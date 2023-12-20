@@ -1,0 +1,48 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserEmailDetailsViewModel
+
+@{
+  ViewData["Title"] = "My Account - Change primary email";
+  var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+
+<div class="bg-white">
+  <div class="nhsuk-width-container app-width-container">
+    <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+    <form asp-controller="MyAccount" asp-action="UpdatePrimaryEmail" method="post">
+      <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-three-quarters nhsuk-u-padding-bottom-5">
+          @if (errorHasOccurred)
+          {
+            <vc:error-summary order-of-property-names="@(new[] { nameof(Model.PrimaryEmailAddress) })" />
+          }
+          <div class="nhsuk-caption-l" id="contact-hint">
+            Change primary email
+          </div>
+        </div>
+      </div>
+      <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+          <h1 class="nhsuk-heading-xl">Enter your new primary email address</h1>
+        </div>
+      </div>
+      <div>
+        <vc:text-input asp-for="PrimaryEmailAddress"
+                       label="Primary email address"
+                       populate-with-current-value="true"
+                       type="text"
+                       spell-check="false"
+                       hint-text=""
+                       autocomplete="PrimaryEmailAddress"
+                       css-class="nhsuk-u-width-one-half"
+                       required="true"
+                        />
+      </div>
+      <div class="nhsuk-u-padding-bottom-5">
+        <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+          Continue
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+﻿@using LearningHub.Nhs.Models.Content
+@using LearningHub.Nhs.Models.Enums.Content
+@using LearningHub.Nhs.WebUI.Models
+@model LandingPageViewModel
+@if (Model.PageViewModel.PageSections.Any())
+{
+    foreach (var pageModel in Model.PageViewModel.PageSections)
+    {
+        <div style="background:@pageModel.PageSectionDetail.BackgroundColour;color:@pageModel.PageSectionDetail.TextColour">
+            <div class="nhsuk-width-container app-width-container">
+                @if (!string.IsNullOrEmpty(pageModel.PageSectionDetail.SectionTitle))
+                {
+                    <div class="nhsuk-grid-row @(pageModel.PageSectionDetail.TopMargin ? "information-page__row--padding-top" : "")">
+                        <div class="nhsuk-grid-column-full">
+                            <@pageModel.PageSectionDetail.SectionTitleElement>@pageModel.PageSectionDetail.SectionTitle</@pageModel.PageSectionDetail.SectionTitleElement>
+                        </div>
+                    </div>
+                }
+
+                <div class="nhsuk-grid-row @(pageModel.PageSectionDetail.TopMargin && string.IsNullOrEmpty(pageModel.PageSectionDetail.SectionTitle) ? "information-page__row--padding-top" : "") @(pageModel.PageSectionDetail.BottomMargin ? "information-page__row--padding-bottom" : "")">
+                    @if (pageModel.PageSectionDetail.PageSection.SectionTemplateType == SectionTemplateType.Video)
+                    {
+                        <div class="nhsuk-grid-column-two-thirds">
+                            <div class="information-page__video-text-container" @(string.IsNullOrEmpty(pageModel.PageSectionDetail.TextBackgroundColour) ? "" : "style=background-color:" + pageModel.PageSectionDetail.TextBackgroundColour)>
+                                <div>@Html.Raw(pageModel.PageSectionDetail.Description)</div>
+                            </div>
+                            <div class="information-page__asset-container display--no-js-hide">
+                                <div id="mediaContainer-@pageModel.PageSectionDetail.Id" class="w-100">
+                                    @{
+                                        var videoPageSectionDetail = @Model.PageSectionDetailViewModels.FirstOrDefault(x => x.Id == pageModel.PageSectionDetail.Id);
+                                    }
+                                    <partial name="_CmsVideo" model="@videoPageSectionDetail" />
+                                    @if (videoPageSectionDetail.VideoAsset != null && videoPageSectionDetail.VideoAsset.TranscriptFile != null)
+                                    {
+                                        <div class="information-page__asset-link-container" @(string.IsNullOrEmpty(pageModel.PageSectionDetail.TextBackgroundColour) ? "" : "style=background-color:" + pageModel.PageSectionDetail.TextBackgroundColour)>
+                                            <a download style="color: @pageModel.PageSectionDetail.HyperLinkColour !important" href="/file/download/@videoPageSectionDetail.VideoAsset.TranscriptFile.FilePath/@videoPageSectionDetail.VideoAsset.TranscriptFile.FileName">
+                                                Download transcript
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <noscript>
+                                <div class="information-page__asset-placeholder">
+                                    To view this video please enable JavaScript in your web browser.
+                                </div>
+                            </noscript>
+                        </div>
+                    }
+                    else
+                    {
+                        string removeLeftOrRightPadding = string.Empty;
+                        if (string.IsNullOrEmpty(pageModel.PageSectionDetail.TextBackgroundColour) && !pageModel.PageSectionDetail.HasBorder)
+                        {
+                            if (pageModel.PageSectionDetail.SectionLayoutType == SectionLayoutType.Left)
+                            {
+                                removeLeftOrRightPadding = "information-page__text-container--no-padding-left";
+                            }
+                            else
+                            {
+                                removeLeftOrRightPadding = "information-page__text-container--no-padding-right";
+                            }
+                            removeLeftOrRightPadding += " information-page__text-container--no-x-padding--mobile";
+                        }
+                        <div class="nhsuk-grid-column-full">
+                            <div class="information-page__container @(pageModel.PageSectionDetail.SectionLayoutType == SectionLayoutType.Left ? "information-page__container--reverse-child-order" : "") @(pageModel.PageSectionDetail.HasBorder ? "information-page__container--border" : "")">
+                                <div class="nhsuk-grid-column-one-half information-page__container-column">
+                                    <div class="information-page__asset-container">
+                                        @if (@pageModel.PageSectionDetail?.ImageAsset != null)
+                                        {
+                                            <img alt="@pageModel.PageSectionDetail.ImageAsset.AltTag" src="/file/download/@pageModel.PageSectionDetail.ImageAsset.ImageFile.FilePath/@pageModel.PageSectionDetail.ImageAsset.ImageFile.FileName" class="information-page__img">
+                                        }
+                                    </div>
+                                </div>
+                                <div class="nhsuk-grid-column-one-half information-page__container-column">
+                                    <div class="information-page__text-container @removeLeftOrRightPadding" @(string.IsNullOrEmpty(pageModel.PageSectionDetail.TextBackgroundColour) ? "" : "style=background-color:" + pageModel.PageSectionDetail.TextBackgroundColour)>
+                                        <div>@Html.Raw(pageModel.PageSectionDetail.Description)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}
+

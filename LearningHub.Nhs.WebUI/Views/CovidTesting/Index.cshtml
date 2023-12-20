@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "COVID-19 self-swab for healthcare staff";
+    Layout = "_CovidTestingLayout.cshtml";
+
+    var summaryVideoAvailable = (@ViewBag.Video2_locatorUri != string.Empty);
+}
+
+<div id="covidcontainer" class="lh-padding-fluid">
+    <div class="lh-container-xl">
+        <div class="pt-5 pb-3">
+        <h1 class="nhsuk-heading-xl">COVID-19 self-swab for healthcare staff</h1>
+        </div>
+
+        <div id="mediacontainer1" class="mediacontainer mb-5">
+            <video id="covid19-self-test-video" class="azuremediaplayer amp-default-skin amp-big-play-centered" controls data-setup='{"nativeControlsForTouch": false, "fluid": true, "autoplay": @ViewBag.AutoPlayMedia}'>
+                <source src="@ViewBag.Video1_locatorUri" type="application/vnd.ms-sstr+xml" />
+                <p class="amp-no-js">
+                    To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
+                </p>
+            </video>
+        </div>
+
+    </div>
+</div>
+<div class="lh-padding-fluid">
+    <div class="lh-container-xl pt-5">
+        <div class="max-width-limit">
+            <h1 class="nhsuk-heading-l nhsuk-u-margin-bottom-4">Lateral Flow self-swab video tutorial for healthcare staff</h1>
+            <p class="py-3">
+                Asymptomatic COVID-19 testing is being made available to all patient-facing healthcare staff.<br />
+            </p>
+            <p class="py-3">
+                This short training video provides step-by-step instructions on self-administering a Lateral Flow COVID-19 test. It covers the use of test packs, instructions for individual tests and each step of the evaluation process.
+            </p>
+            <p class="py-3">
+                The test itself is quick and relatively easy to use, but please watch the video all the way through before commencing the self-swab process. This will help to ensure the tests are carried out correctly, and the results are as accurate and reliable as possible.
+            </p>
+        </div>
+
+        <div class="file-download mb-5">
+            <a href="/api/resource/downloadcovidtestingresource">
+                <div class="outer d-flex justify-content-between">
+                    <img src="~/images/fileicons/a-pdf-icon.svg" class="" alt="Pdf icon" />
+                    <div>
+                        Download the Lateral Flow self-swab instructions
+                    </div>
+                    <i class="fa-solid fa-arrow-down"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+@if (summaryVideoAvailable)
+{
+    <div class="lh-padding-fluid white-background">
+        <div class="lh-container-xl py-5">
+            <div class="max-width-limit-sml">
+            <h1 class="nhsuk-heading-xl">Self-swab summary video</h1>
+
+                <div id="mediacontainer2" class="mediacontainer mb-4">
+                    <video id="covid19-self-swab-summary-video" class="azuremediaplayer amp-default-skin amp-big-play-centered" controls data-setup='{"nativeControlsForTouch": false, "fluid": true, "autoplay": @ViewBag.AutoPlayMedia}'>
+                        <source src="@ViewBag.Video2_locatorUri" type="application/vnd.ms-sstr+xml" />
+                        <p class="amp-no-js">
+                            To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
+                        </p>
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (ViewBag.ShowHomeLink.ToLower() == "true")
+{
+    <div class="lh-padding-fluid @(summaryVideoAvailable ? "" : "white-background")">
+        <div class="lh-container-xl py-5">
+            <div class="max-width-limit">
+        <a href="/" class="nhsuk-heading-m mt-3">Visit the Learning Hub</a>
+                <p class="py-4">
+                    The Learning Hub is a new digital platform that allows you to search, access, rate and contribute learning resources for others in health and care to use.
+                    The platform is still being developed and there are more features to be added to provide you with a great learning experience.
+                </p>
+            </div>
+        </div>
+    </div>
+}

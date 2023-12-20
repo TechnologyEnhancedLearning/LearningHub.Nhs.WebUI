@@ -1,0 +1,129 @@
+@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.WebUI.Configuration.Settings> options
+@{
+    ViewData["Title"] = "Content Policy";
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/staticpages.css" asp-append-version="true" />
+}
+
+<div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-main-wrapper ">
+        <h1>NHS England Learning Hub Content Policy</h1>
+        <article class="nhsuk-u-reading-width  nhsuk-u-font-size-19">
+            <section>
+                <p>
+                    The Learning Hub is a digital platform that provides easy access to a wide range of education and training resources for the health and care workforce, and has been developed by NHS England’s Technology Enhanced Learning team.
+                </p>
+                <p>
+                    Content on the Learning Hub is uploaded by its user community and is not reviewed or endorsed by NHS England. If you find content or links that you think should not be on the Learning Hub, or have any other feedback or concerns about the content or functionality of the Learning Hub, please report it to us using the relevant links, or contact the <a target="_blank" href="@options.Value.SupportUrls.SupportForm">support team</a>.
+                </p>
+                <p>
+                    When uploading content, you must comply with the terms and the spirit of this Content Policy, which is a <a target="_blank" href="/policies/terms-and-conditions">condition of your use</a> of the Learning Hub. Non-compliant content may be removed at any time and without notice.
+                </p>
+            </section>
+            <hr />
+            <section>
+                <h2>
+                    Prohibited content
+                </h2>
+
+
+                <h3>Illegal</h3>
+                <p>Content that violates any laws or regulations.</p>
+
+
+
+
+                <h3>
+                    Advertising
+                </h3>
+                <p>
+                    Content that is created for advertising, promotional or other commercial purposes including links, logos and business names.
+                </p>
+
+                <h3>Personal information and confidential information</h3>
+                <p>
+                    Content that discloses any third party’s confidential information, identity, personally identifiable information or personal data (including data concerning health) is not permitted, unless:
+                </p>
+                <ul>
+                    <li>
+                        You have obtained their consent to the inclusion of their personal data in the Learning Hub and have retained evidence of that consent
+                    </li>
+                    <li>
+                        You agree to at all times process their personal data in accordance with the requirements of data protection legislation
+                    </li>
+                    You agree to promptly notify NHSE of any data protection breach that you become aware of concerning third party personal data that you have uploaded to the Learning Hub
+                    <li>
+                        You agree to promptly notify NHSE when a data subject in respect of any third party personal data that you have uploaded to the Learning Hub notifies you that they wish to exercise their data subject rights
+                    </li>
+                </ul>
+                <p>
+                    Properly anonymised data and content should be uploaded instead of personal data whenever possible.
+                </p>
+                <h3>
+                    Sexually explicit content
+                </h3>
+                <p>
+                    Content featuring sexual imagery purely intended to stimulate sexual arousal. Non-pornographic content relating to sexual health and related issues, surgical procedures and the results of surgical procedures, breastfeeding, therapy, education and the promotion of general wellbeing may be uploaded, but we may make changes to the way in which it is accessed in order that users do not view it accidentally.
+                </p>
+                <h3>
+                    Self-harm
+                </h3>
+                <p>
+                    Content intended to encourage suicide, substance abuse, eating disorders or other acts of self-harm. Content related to self-harm for the purposes of therapy, education and the promotion of general wellbeing may be uploaded, but we may make changes to the way in which it is accessed in order that users do not view it accidentally.
+                </p>
+
+                <h3>Misinformation</h3>
+                <p>
+                    Content constituting misinformation that is likely to harm users, patients/service users, health and care workers, or the general public’s wellbeing, safety, trust and reputation, including the reputation of the NHS or any part of it. This could include false and misleading information relating to disease prevention and treatment, conspiracy theories, content that encourages discrimination, harassment or physical violence, content originating from misinformation campaigns, and content edited or manipulated in such a way as to constitute misinformation.
+                </p>
+                <h3>Discrimination, harassment and bullying</h3>
+                <p>
+                    Content that amounts to being discriminatory in respect of the protected characteristics set out in the Equality Act 2010, being race, sex, disability, sexual orientation, religion or belief, gender reassignment, age, marriage and civil partnership, and pregnancy and maternity. Content that contains material or images designed to shame or degrade any person for any reason, or which may amount to harassment, bullying or a threat. Content of a defamatory nature or containing profanity or of a nature which may be regarded as abusive.
+                </p>
+                <h3>
+                    Graphic, violent and other dangerous content
+                </h3>
+                <p>
+                    Content that incites or glorifies violence including content designed principally for the purposes of causing reactions of shock or disgust. Content that encourages, promotes, seeks to justify, praise or provide aid to dangerous persons or organisations, including extremists, terrorists and terrorist organisations and those engaged in any form of criminal activity.
+                </p>
+                <h3>
+                    Intellectual property and other rights
+                </h3>
+                <p>
+                    Content that infringes the intellectual property rights, privacy rights or any other rights of any person or organisation as set out in the <a href="/policies/terms-and-conditions" target="_blank">Terms and Conditions of Use</a>.
+                </p>
+                <h3>Unsuitable content</h3>
+                <p>
+                    Content irrelevant to the purpose or aims of the Learning Hub, or content that while addressing relevant subject matter contains an irrelevant, unsuitable or inappropriate slant (for example relating to potentially controversial opinions or beliefs of any kind intended to influence others). Content which we may deem unsuitable for any other reason at our discretion.
+                </p>
+                <h3>Spam and malware</h3>
+                <p>
+                    Spam, unwanted or repetitive content uploaded that may cause disruption to the Learning Hub or diminish the user experience, or the Hub’s usefulness or relevance to other users. The use of tools that automatically perform actions on your behalf is not permitted. You must not do any act or thing with the intention of disrupting the Learning Hub in any way, including uploading any malware or links to malware, or introduce any virus or other potentially damaging items into the Learning Hub.
+                </p>
+                <hr />
+
+                <h2>Metadata</h2>
+                <p>
+                    When uploading content, you should where prompted include a sufficient description of the content so that other users can understand the description, source and age of the content. For example, if content has been quality assured then the relevant information should be posted in the appropriate field. All metadata fields on the Learning Hub must be completed appropriately before initiating upload. Including the correct information is important in order to help other users locate the content (otherwise the content may not appear in search results for others to select).
+                </p>
+            </section>
+            <hr />
+            <section>
+                <h2>Update schedules</h2>
+                <p>
+                    You should update content that you have uploaded at least once every 3 years, or update or remove it should it cease to be relevant or become outdated or revealed or generally perceived to be unsafe or otherwise unsuitable for inclusion in the Learning Hub. You will receive an automated notification at least 1 month before the 3-year period ends.
+                </p>
+            </section>
+            <hr />
+            <section>
+                <h2>Accessibility</h2>
+                <p>
+                    We ask that where practicable, all content should aim to meet accessibility standards as described in our Accessibility Statement and as set out in the AA standard Web Content Accessibility Guidelines v2.0.
+                </p>
+            </section>
+            @await Html.PartialAsync("~/Views/Shared/_PageReviewPartial.cshtml", new PageReviewModel { LastReviewedDate = new DateTime(2020, 5, 26), NextReviewDate = new DateTime(2023, 5, 26) })
+        </article>
+    </div>
+</div>

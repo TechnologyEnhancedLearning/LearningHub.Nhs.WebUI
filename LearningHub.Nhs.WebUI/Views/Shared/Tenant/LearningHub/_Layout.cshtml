@@ -1,0 +1,168 @@
+﻿@using LearningHub.Nhs.Models.Enums;
+@inject LearningHub.Nhs.WebUI.Interfaces.IInternalSystemService internalSystemService;
+@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.WebUI.Configuration.Settings> settings
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+
+    <title>@ViewData["Title"]</title>
+
+    <link rel="preload" as="font" href="https://assets.nhs.uk/fonts/FrutigerLTW01-55Roman.woff2" type="font/woff2" crossorigin>
+    <link rel="preload" as="font" href="https://assets.nhs.uk/fonts/FrutigerLTW01-65Bold.woff2" type="font/woff2" crossorigin>
+    <link rel="preconnect  dns-prefetch" href="https://www.nhs.uk/">
+    <link rel="preconnect  dns-prefetch" href="https://assets.nhs.uk/" crossorigin>
+
+    <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="manifest" href="~/site.webmanifest.json">
+    <link href="~/css/nhsuk/common.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/nhsuk/layout.css" rel="stylesheet" asp-append-version="true" />
+    <noscript>
+        <link href="~/css/no-js/no-js.css" rel="stylesheet" asp-append-version="true" />
+    </noscript>
+
+    <environment include="Development">
+        <link rel="stylesheet" type="text/css" href="~/tenant/LearningHub/tenant.css" asp-append-version="true" />
+        <link rel="stylesheet" type="text/css" href="~/lib/fontawesome-free-6.4.2-web/css/all.css" asp-append-version="true" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" type="text/css" href="~/lib/fontawesome-free-6.4.2-web/css/all.min.css" asp-append-version="true" />
+        <link rel="stylesheet" type="text/css" href="~/tenant/LearningHub/tenant.min.css" asp-append-version="true" />
+    </environment>
+
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="~/apple-touch-icon-180x180.png">
+    <link rel="mask-icon" href="~/favicon.svg" color="#005eb8">
+    <link rel="icon" sizes="192x192" href="~/favicon-192x192.png">
+    <meta name="msapplication-TileImage" content="~/mediumtile-144x144.png">
+    <meta name="msapplication-TileColor" content="#005eb8">
+    <meta name="msapplication-square70x70logo" content="~/smalltile-70x70.png">
+    <meta name="msapplication-square150x150logo" content="~/mediumtile-150x150.png">
+    <meta name="msapplication-wide310x150logo" content="~/widetile-310x150.png">
+    <meta name="msapplication-square310x310logo" content="~/largetile-310x310.png">
+
+    @RenderSection("styles", false)
+    @await Html.PartialAsync("_GoogleAnalytics")
+    <partial name="~/Views/Shared/_TimezoneInfoScriptPartial.cshtml" />
+    <partial name="~/Views/Shared/_GoogleTagManagerPartial.cshtml" />
+</head>
+<body class="">
+    <script>
+        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+
+    </script>
+    <a class="nhsuk-skip-link" href="#maincontent">Skip to main content</a>
+
+    @if (await DisplayOffline())
+    {
+        <div class="alert alert-danger mb-0 offline-ribbon" role="alert">
+            System offline
+        </div>
+    }
+    <partial name="~/Views/Shared/_GoogleTagManagerNoScriptPartial.cshtml" />
+
+
+    <div style="@ViewBag.CookieBannerStyle">
+        <partial name="_CookieConsentPartial" />
+    </div>
+
+    <header class="nhsuk-header" role="banner">
+        <partial name="~/Views/Shared/_NavPartial.cshtml" />
+    </header>
+
+    <div class="nhsuk-width-container app-width-container beta-banner">
+        <span class="beta-banner__beta-box">BETA</span>
+        <span class="beta-banner__text">This is a new platform - your <a href="@(settings.Value.SupportUrls.SupportFeedbackForm)" target="_blank">feedback</a> will help us to improve it.</span>
+    </div>
+
+    <div class="bg-white">
+        @RenderSection("NavBreadcrumbs", false)
+    </div>
+
+    <div class="nhsuk-width-container app-width-container--full">
+        <main role="main" id="maincontent" class="nhsuk-main-wrapper app-main-wrapper--no-padding nhsuk-bg-white">
+            @* This print header HAS to be within the main component and not in the header component otherwise there is a problem when
+            printing with the Microsoft Edge browser. Large tables are not split across pages correctly. See card 8917 for example. *@
+            <partial name="~/Views/Shared/_PrintHeaderPartial.cshtml" />
+            @RenderBody()
+        </main>
+    </div>
+
+    <div id="modal-container">
+        @* Inject form here *@
+    </div>
+
+    <footer role="contentinfo">
+        <partial name="~/Views/Shared/_FooterPartial.cshtml" />
+    </footer>
+
+    <script>
+        if (!window.process) { window.process = {}; }
+        if (!window.process.env) { window.process.env = {}; }
+        window.process.env.BUILD = 'web';
+    </script>
+    <environment include="Development">
+        <script type="text/javascript" src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.bundle.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/js/jquery.matchHeight.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/js/site.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                asp-suppress-fallback-integrity="true"
+                crossorigin="anonymous"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"
+                asp-fallback-src="~/lib/jquery-validation/dist/jquery.validate.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.validator"
+                asp-suppress-fallback-integrity="true"
+                crossorigin="anonymous"
+                integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA==">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"
+                asp-fallback-src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive"
+                asp-suppress-fallback-integrity="true"
+                crossorigin="anonymous"
+                integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==">
+        </script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/js/jquery.matchHeight.min.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+    <script type="text/javascript" src="~/js/bundle/header.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/bundle/nhsuk.js" asp-append-version="true"></script>
+
+    <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
+    <partial name="~/Views/Shared/_SessionManagerScriptPartial.cshtml" />
+    <partial name="~/Views/Shared/_JavascriptDetectorPartial.cshtml" />
+    <partial name="~/Views/Shared/_SupportUrlsScriptPartial.cshtml" />
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>
+<!-- Build number: @settings.Value.BuildNumber -->
+@functions {
+    public async Task<bool> DisplayOffline()
+    {
+        if (ViewContext.RouteData.Values["controller"].ToString() != "Offline" && User.Identity.IsAuthenticated)
+        {
+            var internalSystem = await this.internalSystemService.GetByIdAsync((int)InternalSystemType.LearningHub);
+
+            return internalSystem.IsOffline;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}

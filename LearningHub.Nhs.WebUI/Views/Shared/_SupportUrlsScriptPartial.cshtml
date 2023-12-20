@@ -1,0 +1,37 @@
+@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.WebUI.Configuration.Settings> options
+@{
+    // This is used by the data/supportUrls.ts service.
+    var config = options.Value;
+    var supportUrls = config.SupportUrls;
+
+    var resourceLicenceUrl = config.ResourceLicenseUrl;
+
+    var contributeUr = supportUrls.ContributeUR;
+    var privacyNotice = supportUrls.PrivacyNotice;
+    var supportFeedbackForm = supportUrls.SupportFeedbackForm;
+    var supportForm = supportUrls.SupportForm;
+    var supportSite = supportUrls.SupportSite;
+    var unableToView = supportUrls.UnableToViewELearningResources;
+    var whoCanAccess = supportUrls.WhoCanAccessTheLearningHub;
+    var contributingAResource = supportUrls.ContributingAResource;
+    var reportAResource = supportUrls.ReportAResource;
+    var resourceCertificateUrl = supportUrls.ResourceCertificateUrl;
+}
+<script type="text/javascript">
+    if(!window.LearningHubDetails){
+        window.LearningHubDetails = {};
+    }
+    window.LearningHubDetails.SupportUrls = {
+        contributeUr: '@contributeUr',
+        privacyNotice: '@privacyNotice',
+        supportFeedbackForm: '@supportFeedbackForm',
+        supportForm: '@supportForm',
+        supportSite: '@supportSite',
+        unableToViewELearningResources: '@unableToView',
+        whoCanAccessTheLearningHub: '@whoCanAccess',
+        resourceLicenceUrl: '@resourceLicenceUrl',
+        contributingAResource: '@contributingAResource',
+        reportAResource: '@reportAResource',
+        resourceCertificateUrl: '@resourceCertificateUrl'
+    };
+</script>

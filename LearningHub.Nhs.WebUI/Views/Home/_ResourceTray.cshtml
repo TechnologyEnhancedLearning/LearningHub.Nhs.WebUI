@@ -1,0 +1,90 @@
+﻿@model DashboardViewModel
+@using LearningHub.Nhs.Models.Dashboard
+@using LearningHub.Nhs.WebUI.Models.DashBoard;
+
+@{
+    string GetActiveTabName()
+    {
+        switch (Model.Resources.Type)
+        {
+            case "rated-resources":
+                return "Highly rated";
+            case "recent-resources":
+                return "Recently added";
+            case "popular-resources":
+            default:
+                return "Most accessed";
+        }
+    }
+    var pagingViewModel = new DashBoardPagingViewModel
+            {
+                DashboardTrayType = "resources",
+                MyLearningDashboard = Model.MyLearnings.Type,
+                ResourceDashboard = Model.Resources.Type,
+                CatalogueDashboard = Model.Catalogues.Type,
+                CurrentPage = Model.Resources.CurrentPage,
+                TotalPages = Model.Resources.TotalPages,
+                TotalCount = Model.Resources.TotalCount
+            };
+}
+
+<div class="dashboardTray">
+    <h2>Resources</h2>
+
+    <nav class="subnavbarwhite navbar-expand-md nhsuk-u-margin-bottom-5">
+        <input class="subnav-hidden-checkbox" id="resources-subnav-hidden-checkbox" role="button" type="checkbox" aria-controls="collapsingResourcesSubNavbar">
+        <div class="bar">
+            <div class="navbar-toggler navbar-toggler-left nhsuk-u-font-size-19">@GetActiveTabName()</div>
+            <label class="navbar-toggler navbar-toggler-right" for="resources-subnav-hidden-checkbox">
+                <i class="fa-solid fa-chevron-down"><span class="nhsuk-u-visually-hidden">Show Resource Options</span></i>
+                <i class="fa-solid fa-chevron-up display--hide"><span class="nhsuk-u-visually-hidden">Hide Resource Options</span></i>
+
+            </label>
+        </div>
+        <div class="navbar-collapse collapse" id="collapsingResourcesSubNavbar">
+            <ul class="navbar-nav">
+                <li class="subnavwhite-item @(Model.Resources.Type == "popular-resources" ? "active" : string.Empty)">
+                    <a tabindex="0" class="subnavwhite-link text-nowrap"
+                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="@(Model.MyLearnings.Type)" asp-route-resourceDashboard="popular-resources" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="resources">Most accessed</a>
+                </li>
+                <li class="subnavwhite-item @(Model.Resources.Type == "rated-resources" ? "active" : string.Empty)">
+                    <a tabindex="0" class="subnavwhite-link text-nowrap"
+                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="@(Model.MyLearnings.Type)" asp-route-resourceDashboard="rated-resources" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="resources">Highly rated</a>
+                </li>
+                <li class="subnavwhite-item @(Model.Resources.Type == "recent-resources" ? "active" : string.Empty)">
+                    <a tabindex="0" class="subnavwhite-link text-nowrap"
+                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="@(Model.MyLearnings.Type)" asp-route-resourceDashboard="recent-resources" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="resources">Recently added</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred nhsuk-u-margin-bottom-2">
+                @if(@Model.Resources.Resources != null)
+                {
+                    @foreach (var resource in Model.Resources.Resources)
+                    {
+                        var resourceViewModel = new Tuple<string, DashboardResourceViewModel>("resources", resource);
+                        <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+                            <partial name="_ResourceCard" model="resourceViewModel" />
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred  nhsuk-u-margin-bottom-1">
+                <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+                </div>
+                <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item"></div>
+                <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item  nhsuk-u-padding-top-2 display--no-js-hide">
+                    <partial name="_DashboardPaging" model="pagingViewModel" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

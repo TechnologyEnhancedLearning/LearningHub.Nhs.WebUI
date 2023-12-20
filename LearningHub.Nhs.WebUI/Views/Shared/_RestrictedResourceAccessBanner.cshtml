@@ -1,0 +1,19 @@
+﻿@using Microsoft.Extensions.Options;
+@using LearningHub.Nhs.WebUI.Configuration;
+@inject IOptions<Settings> settings
+
+@if (ViewBag.UserAuthenticated && User.IsInRole("BasicUser"))
+{
+    <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-3 nhsuk-u-margin-bottom-3">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-u-reading-width">
+                <h2>Access to this resource is restricted</h2>
+                <p>Only Full users are able to access this learning resource.</p>
+                <p>If you have work email address <a href="~/myaccount">update your account details</a> to upgrade to a full user account.</p>
+                <p>
+                    <a href="@(settings.Value.SupportUrls.WhoCanAccessTheLearningHub)" target="_blank">Who can access the Learning Hub?</a>
+                </p>
+            </div>
+        </div>
+    </div>
+}

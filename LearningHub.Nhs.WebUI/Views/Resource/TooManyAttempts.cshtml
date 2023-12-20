@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Too many attempts";
+}
+
+<div class="user-entry fullwidth">
+
+    <div>
+        <h1 class="nhsuk-heading-xl">Too many attempts</h1>
+        <p>You cannot access this resource, as you have reached the maximum number of allowed attempts. </p>
+        <p>If you believe this is incorrect, please contact the <a href="@ViewBag.SupportFormUrl" target="_blank">support team</a>.</p>
+        <p>@DateTimeOffset.Now.ToString("d MMMM yyyy HH:mm:ss")</p>
+    </div>
+
+</div>

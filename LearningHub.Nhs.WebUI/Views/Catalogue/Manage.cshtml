@@ -1,0 +1,22 @@
+﻿@using LearningHub.Nhs.WebUI.Models;
+@{
+    ViewData["Title"] = "Catalogue";
+}
+@section styles {
+
+}
+
+<noscript>
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <partial name="_JavaScriptDisabled" />
+        </div>
+    </div>
+</noscript>
+<div id="cataloguecontainer" v-cloak style="background-color: white;">
+    <router-view user-authenticated="@ViewBag.UserAuthenticated" support-url="@ViewBag.SupportUrl" />
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/bundle/cataloguecontainer.js" asp-append-version="true"></script>
+}

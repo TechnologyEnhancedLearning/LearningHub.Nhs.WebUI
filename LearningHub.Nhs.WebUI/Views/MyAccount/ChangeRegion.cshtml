@@ -1,0 +1,84 @@
+﻿@using LearningHub.Nhs.WebUI.Models.UserProfile
+@using LearningHub.Nhs.WebUI.Models.Account
+@model UserLocationViewModel
+@{
+  ViewData["Title"] = "My Account - Change region";
+  var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+
+<div class="bg-white">
+  <div class="nhsuk-width-container app-width-container">
+    <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+    <form asp-controller="MyAccount" asp-action="UpdateLocationDetails" method="post">
+      <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-three-quarters nhsuk-u-padding-bottom-5">
+          @if (errorHasOccurred)
+          {
+            <vc:error-summary order-of-property-names="@(new[] { nameof(Model.SelectedRegionId) })" />
+          }
+          <div class="nhsuk-caption-l" id="contact-hint">
+            Change region
+          </div>
+
+          <h1 class="nhsuk-heading-xl">Update your region</h1>
+
+          <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+              <div class="nhsuk-inset-text">
+                <span class="nhsuk-u-visually-hidden">Information: </span>
+                <p>
+                  You can only update your region if you selected England as your country
+                </p>
+              </div>
+              <div class="nhsuk-form-group @(errorHasOccurred ? "nhsuk-form-group--error" : "")">
+                <fieldset class="nhsuk-fieldset">
+                  <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--l">
+                    <h3 class="nhsuk-fieldset__heading">
+                      Select a region
+                    </h3>
+                  </legend>
+
+                  @if (errorHasOccurred)
+                  {
+                    <span class="nhsuk-error-message" id="viewmodel-error">
+                      <span class="nhsuk-u-visually-hidden">Error:</span> @Html.ValidationMessage("SelectRegion")
+                    </span>
+                  }
+
+                  @if (Model.Region != null && Model.Region.Count() > 0)
+                  {
+                    <div class="nhsuk-radios">
+                      @foreach (var region in Model.Region)
+                      {
+                        <div class="nhsuk-radios__item">
+                          @if (Model.SelectedRegionId == Convert.ToInt32(@region.Value))
+                          {
+                            <input type="radio" checked="checked" name="SelectedRegionId" asp-for="SelectedRegionId" value="@region.Value" id="@region.Label" class="nhsuk-radios__input" data-val="false" />
+                          }
+                          else
+                          {
+                            <input type="radio" name="SelectedRegionId" asp-for="SelectedRegionId" value="@region.Value" id="@region.Label" class="nhsuk-radios__input" data-val="false" />
+                          }
+                          <label class="nhsuk-label nhsuk-radios__label" for="@region.Value">
+                            @region.Label
+                          </label>
+                        </div>
+                      }
+                    </div>
+                  }
+                </fieldset>
+              </div>
+            </div>
+          </div>
+
+          <div class="nhsuk-u-padding-bottom-5">
+            <input type="hidden" name="SelectedCountryId" asp-for="SelectedCountryId">
+            <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

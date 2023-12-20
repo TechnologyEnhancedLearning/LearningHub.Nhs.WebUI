@@ -1,0 +1,36 @@
+﻿@using LearningHub.Nhs.WebUI.Configuration;
+@using Microsoft.Extensions.Options;
+@using Microsoft.AspNetCore.Http.Features;
+@inject IOptions<Settings> settings;
+@{
+    ViewData["Title"] = "Restricted Location";
+    Layout = ViewData["Layout"].ToString();
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" />
+}
+
+<div class="create-account nhsuk-u-margin-top-8 nhsuk-u-margin-bottom-8">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-three-quarters">
+                <h1>You are attempting to access from a non-UK location</h1>               
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-three-quarters">
+                 <div class="nhsuk-u-reading-width">
+                    <p>
+                        You are not able to access the Learning Hub from your current location, if you think this is incorrect please contact support.
+                    </p>
+                    <p>
+                        If you are directly employed by the NHS or MoD but accessing from abroad, <a href="@(settings.Value.SupportUrls.SupportSite)" target="_blank"> contact support</a> for further assistance.
+                    </p>
+                    <p>
+                        Access to the Learning Hub is restricted to UK based locations.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

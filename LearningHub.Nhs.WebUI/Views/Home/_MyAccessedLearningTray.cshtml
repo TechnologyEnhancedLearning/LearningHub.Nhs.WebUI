@@ -1,0 +1,134 @@
+﻿@model DashboardViewModel
+@using LearningHub.Nhs.Models.Dashboard;
+@using LearningHub.Nhs.WebUI.Models.DashBoard;
+@{
+    string GetActiveTabName()
+    {
+        switch (Model.MyLearnings.Type)
+        {
+            case "in-progress":
+                return "In Progress";
+            case "my-recent-completed":
+                return "Recently Completed";
+            case "my-certificates":
+                return "Certificates";
+            case "my-catalogues":
+                return "Catalogues";
+            default:
+                return "In Progress";
+        }
+    }
+
+    var pagingViewModel = new DashBoardPagingViewModel
+            {
+                DashboardTrayType = "my-learning",
+                MyLearningDashboard = Model.MyLearnings.Type,
+                ResourceDashboard = Model.Resources.Type,
+                CatalogueDashboard = Model.Catalogues.Type,
+                CurrentPage = Model.MyLearnings.CurrentPage,
+                TotalPages = Model.MyLearnings.TotalPages,
+                TotalCount = Model.MyLearnings.TotalCount
+            };
+}
+<div class="dashboardTray">
+    <h2>My accessed learning</h2>
+
+    <nav class="subnavbarwhite nhsuk-bg-grey navbar-expand-md nhsuk-u-margin-bottom-5">
+        <input class="subnav-hidden-checkbox" id="mylearning-subnav-hidden-checkbox" role="button" type="checkbox" aria-controls="collapsingMyLearningSubNavbar">
+        <div class="bar">
+            <div class="navbar-toggler navbar-toggler-left nhsuk-u-font-size-19">@GetActiveTabName()</div>
+            <label class="navbar-toggler navbar-toggler-right" for="mylearning-subnav-hidden-checkbox">
+                <i class="fa-solid fa-chevron-down"><span class="nhsuk-u-visually-hidden">Show Resource Options</span></i>
+                <i class="fa-solid fa-chevron-up display--hide"><span class="nhsuk-u-visually-hidden">Hide Resource Options</span></i>
+            </label>
+        </div>
+        <div class="navbar-collapse collapse nhsuk-bg-grey" id="collapsingMyLearningSubNavbar">
+            <ul class="navbar-nav">
+                <li class="subnavwhite-item nhsuk-bg-grey @(Model.MyLearnings.Type == "my-in-progress" ? "active" : string.Empty)">
+                    <a tabindex="0" class="subnavwhite-link text-nowrap"
+                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="my-in-progress" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">In Progress</a>
+                </li>
+                <li class="subnavwhite-item nhsuk-bg-grey @(Model.MyLearnings.Type == "my-recent-completed" ? "active" : string.Empty)">
+                    <a tabindex="0" class="subnavwhite-link text-nowrap"
+                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="my-recent-completed" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">Recently Completed</a>
+                </li>
+                <li class="subnavwhite-item nhsuk-bg-grey @(Model.MyLearnings.Type == "my-certificates" ? "active" : string.Empty)">
+                    <a tabindex="0" class="subnavwhite-link text-nowrap"
+                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="my-certificates" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">Certificates</a>
+                </li>
+                <li class="subnavwhite-item nhsuk-bg-grey @(Model.MyLearnings.Type == "my-catalogues" ? "active" : string.Empty)">
+                    <a tabindex="0" class="subnavwhite-link text-nowrap"
+                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="my-catalogues" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">Catalogues</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="nhsuk-grid-row nhsuk-u-margin-bottom-2">
+        <div class="nhsuk-grid-column-full">
+            @if (Model.MyLearnings.Resources?.Count() > 0 || Model.MyLearnings.Catalogues?.Count() > 0)
+            {
+                <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred">
+                    @if (Model.MyLearnings.Type != "my-catalogues")
+                    {
+                        @foreach (var resource in Model.MyLearnings.Resources)
+                        {
+
+                            var resourceViewModel = new Tuple<string, DashboardResourceViewModel>("my-learning", resource);
+                            <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+                                <partial name="_ResourceCard" model="resourceViewModel" />
+                            </li>
+                        }
+                    }
+                    @if (Model.MyLearnings.Type == "my-catalogues")
+                    {
+                        @foreach (var catalogue in Model.MyLearnings.Catalogues)
+                        {
+                            <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+                                <partial name="_CatalogueCard" model="catalogue" />
+                            </li>
+                        }
+                    }
+                </ul>                
+            }
+            else
+            {
+                <div class="nhsuk-bg-white  nhsuk-u-padding-5">
+                    @if (Model.MyLearnings.Type == "my-in-progress" && Model.MyLearnings.TotalCount <= 0)
+                    {
+                        <h3 class="nhsuk-card__heading nhsuk-heading-m">You have not accessed any learning yet.</h3>
+                        <p class="nhsuk-card__description dashboard-card-body">Accessed resources will be displayed here. Browse from the list of resources below or search for a specific term using the search bar at the top of the screen.</p>
+                    }
+                    else if (Model.MyLearnings.Type == "my-recent-completed" && Model.MyLearnings.TotalCount <= 0)
+                    {
+                        <h3 nhsuk-card__heading nhsuk-heading-m>You have not recently completed any learning.</h3>
+                        <p class="nhsuk-card__description dashboard-card-body">When available your completed learning will be displayed here.</p>
+                    }
+                    else if (Model.MyLearnings.Type == "my-certificates" && Model.MyLearnings.TotalCount <= 0)
+                    {
+                        <h3 nhsuk-card__heading nhsuk-heading-m>You have no certificates.</h3>
+                        <p class="nhsuk-card__description dashboard-card-body">Certificates when available will be displayed here.</p>
+                    }
+                    else if (Model.MyLearnings.Type == "my-catalogues" && Model.MyLearnings.TotalCount <= 0)
+                    {
+                        <h3 nhsuk-card__heading nhsuk-heading-m>You have no recently viewed catalogues.</h3>
+                        <p class="nhsuk-card__description dashboard-card-body">When available your catalogues will be displayed here. Browse from the list of catalogues below or search for a specific term using the search bar at the top of the screen.</p>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    <div class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred nhsuk-u-margin-bottom-1">
+        <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item nhsuk-u-padding-top-3">
+            @if (Model.MyLearnings.Type != "my-catalogues")
+            {
+                <a tabindex="0" class="subnavwhite-link text-nowrap" asp-controller="MyLearning" asp-action="Index" asp-route-myLearningDashboard="@Model.MyLearnings.Type">View in My Learning</a>
+            }
+        </div>
+        <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item"></div>
+        <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item  nhsuk-u-padding-top-3 display--no-js-hide">
+            <partial name="_DashboardPaging" model="pagingViewModel" />
+        </div>
+    </div>
+</div>

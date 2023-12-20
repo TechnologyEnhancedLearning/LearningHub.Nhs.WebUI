@@ -1,0 +1,114 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserPrimarySpecialtyUpdateViewModel
+
+@{
+    ViewData["Title"] = "Update Primary Specialty";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    var selectSpecialtyError = ((TagBuilder)Html.ValidationMessageFor(m => m.SelectedPrimarySpecialtyId)).HasInnerHtml;
+}
+
+<div class="create-account">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
+                <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                }
+
+                <h1 class="nhsuk-heading-xl">Update primary specialty</h1>
+
+                <div>
+                    <div class="nhsuk-form-group">
+                        <div class="nhsuk-label nhsuk-u-font-weight-bold">Current primary specialty</div>
+                        <div class="nhsuk-hint">@Model.PrimarySpecialty</div>
+                    </div>
+
+                    <div class="nhsuk-u-padding-bottom-5">
+                        <hr class="nhsuk-section-break nhsuk-section-break--visible ">
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(@Model.FilterText))
+                {
+                    <h2 class="nhsuk-heading-l">Search results for @Model.FilterText</h2>
+                }
+                else
+                {
+                    <h2 class="nhsuk-heading-l">Search for your primary specialty</h2>
+                }
+
+                <form>
+                    <input type="hidden" name="searchSubmission" value="true">
+
+                    <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">
+                        Use a generic term to best describe your primary specialty
+                        or select ‘not applicable’ if not relevant to you.
+                    </label>
+
+                    <div class="nhsuk-form-group search-box-container" style="white-space:nowrap">
+                        <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText">
+                        <button class="nhsuk-search__submit" type="submit">
+                            <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
+                            </svg>
+                            <span class="nhsuk-u-visually-hidden">Search</span>
+                        </button>
+
+                    </div>
+                </form>
+
+
+                <form>
+                    @if (Model.SpecialtyList != null)
+                    {
+                        <vc:radio-list asp-for="SelectedPrimarySpecialtyId"
+                                       label="Select your primary specialty"
+                                       populate-with-current-values="true"
+                                       radios="@Model.SpecialtyRadio()"
+                                       optional-radio="Not Applicable"
+                                       hint-text=""
+                                       required-client-side-error-message="Select a primary specialty or not applicable"
+                                       required="true" />
+                    }
+                    else
+                    {
+                        <div class="nhsuk-form-group @(selectSpecialtyError ? "nhsuk-form-group--error" : string.Empty )">
+                            <fieldset class="nhsuk-fieldset">
+                                @if (selectSpecialtyError)
+                                {
+                                    <span class="nhsuk-error-message" id="example-error-error">
+                                        <span class="nhsuk-u-visually-hidden">Error:</span> @Html.ValidationMessageFor(x => x.SelectedPrimarySpecialtyId)
+                                    </span>
+                                }
+                                <div class="nhsuk-radios">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input" id="SelectedPrimarySpecialtyId" name="SelectedPrimarySpecialtyId"
+                                               type="radio" value="@Model.OptionalSpecialtyItem.Id">
+                                        <label class="nhsuk-label nhsuk-radios__label" for="SelectedPrimarySpecialtyId">
+                                            Not applicable
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    }
+
+                    <div class="nhsuk-form-group">
+                        <input type="hidden" name="formSubmission" value="true">
+                        <input type="hidden" name="filterText" value="@Context.Request.Query["filterText"]">
+                        <button type="submit" class="nhsuk-button">Continue</button>
+                    </div>
+
+                </form>
+
+                @if (Model.SpecialtyList?.Count > 0)
+                {
+                    @await Html.PartialAsync("_UserPrimarySpecialtyPaging", Model)
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+﻿@model SocialMediaSharingUrls
+@using LearningHub.Nhs.WebUI.Configuration
+@{
+    @* Notes: - Social media sharing URLs were obtained from https://mefody.dev/chunks/social-sharing-html-only/
+              - The sharing URLs don't work when running LH locally - Facebook & Linkedin don't allow "localhost" URLs. *@
+
+    string currentUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.PathBase}{Context.Request.Path}{Context.Request.QueryString}";   
+}
+
+<div id="shareResourcePanel">
+    <div class="d-block resourcelinks">
+        <div class="a2a_kit">
+            <a class="a2a_button a2a_button_facebook d-inline-block mr-2" href="@(Model.Facebook + currentUrl)" target="_blank">
+                <img src="/content/shareresource/facebook-share.svg" alt="Facebook" />
+            </a>
+            <a class="a2a_button a2a_button_twitter d-inline-block mr-2" href="@(Model.Twitter + currentUrl)" target="_blank">
+                <img src="/content/shareresource/twitter-share.svg" alt="Twitter" />
+            </a>
+            <a class="a2a_button a2a_button_linkedin d-inline-block mr-2" href="@(Model.LinkedIn + currentUrl)" target="_blank">
+                <img src="/content/shareresource/linkedin-share.svg" alt="Linkedin" />
+            </a>
+            <a class="a2a_button a2a_button_copy_link d-inline-block display--no-js-hide">
+                <img src="/content/shareresource/copyurl-share.svg" alt="Copylink" />
+            </a>
+        </div>
+    </div>
+</div>

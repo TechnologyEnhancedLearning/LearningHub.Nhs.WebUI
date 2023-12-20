@@ -1,0 +1,169 @@
+﻿@using elfhHub.Nhs.Models.Common
+@model LearningHub.Nhs.WebUI.Models.Account.AccountCreationListViewModel
+
+
+@{
+    ViewData["Title"] = "Primary Specialty";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    string grade = !string.IsNullOrWhiteSpace(Context.Request.Query["gradeId"]) ? Context.Request.Query["gradeId"] : Model.GradeId;
+    string regNo = !string.IsNullOrWhiteSpace(Context.Request.Query["registrationNumber"]) ? Context.Request.Query["registrationNumber"] : Model.RegistrationNumber;
+    var routeData = new Dictionary<string, string> { { "gradeId", grade } };
+    var emptyResultRouteData = new Dictionary<string, string> { { "registrationNumber", regNo } };
+    bool returnToConfirmation = false;
+    if (!string.IsNullOrWhiteSpace(Context.Request.Query["returnToConfirmation"]))
+    {
+        bool.TryParse(Context.Request.Query["returnToConfirmation"].ToString(), out returnToConfirmation);
+    }
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+    <div class="create-account">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full @(returnToConfirmation ? "nhsuk-u-padding-top-7":string.Empty) nhsuk-u-padding-bottom-9">
+                @if (Model.SpecialtyList.Any())
+                {
+                    @if (!returnToConfirmation)
+                    {
+                        if (!string.IsNullOrWhiteSpace(Model.PrimarySpecialtyId))
+                        {
+                            <vc:back-link asp-controller="Account" asp-action="CreateAccountGradeSelection" asp-all-route-data="@emptyResultRouteData" link-text="Back to: Select your grade" />
+                        }
+                        else
+                        {
+                            <vc:back-link asp-controller="Account" asp-action="CreateAccountPrimarySpecialty" asp-all-route-data="@routeData" link-text="Back to: Search for your primary specialty" />
+                        }
+                        
+                    }
+                    @if (errorHasOccurred)
+                    {
+                        <vc:error-summary order-of-property-names="@(new[] { nameof(Model.FilterText) })" />
+                    }
+                    <h1 class="nhsuk-heading-xl">Search results for @Model.FilterText</h1>
+                    <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-left-0">
+                    <form asp-controller="Account" asp-action="CreateAccountPrimarySpecialtySelection" method="get">
+                        <input type="hidden" name="formSubmission" value="true">
+                        <input type="hidden" name="GradeId" value="@Context.Request.Query["GradeId"]">
+                        <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+                        <label class="nhsuk-label nhsuk-u-visually-hidden" for="FilterText">Search results for @Model.FilterText</label>
+                        <div class="nhsuk-form-group search-box-container" style="white-space:nowrap">
+                            <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText">
+                            <button class="nhsuk-search__submit" type="submit">
+                                <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
+                                </svg>
+                                <span class="nhsuk-u-visually-hidden">Search</span>
+                            </button>
+
+                        </div>
+
+                    </form>
+                   
+                    <form asp-controller="Account" asp-action="CreateAccountWorkStartDate" method="get">
+                        <input type="hidden" name="formSubmission" value="true">
+                        <div class="nhsuk-form-group">
+                            <input type="hidden" name="RegistrationNumber" value="@Context.Request.Query["RegistrationNumber"]">
+                            <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+
+                            <vc:radio-list asp-for="PrimarySpecialtyId"
+                                       label="Select your primary specialty"
+                                       populate-with-current-values="true"
+                                       radios="@Model.SpecialtyRadio()"
+                                       optional-radio="Not Applicable"
+                                       hint-text=""
+                                       required-client-side-error-message="Select a primary specialty or not applicable"
+                                       required="true" />
+
+
+                            <div class="nhsuk-form-group">
+                                <input type="hidden" name="filterText" value="@Context.Request.Query["filterText"]">
+                                <button type="submit" class="nhsuk-button">Continue</button>
+                            </div>
+
+
+
+                        </div>
+
+                    </form>
+                    </div>
+                }
+                else
+                {
+                    @if (!returnToConfirmation)
+                    {
+                        <vc:back-link asp-controller="Account" asp-action="CreateAccountGradeSelection" asp-all-route-data="@emptyResultRouteData" link-text="Back to: Select your grade" />
+                    }
+                    @if (errorHasOccurred)
+                    {
+                        <vc:error-summary order-of-property-names="@(new[] { nameof(Model.FilterText) })" />
+                    }
+                    <h1 class="nhsuk-heading-xl">Search for your primary specialty</h1>
+
+                    <form asp-controller="Account" asp-action="CreateAccountPrimarySpecialtySelection" method="get">
+                        <input type="hidden" name="formSubmission" value="true">
+                        <input type="hidden" name="GradeId" value="@Context.Request.Query["GradeId"]">
+                        <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+
+                        <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">
+                            Use a generic term to best describe your primary specialty
+                            or select ‘not applicable’ if not relevant to you.
+                        </label>
+                        <div class="nhsuk-form-group search-box-container" style="white-space:nowrap">
+                            <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText">
+                            <button class="nhsuk-search__submit" type="submit">
+                                <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
+                                </svg>
+                                <span class="nhsuk-u-visually-hidden">Search</span>
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                    <h2 class="nhsuk-heading-l">No results found for @Model.FilterText</h2>
+                        <p>You could try:</p>
+                        <ul class="nhsuk-list nhsuk-list--bullet nhsuk-u-padding-bottom-3">
+                            <li>checking your spelling</li>
+                            <li>searching again using other words</li>
+                        </ul>
+
+                    <form asp-controller="Account" asp-action="CreateAccountPrimarySpecialtySelection" method="get">
+                        <input type="hidden" name="GradeId" value="@Context.Request.Query["GradeId"]">
+                        <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+                        <input type="hidden" name="formSubmission" value="true">
+                        <div class="nhsuk-form-group @(errorHasOccurred ? "nhsuk-form-group--error" : string.Empty )">
+                             @if(errorHasOccurred){
+                                <span class="error-message--margin-bottom-1 nhsuk-error-message" id="example-error-error">
+                                    <span class="nhsuk-u-visually-hidden">Error:</span> @Html.ValidationMessageFor(x => x.PrimarySpecialtyId)
+                                </span>
+                            }
+                                <div class="nhsuk-radios">
+
+                                    <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input" id="PrimarySpecialtyId" name="PrimarySpecialtyId" type="radio" value="Not applicable">
+                                        <label class="nhsuk-label nhsuk-radios__label" for="FilterText">
+                                            Not applicable
+                                        </label>
+                                    </div>
+
+                                </div>
+                        </div>
+                        <div class="nhsuk-form-group">
+
+                            <button class="nhsuk-button" type="submit">Continue</button>
+                        </div>
+
+                    </form>
+
+                }
+                @if (Model.SpecialtyList.Any())
+                {
+                    @await Html.PartialAsync("_AccountCreationSpecialtyPaging", Model.AccountCreationPaging)
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+﻿@model elfhHub.Nhs.Models.Entities.TermsAndConditions
+
+<form id="termsAndConditionsForm" asp-action="AcceptTermsAndConditions" class="nhsuk-u-margin-top-4">
+  @Html.HiddenFor(model => model.Id)
+  <div id="terms" class="terms-and-conditions">
+    @Html.Raw(Model.Details)
+  </div>
+  <div class="nhsuk-u-padding-top-5 nhsuk-u-padding-bottom-5">
+    <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+      I accept
+    </button>
+  </div>
+  <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+</form>

@@ -1,0 +1,213 @@
+@using LearningHub.Nhs.WebUI.Extensions
+@using LearningHub.Nhs.Models.Hierarchy
+@using LearningHub.Nhs.WebUI.Models;
+@using LearningHub.Nhs.WebUI.Models.Catalogue
+@using LearningHub.Nhs.Models.Enums;
+@using Microsoft.AspNetCore.Mvc.Routing;
+@model CatalogueIndexViewModel;
+@{
+    ViewData["Title"] = "Catalogue";
+
+
+  bool CanManage()
+  {
+    return IsInRole(RoleEnum.LocalAdmin);
+  }
+
+  bool Unlocked()
+  {
+    return IsInRole(RoleEnum.LocalAdmin) || IsInRole(RoleEnum.Editor) || IsInRole(RoleEnum.Reader) || this.User.IsInRole("Administrator");
+  }
+
+  bool IsInRole(RoleEnum role)
+  {
+    return Model.UserGroups.Any(x => x.RoleId == (int)role);
+  }
+
+  string GetBannerUrl()
+  {
+    if (!string.IsNullOrEmpty(Model.Catalogue.BannerUrl))
+    {
+      return GetFileLink(Model.Catalogue.BannerUrl);
+    }
+    return string.Empty;
+  }
+
+  string GetBadgeUrl()
+  {
+    if (!string.IsNullOrEmpty(Model.Catalogue.BadgeUrl))
+    {
+      return GetFileLink(Model.Catalogue.BadgeUrl);
+    }
+    return string.Empty;
+  }
+
+  string GetFileLink(string fileName)
+  {
+    return "/api/catalogue/download-image/" + Uri.EscapeDataString(fileName);
+  }
+
+  string GetActiveTabName()
+  {
+    switch (ViewBag.ActiveTab)
+    {
+      case "about":
+        return "About";
+      case "search":
+        return "Search catalogue";
+      case "browse":
+      default:
+        return "Browse";
+    }
+  }
+
+  List<(string Title, string Url)> breadcrumbs;
+  if (ViewBag.ActiveTab == "browse")
+  {
+    breadcrumbs = UtilityHelper.GetBreadcrumbsForFolderNodes(Model.NodePathNodes.SkipLast(1).ToList(), Model.Catalogue.Url);
+  }
+  else
+  {
+    breadcrumbs = new List<(string Title, string Url)> { ("Home", "/") };
+  }
+
+  var restrictedAccessVm = new RestrictedAccessBannerViewModel
+      {
+        TitleText = "Access to this catalogue is restricted",
+        BodyText = "This catalogue has been restricted to a limited group of users. You can request access from the catalogue administrator.",
+        CatalogueNodeVersionId = Model.Catalogue.Id,
+        RestrictedAccess = Model.Catalogue.RestrictedAccess,
+        HasCatalogueAccess = Unlocked(),
+        CatalogueAccessRequest = Model.CatalogueAccessRequest
+      };
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/catalogue.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/search.css" asp-append-version="true" />
+}
+
+<div class="catalogue-page">
+
+  <partial name="_LoginBanner" />
+  <partial name="_RestrictedAccessBanner" model="@restrictedAccessVm" />
+
+    @* Admin banner *@
+    @if (CanManage())
+    {
+        <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-3 nhsuk-u-margin-bottom-3">
+            <div class="nhsuk-width-container app-width-container">
+                <p>You are an administrator for this catalogue.</p>
+                <a class="nhsuk-button" asp-controller="Catalogue" asp-action="Manage" asp-route-reference="@Model.Catalogue.Url">Manage this catalogue</a>
+            </div>
+        </div>
+    }
+
+  <div class="nhsuk-width-container app-width-container nhsuk-u-margin-bottom-7">
+
+    @* Catalogue header *@
+    <div class="nhsuk-u-margin-bottom-7">
+      <partial name="_Breadcrumbs" model="new BreadcrumbViewModel { Breadcrumbs = breadcrumbs, ShowBackToParentOnMobile = true }" />
+      @if (Model.Catalogue.Hidden)
+      {
+        <div class="nhsuk-u-margin-bottom-4">
+        <div class="catalogue_preview_div">
+          <div class="Catalogue_preview_text">Catalogue preview </div>
+        </div>
+        </div>
+      }
+      @if (ViewBag.ActiveTab == "browse" && Model.NodeDetails != null)
+      {
+        <span class="nhsuk-caption-l nhsuk-u-margin-bottom-2">@Model.Catalogue.Name</span>
+      }
+
+      <div class="catalogue-title nhsuk-u-margin-bottom-7">
+        @if (!string.IsNullOrEmpty(Model.Catalogue.BadgeUrl))
+        {
+          <img alt="catalogue badge" src="@GetBadgeUrl()" class="catalogue-badge" />
+        }
+
+        <h1 class="heading-lg title nhsuk-u-margin-bottom-0">@(ViewBag.ActiveTab == "browse" && Model.NodeDetails != null ? Model.NodeDetails.Name : Model.Catalogue.Name)</h1>
+      </div>
+
+      @if (ViewBag.UserAuthenticated && Model.Catalogue.RestrictedAccess && Unlocked())
+      {
+        <p class="nhsuk-u-margin-bottom-2 nhsuk-u-font-size-16"><span class="nhsuk-u-font-weight-bold">Access granted</span> you have been granted access to view resources in this catalogue</p>
+      }
+
+      @if (ViewBag.UserAuthenticated)
+      {
+        <div class="nhsuk-u-margin-bottom-4">
+          <a class="nhsuk-u-font-size-16" role="button" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
+           asp-route-bookmarked="@Model.Catalogue.IsBookmarked"
+           asp-route-id="@Model.Catalogue.BookmarkId"
+           asp-route-title="@Model.Catalogue.Name.Truncate(60)"
+           asp-route-nodeId="@Model.Catalogue.NodeId"
+           asp-route-path="@Model.Catalogue.Url"
+           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks</a>
+        </div>
+      }
+
+      @if (!string.IsNullOrEmpty(Model.Catalogue.BannerUrl) && Model.NodeDetails == null)
+      {
+        <img alt="banner image" src="@GetBannerUrl()" class="nhsuk-u-width-full" />
+      }
+
+      @if (Model.NodeDetails != null && !string.IsNullOrEmpty(Model.NodeDetails.Description))
+      {
+        <div class="folder-description">
+          @Html.Raw(Model.NodeDetails.Description)
+        </div>
+      }
+    </div>
+
+        @* Tab header *@
+        <nav class="subnavbarwhite navbar-expand-md navbar-toggleable-md nhsuk-u-margin-bottom-1">
+            <input class="subnav-hidden-checkbox" id="resources-subnav-hidden-checkbox" role="button" type="checkbox" aria-controls="catalogue-details">
+            <div class="bar">
+                <div class="navbar-toggler navbar-toggler-left">@GetActiveTabName()</div>
+                <label class="navbar-toggler navbar-toggler-right" for="resources-subnav-hidden-checkbox">
+                    <i class="fa-solid fa-chevron-down"></i>
+                    <i class="fa-solid fa-chevron-up display--hide"></i>
+                </label>
+            </div>
+            <div class="navbar-collapse collapse" id="catalogue-details">
+                <ul class="navbar-nav">
+                    <li class="subnavwhite-item @(ViewBag.ActiveTab == "browse" ? "active" : string.Empty)">
+                        <a tabindex="0" class="subnavwhite-link text-nowrap" asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-tab="browse" asp-fragment="catalogue-details">Browse</a>
+                    </li>
+                    <li class="subnavwhite-item @(ViewBag.ActiveTab == "about" ? "active" : string.Empty)">
+                        <a tabindex="0" class="subnavwhite-link text-nowrap" asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-tab="about" asp-fragment="catalogue-details">About</a>
+                    </li>
+                    @if (ViewBag.UserAuthenticated)
+                    {
+                        <li class="subnavwhite-item @(ViewBag.ActiveTab == "search" ? "active" : string.Empty)">
+                            <a tabindex="0" class="subnavwhite-link text-nowrap" asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-tab="search" asp-fragment="catalogue-details">Search catalogue</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+
+        @* Tab contents *@
+        @if (ViewBag.ActiveTab == "browse")
+        {
+            <div id="browseTab" class="nhsuk-u-padding-top-1">
+                <partial name="_ContentStructure" model="Model" />
+            </div>
+        }
+        else if (ViewBag.ActiveTab == "about")
+        {
+            <div id="aboutTab" class="nhsuk-u-reading-width nhsuk-u-font-size-19 nhsuk-u-padding-top-7">
+                @Html.Raw(Model.Catalogue.Description)
+            </div>
+        }
+        else if (ViewBag.ActiveTab == "search")
+        {
+            <div id="searchTab" class="search-page">
+                <h2 class="nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-4">Search within this catalogue</h2>
+                <partial name="_SearchWithinCatalogue" model="@Model.SearchResults" />
+            </div>
+        }
+    </div>
+</div>

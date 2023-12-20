@@ -1,0 +1,1431 @@
+﻿@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.Models.Hierarchy
+@using LearningHub.Nhs.Models.Resource.ResourceDisplay
+@using LearningHub.Nhs.WebUI.Configuration;
+@using LearningHub.Nhs.WebUI.Models
+@using LearningHub.Nhs.WebUI.Models.Learning
+@using LearningHub.Nhs.WebUI.Helpers;
+@using Microsoft.Extensions.Options;
+@inject IOptions<Settings> settings
+@model CertificateDetails
+
+@{
+
+    ViewData["Title"] = "Learning Certificate";
+    string spacer = string.Empty;
+    if (Model != null && Model.ActivityDetailedItemViewModel != null)
+    {
+        spacer = string.IsNullOrEmpty(Model.ActivityDetailedItemViewModel.CertificateUrl) ? "nhsuk-u-margin-bottom-7" : "nhsuk-u-margin-bottom-5";
+    }
+    if (Model != null && Model.DownloadCertificate)
+    {
+        Layout = null;
+
+    }
+    else
+    {
+        Layout = ViewData["Layout"].ToString();
+    }
+
+    bool resourceScore = Model != null ? ViewActivityHelper.CanShowScore(Model.ActivityDetailedItemViewModel) : false;
+
+
+
+    List<(string Title, string Url)> breadcrumbs = null;
+    var routeData = new Dictionary<string, string>();
+    if (Model != null)
+    {
+        if (Model.ResourceItemViewModel.Catalogue.NodeId == 1)
+        {
+            breadcrumbs = new List<(string Title, string Url)> { ("Home", "/") };
+        }
+        else
+        {
+            breadcrumbs = UtilityHelper.GetBreadcrumbsForFolderNodes(Model.NodeViewModels, Model.ResourceItemViewModel.Catalogue.Url);
+        }
+
+        routeData = new Dictionary<string, string> { { "SearchText", Model.ActivityDetailedItemViewModel.Title } };
+    }
+
+    string GetCertificateImageUrl()
+    {
+        if (!string.IsNullOrEmpty(Model.ActivityDetailedItemViewModel.CertificateUrl))
+        {
+            return GetFileLink(Model.ActivityDetailedItemViewModel.CertificateUrl);
+        }
+        return string.Empty;
+    }
+    string GetBase64CertificateImage()
+    {
+        return $"data:image/{GetFileExtension(Model.CertificateBase64Image)};base64,{Model.CertificateBase64Image}";
+    }
+    string GetFileExtension(string base64String)
+    {
+        var data = base64String.Substring(0, 5);
+
+        switch (data.ToUpper())
+        {
+            case "IVBOR":
+                return "png";
+            case "/9J/4":
+                return "jpg";
+            case "R0lGO":
+                return "gif";
+            case "PD94b":
+                return "svg";
+            default:
+                return string.Empty;
+        }
+    }
+
+    string GetFileLink(string fileName)
+    {
+        return "/api/catalogue/download-image/" + Uri.EscapeDataString(fileName);
+    }
+}
+@if (Layout == null)
+{
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <title>@ViewData["Title"]</title>
+        <style>
+            /*! CSS Used from: Embedded */
+
+            html {
+                font-family: sans-serif;
+                line-height: 1.15;
+                -webkit-text-size-adjust: 100%;
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+                -webkit-print-color-adjust: exact;
+                 zoom: 0.68;
+            }
+
+
+            table {
+                border-collapse: collapse;
+            }
+
+            th {
+                text-align: inherit;
+                text-align: -webkit-match-parent;
+            }
+
+            h2 {
+                margin-bottom: 0.5rem;
+                font-weight: 500;
+                line-height: 1.2;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .align-items-center {
+                align-items: center !important;
+            }
+
+            a {
+                text-decoration: underline;
+                color: #005eb8;
+            }
+
+            h2 {
+                font-family: Frutiger W01, Arial, Sans-serif;
+            }
+
+            html {
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+
+            table {
+                margin-bottom: 40px;
+                border-spacing: 0;
+                vertical-align: top;
+                width: 100%;
+            }
+
+
+            thead th {
+                border-bottom: 2px solid #d8dde0;
+            }
+
+            th,
+            td {
+                font-size: 16px;
+                font-size: 1rem;
+                line-height: 1.5;
+                padding-bottom: 8px;
+                padding-right: 16px;
+                padding-top: 8px;
+                border-bottom: 1px solid #d8dde0;
+                text-align: left;
+                vertical-align: top;
+            }
+
+            @@media (min-width: 40.0625em) {
+                th,
+                td {
+                    font-size: 19px;
+                    font-size: 1.1875rem;
+                    line-height: 1.47368;
+                }
+            }
+
+            @@media print {
+                th,
+                td {
+                    font-size: 14pt;
+                    line-height: 1.15;
+                }
+            }
+
+            @@media (min-width: 40.0625em) {
+                th,
+                td {
+                    padding-bottom: 16px;
+                }
+            }
+
+            @@media (min-width: 40.0625em) {
+                th,
+                td {
+                    padding-right: 24px;
+                }
+            }
+
+            @@media (min-width: 40.0625em) {
+                th,
+                td {
+                    padding-top: 16px;
+                }
+            }
+
+            th:last-child,
+            td:last-child {
+                padding-right: 0;
+            }
+
+            th {
+                font-weight: 600;
+            }
+
+
+            .nhsuk-grid-column-full {
+                box-sizing: border-box;
+                padding: 0 16px;
+            }
+
+            @@media (min-width: 48.0625em) {
+                .nhsuk-grid-column-full {
+                    float: left;
+                    width: 100%;
+                }
+            }
+
+            .nhsuk-width-container {
+                margin: 0 16px;
+                max-width: 960px;
+            }
+
+            @@media (min-width: 48.0625em) {
+                .nhsuk-width-container {
+                    margin: 0 32px;
+                }
+            }
+
+            @@media (min-width: 1024px) {
+                .nhsuk-width-container {
+                    margin: 0 auto;
+                }
+            }
+
+
+            h2 {
+                font-size: 24px;
+                font-size: 1.5rem;
+                line-height: 1.33333;
+                display: block;
+                font-weight: 600;
+                margin-top: 0;
+                margin-bottom: 16px;
+            }
+
+            @@media (min-width: 40.0625em) {
+                h2 {
+                    font-size: 32px;
+                    font-size: 2rem;
+                    line-height: 1.25;
+                }
+            }
+
+
+            .nhsuk-body-l {
+                font-size: 20px;
+                font-size: 1.25rem;
+                line-height: 1.4;
+                display: block;
+                margin-top: 0;
+                margin-bottom: 24px;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-body-l {
+                    font-size: 24px;
+                    font-size: 1.5rem;
+                    line-height: 1.33333;
+                }
+            }
+
+            @@media print {
+                .nhsuk-body-l {
+                    font-size: 18pt;
+                    line-height: 1.15;
+                }
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-body-l {
+                    margin-bottom: 32px;
+                }
+            }
+
+            p,
+            .nhsuk-body-m {
+                font-size: 16px;
+                font-size: 1rem;
+                line-height: 1.5;
+                display: block;
+                margin-top: 0;
+                margin-bottom: 16px;
+            }
+
+            @@media (min-width: 40.0625em) {
+                p,
+                .nhsuk-body-m {
+                    font-size: 19px;
+                    font-size: 1.1875rem;
+                    line-height: 1.47368;
+                }
+            }
+
+            @@media print {
+                p,
+                .nhsuk-body-m {
+                    font-size: 14pt;
+                    line-height: 1.15;
+                }
+            }
+
+            @@media (min-width: 40.0625em) {
+                p,
+                .nhsuk-body-m {
+                    margin-bottom: 24px;
+                }
+            }
+
+            p,
+            .nhsuk-body-m {
+                color: inherit;
+            }
+
+            .nhsuk-body-s {
+                font-size: 14px;
+                font-size: 0.875rem;
+                line-height: 1.71429;
+                display: block;
+                margin-top: 0;
+                margin-bottom: 16px;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-body-s {
+                    font-size: 16px;
+                    font-size: 1rem;
+                    line-height: 1.5;
+                }
+            }
+
+            @@media print {
+                .nhsuk-body-s {
+                    font-size: 14pt;
+                    line-height: 1.2;
+                }
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-body-s {
+                    margin-bottom: 24px;
+                }
+            }
+
+            .nhsuk-body-l + h2 {
+                padding-top: 4px;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-body-l + h2 {
+                    padding-top: 8px;
+                }
+            }
+
+            p + h2 {
+                padding-top: 16px;
+            }
+
+            @@media (min-width: 40.0625em) {
+                p + h2 {
+                    padding-top: 24px;
+                }
+            }
+
+            b {
+                font-weight: 600;
+            }
+
+            .nhsuk-u-margin-bottom-0 {
+                margin-bottom: 0 !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-margin-bottom-0 {
+                    margin-bottom: 0 !important;
+                }
+            }
+
+            .nhsuk-u-margin-bottom-3 {
+                margin-bottom: 8px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-margin-bottom-3 {
+                    margin-bottom: 16px !important;
+                }
+            }
+
+            .nhsuk-u-margin-top-7 {
+                margin-top: 40px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-margin-top-7 {
+                    margin-top: 48px !important;
+                }
+            }
+
+            .nhsuk-u-margin-bottom-7 {
+                margin-bottom: 40px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-margin-bottom-7 {
+                    margin-bottom: 48px !important;
+                }
+            }
+
+            .nhsuk-u-margin-bottom-9 {
+                margin-bottom: 56px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-margin-bottom-9 {
+                    margin-bottom: 64px !important;
+                }
+            }
+
+            .nhsuk-u-padding-top-1 {
+                padding-top: 4px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-top-1 {
+                    padding-top: 4px !important;
+                }
+            }
+
+            .nhsuk-u-padding-bottom-1 {
+                padding-bottom: 4px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-bottom-1 {
+                    padding-bottom: 4px !important;
+                }
+            }
+
+            .nhsuk-u-padding-top-2 {
+                padding-top: 8px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-top-2 {
+                    padding-top: 8px !important;
+                }
+            }
+
+            .nhsuk-u-padding-right-2 {
+                padding-right: 8px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-right-2 {
+                    padding-right: 8px !important;
+                }
+            }
+
+            .nhsuk-u-padding-bottom-2 {
+                padding-bottom: 8px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-bottom-2 {
+                    padding-bottom: 8px !important;
+                }
+            }
+
+            .nhsuk-u-padding-left-2 {
+                padding-left: 8px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-left-2 {
+                    padding-left: 8px !important;
+                }
+            }
+
+            .nhsuk-u-padding-3 {
+                padding: 8px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-3 {
+                    padding: 16px !important;
+                }
+            }
+
+            .nhsuk-u-padding-top-3 {
+                padding-top: 8px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-top-3 {
+                    padding-top: 16px !important;
+                }
+            }
+
+            .nhsuk-u-padding-right-3 {
+                padding-right: 8px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-right-3 {
+                    padding-right: 16px !important;
+                }
+            }
+
+            .nhsuk-u-padding-bottom-3 {
+                padding-bottom: 8px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-bottom-3 {
+                    padding-bottom: 16px !important;
+                }
+            }
+
+            .nhsuk-u-padding-left-3 {
+                padding-left: 8px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-left-3 {
+                    padding-left: 16px !important;
+                }
+            }
+
+            .nhsuk-u-padding-top-4 {
+                padding-top: 16px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-top-4 {
+                    padding-top: 24px !important;
+                }
+            }
+
+            .nhsuk-u-padding-bottom-4 {
+                padding-bottom: 16px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-bottom-4 {
+                    padding-bottom: 24px !important;
+                }
+            }
+
+            .nhsuk-u-padding-right-5 {
+                padding-right: 24px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-right-5 {
+                    padding-right: 32px !important;
+                }
+            }
+
+            .nhsuk-u-padding-left-5 {
+                padding-left: 24px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-left-5 {
+                    padding-left: 32px !important;
+                }
+            }
+
+            .nhsuk-u-padding-top-9 {
+                padding-top: 56px !important;
+            }
+
+            .nhsuk-u-padding-bottom-9 {
+                padding-bottom: 56px !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-padding-bottom-9 {
+                    padding-bottom: 64px !important;
+                }
+            }
+
+            .nhsuk-u-text-align-right {
+                text-align: right !important;
+            }
+
+            .nhsuk-u-font-size-32 {
+                font-size: 24px !important;
+                font-size: 1.5rem !important;
+                line-height: 1.33333 !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-font-size-32 {
+                    font-size: 32px !important;
+                    font-size: 2rem !important;
+                    line-height: 1.25 !important;
+                }
+            }
+
+            @@media print {
+                .nhsuk-u-font-size-32 {
+                    font-size: 24pt !important;
+                    line-height: 1.05 !important;
+                }
+            }
+
+            .nhsuk-u-font-size-24 {
+                font-size: 20px !important;
+                font-size: 1.25rem !important;
+                line-height: 1.4 !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-font-size-24 {
+                    font-size: 24px !important;
+                    font-size: 1.5rem !important;
+                    line-height: 1.33333 !important;
+                }
+            }
+
+            @@media print {
+                .nhsuk-u-font-size-24 {
+                    font-size: 18pt !important;
+                    line-height: 1.15 !important;
+                }
+            }
+
+            .nhsuk-u-font-size-19 {
+                font-size: 16px !important;
+                font-size: 1rem !important;
+                line-height: 1.5 !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-font-size-19 {
+                    font-size: 19px !important;
+                    font-size: 1.1875rem !important;
+                    line-height: 1.47368 !important;
+                }
+            }
+
+            @@media print {
+                .nhsuk-u-font-size-19 {
+                    font-size: 14pt !important;
+                    line-height: 1.15 !important;
+                }
+            }
+
+            .nhsuk-u-font-size-16 {
+                font-size: 14px !important;
+                font-size: 0.875rem !important;
+                line-height: 1.71429 !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-font-size-16 {
+                    font-size: 16px !important;
+                    font-size: 1rem !important;
+                    line-height: 1.5 !important;
+                }
+            }
+
+            @@media print {
+                .nhsuk-u-font-size-16 {
+                    font-size: 14pt !important;
+                    line-height: 1.2 !important;
+                }
+            }
+
+            .nhsuk-u-font-size-14 {
+                font-size: 12px !important;
+                font-size: 0.75rem !important;
+                line-height: 1.66667 !important;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-u-font-size-14 {
+                    font-size: 14px !important;
+                    font-size: 0.875rem !important;
+                    line-height: 1.71429 !important;
+                }
+            }
+
+            @@media print {
+                .nhsuk-u-font-size-14 {
+                    font-size: 12pt !important;
+                    line-height: 1.2 !important;
+                }
+            }
+
+            .nhsuk-header__logo {
+                float: left;
+            }
+
+            @@media (max-width: 40.0525em) {
+                .nhsuk-header__logo {
+                    position: relative;
+                    z-index: 1;
+                }
+            }
+
+            .nhsuk-header__logo .nhsuk-logo__background {
+                fill: #fff;
+            }
+
+            .nhsuk-header__logo .nhsuk-logo__text {
+                fill: #005eb8;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-header__logo {
+                    padding-left: 0;
+                }
+            }
+
+            .nhsuk-header__logo .nhsuk-logo {
+                height: 40px;
+                width: 100px;
+                border: 0;
+            }
+
+            @@media (max-width: 48.0525em) {
+                .nhsuk-header__logo {
+                    max-width: 60%;
+                }
+            }
+
+            @@media (max-width: 450px) {
+                .nhsuk-header__logo {
+                    max-width: 50%;
+                }
+            }
+
+            .nhsuk-header__link {
+                height: 40px;
+                width: 100px;
+                display: block;
+            }
+
+                .nhsuk-header__link:hover .nhsuk-logo {
+                    box-shadow: 0 0 0 4px #003d78;
+                }
+
+                .nhsuk-header__link:focus {
+                    box-shadow: none;
+                }
+
+                    .nhsuk-header__link:focus .nhsuk-logo {
+                        box-shadow: 0 0 0 4px #ffeb3b, 0 4px 0 4px #212b32;
+                    }
+
+            .nhsuk-header__link--service {
+                height: auto;
+                margin-bottom: -4px;
+                text-decoration: none;
+                width: auto;
+            }
+
+            @@media (min-width: 61.875em) {
+                .nhsuk-header__link--service {
+                    align-items: center;
+                    display: flex;
+                    -ms-flex-align: center;
+                    margin-bottom: 0;
+                    width: auto;
+                }
+            }
+
+
+            .nhsuk-header__service-name {
+                font-weight: 400;
+                font-size: 16px;
+                font-size: 1rem;
+                line-height: 1.5;
+                color: #fff;
+                display: block;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            @@media (min-width: 40.0625em) {
+                .nhsuk-header__service-name {
+                    font-size: 19px;
+                    font-size: 1.1875rem;
+                    line-height: 1.47368;
+                }
+            }
+
+            @@media (min-width: 61.875em) {
+                .nhsuk-header__service-name {
+                    padding-left: 16px;
+                }
+            }
+
+            @@media (max-width: 61.865em) {
+                .nhsuk-header__service-name {
+                    max-width: 220px;
+                }
+            }
+
+            .nhsuk-table__row:hover {
+                background-color: #f0f4f5;
+            }
+
+            .nhsuk-table-responsive {
+                margin-bottom: 0;
+                width: 100%;
+            }
+
+                .nhsuk-table-responsive thead {
+                    border: 0;
+                    clip: rect(0 0 0 0);
+                    -webkit-clip-path: inset(50%);
+                    clip-path: inset(50%);
+                    height: 1px;
+                    margin: 0;
+                    overflow: hidden;
+                    padding: 0;
+                    position: absolute;
+                    white-space: nowrap;
+                    width: 1px;
+                }
+
+            @@media (min-width: 48.0625em) {
+                .nhsuk-table-responsive thead {
+                    clip: auto;
+                    -webkit-clip-path: initial;
+                    clip-path: initial;
+                    display: table-header-group;
+                    height: auto;
+                    overflow: auto;
+                    position: relative;
+                    width: auto;
+                }
+            }
+
+            .nhsuk-table-responsive .nhsuk-table__body .nhsuk-table-responsive__heading {
+                font-weight: 600;
+                padding-right: 16px;
+                text-align: left;
+            }
+
+            @@media (min-width: 48.0625em) {
+                .nhsuk-table-responsive .nhsuk-table__body .nhsuk-table-responsive__heading {
+                    display: none;
+                }
+            }
+
+            .nhsuk-table-responsive .nhsuk-table__body .nhsuk-table__row {
+                display: block;
+                margin-bottom: 24px;
+            }
+
+                .nhsuk-table-responsive .nhsuk-table__body .nhsuk-table__row:last-child {
+                    margin-bottom: 0;
+                }
+
+            @@media (min-width: 48.0625em) {
+                .nhsuk-table-responsive .nhsuk-table__body .nhsuk-table__row {
+                    display: table-row;
+                }
+            }
+
+            .nhsuk-table-responsive .nhsuk-table__body .nhsuk-table__row td {
+                display: block;
+                display: flex;
+                justify-content: space-between;
+                min-width: 1px;
+            }
+
+            @@media all and (-ms-high-contrast: none) {
+                .nhsuk-table-responsive .nhsuk-table__body .nhsuk-table__row td {
+                    display: block;
+                }
+            }
+
+            @@media (min-width: 48.0625em) {
+                .nhsuk-table-responsive .nhsuk-table__body .nhsuk-table__row td {
+                    display: table-cell;
+                }
+            }
+
+            @@media (max-width: 48.0525em) {
+                .nhsuk-table-responsive .nhsuk-table__body .nhsuk-table__row td {
+                    padding-right: 0;
+                    text-align: right;
+                }
+
+                    .nhsuk-table-responsive .nhsuk-table__body .nhsuk-table__row td:last-child {
+                        border-bottom: 3px solid #d8dde0;
+                    }
+            }
+
+            .nhsuk-width-container.app-width-container {
+                max-width: 75.5rem;
+                margin: 0 auto;
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+
+            .nhsuk-header__logo {
+                flex: 1 0 0;
+            }
+
+                .nhsuk-header__logo .nhsuk-header__link--service {
+                    display: inline-flex;
+                }
+
+            .nhsuk-header__service-name {
+                font-size: 1.1875rem;
+            }
+
+            @@media (min-width: 48.0625rem) {
+                .display-desktop--show {
+                    display: block !important;
+                }
+            }
+
+            @@media (max-width: 61.8125rem) {
+                .nhsuk-header__link--service {
+                    align-items: center;
+                    -ms-flex-align: center;
+                    margin-bottom: 0;
+                    width: auto;
+                }
+
+                .nhsuk-header__service-name {
+                    padding-left: 1rem;
+                }
+
+                .nhsuk-header__logo {
+                    order: 0;
+                }
+            }
+
+            @@media (max-width: 48rem) {
+                .nhsuk-width-container.app-width-container {
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                }
+            }
+
+            .fal {
+                -moz-osx-font-smoothing: grayscale;
+                -webkit-font-smoothing: antialiased;
+                display: inline-block;
+                font-style: normal;
+                font-variant: normal;
+                text-rendering: auto;
+                line-height: 1;
+            }
+
+            .fa-chevron-right:before {
+                content: "\f054";
+            }
+
+            .fal {
+                font-family: "Font Awesome 5 Pro";
+                font-weight: 300;
+            }
+
+            .my-learning .certificateHead {
+                background-color: #005eb8 !important;
+                height: 72px;
+            }
+
+            .my-learning thead th {
+                border-bottom: none;
+            }
+
+            .my-learning tbody td {
+                border-bottom: none;
+            }
+
+            .my-learning th,
+            .my-learning td {
+                text-align: left;
+            }
+
+            .my-learning .certificateSummaryBody,
+            .my-learning .certificateBody {
+                border-left: 1px solid #aeb7bd;
+                border-right: 1px solid #aeb7bd;
+            }
+
+            .my-learning .summaryTableHead {
+                background-color: #f0f4f5 !important;
+                border-bottom: none;
+            }
+
+            .my-learning .word-wrapper {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+
+            .my-learning  table, th, td {
+                width: 100%;
+                border: 1px solid;
+                border-color: #005eb8;
+            }
+
+            .my-learning th.Learningresource {
+                    width: 15%;
+                }
+
+            .my-learning thead tr:nth-child(odd) {
+                background-color: #f0f4f5 !important;
+            }
+
+            .my-learning tbody tr span {
+                background-color: #f0f4f5 !important;
+            }
+
+            @@media (max-width: 599px) {
+                .my-learning .summaryTableHead {
+                    width: 100vw;
+                }
+            }
+
+            .my-learning .breadcrumbtable {
+                border: 1px solid #005eb8;
+            }
+
+            .my-learning .summarytabledetails {
+                border: 1px solid #005eb8;
+            }
+
+            .my-learning .summarytabledetailscells {
+                border: 1px solid #005eb8;
+            }
+
+            .my-learning .certificateBody {
+                text-align: center;
+            }
+
+            .my-learning .certificateFooter {
+                background-color: #f0f4f5 !important;
+                text-align: center;
+                border-left: 1px solid #aeb7bd;
+                border-right: 1px solid #aeb7bd;
+                border-bottom: 1px solid #aeb7bd;
+            }
+
+            @@media (max-width: 599px) {
+                .my-learning .nhsuk-table-responsive .nhsuk-table__body .nhsuk-table__row td {
+                    display: grid;
+                    text-align: left;
+                }
+            }
+
+            .my-learning table {
+                width: 100%;
+                border: 1px solid #d8dde0;
+            }
+
+            .my-learning .no-table-spacing {
+                margin-bottom:0px;
+                padding-bottom:0px;
+               
+            }
+
+            .page-spacer {
+                margin-top:250px;
+            }
+
+            .page-max-width {
+                max-width: 100rem
+            }
+
+         
+            @@page {
+                size: landscape;
+                margin: 0;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="my-learning">
+            <div class="nhsuk-width-container app-width-container page-max-width">
+                @if (Model != null)
+                {
+                    <div style="margin-top:20px" class="nhsuk-grid-column-full certificateHead">
+                        <div class="nhsuk-header__logo nhsuk-u-padding-3">
+                            <a style="width:auto" class="nhsuk-header__link nhsuk-header__link--service " href="/" aria-label="NHS homepage">
+                                <svg class="nhsuk-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 16" height="40" width="100">
+                                    <path class="nhsuk-logo__background" fill="#005eb8" d="M0 0h40v16H0z"></path>
+                                    <path class="nhsuk-logo__text" fill="#fff" d="M3.9 1.5h4.4l2.6 9h.1l1.8-9h3.3l-2.8 13H9l-2.7-9h-.1l-1.8 9H1.1M17.3 1.5h3.6l-1 4.9h4L25 1.5h3.5l-2.7 13h-3.5l1.1-5.6h-4.1l-1.2 5.6h-3.4M37.7 4.4c-.7-.3-1.6-.6-2.9-.6-1.4 0-2.5.2-2.5 1.3 0 1.8 5.1 1.2 5.1 5.1 0 3.6-3.3 4.5-6.4 4.5-1.3 0-2.9-.3-4-.7l.8-2.7c.7.4 2.1.7 3.2.7s2.8-.2 2.8-1.5c0-2.1-5.1-1.3-5.1-5 0-3.4 2.9-4.4 5.8-4.4 1.6 0 3.1.2 4 .6"></path>
+                                </svg>
+
+                                <span class="nhsuk-header__service-name">
+                                    Learning Hub
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    if (Model.PageNo == 1)
+                    {
+                        <div class="nhsuk-grid-column-full certificateBody nhsuk-u-padding-left-5 nhsuk-u-padding-right-5 nhsuk-u-padding-top-9 nhsuk-u-padding-bottom-7">
+                            @if (!string.IsNullOrEmpty(Model.ActivityDetailedItemViewModel.CertificateUrl))
+                            {
+                                <img src="@GetBase64CertificateImage()" class="catalogue-badge nhsuk-u-padding-bottom-9" />
+                            }
+                            <div class="nhsuk-u-font-size-24 nhsuk-u-margin-bottom-3">This is to certify that </div>
+                            <h2> @Model.UserViewModel.FirstName @Model.UserViewModel.LastName</h2>
+                            <p class="nhsuk-body-l nhsuk-u-margin-top-7 nhsuk-u-margin-bottom-3">has successfully completed the learning resource </p>
+                            <h2 class="nhsuk-u-margin-bottom-9">
+                                @Model.ActivityDetailedItemViewModel.Title                             
+                            </h2>
+                            @if (resourceScore)
+                            {
+                                <p class="nhsuk-body-l nhsuk-u-margin-bottom-4">with a score of    <span class="nhsuk-u-font-size-32"><b> @Model.ActivityDetailedItemViewModel.ScorePercentage%</b></span> </p>
+                            }
+
+                            <p class="nhsuk-body-l @(!(resourceScore) ? "nhsuk-u-padding-top-4" : string.Empty) nhsuk-u-margin-bottom-7">  on <span class="nhsuk-u-font-size-32"><b>@Model.ActivityDetailedItemViewModel.ActivityDate.ToString("d MMMM yyyy")</b></span></p>
+                            <p class="nhsuk-body-m @spacer">Certificate generated on @DateTime.Now.ToString("d MMMM yyyy")</p>
+                            <p class="nhsuk-body-m nhsuk-u-text-align-right nhsuk-u-padding-bottom-1">Page 1 of 2</p>
+                        </div>
+                        <div class="nhsuk-grid-column-full nhsuk-u-margin-bottom-3 certificateFooter">
+                            <p class="nhsuk-body-s nhsuk-u-padding-top-3 nhsuk-u-padding-bottom-3 nhsuk-u-margin-bottom-0 nhsuk-u-font-size-16">
+                                This document is a record of completion of the elearning material and, where applicable, successful completion of any associated summative assessments.
+                                It does not constitute certification or a formal qualification from NHS England.
+                            </p>
+
+                        </div>
+                    }
+                    else if (Model.PageNo == 2)
+                    {
+                        <div class="nhsuk-grid-column-full nhsuk-u-padding-left-3 nhsuk-u-padding-right-3 certificateSummaryBody nhsuk-u-padding-top-4">
+                            <h2>Activity summary report</h2>
+                            <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>Name:</b> @Model.UserViewModel.FirstName @Model.UserViewModel.LastName</div>
+                            @if (!string.IsNullOrEmpty(Model.ProfessionalRegistrationNumber))
+                            {
+                                <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>PRN:</b> @Model.ProfessionalRegistrationNumber</div>
+                            }
+                            <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>Username:</b> @Model.UserViewModel.UserName</div>
+                            <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19 nhsuk-u-padding-bottom-4"><b>Report generated on</b> @DateTime.Now.ToString("dd MMMM yyyy")</div>
+                            <table style="width:100%;table-layout:fixed;margin-top:0px;" role="table" class="nhsuk-table-responsive">
+                                <thead role="rowgroup" class="nhsuk-table__head">
+                                    <tr role="row">
+                                        <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2" scope="col">
+                                            Learning <br> resource
+                                        </th>
+                                        <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2" scope="col">
+                                            No. Of Times <br>
+                                            Accessed
+                                        </th>
+                                        @if (resourceScore)
+                                        {
+                                            <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2" scope="col">
+                                                Highest Score<br>(%)
+                                            </th>
+                                        }
+                                        <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2" scope="col">
+                                            Total Time<br> Spent
+                                        </th>
+                                        <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2" scope="col">
+                                            Most Recent<br> Activity
+                                        </th>
+                                        <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2" scope="col">
+                                            Last Date<br> Completed
+                                        </th>
+                                        <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 nhsuk-u-padding-right-2" scope="col">
+                                            Overall Status
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="nhsuk-table__body">
+                                    <tr role="row" class="nhsuk-table__row">
+                                        <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 word-wrapper summarytabledetailscells">
+                                            <span class="nhsuk-table-responsive__heading">Learning resource </span>
+                                            @Model.ActivityDetailedItemViewModel.Title
+                                        </td>
+                                        <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 summarytabledetailscells">
+                                            <span class="nhsuk-table-responsive__heading">No. Of Times Accessed </span> @Model.AccessCount
+                                        </td>
+                                        @if (resourceScore)
+                                        {
+                                            <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 summarytabledetailscells">
+                                                <span class="nhsuk-table-responsive__heading summaryTableHead">Highest Score (%) </span> @Model.ActivityDetailedItemViewModel.ScorePercentage
+                                            </td>
+                                        }
+                                        <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 summarytabledetailscells">
+                                            @{
+                                                TimeSpan t = TimeSpan.FromSeconds(Model.ActivityDetailedItemViewModel.ActivityDurationSeconds);
+                                            }
+                                            <span class="nhsuk-table-responsive__heading summaryTableHead">Total Time Spent </span>@ViewActivityHelper.GetDurationText((int)t.TotalMilliseconds)
+                                        </td>
+                                        <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 summarytabledetailscells">
+                                            <span class="nhsuk-table-responsive__heading summaryTableHead">Most Recent Activity </span> @Model.ActivityDetailedItemViewModel.ActivityDate.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 summarytabledetailscells">
+                                            <span class="nhsuk-table-responsive__heading summaryTableHead">Last Date Completed</span>@Model.ActivityDetailedItemViewModel.ActivityDate.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 nhsuk-u-padding-right-2 summarytabledetailscells">
+                                            <span class="nhsuk-table-responsive__heading summaryTableHead">Overall Status </span>@ViewActivityHelper.GetActivityStatusDisplayText(Model.ActivityDetailedItemViewModel)
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="nhsuk-body-m nhsuk-u-padding-top-4 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2 nhsuk-u-text-align-right">Page 2 of 2</p>
+                        </div>
+                        <div class="nhsuk-grid-column-full certificateFooter nhsuk-u-padding-top-3">
+                            <p class="nhsuk-body-s nhsuk-u-padding-top-3 nhsuk-u-padding-bottom-3 nhsuk-u-margin-bottom-0 nhsuk-u-font-size-16">
+                                This document is a record of completion of the elearning material and, where applicable, successful completion of any associated summative assessments.
+                                It does not constitute certification or a formal qualification from NHS England.
+                            </p>
+
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </body>
+}
+@if (Layout != null)
+{
+    @section styles{
+
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/resourcecertificate.css" />
+    }
+
+    <div class="my-learning">
+        <div class="nhsuk-width-container app-width-container">
+            @if (Model != null)
+            {
+                if (!Model.DownloadCertificate)
+                {
+                    <vc:back-link asp-controller="MyLearning" asp-action="Index" asp-all-route-data="@routeData" link-text="Back to: My learning" />
+                    <div class="nhsuk-grid-column-three-quarters nhsuk-u-padding-left-0 nhsuk-u-padding-top-0">
+
+                        <h1 class="nhsuk-heading-xl">Certificate</h1>
+
+                        <span class="nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3 nhsuk-u-secondary-text-color">
+                            Completed learning
+                        </span>
+                        <h2>@Model.ActivityDetailedItemViewModel.Title</h2>
+
+                        <form asp-controller="mylearning" asp-action="downloadcertificate" method="post">
+                            <input type="hidden" name="resourceReferenceId" value="@Model.ActivityDetailedItemViewModel.ResourceReferenceId" />
+                            @if (!Model.ActivityDetailedItemViewModel.IsCurrentResourceVersion)
+                            {
+                                <input type="hidden" name="majorVersion" value="@Model.ActivityDetailedItemViewModel.MajorVersion" />
+                                <input type="hidden" name="minorVersion" value="@Model.ActivityDetailedItemViewModel.MinorVersion" />
+                            }
+                             <input type="hidden" name="userId" value="@Model.UserViewModel.Id" />
+                            <button type="submit" class="nhsuk-button nhsuk-u-margin-bottom-5 nhsuk-u-margin-top-3">Download certificate</button>
+                        </form>
+
+
+                    </div>
+                }
+                <div class="nhsuk-grid-column-full certificateHead">
+                    <div class="nhsuk-header__logo nhsuk-u-padding-3">
+                        <a style="width:auto" class="nhsuk-header__link nhsuk-header__link--service " href="/" aria-label="NHS homepage">
+                            <svg class="nhsuk-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 16" height="40" width="100">
+                                <path class="nhsuk-logo__background" fill="#005eb8" d="M0 0h40v16H0z"></path>
+                                <path class="nhsuk-logo__text" fill="#fff" d="M3.9 1.5h4.4l2.6 9h.1l1.8-9h3.3l-2.8 13H9l-2.7-9h-.1l-1.8 9H1.1M17.3 1.5h3.6l-1 4.9h4L25 1.5h3.5l-2.7 13h-3.5l1.1-5.6h-4.1l-1.2 5.6h-3.4M37.7 4.4c-.7-.3-1.6-.6-2.9-.6-1.4 0-2.5.2-2.5 1.3 0 1.8 5.1 1.2 5.1 5.1 0 3.6-3.3 4.5-6.4 4.5-1.3 0-2.9-.3-4-.7l.8-2.7c.7.4 2.1.7 3.2.7s2.8-.2 2.8-1.5c0-2.1-5.1-1.3-5.1-5 0-3.4 2.9-4.4 5.8-4.4 1.6 0 3.1.2 4 .6"></path>
+                            </svg>
+
+                            
+                        </a>
+                    </div>
+                    <div class="nhsuk-u-padding-top-4 nhsuk-u-font-size-19 text-white">
+                        Learning Hub
+                    </div>
+                </div>
+                <div class="nhsuk-grid-column-full certificateBody nhsuk-u-padding-left-5 nhsuk-u-padding-right-5 nhsuk-u-padding-top-9 nhsuk-u-padding-bottom-9">
+                    @if (!string.IsNullOrEmpty(Model.ActivityDetailedItemViewModel.CertificateUrl))
+                    {
+                        <img src="@GetCertificateImageUrl()" class="catalogue-badge nhsuk-u-padding-bottom-9" />
+                    }
+                    <div class="nhsuk-u-font-size-24 nhsuk-u-margin-bottom-3">This is to certify that </div>
+                    <h2>@Model.UserViewModel.FirstName @Model.UserViewModel.LastName</h2>
+                    <p class="nhsuk-body-l nhsuk-u-margin-top-7 nhsuk-u-margin-bottom-3">has successfully completed the learning resource </p>
+                    <h2 class="nhsuk-u-margin-bottom-9">
+                        <a asp-controller="Resource" asp-action="Index" asp-route-resourceReferenceId="@Model.ActivityDetailedItemViewModel.ResourceReferenceId">@Model.ActivityDetailedItemViewModel.Title</a>
+                    </h2>
+                    @if (resourceScore)
+                    {
+                        <p class="nhsuk-body-l nhsuk-u-margin-bottom-4">with a score of    <span class="nhsuk-u-font-size-32"><b> @Model.ActivityDetailedItemViewModel.ScorePercentage%</b></span> </p>
+                    }
+
+                    <p class="nhsuk-body-l @(!(resourceScore) ? "nhsuk-u-padding-top-4" : string.Empty) nhsuk-u-margin-bottom-7">  on <span class="nhsuk-u-font-size-32"><b>@Model.ActivityDetailedItemViewModel.ActivityDate.ToString("d MMMM yyyy")</b></span></p>
+                    <p class="nhsuk-body-m nhsuk-u-margin-bottom-7">Certificate generated on @DateTime.Now.ToString("d MMMM yyyy")</p>
+                    <p class="nhsuk-body-m nhsuk-u-text-align-right nhsuk-u-margin-bottom-0">Page 1 of 2</p>
+                </div>
+                <div class="nhsuk-grid-column-full certificateFooter nhsuk-u-margin-bottom-9">
+                    <p class="nhsuk-body-s nhsuk-u-padding-top-3 nhsuk-u-padding-bottom-3 nhsuk-u-margin-bottom-0 nhsuk-u-font-size-16">
+                        This document is a record of completion of the elearning material and, where applicable, successful completion of any associated summative assessments.
+                        It does not constitute certification or a formal qualification from NHS England.
+                    </p>
+
+                </div>
+
+                <div>
+                    <div class="nhsuk-grid-column-full certificateHead">
+                        <div class="nhsuk-header__logo nhsuk-u-padding-3">
+                            <a class="nhsuk-header__link nhsuk-header__link--service " href="/" aria-label="NHS homepage">
+                                <svg class="nhsuk-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 16" height="40" width="100">
+                                    <path class="nhsuk-logo__background" fill="#005eb8" d="M0 0h40v16H0z"></path>
+                                    <path class="nhsuk-logo__text" fill="#fff" d="M3.9 1.5h4.4l2.6 9h.1l1.8-9h3.3l-2.8 13H9l-2.7-9h-.1l-1.8 9H1.1M17.3 1.5h3.6l-1 4.9h4L25 1.5h3.5l-2.7 13h-3.5l1.1-5.6h-4.1l-1.2 5.6h-3.4M37.7 4.4c-.7-.3-1.6-.6-2.9-.6-1.4 0-2.5.2-2.5 1.3 0 1.8 5.1 1.2 5.1 5.1 0 3.6-3.3 4.5-6.4 4.5-1.3 0-2.9-.3-4-.7l.8-2.7c.7.4 2.1.7 3.2.7s2.8-.2 2.8-1.5c0-2.1-5.1-1.3-5.1-5 0-3.4 2.9-4.4 5.8-4.4 1.6 0 3.1.2 4 .6"></path>
+                                </svg>
+
+                            </a>
+                        </div>
+                        <div class="nhsuk-u-padding-top-4 nhsuk-u-font-size-19 text-white">
+                            Learning Hub
+                        </div>
+                    </div>
+                    <div class="nhsuk-grid-column-full nhsuk-u-padding-left-3 nhsuk-u-padding-right-3 certificateSummaryBody nhsuk-u-padding-top-4">
+                        <h2>Activity summary report</h2>
+                        <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>Name:</b> @Model.UserViewModel.FirstName @Model.UserViewModel.LastName</div>
+                        @if (!string.IsNullOrEmpty(Model.ProfessionalRegistrationNumber))
+                        {
+                            <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>PRN:</b> @Model.ProfessionalRegistrationNumber</div>
+                        }
+                        <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>Username:</b> @Model.UserViewModel.UserName</div>
+                        <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19 nhsuk-u-padding-bottom-4"><b>Report generated on</b> @DateTime.Now.ToString("dd MMMM yyyy")</div>
+                        <table style="width:100%;table-layout:fixed" role="table" class="nhsuk-table-responsive">
+                            <thead role="rowgroup" class="nhsuk-table__head">
+                                <tr role="row">
+                                    <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2" scope="col">
+                                        Learning <br> resource
+                                    </th>
+                                    <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2" scope="col">
+                                        No. Of Times <br>
+                                        Accessed
+                                    </th>
+                                    @if (resourceScore)
+                                    {
+                                        <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2" scope="col">
+                                            Highest Score<br>(%)
+                                        </th>
+                                    }
+                                    <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2" scope="col">
+                                        Total Time<br> Spent
+                                    </th>
+                                    <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2" scope="col">
+                                        Most Recent<br> Activity
+                                    </th>
+                                    <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2" scope="col">
+                                        Last Date<br> Completed
+                                    </th>
+                                    <th role="columnheader" class="nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 nhsuk-u-padding-right-2" scope="col">
+                                        Overall Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="nhsuk-table__body">
+                                <tr role="row" class="nhsuk-table__row">
+                                    <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 word-wrapper summarytabledetailscells">
+                                        <span class="nhsuk-table-responsive__heading">Learning resource </span>
+                                        <a class="nhsuk-u-font-size-19" asp-controller="Resource" asp-action="Index" asp-route-resourceReferenceId="@Model.ActivityDetailedItemViewModel.ResourceReferenceId">@Model.ActivityDetailedItemViewModel.Title</a>
+                                    </td>
+                                    <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 summarytabledetailscells">
+                                        <span class="nhsuk-table-responsive__heading">No. Of Times Accessed </span> @Model.AccessCount
+                                    </td>
+                                    @if (resourceScore)
+                                    {
+                                        <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 summarytabledetailscells">
+                                            <span class="nhsuk-table-responsive__heading">Highest Score (%) </span> @Model.ActivityDetailedItemViewModel.ScorePercentage
+                                        </td>
+                                    }
+                                    <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 summarytabledetailscells">
+                                        @{
+                                            TimeSpan t = TimeSpan.FromSeconds(Model.ActivityDetailedItemViewModel.ActivityDurationSeconds);
+                                        }
+                                        <span class="nhsuk-table-responsive__heading ">Total Time Spent </span>@ViewActivityHelper.GetDurationText((int)t.TotalMilliseconds)
+                                    </td>
+                                    <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 summarytabledetailscells">
+                                        <span class="nhsuk-table-responsive__heading">Most Recent Activity </span> @Model.ActivityDetailedItemViewModel.ActivityDate.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 summarytabledetailscells">
+                                        <span class="nhsuk-table-responsive__heading">Last Date Completed</span>@Model.ActivityDetailedItemViewModel.ActivityDate.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 nhsuk-u-padding-right-2">
+                                        <span class="nhsuk-table-responsive__heading">Overall Status </span>@ViewActivityHelper.GetActivityStatusDisplayText(Model.ActivityDetailedItemViewModel)
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="nhsuk-body-m nhsuk-u-padding-top-4 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2 nhsuk-u-text-align-right nhsuk-u-margin-bottom-0 nhsuk-u-padding-bottom-4">Page 2 of 2</p>
+                    </div>
+                    <div class="nhsuk-grid-column-full certificateFooter nhsuk-u-padding-top-3">
+                        <p class="nhsuk-body-s nhsuk-u-padding-top-3 nhsuk-u-padding-bottom-3 nhsuk-u-margin-bottom-0 nhsuk-u-font-size-16">
+                            This document is a record of completion of the elearning material and, where applicable, successful completion of any associated summative assessments.
+                            It does not constitute certification or a formal qualification from NHS England.
+                        </p>
+
+                    </div>
+                </div>
+                <div class="nhsuk-grid-row nhsuk-u-padding-bottom-9">
+                </div>
+            }
+            else
+            {
+                <vc:back-link asp-controller="MyLearning" asp-action="Index" link-text="Back to: My learning" />
+                <h1 class="nhsuk-heading-xl">Certificate</h1>
+                <span class="nhsuk-grid-column-full nhsuk-u-margin-top-3 nhsuk-u-font-size-19 nhsuk-u-margin-bottom-9 nhsuk-u-secondary-text-color">
+                    Certificate not available
+                </span>
+            }
+        </div>
+    </div>
+}

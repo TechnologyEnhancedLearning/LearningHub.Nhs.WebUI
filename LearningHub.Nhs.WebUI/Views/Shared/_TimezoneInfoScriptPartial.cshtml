@@ -1,0 +1,22 @@
+﻿@using LearningHub.Nhs.WebUI.Extensions
+@using LearningHub.Nhs.WebUI.Startup
+@inject LearningHub.Nhs.Caching.ICacheService cacheService
+
+@if (User.Identity.IsAuthenticated)
+{
+    var tzOffset = await cacheService.GetAsync<int?>(User.GetTimezoneOffsetCacheKey());
+
+    if (!tzOffset.HasValue)
+    {
+        <text>
+            <script type="text/javascript">
+            'use strict';
+            (function () {
+                var x = new XMLHttpRequest();
+                x.open('GET', '@TimezoneInfoMiddleware.TimezoneInfoUrl?tz=' + (new Date()).getTimezoneOffset());
+                x.send();
+            })();
+            </script>
+        </text>
+    }
+}

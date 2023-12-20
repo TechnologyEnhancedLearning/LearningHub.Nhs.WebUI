@@ -1,0 +1,225 @@
+﻿@model ResourceIndexViewModel
+@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Helpers
+@using LearningHub.Nhs.WebUI.Models
+@using LearningHub.Nhs.WebUI.Models.Resource
+@using LearningHub.Nhs.Models.Provider
+@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.WebUI.Configuration.Settings> options
+@{
+  var resourceItem = Model.ResourceItem;
+
+  bool CanDisplayEsrLink()
+  {
+    if (!this.ViewBag.UserAuthenticated)
+      return false;
+
+    if (!Model.HasCatalogueAccess)
+      return false;
+
+    if (Model.ScormContentDetails == null)
+      return false;
+
+    switch (Model.ScormContentDetails.EsrLinkType)
+    {
+      case EsrLinkType.CreatedUserOnly:
+      case EsrLinkType.CreatedUserAndOtherEditors:
+        return Model.ScormContentDetails.IsOwnerOrEditor;
+      case EsrLinkType.EveryOne:
+        return true;
+      case EsrLinkType.NotAvailable:
+        return false;
+    }
+    return false;
+  }
+}
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-full">
+    <div class="nhsuk-u-reading-width">
+      <div>
+        <div class="display__flex-space-between">
+          <h2>Resource details</h2>
+
+          @if (!string.IsNullOrEmpty(resourceItem.Catalogue.BadgeUrl))
+          {
+            <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(resourceItem.Catalogue.BadgeUrl))" alt="@(resourceItem.Catalogue.Name)" class="catalogue-badge" />
+          }
+        </div>
+
+        @* For cases/assessments show the description separately in the Resource Details section. Note: cases/assessments do not have Additional Information. *@
+        @if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Case || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Assessment)
+        {
+          <div class="nhsuk-u-margin-top-2">@Html.Raw(resourceItem.Description)</div>
+        }
+
+        <table class="resource-details-table nhsuk-u-font-size-16 nhsuk-u-margin-bottom-5">
+          <tbody>
+            @if (resourceItem.Providers?.Count > 0)
+            {
+              foreach (ProviderViewModel provider in resourceItem.Providers)
+              {
+                <tr>
+                  <td colspan="2" class="nhsuk-u-padding-right-0">
+                    <div class="provider-details">
+                      <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name" class="logo" />
+                      <span class="title">@ProviderHelper.GetProviderString(provider.Name)</span>
+                    </div>
+                  </td>
+                </tr>
+              }
+            }
+
+            @if (resourceItem.Catalogue.NodeId == 1)
+            {
+              <tr>
+                <td>
+                  Contributed to:
+                </td>
+                <td>
+                  <span>Community contributions</span><br />
+                  <span>Community resources are online learning and digital materials provided by the wider Learning Hub community that anyone can contribute to.</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Contributed by:
+                </td>
+                <td>
+                  <span>@resourceItem.PublishedBy</span>
+                </td>
+              </tr>
+            }
+            else
+            {
+              <tr>
+                <td>
+                  Contributed by:
+                </td>
+                <td>
+                  <a asp-controller="Catalogue" asp-action="Index" asp-route-reference="@resourceItem.Catalogue.Url" class="catalogue-title">@resourceItem.Catalogue.Name</a>
+                </td>
+              </tr>
+            }
+
+            <tr>
+              <td>Authored by:</td>
+              <td>
+                @foreach (var author in resourceItem.Authors)
+                {
+                  <span class="resource-author">@author</span>
+
+                  <br />
+                }
+              </td>
+            </tr>
+
+            @if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
+            {
+              var authoredDate = @UtilityHelper.GetAuthoredDate(resourceItem.GenericFileDetails.AuthoredDayOfMonth, resourceItem.GenericFileDetails.AuthoredMonth, resourceItem.GenericFileDetails.AuthoredYear);
+              if (!string.IsNullOrEmpty(authoredDate))
+              {
+                <tr>
+                  <td>Authored on:</td>
+                  <td>@authoredDate</td>
+                </tr>
+              }
+            }
+
+            <tr>
+              <td>Licence:</td>
+              <td>
+                @resourceItem.LicenseName
+                <a href="@(resourceItem.LicenseUrl)" target="_blank">More information on licences</a>
+              </td>
+            </tr>
+
+            @if (resourceItem.MajorVersion > 1 || resourceItem.MinorVersion > 0)
+            {
+              <tr>
+                <td>Last updated:</td>
+                <td>
+                  @resourceItem.PublishedDate.ToString("dd MMMM yyyy")
+                </td>
+              </tr>
+            }
+
+            <tr>
+              <td>First contributed:</td>
+              <td>
+                @resourceItem.FirstPublishedDate.ToString("dd MMMM yyyy")
+              </td>
+            </tr>
+            <tr>
+              <td>Audience access level:</td>
+              <td>
+                @ResourceAccessLevelHelper.GetResourceAccessLevelText(resourceItem.ResourceAccessibilityEnum)
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        @if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Scorm && CanDisplayEsrLink())
+        {
+          <details class="nhsuk-details nhsuk-u-margin-bottom-5 nhsuk-u-margin-top-0">
+            <summary class="nhsuk-details__summary">
+              <span class="nhsuk-details__summary-text nhsuk-u-font-size-16">
+                ESR link details
+              </span>
+            </summary>
+            <div class="nhsuk-details__text">
+              <p class="nhsuk-u-font-size-16">
+                Electronic Staff Record (ESR) users with a Learning Administration User Responsibility
+                Profile (URP) can set up elearning content to play via ESR. The link provided enables
+                users with that URP to add this resource as a learning object so others can access
+                it in ESR. The link is only required by those users.
+              </p>
+              <div class="nhsuk-card nhsuk-bg-light-blue">
+                <div class="nhsuk-card__content">
+                  <h4 class="nhsuk-u-font-size-16">ESR link for this learning resource:</h4>
+                  <p class="nhsuk-u-font-size-16 nhsuk-u-font-style-italic word-break__break-word">
+                    @resourceItem.ScormDetails.HostedContentUrl
+                  </p>
+                  <p class="nhsuk-u-font-size-16">
+                    The contributor of this resource could unpublish it or make it unavailable to access
+                    from ESR at any time.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </details>
+        }
+
+        <div id="rating" class="ratings-panel nhsuk-u-margin-bottom-8">
+          <h2>Ratings</h2>
+          <partial name="_RatingSummary" model="@Model.ResourceRating" />
+        </div>
+
+        <div class="share-resource-panel nhsuk-u-margin-bottom-5 nhsuk-u-padding-bottom-7">
+          <h2>Share this resource</h2>
+          <partial name="_ShareResource" model="@options.Value.SocialMediaSharingUrls" />
+        </div>
+
+        <details class="nhsuk-details">
+          <summary class="nhsuk-details__summary">
+            <span class="nhsuk-details__summary-text">
+              Report an issue with this resource
+            </span>
+          </summary>
+          <div class="nhsuk-details__text">
+            <p>
+              You may report a resource, for example, if there is an issue with copyright infringement, breach of personal data,
+              factual inaccuracies, typing errors or safety concerns. The type of issue will determine whether the resource is
+              immediately removed from the platform or if the contributor is asked to make amendments. You can report a resource
+              from the resource information page or by contacting the Learning Hub support team.
+            </p>
+
+            <p>
+              You can contact the Learning Hub support team by completing the <a href="@options.Value.SupportUrls.ReportAResource" target="_blank">support form</a>
+              or if you have a general enquiry you can email <a href="mailto:enquiries@learninghub.nhs.uk">enquiries@learninghub.nhs.uk</a>.
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</div>

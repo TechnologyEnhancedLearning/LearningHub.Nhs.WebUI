@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Learning Hub - Not currently available";
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/pages/landing_page.css" asp-append-version="true" />
+    <link href="https://amp.azure.net/libs/amp/2.3.10/skins/amp-default/azuremediaplayer.min.css" type="text/css" rel="stylesheet" asp-append-version="true" />
+}
+
+<div class="landing-page">
+
+    <div class="bg-white">
+        <div class="lh-container-xl">
+            <div class="lh-container-xl-offset d-flex py-lg-5 py-4 px-md-5 px-xl-0">
+                <div class="col-lg-6 col-12 py-3">
+                    <h1>System temporarily offline</h1>
+
+                    <p class="m-0 mt-20 mt-lg-25 pagetimestamp">@DateTimeOffset.Now.ToString("d MMMM yyyy HH:mm:ss")</p>
+                    <p class="m-0 mt-20 mt-lg-25 heading">The Learning Hub is currently undergoing a scheduled update.</p>
+                    <p class="m-0 mt-20 mt-lg-25">The system will be available again shortly.</p>
+                    <p class="m-0 mt-20 mt-lg-25">Use the button below to go to the homepage in a few minutes once the update is complete.</p>
+                    <p class="m-0 mt-20 mt-lg-25">If you need help, please contact the <a href="@ViewBag.SupportFormUrl" target="_blank">support team</a>.</p>
+
+                    <img class="d-none d-md-block d-lg-none" src="/images/landing-page-platform-polaroid.png" alt="landing page platform image" />
+
+                    <img class="d-md-none" src="/images/landing-page-platform-polaroid-mobile.png" alt="landing page platform image" />
+                    <div class="mt-lg-25">
+                        <button class="btn btn-green mr-4 mt-1 mt-lg-5" aria-label="Home page" onclick="location.href='/'">Go to home page</button>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 py-5 d-none d-lg-block">
+                    <img src="/images/landing-page-platform-polaroid.png" alt="landing page platform image" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white" style="flex:1;">
+</div>

@@ -1,0 +1,40 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.SecurityQuestionAnswerViewModel
+
+@{
+    string[] textualNumber = new string[] { "first", "second", "third", "fourth", "fifth" };
+}
+
+<div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-three-quarters nhsuk-u-padding-bottom-5">
+        <div class="nhsuk-caption-l" id="contact-hint">
+            Set your @textualNumber[Model.QuestionIndex] security question
+        </div>
+        <h1 class="nhsuk-heading-xl">Answer your @textualNumber[Model.QuestionIndex] security question</h1>
+
+        <h2 class="nhsuk-label-wrapper">
+            <label class="nhsuk-body-m" for="example-heading">
+                Selected security question
+            </label>
+        </h2>
+        <div class="nhsuk-label nhsuk-u-width-two-thirds nhsuk-u-padding-bottom-3" id="contact-hint">
+            @Model.QuestionText
+        </div>
+        <div class="nhsuk-u-width-one-half nhsuk-u-padding-bottom-9">
+            <hr class="nhsuk-section-break nhsuk-section-break--visible">
+        </div>
+        <vc:text-input asp-for="SecurityQuestionAnswer"
+                       label="Enter your answer"
+                       populate-with-current-value="false"
+                       type="password"
+                       spell-check="false"
+                       hint-text=""
+                       autocomplete=""
+                       css-class="nhsuk-u-width-one-half"
+                       required="true"
+                       required-client-side-error-message="Please enter an answer to the security question" />
+
+        <input type="hidden" name="QuestionIndex" value="@Model.QuestionIndex" />
+        <input type="hidden" name="SecurityQuestionId" value="@Model.SecurityQuestionId" />
+        <input type="hidden" name="UserSecurityQuestionId" value="@Model.UserSecurityQuestionId" />
+    </div>
+</div>

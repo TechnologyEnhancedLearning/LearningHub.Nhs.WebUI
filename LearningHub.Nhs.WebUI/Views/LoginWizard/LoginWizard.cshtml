@@ -1,0 +1,42 @@
+﻿@using elfhHub.Nhs.Models.Enums
+@model LearningHub.Nhs.WebUI.Models.Account.LoginWizardDisplayViewModel
+
+@{
+    ViewData["Title"] = "Login Wizard";
+}
+
+<div class="nhsuk-bg-white">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-main-wrapper ">
+            <div class="user-entry nhsuk-u-margin-0">
+                <div>
+                    <h1 class="nhsuk-heading-xl nhsuk-u-padding-top-0">@Model.LoginWizard.GetWizardStageDescription(Model.LoginWizard.CurrentLoginWizardStage.Id)</h1>
+
+                    <div class="nhsuk-u-font-size-19">
+                        @if (Model.UserEmployment != null)
+                        {
+                            @Html.Raw(Model.LoginWizard.GetWizardStageText(Model.LoginWizard.CurrentLoginWizardStage.Id, Model.LoginWizard.IsFirstLogin, Model.UserEmployment.JobRoleId, Model.UserEmployment.Location))
+                        }
+                        else
+                        {
+                            @Html.Raw(Model.LoginWizard.GetWizardStageText(Model.LoginWizard.CurrentLoginWizardStage.Id, Model.LoginWizard.IsFirstLogin))
+                        }
+                    </div>
+
+                    @switch ((LoginWizardStageEnum)Model.LoginWizard.CurrentLoginWizardStage.Id)
+                    {
+                        case LoginWizardStageEnum.TermsAndConditions:
+                            @await Html.PartialAsync("_TermsAndConditionsAcceptance", Model.TermsAndConditions, new ViewDataDictionary(ViewData) { {"ReturnUrl", Model.ReturnUrl} })
+                            break;
+                        case LoginWizardStageEnum.PasswordReset:
+                            @await Html.PartialAsync("_ChangePassword", Model.ChangePasswordViewModel, new ViewDataDictionary(ViewData) { {"ReturnUrl", Model.ReturnUrl} })
+                            break;
+
+                        @* Note: Other Login Wizard stages are no longer handled by this view, there are several separate views instead. *@
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

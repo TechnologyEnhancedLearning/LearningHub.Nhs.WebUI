@@ -1,0 +1,34 @@
+﻿@{
+  ViewData["Title"] = "You cannot access the Learning Hub yet using your elfh hub account";
+  Layout = ViewData["Layout"].ToString();
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/staticpages.css" asp-append-version="true" />
+}
+
+<div class="nhsuk-width-container app-width-container">
+  <div class="nhsuk-main-wrapper ">
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-full">
+        <h1 class="nhsuk-heading-xl">@ViewData["Title"]</h1>
+        <div class="nhsuk-u-reading-width">
+          <p>You already have an elearning for healthcare (elfh) hub account but you don't have access to the Learning Hub yet.</p>
+        </div>
+      </div>
+    </div>
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-full">
+        <div class="nhsuk-u-reading-width">
+          <div>
+            <a class="nhsuk-button nhsuk-u-margin-bottom-7" href="@(this.ViewBag.ELfhHubUrl)">Visit the elfh hub to access learning resources</a>
+            <p>Access to the Learning Hub will be widened in the future.</p>
+            <a href="@(this.ViewBag.WhoCanAccessTheLearningHub)">Who can access the Learning Hub?</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,34 @@
+﻿@model decimal
+
+<div class="rating-stars-container ml-0">
+    <div class="rating-stars">
+        <div class="rating-star star-1">
+            <div class="rating-star-empty"></div>
+            <div class="rating-star-full" style="width: @(Model >= 1 ? "100%" : "0%")"></div>
+        </div>
+        <div class="rating-star star-2">
+            <div class="rating-star-empty"></div>
+            <div class="rating-star-full" style="width: @(Model >= 2 ? "100%" : @Model <= 1 ? "0%" : ((@Model - 1) * 100) + "%")"></div>
+        </div>
+        <div class="rating-star star-3">
+            <div class="rating-star-empty"></div>
+            <div class="rating-star-full" style="width: @(Model >= 3 ? "100%" : @Model <= 2 ? "0%" : ((@Model - 2) * 100) + "%")"></div>
+        </div>
+        <div class="rating-star star-4">
+            <div class="rating-star-empty"></div>
+            <div class="rating-star-full" style="width: @(Model >= 4 ? "100%" : @Model <= 3 ? "0%" : ((@Model - 3) * 100) + "%")"></div>
+        </div>
+        <div class="rating-star star-5">
+            <div class="rating-star-empty"></div>
+            <div class="rating-star-full" style="width: @(Model == 5 ? "100%" : @Model <= 4 ? "0%" : ((@Model - 4) * 100) + "%")"></div>
+        </div>
+    </div>
+    @if (Model > 0)
+    {
+        <div class="rating-star-text">@String.Format("{0:0.#}", Model) out of 5</div>
+    }
+    else
+    {
+        <div class="rating-star-text">Not yet rated</div>
+    }
+</div>

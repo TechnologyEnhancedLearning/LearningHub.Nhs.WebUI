@@ -1,0 +1,81 @@
+﻿@using elfhHub.Nhs.Models.Common
+@model LearningHub.Nhs.WebUI.Models.Account.AccountCreationListViewModel
+
+@{
+    ViewData["Title"] = "Select Grade";
+    string currentRole = !string.IsNullOrWhiteSpace(Context.Request.Query["CurrentRole"]) ? Context.Request.Query["CurrentRole"] : Model.CurrentRole;
+    var routeData = new Dictionary<string, string> { { "CurrentRole", currentRole }, { "ReturnToConfirmation", Context.Request.Query["returnToConfirmation"] } };
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+    <div class="create-account">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
+                @if (Model.MedicalCouncilId.HasValue && (int)Model.MedicalCouncilId > 0)
+                {
+                    <vc:back-link asp-controller="Account" asp-action="CreateAccountProfessionalRegNumber" asp-all-route-data="@routeData" link-text="Back to: Enter your @Model.MedicalCouncilCode number" />
+                }
+                else
+                {
+                    <vc:back-link asp-controller="Account" asp-action="CreateAccountCurrentRole" asp-all-route-data="@routeData" link-text="Back to: Search for your current role" />
+
+                }
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model.GradeId) })" />
+                }
+                <form asp-controller="Account" asp-action="CreateAccountPrimarySpecialty" method="get">
+                    <input type="hidden" name="formSubmission" value="true">
+                    
+                    <div class="nhsuk-form-group">
+                        <input type="hidden" name="CurrentRole" value="@Context.Request.Query["CurrentRole"]">
+                        <input type="hidden" name="RegistrationNumber" value="@Context.Request.Query["RegistrationNumber"]">
+
+
+                        <vc:radio-list asp-for="GradeId"
+                                       label="Select your grade"
+                                       populate-with-current-values="true"
+                                       radios="@Model.GradeRadio()"
+                                       hint-text="You can find this on your payslip."
+                                       required-client-side-error-message="Select a grade"
+                                       required="true"
+                                       is-page-heading="true" />
+
+                        @if (Model.GradeList.Any())
+                        {
+                            <div class="nhsuk-form-group">
+                                <input type="hidden" name="CountryId" value="@Context.Request.Query["CountryId"]">
+                                <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+                                <button type="submit" class="nhsuk-button">Continue</button>
+                            </div>
+
+                        }
+
+
+                    </div>
+
+                </form>
+
+                <details class="nhsuk-details nhsuk-expander">
+                    <summary class="nhsuk-details__summary">
+                        <span class="nhsuk-details__summary-text">
+                            Why do I need to provide details about my grade?
+                        </span>
+                    </summary>
+                    <div class="nhsuk-details__text">
+                        <p>Selecting your grade will provide demographical information about the resources you access and help us in the future recommend other relevant learning.</p>
+
+                    </div>
+                </details>
+
+                @if (Model.GradeList.Any())
+                {
+                    @await Html.PartialAsync("_AccountCreationGradePaging", Model.AccountCreationPaging)
+                }
+            </div>
+        </div>
+    </div>
+</div>

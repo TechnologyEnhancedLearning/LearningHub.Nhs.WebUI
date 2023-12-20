@@ -1,0 +1,7 @@
+@inject LearningHub.Nhs.WebUI.Configuration.LearningHubAuthServiceConfig Config
+
+<script type="text/javascript">
+    @if (User.Identity.IsAuthenticated) {
+        @:LHGlobal.sessionManager.init(@Config.AuthTimeout);
+    }
+</script>

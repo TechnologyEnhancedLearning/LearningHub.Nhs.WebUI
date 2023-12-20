@@ -1,0 +1,83 @@
+﻿@using elfhHub.Nhs.Models.Common
+@using LearningHub.Nhs.WebUI.Models.Account
+@model AccountCreationViewModel;
+
+@{
+    ViewData["Title"] = "Primary Specialty";
+    string registrationNumber = !string.IsNullOrWhiteSpace(Context.Request.Query["registrationNumber"]) ? Context.Request.Query["registrationNumber"] : Model.RegistrationNumber;
+    string currentRole = !string.IsNullOrWhiteSpace(Context.Request.Query["currentRole"]) ? Context.Request.Query["currentRole"] : Model.CurrentRole;
+
+    var routeData = new Dictionary<string, string> { { "registrationNumber", registrationNumber }, { "currentRole", currentRole } };
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+    <div class="create-account">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
+                    <vc:back-link asp-controller="Account" asp-action="CreateAccountGradeSelection" asp-all-route-data="@routeData" link-text="Back to: Select your grade" />
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                }
+                <h1 class="nhsuk-heading-xl">Search for your primary specialty</h1>
+
+                <form asp-controller="Account" asp-action="CreateAccountPrimarySpecialtySelection" method="get">
+                    <input type="hidden" name="formSubmission" value="true">
+                    <input type="hidden" name="GradeId" value="@Context.Request.Query["GradeId"]">
+                    <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+
+                    <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">
+                        Use a generic term to best describe your primary specialty
+                        or select ‘not applicable’ if not relevant to you.
+                    </label>
+                    <div class="nhsuk-form-group search-box-container" style="white-space:nowrap">
+                        <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText">
+                        <button class="nhsuk-search__submit" type="submit">
+                            <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
+                            </svg>
+                            <span class="nhsuk-u-visually-hidden">Search</span>
+                        </button>
+
+                    </div>
+
+                </form>
+                <form asp-controller="Account" asp-action="CreateAccountPrimarySpecialtySelection" method="get">
+                    <input type="hidden" name="GradeId" value="@Context.Request.Query["GradeId"]">
+                    <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+                    <input type="hidden" name="formSubmission" value="true">
+                    <div class="nhsuk-form-group @(errorHasOccurred ? "nhsuk-form-group--error" : string.Empty )">
+
+                        <fieldset class="nhsuk-fieldset">
+                            @if(errorHasOccurred){
+                                <span class="nhsuk-error-message" id="example-error-error">
+                                    <span class="nhsuk-u-visually-hidden">Error:</span> @Html.ValidationMessageFor(x => x.PrimarySpecialtyId)
+                                </span>
+                            }
+                            <div class="nhsuk-radios">
+
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input" id="PrimarySpecialtyId" name="PrimarySpecialtyId" type="radio" value="Not applicable">
+                                    <label class="nhsuk-label nhsuk-radios__label" for="PrimarySpecialtyId">
+                                        Not applicable
+                                    </label>
+                                </div>
+
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="nhsuk-form-group">
+                        <button class="nhsuk-button" type="submit">Continue</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

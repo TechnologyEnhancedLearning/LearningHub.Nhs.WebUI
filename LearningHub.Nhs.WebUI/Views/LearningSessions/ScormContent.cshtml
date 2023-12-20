@@ -1,0 +1,22 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" asp-append-version="true" />
+</head>
+<body>
+
+    <div class="ml-3">
+    <h1 class="nhsuk-heading-xl">@(ViewBag.ErrorMessage)</h1>
+
+        <environment include="Development">
+            <p>The file requested was @(ViewBag.FilePath)</p>
+            <h2>Error Detail</h2>
+            <p>@(ViewBag.ErrorDetail)</p>
+        </environment>
+    </div>
+
+</body>
+</html>

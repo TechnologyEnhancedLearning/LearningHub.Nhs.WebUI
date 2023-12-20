@@ -1,0 +1,22 @@
+﻿@using Microsoft.Extensions.Options;
+@using LearningHub.Nhs.WebUI.Configuration;
+@using LearningHub.Nhs.WebUI.Helpers;
+@inject IOptions<Settings> settings
+
+@model NavigationModel
+
+<!-- start Topnav -->
+@if (Model.ShowMyAccount)
+{
+    <a class="nhsuk-account__login--link" asp-controller="Myaccount" asp-action="Index">My account</a>
+}
+@if (Model.ShowSignOut)
+{
+    <a class="nhsuk-account__login--link" asp-controller="Home" asp-action="Logout">Log out</a>
+}
+@if (!Model.ShowHelp)
+{
+    <a class="nhsuk-account__login--link" href="@(settings.Value.SupportUrls.SupportSite)" target="_blank">Help</a>
+}
+
+<!-- end Topnav -->

@@ -1,0 +1,42 @@
+﻿@model StarRatingWithCountViewModel
+
+<div class="rating-stars-container">
+    <div class="rating-stars nhsuk-u-margin-bottom-2">
+        <div class="rating-star star-1">
+            <div class="rating-star-empty"></div>
+            <div class="rating-star-full" style="width: @(Model.AverageRating >= 1 ? "100%" : "0%")"></div>
+        </div>
+        <div class="rating-star star-2">
+            <div class="rating-star-empty"></div>
+            <div class="rating-star-full" style="width: @(Model.AverageRating >= 2 ? "100%" : @Model.AverageRating <= 1 ? "0%" : ((@Model.AverageRating - 1) * 100) + "%")"></div>
+        </div>
+        <div class="rating-star star-3">
+            <div class="rating-star-empty"></div>
+            <div class="rating-star-full" style="width: @(Model.AverageRating >= 3 ? "100%" : @Model.AverageRating <= 2 ? "0%" : ((@Model.AverageRating - 2) * 100) + "%")"></div>
+        </div>
+        <div class="rating-star star-4">
+            <div class="rating-star-empty"></div>
+            <div class="rating-star-full" style="width: @(Model.AverageRating >= 4 ? "100%" : @Model.AverageRating <= 3 ? "0%" : ((@Model.AverageRating - 3) * 100) + "%")"></div>
+        </div>
+        <div class="rating-star star-5">
+            <div class="rating-star-empty"></div>
+            <div class="rating-star-full" style="width: @(Model.AverageRating == 5 ? "100%" : @Model.AverageRating <= 4 ? "0%" : ((@Model.AverageRating - 4) * 100) + "%")"></div>
+        </div>
+    </div>
+
+    <div class="rating-text-block">
+        @if (Model.AverageRating > 0)
+        {
+            <span class="rating-star-text">@String.Format("{0:0.#}", Model.AverageRating) out of 5</span>
+        }
+        else
+        {
+            <span class="rating-star-text">Not yet rated</span>
+        }
+
+        @if (Model.RatingCount > 0)
+        {
+            <span>(<a asp-controller="Resource" asp-action="Index" asp-route-resourceReferenceId="@Model.ResourceReferenceId" asp-fragment="rating">@Model.RatingCount rating@(Model.RatingCount != 1 ? "s" : "")</a>)</span>
+        }
+    </div>
+</div>

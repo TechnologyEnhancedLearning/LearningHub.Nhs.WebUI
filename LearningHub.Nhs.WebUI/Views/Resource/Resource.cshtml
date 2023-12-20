@@ -1,0 +1,289 @@
+@model ResourceIndexViewModel
+@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Extensions
+@using LearningHub.Nhs.WebUI.Models
+@using LearningHub.Nhs.WebUI.Models.Resource
+@using System.Web;
+@{
+    ViewData["Title"] = "Resource";
+
+    var resource = Model.ResourceItem;
+
+    List<(string Title, string Url)> breadcrumbs;
+    if (Model.ResourceItem.Catalogue.NodeId == 1)
+    {
+        breadcrumbs = new List<(string Title, string Url)> { ("Home", "/") };
+    }
+    else
+    {
+        breadcrumbs = UtilityHelper.GetBreadcrumbsForFolderNodes(Model.NodePathNodes, Model.ResourceItem.Catalogue.Url);
+    }
+
+    bool Unlocked()
+    {
+        return this.User.IsInRole("Administrator") || Model.HasCatalogueAccess;
+    }
+    var restrictedAccessVm = new RestrictedAccessBannerViewModel
+            {
+                TitleText = "Access to this resource is restricted",
+                BodyText = "This resource is in a catalogue which has been restricted to a limited group of users. You can request access from the catalogue administrator.",
+                CatalogueNodeVersionId = Model.ResourceItem.Catalogue.CatalogueNodeVersionId,
+                RestrictedAccess = Model.ResourceItem.Catalogue.RestrictedAccess,
+                HasCatalogueAccess = Unlocked(),
+                CatalogueAccessRequest = Model.CatalogueAccessRequest
+            };
+    bool displayCertificateButton = true;
+}
+
+@section styles {
+    <link href="https://amp.azure.net/libs/amp/2.3.10/skins/amp-default/azuremediaplayer.min.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/resource.css" asp-append-version="true" />
+}
+
+<partial name="_LoginBanner" />
+<partial name="_restrictedAccessBanner" model="@restrictedAccessVm" />
+
+@if (resource.ResourceAccessibilityEnum == ResourceAccessibilityEnum.FullAccess)
+{
+    <partial name="_RestrictedResourceAccessBanner" />
+}
+
+@if (resource.DisplayForContributor && resource.ResourceVersionIdPublishing == 0)
+{
+    <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-3">
+        <div class="nhsuk-width-container app-width-container">
+
+            @if (resource.ResourceVersionIdInEdit > 0)
+            {
+                <div class="contributor-panel">
+                    <p class="nhsuk-u-margin-top-2">There is a new draft of this resource</p>
+
+                    <div>
+                        @if (!resource.ReadOnly)
+                        {
+                            @if (resource.ResourceTypeEnum == ResourceTypeEnum.Case || resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
+                            {
+                                <a class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-4" asp-controller="ContributeResource" asp-action="Edit" asp-route-resourceVersionId="@resource.ResourceVersionIdInEdit">Continue Editing</a>
+                            }
+                            else
+                            {
+                                <a class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-4" asp-controller="Contribute" asp-action="ContributeAResource" asp-route-resourceVersionId="@resource.ResourceVersionIdInEdit">Continue Editing</a>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (resource.VersionStatusEnum == VersionStatusEnum.Published
+           && resource.ResourceVersionIdInEdit == 0
+           && resource.ResourceVersionIdPublishing == 0
+           && !resource.ReadOnly)
+            {
+                <div class="nhsuk-u-text-align-right">
+                    <a class="nhsuk-button nhsuk-u-margin-right-4 nhsuk-u-margin-bottom-4" asp-controller="Resource" asp-action="EditConfirm" asp-route-resourceId="@resource.ResourceId"
+                       asp-route-resourceReferenceId="@Model.ResourceReferenceId" asp-route-resourceTitle="@Model.ResourceItem.Title">Edit resource</a>
+                    <a class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-4"
+                       asp-controller="Resource"
+                       asp-action="UnpublishConfirm"
+                       asp-route-resourceVersionId="@resource.ResourceVersionId"
+                       asp-route-resourceReferenceId="@Model.ResourceReferenceId"
+                       asp-route-resourceType="@((int)resource.ResourceTypeEnum)"
+                       asp-route-catalogueNodeVersionId="@resource.Catalogue.CatalogueNodeVersionId"
+                       asp-route-scormEsrLinkType="@((resource.ResourceTypeEnum == ResourceTypeEnum.Scorm) ? (int)Model.ScormContentDetails.EsrLinkType : null)"
+                       asp-route-resourceTitle="@resource.Title">Unpublish</a>
+                </div>
+            }
+
+            @if (resource.VersionStatusEnum == VersionStatusEnum.Unpublished
+           && resource.ResourceVersionIdInEdit == 0
+           && resource.ResourceVersionIdPublishing == 0
+           && !resource.ReadOnly)
+            {
+                <div class="nhsuk-u-text-align-right">
+                    <a class="nhsuk-button nhsuk-u-margin-bottom-4" asp-controller="Resource" asp-action="EditConfirm" asp-route-resourceId="@resource.ResourceId"
+                       asp-route-resourceReferenceId="@Model.ResourceReferenceId" asp-route-resourceTitle="@Model.ResourceItem.Title">Edit resource</a>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<div class="nhsuk-width-container app-width-container nhsuk-u-width-full nhsuk-u-padding-bottom-7">
+
+    @if (resource.DisplayForContributor)
+    {
+        @if (resource.Flags != null || resource.UnpublishedByAdmin)
+        {
+            <div class="nhsuk-warning-callout nhsuk-u-margin-bottom-1 nhsuk-u-reading-width">
+                <h3 class="nhsuk-warning-callout__label">
+                    <span role="text">
+                        <span class="nhsuk-u-visually-hidden">Important: </span>
+                        Unpublished by admin
+                    </span>
+                </h3>
+                @if (resource.Flags != null && resource.Flags.Count > 0)
+                {
+                    @foreach (var flag in resource.Flags)
+                    {
+                        <p>@flag.Details</p>
+                    }
+
+                }
+            </div>
+        }
+
+        @if (ViewBag.UserAuthenticated && resource.ResourceVersionIdPublishing > 0)
+        {
+            <div class="nhsuk-warning-callout  nhsuk-u-margin-bottom-1 nhsuk-u-reading-width">
+                <h3 class="nhsuk-warning-callout__label">
+                    <span role="text">
+                        <span class="nhsuk-u-visually-hidden">Important: </span>
+                        Publishing
+                    </span>
+                </h3>
+                <p>Your resource is publishing and will be available soon.</p>
+            </div>
+        }
+
+    }
+
+    <partial name="_Breadcrumbs" model="@new BreadcrumbViewModel { Breadcrumbs = breadcrumbs, ShowBackToParentOnMobile = true }" />
+
+    @if (Model.ResourceItem.Catalogue.NodeId > 1)
+    {
+        <span class="nhsuk-caption-l nhsuk-u-margin-bottom-2">@Model.ResourceItem.Catalogue.Name</span>
+    }
+
+    <h1 class="nhsuk-heading-xl">@resource.Title</h1>
+
+    @if (ViewBag.UserAuthenticated && Model.ResourceItem.Catalogue.RestrictedAccess && Model.HasCatalogueAccess)
+    {
+        <p class="nhsuk-u-margin-bottom-4 nhsuk-u-font-size-16"><span class="nhsuk-u-font-weight-bold nhsuk-u-margin-right-2">Access granted</span>you have been granted access to view resources in @Model.ResourceItem.Catalogue.Name</p>
+    }
+    @if (!Model.UserHasCertificate && Model.ResourceItem.CertificateEnabled.GetValueOrDefault(false))
+    {
+        <p class="nhsuk-u-margin-bottom-4 nhsuk-u-padding-2 nhsuk-u-font-size-16 nhsuk-bg-light-blue">
+            <b>Certificate available: </b> complete this course to be awarded a certificate
+        </p>
+    }
+
+    @* Cases and assessments have different layout to other resource types - no columns. *@
+    @if (resource.ResourceTypeEnum == ResourceTypeEnum.Case || resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
+    {
+        @if (ViewBag.UserAuthenticated)
+        {
+            <div class="nhsuk-u-margin-bottom-4">
+                @if (Model.UserHasCertificate)
+                {
+                    <form method="get" action="~/MyLearning/Certificate">
+                        <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
+                        <input type="submit" formtarget="_blank" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-top-1" value="View Certificate" />
+                    </form>
+                }
+                <a class="nhsuk-u-font-size-16" role="button" asp-controller="Bookmark" asp-action="BookmarkResource"
+                   asp-route-bookmarked="@Model.ResourceItem.IsBookmarked"
+                   asp-route-id="@Model.ResourceItem.BookmarkId"
+                   asp-route-title="@Model.ResourceItem.Title.Truncate(60)"
+                   asp-route-rri="@Model.ResourceReferenceId"
+                   asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">@(Model.ResourceItem.IsBookmarked ? "Remove from" : "Add to")  my bookmarks</a>
+            </div>
+        }
+
+        <div class="nhsuk-u-margin-bottom-4">
+
+            <partial name="_StarRatingWithCount" model="@new StarRatingWithCountViewModel { AverageRating = (decimal)Model.ResourceRating.RatingSummary.AverageRating,
+                                                                                        RatingCount = Model.ResourceRating.RatingSummary.RatingCount,
+                                                                                        ResourceReferenceId = Model.ResourceReferenceId }" />
+        </div>
+
+        @if (resource.Id > 0 && !resource.Catalogue.Hidden && !(resource.VersionStatusEnum == VersionStatusEnum.Unpublished && !resource.DisplayForContributor))
+        {
+            <partial name="_ResourceItem" model="Model" />
+
+            <hr />
+            <div class="nhsuk-u-reading-width nhsuk-u-font-size-19">
+                <partial name="_ResourceInformation" model="Model" />
+            </div>
+        }
+    }
+    else
+    {
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-quarter nhsuk-u-margin-bottom-7">
+                @if (ViewBag.UserAuthenticated && resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && resource.ScormDetails.CanDownload)
+                {
+                    <div class="nhsuk-u-margin-bottom-4">
+                        @if (Model.UserHasCertificate)
+                        {
+                            displayCertificateButton = false;
+                            <form method="get" action="~/MyLearning/Certificate">
+                                <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
+                                <input type="submit" formtarget="_blank" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-top-1" value="View Certificate" />
+                            </form>
+                        }
+
+                        @{
+                            var file = resource.ScormDetails.File;
+                            var downloadAndRecordLink = $"/api/resource/DownloadResourceAndRecordActivity?resourceVersionId={resource.ResourceVersionId}&nodePathId={resource.NodePathId}&filePath={file.FilePath}&fileName={Uri.EscapeDataString(file.FileName)}";
+                        }
+                        @if (!(User.IsInRole("BasicUser") && resource.ResourceAccessibilityEnum == ResourceAccessibilityEnum.FullAccess))
+                        {
+                            <a class="nhsuk-u-font-size-16" target="_blank" role="button" href="@downloadAndRecordLink">Download elearning resource</a>
+                        }
+                    </div>
+                }
+
+                @if (ViewBag.UserAuthenticated)
+                {
+                    <div class="nhsuk-u-margin-bottom-4">
+                        @if (Model.UserHasCertificate && displayCertificateButton)
+                        {
+                            <form method="get" action="~/MyLearning/Certificate">
+                                <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
+                                <input type="submit" formtarget="_blank" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-top-1" value="View Certificate" />
+                            </form>
+                        }
+                        <a class="nhsuk-u-font-size-16" role="button" asp-controller="Bookmark" asp-action="BookmarkResource"
+                           asp-route-bookmarked="@Model.ResourceItem.IsBookmarked"
+                           asp-route-id="@Model.ResourceItem.BookmarkId"
+                           asp-route-title="@Model.ResourceItem.Title.Truncate(60)"
+                           asp-route-rri="@Model.ResourceReferenceId"
+                           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">@(Model.ResourceItem.IsBookmarked ? "Remove from" : "Add to")  my bookmarks</a>
+                    </div>
+                }
+
+                <partial name="_StarRatingWithCount" model="@new StarRatingWithCountViewModel { AverageRating = (decimal)Model.ResourceRating.RatingSummary.AverageRating,
+                                                                                        RatingCount = Model.ResourceRating.RatingSummary.RatingCount,
+                                                                                        ResourceReferenceId = Model.ResourceReferenceId }" />
+            </div>
+
+            <div class="nhsuk-grid-column-three-quarters">
+                <div class="nhsuk-u-reading-width nhsuk-u-font-size-19">
+                    @if (resource.Id > 0 && !resource.Catalogue.Hidden && !(resource.VersionStatusEnum == VersionStatusEnum.Unpublished && !resource.DisplayForContributor))
+                    {
+                        <partial name="_ResourceItem" model="Model" />
+                        <partial name="_ResourceInformation" model="Model" />
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+@section Scripts{
+    @if (ViewBag.UserAuthenticated)
+    {
+        <script type="text/javascript" src="~/js/bundle/resourcecontainer.js" asp-append-version="true"></script>
+    }
+    <script type="text/javascript" src="https://amp.azure.net/libs/amp/2.3.10/azuremediaplayer.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            var e = document.createElement('script');
+            e.async = true;
+            e.src = 'https://static.addtoany.com/menu/page.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(e, s);
+        });
+    </script>
+}

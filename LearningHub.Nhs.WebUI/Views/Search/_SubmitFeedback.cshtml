@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.WebUtilities
+@model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
+
+@{
+    var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString().ToLower());
+    queryParams["actiontype"] = "feedback";
+    var actionUrl = QueryHelpers.AddQueryString("/search/results", queryParams);
+}
+
+<div class="search-feedback nhsuk-u-padding-4 nhsuk-u-margin-bottom-6">
+    @if (Model.FeedbackSubmitted)
+    {
+        <h2 class="nhsuk-u-margin-bottom-2">Thank you</h2>
+        @:Your feedback will help us to improve the way search works on the Learning Hub.
+    }
+    else
+    {
+        <form id="search-feedback-form" action="@actionUrl" method="post">
+            <div class="@(this.ViewBag.EmptyFeedbackError == true ? "nhsuk-form-group--error" : "")">
+                <h2 class="nhsuk-u-margin-bottom-2">Search feedback</h2>
+
+                @if (this.ViewBag.EmptyFeedbackError == true)
+                {
+                    <span class="nhsuk-error-message nhsuk-u-padding-bottom-2">
+                        <span class="nhsuk-u-visually-hidden">Error:</span> You must provide feedback
+                    </span>
+                }
+
+                <div class="nhsuk-hint" id="feedback-hint">
+                    If you have not found what you were searching for, tell us what you were hoping to find using the search term <b>@Model.SearchString</b>.
+                </div>
+
+                <input type="hidden" name="searchId" value="@Model.ResourceSearchResult?.SearchId" />
+                <input type="hidden" name="groupId" value="@Model.GroupId" />
+                <input type="hidden" name="resourceCount" value="@Model.ResourceSearchResult?.TotalHits" />
+
+                <textarea maxlength="1000" name="Feedback" id="Feedback" class="nhsuk-textarea @(this.ViewBag.EmptyFeedbackError == true ? "nhsuk-textarea--error" : "")" rows="5" aria-describedby="feedback-hint"></textarea>
+            </div>
+
+            <button class="nhsuk-button nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0" data-module="nhsuk-button" type="submit">
+                Submit feedback
+            </button>
+        </form>
+    }
+</div>

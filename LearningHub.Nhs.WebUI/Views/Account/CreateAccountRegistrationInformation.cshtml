@@ -1,0 +1,87 @@
+﻿@using LearningHub.Nhs.WebUI.Models.Account
+@using Microsoft.Extensions.Options;
+@using LearningHub.Nhs.WebUI.Configuration;
+@model EmailValidateViewModel;
+@inject IOptions<Settings> settings
+
+@{
+    ViewData["Title"] = "Registration information";
+    var returnUrl = (string)Url.ActionContext.HttpContext.Request.Query["returnUrl"];
+    var authRequiredReturnUrl = returnUrl == null
+        ? Url.Action("AuthorisationRequired", "Account", new { originalUrl = "/" }, "https")
+        : Url.Action("AuthorisationRequired", "Account", new { originalUrl = returnUrl }, "https");
+    var openAthensSignOnUrl = Url.Action("Login", "OpenAthens", new { returnUrl = authRequiredReturnUrl, invalidScope = false });
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+<div class="create-account">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <vc:back-link asp-controller="Home" asp-action="Index" link-text="Back to: The Learning Hub" />
+                <h1 class="nhsuk-heading-xl">What you need to set up an account</h1>
+                <div class="nhsuk-u-reading-width">
+                    <h2 class="nhsuk-heading-l">General user account</h2>
+                    <p>
+                        General users can access resources made available by contributors to all users.
+                    </p>
+                    <div>
+                        <h3>Required information</h3>
+                        <ul class="nhsuk-list nhsuk-list--bullet">
+                            <li>Email address</li>
+                            <li>Country</li>
+                            <li>Current role</li>
+                        </ul>
+                    </div>
+                    <h2 class="nhsuk-heading-l">Full user account</h2>
+                    <p>
+                        Full users are able to access all learning resources, contribute and share knowledge and content.
+                    </p>
+                    <h2 class="nhsuk-heading-l">Additional information needed</h2>
+                    <ul class="nhsuk-list nhsuk-list--bullet">
+                        <li>Qualifying work email address (e.g. NHS email address)</li>
+                        <li>Current role </li>
+                        <li>Professional registration number (if applicable)</li>
+                        <li>Grade / Band </li>
+                        <li>Start date</li>
+                        <li>Primary specialty (if applicable)</li>
+                        <li>Country</li>
+                        <li>Place of work details</li>
+
+                    </ul>
+                    <p class="nhsuk-body">After registering you will receive an email that includes your username and a link to create a password.</p>
+                    <form asp-controller="Registration" asp-action="CreateAccountEmailVerification" method="get">
+                        <button class="nhsuk-button" type="submit">Continue</button>
+                    </form>
+                    <partial name="_QualifyingWorkEmailAddress"></partial>
+                    <p class="nhsuk-body-s nhsuk-u-margin-bottom-9">
+                        <a href="@(settings.Value.SupportUrls.WhoCanAccessTheLearningHub)" target="_blank">Who can access the Learning Hub?</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="nhsuk-section open-athens">
+        <div class="nhsuk-width-container app-width-container">
+
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-three-quarters nhsuk-u-padding-top-7 nhsuk-u-padding-bottom-7">
+
+                    <h2 class="nhsuk-heading-l">Do you have an OpenAthens account?</h2>
+
+                    <div class="nhsuk-inset-text nhsuk-u-margin-top-8 nhsuk-u-margin-bottom-8">
+                        <span class="nhsuk-u-visually-hidden">Information: </span>
+                        <p>You can use your OpenAthens account to sign in to the Learning Hub.</p>
+                    </div>
+                    <button class="nhsuk-button nhsuk-button--secondary" type="submit">
+                        Log in with OpenAthens
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>

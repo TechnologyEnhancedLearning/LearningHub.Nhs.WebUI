@@ -1,0 +1,35 @@
+﻿@using LearningHub.Nhs.WebUI.Models.Bookmark
+@model BookmarkFolderViewModel
+
+<tr role="row" class="nhsuk-table__row bookmark-folder">
+    <td role="cell" class="nhsuk-table__cell" colspan="3">
+        <details class="nhsuk-details nhsuk-expander">
+            <summary class="nhsuk-details__summary folder-summary">
+                <div class="nhsuk-details__summary-text folder-title">@Model.FolderBookmark.Bookmark.Title (@Model.FolderBookmark.Bookmark.ChildrenCount)</div>
+                <partial name="_BookmarkAction" model="Model.FolderBookmark.Action" />
+            </summary>
+            <div class="nhsuk-details__text">
+                @if (Model.FolderBookmark.Bookmark.ChildrenCount == 0)
+                {
+                    <div class="folder-empty">
+                        To move a bookmark into this folder, select the learning resource and select 'Move'.
+                    </div>
+                }
+                else
+                {
+                    <table role="table" class="nhsuk-table-responsive tree-table-child">
+                        <tbody role="rowgroup" class="nhsuk-table__body">
+
+                            @{
+                                foreach (var childBookmark in Model.ChildBookmarkItems)
+                                {
+                                    <partial name="_BookmarkItem" model="new BookmarkItemViewModel{ Bookmark = childBookmark.Bookmark, Action = childBookmark.Action, IsChild = true }" />
+                                }
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </details>
+    </td>
+</tr>

@@ -1,0 +1,86 @@
+﻿@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.WebUI.Configuration.Settings> options
+@{
+  ViewData["Title"] = "Our policies";
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/staticpages.css" asp-append-version="true" />
+}
+
+<div class="nhsuk-width-container app-width-container">
+  <div class="nhsuk-main-wrapper ">
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-two-thirds ">
+        <h1>
+          @ViewData["Title"]
+        </h1>
+      </div>
+    </div>
+
+    <ul class="nhsuk-grid-row nhsuk-card-group">
+      <li class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+        <div class="nhsuk-card nhsuk-card--clickable">
+          <div class="nhsuk-card__content">
+            <h2 class="nhsuk-card__heading nhsuk-heading-m">
+              <a class="nhsuk-card__link" href="/policies/terms-and-conditions">Terms and conditions</a>
+            </h2>
+            <p>
+              The terms and conditions of using the Learning Hub
+            </p>
+          </div>
+        </div>
+      </li>
+
+      <li class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+        <div class="nhsuk-card nhsuk-card--clickable">
+          <div class="nhsuk-card__content">
+            <h2 class="nhsuk-card__heading nhsuk-heading-m">
+              <a class="nhsuk-card__link" href="/policies/content-policy">Content policy</a>
+            </h2>
+            <p>
+              This content policy includes the guidelines for all content on the Learning Hub
+            </p>
+          </div>
+        </div>
+      </li>
+
+      <li class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+        <div class="nhsuk-card nhsuk-card--clickable">
+          <div class="nhsuk-card__content">
+            <h2 class="nhsuk-card__heading nhsuk-heading-m">
+              <a class="nhsuk-card__link" href="/policies/privacy-policy">Privacy policy</a>
+            </h2>
+            <p>
+              This privacy policy includes what information we collect and how we use, disclose, transfer and store your information
+            </p>
+          </div>
+        </div>
+      </li>
+
+      <li class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+        <div class="nhsuk-card nhsuk-card--clickable">
+          <div class="nhsuk-card__content">
+            <h2 class="nhsuk-card__heading nhsuk-heading-m">
+              <a class="nhsuk-card__link" href="/policies/cookie-policy">Cookies on the Learning Hub</a>
+            </h2>
+            <p>
+              Information on the cookies we use
+            </p>
+          </div>
+        </div>
+      </li>
+
+      <li class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+        <div class="nhsuk-card nhsuk-card--clickable">
+          <div class="nhsuk-card__content">
+            <h2 class="nhsuk-card__heading nhsuk-heading-m">
+              <a class="nhsuk-card__link" href="/policies/acceptable-use-policy">Acceptable use policy</a>
+            </h2>
+            <p>
+              The acceptable use policy describes the conditions of use of the Learning Hub
+            </p>
+          </div>
+        </div>   
+      </li>
+    </ul>
+  </div>
+</div>

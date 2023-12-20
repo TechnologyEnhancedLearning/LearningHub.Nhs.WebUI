@@ -1,0 +1,40 @@
+﻿@model LearningHub.Nhs.Models.Paging.PagingViewModel;
+
+@using LearningHub.Nhs.Models.Paging;
+@using System.Web;
+
+@{
+    var pagingModel = Model;
+
+    string GetPageUrl(int pageIndex)
+    {
+        var url = ViewBag.RequestUrl;
+
+        var uri = new Uri(url);
+        var qs = HttpUtility.ParseQueryString(uri.Query);
+        qs.Set("param1", "newValue2");
+        return $"{url}";
+    }
+}
+
+
+<div class="catalogue-pagination-prev @(pagingModel.CurrentPage <= 0 ? "" : "active")">
+    @if (pagingModel.CurrentPage <= 0)
+    {
+        <i class="fa-solid fa-chevron-left"></i>
+    }
+    else
+    {
+        <a href="@GetPageUrl(pagingModel.CurrentPage--)"><i class="fa-solid fa-chevron-left"></i></a>
+    }
+</div>
+<div class="catalogue-pagination-next @(pagingModel.CurrentPage >= pagingModel.TotalPages - 1 ? "" : "active")">
+    @if (pagingModel.CurrentPage >= pagingModel.TotalPages - 1)
+    {
+            <i class="fa-solid fa-chevron-right"></i>
+    }
+    else
+    {
+            <a href="@GetPageUrl(pagingModel.CurrentPage++)"><i class="fa-solid fa-chevron-right"></i></a>
+    }
+</div>

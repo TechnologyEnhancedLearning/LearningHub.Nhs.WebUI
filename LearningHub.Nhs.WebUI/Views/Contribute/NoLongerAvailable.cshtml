@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "No Longer Available";
+}
+
+<div class="user-entry fullwidth">
+
+    <div>
+        <h1 class="nhsuk-heading-xl">Page not available</h1>
+        <p>This resource has been edited and is no longer available from this page. Go to <a href="/my-contributions">My Contributions</a> to view the resources you have contributed.</p>
+        <p>If you need help, please contact the <a href="@ViewBag.SupportFormUrl" target="_blank">support team</a>.</p>
+        <p>@DateTimeOffset.Now.ToString("d MMMM yyyy HH:mm:ss")</p>
+    </div>
+
+</div>

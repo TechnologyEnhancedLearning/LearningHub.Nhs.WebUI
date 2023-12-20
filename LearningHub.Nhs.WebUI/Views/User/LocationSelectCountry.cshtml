@@ -1,0 +1,38 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserLocationViewModel
+@{
+    ViewData["Title"] = "Location - Country";
+}
+
+<div class="nhsuk-width-container">
+    <main class="nhsuk-main-wrapper nhsuk-main-wrapper--s" id="maincontent" role="main">
+        <form asp-controller="User" asp-action="LocationSelectCountry" method="post">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-two-thirds">                                        
+                    <dl class="nhsuk-summary-list">
+                        <div class="nhsuk-summary-list__row">
+                            <dt class="nhsuk-summary-list__key">
+                                <label asp-for="SelectedCountryId" class="control-label"></label>
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">
+                                <select asp-for="SelectedCountryId" class="form-control" asp-items="@ViewBag.Countries"></select>
+                                <span asp-validation-for="SelectedCountryId" class="text-danger"></span>
+                            </dd>
+                        </div>
+                        <div class="nhsuk-summary-list__row">
+                            <dt class="nhsuk-summary-list__key">
+                                <button type="submit" class="btn btn-custom">
+                                    Next
+                                </button>
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">
+                                <a asp-controller="User" asp-action="Index">Cancel</a>
+                            </dd>
+                        </div>
+                     </dl>
+                </div>
+            </div>
+            @Html.HiddenFor(m => m.SelectedRegionId)
+            @Html.AntiForgeryToken()
+        </form>
+    </main>
+</div>

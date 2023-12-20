@@ -1,0 +1,74 @@
+﻿@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.WebUI.Configuration.Settings> options
+@{
+    ViewData["Title"] = "Accessibility";
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/staticpages.css" asp-append-version="true" />
+}
+
+<div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-main-wrapper ">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full ">
+
+                <h1 class="nhsuk-heading-xl">Accessibility Statement for the NHS England Learning Hub</h1>
+                <article class="nhsuk-u-reading-width nhsuk-u-font-size-19">
+                    <section>
+                        <p>NHS England (<strong>NHSE</strong>) is committed to making its websites accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (<strong>Accessibility Regulations</strong>).</p>
+                        <p>This accessibility statement applies to the Learning Hub (<a href="https://learninghub.nhs.uk" target="_blank">https://learninghub.nhs.uk</a>). This website is run by NHSE.</p>
+                        <p>The Learning Hub was released on 28 May 2020 to support the Coronavirus (COVID-19) response by enabling the health and care workforce to share and access resources during the pandemic. We want as many people as possible to be able to use this website. An internal accessibility check has been completed and we will undertake a full accessibility audit soon. We have also made the website text as simple as possible to understand.</p>
+                        <p>AbilityNet has advice on making your device easier to use if you have a disability, which can be found here: <a href="https://abilitynet.org.uk/" target="_blank">https://abilitynet.org.uk/</a>.</p>
+
+                        <h2 class="nhsuk-heading-l">Feedback and contact information</h2>
+                        <p>The resources available on the Learning Hub are contributed by members of the health and care workforce. We encourage all users to contribute accessible content as set out in our Content Policy which can be found here: <a href="https://learninghub.nhs.uk/policies/content-policy" target="_blank" class="word-break__break-word">https://learninghub.nhs.uk/policies/content-policy</a>, however please note that third party content may not be available in an accessible format because it is not funded or developed by us and is not under our control.</p>
+                        <p>If you require further information, or if you need to access content on this website in a different format, for example accessible PDF, large print etc. please email <a href="mailto:enquiries@learninghub.nhs.uk">enquiries@learninghub.nhs.uk</a>. We will contact the contributor of the resource to ask if they can provide the content in a different format. We will normally respond to you within ten working days.</p>
+
+                        <h2>Reporting accessibility problems with this website</h2>
+                        <p>We are always looking to improve the accessibility of this website. If you find any problems not listed on this page or think we are not meeting accessibility requirements, please contact the Learning Hub support team here: <a href="https://support.learninghub.nhs.uk/support/tickets/new" target="_blank" class="word-break__break-word">https://support.learninghub.nhs.uk/support/tickets/new</a> or email: <a href="mailto:enquiries@learninghub.nhs.uk">enquiries@learninghub.nhs.uk</a>.</p>
+
+                        <h2 class="nhsuk-heading-l">Enforcement procedure</h2>
+                        <p>The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Accessibility Regulations. If you are not happy with how we respond to your complaint, contact the Equality Advisory and Support Service (EASS) here: <a href="https://www.equalityadvisoryservice.com/" target="_blank" class="word-break__break-word">https://www.equalityadvisoryservice.com/</a>.</p>
+
+                        <h2 class="nhsuk-heading-l">Technical information about this website’s accessibility</h2>
+                        <p>NHSE is committed to making its website accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018, which can be found here: <a href="https://www.legislation.gov.uk/uksi/2018/952/regulation/4/made" target="_blank" class="word-break__break-word">https://www.legislation.gov.uk/uksi/2018/952/regulation/4/made</a>.</p>
+
+                        <h2 class="nhsuk-heading-l">Compliance status</h2>
+                        <p>This website is partially compliant with the Web Content Accessibility Guidelines version 2.1 AA standard, which can be found here: <a href="https://www.w3.org/TR/WCAG21/" target="_blank">https://www.w3.org/TR/WCAG21/</a>, due to the non-compliances and exemptions listed below.</p>
+
+                        <h2 class="nhsuk-heading-l">Non Accessible content</h2>
+                        <p>The content listed below is non-accessible for the following reason(s):</p>
+
+                        <h3 class="nhsuk-heading-m">Non-compliance with the Accessibility Regulations</h3>
+                        <p>We recognise that some of the Learning Hub content doesn’t comply with the Accessibility Regulations. Some content is not screen reader compatible, some content is not keyboard navigable, some content does not follow Web Content Accessibility Guidelines accessibility standards, and some video content does not contain closed captions or transcripts.</p>
+
+                        <h3 class="nhsuk-heading-m">Disproportionate burden</h3>
+                        <p>While we have endeavoured to ensure the Learning Hub is as compliant as possible, we believe that auditing the e-learning content specifically for its compliance with the Accessibility Regulations would be a disproportionate burden.</p>
+                        <p>You can read the disproportionate burden statement here: <a href="https://www.hee.nhs.uk/disproportionate-burden-statement" target="_blank" class="word-break__break-word">https://www.hee.nhs.uk/disproportionate-burden-statement</a>.</p>
+
+                        <h3 class="nhsuk-heading-m">Content that’s not within the scope of the Accessibility Regulations</h3>
+
+                        <h4 class="nhsuk-heading-xs nhsuk-u-padding-top-0">PDFs and non-HTML documents</h4>
+                        <p>Many documents are not accessible in a number of ways including missing text alternatives and missing document structure.</p>
+                        <p>The Accessibility Regulations do not require us to fix PDFs or other documents published before 23 September 2018 if they’re not essential to providing our services.  Please refer here: <a href="http://www.legislation.gov.uk/uksi/2018/952/regulation/4/made" target="_blank" class="word-break__break-word">http://www.legislation.gov.uk/uksi/2018/952/regulation/4/made</a>.</p>
+
+                        <h2 class="nhsuk-heading-l">Preparation of this accessibility statement</h2>
+                        <p>This statement was prepared on 26 May 2020. It was last reviewed on 17 March 2023.</p>
+                        <p>This website was last tested in 2020. The test was carried out by Health Education England. The sessions chosen were the most accessed sessions and testing was for the standard accessibility guidelines, for example:</p>
+                        <ul class="nhsuk-u-padding-left-6">
+                            <li>using a keyboard instead of a mouse</li>
+                            <li>changing browser settings to make content easier to read</li>
+                            <li>changing colours, contrast levels, and fonts</li>
+                            <li>zooming in up to 300% without the text spilling off the screen</li>
+                        </ul>
+                        <p>Future testing is planned for 2023 following updates to the Learning Hub which will address known accessibility issues.</p>
+                    </section>
+                    <section>
+                        <a href="~/documents/Learning Hub accessibility statement v2.0 July 2023.pdf" target="_blank">Download as PDF</a>
+                    </section>
+                </article>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,85 @@
+﻿@using LearningHub.Nhs.WebUI.Models.DashBoard;
+@model LearningHub.Nhs.WebUI.Models.DashboardViewModel;
+
+@{
+    string GetActiveTabName()
+    {
+        switch (Model.Catalogues.Type)
+        {
+            case "recent-catalogues":
+                return "Recently added";
+            case "highly-contributed-catalogues":
+                return "Top contributors";
+            case "popular-catalogues":
+            default:
+                return "Most accessed";
+        }
+    }
+    var pagingViewModel = new DashBoardPagingViewModel
+            {
+                DashboardTrayType = "catalogues",
+                MyLearningDashboard = Model.MyLearnings.Type,
+                ResourceDashboard = Model.Resources.Type,
+                CatalogueDashboard = Model.Catalogues.Type,
+                CurrentPage = Model.Catalogues.CurrentPage,
+                TotalPages = Model.Catalogues.TotalPages,
+                TotalCount = Model.Catalogues.TotalCount
+            };
+}
+
+<div class="dashboardTray">
+    <h2>Catalogues</h2>
+
+    <nav class="subnavbarwhite navbar-expand-md nhsuk-u-margin-bottom-5">
+        <input class="subnav-hidden-checkbox" id="catalogues-subnav-hidden-checkbox" role="button" type="checkbox" aria-controls="collapsingCataloguesSubNavbar">
+        <div class="bar">
+            <div class="navbar-toggler navbar-toggler-left  nhsuk-u-font-size-19">@GetActiveTabName()</div>
+            <label class="navbar-toggler navbar-toggler-right" for="catalogues-subnav-hidden-checkbox">
+                <i class="fa-solid fa-chevron-down"><span class="nhsuk-u-visually-hidden">Show Catalogue Options</span></i>
+                <i class="fa-solid fa-chevron-up display--hide"><span class="nhsuk-u-visually-hidden">Hide Catalogue Options</span></i>
+                
+            </label>
+        </div>
+        <div class="navbar-collapse collapse" id="collapsingCataloguesSubNavbar">
+            <ul class="navbar-nav">
+                <li class="subnavwhite-item @(Model.Catalogues.Type == "popular-catalogues" ? "active" : string.Empty)">
+                    <a tabindex="0" class="subnavwhite-link text-nowrap"
+                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="@(Model.MyLearnings.Type)" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="popular-catalogues" asp-fragment="catalogues">Most accessed</a>
+                </li>
+                <li class="subnavwhite-item @(Model.Catalogues.Type == "recent-catalogues" ? "active" : string.Empty)">
+                    <a tabindex="0" class="subnavwhite-link text-nowrap"
+                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="@(Model.MyLearnings.Type)" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="recent-catalogues" asp-fragment="catalogues">Recently added</a>
+                </li>
+                <li class="subnavwhite-item @(Model.Catalogues.Type == "highly-contributed-catalogues" ? "active" : string.Empty)">
+                    <a tabindex="0" class="subnavwhite-link text-nowrap"
+                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="@(Model.MyLearnings.Type)" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="highly-contributed-catalogues" asp-fragment="catalogues">Top contributors</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred nhsuk-u-margin-bottom-2">
+                @foreach (var catalogue in Model.Catalogues.Catalogues)
+                {
+                    <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+                        <partial name="_CatalogueCard" model="catalogue" />
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred nhsuk-u-margin-bottom-1">
+                <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+                </div>
+                <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item"></div>
+                <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item  nhsuk-u-padding-top-2 display--no-js-hide">
+                    <partial name="_DashboardPaging" model="pagingViewModel" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

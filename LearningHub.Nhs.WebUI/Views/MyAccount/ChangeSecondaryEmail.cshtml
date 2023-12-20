@@ -1,0 +1,62 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserEmailDetailsViewModel
+
+@{
+  ViewData["Title"] = "My Account - Change secondary email";
+  var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+
+<div class="bg-white">
+  <div class="nhsuk-width-container app-width-container">
+    <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+    <form asp-controller="MyAccount" asp-action="UpdateSecondaryEmail" method="post">
+      <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-three-quarters nhsuk-u-padding-bottom-5">
+          @if (errorHasOccurred)
+          {
+            <vc:error-summary order-of-property-names="@(new[] { nameof(Model.SecondaryEmailAddress) })" />
+          }
+          <div class="nhsuk-caption-l" id="contact-hint">
+            Change secondary email
+          </div>
+        </div>
+      </div>
+      <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+          <h1 class="nhsuk-heading-xl">Enter your new secondary email address</h1>
+        </div>
+      </div>
+      <div>
+        <vc:text-input asp-for="SecondaryEmailAddress"
+                       label="Secondary email address"
+                       populate-with-current-value="true"
+                       type="text"
+                       spell-check="false"
+                       hint-text=""
+                       autocomplete="SecondaryEmailAddress"
+                       css-class="nhsuk-u-width-one-half"
+                       required="false" />
+        <input name="PrimaryEmailAddress" type="hidden" asp-for="@Model.PrimaryEmailAddress" />
+      </div>
+      <div class="nhsuk-u-padding-bottom-5">
+        <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+          Continue
+        </button>
+      </div>
+    </form>
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-top-5 nhsuk-u-padding-bottom-7">
+        <details class="nhsuk-details nhsuk-expander nhsuk-u-width-two-thirds">
+          <summary class="nhsuk-details__summary">
+            <span class="nhsuk-details__summary-text">
+              Why should I provide a secondary email address?
+            </span>
+          </summary>
+          <div class="nhsuk-details__text">
+            <p>If your email address changes, our support team can contact you using your secondary email address. This can be a personal email address </p>
+
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</div>

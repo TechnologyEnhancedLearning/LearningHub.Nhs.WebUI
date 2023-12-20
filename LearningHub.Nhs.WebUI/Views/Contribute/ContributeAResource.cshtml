@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewData["Title"] = "Contribute a Resource";
+}
+
+<div id="contributecontainer" class="contribute">
+    <router-view :file-upload-size-limit="@ViewBag.FileUploadSizeLimit" :current-user-name="'@ViewBag.CurrentUserName'" :resource-license-url="'@ViewBag.ResourceLicenseUrl'" :resource-certificate-url="'@ViewBag.ResourceCertificateUrl'" :support-url-excluded-files="'@ViewBag.SupportUrlExcludedFiles'" resource-types-supported="@ViewBag.ResourceTypesSupported" />
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/bundle/contributecontainer.js" asp-append-version="true"></script>
+}

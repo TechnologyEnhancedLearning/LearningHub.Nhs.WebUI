@@ -1,0 +1,27 @@
+﻿@{
+    var originalUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+    var authRequiredReturnUrl = Url.Action("AuthorisationRequired", "Account", new { originalUrl = originalUrl }, "https");
+}
+
+@if (!ViewBag.UserAuthenticated)
+{
+    <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-3 nhsuk-u-margin-bottom-3">
+        <div class="nhsuk-width-container app-width-container">
+            <p>You have to be signed in to use this resource.</p>
+            <div>
+                <a asp-controller="Account" asp-action="AuthorisationRequired" asp-route-originalUrl="@originalUrl"
+                    class="nhsuk-button nhsuk-button--beta-login nhsuk-u-margin-right-3">Learning Hub Log in</a>
+                <a asp-controller="OpenAthens" asp-action="Login" asp-route-returnUrl="@authRequiredReturnUrl" asp-route-invalidScope="false"
+                    class="nhsuk-button nhsuk-button--secondary">OpenAthens Log in</a>
+            </div>
+            <p class="nhsuk-u-margin-bottom-2">
+                <a asp-controller="Account" asp-action="ForgotPassword" class="">Forgotten username or password</a>
+            </p>
+            <p>
+                <a asp-controller="Account" asp-action="CreateAnAccount">Create new account</a>
+            </p>
+        </div>
+    </div>
+}
+
+

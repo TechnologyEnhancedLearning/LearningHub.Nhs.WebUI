@@ -1,0 +1,56 @@
+﻿@using elfhHub.Nhs.Models.Enums;
+@using Microsoft.Extensions.Options;
+@using LearningHub.Nhs.WebUI.Configuration;
+@model LearningHub.Nhs.WebUI.Models.Account.AccountCreationViewModel
+@inject IOptions<Settings> settings
+@{
+    ViewData["Title"] = "Login Wizard";
+}
+
+<div class="nhsuk-bg-white">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-main-wrapper ">
+            <div class="nhsuk-grid-row">
+                <h1 class="nhsuk-heading-xl">What you need to complete your Learning Hub account setup</h1>
+                <p class="nhsuk-body-l nhsuk-u-reading-width">
+                    You have successfully created a Learning Hub account using your OpenAthens registered work email address and surname.
+                </p>
+                <h2 class="nhsuk-heading-l">Additional information needed</h2>
+                <ul class="nhsuk-list nhsuk-list--bullet">
+                    @if (Model.WizardStages.Any(x => x.Id == (int)LoginWizardStageEnum.PersonalDetails))
+                    {
+                        <li>Personal details</li>
+                    }
+                    @if (Model.WizardStages.Any(x => x.Id == (int)LoginWizardStageEnum.JobRole || x.Id == (int)LoginWizardStageEnum.PlaceOfWork))
+                    {
+                        <li>Current role</li>
+                        <li>Professional registration number (if applicable)</li>
+                        <li>Grade / Band </li>
+                        <li>Start date</li>
+                        <li>Primary specialty (if applicable)</li>
+                        <li>Place of work details</li>
+                    }
+                </ul>
+
+                @{
+                    string action;
+                    if (Model.WizardStages.Any(x => x.Id == (int)LoginWizardStageEnum.PersonalDetails))
+                    {
+                        action = "CreateAccountPersonalDetails";
+                    }
+                    else
+                    {
+                        action = "CreateAccountSearchRole";
+                    }
+                }
+
+                <form asp-controller="Account" asp-action="@action" method="get">
+                    <button class="nhsuk-button" type="submit">Continue</button>
+                </form>
+                <p class="nhsuk-body-s nhsuk-u-margin-bottom-9">
+                    <a href="@(settings.Value.SupportUrls.WhoCanAccessTheLearningHub)" target="_blank">Who can access the Learning Hub?</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

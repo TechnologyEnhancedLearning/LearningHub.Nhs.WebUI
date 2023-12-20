@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "You already have an account";
+
+    var originalUrl = "/";
+    var authRequiredReturnUrl = Url.Action("AuthorisationRequired", "Account", new { originalUrl = originalUrl }, "https");
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/staticpages.css" asp-append-version="true" />
+}
+
+<div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-main-wrapper ">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <h1 class="nhsuk-heading-xl">@ViewData["Title"]</h1>
+                <article class="nhsuk-u-reading-width">
+                    <section>
+                        <p>You already have an elearning for healthcare (elfh) hub account. You can use your elfh username and password to access the Learning Hub.</p>
+                    </section>
+                </article>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div>
+                    <a asp-controller="Account" asp-action="AuthorisationRequired" asp-route-originalUrl="@originalUrl"
+                       class="nhsuk-button nhsuk-button--beta-login nhsuk-u-margin-right-3 nhsuk-u-margin-bottom-4">Learning Hub Log in</a>
+                    <a asp-controller="OpenAthens" asp-action="Login" asp-route-returnUrl="@authRequiredReturnUrl" asp-route-invalidScope="false"
+                       class="nhsuk-button nhsuk-button--secondary">OpenAthens Log in</a>
+                </div>
+                <p class="nhsuk-u-margin-bottom-3">
+                    <a asp-controller="Account" asp-action="ForgotUserPassword" class="">Forgotten username or password</a>
+                </p>
+                <p>
+                    <a href="@(this.ViewBag.WhoCanAccessTheLearningHubUrl)" target="_blank">Who can access the Learning Hub?</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

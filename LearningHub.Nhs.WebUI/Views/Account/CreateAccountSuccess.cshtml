@@ -1,0 +1,31 @@
+﻿@using LearningHub.Nhs.WebUI.Models.Account;
+@using Microsoft.Extensions.Options;
+@using LearningHub.Nhs.WebUI.Configuration;
+@inject IOptions<Settings> settings
+@{
+    ViewData["Title"] = "Successful Creation";
+    AccountCreationTypeEnum accountCreationType = ViewBag.AccountCreationType;
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+    <div class="create-account">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-three-quarters nhsuk-u-padding-top-9">
+                    <h1 class="nhsuk-heading-xl"> Success, you have created an account</h1>
+
+                    @if (accountCreationType == AccountCreationTypeEnum.GeneralAccess)
+                    {
+                        <p> You can now access a wide variety of learning resources.</p>
+                    }
+                    <p class="nhsuk-body">
+                        You will receive an email that includes your username and a link to create a password. The email will come from donotreply@learninghub.nhs.uk and may go into your spam or junk folder.
+                    </p>
+                    <p class="nhsuk-body">
+                        If you do not receive an email, please contact the <a href="@settings.Value.SupportUrls.SupportForm" target="_blank">support team.</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>

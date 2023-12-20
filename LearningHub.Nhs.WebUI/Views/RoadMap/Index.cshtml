@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Service updates and releases";
+}
+
+<div class="updates-banner">
+    <div class="lh-padding-fluid">
+        <div class="lh-container-xl">
+            <div class="updates-banner-text">
+                <h1>Service updates and releases</h1>
+                <p>See the latest release notes, bug fixes and features for the Learning Hub.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="roadMap">
+    <div class="lh-padding-fluid">
+        <div class="lh-container-xl">            
+            <road-map></road-map>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/bundle/roadmapcontainer.js"></script>
+}

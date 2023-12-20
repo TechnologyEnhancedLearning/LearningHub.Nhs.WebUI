@@ -1,0 +1,26 @@
+﻿[
+  {
+    "outputFile": "wwwroot/tenant/eIn/tenant.css",
+    "inputFile": "wwwroot/tenant/eIn/tenant.scss"
+  },
+  {
+    "outputFile": "wwwroot/tenant/LearningHub/tenant.css",
+    "inputFile": "wwwroot/tenant/LearningHub/tenant.scss"
+  },
+  {
+    "outputFile": "wwwroot/js/bundle/elearning.es5.js",
+    "inputFile": "wwwroot/js/bundle/elearning.js"
+  },
+  {
+    "outputFile": "wwwroot/js/bundle/header.es5.js",
+    "inputFile": "wwwroot/js/bundle/header.js"
+  },
+  {
+    "outputFile": "wwwroot/js/site.min.js",
+    "inputFile": "wwwroot/js/site.js"
+  },
+  {
+    "outputFile": "wwwroot/lib/js-cookie/src/js.cookie.es5.js",
+    "inputFile": "wwwroot/lib/js-cookie/src/js.cookie.js"
+  }
+]

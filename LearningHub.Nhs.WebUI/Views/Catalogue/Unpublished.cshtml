@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Unpublished";
+}
+
+<div class="lh-padding-fluid">
+    <div class="lh-container-xl">
+
+        <div>
+            <h1 class="nhsuk-heading-xl nhsuk-u-padding-top-3">Resource not available</h1>
+            <p>This resource has been unpublished and is not available for you to access. If you need help, please contact the <a href="@ViewBag.SupportFormUrl" target="_blank">support team</a>.</p>
+            <p>@DateTimeOffset.Now.ToString("d MMMM yyyy HH:mm:ss")</p>
+        </div>
+
+    </div>
+</div>

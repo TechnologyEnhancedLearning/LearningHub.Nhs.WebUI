@@ -1,0 +1,158 @@
+﻿@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Helpers
+@using LearningHub.Nhs.WebUI.Models
+@using LearningHub.Nhs.WebUI.Models.Learning;
+@model MyLearningViewModel;
+@{
+
+
+    string dateFilter = "Date: ";
+    string statusFilter = "Status: ";
+    string certificateFilter = string.Empty;
+    string typeFilter = "Type: ";
+    string filtersummary = string.Empty;
+
+    @if (Model.TimePeriod == "thisWeek" || Model.TimePeriod == "thisMonth" || Model.TimePeriod == "last12Months" || Model.TimePeriod == "dateRange" || Model.TimePeriod == "allDates")
+    {
+        string timePeriod = string.Empty;
+        if (Model.TimePeriod == "thisWeek")
+        {
+            timePeriod = "This week";
+        }
+        if (Model.TimePeriod == "thisMonth")
+        {
+            timePeriod = "This month";
+        }
+        if (Model.TimePeriod == "last12Months")
+        {
+            timePeriod = "Last 12 months";
+        }
+        if (Model.TimePeriod == "dateRange")
+        {
+            timePeriod = "date range";
+            bool startDateCheck = (Model.StartDay > 0 && Model.StartMonth > 0 || Model.StartYear > 0);
+            if (Model.StartDay > 0 && Model.StartMonth > 0 || Model.StartYear > 0)
+            {
+                timePeriod = $" from {Model.StartDay}/{Model.StartMonth}/{Model.StartYear}";
+            }
+            if (Model.EndDay > 0 && Model.EndMonth > 0 || Model.EndYear > 0)
+            {
+                timePeriod = timePeriod + $"{(startDateCheck ? " to " : "")}{Model.EndDay}/{Model.EndMonth}/{Model.EndYear}";
+            }
+
+        }
+        if (Model.TimePeriod == "allDates")
+        {
+            timePeriod = "All dates";
+        }
+        dateFilter = dateFilter + $" <strong class='nhsuk-tag'>{timePeriod}</strong>";
+    }
+    @if (Model.CertificateEnabled)
+    {
+        certificateFilter = $"Certificates: <strong class='nhsuk-tag'>Certificate</strong>";
+    }
+    @if (Model.Complete)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Complete</strong>";
+    }
+    @if (Model.Incomplete)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Incomplete</strong>";
+    }
+    @if (Model.Passed)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Passed</strong>";
+    }
+    @if (Model.Failed)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Failed</strong>";
+    }
+    @if (Model.Downloaded)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Downloaded</strong>";
+    }
+    @if (string.IsNullOrWhiteSpace(filtersummary))
+    {
+        statusFilter = string.Empty;
+    }
+    else
+    {
+        statusFilter = statusFilter + filtersummary;
+        filtersummary = string.Empty;
+    }
+
+    @if (Model.Article)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Article</strong>";
+    }
+    @if (Model.Assessment)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Assessment</strong>";
+    }
+    @if (Model.Audio)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Audio</strong>";
+    }
+    @if (Model.Case)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Case</strong>";
+    }
+    @if (Model.Elearning)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>elearning</strong>";
+    }
+    @if (Model.File)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>File</strong>";
+    }
+    @if (Model.Image)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Image</strong>";
+    }
+    @if (Model.Video)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Video</strong>";
+    }
+    @if (Model.Weblink)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Weblink</strong>";
+    }
+
+    @if (string.IsNullOrWhiteSpace(filtersummary))
+    {
+        typeFilter = string.Empty;
+    }
+    else
+    {
+        typeFilter = typeFilter + filtersummary;
+    }
+
+}
+
+<div>
+    Filtered by 
+    @if (!string.IsNullOrWhiteSpace(dateFilter))
+    {
+        <span class="nhsuk-u-padding-right-3">@Html.Raw(dateFilter)</span>
+    }
+    @if (!string.IsNullOrWhiteSpace(certificateFilter))
+    {
+        <span class="nhsuk-u-padding-right-3">@Html.Raw(certificateFilter)</span>
+    }
+    @if (!string.IsNullOrWhiteSpace(statusFilter))
+    {
+        <span class="nhsuk-u-padding-right-3">@Html.Raw(statusFilter)</span>
+    }
+    @if (!string.IsNullOrWhiteSpace(typeFilter))
+    {
+        <span class="nhsuk-u-padding-right-3">@Html.Raw(typeFilter)</span>
+    }
+</div>
+
+
+<div class="clear-filter nhsuk-grid-column-one-quarter">
+    <a class="nhsuk-u-font-weight-bold" asp-action="Index" asp-route-searchText="@Model.SearchText" asp-route-myLearningFormActionType="@MyLearningFormActionTypeEnum.Default" asp-fragment="search-results" title="Clear all filters">
+        Clear all filters
+    </a>
+   </div>
+

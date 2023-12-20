@@ -1,0 +1,67 @@
+﻿@using elfhHub.Nhs.Models.Common
+@using LearningHub.Nhs.WebUI.Models.Account
+@model AccountCreationViewModel;
+
+@{
+    
+    Layout = ViewData["Layout"].ToString();
+    var routeData = new Dictionary<string, string> { { "ReturnToConfirmation", Context.Request.Query["returnToConfirmation"] } };
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    JobRoleBasicViewModel jobDetails = ViewBag.Job;
+    ViewData["Title"] = $"{jobDetails.MedicalCouncilCode} Number";
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+<div class="create-account">
+<div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-2">
+            <vc:back-link asp-controller="Account" asp-action="CreateAccountCurrentRole" asp-all-route-data="@routeData" link-text="Back to: Search for your current role" />
+                    <h1 class="nhsuk-heading-xl">Enter your @jobDetails.MedicalCouncilCode number</h1>
+
+            
+           <form asp-controller="Account" asp-action="CreateAccountGradeSelection" method="get">
+                <input type="hidden" name="formSubmission" value="true">
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model.RegistrationNumber) })" />
+                }
+
+                @if (jobDetails.MedicalCouncilId > 0)
+                {
+                   
+                        <div class="nhsuk-form-group">
+                            <div class="nhsuk-label">Professional body</div>
+                            <div id="professionalBody" class="nhsuk-hint" for="example-with-hint-text-hint">
+                                @jobDetails.MedicalCouncilName
+                            </div>
+                        </div>
+                 
+                  
+                    
+                }
+                <input type="hidden" name="CurrentRole" value="@Context.Request.Query["CurrentRole"]">
+                <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+
+                        <vc:text-input asp-for="RegistrationNumber"
+                                       label="@jobDetails.MedicalCouncilCode number"
+                                       populate-with-current-value="true"
+                                       type="text"
+                                       spell-check="false"
+                                       hint-text=""
+                                       autocomplete=""
+                                       css-class="nhsuk-u-width-one-half"
+                                       required="true" />
+
+
+                <div class="nhsuk-form-group">
+                    <button type="submit" class="nhsuk-button">Continue</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+

@@ -1,0 +1,227 @@
+@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Models
+@using LearningHub.Nhs.WebUI.Models.Learning
+@model MyLearningViewModel;
+
+@{
+
+    ViewData["Title"] = "My learning";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    var startHintTextLines = new List<string> { $"From" };
+    var endHintTextLines = new List<string> { $"To" };
+    var routeData = ViewActivityHelper.GetActivityParameters(Model);
+}
+
+@section styles{
+
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/mylearning.css" asp-append-version="true" />
+
+}
+<div class="my-learning">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row nhsuk-u-padding-top-9 nhsuk-u-padding-bottom-9">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-top-0">
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                }
+                <h1 class="nhsuk-heading-xl">My learning</h1>
+                <p class="nhsuk-body-l">
+                    You can use this page to search and filter learning resources you've accessed, download certificates and generate a report
+                    of your activity.
+                </p>
+
+                <details class="nhsuk-details">
+                    <summary class="nhsuk-details__summary">
+                        <span class="nhsuk-details__summary-text">
+                            Learn how to manage My learning
+                        </span>
+                    </summary>
+                    <div class="nhsuk-details__text">
+                        <p>My learning displays an itemised activity table. This table details everything you have accessed in the Learning Hub.</p>
+                        <p>You can search your learning activity by entering a search term in the search box. This will only search your learning activity and not the entire Learning Hub. Results will be displayed placing your search term as the filter. To return to your full Itemised activity, either select clear all filters or uncheck your search term(s).</p>
+                    </div>
+                </details>
+
+                <p class="nhsuk-body">
+                    Download a report of your learning.
+                </p>
+                @if (Model.TotalCount != 0)
+                {
+                    <form method="post" asp-controller="MyLearning" asp-action="ExportToPDF" asp-all-route-data="@routeData">
+                        <button class="nhsuk-button" type="submit">Download PDF</button>
+                    </form>
+                }
+                else
+                {
+                    <button class="nhsuk-button" disabled="disabled">Download PDF</button>
+                }
+
+                 <form asp-controller="MyLearning" asp-action="Index" method="post" asp-fragment="search-results">
+
+                    <h2 class="nhsuk-heading-l" id="search-results">Search within My learning</h2>
+                    <div class="nhsuk-form-group search-box-container nhsuk-u-padding-bottom-1" style="white-space:nowrap">
+                        <input class="nhsuk-input nhsuk-u-width-one-half search-box" placeholder="" id="SearchText" name="SearchText" value="@Model.SearchText" type="text" aria-describedby="SearchText-hint" aria-required="true">
+                        <button class="nhsuk-search__submit" name="MyLearningFormActionType" value=@MyLearningFormActionTypeEnum.BasicSearch type="submit">
+                            <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
+                            </svg>
+                            <span class="nhsuk-u-visually-hidden">Search</span>
+                        </button>
+
+                    </div>
+                    <p class="nhsuk-body-l">
+                        <h3>@Model.TotalCount activity result@(Model.TotalCount > 1 ? "s" : "")</h3>
+                    </p>
+                </form>
+            </div>
+            <div class="nhsuk-grid-column-one-half">
+                <p class="nhsuk-u-padding-left-0">
+                    <a class="nhsuk-u-width-one-quarter nhsuk-u-margin-right-4" asp-action="Index" asp-route-searchText="@Model.SearchText" asp-route-myLearningFormActionType="@MyLearningFormActionTypeEnum.ApplyWeekFilter" asp-fragment="search-results" title="This week">
+                        This week
+                    </a>
+                    <a class="nhsuk-u-width-one-quarter nhsuk-u-margin-right-4" asp-action="Index" asp-route-searchText="@Model.SearchText" asp-route-myLearningFormActionType="@MyLearningFormActionTypeEnum.ApplyMonthFilter" asp-fragment="search-results" title="This month">
+                        This month
+                    </a>
+                    <a class="nhsuk-u-width-one-quarter nhsuk-u-margin-right-4" asp-action="Index" asp-route-searchText="@Model.SearchText" asp-route-myLearningFormActionType="@MyLearningFormActionTypeEnum.ApplyTwelveMonthFilter" asp-fragment="search-results" title="Last 12 months">
+                        Last 12 months
+                    </a>
+                </p>
+
+            </div>
+            <div class="nhsuk-grid-column-full">
+                <div class="search-filters">
+                    <form asp-controller="MyLearning" asp-action="Index" method="post" asp-fragment="search-results">
+                        <input type="hidden" asp-for="@Model.SearchText" />
+                        <details class="nhsuk-details nhsuk-expander nhsuk-u-margin-bottom-7">
+
+                            <summary class="nhsuk-details__summary nhsuk-u-padding-0">
+                                <span class="nhsuk-details__summary-text">
+                                    Filter results
+                                </span>
+
+                                <hr class="nhsuk-u-margin-top-3 nhsuk-u-margin-bottom-3" />
+
+                                <div class="filter-summary">
+                                    <partial name="_filterSummary" model="@Model" />
+                                </div>
+                                <hr class="nhsuk-u-margin-top-3 nhsuk-u-margin-bottom-0" />
+                            </summary>
+
+                            <div class="search-filter-items nhsuk-u-margin-top-0 nhsuk-u-padding-4 nhsuk-u-padding-bottom-0">
+
+                                <div class="nhsuk-grid-row">
+                                    <div class="nhsuk-grid-column-full filterForm">
+
+                                        <vc:radio-list asp-for="TimePeriod"
+                                                       label="Filter by date:"
+                                                       populate-with-current-values="true"
+                                                       radios="@Model.SortByDateRadio()"
+                                                       hint-text=""
+                                                       css-class="nhsuk-grid-column-one-quarter nhsuk-u-padding-bottom-3"
+                                                       required="true" />
+                                    </div>
+                                    <div class="nhsuk-grid-column-full">
+                                        <div class="nhsuk-grid-column-one-quarter">
+                                            <div class="nhsuk-form-group">
+                                                <div class="nhsuk-radios">
+
+                                                    <div class="nhsuk-radios__item">
+                                                        <input class="nhsuk-radios__input" id="example-inline-1" name="TimePeriod" type="radio" checked="@(Model.TimePeriod == "dateRange")" value="dateRange">
+                                                        <label class="nhsuk-label nhsuk-radios__label" for="example-inline-1">
+                                                            Select dates
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="nhsuk-grid-column-one-third nhsuk-u-padding-top-1">
+                                            <vc:date-input id="StartDate"
+                                                           label=""
+                                                           day-id="StartDay"
+                                                           month-id="StartMonth"
+                                                           year-id="StartYear"
+                                                           css-class=""
+                                                           hint-text-lines="@startHintTextLines" />
+                                        </div>
+                                        <div class="nhsuk-grid-column-one-third nhsuk-u-padding-top-1">
+                                            <vc:date-input id="EndDate"
+                                                           label=""
+                                                           day-id="EndDay"
+                                                           month-id="EndMonth"
+                                                           year-id="EndYear"
+                                                           css-class=""
+                                                           hint-text-lines="@endHintTextLines" />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <hr class="nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-3" />
+
+                                <div class="nhsuk-grid-row">
+                                    <div class="nhsuk-grid-column-full filterForm">
+                                        <vc:checkboxes label="Filter by certificates:"
+                                                       populate-with-current-values="true"
+                                                       checkboxes="@Model.CertificateFilterCheckbox()"
+                                                       hint-text=""
+                                                       required="false"
+                                                       css-class="nhsuk-grid-column-one-quarter"
+                                                       errormessage="" />
+                                    </div>
+                                </div>
+
+                                <div class="nhsuk-grid-row">
+                                    <div class="nhsuk-grid-column-full filterForm">
+                                        <vc:checkboxes label="Filter by status:"
+                                                       populate-with-current-values="true"
+                                                       checkboxes="@Model.StatusFilterCheckbox()"
+                                                       hint-text=""
+                                                       required="false"
+                                                       css-class="nhsuk-grid-column-one-quarter"
+                                                       errormessage="" />
+                                    </div>
+                                </div>
+
+                                <div class="nhsuk-grid-row">
+                                    <div class="nhsuk-grid-column-full filterForm">
+                                        <vc:checkboxes label="Filter by type:"
+                                                       populate-with-current-values="true"
+                                                       checkboxes="@Model.TypeFilterCheckbox()"
+                                                       hint-text=""
+                                                       required="false"
+                                                       css-class="nhsuk-grid-column-one-quarter"
+                                                       errormessage="" />
+                                    </div>
+                                </div>
+                                <hr class="nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-0" />
+                                <button data-module="nhsuk-button" type="submit" class="nhsuk-button nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0" name="MyLearningFormActionType" value="@MyLearningFormActionTypeEnum.ApplyMajorFilters" title="Apply">Apply</button>
+                            </div>
+
+                        </details>
+                    </form>
+                </div>
+                <partial name="_ActivityTable" model="@Model" />
+            </div>
+
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-top-9">
+                <div class="nhsuk-card">
+                    <div class="nhsuk-card__content">
+                        <h3 class="nhsuk-card__heading"> Get help </h3>
+                        <p class="nhsuk-card__description">
+                            Find further guidance and support on how to manage My learning at the <a href="@ViewBag.MyLearningHelpUrl" target="_blank">Learning Hub help centre</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="nhsuk-grid-column-full">
+                @await Html.PartialAsync("_ActivityTablePaging", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,93 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+@{
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    var showBanner = !consentFeature?.CanTrack ?? false;
+    var cookieString = consentFeature?.CreateConsentCookie();
+    var cookieOptionalConsentName = "NHSLearningHub-cookie-consent";
+} 
+
+<script src="/lib/js-cookie/src/js.cookie.min.js"></script>
+<div id="cookieConsentBanner" class="cookie-container bg-white"  style="display:none;">
+    <div id="cookieConsent" class="lh-padding-fluid">
+        <div class="lh-container-xl">
+            <div class="row">
+                <div>
+                    <h3>Cookies on the Learning Hub</h3>
+                    <p>We’d like to use cookies to improve your experience and send information to services such as Google Analytics.</p>
+                    <p>Let us know if this is OK. We'll use a cookie to save your choice. You can <a href="/policies/cookie-policy">read more about our cookies</a> before you choose.</p>
+                </div>
+                <div>
+                    <button class="btn mr-5 btn-cookie-acceptance" data-dismiss="alert" data-cookie-string="@cookieString">
+                        <span aria-hidden="true">I’m OK with optional cookies</span>&nbsp;
+                    </button>
+                    <a class="lnk-cookie-reject" href="#" id="cookieRejectConsent" data-cookie-string="@cookieOptionalConsentName">Do not use optional cookies</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="cookieRejectBanner" class="alert div-cookie-non-acceptance" style="display:none;">
+    <div id="cookieRejectBannerDetails" class="lh-padding-fluid">
+        <div class="lh-container-xl">
+            <div class="row">
+                <div class="col-10 col-md-11">
+                    <div class="my-4 fade show">
+                        You can enable optional cookies at any time using our <a class="cookie-white-link" href="/policies/cookie-policy">cookies page.</a>
+                    </div>
+                </div>
+                <div class="col-2 col-md-1 m-auto text-center">
+                    <div class="m-auto text-right">
+                        <a href="#" style="text-decoration:none" class="cookie-white-link" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">X</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+        function handleCookieSelection() {
+            cookieConsent = Cookies.get('@cookieOptionalConsentName');
+            var rememberMecontainer = document.getElementById("rememberMeContainer");
+
+            if (cookieConsent === 'none') {
+                document.getElementById("cookieConsentBanner").style.display = "block";                
+            }
+            else if (cookieConsent === 'no') {
+                document.getElementById("cookieConsentBanner").style.display = "none";                
+            }
+            else if (cookieConsent === 'yes') {
+                document.getElementById("cookieConsentBanner").style.display = "none";
+                document.getElementById("cookieRejectBanner").style.display = "none";   
+                if (rememberMecontainer) {
+                    document.getElementById("rememberMeContainer").style.display = "flex";
+                }
+            }
+        }
+
+        (function () {
+            var cookieConsent = Cookies.get('@cookieOptionalConsentName');
+            if (cookieConsent === undefined) {
+                Cookies.set('@cookieOptionalConsentName', 'none', { expires: 365 })
+            }
+            handleCookieSelection();
+            var acceptButton = document.querySelector("#cookieConsent button[data-cookie-string]");
+            acceptButton.addEventListener("click", function (event) {
+                document.cookie = acceptButton.dataset.cookieString;
+                Cookies.set('@cookieOptionalConsentName', 'yes', { expires: 365 });
+                handleCookieSelection();
+                event.preventDefault();
+            }, true);
+
+            var rejectButton = document.querySelector("#cookieRejectConsent");
+            rejectButton.addEventListener("click", function (event) {
+                Cookies.set('@cookieOptionalConsentName', 'no', { expires: 365 });
+                handleCookieSelection();
+                document.getElementById("cookieRejectBanner").style.display = "block";
+                event.preventDefault();
+            }, true);
+        })();
+</script>
+

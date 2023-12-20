@@ -1,0 +1,75 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserGradeUpdateViewModel
+
+@{
+    ViewData["Title"] = "Update Job Grade";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+
+<div class="create-account">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
+                @if (Context.Request.Query["direct"] == "true")
+                {
+                    <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+                }
+                else if (Model.SelectedMedicalCouncilId > 0 && Model.SelectedMedicalCouncilId < 4)
+                {
+                    var changeMedicalNoRouteData = new Dictionary<string, string> {
+                { "SelectedJobRoleId", Model.SelectedJobRoleId.ToString() },
+                { "SelectedMedicalCouncilNo", Model.SelectedMedicalCouncilNo }
+                };
+
+                    <vc:back-link asp-controller="MyAccount" asp-action="ChangeMedicalCouncilNo" link-text="Go back" asp-all-route-data="@changeMedicalNoRouteData" />
+                }
+                else
+                {
+                    var changeRoleRouteData = new Dictionary<string, string> {
+                { "SelectedJobRoleId", Model.SelectedJobRoleId.ToString() },
+                { "FilterText", Model.SelectedJobRole }
+                };
+                    <vc:back-link asp-controller="MyAccount" asp-action="ChangeCurrentRole" link-text="Go back" asp-all-route-data="@changeRoleRouteData" />
+                }
+
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                }
+
+                <h1 class="nhsuk-heading-xl">Update grade</h1>
+
+                <div>
+                    <div class="nhsuk-form-group">
+                        <div class="nhsuk-label nhsuk-u-font-weight-bold">Current selected grade</div>
+                        <div class="nhsuk-hint">@Model.Grade</div>
+                    </div>
+
+                    <div class="nhsuk-u-padding-bottom-5">
+                        <hr class="nhsuk-section-break nhsuk-section-break--visible ">
+                    </div>
+                </div>
+
+                <h2 class="nhsuk-heading-l">Select your grade</h2>
+
+                <form>
+                    <vc:radio-list asp-for="SelectedGradeId"
+                                   label=""
+                                   populate-with-current-values="true"
+                                   radios="@Model.GradeRadio().ToList()"
+                                   hint-text="You can find this on your payslip."
+                                   required-client-side-error-message="Select a grade"
+                                   required="true" />
+
+                    <div class="nhsuk-form-group">
+                        <input type="hidden" name="formSubmission" value="true">
+                        <input type="hidden" name="selectedJobRoleId" value="@Model.SelectedJobRoleId">
+                        <input type="hidden" name="SelectedMedicalCouncilNo" value="@Model.SelectedMedicalCouncilNo">
+                        <button type="submit" class="nhsuk-button">Continue</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+﻿@using LearningHub.Nhs.Models.Dashboard
+@using LearningHub.Nhs.Models.Provider
+@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Extensions
+@using LearningHub.Nhs.WebUI.Models
+@using System.Linq
+@using System.Collections.Generic;
+@using LearningHub.Nhs.WebUI.Helpers
+@model Tuple<string, DashboardResourceViewModel>
+
+@{
+    bool providerExists = Model.Item2.Providers?.Count > 0;
+    string cardStyle = Model.Item1.Contains("my-learning") ? "card-provider-details--darkblank" : "card-provider-details--blank";
+}
+
+<div class="nhsuk-card dashboard-card">
+
+    @if (providerExists)
+    {
+        <div class="card-provider-details">
+            @ProviderHelper.GetProviderString(Model.Item2.Providers.FirstOrDefault().Name)
+        </div>
+    }
+    else
+    {
+        <div class="card-provider-details @cardStyle"></div>
+    }
+
+    <div class="nhsuk-card__content dashboard-card-content">                       
+        <div>
+            <h2 class="nhsuk-card__heading nhsuk-heading-m line-clamp-2">
+                <a class="nhsuk-card__link" asp-controller="Dashboard" asp-action="RecordDashboardNavigation" asp-route-eventType="@EventTypeEnum.DashBoardResourceView"
+                   asp-route-url="@("/Resource/" + Model.Item2.ResourceReferenceId)" asp-route-resourceReference="@Model.Item2.ResourceReferenceId">@UtilityHelper.StripHtmlFromString(Model.Item2.Title)</a>
+            </h2>
+        </div>
+        <div class="nhsuk-card__description dashboard-card-body">
+            <div>
+                <div class="nhsuk-body-s nhsuk-u-margin-bottom-2point5">
+                    <span class="nhsuk-u-font-weight-bold">Type:</span> @UtilityHelper.GetPrettifiedResourceTypeName(Model.Item2.ResourceType, Model.Item2.DurationInMilliseconds)
+                </div>
+                <div class="nhsuk-u-margin-bottom-2point5 line-clamp-3">
+                    @UtilityHelper.StripHtmlFromString(Model.Item2.Description)
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Item2.CatalogueName))
+                {
+                    <div class="nhsuk-u-font-size-16 nhsuk-u-margin-bottom-2point5 line-clamp-1">
+                        <a asp-controller="Catalogue" asp-action="Index" asp-route-reference="@Model.Item2.Url">@UtilityHelper.StripHtmlFromString(Model.Item2.CatalogueName)</a>
+                    </div>
+                }
+
+                <div class="nhsuk-body-s nhsuk-u-margin-bottom-2 star-rating-container">
+                    <partial name="_StarRatingWithCount" model="@new StarRatingWithCountViewModel { AverageRating = (decimal)Model.Item2.AverageRating,
+                                                                                        RatingCount = Model.Item2.RatingCount,
+                                                                                        ResourceReferenceId = Model.Item2.ResourceReferenceId }" />
+                </div>
+            </div>
+
+            <div class="catalogue-meta">
+                <div>
+                    <div class="nhsuk-u-margin-bottom-2">
+                        @if (Model.Item2.RestrictedAccess)
+                        {
+                            <div class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">@(Model.Item2.HasAccess ? "Access granted" : "Access restricted")</div>
+                        }
+                    </div>
+                    <div>
+                        <a class="nhsuk-u-font-size-16 nhsuk-u-margin-right-3" role="button" asp-controller="Bookmark" asp-action="BookmarkResource"
+                           asp-route-bookmarked="@Model.Item2.IsBookmarked"
+                           asp-route-id="@Model.Item2.BookmarkId"
+                           asp-route-title="@Model.Item2.Title.Truncate(60)"
+                           asp-route-rri="@Model.Item2.ResourceReferenceId"
+                           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">@(Model.Item2.IsBookmarked ? "Remove from" : "Add to")  my bookmarks</a>
+                    </div>
+                </div>
+                <div>
+                    @if(providerExists)
+                    {
+                        var provider = @Model.Item2.Providers.First();
+                        <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name" class="provider-badge" />
+                    }
+                    else if (!string.IsNullOrEmpty(Model.Item2.BadgeUrl))
+                    {
+                        <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(Model.Item2.BadgeUrl))" alt="@(Model.Item2.CatalogueName)" class="catalogue-badge" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Learning Hub - Session Timeout";
+}
+
+<div class="m-35 p-35 text-center bg-white">
+    <i class="fa-solid fa-triangle-exclamation text-warning display-4 mt-4 mb-1"></i>    
+    <h1 class="nhsuk-heading-xl">You have been signed out</h1>
+    <p>You have been signed out as there has been no activity for at least @ViewBag.AuthTimeout minutes.</p>
+    <p><a asp-controller="Account" asp-action="AuthorisationRequired" asp-route-originalurl="@ViewBag.ReturnUrl">Sign in</a> to the Learning Hub</p>
+</div>

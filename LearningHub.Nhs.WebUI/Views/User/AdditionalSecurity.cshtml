@@ -1,0 +1,63 @@
+﻿@model elfhHub.Nhs.Models.Common.SecurityQuestionsViewModel
+@{
+    ViewData["Title"] = "Profile - Additional Security";
+    string[] textualNumber = new string[] { "first", "second", "third", "fourth", "fifth" };
+}
+
+<div class="nhsuk-width-container">
+    <main class="nhsuk-main-wrapper nhsuk-main-wrapper--s" id="maincontent" role="main">
+        <form asp-controller="User" asp-action="AdditionalSecurity" method="post">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-two-thirds">
+                    <h2>
+                        Additional Security
+                    </h2>
+                    <div>
+                        These security questions can be used to help you to sign in if you forget your password. Please be assured that anything you enter on this page is encrypted and will not be visible to anyone, including system administrators.
+                    </div>
+                    <div>Health Education England will only use this information to help you sign in to the Learning Hub.</div>
+                    <dl class="nhsuk-summary-list">
+                        <div class="error-text form-group input-validation-error ml-0">                            
+                            <span class="text-danger">@Html.ValidationMessage("DuplicateQuestion")</span>
+                        </div>
+                        @for (var i = 0; i < Model.UserSecurityQuestions.Count(); i++)
+                        {
+                            var answerHash = Model.UserSecurityQuestions[i].SecurityQuestionAnswerHash ?? "";
+                            var hasAnswer = answerHash.StartsWith("*") && answerHash.EndsWith("*");
+                            <div class="nhsuk-summary-list__row">
+                                <dt class="nhsuk-summary-list__key">
+                                    <label asp-for="UserSecurityQuestions[i].SecurityQuestionId" class="control-label">Please select your @textualNumber[i] question</label>
+                                </dt>
+                                <dd class="nhsuk-summary-list__value">
+                                    <select asp-for="UserSecurityQuestions[i].SecurityQuestionId" class="form-control" asp-items="@Model.SecurityQuestions"></select>
+                                    <span asp-validation-for="UserSecurityQuestions[i].SecurityQuestionId" class="text-danger"></span>
+                                </dd>
+                            </div>
+                            <div class="nhsuk-summary-list__row">
+                                <dt class="nhsuk-summary-list__key">
+                                    <label asp-for="UserSecurityQuestions[i].SecurityQuestionAnswerHash">Please provide your answer</label>
+                                </dt>
+                                <dd class="nhsuk-summary-list__value">                                   
+                                    <input type="hidden" asp-for="UserSecurityQuestions[i].Id" />
+                                    <input type="password" class="form-control" asp-for="UserSecurityQuestions[i].SecurityQuestionAnswerHash" autocomplete="off" />
+                                    <span asp-validation-for="UserSecurityQuestions[i].SecurityQuestionAnswerHash" class="text-danger"></span>
+                                </dd>
+                            </div>                           
+                        }
+                        <div class="nhsuk-summary-list__row">
+                            <dt class="nhsuk-summary-list__key">
+                                <button type="submit" class="btn btn-custom">
+                                    Save
+                                </button>
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">
+                                <a asp-controller="User" asp-action="Index">Cancel</a>
+                            </dd>
+                        </div>
+                     </dl>
+                </div>
+            </div>            
+            @Html.AntiForgeryToken()
+        </form>
+    </main>
+</div>

@@ -1,0 +1,46 @@
+﻿@using elfhHub.Nhs.Models.Common
+@model LearningHub.Nhs.WebUI.Models.Account.AccountCreationListViewModel
+
+@{
+    ViewData["Title"] = "Region";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    var routeData = new Dictionary<string, string> { { "ReturnToConfirmation", Context.Request.Query["returnToConfirmation"] } };
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+<div class="create-account">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
+                <vc:back-link asp-controller="Account" asp-action="CreateAccountCountrySelection" asp-all-route-data="@routeData" link-text="Back to: Search for your country" />
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                }
+                <form asp-controller="Account" asp-action="CreateAccountSubmitRegionSelection" method="post">
+                    <input type="hidden" name="formSubmission" value="true">
+
+
+                    <vc:radio-list asp-for="RegionId"
+                                   label="Select your region"
+                                   populate-with-current-values="true"
+                                   radios="@Model.RegionRadio()"
+                                   hint-text=""
+                                   required-client-side-error-message="Select a region"
+                                   required="true"
+                                   is-page-heading="true" />
+
+                    <input type="hidden" name="CountryId" value="@Context.Request.Query["CountryId"]">
+                    <input type="hidden" name="FilterText" value="@Context.Request.Query["FilterText"]">
+                    <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+                    <button type="submit" class="nhsuk-button">Continue</button>
+
+                </form>
+                @await Html.PartialAsync("_AccountCreationRegionPaging", Model.AccountCreationPaging)
+            </div>
+        </div>
+    </div>
+</div>
+
+

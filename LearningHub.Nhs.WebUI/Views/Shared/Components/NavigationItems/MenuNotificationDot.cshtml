@@ -1,0 +1,11 @@
+﻿@using Microsoft.Extensions.Options;
+@using LearningHub.Nhs.WebUI.Configuration;
+@using LearningHub.Nhs.WebUI.Helpers;
+@inject IOptions<Settings> settings
+
+@model NavigationModel
+
+@if (Model.NotificationCount > 0 && Model.ShowNotifications)
+{
+    <div class="nhsuk-header__menu-notification-dot"></div>
+}

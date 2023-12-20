@@ -1,0 +1,76 @@
+﻿@using LearningHub.Nhs.WebUI.Models
+@model LandingPageViewModel
+@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.WebUI.Configuration.Settings> options
+@{
+    ViewData["Title"] = "Learning Hub - Home";
+    // OpenAthens url needs to makes sure that the return to WebUI first hits the authorisationrequired endpoint,
+    // which contains it's own redirect to within the UI.
+    // If a return url is specified we want to use it for the authorisationrequired original url
+    // Otherwise we just redirect back to the index page
+    var returnUrl = (string)Url.ActionContext.HttpContext.Request.Query["returnUrl"];
+    var authRequiredReturnUrl = returnUrl == null
+        ? Url.Action("AuthorisationRequired", "Account", new { originalUrl = "/" }, "https")
+        : Url.Action("AuthorisationRequired", "Account", new { originalUrl = returnUrl }, "https");
+    var openAthensSignOnUrl = Url.Action("Login", "OpenAthens", new { returnUrl = authRequiredReturnUrl, invalidScope = false });
+    var whoCanAccess = options.Value.SupportUrls.WhoCanAccessTheLearningHub;
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/landing_page.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/information_page.css" asp-append-version="true" />
+    <link href="https://amp.azure.net/libs/amp/2.3.10/skins/amp-default/azuremediaplayer.min.css" type="text/css" rel="stylesheet" />
+}
+
+
+<div class="">
+    <div class="landing-page__landing-page-banner">
+        <div class="landing-page__banner-panel display--hide display-desktop--show">
+            <h1>A platform for learning and sharing resources</h1>
+            <div class="text">
+                Sign up, explore and learn
+            </div>
+        </div>
+    </div>
+    <div class="landing-page__banner-panel-mobile display-desktop--hide">
+        <h1>A platform for learning and sharing resources</h1>
+        <div class="text">
+            Sign up, explore and learn
+        </div>
+    </div>
+
+    <div class="landing-page__access-container">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <h2>Access your Learning Hub account</h2>
+                </div>
+                <div class="nhsuk-grid-column-one-half">
+                    <h3>Use your Learning Hub or elfh credentials</h3>
+                    <p>
+                        <a asp-controller="Login" asp-action="Index" class="nhsuk-button nhsuk-button--beta-login">Log in</a>
+                    </p>
+                    <p class="nhsuk-u-margin-bottom-2">
+                        <a href="/forgotten-password">Forgotten username or password</a>
+                    </p>
+                    <p>
+                        <a asp-controller="Account" asp-action="CreateAnAccount">Create new account</a>
+                    </p>
+                </div>
+                <div class="nhsuk-grid-column-one-half landing-page__open-athens--mobile">
+                    <h3>Use your OpenAthens credentials</h3>
+                    <p>
+                        <a asp-controller="OpenAthens" asp-action="Login" asp-route-returnUrl=@authRequiredReturnUrl asp-route-invalidScope=false class="nhsuk-button nhsuk-button--secondary">Log in with OpenAthens</a>
+                    </p>
+                    <p>
+                        Registered NHS England and NHS Scotland OpenAthens users can login using their account.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cmsPage">
+        <partial name="_CmsPageRow" model="@Model" />
+    </div>
+
+</div>

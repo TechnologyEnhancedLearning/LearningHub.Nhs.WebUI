@@ -1,0 +1,35 @@
+﻿@using LearningHub.Nhs.Models.Enums
+@model LearningHub.Nhs.WebUI.Models.Bookmark.BookmarkItemViewModel
+
+@{
+    string GetResourceTypeName(int bookmarkTypeId, int? resourceTypeId)
+    {
+        if(bookmarkTypeId == 2)
+        {
+            return "Catalogue";
+        }
+        else if (resourceTypeId.HasValue)
+        {
+            return UtilityHelper.GetPrettifiedResourceTypeName((ResourceTypeEnum)resourceTypeId.Value);
+        }
+        
+        return string.Empty;
+    }
+}
+
+<tr role="row" class="nhsuk-table__row bookmark-item">
+    <td role="cell" class="nhsuk-table__cell bookmark-name">
+        <span class="nhsuk-table-responsive__heading">Learning resource</span>
+        <a href="@Model.Bookmark.Link" class="bookmark-link">
+            <span aria-label="@Model.Bookmark.Title">@Model.Bookmark.Title</span>
+        </a>
+    </td>
+    <td role="row" class="nhsuk-table__row col-type">
+        <span class="nhsuk-table-responsive__heading">Type</span>
+        @GetResourceTypeName(Model.Bookmark.BookmarkTypeId, Model.Bookmark.ResourceTypeId)
+    </td>
+    <td role="row" class="nhsuk-table__row col-organise">
+        <span class="nhsuk-table-responsive__heading">Organise</span>
+        <partial name="_BookmarkAction" model="Model.Action" />
+    </td>
+</tr>

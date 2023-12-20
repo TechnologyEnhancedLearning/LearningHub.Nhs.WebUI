@@ -1,0 +1,67 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserPersonalDetailsViewModel
+
+@{
+    ViewData["Title"] = "Profile - Personal Details";
+}
+
+<div class="nhsuk-width-container">
+    <main class="nhsuk-main-wrapper nhsuk-main-wrapper--s" id="maincontent" role="main">
+        <form asp-controller="User" asp-action="PersonalDetails" method="post">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-two-thirds">               
+                    <h2>
+                        Personal details
+                    </h2>                
+                    <dl class="nhsuk-summary-list">
+                        <div class="nhsuk-summary-list__row">
+                            <dt class="nhsuk-summary-list__key">
+                               <label asp-for="UserName"></label>
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">
+                                @Model.UserName
+                            </dd>
+                        </div>
+                        <div class="nhsuk-summary-list__row">
+                            <dt class="nhsuk-summary-list__key">
+                                <label asp-for="FirstName"></label>
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">
+                                <input asp-for="FirstName" class="form-control" autocomplete="off" width="100%" required />   
+                                <span asp-validation-for="FirstName"></span>                                
+                            </dd>
+                        </div>
+                        <div class="nhsuk-summary-list__row">
+                            <dt class="nhsuk-summary-list__key">
+                                <label asp-for="LastName"></label>
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">
+                              <input asp-for="LastName" class="form-control" autocomplete="off" width="100%" required />                                
+                              <span asp-validation-for="LastName"></span>                                
+                            </dd>
+                        </div>
+                        <div class="nhsuk-summary-list__row">
+                            <dt class="nhsuk-summary-list__key">
+                                <label asp-for="PreferredName"></label>
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">
+                                <input asp-for="PreferredName" class="form-control" autocomplete="off" width="100%" required />
+                                <span asp-validation-for="PreferredName"></span>                                
+                            </dd>
+                        </div>
+                        <div class="nhsuk-summary-list__row">
+                            <dt class="nhsuk-summary-list__key">
+                                <button type="submit" class="btn btn-custom">
+                                    Save
+                                </button>
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">
+                                <a asp-controller="User" asp-action="Index">Cancel</a>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+             </div>
+            @Html.AntiForgeryToken()            
+        </form>
+    </main>
+</div>

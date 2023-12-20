@@ -1,0 +1,98 @@
+@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.WebUI.Configuration.Settings> options
+@{
+    ViewData["Title"] = "Contact us";
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/staticpages.css" asp-append-version="true" />
+}
+
+<div class="nhsuk-width-container app-width-container">
+  <div class="nhsuk-main-wrapper ">
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-two-thirds ">
+        <h1>
+          @ViewData["Title"]
+        </h1>
+      </div>
+    </div>
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-full">
+        <h2 class="nhsuk-heading-l">General enquiries</h2>
+        <p class="nhsuk-u-reading-width">
+          If you have a general enquiry please email: <a class="nhsuk-card__link" href="mailto:enquiries@learninghub.nhs.uk">enquiries@learninghub.nhs.uk</a>. 
+          This email address should not be used for Learning Hub support queries. Support queries should be submitted via the 
+          form to the support team.
+        </p>
+      </div> 
+    </div>    
+
+
+    <ul class="nhsuk-grid-row nhsuk-card-group">
+      <li class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+        <div class="nhsuk-card nhsuk-card--clickable">
+          <div class="nhsuk-card__content">
+            <h2 class="nhsuk-card__heading nhsuk-heading-m">
+              <a class="nhsuk-card__link" target="_blank" href="@options.Value.SupportUrls.SupportSite">Support site</a>
+            </h2>
+            <p class="nhsuk-card__description">
+              Visit our support site for help on using the Learning Hub.
+            </p>
+          </div>
+        </div>
+      </li>
+
+      <li class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+        <div class="nhsuk-card nhsuk-card--clickable">
+          <div class="nhsuk-card__content">
+            <h2 class="nhsuk-card__heading nhsuk-heading-m">
+              <a class="nhsuk-card__link" target="_blank" href="@options.Value.SupportUrls.SupportForm">Support team</a>
+            </h2>
+            <p  class="nhsuk-card__description">
+              Complete our form to ask the support team for help.
+            </p>
+            <p class="nhsuk-card__description"><sup>*</sup>Available Monday-Friday 09:00 to 17:00</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+        <div class="nhsuk-card nhsuk-card--clickable">
+          <div class="nhsuk-card__content">
+            <h2 class="nhsuk-card__heading nhsuk-heading-m">
+              <a href="@options.Value.SupportUrls.SupportFeedbackForm" target="_blank">Share feedback</a>
+            </h2>
+            <p class="nhsuk-card__description">
+                Share your feedback to help us improve the platform.
+            </p>
+          </div>
+        </div>
+      </li>
+
+      <li class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+        <div class="nhsuk-card nhsuk-card--clickable">
+          <div class="nhsuk-card__content">
+            <h2 class="nhsuk-card__heading nhsuk-heading-m">
+              <a class="nhsuk-card__link" href="@options.Value.SupportUrls.ContributeUR">Contribute to user research</a>
+            </h2>
+            <p class="nhsuk-card__description">
+              Influence the future development of the Learning Hub.
+            </p>
+          </div>
+        </div>
+      </li>
+
+    </ul>
+
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-full">
+        @{
+          var now = new DateTime(2020, 4, 30);
+        }
+        @await Html.PartialAsync("~/Views/Shared/_PageReviewPartial.cshtml", new PageReviewModel { LastReviewedDate = now, NextReviewDate = now.AddYears(3) })
+
+      </div>
+    </div>
+
+  </div>
+</div>
+

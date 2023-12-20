@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNetCore.WebUtilities
+@model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
+
+@{
+    var pagingModel = Model.ResourceResultPaging;
+    var indexParamName = "resourcepageindex";
+    var pageFragment = "#search-filters";
+    var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString().ToLower());
+    if (pagingModel.CurrentPage < 0 || pagingModel.CurrentPage >= pagingModel.TotalPages)
+    {
+        queryParams[indexParamName] = "0";
+        Context.Response.Redirect(QueryHelpers.AddQueryString(Context.Request.Path, queryParams));
+    }
+
+    queryParams["searchid"] = $"{Model.ResourceSearchResult.SearchId}";
+    queryParams["groupid"] = $"{Model.GroupId}";
+    queryParams["resourcecount"] = $"{pagingModel.TotalItems}";
+
+    queryParams[indexParamName] = $"{pagingModel.CurrentPage - 1}";
+    var prevUrl = QueryHelpers.AddQueryString("/search/record-resource-navigation", queryParams);
+
+    queryParams[indexParamName] = $"{pagingModel.CurrentPage + 1}";
+    var nextUrl = QueryHelpers.AddQueryString("/search/record-resource-navigation", queryParams);
+
+  @await Html.PartialAsync("_Pagination", new PaginationViewModel(pagingModel.CurrentPage + 1, pagingModel.TotalPages, string.Concat(prevUrl,pageFragment), string.Concat(nextUrl,pageFragment)))
+}

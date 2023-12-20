@@ -1,0 +1,83 @@
+﻿@using Microsoft.Extensions.Options;
+@using LearningHub.Nhs.WebUI.Configuration;
+@inject IOptions<Settings> settings
+@{
+    ViewData["Title"] = "Create an account";
+}
+<article class="fullwidth">
+    <section>
+        <h1 class="nhsuk-heading-xl">@ViewData["Title"]</h1>
+        <p>You can create an account for the Learning Hub if you work in the following areas:</p>
+        <ul>
+            <li>NHS (incl. Wales, Scotland and Northern Ireland)</li>
+            <li>Hospice and Care Homes</li>
+            <li>Social Care (Skills for Care)</li>
+            <li>Public Health England</li>
+            <li>Department of Health</li>
+            <li>NICE</li>
+            <li>Ministry of Defence</li>
+            <li>Dental Trainees/Trainers & Practices</li>
+            <li>Local Government</li>
+            <li>Universities</li>
+        </ul>
+    <h2 class="nhsuk-heading-m">What you will need</h2>
+        <p>You will need to provide the following to complete the account creation form:</p>
+        <ul>
+            <li>A work email address related to an area of work listed above.</li>
+            <li>Details of your job role.</li>
+            <li>Details of your place of work (Postcode or ODS code).</li>
+        </ul>
+
+        <p><button class="btn btn-primary btn-custom mt-4" type="button" onclick="location.href='@settings.Value.ELfhHubLHTenantUrl/Register'">Start now</button></p>
+
+        <div class="accordion" id="accordion">
+            <div class="pt-5 pb-5">
+                <div class="heading" id="headingOne">
+                    <div class="mb-0">
+                        <a href="#" class="collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            <div class="accordion-arrow">I don’t work in the areas listed above</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="content">
+                        If you don’t work in the areas listed above you can alternatively register with the elearning for Healthcare Hub which will give you access to a wide range of resources.<br />
+                        <a href="@settings.Value.ELfhHubUrl/Register">Register for the elearning for Healthcare Hub</a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-5 pb-5">
+                <div class="heading" id="headingTwo">
+                    <div class="mb-0">
+                        <a href="#" class="collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <div class="accordion-arrow">I have already registered for the elearning for Healthcare Hub but my work isn’t listed above</div>
+                        </a>
+                    </div>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="content">
+                        If you have already registered for the elearning for Healthcare Hub but your area of work isn’t listed above, you can continue to access the resources on the elearning for Healthcare Hub using your existing account.
+                        <a href="@settings.Value.ELfhHubUrl">Sign in to the elearning for Healthcare Hub</a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-5 pb-5">
+                <div class="heading" id="headingThree">
+                    <div class="mb-0">
+                        <a href="#" class="collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <div class="accordion-arrow">Can I use my OpenAthens account?</div>
+                        </a>
+                    </div>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="content">
+                        If you have an OpenAthens account you can access the Learning Hub straight away.<br />
+                        <a href="/">Sign in to the Learning Hub</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</article>

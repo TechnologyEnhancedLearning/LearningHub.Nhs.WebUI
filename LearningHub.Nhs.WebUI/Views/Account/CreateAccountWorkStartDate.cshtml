@@ -1,0 +1,59 @@
+﻿@using LearningHub.Nhs.WebUI.Models.Account
+@model AccountCreationDateViewModel;
+
+@{
+    ViewData["Title"] = "Start Date";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    var exampleDate = DateTime.Today;
+    var hintTextLines = new List<string> { $"Enter the date you started your current role, for example, 24 08 2021" };
+    var filterText = !string.IsNullOrWhiteSpace(Context.Request.Query["filterText"]) ? Context.Request.Query["filterText"] : ViewBag.FilterText;
+    var routeData = new Dictionary<string, string> { { "PrimarySpecialtyId", Context.Request.Query["PrimarySpecialtyId"] } };
+    bool returnToConfirmation = false;
+    if (!string.IsNullOrWhiteSpace(Context.Request.Query["returnToConfirmation"]))
+    {
+        bool.TryParse(Context.Request.Query["returnToConfirmation"].ToString(), out returnToConfirmation);
+    }
+    else
+    {
+        bool.TryParse(Model.ReturnToConfirmation.ToString(), out returnToConfirmation);
+    }
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+ <div class="create-account">
+<div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds @(returnToConfirmation ? "nhsuk-u-padding-top-7":string.Empty)">
+                @if (!returnToConfirmation)
+                {
+                    <vc:back-link asp-controller="Account" asp-action="CreateAccountPrimarySpecialtySelection" asp-all-route-data="@routeData" link-text="Back to: Search for your primary specialty" />
+                }
+               @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model.Day), nameof(Model.Month), nameof(Model.Year) })" />
+                }
+
+            <form asp-controller="Account" asp-action="CreateAccountStartDate" method="post">
+                <input type="hidden" name="formSubmission" value="true">
+
+                    <vc:date-input id="StartDate"
+                                   label="Enter your start date"
+                                   day-id="Day"
+                                   month-id="Month"
+                                   year-id="Year"
+                                   css-class="nhsuk-u-margin-bottom-2"
+                                   is-page-heading="true"
+                                   hint-text-lines="@hintTextLines" />
+                            <input type="hidden" name="filterText" value="@Context.Request.Query["filterText"]">
+                            <input type="hidden" name="primarySpecialtyId" value="@Context.Request.Query["PrimarySpecialtyId"]">
+                    <input type="hidden" name="returnToConfirmation" value="@returnToConfirmation.ToString()">
+
+                <div class="nhsuk-form-group">
+                    <button type="submit" class="nhsuk-button">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>

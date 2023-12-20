@@ -1,0 +1,57 @@
+﻿@using LearningHub.Nhs.WebUI.Helpers;
+@model List<LinqToTwitter.Status>
+
+
+
+@if (Model.Any())
+{
+<div class="panel-container panel-container-tweet">
+    <div class="text-center">
+        <img src="~/images/twitter.svg" alt="twitter" />
+    </div>
+    <h2 class="heading-xl">Latest from Twitter</h2>
+    <div class="row">
+        @{
+                var counter = 0;
+
+                foreach (var item in Model)
+                {
+                    var tweetlink = string.Format("https://twitter.com/statuses/{0}", item.StatusID);
+    
+                if (counter > 0 && counter % 2 == 0)
+                {
+                    <div class="w-100"></div>
+                }
+                <div class="col-12 col-md-6 mb-5 tweet text-left">
+                    <div class="panel panel-tweet d-flex flex-column">
+                        <div class="align-self-center">@Html.FormatTwitterDate(item.CreatedAt)</div>
+                        <div>@Html.Raw(item.FullText)</div>
+                        <div class="flex-fill align-self-center">
+                            @if (item.Entities.MediaEntities.Count > 0)
+                            {
+                                <a href="@tweetlink" target="_blank"><img class="tweetmedia" src="@item.Entities.MediaEntities[0].MediaUrlHttps" alt="@item.Entities.MediaEntities[0].AltText" /></a>
+                            }
+                        </div>
+                        <div class="p-2 mt-3 d-flex justify-content-around count-properties iconSection">                            
+                            <div>
+                                <i class="far fa-comment-dots" title="Reply Count"></i>
+                            </div>
+                            <div>
+                                <i class="far fa-retweet" title="Reweet Count"></i>@item.RetweetCount
+                            </div>
+                            <div>
+                                <i class="far fa-heart" title="Favorite Count"></i>@item.FavoriteCount
+                            </div>
+                         </div>
+                    </div>                    
+                </div>
+
+                counter++;
+            }
+
+        }
+    </div>
+    <h3 target="_blank" class="nhsuk-heading-m pb-4">Follow us <a href="https://twitter.com/@ViewBag.TwitterScreenName" target="_blank">@ViewBag.TwitterScreenName</a></h3>
+</div>
+}
+    

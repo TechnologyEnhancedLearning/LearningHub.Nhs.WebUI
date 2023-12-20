@@ -1,0 +1,34 @@
+﻿@model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
+
+<div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+        @await Html.PartialAsync("_SearchBar", @Model.SearchString)
+    </div>
+</div>
+
+@if (Model.ResourceSearchResult?.TotalHits > 0)
+{
+    @await Html.PartialAsync("../Search/_ResourceFilter", Model)
+
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="nhsuk-u-reading-width">
+                @await Html.PartialAsync("../Search/_ResourceSearchResult", Model)
+                @await Html.PartialAsync("_SearchPagination", Model)
+            </div>
+        </div>
+    </div>
+}
+else if (Model.ResourceSearchResult?.TotalHits == 0)
+{
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <h2 class="nhsuk-heading-l nhsuk-u-reading-width">No results found for @Model.SearchString</h2>
+            <p>You could try:</p>
+            <ul class="nhsuk-list nhsuk-list--bullet">
+                <li>checking your spelling</li>
+                <li>searching again using other words</li>
+            </ul>
+        </div>
+    </div>
+}

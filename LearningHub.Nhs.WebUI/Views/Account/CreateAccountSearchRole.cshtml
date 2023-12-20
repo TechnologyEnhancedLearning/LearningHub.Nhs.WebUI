@@ -1,0 +1,66 @@
+﻿@using elfhHub.Nhs.Models.Common
+@using LearningHub.Nhs.WebUI.Models.Account
+@model AccountCreationViewModel;
+
+@{
+    ViewData["Title"] = "Role";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    var routeData = new Dictionary<string, string> { { "CountryId", Context.Request.Query["CountryId"] } };
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+    <div class="create-account">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
+                @if (Model.CountryId == "1")
+                {
+                    <vc:back-link asp-controller="Account" asp-action="CreateAccountRegionSelection" asp-all-route-data="@routeData" link-text="Back to: Select your region" />
+
+                }
+                else
+                {
+                    <vc:back-link asp-controller="Account" asp-action="CreateAccountCountrySelection" asp-all-route-data="@routeData" link-text="Back to: Select your country" />
+
+                }
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                }
+                <h1 class="nhsuk-heading-xl">Search for your current role</h1>
+
+                <form asp-controller="Account" asp-action="CreateAccountCurrentRole" method="get">
+                    <input type="hidden" name="formSubmission" value="true">
+
+                    <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">Use a generic term to best describe your role</label>
+                    <div class="nhsuk-form-group search-box-container nhsuk-u-padding-bottom-5" style="white-space:nowrap">
+                        <input type="hidden" name="RegionId" value="@Context.Request.Query["RegionId"]">
+                        <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText">
+                        <button class="nhsuk-search__submit" type="submit">
+                            <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
+                            </svg>
+                            <span class="nhsuk-u-visually-hidden">Search</span>
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+                <details class="nhsuk-details nhsuk-expander">
+                    <summary class="nhsuk-details__summary">
+                        <span class="nhsuk-details__summary-text">
+                            Why do I need to provide details about my role?
+                        </span>
+                    </summary>
+                    <div class="nhsuk-details__text">
+                        <p>In the future, resources will be recommended to you based on your role.</p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/LearningHub.Nhs.WebUI/bin/Debug/netcoreapp2.2
+/LearningHub.Nhs.WebUI/node_modules
+/LearningHub.Nhs.WebUI/wwwroot/css
+/LearningHub.Nhs.WebUI/obj
+/LearningHub.Nhs.WebUI/Properties/launchSettings.json
+/LearningHub.Nhs.WebUI/LearningHub.Nhs.WebUI.csproj.user
+/LearningHub.Nhs.WebUI/internal-nlog-*.txt
+/LearningHub.Nhs.WebUI/bin/Release/netcoreapp2.2
+/node_modules
+/LearningHub.Nhs.WebUI/.vs
+/LearningHub.Nhs.WebUI/bin/IISSupport/pidfile.txt
+/LearningHub.Nhs.WebUI/bin/IISSupport/VSIISExeLauncher.exe
+/LearningHub.Nhs.WebUI/web.config
+/LearningHub.Nhs.WebUI/bin/IISSupport
+/LearningHub.Nhs.WebUI/wwwroot/js/bundle/
+/LearningHub.Nhs.WebUI/appsettings.Development.json
+/LearningHub.Nhs.WebUI/Properties/PublishProfiles/drj-LearningHub-WebUI - Web Deploy.pubxml.user
+/LearningHub.Nhs.WebUI/Properties/PublishProfiles/drj-LearningHub-WebUI - Web Deploy.pubxml
+/LearningHub.Nhs.WebUI/.config/dotnet-tools.json
+/LearningHub.Nhs.WebUI/Views/Contribute/MyContributions - Copy.cshtml
+bin
+obj
+/LearningHub.Nhs.WebUI/wwwroot/LearningSessions/scorm/c51a8115-6c62-4be5-9645-7d44c3f2815d
+
+# Custom additions
+/.idea
+/LearningHub.Nhs.WebUI/yarn-error.log

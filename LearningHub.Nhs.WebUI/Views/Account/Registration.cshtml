@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewData["Title"] = "Registration";
+}
+
+<div id="registrationcontainer">
+    <router-view elfh-hub-url="@ViewBag.ELfhHubUrl" auth-service-url="@ViewBag.AuthService" who-can-access-url="@ViewBag.WhoCanAccessUrl" support-form-url="@ViewBag.SupportFormUrl" />
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/bundle/registrationcontainer.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,73 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserMedicalCouncilNoUpdateViewModel
+
+@{
+    ViewData["Title"] = "Update Medical Council Number";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+
+<div class="create-account">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
+                @if (Context.Request.Query["direct"] == "true")
+                {
+                    <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+                }
+                else
+                {
+                    var changeRoleRouteData = new Dictionary<string, string> {
+                { "SelectedJobRoleId", Model.SelectedJobRoleId.ToString() },
+                { "FilterText", Model.SelectedJobRole }
+                };
+                    <vc:back-link asp-controller="MyAccount" asp-action="ChangeCurrentRole" link-text="Go back" asp-all-route-data="@changeRoleRouteData" />
+                }
+
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                }
+
+                <h1 class="nhsuk-heading-xl">Update medical council number</h1>
+
+                @if (!string.IsNullOrEmpty(Model.MedicalCouncilNo))
+                {
+                    <div class="nhsuk-form-group">
+                        <div class="nhsuk-label nhsuk-u-font-weight-bold">Professional body</div>
+                        <div class="nhsuk-hint">@Model.MedicalCouncil</div>
+                    </div>
+
+                    <div class="nhsuk-form-group">
+                        <div class="nhsuk-label nhsuk-u-font-weight-bold">@Model.MedicalCouncilCode number</div>
+                        <div class="nhsuk-hint">@Model.MedicalCouncilNo</div>
+                    </div>
+
+                    <div class="nhsuk-u-padding-bottom-5">
+                        <hr class="nhsuk-section-break nhsuk-section-break--visible ">
+                    </div>
+                }
+
+                <h2 class="nhsuk-heading-l">Enter your @Model.SelectedMedicalCouncilCode number</h2>
+
+                <form>
+                    <vc:text-input asp-for="SelectedMedicalCouncilNo"
+                                   label="@Model.SelectedMedicalCouncilCode number"
+                                   populate-with-current-value="true"
+                                   type="text"
+                                   spell-check="false"
+                                   hint-text=""
+                                   autocomplete=""
+                                   css-class="nhsuk-u-width-one-half"
+                                   required="true" />
+
+                    <div class="nhsuk-form-group">
+                        <input type="hidden" name="SelectedJobRoleId" value="@Model.SelectedJobRoleId">
+                        <input type="hidden" name="direct" value="@Context.Request.Query["direct"]">
+                        <input type="hidden" name="formSubmission" value="true">
+                        <button type="submit" class="nhsuk-button">Continue</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

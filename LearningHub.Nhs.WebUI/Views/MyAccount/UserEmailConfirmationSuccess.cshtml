@@ -1,0 +1,21 @@
+﻿@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.WebUI.Configuration.Settings> options;
+@{
+  ViewData["Title"] = "My Account - Confirm Email";
+  Layout = ViewData["Layout"].ToString();
+  var supportUrl = options.Value.SupportUrls.SupportForm;
+}
+<div class="bg-white">
+  <div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-full nhsuk-u-padding-top-9 nhsuk-u-padding-bottom-9">
+        <h1 class="nhsuk-heading-xl">@ViewBag.SuccessMessage</h1>
+        <div class="nhsuk-label nhsuk-padding-top-2" id="contact-hint">
+          <p>If you do not request this change, please contact the <a href="@supportUrl" target="_blank">support team.</a></p>
+        </div>
+        <div class="nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-4">
+          <a class="nhsuk-link" asp-controller="MyAccount" asp-action="Index">Go back to my account</a>
+        </div>
+      </div>      
+    </div>
+  </div>
+</div>

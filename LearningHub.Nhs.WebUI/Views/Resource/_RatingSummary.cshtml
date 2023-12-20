@@ -1,0 +1,109 @@
+﻿@using LearningHub.Nhs.Models.Common
+@model ResourceRatingViewModel
+
+<div>
+    <div class="display__flex-space-between">
+        <p class="nhsuk-u-font-weight-bold">@Model.RatingSummary.RatingCount rating@(Model.RatingSummary.RatingCount == 1 ? "" : "s")</p>
+        <partial name="_StarRating" model="@Convert.ToDecimal(Model.RatingSummary.AverageRating)" />
+    </div>
+
+    @if (Model.RatingSummary.UserHasAlreadyRated)
+    {
+        <p class="nhsuk-u-secondary-text-color nhsuk-u-font-weight-bold">You have rated this resource</p>
+    }
+
+    @if (ViewBag.UserAuthenticated && !Model.RatingSummary.UserIsContributor && Model.HasCatalogueAccess)
+    {
+        <details class="nhsuk-details">
+            <summary class="nhsuk-details__summary">
+                <span class="nhsuk-details__summary-text">
+                    Rate this resource
+                </span>
+            </summary>
+            <div class="nhsuk-details__text">
+                <h3>Rate this resource</h3>
+                @if (Model.RatingSummary.UserCanRate)
+                {
+                    <p>Rate this resource between 1 and 5 stars. 1 star being poor and 5 stars being great.</p>
+                }
+                else
+                {
+                    <p>You need to access this resource before you can rate it.</p>
+                }
+
+                <form asp-controller="Resource" asp-action="RateResource" method="post">
+                    <input type="hidden" asp-for="ResourceVersionId" />
+                    <input type="hidden" asp-for="ResourceReferenceId" />
+                    <input type="hidden" asp-for="RatingSummary.UserHasAlreadyRated" />
+                    <input type="hidden" asp-for="ResourceName" />
+
+                    <div class="ratings-container">
+                        <div>
+                        <fieldset class="star-rating">
+                            <div>
+                                @for (int i = 1; i < 6; i++)
+                                {
+                                    <input type="radio" asp-for="RatingSummary.UserRating" value="@i" id="@("rating" + i)" />
+                                    <label for="@("rating" + i)" @(Model.RatingSummary.UserCanRate ? "class=active" : "")><span>@i</span></label>
+                                }
+                            </div>
+                        </fieldset>
+                        </div>
+                        <div>
+                        <button type="submit" class="btn nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-2 @(Model.RatingSummary.UserCanRate ? "" : "disabled")" @(Model.RatingSummary.UserCanRate ? "" : "disabled")>
+                            @(Model.RatingSummary.UserHasAlreadyRated ? "Update rating" : "Rate resource")
+                        </button>
+                        </div>
+                    </div>
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                </form>
+            </div>
+        </details>
+    }
+
+    <div class="rating-row">
+        <div class="rating-label">5 star</div>
+        <div class="rating-progress-bar">
+            <div class="progress">
+                <div id="progressBar5star" class="progress-bar bg-warning" aria-valuemin="0" aria-valuemax="100" style="width: @Model.RatingSummary.Rating5StarPercent% !important;"></div>
+            </div>
+        </div>
+        <div class="rating-value"> @Model.RatingSummary.Rating5StarPercent%</div>
+    </div>
+    <div class="rating-row">
+        <div class="rating-label">4 star</div>
+        <div class="rating-progress-bar">
+            <div class="progress">
+                <div id="progressBar4star" class="progress-bar bg-warning" aria-valuemin="0" aria-valuemax="100" style="width: @Model.RatingSummary.Rating4StarPercent% !important;"></div>
+            </div>
+        </div>
+        <div class="rating-value"> @Model.RatingSummary.Rating4StarPercent%</div>
+    </div>
+    <div class="rating-row">
+        <div class="rating-label">3 star</div>
+        <div class="rating-progress-bar">
+            <div class="progress">
+                <div id="progressBar3star" class="progress-bar bg-warning" aria-valuemin="0" aria-valuemax="100" style="width: @Model.RatingSummary.Rating3StarPercent% !important;"></div>
+            </div>
+        </div>
+        <div class="rating-value"> @Model.RatingSummary.Rating3StarPercent%</div>
+    </div>
+    <div class="rating-row">
+        <div class="rating-label">2 star</div>
+        <div class="rating-progress-bar">
+            <div class="progress">
+                <div id="progressBar2star" class="progress-bar bg-warning" aria-valuemin="0" aria-valuemax="100" style="width: @Model.RatingSummary.Rating2StarPercent% !important;"></div>
+            </div>
+        </div>
+        <div class="rating-value"> @Model.RatingSummary.Rating2StarPercent%</div>
+    </div>
+    <div class="rating-row">
+        <div class="rating-label">1 star</div>
+        <div class="rating-progress-bar">
+            <div class="progress">
+                <div id="progressBar1star" class="progress-bar bg-warning" aria-valuemin="0" aria-valuemax="100" style="width: @Model.RatingSummary.Rating1StarPercent% !important;"></div>
+            </div>
+        </div>
+        <div class="rating-value"> @Model.RatingSummary.Rating1StarPercent%</div>
+    </div>
+</div>

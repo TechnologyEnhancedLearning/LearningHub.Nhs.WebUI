@@ -1,0 +1,126 @@
+﻿@{
+  ViewData["Title"] = "About us";
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/staticpages.css" asp-append-version="true" />
+}
+<div class="nhsuk-width-container app-width-container">
+  <div class="nhsuk-main-wrapper ">
+
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-two-thirds ">
+        <h1>
+          @ViewData["Title"]
+        </h1>
+      </div>
+    </div>
+
+
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-two-thirds">
+        <article class="nhsuk-u-reading-width">
+          <section>
+            <h2 class="nhsuk-heading-l">The Technology Enhanced Learning (TEL) team</h2>
+            <p>
+              TEL provides access to educational technologies, simulation and immersive services, platforms and 
+              content and communities of practice which are equitable, efficient and sustainable and are changing 
+              how the health and care workforce learns.
+            </p>
+            <p>
+              Educational technologies allow the NHS to meet the challenges of growing, training and upskilling 
+              the workforce at scale and realise financial and time savings. TEL also provides strategic support, 
+              guidance and insight across the system, enhancing digital strategies and practices and making 
+              evidence-based educational technologies accessible to all.
+            </p>
+          </section>
+          <section>
+            <h2 class="nhsuk-heading-l">The Learning Hub</h2>
+            <p>
+              The Learning Hub is a national digital learning platform providing easy access to a wide range of 
+              educational resources and support for the health and care workforce and educators. Organisations 
+              can contribute and share a wide variety of self-managed content, knowledge and learning resources 
+              including elearning, articles, videos, images and more.
+            </p>
+            <p>
+              The platform also offers individuals access to specialist resources to support their education and 
+              professional development locally, regionally and nationally with the ability track and evidence 
+              their learning and activity.
+            </p>
+            <p>
+              Work is underway to migrate the content from elfh onto the Learning Hub to provide a unified 
+              platform and single point of access for all learning for NHS and social care staff which will 
+              be among the biggest of its type in the world. This is to support growth in platform capability 
+              as the Learning Hub delivers the latest technology, offers a better experience for users, and 
+              aligns to government digital standards.
+            </p>
+          </section>
+          <section>
+            <h2 class="nhsuk-heading-l">NHS England elearning for Healthcare</h2>
+            <p>
+              elfh provides elearning resources to educate and train the health and care workforce and support 
+              improved patient care and outcomes. With more than 500 elearning programmes available, elfh content 
+              encompasses a vast range of roles and specialties and is quality-assured and free to access.
+            </p>
+            <p>
+              Our elearning programmes are developed in partnership with professional bodies, including Royal 
+              Colleges and associations, NHS organisations, charities and other health and care organisations 
+              to ensure we are supporting the latest developments in clinical care, research and professional 
+              development. They are available to the entire health and care workforce, including teachers, 
+              volunteers and local government.
+            </p>
+            <p>
+              The elearning programmes are available via the elfh Hub, with most also being available via the 
+              Electronic Staff Record (ESR), OpenAthens and local training platforms. Some elfh programmes 
+              are also available internationally via <a href="https://www.eintegrity.org/" target="_blank">eIntegrity</a>.
+            </p>
+          </section>
+          <section>
+            <h2 class="nhsuk-heading-l">NHS England</h2>
+            <p>
+              TEL is part of the Workforce, Training and Education directorate of NHS England which is 
+              ensuring the NHS in England has a sufficient and inclusive workforce with the knowledge, 
+              skills, values and behaviours to deliver compassionate high-quality health and care to the 
+              people it serves.​
+            </p>
+          </section>
+        </article>
+      </div>
+      <div class="nhsuk-grid-column-one-third">
+        <aside>
+          <h2 class="nhsuk-heading-m">More information</h2>
+
+          <h3 class="nhsuk-heading-s pt-0">Follow us on Twitter</h3>
+          <p>
+            <a href="https://twitter.com/@ViewBag.TwitterScreenName" target="_blank">@ViewBag.TwitterScreenName</a>
+          </p>
+          <h3 class="nhsuk-heading-s pt-0">Visit our blog</h3>
+          <p>
+            <a href="https://telblog.hee.nhs.uk" target="_blank">telblog.hee.nhs.uk</a>
+          </p>
+          <h3 class="nhsuk-heading-s pt-0">Visit our website</h3>
+          <p>
+            <a href="https://www.hee.nhs.uk/our-work/technology-enhanced-learning" target="_blank">www.hee.nhs.uk/our-work/technology-enhanced-learning</a>
+          </p>
+          <h3 class="nhsuk-heading-s pt-0">Visit the elearning for Healthcare website</h3>
+          <p>
+            <a href="https://www.e-lfh.org.uk/" target="_blank">www.e-lfh.org.uk</a>
+          </p>
+          <h3 class="nhsuk-heading-s pt-0">Visit the eintegrity website</h3>
+          <p>
+            <a href="https://www.eintegrity.org/" target="_blank">www.eintegrity.org</a>
+          </p>
+        </aside>
+      </div>
+    </div>
+    <div class="row">
+      <div class="nhsuk-grid-column-two-thirds">
+        @{
+          var lastReviewed = new DateTime(2020, 4, 30);
+        }
+        @await Html.PartialAsync("~/Views/Shared/_PageReviewPartial.cshtml", new PageReviewModel { LastReviewedDate = lastReviewed, NextReviewDate = lastReviewed.AddYears(3) })
+      </div>
+    </div>
+  </div>
+  
+</div>
+

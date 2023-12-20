@@ -1,0 +1,145 @@
+﻿@using LearningHub.Nhs.WebUI.Helpers
+@using LearningHub.Nhs.WebUI.Models
+@using LearningHub.Nhs.WebUI.Models.Learning
+@using System.Web;
+@using Microsoft.AspNetCore.Http;
+@model Tuple<UserBasicViewModel, MyLearningViewModel>
+@{
+  ViewData["Title"] = "MyLearningReport";
+  Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@ViewData["Title"]</title>
+  <link href="https://learninghub.nhs.uk/css/site.css" rel="stylesheet" asp-append-version="true" />
+  <style type="text/css">
+    @@page {
+      size: landscape;
+      margin: 0;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    tr {
+      page-break-inside: avoid;
+      page-break-after: always;
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+  <div class="lh-padding-fluid print-header">
+    <div class="lh-container-xl">
+      <div>
+        <img src="https://learninghub.nhs.uk/images/NHS-white.svg" alt="NHS" />
+        <div class="header-title">Learning Hub<sup class="header-beta" style="color: #768692;">Beta</sup></div>
+      </div>
+    </div>
+  </div>
+  <div class="activity-report">
+    <div class="lh-padding-fluid bg-white">
+      <div class="lh-container-xl">
+        <div class="activity-report-heading pb-4">
+          <h3 class="nhsuk-heading-xs">Activity report: </h3> <span class="no-wrap">  @Model.Item1.FirstName @Model.Item1.LastName (@Model.Item1.UserName)</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="lh-padding-fluid bg-white" id="printableArea">
+        <div class="lh-container-xl">
+          @if (!string.IsNullOrWhiteSpace(Model.Item2.TimePeriod) || !string.IsNullOrWhiteSpace(Model.Item2.SearchText))
+          {
+            <div>
+              <div>
+                <span class="nhsuk-body-xs">Filters used to create this report:</span>
+              </div>
+
+              <div class="chips-container d-flex flex-row">
+                @if (!string.IsNullOrEmpty(Model.Item2.SearchText))
+                {
+                  <div class="chip nhsuk-body-xs">@Model.Item2.SearchText</div>
+                }
+                @if (!string.IsNullOrEmpty(Model.Item2.TimePeriod) && Model.Item2.TimePeriod == "thisweek")
+                {
+                  <div class="chip nhsuk-body-xs">This week</div>
+                }
+                @if (!string.IsNullOrEmpty(Model.Item2.TimePeriod) && Model.Item2.TimePeriod == "thismonth")
+                {
+                  <div class="chip nhsuk-body-xs">This month</div>
+                }
+                @if (!string.IsNullOrEmpty(Model.Item2.TimePeriod) && Model.Item2.TimePeriod == "last12months")
+                {
+                  <div class="chip nhsuk-body-xs">Last 12 months</div>
+                }
+
+              </div>
+            </div>
+          }
+          <div class="error-text">
+            <span class="text-danger"></span>
+          </div>
+          @if (Model.Item2.TotalCount > 0)
+          {
+            <table class="activity-report-table style2">
+              <thead>
+                <tr class="nhsuk-body-xs">
+                  <td>ID</td>
+                  <td>Title</td>
+                  <td>Version</td>
+                  <td>Type</td>
+                  <td>Status</td>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach (var activity in Model.Item2.Activities)
+                {
+                  <tr class="activity-report-item nhsuk-body-s">
+                    <td>
+                      <span>@activity.ResourceReferenceId</span>
+                    </td>
+                    <td>
+                      <span>
+                        @activity.Title<br />
+                        <b>Last @ViewActivityHelper.GetResourceTypeVerb(activity).ToLower() on : </b>  @activity.ActivityDate.DateTime.ToString("dd MMM yyyy") at @activity.ActivityDate.DateTime.ToShortTimeString()<br />
+                      </span>
+
+                      @if (ViewActivityHelper.CanViewPercentage(activity))
+                      {
+                        <span class="nhsuk-u-padding-top-1">
+                          @activity.CompletionPercentage% complete
+                        </span>
+                      }
+                      else if (ViewActivityHelper.CanShowScore(activity))
+                      {
+                        <span>
+                          <b>Scored :</b>  @activity.ScorePercentage%
+                        </span>
+
+                      }
+
+                      @if (activity.AssessmentDetails != null && !string.IsNullOrEmpty(activity.AssessmentDetails.ExtraAttemptReason))
+                      {
+                        <b>Reason :</b> @activity.AssessmentDetails.ExtraAttemptReason
+                      }
+                    </td>
+                    <td class="no-wrap">@activity.Version </td>
+                    <td class="no-wrap">@ViewActivityHelper.GetResourceTypeText(activity)</td>
+                    <td class="no-wrap">
+                      @ViewActivityHelper.GetActivityStatusDisplayText(activity)
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

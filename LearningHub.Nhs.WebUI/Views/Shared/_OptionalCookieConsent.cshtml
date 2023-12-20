@@ -1,0 +1,71 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+
+@{
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    var canTrack = consentFeature?.CanTrack;
+    var cookieString = consentFeature?.CreateConsentCookie();
+    var cookieOptionalConsentName = "NHSLearningHub-cookie-consent";
+}
+
+<div id="optionalCookieConsentBanner" class="optional-cookie-container bg-white">
+    <div class="lh-container-xl">
+        <h3>Optional cookies</h3>
+        <div class="row">
+            <div>
+                <p>Some cookies, like those used to measure how you use the Learning Hub, are not needed for our site to work.</p>
+                <p>
+                    These cookies can help us improve the Learning Hub, but we'll only use them if you say it's OK.  We'll use a cookie to save your settings.
+                </p>
+            </div>
+            <div>
+                <div class="row" style="margin-left:20px; ">
+                    <button id="btncookiePolicyOptionalCookieConsent" class="btn mr-5 btn-cookie-acceptance" data-dismiss="alert" data-cookie-string="@cookieString">
+                        <span aria-hidden="true">I’m OK with optional cookies</span>&nbsp;
+                    </button>
+                    <a class="lnk-cookie-reject" href="#" id="cookiePolicyRejectConsent" data-cookie-string="@cookieOptionalConsentName">Do not use optional cookies</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function handleCookiePolicySelection() {
+            cookieConsent = Cookies.get('@cookieOptionalConsentName');
+            if (cookieConsent === 'none') {
+                document.getElementById("btncookiePolicyOptionalCookieConsent").style.display = "block";
+                document.getElementById("cookiePolicyRejectConsent").style.display = "block";
+            }
+            else if (cookieConsent === 'yes') {
+                document.getElementById("btncookiePolicyOptionalCookieConsent").style.display = "none";
+                document.getElementById("cookiePolicyRejectConsent").style.display = "block";
+            }
+            else if (cookieConsent === 'no') {                
+                document.getElementById("btncookiePolicyOptionalCookieConsent").style.display = "block";   
+                document.getElementById("cookiePolicyRejectConsent").style.display = "none";                             
+            }
+    }
+
+    (function () {
+        handleCookiePolicySelection();
+        var acceptButton = document.querySelector("#btncookiePolicyOptionalCookieConsent");
+        if (acceptButton) {
+            acceptButton.addEventListener("click", function (event) {
+                document.cookie = '@cookieString';
+                Cookies.set('@cookieOptionalConsentName', 'yes', { expires: 365 });
+                handleCookiePolicySelection();
+                handleCookieSelection();
+                event.preventDefault();
+            }, true);
+        }
+
+        var rejectButton = document.querySelector("#cookiePolicyRejectConsent");
+        rejectButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                Cookies.set('@cookieOptionalConsentName', 'no', { expires: 365 });
+                handleCookiePolicySelection();
+                handleCookieSelection();                
+            }, true);
+        })();
+</script>
+

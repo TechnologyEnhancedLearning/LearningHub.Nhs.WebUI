@@ -1,0 +1,68 @@
+﻿@*
+    Use this view to display a screen where the user has to confirm an action. 
+    Button1 is intended to be the cancel/back button.
+    Button2 is intended to be the one that completes the action.
+    The button URL/text/CSS classes can all be set via the DisplayConfirmationViewModel.
+
+    By default, this screen will perform a post request to the URL set on Button2 as operations that
+    perform updates should generally use POST rather than GET. Set IsPost to false to perform GETs.
+
+    ViewModelToPost can be any model but only flat objects are currently supported, i.e. there is no 
+    recursion through child objects. That could be added in future if needed. The properties contained 
+    in ViewModelToPost will be turned into hidden input fields and posted on submission.
+
+    Usage example:
+
+        return this.View("DisplayConfirmation", new DisplayConfirmationViewModel
+            {
+                Title = "My Title",
+                ConfirmationMessageHtml = "This is my <b>message</b>.<br/>With some HTML in it.",
+                ViewModelToPost = viewModelToPost,
+                Button1ReturnUrl = $"/Resource/{resourceReferenceId}",
+                Button2ReturnUrl = "/Resource/UnpublishConfirmPost",
+            });
+
+    More config properties are available on DisplayConfirmationViewModel than are shown above.
+*@
+
+@model DisplayConfirmationViewModel
+@using LearningHub.Nhs.WebUI.Models
+@using System.Reflection
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div id="resourcecontainer">
+    <div class="lh-padding-fluid">
+        <div class="lh-container-xl">
+            <div class="resource">
+                <h1 class="nhsuk-heading-xl">@Model.Title</h1>
+
+                <div>
+                    @Html.Raw(Model.ConfirmationMessageHtml)
+                </div>
+
+                @if (Model.IsPost)
+                {
+                    <form method="POST" action="@Model.Button2ReturnUrl">
+                        @if (Model.ViewModelToPost != null)
+                        {
+                            @foreach (PropertyInfo prop in Model.ViewModelToPost.GetType().GetProperties())
+                            {
+                                <input type="hidden" id="@prop.Name" name="@prop.Name" value="@prop.GetValue(Model.ViewModelToPost)" />
+                            }
+                        }
+
+                        <a class="btn @Model.Button1CssClassNames" href="@Model.Button1ReturnUrl">@Model.Button1Text</a>
+                        <button type="submit" class="btn @Model.Button2CssClassNames" href="@Model.Button2ReturnUrl">@Model.Button2Text</button>
+                    </form>
+                }
+                else
+                {
+                    <a class="btn @Model.Button1CssClassNames" href="@Model.Button1ReturnUrl">@Model.Button1Text</a>
+                    <a class="btn @Model.Button2CssClassNames" href="@Model.Button2ReturnUrl">@Model.Button2Text</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

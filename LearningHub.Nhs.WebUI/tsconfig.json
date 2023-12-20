@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "lib": [ "dom", "es5", "es2015" ],
+    "target": "es5",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    //"strict": true
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "alwaysStrict": true,
+    "strictFunctionTypes": true,
+    "rootDir": "./Scripts"
+    //"strictNullChecks": true
+    //"strictPropertyInitialization": true
+  },
+  "compileOnSave": false,
+  "buildOnSave": false
+}

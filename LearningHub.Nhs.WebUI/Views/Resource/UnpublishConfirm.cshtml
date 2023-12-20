@@ -1,0 +1,42 @@
+﻿@using LearningHub.Nhs.Models.Entities.Resource
+@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Models.Resource
+@model ResourceUnpublishConfirmViewModel
+@{
+    ViewData["Title"] = "Unpublish Resource";
+}
+
+<div>
+    <div class="nhsuk-width-container app-width-container nhsuk-u-margin-bottom-7">
+        <vc:back-link asp-controller="Resource" asp-action="@Model.ResourceReferenceId" link-text="Back to @Model.ResourceTitle" />
+        <h1>Unpublish resource</h1>
+
+        <div class="nhsuk-u-reading-width nhsuk-u-font-size-19">
+            <form asp-controller="Resource" asp-action="UnpublishConfirmPost" method="post">
+                <input type="hidden" asp-for="ResourceVersionId" />
+                <input type="hidden" asp-for="CatalogueNodeVersionId" />
+
+                <p>You are about to unpublish @Model.ResourceTitle.</p>
+
+                <p>This resource will not be available to anyone that had access to it and will not be found in search results.</p>
+
+                @if (Model.ResourceType == ResourceTypeEnum.Scorm && (int)Model.ScormEsrLinkType > 1)
+                {
+                    <h3>Removal of ESR learning object link</h3>
+                    <p>
+                        This resource has an ESR learning object link that is visible to other users. This means that the link may have been used to add this resource as a learning object so others can access it in ESR. By removing this:
+                    </p>
+                    <ul>
+                        <li>The link will no longer be available for others to copy and use.</li>
+                        <li>The resource will no longer be available to access via ESR if this link has been used to set it up as a learning object.</li>
+                    </ul>
+                }
+
+                <div class="display__flex-space-between">
+                    <a class="nhsuk-button nhsuk-button--secondary" asp-controller="Resource" asp-action="Index" asp-route-resourceReferenceId="@Model.ResourceReferenceId">Cancel</a>
+                    <button type="submit" class="nhsuk-button">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

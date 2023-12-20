@@ -1,0 +1,70 @@
+﻿@model  LearningHub.Nhs.Models.OpenAthens.BeginOpenAthensLinkToLearningHubUser
+@{
+    ViewData["Title"] = "Link OpenAthens to Learning Hub";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+
+<div class="create-account">
+<div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-grid-row nhsuk-u-padding-top-9 nhsuk-u-padding-bottom-9">
+        <div class="nhsuk-grid-column-full nhsuk-u-padding-top-0">
+            @if (errorHasOccurred)
+            {
+                <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+            }
+
+
+            <h1 class="nhsuk-heading-xl">Link your OpenAthens account to a Learning Hub account</h1>
+
+            <div class="nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-7 nhsuk-u-reading-width">
+                <p class="nhsuk-body-m">
+                        To link your OpenAthens account to a Learning Hub account please add your Learning Hub username and password below.
+                </p>
+                <p class="nhsuk-body-m">
+                    <form asp-controller="OpenAthens" asp-action="CreateLinkForNewUser" method="post" class="nhsuk-u-font-size-19">
+                        <input type="hidden" asp-for="OaOrganisationId" />
+                        <input type="hidden" asp-for="OaUserId" />
+                        If you do not yet have a Learning Hub account you can
+                           <input class="open-athens-btn-link" type="submit" value="create an account." />
+                    </form>
+                </p>
+            </div>
+
+            <form class="nhsuk-u-margin-bottom-2" asp-controller="OpenAthens" asp-action="Start" method="post">
+
+                <vc:text-input asp-for="Username"
+                               label="Username"
+                               populate-with-current-value="true"
+                               type="text"
+                               spell-check="false"
+                               hint-text=""
+                               autocomplete=""
+                               css-class="nhsuk-u-width-one-half"
+                               required="true"
+                               required-client-side-error-message="Enter a username" />
+
+
+                <vc:text-input asp-for="Password"
+                               label="Password"
+                               populate-with-current-value="false"
+                               type="Password"
+                               spell-check="false"
+                               hint-text=""
+                               autocomplete=""
+                               css-class="nhsuk-u-width-one-half"
+                               required="true"
+                               required-client-side-error-message="Enter a password" />
+
+                <input type="hidden" asp-for="OaOrganisationId" />
+                <input type="hidden" asp-for="OaUserId" />
+                <button class="nhsuk-button" type="submit">Continue</button>
+
+            </form>
+    </div>
+    </div>
+</div>
+</div>

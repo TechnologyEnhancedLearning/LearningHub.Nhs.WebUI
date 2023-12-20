@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="w-100 border-top py-2">
+    <div class="lh-padding-fluid">
+        <article class="with-aside lh-container-xl">
+            <h1 class="nhsuk-heading-xl">@ViewBag.ErrorHeader</h1>
+            <div class="py-3">
+                <p>Please check the web address to make sure it is correct.</p>
+                <p>You can also browse or search from the <a href="@ViewBag.HomePageUrl" target="_blank">Learning Hub home page</a> to find the information you need.</p>
+                <p>If you think this link is broken, please <a href="@ViewBag.SupportFormUrl" target="_blank">contact support.</a></p>
+                <p>The information below may be useful if you do contact support. For example, you may want to take a screen capture and include it when you raise a support ticket.</p>
+                <hr />
+                <p>This is a HTTP @ViewBag.HttpStatusCode page error.</p>
+                <p>Access to the page <span id="originalUrl">url</span> was requested on @DateTimeOffset.Now.ToString("dd MMM yyyy") at @DateTimeOffset.Now.ToString("HH:mm tt").ToString().ToLower().</p>
+            </div>
+        </article>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#originalUrl').text(window.location.href);
+        });
+    </script>
+}
+

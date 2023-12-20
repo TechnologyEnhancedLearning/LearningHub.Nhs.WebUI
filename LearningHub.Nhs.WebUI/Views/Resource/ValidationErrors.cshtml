@@ -1,0 +1,91 @@
+﻿@model ResourceValidationResultViewModel
+@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Extensions
+@using LearningHub.Nhs.WebUI.Models
+@using LearningHub.Nhs.WebUI.Models.Resource
+@using System.Web;
+@{
+    ViewData["Title"] = "Resource";
+    List<(string Title, string Url)> breadcrumbs = new List<(string Title, string Url)> { ("Home", "/") };
+}
+
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/resource.css" />
+}
+<partial name="_LoginBanner" />
+
+@if (Model.HasAccess && Model.ResourceVersionValidationResult.VersionStatus == VersionStatusEnum.FailedToPublish)
+{
+    <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-3">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-u-text-align-right">
+                <a class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-4" asp-controller="Resource" asp-action="RevertToDraft" asp-route-resourceVersionId="@Model.ResourceVersionValidationResult?.ResourceVersionId" asp-route-hasPublishedVersion="@Model.ResourceVersionValidationResult?.HasPublishedVersion">Revert to Draft</a>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="nhsuk-width-container app-width-container nhsuk-u-width-full nhsuk-u-padding-bottom-7">
+
+    <partial name="_Breadcrumbs" model="@new BreadcrumbViewModel { Breadcrumbs = breadcrumbs, ShowBackToParentOnMobile = true }" />    
+    
+    <h1> @Model.ResourceVersionValidationResult.ResourceVersionTitle</h1>
+
+    @if (Model.ResourceVersionValidationResult != null && Model.HasAccess)
+    {
+        <table role="table" class="nhsuk-table-responsive  nhsuk-u-padding-top-4">
+            <thead role="rowgroup" class="nhsuk-table__head">
+                <tr role="row">
+                    <th role="columnheader" class="" scope="col">
+                        Resource VersionId
+                    </th>
+                    <th role="columnheader" class="" scope="col">
+                        Version
+                    </th>
+                    <th role="columnheader" class="" scope="col">
+                        Details
+                    </th>
+                    <th role="columnheader" class="" scope="col">
+                        Create Date
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="nhsuk-table__body">
+                @foreach (var validationError in Model.ResourceVersionValidationResult.ResourceVersionValidationRuleResultViewModels)
+                {
+                    <tr role="row" class="nhsuk-table__row">
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@Model.ResourceVersionValidationResult.ResourceVersionId</span>
+                        </td>
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@Model.ResourceVersionValidationResult.VersionDescription</span>
+                        </td>
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@validationError.Details</span>
+                        </td>
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@validationError.CreateDate.ToString("dd MMM yyyy")</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    <div class="nhsuk-grid-column-full nhsuk-u-padding-top-4 nhsuk-u-reading-width">
+        <div class="nhsuk-card">
+            <div class="nhsuk-card__content">
+                <h3 class="nhsuk-card__heading"> Get help </h3>
+                <p class="nhsuk-card__description">
+                    Find further guidance and support on how to resolve validation errors <a href="@ViewBag.ValidationErrorsHelpUrl" target="_blank">Learning Hub help centre</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @if (ViewBag.UserAuthenticated)
+    {
+        <script type="text/javascript" src="~/js/bundle/resourcecontainer.js" asp-append-version="true"></script>
+    }
+}

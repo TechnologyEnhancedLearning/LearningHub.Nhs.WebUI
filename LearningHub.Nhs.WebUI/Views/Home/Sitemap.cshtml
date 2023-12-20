@@ -1,0 +1,68 @@
+﻿@model LearningHub.Nhs.WebUI.Models.SitemapViewModel
+@{
+    Layout = null;
+}
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>@($"{Model.SiteUrl}/")</loc>
+    </url>
+
+    <url>
+        <loc>@($"{Model.SiteUrl}/home/aboutus")</loc>
+    </url>
+    <url>
+        <loc>@($"{Model.SiteUrl}/home/accessibility")</loc>
+    </url>
+    <url>
+        <loc>@($"{Model.SiteUrl}/home/catalogues")</loc>
+    </url>
+    <url>
+        <loc>@($"{Model.SiteUrl}/home/contactus")</loc>
+    </url>
+    <url>
+        <loc>@($"{Model.SiteUrl}/home/createaccount")</loc>
+    </url>
+    <url>
+        <loc>@($"{Model.SiteUrl}/home/nhssites")</loc>
+    </url>
+
+    <url>
+        <loc>@($"{Model.SiteUrl}/policies")</loc>
+    </url>
+    <url>
+        <loc>@($"{Model.SiteUrl}/policies/content-policy")</loc>
+    </url>
+    <url>
+        <loc>@($"{Model.SiteUrl}/policies/cookie-policy")</loc>
+    </url>
+    <url>
+        <loc>@($"{Model.SiteUrl}/policies/privacy-policy")</loc>
+    </url>
+    <url>
+        <loc>@($"{Model.SiteUrl}/policies/terms-and-conditions")</loc>
+    </url>
+
+    <url>
+        <loc>@($"{Model.SiteUrl}/updates")</loc>
+    </url>
+    <url>
+        <loc>@($"{Model.SiteUrl}/self-swab")</loc>
+    </url>
+
+    <url>
+        <loc>@($"{Model.SiteUrl}/registration/create-an-account")</loc>
+    </url>
+    <url>
+        <loc>@($"{Model.SiteUrl}/forgotten-password")</loc>
+    </url>
+
+    @foreach (var url in Model.DynamicUrls)
+    {
+        <url>
+            <loc>@($"{Model.SiteUrl}{url}")</loc>
+        </url>
+    }
+
+</urlset>

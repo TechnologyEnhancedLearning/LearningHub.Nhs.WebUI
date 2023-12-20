@@ -1,0 +1,22 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.SecurityQuestionAnswerViewModel
+
+@{
+    ViewData["Title"] = "My Account - Change security question";
+}
+
+<div class="bg-white">
+    <div class="nhsuk-width-container app-width-container">
+        <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+        <form asp-controller="MyAccount" asp-action="UpdateSecurityQuestions" method="post">
+
+            <partial name="~/Views/MyAccount/_SecurityQuestionAnswer.cshtml" model="@Model" />
+
+            <div class="nhsuk-u-padding-bottom-5">
+                <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+                    Continue
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>

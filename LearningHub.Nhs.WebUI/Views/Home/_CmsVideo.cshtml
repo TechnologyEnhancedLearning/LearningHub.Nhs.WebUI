@@ -1,0 +1,43 @@
+﻿@using LearningHub.Nhs.Models.Content
+@model PageSectionDetailViewModel
+@if (Model != null)
+{
+    @if (Model.VideoAsset != null)
+    {
+        <video controls id="@($"{"azureMediaPlayer"}{Model.Id}")"
+       data-setup='{"logo": { "enabled": false }, "techOrder": ["azureHtml5JS", "flashSS",  "silverlightSS", "html5"], "nativeControlsForTouch": false, "fluid": true}'
+       class="azuremediaplayer amp-default-skin amp-big-play-centered">
+            <p class="amp-no-js">
+                To view this video please enable JavaScript in your web browser.
+            </p>
+        </video>
+    }
+
+    <script src="https://amp.azure.net/libs/amp/2.3.10/azuremediaplayer.min.js"></script>
+
+    <script type="text/javascript">
+        var model = @Json.Serialize(Model);
+
+        var azureMediaPlayer = amp(`azureMediaPlayer${model.id}`);
+        if (model.videoAsset.thumbnailImageFile) {
+            azureMediaPlayer.poster(`/file/download/${model.videoAsset.thumbnailImageFile.filePath}/${model.videoAsset.thumbnailImageFile.fileName}`);
+        }
+        if (model.videoAsset.azureMediaAsset && model.videoAsset.closedCaptionsFile) {
+            azureMediaPlayer.src([{
+                type: "application/vnd.ms-sstr+xml",
+                src: model.videoAsset.azureMediaAsset.locatorUri,
+                protectionInfo: [{ type: 'AES', authenticationToken: `Bearer=${model.videoAsset.azureMediaAsset.authenticationToken}` }]
+            }],
+                [{ kind: "captions", src: `/file/download/${model.videoAsset.closedCaptionsFile.filePath}/${model.videoAsset.closedCaptionsFile.fileName}`, srclang: "en", label: "english" }]);
+        }
+        else if (model.videoAsset.azureMediaAsset && !model.videoAsset.closedCaptionsFile) {
+            azureMediaPlayer.src([{
+                type: "application/vnd.ms-sstr+xml",
+                src: model.videoAsset.azureMediaAsset.locatorUri,
+                protectionInfo: [{ type: 'AES', authenticationToken: `Bearer=${model.videoAsset.azureMediaAsset.authenticationToken}` }]
+            }]);
+        }
+
+    </script>
+
+}

@@ -1,0 +1,15 @@
+﻿@{
+  ViewData["Title"] = "My Account";
+}
+<div class="bg-white">
+  <div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-full nhsuk-u-padding-top-9">
+        <h1 class="nhsuk-heading-xl">@ViewBag.SuccessMessage</h1>
+      </div>
+    </div>
+    <div class="nhsuk-u-padding-bottom-9">
+      <a class="nhsuk-link" asp-controller="MyAccount" asp-action="Index">Go back to my account</a>
+    </div>
+  </div>
+</div>

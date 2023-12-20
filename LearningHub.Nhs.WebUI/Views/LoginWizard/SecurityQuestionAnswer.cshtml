@@ -1,0 +1,26 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.SecurityQuestionAnswerViewModel
+
+@{
+    ViewData["Title"] = "Login Wizard";
+
+    var routeData = new Dictionary<string, string> { { "questionIndex", Model.QuestionIndex.ToString() }, { "returnUrl", ViewData["ReturnUrl"].ToString() } };
+}
+
+<div class="bg-white">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-main-wrapper nhsuk-u-padding-top-0">
+            <vc:back-link asp-controller="LoginWizard" asp-action="SelectSecurityQuestion" asp-all-route-data="@routeData" link-text="Go back" />
+
+            <form asp-controller="LoginWizard" asp-action="AnswerSecurityQuestionPost" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+
+                <partial name="~/Views/MyAccount/_SecurityQuestionAnswer.cshtml" model="@Model" />
+
+                <div class="nhsuk-u-padding-bottom-5">
+                    <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+                        Continue
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

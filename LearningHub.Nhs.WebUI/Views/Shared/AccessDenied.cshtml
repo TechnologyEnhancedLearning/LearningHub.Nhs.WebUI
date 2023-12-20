@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="user-entry fullwidth">
+
+    <div>
+        <h1 class="nhsuk-heading-xl">Access to this page is not allowed</h1>
+        <p>You do not have permission to access this page. If you think you should have access, please contact the <a href="@ViewBag.SupportFormUrl" target="_blank">support team</a>.</p>
+        <p>@DateTimeOffset.Now.ToString("d MMMM yyyy HH:mm:ss")</p>
+    </div>
+
+</div>

@@ -1,0 +1,89 @@
+﻿@using elfhHub.Nhs.Models.Common
+@model LearningHub.Nhs.WebUI.Models.Account.AccountCreationListViewModel
+
+@{
+    ViewData["Title"] = "Select Country";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    bool returnToConfirmation = false;
+    if (!string.IsNullOrWhiteSpace(Context.Request.Query["returnToConfirmation"]))
+    {
+        bool.TryParse(Context.Request.Query["returnToConfirmation"].ToString(), out returnToConfirmation);
+    }
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+    <div class="create-account">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds @(returnToConfirmation ? "nhsuk-u-padding-top-7":string.Empty) nhsuk-u-padding-bottom-9">
+                @if (!returnToConfirmation)
+                {
+                    <vc:back-link asp-controller="Account" asp-action="CreateAccountPersonalDetails" link-text="Back to: Enter your personal details" />
+                }
+                
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model.FilterText) })" />
+                }
+                <h1 class="nhsuk-heading-xl">Search results for @Model.FilterText</h1>
+                <form asp-controller="Account" asp-action="CreateAccountCountrySelection" method="get">
+                    <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+                    <input type="hidden" name="formSubmission" value="true">
+                    <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">Search for example, England</label>
+                    <div class="nhsuk-form-group search-box-container" style="white-space:nowrap">
+                        <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText">
+                        <button class="nhsuk-search__submit" type="submit">
+                            <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
+                            </svg>
+                            <span class="nhsuk-u-visually-hidden">Search</span>
+                        </button>
+
+                    </div>
+                </form>
+                <form asp-controller="Account" asp-action="CreateAccountRegionSelection" method="get">
+                    <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+                    <input type="hidden" name="formSubmission" value="true">
+                    @if (Model.CountryList.Any())
+                    {
+                    <vc:radio-list asp-for="@nameof(Model.CountryId)"
+                                   label="Select your country"
+                                   populate-with-current-values="true"
+                                   radios="@Model.CountryRadio()"
+                                   hint-text=""
+                                   required-client-side-error-message="Select a country"
+                                   required="true" />
+
+
+                   
+                        <input type="hidden" name="filterText" value="@Context.Request.Query["filterText"]">
+                        <div class="nhsuk-form-group">
+                            <button type="submit" class="nhsuk-button">Continue</button>
+                        </div>
+
+
+                    }
+                    else
+                    {
+                        <h2 class="nhsuk-heading-l">No results found for @Model.FilterText</h2>
+                        <p>You could try:</p>
+                        <ul class="nhsuk-list nhsuk-list--bullet">
+                            <li>checking your spelling</li>
+                            <li>searching again using other words</li>
+                        </ul>
+
+                    }
+
+
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

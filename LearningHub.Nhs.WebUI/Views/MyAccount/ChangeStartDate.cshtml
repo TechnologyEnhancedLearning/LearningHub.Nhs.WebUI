@@ -1,0 +1,56 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserStartDateUpdateViewModel
+
+@{
+    ViewData["Title"] = "Update Start Date";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    var hintTextLines = new List<string> { $"Enter the date you started your current role, for example, 24 08 2021" };
+}
+
+<div class="create-account">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
+                <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model.Day), nameof(Model.Month), nameof(Model.Year) })" />
+                }
+
+                <h1 class="nhsuk-heading-xl">Update start date</h1>
+
+                @if (@Model.JobStartDate.HasValue)
+                {
+                    <div>
+                        <div class="nhsuk-form-group">
+                            <div class="nhsuk-label nhsuk-u-font-weight-bold">Current start date</div>
+                            <div class="nhsuk-hint">@Model.JobStartDate?.ToString("dd MMMM yyyy")</div>
+                        </div>
+
+                        <div class="nhsuk-u-padding-bottom-5">
+                            <hr class="nhsuk-section-break nhsuk-section-break--visible ">
+                        </div>
+                    </div>
+                }
+
+                <h2 class="nhsuk-heading-l">Enter your start date</h2>
+
+                <form>
+                    <vc:date-input id="StartDate"
+                                   label=""
+                                   day-id="Day"
+                                   month-id="Month"
+                                   year-id="Year"
+                                   css-class="nhsuk-u-margin-bottom-2"
+                                   hint-text-lines="@hintTextLines" />
+
+                    <div class="nhsuk-form-group">
+                        <input type="hidden" name="formSubmission" value="true">
+                        <button type="submit" class="nhsuk-button">Continue</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

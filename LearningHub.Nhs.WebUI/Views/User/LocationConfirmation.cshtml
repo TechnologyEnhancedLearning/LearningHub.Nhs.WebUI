@@ -1,0 +1,57 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserLocationViewModel
+@{
+    ViewData["Title"] = "Location - Confirmation";
+}
+
+<div class="nhsuk-width-container">
+    <main class="nhsuk-main-wrapper nhsuk-main-wrapper--s" id="maincontent" role="main">
+        <form asp-controller="User" asp-action="LocationConfirmation" method="post">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-two-thirds">
+                    <h2>
+                        Confirmation
+                    </h2>                    
+                    <dl class="nhsuk-summary-list">
+                        <div class="nhsuk-summary-list__row">
+                            <dt class="nhsuk-summary-list__key">
+                                Country
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">
+                                @Model.SelectedCountryName
+                            </dd>
+                        </div>
+                        @if (Model.SelectedRegionId.HasValue)
+                        {
+                            <div class="nhsuk-summary-list__row">
+                                <dt class="nhsuk-summary-list__key">
+                                    Region
+                                </dt>
+                                <dd class="nhsuk-summary-list__value">
+                                    @Model.SelectedRegionName
+                                </dd>
+                            </div>
+                        }
+                        <div class="nhsuk-summary-list__row">                            
+                            <dt class="nhsuk-summary-list__key">
+                                <button type="submit" class="btn btn-custom">
+                                    Save
+                                </button>
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">
+                                @if (Model.SelectedRegionId.HasValue)
+                                {
+                                    <a asp-controller="User" asp-action="LocationSelectRegion">Back</a>
+                                }
+                                else
+                                {
+                                   <a asp-controller="User" asp-action="LocationSelectCountry" asp-route-selectedcountryid="@Model.SelectedCountryId">Back</a>
+                                }
+                                <a asp-controller="User" asp-action="Index">Cancel</a>
+                            </dd>
+                        </div>
+                     </dl>
+                </div>
+            </div>                                  
+        </form>
+    </main>
+</div>

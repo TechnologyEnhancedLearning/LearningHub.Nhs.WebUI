@@ -1,0 +1,78 @@
+﻿@model LearningHub.Nhs.Models.Paging.PagingViewModel
+@{
+    var currentPage = Model.CurrentPage;
+    var totalPages = Model.TotalPages;
+    var minPage = currentPage == 1 ? 1 : currentPage - 1;
+    if (currentPage == Model.TotalPages)
+    {
+        minPage = currentPage - 2;
+    }
+    var maxPage = currentPage == 1 ? currentPage + 2 : currentPage + 1;
+}
+@if (Model.TotalItems > Model.PageSize)
+{
+    <div class="row paging-container d-flex justify-content-between">
+        <div class="text-left navigate">
+            @if (currentPage > 1)
+            {
+                <i class="paging-text fa-solid fa-chevron-left"></i> <a class="paging-text pl-2" onclick="WebUI.requestPage(@currentPage-1)" href="#">Previous Page</a>
+            }
+        </div>
+        <div class="text-center">
+            <ul class="paging-page-list">
+                @if (minPage > 1)
+                {
+                    <li>
+                        <a onclick="WebUI.requestPage(1)" href="#">1</a>
+                    </li>
+                    if ((minPage) > 2)
+                    {
+                        <li>
+                            ...
+                        </li>
+                    }
+                }
+                @for (int i = minPage; i <= maxPage; i++)
+                {
+                    if (i > 0 && i <= totalPages)
+                    {
+                        if (i == currentPage)
+                        {
+                            <li class="active">
+                                @i
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a onclick="WebUI.requestPage(@i)" href="#">@i</a>
+                            </li>
+                        }
+                    }
+                }
+                @if (totalPages > (currentPage + 1))
+                {
+                    if ((maxPage + 1) < Model.TotalPages)
+                    {
+                        <li>
+                            ...
+                        </li>
+                    }
+                    if (maxPage < Model.TotalPages)
+                    {
+                        <li>
+                            <a onclick="WebUI.requestPage(@Model.TotalPages)" href="#">@Model.TotalPages</a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+        <div class="text-right navigate">
+            @if (currentPage < totalPages)
+            {
+                <a class="paging-text pr-2" onclick="WebUI.requestPage(@currentPage+1)" href="#">Next Page</a>
+                <i class="paging-text fa-solid fa-chevron-right"></i>
+            }
+        </div>
+    </div>
+}

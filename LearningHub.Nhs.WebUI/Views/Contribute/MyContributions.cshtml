@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "My Contributions";
+    var isReadonly = (User.IsInRole("ReadOnly") || User.IsInRole("BasicUser")).ToString().ToLower();
+}
+
+<div id="myContributions" class="my-contributions nhsuk-u-margin-top-7 nhsuk-u-margin-bottom-7" v-cloak>
+    <my-contributions v-bind:is-readonly="@isReadonly"></my-contributions>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/bundle/mycontributions.js" asp-append-version="true"></script>
+}

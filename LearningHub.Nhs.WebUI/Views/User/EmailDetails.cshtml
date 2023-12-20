@@ -1,0 +1,50 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserEmailDetailsViewModel
+
+@{
+    ViewData["Title"] = "Profile - Email Details";
+}
+
+<div class="nhsuk-width-container">
+    <main class="nhsuk-main-wrapper nhsuk-main-wrapper--s" id="maincontent" role="main">
+        <form asp-controller="User" asp-action="EmailDetails" method="post">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-two-thirds">               
+                    <h2>
+                        Email details
+                    </h2>                
+                    <dl class="nhsuk-summary-list">
+                        <div class="nhsuk-summary-list__row">
+                            <dt class="nhsuk-summary-list__key">
+                                <label asp-for="PrimaryEmailAddress"></label>
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">                               
+                                <input asp-for="PrimaryEmailAddress" class="form-control" type="email" autocomplete="off" width="100%" required />
+                                <span asp-validation-for="PrimaryEmailAddress"></span>
+                            </dd>
+                        </div>
+                        <div class="nhsuk-summary-list__row">
+                            <dt class="nhsuk-summary-list__key">
+                                <label asp-for="SecondaryEmailAddress"></label>
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">
+                                <input asp-for="SecondaryEmailAddress" class="form-control" type="email" autocomplete="off" width="100%" />
+                                <span asp-validation-for="SecondaryEmailAddress"></span>                                
+                            </dd>
+                        </div>     
+                        <div class="nhsuk-summary-list__row">
+                            <dt class="nhsuk-summary-list__key">
+                                <button type="submit" class="btn btn-custom">
+                                    Save
+                                </button>
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">
+                                <a asp-controller="User" asp-action="Index">Cancel</a>
+                            </dd>
+                        </div>                        
+                    </dl>
+                </div>
+            </div>
+            @Html.AntiForgeryToken()            
+        </form>
+    </main>
+</div>

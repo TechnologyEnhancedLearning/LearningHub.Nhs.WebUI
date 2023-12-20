@@ -1,0 +1,95 @@
+﻿@using System.Globalization
+@using elfhHub.Nhs.Models.Common
+@model LearningHub.Nhs.WebUI.Models.Account.AccountCreationListViewModel
+
+@{
+    ViewData["Title"] = "Work Place";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
+    bool returnToConfirmation = false;
+    if (!string.IsNullOrWhiteSpace(Context.Request.Query["returnToConfirmation"]))
+    {
+        bool.TryParse(Context.Request.Query["returnToConfirmation"].ToString(), out returnToConfirmation);
+    }
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+    <div class="create-account">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds @(returnToConfirmation ? "nhsuk-u-padding-top-7":string.Empty) nhsuk-u-padding-bottom-9">
+                @if (!returnToConfirmation)
+                {
+                    <vc:back-link asp-controller="Account" asp-action="CreateAccountWorkPlaceSearch" link-text="Back to: Search for your place of work" />
+                }
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model.FilterText) })" />
+                }
+                <h1 class="nhsuk-heading-xl">Search results for @Model.FilterText </h1>
+                <form asp-controller="Account" asp-action="CreateAccountWorkPlace" method="get">
+                    <input type="hidden" name="formSubmission" value="true">
+                    <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+                    <label class="nhsuk-label nhsuk-u-visually-hidden" for="FilterText">Search results for @Model.FilterText</label>
+                    <div class="nhsuk-form-group search-box-container " style="white-space:nowrap">
+                        <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText">
+                        <button class="nhsuk-search__submit" type="submit">
+                            <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
+                            </svg>
+                            <span class="nhsuk-u-visually-hidden">Search</span>
+                        </button>
+
+                    </div>
+                </form>
+                @if (Model.WorkPlaceList.Any())
+                {
+                    <form asp-controller="Account" asp-action="CreateAccountConfirmation" method="get">
+                        <input type="hidden" name="formSubmission" value="true">
+
+
+                        <vc:radio-list asp-for="LocationId"
+                                   label="Select your place of work"
+                                   populate-with-current-values="true"
+                                   radios="@Model.WorkPlaceRadio()"
+                                   hint-text=""
+                                   required-client-side-error-message="Select a place of work"
+                                   required="true" />
+
+                        <div class="nhsuk-form-group">
+                            <input type="hidden" name="filterText" value="@Context.Request.Query["filterText"]">
+                            <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+                            <button type="submit" class="nhsuk-button">Continue</button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+
+                    <h2 class="nhsuk-heading-l">No results found for @Model.FilterText</h2>
+                    <p>You could try:</p>
+                    <ul class="nhsuk-list nhsuk-list--bullet nhsuk-u-padding-bottom-3">
+                        <li>checking your spelling</li>
+                        <li>searching again using other words</li>
+                    </ul>
+                    <details class="nhsuk-details nhsuk-expander">
+                        <summary class="nhsuk-details__summary">
+                            <span class="nhsuk-details__summary-text">
+                                Why do I need to provide details about where I work?
+                            </span>
+                        </summary>
+                        <div class="nhsuk-details__text">
+                            <p>Information on your place of work will help us provide activity reports to evidence your learning.</p>
+                        </div>
+                    </details>
+
+                }
+                @if (Model.WorkPlaceList.Any())
+                {
+                    @await Html.PartialAsync("_AccountCreationWorkPlacePaging", Model.AccountCreationPaging)
+                }
+            </div>
+        </div>
+    </div>
+</div>

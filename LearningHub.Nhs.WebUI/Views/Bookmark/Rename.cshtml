@@ -1,0 +1,50 @@
+﻿@model LearningHub.Nhs.WebUI.Models.Bookmark.EditBookmarkViewModel
+@{
+    var bookmarkType = (Model.BookmarkTypeId == 1) ? "Folder" : "Bookmark";
+    ViewData["Title"] = "Rename " + bookmarkType;
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/bookmark.css" asp-append-version="true" />
+}
+
+<div class="bg-white">
+    <div class="nhsuk-width-container app-width-container nhsuk-u-padding-bottom-9">
+        <vc:back-link asp-controller="Bookmark" asp-action="Index" link-text="Back to: My bookmarks" />
+
+        <form asp-controller="Bookmark" asp-action="BookmarkRename" asp-route-returnUrl="@ViewBag.ReturnUrl" method="post">
+
+            <vc:error-summary order-of-property-names="@(new[] { nameof(Model.Title) })" />
+
+            <h1>Rename @bookmarkType.ToLower()</h1>
+
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <div class="nhsuk-form-group">
+                        <vc:text-input asp-for="Title"
+                                       label="Edit bookmark name"
+                                       populate-with-current-value="true"
+                                       type="text"
+                                       spell-check="false"
+                                       hint-text=""
+                                       autocomplete="off"
+                                       css-class=""
+                                       required="true"
+                                       required-client-side-error-message="<a href='#Title'>You must enter a bookmark name</a>" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-panel">
+                <button type="submit" class="nhsuk-button nhsuk-u-margin-bottom-0">Continue</button>
+                <div class="nhsuk-u-margin-left-5 nhsuk-u-font-size-19">
+                    <a class="cancel-link" asp-controller="Bookmark" asp-action="Index">Cancel</a>
+                </div>
+            </div>
+
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ParentId" />
+            <input type="hidden" asp-for="BookmarkTypeId" data-val="false" />
+        </form>
+    </div>
+</div>

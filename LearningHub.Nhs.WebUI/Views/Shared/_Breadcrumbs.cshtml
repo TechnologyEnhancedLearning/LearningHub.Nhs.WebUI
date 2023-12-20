@@ -1,0 +1,58 @@
+﻿@model BreadcrumbViewModel
+
+@* Desktop *@
+<div class="breadcrumbs display--hide display-desktop--show nhsuk-u-padding-top-5 nhsuk-u-padding-bottom-6">
+    @foreach (var breadcrumb in Model.Breadcrumbs)
+    {
+        <a href="@breadcrumb.Url">@breadcrumb.Title</a>
+        <i class="fa-solid fa-chevron-right nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+    }
+</div>
+
+@* Mobile *@
+<div class="breadcrumbs display-desktop--hide nhsuk-u-padding-top-5 nhsuk-u-padding-bottom-6">
+    @if (Model.ShowBackToParentOnMobile)
+    {
+        @* "Back to parent" view *@
+        var parent = Model.Breadcrumbs.ElementAt(Model.Breadcrumbs.Count - 1);
+
+        <i class="fa-solid fa-chevron-left nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+        <a href="@parent.Url">Back to parent</a>
+    }
+    else
+    {
+        if (Model.Breadcrumbs.Count > 2)
+        {
+            @* Elipsis view - Clicking on ellipsis reveals all breadcrumbs *@
+            <input class="breadcrumb-hidden-checkbox display--hide" id="breadcrumb-hidden-checkbox" role="button" type="checkbox" aria-controls="breadcrumbs-collapsed">
+            <label class="breadcrumbs-icon" for="breadcrumb-hidden-checkbox">
+                <i class="fas fa-ellipsis-h"></i>
+                <i class="fas fa-times display--hide"></i>
+            </label>
+            <span class="breadcrumbs-collapsed">
+                <i class="fa-solid fa-chevron-right nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+                @foreach (var breadcrumb in Model.Breadcrumbs.TakeLast(2))
+                {
+                    <a href="@breadcrumb.Url">@breadcrumb.Title</a>
+                    <i class="fa-solid fa-chevron-right nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+                }
+            </span>
+            <span class="breadcrumbs-expanded display--hide">
+                @foreach (var breadcrumb in Model.Breadcrumbs)
+                {
+                    <a href="@breadcrumb.Url">@breadcrumb.Title</a>
+                    <i class="fa-solid fa-chevron-right nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+                }
+            </span>
+        }
+        else
+        {
+            @* Not enough breadcrumbs to require ellipsis*@
+            @foreach (var breadcrumb in Model.Breadcrumbs)
+            {
+                <a href="@breadcrumb.Url">@breadcrumb.Title</a>
+                <i class="fa-solid fa-chevron-right nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+            }
+        }
+    }
+</div>

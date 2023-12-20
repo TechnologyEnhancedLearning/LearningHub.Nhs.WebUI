@@ -1,0 +1,39 @@
+﻿@model LearningHub.Nhs.WebUI.Models.Bookmark.BookmarkActionViewModel
+
+<div class="action-links-container">
+    <form asp-controller="Bookmark" asp-action="ModifyBookmark" asp-route-id="@Model.Id" asp-route-parentId="@Model.ParentId" asp-route-returnUrl="/bookmark#bookmark-table" method="post">
+
+        <span class="action-link-chevron @(Model.IsFirst? "empty" : "")">
+            @if (Model.IsFirst == false)
+            {
+                <button name="action" value="moveup" class="btn btn-link action-link" title="Move up">
+                    <i class="fa-solid fa-chevron-up fa-sm"></i>
+                </button>
+            }
+        </span>
+
+        <span class="action-link-chevron @(Model.IsLast? "empty" : "")">
+            @if (Model.IsLast == false)
+            {
+                <button name="action" value="movedown" class="btn btn-link action-link" title="Move down">
+                    <i class="fa-solid fa-chevron-down fa-sm"></i>
+                </button>
+            }
+        </span>
+
+        <span class="action-link-rename">
+            <button name="action" value="rename" class="btn btn-link action-link" title="Rename">Rename</button>
+        </span>
+
+        <span class="action-link-move">
+            @if (Model.IsFolder == false)
+            {
+                <button name="action" value="move" class="btn btn-link action-link" title="Move">Move</button>
+            }
+        </span>
+
+        <span class="action-link-delete">
+            <button name="action" value="delete" class="btn btn-link action-link" title="Delete">Delete</button>
+        </span>
+    </form>
+</div>

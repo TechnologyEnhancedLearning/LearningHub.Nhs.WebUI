@@ -1,0 +1,62 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.SecurityQuestionSelectViewModel
+@{
+    string[] textualNumber = new string[] { "first", "second", "third", "fourth", "fifth" };
+
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+
+<div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-three-quarters nhsuk-u-padding-bottom-5">
+        @if (errorHasOccurred)
+        {
+            <vc:error-summary order-of-property-names="@(new[] { nameof(Model.SelectedSecurityQuestionId) })" />
+        }
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-caption-l" id="contact-hint">
+                    Set your @textualNumber[Model.QuestionIndex] security question
+                </div>
+                <h1 class="nhsuk-heading-xl">Choose your @textualNumber[Model.QuestionIndex] security question</h1>
+            </div>
+        </div>
+        <div class="nhsuk-label nhsuk-u-width-two-thirds nhsuk-u-padding-bottom-3" id="contact-hint">
+            These security questions can be used to help you to sign in if you forget your password. Please be assured that anything you enter on this page is encrypted and will not be visible to anyone, including system administrators.
+        </div>
+        <div class="nhsuk-label nhsuk-padding-top-2" id="contact-hint">
+            <p>Your two security questions must be different from each other.</p>
+        </div>
+        <div class="nhsuk-label nhsuk-padding-top-2" id="contact-hint">
+            <p>We will only use this information to help you sign in to the Learning Hub.</p>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-form-group @(errorHasOccurred ? "nhsuk-form-group--error" : "")">
+                    <fieldset class="nhsuk-fieldset">
+                        <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--l">
+                            <h3 class="nhsuk-fieldset__heading">
+                                Select a question
+                            </h3>
+                        </legend>
+                        @if (errorHasOccurred)
+                        {
+                            <span class="nhsuk-error-message" id="viewmodel-error">
+                                <span class="nhsuk-u-visually-hidden">Error:</span> @Html.ValidationMessage("DuplicateQuestion")
+                            </span>
+                        }
+                        <div class="nhsuk-radios">
+                            @foreach (var securityquestion in Model.SecurityQuestions)
+                            {
+                                <div class="nhsuk-radios__item">
+                                    <input type="radio" asp-for="SelectedSecurityQuestionId" value="@securityquestion.Value" id="@securityquestion.Text" class="nhsuk-radios__input" data-val="false" />
+                                    <label class="nhsuk-label nhsuk-radios__label" for="@securityquestion.Text">@securityquestion.Text</label>
+                                </div>
+                            }
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="QuestionIndex" value="@Model.QuestionIndex" />
+    </div>
+</div>
+

@@ -1,0 +1,37 @@
+﻿@*
+    Use this view to display a screen containg a message to the user and a single button that goes to a particular URL.
+
+    Usage example:
+
+        return this.View(
+            "DisplayMessage",
+            new DisplayMessageViewModel
+            {
+                Title = "Request Sent",
+                MessageHtml = "Your request to access this catalogue has been sent to the catalogue administrator.",
+                ButtonText = "Close",
+                ReturnUrl = viewModel.ReturnUrl,
+            });
+*@
+
+@model DisplayMessageViewModel
+@using LearningHub.Nhs.WebUI.Models
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div id="resourcecontainer">
+    <div class="lh-padding-fluid">
+        <div class="lh-container-xl">
+            <div class="resource">
+                <h1 class="nhsuk-heading-xl">@Model.Title</h1>
+
+                <div>
+                    @Html.Raw(Model.MessageHtml)
+                </div>
+
+                <a class="btn @Model.ButtonCssClasses" href="@Model.ReturnUrl">@Model.ButtonText</a>
+            </div>
+        </div>
+    </div>
+</div>

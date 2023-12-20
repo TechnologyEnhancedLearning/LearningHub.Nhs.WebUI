@@ -1,0 +1,300 @@
+// <copyright file="SearchController.cs" company="HEE.nhs.uk">
+// Copyright (c) HEE.nhs.uk.
+// </copyright>
+
+namespace LearningHub.Nhs.WebUI.Controllers
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.WebUI.Filters;
+    using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Models.Search;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Routing;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
+    using Settings = LearningHub.Nhs.WebUI.Configuration.Settings;
+
+    /// <summary>
+    /// The SearchController.
+    /// </summary>
+    [Authorize]
+    [Route("[controller]")]
+    [ServiceFilter(typeof(LoginWizardFilter))]
+    public class SearchController : BaseController
+    {
+        private readonly ISearchService searchService;
+        private readonly IFileService fileService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SearchController"/> class.
+        /// </summary>
+        /// <param name="httpClientFactory">The httpClientFactory.</param>
+        /// <param name="hostingEnvironment">The hostingEnvironment.</param>
+        /// <param name="settings">The settings.</param>
+        /// <param name="searchService">The searchService.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="fileService">The fileService.</param>
+        public SearchController(
+            IHttpClientFactory httpClientFactory,
+            IWebHostEnvironment hostingEnvironment,
+            IOptions<Settings> settings,
+            ISearchService searchService,
+            ILogger<SearchController> logger,
+            IFileService fileService)
+        : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+        {
+            this.searchService = searchService;
+            this.fileService = fileService;
+        }
+
+        /// <summary>
+        /// The Index.
+        /// </summary>
+        /// <param name="search">Search object.</param>
+        /// <param name="noSortFilterError">Whether sort or filter applied.</param>
+        /// <param name="emptyFeedbackError">Whether feedback submitted.</param>
+        /// <param name="filterApplied">filter applied.</param>
+        /// <returns>The actionResult.</returns>
+        [HttpGet("results")]
+        public async Task<IActionResult> Index(SearchRequestViewModel search, bool noSortFilterError = false, bool emptyFeedbackError = false, bool filterApplied = false)
+        {
+            search.SearchId ??= 0;
+            search.GroupId = !string.IsNullOrWhiteSpace(search.GroupId) && Guid.TryParse(search.GroupId, out Guid groupId) ? groupId.ToString() : Guid.NewGuid().ToString();
+
+            var searchResult = await this.searchService.PerformSearch(this.User, search);
+
+            if (search.SearchId == 0 && searchResult.ResourceSearchResult != null)
+            {
+                var searchId = await this.searchService.RegisterSearchEventsAsync(
+                    search,
+                    SearchFormActionTypeEnum.BasicSearch,
+                    searchResult.ResourceSearchResult.TotalHits,
+                    searchResult.CatalogueSearchResult.TotalHits);
+
+                searchResult.ResourceSearchResult.SearchId = searchId;
+                searchResult.CatalogueSearchResult.SearchId = searchId;
+            }
+
+            if (filterApplied)
+            {
+                await this.searchService.RegisterSearchEventsAsync(search, SearchFormActionTypeEnum.ApplyFilter, searchResult.ResourceSearchResult.TotalHits);
+            }
+
+            if (noSortFilterError)
+            {
+                this.ViewBag.SelectFilterError = true;
+            }
+
+            if (emptyFeedbackError)
+            {
+                this.ViewBag.EmptyFeedbackError = true;
+            }
+
+            return this.View("Index", searchResult);
+        }
+
+        /// <summary>
+        /// The IndexPost.
+        /// </summary>
+        /// <param name="search">Search object.</param>
+        /// <param name="resourceCount">The resource result count.</param>
+        /// <param name="filters">The search filter.</param>
+        /// <param name="resourceAccessLevelId">The search resource access level id.</param>
+        /// <param name="providerfilters">The provider filter.</param>
+        /// <param name="sortby">The sort by.</param>
+        /// <param name="groupId">The search group id.</param>
+        /// <param name="searchId">The search id.</param>
+        /// <param name="actionType">The action type.</param>
+        /// <param name="feedback">The feedback.</param>
+        /// <returns>The actionResult.</returns>
+        [HttpPost("results")]
+        public async Task<IActionResult> IndexPost([FromQuery] SearchRequestViewModel search, int resourceCount, [FromForm] IEnumerable<string> filters, [FromForm] int? resourceAccessLevelId, [FromForm] IEnumerable<string> providerfilters, [FromForm] int? sortby, [FromForm] string groupId, [FromForm] int searchId, [FromQuery] string actionType, string feedback)
+        {
+            if (actionType == "feedback")
+            {
+                if (!string.IsNullOrWhiteSpace(feedback))
+                {
+                    var feedbackModel = new SearchFeedBackModel
+                    {
+                        SearchText = search.Term,
+                        Feedback = feedback,
+                        TotalNumberOfHits = resourceCount,
+                        GroupId = !string.IsNullOrWhiteSpace(search.GroupId) && Guid.TryParse(search.GroupId, out Guid guidValue) ? guidValue : Guid.NewGuid(),
+                    };
+
+                    await this.searchService.SubmitFeedbackAsync(feedbackModel);
+                    search.FeedbackSubmitted = true;
+                }
+                else
+                {
+                    return await this.Index(search, emptyFeedbackError: true);
+                }
+            }
+            else
+            {
+                var existingFilters = (search.Filters ?? new List<string>()).OrderBy(t => t);
+                var newFilters = filters.OrderBy(t => t);
+                var filterUpdated = !newFilters.SequenceEqual(existingFilters);
+
+                var resourceAccessLevelFilterUpdated = (resourceAccessLevelId ?? 0) != (search.ResourceAccessLevelId ?? 0);
+                var existingProviderFilters = (search.ProviderFilters ?? new List<string>()).OrderBy(t => t);
+                var newProviderFilters = providerfilters.OrderBy(t => t);
+                var filterProviderUpdated = !newProviderFilters.SequenceEqual(existingProviderFilters);
+
+                // No sort or resource type filter updated or resource access level filter updated or provider filter applied
+                if ((search.Sortby ?? 0) == sortby && !filterUpdated && !resourceAccessLevelFilterUpdated && !filterProviderUpdated)
+                {
+                    return await this.Index(search, noSortFilterError: true);
+                }
+
+                if (search.ResourcePageIndex > 0 && (filterUpdated || resourceAccessLevelFilterUpdated || filterProviderUpdated))
+                {
+                    search.ResourcePageIndex = null;
+                }
+            }
+
+            search.Filters = filters;
+            search.ProviderFilters = providerfilters;
+            search.Sortby = sortby;
+            search.GroupId = groupId;
+            search.SearchId = searchId;
+            search.ResourceAccessLevelId = resourceAccessLevelId;
+
+            var routeValues = new RouteValueDictionary(search)
+            {
+                { "filterApplied", true },
+            };
+
+            return this.RedirectToAction("Index", routeValues);
+        }
+
+        /// <summary>
+        /// The RecordResourceNavigation.
+        /// </summary>
+        /// <param name="search">Search object.</param>
+        /// <param name="resourceCount">The resource result count.</param>
+        /// <returns>The actionResult.</returns>
+        [HttpGet("record-resource-navigation")]
+        public async Task<IActionResult> RecordResourceNavigation(SearchRequestViewModel search, int resourceCount)
+        {
+            await this.searchService.RegisterSearchEventsAsync(search, SearchFormActionTypeEnum.ResourceNextPageChange, resourceCount);
+
+            return this.RedirectToAction("Index", search);
+        }
+
+        /// <summary>
+        /// The RecordResourceNavigation.
+        /// </summary>
+        /// <param name="search">Search object.</param>
+        /// <param name="catalogueCount">The catalogue result count.</param>
+        /// <returns>The actionResult.</returns>
+        [HttpGet("record-catalogue-navigation")]
+        public async Task<IActionResult> RecordCatalogueNavigation(SearchRequestViewModel search, int catalogueCount)
+        {
+            await this.searchService.RegisterSearchEventsAsync(search, SearchFormActionTypeEnum.CatalogueNextPageChange, catalogueCount: catalogueCount);
+
+            return this.RedirectToAction("Index", search);
+        }
+
+        /// <summary>
+        /// The RecordClickedSearchResult.
+        /// </summary>
+        /// <param name="url">The url.</param>
+        /// <param name="nodePathId">The nodePathId.</param>
+        /// <param name="itemIndex">The itemIndex.</param>
+        /// <param name="pageIndex">The page index.</param>
+        /// <param name="totalNumberOfHits">The totalNumberOfHits.</param>
+        /// <param name="searchText">The searchText.</param>
+        /// <param name="resourceReferenceId">The resourceReferenceId.</param>
+        /// <param name="groupId">The groupdId.</param>
+        /// <param name="searchId">The search id.</param>
+        /// <param name="timeOfSearch">time of search.</param>
+        /// <param name="userQuery">user query.</param>
+        /// <param name="query">search query.</param>
+        [HttpGet("record-resource-click")]
+        public void RecordResourceClick(string url, int nodePathId, int itemIndex, int pageIndex, int totalNumberOfHits, string searchText, int resourceReferenceId, Guid groupId, string searchId, long timeOfSearch, string userQuery, string query)
+        {
+            var searchActionResourceModel = new SearchActionResourceModel
+            {
+                NodePathId = nodePathId,
+                ItemIndex = itemIndex,
+                NumberOfHits = pageIndex * this.Settings.FindwiseSettings.ResourceSearchPageSize,
+                TotalNumberOfHits = totalNumberOfHits,
+                SearchText = searchText,
+                ResourceReferenceId = resourceReferenceId,
+                GroupId = groupId,
+                SearchId = searchId,
+                TimeOfSearch = timeOfSearch,
+                UserQuery = userQuery,
+                Query = query,
+            };
+
+            this.searchService.CreateResourceSearchActionAsync(searchActionResourceModel);
+            this.Response.Redirect(url);
+        }
+
+        /// <summary>
+        /// The RecordClickedCatalogueSearchResult.
+        /// </summary>
+        /// <param name="url">The url.</param>
+        /// <param name="nodePathId">The nodePathId.</param>
+        /// <param name="itemIndex">The itemIndex.</param>
+        /// <param name="pageIndex">The page index.</param>
+        /// <param name="totalNumberOfHits">The totalNumberOfHits.</param>
+        /// <param name="searchText">The searchText.</param>
+        /// <param name="catalogueId">catalogue id.</param>
+        /// <param name="groupId">The groupdId.</param>
+        /// <param name="searchId">The search id.</param>
+        /// <param name="timeOfSearch">time of search.</param>
+        /// <param name="userQuery">user query.</param>
+        /// <param name="query">search query.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        [HttpGet("record-catalogue-click")]
+        public async Task<IActionResult> RecordCatalogueClick(string url, int nodePathId, int itemIndex, int pageIndex, int totalNumberOfHits, string searchText, int catalogueId, Guid groupId, string searchId, long timeOfSearch, string userQuery, string query)
+        {
+            SearchActionCatalogueModel searchActionCatalogueModel = new SearchActionCatalogueModel
+            {
+                CatalogueId = catalogueId,
+                NodePathId = nodePathId,
+                ItemIndex = itemIndex,
+                NumberOfHits = pageIndex * this.Settings.FindwiseSettings.CatalogueSearchPageSize,
+                TotalNumberOfHits = totalNumberOfHits,
+                SearchText = searchText,
+                GroupId = groupId,
+                SearchId = searchId,
+                TimeOfSearch = timeOfSearch,
+                UserQuery = userQuery,
+                Query = query,
+            };
+
+            await this.searchService.CreateCatalogueSearchActionAsync(searchActionCatalogueModel);
+            return this.Redirect(url);
+        }
+
+        /// <summary>
+        /// The Image.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The ActionResult.</returns>
+        [HttpGet("Image/{name}")]
+        public async Task<IActionResult> Image(string name)
+        {
+            var file = await this.fileService.DownloadFileAsync("CatalogueImageDirectory", name);
+            if (file != null)
+            {
+                return this.File(file.Content, file.ContentType);
+            }
+            else
+            {
+                return this.Ok(this.Content("No file found"));
+            }
+        }
+    }
+}

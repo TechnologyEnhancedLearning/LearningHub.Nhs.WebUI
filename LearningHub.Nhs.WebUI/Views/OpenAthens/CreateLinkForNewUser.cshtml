@@ -1,0 +1,88 @@
+﻿@model LearningHub.Nhs.Models.OpenAthens.CreateOpenAthensLinkToLhUser
+@{
+    ViewData["Title"] = "Create Learning Hub Account";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+
+ <div class="create-account">
+<div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-grid-row nhsuk-u-padding-top-9 nhsuk-u-padding-bottom-9">
+        <div class="nhsuk-grid-column-full nhsuk-u-padding-top-0">
+           @if (errorHasOccurred)
+            {
+                <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+            }
+
+            <h1 class="nhsuk-heading-xl">Create your Learning Hub account</h1>
+
+            <div class="nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-7 nhsuk-u-reading-width">
+                <p class="nhsuk-body-m">
+                        Creating a Learning Hub account enables us to save your learning data whilst you are using the Learning Hub.
+                </p>
+                <p class="nhsuk-body-m">
+                        To start this process please enter your first and last name and work email address. You will still be able to log in using your OpenAthens credentials.
+                </p>
+            </div>
+
+            <form class="nhsuk-u-margin-bottom-2" asp-controller="OpenAthens" asp-action="CreateLinkForNewUserSubmit" method="post">
+
+                <vc:text-input asp-for="FirstName"
+                                label="First name"
+                                populate-with-current-value="true"
+                                type="text"
+                                spell-check="false"
+                                hint-text=""
+                                autocomplete=""
+                                css-class="nhsuk-u-width-one-half"
+                                required="true"
+                                required-client-side-error-message="Enter a first name" />
+
+                <vc:text-input asp-for="LastName"
+                               label="Last name"
+                               populate-with-current-value="true"
+                               type="text"
+                               spell-check="false"
+                               hint-text=""
+                               autocomplete=""
+                               css-class="nhsuk-u-width-one-half"
+                               required="true"
+                               required-client-side-error-message="Enter a last name" />
+
+
+                <vc:text-input asp-for="EmailAddress"
+                               label="Enter your work email address"
+                               populate-with-current-value="false"
+                               type="email"
+                               spell-check="false"
+                               hint-text=""
+                               autocomplete=""
+                               css-class="nhsuk-u-width-one-half"
+                               required="true"
+                               required-client-side-error-message="Enter a work email address in the correct format" />
+
+                <vc:text-input asp-for="VerifyEmail"
+                               label="Confirm your work email address"
+                               populate-with-current-value="false"
+                               type="email"
+                               spell-check="false"
+                               hint-text=""
+                               autocomplete=""
+                               css-class="nhsuk-u-width-one-half"
+                               required="true"
+                               required-client-side-error-message="Enter a work email address in the correct format" />
+
+                <input type="hidden" asp-for="OaOrganisationId" />
+                <input type="hidden" asp-for="OaUserId" />
+                <button class="nhsuk-button" type="submit">Continue</button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+</div>

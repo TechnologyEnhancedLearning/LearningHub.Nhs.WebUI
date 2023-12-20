@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "You cannot register with the Learning Hub yet using your elfh hub account";
+    Layout = ViewData["Layout"].ToString();
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/staticpages.css" asp-append-version="true" />
+}
+
+<div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-main-wrapper ">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <h1 class="nhsuk-heading-xl">@ViewData["Title"]</h1>
+                <p class="nhsuk-u-reading-width">Your current email address does not give you permission to register with the Learning Hub. Please continue to access the elearning for healthcare (elfh) hub.</p>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <a class="nhsuk-button nhsuk-u-margin-bottom-7" href="@(this.ViewBag.ELfhHubUrl)">Visit the elfh hub to access learning resources</a>
+                <p>Alternatively, use a qualifying work email address to access the Learning Hub.</p>
+                <details class="nhsuk-details nhsuk-expander nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-5 nhsuk-u-reading-width">
+                    <summary class="nhsuk-details__summary">
+                        <span class="nhsuk-details__summary-text">
+                            What is a qualifying work email address?
+                        </span>
+                    </summary>
+                    <div class="nhsuk-details__text">
+                        <p class="nhsuk-u-reading-width">Your work email address helps us check if you already have an account or if you can have one.</p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+</div>
+
+

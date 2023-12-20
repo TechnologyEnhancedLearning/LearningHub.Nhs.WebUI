@@ -1,0 +1,122 @@
+﻿@using NHSUKViewComponents.Web.ViewModels
+@model LearningHub.Nhs.WebUI.Models.Bookmark.MoveBookmarkViewModel
+@{
+    var bookmarkType = (Model.Bookmark.BookmarkTypeId == 3) ? "Learning resource" : "Catalogue";
+    ViewData["Title"] = "Move your bookmark";
+
+    // Default MVC validation of radio buttons didn't show the validation error message or highlight in red. Doing that manually instead.
+    var selectedFolderError = !ViewData.ModelState.IsValid && ViewData.ModelState.Any(x => x.Key == "SelectedFolderId" && x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid);
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/bookmark.css" asp-append-version="true" />
+}
+
+<div class="bg-white">
+    <div class="nhsuk-width-container app-width-container nhsuk-u-padding-bottom-9">
+        <vc:back-link asp-controller="Bookmark" asp-action="Index" link-text="Back to: My bookmarks" />
+
+        <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+
+        <div class="nhsuk-u-margin-bottom-2">
+            <h1>Move your bookmark</h1>
+
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <div class="nhsuk-form-group">
+                        <label class="nhsuk-label nhsuk-u-font-weight-bold nhsuk-u-margin-bottom-4">@bookmarkType</label>
+                        <div class="grey-bottom-border-panel">
+                            <p class="nhsuk-u-margin-bottom-4">@Model.Bookmark.Title</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form asp-controller="Bookmark" asp-action="MoveBookmark" asp-route-returnUrl="@ViewBag.ReturnUrl" method="post">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                        <div class="nhsuk-form-group @(selectedFolderError ? "nhsuk-form-group--error" : "")">
+                        <fieldset class="nhsuk-fieldset">
+                            <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--l">
+                                <h3 class="nhsuk-fieldset__heading">
+                                    Select a folder
+                                </h3>
+                            </legend>
+
+                            @if (selectedFolderError)
+                            {
+                                <span class="nhsuk-error-message" id="viewmodel-error">
+                                    <span class="nhsuk-u-visually-hidden">Error:</span> You must select a folder to move your bookmark to
+                                </span>
+                            }
+
+                            <div class="nhsuk-radios">
+
+                                <div class="nhsuk-radios__item">
+                                    <input type="radio" asp-for="SelectedFolderId" value="0" id="SelectedFolderId" class="nhsuk-radios__input" data-val="false"
+                                           aria-controls="conditional-newfolder" aria-expanded="false" />
+                                    <label class="nhsuk-label nhsuk-radios__label" for="SelectedFolderId">
+                                        Add a folder and include the bookmark in it
+                                    </label>
+                                    @* Note: The hidden div following a conditional radio button (nhsuk-radios__conditional) needs to be a SIBLING of the radio button input element. *@
+                                    <div class="nhsuk-radios__conditional nhsuk-u-margin-bottom-0" id="conditional-newfolder">
+                                        <vc:text-input asp-for="NewFolderName"
+                                                       label="New folder name"
+                                                       populate-with-current-value="false"
+                                                       type="text"
+                                                       spell-check="false"
+                                                       hint-text=""
+                                                       autocomplete="off"
+                                                       css-class=""
+                                                       required="@(Model.SelectedFolderId == 0)" />
+                                    </div>
+                                </div>
+
+                                @if (Model.Bookmark.ParentId.HasValue || (Model.Folders != null && Model.Folders.Any()))
+                                {
+                                    <div class="nhsuk-radios__divider nhsuk-u-margin-top-3 nhsuk-u-margin-bottom-3 nhsuk-u-margin-left-2">Or</div>
+
+                                    @if (Model.Bookmark.ParentId.HasValue)
+                                    {
+                                        <div class="nhsuk-radios__item">
+                                            <input type="radio" asp-for="SelectedFolderId" value="-1" id="moveToTopLevel" class="nhsuk-radios__input" data-val="false" />
+                                            <label class="nhsuk-label nhsuk-radios__label" for="moveToTopLevel">
+                                                Move your bookmark to the top-level
+                                            </label>
+                                        </div>
+                                    }
+
+                                    @if (Model.Folders != null && Model.Folders.Any())
+                                    {
+                                        @foreach (var folder in Model.Folders)
+                                        {
+                                            <div class="nhsuk-radios__item">
+                                                <input type="radio" asp-for="SelectedFolderId" value="@folder.Key" id="folder@(folder.Key)" class="nhsuk-radios__input" data-val="false" />
+                                                <label class="nhsuk-label nhsuk-radios__label nhsuk-u-reading-width" for="folder@(folder.Key)">
+                                                    @folder.Value
+                                                </label>
+                                            </div>
+                                        }
+                                    }
+                                }
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-panel">
+                <button type="submit" class="nhsuk-button nhsuk-u-margin-bottom-0">Continue</button>
+                <div class="nhsuk-u-margin-left-5 nhsuk-u-font-size-19">
+                    <a class="cancel-link" asp-controller="Bookmark" asp-action="Index">Cancel</a>
+                </div>
+            </div>
+
+            <input type="hidden" asp-for="Bookmark.Id" data-val="false" />
+            <input type="hidden" asp-for="Bookmark.BookmarkTypeId" data-val="false" />
+            <input type="hidden" asp-for="Bookmark.ParentId" />
+            <input type="hidden" asp-for="Bookmark.Title" />
+        </form>
+    </div>
+</div>

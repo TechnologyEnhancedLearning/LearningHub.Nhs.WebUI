@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.Nhs.WebUI", "LearningHub.Nhs.WebUI\LearningHub.Nhs.WebUI.csproj", "{16BBF937-C1E9-4240-B56E-20E3E5FA2005}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B5D48B6A-D4A7-494E-89C0-64428232D242}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		StyleCop.ruleset = StyleCop.ruleset
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{16BBF937-C1E9-4240-B56E-20E3E5FA2005}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{16BBF937-C1E9-4240-B56E-20E3E5FA2005}.Debug|Any CPU.Build.0 = Debug|x64
+		{16BBF937-C1E9-4240-B56E-20E3E5FA2005}.Release|Any CPU.ActiveCfg = Release|x64
+		{16BBF937-C1E9-4240-B56E-20E3E5FA2005}.Release|Any CPU.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1ECA38C8-7C69-4DE6-8293-852C603F4217}
+	EndGlobalSection
+EndGlobal

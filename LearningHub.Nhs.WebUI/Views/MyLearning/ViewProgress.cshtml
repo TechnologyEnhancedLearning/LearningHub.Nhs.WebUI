@@ -1,0 +1,162 @@
+@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Models.Learning
+@model ActivityViewProgress;
+
+@{
+    ViewData["Title"] = "Activity View Progress";
+}
+
+<div class="lh-padding-fluid">
+    <div class="lh-container-xl dashboardTray">
+
+        <a href="@ViewBag.ReturnUrl" class="previous-nav-link">
+            <i class="fa-solid fa-chevron-left mr-2"></i>Go back
+        </a>
+
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <p>
+                    <span class="modal-title pl-3">Your progress</span>
+                </p>
+            </div>
+
+            <div class="guide-container">
+                <div class="d-flex flex-row align-items-center small mt-3 px-5">
+                    <div class="key-colour played"></div>
+                    <div class="key-text mr-5">Sections played</div>
+                    <div class="key-colour not-played"></div>
+                    <div class="key-text">Sections not played</div>
+                </div>
+            </div>
+
+            <div class="p-5">
+                <div class="progress">
+                    @foreach (var segment in Model.Segments)
+                    {
+                       <div class="progress-bar @(segment.Played ? "played" : "not-played")" style="width: @segment.Percentage%;"></div>
+                    }
+                </div>
+
+                <div class="progress-bar-times small d-flex flex-row justify-content-between">
+                    <div>00:00</div>
+                    <div>@Model.MediaLength</div>
+                </div>
+            </div>
+
+            <div class="activity-block py-4">
+                <h2 class="p-4">Activity details</h2>
+
+                <div id="accordion" class="accordion col-md-12">
+                    <div class="pt-0 pb-3">
+
+                        <div id="activityDetailBody" aria-labelledby="activityDetailHeading" data-parent="#accordion" class="collapse show">
+                            <div class="collapse-inner">
+                                <table class="segment-table">
+                                    <tbody>
+                                        @foreach (var segment in Model.Segments)
+                                        {
+                                            @:<tr>
+                                            if (segment.Played)
+                                            {
+                                                <td>
+                                                    @segment.SegmentTime
+                                                </td>
+                                                <td class="no-wrap">
+                                                    <div class="progress-indicator d-flex flex-row justify-content-end align-items-center">
+                                                        <div>Played</div>
+                                                        <div>
+                                                            <i class="fa-solid fa-circle-check complete-icon"></i>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                               <td>
+                                                    @segment.SegmentTime
+                                                    <span>
+                                                        | <a href="/Resource/@Model.ResourceReferenceId/item?mediaStartTime=@segment.SegmentStartTime">
+                                                            <i class="fas fa-play-circle mr-2 play-icon"></i>Play
+                                                        </a>
+                                                    </span>
+                                                </td>
+                                                <td class="no-wrap">
+                                                    <div class="progress-indicator d-flex flex-row justify-content-end align-items-center">
+                                                        <div>Not played</div>
+                                                        <div>
+                                                            <span class="fa-stack fa-1x" style="width: 40px;">
+                                                                <i class="fas fa-circle fa-stack-1x incomplete-circle"></i>
+                                                                <i class="fas fa-ellipsis-h fa-stack-1x incomplete-ellipsis"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </td> 
+                                            }
+                                            @:</tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .key-text {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .key-colour {
+        width: 18px;
+        height: 18px;
+    }
+
+    .not-played {
+        background-color: #f0f4f5;
+        border: 1px solid #aeb7bd;
+    }
+
+    .played {
+        background-color: #007f3b;
+    }
+
+    .progress-bar-container {
+        margin: 60px 55px 0 55px;
+    }
+
+    .progress {
+        height: 20px;
+        border-radius: 10px;
+        border: 1px solid #aeb7bd;
+    }
+
+    .progress-bar-times {
+        margin-top: 5px;
+        margin-bottom: 15px;
+    }
+
+    .activity-block {
+        background-color: #f0f4f5;
+    }
+
+    .segment-table {
+        width: 100%;
+    }
+
+        .segment-table tbody {
+            min-width: 100%;
+            display: table;
+        }
+
+        .segment-table td {
+            border-top: 1px solid #aeb7bd;
+            border-bottom: 1px solid #aeb7bd;
+            padding: 12px 0 11px 0;
+        }
+</style>

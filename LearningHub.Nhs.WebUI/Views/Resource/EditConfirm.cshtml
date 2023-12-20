@@ -1,0 +1,27 @@
+﻿@model ResourceEditConfirmViewModel
+@using LearningHub.Nhs.WebUI.Models.Resource
+@{
+    ViewData["Title"] = "Edit Resource";
+}
+
+<div>
+    <div class="nhsuk-width-container app-width-container nhsuk-u-margin-bottom-7">
+        <vc:back-link asp-controller="Resource" asp-action="@Model.ResourceReferenceId" link-text="Back to @Model.ResourceTitle" />
+        <h1>Edit resource</h1>
+
+        <div class="nhsuk-u-reading-width nhsuk-u-font-size-19">
+            <form asp-controller="Resource" asp-action="EditConfirmPost" method="post">
+                <input type="hidden" asp-for="ResourceId" />
+
+                <p>You are about to edit @Model.ResourceTitle.</p>
+
+                <p>Editing this page will create a new draft, nothing will change until this draft is published.</p>
+
+                <div class="display__flex-space-between">
+                    <a class="nhsuk-button nhsuk-button--secondary" asp-controller="Resource" asp-action="Index" asp-route-resourceReferenceId="@Model.ResourceReferenceId">Cancel</a>
+                    <button type="submit" class="nhsuk-button">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

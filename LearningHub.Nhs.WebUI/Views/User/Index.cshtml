@@ -1,0 +1,177 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserProfileSummaryViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="nhsuk-width-container">
+    <main class="nhsuk-main-wrapper nhsuk-main-wrapper--s" id="maincontent" role="main">
+
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds">
+
+                <h1 class="nhsuk-u-margin-top-4">
+                    @Model.PreferredName
+                    <br/>
+                    Profile last updated on @Model.LastUpdated.ToString("dd MMM yyyy")
+                </h1>
+
+                <h2>
+                    Personal details
+                </h2>
+
+                @if (this.TempData["SuccessMessage"] != null)
+                {
+                    <div class="success-message">
+                        @Html.Raw(@TempData["SuccessMessage"].ToString())
+                    </div>
+                }
+
+                <dl class="nhsuk-summary-list">
+
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            User Name
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @Model.UserName
+                        </dd>
+                    </div>
+
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            First name
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @Model.FirstName
+                        </dd>
+                    </div>
+
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Last name
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @Model.LastName
+                        </dd>
+                    </div>
+
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Preferred name
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                           @Model.PreferredName
+                        </dd>
+                    </div>
+
+                    <div class="nhsuk-summary-list__row">                       
+                        <dd class="nhsuk-summary-list__actions">
+                            <a asp-controller="User" asp-action="PersonalDetails">
+                                Change<span class="nhsuk-u-visually-hidden"> personal details</span>
+                            </a>
+                        </dd>
+                    </div>
+                </dl>
+
+                <h2>
+                    Location
+                </h2>
+
+                <dl class="nhsuk-summary-list">
+
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Country
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @Model.CountryName
+                        </dd>
+                    </div>
+                    @if (!String.IsNullOrEmpty(Model.RegionName))
+                    {
+                        <div class="nhsuk-summary-list__row">
+                            <dt class="nhsuk-summary-list__key"> 
+                                Region                       
+                            </dt>
+                            <dd class="nhsuk-summary-list__value">
+                                @Model.RegionName
+                            </dd>
+                        </div>                        
+                    }
+                    <div class="nhsuk-summary-list__row">
+                        <dd class="nhsuk-summary-list__actions">
+                            <a asp-controller="User" asp-action="LocationSelectCountry">
+                                Change<span class="nhsuk-u-visually-hidden"> location details</span>
+                            </a>
+                        </dd>
+                    </div>
+                </dl>
+                <h2>
+                    Email address
+                </h2>
+                <dl class="nhsuk-summary-list">
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Primary email address
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @Model.PrimaryEmailAddress
+                        </dd>
+                    </div>
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Secondary email address
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @Model.SecondaryEmailAddress
+                        </dd>
+                    </div>
+                    <div class="nhsuk-summary-list__row">                       
+                        <dd class="nhsuk-summary-list__actions">
+                            <a asp-controller="User" asp-action="EmailDetails">
+                                Change<span class="nhsuk-u-visually-hidden"> email details</span>
+                            </a>
+                        </dd>
+                    </div>
+                </dl>
+                <h2>
+                   Security questions
+                </h2>
+                <dl class="nhsuk-summary-list">
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            First question
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @Model.SecurityFirstQuestion
+                        </dd>
+                    </div>
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Second question
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @Model.SecuritySecondQuestion
+                        </dd>
+                        <dd class="nhsuk-summary-list__actions">
+                            <a asp-controller="User" asp-action="AdditionalSecurity">
+                                Change<span class="nhsuk-u-visually-hidden"> security questions</span>
+                            </a>                            
+                        </dd>
+                    </div>
+                </dl>
+                <dl class="nhsuk-summary-list">
+                    <div class="nhsuk-summary-list__row">
+                        <dd class="nhsuk-summary-list__actions">
+                            <a asp-controller="User" asp-action="ChangePassword">
+                                Change<span class="nhsuk-u-visually-hidden"> password</span>
+                            </a>                            
+                        </dd>
+
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </main>
+</div>

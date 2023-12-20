@@ -1,0 +1,30 @@
+@use "../../abstracts/all" as *;
+
+main .nhsuk-width-container.app-width-container {
+  max-width:px2rem(1176);
+  width:100%;
+  padding:0 px2rem(16);
+}
+
+
+/* article overwrites from \Styles\sections\_all.scss */
+  article {
+    all:revert;
+  }
+
+  article h2,
+  article h3,
+  article ul,
+  article li {
+    padding-top:0;
+    padding-bottom:0;
+  }
+
+  article p,
+  article ul,
+  article li {
+    margin-top:0;
+  }
+
+
+  

@@ -1,0 +1,61 @@
+﻿@use "../abstracts/all" as *;
+@import "../../wwwroot/lib/bootstrap/scss/functions";
+@import "../../wwwroot/lib/bootstrap/scss/variables";
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+) !default;
+
+$container-max-widths: ( 
+    sm: 540px, 
+    md: 720px, 
+    lg: 960px, 
+    xl: 1144px
+);
+
+$spacers: map-merge( 
+    ( 
+    10: ($spacer),
+    12: ($spacer * 1.2),
+    15: ($spacer * 1.5),
+    16: ($spacer * 1.6),
+    20: ($spacer * 2),
+    24: ($spacer * 2.4),
+    25: ($spacer * 2.5),
+    30: ($spacer * 3),
+    32: ($spacer * 3.2),
+    35: ($spacer * 3.5),
+    40: ($spacer * 4),
+    45: ($spacer * 4.5),
+    50: ($spacer * 5),
+    ), 
+$spacers );
+
+.lh-padding-fluid {
+    @extend .px-3;
+    @extend .px-md-40;
+}
+
+
+.lh-padding-fluid-md {
+    @extend .px-md-40;
+}
+
+.lh-container-xl {
+    @extend .container-xl;
+    @extend .px-0;
+}
+
+.lh-container {
+    @extend .container-fluid;
+    @extend .container-xl;
+    @extend .px-4;
+    @extend .px-md-5;
+    @extend .px-xl-0;
+}
+
+@import "../../wwwroot/lib/bootstrap/scss/bootstrap";

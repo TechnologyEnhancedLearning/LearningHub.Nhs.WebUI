@@ -1,0 +1,73 @@
+@use "../abstracts/all" as *;
+
+.rating-stars-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.rating-stars {
+    display: flex;
+    flex-shrink: 0;
+    margin-right: 10px;
+
+    div::before {
+        content: "";
+    }
+}
+
+.rating-star {
+    width: 20px;
+    margin-right: 2px;
+    margin-top: 2px;
+}
+
+.rating-star-empty, .rating-star-full {
+    position: relative;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-color: white;
+}
+
+.rating-star-empty {
+    width: 20px;
+    background-image: url(/images/star-grey-small.svg);
+    background-size: contain;
+}
+
+.rating-star-full {
+    width: 0;
+    margin-top: -20px;
+    background-image: url(/images/star-gold-small.svg);
+    background-size: cover;
+}
+
+.rating-star-text {
+    white-space: nowrap;
+    font-size: 1rem;
+}
+
+.rating-text-block {
+    white-space: nowrap;
+}
+
+// Some screens require smaller rating stars - 16px
+.star-rating-small {
+    .rating-star {
+        width: 16px;
+        margin-right: 2px;
+        margin-top: 2px;
+    }
+
+    .rating-star-empty, .rating-star-full {
+        height: 16px;
+    }
+
+    .rating-star-empty {
+        width: 16px;
+    }
+
+    .rating-star-full {
+        width: 0;
+        margin-top: -16px;
+    }
+}

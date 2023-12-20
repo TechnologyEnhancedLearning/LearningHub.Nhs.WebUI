@@ -1,0 +1,67 @@
+@use "../abstracts/all" as *;
+
+.complete-icon {
+  color: $nhsuk-green;
+  font-size: 2.5rem;
+  margin-top: 3px;
+  margin-right: 7px;
+  margin-left: 7px;
+}
+
+.failed-icon {
+  color: $nhsuk-red;
+  font-size: 2.5rem;
+  margin-top: 3px;
+  margin-right: 7px;
+  margin-left: 7px;
+}
+
+.downloaded-circle {
+  color: $nhsuk-green;
+  font-size: 2.5rem;
+}
+
+.downloaded-arrow {
+  color: $nhsuk-white;
+}
+
+.incomplete-circle {
+  color: $nhsuk-warm-yellow;
+  font-size: 2.5rem;
+}
+
+.incomplete-ellipsis {
+  color: $nhsuk-white;
+}
+
+.failed-circle {
+  color: $nhsuk-red;
+  font-size: 2.5rem;
+}
+
+.failed-times {
+  color: $nhsuk-white;
+}
+
+.loading-spinner {
+  margin-top: 32px;
+  color: $nhsuk-grey-lighter;
+}
+
+.badge-beta {
+  background-color: $nhsuk-blue;
+  color: $nhsuk-beta-blue;
+  font-family: $font-stack-bold;
+  font-size: 1.4rem;
+  min-width: 4.9rem;
+  width: 4.9rem;
+  height: 2.8rem;
+  line-height: 2.8rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.alert-info {
+  color: $nhsuk-black;
+  border: none;
+}

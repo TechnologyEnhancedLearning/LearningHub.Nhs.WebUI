@@ -1,0 +1,140 @@
+@use "../abstracts/all" as *;
+
+.modal-dialog-slideout {
+  margin: 0 0 0 auto;
+  display: block;
+  font-family: FrutigerLTW01-55Roman, Arial, sans-serif;
+}
+
+.modal.fade .modal-dialog.modal-dialog-slideout {
+  -webkit-transform: translate(100%, 0) scale(1);
+  transform: translate(100%, 0) scale(1);
+}
+
+.modal.fade.show .modal-dialog.modal-dialog-slideout {
+  -webkit-transform: translate(0, 0);
+  transform: translate(0, 0);
+  display: flex;
+  align-items: stretch;
+  -webkit-box-align: stretch;
+  height: 100%;
+}
+
+.modal.fade.show .modal-dialog.modal-dialog-slideout .modal-body {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.modal-dialog-slideout .modal-body {
+  padding: 0 !important;
+}
+
+.modal-dialog-slideout .modal-content {
+  padding: 0 !important;
+  border: 0;
+  font-family: FrutigerLTW01-55Roman, Arial, sans-serif;
+  color: $nhsuk-black;
+  font-size: 16px;
+}
+
+.modal-dialog-slideout .modal-header {
+  border-radius: 0;
+  display: block;
+  background: $nhsuk-grey !important;
+  padding-right: 0;
+  color: $nhsuk-white;
+}
+
+.modal-open {
+  padding-right: 0 !important;
+}
+
+.modal-content {
+  padding: 28px;
+  border-radius: 0.8rem;
+
+  button.close {
+    font-size: 2.5rem;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0 2.8rem;
+    border-bottom: none;
+    border-top-left-radius: 0.3rem;
+    border-top-right-radius: 0.3rem;
+
+    .modal-title {
+      font-size: 3.2rem;
+      font-weight: bold;
+      line-height: 1.25;
+    }
+  }
+
+  .modal-body {
+    padding: 1rem 2.8rem;
+  }
+
+  .modal-footer {
+    padding: 16px 28px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-top: none;
+    border-bottom-right-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .modal-xl {
+    max-width: 1140px;
+  }
+}
+
+@media (max-width: 992px) {
+  .modal-dialog {
+    margin: 1.5rem;
+    max-width: none;
+
+    .modal-content {
+      font-size: 16px;
+      line-height: 24px;
+      padding: 2rem;
+
+      .modal-header {
+        padding: 0.3rem 2rem 1rem 2rem;
+
+        .modal-title {
+          font-size: 24px;
+          font-weight: bold;
+          line-height: 32px;
+        }
+      }
+
+      .modal-body {
+        padding: 1rem 2rem 1rem 2rem;
+      }
+
+      .modal-footer {
+        padding: 1.6rem 2rem 2rem;
+      }
+    }
+  }
+
+  // An additional Bootstrap modal size between "modal" (500px) and "modal-lg" (800px).
+  .modal-md {
+    max-width: 600px;
+  }
+  .modal-xl {
+    max-width: 940px;
+  }
+}
+
+@media (min-width: 768px) {
+  .hide-if-desktop {
+    display: none;
+  }
+}

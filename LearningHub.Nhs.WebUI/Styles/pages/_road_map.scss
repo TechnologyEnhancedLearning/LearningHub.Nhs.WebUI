@@ -1,0 +1,110 @@
+@use "../abstracts/all" as *;
+
+.updates-banner {
+  background: url(/images/updates-banner-image.jpg);
+  background-position: right;
+  background-size: cover;
+  width: 100%;
+  padding-top: 17px;
+  padding-bottom: 20px;
+  color: $nhsuk-white;
+
+  .updates-banner-text {
+    background-color: $nhsuk-blue;
+    padding: 29px 40px 21px;
+    width: 600px;
+
+    h1 {
+      font-size: 3.2rem;
+    }
+  }
+}
+
+.updates-card {
+  width: 800px;
+  margin-top: 40px;
+  background-color: $nhsuk-white;
+  padding-bottom: 40px;
+
+  > img {
+    height: 400px;
+    width: 800px;
+  }
+
+  > h2 {
+    margin-left: 28px;
+    margin-right: 28px;
+    margin-top: 24px;
+    font-size: 2.4rem;
+  }
+
+  > p {
+    margin-left: 28px;
+    margin-right: 28px;
+    margin-top: 8px;
+    color: $nhsuk-grey;
+    font-size: 1.6rem;
+  }
+
+  > div {
+    margin-left: 28px;
+    margin-right: 28px;
+    margin-top: 32px;
+    font-size: 19px;
+  }
+}
+
+#load-more-updates {
+  margin-top: 40px;
+}
+
+@media(max-width: 920px) {
+  .updates-banner {
+    background-position: right 25% top 0;
+    padding-top: 73px;
+    padding-bottom: 12px;
+    color: $nhsuk-white;
+
+    .updates-banner-text {
+      padding-top: 24px;
+      padding-bottom: 19px;
+      background-color: $nhsuk-blue;
+      width: 100%;
+
+      h1 {
+        font-size: 2.4rem;
+      }
+    }
+  }
+
+  #load-more-updates {
+    margin-top: 40px;
+  }
+
+  .updates-card {
+    width: auto;
+    margin-top: 20px;
+    padding-bottom: 20px;
+
+    > img {
+      height: auto;
+      width: 100%;
+    }
+
+    > h2 {
+      margin-top: 16px;
+      font-size: 2rem;
+    }
+
+    > p {
+      margin-top: 16px;
+      color: $nhsuk-grey;
+      font-size: 1.4rem;
+    }
+
+    > div {
+      margin-top: 16px;
+      font-size: 1.6rem;
+    }
+  }
+}

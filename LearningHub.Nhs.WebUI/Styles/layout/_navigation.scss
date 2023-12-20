@@ -1,0 +1,389 @@
+@use "../abstracts/all" as *;
+
+.navbar {
+    margin-top: 1px;
+    padding: 0px !important;
+    background-color: $nhsuk-blue;
+    z-index: 4;
+    justify-content: end;
+
+    .navbar-collapse {
+        background-color: $nhsuk-blue !important;
+        border-bottom: 1px solid $nhsuk-grey-light;
+        flex-basis: auto; // Fix for IE11 - stops menu items overlapping.
+    }
+}
+
+button#navbar-toggler.open {
+    background-color: $nhsuk-yellow;
+    color: $nhsuk-black !important;
+    border: none !important;
+}
+
+.navbar-toggler {
+    margin-left: 15px;
+}
+
+#input-group-searchbar-md {
+    width: 100% !important;
+}
+
+#input-search-md {
+    border-radius: 0 !important;
+    border-bottom-left-radius: 0.5rem !important;
+    border-top-left-radius: 0.5rem !important;
+
+
+    &:focus {
+        border: solid 0.2rem black;
+        box-shadow: 0 0 0 0.2rem yellow;
+    }
+}
+
+#input-catalogue-search {
+    font-size: 1.4rem;
+    height: 30px !important;
+    border-width: 1px;
+    border-radius: 0 !important;
+    border-color: $nhsuk-grey-placeholder;
+
+    &:focus {
+        border: solid 0.2rem black;
+        box-shadow: 0 0 0 0.2rem yellow;
+    }
+}
+
+.subnavbarwhite {
+    margin-top: 1px;
+    padding: 0px !important;
+    background-color: $nhsuk-white;
+    border-bottom: 1px solid $nhsuk-grey-light;
+
+    .subnavbarwhite-collapse {
+        background-color: $nhsuk-white !important;
+    }
+
+    .subnav-hidden-checkbox {
+        display: none;
+    }
+}
+
+.subnavwhite-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: $nhsuk-black !important;
+    margin-right: 2rem !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 14px;
+
+    .subnavwhite-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: $font-stack;
+        color: $nhsuk-black !important;
+        text-decoration: none;
+        border: none;
+    }
+
+    &.active, &:hover {
+        background-color: $nhsuk-white;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    &.active {
+        border-bottom: 5px solid $nhsuk-blue;
+
+        a {
+            margin-bottom: -5px;
+        }
+    }
+}
+
+@media (max-width: 640px) {
+    .navbar-toggler-left {
+        padding: 0 0 9px 0 !important;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+    .navbar-toggler-left {
+        padding: 0 0 12px 0 !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .subnavbarwhite {
+        border-bottom: none;
+
+        .navbar-nav {
+            background-color: $nhsuk-white;
+            border-bottom: none;
+            flex-direction: column;
+        }
+
+        .navbar-collapse {
+            background-color: $nhsuk-white !important;
+        }
+
+        .bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: $nhsuk-black !important;
+            font-weight: bold;
+            border-bottom: 1px solid $nhsuk-grey-light;
+
+            .navbar-toggler {
+                display: block;
+                margin-left: 0;
+                padding-left: 15px;
+                padding-top: 0;
+                height: 100% !important;
+                border-radius: 0 !important;
+            }
+
+            .navbar-toggler-left {
+                border-bottom: 5px solid $nhsuk-blue;
+                border-left: none;
+                border-right: none;
+            }
+
+            .navbar-toggler-right {
+                margin-left: 15px;
+            }
+            /* JS version of navbar-toggler uses a button to show/hide menu: */
+            button.navbar-toggler {
+                color: $nhsuk-blue;
+                font-size: 1.5rem;
+
+                i {
+                    font-weight: 700;
+                }
+            }
+
+            button.navbar-toggler[aria-expanded="true"] i.fa-chevron-down {
+                display: none;
+            }
+
+            button.navbar-toggler[aria-expanded="false"] i.fa-chevron-down {
+                display: inline;
+            }
+
+            button.navbar-toggler[aria-expanded="false"] i.fa-times {
+                display: none;
+            }
+
+            button.navbar-toggler[aria-expanded="true"] i.fa-times {
+                display: inline;
+            }
+            /* Non-JS version of navbar-toggler uses a checkbox & label to show/hide menu: */
+            label.navbar-toggler {
+                color: $nhsuk-blue;
+                font-size: 1.5rem;
+                cursor: pointer;
+                margin: 0;
+                padding-right: 0px;
+
+                i {
+                    font-weight: 700;
+                }
+            }
+        }
+
+        .subnav-hidden-checkbox:checked ~ .navbar-collapse {
+            display: block !important;
+        }
+
+        .subnav-hidden-checkbox:checked ~ .bar > label > i.fa-chevron-up {
+            display: block !important;
+        }
+
+        .subnav-hidden-checkbox:checked ~ .bar > label > i.fa-chevron-down {
+            display: none !important;
+        }
+    }
+
+    .subnavwhite-item {
+        width: 100%;
+        color: $nhsuk-black !important;
+        background-color: $nhsuk-white !important;
+        flex-direction: row;
+        justify-content: flex-start;
+        margin-left: 0;
+        padding: 24px 0;
+        border-bottom: 1px solid $nhsuk-grey-light !important;
+        font-weight: normal !important;
+
+        .subnavwhite-link {
+            color: $nhsuk-blue !important;
+            text-decoration: underline;
+            flex-direction: row;
+            align-items: flex-start;
+            font-family: $font-stack;
+
+            i {
+                margin-right: 22px;
+                width: 35px !important;
+            }
+        }
+
+        .subnavwhite-link:focus {
+            outline: none;
+        }
+
+        &.active {
+            pointer-events: none;
+
+            a {
+                text-decoration: none;
+                color: $nhsuk-grey !important;
+            }
+        }
+
+        &:hover {
+            background-color: $nhsuk-grey-white !important;
+            color: $nhsuk-white !important;
+
+            .subnav-link {
+                color: $nhsuk-black !important;
+            }
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .navbar-nav .dropdown-menu {
+        display: block;
+        position: static;
+        float: none;
+        width: auto;
+        margin-top: 0;
+        background-color: transparent;
+        border: 0;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+
+    .dropdown-toggle {
+        display: none !important;
+    }
+}
+
+.nav-link-notification i.fa-bell {
+    position: relative;
+
+    &:after {
+        position: absolute;
+        height: 2rem;
+        top: -5px;
+        left: 60%;
+        content: attr(data-count);
+        font-size: 11px;
+        padding: .5em;
+        border-radius: 40%;
+        line-height: .8em;
+        color: $nhsuk-white;
+        background-color: #DA291C;
+        text-align: center;
+        min-width: 1.8rem;
+        font-family: $font-awesome-light;
+    }
+
+    &.large:after, &.larger:after {
+        border-radius: 6px !important;
+        line-height: .8em !important;
+        min-width: 2.6rem !important;
+    }
+
+    &.larger:after {
+        min-width: 2.9rem !important;
+    }
+
+    &[data-count="0"]:after {
+        display: none !important;
+    }
+}
+
+.previous-nav-link {
+    display: inline-block;
+    position: relative;
+    text-decoration: none;
+    font-size: 1.6rem;
+
+    svg {
+        fill: $nhsuk-blue;
+        height: 24px;
+        width: 24px;
+    }
+}
+/* Styles taken from Bootstrap to enable tab control to function without it. */
+.navbar-collapse {
+    flex-basis: 100%;
+    flex-grow: 1;
+    align-items: center;
+}
+
+.collapse:not(.show) {
+    display: none;
+}
+
+.navbar-nav {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+@media (min-width: 768px) {
+    .navbar-expand-md {
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+    }
+
+    .navbar-expand-md .navbar-nav {
+        flex-direction: row;
+    }
+
+    .navbar-expand-md .navbar-toggler {
+        display: none;
+    }
+
+    .navbar-collapse {
+        display: flex !important;
+        flex-basis: auto;
+    }
+}
+/* End of bootstrap styles. */
+
+/* Fixes for correct display of tabs/dropdown menu at EXACTLY 768px. LH still shows mobile menu at 768 whereas Bootstrap stops at 767px */
+@media (max-width: 768px) {
+    .navbar-expand-md .navbar-collapse {
+        display: none !important;
+    }
+
+    .navbar-expand-md .navbar-collapse .navbar-nav {
+        flex-direction: column !important;
+    }
+
+    /* Needed for vue.js pages, which add "show" class after clicking on down arrow. */
+    .collapse.show {
+        display: block !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .navbar-expand-md .navbar-collapse {
+        display: flex !important;
+        flex-basis: auto;
+    }
+
+    .navbar-expand-md .navbar-collapse .navbar-nav {
+        flex-direction: row !important;
+    }
+}
+/* End of Fixes for correct display of tabs/dropdown menu at EXACTLY 768px */

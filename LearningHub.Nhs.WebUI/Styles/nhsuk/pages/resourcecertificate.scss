@@ -1,0 +1,102 @@
+@use "../../abstracts/all" as *;
+
+
+.my-learning {
+
+    .word-wrapper {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .certificateHead {
+        background-color: $nhsuk-blue;
+        height: 72px;
+    }
+
+    thead th {
+        border-bottom: none;
+    }
+
+    tbody td {
+        border-bottom: none;
+    }
+
+    th, td {
+        text-align: left;
+    }
+
+
+    .certificateSummaryBody {
+        border-left: 1px solid $nhsuk-grey-light;
+        border-right: 1px solid $nhsuk-grey-light;
+    }
+
+
+    .downloadbuttonaslink {
+        background: none !important;
+        border: none;
+        padding: 0 !important;
+        color: #069;
+        text-decoration: none;
+    }
+
+    .certificateBody {
+        text-align: center;
+        @extend.certificateSummaryBody
+    }
+
+    .certicate-download-spacing {
+        min-height: 900px;
+        margin-bottom: 500px;
+        padding-top: 200px;
+    }
+
+
+    .certificateFooter {
+        background-color: $nhsuk-grey-white;
+        text-align: center;
+        border-left: 1px solid $nhsuk-grey-light;
+        border-right: 1px solid $nhsuk-grey-light;
+        border-bottom: 1px solid $nhsuk-grey-light;
+    }
+
+
+    .app-width-container--full {
+        margin: 0;
+        max-width: none
+    }
+
+    .app-main-wrapper--no-padding {
+        padding: 0
+    }
+
+    .white-background {
+        background-color: #fff
+    }
+
+
+    .nhsuk-table-responsive .nhsuk-table__body .nhsuk-table__row td {
+        @media(max-width: 599px) {
+            display: grid;
+            text-align: left;
+        }
+    }
+
+    table, th, td {
+        width: 100%;
+        border: 1px solid;
+        border-color: $nhsuk-blue;
+    }
+
+    th.Learningresource {
+        width: 15%;
+    }
+
+    thead tr:nth-child(odd) {
+        background-color: $nhsuk-grey-white;
+    }
+
+    tbody tr span {
+        background-color: $nhsuk-grey-white;
+    }
+}

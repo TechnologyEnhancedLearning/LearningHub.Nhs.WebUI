@@ -1,0 +1,66 @@
+@use "../abstracts/all" as *;
+@use "sass:math" as *;
+
+$SLIDER_SIZE: 88px;
+
+.slide-viewer-control {
+
+  .slide-viewer-control-title {
+    font-family: $font-stack-bold;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid $nhsuk-grey-light;
+  }
+
+  .slide-viewer-control-value-and-buttons {
+    display: flex;
+    align-items: center;
+
+    .slide-viewer-control-value {
+      padding: 0 5px;
+    }
+  }
+
+  .slide-viewer-control-reset {
+    font-size: 16px;
+  }
+
+  .slide-viewer-control-slider {
+    position: absolute;
+    width: $SLIDER_SIZE;
+    height: $SLIDER_SIZE;
+    margin: 11px 0;
+    user-select: none;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: div($SLIDER_SIZE - 8, 2);
+      bottom: 0;
+      right: div($SLIDER_SIZE - 8, 2);
+      background-color: $nhsuk-grey-light;
+      pointer-events: none;
+      border-radius: 6px;
+    }
+
+    .slide-viewer-control-slider-position {
+      position: absolute;
+      bottom: 0;
+      left: 31.5px;
+      height: 5px;
+      width: 25px;
+      background-color: $nhsuk-blue;
+      z-index: 1;
+    }
+  }
+
+  .slide-viewer-control-slider-progress {
+    z-index: 1;
+    pointer-events: none;
+
+    &:after {
+      background-color: $nhsuk-blue;
+    }
+  }
+}

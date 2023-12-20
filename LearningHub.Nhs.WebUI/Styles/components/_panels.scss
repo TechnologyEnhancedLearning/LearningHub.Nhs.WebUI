@@ -1,0 +1,98 @@
+@use "../abstracts/all" as *;
+
+.panel-card-container {
+  width: 100%;
+  min-width: 300px;
+  max-width: 380px;
+}
+
+.panel-card {
+  background-color: $nhsuk-white;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border-top: 5px solid $nhsuk-blue;
+  border-left: 1px solid $nhsuk-grey-lighter;
+  border-right: 1px solid $nhsuk-grey-lighter;
+  border-bottom: 1px solid $nhsuk-grey-lighter;
+  min-height: 180px !important;
+  height: auto;
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  &:hover {
+    cursor: pointer;
+    opacity: .9;
+  }
+
+  .heading-xs {
+    padding-top: 1rem;
+  }
+
+  div.small {
+    font-size: 1.4rem !important;
+    font-family: FrutigerLight;
+  }
+
+  .expand {
+    position: absolute;
+    bottom: 10px;
+    text-align: center;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding-top: 10px;
+  }
+}
+
+.panel-card.collapsed {
+  max-height: 0;
+}
+
+.panel-login {
+  padding: 1.5rem;
+}
+
+.panel-header {
+  height: 88px;
+  border-bottom: 1px solid $nhsuk-grey-light;
+}
+
+.panel-body {
+  margin-top: 10px;
+  font-size: 1.9rem;
+
+  button {
+    vertical-align: unset;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  .lh-check {
+    border-width: 2px !important;
+    width: 30px !important;
+    height: 30px;
+    box-shadow: none !important;
+  }
+}
+
+.grey-bottom-border-panel {
+    border-bottom: 1px solid $nhsuk-grey-light;
+}
+
+.button-panel {
+    display: flex;
+    margin-top: 8px;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .panel-header {
+        padding: 10px 0;
+        height: 73px;
+    }
+  
+}

@@ -1,0 +1,272 @@
+@use "../abstracts/all" as *;
+
+.activity-report {
+  padding-bottom: 40px;
+  background-color: $nhsuk-white;
+
+  .activity-report-heading h1 {
+    display: inline;
+  }
+
+  .activity-report-table {
+    width: 100%;
+  }
+
+  .activity-report-table thead td {
+    padding: 12px;
+    font-weight: bold;
+  }
+
+  .activity-report-table tbody td {
+    padding: 12px;
+    border-top: 1px solid $nhsuk-grey-light;
+  }
+
+  @media screen and (max-width: 768px) {
+    .activity-report-heading {
+      margin-top: 15px;
+    }
+
+    .activity-report-table {
+      border-collapse: unset;
+    }
+
+    .activity-report-table tr {
+      display: table;
+      width: 100%;
+      padding: 10px 0;
+      border-top: 1px solid $nhsuk-grey-light;
+    }
+
+    .activity-report-table tr td {
+      display: table-row;
+    }
+
+    .activity-report-table thead {
+      display: none;
+    }
+  }
+}
+
+.chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  .chip {
+    border-radius: 10px;
+    border: 1px solid;
+    margin: 6px 12px 6px 0;
+    padding: 5px 10px 3px 10px;
+    line-height: 40px;
+
+    button {
+      color: $nhsuk-black;
+      font-size: 2rem;
+      padding-top: 2px;
+    }
+  }
+}
+
+@media print {
+  .no-print {
+    display: none;
+  }
+}
+
+@media screen {
+  .print-only {
+    display: none;
+  }
+}
+
+.print-header {
+  background-color: $nhsuk-white;
+  padding-top: 15px;
+
+  .header-title {
+    color: $nhsuk-black;
+  }
+}
+
+a.actionlinkbtn {
+    display: block;
+    text-decoration:none;
+    text-align:center;
+}
+
+/* Also uses some styles in common with ActivityDetailedReport.vue, which are located in site.scss. */
+
+.quicklink-bar {
+    padding-bottom: 15px;
+}
+
+.quicklinks a {
+    margin-right: 20px;
+}
+
+.quicklinks a:last-child {
+    margin-right: 0px;
+}
+
+label.checkContainer {
+    font-family: $font-stack;
+}
+
+.activity-results-count {
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+
+.activity-results-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+}
+
+.activity-results-table tbody tr {
+    padding: 12px;
+    margin-bottom: 20px;
+    background-color: $nhsuk-white;
+}
+
+.activity-results-table thead td {
+    padding: 12px 12px 0 12px;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+.activity-results-table tbody td {
+    padding: 12px;
+    margin-right: 20px;
+}
+
+.activity-results-table td:last-child {
+    margin-right: 0px;
+}
+
+.progress-indicator {
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.load-more {
+    margin-top: 40px;
+    padding-bottom: 40px;
+}
+
+.quicklink-arrow {
+    margin-left: 8px;
+}
+
+.quicklink-arrow::before {
+    content: url('/images/triangle-down.svg');
+    position: absolute;
+}
+
+.filters label.checkContainer {
+    min-width: 250px;
+    margin-top: 20px;
+    margin-bottom: 20px !important;
+}
+
+.filters {
+    margin-left: 0px;
+}
+
+.filters label {
+    font-size: 19px;
+}
+
+.filters .checkContainer {
+    padding-top: 2px;
+    padding-left: 35px;
+}
+
+.datepicker-container {
+    margin-top: 14px;
+}
+
+.date-range-label {
+    min-width: 35px !important;
+    margin-right: 0px !important;
+}
+
+.datepickers label {
+    font-family: $font-stack !important;
+    margin-right: 10px;
+    padding-top: 8px;
+}
+
+.clear-filters {
+    margin-left: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    align-self: center;
+}
+
+.reason {
+    color: $nhsuk-grey-placeholder;
+}
+
+@media (max-width: 768px) {
+    .activity-results-table tr {
+        display: table;
+        width: 100%;
+        padding-top: 5px !important;
+        padding-bottom: 0px !important;
+    }
+
+    .activity-results-table tr td {
+        display: table-row;
+    }
+
+    .activity-results-table thead {
+        display: none;
+    }
+
+    .progress-indicator {
+        flex-direction: row-reverse !important;
+        margin-left: -5px;
+    }
+
+    .quicklinks-mobile {
+        display: block !important;
+    }
+
+    .quicklinks-desktop {
+        display: none;
+    }
+
+    .filters label {
+        font-size: 14px;
+    }
+
+    .filters .checkContainer {
+        padding-top: 5px;
+    }
+
+    .filters label.checkContainer {
+        min-width: 165px;
+        margin-top: 15px;
+        margin-bottom: 15px !important;
+    }
+
+    .datepickers {
+        order: 1;
+    }
+
+    .datepicker-container {
+        flex-direction: column !important;
+    }
+
+    .loading-title {
+        margin-top: 40px;
+    }
+
+    .load-more {
+        text-align: center;
+    }
+}
+

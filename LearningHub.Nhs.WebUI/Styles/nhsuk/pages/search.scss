@@ -1,0 +1,192 @@
+﻿@use "../../abstracts/all" as *;
+
+.search-page {
+    .nhsuk-header__search-form--search-results {
+        display: flex;
+    }
+
+    .nhsuk-search__input {
+        border-bottom: 1px solid $nhsuk-grey-light;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 0;
+        border-left: 1px solid $nhsuk-grey-light;
+        border-right: 0;
+        border-top: 1px solid $nhsuk-grey-light;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 0;
+        height: 52px;
+        padding: 0 16px;
+    }
+
+    .nhsuk-search__submit {
+        background-color: #007f3b;
+        height: 52px;
+        width: 52px;
+        padding-top: 0;
+    }
+
+    .nhsuk-icon__search {
+        fill: $nhsuk-white;
+    }
+
+    .catalogue-pagination {
+        display: flex;
+        justify-content: space-between;
+
+        .nhsuk-list {
+            width: 360px;
+
+            li {
+                width: 33.33%;
+            }
+        }
+
+        .nhsuk-pagination-item--middle {
+            float: left;
+            text-align: center;
+        }
+
+        @media(max-width: 40.0625em) {
+            display: block;
+
+            nav {
+                display: flex;
+                margin-top: 24px;
+            }
+
+            .nhsuk-list {
+                width: 100%;
+            }
+        }
+    }
+
+    .catalogue-card {
+        display: flex;
+        flex-direction: column;
+
+        .catalogue-card-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+
+            .catalogue-card-body {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                justify-content: space-between;
+            }
+
+            .catalogue-meta {
+                display: flex;
+                justify-content: space-between;
+
+                > div:first-child {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                }
+
+                > div:last-child {
+                    align-self: end;
+                }
+
+                .catalogue-card-badge {
+                    height: 56px;
+                    width: 56px;
+                    border: 1px solid $nhsuk-grey-light;
+                }
+            }
+        }
+    }
+
+    .catalogue-all-link {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .search-filters {
+        .nhsuk-expander {
+            border-width: 0;
+
+            .nhsuk-details__summary-text {
+                padding: 0 0 0 24px;
+                text-decoration: auto;
+
+                &:before {
+                    content: "";
+                    width: 0;
+                    height: 0;
+                    top: calc(50% - 7px);
+                    border-style: solid;
+                    border-color: rgba(0,0,0,0);
+                    clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+                    border-width: 7px 0 7px 12.124px;
+                    border-left-color: inherit;
+                }
+            }
+
+            &[open] .nhsuk-details__summary-text:before {
+                clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+                border-width: 12.124px 7px 0 7px;
+                border-top-color: inherit
+            }
+
+            .filter-summary {
+                color: $nhsuk-black;
+                display: flex;
+                line-height: 1.8;
+
+                .clear-filter {
+                    justify-content: flex-end;
+                    display: flex;
+                    flex: 1 1 auto !important;
+                }
+
+                @media(max-width: 48.0525em) {
+                    display: initial;
+
+                    .clear-filter {
+                        display: block;
+                        margin-top: 12px;
+                    }
+                }
+            }
+        }
+
+        .search-filter-items {
+            border-top: 1px $nhsuk-grey-light solid;
+            background-color: $nhsuk-grey-white;
+        }
+    }
+
+    .nhsuk-list-item--border {
+        border-bottom: 1px solid $nhsuk-grey-lighter;
+    }
+
+    .resource-item {
+        .resource-info {
+            display: flex;
+        }
+
+        .resource-description {
+            overflow-wrap: break-word;
+        }
+
+        .resource-author {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .resource-catalogue-badge {
+            height: 32px;
+            width: 32px;
+            margin-right: 8px;
+            border: 1px solid $nhsuk-grey-light;
+        }
+    }
+
+    .search-feedback {
+        background-color: $nhsuk-grey-white;
+    }
+}

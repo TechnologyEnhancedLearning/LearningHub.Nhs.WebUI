@@ -1,0 +1,204 @@
+@use "../../abstracts/all" as *;
+
+.hero-image {
+    object-fit: cover;
+    width: 100%;
+    max-width: 1920px;
+}
+
+.tray-image {
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: cover;
+    width: 100%;
+
+    @media(max-width: 599px) {
+        background-image: url(/images/dashboard/tray/LH-Contribute-resource_600x300.jpg);
+        height: 225px;
+        width: calc(100% + 15px);
+        margin: 0 -15px;
+    }
+
+    @media(min-width: 600px) and (max-width: 768px) {
+        background-image: url(/images/dashboard/tray/LH-Contribute-resource_900x300.jpg);
+        height: 225px;
+        width: calc(100% + 15px);
+        margin: 0 -15px;
+    }
+
+    @media(min-width: 769px) and (max-width: 990px) {
+        background-image: url(/images/dashboard/tray/LH-Contribute-resource_900x300.jpg);
+        height: 300px;
+        width: calc(100% + 68px);
+        margin: 0 -68px;
+    }
+
+    @media(min-width: 991px) {
+        background-image: url(/images/dashboard/tray/LH-Contribute-resource_600x600.jpg);
+        height: 375px;
+    }
+}
+
+.dashboard-card {
+    display: flex;
+    flex-direction: column;
+
+    @media(max-width: 641px) {
+    }
+}
+
+.dashboard-card-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.dashboard-card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.catalogue-meta {
+    display: flex;
+    justify-content: space-between;
+
+    > div:first-child {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    > div:last-child {
+        align-self: end;
+    }
+}
+
+.catalogue-badge {
+    height: 56px;
+    width: 56px;
+    border: 1px solid $nhsuk-grey-light;
+}
+
+.catalogue-banner-container {
+    padding-bottom: 42.86%; // 21:9 aspect ratio.
+    position: relative;
+}
+
+.catalogue-banner {
+    height: 100%;
+    object-fit: cover;
+    object-position: left;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.dashboard-contribute {
+    display: flex;
+    flex-direction: row;
+    padding-right: 0 !important;
+    
+    @media(max-width: 990px) {
+        flex-direction: column-reverse;
+    }
+}
+
+.dashboard-contribute-text {
+    padding: 86px 46px 46px 0;
+
+    @media(max-width: 990px) {
+        padding: 20px 15px 0 0;
+    }
+}
+
+div.dashboardTray {
+    padding: 48px 0 16px 0;
+
+    @media(max-width: 768px) {
+        padding: 20px 0 20px 0;
+    }
+}
+
+div.bmj-best-practice-logo-border {
+    float: right;
+    width: 90px;
+    min-width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 1px solid #AEB7BD;
+    margin-left: 10px;
+
+    @media(max-width: 768px) {
+        width: 56px;
+        min-width: 56px;
+        height: 56px;
+    }
+}
+
+div.bmj-best-practice-logo-image {
+    background-image: url(/images/BMJ-best-practice-logo.png);
+    width: 63px;
+    min-width: 63px;
+    height: 40px;
+    margin-top: 25px;
+    margin-left: 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: $nhsuk-white;
+
+    @media(max-width: 768px) {
+        background-image: url(/images/BMJ-best-practice-logo-mobile.png);
+        width: 39px;
+        min-width: 39px;
+        height: 24px;
+        margin-top: 18px;
+        margin-left: 8px;
+    }
+}
+
+.dashboardTray ul.nhsuk-card-group {
+    margin-bottom: 0px !important;
+}
+
+.view-all-catalogues {
+    margin-top: 0;
+
+    @media(max-width: 768px) {
+        margin-top: 24px;
+    }
+}
+
+.star-rating-container {
+    display: flex !important;
+    flex-wrap: wrap;
+
+    div {
+        white-space: nowrap;
+    }
+}
+
+.nhsuk-bg-grey, .nhsuk-bg-grey.active, .nhsuk-bg-grey:hover {
+    background-color: #f0f4f5;
+}
+
+.dashboard-paging {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    li:nth-child(odd) {
+        width: 30%;
+    }
+
+    li:nth-child(even) {
+        width: 40%;
+    }
+
+    a {
+        cursor: pointer;
+    }
+}

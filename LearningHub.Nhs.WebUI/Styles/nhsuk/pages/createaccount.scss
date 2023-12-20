@@ -1,0 +1,71 @@
+﻿@use "../../abstracts/all" as *;
+
+.create-account {
+    background-color: #fff;
+
+    .app-width-container--full {
+        margin: 0;
+        max-width: none
+    }
+
+    .app-main-wrapper--no-padding {
+        padding: 0
+    }
+
+    .white-background {
+        background-color: #fff
+    }
+
+    .search-box-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .search-box {
+        -webkit-appearance: none;
+        flex: 1;
+        padding: 0 13px;
+    }
+
+    .nhsuk-search__input {
+        border-bottom: 1px solid $nhsuk-grey-light;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 0;
+        border-left: 1px solid $nhsuk-grey-light;
+        border-right: 0;
+        border-top: 1px solid $nhsuk-grey-light;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 0;
+        height: 52px;
+        padding: 0 16px;
+    }
+
+    .nhsuk-search__submit {
+        background-color: $nhsuk-green;
+        height: 52px;
+        width: 52px;
+        padding-top: 0;
+    }
+
+    .nhsuk-icon__search {
+        fill: $nhsuk-white;
+    }
+
+    .open-athens {
+        background-color: $nhsuk-grey-white;
+    }
+
+    .open-athens-btn-link {
+        background: none !important;
+        border: none;
+        padding: 0 !important;
+        color: $nhsuk-blue;
+        text-decoration: none;
+    }
+
+    .no-bottom-border{
+        border-bottom:0px;
+    }
+}

@@ -1,0 +1,54 @@
+@use '../abstracts/all' as *;
+
+.provider-details {
+    display: flex;
+    height: 46px;
+    margin-bottom: 10px;
+
+    .title {
+        display: flex;
+        flex: 1;
+        margin-left: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        align-items: center;
+        background-color: $nhsuk-blue;
+        color: $nhsuk-white;
+    }
+
+    .logo {
+        height: 46px;
+        width: 30px;
+        flex: 0 0 46px;        
+    }
+}
+
+.card-provider-details {
+    display: flex;
+    height: 60px;
+    background-color: $nhsuk-blue;
+    padding: 0px 24px 0px;
+    align-items: center;
+    color: $nhsuk-white;
+    font-size: 16px;
+}
+
+.card-provider-details--blank {
+    background-color: $nhsuk-grey-white;
+}
+
+.card-provider-details--darkblank {
+    background-color: $nhsuk-grey-lighter;
+}
+
+
+.provider-badge {
+    height: 56px;
+    width: 56px;
+}
+
+@media (min-width: 40.0625em) {
+    .card-provider-details {
+        padding: 0px 32px 0px;
+    }
+}

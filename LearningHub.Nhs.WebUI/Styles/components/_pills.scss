@@ -1,0 +1,42 @@
+@use "../abstracts/all" as *;
+
+.pill {
+    border-radius: 6px;
+    color: $nhsuk-white;
+    background-color: $nhsuk-blue;
+    font-size: 19px;
+    font-weight: bold;
+    padding: 3px 8px;
+    vertical-align: text-top;
+
+    @media (max-width: px2rem(768)) {
+        font-size: 16px;
+    }
+}
+
+.pill--small {
+    vertical-align: middle;
+    font-size: 10px;
+}
+
+.pill--blue {
+    background-color: $nhsuk-blue;
+}
+
+.pill--blue-dark {
+    background-color: $nhsuk-blue-dark;
+}
+
+.pill--red {
+    background-color: $nhsuk-red;
+}
+
+.pill--green {
+    background-color: $nhsuk-green;
+}
+
+.pill-yellow {
+    background-color: $nhsuk-warm-yellow;
+    color: $nhsuk-black;
+}
+

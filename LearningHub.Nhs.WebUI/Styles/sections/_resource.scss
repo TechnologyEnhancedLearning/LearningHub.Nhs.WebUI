@@ -1,0 +1,251 @@
+@use "../abstracts/all" as *;
+
+#resourcecontainer {
+  background-color: $nhsuk-white;
+
+  div.resource {
+    padding-top: 0px;
+    background-color: $nhsuk-white;
+
+    .title {
+      font-family: $font-stack-bold;
+      font-size: 24px;
+      color: $nhsuk-black;
+      padding: 30px 0 0 0;
+    }
+
+    a.btn {
+      text-decoration: none;
+      min-height: unset;
+      padding: 8px 25px 8px 25px;
+    }
+
+    .keyword-container {
+      display: flex;
+      padding-bottom: 24px;
+      flex-wrap: wrap;
+
+      .keyword {
+        height: 60px;
+        color: $nhsuk-blue;
+        background-color: $nhsuk-grey-white;
+        border-radius: 6px;
+        padding: 15px 20px;
+        margin-right: 25px;
+        white-space: nowrap;
+        margin-bottom: 10px;
+      }
+    }
+
+    .resourcelinks {
+      font-size: 16px;
+
+      i {
+        padding-right: 3px;
+      }
+    }
+
+    .author {
+      color: $nhsuk-black;
+    }
+
+    .attachment {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .resource-panel-container {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    .resource-panel {
+      background-color: $nhsuk-grey-white;
+      margin-top: 30px;
+      padding: 28px;
+    }
+  }
+}
+
+.contribute-resource-panel-card {
+  background-color: $nhsuk-grey-lighter;
+  border-radius: 5px;
+  min-height: 240px !important;
+  min-width: 320px !important;
+
+  &:hover {
+    cursor: pointer;
+    opacity: .9;
+  }
+
+  .heading-xs {
+    padding-top: 10px;
+  }
+
+  div.small {
+    font-size: 14px !important;
+    font-family: FrutigerLight;
+  }
+}
+
+.my-contributions {
+  .my-contributions-panel-card {
+    background-color: $nhsuk-white;
+    border-top: 1px solid $nhsuk-grey-lighter;
+    border-left: 1px solid $nhsuk-grey-lighter;
+    border-right: 1px solid $nhsuk-grey-lighter;
+    border-bottom: 4px solid $nhsuk-grey-lighter;
+    min-height: 240px !important;
+    min-width: 320px !important;
+    height: auto;
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .heading-xs {
+      padding-top: 10px;
+    }
+
+    div.small {
+      font-size: 14px !important;
+      font-family: FrutigerLight;
+    }
+
+    @media (min-width: 1010px) and (max-width: 1200px) {
+        .nhsuk-button {
+            font-size: 16px;                
+        }
+    }
+
+    @media (min-width: 97px) and (max-width: 1010px) {
+        .nhsuk-button {
+            font-size: 14px;                
+        }
+    }
+  }
+
+  div.radio-options {
+    display: flex;
+    flex-direction: row;
+
+    label {
+      font-family: $font-stack;
+    }
+  }
+
+  .subheading {
+    color: $nhsuk-grey;
+    margin-top: -15px;
+  }
+
+  div.white-background {
+    background-color: $nhsuk-white;
+  }
+}
+
+.create-edit-resource-modal {
+  .btn-cancel {
+    background-color: $nhsuk-white;
+    color: $nhsuk-blue;
+    border: 1px solid $nhsuk-blue;
+    min-width: 80px;
+    height: 40px;
+    font-size: 17px !important;
+    text-align: center !important;
+    flex: 1 1 0;
+  }
+
+  .btn-continue {
+    background-color: $nhsuk-blue;
+    color: $nhsuk-white;
+    border: 1px solid $nhsuk-blue;
+    min-width: 90px;
+    height: 40px;
+    font-size: 17px !important;
+    text-align: center !important;
+    flex: 1 1 0;
+  }
+}
+
+#resourcecontainer {
+
+    // From resource.vue:
+
+    .resource-item {
+        width: 100% !important;
+        max-width: 800px !important;
+        background-color: none;
+    }
+
+    .resource-main {
+        word-wrap: break-word;
+    }
+
+    .resource-item-row {
+        margin-top: 32px;
+    }
+
+    .circle-icon {
+        color: $nhsuk-blue;
+        font-size: 60px;
+    }
+
+    .resource-author {
+        word-break: break-word;
+    }
+
+    .border-bottom {
+        border-bottom: 1px solid $nhsuk-grey-lighter;
+        padding-bottom: 20px;
+    }
+
+    .fa-stack {
+        height: 1.5em;
+    }
+
+    .catalogue-restricted {
+        color: $nhsuk-purple;
+    }
+
+    // ShareResource.vue:
+
+    .a2a_button {
+        height: 40px;
+        width: 40px;
+        border: none;
+    }
+    
+    // Sensitive content
+    .sensitive-content {
+        background-image: url(/images/sensitive-content/sensitive-content-bg.png);
+        max-width: 560px;
+        height: 300px;
+        color: $nhsuk-white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 30px;
+        margin-top: 30px;
+
+        .content-title {
+            font-weight: bold;
+        }
+
+        .content-text {
+            max-width: 420px;
+            text-align: center;
+
+            @media(max-width: 768px) {
+                max-width: 350px;
+            }
+        }
+
+        .btn.btn-custom {
+            background-color: $nhsuk-white !important;
+            color: $nhsuk-blue !important;
+            border: 1px solid $nhsuk-white !important;
+        }
+    }
+}

@@ -1,0 +1,91 @@
+﻿@use "../../abstracts/all" as *;
+/*@import "../nhsuk/common";*/
+
+.landing-page__landing-page-banner {
+    background-image: url(/images/lh-banner_2400x320.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 20rem;
+}
+
+.landing-page__banner-panel-mobile,
+.landing-page__banner-panel {
+    background-color: $nhsuk-blue;
+    color: $nhsuk-white;
+}
+
+.landing-page__banner-panel {
+    position: relative;
+    top: 2rem;
+    left: min(50vw - 3.75rem,100vw - 37.5rem);
+    width: 37.5rem;
+    height: 14rem;
+    padding: 2rem;
+    font-size: 1.5rem;
+
+    h1 {
+        font-size: 3rem;
+        line-height: 3.5rem;
+        margin-top: -0.5rem;
+        margin-bottom: 0;
+    }
+
+    div.text {
+        margin-top: 1.25rem;
+    }
+}
+
+.landing-page__banner-panel-mobile {
+    padding: 1.5rem;
+
+    h1 {
+        font-size: 2rem;
+        line-height: 2.5rem;
+        margin-bottom: 0.25rem;
+    }
+
+    div.text {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+    }
+}
+
+.landing-page__access-container {
+    background-color: $nhsuk-white;
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+
+    .nhsuk-button {
+        margin-bottom: 0;
+    }
+}
+
+/* desktop */
+@media (max-width: px2rem(989)) {
+    .landing-page__landing-page-banner {
+        background-image: url(/images/lh-banner_990x320.jpg);
+    }
+}
+
+/* tablet */
+@media (max-width: px2rem(768)) {
+    .landing-page__landing-page-banner {
+        background-image: url(/images/lh-banner_768x320.jpg);
+        height: 16rem;
+    }
+
+    .landing-page__access-container {
+        padding-top: 3.5rem;
+    }
+
+    .landing-page__open-athens--mobile {
+        margin-top: 3.5rem;
+    }
+}
+
+/* mobile  */
+@media (max-width: px2rem(640)) {
+    .landing-page__landing-page-banner {
+        background-image: url(/images/lh-banner_640x320.jpg);
+    }
+}

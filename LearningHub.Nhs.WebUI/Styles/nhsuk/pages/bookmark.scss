@@ -1,0 +1,251 @@
+﻿@use "../../abstracts/all" as *;
+
+label {
+    font-family: $font-stack;
+}
+
+input, .grey-bottom-border-panel {
+    max-width: 556px;
+}
+
+td {
+    border-bottom: none !important;
+}
+
+tr, td {
+    margin-bottom: 0 !important;
+}
+
+a.cancel-link:visited {
+    color: $nhsuk-blue
+}
+
+.help-panel {
+    border: 1px solid $nhsuk-grey-lighter;
+    margin: 40px 0 0;
+
+    p {
+        margin: 0;
+    }
+}
+
+.folder-title {
+    font-weight: bold;
+}
+
+.bookmark-link {
+    word-break: break-word;
+}
+
+.action-links-container form {
+    display: flex;
+    justify-content: end;
+}
+
+td.col-type {
+    font-size: 16px !important;
+}
+
+// Style the NHS expanders to suit the LH screen design. There is a top level table containing a mixture of expandable folders and non-expandable bookmarks.
+// Each folder contains a child table with the same column structure, but can only contain bookmarks.
+.tree-table-parent, .tree-table-child {
+    table-layout: fixed;
+}
+
+.tree-table-parent > tbody > tr {
+    border-top: 2px solid $nhsuk-grey-lighter;
+}
+
+.tree-table-parent > tbody > tr:last-child {
+    border-bottom: 2px solid $nhsuk-grey-lighter;
+}
+
+.tree-table-parent .nhsuk-expander {
+    border: none;
+}
+
+.tree-table-parent > tbody > tr.bookmark-folder > td {
+    padding: 0 !important;
+    border-bottom: none !important;
+}
+
+.tree-table-parent > tbody > tr > td > details {
+    border-bottom: none !important;
+    margin-bottom: 0;
+    border-left-style: none;
+    border-right-style: none;
+}
+
+.tree-table-parent > tbody > tr > td > details > summary {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.tree-table-parent > tbody > tr > td > details > .nhsuk-details__text {
+    padding-bottom: 0;
+}
+
+.tree-table-parent .nhsuk-details__text {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.tree-table-child tr:first-child {
+    border-top: 1px solid $nhsuk-grey-lighter;
+}
+
+.tree-table-child tr:last-child td {
+    border-bottom: 0px !important;
+}
+
+.tree-table-child tr:nth-child(odd) td {
+    background-color: $nhsuk-grey-white;
+}
+
+// Disable the hover highlighting that the NHS component has.
+.tree-table-child tr:nth-child(odd):hover td {
+    background-color: $nhsuk-grey-white;
+}
+.tree-table-child tr:nth-child(even):hover td {
+    background-color: $nhsuk-white;
+}
+tr.bookmark-item:hover td {
+    background-color: $nhsuk-white;
+}
+
+@media (min-width: 768px) {
+
+    .tree-table-child tr td:first-child {
+        padding-left: 38px;
+    }
+
+    .folder-empty {
+        padding: 0px 16px 16px 38px;
+    }
+
+    .folder-summary {
+        padding: 10px 24px !important;
+        display: flex !important;
+        justify-content: space-between;
+    }
+
+    // Fixed sizes so all action links and resource types across all child tables are aligned with each other, and the parent table.
+    .col-organise {
+        width: 263px;
+        text-align: end;
+    }
+    .col-type {
+        width: 110px;
+        padding-right: 0;
+        padding-top: 20px;
+    }
+    .action-link {
+        padding: 0 8px;
+    }
+    .action-link-chevron {
+        width: 32px;
+        display: inline-block;
+    }
+    .action-link-rename {
+        width: 76px;
+        display: inline-block;
+    }
+    .action-link-move {
+        width: 58px;
+        display: inline-block;
+    }
+    .action-link-delete {
+        width: 65px;
+        display: inline-block;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .nhsuk-expander {
+        width: 100%;
+    }
+
+    .tree-table-parent > tbody > tr > td > details > summary {
+        flex-direction: column;
+    }
+
+    .folder-summary {
+        text-align: left;
+        padding: 4px 0 8px 0 !important;
+    }
+
+    .folder-empty {
+        text-align: left;
+    }
+
+    .tree-table-parent > tr {
+        margin-bottom: 0 !important;
+    }
+
+    // Alignment of folder action links.
+    .folder-summary > .action-links-container {
+        align-self: start;
+        margin-top: 10px;
+
+        .action-link-move, .empty {
+            display: none !important;
+        }
+    }
+
+    .nhsuk-table-responsive__heading {
+        padding-right: 8px !important;
+    }
+
+    .tree-table-child tr td {
+        padding-left: 30px;
+        padding-right: 4px !important;
+    }
+
+    // Different widths compared to desktop, squeeze them in on a 375px screen.
+    .action-link {
+        padding: 0 2px;
+    }
+    .action-link-chevron {
+        width: 26px;
+        display: inline-block;
+        text-align: center;
+    }
+    .action-link-rename {
+        width: 68px;
+        display: inline-block;
+    }
+    .action-link-move {
+        width: 48px;
+        display: inline-block;
+    }
+    .action-link-delete {
+        width: 52px;
+        display: inline-block;
+    }
+
+    // Left align child table right hand content on tablet.
+    tr.bookmark-item > td {
+        justify-content: start !important;
+        text-align: left !important;
+
+        .nhsuk-table-responsive__heading {
+            min-width: 175px;
+            width: 175px;
+        }
+    }
+}
+
+@media (max-width: 640px) {
+
+    // Go back to default right alignment on mobile.
+    tr.bookmark-item > td {
+        justify-content: space-between !important;
+        text-align: right !important;
+
+        .nhsuk-table-responsive__heading {
+            min-width: unset;
+            width: unset;
+        }
+    }
+}

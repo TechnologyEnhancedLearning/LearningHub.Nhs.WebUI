@@ -1,0 +1,211 @@
+@use "../abstracts/all" as *;
+
+button:focus {
+    outline: none !important;
+}
+
+.btn-outline-custom,
+.btn-custom,
+.btn-danger-custom,
+.btn-green {
+    background-color: $nhsuk-blue !important;
+    color: $nhsuk-white !important;
+    font-size: 19px !important;
+    text-align: center !important;
+    border: 1px solid $nhsuk-blue !important;
+    min-height: 50px;
+    min-width: 115px;
+    padding: 0px 25px 0px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.btn-custom {
+    &:hover {
+        background-color: $nhsuk-btn-blue-hover !important;
+    }
+}
+
+.btn-outline-custom {
+    background-color: $nhsuk-white !important;
+    color: $nhsuk-blue !important;
+    font-size: 19px !important;
+
+    &:hover {
+        background-color: $nhsuk-btn-outline-hover !important;
+    }
+}
+
+.btn-danger-custom {
+    background-color: $nhsuk-red !important;
+    color: $nhsuk-white !important;
+    border: 1px solid $nhsuk-red !important;
+
+    &:hover {
+        background-color: $nhsuk-red !important;
+    }
+}
+
+.btn-green {
+    background-color: $nhsuk-green !important;
+    border-color: $nhsuk-green !important;
+    color: $nhsuk-white !important;
+
+    &:hover:enabled {
+        background-color: $nhsuk-green-hover !important;
+        border-color: $nhsuk-green-hover !important;
+        color: $nhsuk-white !important;
+    }
+}
+
+.btn-green.disabled {
+    background-color: $nhsuk-grey !important;
+    border-color: $nhsuk-grey !important;
+}
+
+.btn {
+    border-radius: 0.25rem;
+}
+
+.btn-primary {
+    background-color: $nhsuk-blue;
+    border-color: $nhsuk-blue;
+}
+
+.btn-primary:hover {
+    background-color: $nhsuk-btn-blue-hover;
+    border-color: $nhsuk-btn-blue-hover;
+}
+
+/*.btn-primary-link {
+    background-color: $nhsuk-blue;
+    border-color: $nhsuk-blue;
+    box-shadow: 0 0.25rem 0 $nhsuk-black;
+    text-decoration: none;
+
+    &:visited {
+        color: $nhsuk-white !important;
+    }
+
+    &:focus {
+        color: $nhsuk-black !important;
+        background-color: $nhsuk-yellow;
+        border-color: $nhsuk-yellow;
+        box-shadow: 0 0.25rem $nhsuk-black;
+    }
+}
+
+.btn-secondary-link {
+    background-color: $nhsuk-grey;
+    border-color: $nhsuk-grey;
+    box-shadow: 0 0.25rem 0 $nhsuk-black;
+    text-decoration: none;
+    color: $nhsuk-white !important;*/
+/*    &:visited {
+        color: $nhsuk-white !important;
+    }*/
+
+/*&:focus {
+        color: $nhsuk-black !important;
+        background-color: $nhsuk-yellow;
+        border-color: $nhsuk-yellow;
+        box-shadow: 0 0.25rem $nhsuk-black;
+    }
+}*/
+
+.btn-outline-primary {
+    color: $nhsuk-blue;
+    border-color: $nhsuk-blue;
+}
+
+.btn-outline-primary:hover {
+    color: $nhsuk-blue;
+    background-color: #e4f2ff;
+}
+
+.btn-success {
+    background-color: $nhsuk-green;
+    border-color: $nhsuk-green;
+}
+
+.btn-success:hover {
+    background-color: $nhsuk-green-hover;
+    border-color: $nhsuk-green-hover;
+}
+
+.btn-admin-action {
+    background-color: $nhsuk-green !important;
+    color: $nhsuk-white !important;
+    font-size: 1.9rem !important;
+    text-align: center !important;
+    border: 5px solid $nhsuk-green !important;
+    height: 40px;
+    border-radius: 6px;
+    min-width: 94px;
+    padding: 0 25px;
+
+    i {
+        font-size: 1.6rem !important;
+        margin-right: 5px;
+    }
+
+    &:hover {
+        background-color: $nhsuk-green-hover !important;
+        border-color: $nhsuk-green-hover !important;
+    }
+}
+
+.btn-admin-cancel {
+    background-color: #fff !important;
+    color: #005EB8 !important;
+    border: 1px solid $nhsuk-blue !important;
+    font-size: 1.9rem !important;
+    text-align: center !important;
+    height: 40px;
+    min-width: 108px;
+    padding: 0 25px;
+    vertical-align: middle;
+
+    i {
+        font-size: 14px;
+    }
+}
+
+.btn-focus {
+    background-color: $nhsuk-green !important;
+    border: none;
+    margin-left: 0.3rem;
+    color: $nhsuk-white !important;
+}
+
+@media (max-width: 768px) {
+    .btn-outline-custom,
+    .btn-custom,
+    .btn-danger-custom,
+    .btn-green {
+        font-size: 16px !important;
+        min-height: 44px;
+    }
+
+    .btn-search {
+        margin-top: 5px;
+    }
+}
+
+.btn-search {
+    color: $nhsuk-blue !important;
+    font-size: 2.4rem;
+    background-color: $nhsuk-white !important;
+    height: 45px;
+    width: 45px;
+}
+
+.btn-file-upload-label {
+    font-family: $font-stack !important;
+    margin: 0 10px 0 0 !important;
+}
+
+.btn-link {
+    color: $nhsuk-blue !important;
+    text-decoration: underline !important;
+}

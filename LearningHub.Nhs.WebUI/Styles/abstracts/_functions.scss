@@ -1,0 +1,4 @@
+﻿@function px2rem($pixels) {
+    $remValue: calc($pixels / 16) + rem;
+    @return $remValue;
+}

@@ -1,0 +1,21 @@
+﻿@use "../../abstracts/all" as *;
+
+.custom-ordered-list {
+    list-style: none;
+    counter-reset: section;
+}
+
+.custom-ordered-list > li:before {
+    counter-increment: section;
+    content: counters(section, ".") " ";
+}
+
+.custom-ordered-list ol {
+    list-style: none;
+    counter-reset: subsection;
+}
+
+.custom-ordered-list ol li:before {
+    counter-increment: subsection;
+    content: counters(section, ".") "." counters(subsection, ".") " ";
+}

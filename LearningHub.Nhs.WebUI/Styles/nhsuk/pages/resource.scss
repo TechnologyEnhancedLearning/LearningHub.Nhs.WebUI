@@ -1,0 +1,231 @@
+@use "../../abstracts/all" as *;
+
+.contributor-panel {
+    display: flex;
+    justify-content: space-between;
+
+    @media (max-width: 768px) {
+        flex-wrap:wrap;
+    }
+}
+
+.catalogue-badge {
+    height: 60px;
+    min-width: 60px;
+}
+
+// Resource content section -----------------------------------------
+#mediacontainer .azuremediaplayer {
+    border: 1px solid $nhsuk-grey-light;
+}
+
+.image-container {
+    display: flex;
+    flex-direction: column;
+
+    img {
+        align-self: stretch;
+    }
+}
+
+// Resource details section -----------------------------------------
+.resource-details-table {
+
+    td:first-child {
+        font-weight: bold;
+        padding-right: 18px;
+    }
+
+    td {
+        border: none;
+        padding: 6px 0;
+        font-size: 16px;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        tr {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
+
+.share-resource-panel {
+    border-bottom: 1px solid $nhsuk-grey-lighter;
+}
+
+// Sensitive-content panel ---------------------------------------------
+.sensitive-content {
+    background-color: $nhsuk-blue;
+    color: $nhsuk-white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 80px 50px 44px;
+    margin-bottom: 24px;
+}
+
+// Rating Summary ------------------------------------------------------
+.rating-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.rating-label {
+    width: 55px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.rating-value {
+    width: 50px;
+    text-align: right;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.rating-progress-bar {
+    flex: 1 1 auto;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.rating-progress-bar .progress {
+    height: 15px;
+}
+
+.rating-progress-bar .progress .progress-bar .bg-warning {
+    background-color: #ffc107 !important;
+}
+
+// Rate Resource functionality: ------------------------------------------
+.star-rating {
+    width: min-content;
+    padding: 0.3rem;
+}
+
+.star-rating > div {
+    position: relative;
+    height: 3.5rem;
+    width: 17.5rem;
+    background-image: url('/images/star-white-padding.svg');
+    background-size: 3.5rem 3.5rem;
+}
+
+.star-rating label {
+    position: absolute;
+    height: 100%;
+    background-size: 3.5rem 3.5rem;
+}
+
+.star-rating label:nth-of-type(1) {
+    z-index: 5;
+    width: 20%;
+}
+
+.star-rating label:nth-of-type(2) {
+    z-index: 4;
+    width: 40%;
+}
+
+.star-rating label:nth-of-type(3) {
+    z-index: 3;
+    width: 60%;
+}
+
+.star-rating label:nth-of-type(4) {
+    z-index: 2;
+    width: 80%;
+}
+
+.star-rating label:nth-of-type(5) {
+    z-index: 1;
+    width: 100%;
+}
+
+.star-rating input:checked + label,
+.star-rating input:focus + label {
+    background-image: url('/images/star-gold-padding.svg');
+}
+
+.star-rating input:checked + label.active:hover,
+.star-rating label.active:hover {
+    background-image: url('/images/star-gold-padding.svg');
+}
+
+.star-rating input,
+.star-rating label > span {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
+    clip: rect(1px, 1px, 1px, 1px); /*maybe deprecated but we need to support legacy browsers */
+    clip-path: inset(50%); /*modern browsers, clip-path works inwards from each corner*/
+    white-space: nowrap; /* added line to stop words getting smushed together (as they go onto seperate lines and some screen readers do not understand line feeds as a space */
+}
+
+div.ratings-container {
+    display: flex;
+    justify-content: space-between;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+// Added after disabling bootstrap: -----------------------------------------------------------
+.a2a_button {
+    height: 40px;
+    width: 40px;
+    border: none;
+    margin-right: 10px;
+    text-decoration: none !important;
+}
+
+fieldset {
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.progress {
+    display: flex;
+    height: 1rem;
+    overflow: hidden;
+    line-height: 0;
+    font-size: 0.75rem;
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+}
+
+.progress-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #007bff;
+    transition: width .6s ease;
+}
+
+.bg-warning {
+    background-color: #ffc107 !important;
+}
+
+
+

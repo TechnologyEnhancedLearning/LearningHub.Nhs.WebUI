@@ -165,7 +165,8 @@
 
             // call complete activity if resource type is media or scorm.
             if (this.userAuthenticated && (this.resourceItem.resourceTypeEnum === ResourceType.VIDEO || this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) && this.hasResourceAccess()) {
-                var isIE11 = (!!window.MSInputMethodContext && !!((<any>document).documentMode));
+                //var isIE11 = (!!window.MSInputMethodContext && !!((<any>document).documentMode));
+                var isIE11 = (!!((window as any).MSInputMethodContext) && !!((document as any).documentMode));
                 var self = this;
 
                 if (isIE11) {

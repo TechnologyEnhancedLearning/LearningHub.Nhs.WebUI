@@ -17,6 +17,10 @@
     //"strictNullChecks": true
     //"strictPropertyInitialization": true
   },
+  "include": [
+    "./Scripts/vuesrc/**/*",
+    "./Scripts/**/*"
+  ],
   "compileOnSave": false,
   "buildOnSave": false
 }

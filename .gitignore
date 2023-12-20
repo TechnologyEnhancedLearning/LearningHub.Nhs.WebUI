@@ -32,3 +32,9 @@ obj
 /LearningHub.Nhs.WebUI/yarn-error.log
 /.cache_ggshield
 /AdminUI/LearningHub.Nhs.AdminUI/appsettings.Development.json
+/AdminUI/LearningHub.Nhs.AdminUI/node_modules
+/AdminUI/LearningHub.Nhs.AdminUI/web.config
+/AdminUI/LearningHub.Nhs.AdminUI/internal-nlog-lhadminui.txt
+/WebAPI/LearningHub.Nhs.API/internal-nlog-lhapi.txt
+/WebAPI/LearningHub.Nhs.API/web.config
+/AdminUI/LearningHub.Nhs.AdminUI/yarn.lock

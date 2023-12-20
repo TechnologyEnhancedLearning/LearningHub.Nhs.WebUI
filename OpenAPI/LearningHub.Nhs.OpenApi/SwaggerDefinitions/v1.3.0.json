@@ -1,0 +1,576 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "LearningHub.NHS.OpenAPI",
+    "version": "1.3.0",
+    "description": "A set of API endpoints for retrieving learning resource information from the Learning Hub learning repository. The Learning Hub (https://learninghub.nhs.uk) is a platform for hosting and sharing learning resources for health and social care provided by Technology Enhanced Learning at Health Education England. An application API key must be used to authorise calls to the API from external applications. To contact TEL to discuss connecting your external system to the Learning Hub, email tel@hee.nhs.uk."
+  },
+  "paths": {
+    "/Bookmark/GetAllByParent": {
+      "get": {
+        "tags": [
+          "Bookmark"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserBookmarkViewModel"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserBookmarkViewModel"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserBookmarkViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Catalogues": {
+      "get": {
+        "tags": [
+          "Catalogue"
+        ],
+        "summary": "Gets all available Catalogues.",
+        "responses": {
+          "200": {
+            "description": "Success. If no results are found, an empty result set will be returned.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkCatalogueViewModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkCatalogueViewModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkCatalogueViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Resource/Search": {
+      "get": {
+        "tags": [
+          "Resource"
+        ],
+        "summary": "Gets a set of Learning Hub resources that match the search string provided. Includes paging, catalogue filtering and resource type filtering options.",
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Search string."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "maximum": 9999
+            },
+            "description": "The number of items to skip before starting to collect the result set. Use in combination with \"limit\" to implement pagination. The limit plus offset must not exceed 10,000."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10,
+              "maximum": 10000
+            },
+            "description": "Maximum number of matching resources to include in the result set. Use in combination with \"offset\" to implement pagination. The limit plus offset must not exceed 10,000."
+          },
+          {
+            "name": "catalogueId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Filters the result set to only include resources that have a reference in the matching catalogue. Resources may contain other references not in the matching catalogue. This should match catalogue IDs returned by the Learning Hub Open API."
+          },
+          {
+            "name": "resourceTypes",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "A list of resource types to include in the results set. Must be a valid JSON array of strings. Filters the result set to only include resources matching the array of specified types. These should match resource types returned by the Learning Hub Open API. Any invalid resource types included in the array will be ignored."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. If no matching results are found, an empty result set will be returned.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceSearchResultViewModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceSearchResultViewModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceSearchResultViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Resource/{resourceReferenceId}": {
+      "get": {
+        "tags": [
+          "Resource"
+        ],
+        "description": "Gets the Learning Hub resource that matches the Resource Reference ID supplied.",
+        "parameters": [
+          {
+            "name": "resourceReferenceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "The resource reference id of the Learning Hub resource (in catalogue) to return. 404 will be returned if no matching resource reference is found."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceReferenceWithResourceDetailsViewModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceReferenceWithResourceDetailsViewModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceReferenceWithResourceDetailsViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Resource/Bulk": {
+      "get": {
+        "tags": [
+          "Resource"
+        ],
+        "description": "Gets a set of Learning Hub resources that match the list of Resource Reference IDs supplied. This endpoint is deprecated and exists only for backward compatibility: \"/Resource/BulkJson\" should be used instead.",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "resourceReferenceIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "description": "Resource references should be passed in the form \"resourceReferenceIds=123&resourceReferenceIds=234&…\". Each integer should be the Resource Reference ID of a Learning Hub resource to be included in the result set. Any unmatched results will be listed in the unmatchedResourceReferenceIds return property."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkResourceReferenceViewModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkResourceReferenceViewModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkResourceReferenceViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Resource/BulkJson": {
+      "get": {
+        "tags": [
+          "Resource"
+        ],
+        "description": "Gets a set of Learning Hub resources that match the list of Resource Reference IDs supplied.",
+        "parameters": [
+          {
+            "name": "resourceReferences",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "referenceIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Resource references should be passed in the form \"{referenceIds:[123,234,…]}\". Each integer should be the Resource Reference ID of a Learning Hub resource to be included in the result set. Any unmatched results will be listed in the unmatchedResourceReferenceIds return property."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkResourceReferenceViewModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkResourceReferenceViewModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkResourceReferenceViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BulkResourceReferenceViewModel": {
+        "type": "object",
+        "properties": {
+          "resourceReferences": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResourceReferenceWithResourceDetailsViewModel"
+            },
+            "nullable": false,
+            "readOnly": true
+          },
+          "unmatchedResourceReferenceIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": false,
+            "readOnly": true,
+            "description": "A list of Resource Reference IDs included in the request that could not be matched to Learning Hub resources"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CatalogueViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The unique ID of the catalogue."
+          },
+          "name": {
+            "type": "string",
+            "nullable": false,
+            "description": "The name of the Learning Hub catalogue."
+          },
+          "isRestricted": {
+            "type": "boolean",
+            "description": "Indicates whether this is a restricted catalogue. Restricted catalogues are only available to specific Learning Hub users."
+          }
+        },
+        "additionalProperties": false
+      },
+      "BulkCatalogueViewModel": {
+        "type": "object",
+        "properties": {
+          "catalogues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CatalogueViewModel"
+            },
+            "nullable": false,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResourceMetadataViewModel": {
+        "type": "object",
+        "properties": {
+          "resourceId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Unique identifier for the resource. Because a resource can exist in multiple catalogues, Resource Reference ID (which uniquely identifies a resource within a catalogue) should be used as an identifier in preference and is, therefore, used when calling the Resource and Resource/Bulk endpoints."
+          },
+          "title": {
+            "type": "string",
+            "nullable": false,
+            "description": "The name of the learning resource."
+          },
+          "description": {
+            "type": "string",
+            "nullable": false,
+            "description": "Describes the learning resource. This is an html formatted string."
+          },
+          "references": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResourceReferenceViewModel"
+            },
+            "nullable": false
+          },
+          "resourceType": {
+            "type": "string",
+            "nullable": false,
+            "description": "The type of learning resource, a valid Learning Hub resource type e.g. web link, article, video"
+          },
+          "rating": {
+            "type": "number",
+            "format": "double",
+            "description": "Users are able to rate Learning Hub resources on a scale of 1-5. This is mean Learning Hub user rating for this resource. It will be a number between 0 and 5."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResourceReferenceViewModel": {
+        "type": "object",
+        "properties": {
+          "refId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The Resource Reference ID. Resource Reference ID uniquely identifies a resource within a single Learning Hub catalogue (resources can be in multiple catalogues). This is used to call the Resource and Resource/Bulk endpoints."
+          },
+          "catalogue": {
+            "$ref": "#/components/schemas/CatalogueViewModel"
+          },
+          "link": {
+            "type": "string",
+            "nullable": false,
+            "description": "URL to access the learning resource within its catalogue on the Learning Hub."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResourceReferenceWithResourceDetailsViewModel": {
+        "type": "object",
+        "properties": {
+          "resourceId": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true,
+            "description": "Unique identifier for the resource. Because a resource can exist in multiple catalogues, Resource Reference ID (which uniquely identifies a resource within a catalogue) should be used as an identifier in preference and is, therefore, used when calling the Resource and Resource/Bulk endpoints."
+          },
+          "refId": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true,
+            "description": "The Resource Reference ID. Resource Reference ID uniquely identifies a resource within a single Learning Hub catalogue (resources can be in multiple catalogues). This is used to call the Resource and Resource/Bulk endpoints."
+          },
+          "title": {
+            "type": "string",
+            "nullable": false,
+            "readOnly": true,
+            "description": "The name of the learning resource."
+          },
+          "description": {
+            "type": "string",
+            "nullable": false,
+            "readOnly": true,
+            "description": "Describes the learning resource. This is an html formatted string."
+          },
+          "catalogue": {
+            "$ref": "#/components/schemas/CatalogueViewModel"
+          },
+          "resourceType": {
+            "type": "string",
+            "nullable": false,
+            "readOnly": true,
+            "description": "The type of learning resource, a valid Learning Hub resource type e.g. web link, article, video"
+          },
+          "rating": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true,
+            "description": "Users are able to rate Learning Hub resources on a scale of 1-5. This is mean Learning Hub user rating for this resource. It will be a number between 0 and 5."
+          },
+          "link": {
+            "type": "string",
+            "nullable": false,
+            "readOnly": true,
+            "description": "URL to access the learning resource within its catalogue on the Learning Hub."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResourceSearchResultViewModel": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResourceMetadataViewModel"
+            },
+            "nullable": false,
+            "description": "An array of learning resources matching the search criteria specified. The number in the array will not exceed the limit specified in the request."
+          },
+          "offset": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The number of items skipped before collecting the result set returned."
+          },
+          "totalNumResources": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The total number of learning resources matching the search criteria found in the Learning Hub repository"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserBookmarkViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bookmarkTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "resourceReferenceId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "resourceTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "nodeId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "link": {
+            "type": "string",
+            "nullable": true
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "childrenCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "name": "X-API-KEY",
+        "in": "header",
+        "description": "Application API key required to authorise all API requests. This must be obtained from the Learning Hub team at Health Education England, Technology Enhanced Learning"
+      },
+      "OAuth": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "$(components.securitySchemes.OAuth.flows.authorizationCode.authorizationUrl)",
+            "tokenUrl": "$(components.securitySchemes.OAuth.flows.authorizationCode.tokenUrl)",
+            "scopes": {
+              "learninghubapi": ""
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKey": []
+    },
+    {
+      "OAuth": []
+    }
+  ]
+}

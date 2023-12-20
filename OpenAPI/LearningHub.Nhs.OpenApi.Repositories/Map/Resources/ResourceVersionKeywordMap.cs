@@ -1,0 +1,37 @@
+﻿// <copyright file="ResourceVersionKeywordMap.cs" company="HEE.nhs.uk">
+// Copyright (c) HEE.nhs.uk.
+// </copyright>
+
+namespace LearningHub.Nhs.OpenApi.Repositories.Map.Resources
+{
+    using System;
+    using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.Enums;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+    /// <summary>
+    /// The resource version keyword map.
+    /// </summary>
+    public class ResourceVersionKeywordMap : BaseEntityMap<ResourceVersionKeyword>
+    {
+        /// <summary>
+        /// The internal map.
+        /// </summary>
+        /// <param name="modelBuilder">
+        /// The model builder.
+        /// </param>
+        protected override void InternalMap(EntityTypeBuilder<ResourceVersionKeyword> modelBuilder)
+        {
+            modelBuilder.ToTable("ResourceVersionKeyword", "resources");
+
+            modelBuilder.Property(e => e.Keyword).HasMaxLength(50);
+
+            modelBuilder.HasOne(d => d.ResourceVersion)
+                .WithMany(p => p.ResourceVersionKeyword)
+                .HasForeignKey(d => d.ResourceVersionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ResourceVersionAuthor_ResourceVersion");
+        }
+    }
+}

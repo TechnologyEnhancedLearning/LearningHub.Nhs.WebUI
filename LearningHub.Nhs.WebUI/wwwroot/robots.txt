@@ -1,0 +1,8 @@
+﻿User-agent: *
+Disallow: /home/signout
+Disallow: /home/session-timeout
+Disallow: /home/error
+Disallow: /home/accessdenied
+Disallow: /api/*
+Disallow: /offline
+Sitemap: https://learninghub.nhs.uk/sitemap.xml

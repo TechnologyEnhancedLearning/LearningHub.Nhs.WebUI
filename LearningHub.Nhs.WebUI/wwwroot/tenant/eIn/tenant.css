@@ -1,0 +1,6 @@
+﻿.navbar, .footer {
+  background-color: #008b3a !important;
+  color: #ffffff !important; }
+
+.navbar-light .navbar-nav .nav-link, .navbar-light .navbar-brand {
+  color: #ffffff !important; }

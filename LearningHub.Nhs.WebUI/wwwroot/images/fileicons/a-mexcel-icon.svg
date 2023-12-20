@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60.1 (88133) - https://sketch.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icons" transform="translate(-831.000000, -1597.000000)">
+            <g id="Group" transform="translate(831.000000, 1597.000000)">
+                <rect id="Rectangle" fill="#007E45" x="0" y="0" width="30" height="30"></rect>
+                <path d="M9.84375,23 L12.2109375,20.328125 C13.4765625,18.8828125 14.2617188,17.9296875 14.5664062,17.46875 C14.7851562,18.0625 15.2304688,19.0429688 15.9023438,20.4101562 L15.9023438,20.4101562 L17.1914062,23 L21.1757812,23 L16.9453125,14.8671875 L24.8085938,5.8203125 L20.3671875,5.8203125 L17.6601562,8.87890625 C17.0117188,9.62109375 16.2109375,10.5742188 15.2578125,11.7382812 C15.203125,11.6054688 15.1523438,11.5 15.1054688,11.421875 C14.4735243,10.1163194 14.1008391,9.34471451 13.9874132,9.10706019 L13.9570312,9.04296875 L12.28125,5.8203125 L8.58984375,5.8203125 L12.8554688,14.3046875 L5.2734375,23 L9.84375,23 Z" id="X" fill="#FFFFFF" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

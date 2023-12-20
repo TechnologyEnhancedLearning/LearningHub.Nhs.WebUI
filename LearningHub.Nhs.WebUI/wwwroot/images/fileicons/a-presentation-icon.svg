@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60.1 (88133) - https://sketch.com -->
+    <title>Group 5</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icons" transform="translate(-831.000000, -1678.000000)">
+            <g id="Group-5" transform="translate(831.000000, 1678.000000)">
+                <rect id="Rectangle" fill="#005EB8" x="0" y="0" width="30" height="30"></rect>
+                <rect id="Rectangle" fill="#FFFFFF" x="5" y="6" width="20" height="13"></rect>
+                <polygon id="Triangle" fill="#005EB8" transform="translate(16.000000, 12.500000) rotate(90.000000) translate(-16.000000, -12.500000) " points="16 10 19 15 13 15"></polygon>
+                <rect id="Rectangle" fill="#FFFFFF" x="14" y="18" width="2" height="6"></rect>
+                <rect id="Rectangle" fill="#FFFFFF" x="11" y="23" width="8" height="2"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

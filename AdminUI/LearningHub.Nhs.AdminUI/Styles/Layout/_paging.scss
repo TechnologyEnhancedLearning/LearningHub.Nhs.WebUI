@@ -1,0 +1,21 @@
+.pageWithMenu {
+  margin-left: -15px;
+}
+
+.paging-container {
+  margin-left: 15px;
+  padding: 20px 15px 10px;
+}
+
+.paging-container .navigate {
+  width: 150px;
+}
+
+ul.paging-page-list > li {
+    display: inline;
+    list-style-type: none;
+    margin-left: 5px;
+    margin-right: 5px;
+    zoom: 1;
+    font-size: 16px;
+}

@@ -1,0 +1,129 @@
+@use "../Abstracts/all" as *;
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 130px;
+  max-height: 155px;
+  background-color: $nhsuk-blue;
+  color: $nhsuk-white !important;
+  padding: 0 40px;
+
+  ul {
+    padding-left: 0;
+
+    li:first-child {
+      padding-left: 0;
+    }
+
+    li {
+      list-style-type: none;
+      display: inline-block;
+      font-size: 17px;
+    }
+  }
+}
+
+.footer-primary,
+.footer-secondary {
+  font-size: 17px;
+  line-height: 28px;
+  padding-top: 30px;
+}
+
+.footer-primary {
+  height: 130px;
+  max-height: 155px;
+
+  .footer-title {
+    font-size: 3.2rem;
+    line-height: 40px;
+    padding-top: 8px;
+    font-weight: bold;
+  }
+}
+
+.footer-secondary {
+  height: 84px;
+  padding-top: 15px;
+}
+
+.footer-sub-title {
+  font-size: 1.7rem;
+  line-height: 22px;
+}
+
+.footer-copy-right {
+  font-size: 1.7rem;
+  line-height: 22px;
+  text-align: right;
+  padding-top: 40px;
+  padding-right: 15px;
+
+  @media (max-width: 420px) {
+    padding-top: 10px !important;
+    text-align: left !important;
+  }
+}
+
+.footer-lower-links {
+  padding-top: 12px;
+}
+
+.footer-primary a,
+.footer-secondary a {
+  color: $nhsuk-white;
+  text-decoration: underline;
+  margin-right: 30px;
+
+  &:hover {
+    color: $nhsuk-white;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    /* Set the fixed height of the footer for mobile here */
+    height: 474px;
+    padding-left: 15px;
+
+    ul li {
+      display: list-item;
+      font-size: 15px;
+      margin-bottom: 5px;
+    }
+
+    .footer-primary ul li:first-child {
+      margin-bottom: 20px;
+    }
+  }
+
+  .footer-primary {
+    height: 240px;
+  }
+
+  .footer-secondary {
+    height: 260px;
+  }
+
+  .footer-title {
+    font-size: 2.4rem;
+    line-height: 32px;
+    padding-top: 4px;
+  }
+
+  .footer-sub-title {
+    font-size: 1.5rem;
+  }
+
+  .footer-inner-container {
+    border-top: 1px solid $nhsuk-blue-divider !important;
+    width: 100%;
+  }
+
+  .footer-lower-links {
+    padding-top: 5px;
+  }
+}

@@ -1,0 +1,50 @@
+﻿@model LearningHub.Nhs.AdminUI.Models.ContactViewModel
+@{
+    ViewData["Title"] = "Contact";
+}
+@if (TempData["StatusMessage"] != null)
+{
+    <div class="admin-list-header">
+        <p>@TempData["StatusMessage"]</p>
+    </div>
+}
+<div class="mx-2">
+    <h1>User contact</h1>
+    <p>An email will be sent to @Model.EmailAddress with the following subject and body content</p>
+
+    <div class="user-entry">
+        <form method="post" asp-action="Contact">
+            <input type="hidden" asp-for="EmailAddress" />
+            <input type="hidden" asp-for="UserId" />
+            <div class="form-group mb-0">
+                <div asp-validation-summary="ModelOnly" class="validation-summary text-error"></div>
+            </div>
+            <div class="form-group mb-0 pb-3">
+                <label asp-for="Subject"></label>
+                <div class="error-text">
+                    <span asp-validation-for="Subject" class="text-danger"></span>
+                </div>
+                <input type="text" class="form-control" aria-describedby="Subject" placeholder="Enter the email subject" asp-for="Subject" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Message"></label>
+                <div class="error-text">
+                    <span asp-validation-for="Message" class="text-danger"></span>
+                </div>
+                <textarea type="text" class="form-control" aria-describedby="Body" placeholder="Enter the email body" asp-for="Message"></textarea>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        CKEDITOR.replace('Message');
+                    })
+                </script>
+            </div>
+            <div>
+                <div class="form-group mt-4">
+                    <div class="d-flex align-items-center align-content-center">
+                        <button class="btn btn-custom btn-signin mr-5" name="signin" type="submit">Send</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

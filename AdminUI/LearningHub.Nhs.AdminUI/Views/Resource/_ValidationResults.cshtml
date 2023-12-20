@@ -1,0 +1,41 @@
+﻿@model LearningHub.Nhs.Models.Resource.ResourceVersionValidationResultViewModel
+
+    <table class="table table-striped" cellpadding="0" cellspacing="0">
+        <tr> 
+             <th class="w-15">
+                Resource Version Id
+            </th>
+            <th class="w-10">
+                Version No
+            </th>
+            <th style="width:55%">
+                Details
+            </th>
+            <th style="width:15%">
+                Create User
+            </th>
+            <th style="width:15%">
+                Create Date
+            </th>
+        </tr>
+        @foreach (var e in Model.ResourceVersionValidationRuleResultViewModels)
+        {
+            <tr>      
+                 <td class="pl-2">
+                    @Model.ResourceVersionId
+                </td>
+                <td class="pl-2">
+                    @Model.VersionDescription
+                </td>
+                <td class="pl-2">
+                    @e.Details
+                </td>
+                <td class="pl-2">
+                    @Model.CreateUser
+                </td>
+                <td class="pl-2">
+                    @e.CreateDate.DateTime.ToString("dd MMM yyyy")
+                </td>
+            </tr>
+        }
+    </table>

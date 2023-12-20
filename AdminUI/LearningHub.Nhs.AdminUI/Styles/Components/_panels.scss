@@ -1,0 +1,175 @@
+@use "../Abstracts/all" as *;
+
+.panel-header {
+  height: 88px;
+  border-bottom: 1px solid $nhsuk-grey-lighter;
+}
+
+.panel-body {
+  margin-top: 10px;
+  font-size: 1.9rem;
+
+  button {
+    vertical-align: unset;
+  }
+
+  .lh-check {
+    border-width: 2px !important;
+    width: 30px !important;
+    height: 30px;
+    box-shadow: none !important;
+  }
+
+  .checkContainer {
+    display: block;
+    position: relative;
+    padding-left: 40px;
+    padding-top: 3px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    border-width: 1px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .checkContainer input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 30px;
+    width: 30px;
+    background-color: $nhsuk-white;
+    border-radius: 4px;
+    border: 2px solid $nhsuk-grey;
+  }
+
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  .checkContainer input:checked ~ .checkmark:after {
+    display: block;
+  }
+
+  .checkContainer .checkmark:after {
+    left: 4px;
+    top: 6px;
+    width: 20px;
+    height: 10px;
+    border: solid $nhsuk-black;
+    border-top-color: transparent;
+    border-width: 0 0 4px 4px;
+    transform: rotate(-45deg);
+  }
+}
+
+.admin-body {
+  padding-top: 20px;
+  font-size: 16px;
+  color: $nhsuk-black;
+  margin-top: 0;
+
+  .admin-title {
+    padding-left: 30px;
+    padding-top: 2px;
+    font-size: 24px;
+    font-weight: bold;
+    color: $nhsuk-black;
+    min-height: 60px;
+    flex-wrap: wrap;
+  }
+
+  .admin-section {
+    padding-left: 15px;
+    padding-top: 25px;
+    border-top: 1px solid $nhsuk-grey-lighter;
+  }
+
+
+  .id-container {
+    color: $nhsuk-white;
+    background-color: $nhsuk-grey;
+    padding: 6px 15px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 25px;
+  }
+
+  .block-container {
+    border: 3px solid $nhsuk-black;
+    padding: 6px 15px;
+    border-radius: 4px;
+    margin-bottom: 25px;
+
+    .block-slide-container {
+      background-color: $nhsuk-grey-light;
+      border: 3px solid $nhsuk-black;
+      padding: 6px 15px;
+      border-radius: 4px;
+      margin-bottom: 25px;
+    }
+  }
+
+  dl {
+    margin-bottom: 50px;
+
+    dd {
+      margin-bottom: 2rem;
+      margin-top: .5rem;
+    }
+  }
+
+  div.form-group {
+    margin-bottom: 30px;
+
+    label {
+      font-weight: 700;
+    }
+  }
+
+  input, select {
+    height: 40px !important;
+  }
+
+  input,
+  textarea,
+  select {
+    border: 1px solid $nhsuk-grey !important;
+    border-radius: 4px !important;
+    color: #212B32;
+    box-shadow: none;
+  }
+
+  input:focus,
+  textarea:focus {
+    box-shadow: none;
+  }
+}
+
+.panel-container {
+  max-width: 1180px;
+  margin: 0 auto 0;
+}
+
+.panel {
+  @include panel-mixin(570px);
+}
+
+@media (max-width: 768px) {
+  .panel-header {
+    padding: 10px 0;
+    height: 73px;
+  }
+}

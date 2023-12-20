@@ -1,0 +1,67 @@
+﻿@using LearningHub.Nhs.Models.Notification
+@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.AdminUI.Controllers
+@model LearningHub.Nhs.Models.Paging.TablePagingViewModel<NotificationViewModel>
+
+@{
+    ViewData["Title"] = "Notifications";
+    ViewData["CurrentPage"] = Model.Paging.CurrentPage;
+}
+
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+@{await Html.RenderPartialAsync("_ListPageHeader", Model.ListPageHeader); }
+
+<div class="table-responsive">
+    <table class="table table-striped lh-datatable filtered">
+        <thead>
+            <tr>
+                <th class="orderable" data-column="StartDate" data-type="date">Start Date</th>
+                <th class="orderable" data-column="EndDate" data-type="date">End Date</th>
+                <th class="orderable" data-column="Title" data-type="text">Title</th>
+                <th class="orderable" data-column="CreatedBy" data-type="text">Created by</th>
+                <th class="orderable" data-column="NotificationPriority">Priority</th>
+                <th class="orderable" data-column="NotificationType">Type</th>
+                <th class="action-column">Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Paging.HasItems)
+            {
+                foreach (var notification in Model.Results.Items)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => notification.StartDate)</td>
+                        <td>@Html.DisplayFor(modelItem => notification.EndDate)</td>
+                        <td>
+                            @Html.ActionLink(notification.Title, "Details", new { id = notification.Id })
+                        </td>
+                        <td>@notification.CreateUserName</td>
+                        <td>@(notification.NotificationPriority == NotificationPriorityEnum.Priority ? "High" : "Low" )</td>
+                        <td>@(NotificationsController.GetNotificationTypeText(notification.NotificationType))</td>
+                        <td class="action-column">
+                            <button type="button" class="btn" onclick="location.href='@Url.Action("Edit", "Notifications", new { id = notification.Id, source = "list" })'">
+                                <i class="fa-solid fa-pencil"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+@{await Html.RenderPartialAsync("_PagingControls", Model.Paging);}
+
+
+@section Scripts {
+    <script src="~/js/pagingContol.js"></script>
+    <script>
+        var sortColumn = '@Model.SortColumn';
+        var sortDirection = '@Model.SortDirection';
+        var filter = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Filter));
+        $(document).ready(function () {
+            AdminUI.pagingSetup(sortColumn, sortDirection, filter);
+        })
+    </script>
+}

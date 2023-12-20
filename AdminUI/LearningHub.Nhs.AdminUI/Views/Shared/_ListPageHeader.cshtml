@@ -1,0 +1,48 @@
+﻿@model LearningHub.Nhs.Models.Paging.ListPageHeaderViewModel
+@{
+    var activeItem = Url.Action().ToLower().TrimStart('/');
+    var controller = activeItem.Substring(0, (activeItem + "/").IndexOf('/'));
+    var fromCount = (@Model.DefaultPageSize * (int)@ViewData["CurrentPage"]) - @Model.DefaultPageSize + 1;
+    var toCount = (int)@ViewData["CurrentPage"] * @Model.DefaultPageSize;
+    var btnText = controller == "notifications" ? "Add a notification" :
+        controller == "externalsystem" ? "Add an External System" :
+        "Create";
+
+    if (Model.TotalItemCount == 0)
+    {
+        fromCount = 0;
+    }
+
+    if (toCount > Model.TotalItemCount)
+    {
+        toCount = Model.TotalItemCount;
+    }
+}
+<div class="admin-list-header d-flex flex-row justify-content-between">
+    <div>
+        @if (Model.TotalItemCount > 0 || !string.IsNullOrEmpty(Model.NoResultsMessage))
+        {
+            <text>Showing @fromCount - @toCount of @Model.TotalItemCount</text>
+        } 
+        else
+        {
+            <text>@Model.NoResultsMessage</text>
+        }
+        @if (Model.FilterCount > 0)
+        {
+            <text>(filtered)</text>
+        }
+    </div>
+    <div class="right-side">
+        @if (Model.FilterCount > 0)
+        {
+            <text>
+                <a href="#" onclick="AdminUI.clearFilters()" class="mr-4">Clear filters</a>
+            </text>
+        }
+        @if (Model.CreateRequired)
+        {
+            <button class="btn btn-common btn-success" onclick="location.href='@Url.Action("Create", controller)'"><i class="fa-solid fa-plus">&nbsp;</i>@btnText</button>
+        }
+    </div>
+</div>

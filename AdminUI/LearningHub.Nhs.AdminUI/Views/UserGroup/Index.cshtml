@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "User Groups";
+}
+
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+
+<div id="userGroupList"></div>
+
+@section Scripts {
+    <script src="~/js/pagingContol.js"></script>
+    <script>
+        $(document).ready(function () {
+            loadUserGroups();
+        });
+
+        function loadUserGroups() {
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "/UserGroup/UserGroupList",
+                success: function (data) {
+                    $('#userGroupList').html(data);
+                    AdminUI.pagingSetupAjax('', '', '', '', 'UserGroup/UserGroupList', '#userGroupList');
+                },
+                error: function () {
+                    $('#userGroupList').html('<div class="alert alert-danger">Error loading user groups</div>');
+                }
+            });
+        }
+
+        function addUserGroup() {
+            window.location.href = "/UserGroup/Details/0";
+        }
+    </script>
+}

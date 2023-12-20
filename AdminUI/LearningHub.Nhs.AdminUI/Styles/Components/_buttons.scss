@@ -1,0 +1,185 @@
+@use "../Abstracts/all" as *;
+
+.admin-body {
+  .btn-admin.btn-cancel, .btn-admin.btn-delete {
+    background-color: #fff !important;
+    color: #005EB8 !important;
+    border: 1px solid $nhsuk-blue !important;
+  }
+
+  .btn-admin.btn-cancel:hover {
+    text-decoration: underline;
+  }
+
+  .btn-admin.btn-delete {
+    background-color: #fff !important;
+    color: $nhsuk-red !important;
+    border: 1px solid $nhsuk-red !important;
+  }
+}
+
+.btn-admin {
+  background-color: #005EB8 !important;
+  color: #fff !important;
+  font-size: 1.9rem !important;
+  text-align: center !important;
+  border: 1px solid #005EB8 !important;
+  height: 40px;
+  min-width: 108px;
+  padding: 0px 25px 0px 25px;
+  vertical-align: middle;
+
+  i {
+    font-size: 14px;
+  }
+}
+
+.input-group-search {
+  width: 430px;
+}
+
+.form-control-search {
+  height: 56px;
+  color: $nhsuk-grey-placeholder;
+}
+
+select,
+input {
+  height: 45px !important;
+  border: 1px solid #425563 !important;
+  border-radius: 4px !important;
+}
+
+button:focus {
+  outline: none !important;
+}
+
+.btn-common {
+  font-size: 1.9rem !important;
+  height: 40px;
+  min-width: 108px;
+  padding: 0 25px;
+}
+
+.btn-search {
+  color: $nhsuk-blue !important;
+  font-size: 2rem;
+  margin-left: -50px;
+  background-color: $nhsuk-white !important;
+  border: 0 !important;
+}
+
+.btn-custom {
+  background-color: $nhsuk-blue !important;
+  color: $nhsuk-white !important;
+  font-size: 1.9rem !important;
+  text-align: center !important;
+  border: 1px solid $nhsuk-blue !important;
+  height: 50px;
+  min-width: 115px;
+  padding: 0 25px;
+}
+
+.btn-link-red {
+  color: $nhsuk-red;
+}
+
+.checkbox-large {
+  height: 40px;
+  width: 40px;
+}
+
+.btn-custom-green {
+  background-color: $nhsuk-green !important;
+  color: $nhsuk-white !important;
+  font-size: 1.9rem !important;
+  text-align: center !important;
+  border: 5px solid $nhsuk-green !important;
+  height: 40px;
+  border-radius: 6px;
+  min-width: 94px;
+  padding: 0 25px;
+
+  i {
+    font-size: 1.6rem !important;
+    margin-right: 5px;
+  }
+
+  &:hover {
+    background-color: $nhsuk-green-hover !important;
+    border-color: $nhsuk-green-hover !important;
+  }
+}
+
+.input-section {
+  background-color: $nhsuk-grey-white !important;
+  padding: 2rem;
+}
+
+.btn-success, .btn-outline-primary, .admin-body .btn-admin.btn-delete {
+  padding: 10px 20px;
+  border-radius: 4px;
+  height: initial;
+}
+
+.btn-success {
+  background-color: $nhsuk-green;
+  border-color: $nhsuk-green;
+}
+
+.btn-success:hover {
+  background-color: $nhsuk-green-hover;
+  border-color: $nhsuk-green-hover;
+}
+
+.btn-outline-primary {
+  color: $nhsuk-blue;
+  border-color: $nhsuk-blue;
+}
+
+.btn-outline-primary:hover {
+  color: $nhsuk-blue;
+  background-color: $nhsuk-btn-outline-hover;
+}
+
+.btn-nhs-common {
+  font-size: 1.9rem !important;
+  min-width: 108px;
+  padding: 10px 20px;
+  border-radius: 4px;
+}
+
+.btn-red {
+  background-color: $nhsuk-red !important;
+  border-color: $nhsuk-red !important;
+
+  &:hover {
+    background-color: $nhsuk-red-hover !important;
+    border-color: $nhsuk-red-hover !important;
+  }
+}
+
+.list-item-checked {
+  height: 20px !important;
+  width: 20px;
+}
+
+.btn-md {
+  padding: 0.4rem 0.8rem;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  border-radius: 0.3rem;
+}
+
+.btn-custom-outline {
+  background-color: $nhsuk-white !important;
+  color: $nhsuk-blue !important;
+  border-color: $nhsuk-blue;
+  border-radius: 6px;
+  height: 48px;
+}
+
+.radio-lg {
+  height: 24px;
+  width: 24px;
+}

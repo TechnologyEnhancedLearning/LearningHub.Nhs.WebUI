@@ -1,0 +1,26 @@
+@use "../Abstracts/all" as *;
+
+.sync-notification {
+  color: $nhsuk-white;
+  padding-left: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.remove-resource-sync {
+  cursor: pointer;
+  color: $nhsuk-red;
+}
+
+.sync-information {
+  background-color: $nhsuk-blue;
+}
+
+.sync-error {
+  background-color: $nhsuk-red-danger;
+}
+
+.sync-checked {
+  height: 30px;
+  width: 30px;
+}

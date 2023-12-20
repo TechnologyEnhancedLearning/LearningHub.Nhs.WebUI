@@ -1,0 +1,148 @@
+﻿@model LearningHub.Nhs.Models.Paging.TablePagingViewModel<LearningHub.Nhs.Models.Maintenance.InternalSystemViewModel>
+@using LearningHub.Nhs.AdminUI.Controllers
+
+@{
+    ViewData["Title"] = "Release management";
+}
+@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.AdminUI.Configuration.WebSettings> _settings
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+@{
+    var learningHubUrl = _settings.Value.LearningHubUrl + "offline/access";
+}
+<div class="panel-body admin-body">
+    <div class="d-flex flex-row justify-content-between col-12 admin-title">
+        Release management
+    </div>
+    <div class="admin-section">
+        <div class="col-12">
+            @if (this.ViewBag.lhOffline)
+            {
+                <p class="alert alert-danger">The Learning Hub is Offline</p>
+                <p><button id="setSystemOnline" class="btn btn-custom-green" @(@ViewBag.canTakeOffline ? "" : "disabled") >Make Learning Hub available to all users</button></p>
+            }
+            else
+            {
+                <p class="alert alert-success">Learning Hub is available</p>
+                <p><button id="setSystemOffline" class="btn btn-custom-green" @(@ViewBag.canTakeOffline ? "" : "disabled") >Take learning Hub offline</button></p>
+            }
+        </div>
+        <div class="col-12">
+            <p>
+                Access to the learning hub while it is offline is available at the following url for authorised users:<br />
+                <a href="@learningHubUrl" target="_blank">@learningHubUrl</a>
+            </p>
+        </div>        
+    </div>
+
+</div>
+
+<div id="confirmSetOnline" ref="confirmSetOnlineModal" class="modal @*remove-user-from-user-group-modal*@" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header alert-modal-header text-center">
+                <h2 class="heading-lg w-100"><i class="warningTriangle fas fa-exclamation-triangle pr-3"></i>Set system online</h2>
+            </div>
+
+            <div class="modal-body alert-modal-body">
+                <div class="mt-3">All users will have access to the Learning Hub.</div>
+            </div>
+
+            <div class="modal-footer alert-modal-footer">
+                <div class="form-group col-12 p-0 m-0">
+                    <div class="d-flex">
+                        <input type="button" class="btn btn-admin btn-cancel" data-dismiss="modal" value="Cancel" />
+                        <input type="button" class="btn btn-custom-green ml-auto" onclick="location.href='@Url.Action("ToggleOfflineStatus","Release", new {Id= 1})'" value="Continue" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmSetOffline" ref="confirmSetOfflineModal" class="modal @*remove-user-from-user-group-modal*@" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header alert-modal-header text-center">
+                <h2 class="heading-lg w-100"><i class="warningTriangle fas fa-exclamation-triangle pr-3"></i>Set system offline</h2>
+            </div>
+
+            <div class="modal-body alert-modal-body">
+                <div class="mt-3">Take learning Hub offline. Access will be restricted.</div>
+            </div>
+
+            <div class="modal-footer alert-modal-footer">
+                <div class="form-group col-12 p-0 m-0">
+                    <div class="d-flex">
+                        <input type="button" class="btn btn-admin btn-cancel" data-dismiss="modal" value="Cancel" />
+                        <input type="button" class="btn btn-custom-green ml-auto" onclick="location.href='@Url.Action("ToggleOfflineStatus","Release",  new {Id= 1})'" value="Continue" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped lh-datatable filtered">
+        <thead>
+            <tr>
+                <th class="orderable" data-column="Name" data-type="text">Name</th>
+                <th class="orderable" data-column="Description" data-type="text">Description</th>                
+                <th class="orderable" data-column="IsOffline">Status</th>
+                <th class="action-column">Manage</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.Results.Items)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>  
+                    <td>
+                        @if (@item.IsOffline)
+                        {
+                            <b>Offline</b>
+                        }
+                        else { 
+                            <b>Live</b>
+                        }
+                    </td>
+                    <td class="action-column">
+                        @if (@item.IsOffline)
+                        {
+                            <button type="button" class="btn btn-custom-green" onclick="location.href='@Url.Action("ToggleOfflineStatus", "Release", new { Id = item.Id })'">
+                                Go Live
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-custom-outline" onclick="location.href='@Url.Action("ToggleOfflineStatus", "Release", new { Id = item.Id })'">
+                                Take Offline
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $('#setSystemOnline').on('click', function (e) {
+            e.preventDefault();
+            $('#confirmSetOnline').modal('show');
+        });
+        $('#setSystemOffline').on('click', function (e) {
+            e.preventDefault();
+            $('#confirmSetOffline').modal('show');
+        });
+    </script>
+}

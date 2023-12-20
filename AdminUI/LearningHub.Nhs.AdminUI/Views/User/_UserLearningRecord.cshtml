@@ -1,0 +1,124 @@
+﻿@using LearningHub.Nhs.AdminUI.Helpers
+@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.Models.Paging
+@using LearningHub.Nhs.Models.MyLearning
+@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.AdminUI.Configuration.WebSettings> _settings
+@model Tuple<TablePagingViewModel<MyLearningDetailedItemViewModel>, string>
+@{
+  var resourceUrl = _settings.Value.LearningHubUrl + "Resource";
+  Uri baseUri = new Uri(_settings.Value.LearningHubUrl);
+  string baseUrl = baseUri.GetLeftPart(UriPartial.Authority);
+}
+<div class="nhsuk-table-responsive">
+  <table class="table table-striped" cellpadding="0" cellspacing="0">
+    <thead>
+      <tr>
+        <th>
+          Learning resource
+        </th>
+        <th>
+          Version
+        </th>
+        <th>
+          Type
+        </th>
+        <th>
+          Certificate
+        </th>
+        <th>
+          Status
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var userLearningRecord in Model.Item1.Results.Items)
+      {
+        <tr>
+          <td>
+            <span class="nhsuk-u-text-align-left table-content-spacing">
+              @if (userLearningRecord.IsCurrentResourceVersion && userLearningRecord.ResourceReferenceId > 0 && userLearningRecord.VersionStatusId != (int?)VersionStatusEnum.Unpublished)
+              {
+                <span>
+                  <a class="learning-td" href="@resourceUrl/@userLearningRecord.ResourceReferenceId" target="_blank">@userLearningRecord.Title</a><br />
+                  <b>Last @LearningActivityHelper.GetResourceTypeVerb(userLearningRecord).ToLower() on : </b>  @userLearningRecord.ActivityDate.DateTime.ToString("dd MMM yyyy") at @userLearningRecord.ActivityDate.DateTime.ToShortTimeString()<br />
+                </span>
+              }
+              else
+              {
+                <span class="learning-td">
+                  @userLearningRecord.Title
+                </span>
+
+              }
+            </span>
+          </td>
+          <td>
+            <span class="nhsuk-u-text-align-left table-content-spacing nhsuk-u-font-size-18">@userLearningRecord.Version</span>
+          </td>
+          <td>
+            <span class="nhsuk-u-text-align-left table-content-spacing">@LearningActivityHelper.GetResourceTypeText(userLearningRecord)</span>
+          </td>
+          <td>
+            @if (LearningActivityHelper.CanDownloadCertificate(userLearningRecord))
+            {
+              if (userLearningRecord.IsCurrentResourceVersion)
+              {
+                <a href="@baseUrl/mylearning/certificate/@userLearningRecord.ResourceReferenceId/@Model.Item2" target="_blank" class="text-decoration-none">View certificate</a>
+              }
+              else
+              {
+                string certificateUrl = Url.Action("certificate", "mylearning", new
+                {
+                  resourceReferenceId = userLearningRecord.ResourceReferenceId,
+                  majorVersion = userLearningRecord.MajorVersion,
+                  minorVersion = userLearningRecord.MinorVersion,
+                  userId = @Model.Item2
+                });
+
+                <a href="@baseUrl@certificateUrl" class="text-decoration-none" target="_blank">View certificate</a>
+              }
+            }
+          </td>
+          <td>
+            <span class="nhsuk-u-text-align-left table-content-spacing">
+              @if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.Completed)
+              {
+                <strong class="nhsuk-tag nhsuk-tag--green tag-font">
+                  Completed
+                </strong>
+              }
+              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.Passed)
+              {
+                <strong class="nhsuk-tag tag-font">
+                  Passed
+                </strong>
+              }
+              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.Downloaded)
+              {
+                <strong class="nhsuk-tag nhsuk-tag--green tag-font">
+                  Downloaded
+                </strong>
+              }
+              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.InProgress)
+              {
+                <strong class="nhsuk-tag nhsuk-tag--yellow tag-font">
+                  Incomplete
+                </strong>
+              }
+              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.Failed)
+              {
+                <strong class="nhsuk-tag nhsuk-tag--red tag-font">
+                  Failed
+                </strong>
+              }
+            </span>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@{
+  await Html.RenderPartialAsync("_PagingControls", Model.Item1.Paging);
+}

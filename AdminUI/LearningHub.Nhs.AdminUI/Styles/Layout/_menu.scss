@@ -1,0 +1,22 @@
+@use "../Abstracts/all" as *;
+
+.side-menu {
+  background-color: $nhsuk-grey-white;
+}
+
+.side-menu ul {
+  padding-left: 0;
+  margin: 10px 10px;
+  list-style: none;
+}
+
+.side-menu ul li {
+  color: $nhsuk-blue;
+  min-height: 50px;
+  padding: 13px 0 13px 14px;
+}
+
+.side-menu ul li.active {
+  background-color: $nhsuk-white;
+  border-left: 5px solid #005EB8;
+}

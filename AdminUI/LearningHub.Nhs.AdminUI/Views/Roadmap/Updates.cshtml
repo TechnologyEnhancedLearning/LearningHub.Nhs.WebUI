@@ -1,0 +1,68 @@
+﻿@model LearningHub.Nhs.Models.Paging.TablePagingViewModel<LearningHub.Nhs.Models.Entities.Roadmap>
+@{
+    ViewData["Title"] = "Service updates and releases";
+    ViewData["CurrentPage"] = Model.Paging.CurrentPage;
+    var searchTerm = ViewData["SearchTerm"];
+}
+
+@section Styles{
+    <link href="~/css/Pages/update.css" type="text/css" rel="stylesheet" />
+}
+
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+
+<div class="row">
+    <div class="col roadmap-tab-bar d-flex justify-content-start">
+        <div class="active">
+            <a>Updates</a>
+        </div>
+    </div>
+        <button id="add-update" class="btn btn-custom-green" onclick="window.location.href = '/Roadmap/AddUpdate'"><i class="fa fa-plus"></i> Add</button>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped lh-datatable filtered">
+        <thead>
+            <tr>
+                <th style="width: 75%;"><div class="input-group"><input type="text" class="form-control" id="update-search-input" /><span id="update-search-button"><i class="fa fa-search"></i></span></div></th>
+                <th style="width: 15%;"></th>
+                <th style="width: 10%">Published</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Results.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(item.Title.ToString(), "EditUpdate", new { id = item.Id })
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.RoadmapDate.Value.ToString("dd MMM yyyy"), "EditUpdate", new { id = item.Id })
+                    </td>
+                    <td>
+                        @if (item.Published)
+                        {
+                            <i class="fa fa-check"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-times"></i>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="~/js/pagingContol.js"></script>
+    <script>
+        $('#update-search-button').on('click', function () {
+            var searchTerm = $('#update-search-input').val();
+            window.location.href = "/Roadmap/Updates?searchTerm=" + encodeURIComponent(searchTerm);
+        });
+    </script>
+}

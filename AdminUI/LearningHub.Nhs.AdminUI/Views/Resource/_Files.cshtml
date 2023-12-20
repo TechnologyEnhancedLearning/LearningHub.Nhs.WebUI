@@ -1,0 +1,38 @@
+﻿@using LearningHub.Nhs.AdminUI.Configuration
+@using Microsoft.Extensions.Options
+@model List<LearningHub.Nhs.Models.Resource.FileViewModel>
+@inject IOptions<WebSettings> webSettings
+
+    <table class="table table-striped" >
+        <tr>
+            <th class="pl-0" style="vertical-align:middle" >
+                Filename
+            </th>
+            <th class="pl-0" style="vertical-align:middle" >
+                File Type
+            </th>
+            <th class="pl-0" style="vertical-align:middle" >
+                File Size (Kb)
+            </th>
+            <th class="pl-0" style="vertical-align:middle" >
+                Path
+            </th>
+        </tr>
+        @foreach (var f in Model)
+        {
+            <tr>
+                <td class="pl-0">
+                    <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, f.FilePath, f.FileName)" target="_blank" download>@f.FileName</a>
+                </td>
+                <td class="pl-0">
+                    @f.FileType.Name
+                </td>
+                <td class="pl-0">
+                    @f.FileSizeKb
+                </td>
+                <td class="pl-0">
+                    @f.FilePath
+                </td>
+            </tr>
+        }
+    </table>

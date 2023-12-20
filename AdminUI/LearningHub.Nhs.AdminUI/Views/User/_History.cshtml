@@ -1,0 +1,73 @@
+﻿@model LearningHub.Nhs.Models.Paging.TablePagingViewModel<elfhHub.Nhs.Models.Common.UserHistoryViewModel>
+
+<div class="table-responsive">
+    <table class="table table-striped" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                <th>
+                    Time
+                </th>
+                <th>
+                    Tenant
+                </th>
+                <th>
+                    Type
+                </th>
+                <th>
+                    Detail
+                </th>
+                <th>
+                    Url Referer
+                </th>
+                <th>
+                    Browser
+                </th>
+                <th>
+                    Device, OS
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var historyItem in Model.Results.Items)
+            {
+                <tr>
+                    <td>
+                        @historyItem.CreatedDate.ToString("dd MMM yyyy HH:mm:ss")
+                    </td>
+                    <td>
+                        @historyItem.TenantName
+                    </td>
+                    <td>
+                        @historyItem.UserHistoryType
+                    </td>
+                    <td>
+                        @historyItem.Detail
+                    </td>
+                    @if (!string.IsNullOrEmpty(historyItem.UrlReferer))
+                    {
+                        <td data-toggle="tooltip" title="@historyItem.UrlReferer">
+                            <div>
+                                @{ var url = new Uri(historyItem.UrlReferer);
+                                    var urlString = url.Scheme + "://";
+                                    urlString += (url.PathAndQuery == "/") ? url.Authority + "/" : url.Authority + "/..."; }
+                                @(urlString)
+                            </div>
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    <td>
+                        @historyItem.BrowserName @historyItem.BrowserVersion
+                    </td>
+                    <td>
+                        @historyItem.UserAgent
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@{await Html.RenderPartialAsync("_PagingControls", Model.Paging);}

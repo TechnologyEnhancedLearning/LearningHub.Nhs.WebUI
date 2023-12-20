@@ -1,0 +1,73 @@
+@use "../Abstracts/all" as *;
+
+.unpublish-modal {
+  .btn-cancel {
+    background-color: $nhsuk-white;
+    color: $nhsuk-blue;
+    border: 1px solid $nhsuk-blue;
+    min-width: 80px;
+    height: 40px;
+    font-size: 1.7rem !important;
+    text-align: center !important;
+    flex: 1 1 0;
+  }
+
+  .btn-unpublish {
+    background-color: $nhsuk-blue;
+    color: $nhsuk-white;
+    border: 1px solid $nhsuk-blue;
+    min-width: 90px;
+    height: 40px;
+    font-size: 1.7rem !important;
+    text-align: center !important;
+    flex: 1 1 0;
+  }
+}
+
+.revert-to-draft-modal {
+  .btn-cancel {
+    background-color: $nhsuk-white;
+    color: $nhsuk-blue;
+    border: 1px solid $nhsuk-blue;
+    min-width: 80px;
+    height: 40px;
+    font-size: 1.7rem !important;
+    text-align: center !important;
+    flex: 1 1 0;
+  }
+
+  .btn-revert {
+    background-color: $nhsuk-blue;
+    color: $nhsuk-white;
+    border: 1px solid $nhsuk-blue;
+    min-width: 90px;
+    height: 40px;
+    font-size: 1.7rem !important;
+    text-align: center !important;
+    flex: 1 1 0;
+  }
+}
+
+.transfer-resource-modal {
+  .btn-cancel {
+    background-color: $nhsuk-white;
+    color: $nhsuk-blue;
+    border: 1px solid $nhsuk-blue;
+    min-width: 80px;
+    height: 40px;
+    font-size: 1.7rem !important;
+    text-align: center !important;
+    flex: 1 1 0;
+  }
+
+  .btn-transfer {
+    background-color: $nhsuk-blue;
+    color: $nhsuk-white;
+    border: 1px solid $nhsuk-blue;
+    min-width: 90px;
+    height: 40px;
+    font-size: 1.7rem !important;
+    text-align: center !important;
+    flex: 1 1 0;
+  }
+}

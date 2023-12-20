@@ -1,0 +1,196 @@
+﻿@model LearningHub.Nhs.Models.Notification.NotificationViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+
+<div class="panel-body admin-body">
+    @if (ViewBag.source == "list")
+    {
+        <a href="@Url.Action("Index", "Notifications")" class="pl-5"><i class="fa-solid fa-chevron-left">&nbsp;</i> Go back</a>
+    }
+    else
+    {
+        <a href="@Url.Action("Details", "Notifications", new { id = Model.Id })" class="pl-5"><i class="fa-solid fa-chevron-left">&nbsp;</i> Go back</a>
+    }
+
+    <div class="pt-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" type="hidden" />
+            <div class="admin-section">
+                @if (Model.Id != 0)
+                {
+                    if (ViewBag.copy)
+                    {
+                        <div class="px-4 form-group col-12">
+                            <div class="p-4 bg-success text-white">
+                                A copy of the notification has been successfully created. You can now change the content below.
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="px-4 form-group col-12">
+                            <div class="side-menu p-4">
+                                <p>You are editing a published notification. You must only edit this to correct spelling or grammatical errors.</p>
+                                <p>If more extensive changes are required, create a new notification or select ‘Create a copy’ to copy all existing information into a new notification which you can amend as required.</p>
+                            </div>
+                        </div>
+                    }
+
+                }
+                <div class="form-group col-lg-6">
+                    <label asp-for="Title" class="control-label"></label>
+                    <input asp-for="Title" class="form-control" autofocus required />
+                    <span asp-validation-for="Title" class="text-danger" asp-></span>
+                </div>
+                <div class="form-group col-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label asp-for="NotificationPriority" class="control-label">Notification priority</label>
+                            <select asp-for="NotificationPriority" class="form-control">
+                                <option value="">Select&hellip;</option>
+                                <option value="1">Low</option>
+                                <option value="2">High</option>
+                            </select>
+                            <span asp-validation-for="NotificationPriority" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-sm">
+                            <label asp-for="NotificationType" class="control-label">Notification type</label>
+                            <select asp-for="NotificationType" class="form-control">
+                                <option value="">Select&hellip;</option>
+                                <option value="1">System update</option>
+                                <option value="2">Service release</option>
+                            </select>
+                            <span asp-validation-for="NotificationType" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12">
+                    <label asp-for="Message" class="control-label"></label>
+                    <textarea asp-for="Message" class="form-control" rows="10" required></textarea>
+                    <span asp-validation-for="Message" class="text-danger"></span>
+                </div>
+                <div class="form-group col-lg-3 col-md-6">
+                    <label asp-for="StartDate" class="control-label">Start Date</label>
+                    <input asp-for="StartDate" class="form-control" type="date" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+                <div class="form-group col-lg-3 col-md-6">
+                    <label asp-for="EndDate" class="control-label">End Date</label>
+                    <input asp-for="EndDate" class="form-control" />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+                <div class="form-group col-lg-6">
+                    <div>
+                        <label asp-for="UserDismissable" class="checkContainer login-remember">
+                            User Dismissable
+                            <input asp-for="UserDismissable">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            @if (Model.Id != 0)
+            {
+                <div class="admin-section">
+                    <div class="form-group col-lg-6">
+                        <label asp-for="CreateUserName" class="control-label">Create User</label>
+                        <input asp-for="CreateUserName" class="form-control" readonly />
+                        <span asp-validation-for="CreateUserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label asp-for="AmendUserName" class="control-label">Amend User</label>
+                        <input asp-for="AmendUserName" class="form-control" readonly />
+                        <span asp-validation-for="AmendUserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-6">
+                        <label asp-for="CreateDate" class="control-label">Create Date</label>
+                        <input asp-for="CreateDate" class="form-control" readonly />
+                        <span asp-validation-for="CreateDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-6">
+                        <label asp-for="AmendDate" class="control-label">Amend Date</label>
+                        <input asp-for="AmendDate" class="form-control" readonly />
+                        <span asp-validation-for="AmendDate" class="text-danger"></span>
+                    </div>
+                </div>
+            }
+            <div class="admin-section">
+                <div class="form-group col-lg-6 d-flex flex-row justify-content-between">
+                    <div>
+                        <button type="submit" class="btn btn-common btn-success">Publish</button>
+                        @if (Model.Id != 0)
+                        {
+                            <button class="btn btn-common btn-outline-primary ml-5" type="button"
+                                    onclick="location.href='@Url.Action("Copy", "Notifications", new { id = Model.Id })'">
+                                Create a copy
+                            </button>
+                        }
+                    </div>
+                    @if (Model.Id != 0)
+                    {
+                        <button type="button" class="btn btn-admin btn-delete" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="Delete Modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="max-width:420px">
+            <div class="text-center">
+                <i class="fas fa-exclamation-triangle text-warning">&nbsp;</i>
+                <h4 class="d-inline" id="exampleModalLongTitle">Delete notification</h4>
+                <p class="p-4 mt-5 mb-5 small side-menu">This notification will no longer be available to users</p>
+            </div>
+            <div class="mt-3 d-flex flex-row justify-content-between">
+                <button type="button" class="btn btn-common btn-outline-primary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-common btn-success" onclick="location.href='@Url.Action("Delete", "Notifications", new { id = Model.Id })'">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+
+            CKEDITOR.replace('Message',
+                {
+                    toolbar: [
+                        { name: 'undo', items: ['Undo', 'Redo'] },
+                        { name: 'bold', items: ['Bold', 'Italic'] },
+                        { name: 'list', items: ['NumberedList', 'BulletedList'] },
+                        { name: 'link', items: ['Link'] }
+                    ]
+                });
+
+            CKEDITOR.on('instanceReady', function () {
+                $.each(CKEDITOR.instances, function (instance) {
+                    var ins = CKEDITOR.instances[instance];
+                    ins.on('change', function () {
+                        ins.updateElement();
+                        setTimeout(function () {
+                            var $ins = $('#' + instance);
+                            if ($("<p></p>").html($ins.val()).text().trim() == '') {
+                                $ins.val('')
+                            }
+                            $ins.valid();
+                        }, 1);
+                    });
+                });
+            });
+        });
+
+        $.validator.setDefaults({ ignore: [] });
+
+    </script>
+}

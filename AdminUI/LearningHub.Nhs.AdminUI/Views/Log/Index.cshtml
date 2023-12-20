@@ -1,0 +1,64 @@
+﻿@model LearningHub.Nhs.Models.Paging.TablePagingViewModel<LearningHub.Nhs.Models.Log.LogBasicViewModel>
+
+@{
+    ViewData["Title"] = "Logs";
+    ViewData["CurrentPage"] = Model.Paging.CurrentPage;
+}
+
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+@{await Html.RenderPartialAsync("_ListPageHeader", Model.ListPageHeader); }
+
+<div class="table-responsive">
+    <table class="table table-striped lh-datatable filtered">
+        <thead>
+            <tr>
+                <th class="orderable" data-column="Id" data-type="number" style="min-width:120px">ID</th>
+                <th class="orderable" data-column="Application" data-type="text">Application</th>
+                <th class="orderable" data-column="Logged" data-type="date" style="min-width:210px">Logged</th>
+                <th class="orderable" data-column="Level" data-type="text">Level</th>
+                <th class="orderable" data-column="UserName" data-type="text">Username</th>
+                <th class="" data-column="Message" data-type="text">Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Results.Items)
+            {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Id.ToString(), "Details", new { id = item.Id })
+                </td>
+                <td>
+                    @Html.ActionLink(item.Application.ToString(), "Details", new { id = item.Id })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Logged)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Level)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Message)
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@{await Html.RenderPartialAsync("_PagingControls", Model.Paging);}
+
+@section Scripts {
+    <script src="~/js/pagingContol.js"></script>
+    <script>
+        var sortColumn = '@Model.SortColumn';
+        var sortDirection = '@Model.SortDirection';
+        var filter = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Filter));
+        $(document).ready(function () {
+            AdminUI.pagingSetup(sortColumn, sortDirection, filter);
+        })
+    </script>
+}

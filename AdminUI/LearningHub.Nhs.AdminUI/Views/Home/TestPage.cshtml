@@ -1,0 +1,102 @@
+﻿@model LearningHub.Nhs.AdminUI.Models.UserViewModel
+
+@{
+    ViewData["Title"] = "Test Page";
+}
+
+<h1>Test Page</h1>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <br />
+    <div class="text-center" style="background-color:antiquewhite">
+        <h2>Values from Auth Service</h2>
+        <h2>
+            Given Name = @ViewBag.FirstName
+        </h2>
+        <h2>
+            Family Name = @ViewBag.LastName
+        </h2>
+    </div>
+    <br />
+
+    @if (User.IsInRole("BlueUser"))
+    {
+        <div class="text-center" style="background-color:antiquewhite">
+            <h2>Member of BlueUser role</h2>
+        </div>
+        <br />
+    }
+    @if (User.IsInRole("Administrator"))
+    {
+        <div class="text-center" style="background-color:antiquewhite">
+            <h2>Member of Administrator role</h2>
+        </div>
+        <br />
+    }
+
+    <div style="background-color:antiquewhite">
+        <div class="text-center">
+            <h2>Values from secure Web API call</h2>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">Property</div>
+            <div class="col-6 text-left">Value</div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">@Html.DisplayNameFor(model => model.LastName)</div>
+            <div class="col-6 text-left">@Html.DisplayFor(model => model.LastName)</div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">@Html.DisplayNameFor(model => model.EmailAddress)</div>
+            <div class="col-6 text-left">@Html.DisplayFor(model => model.EmailAddress)</div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">@Html.DisplayNameFor(model => model.AltEmailAddress)</div>
+            <div class="col-6 text-left">@Html.DisplayFor(model => model.AltEmailAddress)</div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">@Html.DisplayNameFor(model => model.PreferredName)</div>
+            <div class="col-6 text-left">@Html.DisplayFor(model => model.PreferredName)</div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">@Html.DisplayNameFor(model => model.CountryId)</div>
+            <div class="col-6 text-left">@Html.DisplayFor(model => model.CountryId)</div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">@Html.DisplayNameFor(model => model.RegistrationCode)</div>
+            <div class="col-6 text-left">@Html.DisplayFor(model => model.RegistrationCode)</div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">@Html.DisplayNameFor(model => model.ActiveFromDate)</div>
+            <div class="col-6 text-left">@Html.DisplayFor(model => model.ActiveFromDate)</div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">@Html.DisplayNameFor(model => model.ActiveToDate)</div>
+            <div class="col-6 text-left">@Html.DisplayFor(model => model.ActiveToDate)</div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">@Html.DisplayNameFor(model => model.Active)</div>
+            <div class="col-6 text-left">@Html.DisplayFor(model => model.Active)</div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">@Html.DisplayNameFor(model => model.LoginTimes)</div>
+            <div class="col-6 text-left">@Html.DisplayFor(model => model.LoginTimes)</div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">@Html.DisplayNameFor(model => model.PrimaryUserEmploymentId)</div>
+            <div class="col-6 text-left">@Html.DisplayFor(model => model.PrimaryUserEmploymentId)</div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">@Html.DisplayNameFor(model => model.RegionId)</div>
+            <div class="col-6 text-left">@Html.DisplayFor(model => model.RegionId)</div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-right">@Html.DisplayNameFor(model => model.PreferredTenantId)</div>
+            <div class="col-6 text-left">@Html.DisplayFor(model => model.PreferredTenantId)</div>
+        </div>
+    </div>
+
+
+
+}

@@ -1,0 +1,82 @@
+@use "../Abstracts/all" as *;
+
+#roadmap-id-tag {
+  height: 46px;
+  width: 77px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $nhsuk-grey;
+  color: $nhsuk-white;
+  font-size: 1.6rem;
+  border-radius: 3px;
+}
+
+#add-update {
+  margin-right: 37px;
+  margin-top: 14px;
+  margin-bottom: 15px;
+  position: absolute;
+  right: 0;
+}
+
+#update-search-button {
+  position: absolute;
+  right: 5px;
+  z-index: 10;
+  margin-top: 3px;
+  font-size: 2rem;
+  color: $nhsuk-blue;
+  cursor: pointer;
+}
+
+.roadmap-tab-bar {
+  margin-left: 15px;
+  height: 75px;
+  border-bottom: 2px solid $nhsuk-grey-light;
+  font-family: $font-stack-bold;
+  align-items: flex-end;
+
+  div {
+    z-index: 2;
+    height: 40px;
+    margin-bottom: -1px;
+    margin-left: 15px;
+
+    &.active {
+      border-bottom: 6px solid $nhsuk-blue;
+    }
+  }
+}
+
+#update-search-input {
+  height: 34px !important;
+}
+
+.roadmap-image-input {
+  background-color: $nhsuk-grey-white;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 1.9rem;
+
+  button {
+    margin: 24px;
+    background-color: $nhsuk-white;
+    color: $nhsuk-black;
+    border-color: $nhsuk-black;
+    border-radius: 6px;
+    height: 48px;
+    width: 105px;
+    font-size: 1.9rem;
+  }
+}
+
+.go-back-header {
+  height: 77px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 2px solid $nhsuk-grey-light;
+  padding-left: 24px;
+}

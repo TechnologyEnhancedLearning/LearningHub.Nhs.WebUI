@@ -1,0 +1,60 @@
+﻿@model LearningHub.Nhs.Models.Paging.TablePagingViewModel<LearningHub.Nhs.Models.User.UserGroupAdminBasicViewModel>
+@{
+    ViewData["CurrentPage"] = Model.Paging.CurrentPage;
+    var fromCount = @Model.ListPageHeader.DefaultPageSize * ((int)@ViewData["CurrentPage"] - 1) + 1;
+    var toCount = ((int)@ViewData["CurrentPage"] - 1) * @Model.ListPageHeader.DefaultPageSize + @Model.ListPageHeader.DisplayedCount;
+}
+
+<div class="admin-list-header d-flex flex-row justify-content-between">
+
+    @if (Model.ListPageHeader.TotalItemCount == 0)
+    {
+        <div>There are no user groups.</div>
+    }
+    else
+    {
+        <div>
+            Showing @fromCount - @toCount of @Model.ListPageHeader.TotalItemCount
+            @if (Model.ListPageHeader.FilterCount > 0)
+            {
+                <text>(filtered)</text>
+            }
+        </div>
+    }
+
+    <div class="right-side">
+        @if (Model.ListPageHeader.FilterCount > 0)
+        {
+            <text>
+                <a href="#" onclick="AdminUI.clearFilters()">Clear filters</a>
+            </text>
+        }
+        <button class="btn btn-custom-green" onclick="addUserGroup();"><i class="fa-solid fa-plus"></i> Create a user group</button>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped lh-datatable filtered">
+        <thead>
+            <tr>
+                <th style="width:15%" class="orderable" data-column="Id" data-type="number">ID</th>
+                <th class="orderable" data-column="UserGroupName" data-type="text">Group Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Results.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(item.Id.ToString(), "Details", new { id = item.Id })
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Name.ToString(), "Details", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@{await Html.RenderPartialAsync("_PagingControls", Model.Paging);}

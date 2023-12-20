@@ -1,0 +1,118 @@
+@use "../Abstracts/all" as *;
+
+.modal-content {
+  padding: 2.8rem;
+  border-radius: 0.8rem;
+
+  button.close {
+    font-size: 2.5rem;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem 2.8rem;
+    border-bottom: none;
+    border-top-left-radius: 0.3rem;
+    border-top-right-radius: 0.3rem;
+
+    .modal-title {
+      font-size: 3.2rem;
+      font-weight: bold;
+      line-height: 1.25;
+    }
+  }
+
+  .modal-body {
+    padding: 1rem 2.8rem;
+  }
+
+  .modal-footer {
+    padding: 1.6rem 2.8rem 2.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-top: none;
+    border-bottom-right-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+  }
+}
+
+.alert-modal-header {
+  padding-bottom: 0 !important;
+}
+
+.alert-modal-body {
+  background-color: $nhsuk-grey-white;
+  min-height: 7rem;
+  border-radius: .5rem;
+  padding: 2.5rem !important;
+
+  p {
+    padding: 0;
+    margin: 0;
+  }
+
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.alert-modal-footer {
+  padding: 0 !important;
+}
+
+.modal-shield {
+  left: 0;
+  top: 0;
+  display: none;
+  position: fixed;
+  height: 100%;
+  z-index: 100;
+  width: 100%;
+  background-color: rgba($nhsuk-grey, 0.8);
+  justify-content: center;
+  align-items: center;
+
+  .modal-container {
+    background-color: $nhsuk-white;
+    width: 580px;
+    border-radius: 20px;
+    padding: 32px;
+
+    &.lg-modal {
+      width: calc(100% - 150px);
+      padding: 0;
+      border-radius: 0;
+    }
+
+    .fa-exclamation-triangle {
+      color: $nhsuk-warm-yellow;
+    }
+
+    .modal-header {
+      padding: 0;
+      border-bottom: none;
+      display: flex;
+      justify-content: center;
+    }
+
+    .modal-body {
+      padding: 32px;
+      background-color: $nhsuk-grey-white;
+      margin-top: 32px;
+      margin-bottom: 32px;
+    }
+
+    .modal-footer {
+      padding: 0;
+      border-top: none;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    #show-catalogue-name, #hide-catalogue-name {
+      font-family: $font-stack-bold;
+    }
+  }
+}

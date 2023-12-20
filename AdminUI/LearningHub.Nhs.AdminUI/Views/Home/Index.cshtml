@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div id="home">
+    <div class="lh-padding-fluid">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <home first-name="@ViewBag.FirstName"></home>
+        }else
+        {
+            <home></home>
+        }
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/bundle/home.js"></script>
+}

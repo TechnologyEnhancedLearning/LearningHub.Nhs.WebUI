@@ -1,0 +1,416 @@
+﻿@model LearningHub.Nhs.Models.User.UserGroupAdminDetailViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+
+<div class="panel-body admin-body">
+
+    <input id="UserGroupId" name="UserGroupId" value="@Model.Id" type="hidden" />
+    <div>
+        <div id="alertInfo" class="alert alert-dismissible fade show admin-alert" role="alert" style="display:none;">
+            <span id="alertText"></span>
+            <button type="button" class="close" data-hide="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+        {
+            <div class="alert alert-success alert-dismissible fade show admin-alert" role="alert">
+                @ViewBag.SuccessMessage
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show admin-alert" role="alert">
+                @ViewBag.ErrorMessage
+                <div class="admin-validation-summary" asp-validation-summary="All"></div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+    </div>
+
+    <div class="id-container" style="margin-left:30px;">@(Model.IsNew() ? "New" : $"ID: {@Model.Id.ToString()}")</div>
+
+    <div class="admin-title">@(Model.IsNew() ? "Untitled" : @Model.Name)</div>
+
+    <div class="tabsbar" id="tabsbar">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="tab-item large">
+                <a class="tab-link active" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="true">User Group Details</a>
+            </li>
+            <li class="tab-item large">
+                <a class="tab-link" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="users" aria-selected="false">Users</a>
+            </li>
+            @if (Model.HasCatalogues)
+            {
+            <li class="tab-item">
+                <a class="tab-link" id="catalogues-tab" data-toggle="tab" href="#catalogues" role="tab" aria-controls="catalogues" aria-selected="false">Catalogues</a>
+            </li>
+            }
+        </ul>
+    </div>
+
+    <div class="tab-content" id="myTabContent">
+
+        <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
+            <form asp-action="Details" spellcheck="false">
+                <div class="admin-section">
+                    <div class="form-group col-12">
+                        <table>
+                            <tr>
+                                <td style="width: 200px;">Date created</td>
+                                <td style="width: 200px;">Last updated</td>
+                            </tr>
+                            <tr>
+                                <td>@(Model.IsNew() ? "-"  : Model.CreateDate.DateTime.ToString("dd/MM/yyyy HH:mm:ss"))</td>
+                                <td>@(Model.IsNew() ? "-" : Model.AmendDate.DateTime.ToString("dd/MM/yyyy HH:mm:ss"))</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="admin-section">
+
+                    <input id="Id" name="Id" value="@Model.Id" type="hidden" />
+                    <input id="OriginalName" name="OriginalName" value="@Model.OriginalName" type="hidden" />
+                    <input id="OriginalDescription" name="OriginalDescription" value="@Model.OriginalDescription" type="hidden" />
+
+                    <div class="form-group col-12">
+                        <label asp-for="Name" class="control-label">Group name</label>
+                        <div>You can enter a maximum of 255 characters including spaces.</div>
+                        <input asp-for="Name" class="form-control" autocomplete="arandomstring" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-12">
+                        <label asp-for="Description" class="control-label">Group description (Optional)</label>
+                        <textarea asp-for="Description" class="form-control" rows="5" autocomplete="arandomstring"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+                @if (Model.CanEdit())
+                {
+                    <div class="admin-section">
+                        <div class="form-group col-12">
+                            <div class="d-flex">
+                                <input type="submit" id="btnUpdateUserGroup" value="Save" class="btn btn-custom-green btn-disabled mr-2" disabled />
+                                <input type="button" class="btn btn-admin btn-cancel" onclick="location.href='@Url.Action("Index", "UserGroup")'" value="Cancel" />
+                                @if (!Model.IsNew())
+                                {
+                                    <input type="button" id="btnDeleteUserGroup" class="btn btn-admin btn-delete ml-auto" data-toggle="modal" data-target="#deleteUserGroup" value="Delete this group" />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </form>
+        </div>
+
+        <div id="deleteUserGroup" ref="deleteUserGroupModal" class="modal delete-user-group-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <h2 class="heading-lg w-100">Delete user group</h2>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mt-3">This user group will no longer be available.</div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <div class="form-group col-12 p-0 m-0">
+                            <div class="d-flex">
+                                <input type="button" class="btn btn-admin btn-cancel" data-dismiss="modal" value="Cancel" />
+                                <input type="button" class="btn btn-custom-green ml-auto" onclick="deleteUserGroup()" value="Continue" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="removeUserFromUserGroup" ref="removeUserFromUserGroupModal" class="modal remove-user-from-user-group-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header alert-modal-header text-center">
+                        <h2 class="heading-lg w-100"><i class="warningTriangle fas fa-exclamation-triangle pr-3"></i>Remove user</h2>
+                    </div>
+
+                    <div class="modal-body alert-modal-body">
+                        <div class="mt-3">This user will no longer be associated with this user group.</div>
+                    </div>
+
+                    <div class="modal-footer alert-modal-footer">
+                        <div class="form-group col-12 p-0 m-0">
+                            <div class="d-flex">
+                                <input type="button" class="btn btn-admin btn-cancel" data-dismiss="modal" value="Cancel" />
+                                <input type="button" class="btn btn-custom-green ml-auto" onclick="removeUserFromUserGroup()" value="Continue" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="addUser" ref="addUserModal" class="modal add-user-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content px-0">
+                    <div class="modal-header py-0">
+                        <h2 class="heading-lg w-100 mb-0">Add users</h2>
+                    </div>
+
+                    <div class="modal-body p-0">
+                        <div id="addUserList"><i class="fa fa-spinner fa-spin ml-4"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
+            <div class="admin-section pt-0 pl-0">
+                <div id="userList"><i class="fa fa-spinner fa-spin ml-4"></i></div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="catalogues" role="tabpanel" aria-labelledby="catalogues-tab">
+            <div class="admin-section pt-0 pl-0">
+                <div id="catalogueList"><i class="fa fa-spinner fa-spin ml-4"></i></div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts{
+    <script src="~/js/pagingContol.js"></script>
+    <script src="~/js/pagingContolModal.js"></script>
+    <script type="text/javascript">
+
+    function showSuccessAlert(alertText) {
+        $('#alertText')
+            .html(alertText)
+        $('#alertInfo')
+            .removeClass("alert-danger")
+            .addClass("alert-success")
+            .show();
+    }
+
+    function showErrorAlert(alertText) {
+        $('#alertText')
+            .html(alertText)
+        $('#alertInfo').removeClass("alert-success")
+            .addClass("alert-danger")
+            .show();
+    }
+
+    function loadUsers() {
+        var userGroupId = $('#UserGroupId').val();
+
+        if (userGroupId == 0) {
+            $('#userList').html('<div class="admin-list-header">There are no users in this user group.</div>');
+        }
+        else {
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "/UserGroup/UserUserGroupList/" + userGroupId,
+                success: function (data) {
+                    $('#userList').html(data);
+
+                    var presetFilter = [{ "Column": "usergroupid", "Value": userGroupId }];
+                    AdminUI.pagingSetupAjax('', '', '', presetFilter, 'UserGroup/UserUserGroupList', '#userList');
+
+                    $('.remove-user').on('click', function (e) {
+                        e.preventDefault();
+                        var $this = $(this);
+                        $this.addClass('remove-user-selection');
+                        $('#removeUserFromUserGroup').modal('show');
+                    });
+                },
+                error: function () {
+                    $('#userList').html('<div class="alert alert-danger">Error loading user groups</div>');
+                }
+            });
+        }
+    }
+
+    function pagingAjax_PageChanged() {
+
+        $('.remove-user').on('click', function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            $this.addClass('remove-user-selection');
+            $('#removeUserFromUserGroup').modal('show');
+        });
+    }
+
+    function showAddUsersModal() {
+        var userGroupId =  $('#UserGroupId').val();
+
+        $.ajax({
+            cache: false,
+            type: "GET",
+            url: "/UserGroup/SelectUserList/" + userGroupId,
+            success: function (data) {
+                $('#addUserList').html(data);
+
+                var presetFilter = [{ "Column": "usergroupid_exclude", "Value": userGroupId }];
+                AdminUIModal.pagingSetupAjax('Id', 'A', '', presetFilter, 'UserGroup/SelectUserList', '#addUserList');
+
+                $('#addUser').modal('show');
+            },
+            error: function () {
+                $('#userList').html('<div class="alert alert-danger">Error loading users</div>');
+            }
+        });
+    }
+
+    function deleteUserGroup() {
+    var userGroupId = $('#UserGroupId').val();
+    $.ajax({
+        cache: false,
+        type: "POST",
+        url: "/UserGroup/DeleteUserGroup",
+        data: { userGroupId: userGroupId },
+        success: function (data) {
+            $('#deleteUserGroup').modal('hide');
+            if (data.success) {
+                window.location.href = "/UserGroup/Index";
+            }
+            else {
+                showErrorAlert(data.details);
+            }
+        },
+        error: function () {
+            showErrorAlert('Unexpected error performing action: Delete User Group.');
+        }
+    });
+    }
+
+    function removeUserFromUserGroup() {
+
+        var selected = $(".remove-user-selection").first();
+        id = selected.data('id');
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "/UserGroup/RemoveUserFromUserGroup",
+            data: { userUserGroupId: id },
+            success: function (data) {
+                if (data.success) {
+                    loadUsers();
+                    $('#removeUserFromUserGroup').modal('hide');
+                }
+                else {
+                    showErrorAlert(data.details);
+                }
+            },
+            error: function () {
+                showErrorAlert('Unexpected error performing action: Remove User from User Group.');
+            }
+        });
+    }
+
+    function addSelectedUsersToUserGroup() {
+        var userGroupId = $('#UserGroupId').val();
+
+        var selectedUserIdList = $('input[id^="user_"]:checked').map(function () {
+            return $(this).attr('id').replace("user_", "");
+        }).get();
+
+        if (selectedUserIdList.length > 0) {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/UserGroup/AddUsersToUserGroup",
+                data: { userGroupId: userGroupId, userIdList: selectedUserIdList.toString() },
+                success: function (data) {
+                    if (data.success) {
+                        loadUsers();
+                    }
+                    else {
+                        showErrorAlert(data.details);
+                    }
+                    $('#addUser').modal('hide');
+                },
+                error: function () {
+                    showErrorAlert('Unexpected error performing action: Add Users to User Group.');
+                }
+            });
+        }
+     }
+
+    function loadCatalogues() {
+        var userGroupId = $('#UserGroupId').val();
+        $.ajax({
+            cache: false,
+            type: "GET",
+            url: "/UserGroup/UserGroupCatalogues/" + userGroupId,
+            success: function (data) {
+                $('#catalogueList').html(data);
+            },
+            error: function () {
+                $('#catalogueList').html('<div class="alert alert-danger">Error loading catalogues</div>');
+            }
+        });
+    }
+
+    $(function () {
+
+        // Remember initial form control values.
+        var $form = $('form'),
+            origForm = $form.serialize();
+        var isChanged = false;
+
+        // When any value changes, enable the update button.
+        $('form :input').on('change input', function () {
+            isChanged = $form.serialize() !== origForm;
+            $('#btnUpdateUserGroup').prop('disabled', !isChanged);
+
+            $('.alert-success').hide();
+        });
+
+        // Prevent save warning appearing if user has clicked Update button.
+        $("#btnUpdateUserGroup").click(function () {
+            isChanged = false;
+        });
+
+        // Unsaved changes warning.
+        window.addEventListener("beforeunload", function (event) {
+            if (isChanged) {
+                event.returnValue = 'You have unfinished changes!';
+            }
+        });
+
+        $(function () {
+            $("[data-hide]").on("click", function () {
+                $(this).closest("." + $(this).attr("data-hide")).hide();
+            });
+        });
+
+        $('#myTab a[href="#users"]').click(function(e){
+            e.preventDefault();
+            $(this).tab('show');
+            loadUsers();
+        });
+
+        $('#myTab a[href="#catalogues"]').click(function(e){
+            e.preventDefault();
+            $(this).tab('show');
+            loadCatalogues();
+        });
+
+    });
+    </script>
+}

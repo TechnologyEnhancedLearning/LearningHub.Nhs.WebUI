@@ -1,0 +1,187 @@
+﻿@using LearningHub.Nhs.Models.Enums;
+
+@model List<LearningHub.Nhs.Models.Catalogue.CatalogueViewModel>
+@{
+    ViewData["Title"] = "Catalogues";
+    var searchTerm = (string)ViewData["searchTerm"];
+}
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+
+<div id="alertInfo" class="alert alert-dismissible fade show admin-alert mb-5 mt-5" role="alert" style="display:none;">
+    <span id="alertText"></span>
+</div>
+
+<div class="table-responsive resource-admin">
+    <table class="table table-striped lh-datatable filtered">
+        <thead>
+            <tr>
+                <th colspan="2"><div class="input-group catalogue-filter"><input id="catalogue-filter-input" class="form-control" /><i class="fa fa-search" id="catalogue-filter-search"></i></div></th>
+                <th style="width: 165px;"><button type="button" class="btn btn-primary btn-custom-green" onclick="window.location = '/Catalogue/Add'"><i class="fa fa-plus"></i>Add</button></th>
+            </tr>
+            <tr>
+                <th>Catalogue name</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="max-width: 70%; min-width: 200px;">
+                        <a asp-action="Edit" asp-route-id="@item.CatalogueNodeVersionId">@item.Name</a>
+                    </td>
+                    <td style="width: 70px;">
+                        @if (item.Hidden)
+                        {
+                            <div class="hidden-badge"><span>Hidden</span></div>
+                        }
+                        else
+                        {
+                            <div class="visible-badge"><span>Visible</span></div>
+                        }
+                    </td>
+                    <td>
+                        @if (item.Hidden)
+                        {
+                            <a href="#" class="show-catalogue" data-id="@item.NodeId" data-name="@item.Name">Change</a>
+                        }
+                        else
+                        {
+                            <a href="#" class="hide-catalogue" data-id="@item.NodeId" data-name="@item.Name">Change</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div id="hide-catalogue-modal" class="modal-shield">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2><i class="fas fa-exclamation-triangle"></i> Hide Catalogue</h2>
+        </div>
+        <div class="modal-body">
+            <p>Hiding the <span id="hide-catalogue-name"></span> catalogue means that learners will not be able to see the catalogue or any of the resources in it. This will happen immediately and may affect learners who are currently using the resources.</p><p>Please ensure this is the correct action to take before proceeding.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-custom-outline btn-custom" id="cancel-hide-catalogue">Cancel</button>
+            <button class="btn btn-custom-green" id="continue-hide-catalogue">Continue</button>
+        </div>
+    </div>
+</div>
+<div id="show-catalogue-modal" class="modal-shield">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2><i class="fas fa-exclamation-triangle"></i> Show Catalogue</h2>
+        </div>
+        <div class="modal-body">
+            Showing the <span id="show-catalogue-name"></span> catalogue means that learners will be able to see the catalogue and all its resources.
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-custom-outline btn-custom" id="cancel-show-catalogue">Cancel</button>
+            <button class="btn btn-custom-green" id="continue-show-catalogue">Continue</button>
+        </div>
+    </div>
+</div>
+<div id="show-catalogue-fail-modal" class="modal-shield">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2><i class="fas fa-exclamation-triangle"></i> Failed to show catalogue</h2>
+        </div>
+        <div class="modal-body">
+            <p id="show-catalogue-fail-details"></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-custom-green" id="show-catalogue-fail-continue">Continue</button>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        function showSuccessAlert(alertText) {
+            $('#alertText')
+                .html(alertText)
+            $('#alertInfo')
+                .removeClass("alert-danger")
+                .addClass("alert-success")
+                .show();
+        }
+        function showErrorAlert(alertText) {
+            $('#alertText')
+                .html(alertText)
+            $('#alertInfo').removeClass("alert-success")
+                .addClass("alert-danger")
+                .show();
+        }
+        function showCatalogueFail(details) {
+            $('#show-catalogue-fail-modal').css('display', 'flex');
+            $('#show-catalogue-fail-details').html(details);
+        }
+        function showCatalogueFailContinue() {
+            $('#show-catalogue-fail-modal').css('display', 'none');
+        }
+        $('#show-catalogue-fail-continue').on('click', showCatalogueFailContinue);
+        var searchVal = '@searchTerm';
+        $('#catalogue-filter-input').val(searchVal);
+        $('#catalogue-filter-input').on('keypress', function (event) {
+            if (event.keyCode === 13) {
+                filter();
+            }
+        })
+        $('#cancel-show-catalogue').on('click', function () {
+            $('#show-catalogue-modal').css('display', 'none');
+        });
+        $('#cancel-hide-catalogue').on('click', function () {
+            $('#hide-catalogue-modal').css('display', 'none');
+        });
+        $('#continue-show-catalogue').on('click', function () {
+            var $this = $(this);var id = $this.data('id');
+            $.post('/Catalogue/Show/' + id).then(x => {
+                if (x.success) {
+                    window.location.reload();
+                }
+                else {
+                    showErrorAlert(x.details);
+                    $('#show-catalogue-modal').css('display', 'none');
+                    showCatalogueFail(x.details);
+                }
+            });
+        });
+        $('#continue-hide-catalogue').on('click', function () {
+            var $this = $(this);
+            var id = $this.data('id');
+            $.post('/Catalogue/Hide/' + id).then(x => {
+                window.location.reload();
+            });
+        });
+        function filter() {
+            var $input = $('#catalogue-filter-input');
+            var val = $input.val();
+            window.location.href = "/Catalogue?searchTerm=" + encodeURIComponent(val);
+        }
+        $('#catalogue-filter-search').on('click', filter);
+        $('.show-catalogue').on('click', function () {
+            var $this = $(this);
+            var id = $this.data('id');
+            var name = $this.data('name');
+            $('#continue-show-catalogue').data('id', id);
+            $('#show-catalogue-modal').css('display', 'flex');
+            $('#show-catalogue-name').text(name);
+            return false;
+        });
+        $('.hide-catalogue').on('click', function () {
+            var $this = $(this);
+            var id = $this.data('id');
+            var name = $this.data('name');
+            $('#continue-hide-catalogue').data('id', id);
+            $('#hide-catalogue-modal').css('display', 'flex');
+            $('#hide-catalogue-name').text(name);
+            return false;
+        });
+        $('.modal-shield').on('click', function () { return false; })
+    </script>
+}

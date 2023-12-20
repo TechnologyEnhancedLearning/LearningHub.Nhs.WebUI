@@ -1,0 +1,431 @@
+﻿@model LearningHub.Nhs.Models.Catalogue.CatalogueViewModel
+@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.AdminUI.Configuration.WebSettings> _settings
+@using LearningHub.Nhs.Models.Enums
+@using Newtonsoft.Json
+@{
+  var page = Model.CatalogueNodeVersionId == 0 ? CatalogueNavPage.Add : CatalogueNavPage.Edit;
+  ViewData["Title"] = page == CatalogueNavPage.Add ? "Add catalogue" : "Edit catalogue";
+  var baseUrl = _settings.Value.LearningHubUrl + "catalogue/";
+  var url = baseUrl + (Model.Url ?? "");
+  var aToZ = (int)CatalogueOrder.AlphabeticalAscending;
+  var keywords = Model.Keywords ?? new List<string>();
+  var Providers = Model.Providers;
+  var CatalogueNodeVersionProviderId = Model.CatalogueNodeVersionProvider?.ProviderId ?? 0;
+  var CatalogueNodeVersionProvider = Model.CatalogueNodeVersionProvider;
+  var action = page.ToString();
+  var keywordsJson = Html.Raw(JsonConvert.SerializeObject(keywords));
+  var imageBaseUrl = "/file/download/CatalogueImageDirectory/";
+  var lastModifiedDate = Model.LastModifiedDate?.ToString("dd MMM yyyy");
+}
+@section SideMenu {
+  @{
+    await Html.RenderPartialAsync("_NavSection");
+  }
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+  <div class="alert alert-danger alert-dismissible fade show admin-alert mb-0 mt-5" role="alert">
+    @ViewBag.ErrorMessage
+    <div class="admin-validation-summary" asp-validation-summary="All"></div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+}
+
+@if (page == CatalogueNavPage.Edit)
+{
+  <div class="row mt-5">
+    <div class="col-12">
+      <h1 class="ml-5" id="catalogue-name-header">@Model.Name</h1>
+    </div>
+  </div>
+}
+@{
+  await Html.RenderPartialAsync("_CatalogueNav.cshtml", new CatalogueNavViewModel { Page = page, CatalogueId = Model.CatalogueNodeVersionId });
+}
+<div class="ml-5" style="max-width: 800px;">
+  <form method="POST" enctype="multipart/form-data">
+    <input type="hidden" id="CatalogueNodeVersionId" name="CatalogueNodeVersionId" value="@Model.CatalogueNodeVersionId" />
+    <input type="hidden" id="NodeId" name="NodeId" value="@Model.NodeId" />
+    <input type="hidden" id="NodeVersionId" name="NodeVersionId" value="@Model.NodeVersionId" />
+    <input type="hidden" id="ResourceOrder" value="@aToZ" />
+    <div class="row mt-5">
+      <div class="col-12 d-flex flex-row">
+        <div id="catalogue-id-tag">
+          @if (page == CatalogueNavPage.Edit)
+          {
+            var idString = Model.CatalogueNodeVersionId.ToString();
+            var paddedIdString = idString.Length > 3 ? idString : idString.PadLeft(3, '0');
+            <span>ID: @paddedIdString</span>
+          }
+          else
+          {
+            <span>NEW</span>
+          }
+        </div>
+        @if (page == CatalogueNavPage.Add || Model.Hidden)
+        {
+          <span class="hidden-badge hidden-badge-lg">Hidden</span>
+        }
+        @if (lastModifiedDate != null)
+        {
+          <p class="catalogue-date-created">Last modified on: @lastModifiedDate</p>
+        }
+      </div>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+      <div class="pt-4 field-validation-error">This form failed to save because there are errors below.</div>
+    }
+
+        <div class="row mt-5">
+            <div class="col-12 form-group">
+                <label for="Name">Catalogue name</label>
+                <p class="hint">You can enter a maximum of 255 characters including spaces</p>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12 form-group">
+                <label for="Name">Catalogue url</label>
+                @if (page == CatalogueNavPage.Add)
+                {
+                    <input asp-for="Url" class="form-control" />
+                }
+                else
+                {
+                    <input asp-for="Url" class="form-control" readonly="readonly" />
+                }
+                <span asp-validation-for="Url"></span>
+            </div>
+            <div class="col-12">
+                @if (Model.Status == VersionStatusEnum.Published && !Model.Hidden)
+                {
+                    <a id="catalogue-url"></a>
+                }
+                else
+                {
+                    <p id="catalogue-url"></p>
+                }
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12 form-group">
+                <image-input for="BadgeImage" label="Badge (optional)" hint="Image must be 240px x 240px and in the following format: .png .jpg .gif .svg" value="@Model.BadgeUrl" existing-url="BadgeUrl" image-width="240" image-height="240" base-url="@imageBaseUrl" circle-crop="false" />
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12 form-group">
+                <image-input for="CertificateImage" label="Certificate Image (optional)" hint="Image: must be 240px x 240px (aspect ratio 1:1) or 240px x 160px (aspect ratio 3:2);Format: .png .jpg .gif .svg;File: 50kB size limit;You do not need to include whitespace around the image (this will be added automatically);You can only upload one image" value="@Model.CertificateUrl" existing-url="CertificateUrl" image-width="240" image-height="240" base-url="@imageBaseUrl" circle-crop="false" />
+                <span asp-validation-for="CertificateUrl"></span>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12 form-group">
+                <image-input for="CardImage" label="Catalogue Card image (optional)" hint="Image must be 360px x 155px and in the following format: .png .jpg .gif .svg" value="@Model.CardImageUrl" existing-url="CardImageUrl" image-width="360" image-height="155" base-url="@imageBaseUrl" circle-crop="false" />
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12 form-group">
+                <image-input for="BannerImage" label="Banner image (optional)" hint="Image must be 1144px x 300px and in the following format: .png .jpg .gif .svg" existing-url="BannerUrl" value="@Model.BannerUrl" image-width="-1" image-height="-1" base-url="@imageBaseUrl" circle-crop="false" />
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12">
+                <label for="Description">Description</label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <small id="with-hint-info" class="pt-2">You have 1800 characters remaining</small>
+                <span asp-validation-for="Description"></span>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12">
+                <label for="Keywords">Keywords</label>
+                <p>
+                    Add one or more relevant keywords to help learners find this catalogue, ensuring that the keyword is specifically related to the catalogue rather than the resources associated with it. A maximum of 5 keywords can be added. Enter one keyword and add it before entering another.
+                </p>
+                <div class="row">
+                    <div class="col-12 input-group">
+                        <input type="text" class="form-control" id="add-keyword-input" />
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-custom btn-custom-outline" id="add-keyword" disabled="disabled"><i class="fa fa-plus"></i>Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <span asp-validation-for="Keywords"></span>
+                        <span class="input-validation-error keyword-maxlength" style="display: none;">The maximum length is 50 characters.</span>
+                    </div>
+                </div>
+
+      </div>
+      <div class="col-12">
+        <p class="hint">You can enter a maximum of 50 characters</p>
+        <div class="keyword-list">
+          @{
+            var i = 0;
+          }
+          @foreach (var keyword in keywords)
+          {
+            <div class="keyword-tag">
+              <p>@keyword</p>
+              <i class="fa fa-times"></i>
+              <input type="hidden" name="Keywords[@i]" class="keyword-value" value="@keyword" />
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="input-section mt-5">
+
+      <div class="row">
+        <div class="col-12">
+          <label>Catalogue access</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="form-check form-check-inline">
+            @if (!Model.RestrictedAccess)
+            {
+              <input type="radio" class="form-check-input radio-lg" name="RestrictedAccess" value="false" checked="checked" />
+            }
+            else
+            {
+              <input type="radio" class="form-check-input radio-lg" name="RestrictedAccess" value="false" />
+            }
+            <span>Unrestricted access (default)</span>
+          </div>
+          <div class="form-check form-check-inline ml-5">
+            @if (Model.RestrictedAccess)
+            {
+              <input type="radio" class="form-check-input radio-lg" name="RestrictedAccess" value="true" checked="checked" />
+            }
+            else
+            {
+              <input type="radio" class="form-check-input radio-lg" name="RestrictedAccess" value="true" />
+            }
+            <span>Restricted access</span>
+          </div>
+        </div>
+      </div>
+      @if (!Model.HasUserGroup)
+      {
+        <div class="col-12 hint" id="has-no-user-group">
+          <p>There are no user groups associated with this catalogue. You can add some in the User Groups tab.</p>
+        </div>
+      }
+    </div>
+
+    <div class="input-section mt-5">
+
+      <div class="row">
+        <div class="col-12">
+          <label>Provided by permission</label>
+          <p class="providertext">Give permission to allow a contributor to flag content from a specific provider. This helps to separate learning resources from community contributions. </p>
+          <p class="providertext">Provided by;</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          @if (Providers != null && Providers.Count() > 0)
+          {
+            <div class="form-check form-check-vertical">
+              @foreach (var provider in Providers)
+              {
+                <input type="radio" class="form-check-input-provider radio-lg" name="CatalogueNodeVersionProvider.ProviderId" value="@provider.Id" @(CatalogueNodeVersionProviderId == @provider.Id ? "checked" : "") />
+                <span class="span-provider">@provider.Name</span>
+                <br />
+              }
+              <input type="radio" class="form-check-input-provider radio-lg" name="CatalogueNodeVersionProvider.ProviderId" value="0" @(CatalogueNodeVersionProviderId == 0 ? "checked" : "") />
+              <span class="span-provider">Not applicable</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-12">
+        @if (page == CatalogueNavPage.Add)
+        {
+          <button type="submit" class="btn btn-custom-green" id="publish-catalogue">Save</button>
+        }
+        else
+        {
+          <button type="submit" class="btn btn-custom-green" id="publish-changes-catalogue">Save</button>
+        }
+      </div>
+    </div>
+  </form>
+  <div style="height: 40px; width: 100%;"></div>
+</div>
+@section Scripts{
+  <script>
+    $(function () {
+      var baseUrl = '@baseUrl';
+      $('#publish-catalogue').on('click', function () {
+        var form = $(this).parents('form');
+        form.attr("action", "/Catalogue/PublishNew");
+      });
+      $('#publish-changes-catalogue').on('click', function () {
+        var form = $(this).parents('form');
+        form.attr("action", "/Catalogue/Edit");
+      });
+
+      // user group text
+      function showHideUserGroupText() {
+        var ugText = $('#has-no-user-group');
+        var restrictedAccess = $('[name="RestrictedAccess"]:checked').val() === "true";
+        if (restrictedAccess) {
+          ugText.show();
+        } else {
+          ugText.hide();
+        }
+      }
+      showHideUserGroupText();
+      $('[name="RestrictedAccess"]').on('change', showHideUserGroupText);
+      //keyword
+      function removeKeyword() {
+        var $close = $(this);
+        var $keyword = $close.parent();
+        var value = $keyword.find('p').text();
+        var index = keywords.indexOf(value);
+        if (index === -1) {
+          return;
+        }
+        keywords.splice(index, 1);
+        $('#Keywords').val(keywords);
+        $keyword.remove();
+        // reindex the keyword inputs
+        $('.keyword-value').each(function (i, x) {
+          $(x).attr('name', "Keywords[" + i + "]");
+        });
+        if (keywords.length < 5) {
+          $('#add-keyword').removeAttr('disabled');
+          $('#add-keyword-input').removeAttr('disabled');
+        }
+      }
+
+      var keywords = @keywordsJson || [];
+      if (keywords.length > 4) {
+        $('#add-keyword').attr('disabled', 'disabled');
+        $('#add-keyword-input').attr('disabled', 'disabled');
+      }
+      $('#Keywords').val(keywords);
+      $('.keyword-tag>i.fa-times').on('click', removeKeyword);
+
+      $('#add-keyword-input').on('input', function () {
+        var value = $(this).val();
+        var length = value.length;
+        if (length === 0 || length > 50) {
+          $('#add-keyword').attr('disabled', 'disabled');
+        } else {
+          $('#add-keyword').removeAttr('disabled');
+        }
+      });
+
+      $('#add-keyword').on('click', function () {
+        var $keywordInput = $('#add-keyword-input');
+        var value = $keywordInput.val();
+        if (!value) {
+          return;
+        }
+        value = value.trim();
+        if (keywords.indexOf(value) === -1) {
+          keywords.push(value);
+          $('#Keywords').val(keywords);
+          var tag = $('<div class="keyword-tag"><p>' + value + '</p><i class="fa fa-times"></i><input class="keyword-value" type="hidden" value="' + value + '" /></div>');
+          tag.find('.fa-times').on('click', removeKeyword);
+          $('.keyword-list').append(tag);
+          $keywordInput.val("");
+          // reindex the keyword inputs
+          $('.keyword-value').each(function (i, x) {
+            $(x).attr('name', "Keywords[" + i + "]");
+          });
+        }
+        if (keywords.length > 4) {
+          $('#add-keyword').attr('disabled', 'disabled');
+          $('#add-keyword-input').attr('disabled', 'disabled');
+        }
+      });
+
+      // url
+      var oldUrl = "";
+      $('#Url').on('input', function () {
+        var value = this.value;
+        var whitelistRegex = /^[a-zA-Z0-9\-\s]{0,}$/;
+        if (!whitelistRegex.test(value)) {
+          value = oldUrl;
+        }
+        this.value = value.replace(/[\s]/g, '-');
+        oldUrl = this.value;
+        var url = baseUrl + this.value;
+        var $catalogueUrl = $('#catalogue-url');
+        $catalogueUrl.text(url);
+        if ($catalogueUrl.is('a')) {
+          $catalogueUrl.attr('href', url);
+        }
+      });
+
+      $('#Url').trigger('input');
+
+      // name
+      $('#Name').on('change', function () {
+        var value = this.value;
+        var encodedValue = value;
+        var $catalogueNameHeader = $('#catalogue-name-header');
+        if ($catalogueNameHeader && $catalogueNameHeader.length) {
+          $catalogueNameHeader.text(encodedValue);
+        }
+      });
+      CKEDITOR.replace('Description',
+        {
+          toolbar: [
+            { name: 'undo', items: ['Undo', 'Redo'] },
+            { name: 'bold', items: ['Bold', 'Italic'] },
+            { name: 'list', items: ['NumberedList', 'BulletedList'] },
+            { name: 'link', items: ['Link'] }
+          ]
+        });
+      CKEDITOR.replace('Notes',
+        {
+          toolbar: [
+            { name: 'undo', items: ['Undo', 'Redo'] },
+            { name: 'bold', items: ['Bold', 'Italic'] },
+            { name: 'list', items: ['NumberedList', 'BulletedList'] },
+            { name: 'link', items: ['Link'] }
+          ]
+        });
+
+      CKEDITOR.on('instanceReady', function () {
+        var editor = CKEDITOR.instances['Description'];
+
+        editor.on('change', function () {
+          var editorData = editor.getData();
+          var data = $("<p></p>").html(editorData).text();
+          var textData = data.replace(/\s\n\n/g, ' ').replace(/\n\n/g, ' ').replace(/\s\n/g, '').replace(/\n/g, '');
+          var remaining = 1800 - textData.length;
+
+          if (remaining >= 0) {
+            $('#with-hint-info').text("You have " + remaining + " characters remaining").removeClass('text-danger');
+          } else {
+            $('#with-hint-info').text("You have " + (-1 * remaining) + " character too many").addClass('text-danger');
+          }
+        });
+
+        editor.fire('change');
+      });
+
+    });
+
+  </script>
+  <script src="~/js/imageInput.js"></script>
+}

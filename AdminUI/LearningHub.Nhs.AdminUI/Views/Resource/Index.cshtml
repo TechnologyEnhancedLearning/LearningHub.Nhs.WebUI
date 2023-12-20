@@ -1,0 +1,150 @@
+﻿@model LearningHub.Nhs.Models.Paging.TablePagingViewModel<LearningHub.Nhs.Models.Resource.ResourceAdminSearchResultViewModel>
+@using LearningHub.Nhs.Models.Enums
+
+@{
+    ViewData["Title"] = "Manage Resources";
+    ViewData["CurrentPage"] = Model.Paging.CurrentPage;
+}
+
+@{await Html.RenderPartialAsync("_ListPageHeader", Model.ListPageHeader); }
+@section SideMenu{
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+
+    <div class="sync-notification row" style="display: none;">
+        <div class="col">
+            <p class="notification-message"></p>
+        </div>
+    </div>
+    
+<div class="table-responsive resource-admin">
+    <table class="table table-striped lh-datatable filtered">
+        <thead>
+            <tr>
+                <th class="orderable" style="width:7%" data-column="VersionId" data-type="number">Id</th>
+                <th style="width:7%" data-column="ReferenceId"  data-type="number">Reference</th>
+                <th class="orderable" style="width:23%" data-column="Title" data-type="text">Title</th>
+                    <th class="orderable w-15" style="width:10%" data-column="CreateUser" data-type="text">Create User</th>
+                <th style="width:14%" data-column="CreateDate" data-type="date">Create Date</th>
+                <th style="width:11%" data-column="Type" data-type="select">Type</th>
+                <th style="width:20%" data-column="Status" data-type="select">Status (version)</th>
+                <th style="width: 8%">Findwise <br/><button type="button" id="SyncAll" class="btn btn-md btn-primary">Add page to sync list</button></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Results.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ResourceVersionId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ResourceReferenceIdList)
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Title, "Details", new { id = item.ResourceVersionId })
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.CreateUser, "Details", "User", new { id = item.CreateUserId }, null)
+                    </td>
+                    <td>
+                        @item.CreateDate.DateTime.ToString("dd/MM/yyyy HH:mm:ss")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ResourceTypeDescription)
+                    </td>
+                    <td>
+                        <span class="p-2 @(item.VersionStatusEnum == VersionStatusEnum.Publishing ? "info-highlight" : "")">@Html.DisplayFor(modelItem => item.VersionFullDetails)</span>
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            @if (item.MarkedForSync)
+                            {
+                                <input type="checkbox" class="sync-checked" value="@item.ResourceVersionId" checked="checked" />
+                            }
+                            else if(item.VersionStatusEnum == VersionStatusEnum.Published || item.VersionStatusEnum == VersionStatusEnum.Unpublished)
+                            {
+                                <input type="checkbox" class="sync-checked" value="@item.ResourceVersionId" />
+                            }
+                            @if (item.VersionStatusEnum == VersionStatusEnum.Published || item.VersionStatusEnum == VersionStatusEnum.Unpublished)
+                            {
+                                <button type="button" class="sync-single btn ml-4" data-id="@item.ResourceVersionId"><i class="fa fa-sync"></i></button>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@{await Html.RenderPartialAsync("_PagingControls", Model.Paging);}
+@section Scripts {
+    <script src="~/js/pagingContol.js"></script>
+    <script>
+        var sortColumn = '@Model.SortColumn';
+        var sortDirection = '@Model.SortDirection';
+        var filter = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Filter));
+        let options = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Options));
+
+        //let options = types.concat(statuses);
+
+        $(document).ready(function () {
+            AdminUI.pagingSetup(sortColumn, sortDirection, filter, options);
+        });
+        $('.sync-checked').on('change', function () {
+            var $this = $(this);
+            var newCheckedVal = $this.is(":checked");
+            var resourceVersionId = $this.val();
+            $.post(newCheckedVal ? "/ResourceSync/AddToSyncList" : "/ResourceSync/RemoveFromSyncList", { resourceIds: [resourceVersionId] })
+                .then(x => x)
+                .fail(x => $this.removeProp('checked')/* display error message*/);
+        });
+        $('#SyncAll').on('click', function () {
+            var idsToSync = [];
+            var inputsSynced = [];
+            $('.sync-checked').each(function (i, x) {
+                var $x = $(x);
+                if (!$x.is(':checked')) {
+                    idsToSync.push($x.val());
+                    inputsSynced.push($x);
+                }
+            });
+            $.post("/ResourceSync/AddToSyncList", { resourceIds: idsToSync })
+                .then(function () {
+                    $.each(inputsSynced, function (i, $x) {
+                        $x.prop('checked', 'checked');
+                    });
+                })
+                .fail(function () {
+                    showError("Failed to add the page of items to the sync list.")
+                });
+        });
+        $('.sync-single').on('click', function () {
+            var id = $(this).data('id');
+            $.post('/ResourceSync/SyncSingle', { resourceId: id })
+                .then(function (x) {
+                    if (x.success) {
+                        showNotification("Synced '" + id + "' with findwise.");
+                    }
+                    else {
+                        showError("Error: " + x.details);
+                    }
+                })
+                .fail(function () {
+                    showError("Failed to sync '" + id + "', please refresh and try again.");
+                });
+        });
+        function showError(error) {
+            $('.notification-message').text(error);
+            var $notification = $('.sync-notification');
+            $notification.show();
+            $notification.addClass('sync-error').removeClass('sync-information');
+        }
+        function showNotification(notification) {
+            $('.notification-message').text(notification);
+            var $notification = $('.sync-notification');
+            $notification.show();
+            $notification.addClass('sync-information').removeClass('sync-error');
+        }
+    </script>
+}

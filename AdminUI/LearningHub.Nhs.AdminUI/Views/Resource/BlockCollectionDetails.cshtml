@@ -1,0 +1,336 @@
+﻿@using LearningHub.Nhs.Models.Resource.Blocks
+@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.AdminUI.Configuration
+@using Microsoft.Extensions.Options
+@model LearningHub.Nhs.Models.Resource.Blocks.BlockCollectionViewModel
+@inject IOptions<WebSettings> webSettings
+
+@if (Model.Blocks != null)
+{
+    @for (int i = 0; i < Model.Blocks.Count; i++)
+    {
+        <div class="block-container">
+        <dl>
+            <dt>Block @(i + 1)</dt>
+            <dt>Order of appearance</dt>
+            <dd>
+                @Html.DisplayFor(b => Model.Blocks[i].Order)
+            </dd>
+            <dt>Title</dt>
+            <dd>
+                @Html.DisplayFor(b => Model.Blocks[i].Title)
+            </dd>
+            <dt>Block Type</dt>
+            <dd>
+                @Html.DisplayFor(b => Model.Blocks[i].BlockType)
+            </dd>
+        </dl>
+
+        @if (Model.Blocks[i].BlockType == BlockType.Media &&
+             Model.Blocks[i].MediaBlock != null)
+        {
+            <dl>
+                <dt>Media Type</dt>
+                <dd>
+                    @Html.DisplayFor(b => Model.Blocks[i].MediaBlock.MediaType)
+                </dd>
+            </dl>
+
+            @if (Model.Blocks[i].MediaBlock.MediaType == MediaType.Attachment &&
+                 Model.Blocks[i].MediaBlock.Attachment != null)
+            {
+                <dl>
+                    @if (Model.Blocks[i].MediaBlock.Attachment.File != null)
+                    {
+                        <dt>File Name</dt>
+                        <dd>
+                            <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @Model.Blocks[i].MediaBlock.Attachment.File.FilePath, Model.Blocks[i].MediaBlock.Attachment.File.FileName)" target="_blank" download>@Model.Blocks[i].MediaBlock.Attachment.File.FileName</a>
+                        </dd>
+                        <dt>
+                            File Path
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(b => Model.Blocks[i].MediaBlock.Attachment.File.FilePath)
+                        </dd>
+                    }
+                </dl>
+            }
+            @if (Model.Blocks[i].MediaBlock.MediaType == MediaType.Image &&
+                 Model.Blocks[i].MediaBlock.Image != null)
+            {
+                <dl>
+                    @if (Model.Blocks[i].MediaBlock.Image.File != null)
+                    {
+                        <dt>File Name</dt>
+                        <dd>
+                            <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @Model.Blocks[i].MediaBlock.Image.File.FilePath, Model.Blocks[i].MediaBlock.Image.File.FileName)" target="_blank" download>@Model.Blocks[i].MediaBlock.Image.File.FileName</a>
+                        </dd>
+                        <dt>File Path</dt>
+                        <dd>
+                            @Html.DisplayFor(b => Model.Blocks[i].MediaBlock.Image.File.FilePath)
+                        </dd>
+                    }
+                    <dt>Alt text</dt>
+                    <dd>
+                        @Html.DisplayFor(b => Model.Blocks[i].MediaBlock.Image.AltText)
+                    </dd>
+                </dl>
+            }
+            @if (Model.Blocks[i].MediaBlock.MediaType == MediaType.Video &&
+                 Model.Blocks[i].MediaBlock.Video != null)
+            {
+                <dl>
+                    @if (Model.Blocks[i].MediaBlock.Video.File != null)
+                    {
+                        <dt>File Name</dt>
+                        <dd>
+                            <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @Model.Blocks[i].MediaBlock.Video.File.FilePath, Model.Blocks[i].MediaBlock.Video.File.FileName)" target="_blank" download>@Model.Blocks[i].MediaBlock.Video.File.FileName</a>
+                        </dd>
+                        <dt>File Path</dt>
+                        <dd>
+                            @Html.DisplayFor(b => Model.Blocks[i].MediaBlock.Video.File.FilePath)
+                        </dd>
+                    }
+                    @if (Model.Blocks[i].MediaBlock.Video.VideoFile != null)
+                    {
+                        @if (Model.Blocks[i].MediaBlock.Video.VideoFile.TranscriptFile != null)
+                        {
+                            <dt>Transcript File</dt>
+                            <dd>
+                                <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @Model.Blocks[i].MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath, Model.Blocks[i].MediaBlock.Video.VideoFile.TranscriptFile.File.FileName)" target="_blank" download>@Model.Blocks[i].MediaBlock.Video.VideoFile.TranscriptFile.File.FileName</a>
+                            </dd>
+                            <dt>Transcript File Path</dt>
+                            <dd>
+                                @Html.DisplayFor(b => Model.Blocks[i].MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath)
+                            </dd>
+                        }
+                        @if (Model.Blocks[i].MediaBlock.Video.VideoFile.CaptionsFile != null)
+                        {
+                            <dt>Closed Captions File</dt>
+                            <dd>
+                                <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @Model.Blocks[i].MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath, Model.Blocks[i].MediaBlock.Video.VideoFile.CaptionsFile.File.FileName)" target="_blank" download>@Model.Blocks[i].MediaBlock.Video.VideoFile.CaptionsFile.File.FileName</a>
+                            </dd>
+                            <dt>Closed Captions Path</dt>
+                            <dd>
+                                @Html.DisplayFor(b => Model.Blocks[i].MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath)
+                            </dd>
+                        }
+                    }
+                </dl>
+            }
+        }
+        @if (Model.Blocks[i].BlockType == BlockType.Question &&
+             Model.Blocks[i].QuestionBlock != null)
+        {
+            <dl>
+                <dt>Question Type</dt>
+                <dd>
+                    @Html.DisplayFor(b => Model.Blocks[i].QuestionBlock.QuestionType)
+                </dd>
+                <dt>Allow Answer Reveal</dt>
+                @Html.DisplayFor(b => Model.Blocks[i].QuestionBlock.AllowReveal)
+                @if (Model.Blocks[i].QuestionBlock.Answers != null)
+                {
+                    <dt>Number of Answers</dt>
+                    <dd>
+                        @Html.DisplayFor(b => Model.Blocks[i].QuestionBlock.Answers.Count)
+                    </dd>
+                }
+            </dl>
+
+            @if (Model.Blocks[i].QuestionBlock.QuestionType == QuestionTypeEnum.MatchGame && Model.Blocks[i].QuestionBlock.Answers != null)
+            {
+                foreach (var answerBlock in Model.Blocks[i].QuestionBlock.Answers)
+                {
+                    if (@answerBlock.BlockCollection != null && @answerBlock.BlockCollection.Blocks != null)
+                    {
+                        foreach (var imageBlock in answerBlock.BlockCollection.Blocks)
+                        {
+                            if (imageBlock.BlockType == BlockType.Media && imageBlock.MediaBlock != null)
+                            {
+                                <dl>
+                                    <dt>Match Game Answer Image</dt>
+                                    <dt>Image File Name</dt>
+                                    <dd>
+                                        <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, imageBlock.MediaBlock.Image.File.FilePath, imageBlock.MediaBlock.Image.File.FileName)" target="_blank" download>@imageBlock.MediaBlock.Image.File.FileName</a>
+                                    </dd>
+                                    <dt>Image File Path</dt>
+                                    <dd>
+                                        @imageBlock.MediaBlock.Image.File.FilePath
+                                    </dd>
+                                </dl>
+                            }
+                        }
+                    }
+                }
+            }
+
+            var questionBlockCollection = Model.Blocks[i].QuestionBlock.QuestionBlockCollection;
+            @if (questionBlockCollection != null && questionBlockCollection.Blocks != null)
+            {
+                foreach (var questionBlock in questionBlockCollection.Blocks)
+                {
+                    if (questionBlock.BlockType == BlockType.Media && questionBlock.MediaBlock != null)
+                    {
+                        if (questionBlock.MediaBlock.Image != null)
+                        {
+                            <dl>
+                                <dt>Question Supporting Image</dt>
+                                <dt>Image File Name</dt>
+                                <dd>
+                                    <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @questionBlock.MediaBlock.Image.File.FilePath, questionBlock.MediaBlock.Image.File.FileName)" target="_blank" download>@questionBlock.MediaBlock.Image.File.FileName</a>
+                                </dd>
+                                <dt>Image File Path</dt>
+                                <dd>
+                                    @questionBlock.MediaBlock.Image.File.FilePath
+                                </dd>
+                            </dl>
+                        }
+                        if (questionBlock.MediaBlock.Video != null)
+                        {
+                            <dl>
+                                @if (questionBlock.MediaBlock.Video.File != null)
+                                {
+                                    <dt>Question Supporting Video</dt>
+                                    <dt>Video File Name</dt>
+                                    <dd>
+                                        <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @questionBlock.MediaBlock.Video.File.FilePath, questionBlock.MediaBlock.Video.File.FileName)" target="_blank" download>@questionBlock.MediaBlock.Video.File.FileName</a>
+                                    </dd>
+                                    <dt>Video File Path</dt>
+                                    <dd>
+                                        @questionBlock.MediaBlock.Video.File.FilePath
+                                    </dd>
+                                }
+                                @if (questionBlock.MediaBlock.Video.VideoFile != null)
+                                {
+                                    @if (questionBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
+                                    {
+                                        <dt>Transcript File</dt>
+                                        <dd>
+                                            <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath, questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FileName)" target="_blank" download>@questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FileName</a>
+                                        </dd>
+                                        <dt>Transcript File Path</dt>
+                                        <dd>
+                                            @questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath
+                                        </dd>
+                                    }
+                                    @if (questionBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
+                                    {
+                                        <dt>Closed Captions File</dt>
+                                        <dd>
+                                            <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath, questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FileName)" target="_blank" download>@questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FileName</a>
+                                        </dd>
+                                        <dt>Closed Captions Path</dt>
+                                        <dd>
+                                            @questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath
+                                        </dd>
+                                    }
+                                }
+                            </dl>
+                        }
+                    }
+                    else if (questionBlock.BlockType == BlockType.WholeSlideImage && questionBlock.WholeSlideImageBlock != null)
+                    {
+                        <dl>
+                            <dt>Question Supporting Whole Slide Image</dt>
+
+                                @await Html.PartialAsync("_WholeSlideImageBlockDetails", questionBlock.WholeSlideImageBlock)
+                        </dl>
+                    }
+                }
+            }
+
+            var feedbackBlockCollection = Model.Blocks[i].QuestionBlock.FeedbackBlockCollection;
+            @if (feedbackBlockCollection != null && feedbackBlockCollection.Blocks != null)
+            {
+                foreach (var feedbackBlock in feedbackBlockCollection.Blocks)
+                {
+                    if (feedbackBlock.BlockType == BlockType.Media && feedbackBlock.MediaBlock != null)
+                    {
+                        if (feedbackBlock.MediaBlock.Image != null)
+                        {
+                            <dl>
+                                <dt>Feedback Supporting Image</dt>
+                                <dt>Image File Name</dt>
+                                <dd>
+                                    <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @feedbackBlock.MediaBlock.Image.File.FilePath, feedbackBlock.MediaBlock.Image.File.FileName)" target="_blank" download>@feedbackBlock.MediaBlock.Image.File.FileName</a>
+                                </dd>
+                                <dt>Image File Path</dt>
+                                <dd>
+                                    @feedbackBlock.MediaBlock.Image.File.FilePath
+                                </dd>
+                            </dl>
+                        }
+                        if (feedbackBlock.MediaBlock.Video != null)
+                        {
+                            <dl>
+                                @if (feedbackBlock.MediaBlock.Video.File != null)
+                                {
+                                    <dt>Feedback Supporting Video</dt>
+                                    <dt>Video File Name</dt>
+                                    <dd>
+                                        <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @feedbackBlock.MediaBlock.Video.File.FilePath, feedbackBlock.MediaBlock.Video.File.FileName)" target="_blank" download>@feedbackBlock.MediaBlock.Video.File.FileName</a>
+                                    </dd>
+                                    <dt>Video File Path</dt>
+                                    <dd>
+                                        @feedbackBlock.MediaBlock.Video.File.FilePath
+                                    </dd>
+                                }
+                                @if (feedbackBlock.MediaBlock.Video.VideoFile != null)
+                                {
+                                    @if (feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
+                                    {
+                                        <dt>Transcript File</dt>
+                                        <dd>
+                                            <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath, feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FileName)" target="_blank" download>@feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FileName</a>
+                                        </dd>
+                                        <dt>Transcript File Path</dt>
+                                        <dd>
+                                            @feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath
+                                        </dd>
+                                    }
+                                    @if (feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
+                                    {
+                                        <dt>Closed Captions File</dt>
+                                        <dd>
+                                            <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath, feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FileName)" target="_blank" download>@feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FileName</a>
+                                        </dd>
+                                        <dt>Closed Captions Path</dt>
+                                        <dd>
+                                            @feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath
+                                        </dd>
+                                    }
+                                }
+                            </dl>
+                        }
+                    }
+                }
+            }
+        }
+        @if (Model.Blocks[i].BlockType == BlockType.WholeSlideImage &&
+             Model.Blocks[i].WholeSlideImageBlock != null)
+        {
+            @await Html.PartialAsync("_WholeSlideImageBlockDetails", Model.Blocks[i].WholeSlideImageBlock)
+        }
+
+        @if (Model.Blocks[i].BlockType == BlockType.ImageCarousel && Model.Blocks[i].ImageCarouselBlock != null &&
+            Model.Blocks[i].ImageCarouselBlock.ImageBlockCollection != null && Model.Blocks[i].ImageCarouselBlock.ImageBlockCollection.Blocks != null)
+        {
+            foreach (var imageBlock in Model.Blocks[i].ImageCarouselBlock.ImageBlockCollection.Blocks)
+            {
+                <dl>
+                    <dt>Image Carousel Image</dt>
+                    <dt>Image File Name</dt>
+                    <dd>
+                            <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @imageBlock.MediaBlock.Image.File.FilePath, imageBlock.MediaBlock.Image.File.FileName)" target="_blank" download>@imageBlock.MediaBlock.Image.File.FileName</a>
+                    </dd>
+                    <dt>Image File Path</dt>
+                    <dd>
+                        @imageBlock.MediaBlock.Image.File.FilePath
+                    </dd>
+                </dl>
+            }
+        }
+        </div>
+    }
+}

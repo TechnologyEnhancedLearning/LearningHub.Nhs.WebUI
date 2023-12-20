@@ -1,0 +1,180 @@
+﻿@model LearningHub.Nhs.AdminUI.Models.UpdateViewModel
+@{
+    ViewData["Title"] = "Service updates and releases";
+    var isNew = Model.Id == 0;
+    var formAction = isNew ? "AddUpdate" : "EditUpdate";
+}
+
+@section Styles{
+    <link href="~/css/Pages/update.css" type="text/css" rel="stylesheet" />
+}
+
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+<div class="go-back-header">
+    <a href="@Url.Action("Updates", "Roadmap")">&lt; Go back</a>
+</div>
+<form style="margin-left: 24px; margin-right: 24px; max-width: 800px;" action="/Roadmap/@formAction" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="RoadmapTypeId" value="@Model.RoadmapTypeId"/>
+    <input type="hidden" name="Id" value="@Model.Id"/>
+    <div class="row mt-5">
+        <div class="col-12">
+            <div id="roadmap-id-tag">
+                @if (!isNew)
+                {
+                    var idString = Model.Id.ToString();
+                    var paddedIdString = idString.Length > 3 ? idString : idString.PadLeft(3, '0');
+                    <span>ID: @paddedIdString</span>
+                }
+                else
+                {
+                    <span>NEW</span>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12 form-group">
+            <label for="Title">Title</label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" />
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12 form-group">
+            <label for="RoadmapDate">Date</label>
+            <input type="date" asp-for="RoadmapDate" class="form-control" style="width: 161px;" />
+            <span asp-validation-for="RoadmapDate" />
+        </div>
+    </div>
+    <input id="Image" type="file" accept="image/png, image/jpeg" class="mt-1" style="display: none;" name="RoadmapImageFile" />
+    <input type="hidden" asp-for="ImageName" />
+    <div id="ImageInput" style="display: none;">
+        <div class="row mt-5">
+            <div class="col-12 form-group">
+                <label for="Image">Feature image (optional)</label>
+                <small style="color: #768692;" class="mt-1 d-block">Image must be 800 x 400px</small>
+                <div class="roadmap-image-input">
+                    <button class="btn" id="ImageInputBrowse" type="button">Browse</button>
+                    <p>No file selected</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="ImageDisplay" style="display: none;">
+        <div class="row mt-5">
+            <div class="col-12">
+                <label for="RoadmapImage">Feature image (optional)</label>
+                <small style="color: #768692;" class="mt-1 d-block">Image must be 800 x 400px</small>
+                <img src="" style="width: 800px; height: 400px" class="mt-1" />
+                <div class="row">
+                    <div class="col d-flex justify-content-between">
+                        <button id="ChangeImage" class="btn btn-link" type="button">Change image</button>
+                        <button id="RemoveImage" class="btn btn-link btn-link-red" type="button">Remove image</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12 form-group">
+            <label for="Description">Description</label>
+            <textarea name="Description" asp-for="Description"></textarea>
+            <span asp-validation-for="Description"></span>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    CKEDITOR.replace('Description');
+                });
+            </script>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-start">
+                <input type="checkbox" asp-for="Published" class="checkbox-large" />
+                <label asp-for="Published" class="ml-2 mt-2">Published</label>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12 d-flex justify-content-between">
+            <button class="btn btn-custom-green">Save</button>
+            @if (isNew)
+            {
+                <a class="btn-link-red btn btn-link" asp-action="Updates" asp-controller="Roadmap">Cancel</a>
+            }
+            else
+            {
+            <button type="button" class="btn btn-link btn-link-red" id="DeleteRoadmap">Delete</button>
+            <div id="DeleteRoadmapConfirm" style="display: none;">
+                <a>Are you sure?</a>
+                    <button type="button" class="btn btn-link btn-link-red" id="ConfirmDelete">Yes</button>
+                <button type="button" class="btn btn-link btn-link-red" id="CancelDelete">No</button>
+            </div>
+            
+            }
+        </div>
+    </div>
+    <div class="mt-5"></div>
+</form>
+<style>
+    .btn-link{
+        text-decoration: underline;
+        font-size: 1.9rem;
+    }
+</style>
+@section Scripts {
+    <script>
+        var $imageInput = $('#ImageInput');
+        var $imageDisplay = $('#ImageDisplay');
+        var $image = $('#Image');
+        var $img = $imageDisplay.find('img');
+        var imageName = '@Model.ImageName';
+        $('#ConfirmDelete').on('click', function () {
+            $.post("/Roadmap/DeleteUpdate", { id: @Model.Id})
+                .then(function () { window.location.href = '@Url.Action("Updates", "Roadmap")'; });
+        })
+        $('#CancelDelete').on('click', function () {
+            $('#DeleteRoadmapConfirm').hide();
+            $('#DeleteRoadmap').show();
+        });
+        $('#DeleteRoadmap').on('click', function () {
+            $('#DeleteRoadmap').hide();
+            $('#DeleteRoadmapConfirm').show();
+        });
+        $('#ChangeImage').on('click', function () {
+            $image.val(null);
+            $image[0].click();
+        });
+        $('#RemoveImage').on('click', function () {
+            $image.val(null);
+            $("#ImageName").val(null);
+            $imageDisplay.hide();
+            $imageInput.show();
+        });
+        $('#ImageInputBrowse').on('click', function () {
+            $image[0].click();
+        });
+        if (imageName) {
+            $imageDisplay.show();
+            $img[0].src = '/file/download/RoadmapImage/' + imageName;
+            $imageInput.hide();
+        } else {
+            $imageDisplay.hide();
+            $imageInput.show();
+        }
+        
+        $image.on('change', function () {
+            console.log("Image input changed");
+            return imageChange(this);
+        });
+        function imageChange(fileInput) {
+            var file = fileInput.files[0];
+            $img[0].src = URL.createObjectURL(file);
+            $imageInput.hide();
+            $imageDisplay.show();
+            return false;
+        }
+    </script>
+}

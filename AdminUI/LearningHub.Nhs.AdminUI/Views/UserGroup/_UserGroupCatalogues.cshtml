@@ -1,0 +1,30 @@
+﻿@model List<LearningHub.Nhs.Models.User.RoleUserGroupViewModel>
+
+<div class="admin-list-header d-flex flex-row justify-content-between">
+    @if (Model.Count == 0)
+    {
+        <div>There are no catalogues associated with this user group.</div>
+    }
+    else
+    {
+        <div>This group is associated with the following catalogues:</div>
+    }
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped lh-datatable filtered">
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="width:70%;">
+                        @Html.ActionLink(item.CatalogueName, "Edit", "Catalogue", new { id = item.CatalogueNodeVersionId }, null)
+                    </td>
+                    <td style="width:30%;" align="right">
+                        <span>Role: @item.RoleName</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

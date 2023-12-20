@@ -1,0 +1,21 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="py-4">
+    <div>
+        <h1 class="heading-xl">Unknown error</h1>
+        <p>An unknown error occurred. Please try to access this page again.</p>
+        <p>Access to the page <a id="originalUrl" href="" _self></a> was requested on @DateTimeOffset.Now.ToString("dd MMM yyyy") at @DateTimeOffset.Now.ToString("HH:mm tt").ToString().ToLower().</p>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#originalUrl').attr("href", window.location.href);
+            $('#originalUrl').text(window.location.href);
+        });
+    </script>
+}

@@ -1,0 +1,62 @@
+﻿@{
+    var sideMenu = "default";
+    var activeItem = Url.Action().ToLower().TrimStart('/');
+    var controller = activeItem.Substring(0, (activeItem + "/").IndexOf('/'));
+    switch (controller)
+    {
+        case "notifications":
+        case "externalsystem":
+        case "log":
+        case "release":
+        case "cms":
+        case "cache":
+            sideMenu = "settings";
+            break;
+        case "roadmap":
+            if (activeItem.Contains("update"))
+            {
+                sideMenu = "settings";
+                controller = "updates";
+            }
+            break;
+        case "user":
+        case "usergroup":
+            sideMenu = "users";
+            break;
+        case "resource":
+        case "catalogue":
+            sideMenu = "resources";
+            break;
+    }
+
+    string IsActive(string itemCheck)
+    {
+        return controller == itemCheck ? "active" : "inactive";
+    }
+}
+@switch (sideMenu)
+{
+    case "settings":
+<ul class="menu-font">
+    <li class="@IsActive("externalsystem")"><a href="/externalsystem">External System</a></li>
+    <li class="@IsActive("cms")"><a href="/cms">Information Pages</a></li>
+    <li class="@IsActive("log")"><a href="/Log">Logs</a></li>
+    <li class="@IsActive("notifications")"><a href="/Notifications">Notifications</a></li>
+    <li class="@IsActive("release")"><a href="/release">Release management</a></li>
+    <li class="@IsActive("cache")"><a href="/cache">Cache management</a></li>
+    <li class="@IsActive("updates")"><a href="/Roadmap/Updates">Service updates and releases</a></li>
+</ul>
+        break;
+    case "users":
+        <ul class="menu-font">
+            <li class="@IsActive("user")"><a href="/User">Users</a></li>
+            <li class="@IsActive("usergroup")"><a href="/UserGroup">User Groups</a></li>
+        </ul>
+        break;
+    case "resources":
+        <ul class="menu-font">
+            <li class="@IsActive("catalogue")"><a asp-controller="Catalogue" asp-action="Index">Catalogues</a></li>
+            <li class="@IsActive("resource")"><a asp-controller="Resource" asp-action="Index">All resources</a></li>
+        </ul>
+        break;
+}

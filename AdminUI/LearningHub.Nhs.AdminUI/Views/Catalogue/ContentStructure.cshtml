@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Catalogue folder";
+    var catalogueName = (string)ViewData["CatalogueName"];
+}
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+
+<h1 class="ml-5 mt-5" id="catalogue-name-header">@catalogueName</h1>
+@{ await Html.RenderPartialAsync("_CatalogueNav.cshtml", new CatalogueNavViewModel { Page = CatalogueNavPage.Folders, CatalogueId = (int)ViewData["id"] }); }
+
+<div id="contentStructureContainer">
+    <div class="lh-padding-fluid ml-5 mb-5">
+        <router-view></router-view>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/bundle/contentStructure.js"></script>
+}

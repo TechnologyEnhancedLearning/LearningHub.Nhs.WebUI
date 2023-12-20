@@ -1,0 +1,74 @@
+﻿@model LearningHub.Nhs.Models.Paging.TablePagingViewModel<LearningHub.Nhs.Models.User.UserUserGroupViewModel>
+@{
+    ViewData["CurrentPage"] = Model.Paging.CurrentPage;
+    var fromCount = (@Model.ListPageHeader.DisplayedCount * (int)@ViewData["CurrentPage"]) - @Model.ListPageHeader.DisplayedCount + 1;
+    var toCount = (int)@ViewData["CurrentPage"] * @Model.ListPageHeader.DisplayedCount;
+}
+
+<div class="admin-list-header d-flex flex-row justify-content-between">
+
+    @if (Model.ListPageHeader.TotalItemCount == 0)
+    {
+        <div>There are no users in this user group.</div>
+    }
+    else
+    {
+        <div>
+            Showing @fromCount - @toCount of @Model.ListPageHeader.TotalItemCount
+            @if (Model.ListPageHeader.FilterCount > 0)
+            {
+                <text>(filtered)</text>
+            }
+        </div>
+    }
+
+    <div class="right-side">
+        @if (Model.ListPageHeader.FilterCount > 0)
+        {
+            <text>
+                <a href="#" onclick="AdminUI.clearFilters()">Clear filters</a>
+            </text>
+        }
+
+        @if (ViewBag.CanEdit)
+        {
+            <button class="btn btn-custom-green" onclick="showAddUsersModal();"><i class="fa-solid fa-plus"></i> Add user</button>
+        }
+    </div>
+</div>
+
+@if (Model.ListPageHeader.TotalItemCount > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-striped lh-datatable filtered">
+            <thead>
+                <tr>
+                    <th style="width:15%" class="orderable" data-column="UserId" data-type="number">ID</th>
+                    <th class="orderable" data-column="Username" data-type="text">Username</th>
+                    <th style="width: 5%">
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Results.Items)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(item.UserId.ToString(), "Details", "User", new { id = item.UserId }, null)
+                        </td>
+                        <td>
+                            @Html.ActionLink(item.UserName.ToString(), "Details", "User", new { id = item.UserId }, null)
+                        </td>                    
+                        <td>
+                            @if (ViewBag.CanEdit)
+                            {
+                                <span><a href="#" data-id="@item.Id" class="remove-list-item remove-user"><i class="fa fa-times"></i></a></span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    await Html.RenderPartialAsync("_PagingControls", Model.Paging);
+}

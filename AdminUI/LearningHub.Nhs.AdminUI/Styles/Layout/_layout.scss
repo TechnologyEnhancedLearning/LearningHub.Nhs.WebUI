@@ -1,0 +1,118 @@
+@use "../Abstracts/all" as *;
+
+.admin-list-header {
+  height: 100px;
+  padding: 20px 30px;
+  align-items: center;
+}
+
+.admin-list-header-modal {
+  padding: 20px 30px;
+  align-items: center;
+}
+
+.detail-page-header,
+.admin-body,
+.admin-list-header {
+  .right-side {
+    button {
+      margin-right: 0;
+      margin-left: 0;
+      margin-bottom: 10px;
+    }
+
+    button:not(:last-child) {
+      margin-right: 20px;
+    }
+  }
+}
+
+.input-validation-error {
+  border-color: $nhsuk-red !important;
+}
+
+.field-validation-error {
+  color: $nhsuk-red !important;
+}
+
+.checkmark {
+  border-width: 1px !important;
+}
+
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.admin-alert {
+  display: inline-block;
+  margin-left: 15px;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+}
+
+.admin-validation-summary {
+  padding-top: 5px;
+
+  ul {
+    margin-bottom: 0;
+  }
+}
+
+.container-fluid {
+  background-color: $nhsuk-white;
+  margin: 0;
+  padding: 0 15px 30px;
+}
+
+.bg-grey-white {
+  background-color: $nhsuk-grey-white;
+}
+
+.no-resources {
+  border-bottom: 1px solid $nhsuk-grey-light;
+  padding-top: 22px;
+  padding-bottom: 22px;
+}
+
+.fa-exclamation-triangle {
+  color: $nhsuk-warm-yellow;
+}
+
+.bg-success {
+  background-color: $nhsuk-green !important;
+}
+
+.nhs-green-color {
+  color: $nhsuk-green;
+}
+
+div.resource-admin {
+  input.form-control,
+  textarea.form-control {
+    border: 2px solid $nhsuk-grey;
+    box-shadow: none;
+  }
+
+  .heading-lg {
+    font-size: 3.2rem;
+  }
+
+  .info-highlight {
+    background-color: $nhsuk-warm-yellow;
+  }
+
+  .info-danger {
+    color: $nhsuk-red-danger;
+  }
+
+  .audit-info {
+    border-top: 1px solid $nhsuk-grey-lighter;
+    border-bottom: none;
+  }
+}
+
+.remove-list-item {
+  cursor: pointer;
+  color: $nhsuk-red;
+}

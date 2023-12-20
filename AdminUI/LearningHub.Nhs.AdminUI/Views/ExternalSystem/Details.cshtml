@@ -1,0 +1,125 @@
+﻿@model LearningHub.Nhs.Models.Entities.External.ExternalSystem
+@using LearningHub.Nhs.AdminUI.Services
+
+@{
+    ViewData["Title"] = "Details";
+}
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+
+    <div class="panel-body admin-body">
+        <div class="d-flex flex-row justify-content-between col-12">
+            <a href="@Url.Action("Index", "ExternalSystem")" class="pl-3"><i class="fa-solid fa-chevron-left">&nbsp;</i> Go back</a>
+            <div class="admin-title right-side">
+                <button type="button" class="btn btn-admin" onclick="location.href='@Url.Action("Edit", "ExternalSystem", new { id = Model.Id })'"><i class="fa-solid fa-pencil"></i> Edit</button>
+            </div>
+        </div>
+        @{ string noneVal = "";}
+        <div class="admin-section">
+            <div class="col-12">
+                <div class="id-container">ID @Model.Id</div>
+                @ViewBag.UpdateSaveError
+                <dl>
+                    <dt>
+                        Name
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dt>
+                        Code
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Code)
+                    </dd>
+                    <dt>
+                        Callback Url
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.CallbackUrl)
+                    </dd>
+                    <dt>
+                        Secret Key
+                    </dt>
+                    <dd>
+                        @Html.Raw(OutputSanitizer.SanitizeOutputHtml(Model.SecretKey))
+                    </dd>
+                    <dt>
+                        Terms And Conditions
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.TermsAndConditions)
+                    </dd>
+                    <dt>
+                        Default User Group Id
+                    </dt>
+                    <dd>
+                        @if (Model.DefaultUserGroupId == null) noneVal = "none"; else noneVal = @Model.DefaultUserGroupId.ToString();
+                        <span>@noneVal</span>
+                    </dd>
+                    <dt>
+                        Default Staff Group Id
+                    </dt>
+                    <dd>
+                        @if (Model.DefaultStaffGroupId == null) noneVal = "none"; else noneVal = @Model.DefaultStaffGroupId.ToString();
+                        <span>@noneVal</span>
+                    </dd>
+                    <dt>
+                        Default Job Role Id
+                    </dt>
+                    <dd>
+                        @if (Model.DefaultJobRoleId == null) noneVal = "none"; else noneVal = @Model.DefaultJobRoleId.ToString();
+                        <span>@noneVal</span>
+                    </dd>
+                    <dt>
+                        Default Grading Id
+                    </dt>
+                    <dd>
+                        @if (Model.DefaultGradingId == null) noneVal = "none"; else noneVal = @Model.DefaultGradingId.ToString();
+                        <span>@noneVal</span>
+                    </dd>
+                    <dt>
+                        Default Speciality Id
+                    </dt>
+                    <dd>
+                        @if (Model.DefaultSpecialityId == null) noneVal = "none"; else noneVal = @Model.DefaultSpecialityId.ToString();
+                        <span>@noneVal</span>
+                    </dd>
+                    <dt>
+                        Default Location Id
+                    </dt>
+                    <dd>
+                        @if (Model.DefaultLocationId == null) noneVal = "none"; else noneVal = @Model.DefaultLocationId.ToString();
+                        <span>@noneVal</span>
+                    </dd>
+                    <dt>
+                        Create User
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.CreateUser.UserName)
+                    </dd>
+                    <dt>
+                        Create Date
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.CreateDate)
+                    </dd>
+                    <dt>
+                        Amend User
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AmendUser.UserName)
+                    </dd>
+                    <dt>
+                        Amend Date
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AmendDate)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+    </div>
+

@@ -1,0 +1,297 @@
+﻿@use "../Abstracts/all" as *;
+@import "../nhsuk/nhsuk";
+
+#contentPageHeader {
+  margin: 0 -15px 0;
+}
+
+.warningTriangle {
+  color: $nhsuk-warm-yellow;
+  font-size: 28px;
+}
+
+.selected-check-circle {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+}
+
+.section-bg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 24px;
+  position: relative;
+  cursor: pointer;
+}
+
+.section-bg.selected:before {
+  content: '';
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid $nhsuk-blue;
+  top: -5px;
+  left: -5px;
+}
+
+.section-bg-white {
+  border: 1px solid $nhsuk-grey-placeholder;
+  background: $nhsuk-white;
+}
+
+.section-bg-grey {
+  border: 1px solid $nhsuk-grey-light;
+  background: $nhsuk-grey-white;
+}
+
+.section-bg-yellow {
+  background: $nhsuk-yellow;
+}
+
+.section-bg-blue {
+  background: $nhsuk-blue;
+}
+
+.section-bg-grey-1 {
+  background: $nhsuk-grey;
+}
+
+.section-bg-black {
+  background: $nhsuk-black;
+}
+
+.section-bg-transparent {
+    border: 1px solid $nhsuk-grey-placeholder;
+    background-image: url(/images/transparent-background.png);
+    background-repeat: repeat;
+}
+
+.section-bg-white.selected:before, .section-bg-grey.selected:before {
+  top: -6px;
+  left: -6px;
+}
+
+.input-color-hash {
+  position: absolute;
+  padding: 13px 5px;
+  min-width: 30px;
+}
+
+.input-color-field {
+  padding-left: 24px;
+  max-width: 170px;
+}
+
+.btn-nhs-common, .btn-outline-primary {
+  font-size: 1.9rem !important;
+  height: 40px;
+  min-width: 108px;
+  padding: 0 25px;
+}
+
+.btn-outline-secondary:hover {
+  color: #6c757d;
+}
+
+i.nhs-green-color {
+  color: $nhsuk-green;
+}
+
+.btn-custom-green {
+  color: $nhsuk-white;
+}
+
+.btn-success {
+  background-color: $nhsuk-green;
+  border-color: $nhsuk-green;
+}
+
+.btn-custom-green:disabled {
+  background: $nhsuk-grey-light !important;
+  border-color: $nhsuk-grey-light !important;
+  color: $nhsuk-white !important;
+}
+
+#cmsContainer {
+  .template-svg-selected {
+    position: absolute;
+    width: 106px;
+    height: 106px;
+    left: -3px;
+    bottom: -3px;
+    border: 5px solid rgb(0, 127, 59);
+    border-radius: 50%;
+  }
+}
+
+
+p {
+    font-size: 19px;
+}
+
+.information-page__row--padding-top {
+    padding-top: 64px;
+}
+
+.information-page__row--padding-bottom {
+    padding-bottom: 64px;
+}
+
+.information-page__container {
+    overflow: auto;
+    display: flex;
+    flex-flow: wrap;
+}
+
+.information-page__container--border {
+    border: solid;
+    border-width: 1px;
+    border-color: $nhsuk-grey-divider;
+}
+
+.information-page__asset-link-container {
+    border: solid;
+    border-width: 0 1px 1px 1px;
+    border-color: $nhsuk-grey-divider;
+    padding: 16px 32px;
+}
+
+.information-page__container-column {
+    padding: 0;
+    display: flex;
+}
+
+.information-page__asset-container,
+.information-page__text-container {
+    flex: 1;
+}
+
+.information-page__text-container {
+    padding: 32px 64px;
+    display: flex;
+    align-items: center;
+}
+
+.information-page__text-container div p:last-child {
+    margin-bottom: 0;
+}
+
+.information-page__video-text-container {
+    padding: 32px 32px 0 32px;
+    overflow: auto;
+}
+
+.information-page__text-container--no-padding-left {
+    padding-left: 0;
+}
+
+.information-page__text-container--no-padding-right {
+    padding-right: 0;
+}
+
+.information-page__text-container-title {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.information-page__video-text-container-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.information-page__text-container p:not(.information-page__text-container-title):not(.information-page__video-text-container-title) {
+    font-size: 19px
+}
+
+.information-page__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.information-page__row {
+    min-height: 80px;
+}
+
+.position-relative {
+    margin: 0 -15px;
+}
+
+h1 {
+    font-size: 48px;
+    line-height: 1.16667;
+    margin-bottom: 48px;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 32px;
+    line-height: 1.25;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+h3 {
+    font-size: 24px;
+    line-height: 1.33333;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+h4 {
+    font-size: 22px;
+    line-height: 1.45455;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+.nhsuk-radios__label {
+    font-size: 16px;
+}
+
+/* desktop */
+@media (min-width: 990px) {
+}
+
+@media (max-width: 989px) {
+}
+
+/* tablet */
+@media (min-width: 769px) {
+    .information-page__container--reverse-child-order {
+
+        div:nth-child(1) {
+            order: 2;
+        }
+
+        div:nth-child(2) {
+            order: 1;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .information-page__row--padding-top {
+        padding-top: 48px;
+    }
+
+    .information-page__row--padding-bottom {
+        padding-bottom: 48px;
+    }
+
+    .information-page__text-container__title {
+        font-size: 24px;
+    }
+
+    .information-page__container-column {
+        width: 100%
+    }
+
+}
+
+/* mobile  */
+@media (max-width: 640px) {
+}

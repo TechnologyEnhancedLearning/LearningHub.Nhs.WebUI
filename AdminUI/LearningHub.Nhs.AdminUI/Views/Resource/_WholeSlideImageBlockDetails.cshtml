@@ -1,0 +1,45 @@
+﻿@using LearningHub.Nhs.AdminUI.Configuration
+@using Microsoft.Extensions.Options
+@model LearningHub.Nhs.Models.Resource.Blocks.WholeSlideImageBlockViewModel
+@inject IOptions<WebSettings> webSettings
+
+@if (Model.WholeSlideImageBlockItems != null)
+{
+    <dl>
+        <dt>Number of Slides</dt>
+        <dd>
+            @Html.DisplayFor(model => Model.WholeSlideImageBlockItems.Count)
+        </dd>
+    </dl>
+
+    for (int i = 0; i < Model.WholeSlideImageBlockItems.Count; i++)
+    {
+        <div class="block-slide-container">
+            <dl>
+                <dt>Slide @(i + 1)</dt>
+                <dt>Slide Order</dt>
+                <dd>
+                    @Model.WholeSlideImageBlockItems[i].Order
+                </dd>
+                @if (Model.WholeSlideImageBlockItems[i].WholeSlideImage != null)
+                {
+                    <dt>Slide Title</dt>
+                    <dd>
+                        @Model.WholeSlideImageBlockItems[i].WholeSlideImage.Title
+                    </dd>
+                    @if (Model.WholeSlideImageBlockItems[i].WholeSlideImage.File != null)
+                    {
+                        <dt>File Name</dt>
+                        <dd>
+                            <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @Model.WholeSlideImageBlockItems[i].WholeSlideImage.File.FilePath, Model.WholeSlideImageBlockItems[i].WholeSlideImage.File.FileName)" target="_blank" download>@Model.WholeSlideImageBlockItems[i].WholeSlideImage.File.FileName</a>
+                        </dd>
+                        <dt>File Path</dt>
+                        <dd>
+                            @Model.WholeSlideImageBlockItems[i].WholeSlideImage.File.FilePath
+                        </dd>
+                    }
+                }
+            </dl>
+        </div>
+    }
+}

@@ -1,0 +1,99 @@
+﻿@model LearningHub.Nhs.Models.Notification.NotificationViewModel
+@using LearningHub.Nhs.AdminUI.Services
+
+@{
+    ViewData["Title"] = "Details";
+}
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+
+    <div class="panel-body admin-body">
+        <div class="d-flex flex-row justify-content-between col-12">
+            <a href="@Url.Action("Index", "Notifications")" class="pl-3"><i class="fa-solid fa-chevron-left">&nbsp;</i> Go back</a>
+            <div class="admin-title right-side">
+                <button type="button" class="btn btn-admin" onclick="location.href='@Url.Action("Edit", "Notifications", new { id = Model.Id })'"><i class="fa-solid fa-pencil"></i> Edit</button>
+            </div>
+        </div>
+        <div class="admin-section">
+            <div class="col-12">
+                <div class="id-container">ID @Model.Id</div>
+                <dl>
+                    <dt>
+                        Title
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Title)
+                    </dd>
+                    <dt>
+                        Notification priority
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.NotificationPriority)
+                    </dd>
+                    <dt>
+                        Notification type
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.NotificationType)
+                    </dd>
+                    <dt>
+                        Title
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Title)
+                    </dd>
+                    <dt>
+                        Message
+                    </dt>
+                    <dd>
+                        @Html.Raw(OutputSanitizer.SanitizeOutputHtml(Model.Message))
+                    </dd>
+                    <dt>
+                        Start Date
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.StartDate)
+                    </dd>
+                    <dt>
+                        End Date
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.EndDate)
+                    </dd>
+                    <dt>
+                        User Dismissable
+                    </dt>
+                    <dd>
+                        @(Model.UserDismissable ? "Yes" : "No")
+                    </dd>
+                    <dt>
+                        Create User
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.CreateUserName)
+                    </dd>
+                    <dt>
+                        Create Date
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.CreateDate.DateTime)
+                    </dd>
+                    <dt>
+                        Amend User
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AmendUserName)
+                    </dd>
+                    <dt>
+                        Amend Date
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AmendDate.DateTime)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+    </div>
+

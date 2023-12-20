@@ -1,0 +1,38 @@
+@use "../Abstracts/all" as *;
+
+article {
+  margin-left: 100px;
+  max-width: 1173px;
+
+  #{headings(1, 6)} {
+    padding-top: 4rem;
+  }
+
+  hr {
+    margin: 2rem 0;
+    color: $nhsuk-grey-light;
+  }
+
+  h4 {
+    margin-top: 3.5rem;
+    font-size: 1.8rem !important;
+  }
+
+  h5 {
+    padding-top: 1rem;
+  }
+
+  p {
+    margin-top: 2rem;
+  }
+
+  &.fullwidth {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  article {
+    margin: 0;
+  }
+}

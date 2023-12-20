@@ -1,0 +1,65 @@
+﻿@model LearningHub.Nhs.Models.Paging.TablePagingViewModel<LearningHub.Nhs.Models.Resource.ResourceAdminSearchResultViewModel>
+@{
+    ViewData["Title"] = "Catalogue resources";
+    var catalogueName = (string)ViewData["CatalogueName"];
+    ViewData["CurrentPage"] = Model.Paging.CurrentPage;
+}
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+<h1 class="ml-5 mt-5" id="catalogue-name-header">@catalogueName</h1>
+@{ await Html.RenderPartialAsync("_CatalogueNav.cshtml", new CatalogueNavViewModel { Page = CatalogueNavPage.Resources, CatalogueId = (int)ViewData["id"] }); }
+@if (Model.Results.Items.Any())
+{
+    await Html.RenderPartialAsync("_ListPageHeader", Model.ListPageHeader);
+}
+<div class="catalogue-resources ml-5">
+    @if (!Model.Results.Items.Any())
+    {
+        <p class="no-resources">There are no resources in this catalogue.</p>
+    }
+    else
+    {
+
+        <table class="table lh-datatable filtered">
+            <thead>
+                <tr>
+                    <th class="orderable" data-column="ResourceVersionId" data-type="number" style="width: 8%;">Id</th>
+                    <th class="orderable" data-column="ResourceReference" data-type="number" style="width: 8%;">Reference</th>
+                    <th class="orderable" data-column="Title" data-type="text" style="width: 30%;">Title</th>
+                    <th class="orderable" style="width: 16%" data-column="CreateUser" data-type="text">Create user</th>
+                    <th style="width: 12%;">Create date</th>
+                    <th style="width: 13%;">Type</th>
+                    <th style="width: 13%;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var resource in Model.Results.Items)
+                {
+                    <tr>
+                        <td>@resource.ResourceVersionId</td>
+                        <td>@resource.ResourceReferenceIdList</td>
+                        <td><a asp-controller="Resource" asp-action="Details" asp-route-id="@resource.ResourceVersionId">@resource.Title</a></td>
+                        <td>@resource.CreateUser</td>
+                        <td>@resource.CreateDate.ToString("dd MMM yyyy")</td>
+                        <td>@resource.ResourceTypeEnum.ToString()</td>
+                        <td>@resource.VersionStatusEnum.ToString()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+@{await Html.RenderPartialAsync("_PagingControls", Model.Paging);}
+
+@section Scripts {
+    <script src="~/js/pagingContol.js"></script>
+    <script>
+        var sortColumn = '@Model.SortColumn';
+        var sortDirection = '@Model.SortDirection';
+        var filter = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Filter));
+        $(document).ready(function () {
+            AdminUI.pagingSetup(sortColumn, sortDirection, filter);
+        })
+    </script>
+}

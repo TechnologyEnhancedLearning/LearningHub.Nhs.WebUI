@@ -1,0 +1,58 @@
+﻿@model LearningHub.Nhs.Models.Paging.TablePagingViewModel<LearningHub.Nhs.Models.User.UserAdminBasicViewModel>
+@{
+    ViewData["CurrentPage"] = Model.Paging.CurrentPage;
+    var fromCount = (@Model.ListPageHeader.DisplayedCount * (int)@ViewData["CurrentPage"]) - @Model.ListPageHeader.DisplayedCount + 1;
+    var toCount = (int)@ViewData["CurrentPage"] * @Model.ListPageHeader.DisplayedCount;
+}
+
+<div class="admin-list-header-modal d-flex flex-row justify-content-between">
+
+    <div>
+        Showing @fromCount - @toCount of @Model.ListPageHeader.TotalItemCount
+        @if (Model.ListPageHeader.FilterCount > 0)
+        {
+            <text>(filtered)</text>
+        }
+    </div>
+    
+    <div class="right-side">
+        @if (Model.ListPageHeader.FilterCount > 0)
+        {
+            <text>
+                <a href="#" onclick="AdminUIModal.clearFilters()">Clear filters</a>
+            </text>
+        }
+        <button class="btn btn-custom-green" onclick="addSelectedUsersToUserGroup();"><i class="fa-solid fa-plus"></i> Add selected</button>
+        <input type="button" class="btn btn-admin btn-cancel mr-2" data-dismiss="modal" value="Cancel" />
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped lh-datatable-modal filtered">
+        <thead>
+            <tr>
+                <th style="width:20%" class="orderable" data-column="Id" data-type="number">ID</th>
+                <th class="orderable" data-column="UserName" data-type="text">Username</th>
+                <th style="width:10%" />
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Results.Items)
+            {
+            <tr>
+                <td style="vertical-align: middle">
+                    @Html.ActionLink(item.Id.ToString(), "Details", new { id = item.Id })
+                </td>
+                <td style="vertical-align: middle">
+                    @Html.ActionLink(item.UserName.ToString(), "Details", new { id = item.Id })
+                </td>
+                <td style="vertical-align: middle">
+                    <input type="checkbox" id=@($"user_{item.Id}") class="list-item-checked" />
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@{await Html.RenderPartialAsync("_PagingControlsModal", Model.Paging);}

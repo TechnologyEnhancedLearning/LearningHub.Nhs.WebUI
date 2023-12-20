@@ -1,0 +1,47 @@
+﻿@model List<LearningHub.Nhs.Models.Resource.ResourceVersionViewModel>
+
+    <table class="table table-striped" cellpadding="0" cellspacing="0">
+        <tr>
+            <th class="w-15">
+                Resource Version Id
+            </th>
+            <th class="w-10">
+                Status
+            </th>
+            <th class="w-10">
+                Version No
+            </th>
+            <th style="width:30%">
+                Title
+            </th>
+            <th style="width:30%">
+                Publication Notes
+            </th>
+            <th style="width:15%">
+                Create Date
+            </th>
+        </tr>
+        @foreach (var rv in Model)
+        {
+            <tr>
+                <td class="pl-2">
+                    @rv.ResourceVersionId
+                </td>
+                <td class="pl-2">
+                    @rv.VersionStatusDescription
+                </td>
+                <td class="pl-2">
+                    @rv.VersionDescription
+                </td>
+                <td class="pl-2">
+                    @Html.ActionLink(rv.Title, "Details", new { id = rv.ResourceVersionId })
+                </td>
+                <td class="pl-2">
+                    @rv.PublishedNotes
+                </td>
+                <td class="pl-2">
+                    @rv.CreateDate.DateTime
+                </td>
+            </tr>
+        }
+    </table>

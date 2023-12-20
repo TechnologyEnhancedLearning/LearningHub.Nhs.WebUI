@@ -1,0 +1,92 @@
+﻿@model LearningHub.Nhs.Models.Catalogue.CatalogueViewModel
+@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.AdminUI.Configuration.WebSettings> _settings
+@using LearningHub.Nhs.Models.Enums
+@using Newtonsoft.Json
+@{
+    var page = CatalogueNavPage.CatalogueOwner;
+    ViewData["Title"] = "Catalogue owner";
+}
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h1 class="ml-5" id="catalogue-name-header">@Model.Name</h1>
+    </div>
+</div>
+
+@{ await Html.RenderPartialAsync("_CatalogueNav.cshtml", new CatalogueNavViewModel { Page = page, CatalogueId = Model.CatalogueNodeVersionId}); }
+
+<div class="ml-5" style="max-width: 800px;">
+    <form method="POST" enctype="multipart/form-data">
+
+        <input type="hidden" id="CatalogueNodeVersionId" name="CatalogueNodeVersionId" value="@Model.CatalogueNodeVersionId" />
+        <input type="hidden" id="NodeId" name="NodeId" value="@Model.NodeId" />
+        <input type="hidden" id="NodeVersionId" name="NodeVersionId" value="@Model.NodeVersionId" />
+
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2 id="catalogue-owner-header">Catalogue owner details</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                The catalogue owner is the key organisation contact for a catalogue, responsible for strategic decisions around content, branding and roles. Catalogue owners may not always have an admin account to manage the catalogue.
+            </div>
+        </div>
+
+        <div class="input-section mt-5">
+            <div class="row">
+                <div class="col-12">
+                    <label>Catalogue owner name</label>
+                    <input asp-for="OwnerName" class="form-control" maxlength="250" />
+                    <span asp-validation-for="OwnerName"></span>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <label>Catalogue owner email address</label>
+                    <input asp-for="OwnerEmailAddress" class="form-control" maxlength="250" />
+                    <span asp-validation-for="OwnerEmailAddress"></span>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <label>Notes</label>
+                    <textarea asp-for="Notes" class="form-control"></textarea>
+                    <span asp-validation-for="Notes"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12">
+                <button type="submit" class="btn btn-custom-green" id="save-catalogue-owner">Save</button>
+            </div>
+        </div>
+    </form>
+    <div style="height: 40px; width: 100%;"></div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('#save-catalogue-owner').on('click', function () {
+                var form = $(this).parents('form');
+                form.attr("action", "/Catalogue/EditCatalogueOwner");
+            });
+
+        CKEDITOR.replace('Notes',
+        {
+            toolbar: [
+                { name: 'undo', items: ['Undo', 'Redo'] },
+                { name: 'bold', items: ['Bold', 'Italic'] },
+                { name: 'list', items: ['NumberedList', 'BulletedList'] },
+                { name: 'link', items: ['Link'] }
+            ]
+        });
+    });
+
+    </script>
+}

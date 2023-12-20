@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Information Pages";
+}
+
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+<div id="pageList">
+    <div class="lh-padding-fluid">
+        <page-list></page-list>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/bundle/contentPageList.js"></script>
+}

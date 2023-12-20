@@ -1,0 +1,28 @@
+﻿@model LearningHub.Nhs.AdminUI.Models.CatalogueNavViewModel
+@{ 
+    var editAddActive = (Model.Page == CatalogueNavPage.Add || Model.Page == CatalogueNavPage.Edit) ? "active" : "";
+    var resourcesActive = (Model.Page == CatalogueNavPage.Resources) ? "active" : "";
+    var foldersActive = (Model.Page == CatalogueNavPage.Folders) ? "active" : "";
+    var userGroupsActive = (Model.Page == CatalogueNavPage.UserGroups) ? "active" : "";
+    var catalogueOwnerActive = (Model.Page == CatalogueNavPage.CatalogueOwner) ? "active" : "";
+}
+<div class="catalogue-tab-bar mt-5 ml-5">
+    <div class="catalogue-tab-link @editAddActive">
+        <a asp-action="Edit" asp-controller="Catalogue" asp-route-id="@Model.CatalogueId">Catalogue info</a>
+    </div>
+    @if (Model.Page != CatalogueNavPage.Add)
+    {
+        <div class="catalogue-tab-link @foldersActive">
+            <a asp-action="ContentStructure" asp-controller="Catalogue" asp-route-id="@Model.CatalogueId">Folders</a>
+        </div>
+        <div class="catalogue-tab-link @resourcesActive">
+            <a asp-action="Resources" asp-controller="Catalogue" asp-route-id="@Model.CatalogueId">Resources</a>
+        </div>
+        <div class="catalogue-tab-link @userGroupsActive">
+            <a asp-action="UserGroups" asp-controller="Catalogue" asp-route-id="@Model.CatalogueId">User groups</a>
+        </div>
+        <div class="catalogue-tab-link @catalogueOwnerActive">
+            <a asp-action="CatalogueOwner" asp-controller="Catalogue" asp-route-id="@Model.CatalogueId">Catalogue owner</a>
+        </div>
+    }
+</div>

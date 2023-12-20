@@ -1,0 +1,105 @@
+﻿@using Microsoft.Extensions.Options;
+@using LearningHub.Nhs.AdminUI.Configuration;
+@inject IOptions<WebSettings> webSettings
+
+@{
+    var mainMenu = "Home";
+    var activeItem = Url.Action().ToLower().TrimStart('/');
+    var controller = activeItem.Substring(0, (activeItem + "/").IndexOf('/'));
+
+    switch (controller)
+    {
+        case "notifications":
+        case "externalsystem":
+        case "log":
+        case "roadmap":
+        case "cms":    
+        case "release":
+        case "cache":
+            mainMenu = "Settings";
+            break;
+
+        case "user":
+        case "usergroup":
+            mainMenu = "ManageUsers";
+            break;
+        case "resource":
+        case "catalogue":
+            mainMenu = "ManageResources";
+            break;
+        case "resourcesync":
+            mainMenu = "ResourceSync";
+            break;
+
+    }
+    string IsActive(string itemCheck)
+    {
+        return mainMenu == itemCheck ? "active" : "inactive";
+    }
+}
+
+<div class="header-main d-flex flex-row justify-content-between">
+    <div class="align-self-center">
+        <a href="https://www.nhs.uk/" target="_blank"><img src="~/images/NHS-white.svg" alt="NHS" /></a>
+    </div>
+    <div class="d-none d-lg-block align-self-center">
+        <div class="mx-auto">
+
+        </div>
+    </div>
+    <div class="align-self-start">
+        <div class="float-right lh-badge-container">
+            <div class="lh-badge">
+                Beta
+            </div>
+        </div>
+        <div class="header-title">Learning Hub</div>
+        <div class="float-right header-sub-title">
+            Admin
+        </div>
+    </div>
+</div>
+<nav class="navbar navbar-expand-md navbar-toggleable-md">
+    <button class="nav-search-toggler navbar-toggler collapsed" type="button" aria-controls="collapsingNavbar" aria-expanded="false" aria-label="Toggle navigation" id="navbar-toggler">
+        <span class="my-1 mx-2 close" title="Close" aria-label="Close menu">X</span>
+        <span class="navbar-toggler-icon-link" title="Menu">Menu</span>
+        <img src="~/images/menu-triangle.png" />
+    </button>
+    <div class="navbar-collapse collapse" id="collapsingNavbar">
+        <ul class="navbar-nav">
+            @if (User.Identity.IsAuthenticated && User.IsInRole("Administrator"))
+            {
+                <li class="nav-item @IsActive("Home")">
+                    <a class="nav-link" href="@Url.Action("Index", "Home")"><i class="fa-solid fa-house fa-lg" title="Home"></i>Home</a>
+                </li>
+                <li class="nav-item large @IsActive("ManageUsers")">
+                    <a class="nav-link" href="/User"><i class="fa-solid fa-users fa-lg" title="Manage users"></i>Users</a>
+                </li>
+                <li class="nav-item large @IsActive("ManageResources")">
+                    <a class="nav-link" href="/Catalogue"><i class="fa-regular fa-folder fa-lg" title="Manage content"></i>Resources</a>
+                </li>
+                <li class="nav-item @IsActive("Settings")">
+                    <a class="nav-link" href="/externalsystem"><i class="fa-solid fa-gear fa-lg" title="System"></i>System</a>
+                </li>
+                <li class="nav-item" @IsActive("ResourceSync")>
+                    <a class="nav-link" href="/ResourceSync/Resources"><i class="fa-solid fa-gear fa-lg" title="Sync"></i>Sync</a>
+                </li>
+            }
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Logout", "Home")"><i class="fa-regular fa-user fa-lg" title="Sign out"></i>Sign out</a>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Login", "Home")"><i class="fa-regular fa-user fa-lg" title="Sign in"></i>Sign in</a>
+                </li>
+            }
+        </ul>
+    </div>
+</nav>
+

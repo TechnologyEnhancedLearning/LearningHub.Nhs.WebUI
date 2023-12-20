@@ -30,3 +30,5 @@ obj
 # Custom additions
 /.idea
 /LearningHub.Nhs.WebUI/yarn-error.log
+/.cache_ggshield
+/AdminUI/LearningHub.Nhs.AdminUI/appsettings.Development.json

@@ -1,0 +1,27 @@
+﻿@use "variables" as *;
+
+@mixin panel-mixin($height:570px) {
+  background-color: $nhsuk-white;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border-top: 5px solid $nhsuk-blue;
+  padding: 0 20px;
+  min-height: $height !important;
+
+  div, img {
+    padding-top: 10px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@function headings($from: 1, $to: 6) {
+  @if $from == $to {
+    @return 'h#{$from}';
+  } @else {
+    @return 'h#{$from},' + headings($from+1, $to);
+  }
+}

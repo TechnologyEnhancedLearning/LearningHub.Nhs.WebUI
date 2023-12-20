@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+    <circle cx="50" cy="50" r="50" fill="#C4C4C4"/>
+  </mask>
+  <g mask="url(#mask0)">
+    <mask id="mask1" mask-type="alpha" maskUnits="userSpaceOnUse" x="-4" y="-4" width="109" height="109">
+      <rect x="-4" y="-4" width="108.333" height="108.333" fill="#005EB8"/>
+    </mask>
+    <g mask="url(#mask1)">
+      <rect x="-4" y="-4" width="108.333" height="108.333" fill="#005EB8"/>
+      <rect x="-72.75" y="51.417" width="88.9775" height="173.241" transform="rotate(-45 -72.75 51.417)" fill="#0271DC"/>
+      <path d="M133 76.9529L106.5 105L54.5 53.5L84.7351 31L133 76.9529Z" fill="#013669"/>
+      <path d="M57.5 108L13 69.4996L65.5 63L91 89L82 97L78 100L57.5 108Z" fill="#01498D"/>
+    </g>
+    <path d="M12 32.6415L12 67.3585C12 68.8174 13.6218 70 15.6224 70L82.3776 70C84.3782 70 86 68.8174 86 67.3585L86 32.6415C86 31.1826 84.3782 30 82.3776 30L15.6224 30C13.6218 30 12 31.1826 12 32.6415Z" fill="white"/>
+    <mask id="mask2" mask-type="alpha" maskUnits="userSpaceOnUse" x="12" y="30" width="74" height="40">
+      <path d="M12 32.6415L12 67.3585C12 68.8174 13.6218 70 15.6224 70L82.3776 70C84.3782 70 86 68.8174 86 67.3585L86 32.6415C86 31.1826 84.3782 30 82.3776 30L15.6224 30C13.6218 30 12 31.1826 12 32.6415Z" fill="white"/>
+    </mask>
+    <g mask="url(#mask2)">
+      <g opacity="0.3" filter="url(#filter0_d)">
+        <path d="M88.5 69.5L12.5 30H7L5 44.5L9.5 71L72 75.5L88.5 69.5Z" fill="#D8DDE0"/>
+      </g>
+    </g>
+    <rect x="54" y="42" width="26.6667" height="3" fill="#768692"/>
+    <rect x="54" y="48.5713" width="17.7778" height="3" fill="#768692"/>
+    <rect x="54" y="55" width="22" height="3" fill="#768692"/>
+    <mask id="mask3" mask-type="alpha" maskUnits="userSpaceOnUse" x="17" y="39" width="33" height="23">
+      <path d="M17 61.4734H49.1664V39H17V61.4734Z" fill="white"/>
+    </mask>
+    <g mask="url(#mask3)">
+      <rect x="17" y="39" width="33" height="22" fill="#C4C4C4"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M20.0408 58.29H45.8059V41.7646H20.0408V58.29Z" fill="#F2F8FD"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M32.9229 44.4932C29.6969 44.4932 27.0818 46.9709 27.0818 50.0269C27.0818 53.0831 29.6969 55.5606 32.9229 55.5606C36.149 55.5606 38.7641 53.0831 38.7641 50.0269C38.7641 46.9709 36.149 44.4932 32.9229 44.4932Z" fill="#007F3B"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M31.563 47.0713V53.1357L36.524 50.1034L31.563 47.0713Z" fill="#FEFEFE"/>
+    </g>
+  </g>
+  <defs>
+    <filter id="filter0_d" x="1" y="30" width="91.5" height="53.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="2"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+    </filter>
+  </defs>
+</svg>

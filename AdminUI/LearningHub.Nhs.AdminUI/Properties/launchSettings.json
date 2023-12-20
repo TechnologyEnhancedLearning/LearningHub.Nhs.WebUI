@@ -1,0 +1,23 @@
+{
+  "profiles": {
+    "LearningHub.Nhs.AdminUI": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:59158;http://localhost:59159"
+    },
+    "IIS Local": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "https://lh-admin.dev.local",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://lh-admin.dev.local",
+      "nativeDebugging": false,
+      "hotReloadEnabled": false
+    }
+  }
+}

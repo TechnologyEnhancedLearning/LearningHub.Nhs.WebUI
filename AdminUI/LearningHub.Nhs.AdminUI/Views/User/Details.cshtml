@@ -1,0 +1,621 @@
+﻿@using LearningHub.Nhs.Models.Provider;
+@model elfhHub.Nhs.Models.Common.UserAdminDetailViewModel
+
+
+@{
+    ViewData["Title"] = "Details";
+    var userRoleUpgradeModel = Model.UserRoleUpgrade?.OrderByDescending(n => n.Id).FirstOrDefault();
+
+    var providers = ViewBag.Providers;
+}
+@section SideMenu {
+    @{
+        await Html.RenderPartialAsync("_NavSection");
+    }
+}
+
+<div class="panel-body admin-body">
+    <div>
+        <div id="alertInfo" class="alert alert-dismissible fade show admin-alert" role="alert" style="display:none;">
+            <span id="alertText"></span>
+            <button type="button" class="close" data-hide="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+        {
+            <div class="alert alert-success alert-dismissible fade show admin-alert" role="alert">
+                @ViewBag.SuccessMessage
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show admin-alert" role="alert">
+                @ViewBag.ErrorMessage
+                <div class="admin-validation-summary" asp-validation-summary="All"></div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+    </div>
+
+    <div class="admin-title">@Model.UserName - @Model.OriginalFirstName @Model.OriginalLastName</div>
+
+    <div class="tabsbar" id="tabsbar">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="tab-item large">
+                <a class="tab-link active" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="true">User Details</a>
+            </li>
+            <li class="tab-item large">
+                <a class="tab-link" id="contributions-tab" data-toggle="tab" href="#contributions" role="tab" aria-controls="contributions" aria-selected="false">Contributions</a>
+            </li>
+            <li class="tab-item large">
+                <a class="tab-link" id="providedBy-tab" data-toggle="tab" href="#providedByPermission" role="tab" aria-controls="providedby" aria-selected="false">Provided by permission</a>
+            </li>
+            <li class="tab-item">
+                <a class="tab-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">History</a>
+            </li>
+            <li class="tab-item">
+                <a class="tab-link" id="user-group-tab" data-toggle="tab" href="#userGroups" role="tab" aria-controls="usergroups" aria-selected="false">User groups</a>
+            </li>
+            <li class="tab-item">
+                <a class="tab-link" id="user-learning-record-tab" data-toggle="tab" href="#userLearningRecord" role="tab" aria-controls="userLearningRecord" aria-selected="false">User learning record</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="tab-content" id="myTabContent">
+
+        <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
+            <form asp-action="Details" spellcheck="false">
+                <div class="admin-section">
+
+                    <div class="col-12 flex-space-between">
+                        <div class="id-container">ID @Model.Id</div>
+                        <div>
+                            <input type="button" id="sendPasswordReset" value="Send username reminder and password reset email" class="btn btn-admin" />
+                            <input type="button" id="clearUserCachedPermissions" value="Remove user permissions from cache" class="btn btn-admin" />
+                        </div>
+                    </div>
+
+                    <input id="Id" name="Id" value="@Model.Id" type="hidden" />
+                    <input id="OriginalFirstName" name="OriginalFirstName" value="@Model.OriginalFirstName" type="hidden" />
+                    <input id="OriginalLastName" name="OriginalLastName" value="@Model.OriginalLastName" type="hidden" />
+                    <input id="OriginalEmailAddress" name="OriginalEmailAddress" value="@Model.OriginalEmailAddress" type="hidden" />
+
+                    <div class="form-group col-lg-5">
+                        <label asp-for="UserName" class="control-label">Username</label>
+                        <input asp-for="UserName" class="form-control" readonly />
+                    </div>
+                    <div class="form-group col-lg-5">
+                        <label asp-for="FirstName" class="control-label">First Name</label>
+                        <input asp-for="FirstName" class="form-control" autocomplete="arandomstring" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-5">
+                        <label asp-for="LastName" class="control-label">Last Name</label>
+                        <input asp-for="LastName" class="form-control" autocomplete="arandomstring" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-10">
+                        <label asp-for="EmailAddress" class="control-label">Email Address</label>
+                        <input asp-for="EmailAddress" class="form-control" autocomplete="arandomstring" />
+                        <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-10">
+                        <label asp-for="AltEmailAddress" class="control-label">Secondary Email Address</label>
+                        <input asp-for="AltEmailAddress" class="form-control" autocomplete="arandomstring" />
+                        <span asp-validation-for="AltEmailAddress" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-10">
+                        <label asp-for="RoleName" class="control-label">User Role</label>
+                        <input asp-for="RoleName" class="form-control" value="@UserRoleHelper.GetRoleLabel(Model.RoleName)" readonly />
+                    </div>
+                    @if (userRoleUpgradeModel != null)
+                    {
+                        if (userRoleUpgradeModel.UpgradeDate.HasValue)
+                        {
+                            <div class="form-group col-lg-3">
+                                <label class="control-label">Upgraded from General to FullAccess</label>
+                                <input asp-for="@userRoleUpgradeModel.UpgradeDate" class="form-control" value="@userRoleUpgradeModel.UpgradeDate.Value.ToString("dd/MM/yyyy HH:mm:ss")" readonly />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group col-lg-3">
+                                <label class="control-label">Upgrade Pending Email Address</label>
+                                <input asp-for="@userRoleUpgradeModel.EmailAddress" class="form-control" value="@userRoleUpgradeModel.EmailAddress" readonly />
+                            </div>
+                        }
+                    }
+
+                    <div class="form-group col-lg-3">
+                        <label asp-for="ActiveFromDate" class="control-label">Active From Date</label>
+                        <input asp-for="ActiveFromDate" class="form-control" type="date" readonly />
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label asp-for="ActiveToDate" class="control-label">Active To Date</label>
+                        <input asp-for="ActiveToDate" class="form-control" type="date" />
+                        <span asp-validation-for="ActiveToDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label asp-for="LoginTimes" class="control-label">Login Times</label>
+                        <input asp-for="LoginTimes" class="form-control" type="number" readonly />
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label asp-for="FailedLoginCount" class="control-label">Failed Login Count</label>
+                        <input asp-for="FailedLoginCount" class="form-control" type="number" />
+                        <span asp-validation-for="FailedLoginCount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <div>
+                            <label asp-for="Active" class="checkContainer">
+                                Account Active
+                                <input asp-for="Active" class="form-control">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <div>
+                            <label asp-for="ReadOnlyUser" class="checkContainer">
+                                View-Only User (cannot contribute resources)
+                                <input asp-for="ReadOnlyUser" class="form-control">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-section">
+                    <div class="form-group col-lg-6">
+                        <input type="submit" id="btnUpdateUser" value="Update" class="btn btn-admin btn-disabled" disabled />
+                        <button type="button" class="btn btn-admin btn-cancel" onclick="location.href='@Url.Action("Index", "User" )'">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="tab-pane fade" id="contributions" role="tabpanel" aria-labelledby="contributions-tab">
+            <div class="admin-section">
+                <div id="contributionsList"><i class="fa fa-spinner fa-spin ml-4"></i></div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="providedByPermission" role="tabpanel" aria-labelledby="provided-by-permission-tab">
+            <div class="admin-section pt-0">
+                <div id="providedByList">
+                    @await Html.PartialAsync("_UserProviders", (List<SelectListItem>) providers)
+                    <div class="form-group col-12">
+                        <input type="button" id="btnUpdateProvider" value="Save" class="btn btn-admin" onclick="addSelectedProvidersToUser()" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+            <div class="admin-section">
+                <div id="historyList"><i class="fa fa-spinner fa-spin ml-4"></i></div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="userGroups" role="tabpanel" aria-labelledby="user-group-tab">
+            <div class="admin-section pt-0">
+                <div id="userGroupList"><i class="fa fa-spinner fa-spin ml-4"></i></div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="userLearningRecord" role="tabpanel" aria-labelledby="user-learning-record-tab">
+            <div class="admin-section">
+                <div id="userLearningRecordList"><i class="fa fa-spinner fa-spin ml-4"></i></div>
+            </div>
+        </div>
+
+        <div id="removeUserFromUserGroup" ref="removeUserFromUserGroupModal" class="modal remove-user-from-user-group-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header alert-modal-header text-center">
+                        <h2 class="heading-lg w-100"><i class="warningTriangle fas fa-exclamation-triangle pr-3"></i>Remove user group</h2>
+                    </div>
+
+                    <div class="modal-body alert-modal-body">
+                        <div class="mt-3">This user will no longer be associated with this user group.</div>
+                    </div>
+
+                    <div class="modal-footer alert-modal-footer">
+                        <div class="form-group col-12 p-0 m-0">
+                            <div class="d-flex">
+                                <input type="button" class="btn btn-admin btn-cancel" data-dismiss="modal" value="Cancel" />
+                                <input type="button" class="btn btn-custom-green ml-auto" onclick="removeUserFromUserGroup()" value="Continue" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="addUserGroup" ref="addUserGroupModal" class="modal add-user-group-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content px-0">
+                    <div class="modal-header py-0">
+                        <h2 class="heading-lg w-100 mb-0">Add user groups</h2>
+                    </div>
+
+                    <div class="modal-body p-0">
+                        <div id="addUserGroupList"><i class="fa fa-spinner fa-spin ml-4"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+
+    <script src="~/js/pagingContol.js"></script>
+    <script src="~/js/pagingContolModal.js"></script>
+    <script type="text/javascript">
+        var selectedUserGroupIdList = [];
+
+        function showSuccessAlert(alertText) {
+            $('#alertText')
+                .html(alertText)
+            $('#alertInfo')
+                .removeClass("alert-danger")
+                .addClass("alert-success")
+                .show();
+        }
+
+        function showErrorAlert(alertText) {
+            $('#alertText')
+                .html(alertText)
+            $('#alertInfo').removeClass("alert-success")
+                .addClass("alert-danger")
+                .show();
+        }
+        function pagingAjax_PageChanged() {
+
+            $('.remove-user-group').on('click', function (e) {
+                e.preventDefault();
+                var $this = $(this);
+                $this.addClass('remove-user-group-selection');
+                $('#removeUserFromUserGroup').modal('show');
+            });
+            markUserGroupSelection();
+        }
+        function loadUserGroups() {
+            var userId = @Model.Id;
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "/User/UserUserGroupList/" + userId,
+                success: function (data) {
+                    $('#userGroupList').html(data);
+
+                    var presetFilter = [{ "Column": "userid", "Value": userId }];
+                    AdminUI.pagingSetupAjax('', '', '', presetFilter, 'User/UserUserGroupList', '#userGroupList');
+
+                    $('.remove-user-group').on('click', function (e) {
+                        e.preventDefault();
+                        var $this = $(this);
+                        $this.addClass('remove-user-group-selection');
+                        $('#removeUserFromUserGroup').modal('show');
+                    });
+                },
+                error: function () {
+                    $('#userGroupList').html('<div class="alert alert-danger">Error loading user groups for user</div>');
+                }
+            });
+        }
+
+        function removeUserFromUserGroup() {
+
+            var selected = $(".remove-user-group-selection").first();
+            id = selected.data('id');
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/UserGroup/RemoveUserFromUserGroup",
+                data: { userUserGroupId: id },
+                success: function (data) {
+                    if (data.success) {
+                        showSuccessAlert(data.details);
+                        loadUserGroups();
+                        $('#removeUserFromUserGroup').modal('hide');
+                    }
+                    else {
+                        showErrorAlert(data.details);
+                    }
+                },
+                error: function () {
+                    showErrorAlert('Unexpected error performing action: Remove User from User Group.');
+                }
+            });
+        }
+
+        function showAddUserGroupsModal() {
+            var userId = @Model.Id;
+
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "/User/SelectUserGroupList/" + userId,
+                success: function (data) {
+                    $('#addUserGroupList').html(data);
+
+                    var presetFilter = [{ "Column": "userid_exclude", "Value": userId }];
+                    AdminUIModal.pagingSetupAjax('Id', 'A', '', presetFilter, 'User/SelectUserGroupList', '#addUserGroupList');
+
+                    $('#addUserGroup').modal('show');
+                },
+                error: function () {
+                    $('#userList').html('<div class="alert alert-danger">Error loading user groups</div>');
+                }
+            });
+        }
+
+        function markUserGroupSelection() {
+            selectedUserGroupIdList.forEach(function (userGroupId) {
+                if ($('#userGroup_' + userGroupId) !== undefined) {
+                    $('#userGroup_' + userGroupId).prop('checked', true);
+                }
+            });
+        }
+
+        function handleUserGroupSelection(id) {
+            var userGroupId = id.replace("userGroup_", "");
+            let index = selectedUserGroupIdList.indexOf(userGroupId);
+            if ($('#' + id).is(":checked")) {
+                if (index == -1) {
+                    selectedUserGroupIdList.push(userGroupId);
+                }
+            } else {
+                if (index >= 0) {
+                    selectedUserGroupIdList.splice(index, 1)
+                }
+            }
+        }
+
+        function addSelectedUserGroupsToUser() {
+            var userId = @Model.Id;
+
+            if (selectedUserGroupIdList.length > 0) {
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "/User/AddUserGroupsToUser",
+                    data: { userId: userId, userGroupIdList: selectedUserGroupIdList.toString() },
+                    success: function (data) {
+                        if (data.success) {
+                            showSuccessAlert(data.details);
+                            loadUserGroups();
+                        }
+                        else {
+                            showErrorAlert(data.details);
+                        }
+                        $('#addUserGroup').modal('hide');
+                    },
+                    error: function () {
+                        showErrorAlert('Unexpected error performing action: Add User Groups to User.');
+                    }
+                });
+            }
+        }
+
+        function addSelectedProvidersToUser() {
+            var userId = @Model.Id;
+
+            var providers = $('[name="providers"]');
+            var selectedProviderList = [];
+
+            $.each(providers, function () {
+                var $this = $(this);
+
+                // check if the checkbox is checked
+                if ($this.is(":checked")) {
+                    selectedProviderList.push($this.val());
+                }
+            });
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/User/UpdateUserProviders",
+                data: { userId: userId, providerIdList: selectedProviderList.toString() },
+                success: function (data) {
+                    if (data.success) {
+                        showSuccessAlert(data.details);
+                    }
+                    else {
+                        showErrorAlert(data.details);
+                    }
+                },
+                error: function () {
+                    showErrorAlert('Unexpected error performing action: Updating provided by permission to User.');
+                }
+            });
+
+        }
+
+        $(function () {
+
+            // Remember initial form control values.
+            var $form = $('form'),
+                origForm = $form.serialize();
+            var isChanged = false;
+
+            // When any value changes, enable the update button.
+            $('form :input').on('change input', function () {
+                isChanged = $form.serialize() !== origForm;
+                $('#btnUpdateUser').prop('disabled', !isChanged);
+
+                $('.alert-success').hide();
+            });
+
+            // Prevent save warning appearing if user has clicked Update button.
+            $("#btnUpdateUser").click(function () {
+                isChanged = false;
+            });
+
+            // Unsaved changes warning.
+            window.addEventListener("beforeunload", function (event) {
+                if (isChanged) {
+                    event.returnValue = 'You have unfinished changes!';
+                }
+            });
+
+            $("#sendPasswordReset").click(function () {
+                var userId = "@Model.Id";
+                $("#sendPasswordReset").attr("disabled", true);
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "/User/SendAdminPasswordResetEmail",
+                    contentType: 'application/json',
+                    data: userId,
+                    success: function (data) {
+                        if (data.success) {
+                            showSuccessAlert(data.details);
+                            $("#sendPasswordReset").attr("disabled", false);
+                        }
+                        else {
+                            showErrorAlert(data.details);
+                            $("#sendPasswordReset").attr("disabled", false);
+                        }
+                    },
+                    error: function () {
+                        showErrorAlert("Error performing action: SendAdminPasswordResetEmail");
+                    }
+                });
+            });
+
+            $("#clearUserCachedPermissions").click(function () {
+                var userId = "@Model.Id";
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "/User/ClearUserCachedPermissions",
+                    contentType: 'application/json',
+                    data: userId,
+                    success: function (data) {
+                        if (data.success) {
+                            showSuccessAlert(data.details);
+                        }
+                        else {
+                            showErrorAlert(data.details);
+                        }
+                    },
+                    error: function () {
+                        showErrorAlert("Error performing action: ClearUserCachedPermissions");
+                    }
+                });
+            });
+
+            function showSuccessAlert(alertText) {
+                $('#alertText')
+                    .html(alertText)
+                $('#alertInfo')
+                    .removeClass("alert-danger")
+                    .addClass("alert-success")
+                    .show();
+            }
+
+            function showErrorAlert(alertText) {
+                $('#alertText')
+                    .html(alertText)
+                $('#alertInfo').removeClass("alert-success")
+                    .addClass("alert-danger")
+                    .show();
+            }
+
+            $(function () {
+                $("[data-hide]").on("click", function () {
+                    $(this).closest("." + $(this).attr("data-hide")).hide();
+                });
+            });
+
+            $('#myTab a[href="#history"]').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+                loadHistory();
+            });
+
+
+            function loadHistory() {
+                var userId = @Model.Id;
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "/User/History/" + userId,
+                    success: function (data) {
+                        $('#historyList').html(data);
+                        var presetFilter = [{ "Column": "userid", "Value": userId }];
+                        AdminUI.pagingSetupAjax('', '', '', presetFilter, 'User/History', '#historyList');
+                    },
+                    error: function () {
+                        $('#historyList').html('<div class="alert alert-danger">Error loading user history</div>');
+                    }
+                });
+            }
+
+            $('#myTab a[href="#contributions"]').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+                loadContributions();
+            });
+
+            function loadContributions() {
+                var userId = @Model.Id;
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "/User/Contributions/" + userId,
+                    success: function (data) {
+                        $('#contributionsList').html(data);
+                    },
+                    error: function () {
+                        $('#contributionsList').html('<div class="alert alert-danger">Error loading user contributions</div>');
+                    }
+                });
+            }
+
+            $('#myTab a[href="#userGroups"]').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+                loadUserGroups();
+            });
+
+            $('#myTab a[href="#userLearningRecord"]').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+                loadUserLearningRecord();
+            });
+            function loadUserLearningRecord() {
+                var userId = @Model.Id;
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "/User/UserLearningRecord/" + userId,
+                    success: function (data) {
+                        $('#userLearningRecordList').html(data);
+                        var presetFilter = [{ "Column": "userid", "Value": userId }];
+                        AdminUI.pagingSetupAjax('', '', '', presetFilter, 'User/UserLearningRecord', '#userLearningRecordList');
+                    },
+                    error: function () {
+                        $('#userLearningRecordList').html('<div class="alert alert-danger">Error loading user learning record</div>');
+                    }
+                });
+            }
+
+            $('#myTab a[href="#providedByPermission"]').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+
+        });
+    </script>
+}

@@ -1,0 +1,84 @@
+﻿@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.AdminUI.Configuration.WebSettings> settings
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@ViewData["Title"] - Learning Hub Administration</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="~/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="~/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="~/favicon-16x16.png">
+
+  <environment include="Development">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/fontawesome-free-6.4.2-web/css/all.css"/>
+  </environment>
+  <environment exclude="Development">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
+          asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+          asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+          crossorigin="anonymous"
+          integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
+    <link rel="stylesheet" type="text/css" href="~/lib/fontawesome-free-6.4.2-web/css/all.min.css" />
+  </environment>
+  <link rel="stylesheet" type="text/css" href="~/css/site.css" asp-append-version="true"/>
+  <link rel="stylesheet" type="text/css" href="~/css/nhsuk/common.css"/>
+  @RenderSection("Styles", required: false)
+  @await Html.PartialAsync("_GoogleAnalytics")
+  <partial name="~/Views/Shared/_TimezoneInfoScriptPartial.cshtml" />
+</head>
+<body>
+  <header role="banner" id="header">
+    <partial name="~/Views/Shared/_NavPartial.cshtml" />
+  </header>
+  <div class="container-fluid">
+    <!--<partial name="_CookieConsentPartial" />-->
+    <main role="main" id="maincontent" tabindex="-1">
+      @{
+        var mainWidth = IsSectionDefined("SideMenu") ? "col-sm-9 col-lg-9 col-xl-10 pageWithMenu" : "col-sm-12";
+      }
+      <div class="row">
+        @if (IsSectionDefined("SideMenu"))
+        {
+          <div class="col-sm-3 col-lg-3 col-xl-2 side-menu">
+            @RenderSection("SideMenu", required: false)
+          </div>
+        }
+        <div class="@mainWidth">
+          @RenderBody()
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="border-top footer text-muted">
+    <partial name="~/Views/Shared/_FooterPartial.cshtml" />
+  </footer>
+
+  <environment include="Development">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+  </environment>
+  <environment exclude="Development">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+            asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+            asp-fallback-test="window.jQuery"
+            crossorigin="anonymous"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"
+            asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+            crossorigin="anonymous"
+            integrity="sha256-E/V4cWE4qvAeO5MOhjtGtqDzPndRO1LBk8lJ/PR7CA4=">
+    </script>
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+    @*<script type="text/javascript" src="~/js/site.min.js"></script>*@
+  </environment>
+  @*<script type="text/javascript" src="~/js/bundle/header.js"></script>*@
+  <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
+  @RenderSection("Scripts", required: false)
+</body>
+</html>
+<!-- Build number: @settings.Value.BuildNumber -->

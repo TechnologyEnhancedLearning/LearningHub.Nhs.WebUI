@@ -1,0 +1,639 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>31abd8b9-4223-4ff3-896b-a46530c9e15c</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/57c55d5f-78c1-4373-a021-ff8357548f51/resourceGroups/LearningHubNhsUk-AdminUI-Prod-RG/providers/microsoft.insights/components/LearningHubNhsUk-AdminUI-Prod</ApplicationInsightsResourceId>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<Platforms>x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Views\Notification\**" />
+    <Content Remove="Views\Notification\**" />
+    <EmbeddedResource Remove="Views\Notification\**" />
+    <None Remove="Views\Notification\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="bundleconfig.json" />
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <TypeScriptCompile Remove="Scripts\vuesrc\content-structure\contentStructureContainer.ts" />
+    <TypeScriptCompile Remove="Scripts\vuesrc\content-structure\contentStructureRouter.ts" />
+    <TypeScriptCompile Remove="Scripts\vuesrc\content\contentContainer.ts" />
+    <TypeScriptCompile Remove="Scripts\vuesrc\content\contentPageListContainer.ts" />
+    <TypeScriptCompile Remove="Scripts\vuesrc\content\contentRouter.ts" />
+    <TypeScriptCompile Remove="Scripts\vuesrc\home\home.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="bundleconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="node_modules\%40ckeditor\ckeditor5-build-classic\package.json" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-core\lang\contexts.json" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-core\package.json" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-engine\package.json" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-engine\theme\placeholder.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-heading\lang\contexts.json" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-heading\package.json" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-heading\theme\heading.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-paragraph\package.json" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\lang\contexts.json" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\package.json" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\button\button.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\button\switchbutton.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\colorgrid\colorgrid.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\dropdown\dropdown.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\dropdown\listdropdown.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\dropdown\splitbutton.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\dropdown\toolbardropdown.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\editorui\editorui.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\icon\icon.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\inputtext\inputtext.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\labeledinput\labeledinput.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\label\label.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\list\list.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\panel\balloonpanel.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\panel\balloonrotator.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\panel\fakepanel.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\panel\stickypanel.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\toolbar\blocktoolbar.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\toolbar\toolbar.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\tooltip\mixins\_tooltip.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\components\tooltip\tooltip.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\globals\globals.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\globals\_hidden.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\globals\_reset.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\globals\_zindex.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\mixins\_dir.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\mixins\_rwd.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-ui\theme\mixins\_unselectable.css" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-utils\package.json" />
+    <Content Include="node_modules\%40ckeditor\ckeditor5-vue\package.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
+    <PackageReference Include="Azure.Storage.Files.Shares" Version="12.8.0" />
+    <PackageReference Include="BuildWebCompiler" Version="1.12.405" />
+    <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.8" />
+    <PackageReference Include="FluentValidation" Version="10.3.4" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.4" />
+    <PackageReference Include="HtmlSanitizer" Version="6.0.453" />
+	<PackageReference Include="IdentityModel" Version="4.4.0" />
+    <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.2" />
+    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.22" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Azure.Management.Media" Version="5.0.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.9" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.14.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.14.1" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime.Azure.Authentication" Version="2.4.1" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.5.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.14.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.14.1" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+    <Folder Include="Scripts\vuesrc\content\upload\" />
+    <Folder Include="Scripts\vuesrc\helpers\" />
+	 <Folder Include="wwwroot\lib\fontawesome-free-6.4.2-web\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="bundleconfig.json" />
+    <None Include="compilerconfig.json" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\ckeditor.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\ckeditor.js.map" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\af.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\ar.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\ast.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\az.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\bg.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\ca.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\cs.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\da.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\de-ch.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\de.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\el.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\en-au.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\en-gb.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\eo.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\es.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\et.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\eu.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\fa.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\fi.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\fr.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\gl.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\gu.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\he.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\hr.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\hu.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\id.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\it.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\ja.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\km.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\kn.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\ko.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\ku.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\lt.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\lv.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\ms.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\nb.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\ne.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\nl.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\no.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\oc.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\pl.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\pt-br.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\pt.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\ro.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\ru.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\si.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\sk.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\sl.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\sq.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\sr-latn.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\sr.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\sv.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\tr.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\tt.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\ug.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\uk.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\vi.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\zh-cn.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\build\translations\zh.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\CHANGELOG.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\LICENSE.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-build-classic\README.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\CHANGELOG.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\af.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\ar.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\ast.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\az.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\bg.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\ca.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\cs.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\da.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\de.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\el.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\en-au.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\en-gb.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\en.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\eo.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\es.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\et.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\eu.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\fa.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\fi.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\fr.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\gl.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\he.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\hr.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\hu.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\id.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\it.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\ja.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\km.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\kn.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\ko.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\ku.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\lt.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\lv.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\nb.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\ne.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\nl.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\no.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\oc.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\pl.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\pt-br.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\pt.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\ro.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\ru.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\sk.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\sl.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\sq.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\sr-latn.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\sr.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\sv.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\tr.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\tt.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\ug.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\uk.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\vi.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\zh-cn.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\lang\translations\zh.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\LICENSE.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\README.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\command.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\commandcollection.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\editingkeystrokehandler.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\editor\editor.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\editor\editorconfig.jsdoc" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\editor\editorui.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\editor\editorwithui.jsdoc" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\editor\utils\attachtoform.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\editor\utils\dataapimixin.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\editor\utils\elementapimixin.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\editor\utils\securesourceelement.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\multicommand.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\pendingactions.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\plugin.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\src\plugincollection.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\theme\icons\cancel.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\theme\icons\check.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\theme\icons\eraser.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\theme\icons\image.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\theme\icons\low-vision.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\theme\icons\object-center.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\theme\icons\object-full-width.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\theme\icons\object-left.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\theme\icons\object-right.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\theme\icons\pencil.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\theme\icons\pilcrow.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\theme\icons\quote.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-core\theme\icons\three-vertical-dots.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\CHANGELOG.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\LICENSE.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\README.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\controller\datacontroller.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\controller\editingcontroller.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\conversion\conversion.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\conversion\conversionhelpers.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\conversion\downcastdispatcher.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\conversion\downcasthelpers.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\conversion\mapper.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\conversion\modelconsumable.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\conversion\upcastdispatcher.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\conversion\upcasthelpers.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\conversion\viewconsumable.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\dataprocessor\basichtmlwriter.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\dataprocessor\dataprocessor.jsdoc" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\dataprocessor\htmldataprocessor.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\dataprocessor\htmlwriter.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\dataprocessor\xmldataprocessor.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\dev-utils\model.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\dev-utils\operationreplayer.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\dev-utils\utils.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\dev-utils\view.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\batch.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\differ.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\document.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\documentfragment.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\documentselection.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\element.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\history.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\item.jsdoc" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\liveposition.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\liverange.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\markercollection.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\model.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\node.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\nodelist.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\attributeoperation.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\detachoperation.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\insertoperation.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\markeroperation.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\mergeoperation.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\moveoperation.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\nooperation.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\operation.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\operationfactory.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\renameoperation.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\rootattributeoperation.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\splitoperation.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\transform.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\operation\utils.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\position.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\range.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\rootelement.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\schema.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\selection.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\text.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\textproxy.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\treewalker.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\utils\deletecontent.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\utils\getselectedcontent.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\utils\insertcontent.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\utils\modifyselection.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\utils\selection-post-fixer.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\model\writer.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\utils\bindtwostepcarettoattribute.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\attributeelement.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\containerelement.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\document.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\documentfragment.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\documentselection.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\domconverter.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\downcastwriter.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\editableelement.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\element.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\elementdefinition.jsdoc" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\emptyelement.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\filler.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\item.jsdoc" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\matcher.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\node.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\observer\clickobserver.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\observer\compositionobserver.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\observer\domeventdata.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\observer\domeventobserver.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\observer\fakeselectionobserver.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\observer\focusobserver.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\observer\inputobserver.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\observer\keyobserver.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\observer\mouseobserver.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\observer\mutationobserver.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\observer\observer.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\observer\selectionobserver.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\placeholder.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\position.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\range.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\renderer.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\rooteditableelement.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\selection.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\text.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\textproxy.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\treewalker.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\uielement.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\upcastwriter.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-engine\src\view\view.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\CHANGELOG.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\ar.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\az.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\bg.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\ca.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\cs.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\da.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\de.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\el.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\en-au.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\en-gb.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\en.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\eo.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\es.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\et.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\eu.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\fa.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\fi.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\fr.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\gl.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\he.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\hr.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\hu.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\id.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\it.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\ja.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\km.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\kn.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\ko.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\ku.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\lt.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\lv.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\nb.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\ne.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\nl.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\no.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\pl.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\pt-br.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\pt.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\ro.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\ru.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\sk.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\sl.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\sq.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\sr-latn.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\sr.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\sv.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\tr.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\ug.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\uk.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\vi.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\zh-cn.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\lang\translations\zh.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\LICENSE.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\README.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\src\heading.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\src\headingbuttonsui.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\src\headingcommand.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\src\headingediting.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\src\headingui.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\src\title.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\src\utils.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\theme\icons\heading1.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\theme\icons\heading2.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\theme\icons\heading3.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\theme\icons\heading4.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\theme\icons\heading5.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-heading\theme\icons\heading6.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-paragraph\CHANGELOG.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-paragraph\LICENSE.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-paragraph\README.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-paragraph\src\paragraph.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-paragraph\src\paragraphbuttonui.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-paragraph\src\paragraphcommand.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-paragraph\theme\icons\paragraph.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\CHANGELOG.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\ar.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\ast.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\az.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\cs.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\da.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\de-ch.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\de.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\el.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\en-au.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\en-gb.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\en.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\eo.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\es.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\et.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\eu.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\fa.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\fi.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\fr.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\gl.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\he.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\hr.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\hu.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\id.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\it.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\ja.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\km.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\kn.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\ku.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\lt.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\lv.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\nb.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\ne.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\nl.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\no.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\pl.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\pt-br.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\pt.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\ro.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\ru.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\sk.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\sq.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\sr-latn.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\sr.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\sv.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\tr.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\ug.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\uk.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\vi.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\zh-cn.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\lang\translations\zh.po" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\LICENSE.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\README.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\bindings\clickoutsidehandler.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\bindings\preventdefault.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\bindings\submithandler.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\button\button.jsdoc" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\button\buttonview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\button\switchbuttonview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\colorgrid\colorgridview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\colorgrid\colortileview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\componentfactory.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\dropdown\button\dropdownbutton.jsdoc" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\dropdown\button\dropdownbuttonview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\dropdown\button\splitbuttonview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\dropdown\dropdownpanelfocusable.jsdoc" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\dropdown\dropdownpanelview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\dropdown\dropdownview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\dropdown\utils.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\editableui\editableuiview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\editableui\inline\inlineeditableuiview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\editorui\boxed\boxededitoruiview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\editorui\editoruiview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\focuscycler.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\icon\iconview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\iframe\iframeview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\inputtext\inputtextview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\labeledinput\labeledinputview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\label\labelview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\list\listitemview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\list\listseparatorview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\list\listview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\model.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\notification\notification.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\panel\balloon\balloonpanelview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\panel\balloon\contextualballoon.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\panel\sticky\stickypanelview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\template.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\toolbar\balloon\balloontoolbar.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\toolbar\block\blockbuttonview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\toolbar\block\blocktoolbar.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\toolbar\enabletoolbarkeyboardfocus.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\toolbar\normalizetoolbarconfig.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\toolbar\toolbarseparatorview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\toolbar\toolbarview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\tooltip\tooltipview.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\view.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\src\viewcollection.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\theme\icons\color-tile-check.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\theme\icons\dropdown-arrow.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\theme\icons\next-arrow.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-ui\theme\icons\previous-arrow.svg" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\CHANGELOG.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\LICENSE.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\README.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\areconnectedthroughproperties.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\ckeditorerror.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\collection.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\comparearrays.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\config.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\count.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\diff.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\difftochanges.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\createelement.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\emittermixin.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\getancestors.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\getborderwidths.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\getcommonancestor.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\getdatafromelement.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\getpositionedancestor.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\getresizeobserver.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\global.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\indexof.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\insertat.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\isnode.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\isrange.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\istext.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\iswindow.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\position.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\rect.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\remove.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\scroll.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\setdatainelement.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\dom\tounit.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\elementreplacer.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\emittermixin.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\env.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\eventinfo.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\fastdiff.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\first.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\focustracker.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\isiterable.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\keyboard.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\keystrokehandler.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\locale.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\mapsequal.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\mix.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\nth.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\objecttomap.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\observablemixin.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\priorities.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\spy.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\tomap.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\translation-service.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\uid.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\unicode.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-utils\src\version.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-vue\CHANGELOG.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-vue\dist\ckeditor.js" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-vue\dist\ckeditor.js.map" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-vue\LICENSE.md" />
+    <None Include="node_modules\%40ckeditor\ckeditor5-vue\README.md" />
+    <None Include="Scripts\vuesrc\content-structure\contentStructureContainer.ts" />
+    <None Include="Scripts\vuesrc\content-structure\contentStructureRouter.ts" />
+    <None Include="Scripts\vuesrc\content\contentRouter.ts" />
+    <None Include="Scripts\vuesrc\content\contentContainer.ts" />
+    <None Include="Scripts\vuesrc\content\contentPageListContainer.ts" />
+    <None Include="Scripts\vuesrc\home\home.ts" />
+    <None Include="Views\ExternalSystem\Index.cshtml" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Update="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+
+  
+
+</Project>

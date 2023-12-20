@@ -1,0 +1,155 @@
+﻿@use "variables" as *;
+@use "mixins" as *;
+
+@font-face {
+  font-family: FrutigerLight;
+  src: url(../wwwroot/fonts/FrutigerLT45Light.woff) format('woff');
+}
+
+@font-face {
+  font-family: FrutigerLT55Roman;
+  src: url(../wwwroot/fonts/FrutigerLT55Roman.woff) format('woff');
+}
+
+@font-face {
+  font-family: FrutigerLTW01-65Bold;
+  src: url(/fonts/FrutigerLTW01-65Bold.woff2) format('woff');
+}
+
+@font-face {
+    font-family: $font-awesome-solid;
+    src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-regular-400.woff2) format('woff');
+}
+
+@font-face {
+    font-family: $font-awesome-solid;
+    src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-solid-900.woff2) format('woff');
+}
+
+html {
+  font-size: ($base-font-size);
+  position: relative;
+  min-height: 100%;
+  color: $nhsuk-black;
+}
+
+body {
+  font-family: $font-stack;
+  font-size: 1.9rem !important;
+  margin-bottom: 180px !important;
+}
+
+label {
+  font-family: $font-stack-bold !important;
+}
+
+.py-20 {
+  padding: 2rem 0;
+}
+
+.my-20 {
+  margin: 2rem 0;
+}
+
+a {
+  color: $nhsuk-blue;
+}
+
+.hyperlink {
+  text-decoration: underline;
+  color: $nhsuk-blue;
+  cursor: pointer;
+}
+
+h1 {
+  font-size: 4.8rem;
+  font-weight: normal;
+  font-family: $font-stack-bold;
+}
+
+h2 {
+  font-size: 3.2rem;
+  font-weight: normal;
+  font-family: $font-stack-bold;
+}
+
+h3 {
+  font-size: 2.4rem;
+  font-weight: normal;
+  font-family: $font-stack-bold;
+}
+
+h4 {
+  font-size: 2.2rem;
+  font-weight: normal;
+  font-family: $font-stack-bold;
+}
+
+h5 {
+  font-size: 1.9rem;
+  font-weight: normal;
+  font-family: $font-stack-bold;
+}
+
+.small {
+  font-size: 1.6rem;
+}
+
+.form-control {
+  font-size: 1.6rem;
+}
+
+.warning {
+  color: #DA291C;
+}
+
+.text-danger {
+  color: $nhsuk-red !important;
+}
+
+.text-warning {
+  color: $nhsuk-warm-yellow !important;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+#{headings(1, 6)} {
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 3.2rem !important;
+  }
+
+  h2 {
+    font-size: 2.4rem !important;
+  }
+
+  h3 {
+    font-size: 2rem !important;
+  }
+
+  h4 {
+    font-size: 1.8rem !important;
+  }
+
+  h5 {
+    font-size: 1.6rem !important;
+  }
+  body {
+    margin-bottom: 474px !important;
+    font-size: 1.6rem !important;
+  }
+
+  .small {
+    font-size: 1.4rem;
+  }
+}
+
+.hint {
+  color: $nhsuk-grey-placeholder;
+  font-size: 1.6rem;
+}

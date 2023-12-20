@@ -1,0 +1,129 @@
+﻿@model List<LearningHub.Nhs.Models.Resource.ResourceAdminSearchResultViewModel>
+@using LearningHub.Nhs.Models.Enums
+@{
+    ViewData["Title"] = "Resources";
+}
+<div class="sync-notification row" style="display: none;">
+    <div class="col">
+        <p class="notification-message"></p>
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col">
+        <div class="fa-pull-right">
+            <button type="button" class="btn btn-custom-green" id="SyncAll">Sync list</button>
+        </div>
+    </div>
+</div>
+<div class="resource-admin mt-5">
+    <table class="table table-striped lh-datatable">
+        <thead>
+            <tr>
+                <th class="orderable" style="width:7%" data-column="VersionId" data-type="number">Id</th>
+                <th class="orderable" style="width:8%" data-column="ReferenceId" data-type="number">Reference</th>
+                <th class="orderable" style="width:28%" data-column="Title" data-type="text">Title</th>
+                <th class="orderable w-15" style="width:13%" data-column="CreateUser" data-type="text">Create User</th>
+                <th style="width:12%">Create Date</th>
+                <th style="width:9%">Type</th>
+                <th style="width:16%">Version Details</th>
+                <th style="width: 7%"><button type="button" class="btn btn-primary btn-md" id="RemoveAll">Remove all</button></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ResourceVersionId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ResourceReferenceIdList)
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Title, "Details", new { id = item.ResourceVersionId })
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.CreateUser, "Details", "User", new { id = item.CreateUserId }, null)
+                    </td>
+                    <td>
+                        @item.CreateDate.DateTime.ToString("dd/MM/yyyy hh:mm:ss")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ResourceTypeDescription)
+                    </td>
+                    <td>
+                        <span class="p-2 @(item.VersionStatusEnum == VersionStatusEnum.Publishing ? "info-highlight" : "")">@Html.DisplayFor(modelItem => item.VersionFullDetails)</span>
+                    </td>
+                    <td>
+                        <span><a href="#" data-id="@item.ResourceVersionId" class="remove-resource-sync"><i class="fa fa-times"></i></a></span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col">
+            
+        </div>
+    </div>
+
+</div>
+@section Scripts {
+    <script>
+        $('.remove-resource-sync').on('click', function () {
+            var $this = $(this);
+            var id = $this.data('id');
+            $.post('/ResourceSync/RemoveFromSyncList', { resourceIds: [id] })
+                .then(function () {
+                    showNotification("Removed item with id '" + id + "'");
+                    $this.parents('tr').remove();
+                })
+                .fail(function () {
+                    showError("Failed to remove, please refresh and try again.");
+                });
+        });
+
+        $('#RemoveAll').on('click', function () {
+            var ids = [];
+            $('tbody tr').each(function (i, x) {
+                var id = $(x).find('.remove-resource-sync').data('id');
+                ids.push(id);
+            });
+            $.post('/ResourceSync/RemoveFromSyncList', { resourceIds: ids })
+                .then(function (x) {
+                    showNotification("Removed all items.")
+                    $('tbody tr').remove();
+                })
+                .fail(function(x){ showError("Failed to remove all items, please refresh and try again.") });
+        });
+
+        $("#SyncAll").on('click', function () {
+            $.post('/ResourceSync/SyncWithFindwise')
+                .then(function (x) {
+                    if (x.success) {
+                        showNotification("Synced all items with findwise.");
+                        $('tbody tr').remove();
+                    }
+                    else {
+                        showError("Error: " + x.details);
+                    }
+                })
+                .fail(function (x) {
+                    showError("Failed to sync with findwise.");
+                });
+        });        
+
+        function showError(error) {
+            $('.notification-message').text(error);
+            var $notification = $('.sync-notification');
+            $notification.show();
+            $notification.addClass('sync-error').removeClass('sync-information');
+        }
+        function showNotification(notification) {
+            $('.notification-message').text(notification);
+            var $notification = $('.sync-notification');
+            $notification.show();
+            $notification.addClass('sync-information').removeClass('sync-error');
+        }
+    </script>
+}

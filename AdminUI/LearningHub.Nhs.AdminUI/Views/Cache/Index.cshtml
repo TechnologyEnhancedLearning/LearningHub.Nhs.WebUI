@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Cache management";
+}
+
+@section SideMenu {
+    @{await Html.RenderPartialAsync("_NavSection"); }
+}
+
+<div class="panel-body admin-body">
+    <div class="d-flex flex-row justify-content-between col-12 admin-title">
+        Cache management
+    </div>
+    <div class="admin-section">
+        @if (this.ViewBag.cacheCleared)
+        {
+            <div class="col-12">
+                <p class="alert alert-success">Cache cleared</p>
+            </div>
+        }
+        <div class="col-12">            
+            <p><button id="setCacheClear" class="btn btn-custom-green">Flush All Cache</button></p>
+        </div>
+    </div>
+
+</div>
+
+<div id="confirmCacheClear" ref="confirmCacheClearModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header alert-modal-header text-center">
+                <h2 class="heading-lg w-100"><i class="warningTriangle fas fa-exclamation-triangle pr-3"></i>Flush All Cache</h2>
+            </div>
+            <div class="modal-footer alert-modal-footer">
+                <div class="form-group col-12 p-0 m-0">
+                    <div class="d-flex">
+                        <input type="button" class="btn btn-admin btn-cancel" data-dismiss="modal" value="Cancel" />
+                        <input type="button" class="btn btn-custom-green ml-auto" onclick="location.href='@Url.Action("FlushAllCache","Cache")'" value="Continue" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('#setCacheClear').on('click', function (e) {
+            e.preventDefault();
+            $('#confirmCacheClear').modal('show');
+        });        
+    </script>
+}

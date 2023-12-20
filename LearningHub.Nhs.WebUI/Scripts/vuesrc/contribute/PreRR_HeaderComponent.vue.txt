@@ -1,0 +1,178 @@
+﻿<template>
+        <div class="contribute-header fullwidth">
+            <div class="ml-3 row">
+                <div class="col-12 pt-3">
+                    <h1 class="heading-xl pt-5 mb-0">Contribute a resource</h1>
+                    <p class="draftText py-3" v-bind:class="{ 'error-message': saveError }">
+                        {{saveStatus}}
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <nav class="subnavbar navbar-expand-md navbar-toggleable-md">
+                        <div class="bar">
+                            <div class="navbar-toggler">{{menuName}}</div>
+                            <button class="navbar-toggler navbar-toggler-right" type="button" aria-controls="collapsingSubNavbar" aria-expanded="false" aria-label="Toggle navigation" id="subnavbar-toggler" data-toggle="collapse" data-target="#collapsingSubNavbar">
+                                <i class="fal fa-chevron-down"></i>
+                                <i class="fal fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="navbar-collapse collapse" id="collapsingSubNavbar">
+                            <ul class="navbar-nav">
+                                <router-link :to="'/contribute-a-resource'" v-slot="{ href, route, navigate, isActive, isExactActive }">
+                                    <li class="subnav-item" v-bind:class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
+                                        <a :href="href" v-on:click="navigate" class="subnav-link" data-toggle="collapse" data-target=".navbar-collapse.show">Content</a>
+                                    </li>
+                                </router-link>
+                                <router-link :to="'/about-your-resource'" v-slot="{ href, route, navigate, isActive, isExactActive }">
+                                    <li class="subnav-item" v-bind:class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
+                                        <a :href="href" v-on:click="navigate" class="subnav-link" data-toggle="collapse" data-target=".navbar-collapse.show">About</a>
+                                    </li>
+                                </router-link>
+                                <router-link :to="'/legal'" v-slot="{ href, route, navigate, isActive, isExactActive }">
+                                    <li class="subnav-item" v-bind:class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
+                                        <a :href="href" v-on:click="navigate" class="subnav-link" data-toggle="collapse" data-target=".navbar-collapse.show">Legal</a>
+                                    </li>
+                                </router-link>
+                                <router-link :to="'/summary'" v-slot="{ href, route, navigate, isActive, isExactActive }">
+                                    <li class="subnav-item" v-bind:class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
+                                        <a :href="href" v-on:click="navigate" class="subnav-link" data-toggle="collapse" data-target=".navbar-collapse.show">Summary</a>
+                                    </li>
+                                </router-link>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+            <div v-if="showWarning" class="row warning-banner">
+                <div class="warning-banner-left">
+                    <div class="warningTriangle">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="info">
+                        You need to complete each section before you can publish a resource. The alert triangle will be displayed if any mandatory information is missing.
+                    </div>
+                </div>
+                <div class="dismiss">
+                    <button class="btn btn-link" @click="showWarning=false"><i class="fal fa-times"></i></button>
+                </div>
+            </div>
+        </div>
+</template>
+
+<script lang="ts">
+    import Vue from 'vue';
+
+    export default Vue.extend({
+        name: 'contributeHeaderComponent',
+        data: function () {
+            return {
+                menuName: '',
+                showWarning: true
+            }
+        },
+        async created() {
+            this.menuName = this.menuItemName(this.$route.name);
+        },
+        computed: {
+            saveStatus: function () {
+                return this.$store.state.saveStatus;
+            },
+            saveError: function () {
+                return this.$store.state.saveError;
+            }
+        },
+        methods: {
+            menuItemName(routeName: string) {
+                switch (routeName) {
+                    case 'ContributeAResource':
+                        return 'Content';
+                    case 'AboutYourResource':
+                        return 'About';
+                    default:
+                        return routeName;
+                }
+            }            
+        },
+        watch: {
+            '$route'(to, from) {
+                this.menuName = this.menuItemName(to.name);
+            }
+        }
+    })
+</script>
+
+<!--<style lang="scss" scoped>
+    @use "../../../Styles/abstracts/all" as *;
+
+    div.contribute {
+        background-color: $nhsuk-grey-white;
+
+        .goBackLink {
+            font-size: 1.4rem;
+            text-decoration: none;
+        }
+        .draftText {
+            color: $nhsuk-green; 
+            font-size: 1.4rem;
+        }
+        .step-nav-item-selected {
+            background-color: $nhsuk-black;
+            border-color: $nhsuk-navbar-blue;
+            border-width: 0px 0px 2px 0px;
+            border-style: solid;
+        }
+
+        .step-nav-item {
+            cursor: pointer;
+            width: 130px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: $nhsuk-white !important;   
+
+            .nav-link {
+                font-size: 1.4rem;
+                font-family: $font-stack;
+                color: $nhsuk-white !important;
+                text-decoration: none;
+            }
+        }
+
+        .navigationRow {
+            background: $nhsuk-grey;
+            min-height: 80px;
+        }
+
+        .navigationUnselected {
+            background: $nhsuk-white;
+            width: 150px;
+        }
+
+        .navigationSelected {
+            background: $nhsuk-black;
+            border-color: $nhsuk-navbar-blue;
+            border-width: 0px 0px 2px 0px;
+            border-style: solid;
+            width: 150px;
+        }
+
+    span.step {
+        background: $nhsuk-white;
+        border-radius: 0.8em;
+        -moz-border-radius: 0.8em;
+        -webkit-border-radius: 0.8em;
+        color: $nhsuk-grey;
+        font-family: $font-stack;
+        display: inline-block;
+        line-height: 1.6em;
+        margin-right: 5px;
+        text-align: center;
+        width: 1.6em;
+    }
+}
+
+</style>-->

@@ -1,0 +1,267 @@
+<template>
+    <div>
+        <div class="row">
+            <div class="form-group col-12">
+                <h3>Uploaded file</h3>
+            </div>
+        </div>
+        <div class="row">
+            <file-panel :file-id="localGenericFileDetail.file.fileId" :file-description="localGenericFileDetail.file.fileName + ' (' + localGenericFileDetail.file.fileSizeKb + ' KB)'" @changefile="changeFile"></file-panel>
+        </div>
+        <div v-if="scormOption" class="row mt-5">
+            <div class="col-12">
+                <div>
+                    <label class="checkContainer">
+                        SCORM/AICC package
+                        <input type="checkbox" v-model="localGenericFileDetail.scormAiccContent" @click="setProperty('scormAiccContent', $event.target.checked)">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <hr class="mt-3" />
+        <div class="row mt-5">
+            <div class="form-group col-12 mb-2">
+                <h3>Date authored <span class="optional">(optional)</span></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 mb-2">
+                Using numbers only, add the date the content was authored.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-sm-3 col-md-2">
+                <label class="mb-0">Year</label><br />
+                <input type="number" v-bind:class="{ 'input-validation-error': $v.localGenericFileDetail.authoredYear.$invalid && $v.localGenericFileDetail.authoredYear.$dirty }" class="form-control" :placeholder="currentYear" v-model="localGenericFileDetail.authoredYear" @blur="setProperty('authoredYear', $event.target.value)" />
+            </div>
+            <div class="col-4 col-sm-3 col-md-2">
+                <label v-bind:class="{ disabled: $v.localGenericFileDetail.authoredYear.$invalid || !localGenericFileDetail.authoredYear }" class="mb-0">Month</label><br />
+                <input type="number" v-bind:class="{ 'input-validation-error': $v.localGenericFileDetail.authoredMonth.$invalid && $v.localGenericFileDetail.authoredMonth.$dirty }" class="form-control" :placeholder="currentMonth" v-model="localGenericFileDetail.authoredMonth" v-bind:disabled="$v.localGenericFileDetail.authoredYear.$invalid || !localGenericFileDetail.authoredYear" @blur="setProperty('authoredMonth', $event.target.value)" />
+            </div>
+            <div class="col-4 col-sm-3 col-md-2">
+                <label v-bind:class="{ disabled: $v.localGenericFileDetail.authoredYear.$invalid || !localGenericFileDetail.authoredYear || $v.localGenericFileDetail.authoredMonth.$invalid || !localGenericFileDetail.authoredMonth }" class="mb-0">Day</label><br />
+                <input type="number" v-bind:class="{ 'input-validation-error': $v.localGenericFileDetail.authoredDayOfMonth.$invalid && $v.localGenericFileDetail.authoredDayOfMonth.$dirty }" class="form-control" :placeholder="currentDayOfMonth" v-model="localGenericFileDetail.authoredDayOfMonth" v-bind:disabled="$v.localGenericFileDetail.authoredYear.$invalid || localGenericFileDetail.authoredYear == '' || $v.localGenericFileDetail.authoredMonth.$invalid || !localGenericFileDetail.authoredMonth" @blur="setProperty('authoredDayOfMonth', $event.target.value)" />
+            </div>
+        </div>
+        <div class="error-text pt-3" v-if="!$v.localGenericFileDetail.authoredYear.between && $v.localGenericFileDetail.authoredYear.$dirty">
+            <span class="text-danger">Please enter the year using four digits. For example 2020.</span>
+        </div>
+        <div class="error-text pt-3" v-if="$v.localGenericFileDetail.authoredYear.between && !$v.localGenericFileDetail.authoredYear.maxValue && $v.localGenericFileDetail.authoredYear.$dirty">
+            <span class="text-danger">The year your file was authored cannot be in the future.</span>
+        </div>
+        <div class="error-text pt-3" v-if="!$v.localGenericFileDetail.authoredYear.$invalid && (!$v.localGenericFileDetail.authoredMonth.between || !$v.localGenericFileDetail.authoredMonth.minLength) && $v.localGenericFileDetail.authoredMonth.$dirty">
+            <span class="text-danger">Please enter the month using two digits. For example 01.</span>
+        </div>
+        <div class="error-text pt-3" v-if="!$v.localGenericFileDetail.authoredYear.$invalid && !$v.localGenericFileDetail.authoredMonth.month_in_past && $v.localGenericFileDetail.authoredMonth.$dirty">
+            <span class="text-danger">The month this file was authored cannot be in the future.</span>
+        </div>
+        <div class="error-text pt-3" v-if="!$v.localGenericFileDetail.authoredMonth.$invalid && (!$v.localGenericFileDetail.authoredDayOfMonth.between || !$v.localGenericFileDetail.authoredDayOfMonth.minLength) && $v.localGenericFileDetail.authoredDayOfMonth.$dirty">
+            <span class="text-danger">Please enter the day using two digits. For example 01.</span>
+        </div>
+        <div class="error-text pt-3" v-if="!$v.localGenericFileDetail.authoredMonth.$invalid && !$v.localGenericFileDetail.authoredDayOfMonth.dayOfMonth_in_past && $v.localGenericFileDetail.authoredDayOfMonth.$dirty">
+            <span class="text-danger">The day your file was authored cannot be in the future.</span>
+        </div>
+
+        <hr />
+        <div class="row mt-5">
+            <div class="form-group col-12 mb-2">
+                <h3>Next review date <span class="optional">(optional)</span></h3>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                Add the date the content is due to be reviewed. Use this format DD/MM/YYYY (for example 27/08/2023).
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <lh-date-picker id="reviewDate" label-text="Review Date" display-style="1" v-model="localGenericFileDetail.nextReviewDate" unique-name="reviewDate" @input="setProperty('nextReviewDate', $event)"></lh-date-picker>
+            </div>
+        </div>
+        <hr />
+        <div class="row mt-5">
+            <div class="form-group col-12 mb-2">
+                <h3>Additional information <span class="optional">(optional)</span></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                Please add any additional information that will help learners use this resource.
+                For instance mention any special circumstances, software or equipment that is required.
+            </div>
+            <div class="col-12 mt-3">
+                <textarea class="form-control" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
+            </div>
+            <div class="col-12 footer-text">
+                You can enter a maximum of 250 characters
+            </div>
+        </div>
+
+    </div>
+</template>
+
+<script lang="ts">
+    import Vue from 'vue';
+    import * as _ from "lodash";
+    import { between, maxValue, minLength } from "vuelidate/lib/validators";
+    import { GenericFileResourceModel, ResourceFileModel } from '../models/contribute/contributeResourceModel';
+    import { FileTypeModel } from "../models/contribute/fileTypeModel";
+    import { ResourceType } from '../constants';
+    import LhDatePicker from '../datepicker.vue';
+    import store from './contributeState';
+    import FilePanel from './FilePanel.vue';
+
+    const month_in_past = (value: number) => {
+        if (!value) { return true; }
+        let dt = new Date();
+        let yearCurrent = store.state.genericFileDetail.authoredYear == dt.getFullYear();
+        if (yearCurrent && value > (dt.getMonth() + 1)) {
+            return false;
+        } else {
+            return true;
+        }
+    };
+
+    const dayOfMonth_in_past = (value: number) => {
+        if (!value) { return true; }
+        let dt = new Date();
+        let yearCurrent = store.state.genericFileDetail.authoredYear == dt.getFullYear();
+        let monthCurrent = store.state.genericFileDetail.authoredMonth == (dt.getMonth() + 1);
+        if (yearCurrent && monthCurrent && value > dt.getDate()) {
+            return false;
+        } else {
+            return true;
+        }
+    };
+
+    export default Vue.extend({
+        components: {
+            FilePanel,
+            LhDatePicker
+        },
+        data() {
+            return {
+                file: null as File,
+                localGenericFileDetail: null as GenericFileResourceModel,
+                additionalInformation: '' as string
+            };
+        },
+        computed: {
+            genericFileDetail(): GenericFileResourceModel {
+                return this.$store.state.genericFileDetail;
+            },
+            genericFileResourceVersionId(): number {
+                return this.$store.state.genericFileDetail.resourceVersionId;
+            },
+            fileUpdated(): ResourceFileModel {
+                return this.$store.state.fileUpdated;
+            },
+            scormOption(): boolean {
+                return this.localGenericFileDetail.file.fileName.endsWith('.zip');
+            },
+            currentYear(): number {
+                let dt = new Date();
+                return dt.getFullYear();
+            },
+            currentMonth(): string {
+                if (this.$v.localGenericFileDetail.authoredYear.$invalid || !this.localGenericFileDetail.authoredYear) {
+                    return '';
+                } else {
+                    let dt = new Date();
+                    let month = '0' + (dt.getMonth() + 1).toString();
+                    return month.substring(month.length - 2);
+                }
+            },
+            currentDayOfMonth(): string {
+                if (this.$v.localGenericFileDetail.authoredMonth.$invalid || !this.localGenericFileDetail.authoredMonth) {
+                    return '';
+                } else {
+                    let dt = new Date();
+                    let day = '0' + dt.getDate().toString();
+                    return day.substring(day.length - 2);
+                }
+            }
+        },
+        created() {
+            this.localGenericFileDetail = _.cloneDeep(this.genericFileDetail);
+            this.additionalInformation = this.$store.state.resourceDetail.additionalInformation;
+        },
+        methods: {
+            changeFile() {
+                this.$emit('filechanged');
+            },
+            setProperty(field: string, value: string) {
+                let preventSave = false;
+                switch (field) {
+                    case 'authoredYear':
+                        if (this.localGenericFileDetail.authoredYear == 0) { this.localGenericFileDetail.authoredYear = null; }
+                        this.$v.localGenericFileDetail.authoredYear.$touch();
+                        preventSave = this.$v.localGenericFileDetail.authoredYear.$invalid;
+                        break;
+                    case 'authoredMonth':
+                        if (this.localGenericFileDetail.authoredMonth == 0) { this.localGenericFileDetail.authoredMonth = null; }
+                        this.$v.localGenericFileDetail.authoredMonth.$touch();
+                        preventSave = this.$v.localGenericFileDetail.authoredMonth.$invalid;
+                        break;
+                    case 'authoredDayOfMonth':
+                        if (this.localGenericFileDetail.authoredDayOfMonth == 0) { this.localGenericFileDetail.authoredDayOfMonth = null; }
+                        this.$v.localGenericFileDetail.authoredDayOfMonth.$touch();
+                        preventSave = this.$v.localGenericFileDetail.authoredDayOfMonth.$invalid;
+                        break;
+                    default:
+                }
+
+                // "this.genericFileDetail[field as keyof GenericFileResourceModel]" equivalent to "this.genericFileDetail[field]"
+                // TypeScript syntax is needed because noImplicitAny is set to true in the tsconfig.json file
+                let storedValue: string = '';
+                if (this.genericFileDetail[field as keyof GenericFileResourceModel] != null) {
+                    storedValue = this.genericFileDetail[field as keyof GenericFileResourceModel].toString();
+                }
+                if (!preventSave && storedValue != value) {
+                    this.$store.commit("saveGenericFileDetail", { field, value });
+                }
+            },
+            setAdditionalInformation(value: string) {
+                let field: string = 'additionalInformation';
+                if (this.$store.state.resourceDetail.title != value) {
+                    this.$store.commit("saveResourceDetail", { field, value });
+                }
+            },
+            getFileType(fileName: string) {
+                let fileExtension = fileName.split(".").pop();
+                let fileTypes: FileTypeModel[] = this.$store.state.fileTypes;
+                let fileType: FileTypeModel = fileTypes.find(ft => ft.extension == fileExtension);
+                return fileType;
+            }
+        },
+        validations: {
+            localGenericFileDetail: {
+                authoredYear: {
+                    between: between(1000, 9999),
+                    maxValue: maxValue(new Date().getFullYear())
+                },
+                authoredMonth: {
+                    between: between(1, 12),
+                    minLength: minLength(2),
+                    month_in_past
+                },
+                authoredDayOfMonth: {
+                    between: between(1, 31),
+                    minLength: minLength(2),
+                    dayOfMonth_in_past
+                }
+            }
+        },
+        watch: {
+            genericFileResourceVersionId(value) {
+                this.localGenericFileDetail = _.cloneDeep(this.genericFileDetail);
+                this.additionalInformation = this.$store.state.resourceDetail.additionalInformation;
+            },
+            fileUpdated(value) {
+                this.localGenericFileDetail.file = this.genericFileDetail.file;
+            }
+        }
+    })
+
+</script>

@@ -1,0 +1,5 @@
+﻿const email = '';
+
+export {
+    email
+};

@@ -1,0 +1,570 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>LearningHub.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{bf9e107f-3a4f-45b6-8c1d-e8b661768be3}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath />
+    <RootNamespace>LearningHub.Nhs.Database</RootNamespace>
+    <AssemblyName>LearningHub.Nhs.Database</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <SuppressTSqlWarnings>70588,71502,71558</SuppressTSqlWarnings>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Tables" />
+    <Folder Include="Scripts" />
+    <Folder Include="Snapshots" />
+    <Folder Include="Scripts\Post-Deploy" />
+    <Folder Include="Scripts\Pre-Deploy" />
+    <Folder Include="Stored Procedures" />
+    <Folder Include="Schemas\" />
+    <Folder Include="Scripts\ELFH Database Scripts" />
+    <Folder Include="Scripts\Temp-Hierarchy" />
+    <Folder Include="Scripts\LH Database Scripts" />
+    <Folder Include="Security\" />
+    <Folder Include="Test Data" />
+    <Folder Include="Stored Procedures\Hierarchy" />
+    <Folder Include="Stored Procedures\Resources" />
+    <Folder Include="Stored Procedures\Hub" />
+    <Folder Include="Tables\Hierarchy" />
+    <Folder Include="Tables\Hub" />
+    <Folder Include="Tables\Migration" />
+    <Folder Include="Functions" />
+    <Folder Include="Stored Procedures\Activity" />
+    <Folder Include="Tables\Search" />
+    <Folder Include="Scripts\Pre-Deploy\Scripts" />
+    <Folder Include="Tables\Analytics" />
+    <Folder Include="Scripts\Post-Deploy\Scripts" />
+    <Folder Include="Views" />
+    <Folder Include="Tables\Adf" />
+    <Folder Include="Stored Procedures\Adf" />
+    <Folder Include="Stored Procedures\Migration" />
+    <Folder Include="Tables\Messaging" />
+    <Folder Include="Stored Procedures\Messaging" />
+    <Folder Include="Functions\Hub" />
+    <Folder Include="Scripts\External" />
+    <Folder Include="Tables\Maintenance" />
+    <Folder Include="Stored Procedures\Maintenance" />
+    <Folder Include="Tables\External" />
+    <Folder Include="Tables\Resource\" />
+    <Folder Include="Tables\Activity\" />
+    <Folder Include="Tables\Content" />
+    <Folder Include="Tables\Report" />
+    <Folder Include="Scripts\NLog Database Scripts" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\learningHub_Data.sql" />
+    <PreDeploy Include="Scripts\Pre-Deploy\Script.PreDeployment.sql" />
+    <PostDeploy Include="Scripts\Post-Deploy\Script.PostDeployment.sql" />
+    <Build Include="Schemas\resources.sql" />
+    <Build Include="Schemas\hierarchy.sql" />
+    <Build Include="Security\db_executor.sql" />
+    <Build Include="Security\db_executor.sql" />
+    <Build Include="Schemas\migrations.sql" />
+    <None Include="Scripts\LH Database Scripts\Create Hierarchy Reference Data.sql" />
+    <None Include="Scripts\LH Database Scripts\Create GenericFile Resource Data.sql" />
+    <Build Include="Stored Procedures\Hub\InsertLog.sql" />
+    <Build Include="Stored Procedures\Resources\AssessmentResourceVersionCreateDuplicate.sql" />
+    <Build Include="Stored Procedures\Resources\BlockCollectionCreateDuplicate.sql" />
+    <Build Include="Stored Procedures\Resources\BlockCollectionWithBlocksCreateDuplicate.sql" />
+    <Build Include="Stored Procedures\Resources\CaseResourceVersionCreateDuplicate.sql" />
+    <Build Include="Stored Procedures\Resources\MediaBlockCreateDuplicate.sql" />
+    <Build Include="Stored Procedures\Resources\QuestionBlockCreateDuplicate.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceCreate.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionCreateDuplicate.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionDraftEventCreate.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionEventCreate.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionPublish.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionSetResourceType.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionUnpublish.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionUnpublishEventCreate.sql" />
+    <Build Include="Stored Procedures\Resources\TextBlockCreateDuplicate.sql" />
+    <Build Include="Stored Procedures\Resources\WholeSlideImageCreateDuplicate.sql" />
+    <Build Include="Stored Procedures\Resources\ImageCarouselBlockCreateDuplicate.sql" />
+    <Build Include="Stored Procedures\Hierarchy\CatalogueLocationsForResource.sql" />
+    <Build Include="Stored Procedures\Hub\PermissionSearch.sql" />
+    <Build Include="Stored Procedures\Hub\RoleSearch.sql" />
+    <Build Include="Tables\Activity\AssessmentResourceActivity.sql" />
+    <Build Include="Tables\Activity\AssessmentResourceActivityInteraction.sql" />
+    <Build Include="Tables\Activity\AssessmentResourceActivityInteractionAnswer.sql" />
+    <Build Include="Tables\Activity\AssessmentResourceActivityMatchQuestion.sql" />
+    <Build Include="Tables\Resource\ArticleResourceVersion.sql" />
+    <Build Include="Tables\Resource\AudioResourceVersion.sql" />
+    <Build Include="Tables\Resource\AudioResourceVersionFile.sql" />
+    <Build Include="Tables\Resource\EmbeddedResourceVersion.sql" />
+    <Build Include="Tables\Resource\EquipmentResourceVersion.sql" />
+    <Build Include="Tables\Resource\File.sql" />
+    <Build Include="Tables\Resource\FileType.sql" />
+    <Build Include="Tables\Resource\GenericFileResourceVersion.sql" />
+    <Build Include="Tables\Hierarchy\VersionStatus.sql" />
+    <Build Include="Tables\Resource\ImageResourceVersion.sql" />
+    <Build Include="Tables\Migration\Migration.sql" />
+    <Build Include="Tables\Migration\MigrationInputRecord.sql" />
+    <Build Include="Tables\Migration\MigrationInputRecordStatus.sql" />
+    <Build Include="Tables\Migration\MigrationSource.sql" />
+    <Build Include="Tables\Migration\MigrationStatus.sql" />
+    <Build Include="Tables\Hierarchy\Node.sql" />
+    <Build Include="Tables\Hierarchy\NodeLink.sql" />
+    <Build Include="Tables\Hierarchy\NodePath.sql" />
+    <Build Include="Tables\Hierarchy\NodePathDisplay.sql" />
+    <Build Include="Tables\Hierarchy\NodePathNode.sql" />
+    <Build Include="Tables\Hierarchy\NodePathResource.sql" />
+    <Build Include="Tables\Hierarchy\NodeResource.sql" />
+    <Build Include="Tables\Hierarchy\NodeType.sql" />
+    <Build Include="Tables\Hierarchy\NodeVersion.sql" />
+    <Build Include="Tables\Resource\Resource.sql" />
+    <Build Include="Tables\Resource\ResourceAttribute.sql" />
+    <Build Include="Tables\Resource\ResourceFiles.sql" />
+    <Build Include="Tables\Resource\ResourceReference.sql" />
+    <Build Include="Tables\Resource\ResourceType.sql" />
+    <Build Include="Tables\Resource\ResourceVersion.sql" />
+    <Build Include="Tables\Resource\ResourceVersionAttribute.sql" />
+    <Build Include="Tables\Resource\ResourceVersionAuthor.sql" />
+    <Build Include="Tables\Resource\ResourceVersionEvent.sql" />
+    <Build Include="Tables\Resource\ResourceVersionFlag.sql" />
+    <Build Include="Tables\Resource\ResourceVersionKeyword.sql" />
+    <Build Include="Tables\Hub\PermissionRole.sql" />
+    <Build Include="Tables\Hub\Attribute.sql" />
+    <Build Include="Tables\Hub\Log.sql" />
+    <Build Include="Tables\Hub\Role.sql" />
+    <Build Include="Tables\Hierarchy\Publication.sql" />
+    <Build Include="Tables\Resource\ScormResourceVersion.sql" />
+    <Build Include="Tables\Hub\Tenant.sql" />
+    <None Include="Scripts\ELFH Database Scripts\Set up LH Read Only User Group.sql" />
+    <None Include="Scripts\ELFH Database Scripts\Set up LH admin password reset email template.sql" />
+    <None Include="Scripts\ELFH Database Scripts\AddUserContactEmail.sql" />
+    <None Include="Scripts\LH Database Scripts\Create RecentlyAdded Resource Data.sql" />
+    <None Include="Scripts\LH Database Scripts\UpdateResourceVersion.sql" />
+    <Build Include="Stored Procedures\Migration\ArticleResourceVersionFileCreate.sql" />
+    <Build Include="Stored Procedures\Migration\ResourceCreate.sql" />
+    <Build Include="Stored Procedures\Migration\ResourceVersionAuthorCreate.sql" />
+    <Build Include="Stored Procedures\Migration\ResourceVersionKeywordCreate.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\UserNotificationChanges.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\MyLearning.PreDeployment.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\Card10129_ExternalResourceChanges.PreDeployment.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\LandingPageData.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\RolePermissionForReleaseOffline.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\PopulateEventTypes.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\Bookmark.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\PopulateReportTypes.sql" />
+    <Build Include="Tables\Report\Report.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\TD-807_AlterTable_HierarchyEditNodeResourceLookup.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\TD-887_PreLoginLandingPageChanges.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="LearningHub.Nhs.Database.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\documentation\LearningHub.Nhs.Database.publish.xml">
+      <Link>LearningHub.Nhs.Database.publish.xml</Link>
+    </None>
+    <Build Include="Schemas\hub.sql" />
+    <None Include="Scripts\ELFH Database Scripts\Set up LH Tenant.sql" />
+    <None Include="Scripts\ELFH Database Scripts\Update LH email content.sql" />
+    <None Include="Scripts\Temp-Hierarchy\Temporary Hierarchy Table Creation.sql" />
+    <None Include="Scripts\LH Database Scripts\Create Resource Reference Data.sql" />
+    <None Include="Scripts\LH Database Scripts\Create Migration Reference Data.sql" />
+    <None Include="Test Data\Create WebLink ResourceVersion.sql" />
+    <None Include="Test Data\Create Image ResourceVersion.sql" />
+    <None Include="Test Data\Create Video ResourceVersion.sql" />
+    <None Include="Test Data\Create Embedded ResourceVersion.sql" />
+    <None Include="Test Data\Create Equipment ResourceVersion.sql" />
+    <None Include="Test Data\Create Article ResourceVersion.sql" />
+    <None Include="Test Data\Create Audio ResourceVersion.sql" />
+    <None Include="Test Data\Create Generic File ResourceVersion.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Tables\Hub\Notification.sql" />
+    <Build Include="Tables\Hub\Permission.sql" />
+    <Build Include="Tables\Hub\RoleUserGroup.sql" />
+    <Build Include="Tables\Hub\TenantUrl.sql" />
+    <Build Include="Tables\Hub\User.sql" />
+    <Build Include="Tables\Hub\UserGroup.sql" />
+    <Build Include="Tables\Hub\UserNotification.sql" />
+    <Build Include="Tables\Hub\UserUserGroup.sql" />
+    <Build Include="Tables\Hub\Address.sql" />
+    <Build Include="Tables\Resource\VersionStatus.sql" />
+    <Build Include="Tables\Resource\VideoResourceVersion.sql" />
+    <Build Include="Tables\Resource\WebLinkResourceVersion.sql" />
+    <Build Include="Tables\Activity\ActivityStatus.sql" />
+    <Build Include="Schemas\activity.sql" />
+    <None Include="Scripts\LH Database Scripts\Create Activity Reference Data.sql" />
+    <Build Include="Tables\Activity\ResourceActivity.sql" />
+    <Build Include="Stored Procedures\Activity\ResourceActivityCreate.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionDelete.sql" />
+    <Build Include="Tables\Resource\ResourceLicence.sql" />
+    <None Include="Scripts\LH Database Scripts\Create Resource Licence Data.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionCreateNext.sql" />
+    <Build Include="Tables\Resource\WholeSlideImageBlockItem.sql" />
+    <Build Include="Tables\Search\SearchTerm.sql" />
+    <Build Include="Schemas\analytics.sql" />
+    <Build Include="Tables\Search\SearchAction.sql" />
+    <Build Include="Tables\Resource\ResourceVersionEventType.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionRevertToDraft.sql" />
+    <Build Include="Tables\Resource\RecentlyAdded.sql" />
+    <Build Include="Tables\Resource\ResourceAzureMediaAsset.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionSubmitForPublishing.sql" />
+    <None Include="Scripts\ELFH Database Scripts\TermsAndConditionsRR.sql" />
+    <None Include="Scripts\LH Database Scripts\Update Resource Type Label Data.sql" />
+    <Build Include="Tables\Resource\ResourceVersionRating.sql" />
+    <Build Include="Tables\Resource\ResourceVersionRatingSummary.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionReassignOwnership.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceReassignOwnership.sql" />
+    <Build Include="Tables\Activity\MediaResourceActivityType.sql" />
+    <Build Include="Tables\Activity\MediaResourceActivity.sql" />
+    <Build Include="Tables\Activity\MediaResourceActivityInteraction.sql" />
+    <Build Include="Tables\Resource\FileChunkDetail.sql" />
+    <Build Include="Tables\Resource\ResourceVersionUserAcceptance.sql" />
+    <Build Include="Tables\Activity\ScormActivity.sql" />
+    <Build Include="Tables\Activity\ScormActivityInteraction.sql" />
+    <Build Include="Tables\Activity\ScormActivityObjective.sql" />
+    <Build Include="Tables\Hub\Roadmap.sql" />
+    <Build Include="Tables\Hub\RoadmapType.sql" />
+    <None Include="Scripts\LH Database Scripts\Create Roadmap Type Reference Data.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionPublishing.sql" />
+    <Build Include="Stored Procedures\Resources\ResourceVersionFailedToPublish.sql" />
+    <Build Include="Tables\Activity\ScormActivityInteractionCorrectResponse.sql" />
+    <Build Include="Tables\Activity\ScormActivityInteractionObjective.sql" />
+    <Build Include="Stored Procedures\Activity\ScormActivityCreate.sql" />
+    <Build Include="Stored Procedures\Activity\ScormActivityGetSummary.sql" />
+    <Build Include="Functions\ScormActivityGetLastCompleted.sql" />
+    <Build Include="Functions\ScormActivityGetLastInComplete.sql" />
+    <Build Include="Tables\Analytics\EventType.sql" />
+    <Build Include="Tables\Analytics\Event.sql" />
+    <None Include="Scripts\LH Database Scripts\Create Event Type Data.sql" />
+    <Build Include="Tables\Hierarchy\CatalogueNodeVersion.sql" />
+    <Build Include="Tables\Hierarchy\CatalogueNodeVersionKeyword.sql" />
+    <Build Include="Tables\Resource\ResourceSync.sql" />
+    <Build Include="Stored Procedures\Resources\GetContributionTotals.sql" />
+    <Build Include="Stored Procedures\Hierarchy\CatalogueCreate.sql" />
+    <Build Include="Stored Procedures\Hierarchy\CatalogueUpdate.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\CataloguesNodeTableUpdate.sql" />
+    <Build Include="Stored Procedures\Migration\ResourceFileCreate.sql" />
+    <Build Include="Tables\Hub\NotificationType.sql" />
+    <Build Include="Tables\Hub\NotificationPriority.sql" />
+    <Build Include="Views\RoleUserGroupView.sql" />
+    <Build Include="Tables\Hub\ScopeType.sql" />
+    <Build Include="Tables\Hub\Scope.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\InitialiseDataForRestrictedCatalogues.sql" />
+    <None Include="Scripts\LH Database Scripts\Create Attribute Reference Data.sql" />
+    <Build Include="Stored Procedures\Hierarchy\UserGroupRestrictedAccessEnsure.sql" />
+    <Build Include="Tables\Hub\UserGroupAttribute.sql" />
+    <Build Include="Stored Procedures\Hierarchy\CatalogueOwnerUpdate.sql" />
+    <Build Include="Stored Procedures\Hub\UserGroupDelete.sql" />
+    <None Include="Scripts\LH Database Scripts\CreateEmailTemplateData.sql" />
+    <Build Include="Tables\Messaging\Message.sql" />
+    <Build Include="Schemas\messaging.sql" />
+    <Build Include="Tables\Messaging\MessageType.sql" />
+    <Build Include="Tables\Messaging\MessegeSend.sql" />
+    <Build Include="Tables\Messaging\MessageSendRecipient.sql" />
+    <Build Include="Tables\Messaging\EmailTemplate.sql" />
+    <Build Include="Stored Procedures\Messaging\CreateEmailForUser.sql" />
+    <Build Include="Tables\Hierarchy\CatalogueAccessRequest.sql" />
+    <Build Include="Tables\Messaging\EmailTemplateLayout.sql" />
+    <Build Include="Tables\Messaging\MessageMetaData.sql" />
+    <Build Include="Tables\Hub\NotificationTemplate.sql" />
+    <Build Include="Stored Procedures\Messaging\CreateNotificationForUser.sql" />
+    <Build Include="Stored Procedures\Messaging\CreateEmailForEmailAddress.sql" />
+    <Build Include="Schemas\adf.sql" />
+    <Build Include="Tables\Adf\Staging_Elfh_User.sql" />
+    <Build Include="Tables\Adf\Staging_Elfh_UserGroup.sql" />
+    <Build Include="Tables\Adf\Staging_Elfh_UserUserGroup.sql" />
+    <Build Include="Stored Procedures\Adf\LoadElfhUserGroups.sql" />
+    <Build Include="Stored Procedures\Adf\LoadElfhUsers.sql" />
+    <Build Include="Stored Procedures\Adf\LoadElfhUserUserGroups.sql" />
+    <Build Include="Tables\Adf\Unmapped_UserUserGroup.sql" />
+    <Build Include="Functions\Hub\fnSplit.sql" />
+    <Build Include="Functions\Hub\UserIsInRole.sql" />
+    <Build Include="Tables\Hub\AttributeType.sql" />
+    <Build Include="Schemas\external.sql" />
+    <None Include="Scripts\External\External Server Configuration.sql" />
+    <Build Include="Stored Procedures\Hub\RoleUserGroupGetByUserId.sql" />
+    <Build Include="Stored Procedures\Hub\RoleUserGroupGetByUserGroupId.sql" />
+    <Build Include="Stored Procedures\Messaging\SetSendStatus.sql" />
+    <Build Include="Tables\Hub\UserProfile.sql" />
+    <Build Include="Tables\Adf\Staging_Elfh_UserProfile.sql" />
+    <Build Include="Stored Procedures\Adf\LoadElfhUserProfiles.sql" />
+    <Build Include="Stored Procedures\Hub\RestrictedCatalogueGetSummary.sql" />
+    <Build Include="Stored Procedures\Hub\RestrictedCatalogueGetAccessRequests.sql" />
+    <Build Include="Stored Procedures\Hub\RestrictedCatalogueGetUsers.sql" />
+    <Build Include="Stored Procedures\Resources\GetDashboardResources.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetDashboardCatalogues.sql" />
+    <Build Include="Tables\Resource\ScormResourceVersionManifest.sql" />
+    <Build Include="Tables\Resource\ResourceVersionValidationResult.sql" />
+    <Build Include="Tables\Resource\ResourceVersionValidationRuleResult.sql" />
+    <Build Include="Tables\Resource\ResourceTypeValidationRule.sql" />
+    <Build Include="Tables\Activity\MediaResourcePlayedSegment.sql" />
+    <Build Include="Stored Procedures\Activity\CalculatePlayedMediaSegments.sql" />
+    <Build Include="Tables\Hierarchy\NodeActivity.sql" />
+    <Build Include="Tables\Search\SearchFeedback.sql" />
+    <Build Include="Tables\Activity\MediaResourcePlayedSegment.sql" />
+    <Build Include="Stored Procedures\Hierarchy\CatalogueAccessRequestCreate.sql" />
+    <Build Include="Schemas\maintenance.sql" />
+    <Build Include="Stored Procedures\Maintenance\CommandExecute.sql" />
+    <Build Include="Tables\Maintenance\CommandLog.sql" />
+    <Build Include="Stored Procedures\Maintenance\IndexOptimize.sql" />
+    <Build Include="Tables\Maintenance\Queue.sql" />
+    <Build Include="Tables\Maintenance\QueueDatabase.sql" />
+    <Build Include="Stored Procedures\Messaging\GetPendingMessages.sql" />
+    <Build Include="Stored Procedures\Messaging\MessageSendFailed.sql" />
+    <Build Include="Stored Procedures\Messaging\MessageSendSuccess.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\StagingTableMigrationChanges.sql" />
+    <Build Include="Tables\Resource\EsrLinkType.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\InitialiseScorm.sql" />
+    <Build Include="Tables\Resource\ExternalReferenceUserAgreement.sql" />
+    <Build Include="Tables\Resource\ExternalReference.sql" />
+    <Build Include="Tables\Resource\UrlRewriting.sql" />
+    <Build Include="Stored Procedures\Resources\GetScormContentDetails.sql" />
+    <Build Include="Tables\Hub\ExternalOrganisation.sql" />
+    <Build Include="Stored Procedures\Resources\GetScormContentServerDetailsForHistoricExternalUrl.sql" />
+    <Build Include="Stored Procedures\Resources\GetScormContentServerDetailsForLHExternalReference.sql" />
+    <Build Include="Schemas\content.sql" />
+    <Build Include="Tables\Content\ImageAsset.sql" />
+    <Build Include="Tables\Content\Page.sql" />
+    <Build Include="Tables\Content\PageSection.sql" />
+    <Build Include="Tables\Content\PageSectionDetail.sql" />
+    <Build Include="Tables\Content\PageSectionStatus.sql" />
+    <Build Include="Tables\Content\SectionLayoutType.sql" />
+    <Build Include="Tables\Content\SectionTemplateType.sql" />
+    <Build Include="Tables\Content\VideoAsset.sql" />
+    <Build Include="Stored Procedures\Migration\UpdateMigrationStatus.sql" />
+    <Build Include="Stored Procedures\Migration\PopulateScormEsrLinkUrl.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\Card10837_Fixes.sql" />
+    <Build Include="Tables\Resource\PartialFile.sql" />
+    <Build Include="Tables\Resource\WholeSlideImageFile.sql" />
+    <Build Include="Tables\Resource\TextBlock.sql" />
+    <Build Include="Tables\Resource\WholeSlideImageBlock.sql" />
+    <Build Include="Tables\Resource\Block.sql" />
+    <Build Include="Tables\Resource\BlockCollection.sql" />
+    <Build Include="Tables\Resource\CaseResourceVersion.sql" />
+    <Build Include="Tables\Resource\WholeSlideImage.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\Card9532_PathologyNewCaseResourceType.sql" />
+    <Build Include="Tables\Resource\Attachment.sql" />
+    <Build Include="Tables\Resource\MediaBlock.sql" />
+    <Build Include="Tables\Resource\Image.sql" />
+    <Build Include="Tables\Resource\Video.sql" />
+    <Build Include="Tables\Resource\VideoFile.sql" />
+    <Build Include="Tables\Resource\ImageAnnotation.sql" />
+    <Build Include="Tables\Resource\ImageAnnotationMark.sql" />
+    <Build Include="Tables\Resource\QuestionBlock.sql" />
+    <Build Include="Tables\Resource\QuestionAnswer.sql" />
+    <Build Include="Tables\Resource\ImageCarouselBlock.sql" />
+    <Build Include="Tables\Resource\AssessmentResourceVersion.sql" />
+    <Build Include="Tables\External\ExternalSystem.sql" />
+    <Build Include="Tables\External\ExternalSystemDeepLink.sql" />
+    <Build Include="Tables\External\ExternalSystemUser.sql" />
+    <Build Include="Stored Procedures\Hierarchy\CatalogueShow.sql" />
+    <None Include="Scripts\LH Database Scripts\Create Content Structure dummy data.sql" />
+    <Build Include="Stored Procedures\Hierarchy\FolderCreate.sql" />
+    <Build Include="Tables\Hierarchy\FolderNodeVersion.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetNodeContentsAdmin.sql" />
+    <Build Include="Tables\Hierarchy\HierarchyEdit.sql" />
+    <Build Include="Tables\Hierarchy\HierarchyEditDetail.sql" />
+    <Build Include="Tables\Hierarchy\HierarchyEditDetailOperation.sql" />
+    <Build Include="Tables\Hierarchy\HierarchyEditDetailType.sql" />
+    <Build Include="Tables\Hierarchy\HierarchyEditStatus.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditCreate.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditDiscard.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditDeleteFolder.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditFolderCreate.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditFolderUpdate.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditMoveNode.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditMoveNodeDown.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditMoveNodeUp.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\InitialiseHierarchyEdit.sql" />
+    <Build Include="Tables\Hierarchy\NodeResourceLookup.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditPublish.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditPublishing.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditSubmitForPublishing.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditFailedToPublish.sql" />
+    <Build Include="Stored Procedures\Hierarchy\FolderNodeVersionCreate.sql" />
+    <Build Include="Stored Procedures\Hub\EventLogEventCreate.sql" />
+    <Build Include="Stored Procedures\Hierarchy\NodeResourcePublish.sql" />
+    <Build Include="Stored Procedures\Resources\GetContributionsActionRequired.sql" />
+    <Build Include="Stored Procedures\Resources\GetContributionsDraft.sql" />
+    <Build Include="Stored Procedures\Resources\GetContributionsPublished.sql" />
+    <Build Include="Stored Procedures\Resources\GetContributionsUnpublished.sql" />
+    <Build Include="Tables\Hub\Event.sql" />
+    <Build Include="Tables\Hub\EventType.sql" />
+    <Build Include="Tables\Hub\EventLog.sql" />
+    <Build Include="Tables\Hub\PublicationLog.sql" />
+    <Build Include="Stored Procedures\Hierarchy\MoveResource.sql" />
+    <Build Include="Stored Procedures\Hierarchy\MoveResourceDown.sql" />
+    <Build Include="Stored Procedures\Hierarchy\MoveResourceUp.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetCacheRefreshDetails.sql" />
+    <Build Include="Stored Procedures\Hierarchy\NodeResourceCreateOrUpdate.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetNodeContentsAdminReadOnly.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetNodeContentsForCatalogueBrowse.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetNodeContentsForCatalogueEditor.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditRefreshNodeResourceLookup.sql" />
+    <Build Include="Tables\Hierarchy\HierarchyEditNodeResourceLookup.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditMoveResource.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditMoveResourceUp.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditMoveResourceDown.sql" />
+    <Build Include="Tables\Resource\ResourceTypeValidationRule.sql" />
+    <Build Include="Tables\Resource\ResourceVersionValidationResult.sql" />
+    <Build Include="Tables\Resource\ResourceVersionValidationRuleResult.sql" />
+    <Build Include="Tables\Resource\ScormResourceVersionManifest.sql" />
+    <Build Include="Functions\ScormTimeToSeconds.sql" />
+    <Build Include="Stored Procedures\Activity\ScormActivityResolve.sql" />
+    <Build Include="Stored Procedures\Activity\ScormActivityComplete.sql" />
+    <Build Include="Stored Procedures\Activity\ScormActivityHousekeeping.sql" />
+    <Build Include="Stored Procedures\Activity\ScormActivityLaunch.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\RolePermissionForScormTraceWindow.sql" />
+    <Build Include="Tables\Adf\Staging_ElfhExternalSystemUser.sql" />
+    <Build Include="Stored Procedures\Adf\UpsertElfhExternalUsers.sql" />
+    <Build Include="Tables\Hub\BookmarkType.sql" />
+    <Build Include="Tables\Hub\UserBookmark.sql" />
+    <Build Include="Tables\Resource\ScormResourceReferenceEvent.sql" />
+    <Build Include="Tables\Resource\ScormResourceReferenceEventType.sql" />
+    <Build Include="Tables\Hub\DetectJsLog.sql" />
+    <Build Include="Tables\Report\ReportType.sql" />
+    <Build Include="Schemas\reports.sql" />
+    <Build Include="Tables\Report\ReportStatus.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\PopulateReportStatuses.sql" />
+    <Build Include="Tables\Report\ReportPage.sql" />
+    <Build Include="Tables\Report\ReportOrientationMode.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\PopulateReportOrientationModes.sql" />
+    <Build Include="Tables\Report\Client.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\PopulateReportClients.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\UpdateEventsData.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\Card763_UpdateSearchEventsData.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditHouseKeeping.sql" />
+    <Build Include="Stored Procedures\Resources\BlockCollectionGet.sql" />
+    <Build Include="Stored Procedures\Resources\BlockCollectionDelete.sql" />
+    <None Include="Scripts\NLog Database Scripts\Schema, Table, StoreProcedure Creation.sql" />
+    <Build Include="Tables\Maintenance\InternalSystem.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\InternalSystem.sql" />
+    <None Include="Scripts\ELFH Database Scripts\UpdateNHSE.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetNodeDetails.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetNodePathNodes.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetNodeContentsForCatalogueBrowse_withEmptyFolders.sql" />
+    <Build Include="Functions\CalculateResourceVersionNumber.sql" />
+    <Build Include="Stored Procedures\Activity\UserScormActivitySuspendDataToBeCleared.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\ExternalSystemData.sql" />
+    <Build Include="Tables\Hub\EmailChangeValidationToken.sql" />
+    <Build Include="Tables\Hub\EmailChangeValidationTokenStatus.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\EmailChangeMessageSeed.sql" />
+    <Build Include="Tables\Resource\ResourceAccessibility.sql" />
+    <Build Include="Tables\Hub\UserProvider.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\PopulateProviders.sql" />
+    <Build Include="Tables\Hub\Provider.sql" />
+    <Build Include="Tables\Hierarchy\CatalogueNodeVersionProvider.sql" />
+    <Build Include="Tables\Resource\ResourceVersionProvider.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Pre-Deploy\Scripts\Card6011_ResourceActivityNullSessions.PreDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Pre-Deploy\Scripts\Card4473_AddColumnToResourceVersion.PreDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\Card7178_BackfillNewMediaResourceActivityColumns.PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\LH Database Scripts\Create Catalogue Node Type.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Pre-Deploy\Scripts\Card6502_ScormResourceVersionChanges.PreDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\Card4707_AddResourceAttribute.PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\Card4708_UpdateMigrationInputRecordStatuses.PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Pre-Deploy\Scripts\Card4707_AddColumnToResourceAttribute.PreDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Pre-Deploy\Scripts\Card8249_CatalogueNodeVersion_DDL.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\InitialiseDataForEmailTemplates.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\InitialiseDataForNotificationTemplates.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\InitialiseDataForMessaging.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Pre-Deploy\Scripts\Card8205_UserGroupAdmin_Changes.PreDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Pre-Deploy\Scripts\Card8254_Messaging_Changes.PreDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\MigrationToolChanges.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Tables\Resource\AssessmentResourceVersion.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\Card11432_AddMoreForbiddenExtensionsToFileType.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\UpdateDataForEmailTemplates.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\Card9399_InitLastShownDate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Pre-Deploy\Scripts\Card13155_ImageZoneQuestionCaseBlock.PreDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Pre-Deploy\Scripts\Card7232_ScormPlayer_Changes.PreDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\ElfhExternalSystemsImport.sql" />
+  </ItemGroup>
+</Project>

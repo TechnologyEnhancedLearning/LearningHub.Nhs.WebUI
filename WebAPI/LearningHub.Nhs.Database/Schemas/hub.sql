@@ -1,0 +1,7 @@
+﻿CREATE SCHEMA [hub]
+    AUTHORIZATION [dbo];
+
+
+
+
+GO

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LearningHub.Nhs.Migration.ConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "-cm config.json"
+    }
+  }
+}

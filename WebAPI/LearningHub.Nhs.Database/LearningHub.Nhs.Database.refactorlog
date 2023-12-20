@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="b41cbf71-d592-49b2-9e74-1d4366c18779" ChangeDateTime="03/12/2019 10:58:22">
+    <Property Name="ElementName" Value="[dbo].[Tenant].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Tenant]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="tenantId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7cd84faf-32e9-4a01-b158-9289cd78869c" ChangeDateTime="03/12/2019 11:24:20">
+    <Property Name="ElementName" Value="[dbo].[Tenant].[live]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Tenant]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="liveChatSnippet" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9cbc704d-b352-4f20-be7d-abdb5e1cd71c" ChangeDateTime="09/16/2020 09:09:08">
+    <Property Name="ElementName" Value="[hierarchy].[CatalogueNodeVersion].[Status]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hierarchy].[CatalogueNodeVersion]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Hidden" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="93795e73-7b68-4ef3-a2ff-3e1e89e27787" ChangeDateTime="07/26/2021 13:10:43">
+    <Property Name="ElementName" Value="[hub].[ExternalSystem].[Address1]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hub].[ExternalSystem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Name" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a2780ea9-6a04-4393-93be-6fbda67f48ab" ChangeDateTime="07/26/2021 13:11:21">
+    <Property Name="ElementName" Value="[hub].[ExternalSystem].[Address2]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hub].[ExternalSystem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Code" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b7989efe-9eeb-465b-a7cf-c4d725a3f7b9" ChangeDateTime="07/26/2021 13:11:25">
+    <Property Name="ElementName" Value="[hub].[ExternalSystem].[Address3]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hub].[ExternalSystem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Url" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="248c2af6-879d-4e84-9a1c-b4fd4a66aa92" ChangeDateTime="07/26/2021 13:11:34">
+    <Property Name="ElementName" Value="[hub].[ExternalSystem].[Address4]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hub].[ExternalSystem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SecurityIdentifier" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="20bc086f-5978-4a00-bc88-1b37a8bc8d80" ChangeDateTime="07/26/2021 13:12:09">
+    <Property Name="ElementName" Value="[hub].[ExternalSystem].[Town]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hub].[ExternalSystem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="TermsAndConditions" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1ab2d263-c6f4-4166-953e-fb708f5a4f9f" ChangeDateTime="07/26/2021 13:12:36">
+    <Property Name="ElementName" Value="[hub].[ExternalSystem].[County]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hub].[ExternalSystem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DefaultUserGroupId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e57fb02c-a5ae-4e4d-9305-0286945b8194" ChangeDateTime="07/26/2021 13:12:54">
+    <Property Name="ElementName" Value="[hub].[ExternalSystem].[PostCode]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hub].[ExternalSystem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DefaultStaffGroupId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e10c6121-3b32-4914-9590-e39896335e55" ChangeDateTime="07/26/2021 13:13:01">
+    <Property Name="ElementName" Value="[hub].[ExternalSystem].[Deleted]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hub].[ExternalSystem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DefaultJobRoleId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a7978e83-b72f-427b-922b-afb8082b2070" ChangeDateTime="07/26/2021 13:13:06">
+    <Property Name="ElementName" Value="[hub].[ExternalSystem].[CreateUserId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hub].[ExternalSystem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DefaultGradingId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7d72b563-9d9b-4e01-9b8a-64eb4b116c67" ChangeDateTime="07/26/2021 13:13:12">
+    <Property Name="ElementName" Value="[hub].[ExternalSystem].[CreateDate]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hub].[ExternalSystem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DefaultSpecialityId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1845b961-5dca-4243-bf97-e29fc273cd3e" ChangeDateTime="07/26/2021 13:13:18">
+    <Property Name="ElementName" Value="[hub].[ExternalSystem].[AmendUserId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hub].[ExternalSystem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DefaultLocationId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ed3d6b89-6963-49e2-b61a-87a149e7f82e" ChangeDateTime="07/28/2021 15:46:23">
+    <Property Name="ElementName" Value="[external].[ExternalSystem].[SecurityIdentifier]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[external].[ExternalSystem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SecretKey" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="89458aea-d08d-401b-81b0-00733cf9d48d" ChangeDateTime="07/28/2021 15:46:30">
+    <Property Name="ElementName" Value="[external].[ExternalSystem].[Url]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[external].[ExternalSystem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CallbackUrl" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4b84f4c6-4cbd-4044-b208-de027839b121" ChangeDateTime="07/28/2021 15:48:32">
+    <Property Name="ElementName" Value="[external].[ExternalSystemUser].[Code]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[external].[ExternalSystemUser]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ExternalSystemId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3cfe171d-36f8-43fb-81bf-4cb1d2d434fc" ChangeDateTime="07/28/2021 15:48:38">
+    <Property Name="ElementName" Value="[external].[ExternalSystemUser].[CallbackUrl]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[external].[ExternalSystemUser]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Active" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="94fbecef-d12f-4113-acd3-461c33993b7d" ChangeDateTime="04/26/2023 14:35:36">
+    <Property Name="ElementName" Value="[content].[PageSectionDetail].[TextBackgroundWhite]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[content].[PageSectionDetail]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="TextBackgroundColour" />
+  </Operation>
+</Operations>

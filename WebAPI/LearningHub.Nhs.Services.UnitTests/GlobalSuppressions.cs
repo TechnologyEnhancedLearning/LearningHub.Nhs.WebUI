@@ -1,0 +1,15 @@
+﻿// <copyright file="GlobalSuppressions.cs" company="HEE.nhs.uk">
+// Copyright (c) HEE.nhs.uk.
+// </copyright>
+
+using System.Diagnostics.CodeAnalysis;
+
+[assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Regions serve a valid purpose.", Scope = "member", Target = "~M:LearningHub.Nhs.Services.UnitTests.MigrationServiceTests.CreateFromJsonString_ReturnsErrorIfDestinationNodeIdDoesntExist~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Regions serve a valid purpose.", Scope = "member", Target = "~M:LearningHub.Nhs.Services.UnitTests.MigrationServiceTests.Validate_ReturnsErrorIfMigrationIdDoesntExist~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Regions serve a valid purpose.", Scope = "member", Target = "~M:LearningHub.Nhs.Services.UnitTests.MigrationServiceTests.BeginCreateMetadata_ReturnsErrorIfMigrationIdDoesntExist~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Regions serve a valid purpose.", Scope = "member", Target = "~M:LearningHub.Nhs.Services.UnitTests.MigrationServiceTests.BeginPublishResources_ReturnsErrorIfMigrationIdDoesntExist~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Regions serve a valid purpose.", Scope = "member", Target = "~M:LearningHub.Nhs.Services.UnitTests.MyLearningServiceTests.GetActivityDetailedArticleFilterReturnsCorrectResource~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Regions serve a valid purpose.", Scope = "member", Target = "~M:LearningHub.Nhs.Services.UnitTests.MyLearningServiceTests.GetActivityDetailedCompleteFilterReturnsCorrectMatches~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Regions serve a valid purpose.", Scope = "member", Target = "~M:LearningHub.Nhs.Services.UnitTests.MyLearningServiceTests.GetActivityDetailedThisWeekFilterReturnsCorrectMatches~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Regions serve a valid purpose.", Scope = "member", Target = "~M:LearningHub.Nhs.Services.UnitTests.MigrationServiceTests.CreateFromStagingTables_ReturnsErrorIfMigrationSourceIdDoesntExist~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Regions serve a valid purpose.", Scope = "member", Target = "~M:LearningHub.Nhs.Services.UnitTests.MigrationServiceTests.CheckStatusOfPublishResources_ReturnsErrorIfMigrationIdDoesntExist~System.Threading.Tasks.Task")]

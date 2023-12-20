@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="b41cbf71-d592-49b2-9e74-1d4366c18779" ChangeDateTime="03/12/2019 10:58:22">
+    <Property Name="ElementName" Value="[dbo].[Tenant].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Tenant]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="tenantId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7cd84faf-32e9-4a01-b158-9289cd78869c" ChangeDateTime="03/12/2019 11:24:20">
+    <Property Name="ElementName" Value="[dbo].[Tenant].[live]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Tenant]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="liveChatSnippet" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9cbc704d-b352-4f20-be7d-abdb5e1cd71c" ChangeDateTime="09/16/2020 09:09:08">
+    <Property Name="ElementName" Value="[hierarchy].[CatalogueNodeVersion].[Status]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hierarchy].[CatalogueNodeVersion]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Hidden" />
+  </Operation>
+</Operations>

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LearningHub.Nhs.Migration.Staging.Repository</name>
+    </assembly>
+    <members>
+        <member name="T:LearningHub.Nhs.Migration.Staging.Repository.IStagingTableInputModelRepository">
+            <summary>
+            The StagingTableInputModelRepository interface.
+            </summary>
+        </member>
+        <member name="M:LearningHub.Nhs.Migration.Staging.Repository.IStagingTableInputModelRepository.GetAllStagingTableInputModels">
+            <summary>
+            The all staging table input models from the staging database.
+            </summary>
+            <returns>
+            The <see cref="T:System.Threading.Tasks.Task"/>.
+            </returns>
+        </member>
+        <member name="T:LearningHub.Nhs.Migration.Staging.Repository.MigrationStagingDbContext">
+            <summary>
+            The migration tool staging tables db context. This is used as a source of migration input data. They are
+            populated by an Azure Data Factory pipeline created by Jeremy. It is a separate db to the LH one.
+            </summary>
+        </member>
+        <member name="M:LearningHub.Nhs.Migration.Staging.Repository.MigrationStagingDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{LearningHub.Nhs.Migration.Staging.Repository.MigrationStagingDbContext})">
+            <summary>
+            Initializes a new instance of the <see cref="T:LearningHub.Nhs.Migration.Staging.Repository.MigrationStagingDbContext"/> class.
+            </summary>
+            <param name="options">
+            The options.
+            </param>
+        </member>
+        <member name="P:LearningHub.Nhs.Migration.Staging.Repository.MigrationStagingDbContext.StagingTableInputModels">
+            <summary>
+            Gets or sets the StagingTableInputModels. These are not entities. They are returned from the [Migration].[GetStagingTableResources]
+            stored proc in the migration staging table database.
+            </summary>
+        </member>
+        <member name="T:LearningHub.Nhs.Migration.Staging.Repository.StagingTableInputModelRepository">
+            <summary>
+            The StagingTableInputModel repository.
+            </summary>
+        </member>
+        <member name="M:LearningHub.Nhs.Migration.Staging.Repository.StagingTableInputModelRepository.#ctor(LearningHub.Nhs.Migration.Staging.Repository.MigrationStagingDbContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LearningHub.Nhs.Migration.Staging.Repository.StagingTableInputModelRepository"/> class.
+            </summary>
+            <param name="dbContext">
+            The db context.
+            </param>
+        </member>
+        <member name="P:LearningHub.Nhs.Migration.Staging.Repository.StagingTableInputModelRepository.DbContext">
+            <summary>
+            Gets the db context.
+            </summary>
+        </member>
+        <member name="M:LearningHub.Nhs.Migration.Staging.Repository.StagingTableInputModelRepository.GetAllStagingTableInputModels">
+            <summary>
+            Gets all staging table input models from the staging database.
+            </summary>
+            <returns>
+            The <see cref="T:System.Threading.Tasks.Task"/>.
+            </returns>
+        </member>
+    </members>
+</doc>

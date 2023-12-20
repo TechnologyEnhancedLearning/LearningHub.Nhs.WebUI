@@ -1,0 +1,21 @@
+{
+  //// JSON file:
+  //"MigrationDataSourceType": "MetadataFile",
+  ////"MetadataFilePath": "C:\\HEE\\MigrationTool\\JSON File\\2021-05-17-scorm publish - Local.json",
+  ////"MetadataFilePath": "C:\\HEE\\MigrationTool\\JSON File\\2021-05-18 ELR migration v9.json",
+  //"MetadataFilePath": "C:\\HEE\\MigrationTool\\JSON File\\2021-05-18 ELR migration v9 - Part1.json",
+  ////"MetadataFilePath": "C:\\HEE\\MigrationTool\\JSON File\\2021-05-19 ELR small test.json",
+  //"MigrationSourceId": 1, //1=elr, 2=ewin
+  //"DestinationNodeId": 1,
+  //"AzureMigrationContainerName": "elr"
+  ////"AzureMigrationContainerName": "ewin-20210129"
+
+  // Staging Tables:
+  "MigrationDataSourceType": "StagingTables",
+  //"MetadataFilePath": "C:\\HEE\\MigrationTool\\Staging Tables\\Learning Hub metadata template v1.2 Test 1.xlsx",
+  //"MetadataFilePath": "C:\\HEE\\MigrationTool\\Migrations\\IOW\\Learning Hub metadata template v1.2 IOW 2021-03-16.xlsx",
+  "MetadataFilePath": "C:\\HEE\\MigrationTool\\Staging Tables\\Staging Table basic test3.xlsx",
+  //"MetadataFilePath": "C:\\HEE\\MigrationTool\\Staging Tables\\Learning Hub metadata template v1.3 (1).xlsx",
+  "MigrationSourceId": 100,
+  "AzureMigrationContainerName": "elr-test"
+}

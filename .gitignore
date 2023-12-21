@@ -38,3 +38,8 @@ obj
 /WebAPI/LearningHub.Nhs.API/internal-nlog-lhapi.txt
 /WebAPI/LearningHub.Nhs.API/web.config
 /AdminUI/LearningHub.Nhs.AdminUI/yarn.lock
+/AdminUI/LearningHub.Nhs.AdminUI/Properties/launchSettings.json
+/AdminUI/LearningHub.Nhs.AdminUI/web.config
+/AdminUI/LearningHub.Nhs.AdminUI/Properties/launchSettings.json
+/WebAPI/LearningHub.Nhs.API/Properties/launchSettings.json
+/WebAPI/LearningHub.Nhs.API/appsettings.Development.json

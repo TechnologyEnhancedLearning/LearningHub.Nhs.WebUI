@@ -1,9 +1,9 @@
 # Introduction 
-This is the official open source repository for the [Learning Hub](https://learninghub.nhs.uk/) platform. 
+This is the official open-source repository for the [Learning Hub](https://learninghub.nhs.uk/) platform. 
 
 The Learning Hub is the national digital learning platform providing easy access to a wide range of educational resources and support for the health and care workforce and educators.
 
-The Learning Hub is provided and supported the Technology Enhanced Learning platforms team at [NHS England](https://www.england.nhs.uk/).
+The Learning Hub is provided and supported by the Technology Enhanced Learning Platforms team at [NHS England](https://www.england.nhs.uk/).
 
 # Getting Started
 
@@ -26,7 +26,7 @@ The Learning Hub is provided and supported the Technology Enhanced Learning plat
 
 To run the code, you will also need to clone and build the [Learning Hub User API repository](https://github.com/TechnologyEnhancedLearning/LearningHub.Nhs.UserApi)
 
-You will need a development copy of the Learning Hub sql database - to obtain this, please contact support (see Contribute section below)
+You will need a development copy of the Learning Hub SQL database - to obtain this, please contact support (see Contribute section below)
 
 ## Getting the code
 
@@ -41,8 +41,8 @@ You should now be able to open the solution in your IDE by finding and opening t
 # Build the solution
 
 ## Prerequisites
-These instructions assume that you have already followed the Build and Test instructions for the [Learning Hub User API repository](https://github.com/TechnologyEnhancedLearning/LearningHub.Nhs.UserApi). Specifically, you have alreadty:
-- Created a Truested self signed certificate
+These instructions assume that you have already followed the Build and Test instructions for the [Learning Hub User API repository](https://github.com/TechnologyEnhancedLearning/LearningHub.Nhs.UserApi). Specifically, you have already:
+- Created a Truested self-signed certificate
 - Configured Learning Hub development URLs to use this certificate in IIS
 - Added the development URLs to the Windows hosts files
 - Set up the Learning Hub and elfh Hub databases and run necessary migrations
@@ -85,10 +85,10 @@ Create a Local IIS launch profile for the following projects:
 
 1. From the launch drop down choose **Debug Properties**
 2. Create a **New** profile
-3. Choose **IIS** from the drop down and name the profile **IIS Local**
+3. Choose **IIS** from the drop-down and name the profile **IIS Local**
 4. Add the environment name to **Environment variables**: `ASPNETCORE_ENVIRONMENT=Development`
 5. Check **Launch browser** if appropriate (WebUI, AdminUI)
-6. Set the **App URL**. Suggested URLs as follows:
+6. Set the **App URL**. Suggested URLs are as follows:
    - LearningHub.Nhs.AdminUI = https://lh-admin.dev.local
    - LearningHub.Nhs.WebAPI = https://lh-api.dev.local
    - LearningHub.Nhs.WebUI = https://lh-web.dev.local

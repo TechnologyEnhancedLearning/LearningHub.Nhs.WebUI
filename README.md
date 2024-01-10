@@ -92,7 +92,7 @@ Create a Local IIS launch profile for the following projects:
    - LearningHub.Nhs.AdminUI = https://lh-admin.dev.local
    - LearningHub.Nhs.WebAPI = https://lh-api.dev.local
    - LearningHub.Nhs.WebUI = https://lh-web.dev.local
-7. Tick the checkbox for **Enable Anonymous Authentication**.
+7. Tick the checkbox for **Enable Anonymous Authentication**. 
 
 ## Rebuild and run
 

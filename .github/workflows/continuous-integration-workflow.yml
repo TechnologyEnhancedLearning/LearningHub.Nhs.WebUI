@@ -1,5 +1,5 @@
 name: Continuous Integration
-on: [pull_request]
+on: [push]
 env:
   BuildParameters.RestoreBuildProjects: '**/*.csproj'
   BuildParameters.TestProjects: '**/*[Tt]ests/*.csproj'

@@ -4,6 +4,10 @@ variables:
   value: '**/*.csproj'
 - name: BuildParameters.TestProjects
   value: '**/*[Tt]ests/*.csproj'
+trigger:
+  branches:
+    include:
+    - refs/heads/RC
 name: $(date:yyyyMMdd)$(rev:.r)
 resources:
   repositories:

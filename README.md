@@ -1,4 +1,4 @@
-# Introduction 
+# Introduction
 This is the official open-source repository for the [Learning Hub](https://learninghub.nhs.uk/) platform. 
 
 The Learning Hub is the national digital learning platform providing easy access to a wide range of educational resources and support for the health and care workforce and educators.

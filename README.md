@@ -7,7 +7,7 @@ The Learning Hub is provided and supported by the Technology Enhanced Learning P
 
 # Getting Started
 
-## Required installs
+## Required installs 
 - [Visual Studio Professional 2022](https://visualstudio.microsoft.com/downloads/) or other suitable An IDE that supports the Microsoft Tech Stack
   - Make sure you have the [NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NPMTaskRunner) extension
 - SQL Server 2019
@@ -94,7 +94,7 @@ Create a Local IIS launch profile for the following projects:
    - LearningHub.Nhs.WebUI = https://lh-web.dev.local
 7. Tick the checkbox for **Enable Anonymous Authentication**. 
 
-## Rebuild and run
+## Rebuild and run 
 
 1. Rebuild the solution
 2. Set **LearningHub.Nhs.WebUI** as the startup Project

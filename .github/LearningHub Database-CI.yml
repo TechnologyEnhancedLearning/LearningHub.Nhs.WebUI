@@ -1,0 +1,30 @@
+trigger:
+  - CI
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/CI
+jobs:
+- job: Job_1
+  displayName: Agent job
+  pool:
+    vmImage: windows-2019
+  steps:
+  - checkout: self
+    clean: true
+    fetchTags: false
+  - task: MSBuild@1
+    displayName: Build solution **/LearningHub.Nhs.Database.sqlproj
+    inputs:
+      solution: '**/LearningHub.Nhs.Database.sqlproj'
+      msbuildArchitecture: x64
+  - task: CopyFiles@2
+    displayName: Copy SQL Dacpac File
+    inputs:
+      SourceFolder: $(agent.builddirectory)\s
+      Contents: '**\LearningHub.Nhs.Database.dacpac'
+      TargetFolder: $(build.artifactstagingdirectory)
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: drop'
+...

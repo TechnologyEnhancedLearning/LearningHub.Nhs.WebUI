@@ -139,6 +139,14 @@
     padding-right: px2rem(68);
 }
 
+#maincontent {
+
+    button[class^='nhsuk-search__submit'] span.nhsuk-u-visually-hidden {
+        color: #595959;
+        background-color: #fff;
+    }
+}
+
 /* One third column layout that switches to full width at the small desktop breakpoint (990px) instead of mobile. */
 .nhsuk-grid-column-one-third-small-desktop {
     @extend .nhsuk-grid-column-one-third;

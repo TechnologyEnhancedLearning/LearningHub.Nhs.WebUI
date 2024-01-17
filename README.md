@@ -7,7 +7,7 @@ The Learning Hub is provided and supported by the Technology Enhanced Learning P
 
 # Getting Started
 
-## Required installs 
+## Required installs
 - [Visual Studio Professional 2022](https://visualstudio.microsoft.com/downloads/) or other suitable An IDE that supports the Microsoft Tech Stack
   - Make sure you have the [NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NPMTaskRunner) extension
 - SQL Server 2019

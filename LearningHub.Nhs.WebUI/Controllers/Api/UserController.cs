@@ -91,6 +91,18 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         }
 
         /// <summary>
+        /// to get user role.
+        /// </summary>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("CheckUserRole")]
+        public async Task<ActionResult> CheckUserRole()
+        {
+            var isSystemAdmin = this.User.IsInRole("Administrator");
+            return this.Ok(isSystemAdmin);
+        }
+
+        /// <summary>
         /// The GetCurrentUserPersonalDetails.
         /// </summary>
         /// <returns>The <see cref="Task{ActionResult}"/>.</returns>

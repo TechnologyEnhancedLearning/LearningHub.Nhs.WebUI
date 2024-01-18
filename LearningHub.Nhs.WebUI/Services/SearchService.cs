@@ -145,12 +145,9 @@ namespace LearningHub.Nhs.WebUI.Services
 
                         var generalAccessValue = (int)ResourceAccessibilityEnum.GeneralAccess;
                         var basicUserAudienceFilterItem = accessLevelFilters.Where(x => x.DisplayName == generalAccessValue.ToString()).FirstOrDefault();
-
-                        if (basicUserAudienceFilterItem != null)
-                        {
-                            var basicUserAudienceFilter = new SearchFilterModel() { DisplayName = ResourceAccessLevelHelper.GetPrettifiedResourceAccessLevelOptionDisplayName(ResourceAccessibilityEnum.GeneralAccess), Count = basicUserAudienceFilterItem.Count, Value = generalAccessValue.ToString(), Selected = (searchRequest.ResourceAccessLevelId ?? 0) == generalAccessValue };
-                            resourceAccessLevelFilters.Add(basicUserAudienceFilter);
-                        }
+                        var basicResourceAccesslevelCount = basicUserAudienceFilterItem?.Count ?? 0;
+                        var basicUserAudienceFilter = new SearchFilterModel() { DisplayName = ResourceAccessLevelHelper.GetPrettifiedResourceAccessLevelOptionDisplayName(ResourceAccessibilityEnum.GeneralAccess), Count = basicResourceAccesslevelCount, Value = generalAccessValue.ToString(), Selected = (searchRequest.ResourceAccessLevelId ?? 0) == generalAccessValue };
+                        resourceAccessLevelFilters.Add(basicUserAudienceFilter);
                     }
 
                     filters = resourceResult.Facets.Where(x => x.Id == "provider_ids").First().Filters;

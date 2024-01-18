@@ -3,113 +3,113 @@
 @model LearningHub.Nhs.Models.Dashboard.DashboardCatalogueResponseViewModel;
 
 @{
-    ViewData["Title"] = "Learning Hub - Catalogues";
+  ViewData["Title"] = "Learning Hub - Catalogues";
 
-    var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString().ToLower());
-    var hasSearchTerm = queryParams.ContainsKey("term");
-    var searhTerm = hasSearchTerm ? queryParams["term"].ToString() : null;
+  var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString().ToLower());
+  var hasSearchTerm = queryParams.ContainsKey("term");
+  var searhTerm = hasSearchTerm ? queryParams["term"].ToString() : null;
 }
 
 @section styles{
-    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/catalogue.css" asp-append-version="true" />
+  <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/catalogue.css" asp-append-version="true" />
 }
 
 <div class="nhsuk-width-container app-width-container" style="width:100%">
-    @if (hasSearchTerm)
+  @if (hasSearchTerm)
+  {
+    var parms = new Dictionary<string, string> { { "term", searhTerm } };
+    <vc:back-link asp-controller="Search" asp-action="Index" asp-all-route-data="@parms" link-text="Back to: Search results" />
+  }
+  else
+  {
+    <vc:back-link asp-controller="Home" asp-action="Index" link-text="Back to: Learning Hub" />
+  }
+  <h1 class="nhsuk-u-margin-bottom-5">
+    @(hasSearchTerm ? $"Search results for {searhTerm}" : "All catalogues")
+  </h1>
+
+  <h2 class="nhsuk-u-margin-bottom-5">
+    @($"{Model.TotalCount} catalogue results")
+  </h2>
+
+
+  <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred">
+
+    @foreach (var item in Model.Catalogues)
     {
-        var parms = new Dictionary<string, string> { { "term", searhTerm } };
-        <vc:back-link asp-controller="Search" asp-action="Index" asp-all-route-data="@parms" link-text="Back to: Search results" />
-    }
-    else
-    {
-        <vc:back-link asp-controller="Home" asp-action="Index" link-text="Back to: Learning Hub" />
-    }
-    <h1 class="nhsuk-u-margin-bottom-5">
-        @(hasSearchTerm ? $"Search results for {searhTerm}" : "All catalogues")
-    </h1>
+      <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
 
-    <h2 class="nhsuk-u-margin-bottom-5">
-        @($"{Model.TotalCount} catalogue results")
-    </h2>
+        <div class="nhsuk-card catalogue-card">
 
+          <div class="nhsuk-card-banner-container">
+            @if (!string.IsNullOrWhiteSpace(item.CardImageUrl))
+            {
+              <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.CardImageUrl" alt="@item.Name" />
+            }
+            else if (!string.IsNullOrWhiteSpace(item.BannerUrl))
+            {
+              <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.BannerUrl" alt="@item.Name" />
+            }
+            else
+            {
+              <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
+            }
+          </div>
 
-    <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred">
+          <div class="nhsuk-card__content catalogue-card-content">
 
-        @foreach (var item in Model.Catalogues)
-        {
-            <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+            <h3 class="nhsuk-card__heading nhsuk-heading-m">
+              <a class="nhsuk-card__link line-clamp-2" asp-controller="Catalogue" asp-action="Index" asp-route-reference="@item.Url">@item.Name</a>
+            </h3>
 
-                <div class="nhsuk-card catalogue-card">
+            <div class="nhsuk-card__description catalogue-card-body">
+              <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
+                @Html.Raw(item.Description)
+              </div>
 
-                    <div class="nhsuk-card-banner-container">
-                        @if (!string.IsNullOrWhiteSpace(item.CardImageUrl))
-                        {
-                            <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.CardImageUrl" alt="@item.Name" />
-                        }
-                        else if (!string.IsNullOrWhiteSpace(item.BannerUrl))
-                        {
-                            <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.BannerUrl" alt="@item.Name" />
-                        }
-                        else
-                        {
-                            <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
-                        }
-                    </div>
-
-                    <div class="nhsuk-card__content catalogue-card-content">
-
-                        <h3 class="nhsuk-card__heading nhsuk-heading-m">
-                            <a class="nhsuk-card__link line-clamp-2" asp-controller="Catalogue" asp-action="Index" asp-route-reference="@item.Url">@item.Name</a>
-                        </h3>
-
-                        <div class="nhsuk-card__description catalogue-card-body">
-                            <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
-                                @Html.Raw(item.Description)
-                            </div>
-
-                            <div class="catalogue-meta">
-                                <div>
-                                    <div>
-                                        @if (item.RestrictedAccess)
-                                        {
-                                            <div class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">@(item.HasAccess ? "Access Granted" : "Access restricted")</div>
-                                        }
-                                    </div>
-                                    <div>
-                                        <a class="nhsuk-u-font-size-16 nhsuk-u-margin-right-3" role="button" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
-                                           asp-route-bookmarked="@item.IsBookmarked"
-                                           asp-route-id="@item.BookmarkId"
-                                           asp-route-title="@item.Name.Truncate(60)"
-                                           asp-route-nodeId="@item.NodeId"
-                                           asp-route-path="@item.Url"
-                                           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
-                                            @(item.IsBookmarked ? "Remove from" : "Add to")  my bookmarks
-                                        </a>
-                                    </div>
-                                </div>
-                                <div>
-                                    @if (!string.IsNullOrEmpty(item.BadgeUrl))
-                                    {
-                                        <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="@(item.Name)" class="catalogue-card-badge" />
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+              <div class="catalogue-meta">
+                <div>
+                  <div>
+                    @if (item.RestrictedAccess)
+                    {
+                      <div class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">@((item.HasAccess || this.User.IsInRole("Administrator")) ? "Access Granted" : "Access restricted")</div>
+                    }
+                  </div>
+                  <div>
+                    <a class="nhsuk-u-font-size-16 nhsuk-u-margin-right-3" role="button" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
+                     asp-route-bookmarked="@item.IsBookmarked"
+                     asp-route-id="@item.BookmarkId"
+                     asp-route-title="@item.Name.Truncate(60)"
+                     asp-route-nodeId="@item.NodeId"
+                     asp-route-path="@item.Url"
+                     asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+                      @(item.IsBookmarked ? "Remove from" : "Add to")  my bookmarks
+                    </a>
+                  </div>
                 </div>
+                <div>
+                  @if (!string.IsNullOrEmpty(item.BadgeUrl))
+                  {
+                    <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="@(item.Name)" class="catalogue-card-badge" />
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-            </li>
-        }
-    </ul>
-
-    @if (Model.TotalCount > 9)
-    {
-        var currentPage = this.ViewBag.PageIndex;
-        int totalPage = (Model.TotalCount / 9) + (Model.TotalCount % 9 == 0 ? 0 : 1);
-        var searchQueryParam = hasSearchTerm ? $"&term={searhTerm}" : string.Empty;
-        var prevUrl = $"/catalogues?pageindex={currentPage - 1}{searchQueryParam}";
-        var nextUrl = $"/catalogues?pageindex={currentPage + 1}{searchQueryParam}";
-
-        @await Html.PartialAsync("_Pagination", new PaginationViewModel(currentPage, totalPage, prevUrl, nextUrl))
+      </li>
     }
+  </ul>
+
+  @if (Model.TotalCount > 9)
+  {
+    var currentPage = this.ViewBag.PageIndex;
+    int totalPage = (Model.TotalCount / 9) + (Model.TotalCount % 9 == 0 ? 0 : 1);
+    var searchQueryParam = hasSearchTerm ? $"&term={searhTerm}" : string.Empty;
+    var prevUrl = $"/catalogues?pageindex={currentPage - 1}{searchQueryParam}";
+    var nextUrl = $"/catalogues?pageindex={currentPage + 1}{searchQueryParam}";
+
+    @await Html.PartialAsync("_Pagination", new PaginationViewModel(currentPage, totalPage, prevUrl, nextUrl))
+  }
 </div>

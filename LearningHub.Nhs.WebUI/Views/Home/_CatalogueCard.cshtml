@@ -46,7 +46,7 @@
           <div class="nhsuk-u-margin-bottom-2">
             @if (Model.RestrictedAccess)
             {
-              <div class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">@(Model.HasAccess ? "Access granted" : "Access restricted")</div>
+              <div class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">@((Model.HasAccess || this.User.IsInRole("Administrator")) ? "Access granted" : "Access restricted")</div>
             }
           </div>
           <div>

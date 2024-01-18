@@ -8,7 +8,7 @@
 
                     <!--Video-->
                     <div id="mediacontainer" class="resource-item nhsuk-u-margin-bottom-7" v-if="hasMediaAccess && (resourceItem.resourceTypeEnum === ResourceType.VIDEO)">
-                        
+
                         <video id="resourceAzureMediaPlayer" data-setup='{"logo": { "enabled": false }, "techOrder": ["azureHtml5JS", "flashSS",  "silverlightSS", "html5"], "nativeControlsForTouch": false}' controls class="azuremediaplayer amp-default-skin amp-big-play-centered resource-video nhsuk-u-margin-bottom-4">
                             <source :src="resourceItem.videoDetails.resourceAzureMediaAsset.locatorUri" type="application/vnd.ms-sstr+xml" :data-setup='getAESProtection(resourceItem.videoDetails.resourceAzureMediaAsset.authenticationToken)' />
                             <source :src="getMediaAssetProxyUrl(resourceItem.videoDetails.resourceAzureMediaAsset)" type="application/vnd.apple.mpegurl" disableUrlRewriter="true" />
@@ -73,7 +73,7 @@
     import '../filters';
     import { resourceData } from '../data/resource';
     import { userData } from '../data/user';
-    import { VersionStatus, ResourceType, ResourceAccessibility,ActivityStatus, MediaResourceActivityType, AzureMediaPlayerOptions, RoleEnum } from '../constants';
+    import { VersionStatus, ResourceType, ResourceAccessibility, ActivityStatus, MediaResourceActivityType, AzureMediaPlayerOptions, RoleEnum } from '../constants';
     import { ResourceItemModel } from '../models/resourceItemModel';
     import { ScormContentDetailsModel } from '../models/scormModel';
     import { RoleUserGroupModel } from '../models/roleUserGroupModel';
@@ -119,19 +119,20 @@
                 interactionQueue: new Array<InteractionQueueModel>(),
                 scormContentDetailsModel: new ScormContentDetailsModel(),
                 assessmentProgress: null as AssessmentProgressModel,
-                isGeneralUser: false
+                isGeneralUser: false,
+                isSystemAdmin: false
             }
         },
         computed: {
             hasCatalogueAccess(): boolean {
-                return (!this.resourceItem.catalogue.restrictedAccess
+                return (!this.resourceItem.catalogue.restrictedAccess || this.IsSystemAdmin
                     ||
                     (this.roleUserGroups.filter((rug: any) => rug.catalogueNodeId == this.resourceItem.catalogue.nodeId
                         && (rug.roleEnum == RoleEnum.LocalAdmin || rug.roleEnum == RoleEnum.Editor || rug.roleEnum == RoleEnum.Reader)).length > 0)
                 );
             },
             hasMediaAccess(): boolean {
-                return this.userAuthenticated && (this.resourceItem.resourceTypeEnum == this.ResourceType.AUDIO || this.resourceItem.resourceTypeEnum == this.ResourceType.VIDEO ) && (!(this.isGeneralUser && this.resourceItem.resourceAccessibilityEnum == this.ResourceAccessibility.FullAccess))
+                return this.userAuthenticated && (this.resourceItem.resourceTypeEnum == this.ResourceType.AUDIO || this.resourceItem.resourceTypeEnum == this.ResourceType.VIDEO) && (!(this.isGeneralUser && this.resourceItem.resourceAccessibilityEnum == this.ResourceAccessibility.FullAccess))
             },
             hasScormAccess(): boolean {
                 return this.userAuthenticated && this.resourceItem.resourceTypeEnum == this.ResourceType.SCORM && (!(this.isGeneralUser && this.resourceItem.resourceAccessibilityEnum == this.ResourceAccessibility.FullAccess))
@@ -146,12 +147,13 @@
                 this.mediaStartTime = parseInt(this.$route.query.mediaStartTime as string);
             }
             await this.getGeneralUser();
+            await this.getUserRole();
             await this.loadResourceItem(Number(this.$route.params.resId));
 
             if (this.userAuthenticated && this.resourceItem.catalogue.restrictedAccess) {
                 await this.loadRoleUserGroups();
             }
-            
+
 
             if (this.userAuthenticated && (this.resourceItem.resourceTypeEnum == ResourceType.VIDEO || this.resourceItem.resourceTypeEnum == ResourceType.AUDIO) && this.hasResourceAccess()) {
                 this.addMediaEventListeners();
@@ -165,8 +167,7 @@
 
             // call complete activity if resource type is media or scorm.
             if (this.userAuthenticated && (this.resourceItem.resourceTypeEnum === ResourceType.VIDEO || this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) && this.hasResourceAccess()) {
-                //var isIE11 = (!!window.MSInputMethodContext && !!((<any>document).documentMode));
-                var isIE11 = (!!((window as any).MSInputMethodContext) && !!((document as any).documentMode));
+                var isIE11 = (!!window.MSInputMethodContext && !!((<any>document).documentMode));
                 var self = this;
 
                 if (isIE11) {
@@ -235,6 +236,9 @@
             },
             async getGeneralUser(): Promise<void> {
                 this.isGeneralUser = await userData.isGeneralUser();
+            },
+            async getUserRole(): Promise<void> {
+                this.IsSystemAdmin = await userData.IsSystemAdmin();
             },
 
             hasResourceAccess(): boolean {
@@ -550,7 +554,7 @@
     .resource-item-row {
         margin-top: 32px;
     }
-    
+
     .border-bottom {
         border-bottom: 1px solid $nhsuk-grey-lighter;
         padding-bottom: 20px;
@@ -628,7 +632,6 @@
         color: #ffffff;
         background-color: transparent;
     }
-
 </style>
 
 <style lang="scss">

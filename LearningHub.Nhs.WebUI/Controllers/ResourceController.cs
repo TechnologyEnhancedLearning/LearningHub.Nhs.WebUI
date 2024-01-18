@@ -136,7 +136,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 var userGroups = await this.userGroupService.GetRoleUserGroupDetailForUserAsync(this.CurrentUserId);
 
                 hasCatalogueAccess = userGroups.Any(x => x.CatalogueNodeId == resource.Catalogue.NodeId &&
-                    (x.RoleEnum == RoleEnum.LocalAdmin || x.RoleEnum == RoleEnum.Editor || x.RoleEnum == RoleEnum.Reader));
+                    (x.RoleEnum == RoleEnum.LocalAdmin || x.RoleEnum == RoleEnum.Editor || x.RoleEnum == RoleEnum.Reader)) || this.User.IsInRole("Administrator");
             }
             else if (!resource.Catalogue.RestrictedAccess)
             {

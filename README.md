@@ -1,4 +1,4 @@
-# Introduction 
+# Introduction
 This is the official open-source repository for the [Learning Hub](https://learninghub.nhs.uk/) platform. 
 
 The Learning Hub is the national digital learning platform providing easy access to a wide range of educational resources and support for the health and care workforce and educators.
@@ -92,7 +92,7 @@ Create a Local IIS launch profile for the following projects:
    - LearningHub.Nhs.AdminUI = https://lh-admin.dev.local
    - LearningHub.Nhs.WebAPI = https://lh-api.dev.local
    - LearningHub.Nhs.WebUI = https://lh-web.dev.local
-7. Tick the checkbox for **Enable Anonymous Authentication**.
+7. Tick the checkbox for **Enable Anonymous Authentication**. 
 
 ## Rebuild and run 
 

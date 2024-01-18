@@ -38,7 +38,6 @@
     import ImagePublishedView from "../../contribute-resource/components/published-view/ImagePublishedView.vue";
     import { Carousel3d, Slide } from 'vue-carousel-3d';
     import ImageCarouselImageView from "./ImageCarouselImageView.vue";
-    let counterInterval: undefined | ReturnType<typeof setTimeout>;
     
     export default Vue.extend({
         components: {
@@ -50,7 +49,7 @@
         },
         data() {
             return {
-                counterInterval,  
+                counterInterval: 0,  
             }
         },
         created() {

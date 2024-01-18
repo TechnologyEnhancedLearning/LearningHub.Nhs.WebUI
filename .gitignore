@@ -43,3 +43,7 @@ obj
 /AdminUI/LearningHub.Nhs.AdminUI/Properties/launchSettings.json
 /WebAPI/LearningHub.Nhs.API/Properties/launchSettings.json
 /WebAPI/LearningHub.Nhs.API/appsettings.Development.json
+/WebAPI/LearningHub.Nhs.Database/LearningHub.Nhs.Database.dbmdl
+/WebAPI/LearningHub.Nhs.Database/LearningHub.Nhs.Database.jfm
+/WebAPI/MigrationTool/LearningHub.Nhs.Migration.Staging.Database/LearningHub.Nhs.Migration.Staging.Database.dbmdl
+/WebAPI/MigrationTool/LearningHub.Nhs.Migration.Staging.Database/LearningHub.Nhs.Migration.Staging.Database.jfm

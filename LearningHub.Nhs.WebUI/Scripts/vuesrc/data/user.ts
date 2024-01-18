@@ -54,6 +54,18 @@ const isGeneralUser = async function (): Promise<boolean[]> {
         });
 };
 
+const IsSystemAdmin = async function (): Promise<boolean[]> {
+    var IsSystemAdmin = `/api/User/CheckUserRole`;
+    return await AxiosWrapper.axios.get<boolean[]>(IsSystemAdmin)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('IsSystemAdmin:' + e);
+            throw e;
+        });
+};
+
 const getCurrentUserBasicDetails = async function (): Promise<UserBasicModel> {
     return await AxiosWrapper.axios.get<UserBasicModel>('/api/User/GetCurrentUserBasicDetails')
         .then(response => {
@@ -160,5 +172,6 @@ export const userData = {
     updateSecurityQuestionAnswers,
     keepUserSessionAlive,
     getkeepUserSessionAliveInterval,
-    isGeneralUser
+    isGeneralUser,
+    IsSystemAdmin
 }

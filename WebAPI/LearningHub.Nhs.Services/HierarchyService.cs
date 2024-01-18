@@ -269,6 +269,10 @@ namespace LearningHub.Nhs.Services
 
             string cacheKey = $"{CacheKeys.PublishedNodeContents}:{nodeId}";
             var nodeContents = await this.cachingService.GetAsync<List<NodeContentBrowseViewModel>>(cacheKey);
+            if (includeEmptyFolder)
+            {
+                nodeContents.ResponseEnum = CacheReadResponseEnum.NotFound;
+            }
 
             if (nodeContents.ResponseEnum == CacheReadResponseEnum.Found)
             {
@@ -285,7 +289,10 @@ namespace LearningHub.Nhs.Services
                     throw new Exception($"Corrupt data. Duplicate Nodes returned in NodeContent for NodeId={nodeId}");
                 }
 
-                await this.cachingService.SetAsync(cacheKey, retVal);
+                if (!includeEmptyFolder)
+                {
+                    await this.cachingService.SetAsync(cacheKey, retVal);
+                }
             }
 
             var list = retVal.Where(ncm => ncm.ResourceVersionId.HasValue);

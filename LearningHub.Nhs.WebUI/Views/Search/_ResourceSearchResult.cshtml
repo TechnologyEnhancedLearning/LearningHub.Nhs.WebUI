@@ -9,96 +9,98 @@
 @using LearningHub.Nhs.WebUI.Models.Search;
 
 @{
-    var resourceResult = Model.ResourceSearchResult;
-    var pagingModel = Model.ResourceResultPaging;
-    var index = pagingModel.CurrentPage * pagingModel.PageSize;
-    var searchString = HttpUtility.UrlEncode(Model.SearchString);
-    var searchSignal = resourceResult.Feedback?.FeedbackAction?.Payload?.SearchSignal;
+  var resourceResult = Model.ResourceSearchResult;
+  var pagingModel = Model.ResourceResultPaging;
+  var index = pagingModel.CurrentPage * pagingModel.PageSize;
+  var searchString = HttpUtility.UrlEncode(Model.SearchString);
+  var searchSignal = resourceResult.Feedback?.FeedbackAction?.Payload?.SearchSignal;
 
-    string GetUrl(int resourceReferenceId, int itemIndex, int nodePathId)
-    {
-        string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
-        string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
+  string GetUrl(int resourceReferenceId, int itemIndex, int nodePathId)
+  {
+    string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
+    string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
 
-        return $@"/search/record-resource-click?url=/Resource/{resourceReferenceId}&nodePathId={nodePathId}&itemIndex={itemIndex}
+    return $@"/search/record-resource-click?url=/Resource/{resourceReferenceId}&nodePathId={nodePathId}&itemIndex={itemIndex}
 &pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={resourceResult.TotalHits}&searchText={searchString}&resourceReferenceId={resourceReferenceId}
 &groupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal?.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal?.UserQuery)}&query={searchSignalQueryEncoded}";
-    }
+  }
 
-    bool showCatalogueFieldsInResources = ViewBag.ShowCatalogueFieldsInResources == null || ViewBag.ShowCatalogueFieldsInResources == true;
-    bool resourceAccessLevelFilterSelected = resourceResult.SearchResourceAccessLevelFilters.Any(f => f.Selected);
+  bool showCatalogueFieldsInResources = ViewBag.ShowCatalogueFieldsInResources == null || ViewBag.ShowCatalogueFieldsInResources == true;
+  bool resourceAccessLevelFilterSelected = resourceResult.SearchResourceAccessLevelFilters.Any(f => f.Selected);
 }
 
 @foreach (var item in resourceResult.DocumentModel)
 {
-    var provider = item.Providers?.FirstOrDefault();
+  var provider = item.Providers?.FirstOrDefault();
 
-    <div class="resource-item nhsuk-list-item--border nhsuk-u-padding-bottom-4 nhsuk-u-margin-bottom-4">
-        <h2 class="nhsuk-heading-xs nhsuk-u-margin-bottom-2">
-            <a class="nhsuk-card__link" href="@GetUrl(item.ResourceReferenceId, index, item.NodePathId??0)">@item.Title</a>
-        </h2>
+  <div class="resource-item nhsuk-list-item--border nhsuk-u-padding-bottom-4 nhsuk-u-margin-bottom-4">
+    <h2 class="nhsuk-heading-xs nhsuk-u-margin-bottom-2">
+      <a class="nhsuk-card__link" href="@GetUrl(item.ResourceReferenceId, index, item.NodePathId??0)">@item.Title</a>
+    </h2>
 
-        @if (provider != null)
-        {   
-            <div>
-                <div class="provider-details">
-                    <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name" class="logo" />
-                    <span class="title">@ProviderHelper.GetProviderString(provider.Name)</span>
-                </div>
-            </div>
-        }
-        @if (item.CatalogueRestrictedAccess && !Model.HideRestrictedBadge && showCatalogueFieldsInResources)
-        {
-            <p class="nhsuk-body-s nhsuk-u-margin-bottom-2 nhsuk-u-font-weight-bold">@(item.CatalogueHasAccess ? "Access Granted" : "Access restricted")</p>
-        }
-
-        @if(!resourceAccessLevelFilterSelected)
-        {
-            <div class="nhsuk-body-s nhsuk-u-margin-bottom-2">
-                <div class="nhsuk-u-margin-right-4">
-                    <strong>Audience access level: </strong>
-                    @ResourceAccessLevelHelper.GetResourceAccessLevelText((ResourceAccessibilityEnum)item.ResourceAccessLevel)
-                </div>            
-            </div>
-        }
-
-
-        <div class="resource-info nhsuk-body-s nhsuk-u-margin-bottom-2">
-            <div class="nhsuk-u-margin-right-4">
-                <strong>Type: </strong>
-                @UtilityHelper.GetPrettifiedResourceTypeName(UtilityHelper.ToEnum<ResourceTypeEnum>(item.ResourceType), 0)
-            </div>
-            <div>
-                @await Html.PartialAsync("../Shared/_StarRating.cshtml", item.Rating)
-            </div>
+    @if (provider != null)
+    {
+      <div>
+        <div class="provider-details">
+          <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name" class="logo" />
+          <span class="title">@ProviderHelper.GetProviderString(provider.Name)</span>
         </div>
+      </div>
+    }
+    @if (item.CatalogueRestrictedAccess && !Model.HideRestrictedBadge && showCatalogueFieldsInResources)
+    {
+      <p class="nhsuk-body-s nhsuk-u-margin-bottom-2 nhsuk-u-font-weight-bold">
+        @((item.CatalogueHasAccess || this.User.IsInRole("Administrator")) ? "Access Granted" : "Access restricted")
+      </p>
+    }
 
-        <p class="nhsuk-body-s nhsuk-u-margin-bottom-2 resource-description line-clamp-3">
-            @item.Description
-        </p>
-
-        <div class="resource-author">
-            @if (!string.IsNullOrWhiteSpace(item.CatalogueBadgeUrl) && showCatalogueFieldsInResources)
-            {
-                <img class="resource-catalogue-badge" src="/search/image/@item.CatalogueBadgeUrl" />
-            }
-
-            @if (!string.IsNullOrEmpty(item.CatalogueName) && !this.Model.CatalogueId.HasValue && showCatalogueFieldsInResources)
-            {
-                <div class="nhsuk-u-margin-right-3">
-                    <a href="@("/Catalogue/" + item.CatalogueUrl)" class="catalogue-resource-search-result-name">@item.CatalogueName</a>
-                </div>
-            }
-
-            <div>
-                @UtilityHelper.GetAttribution(item.Authors)
-                @if (!string.IsNullOrEmpty(item.AuthoredDate))
-                {
-                    @UtilityHelper.GetInOn(item.AuthoredDate)
-                    @: @item.AuthoredDate
-                }
-            </div>
+    @if (!resourceAccessLevelFilterSelected)
+    {
+      <div class="nhsuk-body-s nhsuk-u-margin-bottom-2">
+        <div class="nhsuk-u-margin-right-4">
+          <strong>Audience access level: </strong>
+          @ResourceAccessLevelHelper.GetResourceAccessLevelText((ResourceAccessibilityEnum)item.ResourceAccessLevel)
         </div>
+      </div>
+    }
+
+
+    <div class="resource-info nhsuk-body-s nhsuk-u-margin-bottom-2">
+      <div class="nhsuk-u-margin-right-4">
+        <strong>Type: </strong>
+        @UtilityHelper.GetPrettifiedResourceTypeName(UtilityHelper.ToEnum<ResourceTypeEnum>(item.ResourceType), 0)
+      </div>
+      <div>
+        @await Html.PartialAsync("../Shared/_StarRating.cshtml", item.Rating)
+      </div>
     </div>
-    index++;
+
+    <p class="nhsuk-body-s nhsuk-u-margin-bottom-2 resource-description line-clamp-3">
+      @item.Description
+    </p>
+
+    <div class="resource-author">
+      @if (!string.IsNullOrWhiteSpace(item.CatalogueBadgeUrl) && showCatalogueFieldsInResources)
+      {
+        <img class="resource-catalogue-badge" src="/search/image/@item.CatalogueBadgeUrl" />
+      }
+
+      @if (!string.IsNullOrEmpty(item.CatalogueName) && !this.Model.CatalogueId.HasValue && showCatalogueFieldsInResources)
+      {
+        <div class="nhsuk-u-margin-right-3">
+          <a href="@("/Catalogue/" + item.CatalogueUrl)" class="catalogue-resource-search-result-name">@item.CatalogueName</a>
+        </div>
+      }
+
+      <div>
+        @UtilityHelper.GetAttribution(item.Authors)
+        @if (!string.IsNullOrEmpty(item.AuthoredDate))
+        {
+          @UtilityHelper.GetInOn(item.AuthoredDate)
+          @: @item.AuthoredDate
+        }
+      </div>
+    </div>
+  </div>
+  index++;
 }

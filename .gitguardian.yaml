@@ -1,0 +1,5 @@
+secret:
+  ignored-matches:
+  - match: 26841b2b92a38ec6d2dd87ccc2d4f6d3613486c21f4cf5cb4d98b4527dfc0061
+    name: Generic High Entropy Secret - LearningHub.Nhs.WebUI/Program.cs
+version: 2

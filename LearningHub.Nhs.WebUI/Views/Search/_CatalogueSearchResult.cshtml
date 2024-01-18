@@ -4,106 +4,106 @@
 @model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
 
 @{
-    var catalogueResult = Model.CatalogueSearchResult;
-    var pagingModel = Model.CatalogueResultPaging;
-    var searchString = HttpUtility.UrlEncode(Model.SearchString);
-    var searchSignal = catalogueResult.Feedback?.FeedbackAction?.Payload?.SearchSignal;
+  var catalogueResult = Model.CatalogueSearchResult;
+  var pagingModel = Model.CatalogueResultPaging;
+  var searchString = HttpUtility.UrlEncode(Model.SearchString);
+  var searchSignal = catalogueResult.Feedback?.FeedbackAction?.Payload?.SearchSignal;
 
-    string GetCatalogueUrl(string catalogueUrl, int nodePathId, int itemIndex, int catalogueId)
-    {
-        string encodedCatalogueUrl = HttpUtility.UrlEncode("/Catalogue/" + catalogueUrl);
-        string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
-        string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
+  string GetCatalogueUrl(string catalogueUrl, int nodePathId, int itemIndex, int catalogueId)
+  {
+    string encodedCatalogueUrl = HttpUtility.UrlEncode("/Catalogue/" + catalogueUrl);
+    string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
+    string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
 
-        var url = $@"/search/record-catalogue-click?url={encodedCatalogueUrl}&nodePathId={nodePathId}&itemIndex={itemIndex}
+    var url = $@"/search/record-catalogue-click?url={encodedCatalogueUrl}&nodePathId={nodePathId}&itemIndex={itemIndex}
 &pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={catalogueResult.TotalHits}&searchText={searchString}&catalogueId={catalogueId}
 &GroupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal?.UserQuery)}&query={searchSignalQueryEncoded}";
-        return url;
-    }
+    return url;
+  }
 }
 
 @if (pagingModel.TotalPages > 1)
 {
-    @await Html.PartialAsync("_CataloguePagination", Model)
+  @await Html.PartialAsync("_CataloguePagination", Model)
 
-    <div class="catalogue-all-link nhsuk-u-margin-bottom-3">
-        <a href="/catalogues?term=@searchString">View all catalogues</a>
-    </div>
+  <div class="catalogue-all-link nhsuk-u-margin-bottom-3">
+    <a href="/catalogues?term=@searchString">View all catalogues</a>
+  </div>
 }
 
 @if (catalogueResult.DocumentModel != null)
 {
-    var index = pagingModel.CurrentPage * pagingModel.PageSize;
-    <ul class="nhsuk-grid-row nhsuk-card-group">
+  var index = pagingModel.CurrentPage * pagingModel.PageSize;
+  <ul class="nhsuk-grid-row nhsuk-card-group">
 
-        @foreach (var item in catalogueResult.DocumentModel)
-        {
-            var hasBadge = !string.IsNullOrWhiteSpace(item.BadgeUrl);
-            var provider = item.Providers?.FirstOrDefault();
+    @foreach (var item in catalogueResult.DocumentModel)
+    {
+      var hasBadge = !string.IsNullOrWhiteSpace(item.BadgeUrl);
+      var provider = item.Providers?.FirstOrDefault();
 
-            <li class="nhsuk-grid-column-one-third nhsuk-card-group__item">
+      <li class="nhsuk-grid-column-one-third nhsuk-card-group__item">
 
-                <div class="nhsuk-card nhsuk-bg-light-blue catalogue-card">
-                    @if (provider != null)
+        <div class="nhsuk-card nhsuk-bg-light-blue catalogue-card">
+          @if (provider != null)
+          {
+            <div class="card-provider-details">
+              @ProviderHelper.GetProviderString(provider.Name)
+            </div>
+          }
+          else
+          {
+            <div class="card-provider-details card-provider-details--blank"></div>
+          }
+          <div class="nhsuk-card__content catalogue-card-content">
+
+            <h2 class="nhsuk-card__heading nhsuk-heading-m">
+              <a class="nhsuk-card__link" href="@GetCatalogueUrl(item.Url, item.NodePathId, index, Int32.Parse(item.Id))">@item.Name</a>
+            </h2>
+
+            <div class="nhsuk-card__description catalogue-card-body">
+              <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
+                @Html.Raw(item.Description)
+              </div>
+
+              <div class="catalogue-meta">
+                <div>
+                  <div>
+                    @if (item.RestrictedAccess)
                     {
-                        <div class="card-provider-details">
-                            @ProviderHelper.GetProviderString(provider.Name)
-                        </div>
+                      <div class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">@((item.HasAccess || this.User.IsInRole("Administrator")) ? "Access Granted" : "Access restricted")</div>
                     }
-                    else
-                    {
-                        <div class="card-provider-details card-provider-details--blank"></div>
-                    }
-                    <div class="nhsuk-card__content catalogue-card-content">
+                  </div>
+                  <div>
+                    <a class="nhsuk-card__link nhsuk-u-font-size-16" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
+                   asp-route-bookmarked="@item.IsBookmarked"
+                   asp-route-id="@item.BookmarkId"
+                   asp-route-title="@item.Name.Truncate(60)"
+                   asp-route-nodeId="@item.Id"
+                   asp-route-path="@item.Url"
+                   asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
 
-                        <h2 class="nhsuk-card__heading nhsuk-heading-m">
-                            <a class="nhsuk-card__link" href="@GetCatalogueUrl(item.Url, item.NodePathId, index, Int32.Parse(item.Id))">@item.Name</a>
-                        </h2>
-
-                        <div class="nhsuk-card__description catalogue-card-body">
-                            <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
-                                @Html.Raw(item.Description)
-                            </div>
-
-                            <div class="catalogue-meta">
-                                <div>
-                                    <div>
-                                        @if (item.RestrictedAccess)
-                                        {
-                                            <div class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">@(item.HasAccess ? "Access Granted" : "Access restricted")</div>
-                                        }
-                                    </div>
-                                    <div>
-                                        <a class="nhsuk-card__link nhsuk-u-font-size-16" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
-                                           asp-route-bookmarked="@item.IsBookmarked"
-                                           asp-route-id="@item.BookmarkId"
-                                           asp-route-title="@item.Name.Truncate(60)"
-                                           asp-route-nodeId="@item.Id"
-                                           asp-route-path="@item.Url"
-                                           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
-
-                                            @(item.IsBookmarked ? "Remove from my bookmarks" : "Add to my bookmarks")
-                                        </a>
-                                    </div>
-                                </div>
-                                <div>
-                                    @if (provider != null)
-                                    {  
-                                        <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name" class="provider-badge" />
-                                    }
-                                    else @if (hasBadge)
-                                    {
-                                        <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="@(item.Name)" class="catalogue-card-badge" />
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                      @(item.IsBookmarked ? "Remove from my bookmarks" : "Add to my bookmarks")
+                    </a>
+                  </div>
                 </div>
+                <div>
+                  @if (provider != null)
+                  {
+                    <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name" class="provider-badge" />
+                  }
+                  else @if (hasBadge)
+                  {
+                    <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="@(item.Name)" class="catalogue-card-badge" />
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-            </li>
+      </li>
 
-            index++;
-        }
-    </ul>
+      index++;
+    }
+  </ul>
 }

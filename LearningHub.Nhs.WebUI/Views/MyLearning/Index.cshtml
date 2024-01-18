@@ -12,7 +12,7 @@
     var routeData = ViewActivityHelper.GetActivityParameters(Model);
 }
 
-@section styles{
+@section styles {
 
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/mylearning.css" asp-append-version="true" />
 
@@ -57,7 +57,7 @@
                     <button class="nhsuk-button" disabled="disabled">Download PDF</button>
                 }
 
-                 <form asp-controller="MyLearning" asp-action="Index" method="post" asp-fragment="search-results">
+                <form asp-controller="MyLearning" asp-action="Index" method="post" asp-fragment="search-results">
 
                     <h2 class="nhsuk-heading-l" id="search-results">Search within My learning</h2>
                     <div class="nhsuk-form-group search-box-container nhsuk-u-padding-bottom-1" style="white-space:nowrap">

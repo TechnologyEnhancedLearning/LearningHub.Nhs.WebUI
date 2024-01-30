@@ -101,6 +101,16 @@
     width: px2rem(260);
 }
 
+.nhsuk-header__search {
+    .nhsuk-search__input {
+        width: px2rem(260);
+    }
+
+    #search > label.nhsuk-u-visually-hidden {
+        background-color: $nhsuk-white;
+    }
+}
+
 .nhsuk-account__login--link,
 .nhsuk-account__login--link:visited,
 .nhsuk-account__login--link:hover {
@@ -317,6 +327,10 @@
 
     .nhsuk-back-link {
         padding: 0.5rem 0;
+    }
+
+    .nhsuk-header__menu .nhsuk-header__not-mobile {
+        display: none;
     }
 }
 

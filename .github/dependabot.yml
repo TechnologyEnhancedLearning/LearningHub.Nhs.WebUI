@@ -9,7 +9,7 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 1
     target-branch: "Automatic_version_update_dependabot"
     ignore:
       # Ignore updates to packages that start with 'Wildcards'
@@ -34,7 +34,7 @@ updates:
       interval: "daily"
     target-branch: "Automatic_version_update_dependabot"
     #  - "dependencies"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 1
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
@@ -46,7 +46,7 @@ updates:
       interval: "daily"
     target-branch: "Automatic_version_update_dependabot"
     #  - "dependencies"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 1
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]

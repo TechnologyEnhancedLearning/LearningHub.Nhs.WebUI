@@ -35,7 +35,7 @@
     "nhsuk-frontend": "^6.1.2",
     "openseadragon": "^2.4.2",
     "sanitize-html": "^2.4.0",
-    "save": "^2.4.0",
+    "save": "^2.9.0",
     "ts-debounce": "2.3.0",
     "tus-js-client": "^2.2.0",
     "vue": "^2.7.14",

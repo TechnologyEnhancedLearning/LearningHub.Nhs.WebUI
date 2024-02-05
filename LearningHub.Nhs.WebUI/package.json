@@ -33,7 +33,7 @@
     "lodash": "4.17.21",
     "moment": "^2.24.0",
     "navigator.sendbeacon": "0.0.20",
-    "nhsuk-frontend": "^7.0.0",
+    "nhsuk-frontend": "^7.1.0",
     "node": "^12.19.1",
     "openseadragon": "^2.4.2",
     "sanitize-html": "^2.11.0",

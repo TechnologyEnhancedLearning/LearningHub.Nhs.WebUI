@@ -5,7 +5,9 @@ variables:
 - name: BuildParameters.TestProjects
   value: '**/*[Tt]ests/*.csproj'
 trigger:
-  - CI
+  branches:
+    include: 
+      - CI
 name: $(date:yyyyMMdd)$(rev:.r)
 resources:
   repositories:

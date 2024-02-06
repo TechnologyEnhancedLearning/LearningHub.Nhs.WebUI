@@ -59,7 +59,7 @@
     "@babel/preset-env": "^7.14.1",
     "@types/axios": "^0.14.0",
     "@types/bootstrap": "4.6.1",
-    "@types/ckeditor": "4.9.8",
+    "@types/ckeditor": "4.9.10",
     "@types/jest": "^26.0.24",
     "@types/jquery": "^3.3.32",
     "@types/jquery-match-height": "^0.7.5",

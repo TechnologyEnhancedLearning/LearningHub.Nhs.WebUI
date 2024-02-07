@@ -14,6 +14,9 @@ updates:
     ignore:
       # Ignore updates to packages that start with 'Wildcards'
       - dependency-name: "Microsoft.FeatureManagement.AspNetCore*"
+      - dependency-name: "LearningHub.Nhs.Models*"
+      - dependency-name: "LearningHub.Nhs.Caching*"
+      - dependency-name: "elfhHub.Nhs.Models*"      
       # Ignore some updates to the package
       - dependency-name: "Microsoft.VisualStudio.Web.CodeGeneration.Design"
         versions: [">7.0.0"]

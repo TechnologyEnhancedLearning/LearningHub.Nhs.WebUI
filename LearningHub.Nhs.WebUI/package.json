@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "16.0.0",
-    "@ckeditor/ckeditor5-vue": "1.0.1",
+    "@ckeditor/ckeditor5-vue": "1.0.3",
     "@types/uuid": "^8.3.4",
     "axios": "^0.19.1",
     "babel-polyfill": "^6.26.0",

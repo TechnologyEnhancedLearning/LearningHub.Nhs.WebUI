@@ -549,7 +549,7 @@
             "type": "apiKey",
             "name": "X-API-KEY",
             "in": "header",
-            "description": "Application API key required to authorise all API requests. This must be obtained from the Learning Hub team at Health Education England, Technology Enhanced Learning, contact us at [england.tel@nhs.net](england.tel@nhs.net)"
+            "description": "Application API key required to authorise all API requests. This must be obtained from the Learning Hub team at NHS England, Technology Enhanced Learning, contact us at [england.tel@nhs.net](england.tel@nhs.net)"
         },
       "OAuth": {
         "type": "oauth2",

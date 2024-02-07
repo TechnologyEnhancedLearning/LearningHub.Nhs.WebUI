@@ -1,4 +1,4 @@
-// <copyright file="AuthStartup.cs" company="NHS Englandk">
+// <copyright file="AuthStartup.cs" company="NHS England">
 // Copyright (c) NHS England.
 // </copyright>
 

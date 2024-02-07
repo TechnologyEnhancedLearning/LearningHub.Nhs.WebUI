@@ -39,7 +39,7 @@
     "sanitize-html": "^2.11.0",
     "save": "^2.4.0",
     "ts-debounce": "2.3.0",
-    "tus-js-client": "^2.2.0",
+    "tus-js-client": "^2.3.2",
     "uuid": "^9.0.0",
     "vue": "2.7.14",
     "vue-carousel": "^0.18.0",

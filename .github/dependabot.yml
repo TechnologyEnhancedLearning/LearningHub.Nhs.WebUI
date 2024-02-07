@@ -16,7 +16,8 @@ updates:
       - dependency-name: "Microsoft.FeatureManagement.AspNetCore*"
       - dependency-name: "LearningHub.Nhs.Models*"
       - dependency-name: "LearningHub.Nhs.Caching*"
-      - dependency-name: "elfhHub.Nhs.Models*"      
+      - dependency-name: "elfhHub.Nhs.Models*"   
+      - dependency-name: "linqtotwitter*"         
       # Ignore some updates to the package
       - dependency-name: "Microsoft.VisualStudio.Web.CodeGeneration.Design"
         versions: [">7.0.0"]

@@ -1,5 +1,5 @@
-﻿// <copyright file="IJsDetectionLogger.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="IJsDetectionLogger.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.WebUI.Interfaces

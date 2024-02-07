@@ -1,5 +1,5 @@
-﻿// <copyright file="NodePathNodeMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="NodePathNodeMap.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.OpenApi.Repositories.Map.Hierarchy

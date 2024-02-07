@@ -1,5 +1,5 @@
-﻿// <copyright file="LogControllerTests.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="LogControllerTests.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Api.UnitTests.Controllers

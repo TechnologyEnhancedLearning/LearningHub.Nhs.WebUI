@@ -1,5 +1,5 @@
-﻿// <copyright file="HttpRequestExtensions.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="HttpRequestExtensions.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.WebUI.Extensions

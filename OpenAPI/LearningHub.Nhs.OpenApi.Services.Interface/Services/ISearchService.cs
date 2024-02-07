@@ -1,5 +1,5 @@
-// <copyright file="ISearchService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+// <copyright file="ISearchService.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.OpenApi.Services.Interface.Services

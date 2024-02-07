@@ -1,5 +1,5 @@
-﻿// <copyright file="TestAsyncEnumerable.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="TestAsyncEnumerable.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Services.UnitTests.Helpers

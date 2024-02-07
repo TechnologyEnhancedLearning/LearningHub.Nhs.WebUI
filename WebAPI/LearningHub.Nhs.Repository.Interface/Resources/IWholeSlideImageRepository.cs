@@ -1,5 +1,5 @@
-﻿// <copyright file="IWholeSlideImageRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="IWholeSlideImageRepository.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Repository.Interface.Resources

@@ -1,5 +1,5 @@
-﻿// <copyright file="DisplayMessageViewModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="DisplayMessageViewModel.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.WebUI.Models

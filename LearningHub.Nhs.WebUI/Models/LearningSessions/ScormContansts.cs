@@ -1,5 +1,5 @@
-﻿// <copyright file="ScormContansts.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="ScormContansts.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.WebUI.Models.LearningSessions

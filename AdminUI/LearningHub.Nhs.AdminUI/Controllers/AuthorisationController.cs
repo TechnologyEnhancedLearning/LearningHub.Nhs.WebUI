@@ -1,5 +1,5 @@
-﻿// <copyright file="AuthorisationController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="AuthorisationController.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.AdminUI.Controllers

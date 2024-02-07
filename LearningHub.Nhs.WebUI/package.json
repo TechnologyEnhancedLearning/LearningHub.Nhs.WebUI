@@ -25,7 +25,7 @@
     "@types/uuid": "^8.3.4",
     "axios": "^0.19.1",
     "babel-polyfill": "^6.26.0",
-    "bootstrap": "^4.6.1",
+    "bootstrap": "^4.6.2",
     "ckeditor4-vue": "^0.2.0",
     "concurrently": "^7.6.0",
     "core-js": "^3.35.1",

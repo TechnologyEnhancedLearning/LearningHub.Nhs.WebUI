@@ -1,5 +1,5 @@
-﻿// <copyright file="GlobalSuppressions.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="GlobalSuppressions.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 // This file is used by Code Analysis to maintain SuppressMessage

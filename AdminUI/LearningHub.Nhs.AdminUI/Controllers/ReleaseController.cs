@@ -1,5 +1,5 @@
-﻿// <copyright file="ReleaseController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="ReleaseController.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.AdminUI.Controllers

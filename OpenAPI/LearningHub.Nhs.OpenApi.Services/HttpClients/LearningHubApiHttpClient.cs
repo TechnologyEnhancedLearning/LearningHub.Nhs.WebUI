@@ -1,5 +1,5 @@
-﻿// <copyright file="LearningHubApiHttpClient.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="LearningHubApiHttpClient.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.OpenApi.Services.HttpClients

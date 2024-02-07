@@ -1,5 +1,5 @@
-﻿// <copyright file="NotificationRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="NotificationRepository.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Repository

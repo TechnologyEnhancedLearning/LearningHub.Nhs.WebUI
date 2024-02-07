@@ -1,5 +1,5 @@
-﻿// <copyright file="MessageMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="MessageMap.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Repository.Map.Messaging

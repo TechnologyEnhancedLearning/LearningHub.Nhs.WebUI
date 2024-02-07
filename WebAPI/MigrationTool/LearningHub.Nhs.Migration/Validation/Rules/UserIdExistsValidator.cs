@@ -1,5 +1,5 @@
-﻿// <copyright file="UserIdExistsValidator.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="UserIdExistsValidator.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Migration.Validation.Rules

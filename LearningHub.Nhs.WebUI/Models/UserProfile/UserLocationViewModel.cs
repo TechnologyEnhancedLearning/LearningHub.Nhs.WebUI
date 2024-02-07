@@ -1,5 +1,5 @@
-﻿// <copyright file="UserLocationViewModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="UserLocationViewModel.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.WebUI.Models.UserProfile

@@ -1,5 +1,5 @@
-﻿// <copyright file="UserGroupMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="UserGroupMap.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.OpenApi.Repositories.Map

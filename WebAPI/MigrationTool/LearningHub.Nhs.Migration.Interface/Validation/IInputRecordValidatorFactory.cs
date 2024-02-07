@@ -1,5 +1,5 @@
-﻿// <copyright file="IInputRecordValidatorFactory.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="IInputRecordValidatorFactory.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Migration.Interface.Validation

@@ -1,5 +1,5 @@
-﻿// <copyright file="NotificationSettings.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="NotificationSettings.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Api.Shared.Configuration

@@ -1,5 +1,5 @@
-﻿// <copyright file="ScormActivityInteractionObjectiveMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="ScormActivityInteractionObjectiveMap.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Repository.Map.Activity

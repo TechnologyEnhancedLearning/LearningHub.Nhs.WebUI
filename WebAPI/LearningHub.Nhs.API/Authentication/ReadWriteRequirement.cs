@@ -1,5 +1,5 @@
-﻿// <copyright file="ReadWriteRequirement.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="ReadWriteRequirement.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Api.Authentication

@@ -1,5 +1,5 @@
-﻿// <copyright file="StagingTableInputRecordMapper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="StagingTableInputRecordMapper.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Migration.Mapping

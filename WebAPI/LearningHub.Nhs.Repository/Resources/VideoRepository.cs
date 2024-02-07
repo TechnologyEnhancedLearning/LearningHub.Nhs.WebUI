@@ -1,5 +1,5 @@
-﻿// <copyright file="VideoRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="VideoRepository.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Repository.Resources

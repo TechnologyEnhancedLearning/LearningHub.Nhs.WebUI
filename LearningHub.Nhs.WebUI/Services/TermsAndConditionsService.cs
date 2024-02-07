@@ -1,5 +1,5 @@
-﻿// <copyright file="TermsAndConditionsService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="TermsAndConditionsService.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.WebUI.Services

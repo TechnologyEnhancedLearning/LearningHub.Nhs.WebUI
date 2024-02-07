@@ -1,5 +1,5 @@
-﻿// <copyright file="BaseApiController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="BaseApiController.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.AdminUI.Controllers.Api

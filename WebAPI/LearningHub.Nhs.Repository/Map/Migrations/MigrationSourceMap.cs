@@ -1,5 +1,5 @@
-﻿// <copyright file="MigrationSourceMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="MigrationSourceMap.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Repository.Map.Migrations

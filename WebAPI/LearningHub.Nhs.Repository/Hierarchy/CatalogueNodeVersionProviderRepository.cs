@@ -1,5 +1,5 @@
-﻿// <copyright file="CatalogueNodeVersionProviderRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="CatalogueNodeVersionProviderRepository.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Repository.Hierarchy

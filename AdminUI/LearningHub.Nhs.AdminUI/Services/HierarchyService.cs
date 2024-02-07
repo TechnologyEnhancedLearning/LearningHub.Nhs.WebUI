@@ -1,5 +1,5 @@
-﻿// <copyright file="HierarchyService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="HierarchyService.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.AdminUI.Services

@@ -1,5 +1,5 @@
-﻿// <copyright file="AuthorizeOrCallFromLHHandler.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+﻿// <copyright file="AuthorizeOrCallFromLHHandler.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.Nhs.Api.Authentication

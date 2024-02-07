@@ -1,5 +1,5 @@
-// <copyright file="AuthStartup.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+// <copyright file="AuthStartup.cs" company="NHS Englandk">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.NHS.OpenAPI.Auth

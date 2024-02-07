@@ -1,5 +1,5 @@
-// <copyright file="HttpResponseExceptionFilter.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
+// <copyright file="HttpResponseExceptionFilter.cs" company="NHS England">
+// Copyright (c) NHS England.
 // </copyright>
 
 namespace LearningHub.NHS.OpenAPI.Middleware

@@ -1,8 +1,4 @@
-﻿// <copyright file="LoginWizardDisplayViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Account
+﻿namespace LearningHub.Nhs.WebUI.Models.Account
 {
     using elfhHub.Nhs.Models.Common;
     using elfhHub.Nhs.Models.Entities;

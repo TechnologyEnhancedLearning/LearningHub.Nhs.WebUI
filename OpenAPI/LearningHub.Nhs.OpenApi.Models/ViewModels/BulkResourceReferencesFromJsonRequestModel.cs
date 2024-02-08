@@ -1,8 +1,4 @@
-﻿// <copyright file="BulkResourceReferencesFromJsonRequestModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Models.ViewModels
+﻿namespace LearningHub.Nhs.OpenApi.Models.ViewModels
 {
     using System.Collections.Generic;
     using Newtonsoft.Json;

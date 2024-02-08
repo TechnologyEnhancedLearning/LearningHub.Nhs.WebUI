@@ -1,8 +1,4 @@
-﻿// <copyright file="NotificationSettings.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Api.Shared.Configuration
+﻿namespace LearningHub.Nhs.Api.Shared.Configuration
 {
     /// <summary>
     /// The Notification Settings.

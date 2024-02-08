@@ -1,8 +1,4 @@
-﻿// <copyright file="AttributeMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Map
+﻿namespace LearningHub.Nhs.Repository.Map
 {
     using LearningHub.Nhs.Models.Entities;
     using Microsoft.EntityFrameworkCore;

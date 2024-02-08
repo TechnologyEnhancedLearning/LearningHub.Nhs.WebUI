@@ -1,8 +1,4 @@
-﻿// <copyright file="StandardInputRecordValidatorTests.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.UnitTests.Validation
+﻿namespace LearningHub.Nhs.Migration.UnitTests.Validation
 {
     using System;
     using System.Collections.Generic;

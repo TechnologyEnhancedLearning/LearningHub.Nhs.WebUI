@@ -1,8 +1,4 @@
-﻿// <copyright file="IStagingTableInputModelRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Staging.Repository
+﻿namespace LearningHub.Nhs.Migration.Staging.Repository
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

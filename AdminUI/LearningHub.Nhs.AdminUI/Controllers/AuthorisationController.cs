@@ -1,8 +1,4 @@
-﻿// <copyright file="AuthorisationController.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Controllers
+﻿namespace LearningHub.Nhs.AdminUI.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
 

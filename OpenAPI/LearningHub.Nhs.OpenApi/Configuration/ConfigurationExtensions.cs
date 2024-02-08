@@ -1,7 +1,3 @@
-// <copyright file="ConfigurationExtensions.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.NHS.OpenAPI.Configuration
 {
     using LearningHub.Nhs.OpenApi.Models.Configuration;

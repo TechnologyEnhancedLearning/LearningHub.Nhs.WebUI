@@ -1,8 +1,4 @@
-﻿// <copyright file="TimezoneInfoMiddleware.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Startup
+﻿namespace LearningHub.Nhs.WebUI.Startup
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Caching;

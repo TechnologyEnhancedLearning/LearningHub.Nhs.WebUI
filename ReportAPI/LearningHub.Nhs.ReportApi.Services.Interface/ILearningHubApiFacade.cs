@@ -1,8 +1,4 @@
-﻿// <copyright file="ILearningHubApiFacade.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.ReportApi.Services.Interface
+﻿namespace LearningHub.Nhs.ReportApi.Services.Interface
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;

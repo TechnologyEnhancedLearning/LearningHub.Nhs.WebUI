@@ -1,8 +1,4 @@
-﻿// <copyright file="LoginWizardAccountConfirmation.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Account
+﻿namespace LearningHub.Nhs.WebUI.Models.Account
 {
     using System.Collections.Generic;
     using elfhHub.Nhs.Models.Entities;

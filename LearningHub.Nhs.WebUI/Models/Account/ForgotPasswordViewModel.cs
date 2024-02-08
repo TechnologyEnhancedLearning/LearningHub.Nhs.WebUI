@@ -1,8 +1,4 @@
-﻿// <copyright file="ForgotPasswordViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Account
+﻿namespace LearningHub.Nhs.WebUI.Models.Account
 {
     using System.ComponentModel.DataAnnotations;
     using LearningHub.Nhs.WebUI.Attributes;

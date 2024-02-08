@@ -1,8 +1,4 @@
-﻿// <copyright file="TestBase.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.UnitTests
+﻿namespace LearningHub.Nhs.Services.UnitTests
 {
     using AutoMapper;
     using LearningHub.Nhs.Models.Automapper;

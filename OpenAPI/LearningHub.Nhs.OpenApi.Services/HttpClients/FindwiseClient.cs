@@ -1,7 +1,3 @@
-// <copyright file="FindwiseClient.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.OpenApi.Services.HttpClients
 {
     using System;

@@ -1,8 +1,4 @@
-﻿// <copyright file="BaseHttpClient.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Services
+﻿namespace LearningHub.Nhs.WebUI.Services
 {
     using System;
     using System.Collections.Concurrent;

@@ -1,8 +1,4 @@
-﻿// <copyright file="ExternalReferenceUserAgreementMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Map.Resources
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.Resources
 {
     using LearningHub.Nhs.Entities.Resource;
     using LearningHub.Nhs.Models.Entities.Resource;

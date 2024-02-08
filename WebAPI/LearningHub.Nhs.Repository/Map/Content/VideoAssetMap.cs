@@ -1,8 +1,4 @@
-﻿// <copyright file="VideoAssetMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Map.Content
+﻿namespace LearningHub.Nhs.Repository.Map.Content
 {
     using LearningHub.Nhs.Models.Entities.Content;
     using Microsoft.EntityFrameworkCore;

@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceAccessiblityHelper.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Helpers
+﻿namespace LearningHub.Nhs.AdminUI.Helpers
 {
     using LearningHub.Nhs.Models.Enums;
     using Microsoft.AspNetCore.Mvc.Rendering;

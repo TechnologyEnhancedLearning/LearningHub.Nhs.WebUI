@@ -1,8 +1,4 @@
-﻿// <copyright file="Program.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.ConsoleApp
+﻿namespace LearningHub.Nhs.Migration.ConsoleApp
 {
     using System;
     using System.Collections.Generic;

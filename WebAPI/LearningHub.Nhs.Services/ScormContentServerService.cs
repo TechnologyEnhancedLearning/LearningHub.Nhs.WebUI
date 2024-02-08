@@ -1,8 +1,4 @@
-﻿// <copyright file="ScormContentServerService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Services
+﻿namespace LearningHub.Nhs.Services
 {
     using System.Threading.Tasks;
     using AutoMapper;

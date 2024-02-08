@@ -1,8 +1,4 @@
-﻿// <copyright file="AccountCreationPagingEnum.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Account
+﻿namespace LearningHub.Nhs.WebUI.Models.Account
 {
     /// <summary>
     /// Defines the AccountCreationPagingEnum.

@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceValidationResultViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Resource
+﻿namespace LearningHub.Nhs.WebUI.Models.Resource
 {
     using System.Collections.Generic;
     using LearningHub.Nhs.Models.Catalogue;

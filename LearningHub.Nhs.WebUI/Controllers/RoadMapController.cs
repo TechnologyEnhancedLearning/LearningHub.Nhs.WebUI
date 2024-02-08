@@ -1,8 +1,4 @@
-﻿// <copyright file="RoadMapController.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Controllers
+﻿namespace LearningHub.Nhs.WebUI.Controllers
 {
     using System.Net.Http;
     using Microsoft.AspNetCore.Hosting;

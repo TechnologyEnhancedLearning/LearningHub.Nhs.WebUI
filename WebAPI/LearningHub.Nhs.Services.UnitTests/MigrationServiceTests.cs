@@ -1,8 +1,4 @@
-﻿// <copyright file="MigrationServiceTests.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.UnitTests
+﻿namespace LearningHub.Nhs.Services.UnitTests
 {
     using System;
     using System.Collections.Generic;

@@ -1,8 +1,4 @@
-﻿// <copyright file="UserMedicalCouncilNoUpdateViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.UserProfile
+﻿namespace LearningHub.Nhs.WebUI.Models.UserProfile
 {
     /// <summary>
     /// Defines the <see cref="UserMedicalCouncilNoUpdateViewModel" />.

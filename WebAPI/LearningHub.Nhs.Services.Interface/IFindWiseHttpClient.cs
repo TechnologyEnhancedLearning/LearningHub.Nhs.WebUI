@@ -1,8 +1,4 @@
-﻿// <copyright file="IFindWiseHttpClient.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Interface
+﻿namespace LearningHub.Nhs.Services.Interface
 {
     using System.Net.Http;
     using System.Threading.Tasks;

@@ -1,8 +1,4 @@
-﻿// <copyright file="FindwiseApiFacade.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Findwise
+﻿namespace LearningHub.Nhs.Services.Findwise
 {
     using System;
     using System.Collections.Generic;

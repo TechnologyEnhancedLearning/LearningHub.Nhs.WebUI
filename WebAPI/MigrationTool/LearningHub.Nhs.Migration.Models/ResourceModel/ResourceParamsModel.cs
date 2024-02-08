@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceParamsModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Models
+﻿namespace LearningHub.Nhs.Migration.Models
 {
     using System;
     using System.Collections.Generic;

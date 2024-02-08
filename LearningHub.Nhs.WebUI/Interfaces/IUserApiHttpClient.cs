@@ -1,8 +1,4 @@
-﻿// <copyright file="IUserApiHttpClient.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Interfaces
+﻿namespace LearningHub.Nhs.WebUI.Interfaces
 {
     using System.Net.Http;
     using System.Threading.Tasks;

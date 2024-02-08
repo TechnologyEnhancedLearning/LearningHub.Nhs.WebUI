@@ -1,8 +1,4 @@
-﻿// <copyright file="ServiceCollectionExtension.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.ReportApi
+﻿namespace LearningHub.Nhs.ReportApi
 {
     using System;
     using System.IO;

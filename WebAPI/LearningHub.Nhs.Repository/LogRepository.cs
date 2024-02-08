@@ -1,8 +1,4 @@
-﻿// <copyright file="LogRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository
+﻿namespace LearningHub.Nhs.Repository
 {
     using System.Collections.Generic;
     using System.Linq;

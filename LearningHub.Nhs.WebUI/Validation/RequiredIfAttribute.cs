@@ -1,8 +1,4 @@
-﻿// <copyright file="RequiredIfAttribute.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Validation
+﻿namespace LearningHub.Nhs.WebUI.Validation
 {
     using System.ComponentModel.DataAnnotations;
 

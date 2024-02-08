@@ -1,8 +1,4 @@
-﻿// <copyright file="IReportService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Interface.Report
+﻿namespace LearningHub.Nhs.Services.Interface.Report
 {
     using System;
     using System.Threading.Tasks;

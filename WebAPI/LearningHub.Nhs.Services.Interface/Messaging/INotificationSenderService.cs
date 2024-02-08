@@ -1,8 +1,4 @@
-﻿// <copyright file="INotificationSenderService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Interface.Messaging
+﻿namespace LearningHub.Nhs.Services.Interface.Messaging
 {
     using System.Threading.Tasks;
 

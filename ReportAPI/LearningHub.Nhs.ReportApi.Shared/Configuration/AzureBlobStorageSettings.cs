@@ -1,8 +1,4 @@
-﻿// <copyright file="AzureBlobStorageSettings.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.ReportApi.Shared.Configuration
+﻿namespace LearningHub.Nhs.ReportApi.Shared.Configuration
 {
     /// <summary>
     /// Config AzureBlobStorageSettings.

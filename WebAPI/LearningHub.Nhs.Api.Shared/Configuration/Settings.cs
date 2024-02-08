@@ -1,8 +1,4 @@
-﻿// <copyright file="Settings.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Api.Shared.Configuration
+﻿namespace LearningHub.Nhs.Api.Shared.Configuration
 {
     using System;
 

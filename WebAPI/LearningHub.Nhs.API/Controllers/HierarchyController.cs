@@ -1,8 +1,4 @@
-﻿// <copyright file="HierarchyController.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Api.Controllers
+﻿namespace LearningHub.Nhs.Api.Controllers
 {
     using System;
     using System.Collections.Generic;

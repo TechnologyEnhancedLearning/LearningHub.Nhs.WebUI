@@ -1,8 +1,4 @@
-﻿// <copyright file="ICatalogueService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
+﻿namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;

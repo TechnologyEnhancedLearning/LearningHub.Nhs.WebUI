@@ -1,8 +1,4 @@
-﻿// <copyright file="ReportController.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Api.Controllers
+﻿namespace LearningHub.Nhs.Api.Controllers
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;

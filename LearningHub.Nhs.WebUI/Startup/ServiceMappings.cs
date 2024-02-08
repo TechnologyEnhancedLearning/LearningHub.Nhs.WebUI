@@ -1,8 +1,4 @@
-﻿// <copyright file="ServiceMappings.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Startup
+﻿namespace LearningHub.Nhs.WebUI.Startup
 {
     using System.Net.Http;
     using GDS.MultiPageFormData;

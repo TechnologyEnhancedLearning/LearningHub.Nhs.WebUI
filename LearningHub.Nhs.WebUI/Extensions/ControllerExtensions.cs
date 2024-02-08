@@ -1,8 +1,4 @@
-﻿// <copyright file="ControllerExtensions.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Extensions
+﻿namespace LearningHub.Nhs.WebUI.Extensions
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ViewEngines;

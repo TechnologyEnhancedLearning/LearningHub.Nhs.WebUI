@@ -1,8 +1,4 @@
-﻿// <copyright file="IResourceVersionFlagRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Resources
+﻿namespace LearningHub.Nhs.Repository.Interface.Resources
 {
     using System.Linq;
     using System.Threading.Tasks;

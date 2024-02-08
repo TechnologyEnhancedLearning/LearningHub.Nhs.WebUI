@@ -1,8 +1,4 @@
-﻿// <copyright file="IInputRecordValidatorFactory.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Interface.Validation
+﻿namespace LearningHub.Nhs.Migration.Interface.Validation
 {
     /// <summary>
     /// Defines the methods exposed by the validator factory.

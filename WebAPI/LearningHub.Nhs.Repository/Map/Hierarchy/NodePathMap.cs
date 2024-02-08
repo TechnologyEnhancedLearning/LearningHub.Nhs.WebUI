@@ -1,8 +1,4 @@
-﻿// <copyright file="NodePathMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Map.Hierarchy
+﻿namespace LearningHub.Nhs.Repository.Map.Hierarchy
 {
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using Microsoft.EntityFrameworkCore;

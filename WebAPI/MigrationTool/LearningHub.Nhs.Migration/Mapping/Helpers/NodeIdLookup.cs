@@ -1,8 +1,4 @@
-﻿// <copyright file="NodeIdLookup.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Mapping.Helpers
+﻿namespace LearningHub.Nhs.Migration.Mapping.Helpers
 {
     using LearningHub.Nhs.Repository.Interface.Hierarchy;
 

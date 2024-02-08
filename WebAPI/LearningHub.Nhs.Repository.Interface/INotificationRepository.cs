@@ -1,8 +1,4 @@
-﻿// <copyright file="INotificationRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface
+﻿namespace LearningHub.Nhs.Repository.Interface
 {
     using System.Linq;
     using System.Threading.Tasks;

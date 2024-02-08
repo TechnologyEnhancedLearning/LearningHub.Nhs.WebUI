@@ -1,8 +1,4 @@
-﻿// <copyright file="AuthenticationConfiguration.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Startup
+﻿namespace LearningHub.Nhs.WebUI.Startup
 {
     using System;
     using System.Linq;

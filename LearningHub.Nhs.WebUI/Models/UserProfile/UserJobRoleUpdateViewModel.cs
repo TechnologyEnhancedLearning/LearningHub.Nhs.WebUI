@@ -1,8 +1,4 @@
-﻿// <copyright file="UserJobRoleUpdateViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.UserProfile
+﻿namespace LearningHub.Nhs.WebUI.Models.UserProfile
 {
     using System.Collections.Generic;
     using System.Linq;

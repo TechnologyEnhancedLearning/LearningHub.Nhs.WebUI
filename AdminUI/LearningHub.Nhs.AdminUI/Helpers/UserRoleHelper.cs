@@ -1,8 +1,4 @@
-﻿// <copyright file="UserRoleHelper.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Helpers
+﻿namespace LearningHub.Nhs.AdminUI.Helpers
 {
     using Microsoft.AspNetCore.Mvc.Rendering;
 

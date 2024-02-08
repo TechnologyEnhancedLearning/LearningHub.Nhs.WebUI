@@ -1,8 +1,4 @@
-﻿// <copyright file="InternalSystemRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Maintenance
+﻿namespace LearningHub.Nhs.Repository.Maintenance
 {
     using LearningHub.Nhs.Models.Entities.Maintenance;
     using LearningHub.Nhs.Repository.Interface;

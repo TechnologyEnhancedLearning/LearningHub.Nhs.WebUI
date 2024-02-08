@@ -1,8 +1,4 @@
-﻿// <copyright file="UserUserGroupMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Map
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map
 {
     using LearningHub.Nhs.Models.Entities;
     using Microsoft.EntityFrameworkCore;

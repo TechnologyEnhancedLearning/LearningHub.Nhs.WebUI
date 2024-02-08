@@ -1,7 +1,3 @@
-// <copyright file="FindwiseResultModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.OpenApi.Models.ServiceModels.Findwise
 {
     using LearningHub.Nhs.Models.Search;

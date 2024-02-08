@@ -1,8 +1,4 @@
-﻿// <copyright file="UserProfileRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository
+﻿namespace LearningHub.Nhs.Repository
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities;

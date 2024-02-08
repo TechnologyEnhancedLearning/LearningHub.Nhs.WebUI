@@ -1,8 +1,4 @@
-﻿// <copyright file="CreateParamsModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.ConsoleApp
+﻿namespace LearningHub.Nhs.Migration.ConsoleApp
 {
     /// <summary>
     /// The create params model.

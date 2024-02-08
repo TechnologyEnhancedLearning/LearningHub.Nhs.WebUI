@@ -1,8 +1,4 @@
-﻿// <copyright file="HtmlHelperExtensios.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Extensions
+﻿namespace LearningHub.Nhs.WebUI.Extensions
 {
     using System.Collections.Generic;
     using System.Linq;

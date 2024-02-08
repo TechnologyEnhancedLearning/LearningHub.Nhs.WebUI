@@ -1,8 +1,4 @@
-﻿// <copyright file="TermsAndConditionsViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Policies
+﻿namespace LearningHub.Nhs.WebUI.Models.Policies
 {
     using System;
 

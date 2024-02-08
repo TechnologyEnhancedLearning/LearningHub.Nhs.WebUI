@@ -1,8 +1,4 @@
-﻿// <copyright file="CatalogueAccessRequestMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Map.Hierarchy
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.Hierarchy
 {
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using Microsoft.EntityFrameworkCore;

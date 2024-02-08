@@ -1,7 +1,3 @@
-// <copyright file="ScormResourceVersionManifestRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.Repository.Resources
 {
     using System.Threading.Tasks;

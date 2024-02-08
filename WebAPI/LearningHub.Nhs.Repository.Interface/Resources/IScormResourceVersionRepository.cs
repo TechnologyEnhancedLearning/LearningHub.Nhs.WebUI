@@ -1,8 +1,4 @@
-﻿// <copyright file="IScormResourceVersionRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Resources
+﻿namespace LearningHub.Nhs.Repository.Interface.Resources
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

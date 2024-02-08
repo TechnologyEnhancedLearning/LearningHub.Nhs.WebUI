@@ -1,8 +1,4 @@
-﻿// <copyright file="ICatalogueAccessRequestRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Hierarchy
+﻿namespace LearningHub.Nhs.Repository.Interface.Hierarchy
 {
     using System.Linq;
     using System.Threading.Tasks;

@@ -1,8 +1,4 @@
-﻿// <copyright file="AuthorizeOrCallFromLHRequirement.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.ReportApi.Authentication
+﻿namespace LearningHub.Nhs.ReportApi.Authentication
 {
     using Microsoft.AspNetCore.Authorization;
 

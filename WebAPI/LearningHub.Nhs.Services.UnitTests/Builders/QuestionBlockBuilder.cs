@@ -1,8 +1,4 @@
-﻿// <copyright file="QuestionBlockBuilder.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.UnitTests.Builders
+﻿namespace LearningHub.Nhs.Services.UnitTests.Builders
 {
     using System.Collections.Generic;
     using LearningHub.Nhs.Models.Enums;

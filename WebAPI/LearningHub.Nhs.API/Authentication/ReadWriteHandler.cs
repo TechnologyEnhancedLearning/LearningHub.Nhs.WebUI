@@ -1,8 +1,4 @@
-﻿// <copyright file="ReadWriteHandler.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Api.Authentication
+﻿namespace LearningHub.Nhs.Api.Authentication
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Api.Shared.Configuration;

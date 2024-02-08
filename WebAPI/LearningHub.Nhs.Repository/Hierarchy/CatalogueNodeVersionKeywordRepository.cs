@@ -1,8 +1,4 @@
-﻿// <copyright file="CatalogueNodeVersionKeywordRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Hierarchy
+﻿namespace LearningHub.Nhs.Repository.Hierarchy
 {
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Repository.Interface;

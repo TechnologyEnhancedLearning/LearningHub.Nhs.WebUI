@@ -1,8 +1,4 @@
-﻿// <copyright file="ClaimsPrincipalExtensions.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Extensions
+﻿namespace LearningHub.Nhs.AdminUI.Extensions
 {
     using System;
     using System.Security.Claims;

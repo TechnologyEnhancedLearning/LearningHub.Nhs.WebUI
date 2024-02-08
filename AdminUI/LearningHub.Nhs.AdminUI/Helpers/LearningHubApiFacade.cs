@@ -1,8 +1,4 @@
-﻿// <copyright file="LearningHubApiFacade.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Helpers
+﻿namespace LearningHub.Nhs.AdminUI.Helpers
 {
     using System;
     using System.Net.Http;

@@ -1,7 +1,3 @@
-// <copyright file="IResourceService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
 {
     using System.Collections.Generic;

@@ -1,8 +1,4 @@
-﻿// <copyright file="AzureBlobFileValidator.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Validation.Rules
+﻿namespace LearningHub.Nhs.Migration.Validation.Rules
 {
     using System;
     using System.Threading.Tasks;

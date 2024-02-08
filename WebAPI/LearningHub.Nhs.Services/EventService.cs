@@ -1,8 +1,4 @@
-﻿// <copyright file="EventService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Services
+﻿namespace LearningHub.Nhs.Services
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Analytics;

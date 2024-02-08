@@ -1,8 +1,4 @@
-﻿// <copyright file="Program.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-#pragma warning disable SA1200 // Using directives should be placed correctly
+﻿#pragma warning disable SA1200 // Using directives should be placed correctly
 using System;
 using LearningHub.Nhs.AdminUI;
 using LearningHub.Nhs.AdminUI.Middleware;

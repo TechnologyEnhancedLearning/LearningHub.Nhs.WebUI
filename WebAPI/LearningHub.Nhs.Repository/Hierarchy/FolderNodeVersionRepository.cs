@@ -1,8 +1,4 @@
-﻿// <copyright file="FolderNodeVersionRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Hierarchy
+﻿namespace LearningHub.Nhs.Repository.Hierarchy
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Hierarchy;

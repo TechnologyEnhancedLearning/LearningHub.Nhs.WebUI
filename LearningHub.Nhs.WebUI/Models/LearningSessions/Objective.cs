@@ -1,8 +1,4 @@
-﻿// <copyright file="Objective.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.LearningSessions
+﻿namespace LearningHub.Nhs.WebUI.Models.LearningSessions
 {
     /// <summary>
     /// Defines the <see cref="Objective" />.

@@ -1,8 +1,4 @@
-﻿// <copyright file="CatalogueRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 {
     using System.Collections.Generic;
     using System.Linq;

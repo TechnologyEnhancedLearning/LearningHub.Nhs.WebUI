@@ -1,8 +1,4 @@
-﻿// <copyright file="ServiceCollectionExtension.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI
+﻿namespace LearningHub.Nhs.WebUI
 {
     using System;
     using System.IdentityModel.Tokens.Jwt;

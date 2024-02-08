@@ -1,8 +1,4 @@
-﻿// <copyright file="IRoleService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Interfaces
+﻿namespace LearningHub.Nhs.AdminUI.Interfaces
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

@@ -1,8 +1,4 @@
-﻿// <copyright file="MigrationSourceMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Map.Migrations
+﻿namespace LearningHub.Nhs.Repository.Map.Migrations
 {
     using LearningHub.Nhs.Models.Entities.Migration;
     using Microsoft.EntityFrameworkCore;

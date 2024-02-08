@@ -1,8 +1,4 @@
-﻿// <copyright file="MessageTypeMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Map.Messaging
+﻿namespace LearningHub.Nhs.Repository.Map.Messaging
 {
     using LearningHub.Nhs.Models.Entities.Messaging;
     using Microsoft.EntityFrameworkCore;

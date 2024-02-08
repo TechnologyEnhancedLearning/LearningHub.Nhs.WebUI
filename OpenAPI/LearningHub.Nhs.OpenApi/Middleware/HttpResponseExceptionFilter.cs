@@ -1,7 +1,3 @@
-// <copyright file="HttpResponseExceptionFilter.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.NHS.OpenAPI.Middleware
 {
     using LearningHub.Nhs.OpenApi.Models.Exceptions;

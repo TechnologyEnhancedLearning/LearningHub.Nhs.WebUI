@@ -1,8 +1,4 @@
-﻿// <copyright file="NodeResourceLookupRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Hierarchy
+﻿namespace LearningHub.Nhs.Repository.Hierarchy
 {
     using System.Collections.Generic;
     using System.Linq;

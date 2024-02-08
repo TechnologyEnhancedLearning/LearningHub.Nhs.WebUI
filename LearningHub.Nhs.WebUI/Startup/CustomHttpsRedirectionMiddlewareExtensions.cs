@@ -1,8 +1,4 @@
-﻿// <copyright file="CustomHttpsRedirectionMiddlewareExtensions.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Startup
+﻿namespace LearningHub.Nhs.WebUI.Startup
 {
     using Microsoft.AspNetCore.Builder;
 

@@ -1,8 +1,4 @@
-﻿// <copyright file="EventLogService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Services
+﻿namespace LearningHub.Nhs.Services
 {
     using LearningHub.Nhs.Models.EventLog;
     using LearningHub.Nhs.Repository.Interface;

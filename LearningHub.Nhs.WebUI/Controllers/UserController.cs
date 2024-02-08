@@ -1,8 +1,4 @@
-﻿// <copyright file="UserController.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Controllers
+﻿namespace LearningHub.Nhs.WebUI.Controllers
 {
     using System.Collections.Generic;
     using System.Linq;

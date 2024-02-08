@@ -1,8 +1,4 @@
-﻿// <copyright file="IResourceActivityRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Activity
+﻿namespace LearningHub.Nhs.Repository.Interface.Activity
 {
     using System;
     using System.Collections.Generic;

@@ -1,8 +1,4 @@
-﻿// <copyright file="EmailChangeValidationTokenRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository
+﻿namespace LearningHub.Nhs.Repository
 {
     using System.Linq;
     using System.Threading.Tasks;

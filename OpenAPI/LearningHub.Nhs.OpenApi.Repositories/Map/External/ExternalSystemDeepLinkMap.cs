@@ -1,8 +1,4 @@
-﻿// <copyright file="ExternalSystemDeepLinkMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Map.External
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.External
 {
     using LearningHub.Nhs.Models.Entities.External;
     using Microsoft.EntityFrameworkCore;

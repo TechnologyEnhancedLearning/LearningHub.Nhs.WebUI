@@ -1,7 +1,3 @@
-// <copyright file="CatalogueServiceTests.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.Services.UnitTests
 {
     using System;

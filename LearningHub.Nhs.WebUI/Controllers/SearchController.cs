@@ -1,7 +1,3 @@
-// <copyright file="SearchController.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.WebUI.Controllers
 {
     using System;

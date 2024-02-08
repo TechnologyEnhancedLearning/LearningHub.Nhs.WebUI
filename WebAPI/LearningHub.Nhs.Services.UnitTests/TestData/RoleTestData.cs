@@ -1,8 +1,4 @@
-﻿// <copyright file="RoleTestData.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.UnitTests.TestData
+﻿namespace LearningHub.Nhs.Services.UnitTests.TestData
 {
     using System;
     using System.Linq;

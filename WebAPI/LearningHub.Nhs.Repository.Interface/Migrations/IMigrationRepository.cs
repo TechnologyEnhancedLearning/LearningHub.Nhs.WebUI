@@ -1,8 +1,4 @@
-﻿// <copyright file="IMigrationRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Migrations
+﻿namespace LearningHub.Nhs.Repository.Interface.Migrations
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

@@ -1,7 +1,3 @@
-// <copyright file="NLogSetup.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.NHS.OpenAPI.Setup
 {
     using Microsoft.ApplicationInsights.NLogTarget;

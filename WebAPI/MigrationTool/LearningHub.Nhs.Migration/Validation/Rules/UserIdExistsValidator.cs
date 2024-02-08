@@ -1,8 +1,4 @@
-﻿// <copyright file="UserIdExistsValidator.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Validation.Rules
+﻿namespace LearningHub.Nhs.Migration.Validation.Rules
 {
     using LearningHub.Nhs.Migration.Models;
     using LearningHub.Nhs.Repository.Interface;

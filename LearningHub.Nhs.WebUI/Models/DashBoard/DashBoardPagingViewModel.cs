@@ -1,8 +1,4 @@
-﻿// <copyright file="DashBoardPagingViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.DashBoard
+﻿namespace LearningHub.Nhs.WebUI.Models.DashBoard
 {
     /// <summary>
     /// The DashBoardPagingViewModel.

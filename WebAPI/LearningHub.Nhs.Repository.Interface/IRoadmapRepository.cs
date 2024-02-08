@@ -1,8 +1,4 @@
-﻿// <copyright file="IRoadmapRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface
+﻿namespace LearningHub.Nhs.Repository.Interface
 {
     using System.Collections.Generic;
     using LearningHub.Nhs.Models.Entities;

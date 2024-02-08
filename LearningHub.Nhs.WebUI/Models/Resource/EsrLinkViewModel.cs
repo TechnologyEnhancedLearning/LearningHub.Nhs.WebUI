@@ -1,8 +1,4 @@
-﻿// <copyright file="EsrLinkViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Resource
+﻿namespace LearningHub.Nhs.WebUI.Models.Resource
 {
     using LearningHub.Nhs.Models.Resource;
 

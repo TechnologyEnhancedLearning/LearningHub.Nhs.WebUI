@@ -1,8 +1,4 @@
-﻿// <copyright file="WholeSlideImageFileRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Resources
+﻿namespace LearningHub.Nhs.Repository.Resources
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Resource;

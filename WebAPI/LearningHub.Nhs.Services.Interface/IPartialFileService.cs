@@ -1,8 +1,4 @@
-﻿// <copyright file="IPartialFileService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Interface
+﻿namespace LearningHub.Nhs.Services.Interface
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Resource;

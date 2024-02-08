@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceSyncService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Services
+﻿namespace LearningHub.Nhs.AdminUI.Services
 {
     using System;
     using System.Collections.Generic;

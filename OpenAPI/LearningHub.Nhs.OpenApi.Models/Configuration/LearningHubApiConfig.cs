@@ -1,8 +1,4 @@
-﻿// <copyright file="LearningHubApiConfig.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Models.Configuration
+﻿namespace LearningHub.Nhs.OpenApi.Models.Configuration
 {
     using System;
     using System.Collections.Generic;

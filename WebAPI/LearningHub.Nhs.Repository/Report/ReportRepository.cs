@@ -1,8 +1,4 @@
-﻿// <copyright file="ReportRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Report
+﻿namespace LearningHub.Nhs.Repository.Report
 {
     using System.Linq;
     using System.Threading.Tasks;

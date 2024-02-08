@@ -1,8 +1,4 @@
-﻿// <copyright file="EmailTemplateRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Messaging
+﻿namespace LearningHub.Nhs.Repository.Messaging
 {
     using System.Linq;
     using LearningHub.Nhs.Models.Entities.Messaging;

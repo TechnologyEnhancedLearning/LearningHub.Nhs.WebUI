@@ -1,7 +1,3 @@
-// <copyright file="CatalogueViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.OpenApi.Models.ViewModels
 {
     using LearningHub.Nhs.Models.Entities.Hierarchy;

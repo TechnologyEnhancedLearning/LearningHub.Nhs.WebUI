@@ -1,8 +1,4 @@
-﻿// <copyright file="WebSettings.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Configuration
+﻿namespace LearningHub.Nhs.AdminUI.Configuration
 {
     using System;
 

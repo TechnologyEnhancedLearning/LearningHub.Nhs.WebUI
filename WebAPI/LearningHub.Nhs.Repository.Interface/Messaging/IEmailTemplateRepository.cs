@@ -1,8 +1,4 @@
-﻿// <copyright file="IEmailTemplateRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Messaging
+﻿namespace LearningHub.Nhs.Repository.Interface.Messaging
 {
     using LearningHub.Nhs.Models.Entities.Messaging;
 

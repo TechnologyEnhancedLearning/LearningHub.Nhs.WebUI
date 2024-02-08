@@ -1,7 +1,3 @@
-// <copyright file="IContributeService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.WebUI.Interfaces
 {
     using System.Threading.Tasks;

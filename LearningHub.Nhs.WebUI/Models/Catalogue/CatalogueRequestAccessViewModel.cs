@@ -1,8 +1,4 @@
-﻿// <copyright file="CatalogueRequestAccessViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Catalogue
+﻿namespace LearningHub.Nhs.WebUI.Models.Catalogue
 {
     using System.ComponentModel.DataAnnotations;
     using LearningHub.Nhs.Models.Catalogue;

@@ -1,8 +1,4 @@
-﻿// <copyright file="CookieEventHandler.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Handlers
+﻿namespace LearningHub.Nhs.AdminUI.Handlers
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authentication;

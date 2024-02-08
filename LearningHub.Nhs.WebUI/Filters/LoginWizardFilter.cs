@@ -1,8 +1,4 @@
-﻿// <copyright file="LoginWizardFilter.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Filters
+﻿namespace LearningHub.Nhs.WebUI.Filters
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Caching;

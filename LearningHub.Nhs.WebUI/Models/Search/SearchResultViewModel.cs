@@ -1,8 +1,4 @@
-﻿// <copyright file="SearchResultViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Search
+﻿namespace LearningHub.Nhs.WebUI.Models.Search
 {
     using System;
     using LearningHub.Nhs.Models.Paging;

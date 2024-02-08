@@ -1,8 +1,4 @@
-﻿// <copyright file="AssessmentResourceActivityInteractionMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Map.Activity
+﻿namespace LearningHub.Nhs.Repository.Map.Activity
 {
     using LearningHub.Nhs.Models.Entities.Activity;
     using Microsoft.EntityFrameworkCore;

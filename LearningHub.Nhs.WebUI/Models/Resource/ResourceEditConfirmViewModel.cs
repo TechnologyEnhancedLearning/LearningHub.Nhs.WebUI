@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceEditConfirmViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Resource
+﻿namespace LearningHub.Nhs.WebUI.Models.Resource
 {
     /// <summary>
     /// Defines the <see cref="ResourceEditConfirmViewModel" />.

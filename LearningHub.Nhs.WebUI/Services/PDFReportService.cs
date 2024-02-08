@@ -1,8 +1,4 @@
-﻿// <copyright file="PDFReportService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Services
+﻿namespace LearningHub.Nhs.WebUI.Services
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

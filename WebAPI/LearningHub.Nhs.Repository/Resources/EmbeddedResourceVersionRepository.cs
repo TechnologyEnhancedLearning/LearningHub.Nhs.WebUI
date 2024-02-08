@@ -1,8 +1,4 @@
-﻿// <copyright file="EmbeddedResourceVersionRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Resources
+﻿namespace LearningHub.Nhs.Repository.Resources
 {
     using System;
     using System.Linq;

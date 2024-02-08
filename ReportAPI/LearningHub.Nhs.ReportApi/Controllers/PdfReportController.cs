@@ -1,8 +1,4 @@
-﻿// <copyright file="PdfReportController.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.ReportApi.Controllers
+﻿namespace LearningHub.Nhs.ReportApi.Controllers
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;

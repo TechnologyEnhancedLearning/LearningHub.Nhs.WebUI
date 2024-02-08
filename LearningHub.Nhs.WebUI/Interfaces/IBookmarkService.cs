@@ -1,8 +1,4 @@
-﻿// <copyright file="IBookmarkService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Interfaces
+﻿namespace LearningHub.Nhs.WebUI.Interfaces
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

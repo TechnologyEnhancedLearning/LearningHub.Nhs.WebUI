@@ -1,8 +1,4 @@
-﻿// <copyright file="UrlValidationModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Contribute
+﻿namespace LearningHub.Nhs.WebUI.Models.Contribute
 {
     /// <summary>
     /// Defines the <see cref="UrlValidationModel" />.

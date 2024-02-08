@@ -1,7 +1,3 @@
-// <copyright file="Program.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 #pragma warning disable SA1200 // Using directives should be placed correctly
 using LearningHub.Nhs.ReportApi;
 using LearningHub.Nhs.ReportApi.Middleware;

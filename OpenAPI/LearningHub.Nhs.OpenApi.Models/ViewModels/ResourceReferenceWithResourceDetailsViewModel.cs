@@ -1,7 +1,3 @@
-// <copyright file="ResourceReferenceWithResourceDetailsViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.OpenApi.Models.ViewModels
 {
     /// <summary>

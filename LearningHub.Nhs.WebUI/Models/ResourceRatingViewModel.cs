@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceRatingViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models
+﻿namespace LearningHub.Nhs.WebUI.Models
 {
     using LearningHub.Nhs.Models.Common;
 

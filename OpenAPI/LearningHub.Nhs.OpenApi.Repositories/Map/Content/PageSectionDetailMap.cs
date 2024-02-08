@@ -1,8 +1,4 @@
-﻿// <copyright file="PageSectionDetailMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Map.Content
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.Content
 {
     using LearningHub.Nhs.Models.Entities.Content;
     using Microsoft.EntityFrameworkCore;

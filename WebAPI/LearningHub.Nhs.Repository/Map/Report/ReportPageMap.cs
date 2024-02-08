@@ -1,8 +1,4 @@
-﻿// <copyright file="ReportPageMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Map.Report
+﻿namespace LearningHub.Nhs.Repository.Map.Report
 {
     using LearningHub.Nhs.Models.Entities.Reporting;
     using Microsoft.EntityFrameworkCore;

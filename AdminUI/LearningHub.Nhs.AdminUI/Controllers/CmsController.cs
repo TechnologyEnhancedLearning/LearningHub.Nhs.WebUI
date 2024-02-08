@@ -1,8 +1,4 @@
-﻿// <copyright file="CmsController.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Controllers
+﻿namespace LearningHub.Nhs.AdminUI.Controllers
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Hosting;

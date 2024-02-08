@@ -1,8 +1,4 @@
-﻿// <copyright file="EventRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Analytics
+﻿namespace LearningHub.Nhs.Repository.Analytics
 {
     using System;
     using System.Threading.Tasks;

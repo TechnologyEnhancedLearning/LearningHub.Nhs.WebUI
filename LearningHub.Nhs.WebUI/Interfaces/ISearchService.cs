@@ -1,8 +1,4 @@
-﻿// <copyright file="ISearchService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Interfaces
+﻿namespace LearningHub.Nhs.WebUI.Interfaces
 {
     using System.Security.Principal;
     using System.Threading.Tasks;

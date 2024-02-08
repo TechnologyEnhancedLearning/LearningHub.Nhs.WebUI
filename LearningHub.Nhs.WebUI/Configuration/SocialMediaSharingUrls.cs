@@ -1,8 +1,4 @@
-﻿// <copyright file="SocialMediaSharingUrls.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Configuration
+﻿namespace LearningHub.Nhs.WebUI.Configuration
 {
     /// <summary>
     /// Defines the <see cref="SocialMediaSharingUrls" />.

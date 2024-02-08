@@ -1,8 +1,4 @@
-﻿// <copyright file="LogControllerTests.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Api.UnitTests.Controllers
+﻿namespace LearningHub.Nhs.Api.UnitTests.Controllers
 {
     using System;
     using System.Collections.Generic;

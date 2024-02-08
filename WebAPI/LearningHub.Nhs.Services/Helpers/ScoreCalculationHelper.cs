@@ -1,8 +1,4 @@
-﻿// <copyright file="ScoreCalculationHelper.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Helpers
+﻿namespace LearningHub.Nhs.Services.Helpers
 {
     using System.Collections.Generic;
     using System.Linq;

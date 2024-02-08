@@ -1,8 +1,4 @@
-﻿// <copyright file="UrlChecker.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Validation.Helpers
+﻿namespace LearningHub.Nhs.Migration.Validation.Helpers
 {
     using System;
     using System.Net;

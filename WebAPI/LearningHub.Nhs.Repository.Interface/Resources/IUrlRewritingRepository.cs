@@ -1,8 +1,4 @@
-﻿// <copyright file="IUrlRewritingRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Resources
+﻿namespace LearningHub.Nhs.Repository.Interface.Resources
 {
     using System.Threading.Tasks;
 

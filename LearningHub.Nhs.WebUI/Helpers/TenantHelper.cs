@@ -1,8 +1,4 @@
-﻿// <copyright file="TenantHelper.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Helpers
+﻿namespace LearningHub.Nhs.WebUI.Helpers
 {
     using System.IO;
     using LearningHub.Nhs.WebUI.Models;

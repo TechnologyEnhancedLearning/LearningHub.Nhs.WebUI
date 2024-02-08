@@ -1,8 +1,4 @@
-﻿// <copyright file="ExceptionMiddleware.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Api.Middleware
+﻿namespace LearningHub.Nhs.Api.Middleware
 {
     using System;
     using System.Net;

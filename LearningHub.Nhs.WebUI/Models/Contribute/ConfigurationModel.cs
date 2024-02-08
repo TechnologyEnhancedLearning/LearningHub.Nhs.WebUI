@@ -1,7 +1,3 @@
-// <copyright file="ConfigurationModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.WebUI.Models.Contribute
 {
     /// <summary>

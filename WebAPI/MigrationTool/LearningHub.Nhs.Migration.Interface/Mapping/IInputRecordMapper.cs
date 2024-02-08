@@ -1,8 +1,4 @@
-﻿// <copyright file="IInputRecordMapper.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Interface.Mapping
+﻿namespace LearningHub.Nhs.Migration.Interface.Mapping
 {
     using LearningHub.Nhs.Migration.Models;
 

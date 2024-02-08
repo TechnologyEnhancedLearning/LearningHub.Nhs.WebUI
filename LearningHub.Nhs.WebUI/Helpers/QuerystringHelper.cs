@@ -1,8 +1,4 @@
-﻿// <copyright file="QuerystringHelper.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Helpers
+﻿namespace LearningHub.Nhs.WebUI.Helpers
 {
     /// <summary>
     /// Defines the <see cref="QuerystringHelper" />.

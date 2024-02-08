@@ -1,8 +1,4 @@
-﻿// <copyright file="PdfReportService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.ReportApi.Services
+﻿namespace LearningHub.Nhs.ReportApi.Services
 {
     using System.IO;
     using System.Text;

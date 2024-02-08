@@ -1,8 +1,4 @@
-﻿// <copyright file="FileChunkRegisterModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Models
+﻿namespace LearningHub.Nhs.AdminUI.Models
 {
     /// <summary>
     /// Defines the <see cref="FileChunkRegisterModel" />.

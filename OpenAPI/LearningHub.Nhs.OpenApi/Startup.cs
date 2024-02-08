@@ -1,7 +1,3 @@
-// <copyright file="Startup.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 using Microsoft.AspNetCore.Mvc;
 
 [assembly: ApiController]

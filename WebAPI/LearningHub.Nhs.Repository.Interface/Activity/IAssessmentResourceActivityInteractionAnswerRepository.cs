@@ -1,8 +1,4 @@
-﻿// <copyright file="IAssessmentResourceActivityInteractionAnswerRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Activity
+﻿namespace LearningHub.Nhs.Repository.Interface.Activity
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Activity;

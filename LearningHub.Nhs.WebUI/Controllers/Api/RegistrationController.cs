@@ -1,8 +1,4 @@
-﻿// <copyright file="RegistrationController.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Controllers.Api
+﻿namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System.Threading.Tasks;
     using elfhHub.Nhs.Models.Common;

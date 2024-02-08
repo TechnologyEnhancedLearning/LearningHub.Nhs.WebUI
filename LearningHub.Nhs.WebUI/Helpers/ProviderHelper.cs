@@ -1,8 +1,4 @@
-﻿// <copyright file="ProviderHelper.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Helpers
+﻿namespace LearningHub.Nhs.WebUI.Helpers
 {
     using System.Collections.Generic;
 

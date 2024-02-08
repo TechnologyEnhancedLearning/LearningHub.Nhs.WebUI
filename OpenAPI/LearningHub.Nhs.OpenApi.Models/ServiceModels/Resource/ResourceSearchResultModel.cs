@@ -1,7 +1,3 @@
-// <copyright file="ResourceSearchResultModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource
 {
     using System.Collections.Generic;

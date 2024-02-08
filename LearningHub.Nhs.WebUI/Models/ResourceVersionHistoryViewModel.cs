@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceVersionHistoryViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models
+﻿namespace LearningHub.Nhs.WebUI.Models
 {
     /// <summary>
     /// Defines the <see cref="ResourceVersionHistoryViewModel" />.

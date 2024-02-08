@@ -1,8 +1,4 @@
-﻿// <copyright file="OpenAthens.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Configuration
+﻿namespace LearningHub.Nhs.WebUI.Configuration
 {
     /// <summary>
     /// The OpenAthens.

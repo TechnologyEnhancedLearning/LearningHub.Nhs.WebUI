@@ -1,8 +1,4 @@
-﻿// <copyright file="ModelStateHelpers.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Filters.PRG
+﻿namespace LearningHub.Nhs.AdminUI.Filters.PRG
 {
     using System.Collections.Generic;
     using System.Linq;

@@ -1,8 +1,4 @@
-﻿// <copyright file="BaseApiController.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Controllers.Api
+﻿namespace LearningHub.Nhs.AdminUI.Controllers.Api
 {
     using LearningHub.Nhs.Models.Extensions;
     using Microsoft.AspNetCore.Mvc;

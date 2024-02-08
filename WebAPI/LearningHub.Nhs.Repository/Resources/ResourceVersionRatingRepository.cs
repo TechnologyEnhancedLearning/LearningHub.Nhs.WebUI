@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceVersionRatingRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Resources
+﻿namespace LearningHub.Nhs.Repository.Resources
 {
     using System.Collections.Generic;
     using System.Linq;

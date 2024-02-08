@@ -1,8 +1,4 @@
-﻿// <copyright file="ILearningHubApiHttpClient.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Services.Interface.HttpClients
+﻿namespace LearningHub.Nhs.OpenApi.Services.Interface.HttpClients
 {
     using System;
     using System.Net.Http;

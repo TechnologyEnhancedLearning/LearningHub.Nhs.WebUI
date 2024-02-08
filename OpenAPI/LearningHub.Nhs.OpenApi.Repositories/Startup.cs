@@ -1,7 +1,3 @@
-// <copyright file="Startup.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.OpenApi.Repositories
 {
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;

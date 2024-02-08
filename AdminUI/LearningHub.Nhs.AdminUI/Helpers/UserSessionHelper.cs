@@ -1,8 +1,4 @@
-﻿// <copyright file="UserSessionHelper.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Helpers
+﻿namespace LearningHub.Nhs.AdminUI.Helpers
 {
     using System.Threading.Tasks;
     using elfhHub.Nhs.Models.Common;

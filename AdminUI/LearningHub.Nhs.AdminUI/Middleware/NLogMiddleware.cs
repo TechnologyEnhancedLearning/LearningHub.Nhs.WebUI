@@ -1,8 +1,4 @@
-﻿// <copyright file="NLogMiddleware.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Middleware
+﻿namespace LearningHub.Nhs.AdminUI.Middleware
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Extensions;

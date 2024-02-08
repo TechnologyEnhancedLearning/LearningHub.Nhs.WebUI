@@ -1,8 +1,4 @@
-﻿// <copyright file="IEntityTypeMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Map
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Map
 {
     using Microsoft.EntityFrameworkCore;
 

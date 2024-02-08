@@ -1,8 +1,4 @@
-﻿// <copyright file="EmailTemplateMap.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Map.Messaging
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.Messaging
 {
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Messaging;

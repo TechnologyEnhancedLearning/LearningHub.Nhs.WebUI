@@ -1,8 +1,4 @@
-﻿// <copyright file="ExternalSystemController.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Controllers
+﻿namespace LearningHub.Nhs.AdminUI.Controllers
 {
     using System;
     using System.Linq;

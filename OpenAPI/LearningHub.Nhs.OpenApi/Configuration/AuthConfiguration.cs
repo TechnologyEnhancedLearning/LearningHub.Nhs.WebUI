@@ -1,7 +1,3 @@
-// <copyright file="AuthConfiguration.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.NHS.OpenAPI.Configuration
 {
     using System.Collections.Generic;

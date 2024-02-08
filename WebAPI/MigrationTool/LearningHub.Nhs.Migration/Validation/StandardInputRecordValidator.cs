@@ -1,8 +1,4 @@
-﻿// <copyright file="StandardInputRecordValidator.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Validation
+﻿namespace LearningHub.Nhs.Migration.Validation
 {
     using System;
     using System.Threading.Tasks;

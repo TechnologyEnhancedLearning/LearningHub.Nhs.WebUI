@@ -1,8 +1,4 @@
-﻿// <copyright file="StagingTableInputRecordMapperTests.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.UnitTests.Mapping
+﻿namespace LearningHub.Nhs.Migration.UnitTests.Mapping
 {
     using System;
     using System.Linq;

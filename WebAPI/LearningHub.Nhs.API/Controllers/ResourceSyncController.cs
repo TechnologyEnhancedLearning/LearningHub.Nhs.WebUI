@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceSyncController.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Api.Controllers
+﻿namespace LearningHub.Nhs.Api.Controllers
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

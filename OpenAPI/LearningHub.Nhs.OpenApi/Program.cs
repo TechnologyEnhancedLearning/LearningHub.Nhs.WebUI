@@ -1,7 +1,3 @@
-// <copyright file="Program.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.NHS.OpenAPI
 {
     using System;

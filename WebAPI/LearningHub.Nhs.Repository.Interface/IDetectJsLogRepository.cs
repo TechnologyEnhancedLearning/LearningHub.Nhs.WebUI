@@ -1,7 +1,3 @@
-// <copyright file="IDetectJsLogRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.Repository.Interface
 {
     using System.Threading.Tasks;

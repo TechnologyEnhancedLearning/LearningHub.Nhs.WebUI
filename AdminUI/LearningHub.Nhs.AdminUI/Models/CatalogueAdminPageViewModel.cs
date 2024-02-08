@@ -1,8 +1,4 @@
-﻿// <copyright file="CatalogueAdminPageViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Models
+﻿namespace LearningHub.Nhs.AdminUI.Models
 {
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Paging;

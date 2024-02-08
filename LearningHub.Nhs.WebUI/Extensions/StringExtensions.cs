@@ -1,8 +1,4 @@
-﻿// <copyright file="StringExtensions.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Extensions
+﻿namespace LearningHub.Nhs.WebUI.Extensions
 {
     /// <summary>
     /// Defines the <see cref="StringExtensions" />.

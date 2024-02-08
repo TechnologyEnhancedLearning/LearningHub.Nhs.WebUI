@@ -1,8 +1,4 @@
-﻿// <copyright file="MigrationSourceRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Migrations
+﻿namespace LearningHub.Nhs.Repository.Migrations
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Migration;

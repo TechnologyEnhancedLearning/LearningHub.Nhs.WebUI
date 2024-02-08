@@ -1,8 +1,4 @@
-﻿// <copyright file="IMediaResourcePlayedSegmentRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Activity
+﻿namespace LearningHub.Nhs.Repository.Interface.Activity
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

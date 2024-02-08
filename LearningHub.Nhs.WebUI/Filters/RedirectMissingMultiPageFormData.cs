@@ -1,8 +1,4 @@
-﻿// <copyright file="RedirectMissingMultiPageFormData.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Filters
+﻿namespace LearningHub.Nhs.WebUI.Filters
 {
     using System;
     using System.Threading.Tasks;

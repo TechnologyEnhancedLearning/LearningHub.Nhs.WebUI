@@ -1,7 +1,3 @@
-// <copyright file="CatalogueControllerTests.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.Nhs.Api.UnitTests.Controllers
 {
     using System;

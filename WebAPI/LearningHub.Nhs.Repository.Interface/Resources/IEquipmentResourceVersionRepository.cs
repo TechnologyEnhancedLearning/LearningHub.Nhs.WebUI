@@ -1,8 +1,4 @@
-﻿// <copyright file="IEquipmentResourceVersionRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Resources
+﻿namespace LearningHub.Nhs.Repository.Interface.Resources
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Resource;

@@ -1,8 +1,4 @@
-﻿// <copyright file="VideoAssetRepository.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Content
+﻿namespace LearningHub.Nhs.Repository.Content
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Content;

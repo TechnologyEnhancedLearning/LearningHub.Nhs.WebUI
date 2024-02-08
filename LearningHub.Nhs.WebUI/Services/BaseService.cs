@@ -1,8 +1,4 @@
-﻿// <copyright file="BaseService.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Services
+﻿namespace LearningHub.Nhs.WebUI.Services
 {
     using LearningHub.Nhs.WebUI.Interfaces;
     using Microsoft.Extensions.Logging;

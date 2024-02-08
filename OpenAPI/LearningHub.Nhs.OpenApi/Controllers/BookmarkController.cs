@@ -1,8 +1,4 @@
-﻿// <copyright file="BookmarkController.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
-namespace LearningHub.NHS.OpenAPI.Controllers
+﻿namespace LearningHub.NHS.OpenAPI.Controllers
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

@@ -1,7 +1,3 @@
-// <copyright file="ApiKeyProvider.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-
 namespace LearningHub.NHS.OpenAPI.Auth
 {
     using System;

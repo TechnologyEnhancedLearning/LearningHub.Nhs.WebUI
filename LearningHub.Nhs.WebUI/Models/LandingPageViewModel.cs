@@ -1,7 +1,4 @@
-﻿// <copyright file="LandingPageViewModel.cs" company="NHS England">
-// Copyright (c) NHS England.
-// </copyright>
-namespace LearningHub.Nhs.WebUI.Models
+﻿namespace LearningHub.Nhs.WebUI.Models
 {
     using System.Collections.Generic;
     using LearningHub.Nhs.Models.Common;

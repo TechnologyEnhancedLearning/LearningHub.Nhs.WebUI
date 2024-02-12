@@ -163,12 +163,13 @@
 
         @* Tab header *@
         <nav class="subnavbarwhite navbar-expand-md navbar-toggleable-md nhsuk-u-margin-bottom-1">
-            <input class="subnav-hidden-checkbox" id="resources-subnav-hidden-checkbox" role="button" type="checkbox" aria-controls="catalogue-details">
+            <input class="subnav-hidden-checkbox" id="resources-subnav-hidden-checkbox" role="button" type="checkbox" aria-controls="catalogue-details" aria-labelledby="resources-subnav-hidden-checkbox-label">
             <div class="bar">
                 <div class="navbar-toggler navbar-toggler-left">@GetActiveTabName()</div>
-                <label class="navbar-toggler navbar-toggler-right" for="resources-subnav-hidden-checkbox">
+                <label class="navbar-toggler navbar-toggler-right" id="resources-subnav-hidden-checkbox-label" for="resources-subnav-hidden-checkbox">
                     <i class="fa-solid fa-chevron-down"></i>
                     <i class="fa-solid fa-chevron-up display--hide"></i>
+                    <span class="nhsuk-u-visually-hidden">label</span>
                 </label>
             </div>
             <div class="navbar-collapse collapse" id="catalogue-details">

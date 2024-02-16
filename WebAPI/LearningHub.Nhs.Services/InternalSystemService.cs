@@ -72,9 +72,10 @@ namespace LearningHub.Nhs.Services
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        public Task<InternalSystemViewModel> GetByIdAsync(int id)
+        public async Task<InternalSystemViewModel> GetByIdAsync(int id)
         {
-            return Task.FromResult(this.GetAllAsync().Result.Single(x => x.Id == id));
+            var allItems = await this.GetAllAsync();
+            return allItems.Single(x => x.Id == id);
         }
 
         /// <summary>

@@ -46,18 +46,21 @@ namespace LearningHub.Nhs.WebUI.Filters
 
             var internalSystem = await this.internalSystemService.GetByIdAsync((int)InternalSystemType.LearningHub);
 
-            if (controller != "Offline"
-                && !(controller == "Home" && action == "Logout")
-                && internalSystem.IsOffline
-                && (!user.Identity.IsAuthenticated || !(await this.userGroupService.UserHasPermissionAsync("System_Offline_Bypass"))))
+            if (internalSystem != null)
             {
-                context.Result = new RedirectToRouteResult(
-                                        new RouteValueDictionary
-                                        {
+                if (controller != "Offline"
+                    && !(controller == "Home" && action == "Logout")
+                    && internalSystem.IsOffline
+                    && (!user.Identity.IsAuthenticated || !(await this.userGroupService.UserHasPermissionAsync("System_Offline_Bypass"))))
+                {
+                    context.Result = new RedirectToRouteResult(
+                                            new RouteValueDictionary
+                                            {
                                             { "Controller", "Offline" },
                                             { "Action", "Index" },
-                                        });
-                executeNextAction = false;
+                                            });
+                    executeNextAction = false;
+                }
             }
 
             if (executeNextAction)

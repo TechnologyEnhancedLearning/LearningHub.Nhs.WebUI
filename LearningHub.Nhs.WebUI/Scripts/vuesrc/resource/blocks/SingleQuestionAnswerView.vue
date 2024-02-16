@@ -17,7 +17,8 @@
                    :class="getStyleFromAnswerType(answer.status)"/>
                 <img v-else-if="feedbackVisible"
                      class="answer-medal-icon align-self-center mr-2"
-                     src="/images/medal-icon.svg"/>
+                     src="/images/medal-icon.svg"
+                     alt="Medal Icon"/>
                 {{ answer.blockCollection.blocks[0].textBlock.content }}
             </label>
         </div>

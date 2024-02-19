@@ -41,7 +41,6 @@ export class AttachedFileModel {
 export class GenericFileResourceModel {
     resourceVersionId: number = 0;
     file: ResourceFileModel = new ResourceFileModel();
-    scormAiccContent: boolean = false;
     authoredYear: number = 0;
     authoredMonth: number = 0;
     authoredDayOfMonth: number = 0;

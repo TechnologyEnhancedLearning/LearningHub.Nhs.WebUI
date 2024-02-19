@@ -9,13 +9,9 @@
             <file-panel :file-id="localGenericFileDetail.file.fileId" :file-description="localGenericFileDetail.file.fileName" :file-size="localGenericFileDetail.file.fileSizeKb" @changefile="changeFile"></file-panel>
         </div>
         <div v-if="scormOption" class="row mt-5">
-            <div class="col-12">
+            <div class="col-12 text-danger">
                 <div>
-                    <label class="checkContainer">
-                        This is a SCORM/AICC elearning resource
-                        <input type="checkbox" v-model="localGenericFileDetail.scormAiccContent" @click="setProperty('scormAiccContent', $event.target.checked)">
-                        <span class="checkmark"></span>
-                    </label>
+                    Please choose the resource type as Elearning/HTML for the SCORM/AICC elearning or HTML resources.
                 </div>
             </div>
         </div>

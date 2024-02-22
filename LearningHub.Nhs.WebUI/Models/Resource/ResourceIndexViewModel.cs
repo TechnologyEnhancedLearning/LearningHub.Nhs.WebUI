@@ -33,7 +33,7 @@ namespace LearningHub.Nhs.WebUI.Models.Resource
         /// <summary>
         /// Gets or sets the ScormContentDetails.
         /// </summary>
-        public ScormContentDetailsViewModel ScormContentDetails { get; set; }
+        public ExternalContentDetailsViewModel ExternalContentDetails { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the user has access to the catalogue that the resource is located in.

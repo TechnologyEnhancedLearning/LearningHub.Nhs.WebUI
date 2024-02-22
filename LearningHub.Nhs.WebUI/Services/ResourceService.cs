@@ -227,6 +227,35 @@ namespace LearningHub.Nhs.WebUI.Services
         }
 
         /// <summary>
+        /// The GetHtmlDetailsByIdAsync.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{HtmlViewModel}"/>.</returns>
+        public async Task<HtmlResourceViewModel> GetHtmlDetailsByIdAsync(int resourceVersionId)
+        {
+            HtmlResourceViewModel viewmodel = null;
+
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+
+            var request = $"Resource/GetHtmlDetails/{resourceVersionId}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewmodel = JsonConvert.DeserializeObject<HtmlResourceViewModel>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewmodel;
+        }
+
+        /// <summary>
         /// The GetScormDetailsByIdAsync.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
@@ -255,23 +284,23 @@ namespace LearningHub.Nhs.WebUI.Services
         }
 
         /// <summary>
-        /// The GetScormContentDetailsAsync.
+        /// The GetExternalContentDetailsAsync.
         /// </summary>
         /// <param name="resourceVersionId">resourceVersionId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<ScormContentDetailsViewModel> GetScormContentDetailsAsync(int resourceVersionId)
+        public async Task<ExternalContentDetailsViewModel> GetExternalContentDetailsAsync(int resourceVersionId)
         {
-            ScormContentDetailsViewModel viewmodel = null;
+            ExternalContentDetailsViewModel viewmodel = null;
 
             var client = await this.LearningHubHttpClient.GetClientAsync();
 
-            var request = $"Resource/GetScormContentDetailsById/{resourceVersionId}";
+            var request = $"Resource/GetExternalContentDetailsById/{resourceVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
-                viewmodel = JsonConvert.DeserializeObject<ScormContentDetailsViewModel>(result);
+                viewmodel = JsonConvert.DeserializeObject<ExternalContentDetailsViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
                      response.StatusCode == System.Net.HttpStatusCode.Forbidden)

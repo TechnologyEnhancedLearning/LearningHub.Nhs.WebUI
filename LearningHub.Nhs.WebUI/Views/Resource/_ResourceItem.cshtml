@@ -92,7 +92,7 @@
                 @* Weblink *@
                 @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.WebLink)
                 {
-                    <div class="nhsuk-card nhsuk-bg-light-blue">
+                    <div id="resourcePg" class="nhsuk-card nhsuk-bg-light-blue">
                         <div class="nhsuk-card__content">
                             <p class="nhsuk-body-l nhsuk-u-margin-bottom-3">Visit site:</p>
                             @{
@@ -103,7 +103,23 @@
                                     displayText = resourceItem.WebLinkDetails.Url;
                                 }
                             }
-                            <p class="nhsuk-body-l word-break__break-word"><a href="@GetWeblinkNavigateLink(resourceItem.WebLinkDetails.Url)" target="_blank">@displayText</a></p>
+                            <p class="nhsuk-body-l word-break__break-word"><a v-on:click=checkUserCertificateAvailability(@resourceItem.Id) href="@GetWeblinkNavigateLink(resourceItem.WebLinkDetails.Url)" target="_blank">@displayText</a></p>
+                        </div>
+                    </div>
+                }
+
+                @* Html Resource *@
+                @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Html)
+                {
+                    <div id="resourcePg" class="nhsuk-card nhsuk-bg-light-blue">
+                        <div class="nhsuk-card__content">
+                            <a v-on:click=checkUserCertificateAvailability(@resourceItem.Id) href="@($"{Context.Request.Scheme}://{Context.Request.Host}/resource/html/{resourceItem.Id}/index.html")"
+                               onclick="@($"window.open(this.href, 'scormDebugWindow', 'status=no,location=no,toolbar=no,menubar=no,dependent=no,width={resourceItem.HtmlDetails.PopupWidth},height={resourceItem.HtmlDetails.PopupHeight}'); return false;")">
+                                <button class="nhsuk-button">
+                                    Launch HTML resource
+                                </button>
+                            </a>
+                            <p>This resource will launch in a new window</p>
                         </div>
                     </div>
                 }
@@ -115,12 +131,12 @@
                         <!-- NON SCORM/AICC content-->
                         @if (!resourceItem.GenericFileDetails.ScormAiccContent)
                         {
-                            <div class="nhsuk-card nhsuk-bg-light-blue">
+                            <div id="resourcePg" class="nhsuk-card nhsuk-bg-light-blue">
                                 <div class="nhsuk-card__content">
                                     <p class="nhsuk-body-l nhsuk-u-margin-bottom-3">Download:</p>
                                     <p class="nhsuk-body-l word-break__break-word">
                                         <span class="nhsuk-u-margin-right-4 pill @UtilityHelper.GetPillColour(resourceItem.GenericFileDetails.File.FileName)">@GetFileExtension(resourceItem.GenericFileDetails.File.FileName)</span>
-                                        <a class="nhsuk-u-margin-right-4" href="@GetDownloadResourceLink(resourceItem.GenericFileDetails.File.FilePath, resourceItem.GenericFileDetails.File.FileName)">@resourceItem.GenericFileDetails.File.FileName</a> (@resourceItem.GenericFileDetails.File.FileSizeKb KB)
+                                        <a v-on:click=checkUserCertificateAvailability(@resourceItem.Id) class="nhsuk-u-margin-right-4" href="@GetDownloadResourceLink(resourceItem.GenericFileDetails.File.FilePath, resourceItem.GenericFileDetails.File.FileName)">@resourceItem.GenericFileDetails.File.FileName</a> (@resourceItem.GenericFileDetails.File.FileSizeKb KB)
                                     </p>
                                 </div>
                             </div>
@@ -198,7 +214,7 @@
         }
 
         @* Description / Additional Information *@
-        @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Case && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Assessment)
+        @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Case && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Assessment && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Html)
         {
             <div class="nhsuk-u-margin-bottom-7">
                 @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Article || (resourceItem.Catalogue.RestrictedAccess && !Model.HasCatalogueAccess))

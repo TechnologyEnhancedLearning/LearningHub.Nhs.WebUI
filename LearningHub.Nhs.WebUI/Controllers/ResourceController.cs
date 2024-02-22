@@ -8,10 +8,12 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.Activity;
     using LearningHub.Nhs.Models.Validation;
@@ -24,6 +26,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
 
@@ -42,6 +45,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
         private readonly ICatalogueService catalogueService;
         private readonly IHierarchyService hierarchyService;
         private readonly IMyLearningService myLearningService;
+        private readonly IFileService fileService;
+        private readonly ICacheService cacheService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceController"/> class.
@@ -59,6 +64,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="catalogueService">The catalogueService.</param>
         /// <param name="myLearningService">The myLearningService.</param>
         /// <param name="hierarchyService">The hierarchyService.</param>
+        /// <param name="fileService">The fileService.</param>
+        /// <param name="cacheService">The cacheService.</param>
         public ResourceController(
             IWebHostEnvironment hostingEnvironment,
             ILogger<ResourceController> logger,
@@ -72,7 +79,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
             IActivityService activityService,
             ICatalogueService catalogueService,
             IMyLearningService myLearningService,
-            IHierarchyService hierarchyService)
+            IHierarchyService hierarchyService,
+            IFileService fileService,
+            ICacheService cacheService)
             : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.azureMediaService = azureMediaService;
@@ -84,6 +93,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
             this.catalogueService = catalogueService;
             this.hierarchyService = hierarchyService;
             this.myLearningService = myLearningService;
+            this.fileService = fileService;
+            this.cacheService = cacheService;
         }
 
         /// <summary>
@@ -124,10 +135,12 @@ namespace LearningHub.Nhs.WebUI.Controllers
 
             var catalogueAccessRequest = await this.catalogueService.GetLatestCatalogueAccessRequestAsync(resource.Catalogue.NodeId);
 
-            ScormContentDetailsViewModel scormContentDetails = null;
-            if (resource.ResourceTypeEnum == ResourceTypeEnum.Scorm)
+            ExternalContentDetailsViewModel externalContentDetails = null;
+            if (resource.ResourceTypeEnum == ResourceTypeEnum.Scorm
+                || resource.ResourceTypeEnum == ResourceTypeEnum.GenericFile
+                || resource.ResourceTypeEnum == ResourceTypeEnum.Html)
             {
-                scormContentDetails = await this.resourceService.GetScormContentDetailsAsync(resource.ResourceVersionId);
+                externalContentDetails = await this.resourceService.GetExternalContentDetailsAsync(resource.ResourceVersionId);
             }
 
             var hasCatalogueAccess = false;
@@ -199,7 +212,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 ResourceReferenceId = resourceReferenceId,
                 ResourceItem = resource,
                 ResourceRating = resourceRating,
-                ScormContentDetails = scormContentDetails,
+                ExternalContentDetails = externalContentDetails,
                 HasCatalogueAccess = hasCatalogueAccess,
                 UserHasCertificate = userHasCertificate,
                 CatalogueAccessRequest = catalogueAccessRequest,
@@ -416,6 +429,79 @@ namespace LearningHub.Nhs.WebUI.Controllers
             else
             {
                 return this.Redirect("/Home/Error");
+            }
+        }
+
+        /// <summary>
+        /// View HTML resource content.
+        /// </summary>
+        /// <param name="resourceReferenceId">Resource reference id.</param>
+        /// <param name="path">Html resource content relative path.</param>
+        /// <returns>The file content.</returns>
+        [HttpGet]
+        [Authorize]
+        [Route("resource/html/{resourceReferenceId}/{*path}")]
+        public async Task<IActionResult> HtmlResourceContent(int resourceReferenceId, string path)
+        {
+            if (resourceReferenceId == 0 || string.IsNullOrWhiteSpace(path))
+            {
+                return this.Redirect("/Home/Error");
+            }
+
+            var userId = this.User.Identity.GetCurrentUserId();
+            var cacheKey = $"HtmlContent:{userId}:{resourceReferenceId}";
+            var (cacheExists, cacheValue) = await this.cacheService.TryGetAsync<string>(cacheKey);
+
+            if (!cacheExists)
+            {
+                var resource = await this.resourceService.GetItemByIdAsync(resourceReferenceId);
+
+                if (resource == null || resource.Id == 0 || (resource.Catalogue != null && resource.Catalogue.Hidden))
+                {
+                    this.ViewBag.SupportFormUrl = this.Settings.SupportUrls.SupportForm;
+                    return this.View("Unavailable");
+                }
+
+                if (resource.VersionStatusEnum == VersionStatusEnum.Unpublished && !resource.DisplayForContributor)
+                {
+                    return this.RedirectToAction("unpublished");
+                }
+
+                cacheValue = $"{resource.ResourceVersionId}:{resource.NodePathId}:{resource.HtmlDetails.ContentFilePath}";
+
+                await this.cacheService.SetAsync(cacheKey, cacheValue);
+            }
+
+            var splits = cacheValue.Split(":");
+            var resourceVersionId = int.Parse(splits[0]);
+            var nodePathId = int.Parse(splits[1]);
+            var contentFilePath = splits[2];
+
+            if (path?.ToLower() == "index.html")
+            {
+                var activity = new CreateResourceActivityViewModel
+                {
+                    ResourceVersionId = resourceVersionId,
+                    NodePathId = nodePathId,
+                    ActivityStart = DateTime.UtcNow, // TODO: What about user's timezone offset when Javascript is disabled? Needs JavaScript.
+                    ActivityStatus = ActivityStatusEnum.Launched,
+                };
+                await this.activityService.CreateResourceActivityAsync(activity);
+            }
+
+            if (!new FileExtensionContentTypeProvider().TryGetContentType(path, out string contentType))
+            {
+                contentType = "text/html";
+            }
+
+            var file = await this.fileService.DownloadFileAsync(contentFilePath, path);
+            if (file != null)
+            {
+                return this.File(file.Content, contentType);
+            }
+            else
+            {
+                return this.Ok(this.Content("No file found"));
             }
         }
     }

@@ -41,20 +41,13 @@
 
         <div class="search-width-container nhsuk-u-width-two-thirds nhsuk-u-padding-bottom-5">
           <form asp-controller="MyAccount" asp-action="SearchCountry" method="get">
-            @if (Model.Item2.FilterText == null)
+            @if (Model.Item2.FilterText == null || Model.Item2.Country.Count() == 0)
             {
               <p class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">Search for example, England</p>
             }
-            else
-            {
-              @if (Model.Item2.Country.Count() == 0)
-              {
-                <p class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">Search for example, England</p>
-              }
-            }
-            <div class="nhsuk-form-group) search-box-container" style="white-space:nowrap">
-
-              <input class="nhsuk-input nhsuk-u-width-two-thirds search-box" placeholder="" id="FilterText" name="FilterText" value="@Model.Item2.FilterText" type="search" aria-describedby="FilterText-hint" aria-required="true">
+            <div class="nhsuk-form-group search-box-container" style="white-space:nowrap">
+              <label class="nhsuk-label nhsuk-u-visually-hidden" for="FilterText">Filter</label>
+              <input class="nhsuk-input nhsuk-u-width-two-thirds search-box" placeholder="" id="FilterText" name="FilterText" value="@Model.Item2.FilterText" type="search" aria-required="true">
               <button class="nhsuk-search__submit__green" type="submit">
                 <svg class="nhsuk-icon nhsuk-icon__search__green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                   <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
@@ -83,7 +76,7 @@
 
                           <input type="radio" checked="checked" name="SelectedCountryId" asp-for="Item2.SelectedCountryId" value="@countries.Value" id="@countries.Label" class="nhsuk-radios__input" data-val="false" />
 
-                          <label class="nhsuk-label nhsuk-radios__label" for="@countries.Value">
+                          <label class="nhsuk-label nhsuk-radios__label" for="@countries.Label">
                             @countries.Label
                           </label>
                         </div>

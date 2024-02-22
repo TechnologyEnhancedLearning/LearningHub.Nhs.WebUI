@@ -26,7 +26,7 @@
       @await Component.InvokeAsync("NavigationItems", new { navView = "MobileTopRightNav", controllerName = controllerName })
       @if (User.Identity.IsAuthenticated) {
         <div class="nhsuk-header__menu">
-          <label for="header-dropdown-menu-control" class="nhsuk-header__menu-toggle" id="toggle-menu" aria-controls="header-navigation" aria-expanded="false">Menu</label>
+          <label class="nhsuk-header__menu-toggle" id="toggle-menu" aria-controls="header-navigation" aria-expanded="false">Menu</label>
           @await Component.InvokeAsync("NavigationItems", new { navView = "MenuNotificationDot" })
         </div>
       }
@@ -40,7 +40,7 @@
 
   @if (User.Identity.IsAuthenticated) {
     <div class="nhsuk-header__menu nhsuk-header__not-mobile">
-      <label for="header-dropdown-menu-control" class="nhsuk-header__menu-toggle" id="toggle-menu" aria-controls="header-navigation" aria-expanded="false">Menu</label>
+      <label class="nhsuk-header__menu-toggle" id="toggle-menu" aria-controls="header-navigation" aria-expanded="false">Menu</label>
       @await Component.InvokeAsync("NavigationItems", new { navView = "MenuNotificationDot" })
     </div>
   }

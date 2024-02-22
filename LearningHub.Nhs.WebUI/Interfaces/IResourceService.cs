@@ -60,6 +60,13 @@ namespace LearningHub.Nhs.WebUI.Interfaces
         Task<GenericFileViewModel> GetGenericFileDetailsByIdAsync(int resourceVersionId);
 
         /// <summary>
+        /// The GetHtmlDetailsByIdAsync.
+        /// </summary>
+        /// <param name="resourceVersionId">Resource version id.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<HtmlResourceViewModel> GetHtmlDetailsByIdAsync(int resourceVersionId);
+
+        /// <summary>
         /// The GetScormDetailsByIdAsync.
         /// </summary>
         /// <param name="resourceVersionId">Resource version id.</param>
@@ -67,11 +74,11 @@ namespace LearningHub.Nhs.WebUI.Interfaces
         Task<ScormViewModel> GetScormDetailsByIdAsync(int resourceVersionId);
 
         /// <summary>
-        /// The GetScormContentDetailsAsync.
+        /// The GetExternalContentDetailsAsync.
         /// </summary>
         /// <param name="resourceVersionId">resourceVersionId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        Task<ScormContentDetailsViewModel> GetScormContentDetailsAsync(int resourceVersionId);
+        Task<ExternalContentDetailsViewModel> GetExternalContentDetailsAsync(int resourceVersionId);
 
         /// <summary>
         /// The RecordExternalReferenceUserAgreementAsync.

@@ -55,26 +55,32 @@
 
     <script type="text/javascript">
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        $.ajaxSetup({ cache: false });
+            $.ajaxSetup({ cache: false });
 
-        var callintervalSecs = @(ViewBag.KeepUserSessionAliveInterval);
-        var interval = setInterval("KeepUserSessionAlive()", callintervalSecs);
+            var callintervalSecs = @(ViewBag.KeepUserSessionAliveInterval);
+            var interval = setInterval("KeepUserSessionAlive()", callintervalSecs);
 
-    });
-
-    function KeepUserSessionAlive() {
-
-        $.ajax({
-            type: "POST",
-            url: '/api/User/KeepUserSessionAlive/',
-            error: function (param) {
-                alert('Error: While trying to keep user login session alive!');
-            },
-            async: true
         });
-    }
+
+        function KeepUserSessionAlive() {
+
+            $.ajax({
+                type: "POST",
+                url: '/api/User/KeepUserSessionAlive/',
+                error: function (param) {
+                    alert('Error: While trying to keep user login session alive!');
+                },
+                async: true
+            });
+        }
+
+        window.onunload = refreshResourcePage;
+        function refreshResourcePage() {
+            window.opener.refreshPage();
+
+        }
 
     </script>
 

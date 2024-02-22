@@ -101,6 +101,10 @@
     {
         filtersummary = filtersummary + $" <strong class='nhsuk-tag'>elearning</strong>";
     }
+    @if (Model.Html)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>HTML</strong>";
+    }
     @if (Model.File)
     {
         filtersummary = filtersummary + $" <strong class='nhsuk-tag'>File</strong>";

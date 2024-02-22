@@ -16,21 +16,21 @@
     if (!Model.HasCatalogueAccess)
       return false;
 
-    if (Model.ScormContentDetails == null)
-      return false;
+        if (Model.ExternalContentDetails == null)
+            return false;
 
-    switch (Model.ScormContentDetails.EsrLinkType)
-    {
-      case EsrLinkType.CreatedUserOnly:
-      case EsrLinkType.CreatedUserAndOtherEditors:
-        return Model.ScormContentDetails.IsOwnerOrEditor;
-      case EsrLinkType.EveryOne:
-        return true;
-      case EsrLinkType.NotAvailable:
+        switch (Model.ExternalContentDetails.EsrLinkType)
+        {
+            case EsrLinkType.CreatedUserOnly:
+            case EsrLinkType.CreatedUserAndOtherEditors:
+                return Model.ExternalContentDetails.IsOwnerOrEditor;
+            case EsrLinkType.EveryOne:
+                return true;
+            case EsrLinkType.NotAvailable:
+                return false;
+        }
         return false;
     }
-    return false;
-  }
 }
 <div class="nhsuk-grid-row">
   <div class="nhsuk-grid-column-full">
@@ -157,33 +157,33 @@
           </tbody>
         </table>
 
-        @if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Scorm && CanDisplayEsrLink())
-        {
-          <details class="nhsuk-details nhsuk-u-margin-bottom-5 nhsuk-u-margin-top-0">
+    @if ((resourceItem.ResourceTypeEnum == ResourceTypeEnum.Scorm || resourceItem.ResourceTypeEnum == ResourceTypeEnum.GenericFile || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Html) && CanDisplayEsrLink())
+    {
+        <details class="nhsuk-details nhsuk-u-margin-bottom-5 nhsuk-u-margin-top-0">
             <summary class="nhsuk-details__summary">
               <span class="nhsuk-details__summary-text nhsuk-u-font-size-16">
                 ESR link details
               </span>
             </summary>
             <div class="nhsuk-details__text">
-              <p class="nhsuk-u-font-size-16">
-                Electronic Staff Record (ESR) users with a Learning Administration User Responsibility
-                Profile (URP) can set up elearning content to play via ESR. The link provided enables
-                users with that URP to add this resource as a learning object so others can access
-                it in ESR. The link is only required by those users.
-              </p>
-              <div class="nhsuk-card nhsuk-bg-light-blue">
-                <div class="nhsuk-card__content">
-                  <h4 class="nhsuk-u-font-size-16">ESR link for this learning resource:</h4>
-                  <p class="nhsuk-u-font-size-16 nhsuk-u-font-style-italic word-break__break-word">
-                    @resourceItem.ScormDetails.HostedContentUrl
-                  </p>
-                  <p class="nhsuk-u-font-size-16">
-                    The contributor of this resource could unpublish it or make it unavailable to access
-                    from ESR at any time.
-                  </p>
+                <p class="nhsuk-u-font-size-16">
+                    Electronic Staff Record (ESR) users with a Learning Administration User Responsibility
+                    Profile (URP) can set up elearning content to play via ESR. The link provided enables
+                    users with that URP to add this resource as a learning object so others can access
+                    it in ESR. The link is only required by those users.
+                </p>
+                <div class="nhsuk-card nhsuk-bg-light-blue">
+                    <div class="nhsuk-card__content">
+                        <h4 class="nhsuk-u-font-size-16">ESR link for this learning resource:</h4>
+                        <p class="nhsuk-u-font-size-16 nhsuk-u-font-style-italic word-break__break-word">
+                            @(resourceItem.ScormDetails?.HostedContentUrl ?? resourceItem.HtmlDetails?.HostedContentUrl ?? resourceItem.GenericFileDetails.HostedContentUrl)
+                        </p>
+                        <p class="nhsuk-u-font-size-16">
+                            The contributor of this resource could unpublish it or make it unavailable to access
+                            from ESR at any time.
+                        </p>
+                    </div>
                 </div>
-              </div>
 
             </div>
           </details>

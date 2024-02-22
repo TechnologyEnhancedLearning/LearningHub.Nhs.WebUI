@@ -51,6 +51,8 @@ const getResourceTypeIconClass = function getResourceTypeIconClass(resourceType:
             return ["fa-solid", "fa-globe"];
         case ResourceType[ResourceType.CASE]:
             return ["fa-solid", "fa-microscope"];
+        case ResourceType[ResourceType.HTML]:
+            return ["fa-solid", "fa-code"];
         default:
             return ["fa-regular", "fa-file"];
     }
@@ -227,6 +229,8 @@ const getResourceTypeText = function (resourceType: ResourceType): string {
             return "Case";
         case ResourceType.ASSESSMENT:
             return "Assessment"
+        case ResourceType.HTML:
+            return "HTML"
         default:
             return "";
     }

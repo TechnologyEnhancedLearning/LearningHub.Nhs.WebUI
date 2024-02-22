@@ -72,6 +72,8 @@
                         return "If you want to create a page that has a variety of media such as text and whole slide images.";
                     case ResourceType.ASSESSMENT:
                         return "If you want to set questions to assess people informally (correct answers and feedback provided at the end), or formally (without feedback).";
+                    case ResourceType.HTML:
+                        return "If you want to add an HTML resource package in a zip file.";
                     default:
                         return "";
                 }

@@ -114,7 +114,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 }
                 else
                 {
-                    this.ViewBag.ResourceTypesSupported = "1,2,3,6";
+                    this.ViewBag.ResourceTypesSupported = "1,2,3,6,12";
                 }
 
                 return this.View();

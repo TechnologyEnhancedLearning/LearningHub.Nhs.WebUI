@@ -1,0 +1,69 @@
+﻿@model CatalogueRequestAccessViewModel
+@using LearningHub.Nhs.WebUI.Models.Catalogue
+@using LearningHub.Nhs.Models.Enums
+@{
+  ViewData["Title"] = "Request Permission";
+}
+
+@section styles{
+<link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/catalogue.css" asp-append-version="true" />
+}
+
+<div class="request-access-page">
+    <div class="nhsuk-width-container app-width-container">
+        <vc:back-link asp-controller="Catalogue" asp-action="@Model.CatalogueUrl" link-text="Back to: @Model.CatalogueName" />
+        <h1>Request permission to preview this catalogue</h1>
+
+        <div class="nhsuk-u-reading-width nhsuk-u-font-size-19">
+      @using (Html.BeginForm("RequestPermissionPost", "Catalogue", FormMethod.Post))
+      {
+        @if (Model.CatalogueAccessRequest != null && Model.CatalogueAccessRequest.Status == CatalogueAccessRequestStatus.Rejected)
+        {
+                                    <p>Your last request to access this catalogue was denied on @Model.CatalogueAccessRequest.DateRejected.Value.ToString("dd MMM yyyy") for the following reason:</p>
+                                    <p>@Model.CatalogueAccessRequest.ResponseMessage</p>
+        }
+                          <p>You are requesting permission to the @Model.CatalogueName catalogue. Enter the information below which will be sent to the catalogue administrator. You will be notified of their decision by email.</p>
+
+                        <table class="personal-details-table nhsuk-u-margin-bottom-4">
+                            <tr>
+                                <td class="nhsuk-u-font-weight-bold">Name:</td>
+                                <td>@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</td>
+                            </tr>
+                            <tr>
+                                <td class="nhsuk-u-font-weight-bold">Email:</td>
+                                <td>@Model.CurrentUser.EmailAddress</td>
+                            </tr>
+                        </table>
+
+                        <div class="nhsuk-form-group">
+                            <div class="nhsuk-hint" id="message-hint">
+                                  Enter your role, place of work, professional body number (if applicable) and information on why you are requesting permission for this catalogue.
+                            </div>
+
+                            <textarea asp-for="AccessRequestMessage" class="nhsuk-textarea" id="AccessRequestMessage" rows="5" aria-describedby="message-hint"></textarea>
+                            <div class="nhsuk-u-margin-top-3"><span asp-validation-for="AccessRequestMessage"></span></div>
+                        </div>
+
+                        <input type="hidden" asp-for="CatalogueNodeId" />
+                        <input type="hidden" asp-for="CatalogueName" />
+                        <input type="hidden" asp-for="CatalogueUrl" />
+                        <input type="hidden" asp-for="CurrentUser.FirstName" />
+                        <input type="hidden" asp-for="CurrentUser.LastName" />
+                        <input type="hidden" asp-for="CurrentUser.EmailAddress" />
+                        <input type="hidden" asp-for="ReturnUrl" />
+        @if (Model.CatalogueAccessRequest != null)
+        {
+                                    <input type="hidden" asp-for="CatalogueAccessRequest.DateRejected" />
+                                    <input type="hidden" asp-for="CatalogueAccessRequest.Status" />
+                                    <input type="hidden" asp-for="CatalogueAccessRequest.ResponseMessage" />
+        }
+
+                          <div class="nhsuk-u-padding-bottom-9">                       
+                            <button type="submit" class="nhsuk-button">Send request</button>
+                            <a class="nhsuk-button nhsuk-button--secondary" href="@Model.ReturnUrl">Cancel</a>
+                        </div>
+      }
+        </div>
+        </div>
+    </div>
+</div>

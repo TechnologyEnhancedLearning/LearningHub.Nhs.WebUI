@@ -5,7 +5,7 @@ import Vuex, { ActionContext, Store } from 'vuex';
 import { GetterTree, MutationTree, ActionTree } from "vuex";
 import { ResourceAccessibility, ResourceType } from '../constants';    
 import { debounce } from 'ts-debounce';
-import { ContributeResourceDetailModel, ResourceFileModel, GenericFileResourceModel, ScormResourceModel, ImageResourceModel, VideoResourceModel, ArticleResourceModel, AttachedFileModel, AudioResourceModel, WeblinkResourceModel } from '../models/contribute/contributeResourceModel';
+import { ContributeResourceDetailModel, ResourceFileModel, GenericFileResourceModel, ScormResourceModel, ImageResourceModel, VideoResourceModel, ArticleResourceModel, AttachedFileModel, AudioResourceModel, WeblinkResourceModel, HtmlResourceModel } from '../models/contribute/contributeResourceModel';
 import { FileTypeModel } from '../models/contribute/fileTypeModel';
 import { ContributeSettingsModel } from '../models/contribute/contributeSettingsModel';
 import { LicenceModel } from '../models/contribute/licenceModel';
@@ -46,6 +46,7 @@ export class State {
     audioDetail = new AudioResourceModel();
     articleDetail = new ArticleResourceModel();
     weblinkDetail = new WeblinkResourceModel();
+    htmlDetail = new HtmlResourceModel();
 
     fileTypes: FileTypeModel[] = null;
     licences: LicenceModel[] = null;
@@ -123,6 +124,12 @@ const setSpecificContentState = function (state: State) {
                 && !!state.genericFileDetail.file.fileName
                 && !!state.genericFileDetail.file.fileName.length;
             break;
+        case ResourceType.HTML:
+            state.specificContentValid = !!state.htmlDetail
+                && !!state.htmlDetail.file
+                && !!state.htmlDetail.file.fileName
+                && !!state.htmlDetail.file.fileName.length;
+            break;
         case ResourceType.SCORM:
             state.specificContentValid = !!state.scormDetail && !!state.scormDetail.file;
             break;
@@ -187,6 +194,10 @@ const autosaverPlugin = function (store: Store<State>) {
             case "saveWeblinkDetail":
                 data = state.weblinkDetail;
                 apiAction = "saveWeblinkDetail";
+                break;
+            case "saveHtmlDetail":
+                data = state.htmlDetail;
+                apiAction = "saveHtmlDetail";
                 break;
             default:
                 break;
@@ -270,6 +281,15 @@ const mutations = {
                     break;
                 }
                 state.genericFileDetail = genericFileDetail as GenericFileResourceModel;
+                break;
+            case ResourceType.HTML:
+                const htmlDetail: any = await resourceData.getHtmlDetail(payload);
+                state.resourceDetail = resourceDetail;
+                if (htmlDetail) {
+                    state.htmlDetail = htmlDetail;
+                } else {
+                    state.htmlDetail = new HtmlResourceModel();
+                }
                 break;
             case ResourceType.SCORM:                
                 const scormDetail = await resourceData.getScormDetail(payload);               
@@ -387,6 +407,9 @@ const mutations = {
                 break;
             case ResourceType.AUDIO:
                 state.audioDetail.file = file;
+                break;
+            case ResourceType.HTML:
+                state.htmlDetail.file = file;
                 break;
         }
         state.fileUpdated = new Date();
@@ -534,6 +557,11 @@ const mutations = {
             [field]: value
         });
         state.specificContentDirty = false;
+    },
+    saveHtmlDetail(state: State, { field, value }) {
+        Object.assign(state.htmlDetail, {
+            [field]: value
+        });
     },
 } as MutationTree<State>;
 

@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 25-03-2021  Killian Davies	Initial Revision
+-- 08-02-2024  SA				Included Role details.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hub].[RestrictedCatalogueGetAccessRequests] 
 (
@@ -19,7 +20,7 @@ AS
 
 BEGIN
 
-	SELECT CatalogueAccessRequestId, UserName, EmailAddress, FullName, CatalogueAccessRequestStatus, RequestedDatetime
+	SELECT CatalogueAccessRequestId, UserName, EmailAddress, FullName, CatalogueAccessRequestStatus, RequestedDatetime, RoleId
 	FROM
 	(
 		SELECT 
@@ -29,7 +30,8 @@ BEGIN
 			LTRIM(RTRIM(ISNULL(up.FirstName,'') + ' ' + ISNULL(up.LastName,''))) AS FullName,
 			car.[Status] AS CatalogueAccessRequestStatus,
 			car.CreateDate AS RequestedDatetime,
-			[Sequence] = ROW_NUMBER() OVER (PARTITION BY car.UserId ORDER BY car.CreateDate DESC)
+			[Sequence] = ROW_NUMBER() OVER (PARTITION BY car.UserId ORDER BY car.CreateDate DESC),
+			car.RoleId
 		FROM
 			[hierarchy].[CatalogueAccessRequest] car
 		INNER JOIN

@@ -30,9 +30,9 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
     }
 
     /// <summary>
-    /// Defines the <see cref="IScormResourceReferenceEventRepository" />.
+    /// Defines the <see cref="IResourceReferenceEventRepository" />.
     /// </summary>
-    public interface IScormResourceReferenceEventRepository : IGenericRepository<ScormResourceReferenceEvent>
+    public interface IResourceReferenceEventRepository : IGenericRepository<ResourceReferenceEvent>
     {
     }
 }

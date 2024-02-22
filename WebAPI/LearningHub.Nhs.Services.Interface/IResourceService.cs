@@ -86,6 +86,13 @@ namespace LearningHub.Nhs.Services.Interface
         Task<GenericFileViewModel> GetGenericFileDetailsByIdAsync(int resourceVersionId);
 
         /// <summary>
+        /// The get html resource details by id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{HtmlViewModel}"/>.</returns>
+        Task<HtmlResourceViewModel> GetHtmlDetailsByIdAsync(int resourceVersionId);
+
+        /// <summary>
         /// The get scorm details by id async.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
@@ -93,20 +100,12 @@ namespace LearningHub.Nhs.Services.Interface
         Task<ScormViewModel> GetScormDetailsByIdAsync(int resourceVersionId);
 
         /// <summary>
-        /// The GetScormContentDetails.
+        /// The GetExternalContentDetails.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
         /// <param name="userId">userId.</param>
         /// <returns>The <see cref="Task{ScormContentDetailsViewModel}"/>.</returns>
-        ScormContentDetailsViewModel GetScormContentDetails(int resourceVersionId, int userId);
-
-        /////// <summary>
-        /////// The GetScormContentDetails.
-        /////// </summary>
-        /////// <param name="fullHistoricUrl">The fullHistoricUrl<see cref="string"/>.</param>
-        /////// <param name="userId">userId.</param>
-        /////// <returns>The <see cref="Task{ScormContentDetailsViewModel}"/>.</returns>
-        ////Task<ScormContentDetailsViewModel> GetScormContentDetails(string fullHistoricUrl, int userId);
+        ExternalContentDetailsViewModel GetExternalContentDetails(int resourceVersionId, int userId);
 
         /// <summary>
         /// The get image details by id async.
@@ -264,11 +263,26 @@ namespace LearningHub.Nhs.Services.Interface
         Task<LearningHubValidationResult> UpdateScormDetailAsync(ScormUpdateRequestViewModel scormViewModel, int currentUserId);
 
         /// <summary>
+        /// The update HTML detail async.
+        /// </summary>
+        /// <param name="htmlResourceViewModel">Html resource update view model.</param>
+        /// <param name="currentUserId">The currentUserId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
+        Task<LearningHubValidationResult> UpdateHtmlDetailAsync(HtmlResourceUpdateRequestViewModel htmlResourceViewModel, int currentUserId);
+
+        /// <summary>
         /// The publish update scorm detail async.
         /// </summary>
         /// <param name="scormViewModel">The scormPublishUpdateRequestViewModel<see cref="ScormPublishUpdateViewModel"/>.</param>
         /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
         Task<LearningHubValidationResult> UpdateScormPublishDetailAsync(ScormPublishUpdateViewModel scormViewModel);
+
+        /// <summary>
+        /// The publish update html resource detail async.
+        /// </summary>
+        /// <param name="viewModel">The HtmlResourcePublishUpdateViewModel<see cref="HtmlResourcePublishUpdateViewModel"/>.</param>
+        /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
+        Task<LearningHubValidationResult> UpdateHtmlResourcePublishDetailsAsync(HtmlResourcePublishUpdateViewModel viewModel);
 
         /// <summary>
         /// The RecordExternalReferenceUserAgreementAsync.

@@ -100,6 +100,13 @@ BEGIN
 					 VALUES (@ResourceVersionId, @FileId, 'Unnamed image for ' + @Title, 0, @UserId, @AmendDate, @UserId, @AmendDate)
 		END
 
+		-- Html
+		IF @ResourceTypeId = 12
+		BEGIN
+			INSERT INTO [resources].[HtmlResourceVersion] ([ResourceVersionId],[FileId],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
+					 VALUES (@ResourceVersionId, @FileId, 0, @UserId, @AmendDate, @UserId, @AmendDate)
+		END
+
 		-- Scorm
 		IF @ResourceTypeId = 6 
 		BEGIN

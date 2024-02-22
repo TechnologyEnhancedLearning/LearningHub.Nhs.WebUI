@@ -55,31 +55,15 @@ namespace LearningHub.Nhs.Repository.Resources
         }
 
         /// <summary>
-        /// Gets Scorm content details.
-        /// </summary>
-        /// <param name="resourceVersionId">resourceVersionId.</param>
-        /// <param name="userId">userId.</param>
-        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public ScormContentDetailsViewModel GetScormContentDetails(int resourceVersionId, int userId)
-        {
-            var param0 = new SqlParameter("@resourceVersionId", SqlDbType.Int) { Value = resourceVersionId };
-            var param1 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
-
-            var scormContentDetailsViewModel = this.DbContext.ScormContentDetailsViewModel.FromSqlRaw("[resources].[GetScormContentDetails] @resourceVersionId, @userId", param0, param1).AsEnumerable().FirstOrDefault();
-
-            return scormContentDetailsViewModel;
-        }
-
-        /// <summary>
         /// Gets the SCORM content details for a particular Learning Hub external reference (guid).
         /// </summary>
         /// <param name="externalReference">The external reference (guid).</param>
-        /// <returns>A ScormContentServerViewModel.</returns>
-        public ScormContentServerViewModel GetScormContentServerDetailsByLHExternalReference(string externalReference)
+        /// <returns>A ContentServerViewModel.</returns>
+        public ContentServerViewModel GetContentServerDetailsByLHExternalReference(string externalReference)
         {
             var param0 = new SqlParameter("@externalReference", SqlDbType.NVarChar) { Value = externalReference };
 
-            var scormContentServerViewModel = this.DbContext.ScormContentServerViewModel.FromSqlRaw("[resources].[GetScormContentServerDetailsForLHExternalReference] @externalReference", param0).AsEnumerable().FirstOrDefault();
+            var scormContentServerViewModel = this.DbContext.ContentServerViewModel.FromSqlRaw("[resources].[GetContentServerDetailsForLHExternalReference] @externalReference", param0).AsEnumerable().FirstOrDefault();
 
             return scormContentServerViewModel;
         }
@@ -89,12 +73,12 @@ namespace LearningHub.Nhs.Repository.Resources
         /// allow historic ESR links on migrated resources to continue to work.
         /// </summary>
         /// <param name="externalUrl">The external Url.</param>
-        /// <returns>A ScormContentServerViewModel.</returns>
-        public ScormContentServerViewModel GetScormContentServerDetailsByHistoricExternalUrl(string externalUrl)
+        /// <returns>A ContentServerViewModel.</returns>
+        public ContentServerViewModel GetScormContentServerDetailsByHistoricExternalUrl(string externalUrl)
         {
             var param0 = new SqlParameter("@externalUrl", SqlDbType.NVarChar) { Value = externalUrl };
 
-            var scormContentServerViewModel = this.DbContext.ScormContentServerViewModel.FromSqlRaw("[resources].[GetScormContentServerDetailsForHistoricExternalUrl] @externalUrl", param0).ToList().FirstOrDefault<ScormContentServerViewModel>();
+            var scormContentServerViewModel = this.DbContext.ContentServerViewModel.FromSqlRaw("[resources].[GetScormContentServerDetailsForHistoricExternalUrl] @externalUrl", param0).ToList().FirstOrDefault<ContentServerViewModel>();
 
             return scormContentServerViewModel;
         }

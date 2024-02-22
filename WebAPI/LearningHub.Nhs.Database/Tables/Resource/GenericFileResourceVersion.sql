@@ -6,6 +6,7 @@
 	[AuthoredYear] [int] NULL,
 	[AuthoredMonth] [int] NULL,
 	[AuthoredDayOfMonth] [int] NULL,
+	[EsrLinkTypeId] [int] NULL DEFAULT 1, 
 	[Deleted] [bit] NOT NULL,
 	[CreateUserId] [int] NOT NULL,
 	[CreateDate] [datetimeoffset](7) NOT NULL,

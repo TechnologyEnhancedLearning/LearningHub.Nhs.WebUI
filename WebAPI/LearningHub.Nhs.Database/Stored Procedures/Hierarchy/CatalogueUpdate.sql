@@ -8,6 +8,7 @@
 -- 01-02-2021  Killian Davies	Initial Revision
 -- 01-08-2023  Swapnamol Abraham Provided BY
 -- 11-08-2023  RS               Added CardImageUrl parameter
+-- 08-02-2024  SA               Added Previewer user group 
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[CatalogueUpdate]
 (
@@ -133,6 +134,8 @@ BEGIN
 				EXEC  [hierarchy].[UserGroupRestrictedAccessEnsure] @NodeId, @UserId, @UserTimezoneOffset
 			END
 
+			EXEC [hierarchy].[UserGroupPreviewerEnsure] @NodeId, @UserId, @UserTimezoneOffset
+
 		COMMIT
 	END TRY
 	BEGIN CATCH
@@ -152,5 +155,4 @@ BEGIN
 
 	END CATCH
 END
-
 GO

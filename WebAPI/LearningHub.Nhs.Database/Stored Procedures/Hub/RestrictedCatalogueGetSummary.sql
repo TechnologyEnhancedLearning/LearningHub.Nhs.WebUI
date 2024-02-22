@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 25-03-2021  Killian Davies	Initial Revision
+-- 12-02-2023  SA				Included preview access
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hub].[RestrictedCatalogueGetSummary]
 (
@@ -19,7 +20,7 @@ BEGIN
 	DECLARE @userCount int
 	DECLARE @accessRequestCount int
 
-	SELECT @userCount = COUNT(DISTINCT uug.UserId)
+	SELECT @userCount = COUNT(uug.UserId)
 	FROM
 		hub.UserUserGroup uug
 		INNER JOIN  hub.RoleUserGroup rug ON uug.UserGroupId = rug.UserGroupId
@@ -30,7 +31,7 @@ BEGIN
 			AND uug_exclude.Deleted = 0
 	WHERE
 		s.CatalogueNodeId = @catalogueNodeId
-		AND rug.RoleId IN (1, 2, 3)
+		AND rug.RoleId IN (1, 2, 3, 8)
 		AND uug.Deleted = 0
 		AND rug.Deleted = 0
 		AND s.Deleted = 0

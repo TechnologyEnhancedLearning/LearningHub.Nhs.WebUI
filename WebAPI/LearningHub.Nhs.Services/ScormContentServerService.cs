@@ -29,9 +29,9 @@ namespace LearningHub.Nhs.Services
         private IScormResourceVersionRepository scormResourceVersionRepository;
 
         /// <summary>
-        /// The scormResourceReferenceEventRepository..
+        /// The resourceReferenceEventRepository..
         /// </summary>
-        private IScormResourceReferenceEventRepository scormResourceReferenceEventRepository;
+        private IResourceReferenceEventRepository resourceReferenceEventRepository;
 
         /// <summary>
         /// Defines the mapper.
@@ -47,17 +47,17 @@ namespace LearningHub.Nhs.Services
         /// Initializes a new instance of the <see cref="ScormContentServerService"/> class.
         /// </summary>
         /// <param name="scormResourceVersionRepository">The scormResourceVersionRepository<see cref="IScormResourceVersionRepository"/>.</param>
-        /// <param name="scormResourceReferenceEventRepository">The scormResourceReferenceEventRepository.</param>
+        /// <param name="resourceReferenceEventRepository">The resourceReferenceEventRepository.</param>
         /// <param name="mapper">mapper.</param>
         /// <param name="settings">The settings.</param>
         public ScormContentServerService(
             IScormResourceVersionRepository scormResourceVersionRepository,
-            IScormResourceReferenceEventRepository scormResourceReferenceEventRepository,
+            IResourceReferenceEventRepository resourceReferenceEventRepository,
             IMapper mapper,
             IOptions<Settings> settings)
         {
             this.scormResourceVersionRepository = scormResourceVersionRepository;
-            this.scormResourceReferenceEventRepository = scormResourceReferenceEventRepository;
+            this.resourceReferenceEventRepository = resourceReferenceEventRepository;
             this.mapper = mapper;
             this.settings = settings.Value;
         }
@@ -66,8 +66,8 @@ namespace LearningHub.Nhs.Services
         /// Gets the SCORM content details for a particular external url (LH or historic).
         /// </summary>
         /// <param name="externalUrl">The externalUrl<see cref="string"/>.</param>
-        /// <returns>The <see cref="ScormContentServerViewModel"/>.</returns>
-        public ScormContentServerViewModel GetScormContentDetailsByExternalUrl(string externalUrl)
+        /// <returns>The <see cref="ContentServerViewModel"/>.</returns>
+        public ContentServerViewModel GetContentDetailsByExternalUrl(string externalUrl)
         {
             var response = this.scormResourceVersionRepository.GetScormContentServerDetailsByHistoricExternalUrl(externalUrl);
 
@@ -78,23 +78,23 @@ namespace LearningHub.Nhs.Services
         /// The GetScormContentDetailsByExternalReference.
         /// </summary>
         /// <param name="externalReference">The externalReference<see cref="string"/>.</param>
-        /// <returns>The <see cref="Task{ScormContentServerViewModel}"/>.</returns>
-        public ScormContentServerViewModel GetScormContentDetailsByExternalReference(string externalReference)
+        /// <returns>The <see cref="Task{ContentServerViewModel}"/>.</returns>
+        public ContentServerViewModel GetContentDetailsByExternalReference(string externalReference)
         {
-            var response = this.scormResourceVersionRepository.GetScormContentServerDetailsByLHExternalReference(externalReference);
+            var response = this.scormResourceVersionRepository.GetContentServerDetailsByLHExternalReference(externalReference);
 
             return response;
         }
 
         /// <summary>
-        /// The LogScormResourceReferenceEventAsync.
+        /// The LogResourceReferenceEventAsync.
         /// </summary>
-        /// <param name="scormResourceReferenceEventViewModel">The scormResourceReferenceEventViewModel<see cref="ScormResourceReferenceEventViewModel"/>.</param>
+        /// <param name="resourceReferenceEventViewModel">The resourceReferenceEventViewModel<see cref="ResourceReferenceEventViewModel"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task LogScormResourceReferenceEventAsync(ScormResourceReferenceEventViewModel scormResourceReferenceEventViewModel)
+        public async Task LogResourceReferenceEventAsync(ResourceReferenceEventViewModel resourceReferenceEventViewModel)
         {
-             var scormResourceReferenceEvent = this.mapper.Map<ScormResourceReferenceEvent>(scormResourceReferenceEventViewModel);
-             var id = await this.scormResourceReferenceEventRepository.CreateAsync(SystemUserId, scormResourceReferenceEvent);
+             var resourceReferenceEvent = this.mapper.Map<ResourceReferenceEvent>(resourceReferenceEventViewModel);
+             var id = await this.resourceReferenceEventRepository.CreateAsync(SystemUserId, resourceReferenceEvent);
         }
     }
 }

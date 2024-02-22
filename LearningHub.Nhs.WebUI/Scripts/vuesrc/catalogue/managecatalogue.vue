@@ -23,7 +23,7 @@
                         <div class="nhsuk-grid-row">
                             <div class="nhsuk-grid-column-full">
                                 <p>You are managing the following catalogue and can invite users to request access.</p>
-                                <input type="button" class="nhsuk-button" @click="inviteUserModal()" value="Invite Users" v-if="catalogue.restrictedAccess" />  
+                                <input type="button" class="nhsuk-button" @click="inviteUserModal()" value="Invite Users" v-if="(catalogue.restrictedAccess || catalogue.hidden)" />  
 
                             </div>
                         </div>
@@ -49,13 +49,13 @@
                                     </div>
                                     <div class="navbar-collapse collapse" id="collapsingSubNavbar">
                                         <ul class="navbar-nav">
-                                            <li v-if="catalogue.restrictedAccess" class="subnavwhite-item" v-bind:class="[isActive('accessRequestsTab') && 'active']" v-on:click="activateTab('accessRequestsTab')">
+                                            <li v-if="(catalogue.restrictedAccess || catalogue.hidden)" class="subnavwhite-item" v-bind:class="[isActive('accessRequestsTab') && 'active']" v-on:click="activateTab('accessRequestsTab')">
                                                 <a ref="accessRequestsLink" tabindex="0" class="subnavwhite-link text-nowrap" data-toggle="collapse" data-target=".navbar-collapse.show">{{ tabs[0].name }}</a>
                                             </li>
-                                            <li v-if="catalogue.restrictedAccess" class="subnavwhite-item" v-bind:class="[isActive('usersTab') && 'active']" v-on:click="activateTab('usersTab')">
+                                            <li v-if="(catalogue.restrictedAccess || catalogue.hidden)" class="subnavwhite-item" v-bind:class="[isActive('usersTab') && 'active']" v-on:click="activateTab('usersTab')">
                                                 <a ref="usersLink" tabindex="0" class="subnavwhite-link text-nowrap" data-toggle="collapse" data-target=".navbar-collapse.show">{{ tabs[1].name }}</a>
                                             </li>
-                                            <li class="subnavwhite-item" v-bind:class="[isActive('foldersTab') && 'active']" v-on:click="activateTab('foldersTab')">
+                                            <li v-if="!catalogue.hidden" class="subnavwhite-item" v-bind:class="[isActive('foldersTab') && 'active']" v-on:click="activateTab('foldersTab')">
                                                 <a ref="foldersLink" tabindex="0" class="subnavwhite-link text-nowrap" data-toggle="collapse" data-target=".navbar-collapse.show">{{ tabs[2].name }}</a>
                                             </li>
                                         </ul>
@@ -68,7 +68,7 @@
 
                 <div class="lh-padding-fluid">
                     <div class="lh-container-xl">
-                        <div id="usersTab" v-if="catalogue.restrictedAccess" v-show="isActive('usersTab')" class="pb-md-50">
+                        <div id="usersTab" v-if="(catalogue.restrictedAccess || catalogue.hidden)" v-show="isActive('usersTab')" class="pb-md-50">
                             <div class="row">
                                 <div class="col" style="min-width:400px; width:400px;">
                                     <div class="input-group pt-4" id="input-group-searchbar-md">
@@ -119,9 +119,10 @@
                                         <thead>
                                             <tr>
                                                 <th style="width:20%">Name</th>
-                                                <th style="width:32%">Email address</th>
-                                                <th style="width:18%">Added by</th>
-                                                <th style="width:20%">Time / date added</th>
+                                                <th style="width: 25%">Email address</th>
+                                                <th style="width: 25%">Access Type</th>
+                                                <th style="width:20%">Added by</th>
+                                                <th style="width:30%">Time / date added</th>
                                                 <th style="width:10%; text-align: center;">Remove</th>
                                             </tr>
                                         </thead>
@@ -129,6 +130,10 @@
                                             <tr v-for="(user, index) in users" :key="user.userUserGroupId">
                                                 <td>{{user.fullName}}</td>
                                                 <td>{{user.emailAddress}}</td>
+                                                <td>
+                                                    <span v-if="user.roleId ===8">Preview</span>
+                                                    <span v-if="user.roleId ===2">Restricted Access</span>
+                                                </td>
                                                 <td>{{user.addedByUsername}}</td>
                                                 <td v-if="user.canRemove">{{user.addedDatetime | formatDate('HH:mm DD MMM YYYY')}}</td>
                                                 <td v-if="!user.canRemove">Not available</td>
@@ -179,7 +184,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="accessRequestsTab" v-if="catalogue.restrictedAccess" v-show="isActive('accessRequestsTab')">
+                        <div id="accessRequestsTab" v-if="(catalogue.restrictedAccess || catalogue.hidden)" v-show="isActive('accessRequestsTab')">
                             <div class="row">
                                 <div class="d-flex flex-row flex-wrap">
                                     <label class="checkContainer-medium mt-10 mb-0 mx-4">
@@ -204,16 +209,21 @@
                                     <table class="table small mb-0">
                                         <thead>
                                             <tr>
-                                                <th style="width:22%">Name</th>
-                                                <th style="width:35%">Email address</th>
-                                                <th style="width: 23%">Time / date requested</th>
-                                                <th style="text-align: right; width:20%">Status</th>
+                                                <th style="width:20%">Name</th>
+                                                <th style="width:20%">Email address</th>
+                                                <th style="width:20%">Request Type</th>
+                                                <th style="width: 22%">Time / date requested</th>
+                                                <th style="text-align: right; width:18%">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr v-for="accessRequest in filteredAccessRequests">
                                                 <td><router-link :to="'/Catalogue/Manage/' + reference + '/AccessRequest/' + accessRequest.catalogueAccessRequestId" class="my-auto admin-link">{{accessRequest.fullName}}</router-link></td>
                                                 <td>{{accessRequest.emailAddress}}</td>
+                                                <td>
+                                                    <span v-if="accessRequest.roleId ===8">Preview</span>
+                                                    <span v-if="accessRequest.roleId ===2">Restricted Access</span>                                                  
+                                                </td>
                                                 <td>{{accessRequest.requestedDatetime | formatDate('h:mm a DD MMM YYYY')}}</td>
                                                 <td style="text-align: right;" class="pr-0">
                                                     <span v-if="accessRequest.catalogueAccessRequestStatus === AccessRequestStatus.Pending">
@@ -402,7 +412,7 @@
         created: async function () {
             await this.loadCatalogue()
             await this.loadRoleUserGroups();
-            if (this.isCatalogueLocalAdmin && this.catalogue.restrictedAccess) {
+            if (this.isCatalogueLocalAdmin && (this.catalogue.restrictedAccess || this.catalogue.hidden)) {
                 await this.loadSummary();
                 await this.loadAccessRequests();
                 await this.loadUsers();
@@ -415,7 +425,7 @@
             },
             tabs: function(): Array<any>{
                 return [
-                    { id: "accessRequestsTab", name: "Access requests (" + this.summary.accessRequestCount + ")" },
+                    { id: "accessRequestsTab", name: "Requests (" + this.summary.accessRequestCount + ")" },
                     { id: "usersTab", name: "Users (" + this.summary.userCount + ")" },
                     { id: "foldersTab", name: "Folders" },
                 ];

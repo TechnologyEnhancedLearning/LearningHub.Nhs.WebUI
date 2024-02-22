@@ -33,6 +33,7 @@ namespace LearningHub.Nhs.WebUI.Helpers
             { "assessment", ResourceTypeEnum.Assessment },
             { "genericfile", ResourceTypeEnum.GenericFile },
             { "image", ResourceTypeEnum.Image },
+            { "html", ResourceTypeEnum.Html },
         };
 
         /// <summary>
@@ -100,6 +101,8 @@ namespace LearningHub.Nhs.WebUI.Helpers
                     return "fa-solid fa-globe";
                 case ResourceTypeEnum.Case:
                     return "fa-solid fa-microscope";
+                case ResourceTypeEnum.Html:
+                    return "fa-solid fa-code";
                 default:
                     return "fa-regular fa-file";
             }
@@ -137,6 +140,8 @@ namespace LearningHub.Nhs.WebUI.Helpers
                     return "Embedded";
                 case ResourceTypeEnum.Case:
                     return "Case";
+                case ResourceTypeEnum.Html:
+                    return "HTML";
                 default:
                     return "File";
             }
@@ -173,6 +178,8 @@ namespace LearningHub.Nhs.WebUI.Helpers
                     return "Embedded";
                 case ResourceTypeEnum.Case:
                     return "Case";
+                case ResourceTypeEnum.Html:
+                    return "HTML";
                 default:
                     return "File";
             }
@@ -345,11 +352,11 @@ namespace LearningHub.Nhs.WebUI.Helpers
         public static string GetAuthoredDate(int? day, int? month, int? year)
         {
             var authoredDate = string.Empty;
-            if (year.HasValue)
+            if (year.HasValue && year != 0)
             {
                 authoredDate = year.Value.ToString();
 
-                if (month.HasValue)
+                if (month.HasValue && month != 0)
                 {
                     var monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month.Value);
                     authoredDate = $"{monthName} {authoredDate}";

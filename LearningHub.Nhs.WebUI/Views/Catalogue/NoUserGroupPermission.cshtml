@@ -1,0 +1,15 @@
+﻿@model LearningHub.Nhs.Models.Catalogue.CatalogueViewModel
+@{
+    ViewData["Title"] = "No user group permission";
+}
+<div class="bg-white">
+  <div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-full nhsuk-u-padding-top-9 nhsuk-u-padding-bottom-7">
+        <h1 class="nhsuk-heading-xl">You do not have permission to preview this catalogue</h1>
+        <p>This catalogue has been restricted to a limited group of users. You can request permission from the catalogue administrator.</p>
+        <a class="nhsuk-button" asp-controller="Catalogue" asp-action="RequestPermission" asp-route-catalogueNodeVersionId="@Model.Id">Request permission to preview the catalogue</a>
+      </div>
+    </div>
+  </div>
+</div>

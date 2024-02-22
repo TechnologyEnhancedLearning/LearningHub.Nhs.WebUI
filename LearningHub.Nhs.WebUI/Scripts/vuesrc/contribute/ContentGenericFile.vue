@@ -82,6 +82,89 @@
             </div>
         </div>
 
+        <div class="col-12 mt-4 file-details">
+            <div>
+                <h3>ESR learning object link</h3>
+                <p>Select an option below.</p>
+                <div class="row my-2">
+                    <div class="accordion col-12" id="accordion">
+                        <div class="pt-0 pb-4">
+                            <div class="heading" id="esrLinkInfo">
+                                <div class="mb-0">
+                                    <a href="#" class="collapsed text-decoration-skip" style="color:#005EB8;" data-toggle="collapse" data-target="#collapseEsrLinkInfo" aria-expanded="false" aria-controls="collapseEsrLinkInfo">
+                                        <div class="accordion-arrow">More information on ESR learning object links</div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div id="collapseEsrLinkInfo" class="collapse" aria-labelledby="esrLinkInfo" data-parent="#accordion">
+                                <div class="content col-12">
+                                    <p>
+                                        Electronic Staff Record (ESR) users with the Learning Administration User Responsibility Profile (URP)
+                                        can set up elearning content to play via ESR. Providing a link enables users with that URP to add this resource as a
+                                        learning object in ESR. Select one of the three options to indicate if / how you would like the ESR link to be displayed
+                                        to other users in the Learning Hub.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="checkContainer mr-0" style="margin-left:10px;">
+                        <span>Don't display</span>
+                        <input type="radio" name="esrLinkType" v-model="localGenericFileDetail.esrLinkType" value="1" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)" checked>
+                        <span class="radioButton"></span>
+                    </label>
+                    <label class="checkContainer ml-3" v-if="resourceCatalogueCount<=1">
+                        <span>Display only to me</span>
+                        <input type="radio" name="esrLinkType" v-model="localGenericFileDetail.esrLinkType" value="2" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
+                        <span class="radioButton"></span>
+                    </label>
+                    <label class="checkContainer ml-3" v-if="resourceCatalogueCount>1">
+                        <span>Display only to me and other catalogue editors</span>
+                        <input type="radio" name="esrLinkType" v-model="localGenericFileDetail.esrLinkType" value="3" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
+                        <span class="radioButton"></span>
+                    </label>
+                    <label class="checkContainer ml-3">
+                        <span>Display to everyone</span>
+                        <input type="radio" name="esrLinkType" v-model="localGenericFileDetail.esrLinkType" value="4" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
+                        <span class="radioButton"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div id="esrLinkModal" v-if="showEsrModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                <div class="modal-content" v-if="showEsrModal">
+                    <div class="modal-header mb-15">
+                        <h2><i class="warningTriangle fas fa-exclamation-triangle mr-3"></i>Removal of ESR learning object link</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="model-body-container mb-25">
+                            <div class="mb-3">
+                                This resource has an ESR learning object link that is visible to other users. This means that the link may have been used to add this resource as a learning object so others can access it in ESR. By removing this:
+                            </div>
+                            <div>
+                                <ul v-if="changedValue==='1'">
+                                    <li class="mb-3">The link will no longer be available for others to copy and use.</li>
+                                    <li>The resource will no longer be available to access via ESR if this link has been used to set it up as a learning object. The resource will only be available to access in the Learning Hub.</li>
+                                </ul>
+                                <ul v-if="changedValue!=='1'">
+                                    <li>The link will no longer be available for everyone to copy and use.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer modal-footer--buttons" style="padding-left: 0px;padding-right: 0px;">
+                        <button type="button" class="nhsuk-button nhsuk-button--secondary" data-dismiss="modal" @click="hideWarningModal()">Cancel</button>
+                        <button type="button" class="nhsuk-button" data-dismiss="modal" @click="processChangeEsrLinkType">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -94,6 +177,7 @@
     import LhDatePicker from '../datepicker.vue';
     import store from './contributeState';
     import FilePanel from './FilePanel.vue';
+    import { ResourceType } from '../constants';
 
     const month_in_past = (value: number) => {
         if (!value) { return true; }
@@ -130,7 +214,11 @@
                 authoredYear: '' as string,
                 authoredMonth: '' as string,
                 authoredDayOfMonth: '' as string,
-                additionalInformation: '' as string
+                additionalInformation: '' as string,
+                previousEsrLinkType: 1 as number,
+                showEsrModal: false as Boolean,
+                fieldName: null as string,
+                changedValue: null as string
             };
         },
         computed: {
@@ -144,7 +232,8 @@
                 return this.$store.state.fileUpdated;
             },
             scormOption(): boolean {
-                return this.localGenericFileDetail.file.fileName.endsWith('.zip');
+                return this.localGenericFileDetail.file.fileName.endsWith('.zip')
+                    && store.state.resourceDetail.resourceType != ResourceType.HTML;
             },
             currentYear(): number {
                 let dt = new Date();
@@ -167,10 +256,21 @@
                     let day = '0' + dt.getDate().toString();
                     return day.substring(day.length - 2);
                 }
+            },
+            resourceCatalogueCount(): number {
+                if (!this.$store.state.userCatalogues) {
+                    return 0;
+                } else {
+                    return this.$store.state.userCatalogues.length;
+                }
+            },
+            previousVersionExists(): boolean {
+                return this.$store.state.previousVersionExists;
             }
         },
         created() {
             this.localGenericFileDetail = _.cloneDeep(this.genericFileDetail);
+            this.previousEsrLinkType = this.localGenericFileDetail.esrLinkType;
             if (this.localGenericFileDetail.authoredYear) {
                 this.authoredYear = this.localGenericFileDetail.authoredYear.toString();
             }
@@ -187,6 +287,33 @@
         methods: {
             changeFile() {
                 this.$emit('filechanged');
+            },
+            showWarningModal(field: string, value: string) {
+                this.fieldName = field;
+                this.changedValue = value
+                if (!this.previousVersionExists || this.previousEsrLinkType <= (+value)) {
+                    this.processChangeEsrLinkType();
+                }
+                else {
+                    this.showEsrModal = true
+                }
+            },
+            hideWarningModal() {
+                this.localGenericFileDetail.esrLinkType = this.previousEsrLinkType;
+                this.showEsrModal = false;
+            },
+            processChangeEsrLinkType() {
+                let preventSave = false;
+                // "this.genericFileDetail[field as keyof GenericFileResourceModel]" equivalent to "this.genericFileDetail[field]"
+                // TypeScript syntax is needed because noImplicitAny is set to true in the tsconfig.json file
+                let storedValue: string = '';
+                if (this.genericFileDetail[this.fieldName as keyof GenericFileResourceModel] != null) {
+                    storedValue = this.genericFileDetail[this.fieldName as keyof GenericFileResourceModel].toString();
+                }
+                if (!preventSave && storedValue != this.changedValue) {
+                    this.$store.commit("saveGenericFileDetail", { field: this.fieldName, value: this.changedValue });
+                }
+                this.showEsrModal = false;
             },
             setProperty(field: string, value: string) {
                 let preventSave = false;
@@ -260,3 +387,26 @@
     })
 
 </script>
+<style lang="scss" scoped>
+    @use "../../../Styles/abstracts/all" as *;
+
+    .checkContainer {
+        padding-left: 28px;
+        span{
+                font-size:16px;
+            }
+    }
+
+    .radioButton {
+        height: 24px;
+        width: 24px;
+    }
+
+    .radioButton:after {
+        top: 4px;
+        left: 4px;
+        width: 12px;
+        height: 12px;
+    }
+
+</style>

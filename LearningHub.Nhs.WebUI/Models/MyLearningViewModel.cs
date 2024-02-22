@@ -211,6 +211,7 @@ namespace LearningHub.Nhs.WebUI.Models
                 new CheckboxListItemViewModel("Case", "Case", null),
                 new CheckboxListItemViewModel("Elearning", "elearning", null),
                 new CheckboxListItemViewModel("File", "File", null),
+                new CheckboxListItemViewModel("Html", "HTML", null),
                 new CheckboxListItemViewModel("Image", "Image", null),
                 new CheckboxListItemViewModel("Video", "Video", null),
                 new CheckboxListItemViewModel("Weblink", "Weblink", null),

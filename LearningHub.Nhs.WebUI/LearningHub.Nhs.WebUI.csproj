@@ -50,6 +50,7 @@
 		<None Remove="Scripts\vuesrc\data\resource.ts" />
 		<None Remove="Scripts\vuesrc\filters.ts" />
 		<None Remove="Scripts\vuesrc\forgotpassword.ts" />
+		<None Remove="Scripts\vuesrc\certificateCheck.ts" />
 		<None Remove="Scripts\vuesrc\globalcomponents\index.ts" />
 		<None Remove="Scripts\vuesrc\header.ts" />
 		<None Remove="Scripts\vuesrc\maincontent.ts" />
@@ -107,7 +108,7 @@
 		<PackageReference Include="HtmlAgilityPack" Version="1.11.38" />
 		<PackageReference Include="IdentityModel" Version="4.3.0" />
 		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.22" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.25" />
 		<PackageReference Include="linqtotwitter" Version="6.9.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.EventCounterCollector" Version="2.21.0" />
@@ -121,7 +122,7 @@
 
 		<PackageReference Include="Microsoft.Rest.ClientRuntime.Azure.Authentication" Version="2.4.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
-		<PackageReference Include="NHSUKViewComponents.Web" Version="1.0.23" />
+		<PackageReference Include="NHSUKViewComponents.Web" Version="1.0.24" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

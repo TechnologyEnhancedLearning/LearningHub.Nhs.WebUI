@@ -1,0 +1,23 @@
+﻿@model CatalogueAccessRequestedViewModel
+@using LearningHub.Nhs.WebUI.Models.Catalogue
+@{
+  ViewData["Title"] = "Permission requested";
+}
+
+@section styles{
+  <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/catalogue.css" asp-append-version="true" />
+}
+
+<div>
+  <div class="nhsuk-width-container app-width-container">
+    <vc:back-link asp-controller="Catalogue" asp-action="@Model.CatalogueUrl" link-text="Back to: @Model.CatalogueName" />
+    <h1>Permission requested</h1>
+    <p>
+      Your request for permission to this catalogue has seen sent to the catalogue administrator.
+    </p>
+    <p>The catalogue administrator will review your request and you will be notified of their decision by email.</p>
+    <div class="nhsuk-u-padding-bottom-9">
+    <a class="nhsuk-button" asp-controller="Catalogue" asp-action="@Model.CatalogueUrl">Back to catalogue</a>
+    </div>
+  </div>
+</div>

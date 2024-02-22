@@ -45,6 +45,7 @@ export class GenericFileResourceModel {
     authoredYear: number = 0;
     authoredMonth: number = 0;
     authoredDayOfMonth: number = 0;
+    esrLinkType: number = 1;
 }
 export class ScormResourceModel {
     id: number = 0;
@@ -86,4 +87,12 @@ export class WeblinkResourceModel {
     resourceVersionId: number = 0;
     url: string = '';
     displayText: string = '';
+}
+export class HtmlResourceModel {
+    resourceVersionId: number = 0;
+    useDefaultPopupWindowSize: boolean = true;
+    popupHeight: number = 768;
+    popupWidth: number = 1024;
+    file: ResourceFileModel = new ResourceFileModel();
+    esrLinkType: number = 1;
 }

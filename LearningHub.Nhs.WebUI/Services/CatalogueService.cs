@@ -273,10 +273,11 @@ namespace LearningHub.Nhs.WebUI.Services
         /// </summary>
         /// <param name="reference">The catalogue reference.</param>
         /// <param name="vm">The view model.</param>
+        /// <param name="accessType">The accessType.</param>
         /// <returns>The task.</returns>
-        public async Task<LearningHubValidationResult> RequestAccessAsync(string reference, CatalogueAccessRequestViewModel vm)
+        public async Task<LearningHubValidationResult> RequestAccessAsync(string reference, CatalogueAccessRequestViewModel vm, string accessType)
         {
-            var request = $"Catalogue/RequestAccess/{reference}";
+            var request = $"Catalogue/RequestAccess/{reference}/{accessType}";
 
             var client = await this.LearningHubHttpClient.GetClientAsync();
             var content = new StringContent(JsonConvert.SerializeObject(vm), Encoding.UTF8, "application/json");

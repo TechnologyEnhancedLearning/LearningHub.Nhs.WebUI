@@ -444,7 +444,7 @@ namespace LearningHub.Nhs.WebUI.Services
             var fileTypelist = await this.resourceService.GetFileTypeAsync();
             var fileType = fileTypelist.Where(x => x.Extension.ToLower() == extension.ToLower()).FirstOrDefault();
 
-            if (fileType != null && fileType.NotAllowed)
+            if ((resourceType == 9 && fileType == null) || (fileType != null && fileType.NotAllowed))
             {
                 return new FileUploadResult()
                 {
@@ -500,7 +500,7 @@ namespace LearningHub.Nhs.WebUI.Services
             var fileTypelist = await this.resourceService.GetFileTypeAsync();
             var fileType = fileTypelist.Where(x => x.Extension.ToLower() == extension.ToLower()).FirstOrDefault();
 
-            if ((fileType != null && fileType.NotAllowed) || file.Length <= 0)
+            if ((fileType == null) || (fileType != null && fileType.NotAllowed) || file.Length <= 0)
             {
                 return new FileUploadResult()
                 {
@@ -535,6 +535,10 @@ namespace LearningHub.Nhs.WebUI.Services
                 if (resourceVersion.ResourceTypeEnum == ResourceTypeEnum.Scorm)
                 {
                     resourceType = ResourceTypeEnum.Scorm;
+                }
+                else if (resourceVersion.ResourceTypeEnum == ResourceTypeEnum.Html)
+                {
+                    resourceType = ResourceTypeEnum.Html;
                 }
             }
 
@@ -726,6 +730,10 @@ namespace LearningHub.Nhs.WebUI.Services
                 if (resourceVersion.ResourceTypeEnum == ResourceTypeEnum.Scorm)
                 {
                     resourceType = ResourceTypeEnum.Scorm;
+                }
+                else if (resourceVersion.ResourceTypeEnum == ResourceTypeEnum.Html)
+                {
+                    resourceType = ResourceTypeEnum.Html;
                 }
             }
 
@@ -937,6 +945,40 @@ namespace LearningHub.Nhs.WebUI.Services
             var client = await this.LearningHubHttpClient.GetClientAsync();
 
             var request = $"Resource/UpdateScormDetail";
+            var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
+
+                if (!apiResponse.Success)
+                {
+                    throw new Exception("save failed!");
+                }
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return (int)apiResponse.ValidationResult.CreatedId;
+        }
+
+        /// <summary>
+        /// The SaveHtmlDetailAsync.
+        /// </summary>
+        /// <param name="htmlResource">Html resource update view model.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<int> SaveHtmlDetailAsync(HtmlResourceUpdateRequestViewModel htmlResource)
+        {
+            ApiResponse apiResponse = null;
+            var json = JsonConvert.SerializeObject(htmlResource);
+            var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+
+            var request = $"Resource/UpdateHtmlDetail";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)

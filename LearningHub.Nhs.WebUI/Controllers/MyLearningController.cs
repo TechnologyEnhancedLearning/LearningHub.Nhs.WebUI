@@ -13,6 +13,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.Models.Report;
     using LearningHub.Nhs.WebUI.Configuration;
+    using LearningHub.Nhs.WebUI.Extensions;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -125,6 +126,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 Image = learningRequest.Image,
                 Audio = learningRequest.Audio,
                 Elearning = learningRequest.Elearning,
+                Html = learningRequest.Html,
                 Assessment = learningRequest.Assessment,
                 Complete = learningRequest.Complete,
                 Incomplete = learningRequest.Incomplete,
@@ -478,13 +480,37 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     var pdfReportFile = await this.pdfReportService.GetPdfReportFile(pdfReportResponse);
                     if (pdfReportFile != null)
                     {
-                        var fileName = "LearningCertificate.pdf";
+                        string fileName = this.GenerateCertificateName(certificateDetails.ActivityDetailedItemViewModel.Title);
                         return this.File(pdfReportFile, FileHelper.GetContentTypeFromFileName(fileName), fileName);
                     }
                 }
             }
 
             return this.View("LearningCertificate", certificateDetails);
+        }
+
+        /// <summary>
+        /// Gets the Certificate name.
+        /// </summary>
+        /// <param name="resourceTitile">The resourceTitile.</param>
+        /// <returns>The <see cref="string"/>.</returns>
+        private string GenerateCertificateName(string resourceTitile)
+        {
+            if (!string.IsNullOrEmpty(resourceTitile))
+            {
+                if (resourceTitile.Length <= 71)
+                {
+                    string filename = "LH_Certificate_" + resourceTitile + ".pdf";
+                    return filename;
+                }
+                else if (resourceTitile.Length > 71)
+                {
+                    string filename = "LH_Certificate_" + resourceTitile.Truncate(67, true) + "_ " + ".pdf";
+                    return filename;
+                }
+            }
+
+            return "LearningCertificate.pdf";
         }
     }
 }

@@ -167,6 +167,13 @@ namespace LearningHub.Nhs.WebUI.Interfaces
         Task<int> SaveScormDetailAsync(ScormUpdateRequestViewModel model);
 
         /// <summary>
+        /// The SaveHtmlDetailAsync.
+        /// </summary>
+        /// <param name="model">Model.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<int> SaveHtmlDetailAsync(HtmlResourceUpdateRequestViewModel model);
+
+        /// <summary>
         /// The SaveImageDetailAsync.
         /// </summary>
         /// <param name="model">Model.</param>

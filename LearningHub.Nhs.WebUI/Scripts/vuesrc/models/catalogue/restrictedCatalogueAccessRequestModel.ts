@@ -7,6 +7,7 @@ export class RestrictedCatalogueAccessRequestModel {
     requestedDatetime: Date;
     catalogueAccessRequestStatus: AccessRequestStatus;
     showExpandedDetails: boolean;
+    roleId: number
 
     public constructor(init?: Partial<RestrictedCatalogueAccessRequestModel>) {
         Object.assign(this, init);

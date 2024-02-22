@@ -47,6 +47,10 @@
         height: 52px;
         width: 52px;
         padding-top: 0;
+
+        span.nhsuk-u-visually-hidden {
+            color: $nhsuk-white;
+        }
     }
 
     .nhsuk-icon__search {
@@ -65,7 +69,7 @@
         text-decoration: none;
     }
 
-    .no-bottom-border{
-        border-bottom:0px;
+    .no-bottom-border {
+        border-bottom: 0px;
     }
 }

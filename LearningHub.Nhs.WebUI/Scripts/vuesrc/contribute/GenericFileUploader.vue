@@ -8,7 +8,7 @@
             <div class="p-4 uploadInnerBox">
                 <div class="upload-btn-wrapper nhsuk-u-font-size-16">
                     <label for="fileUpload" class="nhsuk-button nhsuk-button--secondary">Choose file</label> No file chosen
-                    <input type="file" id="fileUpload" aria-label="Choose file" ref="fileUpload" v-on:change="onResourceFileChange" hidden />
+                    <input type="file" id="fileUpload" :accept="fileAccept" aria-label="Choose file" ref="fileUpload" v-on:change="onResourceFileChange" hidden />
                 </div>
             </div>
         </div>
@@ -16,28 +16,30 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from 'vue';
+    import Vue, { PropOptions } from 'vue';
+    import { ResourceType, UploadResourceType } from '../constants';
+    import { ContributeSettingsModel } from '../models/contribute/contributeSettingsModel';
 
-import { UploadResourceType } from '../constants';
-import { ContributeSettingsModel } from '../models/contribute/contributeSettingsModel';
-
-export default Vue.extend({
-    props: {
-        selectedUploadResourceType: {type: Number} as PropOptions<UploadResourceType>,
-        onResourceFileChange: Function,
-        isInlineWithMainContentBody: Boolean,
-    },
-    data() {
-        return {
-            uploadResourceType: UploadResourceType,
-        }
-    },
-    computed: {
-        contributeSettings(): ContributeSettingsModel {
-            return this.$store.state.contributeSettings;
+    export default Vue.extend({
+        props: {
+            selectedUploadResourceType: { type: Number } as PropOptions<UploadResourceType>,
+            onResourceFileChange: Function,
+            isInlineWithMainContentBody: Boolean,
         },
-    },
-});
+        data() {
+            return {
+                uploadResourceType: UploadResourceType,
+            }
+        },
+        computed: {
+            contributeSettings(): ContributeSettingsModel {
+                return this.$store.state.contributeSettings;
+            },
+            fileAccept(): string {
+                return this.$store.state.resourceDetail.resourceType == ResourceType.HTML ? '.zip,.rar,.7zip' : ''
+            },
+        },
+    });
 </script>
 
 <style lang="scss" scoped>

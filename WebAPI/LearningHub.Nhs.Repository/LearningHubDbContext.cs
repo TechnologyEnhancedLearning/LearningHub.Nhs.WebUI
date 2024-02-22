@@ -207,7 +207,7 @@ namespace LearningHub.Nhs.Repository
         /// <summary>
         /// Gets or sets the scorm resource version event..
         /// </summary>
-        public virtual DbSet<ScormResourceReferenceEvent> ScormResourceReferenceEvent { get; set; }
+        public virtual DbSet<ResourceReferenceEvent> ResourceReferenceEvent { get; set; }
 
         /// <summary>
         /// Gets or sets the resource version ratings..
@@ -263,6 +263,11 @@ namespace LearningHub.Nhs.Repository
         /// Gets or sets the generic file resource version.
         /// </summary>
         public virtual DbSet<GenericFileResourceVersion> GenericFileResourceVersion { get; set; }
+
+        /// <summary>
+        /// Gets or sets the html resource version.
+        /// </summary>
+        public virtual DbSet<HtmlResourceVersion> HtmlResourceVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the image resource version.
@@ -351,14 +356,14 @@ namespace LearningHub.Nhs.Repository
         public virtual DbSet<DashboardResourceDto> DashboardResourceDto { get; set; }
 
         /// <summary>
-        /// Gets or sets the ScormContentDetailsViewModel.
+        /// Gets or sets the GenericFileContentDetailsViewModel.
         /// </summary>
-        public virtual DbSet<ScormContentDetailsViewModel> ScormContentDetailsViewModel { get; set; }
+        public virtual DbSet<ExternalContentDetailsViewModel> ExternalContentDetailsViewModel { get; set; }
 
         /// <summary>
-        /// Gets or sets the ScormContentServerViewModel.
+        /// Gets or sets the ContentServerViewModel.
         /// </summary>
-        public virtual DbSet<ScormContentServerViewModel> ScormContentServerViewModel { get; set; }
+        public virtual DbSet<ContentServerViewModel> ContentServerViewModel { get; set; }
 
         /// <summary>
         /// Gets or sets the DashboardCatalogueDto

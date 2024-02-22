@@ -259,5 +259,13 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         /// <param name="blocks">The blocks to be duplicated.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<int> FractionalDuplication(int userId, int sourceBlockCollectionId, int destinationBlockCollectionId, List<int> blocks);
+
+        /// <summary>
+        /// Gets external content details.
+        /// </summary>
+        /// <param name="resourceVersionId">resourceVersionId.</param>
+        /// <param name="userId">userId.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        ExternalContentDetailsViewModel GetExternalContentDetails(int resourceVersionId, int userId);
     }
 }

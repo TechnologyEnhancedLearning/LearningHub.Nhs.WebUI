@@ -57,21 +57,26 @@ namespace LearningHub.Nhs.Repository.Hierarchy
         /// <param name="currentUserId">The currentUserId.</param>
         /// <param name="reference">The reference.</param>
         /// <param name="message">The message.</param>
+        /// <param name="roleId">The roleId.</param>
         /// <param name="catalogueManageAccessUrl">The catalogueManageAccessUrl.</param>
+        /// <param name="accessType">The accessType.</param>
         /// <returns>The task.</returns>
         public async Task CreateCatalogueAccessRequestAsync(
             int currentUserId,
             string reference,
             string message,
-            string catalogueManageAccessUrl)
+            int roleId,
+            string catalogueManageAccessUrl,
+            string accessType)
         {
             var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = currentUserId };
             var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = reference };
             var param2 = new SqlParameter("@p2", SqlDbType.NVarChar) { Value = message };
             var param3 = new SqlParameter("@p3", SqlDbType.NVarChar) { Value = catalogueManageAccessUrl };
             var param4 = new SqlParameter("@p4", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
-
-            await this.DbContext.Database.ExecuteSqlRawAsync("exec [hierarchy].[CatalogueAccessRequestCreate] @p0, @p1, @p2, @p3, @p4", param0, param1, param2, param3, param4);
+            var param5 = new SqlParameter("@p5", SqlDbType.NVarChar) { Value = accessType };
+            var param6 = new SqlParameter("@p6", SqlDbType.Int) { Value = roleId };
+            await this.DbContext.Database.ExecuteSqlRawAsync("exec [hierarchy].[CatalogueAccessRequestCreate] @p0, @p1, @p2, @p3, @p4, @p5, @p6", param0, param1, param2, param3, param4, param5, param6);
         }
     }
 }

@@ -1,15 +1,14 @@
 ﻿-------------------------------------------------------------------------------
--- Author       Killian Davies
+-- Author       Swapna Abraham
 -- Created      21-01-2021
--- Purpose      Enusres that Restricted Access Default User Group Exists for supplied
+-- Purpose      Enusres that Previewer Default User Group Exists for supplied
 --				Catalogue Node Id.
 --
 -- Modification History
 --
--- 21-01-2021  Killian Davies	Initial Revision
--- 08-02-2023 Added condition to differentiate the restricted access role
+-- 08-02-2024  Swapna Abraham	Initial Revision
 -------------------------------------------------------------------------------
-CREATE PROCEDURE [hierarchy].[UserGroupRestrictedAccessEnsure]
+CREATE PROCEDURE [hierarchy].[UserGroupPreviewerEnsure]
 (
 	@NodeId int,
 	@UserId int,
@@ -33,13 +32,14 @@ BEGIN
 				WHERE ug.Deleted = 0
 				AND uga.Deleted = 0
 				AND s.Deleted = 0
-				AND uga.AttributeId = 2)
+				AND uga.AttributeId = 8
+				)
 
 			BEGIN
 
 				DECLARE @CatalogueName nvarchar(255)
-				DECLARE @RestrictedAccessUserGroupId int
-				DECLARE @RestrictedAccessAttributeId int = 2
+				DECLARE @PreviewerUserGroupId int
+				DECLARE @PreviewerAttributeId int = 8
 
 				SELECT 
 					@CatalogueName = cnv.[Name]
@@ -52,14 +52,14 @@ BEGIN
 
 				INSERT INTO [hub].[UserGroup]([Name],[Description],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
 				SELECT 
-					@CatalogueName + ' - Restricted access' AS [Name],
-					'Restricted access for ' + @CatalogueName +' Catalogue' AS [Description],
+					@CatalogueName + ' - Preview' AS [Name],
+					'Previewer access for ' + @CatalogueName +' Catalogue' AS [Description],
 					0 as Deleted,
 					@UserId as CreateUserId,
 					@AmendDate as CreateDate,
 					@UserId as AmendUserId,
 					@AmendDate as AmendDate
-				SELECT @RestrictedAccessUserGroupId = SCOPE_IDENTITY()
+				SELECT @PreviewerUserGroupId = SCOPE_IDENTITY()
 
 				DECLARE @ScopeId int
 				SELECT @ScopeId = [Id]
@@ -69,8 +69,8 @@ BEGIN
 
 				INSERT INTO [hub].[UserGroupAttribute] ([UserGroupId],[AttributeId],[ScopeId],[IntValue],[TextValue],[BooleanValue],[DateValue],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
 				SELECT 
-					@RestrictedAccessUserGroupId AS [UserGroupId], 
-					@RestrictedAccessAttributeId AS [AttributeId],
+					@PreviewerUserGroupId AS [UserGroupId], 
+					@PreviewerAttributeId AS [AttributeId],
 					@ScopeId AS [ScopeId],
 					@NodeId AS [IntValue],
 					NULL AS [TextValue],
@@ -82,11 +82,11 @@ BEGIN
 					@UserId as AmendUserId,
 					@AmendDate as AmendDate
 
-				-- Assign reader role to the user group - scope
+				-- Assign previewer role to the user group - scope
 				INSERT INTO [hub].[RoleUserGroup] ([RoleId],[UserGroupId],[ScopeId],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
 				SELECT 
-					2 AS [RoleId], -- Reader
-					@RestrictedAccessUserGroupId AS [UserGroupId], 
+					8 AS [RoleId], -- Previewer
+					@PreviewerUserGroupId AS [UserGroupId], 
 					@ScopeId AS [ScopeId],
 					0 as Deleted,
 					@UserId as CreateUserId,
@@ -114,4 +114,3 @@ BEGIN
 
 	END CATCH
 END
-GO

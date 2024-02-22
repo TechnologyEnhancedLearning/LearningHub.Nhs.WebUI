@@ -290,13 +290,14 @@ namespace LearningHub.Nhs.Api.Controllers
         /// </summary>
         /// <param name="reference">The reference.</param>
         /// <param name="vm">The view model.</param>
+        /// <param name="accessType">The accessType.</param>
         /// <returns>The ActionResult.</returns>
         [HttpPost]
-        [Route("RequestAccess/{reference}")]
+        [Route("RequestAccess/{reference}/{accessType}")]
         [Authorize]
-        public async Task<IActionResult> RequestAccess(string reference, CatalogueAccessRequestViewModel vm)
+        public async Task<IActionResult> RequestAccess(string reference, CatalogueAccessRequestViewModel vm, string accessType)
         {
-            return this.Ok(await this.catalogueService.RequestAccessAsync(this.CurrentUserId, reference, vm));
+            return this.Ok(await this.catalogueService.RequestAccessAsync(this.CurrentUserId, reference, vm, accessType));
         }
 
         /// <summary>
@@ -360,7 +361,7 @@ namespace LearningHub.Nhs.Api.Controllers
         [Authorize]
         public async Task<IActionResult> AcceptAccessRequest(int accessRequestId)
         {
-            return this.Ok(await this.catalogueService.AcceptAccessAsync(this.CurrentUserId, accessRequestId));
+           return this.Ok(await this.catalogueService.AcceptAccessAsync(this.CurrentUserId, accessRequestId));
         }
 
         /// <summary>

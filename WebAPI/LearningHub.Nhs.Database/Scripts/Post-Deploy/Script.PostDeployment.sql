@@ -10,15 +10,15 @@
 --------------------------------------------------------------------------------------
 */
 
-IF NOT EXISTS (SELECT 1 FROM [resources].[ScormResourceReferenceEventType])
-BEGIN
-	INSERT INTO [resources].[ScormResourceReferenceEventType] ([Name], [Description], [CreateUserID], [CreateDate], [AmendUserID], [AmendDate], [Deleted])	
-	VALUES
-	(N'Status200OK', N'Status200OK', 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET(), 0),
-	(N'Status410Gone', N'Status410Gone', 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET(), 0),
-	(N'Status403Forbidden', N'Status403Forbidden', 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET(), 0),
-	(N'Status404NotFound', N'Status404NotFound', 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET(), 0)
-END
+--IF NOT EXISTS (SELECT 1 FROM [resources].[ScormResourceReferenceEventType])
+--BEGIN
+--	INSERT INTO [resources].[ScormResourceReferenceEventType] ([Name], [Description], [CreateUserID], [CreateDate], [AmendUserID], [AmendDate], [Deleted])	
+--	VALUES
+--	(N'Status200OK', N'Status200OK', 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET(), 0),
+--	(N'Status410Gone', N'Status410Gone', 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET(), 0),
+--	(N'Status403Forbidden', N'Status403Forbidden', 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET(), 0),
+--	(N'Status404NotFound', N'Status404NotFound', 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET(), 0)
+--END
 
 IF EXISTS( SELECT 1 FROM [resources].[ResourceVersionKeyword] WHERE Keyword LIKE '%  %')
 BEGIN
@@ -75,7 +75,8 @@ UPDATE [resources].[ResourceVersion] SET CertificateEnabled = 0 WHERE VersionSta
 :r .\Scripts\UpdateDataForEmailTemplates.sql
 :r .\Scripts\RolePermissionForReleaseOffline.sql
 :r .\Scripts\ExternalSystemData.sql
-:r .\Scripts\UpdateDataForEmailTemplates.sql
-
 :r .\Scripts\EmailChangeMessageSeed.sql
 :r .\Scripts\PopulateProviders.sql
+:r .\Scripts\HtmlResourceType.sql
+:r .\Scripts\InitialiseDataForEmailTemplates.sql
+:r .\Scripts\AttributeData.sql

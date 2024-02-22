@@ -1,30 +1,27 @@
-﻿// <copyright file="GenericFileResourceVersionRepository.cs" company="HEE.nhs.uk">
+﻿// <copyright file="HtmlResourceVersionRepository.cs" company="HEE.nhs.uk">
 // Copyright (c) HEE.nhs.uk.
 // </copyright>
 
 namespace LearningHub.Nhs.Repository.Resources
 {
-    using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Resource;
-    using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Repository.Interface;
     using LearningHub.Nhs.Repository.Interface.Resources;
-    using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
-    /// The generic file resource version repository.
+    /// The html resource version repository.
     /// </summary>
-    public class GenericFileResourceVersionRepository : GenericRepository<GenericFileResourceVersion>, IGenericFileResourceVersionRepository
+    public class HtmlResourceVersionRepository : GenericRepository<HtmlResourceVersion>, IHtmlResourceVersionRepository
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericFileResourceVersionRepository"/> class.
+        /// Initializes a new instance of the <see cref="HtmlResourceVersionRepository"/> class.
         /// </summary>
         /// <param name="dbContext">The db context.</param>
         /// <param name="tzOffsetManager">The Timezone offset manager.</param>
-        public GenericFileResourceVersionRepository(LearningHubDbContext dbContext, ITimezoneOffsetManager tzOffsetManager)
+        public HtmlResourceVersionRepository(LearningHubDbContext dbContext, ITimezoneOffsetManager tzOffsetManager)
             : base(dbContext, tzOffsetManager)
         {
         }
@@ -34,9 +31,9 @@ namespace LearningHub.Nhs.Repository.Resources
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<GenericFileResourceVersion> GetByIdAsync(int id)
+        public async Task<HtmlResourceVersion> GetByIdAsync(int id)
         {
-            return await this.DbContext.GenericFileResourceVersion.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id && !r.Deleted);
+            return await this.DbContext.HtmlResourceVersion.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id && !r.Deleted);
         }
 
         /// <summary>
@@ -45,9 +42,9 @@ namespace LearningHub.Nhs.Repository.Resources
         /// <param name="resourceVersionid">The resource versionid.</param>
         /// <param name="includeDeleted">Allows deleted items to be returned.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<GenericFileResourceVersion> GetByResourceVersionIdAsync(int resourceVersionid, bool includeDeleted = false)
+        public async Task<HtmlResourceVersion> GetByResourceVersionIdAsync(int resourceVersionid, bool includeDeleted = false)
         {
-            return await this.DbContext.GenericFileResourceVersion
+            return await this.DbContext.HtmlResourceVersion
                 .Include(gfrv => gfrv.File).ThenInclude(f => f.FileType)
                 .AsNoTracking().FirstOrDefaultAsync(gfrv => gfrv.ResourceVersionId == resourceVersionid && (includeDeleted || !gfrv.Deleted));
         }
@@ -55,12 +52,12 @@ namespace LearningHub.Nhs.Repository.Resources
         /// <summary>
         /// The get by resource version id.
         /// </summary>
-        /// <param name="resourceVersionid">The resource versionid.</param>
+        /// <param name="resourceVersionid">The resource version id.</param>
         /// <param name="includeDeleted">Allows deleted items to be returned.</param>
-        /// <returns>The generic file resource version.</returns>
-        public GenericFileResourceVersion GetByResourceVersionId(int resourceVersionid, bool includeDeleted = false)
+        /// <returns>The html resource version.</returns>
+        public HtmlResourceVersion GetByResourceVersionId(int resourceVersionid, bool includeDeleted = false)
         {
-            return this.DbContext.GenericFileResourceVersion
+            return this.DbContext.HtmlResourceVersion
                 .Include(gfrv => gfrv.File).ThenInclude(f => f.FileType)
                 .AsNoTracking().FirstOrDefault(gfrv => gfrv.ResourceVersionId == resourceVersionid && (includeDeleted || !gfrv.Deleted));
         }

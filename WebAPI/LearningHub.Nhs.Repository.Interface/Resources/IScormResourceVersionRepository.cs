@@ -30,27 +30,19 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         Task<ScormResourceVersion> GetByResourceVersionIdAsync(int id, bool includeDeleted = false);
 
         /// <summary>
-        /// Gets Scorm content details.
-        /// </summary>
-        /// <param name="resourceVersionId">resourceVersionId.</param>
-        /// <param name="userId">userId.</param>
-        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        ScormContentDetailsViewModel GetScormContentDetails(int resourceVersionId, int userId);
-
-        /// <summary>
-        /// Gets the SCORM content details for a particular Learning Hub external reference (guid).
+        /// Gets the content details for a particular Learning Hub external reference (guid).
         /// </summary>
         /// <param name="externalReference">The external reference (guid).</param>
-        /// <returns>A ScormContentServerViewModel.</returns>
-        ScormContentServerViewModel GetScormContentServerDetailsByLHExternalReference(string externalReference);
+        /// <returns>A ContentServerViewModel.</returns>
+        ContentServerViewModel GetContentServerDetailsByLHExternalReference(string externalReference);
 
         /// <summary>
         /// Gets the SCORM content details for a particular historic external URL. These historic URLs have to be supported to
         /// allow historic ESR links on migrated resources to continue to work.
         /// </summary>
         /// <param name="externalUrl">The external Url.</param>
-        /// <returns>A ScormContentServerViewModel.</returns>
-        ScormContentServerViewModel GetScormContentServerDetailsByHistoricExternalUrl(string externalUrl);
+        /// <returns>A ContentServerViewModel.</returns>
+        ContentServerViewModel GetScormContentServerDetailsByHistoricExternalUrl(string externalUrl);
 
         /// <summary>
         /// GetExternalReferenceByResourceId.

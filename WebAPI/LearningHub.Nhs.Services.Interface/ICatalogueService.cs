@@ -169,8 +169,9 @@ namespace LearningHub.Nhs.Services.Interface
         /// <param name="currentUserId">The currentUserId.</param>
         /// <param name="reference">The reference.</param>
         /// <param name="vm">The view model.</param>
+        /// <param name="accessType">The accessType.</param>
         /// <returns>The bool.</returns>
-        Task<bool> RequestAccessAsync(int currentUserId, string reference, CatalogueAccessRequestViewModel vm);
+        Task<bool> RequestAccessAsync(int currentUserId, string reference, CatalogueAccessRequestViewModel vm, string accessType);
 
         /// <summary>
         /// The InviteUserAsync.

@@ -307,7 +307,7 @@
 
                 // Only make a new activity if the latest activity is finished
                 if (typeof latest.userScore === 'number') {
-                    const result = await activityRecorder.recordActivityLaunched(this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date(), reason);
+                    const result = await activityRecorder.recordActivityLaunched(this.resourceItem.resourceTypeEnum, this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date(), reason);
                     this.shuffleMatchQuestionsState();
                     await activityRecorder.recordAssessmentResourceActivity(result.createdId, this.matchQuestionsState, reason);
                 }

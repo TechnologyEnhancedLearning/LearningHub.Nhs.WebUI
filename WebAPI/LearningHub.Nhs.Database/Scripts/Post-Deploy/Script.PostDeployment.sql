@@ -79,4 +79,6 @@ UPDATE [resources].[ResourceVersion] SET CertificateEnabled = 0 WHERE VersionSta
 :r .\Scripts\PopulateProviders.sql
 :r .\Scripts\HtmlResourceType.sql
 :r .\Scripts\InitialiseDataForEmailTemplates.sql
+:r .\Scripts\TD-2929_ActivityStatusUpdates.sql
+:r .\Scripts\InitialiseDataForEmailTemplates.sql
 :r .\Scripts\AttributeData.sql

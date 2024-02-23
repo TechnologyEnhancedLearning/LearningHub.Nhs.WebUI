@@ -169,8 +169,7 @@
 
             // call complete activity if resource type is media or scorm.
             if (this.userAuthenticated && (this.resourceItem.resourceTypeEnum === ResourceType.VIDEO || this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) && this.hasResourceAccess()) {
-                //var isIE11 = (!!window.MSInputMethodContext && !!((<any>document).documentMode));
-                var isIE11 = (!!((window as any).MSInputMethodContext) && !!((document as any).documentMode));
+                var isIE11 = (!!window.MSInputMethodContext && !!((<any>document).documentMode));
                 var self = this;
 
                 if (isIE11) {
@@ -205,17 +204,13 @@
         methods: {
             initialise(): void {
                 // record activity on page created for resource article
-                if (this.userAuthenticated && (
-                    this.resourceItem.resourceTypeEnum === ResourceType.ARTICLE
-                    || this.resourceItem.resourceTypeEnum === ResourceType.IMAGE
-                    || this.resourceItem.resourceTypeEnum === ResourceType.CASE) && this.hasResourceAccess()) {
-
+                if (this.userAuthenticated && this.resourceItem.resourceTypeEnum === ResourceType.CASE) {
                     this.recordActivityLaunched();
                 }
-                else if (this.userAuthenticated && this.resourceItem.resourceTypeEnum === ResourceType.ASSESSMENT && this.hasResourceAccess()) {
+                else if (this.userAuthenticated && this.resourceItem.resourceTypeEnum === ResourceType.ASSESSMENT) {
                     this.getCurrentAssessmentActivity();
                 }
-                if (this.resourceItem.resourceTypeEnum === ResourceType.AUDIO || this.resourceItem.resourceTypeEnum === ResourceType.VIDEO) {
+                else if (this.resourceItem.resourceTypeEnum === ResourceType.AUDIO || this.resourceItem.resourceTypeEnum === ResourceType.VIDEO) {
                     window.setTimeout(this.handleResize, 100);
                 }
             },
@@ -252,8 +247,8 @@
 
                 if (!this.activityLogged) {
                     this.activityLogged = true;
-
-                    await activityRecorder.recordActivityLaunched(this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
+                    await activityRecorder.recordActivityLaunched(this.resourceItem.resourceTypeEnum, this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
+                   // await activityRecorder.recordActivityLaunched(this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
                         .then(response => {
                             this.launchedResourceActivityId = response.createdId;
                             this.checkUserCertificateAvailability();

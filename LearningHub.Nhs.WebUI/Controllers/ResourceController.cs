@@ -179,14 +179,14 @@ namespace LearningHub.Nhs.WebUI.Controllers
             }
 
             // For article/image resources, immediately record the resource activity for this user.
-            if ((resource.ResourceTypeEnum == ResourceTypeEnum.Article || resource.ResourceTypeEnum == ResourceTypeEnum.Image) && ((resource.SensitiveContent && acceptSensitiveContent.HasValue && acceptSensitiveContent.Value) || !resource.SensitiveContent) && canAccessResource)
+            if ((resource.ResourceTypeEnum == ResourceTypeEnum.Article || resource.ResourceTypeEnum == ResourceTypeEnum.Image) && (!resource.SensitiveContent))
             {
                 var activity = new CreateResourceActivityViewModel()
                 {
                     ResourceVersionId = resource.ResourceVersionId,
                     NodePathId = resource.NodePathId,
                     ActivityStart = DateTime.UtcNow, // TODO: What about user's timezone offset when Javascript is disabled? Needs JavaScript.
-                    ActivityStatus = ActivityStatusEnum.Launched,
+                    ActivityStatus = ActivityStatusEnum.Completed,
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
             }
@@ -484,7 +484,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     ResourceVersionId = resourceVersionId,
                     NodePathId = nodePathId,
                     ActivityStart = DateTime.UtcNow, // TODO: What about user's timezone offset when Javascript is disabled? Needs JavaScript.
-                    ActivityStatus = ActivityStatusEnum.Launched,
+                    ActivityStatus = ActivityStatusEnum.Completed,
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
             }

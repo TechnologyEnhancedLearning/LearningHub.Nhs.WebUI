@@ -1,4 +1,14 @@
-# triggered via Azure Pipeline
+trigger:
+  branches:
+    include: 
+      - CI
+    exclude:
+    - '*'
+pr:
+  branches:
+    exclude:
+      - '*'
+
 resources:
   repositories:
   - repository: self

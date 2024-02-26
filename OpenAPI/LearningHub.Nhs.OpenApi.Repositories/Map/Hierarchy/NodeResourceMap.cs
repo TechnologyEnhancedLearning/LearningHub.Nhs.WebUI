@@ -1,8 +1,4 @@
-﻿// <copyright file="NodeResourceMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Map.Hierarchy
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.Hierarchy
 {
     using System;
     using LearningHub.Nhs.Models.Entities.Hierarchy;

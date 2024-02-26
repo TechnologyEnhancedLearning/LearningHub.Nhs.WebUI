@@ -1,8 +1,4 @@
-﻿// <copyright file="INodeResourceLookupRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Hierarchy
+﻿namespace LearningHub.Nhs.Repository.Interface.Hierarchy
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

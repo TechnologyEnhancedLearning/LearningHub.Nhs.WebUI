@@ -1,7 +1,3 @@
-// <copyright file="ResourceController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System;

@@ -1,8 +1,4 @@
-﻿// <copyright file="SsoLoginFilterAttribute.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Filters
+﻿namespace LearningHub.Nhs.WebUI.Filters
 {
     using System.Collections.Generic;
     using System.Linq;

@@ -1,8 +1,4 @@
-﻿// <copyright file="QuestionValidationHelper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Helpers
+﻿namespace LearningHub.Nhs.Services.Helpers
 {
     using System.Linq;
     using System.Threading.Tasks;

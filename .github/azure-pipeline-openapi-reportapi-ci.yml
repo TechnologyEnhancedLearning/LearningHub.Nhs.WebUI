@@ -15,7 +15,7 @@ resources:
   repositories:
   - repository: self
     type: git
-    ref: refs/heads/RC
+    ref: refs/heads/CI
 jobs:
 - job: Job_1
   displayName: Agent job

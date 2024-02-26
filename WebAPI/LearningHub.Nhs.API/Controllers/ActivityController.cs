@@ -1,8 +1,4 @@
-﻿// <copyright file="ActivityController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Api.Controllers
+﻿namespace LearningHub.Nhs.Api.Controllers
 {
     using System.Linq;
     using System.Threading.Tasks;

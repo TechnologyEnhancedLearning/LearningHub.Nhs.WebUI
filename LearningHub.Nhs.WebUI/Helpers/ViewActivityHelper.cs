@@ -1,8 +1,4 @@
-﻿// <copyright file="ViewActivityHelper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Helpers
+﻿namespace LearningHub.Nhs.WebUI.Helpers
 {
     using System;
     using System.Collections.Generic;

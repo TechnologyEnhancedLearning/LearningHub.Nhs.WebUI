@@ -1,8 +1,4 @@
-﻿// <copyright file="TestAsyncEnumerator.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.UnitTests.Helpers
+﻿namespace LearningHub.Nhs.Services.UnitTests.Helpers
 {
     using System.Collections.Generic;
     using System.Threading;

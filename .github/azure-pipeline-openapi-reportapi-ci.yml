@@ -8,6 +8,8 @@ trigger:
   branches:
     include: 
       - CI
+    exclude:
+      - '*'
 name: $(date:yyyyMMdd)$(rev:.r)
 resources:
   repositories:

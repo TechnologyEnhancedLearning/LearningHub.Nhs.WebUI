@@ -1,8 +1,4 @@
-﻿// <copyright file="IMyLearningService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Interface
+﻿namespace LearningHub.Nhs.Services.Interface
 {
     using System;
     using System.Collections.Generic;

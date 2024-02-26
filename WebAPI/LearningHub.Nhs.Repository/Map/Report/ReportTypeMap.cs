@@ -1,8 +1,4 @@
-﻿// <copyright file="ReportTypeMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Map.Report
+﻿namespace LearningHub.Nhs.Repository.Map.Report
 {
     using LearningHub.Nhs.Models.Entities.Reporting;
     using Microsoft.EntityFrameworkCore;

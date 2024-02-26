@@ -1,7 +1,3 @@
-// <copyright file="MiddlewareStartup.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.NHS.OpenAPI.Middleware
 {
     using Microsoft.AspNetCore.Builder;

@@ -1,8 +1,4 @@
-﻿// <copyright file="INavigationPermissionService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Interfaces
+﻿namespace LearningHub.Nhs.WebUI.Interfaces
 {
     using System.Security.Principal;
     using System.Threading.Tasks;

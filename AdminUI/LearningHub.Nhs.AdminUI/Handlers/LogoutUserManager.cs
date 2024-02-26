@@ -1,8 +1,4 @@
-﻿// <copyright file="LogoutUserManager.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Handlers
+﻿namespace LearningHub.Nhs.AdminUI.Handlers
 {
     using System.Collections.Generic;
     using System.Linq;

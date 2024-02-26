@@ -1,8 +1,4 @@
-﻿// <copyright file="BinaryFormatterHelper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Helpers
+﻿namespace LearningHub.Nhs.Services.Helpers
 {
     /// <summary>
     /// The querystring helper.

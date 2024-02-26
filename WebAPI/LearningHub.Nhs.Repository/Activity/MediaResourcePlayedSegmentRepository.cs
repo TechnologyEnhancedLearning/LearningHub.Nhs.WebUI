@@ -1,8 +1,4 @@
-﻿// <copyright file="MediaResourcePlayedSegmentRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Activity
+﻿namespace LearningHub.Nhs.Repository.Activity
 {
     using System.Collections.Generic;
     using System.Linq;

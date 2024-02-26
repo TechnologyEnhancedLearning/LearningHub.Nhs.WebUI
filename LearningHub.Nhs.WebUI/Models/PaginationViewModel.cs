@@ -1,8 +1,4 @@
-﻿// <copyright file="PaginationViewModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models
+﻿namespace LearningHub.Nhs.WebUI.Models
 {
     /// <summary>
     /// Defines the <see cref="PaginationViewModel" />.

@@ -1,8 +1,4 @@
-﻿// <copyright file="ReadWriteRequirement.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Api.Authentication
+﻿namespace LearningHub.Nhs.Api.Authentication
 {
     using System.Collections.Generic;
     using System.Security.Claims;

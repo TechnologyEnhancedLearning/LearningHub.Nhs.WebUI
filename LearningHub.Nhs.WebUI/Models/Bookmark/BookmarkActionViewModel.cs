@@ -1,8 +1,4 @@
-﻿// <copyright file="BookmarkActionViewModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Bookmark
+﻿namespace LearningHub.Nhs.WebUI.Models.Bookmark
 {
     using System.Collections.Generic;
 

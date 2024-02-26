@@ -2,7 +2,7 @@
 
 
 .my-learning {
-   
+
 
     .downloadbuttonaslink {
         background: none !important;
@@ -101,6 +101,8 @@
 
 
     .search-filters {
+        position: relative;
+
         .nhsuk-expander {
             border-width: 0;
 
@@ -126,30 +128,32 @@
                 border-width: 12.124px 7px 0 7px;
                 border-top-color: inherit
             }
+        }
 
-            .filter-summary {
-                color: $nhsuk-black;
+        .filter-summary {
+            color: $nhsuk-black;
+            display: flex;
+            line-height: 1.8;
+            position: absolute;
+            z-index: 1;
+            margin-top: 67px;
+            width: 100%;
+
+            .clear-filter {
+                justify-content: flex-end;
                 display: flex;
-                line-height: 1.8;
+                flex: 1 1 auto !important;
+            }
+
+            @media(max-width: 48.0525em) {
+                display: initial;
 
                 .clear-filter {
-                    justify-content: flex-end;
-                    display: flex;
-                    flex: 1 1 auto !important;
-                }
-
-                @media(max-width: 48.0525em) {
-                    display: initial;
-
-                    .clear-filter {
-                        display: block;
-                        margin-top: 12px;
-                    }
+                    display: block;
+                    margin-top: 12px;
                 }
             }
         }
-
-
 
         .search-filter-items {
             background-color: $nhsuk-grey-white;

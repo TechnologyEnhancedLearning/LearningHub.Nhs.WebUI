@@ -1,8 +1,4 @@
-﻿// <copyright file="PersonalDetails.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Account
+﻿namespace LearningHub.Nhs.WebUI.Models.Account
 {
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;

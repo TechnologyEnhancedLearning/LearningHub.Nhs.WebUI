@@ -1,8 +1,4 @@
-﻿// <copyright file="TwitterSettings.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Configuration
+﻿namespace LearningHub.Nhs.WebUI.Configuration
 {
     /// <summary>
     /// Defines the <see cref="TwitterSettings" />.

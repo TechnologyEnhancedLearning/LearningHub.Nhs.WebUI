@@ -1,8 +1,4 @@
-﻿// <copyright file="UserGroupRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository
+﻿namespace LearningHub.Nhs.Repository
 {
     using System;
     using System.Data;

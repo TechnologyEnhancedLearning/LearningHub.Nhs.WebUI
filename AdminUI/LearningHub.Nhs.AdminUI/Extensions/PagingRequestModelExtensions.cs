@@ -1,8 +1,4 @@
-﻿// <copyright file="PagingRequestModelExtensions.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Extensions
+﻿namespace LearningHub.Nhs.AdminUI.Extensions
 {
     using System;
     using LearningHub.Nhs.Models.Common.Enums;

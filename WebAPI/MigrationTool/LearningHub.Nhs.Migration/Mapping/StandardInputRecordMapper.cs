@@ -1,8 +1,4 @@
-﻿// <copyright file="StandardInputRecordMapper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Mapping
+﻿namespace LearningHub.Nhs.Migration.Mapping
 {
     using System;
     using System.Collections.Generic;

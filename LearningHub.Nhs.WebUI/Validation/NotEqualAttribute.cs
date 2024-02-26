@@ -1,8 +1,4 @@
-﻿// <copyright file="NotEqualAttribute.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Validation
+﻿namespace LearningHub.Nhs.WebUI.Validation
 {
     using System.ComponentModel.DataAnnotations;
 

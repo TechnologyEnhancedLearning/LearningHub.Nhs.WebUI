@@ -1,8 +1,4 @@
-﻿// <copyright file="CatalogueAccessRequestRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Hierarchy
+﻿namespace LearningHub.Nhs.Repository.Hierarchy
 {
     using System;
     using System.Data;

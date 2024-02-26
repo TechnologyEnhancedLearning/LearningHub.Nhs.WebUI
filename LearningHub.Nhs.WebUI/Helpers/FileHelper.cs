@@ -1,8 +1,4 @@
-﻿// <copyright file="FileHelper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Helpers
+﻿namespace LearningHub.Nhs.WebUI.Helpers
 {
   using Microsoft.AspNetCore.StaticFiles;
 

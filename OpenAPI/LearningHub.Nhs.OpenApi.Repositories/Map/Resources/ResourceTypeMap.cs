@@ -1,7 +1,3 @@
-// <copyright file="ResourceTypeMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.OpenApi.Repositories.Map.Resources
 {
     using LearningHub.Nhs.Models.Entities.Resource;

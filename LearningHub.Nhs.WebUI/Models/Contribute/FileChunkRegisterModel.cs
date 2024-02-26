@@ -1,8 +1,4 @@
-﻿// <copyright file="FileChunkRegisterModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Contribute
+﻿namespace LearningHub.Nhs.WebUI.Models.Contribute
 {
     /// <summary>
     /// Defines the <see cref="FileChunkRegisterModel" />.

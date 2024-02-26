@@ -1,8 +1,4 @@
-﻿// <copyright file="MediaManifestProxyController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Controllers.Api
+﻿namespace LearningHub.Nhs.AdminUI.Controllers.Api
 {
     using System;
     using System.Globalization;

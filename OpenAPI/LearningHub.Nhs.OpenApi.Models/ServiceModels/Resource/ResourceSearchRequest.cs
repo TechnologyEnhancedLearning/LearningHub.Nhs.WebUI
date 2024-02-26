@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceSearchRequest.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource
+﻿namespace LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource
 {
     using System.Collections.Generic;
     using System.Linq;

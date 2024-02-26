@@ -1,8 +1,4 @@
-﻿// <copyright file="CatalogueAccessRequestedViewModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Catalogue
+﻿namespace LearningHub.Nhs.WebUI.Models.Catalogue
 {
     /// <summary>
     /// Defines the <see cref="CatalogueAccessRequestedViewModel" />.

@@ -1,8 +1,4 @@
-﻿// <copyright file="EmailChangeValidationTokenMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository
+﻿namespace LearningHub.Nhs.Repository
 {
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Repository.Map;

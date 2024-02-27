@@ -1249,11 +1249,6 @@
                 accountCreationViewModel.CurrentRoleName = role.Item2.FirstOrDefault(x => x.Id == int.Parse(accountCreationViewModel.CurrentRole)).NameWithStaffGroup;
             }
 
-            if (role.Item1 > 0)
-            {
-                accountCreationViewModel.CurrentRoleName = role.Item2.FirstOrDefault(x => x.Id == int.Parse(accountCreationViewModel.CurrentRole)).NameWithStaffGroup;
-            }
-
             var grade = await this.gradeService.GetGradesForJobRoleAsync(int.TryParse(accountCreationViewModel.CurrentRole, out int roleId) ? roleId : 0);
             var confirmationPayload = new AccountCreationConfirmation
             {

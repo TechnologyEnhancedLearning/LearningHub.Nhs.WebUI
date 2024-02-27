@@ -89,7 +89,7 @@
                        asp-route-resourceReferenceId="@Model.ResourceReferenceId"
                        asp-route-resourceType="@((int)resource.ResourceTypeEnum)"
                        asp-route-catalogueNodeVersionId="@resource.Catalogue.CatalogueNodeVersionId"
-                       asp-route-scormEsrLinkType="@((resource.ResourceTypeEnum == ResourceTypeEnum.Scorm) ? (int)Model.ScormContentDetails.EsrLinkType : null)"
+                       asp-route-scormEsrLinkType="@((resource.ResourceTypeEnum == ResourceTypeEnum.Scorm || resource.ResourceTypeEnum == ResourceTypeEnum.GenericFile) ? (int)Model.ExternalContentDetails.EsrLinkType : null)"
                        asp-route-resourceTitle="@resource.Title">Unpublish</a>
                 </div>
             }
@@ -162,7 +162,7 @@
     }
     @if (!Model.UserHasCertificate && Model.ResourceItem.CertificateEnabled.GetValueOrDefault(false))
     {
-        <p class="nhsuk-u-margin-bottom-4 nhsuk-u-padding-2 nhsuk-u-font-size-16 nhsuk-bg-light-blue">
+        <p class="nhsuk-u-margin-bottom-4 nhsuk-u-padding-2 nhsuk-u-font-size-16 nhsuk-bg-light-blue certificateNotification">
             <b>Certificate available: </b> complete this course to be awarded a certificate
         </p>
     }
@@ -173,6 +173,7 @@
         @if (ViewBag.UserAuthenticated)
         {
             <div class="nhsuk-u-margin-bottom-4">
+                <div class="certificateDownload">
                 @if (Model.UserHasCertificate)
                 {
                     <form method="get" action="~/MyLearning/Certificate">
@@ -180,6 +181,7 @@
                         <input type="submit" formtarget="_blank" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-top-1" value="View Certificate" />
                     </form>
                 }
+                </div>
                 <a class="nhsuk-u-font-size-16" role="button" asp-controller="Bookmark" asp-action="BookmarkResource"
                    asp-route-bookmarked="@Model.ResourceItem.IsBookmarked"
                    asp-route-id="@Model.ResourceItem.BookmarkId"
@@ -197,9 +199,8 @@
         </div>
 
         @if (resource.Id > 0 && !resource.Catalogue.Hidden && !(resource.VersionStatusEnum == VersionStatusEnum.Unpublished && !resource.DisplayForContributor))
-        {
+        {            
             <partial name="_ResourceItem" model="Model" />
-
             <hr />
             <div class="nhsuk-u-reading-width nhsuk-u-font-size-19">
                 <partial name="_ResourceInformation" model="Model" />
@@ -213,6 +214,7 @@
                 @if (ViewBag.UserAuthenticated && resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && resource.ScormDetails.CanDownload)
                 {
                     <div class="nhsuk-u-margin-bottom-4">
+                        <div class="certificateDownload">
                         @if (Model.UserHasCertificate)
                         {
                             displayCertificateButton = false;
@@ -221,6 +223,7 @@
                                 <input type="submit" formtarget="_blank" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-top-1" value="View Certificate" />
                             </form>
                         }
+                        </div>
 
                         @{
                             var file = resource.ScormDetails.File;
@@ -236,6 +239,7 @@
                 @if (ViewBag.UserAuthenticated)
                 {
                     <div class="nhsuk-u-margin-bottom-4">
+                        <div class="certificateDownload">
                         @if (Model.UserHasCertificate && displayCertificateButton)
                         {
                             <form method="get" action="~/MyLearning/Certificate">
@@ -243,6 +247,7 @@
                                 <input type="submit" formtarget="_blank" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-top-1" value="View Certificate" />
                             </form>
                         }
+                        </div>
                         <a class="nhsuk-u-font-size-16" role="button" asp-controller="Bookmark" asp-action="BookmarkResource"
                            asp-route-bookmarked="@Model.ResourceItem.IsBookmarked"
                            asp-route-id="@Model.ResourceItem.BookmarkId"
@@ -275,6 +280,7 @@
     @if (ViewBag.UserAuthenticated)
     {
         <script type="text/javascript" src="~/js/bundle/resourcecontainer.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/js/bundle/certificateCheck.js" asp-append-version="true"></script>
     }
     <script type="text/javascript" src="https://amp.azure.net/libs/amp/2.3.10/azuremediaplayer.min.js"></script>
     <script>
@@ -285,5 +291,11 @@
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(e, s);
         });
+
+        function refreshPage() {
+            setTimeout(function () {
+                location.reload();
+            }, 3000);
+        }
     </script>
 }

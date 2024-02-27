@@ -74,8 +74,9 @@ namespace LearningHub.Nhs.WebUI.Interfaces
         /// </summary>
         /// <param name="reference">The catalogue reference.</param>
         /// <param name="vm">The view model.</param>
+        /// <param name="accessType">The accessType.</param>
         /// <returns>The task.</returns>
-        Task<LearningHubValidationResult> RequestAccessAsync(string reference, CatalogueAccessRequestViewModel vm);
+        Task<LearningHubValidationResult> RequestAccessAsync(string reference, CatalogueAccessRequestViewModel vm, string accessType);
 
         /// <summary>
         /// The InviteUserAsync.

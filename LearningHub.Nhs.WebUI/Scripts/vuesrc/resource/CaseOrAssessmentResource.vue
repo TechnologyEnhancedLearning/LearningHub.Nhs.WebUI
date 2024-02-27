@@ -83,6 +83,7 @@
 <script lang="ts">
     import Vue, { PropOptions } from 'vue';
     import { userData } from '../data/user';
+    import { resourceData } from '../data/resource';
     import BlocksView from './blocks/BlocksView.vue';
     import PageSelector from "./PageSelector.vue";
     import PageSidebar from "./PageSidebar.vue";
@@ -101,6 +102,7 @@
     import { assessmentResourceHelper } from './helpers/assessmentResourceHelper';
     import { QuestionTypeEnum } from "../models/contribute-resource/blocks/questions/questionTypeEnum";
     import { AnswerModel } from "../models/contribute-resource/blocks/questions/answerModel";
+    import {setResourceCetificateLink} from './helpers/resourceCertificateHelper';
 
     export default Vue.extend({
         components: {
@@ -131,6 +133,7 @@
                 questionsInFocus: [],
                 selectedQuestionValues: [],
                 summaryViewed: false,
+                initialCertificateStatus: null,
                 matchQuestionsState: this.assessmentProgress?.matchQuestions || []
             };
         },
@@ -313,6 +316,7 @@
             },
             async goToPageFromButton(page: number) {
                 this.$el.scrollIntoView({ behavior: "smooth" });
+                this.checkUserCertificateAvailability();
                 this.goToPage(page);
             },
             updatePageQuestionProgress() {
@@ -320,7 +324,20 @@
             },
             keepUserSessionAlive() {
                 setInterval(() => { userData.keepUserSessionAlive() }, this.keepUserSessionAliveIntervalSeconds);
-            }
+            },
+            async checkUserCertificateAvailability() {
+                if (this.initialCertificateStatus == null) {
+                    this.initialCertificateStatus = await resourceData.userHasResourceCertificate(this.resourceItem.id);
+                }
+                else if (this.resourceItem.certificateEnabled && this.initialCertificateStatus == false) {
+                    let check = await resourceData.userHasResourceCertificate(this.resourceItem.id);
+                    if (check == true) {
+                        this.initialCertificateStatus = true;
+                        setResourceCetificateLink(this.resourceItem.id.toString());
+                        }
+               }
+               
+           }
         },
         async created() {
             this.blockCollection = this.getBlockCollection();
@@ -337,7 +354,7 @@
             if (!this.isAssessment || this.isPreview) {
                 this.shuffleMatchQuestionsState();
             }
-
+            this.checkUserCertificateAvailability();
             this.keepUserSessionAlive();
         },
         watch: {

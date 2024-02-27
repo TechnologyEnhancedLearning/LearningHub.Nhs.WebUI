@@ -60,6 +60,10 @@
                                                     <span class="title">Web link</span><br />
                                                     If you have a link to a website that you want to share, for example https://www.nhs.uk
                                                 </p>
+                                                <p>
+                                                    <span class="title">HTML</span><br />
+                                                    If you want to add an HTML resource package in a zip file.
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -143,6 +147,11 @@
                                     <content-weblink v-if="selectedResourceType == resourceType.WEBLINK"
                                                      @isvalid="setSpecificContentLocalValid">
                                     </content-weblink>
+                                    <content-html v-if="selectedResourceType == resourceType.HTML"
+                                                  v-bind:onResourceFileChange="onResourceFileChange"
+                                                  @filechanged="fileChanged"
+                                                  @isvalid="setSpecificContentLocalValid">
+                                    </content-html>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +178,7 @@
                                                 <div class="modal-body">
                                                     <div class="model-body-container">
                                                         <p>{{returnFileError()}}</p>
-                                                        <p v-if="fileErrorType==2 || fileErrorType==7"><a :href="supportUrlExcludedFiles" target="_blank">Files that cannot be uploaded to the Learning Hub</a></p>
+                                                        <p v-if="fileErrorType==2 || fileErrorType==7">Please see our support article which describes the <a :href="supportUrlExcludedFiles" target="_blank">file types that can be uploaded to the Learning Hub.</a></p>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -395,6 +404,7 @@
     import ContentImage from './ContentImage.vue';
     import ContentVideo from './ContentVideo.vue';
     import ContentWeblink from './ContentWeblink.vue';
+    import ContentHtml from './ContentHtml.vue';
     import FileUpload from './fileUpload.vue';
     import ProgressBar from 'vue-simple-progress';
     import GenericFileUploader from './GenericFileUploader.vue';
@@ -436,6 +446,7 @@
             ContentImage,
             ContentVideo,
             ContentWeblink,
+            ContentHtml,
             FileUpload,
             GenericFileUploader,
         },
@@ -465,7 +476,7 @@
                 // which isn't in the vuex store.
                 // This means those fields are validated using an
                 // 'isvalid' $emit which sets specificContentLocalValid,
-                // while other parts of the specific content are validated 
+                // while other parts of the specific content are validated
                 // in the Vuex store.
                 // Ideally all validation would happen in one place, Vuex.
                 specificContentLocalValid: null as boolean,
@@ -523,6 +534,9 @@
                     case this.uploadResourceType.SCORM:
                         resourceTypeDescription = 'elearning package (SCORM 1.2)';
                         break;
+                    case this.uploadResourceType.HTML:
+                        resourceTypeDescription = 'HTML package';
+                        break;
                 }
                 return resourceTypeDescription;
             },
@@ -550,6 +564,8 @@
                         return this.$store.state.audioDetail.file.fileName !== '';
                     case this.resourceType.SCORM:
                         return this.$store.state.scormDetail.file && this.$store.state.scormDetail.file.fileName !== '';
+                    case this.resourceType.HTML:
+                        return this.$store.state.htmlDetail.file.fileName !== '';
                     default:
                         return false;
                 }
@@ -635,6 +651,9 @@
                         break
                     case this.resourceType.SCORM:
                         this.selectUploadResourceType = UploadResourceType.SCORM;
+                        break
+                    case this.resourceType.HTML:
+                        this.selectUploadResourceType = UploadResourceType.HTML;
                         break
                     default:
                         this.selectUploadResourceType = UploadResourceType.FILEUPLOAD;
@@ -817,6 +836,9 @@
                     case this.uploadResourceType.SCORM:
                         this.$store.commit("saveResourceType", this.resourceType.SCORM);
                         break;
+                    case this.uploadResourceType.HTML:
+                        this.$store.commit("saveResourceType", this.resourceType.HTML);
+                        break;
                     default:
                 }
             },
@@ -859,6 +881,8 @@
                             let resourceType: ResourceType = ResourceType.GENERICFILE;
                             if (fileExtension.toLowerCase() == 'zip' && this.selectedResourceType == ResourceType.SCORM) {
                                 resourceType = ResourceType.SCORM;
+                            } else if (fileExtension.toLowerCase() == 'zip' && this.selectedResourceType == ResourceType.HTML) {
+                                resourceType = ResourceType.HTML;
                             } else {
                                 let fileTypes: FileTypeModel[] = this.$store.state.fileTypes;
                                 let fileType = fileTypes.find(ft => ft.extension == fileExtension);
@@ -927,7 +951,7 @@
                         errorMessage = "A file without an extension cannot be uploaded.";
                         break;
                     case FileErrorTypeEnum.InvalidType:
-                        errorMessage = "This type of file cannot be uploaded.";
+                        errorMessage = "We do not support this file type on the Learning Hub.";
                         break;
                     case FileErrorTypeEnum.InvalidScormType:
                         errorMessage = "Only zip file can be uploaded as a SCORM package.";

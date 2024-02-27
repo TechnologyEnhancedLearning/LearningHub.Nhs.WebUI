@@ -81,6 +81,7 @@ namespace LearningHub.Nhs.Api
             services.AddSingleton<IEntityTypeMap, FileTypeMap>();
             services.AddSingleton<IEntityTypeMap, FileChunkDetailMap>();
             services.AddSingleton<IEntityTypeMap, GenericFileResourceVersionMap>();
+            services.AddSingleton<IEntityTypeMap, HtmlResourceVersionMap>();
             services.AddSingleton<IEntityTypeMap, ImageResourceVersionMap>();
             services.AddSingleton<IEntityTypeMap, VideoResourceVersionMap>();
             services.AddSingleton<IEntityTypeMap, AudioResourceVersionMap>();
@@ -109,7 +110,7 @@ namespace LearningHub.Nhs.Api
             services.AddSingleton<IEntityTypeMap, ResourceReferenceMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionAuthorMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionEventMap>();
-            services.AddScoped<IScormResourceReferenceEventRepository, ScormResourceReferenceEventRepository>();
+            services.AddScoped<IResourceReferenceEventRepository, ResourceReferenceEventRepository>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionRatingMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionRatingSummaryMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionFlagMap>();
@@ -145,7 +146,7 @@ namespace LearningHub.Nhs.Api
             services.AddSingleton<IEntityTypeMap, ImageAnnotationMarkMap>();
             services.AddSingleton<IEntityTypeMap, WholeSlideImageFileMap>();
             services.AddSingleton<IEntityTypeMap, UrlRewritingMap>();
-            services.AddSingleton<IEntityTypeMap, ScormResourceReferenceEventMap>();
+            services.AddSingleton<IEntityTypeMap, ResourceReferenceEventMap>();
             services.AddSingleton<IEntityTypeMap, ResourceSyncMap>();
             services.AddSingleton<IEntityTypeMap, EmailTemplateMap>();
             services.AddSingleton<IEntityTypeMap, EmailTemplateLayoutMap>();
@@ -316,6 +317,7 @@ namespace LearningHub.Nhs.Api
             services.AddScoped<IFileChunkDetailRepository, FileChunkDetailRepository>();
             services.AddScoped<IFileTypeRepository, FileTypeRepository>();
             services.AddScoped<IGenericFileResourceVersionRepository, GenericFileResourceVersionRepository>();
+            services.AddScoped<IHtmlResourceVersionRepository, HtmlResourceVersionRepository>();
             services.AddScoped<IPartialFileRepository, PartialFileRepository>();
             services.AddScoped<IWholeSlideImageFileRepository, WholeSlideImageFileRepository>();
             services.AddScoped<IBlockCollectionRepository, BlockCollectionRepository>();

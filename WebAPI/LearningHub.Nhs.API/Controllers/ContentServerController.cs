@@ -1,4 +1,4 @@
-﻿// <copyright file="ScormContentServerController.cs" company="HEE.nhs.uk">
+﻿// <copyright file="ContentServerController.cs" company="HEE.nhs.uk">
 // Copyright (c) HEE.nhs.uk.
 // </copyright>
 
@@ -20,7 +20,7 @@ namespace LearningHub.Nhs.Api.Controllers
     [Authorize(Policy = "AuthorizeOrCallFromLH")]
     [Route("api/[controller]")]
     [ApiController]
-    public class ScormContentServerController : ApiControllerBase
+    public class ContentServerController : ApiControllerBase
     {
         /// <summary>
         /// The scorm content server service.
@@ -28,15 +28,15 @@ namespace LearningHub.Nhs.Api.Controllers
         private IScormContentServerService scormContentServerService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ScormContentServerController"/> class.
+        /// Initializes a new instance of the <see cref="ContentServerController"/> class.
         /// </summary>
         /// <param name="userService">The UserService<see cref="IUserService"/>.</param>
         /// <param name="scormContentServerService">The scormContentServerService<see cref="IScormContentServerService"/>.</param>
         /// <param name="logger">The logger.</param>
-        public ScormContentServerController(
+        public ContentServerController(
             IUserService userService,
             IScormContentServerService scormContentServerService,
-            ILogger<ScormContentServerController> logger)
+            ILogger<ContentServerController> logger)
             : base(userService, logger)
         {
             this.scormContentServerService = scormContentServerService;
@@ -48,40 +48,40 @@ namespace LearningHub.Nhs.Api.Controllers
         /// <param name="externalUrl">The externalUrl<see cref="string"/>.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [HttpPost]
-        [Route("GetScormContentDetailsByExternalUrl")]
-        public IActionResult GetScormContentDetailsByExternalUrl([FromBody] string externalUrl)
+        [Route("GetContentDetailsByExternalUrl")]
+        public IActionResult GetContentDetailsByExternalUrl([FromBody] string externalUrl)
         {
             string decodedUrl = HttpUtility.UrlDecode(externalUrl);
 
-            var details = this.scormContentServerService.GetScormContentDetailsByExternalUrl(decodedUrl);
+            var details = this.scormContentServerService.GetContentDetailsByExternalUrl(decodedUrl);
 
             return this.Ok(details);
         }
 
         /// <summary>
-        /// The GetScormContentDetailsByExternalIdentifier.
+        /// The GetContentDetailsByExternalIdentifier.
         /// </summary>
         /// <param name="externalReference">The externalIdentifier<see cref="Guid"/>.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [HttpGet]
-        [Route("GetScormContentDetailsByExternalReference/{externalReference}")]
-        public IActionResult GetScormContentDetailsByExternalReference(string externalReference)
+        [Route("GetContentDetailsByExternalReference/{externalReference}")]
+        public IActionResult GetContentDetailsByExternalReference(string externalReference)
         {
-            var details = this.scormContentServerService.GetScormContentDetailsByExternalReference(externalReference);
+            var details = this.scormContentServerService.GetContentDetailsByExternalReference(externalReference);
 
             return this.Ok(details);
         }
 
         /// <summary>
-        /// The LogScormResourceReferenceEventAsync.
+        /// The LogResourceReferenceEventAsync.
         /// </summary>
-        /// <param name="scormResourceReferenceEventViewModel">The ScormResourceReferenceEventViewModel<see cref="ScormResourceReferenceEventViewModel"/>.</param>
+        /// <param name="resourceReferenceEventViewModel">The ResourceReferenceEventViewModel<see cref="ResourceReferenceEventViewModel"/>.</param>
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         [HttpPost]
-        [Route("LogScormResourceReferenceEvent")]
-        public async Task<IActionResult> LogScormResourceReferenceEventAsync([FromBody] ScormResourceReferenceEventViewModel scormResourceReferenceEventViewModel)
+        [Route("LogResourceReferenceEvent")]
+        public async Task<IActionResult> LogResourceReferenceEventAsync([FromBody] ResourceReferenceEventViewModel resourceReferenceEventViewModel)
         {
-            await this.scormContentServerService.LogScormResourceReferenceEventAsync(scormResourceReferenceEventViewModel);
+            await this.scormContentServerService.LogResourceReferenceEventAsync(resourceReferenceEventViewModel);
             return this.Ok();
         }
     }

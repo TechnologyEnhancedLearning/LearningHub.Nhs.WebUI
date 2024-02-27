@@ -199,6 +199,18 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         }
 
         /// <summary>
+        /// The GetHtmlDetailsByIdAsync.
+        /// </summary>
+        /// <param name="id">Id.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpGet]
+        [Route("GetHtmlDetailsById/{id}")]
+        public async Task<ActionResult> GetHtmlDetailsByIdAsync(int id)
+        {
+            return this.Ok(await this.resourceService.GetHtmlDetailsByIdAsync(id));
+        }
+
+        /// <summary>
         /// The GetScormDetailsByIdAsync.
         /// </summary>
         /// <param name="id">Id.</param>
@@ -217,10 +229,10 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         /// <param name="id">id.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [HttpGet]
-        [Route("GetScormContentDetails/{id}")]
-        public async Task<ActionResult> GetScormContentDetailsAsync(int id)
+        [Route("GetExternalContentDetails/{id}")]
+        public async Task<ActionResult> GetExternalContentDetailsAsync(int id)
         {
-            return this.Ok(await this.resourceService.GetScormContentDetailsAsync(id));
+            return this.Ok(await this.resourceService.GetExternalContentDetailsAsync(id));
         }
 
         /// <summary>

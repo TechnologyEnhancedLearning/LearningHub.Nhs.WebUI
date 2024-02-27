@@ -4,11 +4,14 @@
 
 namespace LearningHub.Nhs.Repository.Resources
 {
+    using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Repository.Interface;
     using LearningHub.Nhs.Repository.Interface.Resources;
+    using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>

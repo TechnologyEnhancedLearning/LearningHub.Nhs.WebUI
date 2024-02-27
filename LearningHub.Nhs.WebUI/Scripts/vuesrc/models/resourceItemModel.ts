@@ -31,6 +31,7 @@ export class ResourceItemModel {
     versionStatusEnum: VersionStatus; 
     versionDescription: string;
     sensitiveContent: boolean;
+    certificateEnabled: boolean;
     authors: string[];
     authoredDate: Date;
     articleDetails: ArticleModel;

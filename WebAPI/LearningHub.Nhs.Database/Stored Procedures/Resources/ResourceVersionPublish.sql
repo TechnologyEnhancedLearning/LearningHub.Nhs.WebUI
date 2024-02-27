@@ -1,4 +1,4 @@
-﻿-------------------------------------------------------------------------------
+﻿----------------------------------------------------------------------------------------------------------------
 -- Author       Killian Davies
 -- Created      01-01-2020
 -- Purpose      Publishes a ResourceVersion that is currently in "Draft"
@@ -17,7 +17,9 @@
 -- 01-04-2021  RobS				Added call to UpdateMigrationStatus stored proc for migration tool improvements.
 -- 08-10-2021  Killian Davies	Modified to use hierarchy.NodeResourcePublish (IT1)
 -- 21-12-2021  RobS             Fix to NodeResource update when republishing unpublished resource.
--------------------------------------------------------------------------------
+-- 10-10-2023  Dave Brown		Allow Generic File resource types to have ESR links.
+-- 13-10-2023  Dharmendra Verma	Allow Html resource types to have ESR links.
+----------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE [resources].[ResourceVersionPublish]
 (
 	@ResourceVersionId int,
@@ -133,7 +135,12 @@ BEGIN
 			EXECUTE hierarchy.NodeResourcePublish @NodeId, @ResourceId, @PublicationId, @UserId
 		END
 
-		IF EXISTS (SELECT 1 FROM resources.Resource r WHERE r.Id = @ResourceId AND r.ResourceTypeId = 6) --SCORM
+		DECLARE @ResourceTypeId INT
+		SELECT	@ResourceTypeId = ResourceTypeId
+		FROM	resources.Resource
+		WHERE	Id = @ResourceId
+
+		IF (@ResourceTypeId = 6 /* SCORM */ OR @ResourceTypeId = 9 /* GenericFile */ OR @ResourceTypeId = 12 /* HTML Resource */)
 		BEGIN
 			DECLARE @ExternalNodeId INT
 			DECLARE @ResourceReferenceId INT
@@ -153,7 +160,30 @@ BEGIN
 			WHERE	ResourceId = @ResourceId
 				AND NodePathId = @NodePathId
 
-			IF EXISTS (SELECT 1 FROM resources.ScormResourceVersion srv WHERE srv.ResourceVersionId = @ResourceVersionId AND srv.EsrLinkTypeId IN (2,3,4) AND Deleted = 0) -- HAS ESR Link
+			DECLARE @EsrLinkTypeId INT
+			IF (@ResourceTypeId = 6 /* SCORM */)
+			BEGIN
+				SELECT	@EsrLinkTypeId = EsrLinkTypeId
+				FROM	resources.ScormResourceVersion
+				WHERE	ResourceVersionId = @ResourceVersionId
+					AND Deleted = 0
+			END
+			ELSE IF (@ResourceTypeId = 12 /* HTML */)
+			BEGIN -- HTML Resource
+				SELECT	@EsrLinkTypeId = EsrLinkTypeId
+				FROM	resources.HtmlResourceVersion
+				WHERE	ResourceVersionId = @ResourceVersionId
+					AND Deleted = 0
+			END
+			ELSE
+			BEGIN -- GenericFile
+				SELECT	@EsrLinkTypeId = EsrLinkTypeId
+				FROM	resources.GenericFileResourceVersion
+				WHERE	ResourceVersionId = @ResourceVersionId
+					AND Deleted = 0
+			END
+
+			IF (@EsrLinkTypeId IN (2,3,4)) -- HAS ESR Link
 			BEGIN
 
 				IF (@ResourceReferenceId IS NULL)

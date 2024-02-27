@@ -243,9 +243,14 @@
                         this.$emit('fileuploadcomplete', response.data);
                         this.processing = false;
                         this.uploading = false;
-                    } else {
+                    } else {                       
                         if (this.file.size > 0) {
-                            this.$emit('childfileuploaderror', FileErrorTypeEnum.Custom, 'There was a problem uploading this file to the Learning Hub. Please try again and if it still does not upload, contact the support team.');
+                            if (response.data.invalid) {
+                                this.$emit('childfileuploaderror', FileErrorTypeEnum.InvalidType, 'We do not support this file type on the Learning Hub.');
+                            }
+                            else {
+                                this.$emit('childfileuploaderror', FileErrorTypeEnum.Custom, 'There was a problem uploading this file to the Learning Hub. Please try again and if it still does not upload, contact the support team.');
+                            }
                         }
                         else {
                             this.$emit('childfileuploaderror', FileErrorTypeEnum.Custom, 'There was a problem uploading this file to the Learning Hub. The .zip file you tried to upload was empty.');

@@ -139,9 +139,9 @@
     padding-right: px2rem(68);
 }
 
-#maincontent {
+#maincontent .search-width-container {
 
-    button[class^='nhsuk-search__submit'] span.nhsuk-u-visually-hidden {
+    .nhsuk-search__submit__green span.nhsuk-u-visually-hidden {
         color: #595959;
         background-color: #fff;
     }

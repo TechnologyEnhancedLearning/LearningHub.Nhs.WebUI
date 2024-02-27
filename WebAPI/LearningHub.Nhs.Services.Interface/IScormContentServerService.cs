@@ -14,24 +14,24 @@ namespace LearningHub.Nhs.Services.Interface
     public interface IScormContentServerService
     {
         /// <summary>
-        /// Gets the SCORM content details for a particular external url (LH or historic).
+        /// Gets the content details for a particular external url (LH or historic).
         /// </summary>
         /// <param name="externalUrl">The externalUrl<see cref="string"/>.</param>
-        /// <returns>The <see cref="ScormContentServerViewModel"/>.</returns>
-        ScormContentServerViewModel GetScormContentDetailsByExternalUrl(string externalUrl);
+        /// <returns>The <see cref="ContentServerViewModel"/>.</returns>
+        ContentServerViewModel GetContentDetailsByExternalUrl(string externalUrl);
 
         /// <summary>
-        /// The GetScormContentDetailsByExternalReference.
+        /// The GetContentDetailsByExternalReference.
         /// </summary>
         /// <param name="externalReference">The externalReference<see cref="Guid"/>.</param>
-        /// <returns>The <see cref="ScormContentServerViewModel"/>.</returns>
-        ScormContentServerViewModel GetScormContentDetailsByExternalReference(string externalReference);
+        /// <returns>The <see cref="ContentServerViewModel"/>.</returns>
+        ContentServerViewModel GetContentDetailsByExternalReference(string externalReference);
 
         /// <summary>
-        /// The LogScormResourceReferenceEventAsync.
+        /// The LogResourceReferenceEventAsync.
         /// </summary>
-        /// <param name="scormResourceReferenceEventViewModel">The scormResourceReferenceEventViewModel<see cref="ScormResourceReferenceEventViewModel"/>.</param>
+        /// <param name="resourceReferenceEventViewModel">The ResourceReferenceEventViewModel<see cref="ResourceReferenceEventViewModel"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task LogScormResourceReferenceEventAsync(ScormResourceReferenceEventViewModel scormResourceReferenceEventViewModel);
+        Task LogResourceReferenceEventAsync(ResourceReferenceEventViewModel resourceReferenceEventViewModel);
     }
 }

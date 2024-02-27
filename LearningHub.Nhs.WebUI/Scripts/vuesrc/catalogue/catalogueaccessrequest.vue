@@ -1,40 +1,40 @@
 ﻿<template>
     <div class="catalogue-access-request">
         <div class="lh-container-xl">
-            <div class="lh-padding-fluid">
-                <div class="row pt-4">
-                    <div class="col">
+            <div>
+                <div>
+                    <div class="nhsuk-u-padding-bottom-5">
                         <router-link :to="goBackUrl" class="back-link"><i class="fa fa-chevron-left"></i>&nbsp; Go back</router-link>
                     </div>
                 </div>
-                <div class="row mt-4">
-                    <div class="col">
+                <div>
+                    <div>
                         <h1 class="nhsuk-heading-xl">Access request</h1>
                     </div>
                 </div>
                 <div v-if="loaded">
-                    <div class="row mt-4">
-                        <div class="col">
+                    <div>
+                        <div>
                             <h3>{{accessRequest.userFullName}}</h3>
                         </div>
                     </div>
-                    <div class="row mt-30">
-                        <div class="col">
+                    <div>
+                        <div>
                             <p><b>Email address</b></p>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
+                    <div>
+                        <div>
                             <p>{{accessRequest.emailAddress}}</p>
                         </div>
                     </div>
-                    <div class="row mt-30">
-                        <div class="col">
+                    <div>
+                        <div>
                             <p><b>Message</b></p>
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        <div class="col">
+                    <div>
+                        <div>
                             <p>{{accessRequest.message}}</p>
                         </div>
                     </div>
@@ -45,6 +45,9 @@
                                     <div class="col-12">
                                         <p>What would you like to do?</p>
                                     </div>
+                                    <div v-if="accessRequestResponseMessage != null" class="col-12 responsemessage">
+                                        <p>{{accessRequestResponseMessage}} </p>
+                                    </div>
                                     <div class="col-12 d-flex justify-content-start mt-5">
                                         <button class="nhsuk-button mr-5" @click="acceptAccessRequest()">{{acceptString}}</button>
                                         <button class="nhsuk-button nhsuk-button--secondary" @click="openDenyModal()">Deny</button>
@@ -53,7 +56,7 @@
                                 <div class="row" v-if="accessRequest.status == 1">
                                     <div class="col-12  d-flex flex-row align-items-center">
                                         <i class="fa-solid fa-circle-check"></i>
-                                        <p class="mb-0 ml-2">Accepted at {{this.accessRequest.dateApproved | formatDate('h:mm a DD MMM YYYY')}}</p>                                     
+                                        <p class="mb-0 ml-2">Accepted at {{this.accessRequest.dateApproved | formatDate('h:mm a DD MMM YYYY')}}</p>
                                     </div>
                                 </div>
                                 <div class="row" v-if="accessRequest.status == 2">
@@ -138,7 +141,8 @@
                 acceptPending: false,
                 rejectPending: false,
                 roleUserGroups: [] as RoleUserGroupModel[],
-                catalogue: null,
+                catalogue: null,              
+                accessRequestResponseMessage: null,
             };
         },
         created: async function () {
@@ -152,10 +156,10 @@
             ]);
         },
         computed: {
-            acceptString() : string{
+            acceptString(): string {
                 return this.acceptPending ? "Processing..." : "Accept";
             },
-            submitString() : string{
+            submitString(): string {
                 return this.rejectPending ? "Processing..." : "Submit";
             },
             goBackUrl(): string {
@@ -164,9 +168,9 @@
             reference: function (): string {
                 return this.$route.params.reference;
             },
-            dateCompleted: function (): string {                
-                var mDateCompleted = moment(this.accessRequest.dateApproved);                 
-                return mDateCompleted.format("h:mma") + " on " + mDateCompleted.format("d MMMM YYYY")               
+            dateCompleted: function (): string {
+                var mDateCompleted = moment(this.accessRequest.dateApproved);
+                return mDateCompleted.format("h:mma") + " on " + mDateCompleted.format("d MMMM YYYY")
             },
             dateRejected: function (): string {
                 var mDateRejected = moment(this.accessRequest.dateRejected);
@@ -186,23 +190,24 @@
             async loadRoleUserGroups(): Promise<void> {
                 this.roleUserGroups = await userData.getRoleUserGroups(this.accessRequest.userId);
             },
-            getAccessRequest: async function (): Promise<void>{
+            getAccessRequest: async function (): Promise<void> {
                 this.loaded = false;
                 this.accessRequest = await catalogueData.getAccessRequest(+this.$route.params.accessRequestId);
                 this.loaded = true;
             },
-            cancelRejection() : void{
+            cancelRejection(): void {
                 this.rejectionMessage = '';
                 $("#rejectAccessModal").modal("hide");
             },
-            async acceptAccessRequest(): Promise<void>{                                
+            async acceptAccessRequest(): Promise<void> {           
                 await catalogueData.acceptAccessRequest(this.accessRequest)
                     .then(async x => {
+                        this.accessRequestResponseMessage = x.data.details[0];
                         await this.getAccessRequest();
                         await this.loadRoleUserGroups();
                     });
             },
-            async submitRejection(): Promise<void>{
+            async submitRejection(): Promise<void> {
                 await catalogueData.rejectAccessRequest(+this.$route.params.accessRequestId, this.rejectionMessage)
                     .then(x => {
                         $("#rejectAccessModal").modal("hide");
@@ -217,62 +222,66 @@
 <style lang="scss" scoped>
     @use "../../../Styles/abstracts/all" as *;
 
-    .btn-green.disabled{
-        background-color: #425563!important;
+    .btn-green.disabled {
+        background-color: #425563 !important;
         border-color: #425563 !important;
     }
 
-    .mt-30{
-        p{
+    .mt-30 {
+        p {
             margin-bottom: 4px;
         }
     }
 
-    .spacer{
+    .spacer {
         height: 80px;
     }
 
-    h1{
+    h1 {
         font-size: 3.2rem;
     }
 
-    h3{
+    h3 {
         font-size: 2.4rem;
     }
-    .rejection-message-input{
+
+    .rejection-message-input {
         resize: none;
     }
-    .catalogue-access-request{
+
+    .catalogue-access-request {
         background-color: $nhsuk-white;
     }
 
-    .back-link{
+    .back-link {
         text-decoration: none;
-        font-size: 1.6rem;
     }
 
-    .accept-deny-request{
+    .accept-deny-request {
         background-color: $nhsuk-grey-white;
         border: 1px solid $nhsuk-grey-light;
         padding: 40px;
     }
-    .modal-footer{
+
+    .modal-footer {
         justify-content: space-between !important;
     }
-    .modal-dialog{
+
+    .modal-dialog {
         max-width: 1000px !important;
     }
-    .fa-check-circle{
+
+    .fa-check-circle {
         color: $nhsuk-green;
         font-size: 32px;
     }
 
-    .fa-times-circle{
+    .fa-times-circle {
         color: $nhsuk-red;
         font-size: 32px;
     }
-    
-    .fa-exclamation-triangle{
+
+    .fa-exclamation-triangle {
         color: $nhsuk-warm-yellow;
     }
 
@@ -293,6 +302,9 @@
         flex: 1;
         order: 2;
         display: none;
+    }
+    .responsemessage {
+        color: $nhsuk-red;
     }
 
     @media screen and (min-width: 769px) {
@@ -324,36 +336,44 @@
             width: 42%;
         }
     }
-    .modal-footer{
+
+    .modal-footer {
         padding-left: 9px !important;
         padding-right: 9px !important;
     }
-    @media(max-width: 576px){
-        .modal-footer > *{margin: 0}
-        .modal-footer{
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-    }
-        .modal-dialog{
+
+    @media(max-width: 576px) {
+        .modal-footer > * {
+            margin: 0
+        }
+
+        .modal-footer {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        .modal-dialog {
             min-height: 100%;
             margin: 0;
-            .modal-content{
+
+            .modal-content {
                 padding: 16px;
                 border-radius: 0;
                 height: 100%;
-                .modal-body{
+
+                .modal-body {
                     padding: 0;
                 }
-                .modal-header{
-                    
+
+                .modal-header {
                     padding: 0;
                     padding-bottom: 1rem;
                 }
             }
         }
-        .modal{
-            padding-right: 0!important;
+
+        .modal {
+            padding-right: 0 !important;
         }
     }
-
 </style>

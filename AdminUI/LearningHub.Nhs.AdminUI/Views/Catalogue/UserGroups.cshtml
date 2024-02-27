@@ -37,6 +37,9 @@
         <a class="tab-link" id="editors-tab" data-toggle="tab" href="#editors" role="tab" aria-controls="editors" aria-selected="false">Editors</a>
       </li>
       <li class="tab-item-small">
+        <a class="tab-link" id="creators-tab" data-toggle="tab" href="#creators" role="tab" aria-controls="creators" aria-selected="false">Course Creator</a>
+      </li>
+      <li class="tab-item-small">
         <a class="tab-link" id="readers-tab" data-toggle="tab" href="#readers" role="tab" aria-controls="readers" aria-selected="false">Restricted Access</a>
       </li>
       <li class="tab-item-small">
@@ -63,7 +66,12 @@
         <div id="editorUserGroupList" class="catalogue-user-group-list"><i class="fa fa-spinner fa-spin ml-4"></i></div>
       </div>
     </div>
-
+    <div class="tab-pane fade" id="creators" role="tabpanel" aria-labelledby="creators-tab">
+      <div class="admin-section pt-0 pl-0">
+        <div class="catalogue-role-description">Users that are added to the Course Creator role can Add, Edit, Publish or Unpublish and change the structure of a course within a catalogue.</div>
+        <div id="creatorsUserGroupList" class="catalogue-user-group-list"><i class="fa fa-spinner fa-spin ml-4"></i></div>
+      </div>
+    </div>
     <div class="tab-pane fade" id="readers" role="tabpanel" aria-labelledby="readers-tab">
       <div class="admin-section pt-0 pl-0">
         <div class="catalogue-role-description">Users that are added to the Restricted Access role can view resources within a restricted catalogue.</div>
@@ -166,6 +174,7 @@
       var roleUserGroupList = ""
       $("#adminUserGroupList").html('');
       $("#editorUserGroupList").html('');
+      $("#creatorsUserGroupList").html('');
       $("#readerUserGroupList").html('');
       $("#reportersUserGroupList").html('');
       $("#previewUserGroupList").html('');
@@ -175,6 +184,9 @@
       }
       if (roleId == @((int)RoleEnum.Editor)) {
         roleUserGroupList = "#editorUserGroupList";
+      }
+      if (roleId == @((int)RoleEnum.CourseCreator)) {
+        roleUserGroupList = "#creatorsUserGroupList";
       }
       if (roleId == @((int)RoleEnum.Reader)) {
         roleUserGroupList = "#readerUserGroupList";
@@ -215,6 +227,9 @@
       }
       if (selectedRole == @((int)RoleEnum.Editor)) {
         $('#removeUserGroupMessage').html("This user group has the role of editor. Users of the group will no longer be able to edit the catalogue.");
+      }
+      if (selectedRole == @((int)RoleEnum.CourseCreator)) {
+        $('#removeUserGroupMessage').html("This user group has the role of course creator. Users of the group will no longer be able to Add, Edit, Publish or Unpublish and change the structure of a course within a catalogue.");
       }
       if (selectedRole == @((int)RoleEnum.Reader)) {
         $('#removeUserGroupMessage').html("This user group will no longer be able to see the catalogue resources because the catalogue is restricted access.");
@@ -342,6 +357,12 @@
         e.preventDefault();
         $(this).tab('show');
         loadRoleUserGroups(@((int)RoleEnum.Editor));
+      });
+
+      $('#myTab a[href="#creators"]').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+        loadRoleUserGroups(@((int)RoleEnum.CourseCreator));
       });
 
       $('#myTab a[href="#readers"]').click(function (e) {

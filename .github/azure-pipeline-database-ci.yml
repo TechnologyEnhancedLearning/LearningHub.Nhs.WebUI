@@ -1,9 +1,8 @@
 trigger:
   branches:
-    include: 
-      - CI
     exclude:
-    - '*'
+      - '*'
+
 pr:
   branches:
     exclude:
@@ -19,6 +18,7 @@ jobs:
   displayName: Agent job
   pool:
     vmImage: windows-2019
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/CI'))
   steps:
   - checkout: self
     clean: true

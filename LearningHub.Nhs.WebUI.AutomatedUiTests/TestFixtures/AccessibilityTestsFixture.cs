@@ -4,17 +4,13 @@
 
 namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
 {
-    using System;
-    using System.Data.SqlClient;
     using LearningHub.Nhs.WebUI.AutomatedUiTests.TestHelpers;
     using OpenQA.Selenium;
 
     /// <summary>
     /// Represents a fixture for accessibility tests.
     /// </summary>
-    /// <typeparam name="TStartup">The type of the startup class.</typeparam>
-    public class AccessibilityTestsFixture<TStartup> : IDisposable
-        where TStartup : class
+    public class AccessibilityTestsFixture
     {
         /// <summary>
         /// Gets the base URL for the tests.
@@ -30,14 +26,14 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
         internal readonly IWebDriver Driver;
 #pragma warning restore SA1401 // Fields should be private
 
-        private readonly SeleniumServerFactory<TStartup> factory;
+        private readonly SeleniumServerFactory factory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AccessibilityTestsFixture{TStartup}"/> class.
+        /// Initializes a new instance of the <see cref="AccessibilityTestsFixture"/> class.
         /// </summary>
         public AccessibilityTestsFixture()
         {
-            this.factory = new SeleniumServerFactory<TStartup>();
+            this.factory = new SeleniumServerFactory();
             this.BaseUrl = this.factory.RootUri;
             this.Driver = DriverHelper.CreateHeadlessChromeDriver();
         }
@@ -49,7 +45,6 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
         {
             this.Driver.Quit();
             this.Driver.Dispose();
-            this.factory.Dispose();
         }
     }
 }

@@ -40,15 +40,43 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestHelpers
         {
             driver.Navigate().GoToUrl(baseUrl);
 
-            // Wait for the element to be present on the page
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-            IWebElement logoutLink = driver.FindElement(By.XPath("//a[@class='nhsuk-account__login--link' and @href='/Home/Logout']"));
+            try
+            {
+                // Maximum time to wait for the element in seconds
+                int maxWaitTimeInSeconds = 10;
 
-            // Perform an action on the element (e.g., click)
-            logoutLink.Click();
+                // Find the element using XPath
+                IWebElement logoutLink = null;
 
-            // var submitButton = driver.FindElement(By.TagName("form"));
-            // submitButton.Submit();
+                for (int i = 0; i < maxWaitTimeInSeconds; i++)
+                {
+                    try
+                    {
+                        logoutLink = driver.FindElement(By.XPath("//a[@class='nhsuk-account__login--link' and @href='/Home/Logout']"));
+                        if (logoutLink.Displayed)
+                        {
+                            break; // Exit the loop if element is found and displayed
+                        }
+                    }
+                    catch (NoSuchElementException)
+                    {
+                        // Element not found yet, wait for a second and try again
+                        Thread.Sleep(1000);
+                    }
+                }
+
+                // Check if the element is found and displayed
+                if (logoutLink != null && logoutLink.Displayed)
+                {
+                    // Perform an action on the element (e.g., click)
+                    logoutLink.Click();
+                }
+            }
+            finally
+            {
+                // Close the browser window
+                driver.Quit();
+            }
         }
     }
 }

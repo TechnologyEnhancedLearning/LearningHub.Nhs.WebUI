@@ -35,7 +35,7 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.AccessibilityTests
         /// Initializes a new instance of the <see cref="AccessibilityTestsBase"/> class.
         /// </summary>
         /// <param name="fixture">fixture.</param>
-        public AccessibilityTestsBase(AccessibilityTestsFixture<Program> fixture)
+        public AccessibilityTestsBase(AccessibilityTestsFixture fixture)
         {
             this.BaseUrl = fixture.BaseUrl;
             this.Driver = fixture.Driver;

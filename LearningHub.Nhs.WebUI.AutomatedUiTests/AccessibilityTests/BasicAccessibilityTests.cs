@@ -10,14 +10,14 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.AccessibilityTests
     /// <summary>
     /// BasicAccessibilityTests.
     /// </summary>
-    public class BasicAccessibilityTests : AccessibilityTestsBase, IClassFixture<AccessibilityTestsFixture<Program>>
+    public class BasicAccessibilityTests : AccessibilityTestsBase, IClassFixture<AccessibilityTestsFixture>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BasicAccessibilityTests"/> class.
         /// BasicAccessibilityTests.
         /// </summary>
         /// <param name="fixture">fixture.</param>
-        public BasicAccessibilityTests(AccessibilityTestsFixture<Program> fixture)
+        public BasicAccessibilityTests(AccessibilityTestsFixture fixture)
             : base(fixture)
         {
         }
@@ -34,6 +34,8 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.AccessibilityTests
 
             // then
             this.AnalyzePageHeadingAndAccessibility(pageTitle);
+
+            this.Driver.Dispose();
         }
     }
 }

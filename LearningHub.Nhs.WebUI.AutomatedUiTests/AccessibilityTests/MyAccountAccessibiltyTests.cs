@@ -2,10 +2,10 @@
 // Copyright (c) HEE.nhs.uk.
 // </copyright>
 
-namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
+namespace LearningHub.Nhs.WebUI.AutomatedUiTests.AccessibilityTests
 {
     using FluentAssertions;
-    using LearningHub.Nhs.WebUI.AutomatedUiTests.AccessibilityTests;
+    using LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures;
     using LearningHub.Nhs.WebUI.AutomatedUiTests.TestHelpers;
     using Selenium.Axe;
     using Xunit;
@@ -14,26 +14,26 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
     /// MyAccountAccessibiltyTests.
     /// </summary>
     public class MyAccountAccessibiltyTests : AccessibilityTestsBase,
-        IClassFixture<AuthenticatedAccessibilityTestsFixture<Program>>
+        IClassFixture<AuthenticatedAccessibilityTestsFixture>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MyAccountAccessibiltyTests"/> class.
         /// MyAccountAccessibiltyTests.
         /// </summary>
         /// <param name="fixture">fixture.</param>
-        public MyAccountAccessibiltyTests(AuthenticatedAccessibilityTestsFixture<Program> fixture)
+        public MyAccountAccessibiltyTests(AuthenticatedAccessibilityTestsFixture fixture)
             : base(fixture)
         {
         }
 
         /// <summary>
-        /// MyAccountPageHasNoAccessibilityErrors.
+        /// MyAccount Page Has Accessibility Errors.
         /// </summary>
         [Fact]
-        public void MyAccountPageHasNoAccessibilityErrors()
+        public void MyAccountPageHasAccessibilityErrors()
         {
             // given
-           // this.Driver.LogUserInAsAdmin(this.BaseUrl);
+            // this.Driver.LogUserInAsAdmin(this.BaseUrl);
             const string myaccountsUrl = "/myaccount";
 
             // when
@@ -42,14 +42,13 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
 
             // then
             CheckAccessibilityResult(result);
+
+            this.Driver.LogOutUser(this.BaseUrl);
         }
 
         private static void CheckAccessibilityResult(AxeResult result)
         {
-            // Expect axe violations caused by having an aria-expanded attribute on two
-            // radio inputs and one checkbox input.
-            // The targets #course-filter-type-1, #course-filter-type-2 and #EndDate are
-            // nhs-tested components so ignore this violation.
+            // Expect axe violation
             result.Violations.Should().HaveCount(5);
 
             var violation = result.Violations[0];

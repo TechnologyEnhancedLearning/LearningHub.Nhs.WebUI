@@ -11,11 +11,10 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
     /// AuthenticatedAccessibilityTestsFixture.
     /// </summary>
     /// <typeparam name="TStartup">TStartup.</typeparam>
-    public class AuthenticatedAccessibilityTestsFixture<TStartup> : AccessibilityTestsFixture<TStartup>
-        where TStartup : class
+    public class AuthenticatedAccessibilityTestsFixture : AccessibilityTestsFixture
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AuthenticatedAccessibilityTestsFixture{TStartup}"/> class.
+        /// Initializes a new instance of the <see cref="AuthenticatedAccessibilityTestsFixture"/> class.
         /// </summary>
         public AuthenticatedAccessibilityTestsFixture()
         {

@@ -15,6 +15,7 @@
 -- 15 Jun 2023  RS  Re-added BadgeUrl column following design change
 -- 27 Sep 2023  HV  Included Paging and user resource activity
 -- 08 Nov 2023  OA  Fixed latest resource activity entry selection(with updated logic for media activities) and  status check for incomplete assessment.
+-- 27 Feb 2024  SS  Fixed missing In progress resources in the My Accessed Learning tray issue
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [resources].[GetDashboardResources]
@@ -222,8 +223,7 @@ BEGIN
 	BEGIN
 	INSERT INTO @MyActivity					
 			SELECT TOP (@MaxRows) ra.ResourceId, MAX(ra.Id) ResourceActivityId
-				FROM
-				(SELECT a.* FROM activity.ResourceActivity a INNER JOIN (SELECT ResourceId, MAX(Id) as id FROM activity.ResourceActivity GROUP BY ResourceId ) AS b ON a.ResourceId = b.ResourceId  AND a.id = b.id  order by a.Id desc OFFSET 0 ROWS) ra				
+				FROM activity.ResourceActivity ra
 				JOIN [resources].[Resource] r ON  ra.ResourceId = r.Id
 				JOIN [resources].[ResourceVersion] rv ON  rv.Id = ra.ResourceVersionId
 				LEFT JOIN [resources].[AssessmentResourceVersion] arv ON arv.ResourceVersionId = ra.ResourceVersionId

@@ -1,5 +1,6 @@
 ﻿namespace LearningHub.Nhs.WebUI.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
@@ -1232,7 +1233,17 @@
             var employer = await this.locationService.GetByIdAsync(int.TryParse(accountCreationViewModel.LocationId, out int primaryEmploymentId) ? primaryEmploymentId : 0);
             var region = await this.regionService.GetAllAsync();
             var specialty = await this.specialtyService.GetSpecialtiesAsync();
-            var role = await this.jobRoleService.GetPagedFilteredAsync(accountCreationViewModel.CurrentRoleName, accountCreationViewModel.CurrentPageIndex, UserRegistrationContentPageSize);
+            var role = new Tuple<int, List<JobRoleBasicViewModel>>(0, null);
+            if (!string.IsNullOrEmpty(accountCreationViewModel.CurrentRoleName) && accountCreationViewModel.CurrentRoleName.Contains('/'))
+            {
+                string jobrole = accountCreationViewModel.CurrentRoleName.Replace("/", " ");
+                role = await this.jobRoleService.GetPagedFilteredAsync(jobrole, accountCreationViewModel.CurrentPageIndex, UserRegistrationContentPageSize);
+            }
+            else
+            {
+                role = await this.jobRoleService.GetPagedFilteredAsync(accountCreationViewModel.CurrentRoleName, accountCreationViewModel.CurrentPageIndex, UserRegistrationContentPageSize);
+            }
+
             if (role.Item1 > 0)
             {
                 accountCreationViewModel.CurrentRoleName = role.Item2.FirstOrDefault(x => x.Id == int.Parse(accountCreationViewModel.CurrentRole)).NameWithStaffGroup;

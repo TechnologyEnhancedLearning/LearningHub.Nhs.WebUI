@@ -21,7 +21,7 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestHelpers
         {
             var chromeOptions = new ChromeOptions();
 
-            // chromeOptions.AddArgument("--headless");
+            chromeOptions.AddArgument("--headless");
             return new ChromeDriver(chromeOptions);
         }
 

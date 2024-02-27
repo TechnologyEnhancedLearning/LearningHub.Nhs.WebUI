@@ -33,7 +33,6 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.AccessibilityTests
         public void MyAccountPageHasAccessibilityErrors()
         {
             // given
-            // this.Driver.LogUserInAsAdmin(this.BaseUrl);
             const string myaccountsUrl = "/myaccount";
 
             // when
@@ -43,6 +42,7 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.AccessibilityTests
             // then
             CheckAccessibilityResult(result);
 
+            // Dispose driver
             this.Driver.LogOutUser(this.BaseUrl);
         }
 

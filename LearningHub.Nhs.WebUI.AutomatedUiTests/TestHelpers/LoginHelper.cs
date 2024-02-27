@@ -52,7 +52,7 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestHelpers
                 {
                     try
                     {
-                        logoutLink = driver.FindElement(By.XPath("//a[@class='nhsuk-account__login--link' and @href='/Home/Logout']"));
+                        logoutLink = driver.FindElement(By.CssSelector("a.nhsuk-account__login--link[href='/Home/Logout']"));
                         if (logoutLink.Displayed)
                         {
                             break; // Exit the loop if element is found and displayed

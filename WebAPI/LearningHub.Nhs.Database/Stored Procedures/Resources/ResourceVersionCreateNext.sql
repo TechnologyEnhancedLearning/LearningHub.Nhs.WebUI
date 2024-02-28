@@ -145,9 +145,16 @@ BEGIN
 		END
 		IF @CurrentResourceTypeId = 9 
 		BEGIN
-			INSERT INTO resources.GenericFileResourceVersion (ResourceVersionId, FileId, ScormAiccContent, AuthoredYear, AuthoredMonth, AuthoredDayOfMonth, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
-			SELECT	@ResourceVersionId, FileId, ScormAiccContent, AuthoredYear, AuthoredMonth, AuthoredDayOfMonth, 0, @UserId, @AmendDate, @UserId, @AmendDate
+			INSERT INTO resources.GenericFileResourceVersion (ResourceVersionId, FileId, ScormAiccContent, AuthoredYear, AuthoredMonth, AuthoredDayOfMonth, EsrLinkTypeId, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
+			SELECT	@ResourceVersionId, FileId, ScormAiccContent, AuthoredYear, AuthoredMonth, AuthoredDayOfMonth, EsrLinkTypeId, 0, @UserId, @AmendDate, @UserId, @AmendDate
 			FROM	resources.GenericFileResourceVersion
+			WHERE	ResourceVersionId = @CurrentResourceVersionId
+		END
+		IF @CurrentResourceTypeId = 12 
+		BEGIN
+			INSERT INTO resources.HtmlResourceVersion (ResourceVersionId, FileId, PopupWidth, PopupHeight, EsrLinkTypeId, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
+			SELECT	@ResourceVersionId, FileId, PopupWidth, PopupHeight, EsrLinkTypeId, 0, @UserId, @AmendDate, @UserId, @AmendDate
+			FROM	resources.HtmlResourceVersion
 			WHERE	ResourceVersionId = @CurrentResourceVersionId
 		END
 

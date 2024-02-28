@@ -76,6 +76,7 @@ namespace LearningHub.Nhs.Services
         private readonly IEquipmentResourceVersionRepository equipmentResourceVersionRepository;
         private readonly IWebLinkResourceVersionRepository webLinkResourceVersionRepository;
         private readonly IGenericFileResourceVersionRepository genericFileResourceVersionRepository;
+        private readonly IHtmlResourceVersionRepository htmlResourceVersionRepository;
         private readonly IImageResourceVersionRepository imageResourceVersionRepository;
         private readonly IVideoResourceVersionRepository videoResourceVersionRepository;
         private readonly IAudioResourceVersionRepository audioResourceVersionRepository;
@@ -177,6 +178,9 @@ namespace LearningHub.Nhs.Services
         /// </param>
         /// <param name="genericFileResourceVersionRepository">
         /// The generic file resource version repository.
+        /// </param>
+        /// <param name="htmlResourceVersionRepository">
+        /// The html resource version repository.
         /// </param>
         /// <param name="imageResourceVersionRepository">
         /// The image resource version repository.
@@ -302,6 +306,7 @@ namespace LearningHub.Nhs.Services
             IEquipmentResourceVersionRepository equipmentResourceVersionRepository,
             IWebLinkResourceVersionRepository webLinkResourceVersionRepository,
             IGenericFileResourceVersionRepository genericFileResourceVersionRepository,
+            IHtmlResourceVersionRepository htmlResourceVersionRepository,
             IImageResourceVersionRepository imageResourceVersionRepository,
             IVideoResourceVersionRepository videoResourceVersionRepository,
             IAudioResourceVersionRepository audioResourceVersionRepository,
@@ -360,6 +365,7 @@ namespace LearningHub.Nhs.Services
             this.equipmentResourceVersionRepository = equipmentResourceVersionRepository;
             this.webLinkResourceVersionRepository = webLinkResourceVersionRepository;
             this.genericFileResourceVersionRepository = genericFileResourceVersionRepository;
+            this.htmlResourceVersionRepository = htmlResourceVersionRepository;
             this.imageResourceVersionRepository = imageResourceVersionRepository;
             this.videoResourceVersionRepository = videoResourceVersionRepository;
             this.audioResourceVersionRepository = audioResourceVersionRepository;
@@ -701,6 +707,12 @@ namespace LearningHub.Nhs.Services
 
                         var genericFileDetails = await this.GetGenericFileDetailsByIdAsync(rvvm.ResourceVersionId);
                         rvvm.GenericFileDetails = genericFileDetails;
+                        break;
+
+                    case ResourceTypeEnum.Html:
+
+                        var htmlDetails = await this.GetHtmlDetailsByIdAsync(rvvm.ResourceVersionId);
+                        rvvm.HtmlDetails = htmlDetails;
                         break;
 
                     case ResourceTypeEnum.Image:
@@ -1676,13 +1688,15 @@ namespace LearningHub.Nhs.Services
             switch (rv.Resource.ResourceTypeEnum)
             {
                 case ResourceTypeEnum.Case:
-
                     retVal.CaseDetails = erv.CaseDetails;
                     break;
 
                 case ResourceTypeEnum.Assessment:
-
                     retVal.AssessmentDetails = erv.AssessmentDetails;
+                    break;
+
+                case ResourceTypeEnum.Html:
+                    retVal.HtmlDetails = erv.HtmlDetails;
                     break;
 
                 default:
@@ -2264,6 +2278,9 @@ namespace LearningHub.Nhs.Services
                 case ResourceTypeEnum.WebLink:
                 case ResourceTypeEnum.Undefined:
                     return new LearningHubValidationResult(false, "Invalid ResourceType for file creation!");
+                case ResourceTypeEnum.Html:
+                    await this.CreateHtmlDetailsAsync(fileCreateRequestViewModel.ResourceVersionId, newFile, userId);
+                    break;
             }
 
             var retVal = new LearningHubValidationResult(true);
@@ -2433,7 +2450,38 @@ namespace LearningHub.Nhs.Services
         public async Task<GenericFileViewModel> GetGenericFileDetailsByIdAsync(int resourceVersionId)
         {
             var genericFile = await this.genericFileResourceVersionRepository.GetByResourceVersionIdAsync(resourceVersionId);
-            return this.mapper.Map<GenericFileViewModel>(genericFile);
+            var vm = this.mapper.Map<GenericFileViewModel>(genericFile);
+
+            // User id is used to populate a field we aren't going to use, so we can just pass in the system user id.
+            var externalContentDetails = this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, 4);
+            if (!string.IsNullOrEmpty(externalContentDetails?.ExternalReference))
+            {
+                vm.HostedContentUrl = $"{this.settings.LearningHubContentServerUrl}/{externalContentDetails.ExternalReference}/".ToLower();
+                vm.FullHistoricUrl = externalContentDetails.FullHistoricUrl;
+            }
+
+            return vm;
+        }
+
+        /// <summary>
+        /// The get html resource details by id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{HtmlResourceViewModel}"/>.</returns>
+        public async Task<HtmlResourceViewModel> GetHtmlDetailsByIdAsync(int resourceVersionId)
+        {
+            var htmlFile = await this.htmlResourceVersionRepository.GetByResourceVersionIdAsync(resourceVersionId);
+            var vm = this.mapper.Map<HtmlResourceViewModel>(htmlFile);
+
+            // User id is used to populate a field we aren't going to use, so we can just pass in the system user id.
+            var externalContentDetails = this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, 4);
+            if (!string.IsNullOrEmpty(externalContentDetails?.ExternalReference))
+            {
+                vm.HostedContentUrl = $"{this.settings.LearningHubContentServerUrl}/{externalContentDetails.ExternalReference}/".ToLower();
+                vm.FullHistoricUrl = externalContentDetails.FullHistoricUrl;
+            }
+
+            return vm;
         }
 
         /// <summary>
@@ -2447,25 +2495,25 @@ namespace LearningHub.Nhs.Services
             var vm = this.mapper.Map<ScormViewModel>(scorm);
 
             // User id is used to populate a field we aren't going to use, so we can just pass in the system user id.
-            var scormContentDetails = this.scormResourceVersionRepository.GetScormContentDetails(resourceVersionId, 4);
-            if (!string.IsNullOrEmpty(scormContentDetails?.ExternalReference))
+            var externalContentDetails = this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, 4);
+            if (!string.IsNullOrEmpty(externalContentDetails?.ExternalReference))
             {
-                vm.HostedContentUrl = $"{this.settings.LearningHubContentServerUrl}/{scormContentDetails.ExternalReference}/".ToLower();
-                vm.FullHistoricUrl = scormContentDetails.FullHistoricUrl;
+                vm.HostedContentUrl = $"{this.settings.LearningHubContentServerUrl}/{externalContentDetails.ExternalReference}/".ToLower();
+                vm.FullHistoricUrl = externalContentDetails.FullHistoricUrl;
             }
 
             return vm;
         }
 
         /// <summary>
-        /// The GetScormContentDetails.
+        /// The GetExternalContentDetails.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
         /// <param name="userId">userId.</param>
-        /// <returns>The <see cref="Task{ScormContentDetailsViewModel}"/>.</returns>
-        public ScormContentDetailsViewModel GetScormContentDetails(int resourceVersionId, int userId)
+        /// <returns>The <see cref="Task{ExternalContentDetailsViewModel}"/>.</returns>
+        public ExternalContentDetailsViewModel GetExternalContentDetails(int resourceVersionId, int userId)
         {
-            var viewModel = this.scormResourceVersionRepository.GetScormContentDetails(resourceVersionId, userId);
+            var viewModel = this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, userId);
             if (viewModel != null)
             {
                 viewModel.HostedContentUrl = $"{this.settings.LearningHubContentServerUrl}/{viewModel.ExternalReference}/".ToLower();
@@ -2534,6 +2582,38 @@ namespace LearningHub.Nhs.Services
                 await this.scormResourceVersionRepository.UpdateAsync(currentUserId, updatedScormResourceVersion);
                 result.IsValid = true;
                 result.CreatedId = scormViewModel.ResourceVersionId;
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public async Task<LearningHubValidationResult> UpdateHtmlDetailAsync(HtmlResourceUpdateRequestViewModel htmlResourceViewModel, int currentUserId)
+        {
+            var hrv = await this.htmlResourceVersionRepository.GetByResourceVersionIdAsync(htmlResourceViewModel.ResourceVersionId);
+            var result = new LearningHubValidationResult();
+
+            if (hrv == null)
+            {
+                hrv = this.mapper.Map<HtmlResourceVersion>(htmlResourceViewModel);
+                await this.htmlResourceVersionRepository.CreateAsync(currentUserId, hrv);
+                result.IsValid = true;
+                result.CreatedId = htmlResourceViewModel.ResourceVersionId;
+                return result;
+            }
+
+            if (hrv == null || !await this.UserCanEditResourceVersion(hrv.CreateUserId, htmlResourceViewModel.ResourceVersionId, currentUserId))
+            {
+                result.IsValid = false;
+            }
+            else
+            {
+                var updatedHtmlResourceVersion = this.mapper.Map<HtmlResourceVersion>(htmlResourceViewModel);
+                updatedHtmlResourceVersion.Id = hrv.Id;
+                updatedHtmlResourceVersion.FileId = hrv.FileId;
+                await this.htmlResourceVersionRepository.UpdateAsync(currentUserId, updatedHtmlResourceVersion);
+                result.IsValid = true;
+                result.CreatedId = htmlResourceViewModel.ResourceVersionId;
             }
 
             return result;
@@ -2743,6 +2823,28 @@ namespace LearningHub.Nhs.Services
                 scorm.ContentFilePath = scormViewModel.ContentFilePath;
 
                 await this.scormResourceVersionRepository.UpdateAsync(scormViewModel.AmendUserId, scorm);
+
+                result.IsValid = true;
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public async Task<LearningHubValidationResult> UpdateHtmlResourcePublishDetailsAsync(HtmlResourcePublishUpdateViewModel viewModel)
+        {
+            var htmlResource = await this.htmlResourceVersionRepository.GetByResourceVersionIdAsync(viewModel.ResourceVersionId);
+            var result = new LearningHubValidationResult();
+
+            if (htmlResource == null)
+            {
+                result.IsValid = false;
+            }
+            else
+            {
+                htmlResource.ContentFilePath = viewModel.ContentFilePath;
+
+                await this.htmlResourceVersionRepository.UpdateAsync(viewModel.AmendUserId, htmlResource);
 
                 result.IsValid = true;
             }
@@ -3938,6 +4040,36 @@ namespace LearningHub.Nhs.Services
                 imageResourceVersion.Description = null;
                 imageResourceVersion.Deleted = false;
                 await this.imageResourceVersionRepository.UpdateAsync(userId, imageResourceVersion);
+            }
+        }
+
+        /// <summary>
+        /// The create html details async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="newFile">The newFile<see cref="File"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        private async Task CreateHtmlDetailsAsync(int resourceVersionId, File newFile, int userId)
+        {
+            int fileId = await this.fileRepository.CreateAsync(userId, newFile);
+            var htmlResourceVersion = await this.htmlResourceVersionRepository.GetByResourceVersionIdAsync(resourceVersionId, true);
+
+            if (htmlResourceVersion == null)
+            {
+                htmlResourceVersion = new HtmlResourceVersion()
+                {
+                    ResourceVersionId = resourceVersionId,
+                    FileId = fileId,
+                };
+                await this.htmlResourceVersionRepository.CreateAsync(userId, htmlResourceVersion);
+            }
+            else
+            {
+                htmlResourceVersion.File = null;
+                htmlResourceVersion.FileId = fileId;
+                htmlResourceVersion.Deleted = false;
+                await this.htmlResourceVersionRepository.UpdateAsync(userId, htmlResourceVersion);
             }
         }
 

@@ -12,7 +12,8 @@ export enum UploadResourceType {
     WEBLINK = 3,
     EMBEDRESOURCE = 4,
     EQUIPMENT = 5,
-    SCORM = 6
+    SCORM = 6,
+    HTML = 12
 };
 
 export enum ResourceType {
@@ -28,6 +29,7 @@ export enum ResourceType {
     GENERICFILE = 9,
     CASE = 10,
     ASSESSMENT = 11,
+    HTML = 12,
 };
 
 //export enum ResourceFileType {

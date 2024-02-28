@@ -133,7 +133,7 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         [HttpPost("catalogue/RequestAccess/{reference}")]
         public async Task<IActionResult> RequestAccess(string reference, CatalogueAccessRequestViewModel vm)
         {
-            return this.Ok(await this.catalogueService.RequestAccessAsync(reference, vm));
+            return this.Ok(await this.catalogueService.RequestAccessAsync(reference, vm, "access"));
         }
 
         /// <summary>

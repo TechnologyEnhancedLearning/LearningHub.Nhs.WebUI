@@ -35,12 +35,16 @@ namespace LearningHub.Nhs.Repository.Interface.Hierarchy
         /// <param name="currentUserId">The currentUserId.</param>
         /// <param name="reference">The reference.</param>
         /// <param name="message">The message.</param>
+        /// <param name="roleId">The roleId.</param>
         /// <param name="catalogueManageAccessUrl">The catalogueManageAccessUrl.</param>
+        /// <param name="accessType">The accessType.</param>
         /// <returns>The task.</returns>
         Task CreateCatalogueAccessRequestAsync(
             int currentUserId,
             string reference,
             string message,
-            string catalogueManageAccessUrl);
+            int roleId,
+            string catalogueManageAccessUrl,
+            string accessType);
     }
 }

@@ -7,6 +7,7 @@
 -- Modification History
 --
 -- 21-01-2021  Killian Davies	Initial Revision
+-- 08-02-2023 Added condition to differentiate the restricted access role
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[UserGroupRestrictedAccessEnsure]
 (
@@ -31,7 +32,8 @@ BEGIN
 										AND s.CatalogueNodeId = @NodeId
 				WHERE ug.Deleted = 0
 				AND uga.Deleted = 0
-				AND s.Deleted = 0)
+				AND s.Deleted = 0
+				AND uga.AttributeId = 2)
 
 			BEGIN
 

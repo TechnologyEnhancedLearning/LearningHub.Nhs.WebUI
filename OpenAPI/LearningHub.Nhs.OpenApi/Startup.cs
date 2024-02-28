@@ -10,12 +10,14 @@ namespace LearningHub.NHS.OpenAPI
 {
     using System.Collections.Generic;
     using System.IO;
+    using AspNetCore.Authentication.ApiKey;
     using LearningHub.NHS.OpenAPI.Auth;
     using LearningHub.NHS.OpenAPI.Configuration;
     using LearningHub.NHS.OpenAPI.Middleware;
     using LearningHub.Nhs.OpenApi.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
     using LearningHub.Nhs.OpenApi.Services;
+    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -57,17 +59,17 @@ namespace LearningHub.NHS.OpenAPI
 
             services.AddApiKeyAuth();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication()
             .AddJwtBearer(options =>
             {
-              options.Authority = this.Configuration.GetValue<string>("LearningHUbAuthServiceConfig:Authority");
-              options.TokenValidationParameters = new TokenValidationParameters()
-              {
-                NameClaimType = "given_name",
-                RoleClaimType = "role",
-                ValidateAudience = true,
-                ValidAudiences = new List<string> { "learninghubopenapi", "learninghubapi" },
-              };
+                options.Authority = this.Configuration.GetValue<string>("LearningHUbAuthServiceConfig:Authority");
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    NameClaimType = "given_name",
+                    RoleClaimType = "role",
+                    ValidateAudience = true,
+                    ValidAudiences = new List<string> { "learninghubopenapi", "learninghubapi" },
+                };
             });
 
             services.AddCustomMiddleware();
@@ -150,6 +152,24 @@ namespace LearningHub.NHS.OpenAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.Use(async (context, next) =>
+            {
+                // Check context headers to determine which authentication scheme is appropriate
+                string scheme = ApiKeyDefaults.AuthenticationScheme;
+                if (context.Request.Headers.Keys.Contains("Authorization"))
+                {
+                    scheme = JwtBearerDefaults.AuthenticationScheme;
+                }
+
+                var result = await context.AuthenticateAsync(scheme);
+                if (result.Succeeded)
+                {
+                    context.User = result.Principal;
+                }
+
+                await next();
+            });
 
             app.UseStaticFiles(new StaticFileOptions
             {

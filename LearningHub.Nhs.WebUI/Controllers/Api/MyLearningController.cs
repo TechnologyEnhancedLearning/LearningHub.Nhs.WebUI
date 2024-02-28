@@ -6,7 +6,9 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.MyLearning;
+    using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -57,6 +59,28 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         {
             var activityModel = await this.myLearningService.GetPlayedSegments(resourceId, majorVersion);
             return this.Ok(activityModel);
+        }
+
+        /// <summary>
+        /// The CheckCertificateAvailability.
+        /// </summary>
+        /// <param name="resourceReferenceId">The reesource reference id.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpGet]
+        [Route("CheckCertificateAvailability/{resourceReferenceId}")]
+        public async Task<bool> CheckCertificateAvailabilityAsync(int resourceReferenceId)
+        {
+            var certDetails = await this.myLearningService.GetResourceCertificateDetails(resourceReferenceId);
+            if (certDetails.Item2 != null && certDetails.Item2.IsCurrentResourceVersion)
+            {
+                var activityDetailedItemViewModel = new ActivityDetailedItemViewModel(certDetails.Item2);
+                if (activityDetailedItemViewModel != null && ViewActivityHelper.CanDownloadCertificate(activityDetailedItemViewModel))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

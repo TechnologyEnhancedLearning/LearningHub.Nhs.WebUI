@@ -1,10 +1,22 @@
-﻿CREATE PROCEDURE [hierarchy].[CatalogueAccessRequestCreate]
+﻿-------------------------------------------------------------------------------
+-- Author     <>  
+-- Created      28-01-2022
+-- Purpose      To handle Catalogue Access requests.
+--
+-- Modification History
+--
+-- 01-02-2021 <> Initial Revision
+-- 12-01-2024  Swapnamol Abraham Added Role ID referernce
+-------------------------------------------------------------------------------
+CREATE PROCEDURE [hierarchy].[CatalogueAccessRequestCreate]
 (
 	@currentUserId int,
 	@reference nvarchar(max),
 	@message nvarchar(max),
 	@catalogueManageAccessUrl nvarchar(max),
-	@UserTimezoneOffset int = NULL
+	@UserTimezoneOffset int = NULL,
+	@accessType nvarchar(max),
+	@roleId int
 )
 AS
 BEGIN
@@ -33,7 +45,8 @@ BEGIN
 
 			DECLARE @emailTemplateBody nvarchar(max);
 			DECLARE @emailTemplateSubject nvarchar(max);
-
+			IF @accessType = 'access'
+			BEGIN
 			SELECT 
 				@emailTemplateBody = REPLACE(etl.Body, '[Content]', et.Body),
 				@emailTemplateSubject = et.Subject
@@ -41,6 +54,17 @@ BEGIN
 				[messaging].[EmailTemplate] et
 			JOIN [messaging].[EmailTemplateLayout] etl on et.LayoutId = etl.Id
 			WHERE et.Title = 'CatalogueAccessRequest';
+			END
+			ELSE
+			BEGIN
+			SELECT 
+				@emailTemplateBody = REPLACE(etl.Body, '[Content]', et.Body),
+				@emailTemplateSubject = et.Subject
+			FROM 
+				[messaging].[EmailTemplate] et
+			JOIN [messaging].[EmailTemplateLayout] etl on et.LayoutId = etl.Id
+			WHERE et.Title = 'CataloguePermissionRequest';
+			END
 
 			DECLARE @AdminUserCursor CURSOR 
 			SET @AdminUserCursor = CURSOR FAST_FORWARD 
@@ -91,8 +115,8 @@ BEGIN
 			DEALLOCATE @AdminUserCursor;
 
 			INSERT INTO [hierarchy].[CatalogueAccessRequest]
-			(UserId, CatalogueNodeId, EmailAddress, Message, Status, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
-			VALUES (@currentUserId, @catalogueNodeId, @currentUserEmailAddress, @message, 0, 0, @currentUserId, @AmendDate, @currentUserId, @AmendDate);
+			(UserId, CatalogueNodeId, EmailAddress, Message, Status, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate, RoleId)
+			VALUES (@currentUserId, @catalogueNodeId, @currentUserEmailAddress, @message, 0, 0, @currentUserId, @AmendDate, @currentUserId, @AmendDate, @roleId);
 		COMMIT
 	END TRY
 	BEGIN CATCH

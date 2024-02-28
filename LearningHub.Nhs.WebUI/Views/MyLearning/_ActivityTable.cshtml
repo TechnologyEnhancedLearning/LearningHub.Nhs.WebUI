@@ -143,6 +143,12 @@
                                     Failed
                                 </strong>
                             }
+                            else if (ViewActivityHelper.GetActivityStatus(activity) == ActivityStatusEnum.Launched)
+                            {
+                                <strong class="nhsuk-tag nhsuk-tag--green">
+                                    Launched
+                                </strong>
+                            }
                         </span>
                     </td>
                 </tr>

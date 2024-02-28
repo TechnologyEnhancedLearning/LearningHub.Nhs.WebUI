@@ -50,7 +50,7 @@
         },
         data() {
             return {
-                counterInterval,  
+                counterInterval,   
             }
         },
         created() {

@@ -145,6 +145,17 @@ BEGIN
 			ResourceVersionId=@ResourceVersionId
 			AND Deleted=0
 	END
+	IF @ResourceTypeId = 12 
+	BEGIN
+		UPDATE resources.HtmlResourceVersion
+		SET 
+			CreateUserId=@NewOwnerUserId, 
+			AmendUserID=@NewOwnerUserId, 
+			AmendDate=@AmendDate
+		WHERE 
+			ResourceVersionId=@ResourceVersionId
+			AND Deleted=0
+	END
 
 	IF @PublicationId IS NOT NULL
 	BEGIN

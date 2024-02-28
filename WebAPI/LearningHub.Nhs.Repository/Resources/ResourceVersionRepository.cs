@@ -676,5 +676,28 @@ namespace LearningHub.Nhs.Repository.Resources
                 "resources.BlockCollectionWithBlocksCreateDuplicate @p0, @p1, @p2, @p3, @p4, @p5 output", param0, param1, param2, param3, param4, param5);
             return param5.Value == DBNull.Value ? -1 : (int)param5.Value;
         }
+
+        /// <summary>
+        /// Gets Generic File content details.
+        /// </summary>
+        /// <param name="resourceVersionId">resourceVersionId.</param>
+        /// <param name="userId">userId.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public ExternalContentDetailsViewModel GetExternalContentDetails(int resourceVersionId, int userId)
+        {
+            try
+            {
+                var param0 = new SqlParameter("@resourceVersionId", SqlDbType.Int) { Value = resourceVersionId };
+                var param1 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+
+                var externalContentDetailsViewModel = this.DbContext.ExternalContentDetailsViewModel.FromSqlRaw("[resources].[GetExternalContentDetails] @resourceVersionId, @userId", param0, param1).AsEnumerable().FirstOrDefault();
+
+                return externalContentDetailsViewModel;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

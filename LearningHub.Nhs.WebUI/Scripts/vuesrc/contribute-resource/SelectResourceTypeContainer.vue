@@ -8,6 +8,7 @@
             <SelectResourceType :resourceType="resourceType.ASSESSMENT" v-bind:resourceDetails="resourceDetails"></SelectResourceType>
             <SelectResourceType :resourceType="resourceType.CASE" v-bind:resourceDetails="resourceDetails"></SelectResourceType>
             <SelectResourceType :resourceType="resourceType.SCORM" v-bind:resourceDetails="resourceDetails"></SelectResourceType>
+            <SelectResourceType :resourceType="resourceType.HTML" v-bind:resourceDetails="resourceDetails"></SelectResourceType>
         </div>
     </div>
 </template>

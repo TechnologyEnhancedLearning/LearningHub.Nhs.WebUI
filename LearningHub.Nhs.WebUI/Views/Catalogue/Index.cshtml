@@ -16,7 +16,8 @@
 
   bool Unlocked()
   {
-    return IsInRole(RoleEnum.LocalAdmin) || IsInRole(RoleEnum.Editor) || IsInRole(RoleEnum.Reader) || this.User.IsInRole("Administrator");
+    return IsInRole(RoleEnum.LocalAdmin) || IsInRole(RoleEnum.Editor) || IsInRole(RoleEnum.Reader) ;
+    //// || this.User.IsInRole("Administrator")
   }
 
   bool IsInRole(RoleEnum role)

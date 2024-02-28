@@ -21,7 +21,7 @@ namespace LearningHub.NHS.OpenAPI.Auth
         {
             services.AddScoped<IApiKeyRepository, ApiKeyRepository>();
 
-            services.AddAuthentication(ApiKeyDefaults.AuthenticationScheme)
+            services.AddAuthentication()
                 .AddApiKeyInHeaderOrQueryParams<ApiKeyProvider>(
                     options =>
                     {

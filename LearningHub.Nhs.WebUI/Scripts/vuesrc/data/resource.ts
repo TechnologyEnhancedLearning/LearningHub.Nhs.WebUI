@@ -5,7 +5,7 @@ import { ResourceItemModel } from '../models/resourceItemModel';
 import { ResourceVersionHistoryModel } from '../models/resourceVersionHistoryModel';
 import { FileTypeModel } from '../models/contribute/fileTypeModel';
 import { ResourceLocationsModel } from '../models/resourceLocationsModel';
-import { ContributeResourceDetailModel, GenericFileResourceModel, ScormResourceModel, ExternalReferenceUserAgreement, ImageResourceModel, VideoResourceModel, ArticleResourceModel, AudioResourceModel, WeblinkResourceModel } from '../models/contribute/contributeResourceModel';
+import { ContributeResourceDetailModel, GenericFileResourceModel, ScormResourceModel, ExternalReferenceUserAgreement, ImageResourceModel, VideoResourceModel, ArticleResourceModel, AudioResourceModel, WeblinkResourceModel, HtmlResourceModel } from '../models/contribute/contributeResourceModel';
 import { ResourceType, VersionStatus } from '../constants';
 import { LicenceModel } from '../models/contribute/licenceModel';
 import { AuthorModel } from '../models/contribute/authorModel';
@@ -76,12 +76,26 @@ const getItem = async function (id: number): Promise<ResourceItemModel> {
         });
 };
 
+
+const userHasResourceCertificate = async function (id: number): Promise<boolean> {
+
+    return await AxiosWrapper.axios.get<boolean>('/api/MyLearning/CheckCertificateAvailability/'+ id)
+        .then(response => {
+            if (response.data == true) { return true } else { return false; }
+        })
+        .catch(e => {
+            console.log('userHasResourceCertificate:' + e);
+            throw e;
+        });
+};
+
 const getUploadResourceTypes = async function (): Promise<{ id: number, description: string }[]> {
     return [
         { id: 6, description: 'elearning package (SCORM 1.2)' },
         { id: 2, description: 'Article' },
         { id: 3, description: 'Web link' },
         { id: 1, description: 'File upload' },
+        { id: 12, description: 'HTML' },
         //{ id: 4, description: 'Video or audio embed code' },
         //{ id: 5, description: 'Equipment or facilities' }
     ];
@@ -152,6 +166,17 @@ const getGenericFileDetail = async function (id: number): Promise<GenericFileRes
         });
 };
 
+const getHtmlDetail = async function (id: number): Promise<HtmlResourceModel> {
+    return await AxiosWrapper.axios.get<HtmlResourceModel>('/api/Resource/GetHtmlDetailsById/' + id)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('getHtmlDetail:' + e);
+            throw e;
+        });
+};
+
 const getScormDetail = async function (id: number): Promise<ScormResourceModel> {
     return await AxiosWrapper.axios.get<ScormResourceModel>('/api/Resource/GetScormDetailsById/' + id)
         .then(response => {
@@ -164,7 +189,7 @@ const getScormDetail = async function (id: number): Promise<ScormResourceModel> 
 };
 
 const getScormContentDetails = async function (id: number): Promise<ScormContentDetailsModel> {
-    return await AxiosWrapper.axios.get<ScormContentDetailsModel>('/api/Resource/GetScormContentDetails/' + id)
+    return await AxiosWrapper.axios.get<ScormContentDetailsModel>('/api/Resource/GetExternalContentDetails/' + id)
         .then(response => {
             return response.data;
         })
@@ -483,6 +508,7 @@ export const resourceData = {
     getContributeSettings,
     getHeader,
     getItem,
+    userHasResourceCertificate,
     getUploadResourceTypes,
     getFileTypes,
     getLicences,
@@ -490,6 +516,7 @@ export const resourceData = {
     getFileTypesExtensions,
     getResourceVersion,
     getGenericFileDetail,
+    getHtmlDetail,
     getScormDetail,
     getScormContentDetails,
     recordExternalReferenceUserAgreement,

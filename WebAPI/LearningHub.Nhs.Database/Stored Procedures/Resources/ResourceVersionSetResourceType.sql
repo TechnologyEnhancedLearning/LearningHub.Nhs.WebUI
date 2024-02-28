@@ -104,6 +104,12 @@ BEGIN
 			SET Deleted=1, AmendDate=@AmendDate, AmendUserId=@UserId
 			WHERE ResourceVersionId = @ResourceVersionId
 		END
+		IF @CurrentResourceTypeId = 12 
+		BEGIN
+			UPDATE resources.HtmlResourceVersion
+			SET Deleted=1, AmendDate=@AmendDate, AmendUserId=@UserId
+			WHERE ResourceVersionId = @ResourceVersionId
+		END
 
 		IF @ResourceTypeId = 1 -- Article Resource Type
 		BEGIN
@@ -155,6 +161,25 @@ BEGIN
 			BEGIN
 				INSERT INTO [resources].[WebLinkResourceVersion] ([ResourceVersionId],[WebLinkURL],[DisplayText],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
 					VALUES (@ResourceVersionId, '', '', 0, @UserId, @AmendDate, @UserId, @AmendDate)
+			END
+		END
+
+		IF @ResourceTypeId = 12 --HTML Resource Type
+		BEGIN
+			UPDATE [resources].[HtmlResourceVersion]
+			SET	FileId = NULL,
+				[ContentFilePath] = NULL,
+				PopupWidth = NULL,
+				PopupHeight = NULL,
+				[EsrLinkTypeId] = 1,
+				[Deleted] = 0,
+				[AmendUserId] = @UserId,
+				[AmendDate] = @AmendDate
+			WHERE [ResourceVersionId] = @ResourceVersionId
+			IF @@ROWCOUNT = 0
+			BEGIN
+				INSERT INTO [resources].[HtmlResourceVersion] ([ResourceVersionId],[FileId],[ContentFilePath],[PopupWidth],[PopupHeight],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
+					VALUES (@ResourceVersionId, NULL, NULL, NULL, NULL, 0, @UserId, @AmendDate, @UserId, @AmendDate)
 			END
 		END
 

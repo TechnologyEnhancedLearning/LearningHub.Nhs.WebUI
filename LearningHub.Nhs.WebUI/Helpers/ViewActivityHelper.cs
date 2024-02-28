@@ -58,6 +58,9 @@ namespace LearningHub.Nhs.WebUI.Helpers
                 case ResourceTypeEnum.Case:
                     typeText = "Case";
                     break;
+                case ResourceTypeEnum.Html:
+                    typeText = "HTML";
+                    break;
                 default:
                     typeText = string.Empty;
                     break;
@@ -132,6 +135,7 @@ namespace LearningHub.Nhs.WebUI.Helpers
                      && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Article
                          || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.WebLink
                          || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Image
+                         || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Html
                          || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Case))
             {
                 return "Completed";
@@ -169,6 +173,7 @@ namespace LearningHub.Nhs.WebUI.Helpers
                 && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Article
                     || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.WebLink
                     || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Image
+                    || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Html
                     || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Case))
             {
                 return ActivityStatusEnum.Completed;

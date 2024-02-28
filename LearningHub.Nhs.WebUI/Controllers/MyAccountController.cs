@@ -817,7 +817,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                         LocationId = profile.LocationId,
                     });
 
-                this.ViewBag.SuccessMessage = "Your job details has been changed";
+                this.ViewBag.SuccessMessage = "Your job details have been changed";
                 return this.View("SuccessMessage");
             }
 

@@ -18,6 +18,7 @@ module.exports = {
         contributeresourcecontainer: './Scripts/vuesrc/contribute-resource/contributeresourcecontainer.ts',
         cataloguecontainer: './Scripts/vuesrc/catalogue/cataloguecontainer.ts',
         forgotpassword: './Scripts/vuesrc/forgotpassword.ts',
+        certificateCheck: './Scripts/vuesrc/certificateCheck.ts',
         notificationcontainer: './Scripts/vuesrc/notification/notificationcontainer.ts',
         mylearningcontainer: './Scripts/vuesrc/mylearning/mylearningcontainer.ts',
         catalogueslistcontainer: './Scripts/vuesrc/dashboard/catalogueslistcontainer.ts',

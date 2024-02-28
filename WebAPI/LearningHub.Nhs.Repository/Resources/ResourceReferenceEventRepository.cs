@@ -1,4 +1,4 @@
-﻿// <copyright file="ScormResourceReferenceEventRepository.cs" company="HEE.nhs.uk">
+﻿// <copyright file="ResourceReferenceEventRepository.cs" company="HEE.nhs.uk">
 // Copyright (c) HEE.nhs.uk.
 // </copyright>
 
@@ -11,14 +11,14 @@ namespace LearningHub.Nhs.Repository.Resources
     /// <summary>
     /// The scorm resource version Event repository.
     /// </summary>
-    public class ScormResourceReferenceEventRepository : GenericRepository<ScormResourceReferenceEvent>, IScormResourceReferenceEventRepository
+    public class ResourceReferenceEventRepository : GenericRepository<ResourceReferenceEvent>, IResourceReferenceEventRepository
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ScormResourceReferenceEventRepository"/> class.
+        /// Initializes a new instance of the <see cref="ResourceReferenceEventRepository"/> class.
         /// </summary>
         /// <param name="dbContext">The dbContext<see cref="LearningHubDbContext"/>.</param>
         /// <param name="tzOffsetManager">tzOffsetManager.</param>
-        public ScormResourceReferenceEventRepository(LearningHubDbContext dbContext, ITimezoneOffsetManager tzOffsetManager)
+        public ResourceReferenceEventRepository(LearningHubDbContext dbContext, ITimezoneOffsetManager tzOffsetManager)
             : base(dbContext, tzOffsetManager)
         {
         }

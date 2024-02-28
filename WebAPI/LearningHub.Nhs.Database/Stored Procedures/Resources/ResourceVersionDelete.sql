@@ -118,6 +118,12 @@ BEGIN
             SET Deleted=1, AmendDate=SYSDATETIMEOFFSET(), AmendUserId=@UserId
             WHERE ResourceVersionId = @ResourceVersionId
         END
+		IF @CurrentResourceTypeId = 12
+        BEGIN
+            UPDATE resources.HtmlResourceVersion
+            SET Deleted=1, AmendDate=SYSDATETIMEOFFSET(), AmendUserId=@UserId
+            WHERE ResourceVersionId = @ResourceVersionId
+        END
 
 		UPDATE resources.ResourceVersion
 		SET Deleted=1, AmendDate=@AmendDate, AmendUserId=@UserId

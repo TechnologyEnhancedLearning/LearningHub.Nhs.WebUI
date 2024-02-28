@@ -2,8 +2,8 @@
 @using NHSUKViewComponents.Web.Helpers
 @model TextInputViewModel
 <div class="nhsuk-form-group @(Model.HasError ? "nhsuk-form-group--error" : "")">
-    <label class="nhsuk-label" for="@Model.Name">
-        @Model.Label
+    <label class="nhsuk-label @(string.IsNullOrWhiteSpace(Model.Label) ? "nhsuk-u-visually-hidden" : "")" for="@Model.Name">
+        @(string.IsNullOrWhiteSpace(Model.Label) ? "N/A" : @Model.Label)
     </label>
     @if (Model.HintText != null)
     {

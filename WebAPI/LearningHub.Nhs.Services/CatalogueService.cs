@@ -410,14 +410,17 @@ namespace LearningHub.Nhs.Services
         /// <param name="currentUserId">The currentUserId.</param>
         /// <param name="reference">The reference.</param>
         /// <param name="vm">The view model.</param>
+        /// <param name="accessType">The accessType.</param>
         /// <returns>The bool.</returns>
-        public async Task<bool> RequestAccessAsync(int currentUserId, string reference, CatalogueAccessRequestViewModel vm)
+        public async Task<bool> RequestAccessAsync(int currentUserId, string reference, CatalogueAccessRequestViewModel vm, string accessType)
         {
             await this.catalogueAccessRequestRepository.CreateCatalogueAccessRequestAsync(
                 currentUserId,
                 reference,
                 vm.Message,
-                this.settings.LearningHubUrl + "Catalogue/Manage/" + reference);
+                vm.RoleId,
+                this.settings.LearningHubUrl + "Catalogue/Manage/" + reference,
+                accessType);
 
             return true;
         }
@@ -761,8 +764,18 @@ namespace LearningHub.Nhs.Services
             await this.catalogueAccessRequestRepository.UpdateAsync(userId, car);
 
             // access request may have previously been accepted, need to check for user user group
-            var rug = this.roleUserGroupRepository.GetAll()
-                .SingleOrDefault(x => x.RoleId == (int)RoleEnum.Reader && x.Scope.CatalogueNodeId == catalogue.NodeVersion.NodeId);
+            var rug = new RoleUserGroup();
+            if (car.RoleId == 8)
+            {
+                rug = this.roleUserGroupRepository.GetAll()
+                   .SingleOrDefault(x => x.RoleId == (int)RoleEnum.Previewer && x.Scope.CatalogueNodeId == catalogue.NodeVersion.NodeId);
+            }
+            else
+            {
+                rug = this.roleUserGroupRepository.GetAll()
+                       .SingleOrDefault(x => x.RoleId == (int)RoleEnum.Reader && x.Scope.CatalogueNodeId == catalogue.NodeVersion.NodeId);
+            }
+
             if (rug != null)
             {
                 var uug = this.userUserGroupRepository.GetAll().SingleOrDefault(x => x.UserGroupId == rug.UserGroupId && x.UserId == car.UserId);
@@ -806,9 +819,44 @@ namespace LearningHub.Nhs.Services
                 throw new Exception($"User '{userId}' does not have access to manage catalogue '{catalogue.Url}'");
             }
 
+            RoleUserGroup rug = new RoleUserGroup();
+            if (catalogueAccessRequest.RoleId == 8)
+            {
+                RoleUserGroup previewerRoleuserGroup = new RoleUserGroup();
+                var previewerRoleuserGroups = await this.roleUserGroupRepository.GetByRoleIdCatalogueId((int)RoleEnum.Previewer, catalogue.NodeVersion.NodeId);
+
+                previewerRoleuserGroup = previewerRoleuserGroups.Where(r => r.RoleId == (int)RoleEnum.Previewer
+                                   && r.UserGroup.UserGroupAttribute.Any(uga => uga.AttributeId == (int)AttributeEnum.PreviewerAccess)
+                                   && r.Scope.ScopeType == ScopeTypeEnum.Catalogue).FirstOrDefault();
+
+                if (previewerRoleuserGroup == null)
+                {
+                    var details = new List<string>();
+                    details.Add($"No role user group for previewer in catalogue {catalogue.Name}");
+                    return new LearningHubValidationResult(false) { Details = details };
+                    throw new Exception($"No role user group for previewer in catalogue with node id {catalogue.NodeVersion.NodeId}");
+                }
+
+                var previewUserGroupId = previewerRoleuserGroup.UserGroupId;
+
+                var previewExistingUug = this.userUserGroupRepository.GetAll().SingleOrDefault(x => x.UserId == catalogueAccessRequest.UserId && x.UserGroupId == previewUserGroupId && !x.Deleted);
+
+                catalogueAccessRequest.Status = (int)CatalogueAccessRequestStatus.Accepted;
+                catalogueAccessRequest.CompletedDate = this.timezoneOffsetManager.ConvertToUserTimezone(DateTimeOffset.UtcNow);
+                await this.catalogueAccessRequestRepository.UpdateAsync(userId, catalogueAccessRequest);
+                if (previewExistingUug == null)
+                {
+                    var previewuugId = await this.userUserGroupRepository.CreateAsync(userId, new LearningHub.Nhs.Models.Entities.UserUserGroup
+                    {
+                        UserGroupId = previewUserGroupId,
+                        UserId = catalogueAccessRequest.UserId,
+                    });
+                }
+            }
+
             var rugs = await this.roleUserGroupRepository.GetByRoleIdCatalogueId((int)RoleEnum.Reader, catalogue.NodeVersion.NodeId);
 
-            var rug = rugs.Where(r => r.RoleId == (int)RoleEnum.Reader
+            rug = rugs.Where(r => r.RoleId == (int)RoleEnum.Reader
                                     && r.UserGroup.UserGroupAttribute.Any(uga => uga.AttributeId == (int)AttributeEnum.RestrictedAccess)
                                     && r.Scope.ScopeType == ScopeTypeEnum.Catalogue).FirstOrDefault();
 
@@ -819,16 +867,20 @@ namespace LearningHub.Nhs.Services
 
             var userGroupId = rug.UserGroupId;
 
-            var existingUug = this.userUserGroupRepository.GetAll().SingleOrDefault(x => x.UserId == catalogueAccessRequest.UserId && x.UserGroupId == userGroupId);
+            var existingUug = this.userUserGroupRepository.GetAll().SingleOrDefault(x => x.UserId == catalogueAccessRequest.UserId && x.UserGroupId == userGroupId && !x.Deleted);
 
             catalogueAccessRequest.Status = (int)CatalogueAccessRequestStatus.Accepted;
             catalogueAccessRequest.CompletedDate = this.timezoneOffsetManager.ConvertToUserTimezone(DateTimeOffset.UtcNow);
             await this.catalogueAccessRequestRepository.UpdateAsync(userId, catalogueAccessRequest);
-            var uugId = await this.userUserGroupRepository.CreateAsync(userId, new LearningHub.Nhs.Models.Entities.UserUserGroup
+            int uugId = 0;
+            if (existingUug == null)
             {
-                UserGroupId = userGroupId,
-                UserId = catalogueAccessRequest.UserId,
-            });
+                uugId = await this.userUserGroupRepository.CreateAsync(userId, new LearningHub.Nhs.Models.Entities.UserUserGroup
+                {
+                    UserGroupId = userGroupId,
+                    UserId = catalogueAccessRequest.UserId,
+                });
+            }
 
             await this.notificationSenderService.SendCatalogueAccessRequestAcceptedNotification(
                 userId,

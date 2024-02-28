@@ -391,6 +391,19 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         }
 
         /// <summary>
+        /// The SaveHtmlDetailAsync.
+        /// </summary>
+        /// <param name="request">Request.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpPost]
+        [Route("SaveHtmlDetail")]
+        public async Task<ActionResult> SaveHtmlDetailAsync([FromBody] HtmlResourceUpdateRequestViewModel request)
+        {
+            int resourceVersionId = await this.contributeService.SaveHtmlDetailAsync(request);
+            return this.Ok(resourceVersionId);
+        }
+
+        /// <summary>
         /// The SaveImageDetailAsync.
         /// </summary>
         /// <param name="request">Request.</param>

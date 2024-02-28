@@ -459,6 +459,17 @@ namespace LearningHub.Nhs.Api.Controllers
         }
 
         /// <summary>
+        /// Get specific Html resource details by ResourceVersionId.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet("GetHtmlDetails/{resourceVersionId}")]
+        public async Task<ActionResult> GetHtmlDetailsAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetHtmlDetailsByIdAsync(resourceVersionId));
+        }
+
+        /// <summary>
         /// Get specific GetScormFileDetails by ResourceVersionId.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
@@ -470,14 +481,14 @@ namespace LearningHub.Nhs.Api.Controllers
         }
 
         /// <summary>
-        /// The GetScormContentDetailsById.
+        /// The GetExternalContentDetailsById.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
         /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
-        [HttpGet("GetScormContentDetailsById/{resourceVersionId}")]
+        [HttpGet("GetExternalContentDetailsById/{resourceVersionId}")]
         public ActionResult GetScormContentDetailsById(int resourceVersionId)
         {
-            return this.Ok(this.resourceService.GetScormContentDetails(resourceVersionId, this.CurrentUserId));
+            return this.Ok(this.resourceService.GetExternalContentDetails(resourceVersionId, this.CurrentUserId));
         }
 
         /// <summary>
@@ -532,6 +543,27 @@ namespace LearningHub.Nhs.Api.Controllers
         public async Task<IActionResult> UpdateScormDetailAsync(ScormUpdateRequestViewModel scormUpdateRequestViewModel)
         {
             var vr = await this.resourceService.UpdateScormDetailAsync(scormUpdateRequestViewModel, this.CurrentUserId);
+
+            if (vr.IsValid)
+            {
+                return this.Ok(new ApiResponse(true, vr));
+            }
+            else
+            {
+                return this.BadRequest(new ApiResponse(false, vr));
+            }
+        }
+
+        /// <summary>
+        /// Update HTML Detail.
+        /// </summary>
+        /// <param name="htmlResourceViewModel">Html resource update view model.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        [Route("UpdateHtmlDetail")]
+        public async Task<IActionResult> UpdateHtmlDetailAsync(HtmlResourceUpdateRequestViewModel htmlResourceViewModel)
+        {
+            var vr = await this.resourceService.UpdateHtmlDetailAsync(htmlResourceViewModel, this.CurrentUserId);
 
             if (vr.IsValid)
             {
@@ -950,6 +982,20 @@ namespace LearningHub.Nhs.Api.Controllers
         public async Task<IActionResult> UpdateScormPublishDetailsAsync(ScormPublishUpdateViewModel scormPublishUpdateViewModel)
         {
             var vr = await this.resourceService.UpdateScormPublishDetailAsync(scormPublishUpdateViewModel);
+
+            return this.Ok(new ApiResponse(true, vr));
+        }
+
+        /// <summary>
+        /// The html resource publish update async.
+        /// </summary>
+        /// <param name="viewModel">The HtmlResourcePublishUpdateViewModel<see cref="HtmlResourcePublishUpdateViewModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        [Route("UpdateHtmlResourcePublishDetails")]
+        public async Task<IActionResult> UpdateHtmlResourcePublishDetailsAsync(HtmlResourcePublishUpdateViewModel viewModel)
+        {
+            var vr = await this.resourceService.UpdateHtmlResourcePublishDetailsAsync(viewModel);
 
             return this.Ok(new ApiResponse(true, vr));
         }

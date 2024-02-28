@@ -63,3 +63,20 @@ BEGIN
     VALUES (2003, 1, 'CatalogueAccessInvitation', 'Learning Hub - request access to a catalogue', '<p>[Greeting],</p><br/>
     <p>The catalogue administrator of the <a href="[CatalogueUrl]">[CatalogueName]</a> catalogue, has sent you a link to request access to it.</p><br/><p>You can sign into the Learning Hub either using an e-Learning for Healthcare username and password or NHS OpenAthens user account details or by creating an account on the Learning Hub and using those details.</p>', '[Greeting][AdminFullName][CatalogueName][CatalogueUrl][CreateAccountUrl]', 0, 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET());
 END
+
+IF NOT EXISTS (SELECT 1 FROM [messaging].[EmailTemplate] WHERE Title = 'CataloguePermissionRequest')
+BEGIN
+    INSERT INTO [messaging].[EmailTemplate] (Id, LayoutId, Title, Subject, Body, AvailableTags, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
+    VALUES (2006, 1, 'CataloguePermissionRequest', 'Learning Hub - catalogue permission request', '<p>Dear [AdminFirstName],</p>
+    <br/>
+    <p>A user has requested permission to the [CatalogueName] catalogue in the Learning Hub. Please review this request and then approve or deny permission in the Learning Hub by selecting the link below.</p>
+    <div style="width: 100%; height: 0; border-top: 1px solid #AEB7BD; margin-top: 10px; margin-bottom: 10px;"></div>
+    <p><b>Requested by</b></p>
+    <p>[UserFullName]</p>
+    <p>[UserEmailAddress]</p>
+    </br>
+    <p><b style="margin-top: 10px;">Message</b></p>
+    <p>[UserMessage]</p>
+    <br/>
+    <a href="[ManageAccessUrl]" style="font-size: 24px;">Review request</a>', '[AdminFirstName][CatalogueName][UserFullName][UserEmailAddress][UserMessage][ManageAccessUrl]',0, 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET());
+END

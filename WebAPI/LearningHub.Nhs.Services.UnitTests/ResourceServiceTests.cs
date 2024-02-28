@@ -116,6 +116,7 @@ namespace LearningHub.Nhs.Services.UnitTests
                 null,
                 null,
                 null,
+                null,
                 this.mockPublicationRepo.Object,
                 null,
                 null,

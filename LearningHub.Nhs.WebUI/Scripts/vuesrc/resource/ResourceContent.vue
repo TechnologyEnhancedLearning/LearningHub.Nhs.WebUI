@@ -85,6 +85,7 @@
     import { assessmentResourceHelper } from './helpers/assessmentResourceHelper';
     import { AssessmentProgressModel } from '../models/mylearning/assessmentProgressModel';
     import { getQueryParam } from './helpers/getQueryParam';
+    import {setResourceCetificateLink} from './helpers/resourceCertificateHelper';
 
     Vue.use(Vuelidate as any);
 
@@ -120,7 +121,8 @@
                 scormContentDetailsModel: new ScormContentDetailsModel(),
                 assessmentProgress: null as AssessmentProgressModel,
                 isGeneralUser: false,
-                isSystemAdmin: false
+                isSystemAdmin: false,
+                initialCertificateStatus: null,
             }
         },
         computed: {
@@ -230,6 +232,7 @@
             },
             async loadResourceItem(id: number): Promise<void> {
                 this.resourceItem = await resourceData.getItem(id);
+                await this.checkUserCertificateAvailability();
                 this.initialise();
             },
             async loadRoleUserGroups(): Promise<void> {
@@ -253,6 +256,7 @@
                     await activityRecorder.recordActivityLaunched(this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
                         .then(response => {
                             this.launchedResourceActivityId = response.createdId;
+                            this.checkUserCertificateAvailability();
                         })
                         .catch(e => {
                             console.log(e);
@@ -287,6 +291,7 @@
                     await activityRecorder.recordActivity(this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, activityStart, activityEnd, activityStatus)
                         .then(response => {
                             this.launchedResourceActivityId = response.createdId;
+                            this.checkUserCertificateAvailability();
                         })
                         .catch(e => {
                             console.log(e);
@@ -525,6 +530,19 @@
                     targetWin = window.open("/LearningSessions/Scorm/" + this.$route.params.resId, targetWinName, "location=0,menubar=0,resizable=0,width=" + this.resourceItem.scormDetails.popupWidth + ",height=" + this.resourceItem.scormDetails.popupHeight);
                     targetWin.focus();
                 }
+            },
+            async checkUserCertificateAvailability() {
+                if (this.initialCertificateStatus == null) {
+                    this.initialCertificateStatus = await resourceData.userHasResourceCertificate(this.$route.params.resId);
+                }
+                else if (this.userAuthenticated && this.resourceItem.certificateEnabled && this.initialCertificateStatus == false) {
+                    let check = await resourceData.userHasResourceCertificate(this.$route.params.resId);
+                    if (check == true) {
+                         this.initialCertificateStatus = true;
+                         setResourceCetificateLink(this.$route.params.resId);
+                    }
+                }
+
             },
         }
     })

@@ -97,8 +97,15 @@
     display: none;
 }
 
-.nhsuk-header__search .nhsuk-search__input {
-    width: px2rem(260);
+.nhsuk-header__search {
+    .nhsuk-search__input {
+        width: px2rem(260);
+    }
+    
+    label {
+        color: #E0E0E6;
+    }
+
 }
 
 .nhsuk-account__login--link,

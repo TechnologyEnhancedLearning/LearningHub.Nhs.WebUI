@@ -51,7 +51,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.9",
+    "@babel/core": "^7.24.0",
     "@babel/preset-env": "^7.23.9",
     "@types/axios": "^0.14.0",
     "@types/bootstrap": "4.1.3",

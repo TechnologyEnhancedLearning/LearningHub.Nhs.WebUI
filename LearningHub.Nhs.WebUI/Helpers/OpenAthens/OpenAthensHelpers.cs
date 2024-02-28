@@ -1,8 +1,4 @@
-﻿// <copyright file="OpenAthensHelpers.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Helpers.OpenAthens
+﻿namespace LearningHub.Nhs.WebUI.Helpers.OpenAthens
 {
     using System.Linq;
     using LearningHub.Nhs.Models.OpenAthens;

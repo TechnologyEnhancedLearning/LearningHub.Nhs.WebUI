@@ -1,13 +1,12 @@
 import AxiosWrapper from './axiosWrapper';
-import { ActivityStatus, MediaResourceActivityType } from './constants';
+import { ActivityStatus, MediaResourceActivityType, ResourceType } from './constants';
 import { LearningHubValidationResultModel } from './models/learningHubValidationResultModel';
 import 'navigator.sendbeacon';
 import { AssessmentModel } from './models/contribute-resource/assessmentModel';
-import { QuestionBlockModel } from "./models/contribute-resource/blocks/questionBlockModel";
-import { BlockCollectionModel } from "./models/contribute-resource/blocks/blockCollectionModel";
 import { MatchQuestionState } from "./models/mylearning/matchQuestionState";
 
 const recordActivityLaunched = async function (
+    resourceType: ResourceType,
     resourceVersionId: number,
     nodePathId: number,
     activityDatetime: Date,
@@ -16,7 +15,8 @@ const recordActivityLaunched = async function (
     var data = {
         resourceVersionId: resourceVersionId,
         nodePathId: nodePathId,
-        activityStatus: ActivityStatus.Launched,
+        activityStatus: (resourceType == ResourceType.ASSESSMENT || resourceType == ResourceType.VIDEO || resourceType == ResourceType.AUDIO ||
+            resourceType == ResourceType.SCORM) ? ActivityStatus.Incomplete : ActivityStatus.Completed,
         activityStart: activityDatetime,
         extraAttemptReason
     };
@@ -37,32 +37,6 @@ const recordActivityLaunched = async function (
         });
 
 };
-
-const recordActivityDownloaded = async function (
-    resourceVersionId: number,
-    nodePathId: number,
-    activityDatetime: Date): Promise<LearningHubValidationResultModel> {
-
-    var data = {
-        resourceVersionId: resourceVersionId,
-        nodePathId: nodePathId,
-        activityStatus: ActivityStatus.Downloaded,
-        activityStart: activityDatetime
-    };
-
-    return await AxiosWrapper.axios.post<LearningHubValidationResultModel>('/api/activity/CreateResourceActivity', data)
-        .then(response => {
-            if (!response.data.isValid) {
-                window.location.pathname = './Home/Error';
-            }
-            return response.data;
-        })
-        .catch(e => {
-            console.log('recordActivityDownloaded:' + e);
-            throw e;
-        });
-};
-
 const recordActivity = async function (
     resourceVersionId: number,
     nodePathId: number,
@@ -243,7 +217,6 @@ const recordAssessmentResourceActivityInteraction = async function (
 
 export const activityRecorder = {
     recordActivityLaunched,
-    recordActivityDownloaded,
     recordActivity,
     recordMediaResourceActivity,
     recordMediaResourceActivityInteraction,

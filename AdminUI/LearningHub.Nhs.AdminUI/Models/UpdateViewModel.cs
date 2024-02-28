@@ -1,8 +1,4 @@
-﻿// <copyright file="UpdateViewModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Models
+﻿namespace LearningHub.Nhs.AdminUI.Models
 {
     using System;
     using System.ComponentModel.DataAnnotations;

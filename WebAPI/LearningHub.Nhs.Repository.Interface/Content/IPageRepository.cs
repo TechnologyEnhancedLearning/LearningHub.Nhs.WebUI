@@ -1,8 +1,4 @@
-﻿// <copyright file="IPageRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Content
+﻿namespace LearningHub.Nhs.Repository.Interface.Content
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

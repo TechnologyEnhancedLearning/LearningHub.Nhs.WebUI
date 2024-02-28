@@ -1,8 +1,4 @@
-﻿// <copyright file="BaseEntityMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Map
+﻿namespace LearningHub.Nhs.Repository.Map
 {
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Resource;

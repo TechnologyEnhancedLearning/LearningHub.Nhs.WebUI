@@ -1,7 +1,3 @@
-// <copyright file="Settings.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.WebUI.Configuration
 {
     using System;

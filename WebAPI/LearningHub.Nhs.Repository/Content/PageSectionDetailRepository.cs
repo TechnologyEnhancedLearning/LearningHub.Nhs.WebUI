@@ -1,8 +1,4 @@
-﻿// <copyright file="PageSectionDetailRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Content
+﻿namespace LearningHub.Nhs.Repository.Content
 {
     using System.Collections.Generic;
     using System.Linq;

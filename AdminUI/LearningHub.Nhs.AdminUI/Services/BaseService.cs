@@ -1,8 +1,4 @@
-﻿// <copyright file="BaseService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Services
+﻿namespace LearningHub.Nhs.AdminUI.Services
 {
     using LearningHub.Nhs.AdminUI.Interfaces;
 

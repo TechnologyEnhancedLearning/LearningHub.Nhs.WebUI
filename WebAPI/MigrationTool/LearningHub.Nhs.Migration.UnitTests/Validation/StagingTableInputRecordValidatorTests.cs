@@ -1,8 +1,4 @@
-﻿// <copyright file="StagingTableInputRecordValidatorTests.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.UnitTests.Validation
+﻿namespace LearningHub.Nhs.Migration.UnitTests.Validation
 {
     using System;
     using System.Collections.Generic;

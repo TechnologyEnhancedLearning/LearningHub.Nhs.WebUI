@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceFileParamsModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Models
+﻿namespace LearningHub.Nhs.Migration.Models
 {
     /// <summary>
     /// Provides the parameters required for creating a resource file.

@@ -1,7 +1,3 @@
-// <copyright file="ResourceService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.Services
 {
     using System;

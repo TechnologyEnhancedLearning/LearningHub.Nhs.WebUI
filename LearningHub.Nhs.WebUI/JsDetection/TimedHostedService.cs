@@ -1,8 +1,4 @@
-﻿// <copyright file="TimedHostedService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.JsDetection
+﻿namespace LearningHub.Nhs.WebUI.JsDetection
 {
     using System;
     using System.Threading;

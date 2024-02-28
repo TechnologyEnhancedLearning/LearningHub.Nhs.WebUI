@@ -1,8 +1,4 @@
-﻿// <copyright file="AnswerSubmissionValidationHelper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Helpers
+﻿namespace LearningHub.Nhs.Services.Helpers
 {
     using System.Collections.Generic;
     using System.Linq;

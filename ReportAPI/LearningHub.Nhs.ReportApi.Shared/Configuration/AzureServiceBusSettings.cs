@@ -1,8 +1,4 @@
-﻿// <copyright file="AzureServiceBusSettings.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.ReportApi.Shared.Configuration
+﻿namespace LearningHub.Nhs.ReportApi.Shared.Configuration
 {
     /// <summary>
     /// Config AzureServiceBusSettings.

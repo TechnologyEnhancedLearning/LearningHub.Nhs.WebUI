@@ -4,232 +4,187 @@
 @using LearningHub.Nhs.WebUI.Models
 @using LearningHub.Nhs.WebUI.Models.Resource
 @{
-    var resourceItem = Model.ResourceItem;
-    var canShowMoreDetails = User.Identity.IsAuthenticated;
-    if (canShowMoreDetails && resourceItem.ResourceAccessibilityEnum == ResourceAccessibilityEnum.FullAccess)
+  var resourceItem = Model.ResourceItem;
+  var canShowMoreDetails = User.Identity.IsAuthenticated;
+  if (canShowMoreDetails && resourceItem.ResourceAccessibilityEnum == ResourceAccessibilityEnum.FullAccess)
+  {
+    canShowMoreDetails = !User.IsInRole("BasicUser");
+  }
+
+  string GetFileLink(string filePath, string fileName)
+  {
+    return $"/api/resource/DownloadResource?filePath={filePath}&fileName={Uri.EscapeDataString(fileName)}";
+  }
+
+  string GetDownloadResourceLink(string filePath, string fileName)
+  {
+    return $"/api/resource/DownloadResourceAndRecordActivity?resourceVersionId={resourceItem.ResourceVersionId}&nodePathId={resourceItem.NodePathId}&filePath={filePath}&fileName={Uri.EscapeDataString(fileName)}";
+  }
+
+  string GetWeblinkNavigateLink(string url)
+  {
+    return $"/api/resource/NavigateToWeblinkAndRecordActivity?resourceVersionId={resourceItem.ResourceVersionId}&nodePathId={resourceItem.NodePathId}&url={Uri.EscapeDataString(url)}";
+  }
+
+  string GetFileExtension(string filename)
+  {
+    var extension = UtilityHelper.GetFileExtension(filename);
+
+    if (string.IsNullOrEmpty(extension))
     {
-        canShowMoreDetails = !User.IsInRole("BasicUser");
+      return "-";
     }
 
-    string GetFileLink(string filePath, string fileName)
+    return extension.ToUpper();
+  }
+
+  string GetSensitiveContentUrl()
+  {
+    if (this.ViewContext.HttpContext.Request.QueryString.Value == "")
     {
-        return $"/api/resource/DownloadResource?filePath={filePath}&fileName={Uri.EscapeDataString(fileName)}";
+      return "?acceptSensitiveContent=true";
     }
-
-    string GetDownloadResourceLink(string filePath, string fileName)
+    else
     {
-        return $"/api/resource/DownloadResourceAndRecordActivity?resourceVersionId={resourceItem.ResourceVersionId}&nodePathId={resourceItem.NodePathId}&filePath={filePath}&fileName={Uri.EscapeDataString(fileName)}";
+      return this.ViewContext.HttpContext.Request.QueryString.Value + "&acceptSensitiveContent=true";
     }
-
-    string GetWeblinkNavigateLink(string url)
-    {
-        return $"/api/resource/NavigateToWeblinkAndRecordActivity?resourceVersionId={resourceItem.ResourceVersionId}&nodePathId={resourceItem.NodePathId}&url={Uri.EscapeDataString(url)}";
-    }
-
-    string GetFileExtension(string filename)
-    {
-        var extension = UtilityHelper.GetFileExtension(filename);
-
-        if (string.IsNullOrEmpty(extension))
-        {
-            return "-";
-        }
-
-        return extension.ToUpper();
-    }
-
-    string GetSensitiveContentUrl()
-    {
-        if (this.ViewContext.HttpContext.Request.QueryString.Value == "")
-        {
-            return "?acceptSensitiveContent=true";
-        }
-        else
-        {
-            return this.ViewContext.HttpContext.Request.QueryString.Value + "&acceptSensitiveContent=true";
-        }
-    }
+  }
 }
 
 <div>
-    <div class="resource-main">
+  <div class="resource-main">
 
-        @if (canShowMoreDetails && resourceItem.SensitiveContent && Model.HasCatalogueAccess)
+    @if (canShowMoreDetails && resourceItem.SensitiveContent && Model.HasCatalogueAccess)
+    {
+      <div class="sensitive-content">
+        <h2>
+          Sensitive content
+        </h2>
+        <p class="nhsuk-body-l nhsuk-u-text-align-centre">
+          This resource contains sensitive content which some people may find offensive or disturbing.
+        </p>
+        <div>
+          <a class="nhsuk-button nhsuk-button--secondary" href="@GetSensitiveContentUrl()">Show content</a>
+        </div>
+      </div>
+    }
+
+    <!-- Content Object -->
+    @if (Model.HasCatalogueAccess && !resourceItem.SensitiveContent)
+    {
+      <div>
+
+        @* Image *@
+        @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Image)
         {
-            <div class="sensitive-content">
-                <h2>
-                    Sensitive content
-                </h2>
-                <p class="nhsuk-body-l nhsuk-u-text-align-centre">
-                    This resource contains sensitive content which some people may find offensive or disturbing.
+          <div class="nhsuk-card nhsuk-bg-light-blue">
+            <div class="nhsuk-card__content nhsuk-u-padding-bottom-1">
+              <div class="image-container">
+                <img class="img-main" src="@GetFileLink(resourceItem.ImageDetails.File.FilePath, resourceItem.ImageDetails.File.FileName)" alt="@resourceItem.Title" />
+              </div>
+              <div>
+                <a class="nhsuk-button nhsuk-u-margin-top-4" href="@GetFileLink(resourceItem.ImageDetails.File.FilePath, resourceItem.ImageDetails.File.FileName)">Download this image</a>
+              </div>
+            </div>
+          </div>
+        }
+
+        @* Weblink *@
+        @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.WebLink)
+        {
+          <div class="nhsuk-card nhsuk-bg-light-blue">
+            <div class="nhsuk-card__content">
+              <p class="nhsuk-body-l nhsuk-u-margin-bottom-3">Visit site:</p>
+              @{
+                string displayText = resourceItem.WebLinkDetails.DisplayText;
+
+                if (string.IsNullOrEmpty(displayText))
+                {
+                  displayText = resourceItem.WebLinkDetails.Url;
+                }
+              }
+              <p class="nhsuk-body-l word-break__break-word"><a href="@GetWeblinkNavigateLink(resourceItem.WebLinkDetails.Url)" target="_blank">@displayText</a></p>
+            </div>
+          </div>
+        }
+
+        @* Generic File *@
+        @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
+        {
+          <div class="resource-panel-container">
+            <div class="nhsuk-card nhsuk-bg-light-blue">
+              <div class="nhsuk-card__content">
+                <p class="nhsuk-body-l nhsuk-u-margin-bottom-3">Download:</p>
+                <p class="nhsuk-body-l word-break__break-word">
+                  <span class="nhsuk-u-margin-right-4 pill @UtilityHelper.GetPillColour(resourceItem.GenericFileDetails.File.FileName)">@GetFileExtension(resourceItem.GenericFileDetails.File.FileName)</span>
+                  <a class="nhsuk-u-margin-right-4" href="@GetDownloadResourceLink(resourceItem.GenericFileDetails.File.FilePath, resourceItem.GenericFileDetails.File.FileName)">@resourceItem.GenericFileDetails.File.FileName</a> (@resourceItem.GenericFileDetails.File.FileSizeKb KB)
                 </p>
-                <div>
-                    <a class="nhsuk-button nhsuk-button--secondary" href="@GetSensitiveContentUrl()">Show content</a>
-                </div>
+              </div>
             </div>
+
+          </div>
         }
 
-        <!-- Content Object -->
-        @if (Model.HasCatalogueAccess && !resourceItem.SensitiveContent)
+        @* Article *@
+        @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Article)
         {
-            <div>
+          <div class="nhsuk-u-margin-bottom-7">@Html.Raw(resourceItem.ArticleDetails.Description)</div>
 
-                @* Image *@
-                @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Image)
+          @if (resourceItem.ArticleDetails.Files != null && resourceItem.ArticleDetails.Files.Count > 0)
+          {
+            <div class="nhsuk-card">
+              <div class="nhsuk-card__content">
+                <h2 class="nhsuk-card__heading">Documents</h2>
+                @foreach (var file in resourceItem.ArticleDetails.Files)
                 {
-                    <div class="nhsuk-card nhsuk-bg-light-blue">
-                        <div class="nhsuk-card__content nhsuk-u-padding-bottom-1">
-                            <div class="image-container">
-                                <img class="img-main" src="@GetFileLink(resourceItem.ImageDetails.File.FilePath, resourceItem.ImageDetails.File.FileName)" alt="@resourceItem.Title" />
-                            </div>
-                            <div>
-                                <a class="nhsuk-button nhsuk-u-margin-top-4" href="@GetFileLink(resourceItem.ImageDetails.File.FilePath, resourceItem.ImageDetails.File.FileName)">Download this image</a>
-                            </div>
-                        </div>
-                    </div>
+                  <p class="nhsuk-u-margin-bottom-2 word-break__break-word">
+                    <span class="nhsuk-u-margin-right-3 pill pill--small @UtilityHelper.GetPillColour(file.FileName)">@GetFileExtension(file.FileName)</span>
+                    <a class="nhsuk-u-margin-right-3" href="@GetFileLink(file.FilePath, file.FileName)">@file.FileName</a> (@file.FileSizeKb KB)
+                  </p>
                 }
-
-                @* Weblink *@
-                @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.WebLink)
-                {
-                    <div id="resourcePg" class="nhsuk-card nhsuk-bg-light-blue">
-                        <div class="nhsuk-card__content">
-                            <p class="nhsuk-body-l nhsuk-u-margin-bottom-3">Visit site:</p>
-                            @{
-                                string displayText = resourceItem.WebLinkDetails.DisplayText;
-
-                                if (string.IsNullOrEmpty(displayText))
-                                {
-                                    displayText = resourceItem.WebLinkDetails.Url;
-                                }
-                            }
-                            <p class="nhsuk-body-l word-break__break-word"><a v-on:click=checkUserCertificateAvailability(@resourceItem.Id) href="@GetWeblinkNavigateLink(resourceItem.WebLinkDetails.Url)" target="_blank">@displayText</a></p>
-                        </div>
-                    </div>
-                }
-
-                @* Html Resource *@
-                @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Html)
-                {
-                    <div id="resourcePg" class="nhsuk-card nhsuk-bg-light-blue">
-                        <div class="nhsuk-card__content">
-                            <a v-on:click=checkUserCertificateAvailability(@resourceItem.Id) href="@($"{Context.Request.Scheme}://{Context.Request.Host}/resource/html/{resourceItem.Id}/index.html")"
-                               onclick="@($"window.open(this.href, 'scormDebugWindow', 'status=no,location=no,toolbar=no,menubar=no,dependent=no,width={resourceItem.HtmlDetails.PopupWidth},height={resourceItem.HtmlDetails.PopupHeight}'); return false;")">
-                                <button class="nhsuk-button">
-                                    Launch HTML resource
-                                </button>
-                            </a>
-                            <p>This resource will launch in a new window</p>
-                        </div>
-                    </div>
-                }
-
-                @* Generic File *@
-                @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
-                {
-                    <div class="resource-panel-container">
-                        <!-- NON SCORM/AICC content-->
-                        @if (!resourceItem.GenericFileDetails.ScormAiccContent)
-                        {
-                            <div id="resourcePg" class="nhsuk-card nhsuk-bg-light-blue">
-                                <div class="nhsuk-card__content">
-                                    <p class="nhsuk-body-l nhsuk-u-margin-bottom-3">Download:</p>
-                                    <p class="nhsuk-body-l word-break__break-word">
-                                        <span class="nhsuk-u-margin-right-4 pill @UtilityHelper.GetPillColour(resourceItem.GenericFileDetails.File.FileName)">@GetFileExtension(resourceItem.GenericFileDetails.File.FileName)</span>
-                                        <a v-on:click=checkUserCertificateAvailability(@resourceItem.Id) class="nhsuk-u-margin-right-4" href="@GetDownloadResourceLink(resourceItem.GenericFileDetails.File.FilePath, resourceItem.GenericFileDetails.File.FileName)">@resourceItem.GenericFileDetails.File.FileName</a> (@resourceItem.GenericFileDetails.File.FileSizeKb KB)
-                                    </p>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <!-- SCORM/AICC content - User uploaded a zip file as a generic file and ticked the "SCORM/AICC content" checkbox -->
-                            <div class="nhsuk-card nhsuk-bg-light-blue">
-                                <div class="nhsuk-card__content">
-                                    <p>You will be able to launch SCORM/AICC elearning resources on the Learning Hub in the future.</p>
-                                    <p>In the meantime you can download this and add it to another system that supports this type of resource.</p>
-                                    <div>
-                                        <a href="@GetDownloadResourceLink(resourceItem.GenericFileDetails.File.FilePath, resourceItem.GenericFileDetails.File.FileName)" class="nhsuk-button">Download this elearning resource</a>
-                                    </div>
-
-                                    <details class="nhsuk-details nhsuk-u-margin-top-2 nhsuk-u-margin-bottom-0">
-                                        <summary class="nhsuk-details__summary">
-                                            <span class="nhsuk-details__summary-text">
-                                                Why am I unable to view e-learning resources?
-                                            </span>
-                                        </summary>
-                                        <div class="nhsuk-details__text">
-                                            <p>
-                                                TBC
-                                            </p>
-                                        </div>
-                                    </details>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                }
-
-                @* Article *@
-                @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Article)
-                {
-                    <div class="nhsuk-u-margin-bottom-7">@Html.Raw(resourceItem.ArticleDetails.Description)</div>
-
-                    @if (resourceItem.ArticleDetails.Files != null && resourceItem.ArticleDetails.Files.Count > 0)
-                    {
-                        <div class="nhsuk-card">
-                            <div class="nhsuk-card__content">
-                                <h2 class="nhsuk-card__heading">Documents</h2>
-                                @foreach (var file in resourceItem.ArticleDetails.Files)
-                                {
-                                    <p class="nhsuk-u-margin-bottom-2 word-break__break-word">
-                                        <span class="nhsuk-u-margin-right-3 pill pill--small @UtilityHelper.GetPillColour(file.FileName)">@GetFileExtension(file.FileName)</span>
-                                        <a class="nhsuk-u-margin-right-3" href="@GetFileLink(file.FilePath, file.FileName)">@file.FileName</a> (@file.FileSizeKb KB)
-                                    </p>
-                                }
-                            </div>
-                        </div>
-                    }
-                }
-
-                @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Video || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Audio || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Scorm ||
-               resourceItem.ResourceTypeEnum == ResourceTypeEnum.Case || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Assessment)
-                {
-                    if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Case)
-                    {
-                        <hr />
-                    }
-
-                    @* Video/Audio/Scorm/Case/Assessment require JavaScript - use Vue.js resource app. *@
-
-                    <div id="resourcecontainer">
-                        <router-view user-authenticated="@ViewBag.UserAuthenticated"
-                                     :media-activity-playing-event-interval-seconds="@ViewBag.MediaActivityPlayingEventIntervalSeconds"
-                                     :keep-user-session-alive-interval-seconds="@ViewBag.KeepUserSessionAliveIntervalSeconds" />
-                    </div>
-
-                    <partial name="_JavaScriptDisabled" />
-                }
+              </div>
             </div>
+          }
         }
 
-        @* Description / Additional Information *@
-        @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Case && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Assessment && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Html)
+        @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Video || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Audio || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Scorm ||
+       resourceItem.ResourceTypeEnum == ResourceTypeEnum.Case || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Assessment)
         {
-            <div class="nhsuk-u-margin-bottom-7">
-                @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Article || (resourceItem.Catalogue.RestrictedAccess && !Model.HasCatalogueAccess))
-                {
-                    <div>@Html.Raw(resourceItem.Description)</div>
-                }
+          if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Case)
+          {
+            <hr />
+          }
 
-                @if (!string.IsNullOrEmpty(resourceItem.AdditionalInformation) && Model.HasCatalogueAccess)
-                {
-                    <div class="nhsuk-inset-text">
-                        <h2>Additional information</h2>
-                        <p>@resourceItem.AdditionalInformation</p>
-                    </div>
-                }
-            </div>
+          @* Video/Audio/Scorm/Case/Assessment require JavaScript - use Vue.js resource app. *@
+
+          <div id="resourcecontainer">
+            <router-view user-authenticated="@ViewBag.UserAuthenticated"
+                         :media-activity-playing-event-interval-seconds="@ViewBag.MediaActivityPlayingEventIntervalSeconds"
+                         :keep-user-session-alive-interval-seconds="@ViewBag.KeepUserSessionAliveIntervalSeconds" />
+          </div>
+
+          <partial name="_JavaScriptDisabled" />
         }
-    </div>
+      </div>
+    }
+
+    @* Description / Additional Information *@
+    @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Case && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Assessment)
+    {
+      <div class="nhsuk-u-margin-bottom-7">
+        @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Article || (resourceItem.Catalogue.RestrictedAccess && !Model.HasCatalogueAccess))
+        {
+          <div>@Html.Raw(resourceItem.Description)</div>
+        }
+
+        @if (!string.IsNullOrEmpty(resourceItem.AdditionalInformation) && Model.HasCatalogueAccess)
+        {
+          <div class="nhsuk-inset-text">
+            <h2>Additional information</h2>
+            <p>@resourceItem.AdditionalInformation</p>
+          </div>
+        }
+      </div>
+    }
+  </div>
 </div>

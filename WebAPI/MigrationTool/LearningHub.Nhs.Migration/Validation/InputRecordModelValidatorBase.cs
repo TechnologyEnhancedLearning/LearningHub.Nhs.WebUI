@@ -1,8 +1,4 @@
-﻿// <copyright file="InputRecordModelValidatorBase.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Validation
+﻿namespace LearningHub.Nhs.Migration.Validation
 {
     using System.Collections.Generic;
     using FluentValidation;

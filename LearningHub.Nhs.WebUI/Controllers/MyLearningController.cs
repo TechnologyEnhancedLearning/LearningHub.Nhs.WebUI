@@ -1,8 +1,4 @@
-﻿// <copyright file="MyLearningController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Controllers
+﻿namespace LearningHub.Nhs.WebUI.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -133,6 +129,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 Passed = learningRequest.Passed,
                 Failed = learningRequest.Failed,
                 Downloaded = learningRequest.Downloaded,
+                Viewed = learningRequest.Viewed,
+                Launched = learningRequest.Launched,
                 CertificateEnabled = learningRequest.CertificateEnabled,
             };
 

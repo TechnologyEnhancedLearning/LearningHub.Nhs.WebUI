@@ -1,8 +1,4 @@
-﻿// <copyright file="MyLearningService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services
+﻿namespace LearningHub.Nhs.Services
 {
     using System;
     using System.Collections.Generic;
@@ -114,24 +110,16 @@ namespace LearningHub.Nhs.Services
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<MyLearningDetailedViewModel> GetActivityDetailed(int userId, MyLearningRequestModel requestModel)
         {
-            var activityQuery = this.resourceActivityRepository.GetByUserId(userId);
-
-            // Filter records by request parameters.
-            activityQuery = this.ApplyFilters(activityQuery, requestModel);
+            var activityQuery = this.resourceActivityRepository.GetByUserIdFromSP(userId, requestModel, this.settings.Value.DetailedMediaActivityRecordingStartDate).Result.OrderByDescending(r => r.ActivityStart);
 
             // Count total records.
             MyLearningDetailedViewModel viewModel = new MyLearningDetailedViewModel()
             {
-                TotalCount = requestModel.CertificateEnabled ? await activityQuery.GroupBy(x => x.ResourceVersionId).CountAsync() : activityQuery.Count(),
+                TotalCount = this.resourceActivityRepository.GetTotalCount(userId, requestModel, this.settings.Value.DetailedMediaActivityRecordingStartDate),
             };
 
-            if (requestModel.CertificateEnabled)
-            {
-               activityQuery = activityQuery.GroupBy(x => x.ResourceVersionId).OrderByDescending(x => x.Key).Select(g => g.OrderByDescending(x => x.Id).FirstOrDefault());
-            }
-
             // Return only the requested batch.
-            var activityEntities = await activityQuery.Skip(requestModel.Skip).Take(requestModel.Take).ToListAsync();
+            var activityEntities = activityQuery.Skip(requestModel.Skip).Take(requestModel.Take).ToList();
 
             viewModel.Activities = await this.PopulateMyLearningDetailedItemViewModels(activityEntities, userId);
 
@@ -169,8 +157,13 @@ namespace LearningHub.Nhs.Services
             {
                 activityQuery = activityQuery.Where(x => x.MajorVersion == majorVersion && x.MinorVersion == minorVersion);
             }
+            else
+            {
+                // filter and use the latest version only
+                activityQuery = activityQuery.Where(rv => rv.ResourceVersionId == rv.Resource.CurrentResourceVersionId);
+            }
 
-            activityQuery = activityQuery.Where(x => x.Resource.ResourceReference.FirstOrDefault() != null && x.Resource.ResourceReference.FirstOrDefault().OriginalResourceReferenceId == resourceReferenceId);
+            activityQuery = activityQuery.Where(x => x.Resource.ResourceReference.FirstOrDefault() != null && x.Resource.ResourceReference.Any(rr => rr.OriginalResourceReferenceId == resourceReferenceId));
             int totalNumberOfAccess = activityQuery.Count();
             var activityEntities = await activityQuery.OrderByDescending(x => x.Score).ThenByDescending(x => x.ActivityStart).ToListAsync();
             activityEntities.RemoveAll(x => x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && (x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded || x.ActivityStatusId == (int)ActivityStatusEnum.Launched || x.ActivityStatusId == (int)ActivityStatusEnum.InProgress));
@@ -206,7 +199,10 @@ namespace LearningHub.Nhs.Services
                             myLearningDetailedItemViewModel.ActivityDurationSeconds = 0;
                             foreach (var item in ma)
                             {
-                                myLearningDetailedItemViewModel.ActivityDurationSeconds = myLearningDetailedItemViewModel.ActivityDurationSeconds + (int)item.SecondsPlayed;
+                                if (item.SecondsPlayed.HasValue)
+                                {
+                                    myLearningDetailedItemViewModel.ActivityDurationSeconds = myLearningDetailedItemViewModel.ActivityDurationSeconds + (int)item.SecondsPlayed;
+                                }
                             }
                         }
                     }
@@ -248,14 +244,14 @@ namespace LearningHub.Nhs.Services
                     VersionStatusId = (int?)resourceActivity.ResourceVersion.VersionStatusEnum,
                 };
 
-                var latestActivityCheck = await this.resourceActivityRepository.GetAllTheActivitiesFor(resourceActivity.CreateUserId, resourceActivity.ResourceVersionId);
-                latestActivityCheck.RemoveAll(x => x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && (x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded || x.ActivityStatusId == (int)ActivityStatusEnum.Launched || x.ActivityStatusId == (int)ActivityStatusEnum.InProgress));
+                var latestActivityCheck = await this.resourceActivityRepository.GetAllTheActivitiesFromSP(resourceActivity.CreateUserId, resourceActivity.ResourceVersionId);
+                latestActivityCheck.RemoveAll(x => x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && (x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded || x.ActivityStatusId == (int)ActivityStatusEnum.Incomplete || x.ActivityStatusId == (int)ActivityStatusEnum.InProgress));
                 if (latestActivityCheck.Any() && latestActivityCheck.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
                 {
-                   latestActivityCheck = latestActivityCheck.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && x.AssessmentResourceActivity.FirstOrDefault().Score.HasValue && ((int)Math.Round(x.AssessmentResourceActivity.FirstOrDefault().Score.Value, MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark)).ToList();
+                    latestActivityCheck = latestActivityCheck.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && x.AssessmentResourceActivity.FirstOrDefault().Score.HasValue && ((int)Math.Round(x.AssessmentResourceActivity.FirstOrDefault().Score.Value, MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark)).ToList();
                 }
 
-                var expectedActivities = latestActivityCheck.Where(x => x.Id == resourceActivity.Id && (x.ActivityStatusId == ((int)ActivityStatusEnum.Completed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Launched) || x.ActivityStatusId == ((int)ActivityStatusEnum.Passed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Downloaded))).OrderByDescending(x => x.ActivityStart).FirstOrDefault();
+                var expectedActivities = latestActivityCheck.Where(x => x.Id == resourceActivity.Id && (x.ActivityStatusId == ((int)ActivityStatusEnum.Completed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Passed))).OrderByDescending(x => x.ActivityStart).FirstOrDefault();
 
                 if (latestActivityCheck.Any() && expectedActivities != null)
                 {
@@ -347,6 +343,25 @@ namespace LearningHub.Nhs.Services
 
                         var allAttempts = await this.resourceActivityRepository.GetAllTheActivitiesFor(userId, resourceActivity.ResourceVersionId);
                         var currentAttempt = allAttempts.FindIndex(a => a.Id == resourceActivity.Id) + 1;
+
+                        if (viewModel.CompletionPercentage == 100)
+                        {
+                            if (resourceActivity.ResourceVersion.AssessmentResourceVersion.AssessmentType == AssessmentTypeEnum.Informal)
+                            {
+                                viewModel.ActivityStatus = ActivityStatusEnum.Completed;
+                            }
+                            else
+                            {
+                                viewModel.ActivityStatus = viewModel.ScorePercentage >= resourceActivity.ResourceVersion.AssessmentResourceVersion.PassMark
+                                    ? ActivityStatusEnum.Passed
+                                    : ActivityStatusEnum.Failed;
+                            }
+                        }
+                        else
+                        {
+                            viewModel.ActivityStatus = ActivityStatusEnum.InProgress;
+                        }
+
                         viewModel.AssessmentDetails = new MyLearningAssessmentDetails
                         {
                             ExtraAttemptReason = activity.Reason,
@@ -361,113 +376,6 @@ namespace LearningHub.Nhs.Services
             }
 
             return viewModels;
-        }
-
-        private IQueryable<ResourceActivity> ApplyFilters(IQueryable<ResourceActivity> query, MyLearningRequestModel requestModel)
-        {
-            // Text filter - Title, Keywords or Description.
-            if (!string.IsNullOrEmpty(requestModel.SearchText))
-            {
-                query = query.Where(x => x.ResourceVersion.Title.Contains(requestModel.SearchText) ||
-                                         x.ResourceVersion.Description.Contains(requestModel.SearchText) ||
-                                         x.ResourceVersion.ResourceVersionKeyword.Any(y => y.Keyword.Contains(requestModel.SearchText)));
-            }
-
-            // Resource Type filter.
-            if (requestModel.Article || requestModel.Audio || requestModel.Elearning || requestModel.File || requestModel.Image || requestModel.Video || requestModel.Weblink || requestModel.Assessment || requestModel.Case)
-            {
-                query = query.Where(x =>
-                    (requestModel.Article && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Article) ||
-                    (requestModel.Audio && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio) ||
-                    (requestModel.Elearning && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm) ||
-                    (requestModel.File && x.Resource.ResourceTypeEnum == ResourceTypeEnum.GenericFile) ||
-                    (requestModel.Image && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Image) ||
-                    (requestModel.Video && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Video) ||
-                    (requestModel.Weblink && x.Resource.ResourceTypeEnum == ResourceTypeEnum.WebLink) ||
-                    (requestModel.Assessment && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Assessment) ||
-                    (requestModel.Case && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Case));
-            }
-
-            // Status Filter.
-            // All media activity prior to start of detailed media activity recording count as complete.
-            // All media activity after start of detailed media activity recording have to be 100% complete.
-            // Scorm treated as "in progress" when there is a launch event but no subsequent associated complete / passed / failed.
-            // Weblink, Article, Image treated as "complete" when there is a launch event.
-            if (requestModel.Complete || requestModel.Incomplete || requestModel.Passed || requestModel.Failed || requestModel.Downloaded)
-            {
-                query = query.Where(x =>
-                (requestModel.Complete && (((x.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio || x.Resource.ResourceTypeEnum == ResourceTypeEnum.Video) &&
-                                            ((x.ActivityStart.Value < this.settings.Value.DetailedMediaActivityRecordingStartDate) ||
-                                            (x.MediaResourceActivity != null && x.MediaResourceActivity.Any() && x.MediaResourceActivity.First().PercentComplete == 100)))
-                                            ||
-                                            ((x.Resource.ResourceTypeEnum == ResourceTypeEnum.WebLink || x.Resource.ResourceTypeEnum == ResourceTypeEnum.Article || x.Resource.ResourceTypeEnum == ResourceTypeEnum.Image || x.Resource.ResourceTypeEnum == ResourceTypeEnum.Case) && x.ActivityStatusId == (int)ActivityStatusEnum.Launched)
-                                            ||
-                                            (x.Resource.ResourceTypeEnum != ResourceTypeEnum.Audio && x.Resource.ResourceTypeEnum != ResourceTypeEnum.Video && x.ActivityStatusId == (int)ActivityStatusEnum.Completed))) ||
-                (requestModel.Incomplete && (((x.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio || x.Resource.ResourceTypeEnum == ResourceTypeEnum.Video) &&
-                                         x.ActivityStart.Value >= this.settings.Value.DetailedMediaActivityRecordingStartDate &&
-                                         (x.MediaResourceActivity == null || !x.MediaResourceActivity.Any() || x.MediaResourceActivity.First().PercentComplete < 100))
-                                         ||
-                                         //// Note - too slow to do this: (x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && x.ScormActivity.FirstOrDefault() != null && x.ScormActivity.First().CmiCoreLessonStatus == (int)ActivityStatusEnum.InProgress)
-                                         //// - only returning "launched" for non-media when there is no subsequent event referencing the launch.
-                                         //// (x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && x.ActivityStatusId == (int)ActivityStatusEnum.Launched)
-                                         (x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && x.ScormActivity.Any() && x.ScormActivity.First().CmiCoreLessonStatus == (int)ActivityStatusEnum.InProgress)
-                                         ||
-                                         (x.Resource.ResourceTypeEnum == ResourceTypeEnum.Assessment && x.AssessmentResourceActivity.Any() && !x.AssessmentResourceActivity.First().Score.HasValue))) ||
-                (requestModel.Passed && x.ActivityStatusId == (int)ActivityStatusEnum.Passed) ||
-                (requestModel.Passed && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Assessment && x.AssessmentResourceActivity.Any() && x.AssessmentResourceActivity.First().Score >= x.ResourceVersion.AssessmentResourceVersion.PassMark) ||
-                (requestModel.Failed && x.ActivityStatusId == (int)ActivityStatusEnum.Failed) ||
-                (requestModel.Failed && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Assessment && x.AssessmentResourceActivity.Any() && x.AssessmentResourceActivity.First().Score < x.ResourceVersion.AssessmentResourceVersion.PassMark) ||
-                (requestModel.Downloaded && x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded));
-            }
-
-            // Date Filter.
-            if (!string.IsNullOrEmpty(requestModel.TimePeriod))
-            {
-                var now = DateTime.Now.Date;
-
-                if (requestModel.TimePeriod == "dateRange")
-                {
-                    if (requestModel.StartDate.HasValue || requestModel.EndDate.HasValue)
-                    {
-                        if (requestModel.StartDate.HasValue)
-                        {
-                            query = query.Where(x => x.ActivityStart >= requestModel.StartDate);
-                        }
-
-                        if (requestModel.EndDate.HasValue)
-                        {
-                            query = query.Where(x => x.ActivityStart < requestModel.EndDate.Value.AddDays(1));
-                        }
-                    }
-                    else
-                    {
-                        throw new ArgumentException("If RequestModel.TimePeriod is set to 'dateRange', the RequestModel.StartDate and/or EndDate must also be specified.");
-                    }
-                }
-                else if (requestModel.TimePeriod == "thisWeek")
-                {
-                    // Definition of this week is anything from the Monday prior, or today if today is Monday.
-                    var firstDateOfWeek = now.FirstDateInWeek(DayOfWeek.Monday);
-                    query = query.Where(x => x.ActivityStart >= firstDateOfWeek);
-                }
-                else if (requestModel.TimePeriod == "thisMonth")
-                {
-                    // Definition of this month is anything from the 1st of the current month.
-                    query = query.Where(x => x.ActivityStart >= new DateTime(now.Year, now.Month, 1));
-                }
-                else if (requestModel.TimePeriod == "last12Months")
-                {
-                    // Definition of the last 12 months is anything from the same date 12 months ago. e.g. if today is 7th Oct 2020, then return anything from 7th Oct 2019.
-                    query = query.Where(x => x.ActivityStart > now.AddMonths(-12));
-                }
-            }
-
-            if (requestModel.CertificateEnabled)
-            {
-               query = query.Where(x => x.ResourceVersion.CertificateEnabled.Equals(true));
-            }
-
-            return query;
         }
     }
 }

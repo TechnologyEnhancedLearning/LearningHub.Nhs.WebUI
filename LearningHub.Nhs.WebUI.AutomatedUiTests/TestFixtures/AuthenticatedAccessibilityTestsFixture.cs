@@ -1,7 +1,3 @@
-// <copyright file="AuthenticatedAccessibilityTestsFixture.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
 {
     using LearningHub.Nhs.WebUI.AutomatedUiTests.TestHelpers;

@@ -1,8 +1,4 @@
-﻿// <copyright file="SeleniumServerFactory.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.AutomatedUiTests
+﻿namespace LearningHub.Nhs.WebUI.AutomatedUiTests
 {
     using System;
     using System;
@@ -31,7 +27,6 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests
         /// <summary>
         /// Root Uri.
         /// </summary>
-#pragma warning disable SA1401 // Fields should be private
         public string RootUri;
 
         /// <summary>

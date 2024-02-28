@@ -1,7 +1,3 @@
-// <copyright file="AccessibilityTestsFixture.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
 {
     using LearningHub.Nhs.WebUI.AutomatedUiTests.TestHelpers;
@@ -15,16 +11,12 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
         /// <summary>
         /// Gets the base URL for the tests.
         /// </summary>
-#pragma warning disable SA1401 // Fields should be private
         internal readonly string BaseUrl;
-#pragma warning restore SA1401 // Fields should be private
 
         /// <summary>
         /// Gets the WebDriver used for the tests.
         /// </summary>
-#pragma warning disable SA1401 // Fields should be private
         internal readonly IWebDriver Driver;
-#pragma warning restore SA1401 // Fields should be private
 
         private readonly SeleniumServerFactory factory;
 

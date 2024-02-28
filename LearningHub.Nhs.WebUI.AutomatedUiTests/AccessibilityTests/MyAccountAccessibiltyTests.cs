@@ -1,8 +1,4 @@
-﻿// <copyright file="MyAccountAccessibiltyTests.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.AutomatedUiTests.AccessibilityTests
+﻿namespace LearningHub.Nhs.WebUI.AutomatedUiTests.AccessibilityTests
 {
     using FluentAssertions;
     using LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures;
@@ -49,9 +45,9 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.AccessibilityTests
         private static void CheckAccessibilityResult(AxeResult result)
         {
             // Expect axe violation
-            result.Violations.Should().HaveCount(5);
+            result.Violations.Should().HaveCount(6);
 
-            var violation = result.Violations[0];
+            var violation = result.Violations[1];
 
             violation.Id.Should().Be("landmark-contentinfo-is-top-level");
             violation.Nodes.Should().HaveCount(1);

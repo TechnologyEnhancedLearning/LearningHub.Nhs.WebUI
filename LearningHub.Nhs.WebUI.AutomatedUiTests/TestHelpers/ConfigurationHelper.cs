@@ -1,8 +1,4 @@
-﻿// <copyright file="ConfigurationHelper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestHelpers
+﻿namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestHelpers
 {
     using Microsoft.Extensions.Configuration;
 

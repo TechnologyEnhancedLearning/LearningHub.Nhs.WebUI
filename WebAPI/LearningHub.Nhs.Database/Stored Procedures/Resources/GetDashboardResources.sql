@@ -150,7 +150,7 @@ BEGIN
 		LEFT JOIN (  SELECT DISTINCT CatalogueNodeId 
 						FROM [hub].[RoleUserGroupView] rug JOIN hub.UserUserGroup uug ON rug.UserGroupId = uug.UserGroupId
 						WHERE rug.ScopeTypeId = 1 and rug.RoleId in (1,2,3) and uug.Deleted = 0 and uug.UserId = @userId) auth ON n.Id = auth.CatalogueNodeId
-		LEFT JOIN resources.ResourceVersionRatingSummary rs ON rs.ResourceVersionId = rv.Id
+		INNER JOIN resources.ResourceVersionRatingSummary rs ON rs.ResourceVersionId = rv.Id
 		WHERE rv.VersionStatusId = 2	
 		ORDER BY rvrs.AverageRating DESC, rvrs.RatingCount DESC, rv.Title
 
@@ -207,7 +207,7 @@ BEGIN
 		LEFT JOIN (  SELECT DISTINCT CatalogueNodeId 
 						FROM [hub].[RoleUserGroupView] rug JOIN hub.UserUserGroup uug ON rug.UserGroupId = uug.UserGroupId
 						WHERE rug.ScopeTypeId = 1 and rug.RoleId in (1,2,3) and uug.Deleted = 0 and uug.UserId = @userId) auth ON n.Id = auth.CatalogueNodeId
-		LEFT JOIN resources.ResourceVersionRatingSummary rs ON rs.ResourceVersionId = rv.Id
+		INNER JOIN resources.ResourceVersionRatingSummary rs ON rs.ResourceVersionId = rv.Id
 		WHERE rv.VersionStatusId = 2
 		ORDER BY p.CreateDate DESC
 		

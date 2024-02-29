@@ -95,7 +95,7 @@
                             </template>
                             <template v-slot:tab_2>
                                 <Tick :complete="providedbyPermissionTabComplete"></Tick>
-                                Content provided by
+                                Content developed with
                             </template>
                             <template v-slot:page_2>
                                 <ContributeProvideByTab :resourceDetails="resourceDetails" :userProviders="userProviders" />

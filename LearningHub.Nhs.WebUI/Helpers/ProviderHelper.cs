@@ -22,7 +22,7 @@ namespace LearningHub.Nhs.WebUI.Helpers
 
             if (providerNames != null && providerNames.Count > 0)
             {
-                providerstring += "Provided by ";
+                providerstring += "Developed with ";
                 providerstring += string.Join(", ", providerNames.ToArray());
             }
 

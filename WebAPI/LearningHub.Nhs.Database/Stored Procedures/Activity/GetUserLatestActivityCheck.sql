@@ -33,10 +33,11 @@ BEGIN
 	,[t2].[Deleted0] as ResourceVersion_Deleted,[t2].[Description] as ResourceVersion_Description, [t2].[HasCost] as ResourceVersion_HasCost, [t2].[MajorVersion0] as ResourceVersion_MajorVersion,
 	[t2].[MinorVersion0] as ResourceVersion_MinorVersion, [t2].[PublicationId] as ResourceVersion_PublicationId ,[t2].[ResourceLicenceId] as ResourceVersion_ResourceLicenceId,[t2].[ReviewDate] ResourceVersion_ReviewDate
 	,[t2].[SensitiveContent] as ResourceVersion_SensitiveContent, [t2].[Title] as ResourceVersion_Title,[t2].[ResourceId0] as ResourceVersion_ResourceId, [t2].[VersionStatusId] as ResourceVersion_VersionStatusId
+	,[t2].[MaximumAttempts] AS ResourceVersion_MaximumAttempts, [t2].[PassMark] AS ResourceVersion_PassMark,[t2].[AssessmentType] as ResourceVersion_AssessmentResourceVersion_AssessmentType
 	--Resource version  columns ends here
 
 	--Block columns starts here
-	 ,[t10].[BlockCollectionId] as Block_BlockCollectionId, [t10].[BlockType] as Block_BlockType,[t10].[Title] as Block_Title, [t10].[Order] as Block_Order
+	  ,[t10].Id as Block_BlockId,[t10].[BlockCollectionId] as Block_BlockCollectionId, [t10].[BlockType] as Block_BlockType,[t10].[Title] as Block_Title, [t10].[Order] as Block_Order
 	--Block columns ends here
 	--Video resource version starts here
 	,[VideoResourceVersion].[AmendDate] as VideoResourcVersion_AmendDate, [VideoResourceVersion].[AmendUserId] AS VideoResourcVersion_AmendUserId , [VideoResourceVersion].[ClosedCaptionsFileId] AS VideoResourcVersion_ClosedCaptionsFileId, [VideoResourceVersion].[CreateDate] AS VideoResourcVersion_CreateDate, [VideoResourceVersion].[CreateUserId] AS VideoResourcVersion_CreateUserId,
@@ -71,6 +72,10 @@ BEGIN
 	 --Assessment Resource activity startes here
 	,[t11].[Reason] as AssessmentResourceActivity_Reason, [t11].[ResourceActivityId] as AssessmentResourceActivity_ResourceActivityId
 	,[t11].[Score] as AssessmentResourceActivity_Score
+	,[t11].[Id0] as AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id,[t11].[QuestionBlockId] as AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId,
+	 [t11].[AssessmentResourceActivityId] as AssessmentResourceActivity_AssessmentResourceActivityInteraction_AssessmentResourceActivityId
+	,[t11].[AssessmentResourceActivityId] as AssessmentResourceActivity_AssessmentResourceActivityId
+	,[t11].[Id] as  AssessmentResourceActivity_Id
 
 	--Assessment resource activity ends here
 

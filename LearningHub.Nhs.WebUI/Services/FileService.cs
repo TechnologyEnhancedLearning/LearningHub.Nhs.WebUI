@@ -1,7 +1,9 @@
 ﻿namespace LearningHub.Nhs.WebUI.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using Azure.Storage.Files.Shares;
     using Azure.Storage.Files.Shares.Models;
@@ -17,6 +19,7 @@
     {
         private readonly Settings settings;
         private ShareClient shareClient;
+        private ShareClient archiveShareClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileService"/> class.
@@ -38,6 +41,50 @@
                     options.Retry.Delay = TimeSpan.FromSeconds(10);
 
                     this.shareClient = new ShareClient(this.settings.AzureFileStorageConnectionString, this.settings.AzureFileStorageResourceShareName, options);
+
+                    if (!this.shareClient.Exists())
+                    {
+                        throw new Exception($"Unable to access azure file storage resource {this.settings.AzureFileStorageResourceShareName}");
+                    }
+                }
+
+                return this.shareClient;
+            }
+        }
+
+        private ShareClient OutputArchiveShareClient
+        {
+            get
+            {
+                if (this.archiveShareClient == null)
+                {
+                    var options = new ShareClientOptions();
+                    options.Retry.MaxRetries = 3;
+                    options.Retry.Delay = TimeSpan.FromSeconds(10);
+
+                    this.archiveShareClient = new ShareClient(this.settings.AzureContentArchiveStorageConnectionString, this.settings.AzureFileStorageResourceShareName, options);
+
+                    if (!this.shareClient.Exists())
+                    {
+                        throw new Exception($"Unable to access azure file storage resource {this.settings.AzureFileStorageResourceShareName}");
+                    }
+                }
+
+                return this.shareClient;
+            }
+        }
+
+        private ShareClient InputArchiveShareClient
+        {
+            get
+            {
+                if (this.archiveShareClient == null)
+                {
+                    var options = new ShareClientOptions();
+                    options.Retry.MaxRetries = 3;
+                    options.Retry.Delay = TimeSpan.FromSeconds(10);
+
+                    this.archiveShareClient = new ShareClient(this.settings.AzureSourceArchiveStorageConnectionString, this.settings.AzureFileStorageResourceShareName, options);
 
                     if (!this.shareClient.Exists())
                     {
@@ -123,6 +170,105 @@
             await fileClient.UploadAsync(fileBytes);
 
             return directoryRef;
+        }
+
+        /// <summary>
+        /// The MoveOutPutDirectoryToArchive.
+        /// </summary>
+        /// <param name="allDirectoryRef">The directoryRefes.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task MoveOutPutDirectoryToArchive(List<string> allDirectoryRef)
+        {
+            if (allDirectoryRef.Any())
+            {
+                foreach (var directoryRef in allDirectoryRef)
+                {
+                    var directory = this.ShareClient.GetDirectoryClient(directoryRef);
+                    var archiveDirectory = this.OutputArchiveShareClient.GetDirectoryClient(directoryRef);
+
+                    await foreach (var fileItem in directory.GetFilesAndDirectoriesAsync())
+                    {
+                        var sourceFileClient = directory.GetFileClient(directoryRef);
+
+                        archiveDirectory.CreateIfNotExists();
+                        var destinationFileClient = archiveDirectory.GetFileClient(fileItem.Name);
+                        var uri = sourceFileClient.GenerateSasUri(Azure.Storage.Sas.ShareFileSasPermissions.Read, DateTime.UtcNow.AddHours(24));
+
+                        await destinationFileClient.StartCopyAsync(uri);
+
+                        await WaitForCopyAsync(destinationFileClient);
+                    }
+
+                    if (await directory.ExistsAsync())
+                    {
+                        foreach (var fileItem in directory.GetFilesAndDirectories())
+                        {
+                            var sourceFileClient = directory.GetFileClient(fileItem.Name);
+                            await sourceFileClient.DeleteIfExistsAsync();
+                        }
+
+                        await directory.DeleteAsync();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The MoveInPutDirectoryToArchive.
+        /// </summary>
+        /// <param name="allDirectoryRef">The directoryRefes.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task MoveInPutDirectoryToArchive(List<string> allDirectoryRef)
+        {
+            if (allDirectoryRef.Any())
+            {
+                foreach (var directoryRef in allDirectoryRef)
+                {
+                    var directory = this.ShareClient.GetDirectoryClient(directoryRef);
+                    var archiveDirectory = this.InputArchiveShareClient.GetDirectoryClient(directoryRef);
+
+                    await foreach (var fileItem in directory.GetFilesAndDirectoriesAsync())
+                    {
+                        var sourceFileClient = directory.GetFileClient(directoryRef);
+
+                        archiveDirectory.CreateIfNotExists();
+                        var destinationFileClient = archiveDirectory.GetFileClient(fileItem.Name);
+                        var uri = sourceFileClient.GenerateSasUri(Azure.Storage.Sas.ShareFileSasPermissions.Read, DateTime.UtcNow.AddHours(24));
+
+                        await destinationFileClient.StartCopyAsync(uri);
+
+                        await WaitForCopyAsync(destinationFileClient);
+                    }
+
+                    if (await directory.ExistsAsync())
+                    {
+                        foreach (var fileItem in directory.GetFilesAndDirectories())
+                        {
+                            var sourceFileClient = directory.GetFileClient(fileItem.Name);
+                            await sourceFileClient.DeleteIfExistsAsync();
+                        }
+
+                        await directory.DeleteAsync();
+                    }
+                }
+            }
+        }
+
+        private static async Task WaitForCopyAsync(ShareFileClient fileClient)
+        {
+            // Wait for the copy operation to complete
+            ShareFileProperties copyInfo;
+            do
+            {
+                await Task.Delay(500); // Delay before checking the status again
+                copyInfo = await fileClient.GetPropertiesAsync().ConfigureAwait(false);
+            }
+            while (copyInfo.CopyStatus == CopyStatus.Pending);
+
+            if (copyInfo.CopyStatus != CopyStatus.Success)
+            {
+                throw new InvalidOperationException($"Copy failed: {copyInfo.CopyStatus}");
+            }
         }
     }
 }

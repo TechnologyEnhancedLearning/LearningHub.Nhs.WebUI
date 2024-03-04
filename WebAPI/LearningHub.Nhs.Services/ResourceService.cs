@@ -1334,19 +1334,21 @@ namespace LearningHub.Nhs.Services
                 var extendedResourceVersion = await this.GetResourceVersionExtendedViewModelAsync(rv.Id);
                 if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Scorm)
                 {
-                    fileDetails = await this.GetFileAsync((int)extendedResourceVersion.ScormDetails.FileId);
-                    retVal.Add(fileDetails.FilePath);
+                    retVal.Add(extendedResourceVersion.ScormDetails.ContentFilePath);
                 }
                 else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Html)
                 {
-                    fileDetails = await this.GetFileAsync(extendedResourceVersion.HtmlDetails.FileId);
-                    retVal.Add(fileDetails.FilePath);
+                    retVal.Add(extendedResourceVersion.HtmlDetails.ContentFilePath);
                 }
-                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Audio || extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Video)
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Audio)
                 {
-                    fileDetails = await this.GetFileAsync(extendedResourceVersion.AudioDetails.FileId);
-                    retVal.Add(fileDetails.FilePath);
-                    retVal.Add(fileDetails.VideoFile?.AzureAssetOutputFilePath);
+                    retVal.Add(extendedResourceVersion.AudioDetails.File.FilePath);
+                    retVal.Add(extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Video)
+                {
+                    retVal.Add(extendedResourceVersion.VideoDetails.File.FilePath);
+                    retVal.Add(extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath);
                 }
             }
 

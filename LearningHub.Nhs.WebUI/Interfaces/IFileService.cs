@@ -1,5 +1,6 @@
 ﻿namespace LearningHub.Nhs.WebUI.Interfaces
 {
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
     using Azure.Storage.Files.Shares.Models;
@@ -33,5 +34,19 @@
         /// <param name="directoryRef">The directoryRef.</param>
         /// <returns>The .</returns>
         Task<string> ProcessFile(Stream fileBytes, string fileName, string directoryRef = "");
+
+        /// <summary>
+        /// The MoveOutPutDirectoryToArchive.
+        /// </summary>
+        /// <param name="allDirectoryRef">The directoryRefes.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task MoveOutPutDirectoryToArchive(List<string> allDirectoryRef);
+
+        /// <summary>
+        /// The MoveInPutDirectoryToArchive.
+        /// </summary>
+        /// <param name="allDirectoryRef">The directoryRefes.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task MoveInPutDirectoryToArchive(List<string> allDirectoryRef);
     }
 }

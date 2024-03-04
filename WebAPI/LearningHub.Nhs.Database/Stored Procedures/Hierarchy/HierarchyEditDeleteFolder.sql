@@ -7,6 +7,7 @@
 --
 -- 25-08-2021  KD	Initial Revision.
 -- 04-10-2021  KD   Correction for updating display order of sibling nodes on delete.
+-- 22-11-2023  SA	Changes for the Catalogue structure - folders always displayed at the top.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditDeleteFolder] 
 (
@@ -24,27 +25,21 @@ BEGIN
 		BEGIN TRAN	
 
 		DECLARE @AmendDate datetimeoffset(7) = ISNULL(TODATETIMEOFFSET(DATEADD(mi, @UserTimezoneOffset, GETUTCDATE()), @UserTimezoneOffset), SYSDATETIMEOFFSET())
-		
+		DECLARE @HierarchyEditId int, @ParentNodeId INT,@DelDisplayOrder INT
+		SELECT @HierarchyEditId = HierarchyEditId, @DelDisplayOrder = DisplayOrder FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @HierarchyEditDetailId
+		SELECT @ParentNodeId = NodeId from [hierarchy].[HierarchyEditDetail] Where Id = @HierarchyEditDetailId
 		-- Decrement display order of sibling nodes with higher display order
-		UPDATE 
-			hed
+		UPDATE  
+			[hierarchy].[HierarchyEditDetail] 
 		SET
-			HierarchyEditDetailOperationId = CASE WHEN hed.HierarchyEditDetailOperationId IS NULL THEN 2 ELSE hed.HierarchyEditDetailOperationId END,
-			DisplayOrder = hed.DisplayOrder - 1,
-			AmendUserId = @UserId,
+			HierarchyEditDetailOperationId = CASE WHEN HierarchyEditDetailOperationId IS NULL THEN 2 ELSE HierarchyEditDetailOperationId END,
+			DisplayOrder = DisplayOrder - 1,
 			AmendDate = @AmendDate
-		FROM
-			[hierarchy].[HierarchyEditDetail] hed
-		INNER JOIN
-			[hierarchy].[HierarchyEditDetail] hed_delete ON hed.HierarchyEditId = hed_delete.HierarchyEditId AND hed.ParentNodeId = hed_delete.ParentNodeId
-		INNER JOIN
-			hierarchy.FolderNodeVersion fnv ON hed.NodeVersionId = fnv.NodeVersionId
-		WHERE	
-			hed_delete.Id = @HierarchyEditDetailId
-			AND hed.DisplayOrder > hed_delete.DisplayOrder
-			AND hed.ResourceId IS NULL
-			AND hed.Deleted = 0
-			AND fnv.Deleted = 0
+			where 
+			 HierarchyEditId = @HierarchyEditId AND
+			 ParentNodeId =  @ParentNodeId
+			 AND DisplayOrder > @DelDisplayOrder
+			AND Deleted = 0		
 
 		-- Delete folder node:
 		-- If the folder node is newly added within the hierarchy edit then delete, otherwise

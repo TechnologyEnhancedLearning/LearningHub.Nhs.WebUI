@@ -7,11 +7,12 @@
 --
 -- 25-08-2021  KD	Initial Revision.
 -- 05-01-2021  KD	IT2 - refresh hierarchy.HierarchyEditNodeResourceLookup if required.
+-- 22-11-2023  SA	Changes for the Catalogue structure - folders always displayed at the top.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditMoveNode]
 (
-	@HierarchyEditDetailId int,
-	@MoveToHierarchyEditDetailId int,
+	@HierarchyEditDetailId int, 
+	@MoveToHierarchyEditDetailId int, 
 	@UserId int,
 	@UserTimezoneOffset int = NULL
 )
@@ -26,10 +27,10 @@ BEGIN
 
 		DECLARE @AmendDate datetimeoffset(7) = ISNULL(TODATETIMEOFFSET(DATEADD(mi, @UserTimezoneOffset, GETUTCDATE()), @UserTimezoneOffset), SYSDATETIMEOFFSET())
 
-		DECLARE @HierarchyEditId int
+		DECLARE @HierarchyEditId int, @MoveToParentNodeId INT
 		DECLARE @NodeId int
 		SELECT @HierarchyEditId = HierarchyEditId, @NodeId = NodeId FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @HierarchyEditDetailId
-
+		SELECT @MoveToParentNodeId = NodeId from [hierarchy].[HierarchyEditDetail] Where Id = @MoveToHierarchyEditDetailId
 		-- Decrement display order of sibling nodes with higher display order.
 		UPDATE 
 			hed
@@ -45,28 +46,22 @@ BEGIN
 		WHERE	
 			hed_moveFrom.Id = @HierarchyEditDetailId
 			AND hed.DisplayOrder > hed_moveFrom.DisplayOrder
-			AND hed.ResourceId IS NULL
 			AND hed.Deleted = 0
 			AND hed_moveFrom.Deleted = 0
 
 		-- Increment display order of nodes in destination.
 		UPDATE  
-			hed_moveTo_children 
+			[hierarchy].[HierarchyEditDetail] 
 		SET
-			HierarchyEditDetailOperationId = CASE WHEN hed_moveTo_children.HierarchyEditDetailOperationId IS NULL THEN 2 ELSE hed_moveTo_children.HierarchyEditDetailOperationId END,
-			DisplayOrder = hed_moveTo_children.DisplayOrder + 1,
+			HierarchyEditDetailOperationId = CASE WHEN HierarchyEditDetailOperationId IS NULL THEN 2 ELSE HierarchyEditDetailOperationId END,
+			DisplayOrder = DisplayOrder + 1,
 			AmendDate = @AmendDate
-		FROM
-			[hierarchy].[HierarchyEditDetail] hed_moveTo
-		INNER JOIN
-			[hierarchy].[HierarchyEditDetail] hed_moveTo_children ON hed_moveTo_children.HierarchyEditId = hed_moveTo.HierarchyEditId
-															AND hed_moveTo_children.ParentNodeId = hed_moveTo.NodeId
-															AND ISNULL(hed_moveTo_children.HierarchyEditDetailOperationId, 0) != 3 -- ignore deletes.
-		WHERE	
-			hed_moveTo.Id = @MoveToHierarchyEditDetailId
-			AND hed_moveTo.ResourceId IS NULL
-			AND hed_moveTo.Deleted = 0
-			AND hed_moveTo_children.Deleted = 0
+			where 
+			 HierarchyEditId = @HierarchyEditId AND
+			 ParentNodeId =  @MoveToParentNodeId
+			 AND ISNULL(HierarchyEditDetailOperationId, 0) != 3
+			AND Deleted = 0		
+
 
 		-- Move the node.
 		-- Is there an existing NodeLink between the Nodes (i.e. from delete / move away & reinstate scenario)

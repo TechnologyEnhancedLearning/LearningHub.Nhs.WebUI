@@ -117,6 +117,6 @@ BEGIN
 			AND rv.Deleted = 0
 
 	) AS t1
-	ORDER BY  NodeTypeId DESC,DisplayOrder ASC
+	ORDER BY  DisplayOrder ASC
 END
 GO

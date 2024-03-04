@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 19-10-2021  RS	Initial Revision.
+-- 01-09-2023  SA	Changes for the Catalogue structure - folders always displayed at the top.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[MoveResource] 
 (
@@ -75,7 +76,7 @@ BEGIN
 		END
 
 		-- Different implementation required for draft and published resources.
-		DECLARE @VersionStatusId int
+		DECLARE @VersionStatusId int, @DestinationHierarchyEditDetailId INT,@SourceHierarchyEditDetailId INT, @HierarchyEditId INT
 		SELECT	@VersionStatusId = VersionStatusId 
 		FROM	hierarchy.NodeResource 
 		WHERE	NodeId = @SourceNodeId AND ResourceId = @ResourceId AND Deleted = 0
@@ -101,6 +102,8 @@ BEGIN
 					AND	VersionStatusId = 1
 					AND	Deleted = 0
 
+			SELECT @SourceHierarchyEditDetailId = Id, @HierarchyEditId = HierarchyEditId  FROM [hierarchy].[HierarchyEditDetail] Where NodeId = @SourceNodeId and ResourceId = @ResourceId
+			SELECT @DestinationHierarchyEditDetailId = Id  FROM [hierarchy].[HierarchyEditDetail] Where NodeId = @DestinationNodeId 
 			IF @DestinationNodeId > 1
 			BEGIN
 				-- Update NodeResources in destination node which will appear after this one - increment by 1.
@@ -113,6 +116,14 @@ BEGIN
 				-- Update NodeResources in source node which appeared after this one - decrement by 1.
 				UPDATE [hierarchy].[NodeResource] SET DisplayOrder = DisplayOrder - 1, AmendDate = @AmendDate, AmendUserId = @UserId 
 				WHERE NodeId = @SourceNodeId AND Deleted = 0 AND DisplayOrder > @SourceDisplayOrder
+
+				UPDATE [hierarchy].[HierarchyEditDetail] SET NodeId = @DestinationNodeId, DisplayOrder = DisplayOrder + 1 ,AmendDate = @AmendDate, AmendUserId = @UserId 
+				WHERE NodeId = @SourceNodeId AND Id = @SourceHierarchyEditDetailId
+
+				UPDATE HED SET HED.DisplayOrder = NR.DisplayOrder 
+				 FROM [hierarchy].[HierarchyEditDetail] HED INNER JOIN 
+				 hierarchy.NodeResource NR ON NR.NodeId = HED.ParentNodeId AND NR.ResourceId= HED.ResourceId
+				 WHERE HED.ParentNodeId = @SourceNodeId AND NR.Deleted = 0 AND HED.HierarchyEditId = @HierarchyEditId
 			END
 		END
 

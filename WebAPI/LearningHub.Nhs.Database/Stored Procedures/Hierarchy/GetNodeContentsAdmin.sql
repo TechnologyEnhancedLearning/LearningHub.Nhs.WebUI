@@ -115,7 +115,7 @@ BEGIN
 		INNER JOIN 
 			resources.ResourceVersion rv ON rv.Id = hed.ResourceVersionId
 		LEFT JOIN 
-			resources.ResourceReference rr ON rr.ResourceId = hed.ResourceId AND rr.Deleted = 0
+			resources.ResourceReference rr ON rr.ResourceId = hed.ResourceId AND rr.Deleted = 0 AND rr.NodePathId = hed.NodeId
 		LEFT JOIN 
 			hierarchy.NodePath np ON rr.NodePathId = np.Id
 								  AND np.Id NOT IN (SELECT np.Id FROM hierarchy.NodePath np INNER JOIN [hub].[ExternalOrganisation] eo ON eo.NodeId = np.NodeId)

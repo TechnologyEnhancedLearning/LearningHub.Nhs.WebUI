@@ -187,7 +187,7 @@
                 return this.item.nodeTypeId > 0;
             },
             orderedChildren: function (): NodeContentAdminModel[] {
-                return _.orderBy(this.childNodeList, ['nodeTypeId', 'displayOrder'], ['desc', 'asc'])
+                return _.orderBy(this.childNodeList, ['displayOrder'], ['asc'])
             },
             childrenLoaded: function (): boolean {
                 return this.item.childrenLoaded;
@@ -271,14 +271,14 @@
         methods: {
             recomputeNodeOptions: function () {
                 this.canMoveNodeUp = this.item.displayOrder > 1;
-                this.canMoveNodeDown = this.item.parent && this.item.displayOrder < this.item.parent.children.filter(c => c.nodeTypeId > 0).length;
+                this.canMoveNodeDown = this.item.parent && (this.item.parent.children.filter(c => c.displayOrder > ((this.item.displayOrder))).length > 0);
                 this.canDeleteNode = !this.item.hasResourcesInBranchInd;
                 this.canEditNode = true;
                 this.canMoveNode = this.item.parent != null;
             },
             recomputeResourceOptions: function () {
                 this.canMoveResourceUp = this.item.displayOrder > 1;
-                this.canMoveResourceDown = this.item.parent && this.item.displayOrder < this.item.parent.children.filter(c => c.nodeTypeId === 0).length;
+                this.canMoveResourceDown = this.item.parent && (this.item.parent.children.filter(c => c.displayOrder > ((this.item.displayOrder))).length > 0);
                 this.canMoveResource = this.item.versionStatusId != VersionStatus.PUBLISHING;
             },
             onDeleteFolder(event: MouseEvent) {
@@ -338,10 +338,10 @@
                 this.$store.commit('contentStructureState/cancelMoveNode');
             },
             onMoveResourceUp: function () {
-                this.$store.dispatch('contentStructureState/moveResourceUp', { node: this.item });
+                this.$store.dispatch('contentStructureState/moveNodeUp', { node: this.item });
             },
             onMoveResourceDown: function () {
-                this.$store.dispatch('contentStructureState/moveResourceDown', { node: this.item });
+                this.$store.dispatch('contentStructureState/moveNodeDown', { node: this.item });
             },
             onInitiateMoveResource: function () {
                 this.$store.commit('contentStructureState/setMovingResource', { node: this.item });

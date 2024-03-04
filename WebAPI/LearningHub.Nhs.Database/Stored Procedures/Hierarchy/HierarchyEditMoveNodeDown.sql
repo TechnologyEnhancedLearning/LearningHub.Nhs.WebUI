@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 25-08-2021  KD	Initial Revision.
+-- 01-09-2023  SA	Changes for the Catalogue structure - folders always displayed at the top.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditMoveNodeDown] 
 (
@@ -24,21 +25,13 @@ BEGIN
 
 		DECLARE @AmendDate datetimeoffset(7) = ISNULL(TODATETIMEOFFSET(DATEADD(mi, @UserTimezoneOffset, GETUTCDATE()), @UserTimezoneOffset), SYSDATETIMEOFFSET())
 
-		DECLARE @siblingHierarchyEditDetailId int
-		SELECT 
-			@SiblingHierarchyEditDetailId = hedSibling.Id
-		FROM
-			[hierarchy].[HierarchyEditDetail] hed
-		INNER JOIN
-			[hierarchy].[HierarchyEditDetail] hedSibling ON hed.HierarchyEditId = hedSibling.HierarchyEditId
-															AND hed.ParentNodeId = hedSibling.ParentNodeId 
-															AND hedSibling.DisplayOrder = hed.DisplayOrder + 1
-															AND hedSibling.ResourceId IS NULL
-		WHERE
-			hed.Id = @HierarchyEditDetailId
-			AND hed.Deleted = 0
-			AND hedSibling.Deleted = 0
+		DECLARE @siblingHierarchyEditDetailId int, @parentnodeId INT ,@currentDisplayOrder INT,@HierarchyEditId INT
 
+		SELECT @parentnodeId = ParentNodeId,@CurrentDisplayOrder = DisplayOrder,@HierarchyEditId = HierarchyEditId from [hierarchy].[HierarchyEditDetail] Where Id = @HierarchyEditDetailId
+
+		SELECT @SiblingHierarchyEditDetailId = Id FROM [hierarchy].[HierarchyEditDetail] 
+										WHERE (ParentNodeId = @parentnodeId OR (ParentNodeId IS NULL AND ResourceId IS NOT NULL)) 
+										AND HierarchyEditId = @HierarchyEditId AND DisplayOrder = (@CurrentDisplayOrder + 1)
 		UPDATE 
 			hed
 		SET
@@ -51,13 +44,10 @@ BEGIN
 			AmendDate = @AmendDate
 		FROM
 			[hierarchy].[HierarchyEditDetail] hed
-		INNER JOIN
-			hierarchy.FolderNodeVersion fnv ON hed.NodeVersionId = fnv.NodeVersionId
 		WHERE	
 			(hed.Id = @HierarchyEditDetailId
 			OR hed.Id = @SiblingHierarchyEditDetailId)
 			AND hed.Deleted = 0
-			AND fnv.Deleted = 0
 
 		COMMIT
 

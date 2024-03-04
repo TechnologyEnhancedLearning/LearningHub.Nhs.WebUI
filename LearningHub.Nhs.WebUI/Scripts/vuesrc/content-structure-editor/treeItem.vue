@@ -193,7 +193,7 @@
                 return this.item.nodeTypeId > 0;
             },
             orderedChildren: function (): NodeContentEditorModel[] {
-                return _.orderBy(this.childNodeList, ['nodeTypeId', 'displayOrder'], ['desc', 'asc'])
+                return _.orderBy(this.childNodeList, ['displayOrder'], ['asc'])
             },
             childrenLoaded: function (): boolean {
                 return this.item.childrenLoaded;
@@ -276,6 +276,7 @@
                 if (this.isNode && this.item.nodeId) {
                     // Automatically horizontally scroll the treeview if user opens a folder whose left edge is greater than 40% from the left.
                     if (!this.isOpen) {
+                        this.item.childrenLoaded = false;
                         var viewportWidth = $(window).width();
                         var treenode = $('#treenode' + this.item.nodeId);
                         if (treenode.position()) {

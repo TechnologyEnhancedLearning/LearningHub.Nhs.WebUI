@@ -62,6 +62,7 @@ BEGIN
 				BEGIN
 					-- Update DisplayOrder of NodeResources in destination node which will appear after this one - increment by 1.
 					UPDATE [hierarchy].[NodeResource] SET DisplayOrder = DisplayOrder + 1, AmendDate = @AmendDate WHERE NodeId = @NodeId AND Deleted = 0
+					UPDATE [hierarchy].NodeLink SET DisplayOrder = DisplayOrder + 1, AmendDate = @AmendDate, AmendUserId = @UserId WHERE ParentNodeId = @NodeId AND Deleted = 0 
 				END
 			
 				-- Create new draft NodeResource
@@ -124,6 +125,7 @@ BEGIN
 					-- Update DisplayOrder of NodeResources in destination node which will appear after this one - increment by 1.
 					UPDATE [hierarchy].[NodeResource] SET DisplayOrder = DisplayOrder + 1, AmendDate = @AmendDate, AmendUserId = @UserId 
 					WHERE NodeId = @NodeId AND Deleted = 0
+					UPDATE [hierarchy].NodeLink SET DisplayOrder = DisplayOrder + 1, AmendDate = @AmendDate, AmendUserId = @UserId WHERE ParentNodeId = @NodeId AND Deleted = 0 
 				END
 			
 				-- Update the existing draft NodeResource to point to the new node.

@@ -10,6 +10,7 @@
 --					Addition of hierarchy.HierarchyEditNodeResourceLookup to provide
 --					details of Resource placement within a HierarchyEdit (for all Resource statuses)
 -- 12-12-2022  DB	Addition of call to hierarchy.HierarchyEditHouseKeeping to remove old temporary data.
+-- 01-09-2023  SA	Changes for the Catalogue structure - folders always displayed at the top.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditCreate]
 (
@@ -25,7 +26,7 @@ BEGIN
 
 	BEGIN TRY
 
-		-- Tidy up previous temporary hierarchy data for this root node.
+	    -- Tidy up previous temporary hierarchy data for this root node.
 		Exec hierarchy.HierarchyEditHouseKeeping @RootNodeId
 
 		BEGIN TRAN	
@@ -144,12 +145,13 @@ BEGIN
 			NULL AS HierarchyEditDetailOperationId,													
 			hed.NodeId,
 			hed.NodeVersionId,
-			NULL AS ParentNodeId,
+			hed.NodeId AS ParentNodeId,
 			NULL AS NodeLinkId,
 			r.Id AS ResourceId,
 			CASE WHEN r.CurrentResourceVersionId IS NOT NULL THEN r.CurrentResourceVersionId ELSE rv.Id END AS ResourceVersionId,
 			nr.Id AS NodeResourceId,
 			nr.DisplayOrder AS DisplayOrder,
+		
 			hed.InitialNodePath,
 			0 AS Deleted,
 			@UserId AS CreateUserId,
@@ -159,7 +161,7 @@ BEGIN
 		FROM
 			[hierarchy].[HierarchyEditDetail] hed
 		INNER JOIN
-			hierarchy.NodeResource nr ON hed.NodeId = nr.NodeId
+			hierarchy.NodeResource nr ON hed.NodeId = nr.NodeId		
 		INNER JOIN	
 			resources.[Resource] r ON nr.ResourceId = r.Id
 		LEFT JOIN
@@ -168,7 +170,21 @@ BEGIN
 			hed.HierarchyEditId = @HierarchyEditId
 			AND nr.Deleted = 0
 			AND r.Deleted = 0
-	
+
+		;WITH CTEDisplayOrder AS
+        (
+		  select Id as HieracyEditDetailID, 
+		  ROW_NUMBER ()  over (partition by  (ParentNodeId) order by DisplayOrder) DisplayOrder,
+		  ParentNodeId FROM [hierarchy].[HierarchyEditDetail]
+          WHERE HierarchyEditId = @HierarchyEditId
+        )
+		 -- Update the DisplayOrder in the HierarchyEditDetail table based on the parent node id
+        UPDATE hed
+        SET DisplayOrder = CD.DisplayOrder 
+        FROM [hierarchy].[HierarchyEditDetail] hed
+        INNER JOIN CTEDisplayOrder CD ON hed.ParentNodeId = CD.ParentNodeId and hed.Id = CD.HieracyEditDetailID
+        WHERE hed.HierarchyEditId = @HierarchyEditId	     
+
 		------------------------------------------------------------ 
 		-- Populate HierarchyEditNodeResourceLookup
 		----------------------------------------------------------

@@ -132,10 +132,11 @@ BEGIN
 			@AmendUserId, 
 			@AmendDate)
 
-		-- Increment DisplayOrder on existing NodeResources if node is not the Community Contributions catalogue.
+		 --Increment DisplayOrder on existing NodeResources if node is not the Community Contributions catalogue.
 		IF @NodeId > 1
 		BEGIN
 			UPDATE [hierarchy].[NodeResource] SET DisplayOrder = DisplayOrder + 1, AmendDate = @AmendDate, AmendUserId = @AmendUserId WHERE NodeId = @NodeId AND Deleted = 0 AND ResourceId != @ResourceId
+			UPDATE [hierarchy].NodeLink SET DisplayOrder = DisplayOrder + 1, AmendDate = @AmendDate, AmendUserId = @AmendUserId WHERE ParentNodeId = @NodeId AND Deleted = 0 
 		END
 
 	END

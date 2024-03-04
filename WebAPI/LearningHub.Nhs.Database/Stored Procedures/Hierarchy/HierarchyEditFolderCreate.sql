@@ -33,7 +33,7 @@ BEGIN
 		EXECUTE [hierarchy].[FolderNodeVersionCreate] @Name, @Description, @CreatedNodeVersionId OUTPUT
 
 		-- Create new HierarchyEditDetail with details of the link to parent node.
-		UPDATE [hierarchy].[HierarchyEditDetail] SET DisplayOrder = DisplayOrder + 1 WHERE ParentNodeId = @ParentNodeId AND HierarchyEditId = @HierarchyEditId AND ResourceId IS NULL
+		UPDATE [hierarchy].[HierarchyEditDetail] SET DisplayOrder = DisplayOrder + 1 WHERE ParentNodeId = @ParentNodeId AND HierarchyEditId = @HierarchyEditId 
 
 		INSERT INTO [hierarchy].[HierarchyEditDetail](HierarchyEditId,
 														HierarchyEditDetailTypeId,

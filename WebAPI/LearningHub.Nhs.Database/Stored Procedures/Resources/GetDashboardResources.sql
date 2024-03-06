@@ -16,6 +16,7 @@
 -- 27 Sep 2023  HV  Included Paging and user resource activity
 -- 08 Nov 2023  OA  Fixed latest resource activity entry selection(with updated logic for media activities) and  status check for incomplete assessment.
 -- 17 Jan 2024  SA  Changes to accomadate activity status changes
+-- 27 Feb 2024  SS  Fixed missing In progress resources in the My Accessed Learning tray issue
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [resources].[GetDashboardResources]

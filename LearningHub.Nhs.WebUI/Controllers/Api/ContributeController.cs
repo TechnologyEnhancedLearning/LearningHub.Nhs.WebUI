@@ -228,7 +228,7 @@
             var validationResult = await this.contributeService.DeleteResourceVersionAsync(resourceVersionId);
             if (validationResult.IsValid)
             {
-                _ = Task.Run(async () => { await this.PurgeResourceFile(associatedFile); });
+                _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(associatedFile); });
             }
 
             return this.Ok(validationResult);
@@ -607,45 +607,6 @@
         private async Task<bool> UserCanEditCatalogue(int catalogueId)
         {
             return await this.catalogueService.CanCurrentUserEditCatalogue(catalogueId);
-        }
-
-        private async Task PurgeResourceFile(ResourceVersionExtendedViewModel vm)
-        {
-            if (vm != null)
-            {
-                var allContentPath = new List<string>();
-                var allFilePath = new List<string>();
-                if (vm.ScormDetails != null)
-                {
-                    allContentPath.Add(vm.ScormDetails.ContentFilePath);
-                }
-                else if (vm.GenericFileDetails != null)
-                {
-                    allFilePath.Add(vm.GenericFileDetails.File.FilePath);
-                }
-                else if (vm.HtmlDetails != null)
-                {
-                    allContentPath.Add(vm.HtmlDetails.ContentFilePath);
-                }
-                else if (vm.ImageDetails != null)
-                {
-                    allFilePath.Add(vm.ImageDetails.File?.FilePath);
-                }
-                else if (vm.ArticleDetails != null)
-                {
-                    var files = vm.ArticleDetails.Files.ToList();
-                    if (files.Any())
-                    {
-                        foreach (var file in files)
-                        {
-                            allFilePath.Add(file.FilePath);
-                        }
-                    }
-                }
-
-                await this.fileService.MoveInPutDirectoryToArchive(allFilePath);
-                await this.fileService.MoveOutPutDirectoryToArchive(allContentPath);
-            }
         }
     }
 }

@@ -4,6 +4,7 @@
     using System.IO;
     using System.Threading.Tasks;
     using Azure.Storage.Files.Shares.Models;
+    using LearningHub.Nhs.Models.Resource;
 
     /// <summary>
     /// Defines the <see cref="IFileService" />.
@@ -36,17 +37,10 @@
         Task<string> ProcessFile(Stream fileBytes, string fileName, string directoryRef = "");
 
         /// <summary>
-        /// The MoveOutPutDirectoryToArchive.
+        /// The PurgeResourceFile.
         /// </summary>
-        /// <param name="allDirectoryRef">The directoryRefes.</param>
+        /// <param name="vm">The vm.<see cref="ResourceVersionExtendedViewModel"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task MoveOutPutDirectoryToArchive(List<string> allDirectoryRef);
-
-        /// <summary>
-        /// The MoveInPutDirectoryToArchive.
-        /// </summary>
-        /// <param name="allDirectoryRef">The directoryRefes.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        Task MoveInPutDirectoryToArchive(List<string> allDirectoryRef);
+        Task PurgeResourceFile(ResourceVersionExtendedViewModel vm);
     }
 }

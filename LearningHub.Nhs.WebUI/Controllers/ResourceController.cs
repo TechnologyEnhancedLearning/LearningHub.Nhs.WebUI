@@ -408,11 +408,13 @@
         [Route("Resource/UnpublishConfirmPost")]
         public async Task<IActionResult> UnpublishConfirm(ResourceUnpublishConfirmViewModel viewModel)
         {
+            var associatedFile = await this.resourceService.GetResourceVersionExtendedAsync(viewModel.ResourceVersionId);
             var validationResult = await this.resourceService.UnpublishResourceVersionAsync(viewModel.ResourceVersionId);
             var catalogue = await this.catalogueService.GetCatalogueAsync(viewModel.CatalogueNodeVersionId);
 
             if (validationResult.IsValid)
             {
+                _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(associatedFile); });
                 if (viewModel.CatalogueNodeVersionId == 1)
                 {
                     return this.Redirect("/my-contributions/unpublished");

@@ -444,6 +444,18 @@ namespace LearningHub.Nhs.Api.Controllers
         }
 
         /// <summary>
+        /// Get file directory for unpublished or deleted versions.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{String}"/>.</returns>
+        [HttpGet]
+        [Route("GetObsoleteResourceFile/{resourceVersionId}")]
+        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId)
+        {
+            return await this.resourceService.GetObsoleteResourceFile(resourceVersionId);
+        }
+
+        /// <summary>
         /// Get specific GenericFileDetails by ResourceVersionId.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>

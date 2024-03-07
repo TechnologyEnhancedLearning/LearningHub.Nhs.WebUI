@@ -1,6 +1,8 @@
 ﻿namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
@@ -222,7 +224,13 @@
         [Route("DeleteResourceVersion/{resourceversionId}")]
         public async Task<ActionResult> DeleteResourceVersion(int resourceVersionId)
         {
+            var associatedFile = await this.resourceService.GetResourceVersionExtendedAsync(resourceVersionId);
             var validationResult = await this.contributeService.DeleteResourceVersionAsync(resourceVersionId);
+            if (validationResult.IsValid)
+            {
+                _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(associatedFile); });
+            }
+
             return this.Ok(validationResult);
         }
 

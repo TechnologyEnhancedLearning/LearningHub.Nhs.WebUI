@@ -119,7 +119,7 @@
             };
 
             // Return only the requested batch.
-            var activityEntities = activityQuery.Skip(requestModel.Skip).Take(requestModel.Take).ToList();
+            var activityEntities = activityQuery.ToList();
 
             viewModel.Activities = await this.PopulateMyLearningDetailedItemViewModels(activityEntities, userId);
 

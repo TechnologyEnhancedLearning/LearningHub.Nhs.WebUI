@@ -371,14 +371,17 @@ namespace LearningHub.Nhs.Repository.Activity
         {
             result.ToList().ForEach(i =>
             {
-                MediaResourceActivity mediaResourceActivity = new MediaResourceActivity();
+                if (i.MediaResourceActivity_ResourceActivityId != null)
+                {
+                    MediaResourceActivity mediaResourceActivity = new MediaResourceActivity();
 
-                mediaResourceActivity.ResourceActivityId = i.MediaResourceActivity_ResourceActivityId ?? 0;
-                mediaResourceActivity.Id = i.MediaResourceActivity_ResourceActivityId ?? 0;
-                mediaResourceActivity.ActivityStart = i.MediaResourceActivity_ActivityStart ?? DateTimeOffset.MinValue;
-                mediaResourceActivity.SecondsPlayed = i.MediaResourceActivity_SecondsPlayed;
-                mediaResourceActivity.PercentComplete = i.MediaResourceActivity_PercentComplete;
-                i.MediaResourceActivity.Add(mediaResourceActivity);
+                    mediaResourceActivity.ResourceActivityId = i.MediaResourceActivity_ResourceActivityId ?? 0;
+                    mediaResourceActivity.Id = i.MediaResourceActivity_ResourceActivityId ?? 0;
+                    mediaResourceActivity.ActivityStart = i.MediaResourceActivity_ActivityStart ?? DateTimeOffset.MinValue;
+                    mediaResourceActivity.SecondsPlayed = i.MediaResourceActivity_SecondsPlayed;
+                    mediaResourceActivity.PercentComplete = i.MediaResourceActivity_PercentComplete;
+                    i.MediaResourceActivity.Add(mediaResourceActivity);
+                }
             });
         }
 
@@ -386,25 +389,27 @@ namespace LearningHub.Nhs.Repository.Activity
         {
             result.ToList().ForEach(i =>
             {
-                AssessmentResourceActivity assessmentResourceActivity = new AssessmentResourceActivity();
-
-                assessmentResourceActivity.ResourceActivityId = i.AssessmentResourceActivity_ResourceActivityId ?? 0;
-                assessmentResourceActivity.Id = i.AssessmentResourceActivity_Id ?? 0;
-                assessmentResourceActivity.Score = i.AssessmentResourceActivity_Score;
-                assessmentResourceActivity.Reason = i.AssessmentResourceActivity_Reason;
-                var c = result.Where(x => x.Id == i.Id).ToList().DistinctBy(l => l.AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId);
-                List<AssessmentResourceActivityInteraction> assessmentResourceActivityInteractionList = new List<AssessmentResourceActivityInteraction>();
-                foreach (var item in c)
+                if (i.AssessmentResourceActivity_ResourceActivityId != null)
                 {
-                    AssessmentResourceActivityInteraction assessmentResourceActivityInteraction = new AssessmentResourceActivityInteraction();
-                    assessmentResourceActivityInteraction.AssessmentResourceActivityId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_AssessmentResourceActivityId ?? 0;
-                    assessmentResourceActivityInteraction.Id = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id ?? 0;
-                    assessmentResourceActivityInteraction.QuestionBlockId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId ?? 0;
-                    assessmentResourceActivityInteractionList.Add(assessmentResourceActivityInteraction);
-                }
+                    AssessmentResourceActivity assessmentResourceActivity = new AssessmentResourceActivity();
+                    assessmentResourceActivity.ResourceActivityId = i.AssessmentResourceActivity_ResourceActivityId ?? 0;
+                    assessmentResourceActivity.Id = i.AssessmentResourceActivity_Id ?? 0;
+                    assessmentResourceActivity.Score = i.AssessmentResourceActivity_Score;
+                    assessmentResourceActivity.Reason = i.AssessmentResourceActivity_Reason;
+                    var c = result.Where(x => x.Id == i.Id).ToList().DistinctBy(l => l.AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId);
+                    List<AssessmentResourceActivityInteraction> assessmentResourceActivityInteractionList = new List<AssessmentResourceActivityInteraction>();
+                    foreach (var item in c)
+                    {
+                        AssessmentResourceActivityInteraction assessmentResourceActivityInteraction = new AssessmentResourceActivityInteraction();
+                        assessmentResourceActivityInteraction.AssessmentResourceActivityId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_AssessmentResourceActivityId ?? 0;
+                        assessmentResourceActivityInteraction.Id = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id ?? 0;
+                        assessmentResourceActivityInteraction.QuestionBlockId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId ?? 0;
+                        assessmentResourceActivityInteractionList.Add(assessmentResourceActivityInteraction);
+                    }
 
-                assessmentResourceActivity.AssessmentResourceActivityInteractions = assessmentResourceActivityInteractionList;
-                i.AssessmentResourceActivity.Add(assessmentResourceActivity);
+                    assessmentResourceActivity.AssessmentResourceActivityInteractions = assessmentResourceActivityInteractionList;
+                    i.AssessmentResourceActivity.Add(assessmentResourceActivity);
+                }
             });
         }
 

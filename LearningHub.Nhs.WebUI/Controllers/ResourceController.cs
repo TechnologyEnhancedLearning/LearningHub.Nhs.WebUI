@@ -3,13 +3,9 @@
     using System;
     using System.Linq;
     using System.Net.Http;
-    using System.Reflection;
-    using System.Security.AccessControl;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Common;
-    using LearningHub.Nhs.Models.Entities.Hierarchy;
-    using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.Resource;
@@ -25,7 +21,6 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.StaticFiles;
-    using Microsoft.Azure.Management.Media.Models;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
 
@@ -356,7 +351,7 @@
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [Authorize]
         [Route("Resource/EditConfirm")]
-        public IActionResult EditConfirm1(ResourceIndexViewModel viewModel)
+        public IActionResult EditConfirm(ResourceIndexViewModel viewModel)
         {
             return this.View("EditConfirm", new ResourceEditConfirmViewModel { ResourceId = viewModel.ResourceItem.ResourceId, ResourceReferenceId = viewModel.ResourceReferenceId, ResourceTitle = viewModel.ResourceItem.Title });
         }

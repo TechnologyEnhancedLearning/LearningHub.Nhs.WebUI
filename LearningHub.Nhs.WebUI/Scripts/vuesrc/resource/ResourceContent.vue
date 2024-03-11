@@ -426,6 +426,11 @@
                             window.location.pathname = './Home/Error';
                         });
                 }
+
+                if (interactionType == "ended") {
+                    setTimeout(() => { this.checkUserCertificateAvailability() }, 10000);
+                    await this.recordActivityComplete();                 
+                }
             },
             async recordMediaPlayingEvent(): Promise<void> {
                 let currentMediaTime = this.getMediaPlayerDisplayTime();

@@ -7,6 +7,7 @@
 -- Modification History
 
 -- Sarathlal	18-12-2023
+-- Sarathlal	08-03-2023
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserLearningActivitiesCount] (
 	 @userId INT	
@@ -314,7 +315,8 @@ FROM (
 							OR	
 							(
 								-- select download activities if requested
-								EXISTS (SELECT 1 FROM @tmpActivityStatus WHERE ActivityStatusId = 6) AND [ResourceActivity].[ActivityStatusId]  = 6 
+								EXISTS (SELECT 1 FROM @tmpActivityStatus WHERE ActivityStatusId = 6) AND [ResourceActivity].[ActivityStatusId]  = 3 
+								AND ([Res].[ResourceTypeId] = 9) 
 							)
 							OR	
 							(

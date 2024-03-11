@@ -7,6 +7,7 @@
 -- Modification History
 
 -- Sarathlal	14-12-2023
+-- Sarathlal	08-03-2023
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserLearningActivities] (
 	 @userId INT	
@@ -124,7 +125,7 @@ BEGIN
 	--	no data available in resilt set
 	--InverseLaunchResourceActivity ends here
 	 --MediaResourceActivity   starts here
-	 ,[t8].[Id] as MediaResourceActivity_Id, [t8].[ActivityStart] as MediaResourceActivity_ActivityStart, [t8].[AmendDate] as MediaResourceActivity_AmendDate, [t8].[AmendUserID]  as MediaResourceActivity_AmendUserID,
+	 ,[t8].[Id] as MediaResourceActivity_Id, [t2].[ActivityStart] as MediaResourceActivity_ActivityStart, [t8].[AmendDate] as MediaResourceActivity_AmendDate, [t8].[AmendUserID]  as MediaResourceActivity_AmendUserID,
 	 [t8].[CreateDate] as MediaResourceActivity_CreateDate, [t8].[CreateUserID] as MediaResourceActivity_CreateUserID, [t8].[Deleted] as MediaResourceActivity_Deleted, [t8].[PercentComplete] as MediaResourceActivity_PercentComplete,
 	 [t8].[ResourceActivityId] as MediaResourceActivity_ResourceActivityId, [t8].[SecondsPlayed] as MediaResourceActivity_SecondsPlayed
 	 --MediaResourceActivity   ends here
@@ -399,7 +400,8 @@ FROM (
 							OR	
 							(
 								-- select download activities if requested
-								EXISTS (SELECT 1 FROM @tmpActivityStatus WHERE ActivityStatusId = 6) AND [ResourceActivity].[ActivityStatusId]  = 6 
+								EXISTS (SELECT 1 FROM @tmpActivityStatus WHERE ActivityStatusId = 6) AND [ResourceActivity].[ActivityStatusId]  = 3 
+								AND ([Res].[ResourceTypeId] = 9)
 							)
 							OR	
 							(
@@ -418,10 +420,10 @@ FROM (
 						)
 			  )
 		AND (@certificateEnabled IS NULL OR [ResVer].[CertificateEnabled]=@certificateEnabled)
-  --  ORDER BY 
-		--[ResourceActivity].[ActivityStart] DESC
-  --  OFFSET @offSet 
-		--ROWS FETCH NEXT @fetchRows ROWS ONLY
+    ORDER BY 
+		[ResourceActivity].[ActivityStart] DESC
+    OFFSET @offSet 
+		ROWS FETCH NEXT @fetchRows ROWS ONLY
 ) AS [t2]
 LEFT JOIN [resources].[VideoResourceVersion] AS [VideoResourceVersion] ON [t2].[Id1] = [VideoResourceVersion].[ResourceVersionId]
 LEFT JOIN [resources].[AudioResourceVersion] AS [AudeoResourceVersion] ON [t2].[Id1] = [AudeoResourceVersion].[ResourceVersionId]

@@ -169,8 +169,13 @@ namespace LearningHub.Nhs.Services
             {
                 activityQuery = activityQuery.Where(x => x.MajorVersion == majorVersion && x.MinorVersion == minorVersion);
             }
+            else
+            {
+                // filter and use the latest version only
+                activityQuery = activityQuery.Where(rv => rv.ResourceVersionId == rv.Resource.CurrentResourceVersionId);
+            }
 
-            activityQuery = activityQuery.Where(x => x.Resource.ResourceReference.FirstOrDefault() != null && x.Resource.ResourceReference.FirstOrDefault().OriginalResourceReferenceId == resourceReferenceId);
+            activityQuery = activityQuery.Where(x => x.Resource.ResourceReference.FirstOrDefault() != null && x.Resource.ResourceReference.Any(rr => rr.OriginalResourceReferenceId == resourceReferenceId));
             int totalNumberOfAccess = activityQuery.Count();
             var activityEntities = await activityQuery.OrderByDescending(x => x.Score).ThenByDescending(x => x.ActivityStart).ToListAsync();
             activityEntities.RemoveAll(x => x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && (x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded || x.ActivityStatusId == (int)ActivityStatusEnum.Launched || x.ActivityStatusId == (int)ActivityStatusEnum.InProgress));
@@ -206,7 +211,10 @@ namespace LearningHub.Nhs.Services
                             myLearningDetailedItemViewModel.ActivityDurationSeconds = 0;
                             foreach (var item in ma)
                             {
-                                myLearningDetailedItemViewModel.ActivityDurationSeconds = myLearningDetailedItemViewModel.ActivityDurationSeconds + (int)item.SecondsPlayed;
+                                if (item.SecondsPlayed.HasValue)
+                                {
+                                    myLearningDetailedItemViewModel.ActivityDurationSeconds = myLearningDetailedItemViewModel.ActivityDurationSeconds + (int)item.SecondsPlayed;
+                                }
                             }
                         }
                     }
@@ -374,12 +382,13 @@ namespace LearningHub.Nhs.Services
             }
 
             // Resource Type filter.
-            if (requestModel.Article || requestModel.Audio || requestModel.Elearning || requestModel.File || requestModel.Image || requestModel.Video || requestModel.Weblink || requestModel.Assessment || requestModel.Case)
+            if (requestModel.Article || requestModel.Audio || requestModel.Elearning || requestModel.Html || requestModel.File || requestModel.Image || requestModel.Video || requestModel.Weblink || requestModel.Assessment || requestModel.Case)
             {
                 query = query.Where(x =>
                     (requestModel.Article && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Article) ||
                     (requestModel.Audio && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio) ||
                     (requestModel.Elearning && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm) ||
+                    (requestModel.Html && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Html) ||
                     (requestModel.File && x.Resource.ResourceTypeEnum == ResourceTypeEnum.GenericFile) ||
                     (requestModel.Image && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Image) ||
                     (requestModel.Video && x.Resource.ResourceTypeEnum == ResourceTypeEnum.Video) ||

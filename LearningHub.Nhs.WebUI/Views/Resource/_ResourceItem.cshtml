@@ -148,14 +148,14 @@
         }
 
         @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Video || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Audio || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Scorm ||
-       resourceItem.ResourceTypeEnum == ResourceTypeEnum.Case || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Assessment)
+               resourceItem.ResourceTypeEnum == ResourceTypeEnum.Case || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Assessment || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Html)
         {
           if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Case)
           {
             <hr />
           }
 
-          @* Video/Audio/Scorm/Case/Assessment require JavaScript - use Vue.js resource app. *@
+          @* Video/Audio/Scorm/Case/Assessment/Html require JavaScript - use Vue.js resource app. *@
 
           <div id="resourcecontainer">
             <router-view user-authenticated="@ViewBag.UserAuthenticated"
@@ -169,7 +169,7 @@
     }
 
     @* Description / Additional Information *@
-    @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Case && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Assessment)
+        @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Case && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Assessment && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Html)
     {
       <div class="nhsuk-u-margin-bottom-7">
         @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Article || (resourceItem.Catalogue.RestrictedAccess && !Model.HasCatalogueAccess))

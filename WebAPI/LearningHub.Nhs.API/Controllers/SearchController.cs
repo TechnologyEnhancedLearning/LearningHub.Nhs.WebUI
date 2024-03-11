@@ -1,8 +1,4 @@
-﻿// <copyright file="SearchController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Api.Controllers
+﻿namespace LearningHub.Nhs.Api.Controllers
 {
     using System.Collections.Generic;
     using System.Linq;

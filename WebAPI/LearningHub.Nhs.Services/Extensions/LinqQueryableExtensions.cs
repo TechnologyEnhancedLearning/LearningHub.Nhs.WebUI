@@ -1,8 +1,4 @@
-﻿// <copyright file="LinqQueryableExtensions.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Extensions
+﻿namespace LearningHub.Nhs.Services.Extensions
 {
     using System;
     using System.Linq;

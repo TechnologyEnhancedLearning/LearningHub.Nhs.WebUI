@@ -1,8 +1,4 @@
-﻿// <copyright file="LearningSessionsController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Controllers
+﻿namespace LearningHub.Nhs.WebUI.Controllers
 {
     using System;
     using System.Diagnostics;

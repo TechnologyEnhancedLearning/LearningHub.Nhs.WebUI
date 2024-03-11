@@ -1,8 +1,4 @@
-﻿// <copyright file="IResourceActivityRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Activity
+﻿namespace LearningHub.Nhs.Repository.Interface.Activity
 {
     using System;
     using System.Collections.Generic;
@@ -10,6 +6,7 @@ namespace LearningHub.Nhs.Repository.Interface.Activity
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.MyLearning;
 
     /// <summary>
     /// The ResourceActivity interface.
@@ -72,5 +69,31 @@ namespace LearningHub.Nhs.Repository.Interface.Activity
         /// <param name="scormActivityId">The scormActivityId id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<bool> IsScormActivityFinished(int userId, int scormActivityId);
+
+        /// <summary>
+        /// Get Resource Activity By user id.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">requestModel.</param>
+        /// <param name="detailedMediaActivityRecordingStartDate">detailedMediaActivityRecordingStartDate.</param>
+        /// <returns>ResourceActivity.</returns>
+        Task<IQueryable<ResourceActivity>> GetByUserIdFromSP(int userId, Models.MyLearning.MyLearningRequestModel requestModel, DateTimeOffset detailedMediaActivityRecordingStartDate);
+
+        /// <summary>
+        /// Check if scorm activity has been completed.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">requestModel.</param>
+        /// <param name="detailedMediaActivityRecordingStartDate">detailedMediaActivityRecordingStartDate.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        int GetTotalCount(int userId, MyLearningRequestModel requestModel, DateTimeOffset detailedMediaActivityRecordingStartDate);
+
+        /// <summary>
+        /// Gets a list of all the user's activities for a given resource.
+        /// </summary>
+        /// <param name="userId">The user id.</param>>
+        /// <param name="resourceId">The resource id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<List<ResourceActivity>> GetAllTheActivitiesFromSP(int userId, int resourceId);
     }
 }

@@ -1,7 +1,3 @@
-// <copyright file="HttpResponseException.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.OpenApi.Models.Exceptions
 {
     using System;

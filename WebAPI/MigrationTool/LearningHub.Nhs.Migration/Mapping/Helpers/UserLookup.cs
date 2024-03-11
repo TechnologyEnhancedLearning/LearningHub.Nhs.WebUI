@@ -1,8 +1,4 @@
-﻿// <copyright file="UserLookup.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Mapping.Helpers
+﻿namespace LearningHub.Nhs.Migration.Mapping.Helpers
 {
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Repository.Interface;

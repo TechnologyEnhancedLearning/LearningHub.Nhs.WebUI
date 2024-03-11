@@ -1,8 +1,4 @@
-﻿// <copyright file="CovidTestingController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Controllers
+﻿namespace LearningHub.Nhs.WebUI.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;

@@ -1,12 +1,10 @@
-﻿// <copyright file="IFileService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Interfaces
+﻿namespace LearningHub.Nhs.WebUI.Interfaces
 {
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
     using Azure.Storage.Files.Shares.Models;
+    using LearningHub.Nhs.Models.Resource;
 
     /// <summary>
     /// Defines the <see cref="IFileService" />.
@@ -37,5 +35,12 @@ namespace LearningHub.Nhs.WebUI.Interfaces
         /// <param name="directoryRef">The directoryRef.</param>
         /// <returns>The .</returns>
         Task<string> ProcessFile(Stream fileBytes, string fileName, string directoryRef = "");
+
+        /// <summary>
+        /// The PurgeResourceFile.
+        /// </summary>
+        /// <param name="vm">The vm.<see cref="ResourceVersionExtendedViewModel"/>.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task PurgeResourceFile(ResourceVersionExtendedViewModel vm);
     }
 }

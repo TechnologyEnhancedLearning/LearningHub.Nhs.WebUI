@@ -1,8 +1,4 @@
-﻿// <copyright file="EventLogController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Api.Controllers
+﻿namespace LearningHub.Nhs.Api.Controllers
 {
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.EventLog;

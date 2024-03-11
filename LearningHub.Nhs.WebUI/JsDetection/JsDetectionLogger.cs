@@ -1,8 +1,4 @@
-﻿// <copyright file="JsDetectionLogger.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.JsDetection
+﻿namespace LearningHub.Nhs.WebUI.JsDetection
 {
     using System.Threading;
     using System.Threading.Tasks;

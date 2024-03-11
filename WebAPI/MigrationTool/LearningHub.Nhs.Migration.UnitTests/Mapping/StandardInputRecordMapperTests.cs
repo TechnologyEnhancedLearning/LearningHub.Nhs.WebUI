@@ -1,8 +1,4 @@
-﻿// <copyright file="StandardInputRecordMapperTests.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.UnitTests.Mapping
+﻿namespace LearningHub.Nhs.Migration.UnitTests.Mapping
 {
     using System;
     using System.Linq;

@@ -1,7 +1,3 @@
-// <copyright file="ResourceController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System;
@@ -105,7 +101,7 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
                     ResourceVersionId = resourceVersionId,
                     NodePathId = nodePathId,
                     ActivityStart = DateTime.UtcNow, // TODO: What about user's timezone offset when Javascript is disabled? Needs JavaScript.
-                    ActivityStatus = ActivityStatusEnum.Downloaded,
+                    ActivityStatus = ActivityStatusEnum.Completed,
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
 
@@ -132,7 +128,7 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
                 ResourceVersionId = resourceVersionId,
                 NodePathId = nodePathId,
                 ActivityStart = DateTime.UtcNow, // TODO: What about user's timezone offset when Javascript is disabled? Needs JavaScript.
-                ActivityStatus = ActivityStatusEnum.Launched,
+                ActivityStatus = ActivityStatusEnum.Completed,
             };
             await this.activityService.CreateResourceActivityAsync(activity);
 

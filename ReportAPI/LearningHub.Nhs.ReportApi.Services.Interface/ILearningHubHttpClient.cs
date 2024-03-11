@@ -1,8 +1,4 @@
-﻿// <copyright file="ILearningHubHttpClient.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.ReportApi.Services.Interface
+﻿namespace LearningHub.Nhs.ReportApi.Services.Interface
 {
     using System.Net.Http;
     using System.Threading.Tasks;

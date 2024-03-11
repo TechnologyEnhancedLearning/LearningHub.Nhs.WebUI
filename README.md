@@ -102,4 +102,4 @@ Create a Local IIS launch profile for the following projects:
 
 
 # Contribute
-If you are interested in contributing to the Learning Hub, please contact [support@learninghub.nhs.uk](mailto:support@learninghub.nhs.uk)
+If you are interested in contributing to the Learning Hub, please contact [support@learninghub.nhs.uk](mailto:support@learninghub.nhs.uk).

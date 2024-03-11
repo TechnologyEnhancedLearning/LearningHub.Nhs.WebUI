@@ -1,7 +1,3 @@
-// <copyright file="BulkResourceReferenceViewModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.OpenApi.Models.ViewModels
 {
     using System.Collections.Generic;

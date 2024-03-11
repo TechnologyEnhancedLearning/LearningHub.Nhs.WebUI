@@ -1,7 +1,3 @@
-// <copyright file="ResourceHelperTests.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.OpenApi.Tests.Services.Helpers
 {
     using System.Linq;

@@ -1,8 +1,4 @@
-﻿// <copyright file="GlobalSuppressions.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Regions allowed", Scope = "member", Target = "~M:LearningHub.Nhs.Services.ResourceService.CreateGenericFileDetailsAsync(System.Int32,LearningHub.Nhs.Models.Entities.Resource.File,System.Int32)~System.Threading.Tasks.Task")]
 [assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Regions allowed", Scope = "member", Target = "~M:LearningHub.Nhs.Services.ResourceService.GetResourceCardExtendedDetailsAsync(System.Int32)~System.Threading.Tasks.Task{LearningHub.Nhs.Models.Resource.ResourceCardExtendedViewModel}")]

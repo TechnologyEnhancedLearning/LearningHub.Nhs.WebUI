@@ -1,7 +1,3 @@
-// <copyright file="ResourceController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.Api.Controllers
 {
     using System;
@@ -445,6 +441,18 @@ namespace LearningHub.Nhs.Api.Controllers
         public async Task<ActionResult> GetResourceVersionsAsync(int resourceId)
         {
             return this.Ok(await this.resourceService.GetResourceVersionsAsync(resourceId));
+        }
+
+        /// <summary>
+        /// Get file directory for unpublished or deleted versions.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{String}"/>.</returns>
+        [HttpGet]
+        [Route("GetObsoleteResourceFile/{resourceVersionId}")]
+        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId)
+        {
+            return await this.resourceService.GetObsoleteResourceFile(resourceVersionId);
         }
 
         /// <summary>

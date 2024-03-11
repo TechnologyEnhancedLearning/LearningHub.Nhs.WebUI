@@ -1,8 +1,4 @@
-﻿// <copyright file="IMessageRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Messaging
+﻿namespace LearningHub.Nhs.Repository.Interface.Messaging
 {
     using System;
     using System.Collections.Generic;

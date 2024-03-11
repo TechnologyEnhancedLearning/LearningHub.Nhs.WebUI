@@ -1,8 +1,4 @@
-﻿// <copyright file="EmailSenderService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Messaging
+﻿namespace LearningHub.Nhs.Services.Messaging
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Email;

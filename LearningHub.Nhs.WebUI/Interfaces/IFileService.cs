@@ -28,6 +28,14 @@
         Task<ShareFileDownloadInfo> DownloadFileAsync(string filePath, string fileName);
 
         /// <summary>
+        /// The StreamFileAsync.
+        /// </summary>
+        /// <param name="filePath">The filePath.</param>
+        /// <param name="fileName">The fileName.</param>
+        /// <returns>The <see cref="Task{Stream}"/>.</returns>
+        Task<Stream> StreamFileAsync(string filePath, string fileName);
+
+        /// <summary>
         /// The ProcessFile.
         /// </summary>
         /// <param name="fileBytes">The fileBytes<see cref="Stream"/>.</param>

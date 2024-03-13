@@ -484,15 +484,24 @@
                 contentType = "text/html";
             }
 
-            var file = await this.fileService.DownloadFileAsync(contentFilePath, path);
-            if (file != null)
+            if (contentType.Contains("video") || contentType.Contains("audio"))
             {
-                return this.File(file.Content, contentType);
+                var stream = await this.fileService.StreamFileAsync(contentFilePath, path);
+                if (stream != null)
+                {
+                    return this.File(stream, contentType, enableRangeProcessing: true);
+                }
             }
             else
             {
-                return this.Ok(this.Content("No file found"));
+                var file = await this.fileService.DownloadFileAsync(contentFilePath, path);
+                if (file != null)
+                {
+                    return this.File(file.Content, contentType);
+                }
             }
+
+            return this.Ok(this.Content("No file found"));
         }
     }
 }

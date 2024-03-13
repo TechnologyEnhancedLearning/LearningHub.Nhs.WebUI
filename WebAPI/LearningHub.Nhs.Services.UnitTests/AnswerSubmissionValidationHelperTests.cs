@@ -1,8 +1,4 @@
-﻿// <copyright file="AnswerSubmissionValidationHelperTests.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.UnitTests
+﻿namespace LearningHub.Nhs.Services.UnitTests
 {
     using System.Collections.Generic;
     using LearningHub.Nhs.Models.Enums;

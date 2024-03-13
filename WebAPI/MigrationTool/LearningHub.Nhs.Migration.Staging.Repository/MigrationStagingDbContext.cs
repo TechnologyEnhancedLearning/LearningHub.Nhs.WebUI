@@ -1,8 +1,4 @@
-﻿// <copyright file="MigrationStagingDbContext.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Staging.Repository
+﻿namespace LearningHub.Nhs.Migration.Staging.Repository
 {
     using LearningHub.Nhs.Migration.Models;
     using Microsoft.EntityFrameworkCore;

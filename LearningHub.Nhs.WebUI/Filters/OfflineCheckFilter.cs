@@ -1,8 +1,4 @@
-﻿// <copyright file="OfflineCheckFilter.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Filters
+﻿namespace LearningHub.Nhs.WebUI.Filters
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Caching;

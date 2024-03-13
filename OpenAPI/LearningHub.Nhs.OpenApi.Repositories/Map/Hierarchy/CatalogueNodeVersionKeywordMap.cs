@@ -1,8 +1,4 @@
-﻿// <copyright file="CatalogueNodeVersionKeywordMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Map.Hierarchy
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.Hierarchy
 {
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using Microsoft.EntityFrameworkCore;

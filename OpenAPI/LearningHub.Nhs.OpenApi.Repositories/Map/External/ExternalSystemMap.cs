@@ -1,8 +1,4 @@
-﻿// <copyright file="ExternalSystemMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Map.External
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.External
 {
     using LearningHub.Nhs.Models.Entities.External;
     using Microsoft.EntityFrameworkCore;

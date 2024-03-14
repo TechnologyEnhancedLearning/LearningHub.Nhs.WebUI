@@ -1,8 +1,4 @@
-﻿// <copyright file="InternalSystemMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Map.Content
+﻿namespace LearningHub.Nhs.Repository.Map.Content
 {
     using LearningHub.Nhs.Models.Entities.Maintenance;
     using Microsoft.EntityFrameworkCore;

@@ -1,8 +1,4 @@
-﻿// <copyright file="CatalogueServiceTests.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
+﻿namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
 {
     using System.Collections.Generic;
     using System.Linq;

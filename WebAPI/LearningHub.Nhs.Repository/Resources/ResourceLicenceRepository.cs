@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceLicenceRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Resources
+﻿namespace LearningHub.Nhs.Repository.Resources
 {
     using System.Linq;
     using System.Threading.Tasks;

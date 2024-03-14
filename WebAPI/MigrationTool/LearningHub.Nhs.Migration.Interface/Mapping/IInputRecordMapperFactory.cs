@@ -1,8 +1,4 @@
-﻿// <copyright file="IInputRecordMapperFactory.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Interface.Mapping
+﻿namespace LearningHub.Nhs.Migration.Interface.Mapping
 {
     /// <summary>
     /// Defines the methods exposed by the input record mapper factory.

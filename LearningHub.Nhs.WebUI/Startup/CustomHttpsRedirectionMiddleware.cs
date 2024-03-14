@@ -1,8 +1,4 @@
-﻿// <copyright file="CustomHttpsRedirectionMiddleware.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Startup
+﻿namespace LearningHub.Nhs.WebUI.Startup
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;

@@ -1,8 +1,4 @@
-﻿// <copyright file="ContentService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Services
+﻿namespace LearningHub.Nhs.AdminUI.Services
 {
     using System;
     using System.Collections.Generic;

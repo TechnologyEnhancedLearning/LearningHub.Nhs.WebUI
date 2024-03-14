@@ -1,8 +1,4 @@
-﻿// <copyright file="NoWhitespaceAttribute.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Attributes
+﻿namespace LearningHub.Nhs.WebUI.Attributes
 {
     using System.ComponentModel.DataAnnotations;
     using System.Linq;

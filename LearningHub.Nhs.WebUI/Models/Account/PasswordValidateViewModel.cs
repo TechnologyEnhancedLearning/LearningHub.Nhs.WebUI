@@ -1,8 +1,4 @@
-﻿// <copyright file="PasswordValidateViewModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Account
+﻿namespace LearningHub.Nhs.WebUI.Models.Account
 {
     /// <summary>
     /// Defines the <see cref="PasswordValidateViewModel" />.

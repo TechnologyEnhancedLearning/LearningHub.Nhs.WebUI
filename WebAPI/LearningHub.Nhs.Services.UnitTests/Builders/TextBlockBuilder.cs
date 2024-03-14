@@ -1,8 +1,4 @@
-﻿// <copyright file="TextBlockBuilder.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.UnitTests.Builders
+﻿namespace LearningHub.Nhs.Services.UnitTests.Builders
 {
     using LearningHub.Nhs.Models.Resource.Blocks;
 

@@ -173,14 +173,14 @@
             }
 
             // For article/image resources, immediately record the resource activity for this user.
-            if ((resource.ResourceTypeEnum == ResourceTypeEnum.Article || resource.ResourceTypeEnum == ResourceTypeEnum.Image) && ((resource.SensitiveContent && acceptSensitiveContent.HasValue && acceptSensitiveContent.Value) || !resource.SensitiveContent) && canAccessResource)
+            if ((resource.ResourceTypeEnum == ResourceTypeEnum.Article || resource.ResourceTypeEnum == ResourceTypeEnum.Image) && (!resource.SensitiveContent))
             {
                 var activity = new CreateResourceActivityViewModel()
                 {
                     ResourceVersionId = resource.ResourceVersionId,
                     NodePathId = resource.NodePathId,
                     ActivityStart = DateTime.UtcNow, // TODO: What about user's timezone offset when Javascript is disabled? Needs JavaScript.
-                    ActivityStatus = ActivityStatusEnum.Launched,
+                    ActivityStatus = ActivityStatusEnum.Completed,
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
             }
@@ -400,11 +400,13 @@
         [Route("Resource/UnpublishConfirmPost")]
         public async Task<IActionResult> UnpublishConfirm(ResourceUnpublishConfirmViewModel viewModel)
         {
+            var associatedFile = await this.resourceService.GetResourceVersionExtendedAsync(viewModel.ResourceVersionId);
             var validationResult = await this.resourceService.UnpublishResourceVersionAsync(viewModel.ResourceVersionId);
             var catalogue = await this.catalogueService.GetCatalogueAsync(viewModel.CatalogueNodeVersionId);
 
             if (validationResult.IsValid)
             {
+                _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(associatedFile); });
                 if (viewModel.CatalogueNodeVersionId == 1)
                 {
                     return this.Redirect("/my-contributions/unpublished");
@@ -472,7 +474,7 @@
                     ResourceVersionId = resourceVersionId,
                     NodePathId = nodePathId,
                     ActivityStart = DateTime.UtcNow, // TODO: What about user's timezone offset when Javascript is disabled? Needs JavaScript.
-                    ActivityStatus = ActivityStatusEnum.Launched,
+                    ActivityStatus = ActivityStatusEnum.Completed,
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
             }

@@ -7,6 +7,8 @@
 -- Modification History
 --
 -- 09-11-2020  RobS	Initial Revision
+-- 30-10-2023  RobS Updates for changes to activity status. Ending ResourceActivity status is now 'Incomplete' if
+--             user hasn't played whole media file. Used to be 'Completed'.
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [activity].[CalculatePlayedMediaSegments]
@@ -75,7 +77,7 @@ from [activity].[MediaResourceActivity] (nolock) MRA
 	inner join [activity].[ResourceActivity] (nolock) ra
 		on ra.Id = mra.ResourceActivityId
 	inner join [activity].[ResourceActivity] (nolock) ra2
-		on ra.Id = ra2.LaunchResourceActivityId and ra2.ActivityStatusId = 3 -- This join ensures that we only include interactions from completed activities.
+		on ra.Id = ra2.LaunchResourceActivityId
 where ra.userId = @userid
 	and ra.ResourceId = @ResourceId
 	and ra.MajorVersion = @MajorVersion
@@ -395,5 +397,17 @@ set mra.SecondsPlayed = Coalesce(@SecondsPlayed, 0),
 from activity.MediaResourceActivity mra 
 where mra.Id = @MediaResourceActivityId
 
+
+-- If the MediaResourceActivity.PercentComplete value is now 100%, update the end ResourceActivity record to 'Completed' status.
+
+IF @PercentComplete = 100
+	UPDATE raEnd 
+	SET ActivityStatusId = 3, /* Completed */
+		AmendUserID = @AuditUserId,
+		AmendDate = @AmendDate
+	FROM [activity].[MediaResourceActivity] mra 
+		LEFT JOIN [activity].[ResourceActivity] raStart ON raStart.Id = mra.ResourceActivityId
+		LEFT JOIN [activity].[ResourceActivity] raEnd ON raStart.Id = raEnd.LaunchResourceActivityId
+	WHERE mra.Id = @MediaResourceActivityId
 
 END

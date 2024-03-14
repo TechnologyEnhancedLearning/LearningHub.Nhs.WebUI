@@ -28,10 +28,6 @@
 		<TypeScriptCompile Remove="node_modules\nhsuk-frontend\**" />
 		<TypeScriptCompile Remove="wwwroot\lib\fontawesome-pro-5.9.0\**" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Remove="Models\Resource\EsrLinkViewModel.cs" />
-	</ItemGroup>
 	<ItemGroup>
 		<Content Remove="compilerconfig.json" />
 		<Content Remove="StyleCop.json" />

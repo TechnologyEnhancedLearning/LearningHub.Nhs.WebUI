@@ -1,8 +1,4 @@
-﻿// <copyright file="DateTimeHelper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Helpers
+﻿namespace LearningHub.Nhs.Repository.Helpers
 {
     using System;
 

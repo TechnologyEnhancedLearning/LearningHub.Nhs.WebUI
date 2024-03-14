@@ -1,8 +1,4 @@
-﻿// <copyright file="IRoadMapService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Interfaces
+﻿namespace LearningHub.Nhs.WebUI.Interfaces
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.RoadMap;

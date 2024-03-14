@@ -1,8 +1,4 @@
-﻿// <copyright file="MessageService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Messaging
+﻿namespace LearningHub.Nhs.Services.Messaging
 {
     using System;
     using System.Collections.Generic;

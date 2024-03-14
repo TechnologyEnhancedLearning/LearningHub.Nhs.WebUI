@@ -1,8 +1,4 @@
-﻿// <copyright file="ILearningHubApiFacade.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Helpers
+﻿namespace LearningHub.Nhs.AdminUI.Helpers
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;

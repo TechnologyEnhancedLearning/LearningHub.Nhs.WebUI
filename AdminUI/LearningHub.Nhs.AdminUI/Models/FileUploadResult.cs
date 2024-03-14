@@ -1,8 +1,4 @@
-﻿// <copyright file="FileUploadResult.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Models
+﻿namespace LearningHub.Nhs.AdminUI.Models
 {
     using LearningHub.Nhs.Models.Enums;
 

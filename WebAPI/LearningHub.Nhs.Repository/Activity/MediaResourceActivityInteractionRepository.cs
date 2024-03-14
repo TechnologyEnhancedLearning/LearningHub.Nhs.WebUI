@@ -1,8 +1,4 @@
-﻿// <copyright file="MediaResourceActivityInteractionRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Activity
+﻿namespace LearningHub.Nhs.Repository.Activity
 {
     using System;
     using System.Data;

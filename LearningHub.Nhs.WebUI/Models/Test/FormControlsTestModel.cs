@@ -1,8 +1,4 @@
-﻿// <copyright file="FormControlsTestModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Test
+﻿namespace LearningHub.Nhs.WebUI.Models.Test
 {
     using System;
 

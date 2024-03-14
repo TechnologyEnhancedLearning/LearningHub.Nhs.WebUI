@@ -1,8 +1,4 @@
-﻿// <copyright file="IAzureMediaService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Interfaces
+﻿namespace LearningHub.Nhs.AdminUI.Interfaces
 {
     using System.Threading.Tasks;
     using Azure.Storage.Blobs.Models;

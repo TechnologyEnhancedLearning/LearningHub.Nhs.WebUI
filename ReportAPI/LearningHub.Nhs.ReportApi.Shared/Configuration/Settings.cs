@@ -1,8 +1,4 @@
-﻿// <copyright file="Settings.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.ReportApi.Shared.Configuration
+﻿namespace LearningHub.Nhs.ReportApi.Shared.Configuration
 {
     /// <summary>
     /// The settings.

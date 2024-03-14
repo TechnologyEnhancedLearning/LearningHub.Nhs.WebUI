@@ -1,8 +1,4 @@
-﻿// <copyright file="TextHelper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Helpers
+﻿namespace LearningHub.Nhs.Repository.Helpers
 {
     /// <summary>
     /// The text helper.

@@ -1,8 +1,4 @@
-﻿// <copyright file="MigrationControllerTests.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Api.UnitTests.Controllers
+﻿namespace LearningHub.Nhs.Api.UnitTests.Controllers
 {
     using System.Collections.Generic;
     using System.Security.Claims;

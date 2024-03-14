@@ -1,8 +1,4 @@
-﻿// <copyright file="GlobalSuppressions.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Regions serve a valid purpose.", Scope = "member", Target = "~M:LearningHub.Nhs.Services.UnitTests.MigrationServiceTests.CreateFromJsonString_ReturnsErrorIfDestinationNodeIdDoesntExist~System.Threading.Tasks.Task")]
 [assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Regions serve a valid purpose.", Scope = "member", Target = "~M:LearningHub.Nhs.Services.UnitTests.MigrationServiceTests.Validate_ReturnsErrorIfMigrationIdDoesntExist~System.Threading.Tasks.Task")]

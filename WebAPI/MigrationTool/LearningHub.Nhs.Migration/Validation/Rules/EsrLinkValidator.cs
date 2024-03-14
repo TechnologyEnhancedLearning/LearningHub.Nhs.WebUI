@@ -1,8 +1,4 @@
-﻿// <copyright file="EsrLinkValidator.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Validation.Rules
+﻿namespace LearningHub.Nhs.Migration.Validation.Rules
 {
     using System.Collections.Generic;
     using LearningHub.Nhs.Migration.Models;

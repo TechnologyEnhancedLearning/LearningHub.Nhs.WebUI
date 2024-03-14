@@ -1,8 +1,4 @@
-﻿// <copyright file="CatalogueControllerTests.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Tests.Controllers
+﻿namespace LearningHub.Nhs.OpenApi.Tests.Controllers
 {
     using System;
     using System.Collections.Generic;

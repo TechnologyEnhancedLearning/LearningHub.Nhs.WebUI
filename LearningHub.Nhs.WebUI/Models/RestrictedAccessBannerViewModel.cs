@@ -1,8 +1,4 @@
-﻿// <copyright file="RestrictedAccessBannerViewModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models
+﻿namespace LearningHub.Nhs.WebUI.Models
 {
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Entities.Hierarchy;

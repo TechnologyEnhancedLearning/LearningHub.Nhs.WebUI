@@ -1,8 +1,4 @@
-﻿// <copyright file="FileUploadSettingsModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Configuration
+﻿namespace LearningHub.Nhs.AdminUI.Configuration
 {
     /// <summary>
     /// Defines the <see cref="FileUploadSettingsModel" />.

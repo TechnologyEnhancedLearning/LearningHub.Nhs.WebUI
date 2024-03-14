@@ -1,8 +1,4 @@
-﻿// <copyright file="TestAsyncQueryProvider.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.UnitTests.Helpers
+﻿namespace LearningHub.Nhs.Services.UnitTests.Helpers
 {
     using System;
     using System.Linq;

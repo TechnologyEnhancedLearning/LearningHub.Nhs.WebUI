@@ -1,8 +1,4 @@
-﻿// <copyright file="MigrationInputRecordMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Map.Migrations
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.Migrations
 {
     using System;
     using LearningHub.Nhs.Models.Entities.Migration;

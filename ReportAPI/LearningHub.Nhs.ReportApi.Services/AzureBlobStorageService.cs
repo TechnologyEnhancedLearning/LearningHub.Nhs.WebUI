@@ -1,8 +1,4 @@
-﻿// <copyright file="AzureBlobStorageService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.ReportApi.Services
+﻿namespace LearningHub.Nhs.ReportApi.Services
 {
     using System.IO;
     using Azure;

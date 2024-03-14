@@ -1,8 +1,4 @@
-﻿// <copyright file="ScormEntryValue.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.LearningSessions
+﻿namespace LearningHub.Nhs.WebUI.Models.LearningSessions
 {
     /// <summary>
     /// Defines the <see cref="ScormEntryValue" />.

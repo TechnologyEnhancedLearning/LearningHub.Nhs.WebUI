@@ -1,8 +1,4 @@
-﻿// <copyright file="BaseController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Controllers
+﻿namespace LearningHub.Nhs.AdminUI.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;

@@ -1,8 +1,4 @@
-﻿// <copyright file="SearchFormActionTypeEnum.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Search
+﻿namespace LearningHub.Nhs.WebUI.Models.Search
 {
     /// <summary>
     /// Defines the SearchFormActionTypeEnum.

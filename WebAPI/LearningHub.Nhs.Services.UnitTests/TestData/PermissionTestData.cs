@@ -1,8 +1,4 @@
-﻿// <copyright file="PermissionTestData.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.UnitTests.TestData
+﻿namespace LearningHub.Nhs.Services.UnitTests.TestData
 {
     using System;
     using System.Linq;

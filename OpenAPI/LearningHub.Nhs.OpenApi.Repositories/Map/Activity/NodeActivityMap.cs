@@ -1,8 +1,4 @@
-﻿// <copyright file="NodeActivityMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Map.Activity
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.Activity
 {
     using LearningHub.Nhs.Models.Entities.Activity;
     using Microsoft.EntityFrameworkCore;

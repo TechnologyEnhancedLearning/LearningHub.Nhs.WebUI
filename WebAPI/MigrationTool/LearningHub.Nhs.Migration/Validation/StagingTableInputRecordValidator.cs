@@ -1,8 +1,4 @@
-﻿// <copyright file="StagingTableInputRecordValidator.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Validation
+﻿namespace LearningHub.Nhs.Migration.Validation
 {
     using System;
     using System.Threading.Tasks;

@@ -1,7 +1,4 @@
-﻿// <copyright file="CountrySearchViewModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-namespace LearningHub.Nhs.WebUI.Models.Account
+﻿namespace LearningHub.Nhs.WebUI.Models.Account
 {
     using System.Collections.Generic;
     using NHSUKViewComponents.Web.ViewModels;

@@ -1,8 +1,4 @@
-﻿// <copyright file="ScormContentEventSource.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.EventSource
+﻿namespace LearningHub.Nhs.WebUI.EventSource
 {
     using System;
     using System.Diagnostics.Tracing;

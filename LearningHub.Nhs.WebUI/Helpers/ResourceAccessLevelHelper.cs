@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceAccessLevelHelper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Helpers
+﻿namespace LearningHub.Nhs.WebUI.Helpers
 {
     using LearningHub.Nhs.Models.Enums;
     using Microsoft.AspNetCore.Mvc.Rendering;

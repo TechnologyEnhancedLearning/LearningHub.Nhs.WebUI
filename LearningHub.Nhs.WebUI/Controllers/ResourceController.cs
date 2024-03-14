@@ -1,4 +1,8 @@
-﻿namespace LearningHub.Nhs.WebUI.Controllers
+﻿// <copyright file="ResourceController.cs" company="HEE.nhs.uk">
+// Copyright (c) HEE.nhs.uk.
+// </copyright>
+
+namespace LearningHub.Nhs.WebUI.Controllers
 {
     using System;
     using System.Linq;
@@ -6,6 +10,8 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Models.Entities.Hierarchy;
+    using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.Resource;
@@ -173,14 +179,14 @@
             }
 
             // For article/image resources, immediately record the resource activity for this user.
-            if ((resource.ResourceTypeEnum == ResourceTypeEnum.Article || resource.ResourceTypeEnum == ResourceTypeEnum.Image) && (!resource.SensitiveContent))
+            if ((resource.ResourceTypeEnum == ResourceTypeEnum.Article || resource.ResourceTypeEnum == ResourceTypeEnum.Image) && ((resource.SensitiveContent && acceptSensitiveContent.HasValue && acceptSensitiveContent.Value) || !resource.SensitiveContent) && canAccessResource)
             {
                 var activity = new CreateResourceActivityViewModel()
                 {
                     ResourceVersionId = resource.ResourceVersionId,
                     NodePathId = resource.NodePathId,
                     ActivityStart = DateTime.UtcNow, // TODO: What about user's timezone offset when Javascript is disabled? Needs JavaScript.
-                    ActivityStatus = ActivityStatusEnum.Completed,
+                    ActivityStatus = ActivityStatusEnum.Launched,
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
             }
@@ -347,13 +353,15 @@
         /// <summary>
         /// Ask user to confirm that they wish to edit a published resource.
         /// </summary>
-        /// <param name="viewModel">The ResourceIndexViewModel.</param>
+        /// <param name="resourceId">The resourceId.</param>
+        /// <param name="resourceReferenceId">The resourceReferenceId.</param>
+        /// <param name="resourceTitle">The resourceTitle.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [Authorize]
-        [Route("Resource/EditConfirm")]
-        public IActionResult EditConfirm(ResourceIndexViewModel viewModel)
+        [Route("Resource/EditConfirm/{resourceId}/{resourceReferenceId}/{resourceTitle}")]
+        public IActionResult EditConfirm(int resourceId, int resourceReferenceId, string resourceTitle)
         {
-            return this.View("EditConfirm", new ResourceEditConfirmViewModel { ResourceId = viewModel.ResourceItem.ResourceId, ResourceReferenceId = viewModel.ResourceReferenceId, ResourceTitle = viewModel.ResourceItem.Title });
+            return this.View("EditConfirm", new ResourceEditConfirmViewModel { ResourceId = resourceId, ResourceReferenceId = resourceReferenceId, ResourceTitle = resourceTitle });
         }
 
         /// <summary>
@@ -372,20 +380,24 @@
         /// <summary>
         /// Ask user to confirm that they wish to unpublish a published resource.
         /// </summary>
-        /// <param name="viewModel">The ResourceIndexViewModel.</param>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <param name="resourceReferenceId">The resourceReferenceId.</param>
+        /// <param name="resourceType">The resourceType.</param>
+        /// <param name="catalogueNodeVersionId"> The catalogueNodeVersionId.</param>
+        /// <param name="resourceTitle">The resourceTitle.</param>
+        /// <param name="scormEsrLinkType">The SCORM ESR link type.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [Authorize]
-        [Route("Resource/UnpublishConfirm")]
-        public IActionResult UnpublishConfirm(ResourceIndexViewModel viewModel)
+        [Route("Resource/UnpublishConfirm/{resourceVersionId}/{resourceReferenceId}/{resourceType}/{catalogueNodeVersionId}/{resourceTitle}/{scormEsrLinkType?}")]
+        public IActionResult UnpublishConfirm(int resourceVersionId, int resourceReferenceId, int resourceType, int catalogueNodeVersionId, string resourceTitle, int scormEsrLinkType)
         {
-            int scormEsrLinkType = viewModel.ResourceItem.ResourceTypeEnum == ResourceTypeEnum.Scorm || viewModel.ResourceItem.ResourceTypeEnum == ResourceTypeEnum.GenericFile ? (int)viewModel.ExternalContentDetails.EsrLinkType : 0;
             return this.View("UnpublishConfirm", new ResourceUnpublishConfirmViewModel
             {
-                ResourceVersionId = viewModel.ResourceItem.ResourceVersionId,
-                ResourceReferenceId = viewModel.ResourceReferenceId,
-                ResourceType = (ResourceTypeEnum)(int)viewModel.ResourceItem.ResourceTypeEnum,
-                CatalogueNodeVersionId = viewModel.ResourceItem.Catalogue.CatalogueNodeVersionId,
-                ResourceTitle = viewModel.ResourceItem.Title,
+                ResourceVersionId = resourceVersionId,
+                ResourceReferenceId = resourceReferenceId,
+                ResourceType = (ResourceTypeEnum)resourceType,
+                CatalogueNodeVersionId = catalogueNodeVersionId,
+                ResourceTitle = resourceTitle,
                 ScormEsrLinkType = (EsrLinkType)scormEsrLinkType,
             });
         }
@@ -400,13 +412,11 @@
         [Route("Resource/UnpublishConfirmPost")]
         public async Task<IActionResult> UnpublishConfirm(ResourceUnpublishConfirmViewModel viewModel)
         {
-            var associatedFile = await this.resourceService.GetResourceVersionExtendedAsync(viewModel.ResourceVersionId);
             var validationResult = await this.resourceService.UnpublishResourceVersionAsync(viewModel.ResourceVersionId);
             var catalogue = await this.catalogueService.GetCatalogueAsync(viewModel.CatalogueNodeVersionId);
 
             if (validationResult.IsValid)
             {
-                _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(associatedFile); });
                 if (viewModel.CatalogueNodeVersionId == 1)
                 {
                     return this.Redirect("/my-contributions/unpublished");
@@ -474,7 +484,7 @@
                     ResourceVersionId = resourceVersionId,
                     NodePathId = nodePathId,
                     ActivityStart = DateTime.UtcNow, // TODO: What about user's timezone offset when Javascript is disabled? Needs JavaScript.
-                    ActivityStatus = ActivityStatusEnum.Completed,
+                    ActivityStatus = ActivityStatusEnum.Launched,
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
             }

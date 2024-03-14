@@ -2,6 +2,7 @@ namespace LearningHub.Nhs.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing.Imaging;
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
@@ -1310,6 +1311,45 @@ namespace LearningHub.Nhs.Services
                 var vm = new ResourceVersionViewModel();
                 await this.GetResourceVersionViewModel(rv.Id, vm);
                 retVal.Add(vm);
+            }
+
+            return retVal;
+        }
+
+        /// <summary>
+        /// Get file directory for unpublished or deleted versions.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="List{String}"/>.</returns>
+        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId)
+        {
+            var retVal = new List<string>();
+            File fileDetails = null;
+            var resource = await this.GetResourceVersionByIdAsync(resourceVersionId);
+            var rvs = await this.resourceVersionRepository.GetResourceVersionsAsync(resource.ResourceId);
+            rvs = rvs.Where(x => x.Id != resourceVersionId && x.PublicationId > 0).OrderByDescending(x => x.PublicationId).ToList();
+            var rv = rvs.FirstOrDefault();
+            if (rv != null)
+            {
+                var extendedResourceVersion = await this.GetResourceVersionExtendedViewModelAsync(rv.Id);
+                if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Scorm)
+                {
+                    retVal.Add(extendedResourceVersion.ScormDetails.ContentFilePath);
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Html)
+                {
+                    retVal.Add(extendedResourceVersion.HtmlDetails.ContentFilePath);
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Audio)
+                {
+                    retVal.Add(extendedResourceVersion.AudioDetails.File.FilePath);
+                    retVal.Add(extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Video)
+                {
+                    retVal.Add(extendedResourceVersion.VideoDetails.File.FilePath);
+                    retVal.Add(extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                }
             }
 
             return retVal;

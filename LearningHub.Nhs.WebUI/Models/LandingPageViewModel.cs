@@ -49,5 +49,10 @@ namespace LearningHub.Nhs.WebUI.Models
         /// Gets or sets get or sets the pageSectionDetailViewModels.
         /// </summary>
         public List<PageSectionDetailViewModel> PageSectionDetailViewModels { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether gets or sets the DisplayAVFromAMS.
+        /// </summary>
+        public bool DisplayAudioVideo { get; set; }
     }
 }

@@ -16,6 +16,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Filters;
+    using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
     using Microsoft.ApplicationInsights.AspNetCore;
@@ -27,6 +28,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Microsoft.FeatureManagement;
     using Settings = LearningHub.Nhs.WebUI.Configuration.Settings;
 
     /// <summary>
@@ -40,6 +42,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         private readonly IUserService userService;
         private readonly IDashboardService dashboardService;
         private readonly IContentService contentService;
+        private readonly IFeatureManager featureManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController"/> class.
@@ -53,6 +56,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="authConfig">Auth config.</param>
         /// <param name="dashboardService">Dashboard service.</param>
         /// <param name="contentService">Content service.</param>
+        /// <param name="featureManager"> featureManager.</param>
         public HomeController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
@@ -62,7 +66,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
             IResourceService resourceService,
             LearningHubAuthServiceConfig authConfig,
             IDashboardService dashboardService,
-            IContentService contentService)
+            IContentService contentService,
+            IFeatureManager featureManager)
         : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.authConfig = authConfig;
@@ -70,6 +75,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             this.resourceService = resourceService;
             this.dashboardService = dashboardService;
             this.contentService = contentService;
+            this.featureManager = featureManager;
         }
 
         /// <summary>
@@ -359,6 +365,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             var model = new LandingPageViewModel { PageSectionDetailViewModels = new List<PageSectionDetailViewModel>() };
             var pageViewModel = await this.contentService.GetPageByIdAsync(1, preview);
             model.PageViewModel = pageViewModel;
+            model.DisplayAudioVideo = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.LearnAudioVideoResource)).Result;
             if (pageViewModel != null && pageViewModel.PageSections.Any())
             {
                 foreach (var item in pageViewModel.PageSections)

@@ -10,6 +10,7 @@ namespace LearningHub.Nhs.AdminUI.Controllers
     using System.Threading.Tasks;
     using LearningHub.Nhs.AdminUI.Configuration;
     using LearningHub.Nhs.AdminUI.Extensions;
+    using LearningHub.Nhs.AdminUI.Helpers;
     using LearningHub.Nhs.AdminUI.Interfaces;
     using LearningHub.Nhs.AdminUI.Models;
     using LearningHub.Nhs.Models.Common;
@@ -20,6 +21,7 @@ namespace LearningHub.Nhs.AdminUI.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Microsoft.FeatureManagement;
 
     /// <summary>
     /// Defines the <see cref="ResourceController" />.
@@ -35,6 +37,11 @@ namespace LearningHub.Nhs.AdminUI.Controllers
         /// Defines the websettings.
         /// </summary>
         private readonly IOptions<WebSettings> websettings;
+
+        /// <summary>
+        /// Defines the featureManager.
+        /// </summary>
+        private readonly IFeatureManager featureManager;
 
         /// <summary>
         /// Defines the _logger.
@@ -59,18 +66,21 @@ namespace LearningHub.Nhs.AdminUI.Controllers
         /// <param name="logger">The logger<see cref="ILogger{HomeController}"/>.</param>
         /// <param name="resourceService">The resourceService<see cref="IResourceService"/>.</param>
         /// /// <param name="websettings">The websettings<see cref="IOptions{WebSettings}"/>.</param>
+        /// <param name="featureManager">The featureManager<see cref="IFeatureManager"/>.</param>
         public ResourceController(
             IWebHostEnvironment hostingEnvironment,
             IOptions<WebSettings> config,
             ILogger<HomeController> logger,
             IResourceService resourceService,
-            IOptions<WebSettings> websettings)
+            IOptions<WebSettings> websettings,
+            IFeatureManager featureManager)
         : base(hostingEnvironment)
         {
             this.logger = logger;
             this.websettings = websettings;
             this.config = config.Value;
             this.resourceService = resourceService;
+            this.featureManager = featureManager;
         }
 
         /// <summary>
@@ -312,6 +322,33 @@ namespace LearningHub.Nhs.AdminUI.Controllers
                 });
             }
         }
+
+        /// <summary>
+        /// The GetAVUnavailableView.
+        /// </summary>
+        /// <returns> partial view.  </returns>
+        [Route("Resource/GetAVUnavailableView")]
+        [HttpGet("GetAVUnavailableView")]
+        public IActionResult GetAVUnavailableView()
+        {
+            return this.PartialView("_AudioVideoUnavailable");
+        }
+
+        /// <summary>
+        /// The GetContributeResourceAVFlag.
+        /// </summary>
+        /// <returns> Return Contribute Resource AV Flag.</returns>
+        [Route("Resource/GetContributeAVResourceFlag")]
+        [HttpGet("GetContributeAVResourceFlag")]
+        public IActionResult GetContributeResourceAVFlag() => this.Ok(Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.ContributeAudioVideoResource)).Result);
+
+        /// <summary>
+        /// The GetLearnAVResourceFlag.
+        /// </summary>
+        /// <returns> Return Learn AV Resource Flag.</returns>
+        [Route("Resource/GetLearnAVResourceFlag")]
+        [HttpGet("GetLearnAVResourceFlag")]
+        public IActionResult GetLearnAVResourceFlag() => this.Ok(Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.LearnAudioVideoResource)).Result);
 
         private static List<PagingOptionPair> FilterOptions()
         {

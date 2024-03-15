@@ -241,6 +241,38 @@ const updateVideoAsset = async function (videoAsset: VideoAssetModel): Promise<b
         });
 };
 
+const getContributeAVResourceFlag = async function (): Promise<boolean> {
+    return await axios.get<boolean>('/Resource/GetContributeResourceAVFlag')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('getContributeResourceAVFlag:' + e);
+            throw e;
+        });
+};
+
+const getLearnAVResourceFlag = async function (): Promise<boolean> {
+    return await axios.get<boolean>('/Resource/GetLearnAVResourceFlag')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('getLearnResourceAVFlag:' + e);
+            throw e;
+        });
+};
+
+const getAVUnavailableView = async function (): Promise<string> {
+    return await axios.get('/Resource/GetAVUnavailableView')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.error('Error fetching shared partial view:', e)
+            throw e;
+        });
+};
 
 export const contentData = {
     getUploadSettings,
@@ -260,5 +292,8 @@ export const contentData = {
     createPageSection,
     updatePageSectionDetail,
     getPageSectionDetailVideo,
-    updateVideoAsset
+    updateVideoAsset,
+    getContributeAVResourceFlag,
+    getLearnAVResourceFlag,
+    getAVUnavailableView
 };

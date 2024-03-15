@@ -26,6 +26,9 @@ export class State {
     isTranscriptFileValid: boolean;
     isCaptionFileValid: boolean;    
     isThumbnailFileValid: boolean;
+    contributeAVResourceFlag: boolean;
+    learnAVResourceFlag: boolean;
+    getAVUnavailableView: string = '';
 }
 const state = new State();
 
@@ -37,7 +40,16 @@ class ApiRequest {
 const mutations = {
     async populateUploadSettings(state: State) {
         state.uploadSettings = await contentData.getUploadSettings();
-    },        
+    }, 
+    async populateContributeAVResourceFlag(state: State) {
+        state.contributeAVResourceFlag = await contentData.getContributeAVResourceFlag();
+    },
+    async populateAVLearnResourceFlag(state: State) {
+        state.learnAVResourceFlag = await contentData.getLearnAVResourceFlag();
+    },
+    async populateAVUnavailableView(state: State) {
+        state.getAVUnavailableView = await contentData.getAVUnavailableView();
+    },
     setCurrentUserName(state: State, payload: string) {
         state.currentUserName = payload;
     },

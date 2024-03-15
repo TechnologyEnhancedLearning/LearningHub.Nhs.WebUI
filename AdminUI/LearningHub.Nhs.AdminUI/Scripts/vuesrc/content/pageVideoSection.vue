@@ -66,7 +66,12 @@
             </div>
         </div>
 
-        <div>
+        <div v-if="!contributeResourceAVFlag">
+            <label class="control-label">Feature Video</label>
+            <div v-html="audioVideoUnavailableView"></div>
+        </div>
+
+        <div v-else>
             <label class="control-label">Feature Video</label>
             <div>
                 <span class="text-secondary mb-5">
@@ -295,6 +300,8 @@ Vue.use(Vuelidate as any);
         },
         async created() {
             this.$store.commit('populateUploadSettings');
+            this.$store.commit('populateAVLearnResourceFlag');
+            this.$store.commit('populateAVUnavailableView'); 
 
             const pageSectionId = this.$route.params.sectionId;
 
@@ -348,7 +355,13 @@ Vue.use(Vuelidate as any);
             },
             videoAsset(): VideoAssetModel {
                 return this.$store.state.pageSectionDetail.videoAsset;
-            }
+            },
+            contributeResourceAVFlag(): boolean {
+                return this.$store.state.getContributeAVResourceFlag;
+            },
+            audioVideoUnavailableView(): string {
+                return this.$store.state.getAVUnavailableView;
+            },
         },
         methods: {
             setSectionLayoutType(sectionLayoutType: SectionLayoutType) {

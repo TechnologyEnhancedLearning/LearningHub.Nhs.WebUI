@@ -29,6 +29,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Microsoft.FeatureManagement;
 
     /// <summary>
     /// Defines the <see cref="ResourceController" />.
@@ -47,6 +48,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         private readonly IMyLearningService myLearningService;
         private readonly IFileService fileService;
         private readonly ICacheService cacheService;
+        private readonly IFeatureManager featureManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceController"/> class.
@@ -66,6 +68,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="hierarchyService">The hierarchyService.</param>
         /// <param name="fileService">The fileService.</param>
         /// <param name="cacheService">The cacheService.</param>
+        /// <param name="featureManager"> The Feature flag manager.</param>
         public ResourceController(
             IWebHostEnvironment hostingEnvironment,
             ILogger<ResourceController> logger,
@@ -81,7 +84,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
             IMyLearningService myLearningService,
             IHierarchyService hierarchyService,
             IFileService fileService,
-            ICacheService cacheService)
+            ICacheService cacheService,
+            IFeatureManager featureManager)
             : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.azureMediaService = azureMediaService;
@@ -95,6 +99,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             this.myLearningService = myLearningService;
             this.fileService = fileService;
             this.cacheService = cacheService;
+            this.featureManager = featureManager;
         }
 
         /// <summary>
@@ -114,6 +119,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
             this.ViewBag.MediaActivityPlayingEventIntervalSeconds = this.Settings.MediaActivityPlayingEventIntervalSeconds;
             this.ViewBag.KeepUserSessionAliveIntervalSeconds = Convert.ToInt32(this.Settings.KeepUserSessionAliveIntervalMins) * 60000;
             this.ViewBag.SupportUrl = this.Settings.SupportUrls.SupportForm;
+            var learnResourceAVFlag = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.LearnAudioVideoResource)).Result;
+            this.ViewBag.LearnResourceAVFlag = learnResourceAVFlag;
 
             if (resourceReferenceId == 0)
             {
@@ -504,5 +511,32 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 return this.Ok(this.Content("No file found"));
             }
         }
+
+        /// <summary>
+        /// The GetAVUnavailableView.
+        /// </summary>
+        /// <returns> partial view.  </returns>
+        [Route("Resource/GetAVUnavailableView")]
+        [HttpGet("GetAVUnavailableView")]
+        public IActionResult GetAVUnavailableView()
+        {
+            return this.PartialView("_AudioVideoUnavailable");
+        }
+
+        /// <summary>
+        /// The GetContributeAVResourceFlag.
+        /// </summary>
+        /// <returns> Return Contribute Resource AV Flag.</returns>
+        [Route("Resource/GetContributeAVResourceFlag")]
+        [HttpGet("GetContributeAVResourceFlag")]
+        public IActionResult GetContributeResourceAVFlag() => this.Ok(Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.ContributeAudioVideoResource)).Result);
+
+        /// <summary>
+        /// The GetLearnAVResourceFlag.
+        /// </summary>
+        /// <returns> Return Learn AV Resource Flag.</returns>
+        [Route("Resource/GetLearnAVResourceFlag")]
+        [HttpGet("GetLearnAVResourceFlag")]
+        public IActionResult GetLearnAVResourceFlag() => this.Ok(Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.LearnAudioVideoResource)).Result);
     }
 }

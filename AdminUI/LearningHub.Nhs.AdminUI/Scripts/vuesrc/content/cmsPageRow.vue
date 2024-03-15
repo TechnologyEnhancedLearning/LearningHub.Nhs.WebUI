@@ -18,7 +18,7 @@
                         <div v-html="getDescription" />
                     </div>
                     <div class="information-page__asset-container">
-                        <div id="mediaContainer" :class="[`${disableVideoControl ? 'videoControlDisabled' : ''}`]" v-show="sectionTemplateType === SectionTemplateType.Video" class="w-100">
+                        <div id="mediaContainer" :class="[`${disableVideoControl ? 'videoControlDisabled' : ''}`]" v-show="sectionTemplateType === SectionTemplateType.Video && learnResourceAVFlag" class="w-100">
                             <video controls v-show="section.id" :id="[`azureMediaPlayer${section.id}`]"
                                    data-setup='{"logo": { "enabled": false }, "techOrder": ["azureHtml5JS", "flashSS",  "silverlightSS", "html5"], "nativeControlsForTouch": false, "fluid": true}'
                                    class="azuremediaplayer amp-default-skin amp-big-play-centered" style="height:250px;">
@@ -32,6 +32,9 @@
                                 </a>
                             </div>
                         </div>
+                    </div>
+                    <div v-if="!learnResourceAVFlag">
+                        <div v-html="audioVideoUnavailableView"></div>
                     </div>
                 </div>
                 <div v-if="sectionTemplateType === SectionTemplateType.Image && section.imageAsset" class="nhsuk-grid-column-full">
@@ -78,10 +81,14 @@
                 SectionTemplateType: SectionTemplateType,
                 pageSectionDetail: null as PageSectionDetailModel,
                 disableVideoControl: false,
+                learnResourceAVFlag: false,
+                audioVideoUnavailableView : '' as string,
             };
         },
         created() {
             this.load();
+            this.getLearnResourceAVFlag();
+            this.getAudioVideoUnavailableView();
         },
         computed: {
             getStyle() {
@@ -125,7 +132,7 @@
                         returnClass = "information-page__text-container--no-padding-right";
                     }
                 }
-                return returnClass;                
+                return returnClass;
             },
             getDescription() {
                 if (this.section.description) {
@@ -138,50 +145,60 @@
             },
             isRightSectionLayout() {
                 return this.section.sectionLayoutType == SectionLayoutType.Right;
-            }
+            },            
         },
         methods: {
+            getLearnResourceAVFlag() {
+                contentData.getLearnAVResourceFlag().then(response => {
+                this.learnResourceAVFlag = response;
+               });
+            },
+            getAudioVideoUnavailableView() {
+                contentData.getAVUnavailableView().then(response => {
+                this.audioVideoUnavailableView =  response;
+                });
+            },
             load() {
                 if (this.sectionTemplateType === SectionTemplateType.Video) {
-                contentData.getPageSectionDetailVideo(this.section.id).then(response => {
-                    this.pageSectionDetail = response;
+                    contentData.getPageSectionDetailVideo(this.section.id).then(response => {
+                        this.pageSectionDetail = response;
 
-                    if (!this.pageSectionDetail.videoAsset)
-                        return;
+                        if (!this.pageSectionDetail.videoAsset)
+                            return;
 
-                    const id = 'azureMediaPlayer' + this.pageSectionDetail.id;
-                    let azureMediaPlayer = amp(id);
+                        const id = 'azureMediaPlayer' + this.pageSectionDetail.id;
+                        let azureMediaPlayer = amp(id);
 
-                    if (this.pageSectionDetail.videoAsset.azureMediaAsset) {
-                        $(`#${id}`).css({ 'height': '', 'border': '1px solid #768692' });
-                        this.disableVideoControl = false;
-                    } else {
-                        this.disableVideoControl = true;
-                    }
+                        if (this.pageSectionDetail.videoAsset.azureMediaAsset) {
+                            $(`#${id}`).css({ 'height': '', 'border': '1px solid #768692' });
+                            this.disableVideoControl = false;
+                        } else {
+                            this.disableVideoControl = true;
+                        }
 
-                    if (this.pageSectionDetail.videoAsset.thumbnailImageFile) {
-                        azureMediaPlayer.poster(`/file/download/${this.pageSectionDetail.videoAsset.thumbnailImageFile.filePath}/${this.pageSectionDetail.videoAsset.thumbnailImageFile.fileName}`);
-                    }
-                    if (this.pageSectionDetail.videoAsset.azureMediaAsset && this.pageSectionDetail.videoAsset.closedCaptionsFile) {
-                        azureMediaPlayer.src([{
-                            type: "application/vnd.ms-sstr+xml",
-                            src: this.pageSectionDetail.videoAsset.azureMediaAsset.locatorUri,
-                            protectionInfo: [{ type: 'AES', authenticationToken: `Bearer=${this.pageSectionDetail.videoAsset.azureMediaAsset.authenticationToken}` }]
-                        }],
-                            [{ kind: "captions", src: `/file/download/${this.pageSectionDetail.videoAsset.closedCaptionsFile.filePath}/${this.pageSectionDetail.videoAsset.closedCaptionsFile.fileName}`, srclang: "en", label: "english" }]);
-                    }
-                    else if (this.pageSectionDetail.videoAsset.azureMediaAsset && !this.pageSectionDetail.videoAsset.closedCaptionsFile) {
-                        azureMediaPlayer.src([{
-                            type: "application/vnd.ms-sstr+xml",
-                            src: this.pageSectionDetail.videoAsset.azureMediaAsset.locatorUri,
-                            protectionInfo: [{ type: 'AES', authenticationToken: `Bearer=${this.pageSectionDetail.videoAsset.azureMediaAsset.authenticationToken}` }]
-                        }]);
-                    }
-                });
-            } else {
-                contentData.getPageSectionDetail(this.section.id).then(x => this.pageSectionDetail = x);
-            }
-            },
+                        if (this.pageSectionDetail.videoAsset.thumbnailImageFile) {
+                            azureMediaPlayer.poster(`/file/download/${this.pageSectionDetail.videoAsset.thumbnailImageFile.filePath}/${this.pageSectionDetail.videoAsset.thumbnailImageFile.fileName}`);
+                        }
+                        if (this.pageSectionDetail.videoAsset.azureMediaAsset && this.pageSectionDetail.videoAsset.closedCaptionsFile) {
+                            azureMediaPlayer.src([{
+                                type: "application/vnd.ms-sstr+xml",
+                                src: this.pageSectionDetail.videoAsset.azureMediaAsset.locatorUri,
+                                protectionInfo: [{ type: 'AES', authenticationToken: `Bearer=${this.pageSectionDetail.videoAsset.azureMediaAsset.authenticationToken}` }]
+                            }],
+                                [{ kind: "captions", src: `/file/download/${this.pageSectionDetail.videoAsset.closedCaptionsFile.filePath}/${this.pageSectionDetail.videoAsset.closedCaptionsFile.fileName}`, srclang: "en", label: "english" }]);
+                        }
+                        else if (this.pageSectionDetail.videoAsset.azureMediaAsset && !this.pageSectionDetail.videoAsset.closedCaptionsFile) {
+                            azureMediaPlayer.src([{
+                                type: "application/vnd.ms-sstr+xml",
+                                src: this.pageSectionDetail.videoAsset.azureMediaAsset.locatorUri,
+                                protectionInfo: [{ type: 'AES', authenticationToken: `Bearer=${this.pageSectionDetail.videoAsset.azureMediaAsset.authenticationToken}` }]
+                            }]);
+                        }
+                    });
+                } else {
+                    contentData.getPageSectionDetail(this.section.id).then(x => this.pageSectionDetail = x);
+                }
+            },           
             getAESProtection(token: string): string {
                 var aesProtectionInfo = '{"protectionInfo": [{"type": "AES", "authenticationToken":"Bearer=' + token + '"}], "streamingFormats":["SMOOTH","DASH"]}';
                 return aesProtectionInfo;
@@ -198,7 +215,7 @@
         },
         watch: {
             section() {
-                this.load();
+                this.load();               
             }
         }
     })

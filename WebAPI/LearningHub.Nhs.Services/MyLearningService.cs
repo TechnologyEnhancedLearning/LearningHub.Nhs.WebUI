@@ -182,14 +182,23 @@
 
             if (activityEntities.Any())
             {
-                var filteredActivities = new List<ResourceActivity> { activityEntities.FirstOrDefault(x => x.ActivityStatusId == ((int)ActivityStatusEnum.Completed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Launched) || x.ActivityStatusId == ((int)ActivityStatusEnum.Passed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Downloaded)) };
-                if (filteredActivities.FirstOrDefault() != null)
+                ResourceActivity filteredActivity = null;
+                if (activityEntities.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio || activityEntities.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Video)
                 {
-                    var result = await this.PopulateMyLearningDetailedItemViewModels(filteredActivities, userId);
+                    filteredActivity = activityEntities.Where(x => x.MediaResourceActivity != null && x.MediaResourceActivity.Any(x => x.PercentComplete == 100)).OrderByDescending(x => x.ActivityStart).FirstOrDefault();
+                }
+                else
+                {
+                    filteredActivity = activityEntities.Where(x => x.ActivityStatusId == ((int)ActivityStatusEnum.Completed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Launched) || x.ActivityStatusId == ((int)ActivityStatusEnum.Passed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Downloaded)).OrderByDescending(x => x.ActivityStart).FirstOrDefault();
+                }
+
+                if (filteredActivity != null)
+                {
+                    var result = await this.PopulateMyLearningDetailedItemViewModels(new List<ResourceActivity> { filteredActivity }, userId);
                     myLearningDetailedItemViewModel = result.FirstOrDefault();
-                    if (filteredActivities.FirstOrDefault().Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm)
+                    if (filteredActivity.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm)
                     {
-                        var sa = this.scormActivityRepository.GetAll().OrderByDescending(x => x.Id).Where(x => x.ResourceActivity.ResourceVersionId == filteredActivities.FirstOrDefault().ResourceVersionId && x.CreateUserId == filteredActivities.FirstOrDefault().UserId);
+                        var sa = this.scormActivityRepository.GetAll().OrderByDescending(x => x.Id).Where(x => x.ResourceActivity.ResourceVersionId == filteredActivity.ResourceVersionId && x.CreateUserId == filteredActivity.UserId);
                         if (sa.Any())
                         {
                             myLearningDetailedItemViewModel.ActivityDurationSeconds = 0;
@@ -199,9 +208,9 @@
                             }
                         }
                     }
-                    else if (filteredActivities.FirstOrDefault().Resource.ResourceTypeEnum == ResourceTypeEnum.Video || filteredActivities.FirstOrDefault().Resource.ResourceTypeEnum == ResourceTypeEnum.Audio)
+                    else if (filteredActivity.Resource.ResourceTypeEnum == ResourceTypeEnum.Video || filteredActivity.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio)
                     {
-                        var ma = this.mediaResourceActivity.GetAll().OrderByDescending(x => x.Id).Where(x => x.ResourceActivity.ResourceVersionId == filteredActivities.FirstOrDefault().ResourceVersionId && x.CreateUserId == filteredActivities.FirstOrDefault().UserId);
+                        var ma = this.mediaResourceActivity.GetAll().OrderByDescending(x => x.Id).Where(x => x.ResourceActivity.ResourceVersionId == filteredActivity.ResourceVersionId && x.CreateUserId == filteredActivity.UserId);
                         if (ma.Any())
                         {
                             myLearningDetailedItemViewModel.ActivityDurationSeconds = 0;
@@ -259,11 +268,19 @@
                    latestActivityCheck = latestActivityCheck.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && x.AssessmentResourceActivity.FirstOrDefault().Score.HasValue && ((int)Math.Round(x.AssessmentResourceActivity.FirstOrDefault().Score.Value, MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark)).ToList();
                 }
 
-                var expectedActivities = latestActivityCheck.Where(x => x.Id == resourceActivity.Id && (x.ActivityStatusId == ((int)ActivityStatusEnum.Completed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Launched) || x.ActivityStatusId == ((int)ActivityStatusEnum.Passed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Downloaded))).OrderByDescending(x => x.ActivityStart).FirstOrDefault();
-
-                if (latestActivityCheck.Any() && expectedActivities != null)
+                ResourceActivity expectedActivity = null;
+                if (resourceActivity.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio || resourceActivity.Resource.ResourceTypeEnum == ResourceTypeEnum.Video)
                 {
-                    if (latestActivityCheck.OrderByDescending(x => x.ActivityStart).FirstOrDefault().Id == expectedActivities.Id)
+                    expectedActivity = latestActivityCheck.Where(x => x.Id == resourceActivity.Id && x.MediaResourceActivity != null && x.MediaResourceActivity.Any(x => x.PercentComplete == 100)).OrderByDescending(x => x.ActivityStart).FirstOrDefault();
+                }
+                else
+                {
+                    expectedActivity = latestActivityCheck.Where(x => x.Id == resourceActivity.Id && (x.ActivityStatusId == ((int)ActivityStatusEnum.Completed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Launched) || x.ActivityStatusId == ((int)ActivityStatusEnum.Passed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Downloaded))).OrderByDescending(x => x.ActivityStart).FirstOrDefault();
+                }
+
+                if (latestActivityCheck.Any() && expectedActivity != null)
+                {
+                    if (latestActivityCheck.OrderByDescending(x => x.ActivityStart).FirstOrDefault().Id == expectedActivity.Id)
                     {
                         viewModel.CertificateEnabled = resourceActivity.ResourceVersion.CertificateEnabled.GetValueOrDefault(false);
                     }

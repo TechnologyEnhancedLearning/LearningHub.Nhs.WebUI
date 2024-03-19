@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using elfhHub.Nhs.Models.Common;
     using elfhHub.Nhs.Models.Entities;
@@ -428,6 +429,15 @@
         public async Task<IActionResult> CreateAccountCountrySelection(AccountCreationViewModel accountCreationViewModel)
         {
             var accountDetails = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            if (!string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
+            {
+                string filterText = Regex.Replace(accountCreationViewModel.FilterText, "[:!@#$%^&*()}{|\":?><\\[\\]\\;'/.,~]", " ");
+                if (string.IsNullOrWhiteSpace(filterText))
+                {
+                    this.ModelState.AddModelError("FilterText", CommonValidationErrorMessages.SearchTermRequired);
+                    return this.View("CreateAccountCountrySearch", accountCreationViewModel);
+                }
+            }
 
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
             {
@@ -565,6 +575,16 @@
         public async Task<IActionResult> CreateAccountCurrentRole(AccountCreationViewModel accountCreationViewModel)
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            if (!string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
+            {
+                string filterText = Regex.Replace(accountCreationViewModel.FilterText, "[:!@#$%^&*()}{|\":?><\\[\\]\\;'/.,~]", " ");
+                if (string.IsNullOrWhiteSpace(filterText))
+                {
+                    this.ModelState.AddModelError("FilterText", CommonValidationErrorMessages.SearchTermRequired);
+                    return this.View("CreateAccountSearchRole", new AccountCreationViewModel { RegionId = accountCreation.RegionId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+                }
+            }
+
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
             {
                 var currentJobRole = int.TryParse(accountCreation.CurrentRole, out int currentRole);
@@ -749,6 +769,18 @@
             }
 
             var optionalSpecialty = await this.specialtyService.GetSpecialtiesAsync();
+            if (!string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
+            {
+                string filterText = Regex.Replace(accountCreationViewModel.FilterText, "[:!@#$%^&*()}{|\":?><\\[\\]\\;'/.,~]", " ");
+                if (string.IsNullOrWhiteSpace(filterText))
+                {
+                    this.ModelState.AddModelError("PrimarySpecialtyId", CommonValidationErrorMessages.SpecialtyNotApplicable);
+                    accountCreationViewModel.RegistrationNumber = accountCreation.RegistrationNumber;
+                    accountCreationViewModel.CurrentRole = accountCreation.CurrentRole;
+                    return this.View("CreateAccountPrimarySpecialty", accountCreationViewModel);
+                }
+            }
+
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
             {
                 if (!string.IsNullOrWhiteSpace(accountCreation.PrimarySpecialtyId))

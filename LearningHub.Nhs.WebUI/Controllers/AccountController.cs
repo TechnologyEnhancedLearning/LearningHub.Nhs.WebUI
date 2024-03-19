@@ -1266,16 +1266,7 @@
             var region = await this.regionService.GetAllAsync();
             var specialty = await this.specialtyService.GetSpecialtiesAsync();
             var role = new Tuple<int, List<JobRoleBasicViewModel>>(0, null);
-            if (!string.IsNullOrEmpty(accountCreationViewModel.CurrentRoleName) && accountCreationViewModel.CurrentRoleName.Contains('/'))
-            {
-                string jobrole = accountCreationViewModel.CurrentRoleName.Replace("/", " ");
-                role = await this.jobRoleService.GetPagedFilteredAsync(jobrole, accountCreationViewModel.CurrentPageIndex, UserRegistrationContentPageSize);
-            }
-            else
-            {
-                role = await this.jobRoleService.GetPagedFilteredAsync(accountCreationViewModel.CurrentRoleName, accountCreationViewModel.CurrentPageIndex, UserRegistrationContentPageSize);
-            }
-
+            role = await this.jobRoleService.GetPagedFilteredAsync(accountCreationViewModel.CurrentRoleName, accountCreationViewModel.CurrentPageIndex, UserRegistrationContentPageSize);
             if (role.Item1 > 0)
             {
                 accountCreationViewModel.CurrentRoleName = role.Item2.FirstOrDefault(x => x.Id == int.Parse(accountCreationViewModel.CurrentRole)).NameWithStaffGroup;

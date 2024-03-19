@@ -10,13 +10,13 @@ namespace LearningHub.Nhs.AdminUI.Helpers
     public static class FeatureFlags
     {
         /// <summary>
-        /// The ContributeAudioVideoResource.
+        /// The AddAudioVideo.
         /// </summary>
-        public const string ContributeAudioVideoResource = "ContributeAudioVideoResource";
+        public const string AddAudioVideo = "AddAudioVideo";
 
         /// <summary>
-        /// The LearnAudioVideoResource.
+        /// The DisplayAudioVideo.
         /// </summary>
-        public const string LearnAudioVideoResource = "LearnAudioVideoResource";
+        public const string DisplayAudioVideo = "DisplayAudioVideo";
     }
 }

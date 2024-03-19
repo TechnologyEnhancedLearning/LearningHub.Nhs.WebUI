@@ -502,6 +502,38 @@ const getMyContributions = async function (resourceType: ResourceType, status: V
         });
 };
 
+const getContributeAVResourceFlag = async function (): Promise<boolean> {
+    return await AxiosWrapper.axios.get<boolean>('/Resource/GetContributeAVResourceFlag')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('GetContributeAVResourceFlag:' + e);
+            throw e;
+        });
+};
+
+const getLearnAVResourceFlag = async function (): Promise<boolean> {
+    return await AxiosWrapper.axios.get<boolean>('/Resource/GetLearnAVResourceFlag')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('GetLearnAVResourceFlag:' + e);
+            throw e;
+        });
+};
+
+const getAVUnavailableView = async function (): Promise<string> {
+    return await AxiosWrapper.axios.get('/Resource/GetAVUnavailableView')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.error('Error fetching shared partial view:', e)
+            throw e;
+        });
+};
 
 export const resourceData = {
     getContributeConfiguration,
@@ -541,4 +573,7 @@ export const resourceData = {
     getAssessmentDetail,
     duplicateBlocks,
     getMyContributions,
+    getContributeAVResourceFlag,
+    getLearnAVResourceFlag,
+    getAVUnavailableView
 };

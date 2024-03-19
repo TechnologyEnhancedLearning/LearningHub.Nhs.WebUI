@@ -55,7 +55,10 @@ export class State {
     counterInterval: any = undefined;
     hierarchyEdit: HierarchyEditModel = null;
     hierarchyEditLoaded: boolean = false;
-    userProviders : ProviderModel[] = null;
+    userProviders: ProviderModel[] = null;
+    contributeAVResourceFlag: boolean;
+    learnAVResourceFlag: boolean;
+    getAVUnavailableView: string = '';
 
     get previousVersionExists(): boolean {
         if (this.resourceDetail.currentResourceVersionId) {
@@ -241,6 +244,15 @@ const autosaverPlugin = function (store: Store<State>) {
 const mutations = {
     async populateContributeSettings(state: State) {
         state.contributeSettings = await resourceData.getContributeSettings();
+    },
+    async populateContributeAVResourceFlag(state: State) {
+        state.contributeAVResourceFlag = await resourceData.getContributeAVResourceFlag();
+    },
+    async populatLearnResourceAVFlag(state: State) {
+        state.learnAVResourceFlag = await resourceData.getLearnAVResourceFlag();
+    },
+    async populateAVUnavailableView(state: State) {
+        state.getAVUnavailableView = await resourceData.getAVUnavailableView();
     },
     async populateScormDetails(state: State, payload: number) {
         const scormDetail = await resourceData.getScormDetail(payload);

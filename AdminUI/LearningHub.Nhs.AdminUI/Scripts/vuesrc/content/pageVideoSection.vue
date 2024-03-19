@@ -66,7 +66,7 @@
             </div>
         </div>
 
-        <div v-if="!contributeResourceAVFlag">
+        <div v-if="!addAVFlag">
             <label class="control-label">Feature Video</label>
             <div v-html="audioVideoUnavailableView"></div>
         </div>
@@ -289,7 +289,8 @@ Vue.use(Vuelidate as any);
                 deleteWarning: false,
                 fileDeleteWarning: false,
                 fileOrTypeToBeDeleted: 0,
-                videoErrorMessage: ''
+                videoErrorMessage: '',
+                addAVFlag: false
             }
         },
         validations: {
@@ -299,9 +300,9 @@ Vue.use(Vuelidate as any);
             }
         },
         async created() {
-            this.$store.commit('populateUploadSettings');
-            this.$store.commit('populateAVLearnResourceFlag');
+            this.$store.commit('populateUploadSettings');            
             this.$store.commit('populateAVUnavailableView'); 
+            this.getAddAudioVideoFlag();
 
             const pageSectionId = this.$route.params.sectionId;
 
@@ -355,10 +356,7 @@ Vue.use(Vuelidate as any);
             },
             videoAsset(): VideoAssetModel {
                 return this.$store.state.pageSectionDetail.videoAsset;
-            },
-            contributeResourceAVFlag(): boolean {
-                return this.$store.state.getContributeAVResourceFlag;
-            },
+            },            
             audioVideoUnavailableView(): string {
                 return this.$store.state.getAVUnavailableView;
             },
@@ -505,7 +503,12 @@ Vue.use(Vuelidate as any);
                 this.fileErrorType = FileErrorTypeEnum.NoError
                 this.fileUploadServerError = '';
                 $('#fileUpload').val(null);
-            },          
+            }, 
+            getAddAudioVideoFlag() {
+                contentData.getAddAVFlag().then(response => {
+                    this.addAVFlag = response;
+               });
+            },
         },
     });
 </script>

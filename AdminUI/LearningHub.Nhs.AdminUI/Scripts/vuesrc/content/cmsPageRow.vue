@@ -18,7 +18,7 @@
                         <div v-html="getDescription" />
                     </div>
                     <div class="information-page__asset-container">
-                        <div id="mediaContainer" :class="[`${disableVideoControl ? 'videoControlDisabled' : ''}`]" v-show="sectionTemplateType === SectionTemplateType.Video && learnResourceAVFlag" class="w-100">
+                        <div id="mediaContainer" :class="[`${disableVideoControl ? 'videoControlDisabled' : ''}`]" v-show="sectionTemplateType === SectionTemplateType.Video && displayAVFlag" class="w-100">
                             <video controls v-show="section.id" :id="[`azureMediaPlayer${section.id}`]"
                                    data-setup='{"logo": { "enabled": false }, "techOrder": ["azureHtml5JS", "flashSS",  "silverlightSS", "html5"], "nativeControlsForTouch": false, "fluid": true}'
                                    class="azuremediaplayer amp-default-skin amp-big-play-centered" style="height:250px;">
@@ -33,7 +33,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="!learnResourceAVFlag">
+                    <div v-if="!displayAVFlag">
                         <div v-html="audioVideoUnavailableView"></div>
                     </div>
                 </div>
@@ -81,13 +81,13 @@
                 SectionTemplateType: SectionTemplateType,
                 pageSectionDetail: null as PageSectionDetailModel,
                 disableVideoControl: false,
-                learnResourceAVFlag: false,
+                displayAVFlag: false,
                 audioVideoUnavailableView : '' as string,
             };
         },
         created() {
             this.load();
-            this.getLearnResourceAVFlag();
+            this.getDisplayAVFlag();
             this.getAudioVideoUnavailableView();
         },
         computed: {
@@ -148,9 +148,9 @@
             },            
         },
         methods: {
-            getLearnResourceAVFlag() {
-                contentData.getLearnAVResourceFlag().then(response => {
-                this.learnResourceAVFlag = response;
+            getDisplayAVFlag() {
+                contentData.getDisplayAVFlag().then(response => {
+                this.displayAVFlag = response;
                });
             },
             getAudioVideoUnavailableView() {

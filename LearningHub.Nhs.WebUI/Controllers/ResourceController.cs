@@ -529,7 +529,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <returns> Return Contribute Resource AV Flag.</returns>
         [Route("Resource/GetContributeAVResourceFlag")]
         [HttpGet("GetContributeAVResourceFlag")]
-        public IActionResult GetContributeResourceAVFlag() => this.Ok(Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.ContributeAudioVideoResource)).Result);
+        public bool GetContributeResourceAVFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.ContributeAudioVideoResource).Result;
 
         /// <summary>
         /// The GetLearnAVResourceFlag.
@@ -537,6 +537,6 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <returns> Return Learn AV Resource Flag.</returns>
         [Route("Resource/GetLearnAVResourceFlag")]
         [HttpGet("GetLearnAVResourceFlag")]
-        public IActionResult GetLearnAVResourceFlag() => this.Ok(Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.LearnAudioVideoResource)).Result);
+        public bool GetLearnAVResourceFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.LearnAudioVideoResource).Result;
     }
 }

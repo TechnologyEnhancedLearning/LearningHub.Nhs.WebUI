@@ -335,20 +335,20 @@ namespace LearningHub.Nhs.AdminUI.Controllers
         }
 
         /// <summary>
-        /// The GetContributeResourceAVFlag.
+        /// The GetAddAVFlag.
         /// </summary>
-        /// <returns> Return Contribute Resource AV Flag.</returns>
-        [Route("Resource/GetContributeAVResourceFlag")]
-        [HttpGet("GetContributeAVResourceFlag")]
-        public IActionResult GetContributeResourceAVFlag() => this.Ok(Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.ContributeAudioVideoResource)).Result);
+        /// <returns> Return AV Flag.</returns>
+        [Route("Resource/GetAddAVFlag")]
+        [HttpGet("GetAddAVFlag")]
+        public bool GetAddAVFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.AddAudioVideo).Result;
 
         /// <summary>
-        /// The GetLearnAVResourceFlag.
+        /// The GetDisplayAVFlag.
         /// </summary>
-        /// <returns> Return Learn AV Resource Flag.</returns>
-        [Route("Resource/GetLearnAVResourceFlag")]
-        [HttpGet("GetLearnAVResourceFlag")]
-        public IActionResult GetLearnAVResourceFlag() => this.Ok(Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.LearnAudioVideoResource)).Result);
+        /// <returns> Return display AV flag.</returns>
+        [Route("Resource/GetDisplayAVFlag")]
+        [HttpGet("GetDisplayAVFlag")]
+        public bool GetDisplayAVFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.DisplayAudioVideo).Result;
 
         private static List<PagingOptionPair> FilterOptions()
         {

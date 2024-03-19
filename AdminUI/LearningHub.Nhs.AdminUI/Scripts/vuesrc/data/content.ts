@@ -241,24 +241,24 @@ const updateVideoAsset = async function (videoAsset: VideoAssetModel): Promise<b
         });
 };
 
-const getContributeAVResourceFlag = async function (): Promise<boolean> {
-    return await axios.get<boolean>('/Resource/GetContributeResourceAVFlag')
+const getAddAVFlag = async function (): Promise<boolean> {
+    return await axios.get<boolean>('/Resource/GetAddAVFlag')
         .then(response => {
             return response.data;
         })
         .catch(e => {
-            console.log('getContributeResourceAVFlag:' + e);
+            console.log('getAddAVFlag:' + e);
             throw e;
         });
 };
 
-const getLearnAVResourceFlag = async function (): Promise<boolean> {
-    return await axios.get<boolean>('/Resource/GetLearnAVResourceFlag')
+const getDisplayAVFlag = async function (): Promise<boolean> {
+    return await axios.get<boolean>('/Resource/GetDisplayAVFlag')
         .then(response => {
             return response.data;
         })
         .catch(e => {
-            console.log('getLearnResourceAVFlag:' + e);
+            console.log('getDisplayAVFlag:' + e);
             throw e;
         });
 };
@@ -293,7 +293,7 @@ export const contentData = {
     updatePageSectionDetail,
     getPageSectionDetailVideo,
     updateVideoAsset,
-    getContributeAVResourceFlag,
-    getLearnAVResourceFlag,
+    getAddAVFlag,
+    getDisplayAVFlag,
     getAVUnavailableView
 };

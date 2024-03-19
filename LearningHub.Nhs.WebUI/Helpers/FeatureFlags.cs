@@ -15,8 +15,8 @@ namespace LearningHub.Nhs.WebUI.Helpers
         public const string ContributeAudioVideoResource = "ContributeAudioVideoResource";
 
         /// <summary>
-        /// The LearnAudioVideoResource.
+        /// The DisplayAudioVideoResource.
         /// </summary>
-        public const string LearnAudioVideoResource = "LearnAudioVideoResource";
+        public const string DisplayAudioVideoResource = "DisplayAudioVideoResource";
     }
 }

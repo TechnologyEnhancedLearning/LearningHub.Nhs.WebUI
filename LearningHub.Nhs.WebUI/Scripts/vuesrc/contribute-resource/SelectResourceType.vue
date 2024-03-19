@@ -67,7 +67,6 @@
             getContributeResAVResourceFlag() {
                  resourceData.getContributeAVResourceFlag().then(response => {
                  this.contributeResourceAVFlag = response;
-                 debugger;
                 });
              },
             getResourceTypeDescription(resourceType: ResourceType): string {

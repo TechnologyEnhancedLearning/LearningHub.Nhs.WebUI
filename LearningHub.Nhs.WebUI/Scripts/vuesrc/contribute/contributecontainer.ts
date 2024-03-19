@@ -23,6 +23,8 @@ new Vue({
     },
     created() {
         this.$store.commit('populateContributeSettings');
+        this.$store.commit('populateContributeAVResourceFlag');
+        this.$store.commit('populateAVUnavailableView'); 
         if (this.$route.params.rvId) {
             this.$store.commit('populateResource', this.$route.params.rvId);
         }

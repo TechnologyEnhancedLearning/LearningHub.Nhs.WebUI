@@ -119,8 +119,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
             this.ViewBag.MediaActivityPlayingEventIntervalSeconds = this.Settings.MediaActivityPlayingEventIntervalSeconds;
             this.ViewBag.KeepUserSessionAliveIntervalSeconds = Convert.ToInt32(this.Settings.KeepUserSessionAliveIntervalMins) * 60000;
             this.ViewBag.SupportUrl = this.Settings.SupportUrls.SupportForm;
-            var learnResourceAVFlag = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.LearnAudioVideoResource)).Result;
-            this.ViewBag.LearnResourceAVFlag = learnResourceAVFlag;
+            var displayAVResourceFlag = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.DisplayAudioVideoResource)).Result;
+            this.ViewBag.DisplayAVResourceFlag = displayAVResourceFlag;
 
             if (resourceReferenceId == 0)
             {
@@ -532,11 +532,11 @@ namespace LearningHub.Nhs.WebUI.Controllers
         public bool GetContributeResourceAVFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.ContributeAudioVideoResource).Result;
 
         /// <summary>
-        /// The GetLearnAVResourceFlag.
+        /// The GetDisplayAVResourceFlag.
         /// </summary>
-        /// <returns> Return Learn AV Resource Flag.</returns>
-        [Route("Resource/GetLearnAVResourceFlag")]
-        [HttpGet("GetLearnAVResourceFlag")]
-        public bool GetLearnAVResourceFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.LearnAudioVideoResource).Result;
+        /// <returns> Return Display AV Resource Flag.</returns>
+        [Route("Resource/GetDisplayAVResourceFlag")]
+        [HttpGet("GetDisplayAVResourceFlag")]
+        public bool GetDisplayAVResourceFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.DisplayAudioVideoResource).Result;
     }
 }

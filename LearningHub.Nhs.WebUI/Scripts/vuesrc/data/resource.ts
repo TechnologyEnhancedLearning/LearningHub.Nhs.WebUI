@@ -513,13 +513,13 @@ const getContributeAVResourceFlag = async function (): Promise<boolean> {
         });
 };
 
-const getLearnAVResourceFlag = async function (): Promise<boolean> {
-    return await AxiosWrapper.axios.get<boolean>('/Resource/GetLearnAVResourceFlag')
+const getDisplayAVResourceFlag = async function (): Promise<boolean> {
+    return await AxiosWrapper.axios.get<boolean>('/Resource/GetDisplayAVResourceFlag')
         .then(response => {
             return response.data;
         })
         .catch(e => {
-            console.log('GetLearnAVResourceFlag:' + e);
+            console.log('GetDisplayAVResourceFlag:' + e);
             throw e;
         });
 };
@@ -574,6 +574,6 @@ export const resourceData = {
     duplicateBlocks,
     getMyContributions,
     getContributeAVResourceFlag,
-    getLearnAVResourceFlag,
+    getDisplayAVResourceFlag,
     getAVUnavailableView
 };

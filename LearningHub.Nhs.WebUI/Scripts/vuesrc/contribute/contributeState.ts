@@ -248,8 +248,8 @@ const mutations = {
     async populateContributeAVResourceFlag(state: State) {
         state.contributeAVResourceFlag = await resourceData.getContributeAVResourceFlag();
     },
-    async populatLearnResourceAVFlag(state: State) {
-        state.learnAVResourceFlag = await resourceData.getLearnAVResourceFlag();
+    async populateDisplayAVResourceFlag(state: State) {
+        state.learnAVResourceFlag = await resourceData.getDisplayAVResourceFlag();
     },
     async populateAVUnavailableView(state: State) {
         state.getAVUnavailableView = await resourceData.getAVUnavailableView();

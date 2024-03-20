@@ -431,7 +431,7 @@
             var accountDetails = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
             if (!string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
             {
-                string filterText = Regex.Replace(accountCreationViewModel.FilterText, "[:!@#$%^&*()}{|\":?><\\[\\]\\;'/.,~]", " ");
+                string filterText = Regex.Replace(accountCreationViewModel.FilterText, "[:!@#$%^&*()}{|\":?><\\[\\]\\;'/.,~\\\"\"\\'\\\\/]", " ");
                 if (string.IsNullOrWhiteSpace(filterText))
                 {
                     this.ModelState.AddModelError("FilterText", CommonValidationErrorMessages.SearchTermRequired);
@@ -577,7 +577,7 @@
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
             if (!string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
             {
-                string filterText = Regex.Replace(accountCreationViewModel.FilterText, "[:!@#$%^&*()}{|\":?><\\[\\]\\;'/.,~]", " ");
+                string filterText = Regex.Replace(accountCreationViewModel.FilterText, "[:!@#$%^&*()}{|\":?><\\[\\]\\;'/.,~\\\"\"\\'\\\\/]", " ");
                 if (string.IsNullOrWhiteSpace(filterText))
                 {
                     this.ModelState.AddModelError("FilterText", CommonValidationErrorMessages.SearchTermRequired);
@@ -771,7 +771,7 @@
             var optionalSpecialty = await this.specialtyService.GetSpecialtiesAsync();
             if (!string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
             {
-                string filterText = Regex.Replace(accountCreationViewModel.FilterText, "[:!@#$%^&*()}{|\":?><\\[\\]\\;'/.,~]", " ");
+                string filterText = Regex.Replace(accountCreationViewModel.FilterText, "[:!@#$%^&*()}{|\":?><\\[\\]\\;'/.,~\\\"\"\\'\\\\/]", " ");
                 if (string.IsNullOrWhiteSpace(filterText))
                 {
                     this.ModelState.AddModelError("PrimarySpecialtyId", CommonValidationErrorMessages.SpecialtyNotApplicable);

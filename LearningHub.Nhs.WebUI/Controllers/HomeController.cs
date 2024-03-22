@@ -246,17 +246,29 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     Catalogues = new Nhs.Models.Dashboard.DashboardCatalogueResponseViewModel { Type = catalogueDashBoard },
                 };
 
-                switch (dashBoardTray)
+                bool isAjax = this.HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest";
+
+                if (isAjax)
                 {
-                    case "my-learning":
-                        model.MyLearnings = await this.dashboardService.GetMyAccessLearningsAsync(myLearningDashBoard, pageNumber);
-                        return this.PartialView("_MyAccessedLearningTray", model);
-                    case "resources":
-                        model.Resources = await this.dashboardService.GetResourcesAsync(resourceDashBoard, pageNumber);
-                        return this.PartialView("_ResourceTray", model);
-                    case "catalogues":
-                        model.Catalogues = await this.dashboardService.GetCataloguesAsync(catalogueDashBoard, pageNumber);
-                        return this.PartialView("_CatalogueTray", model);
+                    switch (dashBoardTray)
+                    {
+                        case "my-learning":
+                            model.MyLearnings = await this.dashboardService.GetMyAccessLearningsAsync(myLearningDashBoard, pageNumber);
+                            return this.PartialView("_MyAccessedLearningTray", model);
+                        case "resources":
+                            model.Resources = await this.dashboardService.GetResourcesAsync(resourceDashBoard, pageNumber);
+                            return this.PartialView("_ResourceTray", model);
+                        case "catalogues":
+                            model.Catalogues = await this.dashboardService.GetCataloguesAsync(catalogueDashBoard, pageNumber);
+                            return this.PartialView("_CatalogueTray", model);
+                    }
+                }
+                else
+                {
+                    model.MyLearnings = await this.dashboardService.GetMyAccessLearningsAsync(myLearningDashBoard, dashBoardTray == "my-learning" ? pageNumber : 1);
+                    model.Resources = await this.dashboardService.GetResourcesAsync(resourceDashBoard, dashBoardTray == "resources" ? pageNumber : 1);
+                    model.Catalogues = await this.dashboardService.GetCataloguesAsync(catalogueDashBoard, dashBoardTray == "catalogues" ? pageNumber : 1);
+                    return this.View("Dashboard", model);
                 }
             }
 

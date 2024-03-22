@@ -98,6 +98,8 @@
     <Folder Include="Tables\Report" />
     <Folder Include="Scripts\NLog Database Scripts" />
     <Folder Include="Functions\Resources" />
+    <Folder Include="Triggers" />
+    <Folder Include="Triggers\external" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\learningHub_Data.sql" />
@@ -506,6 +508,7 @@
     <Build Include="Functions\Resources\UserCanEditResource.sql" />
     <Build Include="Stored Procedures\Hierarchy\UserGroupPreviewerEnsure.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\AttributeData.sql" />
+    <None Include="Triggers\external\AddDigitalLearningSolutionsExternalSystem.sql" />
     <Build Include="Stored Procedures\Activity\GetUserLatestActivityCheck.sql" />
     <Build Include="Stored Procedures\Activity\GetUserLearningActivities.sql" />
     <Build Include="Stored Procedures\Activity\GetUserLearningActivitiesCount.sql" />

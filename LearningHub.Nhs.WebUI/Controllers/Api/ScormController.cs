@@ -260,6 +260,11 @@
 
                 // Persist update.
                 await this.activityService.UpdateScormActivityAsync(scoObject);
+                if (scoObject.LessonStatusId == 3)
+                {
+                    await this.activityService.CompleteScormActivity(scoObject);
+                }
+
                 return true;
             }
             catch (Exception ex)

@@ -1267,15 +1267,10 @@
             var region = await this.regionService.GetAllAsync();
             var specialty = await this.specialtyService.GetSpecialtiesAsync();
 
-            // var role = await this.jobRoleService.GetFilteredAsync(accountCreationViewModel.CurrentRoleName);
-            // if (role.Count > 0)
-            // {
-            //    accountCreationViewModel.CurrentRoleName = role.FirstOrDefault(x => x.Id == int.Parse(accountCreationViewModel.CurrentRole)).NameWithStaffGroup;
-            // }
-            var role = await this.jobRoleService.GetPagedFilteredAsync(accountCreationViewModel.CurrentRoleName, accountCreationViewModel.CurrentPageIndex, UserRegistrationContentPageSize);
-            if (role.Item1 > 0)
+            var role = await this.jobRoleService.GetFilteredAsync(accountCreationViewModel.CurrentRoleName);
+            if (role.Count > 0)
             {
-                accountCreationViewModel.CurrentRoleName = role.Item2.FirstOrDefault(x => x.Id == int.Parse(accountCreationViewModel.CurrentRole)).NameWithStaffGroup;
+                accountCreationViewModel.CurrentRoleName = role.FirstOrDefault(x => x.Id == int.Parse(accountCreationViewModel.CurrentRole)).NameWithStaffGroup;
             }
 
             var grade = await this.gradeService.GetGradesForJobRoleAsync(int.TryParse(accountCreationViewModel.CurrentRole, out int roleId) ? roleId : 0);

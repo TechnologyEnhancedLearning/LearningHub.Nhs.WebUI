@@ -5,7 +5,10 @@
                 <h3>Uploaded file</h3>
             </div>
         </div>
-        <div class="row">
+        <div v-if="!contributeResourceAVFlag">
+            <div v-html="audioVideoUnavailableView"></div>
+        </div>
+        <div v-else class="row">
             <file-panel :file-id="localVideoDetail.file.fileId" :file-description="localVideoDetail.file.fileName" :file-size="localVideoDetail.file.fileSizeKb" @changefile="changeFile"></file-panel>
         </div>
 
@@ -116,7 +119,13 @@
             },
             fileUpdated(): ResourceFileModel {
                 return this.$store.state.fileUpdated;
-            }
+            },
+            contributeResourceAVFlag(): boolean {
+                return this.$store.state.contributeAVResourceFlag;
+            },
+            audioVideoUnavailableView(): string {
+                return this.$store.state.getAVUnavailableView;
+            },
         },
         created() {
             this.setInitialValues();

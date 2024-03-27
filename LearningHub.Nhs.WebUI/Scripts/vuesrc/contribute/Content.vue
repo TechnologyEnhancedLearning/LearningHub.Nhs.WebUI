@@ -295,6 +295,23 @@
                             </transition>
                         </div>
 
+                        <div v-if="avUnavailableMessage">
+                            <transition name="modal">
+                                <div class="modal-mask">
+                                    <div class="modal-wrapper">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div v-html="audioVideoUnavailableView"></div>
+                                                <div class="modal-footer modal-footer--buttons">
+                                                    <button type="button" class="nhsuk-button nhsuk-button--secondary" @click="cancelAVUnavailModal">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </transition>
+                        </div>
+
                         <div v-if="invalidFileTypeError">
                             <transition name="modal">
                                 <div class="modal-mask">
@@ -472,6 +489,7 @@
                 flags: [] as FlagModel[],
                 displayType: '' as string,
                 commonContentKey: 0,
+                avUnavailableMessage: false,
                 // Some of the Content components have local state
                 // which isn't in the vuex store.
                 // This means those fields are validated using an
@@ -589,7 +607,13 @@
             },
             hierarchyEditLoaded(): boolean {
                 return this.$store.state.hierarchyEditLoaded;
-            }
+            },
+            contributeResourceAVFlag(): boolean {
+                return this.$store.state.contributeAVResourceFlag;
+            },
+            audioVideoUnavailableView(): string {
+                return this.$store.state.getAVUnavailableView;
+            },
         },
         async created() {
             if (this.$store.state.currentUserName == '') {
@@ -779,6 +803,9 @@
             cancelChangeFile() {
                 this.fileTypeChangeWarning = false;
             },
+            cancelAVUnavailModal() {
+                this.avUnavailableMessage = false;
+            },
             processChangeFile() {
                 this.fileTypeChangeWarning = false;
                 this.acceptUploadedFile();
@@ -879,7 +906,7 @@
                         if (this.selectedResourceType != ResourceType.UNDEFINED) {
                             let fileExtension = this.uploadingFile.name.split(".").pop();
                             let resourceType: ResourceType = ResourceType.GENERICFILE;
-                            if (fileExtension.toLowerCase() == 'zip' && this.selectedResourceType == ResourceType.SCORM) {
+                           if (fileExtension.toLowerCase() == 'zip' && this.selectedResourceType == ResourceType.SCORM) {
                                 resourceType = ResourceType.SCORM;
                             } else if (fileExtension.toLowerCase() == 'zip' && this.selectedResourceType == ResourceType.HTML) {
                                 resourceType = ResourceType.HTML;
@@ -889,6 +916,10 @@
                                 if (fileType) {
                                     resourceType = fileType.defaultResourceTypeId;
                                 }
+                            }
+                            if ((resourceType == 2 || resourceType == 7) && !this.contributeResourceAVFlag) {
+                                this.avUnavailableMessage = true;
+                                return;
                             }
                             if (resourceType != this.selectedResourceType && this.isFileAlreadyUploaded) {
                                 if (this.previousVersionExists) {

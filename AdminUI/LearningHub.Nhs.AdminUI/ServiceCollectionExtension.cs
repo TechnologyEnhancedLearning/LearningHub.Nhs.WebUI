@@ -32,6 +32,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.FeatureManagement;
     using Microsoft.IdentityModel.Protocols.OpenIdConnect;
     using Microsoft.IdentityModel.Tokens;
 
@@ -219,6 +220,8 @@
             {
                 options.Filters.Add(typeof(CheckInitialLogonFilter));
             });
+
+            services.AddFeatureManagement();
         }
 
         private static async Task UserSessionBegins(TokenValidatedContext context)

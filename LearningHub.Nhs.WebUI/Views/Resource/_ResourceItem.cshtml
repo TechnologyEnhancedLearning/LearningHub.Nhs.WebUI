@@ -188,11 +188,18 @@
 
                     @* Video/Audio/Scorm/Case/Assessment require JavaScript - use Vue.js resource app. *@
 
-                    <div id="resourcecontainer">
-                        <router-view user-authenticated="@ViewBag.UserAuthenticated"
-                                     :media-activity-playing-event-interval-seconds="@ViewBag.MediaActivityPlayingEventIntervalSeconds"
-                                     :keep-user-session-alive-interval-seconds="@ViewBag.KeepUserSessionAliveIntervalSeconds" />
-                    </div>
+                    if (!@ViewBag.DisplayAVResourceFlag)
+                    {
+                        <partial name="_AudioVideoUnavailable" />
+                    }
+                    else
+                    {
+                        <div id="resourcecontainer">
+                            <router-view user-authenticated="@ViewBag.UserAuthenticated"
+                                         :media-activity-playing-event-interval-seconds="@ViewBag.MediaActivityPlayingEventIntervalSeconds"
+                                         :keep-user-session-alive-interval-seconds="@ViewBag.KeepUserSessionAliveIntervalSeconds" />
+                        </div>
+                    }
 
                     <partial name="_JavaScriptDisabled" />
                 }

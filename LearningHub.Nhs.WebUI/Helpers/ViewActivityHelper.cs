@@ -303,7 +303,7 @@
                     else
                     {
                         duration = $"{t.Minutes}min {t.Seconds}sec";
-                        duration = duration.Replace("0min", string.Empty);
+                        duration = duration.StartsWith("0min") ? duration.Replace("0min", string.Empty) : duration;
                     }
                 }
             }

@@ -20,6 +20,7 @@
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models.Account;
+    using LinqToTwitter.Provider;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http.Features;
@@ -953,7 +954,7 @@
         public async Task<IActionResult> CreateAccountWorkPlace(AccountCreationViewModel accountCreationViewModel)
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-
+            accountCreation.LocationId = "606";
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
             {
                 if (!string.IsNullOrWhiteSpace(accountCreation.LocationId))
@@ -1265,6 +1266,12 @@
             var employer = await this.locationService.GetByIdAsync(int.TryParse(accountCreationViewModel.LocationId, out int primaryEmploymentId) ? primaryEmploymentId : 0);
             var region = await this.regionService.GetAllAsync();
             var specialty = await this.specialtyService.GetSpecialtiesAsync();
+
+            // var role = await this.jobRoleService.GetFilteredAsync(accountCreationViewModel.CurrentRoleName);
+            // if (role.Count > 0)
+            // {
+            //    accountCreationViewModel.CurrentRoleName = role.FirstOrDefault(x => x.Id == int.Parse(accountCreationViewModel.CurrentRole)).NameWithStaffGroup;
+            // }
             var role = await this.jobRoleService.GetPagedFilteredAsync(accountCreationViewModel.CurrentRoleName, accountCreationViewModel.CurrentPageIndex, UserRegistrationContentPageSize);
             if (role.Item1 > 0)
             {

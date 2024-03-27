@@ -954,7 +954,6 @@
         public async Task<IActionResult> CreateAccountWorkPlace(AccountCreationViewModel accountCreationViewModel)
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-            accountCreation.LocationId = "606";
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
             {
                 if (!string.IsNullOrWhiteSpace(accountCreation.LocationId))

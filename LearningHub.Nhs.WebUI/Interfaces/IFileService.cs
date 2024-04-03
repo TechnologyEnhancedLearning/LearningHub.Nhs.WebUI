@@ -1,8 +1,4 @@
-﻿// <copyright file="IFileService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Interfaces
+﻿namespace LearningHub.Nhs.WebUI.Interfaces
 {
     using System.IO;
     using System.Threading.Tasks;
@@ -28,6 +24,14 @@ namespace LearningHub.Nhs.WebUI.Interfaces
         /// <param name="fileName">File name.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         Task<ShareFileDownloadInfo> DownloadFileAsync(string filePath, string fileName);
+
+        /// <summary>
+        /// The StreamFileAsync.
+        /// </summary>
+        /// <param name="filePath">The filePath.</param>
+        /// <param name="fileName">The fileName.</param>
+        /// <returns>The <see cref="Task{Stream}"/>.</returns>
+        Task<Stream> StreamFileAsync(string filePath, string fileName);
 
         /// <summary>
         /// The ProcessFile.

@@ -1,8 +1,4 @@
-﻿// <copyright file="ViewActivityHelper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Helpers
+﻿namespace LearningHub.Nhs.WebUI.Helpers
 {
     using System;
     using System.Collections.Generic;
@@ -307,7 +303,7 @@ namespace LearningHub.Nhs.WebUI.Helpers
                     else
                     {
                         duration = $"{t.Minutes}min {t.Seconds}sec";
-                        duration = duration.Replace("0min", string.Empty);
+                        duration = duration.StartsWith("0min") ? duration.Replace("0min", string.Empty) : duration;
                     }
                 }
             }

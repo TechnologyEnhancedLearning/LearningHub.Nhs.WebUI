@@ -1,7 +1,3 @@
-// <copyright file="QuestionBlockRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.Repository.Resources
 {
     using System.Threading.Tasks;

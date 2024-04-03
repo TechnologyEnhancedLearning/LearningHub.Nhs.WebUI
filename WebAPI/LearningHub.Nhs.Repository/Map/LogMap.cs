@@ -1,8 +1,4 @@
-﻿// <copyright file="LogMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Map
+﻿namespace LearningHub.Nhs.Repository.Map
 {
     using LearningHub.Nhs.Models.Entities;
     using Microsoft.EntityFrameworkCore;

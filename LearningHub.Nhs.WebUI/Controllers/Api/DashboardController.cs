@@ -1,8 +1,4 @@
-﻿// <copyright file="DashboardController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Controllers.Api
+﻿namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Enums;

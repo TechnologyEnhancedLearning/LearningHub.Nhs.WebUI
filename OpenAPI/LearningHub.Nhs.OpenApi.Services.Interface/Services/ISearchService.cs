@@ -1,7 +1,3 @@
-// <copyright file="ISearchService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
 {
     using System.Threading.Tasks;

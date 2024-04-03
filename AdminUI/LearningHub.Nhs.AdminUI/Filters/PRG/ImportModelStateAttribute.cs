@@ -1,8 +1,4 @@
-﻿// <copyright file="ImportModelStateAttribute.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Filters.PRG
+﻿namespace LearningHub.Nhs.AdminUI.Filters.PRG
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;

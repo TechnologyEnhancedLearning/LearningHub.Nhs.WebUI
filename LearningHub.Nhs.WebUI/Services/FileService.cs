@@ -1,8 +1,4 @@
-﻿// <copyright file="FileService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Services
+﻿namespace LearningHub.Nhs.WebUI.Services
 {
     using System;
     using System.IO;
@@ -92,6 +88,29 @@ namespace LearningHub.Nhs.WebUI.Services
                 if (await file.ExistsAsync())
                 {
                     return await file.DownloadAsync();
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// The StreamFileAsync.
+        /// </summary>
+        /// <param name="filePath">The filePath.</param>
+        /// <param name="fileName">The fileName.</param>
+        /// <returns>The <see cref="Task{Stream}"/>.</returns>
+        public async Task<Stream> StreamFileAsync(string filePath, string fileName)
+        {
+            var directory = this.ShareClient.GetDirectoryClient(filePath);
+
+            if (await directory.ExistsAsync())
+            {
+                var file = directory.GetFileClient(fileName);
+
+                if (await file.ExistsAsync())
+                {
+                    return await file.OpenReadAsync();
                 }
             }
 

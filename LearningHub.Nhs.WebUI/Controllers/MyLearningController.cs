@@ -129,6 +129,8 @@
                 Passed = learningRequest.Passed,
                 Failed = learningRequest.Failed,
                 Downloaded = learningRequest.Downloaded,
+                Viewed = learningRequest.Viewed,
+                Launched = learningRequest.Launched,
                 CertificateEnabled = learningRequest.CertificateEnabled,
             };
 

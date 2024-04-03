@@ -9,7 +9,8 @@
                 <IconButton v-if="isEnabled"
                             class="expansion-button"
                             :iconClasses="isOpen ? `fas fa-minus-circle blue` : `fas fa-plus-circle blue`"
-                            :ariaLabel="isOpen ? `hide content` : `reveal content`"></IconButton>
+                            :ariaLabel="isOpen ? `hide content` : `reveal content`"
+                            iconRole="img"></IconButton>
                 <i v-else
                    class="fas fa-lock expansion-button grey pl-12 pr-12"></i>
                 <div class="text-field d-flex">

@@ -3,159 +3,165 @@
 @using LearningHub.Nhs.WebUI.Models
 @model MyLearningViewModel;
 @{
-    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+  var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
 }
 
 @if (Model.TotalCount > 0)
 {
-    <table role="table" class="nhsuk-table-responsive">
-        <thead role="rowgroup" class="nhsuk-table__head">
-            <tr role="row">
-                <th role="columnheader" class="" scope="col">
-                    Learning resource
-                </th>
-                <th role="columnheader" class="" scope="col">
-                    Version
-                </th>
-                <th role="columnheader" class="" scope="col">
-                    Type
-                </th>
-                <th role="columnheader" class="" scope="col">
-                    Certificate
-                </th>
-                <th role="columnheader" class="" scope="col">
-                    Status
-                </th>
-            </tr>
-        </thead>
-        <tbody class="nhsuk-table__body">
-            @foreach (var activity in Model.Activities)
-            {
-                <tr role="row" class="nhsuk-table__row">
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading"> Learning resource </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">
-                            @if (activity.IsCurrentResourceVersion && activity.ResourceReferenceId > 0 && activity.VersionStatusId != (int?) VersionStatusEnum.Unpublished)
-                            {
-                                <span>
-                                    <a class="nhsuk-u-font-size-19" asp-controller="Resource" asp-action="Index" asp-route-resourceReferenceId="@activity.ResourceReferenceId">@activity.Title</a><br />
-                                    <b>Last @ViewActivityHelper.GetResourceTypeVerb(activity).ToLower() on : </b>  @activity.ActivityDate.DateTime.ToString("dd MMM yyyy") at @activity.ActivityDate.DateTime.ToShortTimeString()<br />
-                                </span>
-                            }
-                            else
-                            {
-                                <span class="nhsuk-u-font-size-19">
-                                    @activity.Title<br>
-                                </span>
+  <table role="table" class="nhsuk-table-responsive">
+    <thead role="rowgroup" class="nhsuk-table__head">
+      <tr role="row">
+        <th role="columnheader" class="" scope="col">
+          Learning resource
+        </th>
+        <th role="columnheader" class="" scope="col">
+          Version
+        </th>
+        <th role="columnheader" class="" scope="col">
+          Type
+        </th>
+        <th role="columnheader" class="" scope="col">
+          Certificate
+        </th>
+        <th role="columnheader" class="" scope="col">
+          Status
+        </th>
+      </tr>
+    </thead>
+    <tbody class="nhsuk-table__body">
+      @foreach (var activity in Model.Activities)
+      {
+        <tr role="row" class="nhsuk-table__row">
+          <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+            <span class="nhsuk-table-responsive__heading"> Learning resource </span>
+            <span class="nhsuk-u-text-align-left table-content-spacing">
+              @if (activity.IsCurrentResourceVersion && activity.ResourceReferenceId > 0 && activity.VersionStatusId != (int?)VersionStatusEnum.Unpublished)
+              {
+                <span>
+                  <a class="nhsuk-u-font-size-19" asp-controller="Resource" asp-action="Index" asp-route-resourceReferenceId="@activity.ResourceReferenceId">@activity.Title</a><br />
+                  <b>Last @ViewActivityHelper.GetResourceTypeVerb(activity).ToLower() on : </b>  @activity.ActivityDate.DateTime.ToString("dd MMM yyyy") at @activity.ActivityDate.DateTime.ToShortTimeString()<br />
+                </span>
+              }
+              else
+              {
+                <span class="nhsuk-u-font-size-19">
+                  @activity.Title<br>
+                </span>
 
-                            }
-                            @if (activity.IsCurrentResourceVersion && activity.ResourceType == ResourceTypeEnum.Assessment)
-                            {
-                                string linkName = "Resume";
-                                if (ViewActivityHelper.CanShowScore(activity)) linkName = "View summary";
+              }
+              @if (activity.IsCurrentResourceVersion && activity.ResourceType == ResourceTypeEnum.Assessment)
+              {
+                string linkName = "Resume";
+                if (ViewActivityHelper.CanShowScore(activity)) linkName = "View summary";
 
-                                <a asp-controller="Resource" asp-action="Index" asp-route-attempt="@activity.AssessmentResourceActivityId" asp-route-resourceReferenceId="@activity.ResourceReferenceId">@linkName</a>
-
-
-                            }
-
-                            @if (ViewActivityHelper.CanViewPercentage(activity))
-                            {
-                                <span class="nhsuk-u-padding-top-1">
-                                    @activity.CompletionPercentage% complete
-                                    @if (activity.IsMostRecent && ViewActivityHelper.CanViewProgress(activity))
-                                    {
-                                        <a asp-controller="MyLearning" asp-action="ViewProgress" asp-route-resourceId="@activity.ResourceId" asp-route-version="@activity.MajorVersion" asp-route-maxTime="@activity.ResourceDurationMilliseconds" asp-route-returnUrl="@returnUrl" asp-route-resourceReferenceId="@activity.ResourceReferenceId">View Progress</a>
-                                    }
-                                </span>
-                            }
-                            else if (ViewActivityHelper.CanShowScore(activity))
-                            {
-                                <span>
-                                    <b>Scored :</b>  @activity.ScorePercentage%
-                                </span>
-
-                            }
-
-                            @if (activity.AssessmentDetails != null && !string.IsNullOrEmpty(activity.AssessmentDetails.ExtraAttemptReason))
-                            {
-
-                                <b>Reason :</b> @activity.AssessmentDetails.ExtraAttemptReason
-                            }
-                        </span>
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading">Version </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">@activity.Version</span>
-
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading">Type </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">@ViewActivityHelper.GetResourceTypeText(activity)</span>
-
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading">Certificate </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">
-                            @if(ViewActivityHelper.CanDownloadCertificate(activity))
-                            {
-                                @if (activity.IsCurrentResourceVersion)
-                                {
-                                    <a target="_blank" asp-controller="mylearning" asp-action="certificate" asp-route-resourceReferenceId="@activity.ResourceReferenceId">View certificate</a>
-                                }
-                                else
-                                {
-                                    <a target="_blank" asp-controller="mylearning" asp-action="certificate" asp-route-resourceReferenceId="@activity.ResourceReferenceId" asp-route-majorVersion="@activity.MajorVersion" asp-route-minorVersion="@activity.MinorVersion">View certificate</a>
-                                }
-                            }
-                        </span>
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading">Status </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">
-                            @if (ViewActivityHelper.GetActivityStatus(activity) == ActivityStatusEnum.Completed)
-                            {
-                                <strong class="nhsuk-tag nhsuk-tag--green">
-                                    Completed
-                                </strong>
-                            }
-                            else if (ViewActivityHelper.GetActivityStatus(activity) == ActivityStatusEnum.Passed)
-                            {
-                                <strong class="nhsuk-tag">
-                                    Passed
-                                </strong>
-                            }
-                            else if (ViewActivityHelper.GetActivityStatus(activity) == ActivityStatusEnum.Downloaded)
-                            {
-                                <strong class="nhsuk-tag nhsuk-tag--green">
-                                    Downloaded
-                                </strong>
-                            }
-                            else if (ViewActivityHelper.GetActivityStatus(activity) == ActivityStatusEnum.InProgress)
-                            {
-                                <strong class="nhsuk-tag nhsuk-tag--yellow">
-                                    Incomplete
-                                </strong>
-                            }
-                            else if (ViewActivityHelper.GetActivityStatus(activity) == ActivityStatusEnum.Failed)
-                            {
-                                <strong class="nhsuk-tag nhsuk-tag--red">
-                                    Failed
-                                </strong>
-                            }
-                            else if (ViewActivityHelper.GetActivityStatus(activity) == ActivityStatusEnum.Launched)
-                            {
-                                <strong class="nhsuk-tag nhsuk-tag--green">
-                                    Launched
-                                </strong>
-                            }
-                        </span>
-                    </td>
-                </tr>
+                <a asp-controller="Resource" asp-action="Index" asp-route-attempt="@activity.AssessmentResourceActivityId" asp-route-resourceReferenceId="@activity.ResourceReferenceId">@linkName</a>
 
 
-            }
+              }
 
-        </tbody>
-    </table>
+              @if (ViewActivityHelper.CanViewPercentage(activity))
+              {
+                <span class="nhsuk-u-padding-top-1">
+                  @activity.CompletionPercentage% complete
+                  @if (activity.IsMostRecent && ViewActivityHelper.CanViewProgress(activity))
+                  {
+                    <a asp-controller="MyLearning" asp-action="ViewProgress" asp-route-resourceId="@activity.ResourceId" asp-route-version="@activity.MajorVersion" asp-route-maxTime="@activity.ResourceDurationMilliseconds" asp-route-returnUrl="@returnUrl" asp-route-resourceReferenceId="@activity.ResourceReferenceId">View Progress</a>
+                  }
+                </span>
+              }
+              else if (ViewActivityHelper.CanShowScore(activity))
+              {
+                <span>
+                  <b>Scored :</b>  @activity.ScorePercentage%
+                </span>
+
+              }
+
+              @if (activity.AssessmentDetails != null && !string.IsNullOrEmpty(activity.AssessmentDetails.ExtraAttemptReason))
+              {
+
+                <b>Reason :</b> @activity.AssessmentDetails.ExtraAttemptReason
+              }
+            </span>
+          </td>
+          <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+            <span class="nhsuk-table-responsive__heading">Version </span>
+            <span class="nhsuk-u-text-align-left table-content-spacing">@activity.Version</span>
+
+          </td>
+          <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+            <span class="nhsuk-table-responsive__heading">Type </span>
+            <span class="nhsuk-u-text-align-left table-content-spacing">@ViewActivityHelper.GetResourceTypeText(activity)</span>
+
+          </td>
+          <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+            <span class="nhsuk-table-responsive__heading">Certificate </span>
+            <span class="nhsuk-u-text-align-left table-content-spacing">
+              @if (ViewActivityHelper.CanDownloadCertificate(activity))
+              {
+                @if (activity.IsCurrentResourceVersion)
+                {
+                  <a target="_blank" asp-controller="mylearning" asp-action="certificate" asp-route-resourceReferenceId="@activity.ResourceReferenceId">View certificate</a>
+                }
+                else
+                {
+                  <a target="_blank" asp-controller="mylearning" asp-action="certificate" asp-route-resourceReferenceId="@activity.ResourceReferenceId" asp-route-majorVersion="@activity.MajorVersion" asp-route-minorVersion="@activity.MinorVersion">View certificate</a>
+                }
+              }
+            </span>
+          </td>
+          <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+            <span class="nhsuk-table-responsive__heading">Status </span>
+            <span class="nhsuk-u-text-align-left table-content-spacing">
+              @if (ViewActivityHelper.GetActivityStatus(activity) == ActivityStatusEnum.Completed.ToString())
+              {
+                <strong class="nhsuk-tag nhsuk-tag--green">
+                  Completed
+                </strong>
+              }
+              else if (ViewActivityHelper.GetActivityStatus(activity) == "Viewed")
+              {
+                <strong class="nhsuk-tag nhsuk-tag--blue">
+                  Viewed
+                </strong>
+              }
+              else if (ViewActivityHelper.GetActivityStatus(activity) == ActivityStatusEnum.Passed.ToString())
+              {
+                <strong class="nhsuk-tag">
+                  Passed
+                </strong>
+              }
+              else if (ViewActivityHelper.GetActivityStatus(activity) == ActivityStatusEnum.Downloaded.ToString())
+              {
+                <strong class="nhsuk-tag nhsuk-tag--grey">
+                  Downloaded
+                </strong>
+              }
+              else if (ViewActivityHelper.GetActivityStatus(activity) == ActivityStatusEnum.InProgress.ToString())
+              {
+                <strong class="nhsuk-tag nhsuk-tag--yellow">
+                  In progress
+                </strong>
+              }
+              else if (ViewActivityHelper.GetActivityStatus(activity) == ActivityStatusEnum.Failed.ToString())
+              {
+                <strong class="nhsuk-tag nhsuk-tag--red">
+                  Failed
+                </strong>
+              }
+              else if (ViewActivityHelper.GetActivityStatus(activity) == ActivityStatusEnum.Launched.ToString())
+              {
+                <strong class="nhsuk-tag nhsuk-tag--blue">
+                  Launched
+                </strong>
+              }
+            </span>
+          </td>
+        </tr>
+
+
+      }
+
+    </tbody>
+  </table>
 }

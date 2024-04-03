@@ -142,9 +142,14 @@
 #maincontent {
 
     button[class^='nhsuk-search__submit'] span.nhsuk-u-visually-hidden {
-        color: #595959;
-        background-color: #fff;
+        color: $color_nhsuk-grey-1;
+        background-color: $color_nhsuk-white;
     }
+}
+
+form label.nhsuk-u-visually-hidden {
+    color: $color_nhsuk-grey-1;
+    background-color: $color_nhsuk-white;
 }
 
 /* One third column layout that switches to full width at the small desktop breakpoint (990px) instead of mobile. */

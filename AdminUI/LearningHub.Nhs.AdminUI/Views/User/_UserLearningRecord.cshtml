@@ -81,34 +81,46 @@
           </td>
           <td>
             <span class="nhsuk-u-text-align-left table-content-spacing">
-              @if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.Completed)
+              @if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.Completed.ToString())
               {
                 <strong class="nhsuk-tag nhsuk-tag--green tag-font">
                   Completed
                 </strong>
               }
-              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.Passed)
+              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == "Viewed")
+              {
+                <strong class="nhsuk-tag nhsuk-tag--blue tag-font">
+                  Viewed
+                </strong>
+              }
+              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.Passed.ToString())
               {
                 <strong class="nhsuk-tag tag-font">
                   Passed
                 </strong>
               }
-              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.Downloaded)
+              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.Downloaded.ToString())
               {
-                <strong class="nhsuk-tag nhsuk-tag--green tag-font">
+                <strong class="nhsuk-tag nhsuk-tag--grey tag-font">
                   Downloaded
                 </strong>
               }
-              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.InProgress)
+              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.InProgress.ToString())
               {
                 <strong class="nhsuk-tag nhsuk-tag--yellow tag-font">
-                  Incomplete
+                  In progress
                 </strong>
               }
-              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.Failed)
+              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.Failed.ToString())
               {
                 <strong class="nhsuk-tag nhsuk-tag--red tag-font">
                   Failed
+                </strong>
+              }
+              else if (LearningActivityHelper.GetActivityStatus(userLearningRecord) == ActivityStatusEnum.Launched.ToString())
+              {
+                <strong class="nhsuk-tag nhsuk-tag--blue tag-font">
+                  Launched
                 </strong>
               }
             </span>

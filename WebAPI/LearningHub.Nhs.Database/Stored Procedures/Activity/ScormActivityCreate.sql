@@ -7,6 +7,7 @@
 --
 -- 23-02-2021  Killian Davies	Initial Revision
 -- 09-02-2022  Killian Davies	Use OriginalResourceReference.
+-- 20-11-2023  SA  Initial ResourceActivity status changed from Launched to Incomplete.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[ScormActivityCreate]
 (
@@ -75,7 +76,7 @@ BEGIN
 			rv.MajorVersion,
 			rv.MinorVersion,
 			@NodePathId,
-			1, -- Launched
+			7, -- Incomplete
 			ActivityStart = @AmendDate,
 			DurationSeconds = 0,
 			Deleted = 0,

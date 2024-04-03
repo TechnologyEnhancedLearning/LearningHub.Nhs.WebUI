@@ -110,24 +110,16 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<MyLearningDetailedViewModel> GetActivityDetailed(int userId, MyLearningRequestModel requestModel)
         {
-            var activityQuery = this.resourceActivityRepository.GetByUserId(userId);
-
-            // Filter records by request parameters.
-            activityQuery = this.ApplyFilters(activityQuery, requestModel);
+            var activityQuery = this.resourceActivityRepository.GetByUserIdFromSP(userId, requestModel, this.settings.Value.DetailedMediaActivityRecordingStartDate).Result.OrderByDescending(r => r.ActivityStart).DistinctBy(l => l.Id);
 
             // Count total records.
             MyLearningDetailedViewModel viewModel = new MyLearningDetailedViewModel()
             {
-                TotalCount = requestModel.CertificateEnabled ? await activityQuery.GroupBy(x => x.ResourceVersionId).CountAsync() : activityQuery.Count(),
+                TotalCount = this.resourceActivityRepository.GetTotalCount(userId, requestModel, this.settings.Value.DetailedMediaActivityRecordingStartDate),
             };
 
-            if (requestModel.CertificateEnabled)
-            {
-               activityQuery = activityQuery.GroupBy(x => x.ResourceVersionId).OrderByDescending(x => x.Key).Select(g => g.OrderByDescending(x => x.Id).FirstOrDefault());
-            }
-
             // Return only the requested batch.
-            var activityEntities = await activityQuery.Skip(requestModel.Skip).Take(requestModel.Take).ToListAsync();
+            var activityEntities = activityQuery.ToList();
 
             viewModel.Activities = await this.PopulateMyLearningDetailedItemViewModels(activityEntities, userId);
 
@@ -261,11 +253,11 @@
                     VersionStatusId = (int?)resourceActivity.ResourceVersion.VersionStatusEnum,
                 };
 
-                var latestActivityCheck = await this.resourceActivityRepository.GetAllTheActivitiesFor(resourceActivity.CreateUserId, resourceActivity.ResourceVersionId);
-                latestActivityCheck.RemoveAll(x => x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && (x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded || x.ActivityStatusId == (int)ActivityStatusEnum.Launched || x.ActivityStatusId == (int)ActivityStatusEnum.InProgress));
+                var latestActivityCheck = await this.resourceActivityRepository.GetAllTheActivitiesFromSP(resourceActivity.CreateUserId, resourceActivity.ResourceVersionId);
+                latestActivityCheck.RemoveAll(x => x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && (x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded || x.ActivityStatusId == (int)ActivityStatusEnum.Incomplete || x.ActivityStatusId == (int)ActivityStatusEnum.InProgress));
                 if (latestActivityCheck.Any() && latestActivityCheck.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
                 {
-                   latestActivityCheck = latestActivityCheck.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && x.AssessmentResourceActivity.FirstOrDefault().Score.HasValue && ((int)Math.Round(x.AssessmentResourceActivity.FirstOrDefault().Score.Value, MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark)).ToList();
+                    latestActivityCheck = latestActivityCheck.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && x.AssessmentResourceActivity.FirstOrDefault().Score.HasValue && ((int)Math.Round(x.AssessmentResourceActivity.FirstOrDefault().Score.Value, MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark)).ToList();
                 }
 
                 ResourceActivity expectedActivity = null;
@@ -368,6 +360,25 @@
 
                         var allAttempts = await this.resourceActivityRepository.GetAllTheActivitiesFor(userId, resourceActivity.ResourceVersionId);
                         var currentAttempt = allAttempts.FindIndex(a => a.Id == resourceActivity.Id) + 1;
+
+                        if (viewModel.CompletionPercentage == 100)
+                        {
+                            if (resourceActivity.ResourceVersion.AssessmentResourceVersion.AssessmentType == AssessmentTypeEnum.Informal)
+                            {
+                                viewModel.ActivityStatus = ActivityStatusEnum.Completed;
+                            }
+                            else
+                            {
+                                viewModel.ActivityStatus = viewModel.ScorePercentage >= resourceActivity.ResourceVersion.AssessmentResourceVersion.PassMark
+                                    ? ActivityStatusEnum.Passed
+                                    : ActivityStatusEnum.Failed;
+                            }
+                        }
+                        else
+                        {
+                            viewModel.ActivityStatus = ActivityStatusEnum.InProgress;
+                        }
+
                         viewModel.AssessmentDetails = new MyLearningAssessmentDetails
                         {
                             ExtraAttemptReason = activity.Reason,

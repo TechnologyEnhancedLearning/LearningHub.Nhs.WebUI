@@ -1,9 +1,11 @@
 ﻿namespace LearningHub.Nhs.WebUI.Models
 {
+    using System.Collections.Generic;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
+    using LearningHub.Nhs.Models.User;
 
-    /// <summary>
+     /// <summary>
     /// Defines the <see cref="RestrictedAccessBannerViewModel" />.
     /// </summary>
     public class RestrictedAccessBannerViewModel
@@ -37,5 +39,10 @@
         /// Gets or sets the CatalogueAccessRequest if there is one.
         /// </summary>
         public CatalogueAccessRequestViewModel CatalogueAccessRequest { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current user's usergroups.
+        /// </summary>
+        public List<RoleUserGroupViewModel> UserGroups { get; set; }
     }
 }

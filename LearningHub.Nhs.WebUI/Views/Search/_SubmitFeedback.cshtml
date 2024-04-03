@@ -34,6 +34,7 @@
                 <input type="hidden" name="groupId" value="@Model.GroupId" />
                 <input type="hidden" name="resourceCount" value="@Model.ResourceSearchResult?.TotalHits" />
 
+                <label class="nhsuk-u-visually-hidden" for="Feedback">Feedback</label>
                 <textarea maxlength="1000" name="Feedback" id="Feedback" class="nhsuk-textarea @(this.ViewBag.EmptyFeedbackError == true ? "nhsuk-textarea--error" : "")" rows="5" aria-describedby="feedback-hint"></textarea>
             </div>
 

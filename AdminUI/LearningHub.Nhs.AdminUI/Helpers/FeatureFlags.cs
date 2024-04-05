@@ -1,8 +1,4 @@
-﻿// <copyright file="FeatureFlags.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Helpers
+﻿namespace LearningHub.Nhs.AdminUI.Helpers
 {
     /// <summary>
     /// <see cref="FeatureFlags"/>.

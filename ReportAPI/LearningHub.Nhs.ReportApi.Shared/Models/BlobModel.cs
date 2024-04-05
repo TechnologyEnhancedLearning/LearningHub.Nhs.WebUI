@@ -1,8 +1,4 @@
-﻿// <copyright file="BlobModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.ReportApi.Shared.Models
+﻿namespace LearningHub.Nhs.ReportApi.Shared.Models
 {
     using System.IO;
 

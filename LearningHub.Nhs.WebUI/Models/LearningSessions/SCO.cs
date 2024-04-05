@@ -1,8 +1,4 @@
-﻿// <copyright file="SCO.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.LearningSessions
+﻿namespace LearningHub.Nhs.WebUI.Models.LearningSessions
 {
     using System.Collections.Generic;
     using LearningHub.Nhs.Models.Resource.Activity;

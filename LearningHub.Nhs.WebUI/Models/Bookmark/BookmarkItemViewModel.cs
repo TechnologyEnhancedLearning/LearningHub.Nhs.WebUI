@@ -1,8 +1,4 @@
-﻿// <copyright file="BookmarkItemViewModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Bookmark
+﻿namespace LearningHub.Nhs.WebUI.Models.Bookmark
 {
     using LearningHub.Nhs.Models.Bookmark;
 

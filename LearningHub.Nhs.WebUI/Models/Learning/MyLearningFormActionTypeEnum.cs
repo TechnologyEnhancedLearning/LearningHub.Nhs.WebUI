@@ -1,8 +1,4 @@
-﻿// <copyright file="MyLearningFormActionTypeEnum.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Learning
+﻿namespace LearningHub.Nhs.WebUI.Models.Learning
 {
     /// <summary>
     /// Defines the MyLearningFormActionTypeEnum.

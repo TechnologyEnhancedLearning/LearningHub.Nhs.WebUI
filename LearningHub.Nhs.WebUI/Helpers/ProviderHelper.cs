@@ -1,8 +1,4 @@
-﻿// <copyright file="ProviderHelper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Helpers
+﻿namespace LearningHub.Nhs.WebUI.Helpers
 {
     using System.Collections.Generic;
 
@@ -22,7 +18,7 @@ namespace LearningHub.Nhs.WebUI.Helpers
 
             if (providerNames != null && providerNames.Count > 0)
             {
-                providerstring += "Provided by ";
+                providerstring += "Developed with ";
                 providerstring += string.Join(", ", providerNames.ToArray());
             }
 

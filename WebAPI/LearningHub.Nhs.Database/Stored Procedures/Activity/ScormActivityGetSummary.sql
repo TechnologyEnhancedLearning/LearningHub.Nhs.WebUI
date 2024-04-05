@@ -27,7 +27,7 @@ BEGIN
 	INNER JOIN
 		resources.[ResourceVersion] rv ON rv.id = r.CurrentResourceVersionId
 	WHERE 
-		rr.id = @ResourceReferenceId
+		rr.OriginalResourceReferenceId = @ResourceReferenceId
 		AND rr.Deleted = 0
 		AND r.Deleted = 0
 		AND rv.Deleted = 0

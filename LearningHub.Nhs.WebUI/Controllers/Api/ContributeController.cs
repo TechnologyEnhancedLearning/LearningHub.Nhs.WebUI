@@ -1,10 +1,8 @@
-﻿// <copyright file="ContributeController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Controllers.Api
+﻿namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
@@ -226,7 +224,13 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         [Route("DeleteResourceVersion/{resourceversionId}")]
         public async Task<ActionResult> DeleteResourceVersion(int resourceVersionId)
         {
+            var associatedFile = await this.resourceService.GetResourceVersionExtendedAsync(resourceVersionId);
             var validationResult = await this.contributeService.DeleteResourceVersionAsync(resourceVersionId);
+            if (validationResult.IsValid)
+            {
+                _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(associatedFile); });
+            }
+
             return this.Ok(validationResult);
         }
 

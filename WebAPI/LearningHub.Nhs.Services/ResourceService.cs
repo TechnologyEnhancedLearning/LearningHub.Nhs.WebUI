@@ -1,11 +1,8 @@
-// <copyright file="ResourceService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing.Imaging;
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
@@ -1320,6 +1317,45 @@ namespace LearningHub.Nhs.Services
         }
 
         /// <summary>
+        /// Get file directory for unpublished or deleted versions.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="List{String}"/>.</returns>
+        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId)
+        {
+            var retVal = new List<string>();
+            File fileDetails = null;
+            var resource = await this.GetResourceVersionByIdAsync(resourceVersionId);
+            var rvs = await this.resourceVersionRepository.GetResourceVersionsAsync(resource.ResourceId);
+            rvs = rvs.Where(x => x.Id != resourceVersionId && x.PublicationId > 0).OrderByDescending(x => x.PublicationId).ToList();
+            var rv = rvs.FirstOrDefault();
+            if (rv != null)
+            {
+                var extendedResourceVersion = await this.GetResourceVersionExtendedViewModelAsync(rv.Id);
+                if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Scorm)
+                {
+                    retVal.Add(extendedResourceVersion.ScormDetails.ContentFilePath);
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Html)
+                {
+                    retVal.Add(extendedResourceVersion.HtmlDetails.ContentFilePath);
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Audio)
+                {
+                    retVal.Add(extendedResourceVersion.AudioDetails.File.FilePath);
+                    retVal.Add(extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Video)
+                {
+                    retVal.Add(extendedResourceVersion.VideoDetails.File.FilePath);
+                    retVal.Add(extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                }
+            }
+
+            return retVal;
+        }
+
+        /// <summary>
         /// Creation of a new resource version.
         /// </summary>
         /// <param name="resourceId">The resourceId<see cref="int"/>.</param>
@@ -1646,64 +1682,71 @@ namespace LearningHub.Nhs.Services
             // - set field ResourceVersionIdInEdit / ResourceVersionIdPublishing for this scenario, required for UI rendering
             var rv = await this.resourceVersionRepository.GetCurrentForResourceReferenceIdAsync(resourceReferenceId);
 
-            int resourceVersionIdInEdit = 0;
-            int resourceVersionIdPublishing = 0;
-
-            if (rv.VersionStatusEnum == VersionStatusEnum.Draft || rv.VersionStatusEnum == VersionStatusEnum.Publishing)
+            if (rv != null)
             {
-                var rvp = await this.resourceVersionRepository.GetCurrentPublicationForResourceReferenceIdAsync(resourceReferenceId);
+                int resourceVersionIdInEdit = 0;
+                int resourceVersionIdPublishing = 0;
 
-                if (rvp != null && rv.VersionStatusEnum == VersionStatusEnum.Draft)
+                if (rv.VersionStatusEnum == VersionStatusEnum.Draft || rv.VersionStatusEnum == VersionStatusEnum.Publishing)
                 {
-                    resourceVersionIdInEdit = rv.Id;
+                    var rvp = await this.resourceVersionRepository.GetCurrentPublicationForResourceReferenceIdAsync(resourceReferenceId);
+
+                    if (rvp != null && rv.VersionStatusEnum == VersionStatusEnum.Draft)
+                    {
+                        resourceVersionIdInEdit = rv.Id;
+                    }
+
+                    if (rvp != null && rv.VersionStatusEnum == VersionStatusEnum.Publishing)
+                    {
+                        resourceVersionIdPublishing = rv.Id;
+                    }
+
+                    rv = rvp;
                 }
 
-                if (rvp != null && rv.VersionStatusEnum == VersionStatusEnum.Publishing)
+                var erv = await this.GetResourceVersionExtendedViewModelAsync(rv.Id, userId);
+
+                var retVal = new ResourceItemViewModel(erv);
+                retVal.Id = resourceReferenceId;
+                var bookmark = this.bookmarkRepository.GetAll().Where(b => b.ResourceReferenceId == resourceReferenceId && b.UserId == userId).FirstOrDefault();
+                retVal.BookmarkId = bookmark?.Id;
+                retVal.IsBookmarked = !bookmark?.Deleted ?? false;
+                retVal.ReadOnly = readOnly;
+                retVal.DisplayForContributor = await this.UserCanEditResourceVersion(rv.CreateUserId, rv.Id, userId);
+                retVal.ResourceVersionIdInEdit = resourceVersionIdInEdit;
+                retVal.ResourceVersionIdPublishing = resourceVersionIdPublishing;
+                retVal.ResourceAccessibilityEnum = rv.ResourceAccessibilityEnum;
+
+                // Obtain catalogue associated with the supplied Resource Reference.
+                var rr = await this.resourceReferenceRepository.GetByOriginalResourceReferenceIdAsync(resourceReferenceId, true);
+                var catalogueNodeVersion = this.catalogueNodeVersionRepository.GetBasicCatalogue(rr.NodePath.CatalogueNode.Id);
+                retVal.Catalogue = this.mapper.Map<CatalogueViewModel>(catalogueNodeVersion);
+                retVal.NodePathId = rr.NodePathId.Value;
+
+                switch (rv.Resource.ResourceTypeEnum)
                 {
-                    resourceVersionIdPublishing = rv.Id;
+                    case ResourceTypeEnum.Case:
+                        retVal.CaseDetails = erv.CaseDetails;
+                        break;
+
+                    case ResourceTypeEnum.Assessment:
+                        retVal.AssessmentDetails = erv.AssessmentDetails;
+                        break;
+
+                    case ResourceTypeEnum.Html:
+                        retVal.HtmlDetails = erv.HtmlDetails;
+                        break;
+
+                    default:
+                        break;
                 }
 
-                rv = rvp;
+                return retVal;
             }
-
-            var erv = await this.GetResourceVersionExtendedViewModelAsync(rv.Id, userId);
-
-            var retVal = new ResourceItemViewModel(erv);
-            retVal.Id = resourceReferenceId;
-            var bookmark = this.bookmarkRepository.GetAll().Where(b => b.ResourceReferenceId == resourceReferenceId && b.UserId == userId).FirstOrDefault();
-            retVal.BookmarkId = bookmark?.Id;
-            retVal.IsBookmarked = !bookmark?.Deleted ?? false;
-            retVal.ReadOnly = readOnly;
-            retVal.DisplayForContributor = await this.UserCanEditResourceVersion(rv.CreateUserId, rv.Id, userId);
-            retVal.ResourceVersionIdInEdit = resourceVersionIdInEdit;
-            retVal.ResourceVersionIdPublishing = resourceVersionIdPublishing;
-            retVal.ResourceAccessibilityEnum = rv.ResourceAccessibilityEnum;
-
-            // Obtain catalogue associated with the supplied Resource Reference.
-            var rr = await this.resourceReferenceRepository.GetByOriginalResourceReferenceIdAsync(resourceReferenceId, true);
-            var catalogueNodeVersion = this.catalogueNodeVersionRepository.GetBasicCatalogue(rr.NodePath.CatalogueNode.Id);
-            retVal.Catalogue = this.mapper.Map<CatalogueViewModel>(catalogueNodeVersion);
-            retVal.NodePathId = rr.NodePathId.Value;
-
-            switch (rv.Resource.ResourceTypeEnum)
+            else
             {
-                case ResourceTypeEnum.Case:
-                    retVal.CaseDetails = erv.CaseDetails;
-                    break;
-
-                case ResourceTypeEnum.Assessment:
-                    retVal.AssessmentDetails = erv.AssessmentDetails;
-                    break;
-
-                case ResourceTypeEnum.Html:
-                    retVal.HtmlDetails = erv.HtmlDetails;
-                    break;
-
-                default:
-                    break;
+                return null;
             }
-
-            return retVal;
         }
 
         /// <summary>
@@ -3225,30 +3268,30 @@ namespace LearningHub.Nhs.Services
         /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
         public async Task CheckAndRemoveResourceVersionProviderAsync(int resourceVersionId, int userId)
         {
-                List<int> userProviderList = new List<int>();
+            List<int> userProviderList = new List<int>();
 
-                // list of resource version provider
-                var resourceProviderList = await this.providerService.GetByResourceVersionIdAsync(resourceVersionId);
+            // list of resource version provider
+            var resourceProviderList = await this.providerService.GetByResourceVersionIdAsync(resourceVersionId);
 
-                // list of user providers
-                var userProviders = await this.providerService.GetByUserIdAsync(userId);
+            // list of user providers
+            var userProviders = await this.providerService.GetByUserIdAsync(userId);
 
-                if (userProviders != null && userProviders.Count > 0)
+            if (userProviders != null && userProviders.Count > 0)
+            {
+                userProviderList.AddRange(userProviders.Select(n => n.Id).ToList());
+            }
+
+            // delete provider from resource version if user do not have permission.
+            if (resourceProviderList != null && resourceProviderList.Count > 0)
+            {
+                foreach (ProviderViewModel resourceProvider in resourceProviderList)
                 {
-                    userProviderList.AddRange(userProviders.Select(n => n.Id).ToList());
-                }
-
-                // delete provider from resource version if user do not have permission.
-                if (resourceProviderList != null && resourceProviderList.Count > 0)
-                {
-                    foreach (ProviderViewModel resourceProvider in resourceProviderList)
+                    if (!userProviderList.Contains(resourceProvider.Id))
                     {
-                        if (!userProviderList.Contains(resourceProvider.Id))
-                        {
-                            await this.resourceVersionProviderRepository.DeleteAsync(resourceVersionId, resourceProvider.Id, userId);
-                        }
+                        await this.resourceVersionProviderRepository.DeleteAsync(resourceVersionId, resourceProvider.Id, userId);
                     }
                 }
+            }
         }
 
         /// <summary>

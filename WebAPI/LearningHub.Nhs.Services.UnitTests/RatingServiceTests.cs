@@ -1,8 +1,4 @@
-﻿// <copyright file="RatingServiceTests.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.UnitTests
+﻿namespace LearningHub.Nhs.Services.UnitTests
 {
     using System.Threading.Tasks;
     using AutoFixture;

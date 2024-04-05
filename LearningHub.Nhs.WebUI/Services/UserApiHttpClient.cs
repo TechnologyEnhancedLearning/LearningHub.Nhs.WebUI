@@ -1,8 +1,4 @@
-﻿// <copyright file="UserApiHttpClient.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Services
+﻿namespace LearningHub.Nhs.WebUI.Services
 {
     using System.Net.Http;
     using LearningHub.Nhs.Caching;

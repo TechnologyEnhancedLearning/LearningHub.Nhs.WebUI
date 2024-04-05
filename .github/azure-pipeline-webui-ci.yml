@@ -4,10 +4,7 @@ variables:
   value: '**/*.csproj'
 - name: BuildParameters.TestProjects
   value: '**/*[Tt]ests/*.csproj'
-trigger:
-  branches:
-    include: 
-      - CI
+# Triggered Via Azure pipeline
 name: $(date:yyyyMMdd)$(rev:.r)
 resources:
   repositories:

@@ -3,7 +3,7 @@
         <div v-if="showProviders">
             <div class="row">
                 <div class="form-group col-12">
-                    <h2 class="nhsuk-heading-l">Content provided by<i v-if="resourceProviderId === null" class="warningTriangle fas fa-exclamation-triangle"></i></h2>
+                    <h2 class="nhsuk-heading-l">Content developed with<i v-if="resourceProviderId === null" class="warningTriangle fas fa-exclamation-triangle"></i></h2>
                 </div>
             </div>
             <div class="row mt-3">
@@ -26,7 +26,7 @@
                         <div class="heading" id="headingProvidedBy">
                             <div class="mb-0">
                                 <a href="#" class="collapsed" data-toggle="collapse" data-target="#collapseProvidedByInfo" aria-expanded="false" aria-controls="collapseProvidedByInfo">
-                                    <div class="accordion-arrow">Why should I flag a resource as 'Provided by'</div>
+                                    <div class="accordion-arrow">Why should I flag a resource as 'Developed with'</div>
                                 </a>
                             </div>
                         </div>
@@ -34,7 +34,7 @@
                             <div class="content col-12">
                                 <p>
                                     <b>
-                                        When publishing a resource it is important to mark a resource as 'Provided by' as it helps;
+                                        When publishing a resource it is important to mark a resource as 'Developed with' as it helps;
                                     </b>
                                 </p>
                                 <ul>

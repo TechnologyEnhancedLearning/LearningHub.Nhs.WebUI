@@ -1,7 +1,3 @@
-// <copyright file="IApiKeyRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.NHS.OpenAPI.Auth
 {
     using AspNetCore.Authentication.ApiKey;

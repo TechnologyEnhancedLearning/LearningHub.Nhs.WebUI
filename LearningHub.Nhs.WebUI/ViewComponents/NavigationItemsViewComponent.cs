@@ -1,8 +1,4 @@
-﻿// <copyright file="NavigationItemsViewComponent.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.ViewComponents
+﻿namespace LearningHub.Nhs.WebUI.ViewComponents
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Caching;

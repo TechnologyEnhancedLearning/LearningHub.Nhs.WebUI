@@ -2,7 +2,7 @@
     <div class="lh-padding-fluid">
         <div class="lh-container-xl py-15">
             <div class="contribute contribute-providedby-tab">
-                <h2 id="licence-heading" class="nhsuk-heading-l pt-15">Content provided by</h2>
+                <h2 id="licence-heading" class="nhsuk-heading-l pt-15">Content developed with</h2>
                 <p class="nhsuk-u-font-weight-normal">When applicable pease select the provider of this content. This will enable users to search for content produced by specific organisations.</p>
                 <div class="my-3">
                     <input class="radio-button" name="resourceProviderId" type="radio" :value="0" v-model="resourceProviderId" @click="setResourceProvider($event.target.value)" />
@@ -22,7 +22,7 @@
                             <div class="heading" id="headingProvidedBy">
                                 <div class="mb-0">
                                     <a href="#" class="collapsed" data-toggle="collapse" data-target="#collapseProvidedByInfo" aria-expanded="false" aria-controls="collapseProvidedByInfo">
-                                        <div class="accordion-arrow">Why should I flag a resource as 'Provided by'</div>
+                                        <div class="accordion-arrow">Why should I flag a resource as 'Developed with'</div>
                                     </a>
                                 </div>
                             </div>
@@ -30,7 +30,7 @@
                                 <div class="content col-12">
                                     <p>
                                         <b>
-                                            When publishing a resource it is important to mark a resource as 'Provided by' as it helps;
+                                            When publishing a resource it is important to mark a resource as 'Developed with' as it helps;
                                         </b>
                                     </p>
                                     <ul>

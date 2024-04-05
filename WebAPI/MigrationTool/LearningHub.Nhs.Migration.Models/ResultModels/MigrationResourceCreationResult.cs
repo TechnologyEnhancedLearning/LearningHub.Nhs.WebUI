@@ -1,8 +1,4 @@
-﻿// <copyright file="MigrationResourceCreationResult.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Models
+﻿namespace LearningHub.Nhs.Migration.Models
 {
     using System.Collections.Generic;
 

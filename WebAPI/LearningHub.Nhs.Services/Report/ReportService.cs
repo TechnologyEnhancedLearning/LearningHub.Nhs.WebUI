@@ -1,8 +1,4 @@
-﻿// <copyright file="ReportService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Report
+﻿namespace LearningHub.Nhs.Services.Report
 {
     using System;
     using System.Collections.Generic;

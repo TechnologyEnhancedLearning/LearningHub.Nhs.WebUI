@@ -1,8 +1,4 @@
-﻿// <copyright file="ImageInputTagHelper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.TagHelpers
+﻿namespace LearningHub.Nhs.AdminUI.TagHelpers
 {
     using System.Collections.Generic;
     using System.Linq;

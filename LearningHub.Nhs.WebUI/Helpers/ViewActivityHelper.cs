@@ -1,8 +1,4 @@
-﻿// <copyright file="ViewActivityHelper.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Helpers
+﻿namespace LearningHub.Nhs.WebUI.Helpers
 {
     using System;
     using System.Collections.Generic;
@@ -131,7 +127,7 @@ namespace LearningHub.Nhs.WebUI.Helpers
         /// <returns>The .</returns>
         public static string GetActivityStatusDisplayText(this ActivityDetailedItemViewModel activityDetailedItemViewModel)
         {
-            if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Launched
+            if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
                      && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Article
                          || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.WebLink
                          || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Image
@@ -140,7 +136,7 @@ namespace LearningHub.Nhs.WebUI.Helpers
             {
                 return "Completed";
             }
-            else if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Launched
+            else if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
                 && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.GenericFile))
             {
                 return "Downloaded";
@@ -167,36 +163,33 @@ namespace LearningHub.Nhs.WebUI.Helpers
         /// </summary>
         /// <param name="activityDetailedItemViewModel">The activityDetailedItemViewModel.</param>
         /// <returns>The <see cref="ActivityStatusEnum"/>.</returns>
-        public static ActivityStatusEnum GetActivityStatus(this ActivityDetailedItemViewModel activityDetailedItemViewModel)
+        public static string GetActivityStatus(this ActivityDetailedItemViewModel activityDetailedItemViewModel)
         {
-            if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Launched
+            if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
                 && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Article
-                    || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.WebLink
                     || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Image
                     || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Html
                     || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Case))
             {
-                return ActivityStatusEnum.Completed;
+                return "Viewed";
             }
-            else if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Launched
-                && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.GenericFile))
+            else if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
+               && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.WebLink))
             {
-                return ActivityStatusEnum.Downloaded;
+                return "Launched";
             }
-            else if (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment)
+            else if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
+                      && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.GenericFile))
             {
-                if (activityDetailedItemViewModel.Complete)
-                {
-                    return activityDetailedItemViewModel.ScorePercentage >= activityDetailedItemViewModel.AssessmentDetails.PassMark ? ActivityStatusEnum.Passed : ActivityStatusEnum.Failed;
-                }
-                else
-                {
-                    return activityDetailedItemViewModel.ScorePercentage >= activityDetailedItemViewModel.AssessmentDetails.PassMark ? ActivityStatusEnum.Passed : ActivityStatusEnum.InProgress;
-                }
+                return ActivityStatusEnum.Downloaded.ToString();
+            }
+            else if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Incomplete)
+            {
+                return ActivityStatusEnum.InProgress.ToString();
             }
             else
             {
-                return activityDetailedItemViewModel.ActivityStatus;
+                return activityDetailedItemViewModel.ActivityStatus.ToString();
             }
         }
 
@@ -307,7 +300,7 @@ namespace LearningHub.Nhs.WebUI.Helpers
                     else
                     {
                         duration = $"{t.Minutes}min {t.Seconds}sec";
-                        duration = duration.Replace("0min", string.Empty);
+                        duration = duration.StartsWith("0min") ? duration.Replace("0min", string.Empty) : duration;
                     }
                 }
             }

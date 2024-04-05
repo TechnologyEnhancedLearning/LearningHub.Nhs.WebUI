@@ -5,6 +5,10 @@
                 You can upload a file from your computer or other storage drive you are connected to.
                 Maximum file size {{ contributeSettings.fileUploadSettings.fileUploadSizeLimitText }}
             </p>
+            <div v-if="!contributeResourceAVFlag">
+                <div v-html="audioVideoUnavailableView"></div>
+            </div>
+
             <div class="p-4 uploadInnerBox">
                 <div class="upload-btn-wrapper nhsuk-u-font-size-16">
                     <label for="fileUpload" class="nhsuk-button nhsuk-button--secondary">Choose file</label> No file chosen
@@ -37,6 +41,12 @@
             },
             fileAccept(): string {
                 return this.$store.state.resourceDetail.resourceType == ResourceType.HTML ? '.zip,.rar,.7zip' : ''
+            },
+            contributeResourceAVFlag(): boolean {
+                return this.$store.state.contributeAVResourceFlag;
+            },
+            audioVideoUnavailableView(): string {
+                return this.$store.state.getAVUnavailableView;
             },
         },
     });

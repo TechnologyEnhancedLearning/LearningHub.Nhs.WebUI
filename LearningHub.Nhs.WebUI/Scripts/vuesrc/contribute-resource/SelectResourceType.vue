@@ -5,13 +5,16 @@
         </div>
         <div class="mx-5">
             <h3 class="nhsuk-heading-l nhsuk-u-margin-bottom-2">{{title}}</h3>
-            <div>{{description}}</div>
-        </div>
-        <div v-if="!isSelected" class="align-self-center">
-            <Button v-on:click="onSelectClick">Select</Button>
+            <div>{{description}}</div>            
+            <div v-if="!contributeResourceAVFlag && title === 'File' && !isSelected" class="align-self-center">
+                <div v-html="audioVideoUnavailableView"></div>
+            </div>
         </div>
         <div v-if="isSelected" class="align-self-center select_resource_type_component_tick_wrapper">
             <Tick class="select_resource_type_component_tick" complete></Tick>
+        </div>
+        <div v-if="!isSelected" class="align-self-center">
+            <Button v-on:click="onSelectClick">Select</Button>
         </div>
     </div>
 </template>
@@ -19,6 +22,7 @@
 <script lang="ts">
     import Vue, { PropOptions } from 'vue';
     import { commonlib } from '../common';
+    import { resourceData } from '../data/resource';
     import Button from '../globalcomponents/Button.vue';
     import Tick from '../globalcomponents/Tick.vue';
     import { ResourceType } from '../constants';
@@ -33,6 +37,14 @@
             resourceType: { type: Number } as PropOptions<ResourceType>,
             resourceDetails: { type: Object } as PropOptions<ContributeResourceDetailModel>,
         },
+        data() {
+            return {
+                contributeResourceAVFlag: false                
+            };
+        },
+        created() {
+            this.getContributeResAVResourceFlag();
+        },
         computed: {
             title(): String {
                 return commonlib.getResourceTypeText(this.resourceType);
@@ -45,9 +57,18 @@
             },
             isSelected(): boolean {
                 return this.resourceDetails.resourceType === this.resourceType;
+            },           
+            audioVideoUnavailableView(): string {
+                var view = this.$store.state.getAVUnavailableView;
+                return this.$store.state.getAVUnavailableView;
             }
         },
         methods: {
+            getContributeResAVResourceFlag() {
+                 resourceData.getContributeAVResourceFlag().then(response => {
+                 this.contributeResourceAVFlag = response;
+                });
+             },
             getResourceTypeDescription(resourceType: ResourceType): string {
                 switch (resourceType) {
                     case ResourceType.ARTICLE:

@@ -1,8 +1,4 @@
-﻿// <copyright file="TimezoneInfoMiddleware.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Middleware
+﻿namespace LearningHub.Nhs.AdminUI.Middleware
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.AdminUI.Extensions;

@@ -1,9 +1,6 @@
-// <copyright file="IResourceService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.Services.Interface
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;
@@ -231,6 +228,13 @@ namespace LearningHub.Nhs.Services.Interface
         /// <param name="resourceId">The resourceId<see cref="int"/>.</param>
         /// <returns>The <see cref="List{ResourceVersionViewModel}"/>.</returns>
         Task<List<ResourceVersionViewModel>> GetResourceVersionsAsync(int resourceId);
+
+        /// <summary>
+        /// Get file directory for unpublished or deleted versions.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="List{String}"/>.</returns>
+        Task<List<string>> GetObsoleteResourceFile(int resourceVersionId);
 
         /// <summary>
         /// Delete resource version async.

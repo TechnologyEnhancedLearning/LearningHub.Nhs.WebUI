@@ -58,8 +58,8 @@
     flex: 1 0 0;
 }
 
-.nhsuk-header__logo  .nhsuk-header__link--service {
-    display:inline-flex;
+.nhsuk-header__logo .nhsuk-header__link--service {
+    display: inline-flex;
 }
 
 .nhsuk-header__service-name {
@@ -90,22 +90,25 @@
     height: px2rem(18);
     text-align: center;
     border-radius: px2rem(9);
-    padding:px2rem(1) px2rem(3) 0;
+    padding: px2rem(1) px2rem(3) 0;
 }
 
 .nhsuk-header__menu {
     display: none;
 }
 
+.nhsuk-header__search .nhsuk-search__input {
+    width: px2rem(260);
+}
+
 .nhsuk-header__search {
     .nhsuk-search__input {
         width: px2rem(260);
     }
-    
-    label {
-        color: #E0E0E6;
-    }
 
+    #search > label.nhsuk-u-visually-hidden {
+        background-color: $nhsuk-white;
+    }
 }
 
 .nhsuk-account__login--link,
@@ -125,7 +128,7 @@
 }
 
 .beta-banner + div {
-    border-top:1px solid $color_nhsuk-grey-3;
+    border-top: 1px solid $color_nhsuk-grey-3;
 }
 
 .beta-banner__beta-box {
@@ -184,14 +187,14 @@
 @media (min-width: px2rem(990)) {
 
     .nhsuk-header__navigation-item--current a {
-        border-bottom:4px solid $nhsuk-grey-lighter;
-        font-weight:normal;
+        border-bottom: 4px solid $nhsuk-grey-lighter;
+        font-weight: normal;
     }
 
     .nhsuk-header__navigation-link {
-        position:relative;
+        position: relative;
     }
-    
+
     .nhsuk-header__navigation-item:last-child {
         margin-right: 16px;
     }
@@ -265,7 +268,7 @@
         text-align: center;
         margin: 0;
         right: 0;
-        font-weight:600;
+        font-weight: 600;
     }
 
     .nhsuk-header__search-form {
@@ -290,7 +293,7 @@
         background: $nhsuk-error-color;
         color: $nhsuk-white;
         min-width: px2rem(18);
-        width:fit-content;
+        width: fit-content;
         height: px2rem(18);
         text-align: center;
         border-radius: px2rem(9);
@@ -325,6 +328,10 @@
     .nhsuk-back-link {
         padding: 0.5rem 0;
     }
+
+    .nhsuk-header__menu .nhsuk-header__not-mobile {
+        display: none;
+    }
 }
 
 /* mobile  */
@@ -335,7 +342,7 @@
     }
 
     .nhsuk-header__logo {
-        max-width:none;
+        max-width: none;
     }
 
     .nhsuk-header__mobile-only-nav {
@@ -395,7 +402,7 @@
     }
 
     .nhsuk-header__search .nhsuk-search__submit {
-        padding-top:nhsuk-spacing(1);
+        padding-top: nhsuk-spacing(1);
     }
 
     .nhsuk-header__menu {

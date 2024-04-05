@@ -1,7 +1,3 @@
-// <copyright file="LearningHubDbContext.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.Repository
 {
     using LearningHub.Nhs.Entities.Resource;
@@ -760,6 +756,11 @@ namespace LearningHub.Nhs.Repository
         /// Gets or sets Resource Version Provider.
         /// </summary>
         public virtual DbSet<ResourceVersionProvider> ResourceVersionProvider { get; set; }
+
+        /// <summary>
+        /// Gets or sets the resource activity.
+        /// </summary>
+        public virtual DbSet<MyLearningActivity> MyLearningActivity { get; set; }
 
         /// <summary>
         /// The on model creating.

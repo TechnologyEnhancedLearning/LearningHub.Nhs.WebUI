@@ -1,7 +1,3 @@
-// <copyright file="PdfReportServicesTests.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.ReportApi.Services.UnitTests
 {
     using System;

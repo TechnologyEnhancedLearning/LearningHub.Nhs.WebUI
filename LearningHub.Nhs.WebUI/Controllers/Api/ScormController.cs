@@ -1,8 +1,4 @@
-﻿// <copyright file="ScormController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Controllers.Api
+﻿namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System;
     using System.Linq;
@@ -264,6 +260,11 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
 
                 // Persist update.
                 await this.activityService.UpdateScormActivityAsync(scoObject);
+                if (scoObject.LessonStatusId == 3)
+                {
+                    await this.activityService.CompleteScormActivity(scoObject);
+                }
+
                 return true;
             }
             catch (Exception ex)

@@ -1,7 +1,3 @@
-// <copyright file="IResourceRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
 {
     using System.Collections.Generic;

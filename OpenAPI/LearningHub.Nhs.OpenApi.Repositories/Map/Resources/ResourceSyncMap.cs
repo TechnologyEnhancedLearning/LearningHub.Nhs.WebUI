@@ -1,8 +1,4 @@
-﻿// <copyright file="ResourceSyncMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Map.Resources
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.Resources
 {
     using System;
     using System.Collections.Generic;

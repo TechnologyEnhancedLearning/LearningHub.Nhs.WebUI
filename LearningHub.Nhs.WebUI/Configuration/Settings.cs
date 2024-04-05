@@ -1,7 +1,3 @@
-// <copyright file="Settings.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.WebUI.Configuration
 {
     using System;
@@ -154,6 +150,16 @@ namespace LearningHub.Nhs.WebUI.Configuration
         /// Gets or sets the AzureFileStorageConnectionString.
         /// </summary>
         public string AzureFileStorageConnectionString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the AzureSourceFileStorageConnectionString.
+        /// </summary>
+        public string AzureSourceArchiveStorageConnectionString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the AzurePurgedFileStorageConnectionString.
+        /// </summary>
+        public string AzureContentArchiveStorageConnectionString { get; set; }
 
         /// <summary>
         /// Gets or sets the AzureFileStorageResourceShareName.

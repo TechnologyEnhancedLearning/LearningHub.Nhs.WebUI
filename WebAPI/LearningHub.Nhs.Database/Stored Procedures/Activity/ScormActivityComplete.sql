@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 11-06-2021  Killian Davies	Initial Revision
+-- 22-03-2024  Sarathlal		TD-1325
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[ScormActivityComplete]
 (
@@ -23,7 +24,7 @@ BEGIN
 	DECLARE @DurationSeconds int
 	DECLARE @ScormActivityDurationLimitHours int = 10 * 60 * 60
 	DECLARE @AmendDate datetimeoffset(7) = ISNULL(TODATETIMEOFFSET(DATEADD(mi, @UserTimezoneOffset, GETUTCDATE()), @UserTimezoneOffset), SYSDATETIMEOFFSET())
-
+	DECLARE @CmiCoreSessionTime NVARCHAR(MAX)
 	SELECT 
 		@ScormResourceActivityId = [ResourceActivityId],
 		@ActivityStatusId = CmiCoreLesson_status,
@@ -32,7 +33,8 @@ BEGIN
 							WHEN (activity.ScormTimeToSeconds(CmiCoreSession_time) >= @ScormActivityDurationLimitHours) THEN (@ScormActivityDurationLimitHours - 1)
 							ELSE activity.ScormTimeToSeconds(CmiCoreSession_time) 
 						   END,
-		@Score = CmiCoreScoreRaw
+		@Score = CmiCoreScoreRaw,
+		@CmiCoreSessionTime = CmiCoreSession_time
 	FROM 
 		activity.ScormActivity sa
 	INNER JOIN	
@@ -52,7 +54,7 @@ BEGIN
 	END
 
 	-- Validation ported from e-LfH: completed status requires duration > 0
-	IF (@ActivityStatusId IN (3, 4, 5) AND @DurationSeconds > 0)
+	IF ((@ActivityStatusId IN (3, 4, 5) AND @DurationSeconds > 0) OR (@ActivityStatusId=3 AND @CmiCoreSessionTime =''))
 	BEGIN TRY
 		BEGIN TRAN
 
@@ -122,5 +124,3 @@ BEGIN
 				);
 	END CATCH
 END
-
-GO

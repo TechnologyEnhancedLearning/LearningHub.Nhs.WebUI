@@ -1,8 +1,4 @@
-﻿// <copyright file="ServiceCollectionExtension.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI
+﻿namespace LearningHub.Nhs.AdminUI
 {
     using System;
     using System.IdentityModel.Tokens.Jwt;

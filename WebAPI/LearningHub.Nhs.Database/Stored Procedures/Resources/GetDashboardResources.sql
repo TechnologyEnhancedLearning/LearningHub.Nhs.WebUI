@@ -15,6 +15,8 @@
 -- 15 Jun 2023  RS  Re-added BadgeUrl column following design change
 -- 27 Sep 2023  HV  Included Paging and user resource activity
 -- 08 Nov 2023  OA  Fixed latest resource activity entry selection(with updated logic for media activities) and  status check for incomplete assessment.
+-- 17 Jan 2024  SA  Changes to accomadate activity status changes
+-- 27 Feb 2024  SS  Fixed missing In progress resources in the My Accessed Learning tray issue
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [resources].[GetDashboardResources]
@@ -150,7 +152,7 @@ BEGIN
 		LEFT JOIN (  SELECT DISTINCT CatalogueNodeId 
 						FROM [hub].[RoleUserGroupView] rug JOIN hub.UserUserGroup uug ON rug.UserGroupId = uug.UserGroupId
 						WHERE rug.ScopeTypeId = 1 and rug.RoleId in (1,2,3) and uug.Deleted = 0 and uug.UserId = @userId) auth ON n.Id = auth.CatalogueNodeId
-		LEFT JOIN resources.ResourceVersionRatingSummary rs ON rs.ResourceVersionId = rv.Id
+		INNER JOIN resources.ResourceVersionRatingSummary rs ON rs.ResourceVersionId = rv.Id
 		WHERE rv.VersionStatusId = 2	
 		ORDER BY rvrs.AverageRating DESC, rvrs.RatingCount DESC, rv.Title
 
@@ -207,7 +209,7 @@ BEGIN
 		LEFT JOIN (  SELECT DISTINCT CatalogueNodeId 
 						FROM [hub].[RoleUserGroupView] rug JOIN hub.UserUserGroup uug ON rug.UserGroupId = uug.UserGroupId
 						WHERE rug.ScopeTypeId = 1 and rug.RoleId in (1,2,3) and uug.Deleted = 0 and uug.UserId = @userId) auth ON n.Id = auth.CatalogueNodeId
-		LEFT JOIN resources.ResourceVersionRatingSummary rs ON rs.ResourceVersionId = rv.Id
+		INNER JOIN resources.ResourceVersionRatingSummary rs ON rs.ResourceVersionId = rv.Id
 		WHERE rv.VersionStatusId = 2
 		ORDER BY p.CreateDate DESC
 		
@@ -222,8 +224,8 @@ BEGIN
 	BEGIN
 	INSERT INTO @MyActivity					
 			SELECT TOP (@MaxRows) ra.ResourceId, MAX(ra.Id) ResourceActivityId
-				FROM
-				(SELECT a.* FROM activity.ResourceActivity a INNER JOIN (SELECT ResourceId, MAX(Id) as id FROM activity.ResourceActivity GROUP BY ResourceId ) AS b ON a.ResourceId = b.ResourceId  AND a.id = b.id  order by a.Id desc OFFSET 0 ROWS) ra				
+				FROM 
+				(SELECT a.* FROM activity.ResourceActivity a INNER JOIN (SELECT ResourceId, MAX(Id) as id FROM activity.ResourceActivity GROUP BY ResourceId,ActivityStatusId ) AS b ON a.ResourceId = b.ResourceId AND a.id = b.id  order by a.Id desc OFFSET 0 ROWS) ra	
 				JOIN [resources].[Resource] r ON  ra.ResourceId = r.Id
 				JOIN [resources].[ResourceVersion] rv ON  rv.Id = ra.ResourceVersionId
 				LEFT JOIN [resources].[AssessmentResourceVersion] arv ON arv.ResourceVersionId = ra.ResourceVersionId
@@ -232,9 +234,9 @@ BEGIN
 				LEFT JOIN [activity].[ScormActivity] sa ON sa.ResourceActivityId = ra.Id
 				WHERE ra.UserId = @UserId
 				AND (
-					 (r.ResourceTypeId IN (1, 5, 8, 10, 12) AND ra.ActivityStatusId <> 1)
+					 (r.ResourceTypeId IN (1, 5, 8, 9,10, 12) AND ra.ActivityStatusId <> 3)
 				    OR (r.ResourceTypeId IN (2, 7) AND (mar.Id IS NULL OR (mar.Id IS NOT NULL AND mar.PercentComplete < 100) OR ra.ActivityStart < '2020-09-07 00:00:00 +00:00'))
-					OR (r.ResourceTypeId = 6 AND sa.CmiCoreLesson_status NOT IN (3, 5))
+					OR  (r.ResourceTypeId = 6 AND (sa.CmiCoreLesson_status NOT IN (3, 5) AND (ra.ActivityStatusId NOT IN(3, 5))))
 					OR (r.ResourceTypeId IN (9) AND ra.ActivityStatusId NOT IN (6))
 					OR (r.ResourceTypeId = 11 AND ((ara.Id IS NOT NULL AND ara.score < arv.PassMark) OR ra.ActivityStatusId IN (1))) 
 					)		
@@ -309,9 +311,8 @@ BEGIN
 				AND (					
 					 (r.ResourceTypeId IN (2, 7) AND ra.ActivityStatusId IN (3) AND ((mar.Id IS NOT NULL AND mar.PercentComplete = 100) OR ra.ActivityStart < '2020-09-07 00:00:00 +00:00'))
 					OR (r.ResourceTypeId = 6 AND (sa.CmiCoreLesson_status IN(3,5) OR (ra.ActivityStatusId IN(3, 5))))
-					OR (r.ResourceTypeId = 9 AND ra.ActivityStatusId = 6)
-					OR (r.ResourceTypeId = 11 AND ara.Score >= arv.PassMark OR ra.ActivityStatusId = 5)
-					OR (r.ResourceTypeId IN (1, 5, 8, 10, 12) AND ra.ActivityStatusId IN (1)))		
+					OR (r.ResourceTypeId = 11 AND ara.Score >= arv.PassMark OR ra.ActivityStatusId IN( 3, 5))
+					OR (r.ResourceTypeId IN (1, 5, 8, 9, 10, 12) AND ra.ActivityStatusId IN (3)))		
 				GROUP BY ra.ResourceId
 				ORDER BY ResourceActivityId DESC
 
@@ -383,9 +384,8 @@ BEGIN
 				AND (					
 					 (r.ResourceTypeId IN (2, 7) AND ra.ActivityStatusId IN (3) OR ra.ActivityStart < '2020-09-07 00:00:00 +00:00' OR mar.Id IS NOT NULL AND mar.PercentComplete = 100)
 					OR (r.ResourceTypeId = 6 AND (sa.CmiCoreLesson_status IN(3,5) OR (ra.ActivityStatusId IN(3, 5))))
-					OR (r.ResourceTypeId = 9 AND ra.ActivityStatusId = 6)
-					OR (r.ResourceTypeId = 11 AND ara.Score >= arv.PassMark OR ra.ActivityStatusId = 5)
-					OR (r.ResourceTypeId IN (1, 5, 8, 10, 12) AND ra.ActivityStatusId IN (1)))		
+					OR (r.ResourceTypeId = 11 AND ara.Score >= arv.PassMark OR ra.ActivityStatusId IN(3, 5))
+					OR (r.ResourceTypeId IN (1, 5, 8, 9, 10, 12) AND ra.ActivityStatusId IN (3)))		
 				GROUP BY ra.ResourceId
 				ORDER BY ResourceActivityId DESC
 

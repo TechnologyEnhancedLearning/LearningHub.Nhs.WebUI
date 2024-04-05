@@ -1,8 +1,4 @@
-﻿// <copyright file="LearningSessionsController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Controllers
+﻿namespace LearningHub.Nhs.WebUI.Controllers
 {
     using System;
     using System.Diagnostics;
@@ -54,9 +50,12 @@ namespace LearningHub.Nhs.WebUI.Controllers
         public async Task<IActionResult> Scorm(int id)
         {
             var rv = await this.resourceService.GetItemByIdAsync(id);
+            if (rv != null)
+            {
+                this.ViewBag.FilePath = $"/ScormContent/{rv.ScormDetails.ContentFilePath}/{rv.ScormDetails.ScormManifest.ManifestUrl}";
+            }
 
             this.ViewBag.ResourceReferenceId = id;
-            this.ViewBag.FilePath = $"/ScormContent/{rv.ScormDetails.ContentFilePath}/{rv.ScormDetails.ScormManifest.ManifestUrl}";
             this.ViewBag.KeepUserSessionAliveInterval = Convert.ToInt32(this.settings.Value.KeepUserSessionAliveIntervalMins) * 60000;
             this.ViewBag.UseTraceWindow = await this.userGroupService.UserHasPermissionAsync("Scorm_Trace_Window");
 

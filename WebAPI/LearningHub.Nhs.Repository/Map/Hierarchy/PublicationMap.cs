@@ -1,8 +1,4 @@
-﻿// <copyright file="PublicationMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Map.Hierarchy
+﻿namespace LearningHub.Nhs.Repository.Map.Hierarchy
 {
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Entities.Resource;

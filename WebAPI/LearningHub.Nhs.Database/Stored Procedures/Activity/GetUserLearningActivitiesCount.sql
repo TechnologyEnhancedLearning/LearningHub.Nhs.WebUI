@@ -160,6 +160,8 @@ FROM (
 														)	
 												)
 										  )
+										  OR
+												([Res].[ResourceTypeId]  IN (6) AND  [ResourceActivity].[ActivityStatusId] = 3)
 
 										--OR         
 										--(

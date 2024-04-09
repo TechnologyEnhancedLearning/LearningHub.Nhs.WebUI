@@ -184,8 +184,8 @@
         {
             var checkboxes = new List<CheckboxListItemViewModel>()
             {
-                new CheckboxListItemViewModel("Complete", "Complete", null),
-                new CheckboxListItemViewModel("Incomplete", "InProgress", null),
+                new CheckboxListItemViewModel("Complete", "Completed", null),
+                new CheckboxListItemViewModel("Incomplete", "In Progress", null),
                 new CheckboxListItemViewModel("Passed", "Passed", null),
                 new CheckboxListItemViewModel("Failed", "Failed", null),
                 new CheckboxListItemViewModel("Downloaded", "Downloaded", null),

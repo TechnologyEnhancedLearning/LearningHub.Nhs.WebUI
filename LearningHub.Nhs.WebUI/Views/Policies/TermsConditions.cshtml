@@ -1,6 +1,7 @@
 @model LearningHub.Nhs.WebUI.Models.Policies.TermsAndConditionsViewModel
 @{
     ViewData["Title"] = "Terms and Conditions";
+    var nextDate = new DateTime(2026, 8, 16);
 }
 @section styles{
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/Policies.css" asp-append-version="true" />
@@ -14,7 +15,7 @@
             <section>
                 <div id="terms-and-conditions-content">
                     @Html.Raw(Model.TermsAndConditions)
-                    @await Html.PartialAsync("~/Views/Shared/_PageReviewPartial.cshtml", new PageReviewModel { LastReviewedDate = Model.CreatedDate, NextReviewDate = Model.CreatedDate.AddYears(3) })
+                    @await Html.PartialAsync("~/Views/Shared/_PageReviewPartial.cshtml", new PageReviewModel { LastReviewedDate = Model.CreatedDate, NextReviewDate = nextDate })
                 </div>
             </section>
         </article>

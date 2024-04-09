@@ -83,7 +83,10 @@ namespace LearningHub.Nhs.Repository.Resources
 
             foreach (var id in collectionIds)
             {
-                await this.DbContext.Database.ExecuteSqlRawAsync("resources.BlockCollectionDelete @p0", new SqlParameter("@p0", SqlDbType.Int) { Value = id });
+                using (var lhContext = new LearningHubDbContext(this.DbContext.Options))
+                {
+                    _ = lhContext.Database.ExecuteSqlRawAsync("resources.BlockCollectionDelete @p0", new SqlParameter("@p0", SqlDbType.Int) { Value = id });
+                }
             }
         }
 

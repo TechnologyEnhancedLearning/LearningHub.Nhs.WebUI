@@ -245,7 +245,8 @@ FROM (
 														)	
 												)
 										  )
-
+										  OR
+												([Res].[ResourceTypeId]  IN (6) AND  [ResourceActivity].[ActivityStatusId] = 3)
 										--OR         
 										--(
 										--		([Res].[ResourceTypeId] IN (1,5,10,12) AND  [ResourceActivity].[ActivityStatusId] = 3)

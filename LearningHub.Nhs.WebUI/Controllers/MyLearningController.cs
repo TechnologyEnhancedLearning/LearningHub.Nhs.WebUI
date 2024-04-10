@@ -446,6 +446,7 @@
                 var nodePathNodes = await this.hierarchyService.GetNodePathNodes(resource.NodePathId);
                 var currentUser = await this.userService.GetUserByUserIdAsync((userId == 0) ? this.CurrentUserId : (int)userId);
                 var userEmployment = await this.userService.GetUserEmploymentByIdAsync(currentUser.PrimaryUserEmploymentId ?? 0);
+                var resourceItemUrl = this.Settings.LearningHubWebUiUrl.Trim() + "Resource/" + resourceReferenceId + "/Item";
                 if (activity.Item2.CertificateUrl != null)
                 {
                     var file = await this.fileService.DownloadFileAsync(this.filePath, activity.Item2.CertificateUrl);
@@ -456,7 +457,7 @@
                     }
                 }
 
-                certificateDetails = new CertificateDetails { AccessCount = activity.Item1, ProfessionalRegistrationNumber = userEmployment?.MedicalCouncilNo, NodeViewModels = nodePathNodes, UserViewModel = currentUser, ResourceItemViewModel = resource, ActivityDetailedItemViewModel = new ActivityDetailedItemViewModel(activity.Item2), DownloadCertificate = true, CertificateBase64Image = base64Image };
+                certificateDetails = new CertificateDetails { AccessCount = activity.Item1, ProfessionalRegistrationNumber = userEmployment?.MedicalCouncilNo, NodeViewModels = nodePathNodes, UserViewModel = currentUser, ResourceItemViewModel = resource, ActivityDetailedItemViewModel = new ActivityDetailedItemViewModel(activity.Item2), DownloadCertificate = true, CertificateBase64Image = base64Image, PdfResoureItemUrl = resourceItemUrl };
                 var renderedViewHTML = new List<string>();
                 certificateDetails.PageNo++;
                 renderedViewHTML.Add(RenderRazorViewToString(this, "LearningCertificate", certificateDetails));

@@ -162,6 +162,7 @@ FROM (
 										  )
 										  OR
 												([Res].[ResourceTypeId]  IN (6,11) AND  [ResourceActivity].[ActivityStatusId] = 3)
+												 OR	([Res].[ResourceTypeId]  IN (11) AND  [ResourceActivity].[ActivityStatusId] = 3 AND [AssessResVer].[AssessmentType]=1)
 
 										--OR         
 										--(
@@ -263,7 +264,7 @@ FROM (
 								EXISTS (SELECT 1 FROM @tmpActivityStatus WHERE ActivityStatusId = 5) 
 								AND
 								(
-									[Res].[ResourceTypeId] = 11
+									[Res].[ResourceTypeId] = 11 AND  [AssessResVer].[AssessmentType]=2
 									AND
 										EXISTS
 										(
@@ -296,7 +297,7 @@ FROM (
 				
 								AND
 								(
-									[Res].[ResourceTypeId] = 11
+									[Res].[ResourceTypeId] = 11 and [AssessResVer].[AssessmentType]=2
 									AND 
 										EXISTS
 											(

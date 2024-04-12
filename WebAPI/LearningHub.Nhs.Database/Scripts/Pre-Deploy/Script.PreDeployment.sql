@@ -18,7 +18,3 @@ BEGIN
     RAISERROR (N'TD-2902 Add resource types to Content Server.sql must be run manually before release.', 16, 127) WITH NOWAIT
 END
 GO
-
---TD-4016-Remove character limit from catalogue description
-ALTER TABLE hierarchy.CatalogueNodeVersion ALTER COLUMN Description nvarchar(max) NULL;
-GO

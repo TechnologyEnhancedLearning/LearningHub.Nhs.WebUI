@@ -513,6 +513,7 @@
     <Build Include="Stored Procedures\Activity\GetUserLearningActivities.sql" />
     <Build Include="Stored Procedures\Activity\GetUserLearningActivitiesCount.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-2929_ActivityStatusUpdates.sql" />
+    <Build Include="Scripts\Post-Deploy\Scripts\TD-4016_Alter_CatalogueNodeVersionTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />
@@ -582,5 +583,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Post-Deploy\Scripts\ElfhExternalSystemsImport.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\TD-4016-AlterCatalogueNodeVerstion.sql" />
   </ItemGroup>
 </Project>

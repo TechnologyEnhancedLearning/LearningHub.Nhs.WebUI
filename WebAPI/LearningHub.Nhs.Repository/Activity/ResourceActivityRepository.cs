@@ -400,11 +400,14 @@ namespace LearningHub.Nhs.Repository.Activity
                     List<AssessmentResourceActivityInteraction> assessmentResourceActivityInteractionList = new List<AssessmentResourceActivityInteraction>();
                     foreach (var item in c)
                     {
-                        AssessmentResourceActivityInteraction assessmentResourceActivityInteraction = new AssessmentResourceActivityInteraction();
-                        assessmentResourceActivityInteraction.AssessmentResourceActivityId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_AssessmentResourceActivityId ?? 0;
-                        assessmentResourceActivityInteraction.Id = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id ?? 0;
-                        assessmentResourceActivityInteraction.QuestionBlockId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId ?? 0;
-                        assessmentResourceActivityInteractionList.Add(assessmentResourceActivityInteraction);
+                        if (i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id != null)
+                        {
+                            AssessmentResourceActivityInteraction assessmentResourceActivityInteraction = new AssessmentResourceActivityInteraction();
+                            assessmentResourceActivityInteraction.AssessmentResourceActivityId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_AssessmentResourceActivityId ?? 0;
+                            assessmentResourceActivityInteraction.Id = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id ?? 0;
+                            assessmentResourceActivityInteraction.QuestionBlockId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId ?? 0;
+                            assessmentResourceActivityInteractionList.Add(assessmentResourceActivityInteraction);
+                        }
                     }
 
                     assessmentResourceActivity.AssessmentResourceActivityInteractions = assessmentResourceActivityInteractionList;

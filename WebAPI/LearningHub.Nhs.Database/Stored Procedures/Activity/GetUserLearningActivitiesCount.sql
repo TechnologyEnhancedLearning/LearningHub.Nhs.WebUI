@@ -278,7 +278,7 @@ FROM (
 									AND 
 										(
 											 (SELECT TOP(1)
-													ISNULL([AssessmentResourceActivity3].[Score],0)
+													[AssessmentResourceActivity3].[Score]
 											 FROM   [activity].[AssessmentResourceActivity] AS [AssessmentResourceActivity3]
 											 WHERE  
 													[AssessmentResourceActivity3].[Deleted] = 0
@@ -307,7 +307,7 @@ FROM (
 									
 									AND        
 										(
-										   (SELECT TOP(1) ISNULL([AssessmentResourceActivity5].[Score],0)
+										   (SELECT TOP(1) [AssessmentResourceActivity5].[Score]
 											   FROM   [activity].[AssessmentResourceActivity] AS [AssessmentResourceActivity5]
 											   WHERE  [AssessmentResourceActivity5].[Deleted] = 0
 											   AND  [ResourceActivity].[Id] = [AssessmentResourceActivity5].[ResourceActivityId]) < Cast([AssessResVer].[PassMark] AS DECIMAL(18,2))

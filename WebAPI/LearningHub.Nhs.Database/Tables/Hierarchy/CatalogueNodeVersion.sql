@@ -7,7 +7,7 @@
     [CardImageUrl]      NVARCHAR (128)     NULL,
     [BannerUrl]         NVARCHAR (128)     NULL,
     [CertificateUrl]    NVARCHAR (128)     NULL,
-    [Description]       NVARCHAR (4000)    NOT NULL,
+    [Description]       NVARCHAR (MAX)    NOT NULL,
     [OwnerName]         NVARCHAR (250)     NULL,
     [OwnerEmailAddress] NVARCHAR (250)     NULL,
     [Notes]             NVARCHAR (MAX)     NULL,

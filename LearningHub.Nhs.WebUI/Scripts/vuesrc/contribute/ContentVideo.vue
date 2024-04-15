@@ -105,6 +105,7 @@
                 uploadingFile: null as File,
                 uploadingTranscriptFile: null as File,
                 uploadingCaptionsFile: null as File,
+                contributeResourceAVFlag: true
             };
         },
         computed: {
@@ -120,15 +121,13 @@
             fileUpdated(): ResourceFileModel {
                 return this.$store.state.fileUpdated;
             },
-            contributeResourceAVFlag(): boolean {
-                return this.$store.state.contributeAVResourceFlag;
-            },
             audioVideoUnavailableView(): string {
                 return this.$store.state.getAVUnavailableView;
             },
         },
         created() {
             this.setInitialValues();
+            this.getContributeResAVResourceFlag();
             EventBus.$on('deleteFile', (fileTypeToBeDeleted: number) => {
                 this.processDeleteFile(fileTypeToBeDeleted);
             });
@@ -141,6 +140,11 @@
         methods: {
             changeFile() {
                 this.$emit('filechanged');
+            },
+            getContributeResAVResourceFlag() {
+                resourceData.getContributeAVResourceFlag().then(response => {
+                    this.contributeResourceAVFlag = response;
+                });
             },
             changeTranscriptFile() {
                 $('#transcriptFileUpload').val(null);

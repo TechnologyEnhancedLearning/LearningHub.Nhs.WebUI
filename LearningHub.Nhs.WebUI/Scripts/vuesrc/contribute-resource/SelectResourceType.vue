@@ -5,7 +5,7 @@
         </div>
         <div class="mx-5">
             <h3 class="nhsuk-heading-l nhsuk-u-margin-bottom-2">{{title}}</h3>
-            <div>{{description}}</div>            
+            <div>{{description}}</div>
             <div v-if="!contributeResourceAVFlag && title === 'File' && !isSelected" class="align-self-center">
                 <div v-html="audioVideoUnavailableView"></div>
             </div>
@@ -39,7 +39,7 @@
         },
         data() {
             return {
-                contributeResourceAVFlag: false                
+                contributeResourceAVFlag: true
             };
         },
         created() {
@@ -57,18 +57,17 @@
             },
             isSelected(): boolean {
                 return this.resourceDetails.resourceType === this.resourceType;
-            },           
+            },
             audioVideoUnavailableView(): string {
-                var view = this.$store.state.getAVUnavailableView;
                 return this.$store.state.getAVUnavailableView;
             }
         },
         methods: {
             getContributeResAVResourceFlag() {
-                 resourceData.getContributeAVResourceFlag().then(response => {
-                 this.contributeResourceAVFlag = response;
+                resourceData.getContributeAVResourceFlag().then(response => {
+                    this.contributeResourceAVFlag = response;
                 });
-             },
+            },
             getResourceTypeDescription(resourceType: ResourceType): string {
                 switch (resourceType) {
                     case ResourceType.ARTICLE:

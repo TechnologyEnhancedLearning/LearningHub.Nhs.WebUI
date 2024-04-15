@@ -21,6 +21,7 @@
 
 <script lang="ts">
     import Vue, { PropOptions } from 'vue';
+    import { resourceData } from '../data/resource';
     import { ResourceType, UploadResourceType } from '../constants';
     import { ContributeSettingsModel } from '../models/contribute/contributeSettingsModel';
 
@@ -33,7 +34,11 @@
         data() {
             return {
                 uploadResourceType: UploadResourceType,
+                contributeResourceAVFlag: true
             }
+        },
+        created() {
+            this.getContributeResAVResourceFlag();
         },
         computed: {
             contributeSettings(): ContributeSettingsModel {
@@ -42,13 +47,17 @@
             fileAccept(): string {
                 return this.$store.state.resourceDetail.resourceType == ResourceType.HTML ? '.zip,.rar,.7zip' : ''
             },
-            contributeResourceAVFlag(): boolean {
-                return this.$store.state.contributeAVResourceFlag;
-            },
             audioVideoUnavailableView(): string {
                 return this.$store.state.getAVUnavailableView;
             },
         },
+        methods: {
+            getContributeResAVResourceFlag() {
+                resourceData.getContributeAVResourceFlag().then(response => {
+                    this.contributeResourceAVFlag = response;
+                });
+            },
+        }
     });
 </script>
 

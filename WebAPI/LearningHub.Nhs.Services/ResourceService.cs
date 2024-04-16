@@ -1320,12 +1320,12 @@ namespace LearningHub.Nhs.Services
         /// Get file directory for unpublished or deleted versions.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="deletedResource">.</param>
         /// <returns>The <see cref="List{String}"/>.</returns>
-        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId)
+        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId, bool deletedResource = false)
         {
             var retVal = new List<string>();
-            File fileDetails = null;
-            var resource = await this.GetResourceVersionByIdAsync(resourceVersionId);
+            var resource = await this.GetResourceVersionExtendedViewModelAsync(resourceVersionId);
             var rvs = await this.resourceVersionRepository.GetResourceVersionsAsync(resource.ResourceId);
             rvs = rvs.Where(x => x.Id != resourceVersionId && x.PublicationId > 0).OrderByDescending(x => x.PublicationId).ToList();
             var rv = rvs.FirstOrDefault();
@@ -1334,21 +1334,142 @@ namespace LearningHub.Nhs.Services
                 var extendedResourceVersion = await this.GetResourceVersionExtendedViewModelAsync(rv.Id);
                 if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Scorm)
                 {
-                    retVal.Add(extendedResourceVersion.ScormDetails.ContentFilePath);
+                    if (resource.ScormDetails?.ContentFilePath != extendedResourceVersion.ScormDetails.ContentFilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.ScormDetails.ContentFilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.ScormDetails?.File?.FilePath);
+                        }
+                    }
                 }
                 else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Html)
                 {
-                    retVal.Add(extendedResourceVersion.HtmlDetails.ContentFilePath);
+                    if (resource.HtmlDetails?.ContentFilePath != extendedResourceVersion.HtmlDetails.ContentFilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.HtmlDetails.ContentFilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.HtmlDetails?.File?.FilePath);
+                        }
+                    }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
+                {
+                    if (resource.GenericFileDetails.File.FilePath != extendedResourceVersion.GenericFileDetails.File.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.GenericFileDetails.File.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.GenericFileDetails.File.FilePath);
+                        }
+                    }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Image)
+                {
+                    if (resource.ImageDetails.File.FilePath != extendedResourceVersion.ImageDetails.File.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.ImageDetails.File.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.ImageDetails.File.FilePath);
+                        }
+                    }
                 }
                 else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Audio)
                 {
-                    retVal.Add(extendedResourceVersion.AudioDetails.File.FilePath);
-                    retVal.Add(extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                    if (resource.AudioDetails.File.FilePath != extendedResourceVersion.AudioDetails.File.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.AudioDetails.File.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.AudioDetails.File.FilePath);
+                        }
+                    }
+
+                    if (resource.AudioDetails.ResourceAzureMediaAsset.FilePath != extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                        }
+                    }
                 }
                 else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Video)
                 {
-                    retVal.Add(extendedResourceVersion.VideoDetails.File.FilePath);
-                    retVal.Add(extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                    if (resource.VideoDetails.File.FilePath != extendedResourceVersion.VideoDetails.File.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.VideoDetails.File.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.VideoDetails.File.FilePath);
+                        }
+                    }
+
+                    if (resource.VideoDetails.ResourceAzureMediaAsset.FilePath != extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                        }
+                    }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Article)
+                {
+                    var inputResourceFiles = resource.ArticleDetails.Files.ToList();
+                    var previousPublishedfiles = extendedResourceVersion.ArticleDetails.Files.ToList();
+                    if (!deletedResource)
+                    {
+                        if (previousPublishedfiles.Any())
+                        {
+                            foreach (var file in previousPublishedfiles)
+                            {
+                                if (!inputResourceFiles.Where(x => x.FilePath == file.FilePath).Any())
+                                {
+                                    retVal.Add(file.FilePath);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (inputResourceFiles.Any())
+                        {
+                            foreach (var file in inputResourceFiles)
+                            {
+                                if (!previousPublishedfiles.Where(x => x.FilePath == file.FilePath).Any())
+                                {
+                                    retVal.Add(file.FilePath);
+                                }
+                            }
+                        }
+                    }
                 }
             }
 

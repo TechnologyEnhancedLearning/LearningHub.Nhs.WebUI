@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using Azure.Storage.Files.Shares;
     using Azure.Storage.Files.Shares.Models;
+    using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -94,7 +95,7 @@
                     }
                 }
 
-                return this.shareClient;
+                return this.archiveShareClient;
             }
         }
 
@@ -201,9 +202,17 @@
         /// The PurgeResourceFile.
         /// </summary>
         /// <param name="vm">The vm.<see cref="ResourceVersionExtendedViewModel"/>.</param>
+        /// <param name="filePaths">.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task PurgeResourceFile(ResourceVersionExtendedViewModel vm)
+        public async Task PurgeResourceFile(ResourceVersionExtendedViewModel vm = null, List<string> filePaths = null)
         {
+            if (filePaths != null
+                && filePaths.Any())
+            {
+                await this.MoveInPutDirectoryToArchive(filePaths);
+                return;
+            }
+
             if (vm != null)
             {
                 var allContentPath = new List<string>();
@@ -235,7 +244,29 @@
                         }
                     }
                 }
+                else if (vm.CaseDetails != null)
+                {
+                    var blockCollection = vm.CaseDetails.BlockCollection;
+                    foreach (var entry in blockCollection.Blocks)
+                    {
+                        if (entry.ImageCarouselBlock != null)
+                        {
+                            foreach (var item in entry.ImageCarouselBlock?.ImageBlockCollection?.Blocks)
+                            {
+                                allFilePath.Add(item?.MediaBlock?.Image?.File.FilePath);
+                            }
+                        }
+                        else if (entry.WholeSlideImageBlock != null)
+                        {
+                            foreach (var item in entry.WholeSlideImageBlock.WholeSlideImageBlockItems)
+                            {
+                                allFilePath.Add(item?.WholeSlideImage?.File.FilePath);
+                            }
+                        }
+                    }
+                }
 
+                // audio and video to be added
                 await this.MoveInPutDirectoryToArchive(allFilePath);
                 await this.MoveOutPutDirectoryToArchive(allContentPath);
             }

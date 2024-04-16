@@ -282,5 +282,13 @@ namespace LearningHub.Nhs.WebUI.Interfaces
         /// <param name="resourceVersionId">resource version id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<LearningHubValidationResult> DeleteAllResourceVersionProviderAsync(int resourceVersionId);
+
+        /// <summary>
+        /// The GetObsoleteResourceFile.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <param name="deletedResource">.</param>
+        /// <returns>The <see cref="T:Task{List{FileTypeViewModel}}"/>.</returns>
+        Task<List<string>> GetObsoleteResourceFile(int resourceVersionId, bool deletedResource = false);
     }
 }

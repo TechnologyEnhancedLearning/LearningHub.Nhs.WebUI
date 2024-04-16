@@ -413,7 +413,7 @@
 
             if (validationResult.IsValid)
             {
-                _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(associatedFile); });
+                _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(associatedFile, null); });
                 if (viewModel.CatalogueNodeVersionId == 1)
                 {
                     return this.Redirect("/my-contributions/unpublished");

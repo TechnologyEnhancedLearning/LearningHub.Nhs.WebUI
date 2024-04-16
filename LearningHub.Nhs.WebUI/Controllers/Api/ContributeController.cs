@@ -224,11 +224,14 @@
         [Route("DeleteResourceVersion/{resourceversionId}")]
         public async Task<ActionResult> DeleteResourceVersion(int resourceVersionId)
         {
-            var associatedFile = await this.resourceService.GetResourceVersionExtendedAsync(resourceVersionId);
+            var associatedFile = await this.resourceService.GetObsoleteResourceFile(resourceVersionId, true);
             var validationResult = await this.contributeService.DeleteResourceVersionAsync(resourceVersionId);
             if (validationResult.IsValid)
             {
-                _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(associatedFile); });
+                if (associatedFile.Any())
+                {
+                    _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, associatedFile); });
+                }
             }
 
             return this.Ok(validationResult);
@@ -338,7 +341,19 @@
         [Route("PublishResourceVersion")]
         public async Task<ActionResult> PublishResourceVersionAsync([FromBody] PublishViewModel publishViewModel)
         {
+            var associatedResource = await this.resourceService.GetResourceVersionExtendedAsync(publishViewModel.ResourceVersionId);
             var validationResult = await this.contributeService.SubmitResourceVersionForPublishAsync(publishViewModel);
+            if (validationResult.IsValid)
+            {
+                if (associatedResource.ResourceTypeEnum != ResourceTypeEnum.Scorm && associatedResource.ResourceTypeEnum != ResourceTypeEnum.Html)
+                {
+                    var obsoleteFiles = await this.resourceService.GetObsoleteResourceFile(publishViewModel.ResourceVersionId);
+                    if (obsoleteFiles.Any())
+                    {
+                        await this.fileService.PurgeResourceFile(null, obsoleteFiles);
+                    }
+                }
+            }
 
             return this.Ok(validationResult);
         }

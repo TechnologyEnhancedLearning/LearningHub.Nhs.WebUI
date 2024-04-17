@@ -230,10 +230,10 @@
             try
             {
                 var activeContent = this.userService.GetActiveContentAsync().Result;
-                if (activeContent.Count == 0)
-                {
-                    return false;
-                }
+                ////if (activeContent.Count == 0)
+                ////{
+                ////    return false;
+                ////}
 
                 if (!activeContent.Any(ac => ac.ScormActivityId == scoObject.InstanceId))
                 {
@@ -265,10 +265,10 @@
 
                 // Persist update.
                 await this.activityService.UpdateScormActivityAsync(scoObject);
-                if (scoObject.LessonStatusId == ScormLessionStatus.ActivityStatusId(ScormLessionStatus.Completed) || scoObject.LessonStatusId == ScormLessionStatus.ActivityStatusId(ScormLessionStatus.Passed))
-                {
-                    await this.activityService.CompleteScormActivity(scoObject);
-                }
+                ////if (scoObject.LessonStatusId == ScormLessionStatus.ActivityStatusId(ScormLessionStatus.Completed) || scoObject.LessonStatusId == ScormLessionStatus.ActivityStatusId(ScormLessionStatus.Passed))
+                ////{
+                ////    await this.activityService.CompleteScormActivity(scoObject);
+                ////}
 
                 return true;
             }

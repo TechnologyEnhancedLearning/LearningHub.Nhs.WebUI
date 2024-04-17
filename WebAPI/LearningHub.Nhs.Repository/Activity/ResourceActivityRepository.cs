@@ -96,6 +96,7 @@ namespace LearningHub.Nhs.Repository.Activity
             //
             // For assessment activities, only include the original activities that were created when starting the assessment. The created end record is only for consistency.
             // It's easier to get the real assessment resource activity from the original resource activity, so only fetch that one.
+            // TD-4047: As part of this defect bringing back the removed code which then used for the new stored procedure created as part of performance improvement.
             return this.DbContext.ResourceActivity
                .Include(r => r.Resource)
                .ThenInclude(r => r.ResourceReference)
@@ -111,9 +112,10 @@ namespace LearningHub.Nhs.Repository.Activity
                .Include(r => r.NodePath)
                .AsNoTracking()
              .Where(r =>
-                            r.UserId == userId && r.ScormActivity.First().CmiCoreLessonStatus != (int)ActivityStatusEnum.Completed &&
-                           ((!r.InverseLaunchResourceActivity.Any()) ||
-                              r.InverseLaunchResourceActivity.Any()))
+                      r.UserId == userId && r.ScormActivity.First().CmiCoreLessonStatus != (int)ActivityStatusEnum.Completed &&
+                     ((r.Resource.ResourceTypeEnum != ResourceTypeEnum.Video && r.Resource.ResourceTypeEnum != ResourceTypeEnum.Audio && !r.InverseLaunchResourceActivity.Any()) ||
+                        r.InverseLaunchResourceActivity.Any(y => y.ActivityStatusId == (int)ActivityStatusEnum.Completed)) &&
+                     (r.Resource.ResourceTypeEnum != ResourceTypeEnum.Assessment || r.ActivityStatusId == (int)ActivityStatusEnum.Launched))
               .OrderByDescending(r => r.ActivityStart);
         }
 

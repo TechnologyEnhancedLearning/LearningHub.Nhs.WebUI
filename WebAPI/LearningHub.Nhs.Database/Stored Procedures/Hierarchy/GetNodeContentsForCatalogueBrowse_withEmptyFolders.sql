@@ -8,6 +8,7 @@
 -- Modification History
 --
 -- 05-09-2023  SA	Initial Revision. To get the empty foder details also.
+-- 17-04-2024  DB	Resources limited to the correct NodeId.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsForCatalogueBrowse_withEmptyFolders]
 (
@@ -99,7 +100,7 @@ BEGIN
 		INNER JOIN 
 			resources.ResourceReference rr ON rr.ResourceId = nr.ResourceId AND rr.Deleted = 0
 		INNER JOIN 
-			hierarchy.NodePath np ON rr.NodePathId = np.Id AND np.Deleted = 0
+			hierarchy.NodePath np ON rr.NodePathId = np.Id AND np.NodeId = nr.NodeId AND np.Deleted = 0
 		INNER JOIN 
 			hierarchy.[Node] n ON np.NodeId = n.Id AND n.Deleted = 0
 		LEFT JOIN

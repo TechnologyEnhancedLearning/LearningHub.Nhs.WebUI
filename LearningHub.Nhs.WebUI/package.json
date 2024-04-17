@@ -28,7 +28,7 @@
     "bootstrap": "^4.6.2",
     "ckeditor4-vue": "^0.2.0",
     "concurrently": "^7.6.0",
-    "core-js": "^3.36.0",
+    "core-js": "^3.37.0",
     "js-cookie": "2.2.1",
     "lodash": "4.17.21",
     "moment": "^2.30.1",

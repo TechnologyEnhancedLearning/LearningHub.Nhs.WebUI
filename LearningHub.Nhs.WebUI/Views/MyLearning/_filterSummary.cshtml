@@ -53,11 +53,11 @@
     }
     @if (Model.Complete)
     {
-        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Complete</strong>";
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Completed</strong>";
     }
     @if (Model.Incomplete)
     {
-        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Incomplete</strong>";
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>In progress</strong>";
     }
     @if (Model.Passed)
     {
@@ -71,6 +71,14 @@
     {
         filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Downloaded</strong>";
     }
+  @if (Model.Viewed)
+  {
+    filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Viewed</strong>";
+  }
+  @if (Model.Launched)
+  {
+    filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Launched</strong>";
+  }
     @if (string.IsNullOrWhiteSpace(filtersummary))
     {
         statusFilter = string.Empty;

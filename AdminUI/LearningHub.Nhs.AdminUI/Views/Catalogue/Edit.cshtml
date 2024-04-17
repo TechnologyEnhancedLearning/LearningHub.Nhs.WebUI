@@ -138,7 +138,6 @@
             <div class="col-12">
                 <label for="Description">Description</label>
                 <textarea asp-for="Description" class="form-control"></textarea>
-                <small id="with-hint-info" class="pt-2">You have 1800 characters remaining</small>
                 <span asp-validation-for="Description"></span>
             </div>
         </div>
@@ -413,13 +412,6 @@
                     var editorData = editor.getData();
                     var data = $("<p></p>").html(editorData).text();
                     var textData = data.replace(/\s\n\n/g, ' ').replace(/\n\n/g, ' ').replace(/\s\n/g, '').replace(/\n/g, '');
-                    var remaining = 1800 - textData.length;
-
-                    if (remaining >= 0) {
-                        $('#with-hint-info').text("You have " + remaining + " characters remaining").removeClass('text-danger');
-                    } else {
-                        $('#with-hint-info').text("You have " + (-1 * remaining) + " character too many").addClass('text-danger');
-                    }
                 });
 
                 editor.fire('change');

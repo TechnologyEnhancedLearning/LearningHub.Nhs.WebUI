@@ -581,7 +581,7 @@
 
             // 1. Check if the launch activity has already been ended. This could happen if the user logs in on a different device/browser whilst leaving the original page still open. The login process will have automatically ended the activity.
             var endActivity = await this.resourceActivityRepository.GetAll()
-                .Where(x => x.LaunchResourceActivityId == launchResourceActivityId && x.ActivityStatusId == (int)ActivityStatusEnum.Completed).FirstOrDefaultAsync();
+                .Where(x => x.LaunchResourceActivityId == launchResourceActivityId).FirstOrDefaultAsync();
 
             if (endActivity != null)
             {
@@ -606,14 +606,15 @@
                 await this.mediaResourceActivityInteractionRepository.CreateAsync(userId, pauseInteraction);
             }
 
-            // 3. Create new end activity record. All scenarios.
-            id = this.resourceActivityRepository.CreateActivity(userId, resourceVersionId, nodePathId, launchResourceActivityId, ActivityStatusEnum.Completed, null, activityEnd);
+            // 3. Create new end activity record. All scenarios. Start with ActivityStatus of Incomplete. Update to Completed in step 6 if all of media played.
+            id = this.resourceActivityRepository.CreateActivity(userId, resourceVersionId, nodePathId, launchResourceActivityId, ActivityStatusEnum.Incomplete, null, activityEnd);
 
             // 4. Analyse the activity to update the user's played segments for this resource activity. All scenarios.
             await this.mediaResourceActivityInteractionRepository.CalculatePlayedMediaSegments(userId, resourceVersionId, mediaResourceActivityId);
 
             // 5. Re-analyse any completed activities that started after this one because their cumulative percentage complete will now be wrong.
             // This scenario happens if user watches a video in multiple tabs or devices and they close an earlier activity after a later one.
+            // This also updates the ActivityStatusId on the end ResourceActivity record if the percentage complete is 100%.
             var launchActivity = await this.resourceActivityRepository.GetByIdAsync(launchResourceActivityId);
             var laterActivities = this.resourceActivityRepository.GetAll()
                 .Include(x => x.MediaResourceActivity)
@@ -621,8 +622,7 @@
                             x.UserId == userId &&
                             x.ResourceVersionId == resourceVersionId &&
                             x.ActivityStart > launchActivity.ActivityStart &&
-                            !x.LaunchResourceActivityId.HasValue &&
-                            x.InverseLaunchResourceActivity.Any(y => y.ActivityStatusId == (int)ActivityStatusEnum.Completed)).ToList();
+                            !x.LaunchResourceActivityId.HasValue).ToList();
 
             foreach (var ra in laterActivities)
             {
@@ -653,14 +653,29 @@
                 return result;
             }
 
-            await this.CalculateAssessmentResourceActivityScore(userId, assessmentResourceActivity);
+            var assessmentResourceVersion = await this.assessmentResourceVersionRepository
+               .GetByResourceVersionIdAsync(assessmentResourceActivity.ResourceActivity.ResourceVersionId);
+            var assessmentResource = await this.CalculateAssessmentResourceActivityScore(userId, assessmentResourceActivity);
+
+            var activityStatus = ActivityStatusEnum.Completed;
+            if (assessmentResourceVersion != null && (int)assessmentResourceVersion.AssessmentType == 2)
+            {
+                if (assessmentResource.Score >= assessmentResourceVersion.PassMark)
+                {
+                    activityStatus = ActivityStatusEnum.Passed;
+                }
+                else
+                {
+                    activityStatus = ActivityStatusEnum.Failed;
+                }
+            }
 
             this.resourceActivityRepository.CreateActivity(
                 resourceActivity.CreateUserId,
                 resourceActivity.ResourceVersionId,
                 resourceActivity.NodePathId,
                 resourceActivity.Id,
-                ActivityStatusEnum.Completed,
+                activityStatus,
                 null,
                 this.timezoneOffsetManager.ConvertToUserTimezone(DateTimeOffset.UtcNow));
 
@@ -674,7 +689,7 @@
         /// <param name="userId">The user id.</param>
         /// <param name="assessmentResourceActivity">The assessment resource activity.</param>
         /// <returns>The task.</returns>
-        private async Task CalculateAssessmentResourceActivityScore(int userId, AssessmentResourceActivity assessmentResourceActivity)
+        private async Task<AssessmentResourceActivity> CalculateAssessmentResourceActivityScore(int userId, AssessmentResourceActivity assessmentResourceActivity)
         {
             var questions = await this.GetAssessmentQuestionsByResourceActivityId(assessmentResourceActivity.ResourceActivityId);
             var answers = (await this.assessmentResourceActivityInteractionRepository.
@@ -693,6 +708,7 @@
 
             assessmentResourceActivity.Score = Math.Round(Convert.ToDecimal(userScore) / maxScore * 100, 3);
             await this.assessmentResourceActivityRepository.UpdateAsync(userId, assessmentResourceActivity);
+            return assessmentResourceActivity;
         }
 
         /// <summary>

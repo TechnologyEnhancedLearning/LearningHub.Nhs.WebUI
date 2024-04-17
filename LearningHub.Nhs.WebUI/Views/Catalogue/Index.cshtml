@@ -79,7 +79,8 @@
         CatalogueNodeVersionId = Model.Catalogue.Id,
         RestrictedAccess = Model.Catalogue.RestrictedAccess,
         HasCatalogueAccess = Unlocked(),
-        CatalogueAccessRequest = Model.CatalogueAccessRequest
+        CatalogueAccessRequest = Model.CatalogueAccessRequest,
+        UserGroups = Model.UserGroups
       };
 }
 
@@ -125,7 +126,7 @@
       <div class="catalogue-title nhsuk-u-margin-bottom-7">
         @if (!string.IsNullOrEmpty(Model.Catalogue.BadgeUrl))
         {
-          <img alt="catalogue badge" src="@GetBadgeUrl()" class="catalogue-badge" />
+          <img alt="ELFH catalogue badge" src="@GetBadgeUrl()" class="catalogue-badge" />
         }
 
         <h1 class="heading-lg title nhsuk-u-margin-bottom-0">@(ViewBag.ActiveTab == "browse" && Model.NodeDetails != null ? Model.NodeDetails.Name : Model.Catalogue.Name)</h1>
@@ -145,7 +146,8 @@
            asp-route-title="@Model.Catalogue.Name.Truncate(60)"
            asp-route-nodeId="@Model.Catalogue.NodeId"
            asp-route-path="@Model.Catalogue.Url"
-           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks</a>
+           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)"
+           aria-label="@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks">@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks</a>
         </div>
       }
 
@@ -164,12 +166,13 @@
 
         @* Tab header *@
         <nav class="subnavbarwhite navbar-expand-md navbar-toggleable-md nhsuk-u-margin-bottom-1">
-            <input class="subnav-hidden-checkbox" id="resources-subnav-hidden-checkbox" role="button" type="checkbox" aria-controls="catalogue-details">
+            <input class="subnav-hidden-checkbox" id="resources-subnav-hidden-checkbox" role="button" type="checkbox" aria-controls="catalogue-details" aria-labelledby="resources-subnav-hidden-checkbox-label">
             <div class="bar">
                 <div class="navbar-toggler navbar-toggler-left">@GetActiveTabName()</div>
-                <label class="navbar-toggler navbar-toggler-right" for="resources-subnav-hidden-checkbox">
+                <label class="navbar-toggler navbar-toggler-right" id="resources-subnav-hidden-checkbox-label" for="resources-subnav-hidden-checkbox">
                     <i class="fa-solid fa-chevron-down"></i>
                     <i class="fa-solid fa-chevron-up display--hide"></i>
+                    <span class="nhsuk-u-visually-hidden">label</span>
                 </label>
             </div>
             <div class="navbar-collapse collapse" id="catalogue-details">

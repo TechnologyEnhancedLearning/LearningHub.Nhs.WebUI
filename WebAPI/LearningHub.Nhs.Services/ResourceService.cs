@@ -2,6 +2,7 @@ namespace LearningHub.Nhs.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing.Imaging;
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
@@ -1310,6 +1311,166 @@ namespace LearningHub.Nhs.Services
                 var vm = new ResourceVersionViewModel();
                 await this.GetResourceVersionViewModel(rv.Id, vm);
                 retVal.Add(vm);
+            }
+
+            return retVal;
+        }
+
+        /// <summary>
+        /// Get file directory for unpublished or deleted versions.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="deletedResource">.</param>
+        /// <returns>The <see cref="List{String}"/>.</returns>
+        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId, bool deletedResource = false)
+        {
+            var retVal = new List<string>();
+            var resource = await this.GetResourceVersionExtendedViewModelAsync(resourceVersionId);
+            var rvs = await this.resourceVersionRepository.GetResourceVersionsAsync(resource.ResourceId);
+            rvs = rvs.Where(x => x.Id != resourceVersionId && x.PublicationId > 0).OrderByDescending(x => x.PublicationId).ToList();
+            var rv = rvs.FirstOrDefault();
+            if (rv != null)
+            {
+                var extendedResourceVersion = await this.GetResourceVersionExtendedViewModelAsync(rv.Id);
+                if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Scorm)
+                {
+                    if (resource.ScormDetails?.ContentFilePath != extendedResourceVersion.ScormDetails.ContentFilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.ScormDetails.ContentFilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.ScormDetails?.File?.FilePath);
+                        }
+                    }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Html)
+                {
+                    if (resource.HtmlDetails?.ContentFilePath != extendedResourceVersion.HtmlDetails.ContentFilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.HtmlDetails.ContentFilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.HtmlDetails?.File?.FilePath);
+                        }
+                    }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
+                {
+                    if (resource.GenericFileDetails.File.FilePath != extendedResourceVersion.GenericFileDetails.File.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.GenericFileDetails.File.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.GenericFileDetails.File.FilePath);
+                        }
+                    }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Image)
+                {
+                    if (resource.ImageDetails.File.FilePath != extendedResourceVersion.ImageDetails.File.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.ImageDetails.File.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.ImageDetails.File.FilePath);
+                        }
+                    }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Audio)
+                {
+                    if (resource.AudioDetails.File.FilePath != extendedResourceVersion.AudioDetails.File.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.AudioDetails.File.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.AudioDetails.File.FilePath);
+                        }
+                    }
+
+                    if (resource.AudioDetails.ResourceAzureMediaAsset.FilePath != extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                        }
+                    }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Video)
+                {
+                    if (resource.VideoDetails.File.FilePath != extendedResourceVersion.VideoDetails.File.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.VideoDetails.File.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.VideoDetails.File.FilePath);
+                        }
+                    }
+
+                    if (resource.VideoDetails.ResourceAzureMediaAsset.FilePath != extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                        }
+                    }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Article)
+                {
+                    var inputResourceFiles = resource.ArticleDetails.Files.ToList();
+                    var previousPublishedfiles = extendedResourceVersion.ArticleDetails.Files.ToList();
+                    if (!deletedResource)
+                    {
+                        if (previousPublishedfiles.Any())
+                        {
+                            foreach (var file in previousPublishedfiles)
+                            {
+                                if (!inputResourceFiles.Where(x => x.FilePath == file.FilePath).Any())
+                                {
+                                    retVal.Add(file.FilePath);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (inputResourceFiles.Any())
+                        {
+                            foreach (var file in inputResourceFiles)
+                            {
+                                if (!previousPublishedfiles.Where(x => x.FilePath == file.FilePath).Any())
+                                {
+                                    retVal.Add(file.FilePath);
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             return retVal;

@@ -66,6 +66,7 @@
                         <a href="~/documents/Learning Hub accessibility statement v2.0 July 2023.pdf" target="_blank">Download as PDF</a>
                     </section>
                 </article>
+                @await Html.PartialAsync("~/Views/Shared/_PageReviewPartial.cshtml", new PageReviewModel { LastReviewedDate = new DateTime(2023, 3, 17), NextReviewDate = new DateTime(2026, 8, 16) })
             </div>
         </div>
     </div>

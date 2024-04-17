@@ -107,6 +107,21 @@
                         </div>
                     </div>
                 }
+                @* Html Resource *@
+                @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Html)
+                {
+                    <div id="resourcePg" class="nhsuk-card nhsuk-bg-light-blue">
+                        <div class="nhsuk-card__content">
+                            <a v-on:click=checkUserCertificateAvailability(@resourceItem.Id) href="@($"{Context.Request.Scheme}://{Context.Request.Host}/resource/html/{resourceItem.Id}/index.html")"
+                               onclick="@($"window.open(this.href, 'scormDebugWindow', 'status=no,location=no,toolbar=no,menubar=no,dependent=no,width={resourceItem.HtmlDetails.PopupWidth},height={resourceItem.HtmlDetails.PopupHeight}'); return false;")">
+                                <button class="nhsuk-button">
+                                    Launch HTML resource
+                                </button>
+                            </a>
+                            <p>This resource will launch in a new window</p>
+                        </div>
+                    </div>
+                }
 
                 @* Generic File *@
                 @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
@@ -146,23 +161,7 @@
                         </div>
                     }
                 }
-                @* Html Resource *@
-                @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Html)
-                {
-                    <div id="resourcePg" class="nhsuk-card nhsuk-bg-light-blue">
-                        <div class="nhsuk-card__content">
-                            <a v-on:click=checkUserCertificateAvailability(@resourceItem.Id) href="@($"{Context.Request.Scheme}://{Context.Request.Host}/resource/html/{resourceItem.Id}/index.html")"
-                               onclick="@($"window.open(this.href, 'scormDebugWindow', 'status=no,location=no,toolbar=no,menubar=no,dependent=no,width={resourceItem.HtmlDetails.PopupWidth},height={resourceItem.HtmlDetails.PopupHeight}'); return false;")">
-                                <button class="nhsuk-button">
-                                    Launch HTML resource
-                                </button>
-                            </a>
-                            <p>This resource will launch in a new window</p>
-                        </div>
-                    </div>
-                }
-
-
+               
                 @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Video || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Audio || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Scorm ||
                resourceItem.ResourceTypeEnum == ResourceTypeEnum.Case || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Assessment)
                 {
@@ -173,11 +172,18 @@
 
                     @* Video/Audio/Scorm/Case/Assessment require JavaScript - use Vue.js resource app. *@
 
-                    <div id="resourcecontainer">
-                        <router-view user-authenticated="@ViewBag.UserAuthenticated"
-                                     :media-activity-playing-event-interval-seconds="@ViewBag.MediaActivityPlayingEventIntervalSeconds"
-                                     :keep-user-session-alive-interval-seconds="@ViewBag.KeepUserSessionAliveIntervalSeconds" />
-                    </div>
+                    if (!@ViewBag.DisplayAVResourceFlag)
+                    {
+                        <partial name="_AudioVideoUnavailable" />
+                    }
+                    else
+                    {
+                        <div id="resourcecontainer">
+                            <router-view user-authenticated="@ViewBag.UserAuthenticated"
+                                         :media-activity-playing-event-interval-seconds="@ViewBag.MediaActivityPlayingEventIntervalSeconds"
+                                         :keep-user-session-alive-interval-seconds="@ViewBag.KeepUserSessionAliveIntervalSeconds" />
+                        </div>
+                    }
 
                     <partial name="_JavaScriptDisabled" />
                 }

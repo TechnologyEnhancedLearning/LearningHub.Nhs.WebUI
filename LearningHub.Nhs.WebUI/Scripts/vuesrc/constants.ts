@@ -60,7 +60,8 @@ export enum ActivityStatus {
     Completed = 3,
     Failed = 4,
     Passed = 5,
-    Downloaded = 6
+    Downloaded = 6,
+    Incomplete = 7
 };
 
 export enum AccessRequestStatus {

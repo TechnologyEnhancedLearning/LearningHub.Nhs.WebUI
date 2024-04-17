@@ -7,6 +7,7 @@
 @inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.WebUI.Configuration.Settings> options
 @{
   var resourceItem = Model.ResourceItem;
+  bool providerExists = Model.ResourceItem.Providers?.Count > 0;
 
   bool CanDisplayEsrLink()
   {
@@ -39,9 +40,15 @@
         <div class="display__flex-space-between">
           <h2>Resource details</h2>
 
+          @if (providerExists)
+          {
+            var providersss = @resourceItem.Providers;
+            var provider = @resourceItem.Providers.First();
+            <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
+          }
           @if (!string.IsNullOrEmpty(resourceItem.Catalogue.BadgeUrl))
           {
-            <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(resourceItem.Catalogue.BadgeUrl))" alt="@(resourceItem.Catalogue.Name)" class="catalogue-badge" />
+            <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(resourceItem.Catalogue.BadgeUrl))" alt="Provider's catalogue badge" class="catalogue-badge" />
           }
         </div>
 

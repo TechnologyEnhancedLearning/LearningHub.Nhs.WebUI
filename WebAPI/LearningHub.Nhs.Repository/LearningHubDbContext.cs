@@ -766,6 +766,11 @@ namespace LearningHub.Nhs.Repository
         public virtual DbSet<ResourceVersionProvider> ResourceVersionProvider { get; set; }
 
         /// <summary>
+        /// Gets or sets the resource activity.
+        /// </summary>
+        public virtual DbSet<MyLearningActivity> MyLearningActivity { get; set; }
+
+        /// <summary>
         /// The on model creating.
         /// </summary>
         /// <param name="modelBuilder">The modelBuilder<see cref="ModelBuilder"/>.</param>

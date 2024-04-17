@@ -213,7 +213,30 @@ FROM (
 				) 
 					IS NULL
 			)		
-		
+		AND   
+				(
+					(
+					   -- resource type is not video/audio and launch resource activity doesn't exists
+					   [Res].[ResourceTypeId] NOT IN (7,2) AND NOT (EXISTS
+								(
+									SELECT 1 FROM   [activity].[ResourceActivity] AS [ResAct1]
+									WHERE  [ResAct1].[Deleted] = 0 AND [ResourceActivity].[Id] = [ResAct1].[LaunchResourceActivityId]
+								))
+					)
+				OR  
+					-- or launch resource activity completed
+					EXISTS
+					(
+							SELECT 1	FROM   [activity].[ResourceActivity] AS [ResAct2]
+							WHERE  [ResAct2].[Deleted] = 0 AND  [ResourceActivity].[Id] = [ResAct2].[LaunchResourceActivityId] AND  [ResAct2].[ActivityStatusId] = 3
+					)
+					
+				)
+		AND
+				(
+					-- resource type is not assessment and activity status is launched
+					[Res].[ResourceTypeId] <> 11 OR [ResourceActivity].[ActivityStatusId] = 1
+				)
 		AND
 				(
 						@filterActivityStatus = 0			

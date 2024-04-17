@@ -13,6 +13,8 @@
 -- 11-05-2023  RS   Removed Description and AuthoredBy as no longer required for screen.
 -- 15-05-2023  RS   Added AuthoredBy back in following design decision change.
 -- 23-06-2023  RS   Removed AverageRating and RatingCount as not required from this proc. That data comes separately from RatingService.
+-- 23-06-2023  RS   Removed AverageRating and RatingCount as not required from this proc. That data comes separately from RatingService.
+-- 17-04-2024  DB	Resources limited to the correct NodeId.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsForCatalogueBrowse]
 (
@@ -104,7 +106,7 @@ BEGIN
 		INNER JOIN 
 			resources.ResourceReference rr ON rr.ResourceId = nr.ResourceId AND rr.Deleted = 0
 		INNER JOIN 
-			hierarchy.NodePath np ON rr.NodePathId = np.Id AND np.Deleted = 0
+			hierarchy.NodePath np ON rr.NodePathId = np.Id AND np.NodeId = nr.NodeId AND np.Deleted = 0
 		INNER JOIN 
 			hierarchy.[Node] n ON np.NodeId = n.Id AND n.Deleted = 0
 		LEFT JOIN

@@ -405,6 +405,10 @@
                 {
                     var directory = this.ShareClient.GetDirectoryClient(directoryRef);
                     var archiveDirectory = this.InputArchiveShareClient.GetDirectoryClient(directoryRef);
+                    if (!directory.Exists())
+                    {
+                        continue;
+                    }
 
                     await foreach (var fileItem in directory.GetFilesAndDirectoriesAsync())
                     {

@@ -324,7 +324,17 @@ export const getMediaTypeFromFileExtension = function (fileExtension: string): M
         return MediaTypeEnum.Attachment;
     }
 };
-
+export const getMediaTypeFromFileExtensionContributeCaseOrAssessment = function (fileExtension: string): MediaTypeEnum {
+    if (isIncludedInListIgnoringCase(IMAGE_FILE_EXTENSIONS, fileExtension)) {
+        return MediaTypeEnum.Image;
+    } else if (isIncludedInListIgnoringCase(VIDEO_FILE_EXTENSIONS, fileExtension)) {
+        return MediaTypeEnum.Video;
+    } else if (isIncludedInListIgnoringCase(AUDIO_FILE_EXTENSIONS, fileExtension)) {
+        return MediaTypeEnum.Audio;
+    } else {
+        return MediaTypeEnum.Attachment;
+    }
+};
 export const getUploadTypeFromMediaType = function (mediaType: MediaTypeEnum): FileUploadType {
     switch (mediaType) {
         case MediaTypeEnum.Attachment:

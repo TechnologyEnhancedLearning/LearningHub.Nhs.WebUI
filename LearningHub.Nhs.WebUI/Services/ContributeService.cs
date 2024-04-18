@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Net.Http;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Enums;
@@ -1240,6 +1241,9 @@
             {
                 if (fileChunkDetailId == 0)
                 {
+                    // removing special characters in file name
+                    string fileNameUpdated = Regex.Replace(fileName, "[^a-zA-Z0-9.]", string.Empty);
+
                     // Store the chunk
                     var filelocation = string.Empty;
                     var directoryRef = "chunks_" + Guid.NewGuid().ToString();
@@ -1256,7 +1260,7 @@
                         FilePath = filelocation,
                         ChunkCount = chunkCount,
                         ResourceVersionId = (resourceVersionId == 0) ? (int?)null : resourceVersionId,
-                        FileName = fileName,
+                        FileName = fileNameUpdated,
                         FileSizeKb = (int)(fileSize / 1000),
                     });
                 }

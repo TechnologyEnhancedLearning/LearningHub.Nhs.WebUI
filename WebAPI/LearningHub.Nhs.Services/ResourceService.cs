@@ -1390,7 +1390,7 @@ namespace LearningHub.Nhs.Services
                 }
                 else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Audio)
                 {
-                    if (resource.AudioDetails.File.FilePath != extendedResourceVersion.AudioDetails.File.FilePath)
+                    if (resource.AudioDetails?.File?.FilePath != extendedResourceVersion.AudioDetails.File.FilePath)
                     {
                         if (!deletedResource)
                         {
@@ -1402,7 +1402,7 @@ namespace LearningHub.Nhs.Services
                         }
                     }
 
-                    if (resource.AudioDetails.ResourceAzureMediaAsset.FilePath != extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath)
+                    if (resource.AudioDetails?.ResourceAzureMediaAsset?.FilePath != extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath)
                     {
                         if (!deletedResource)
                         {
@@ -1416,7 +1416,7 @@ namespace LearningHub.Nhs.Services
                 }
                 else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Video)
                 {
-                    if (resource.VideoDetails.File.FilePath != extendedResourceVersion.VideoDetails.File.FilePath)
+                    if (resource.VideoDetails?.File?.FilePath != extendedResourceVersion.VideoDetails.File.FilePath)
                     {
                         if (!deletedResource)
                         {
@@ -1428,7 +1428,7 @@ namespace LearningHub.Nhs.Services
                         }
                     }
 
-                    if (resource.VideoDetails.ResourceAzureMediaAsset.FilePath != extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath)
+                    if (resource.VideoDetails?.ResourceAzureMediaAsset?.FilePath != extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath)
                     {
                         if (!deletedResource)
                         {
@@ -1443,7 +1443,7 @@ namespace LearningHub.Nhs.Services
                 else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Article)
                 {
                     var inputResourceFiles = resource.ArticleDetails.Files.ToList();
-                    var previousPublishedfiles = extendedResourceVersion.ArticleDetails.Files.ToList();
+                    var previousPublishedfiles = extendedResourceVersion.ArticleDetails?.Files?.ToList();
                     if (!deletedResource)
                     {
                         if (previousPublishedfiles.Any())

@@ -228,7 +228,7 @@
             var validationResult = await this.contributeService.DeleteResourceVersionAsync(resourceVersionId);
             if (validationResult.IsValid)
             {
-                if (associatedFile.Any())
+                if (associatedFile != null && associatedFile.Any())
                 {
                     _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, associatedFile); });
                 }
@@ -348,7 +348,7 @@
                 if (associatedResource.ResourceTypeEnum != ResourceTypeEnum.Scorm && associatedResource.ResourceTypeEnum != ResourceTypeEnum.Html)
                 {
                     var obsoleteFiles = await this.resourceService.GetObsoleteResourceFile(publishViewModel.ResourceVersionId);
-                    if (obsoleteFiles.Any())
+                    if (obsoleteFiles != null && obsoleteFiles.Any())
                     {
                         await this.fileService.PurgeResourceFile(null, obsoleteFiles);
                     }

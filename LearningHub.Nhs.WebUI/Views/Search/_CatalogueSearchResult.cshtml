@@ -89,11 +89,11 @@
                 <div>
                   @if (provider != null)
                   {
-                    <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name" class="provider-badge" />
+                    <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
                   }
                   else @if (hasBadge)
                   {
-                    <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="@(item.Name)" class="catalogue-card-badge" />
+                    <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="Provider's catalogue badge" class="catalogue-card-badge" />
                   }
                 </div>
               </div>

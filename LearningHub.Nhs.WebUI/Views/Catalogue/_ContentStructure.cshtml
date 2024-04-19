@@ -25,7 +25,7 @@
     }
         else
         {
-            <h3 class="nhsuk-u-reading-width"><a asp-controller="Resource" asp-action="Index" asp-route-resourcereferenceid="@item.ResourceReferenceId">@item.Name</a></h3>
+            <h2 class="nhsuk-u-reading-width"><a asp-controller="Resource" asp-action="Index" asp-route-resourcereferenceid="@item.ResourceReferenceId">@item.Name</a></h2>
             <div class="resource-metadata">
                 <div class="nhsuk-u-padding-right-5"><span class="nhsuk-u-font-weight-bold">Type:</span> @UtilityHelper.GetPrettifiedResourceTypeName((ResourceTypeEnum)item.ResourceTypeId, item.DurationInMilliseconds)</div>
                 <div class="nhsuk-u-padding-right-5 star-rating-container">

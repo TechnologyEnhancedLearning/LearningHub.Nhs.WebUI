@@ -27,23 +27,10 @@
                    @change="uploadNewMediaFiles"
                    class="visually-hidden" />
 
-            <div v-if="avUnavailableMessage">
-                <transition name="modal">
-                    <div class="modal-mask">
-                        <div class="modal-wrapper">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div v-html="audioVideoUnavailableView"></div>
-                                    <div class="modal-footer modal-footer--buttons">
-                                        <button type="button" class="nhsuk-button nhsuk-button--secondary" @click="cancelAVUnavailModal">Cancel</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </transition>
-            </div>
-
+            <Modal v-if="avUnavailableMessage">
+                <div v-html="audioVideoUnavailableView"></div>
+                <button type="button" class="nhsuk-button nhsuk-button--secondary mt-2 col-4 col-sm-3 col-md-2" @click="cancelAVUnavailModal">Cancel</button>
+            </Modal>   
         </div>
     </div>
 </template>
@@ -60,12 +47,13 @@
         FileUploadType,
         getAllowedFileExtensionsInAcceptFormat,
         startUploadsFromFileElement,
-        getMediaTypeFromFileExtensionContributeCaseOrAssessment        
+        getMediaTypeFromFileExtensionContributeCaseOrAssessment
     } from '../helpers/fileUpload';
     import FilteredBlockCollectionView from './components/questions/FilteredBlockCollectionView.vue';
     import { WholeSlideImageModel } from "../models/contribute-resource/blocks/wholeSlideImageModel";
     import { ResourceType } from "../constants";
     import { MediaTypeEnum } from '../models/contribute-resource/blocks/mediaTypeEnum';
+    import Modal from '../globalcomponents/Modal.vue';
 
     export default Vue.extend({
         props: {
@@ -80,6 +68,7 @@
             ContributeAddContentBlock,
             ContributeChooseContentBlockType,
             FilteredBlockCollectionView,
+            Modal,
         },
         data() {
             return {
@@ -170,9 +159,5 @@
 
     .placeholder-text {
         color: $nhsuk-grey;
-    }
-    .modal-content--scroll {
-        max-height: 90vh;
-        overflow-y: auto;
     }
 </style>

@@ -126,7 +126,7 @@
       <div class="catalogue-title nhsuk-u-margin-bottom-7">
         @if (!string.IsNullOrEmpty(Model.Catalogue.BadgeUrl))
         {
-          <img alt="catalogue badge" src="@GetBadgeUrl()" class="catalogue-badge" />
+          <img alt="Provider's catalogue badge" src="@GetBadgeUrl()" class="catalogue-badge" />
         }
 
         <h1 class="heading-lg title nhsuk-u-margin-bottom-0">@(ViewBag.ActiveTab == "browse" && Model.NodeDetails != null ? Model.NodeDetails.Name : Model.Catalogue.Name)</h1>
@@ -140,13 +140,14 @@
       @if (ViewBag.UserAuthenticated)
       {
         <div class="nhsuk-u-margin-bottom-4">
-          <a class="nhsuk-u-font-size-16" role="button" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
+          <a class="nhsuk-u-font-size-16" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
            asp-route-bookmarked="@Model.Catalogue.IsBookmarked"
            asp-route-id="@Model.Catalogue.BookmarkId"
            asp-route-title="@Model.Catalogue.Name.Truncate(60)"
            asp-route-nodeId="@Model.Catalogue.NodeId"
            asp-route-path="@Model.Catalogue.Url"
-           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks</a>
+           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)"
+           aria-label="@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks">@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks</a>
         </div>
       }
 

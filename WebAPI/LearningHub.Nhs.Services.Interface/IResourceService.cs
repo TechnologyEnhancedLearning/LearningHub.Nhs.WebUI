@@ -233,8 +233,9 @@ namespace LearningHub.Nhs.Services.Interface
         /// Get file directory for unpublished or deleted versions.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="deletedResource">.</param>
         /// <returns>The <see cref="List{String}"/>.</returns>
-        Task<List<string>> GetObsoleteResourceFile(int resourceVersionId);
+        Task<List<string>> GetObsoleteResourceFile(int resourceVersionId, bool deletedResource = false);
 
         /// <summary>
         /// Delete resource version async.

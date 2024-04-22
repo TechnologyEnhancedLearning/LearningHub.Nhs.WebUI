@@ -260,10 +260,6 @@
 
                 // Persist update.
                 await this.activityService.UpdateScormActivityAsync(scoObject);
-                if (scoObject.LessonStatusId == ScormLessionStatus.ActivityStatusId(ScormLessionStatus.Completed) || scoObject.LessonStatusId == ScormLessionStatus.ActivityStatusId(ScormLessionStatus.Passed))
-                {
-                    await this.activityService.CompleteScormActivity(scoObject);
-                }
 
                 return true;
             }

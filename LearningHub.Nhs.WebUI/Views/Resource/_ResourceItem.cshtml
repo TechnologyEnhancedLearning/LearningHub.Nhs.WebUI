@@ -172,7 +172,7 @@
 
                     @* Video/Audio/Scorm/Case/Assessment require JavaScript - use Vue.js resource app. *@
 
-                    if (!@ViewBag.DisplayAVResourceFlag)
+                    if (!@ViewBag.DisplayAVResourceFlag && (resourceItem.AudioDetails !=null || resourceItem.VideoDetails !=null))
                     {
                         <partial name="_AudioVideoUnavailable" />
                     }

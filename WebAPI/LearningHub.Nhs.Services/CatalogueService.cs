@@ -683,7 +683,7 @@
 
             if (u != null)
             {
-                var ug = u.UserUserGroup.Where(uug => uug.UserGroup.RoleUserGroup.Where(rug => rug.Scope != null && rug.Scope.CatalogueNodeId == catalogueId                                                                                               && (rug.RoleId == (int)RoleEnum.Editor)).ToList().Count > 0).ToList();
+                var ug = u.UserUserGroup.Where(uug => uug.UserGroup.RoleUserGroup.Where(rug => rug.Scope != null && rug.Scope.CatalogueNodeId == catalogueId && (rug.RoleId == (int)RoleEnum.Editor)).ToList().Count > 0).ToList();
                 return ug.Count > 0;
             }
 

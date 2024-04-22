@@ -29,6 +29,13 @@ textarea {
     }
 }
 
+@media(min-width: 40.0625em) {
+    .folder-title {
+        font-size: 24px;
+        font-size: 1.5rem;
+    }
+}
+
 .folder-title_empty {
     display: flex;
 
@@ -91,8 +98,12 @@ textarea {
     padding: 20px 0 32px 0;
     border-bottom: 1px solid $nhsuk-grey-light;
 
-    p, h3 {
+    p, h2, h3 {
         margin: 0;
+    }
+
+    h2.nhsuk-u-reading-width {
+        font-size: x-large;
     }
 }
 

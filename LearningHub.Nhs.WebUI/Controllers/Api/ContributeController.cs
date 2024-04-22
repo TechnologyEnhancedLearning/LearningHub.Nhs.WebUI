@@ -9,6 +9,7 @@
     using System.Web;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Resource;
+    using LearningHub.Nhs.Models.Resource.Blocks;
     using LearningHub.Nhs.Models.Resource.Contribute;
     using LearningHub.Nhs.Models.Resource.Files;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -224,11 +225,14 @@
         [Route("DeleteResourceVersion/{resourceversionId}")]
         public async Task<ActionResult> DeleteResourceVersion(int resourceVersionId)
         {
-            var associatedFile = await this.resourceService.GetResourceVersionExtendedAsync(resourceVersionId);
+            var associatedFile = await this.resourceService.GetObsoleteResourceFile(resourceVersionId, true);
             var validationResult = await this.contributeService.DeleteResourceVersionAsync(resourceVersionId);
             if (validationResult.IsValid)
             {
-                _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(associatedFile); });
+                if (associatedFile != null && associatedFile.Any())
+                {
+                    _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, associatedFile); });
+                }
             }
 
             return this.Ok(validationResult);
@@ -338,7 +342,19 @@
         [Route("PublishResourceVersion")]
         public async Task<ActionResult> PublishResourceVersionAsync([FromBody] PublishViewModel publishViewModel)
         {
+            var associatedResource = await this.resourceService.GetResourceVersionExtendedAsync(publishViewModel.ResourceVersionId);
             var validationResult = await this.contributeService.SubmitResourceVersionForPublishAsync(publishViewModel);
+            if (validationResult.IsValid)
+            {
+                if (associatedResource.ResourceTypeEnum != ResourceTypeEnum.Scorm && associatedResource.ResourceTypeEnum != ResourceTypeEnum.Html)
+                {
+                    var obsoleteFiles = await this.resourceService.GetObsoleteResourceFile(publishViewModel.ResourceVersionId);
+                    if (obsoleteFiles != null && obsoleteFiles.Any())
+                    {
+                        await this.fileService.PurgeResourceFile(null, obsoleteFiles);
+                    }
+                }
+            }
 
             return this.Ok(validationResult);
         }
@@ -475,7 +491,9 @@
         [Route("SaveCaseDetail")]
         public async Task<ActionResult> SaveCaseDetailAsync([FromBody] CaseViewModel request)
         {
+            var existingResourceState = await this.resourceService.GetResourceVersionExtendedAsync(request.ResourceVersionId);
             int resourceVersionId = await this.contributeService.SaveCaseDetailAsync(request);
+            this.RemoveDeletedCaseFiles(existingResourceState?.CaseDetails, request);
             return this.Ok(resourceVersionId);
         }
 
@@ -607,6 +625,104 @@
         private async Task<bool> UserCanEditCatalogue(int catalogueId)
         {
             return await this.catalogueService.CanCurrentUserEditCatalogue(catalogueId);
+        }
+
+        private void RemoveDeletedCaseFiles(CaseViewModel existingResource, CaseViewModel newResource)
+        {
+            try
+            {
+                var filePaths = new List<string>();
+                if (existingResource != null && existingResource.BlockCollection != null)
+                {
+                    var allBlocks = existingResource.BlockCollection.Blocks.ToList();
+                    var newBlocks = newResource.BlockCollection.Blocks.ToList();
+                    if (allBlocks.Any())
+                    {
+                        var existingAttachements = allBlocks.Where(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Attachment && x.MediaBlock.Attachment != null).ToList();
+                        if (existingAttachements.Any())
+                        {
+                            foreach (var oldblock in existingAttachements)
+                            {
+                                var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Attachment && x.MediaBlock.Attachment != null && x.MediaBlock.Attachment.File?.FileId == oldblock.MediaBlock.Attachment?.File?.FileId);
+                                if (entry == null)
+                                {
+                                    filePaths.Add(oldblock.MediaBlock.Attachment?.File?.FilePath);
+                                }
+                            }
+                        }
+
+                        var existingVideos = allBlocks.Where(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Video && x.MediaBlock.Video != null).ToList();
+                        if (existingVideos.Any())
+                        {
+                            foreach (var oldblock in existingVideos)
+                            {
+                                var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Video && x.MediaBlock.Video != null && x.MediaBlock.Video.VideoFile?.File?.FileId == oldblock.MediaBlock?.Video?.VideoFile?.File?.FileId);
+                                if (entry == null)
+                                {
+                                    filePaths.Add(oldblock.MediaBlock.Video?.VideoFile?.File?.FilePath);
+                                    if (oldblock.MediaBlock?.Video?.VideoFile?.TranscriptFile?.File?.FilePath != null)
+                                    {
+                                        filePaths.Add(oldblock.MediaBlock.Video?.VideoFile?.TranscriptFile?.File?.FilePath);
+                                    }
+                                }
+                            }
+                        }
+
+                        var existingImages = allBlocks.Where(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null).ToList();
+                        if (existingImages.Any())
+                        {
+                            foreach (var oldblock in existingImages)
+                            {
+                                var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null && x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId);
+                                if (entry == null)
+                                {
+                                    filePaths.Add(oldblock?.MediaBlock?.Image?.File?.FilePath);
+                                }
+                            }
+                        }
+
+                        var existingImageCarousel = allBlocks.Where(x => x.BlockType == BlockType.ImageCarousel && x.ImageCarouselBlock != null && x.ImageCarouselBlock.ImageBlockCollection != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks != null).ToList();
+                        if (existingImageCarousel.Any())
+                        {
+                            foreach (var imageBlock in existingImageCarousel)
+                            {
+                                foreach (var oldblock in imageBlock?.ImageCarouselBlock?.ImageBlockCollection?.Blocks)
+                                {
+                                    var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.ImageCarousel && x.ImageCarouselBlock != null && x.ImageCarouselBlock.ImageBlockCollection != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks.Where(x => x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId).Any());
+                                    if (entry == null)
+                                    {
+                                        filePaths.Add(oldblock.MediaBlock?.Image?.File?.FilePath);
+                                    }
+                                }
+                            }
+                        }
+
+                        var existingWholeSlideImages = allBlocks.Where(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Any()).ToList();
+                        if (existingWholeSlideImages.Any())
+                        {
+                            foreach (var wsi in existingWholeSlideImages)
+                            {
+                                foreach (var oldblock in wsi?.WholeSlideImageBlock?.WholeSlideImageBlockItems)
+                                {
+                                    var entry = newBlocks.FirstOrDefault(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Where(x => x.WholeSlideImage?.File?.FileId == oldblock.WholeSlideImage?.File?.FileId).Any());
+                                    if (entry == null)
+                                    {
+                                        filePaths.Add(oldblock.WholeSlideImage?.File?.FilePath);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (filePaths != null && filePaths.Any())
+                {
+                    _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, filePaths); });
+                }
+            }
+            catch (Exception ex)
+            {
+            }
         }
     }
 }

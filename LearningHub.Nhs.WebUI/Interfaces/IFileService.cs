@@ -48,7 +48,8 @@
         /// The PurgeResourceFile.
         /// </summary>
         /// <param name="vm">The vm.<see cref="ResourceVersionExtendedViewModel"/>.</param>
+        /// <param name="filePaths">.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task PurgeResourceFile(ResourceVersionExtendedViewModel vm);
+        Task PurgeResourceFile(ResourceVersionExtendedViewModel vm = null, List<string> filePaths = null);
     }
 }

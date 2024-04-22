@@ -10,17 +10,17 @@
     {
       @if (item.IsEmptyFolder)
       {
-        <h3 class="folder-title">
+        <h2 class="folder-title">
           <img src="/images/folder-icon.svg" alt="folder icon" />
           <a asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-nodeId="@item.NodeId">@item.Name</a>
-        </h3>
+        </h2>
       }
       else
       {
-        <h3 class="folder-title_empty">
+        <h2 class="folder-title_empty">
           <img src="/images/folder-icon.svg" alt="folder icon" />
           @item.Name
-        </h3>
+        </h2>
       }
     }
         else

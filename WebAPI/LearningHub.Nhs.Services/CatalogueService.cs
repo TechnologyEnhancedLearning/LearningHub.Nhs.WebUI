@@ -259,6 +259,7 @@
             if (cnv != null)
             {
                 var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
+                searchModel.Description = searchModel.Description.Substring(0, 2995) + "</p>";
                 await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
             }
 

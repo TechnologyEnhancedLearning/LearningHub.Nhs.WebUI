@@ -7,11 +7,9 @@
     using System.Threading.Tasks;
     using Azure.Storage.Files.Shares;
     using Azure.Storage.Files.Shares.Models;
-    using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
-    using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.Extensions.Options;
 
@@ -89,7 +87,7 @@
 
                     this.archiveShareClient = new ShareClient(this.settings.AzureSourceArchiveStorageConnectionString, this.settings.AzureFileStorageResourceShareName, options);
 
-                    if (!this.shareClient.Exists())
+                    if (!this.archiveShareClient.Exists())
                     {
                         throw new Exception($"Unable to access azure file storage resource {this.settings.AzureFileStorageResourceShareName}");
                     }
@@ -130,10 +128,20 @@
         public async Task<ShareFileDownloadInfo> DownloadFileAsync(string filePath, string fileName)
         {
             var directory = this.ShareClient.GetDirectoryClient(filePath);
+            var sourceDirectory = this.InputArchiveShareClient.GetDirectoryClient(filePath);
 
             if (await directory.ExistsAsync())
             {
                 var file = directory.GetFileClient(fileName);
+
+                if (await file.ExistsAsync())
+                {
+                    return await file.DownloadAsync();
+                }
+            }
+            else if (await sourceDirectory.ExistsAsync())
+            {
+                var file = sourceDirectory.GetFileClient(fileName);
 
                 if (await file.ExistsAsync())
                 {

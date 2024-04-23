@@ -3,10 +3,10 @@
 
         <AttachmentPublishedView v-if="mediaType === MediaTypeEnum.Attachment" v-bind:attachment="attachment" />
         <ImagePublishedView v-if="mediaType === MediaTypeEnum.Image" v-bind:image="image" />
-        <div v-if="!contributeResourceAVFlag">
+        <div v-if="!contributeResourceAVFlag && mediaType === MediaTypeEnum.Video">
             <div v-html="audioVideoUnavailableView"></div>
         </div>
-        <div else>
+        <div v-else>
             <VideoPlayerContainer v-if="mediaType === MediaTypeEnum.Video" :video="video" />
         </div>
 

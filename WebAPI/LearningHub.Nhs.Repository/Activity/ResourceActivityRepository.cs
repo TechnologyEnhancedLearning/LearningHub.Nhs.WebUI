@@ -113,9 +113,8 @@ namespace LearningHub.Nhs.Repository.Activity
                .AsNoTracking()
              .Where(r =>
                       r.UserId == userId && r.ScormActivity.First().CmiCoreLessonStatus != (int)ActivityStatusEnum.Completed &&
-                     ((r.Resource.ResourceTypeEnum != ResourceTypeEnum.Video && r.Resource.ResourceTypeEnum != ResourceTypeEnum.Audio && !r.InverseLaunchResourceActivity.Any()) ||
-                        r.InverseLaunchResourceActivity.Any(y => y.ActivityStatusId == (int)ActivityStatusEnum.Completed)) &&
-                     (r.Resource.ResourceTypeEnum != ResourceTypeEnum.Assessment || r.ActivityStatusId == (int)ActivityStatusEnum.Launched))
+                     ((!r.InverseLaunchResourceActivity.Any()) ||
+                        (r.InverseLaunchResourceActivity.Any(y => y.ActivityStatusId == (int)ActivityStatusEnum.Completed) || r.InverseLaunchResourceActivity.Any(y => y.ActivityStatusId == (int)ActivityStatusEnum.Incomplete))))
               .OrderByDescending(r => r.ActivityStart);
         }
 

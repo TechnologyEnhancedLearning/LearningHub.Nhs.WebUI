@@ -11,7 +11,7 @@
                          v-on:updatePublishingStatus="updatePublishingStatus"
                          v-bind:video="video" />
 
-        <div v-if="!contributeResourceAVFlag && (mediaBlock.mediaType === MediaTypeEnum.Video || mediaBlock.mediaType === MediaTypeEnum.Attachment)">
+        <div v-if="!contributeResourceAVFlag && (mediaBlock.mediaType === MediaTypeEnum.Video)">
             <div v-html="audioVideoUnavailableView"></div>
         </div>        
     </div>

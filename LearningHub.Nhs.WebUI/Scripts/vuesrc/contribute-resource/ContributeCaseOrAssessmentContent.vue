@@ -47,7 +47,7 @@
         FileUploadType,
         getAllowedFileExtensionsInAcceptFormat,
         startUploadsFromFileElement,
-        getMediaTypeFromFileExtensionContributeCaseOrAssessment
+        getMediaTypeFromFileExtension
     } from '../helpers/fileUpload';
     import FilteredBlockCollectionView from './components/questions/FilteredBlockCollectionView.vue';
     import { WholeSlideImageModel } from "../models/contribute-resource/blocks/wholeSlideImageModel";
@@ -115,9 +115,9 @@
                     for (let i = 0; i < targetItem.files.length; i++) {
                         const file = targetItem.files[i] as File;
                         const fileExtension = file.name.split('.').pop();
-                        const mediaType = getMediaTypeFromFileExtensionContributeCaseOrAssessment(`.${fileExtension}`);
+                        const mediaType = getMediaTypeFromFileExtension(`.${fileExtension}`);
 
-                        if (!this.contributeResourceAVFlag && (mediaType === MediaTypeEnum.Audio || mediaType === MediaTypeEnum.Video)) {
+                        if (!this.contributeResourceAVFlag && (mediaType === MediaTypeEnum.Video)) {
                             startUpload = false;
                             this.avUnavailableMessage = true;
                         }

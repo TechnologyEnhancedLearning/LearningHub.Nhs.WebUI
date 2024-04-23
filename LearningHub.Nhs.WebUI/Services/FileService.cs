@@ -21,6 +21,7 @@
         private readonly Settings settings;
         private ShareClient shareClient;
         private ShareClient archiveShareClient;
+        private ShareClient contentArchiveShareClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileService"/> class.
@@ -57,21 +58,21 @@
         {
             get
             {
-                if (this.archiveShareClient == null)
+                if (this.contentArchiveShareClient == null)
                 {
                     var options = new ShareClientOptions();
                     options.Retry.MaxRetries = 3;
                     options.Retry.Delay = TimeSpan.FromSeconds(10);
 
-                    this.archiveShareClient = new ShareClient(this.settings.AzureContentArchiveStorageConnectionString, this.settings.AzureFileStorageResourceShareName, options);
+                    this.contentArchiveShareClient = new ShareClient(this.settings.AzureContentArchiveStorageConnectionString, this.settings.AzureFileStorageResourceShareName, options);
 
-                    if (!this.archiveShareClient.Exists())
+                    if (!this.contentArchiveShareClient.Exists())
                     {
                         throw new Exception($"Unable to access azure content archive file storage resource {this.settings.AzureFileStorageResourceShareName}");
                     }
                 }
 
-                return this.archiveShareClient;
+                return this.contentArchiveShareClient;
             }
         }
 
@@ -416,6 +417,16 @@
                     if (!directory.Exists())
                     {
                         continue;
+                    }
+
+                    if (directory.Exists())
+                    {
+                        var inputCheck = directory.GetFilesAndDirectories();
+                        if (inputCheck.Count() > 1)
+                        {
+                            await this.MoveOutPutDirectoryToArchive(new List<string> { directoryRef });
+                            continue;
+                        }
                     }
 
                     await foreach (var fileItem in directory.GetFilesAndDirectoriesAsync())

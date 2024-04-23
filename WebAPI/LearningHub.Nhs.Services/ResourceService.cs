@@ -1539,6 +1539,113 @@ namespace LearningHub.Nhs.Services
                     }
                 }
             }
+            else if (rv == null && deletedResource)
+            {
+                if (resource.ResourceTypeEnum == ResourceTypeEnum.Scorm)
+                {
+                      retVal.Add(resource.ScormDetails.ContentFilePath);
+                }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Html)
+                {
+                      retVal.Add(resource.HtmlDetails.ContentFilePath);
+                }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
+                {
+                    retVal.Add(resource.GenericFileDetails.File.FilePath);
+                }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Image)
+                {
+                    retVal.Add(resource.ImageDetails.File.FilePath);
+                }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Audio)
+                {
+                    retVal.Add(resource.AudioDetails.File.FilePath);
+                    if (resource.AudioDetails?.ResourceAzureMediaAsset?.FilePath != null)
+                    {
+                            retVal.Add(resource.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                    }
+                }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Video)
+                {
+                    retVal.Add(resource.VideoDetails.File.FilePath);
+                    if (resource.VideoDetails?.ResourceAzureMediaAsset?.FilePath != null)
+                    {
+                         retVal.Add(resource.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                    }
+                }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Article)
+                {
+                        var inputResourceFiles = resource.ArticleDetails.Files.ToList();
+                        if (inputResourceFiles.Any())
+                        {
+                            foreach (var file in inputResourceFiles)
+                            {
+                                    retVal.Add(file.FilePath);
+                            }
+                        }
+                    }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Case)
+                {
+                    var allBlocks = resource.CaseDetails.BlockCollection.Blocks.ToList();
+                    if (allBlocks.Any())
+                    {
+                        var existingAttachements = allBlocks.Where(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Attachment && x.MediaBlock.Attachment != null).ToList();
+                        if (existingAttachements.Any())
+                        {
+                            foreach (var oldblock in existingAttachements)
+                            {
+                                retVal.Add(oldblock.MediaBlock.Attachment?.File?.FilePath);
+                            }
+                        }
+
+                        var existingVideos = allBlocks.Where(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Video && x.MediaBlock.Video != null).ToList();
+                        if (existingVideos.Any())
+                        {
+                            foreach (var oldblock in existingVideos)
+                            {
+                                retVal.Add(oldblock.MediaBlock.Video?.VideoFile?.File?.FilePath);
+                                if (oldblock.MediaBlock?.Video?.VideoFile.TranscriptFile?.File.FilePath != null)
+                                {
+                                    retVal.Add(oldblock.MediaBlock.Video?.VideoFile?.TranscriptFile?.File?.FilePath);
+                                }
+                            }
+                        }
+
+                        var existingImages = allBlocks.Where(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null).ToList();
+                        if (existingImages.Any())
+                        {
+                            foreach (var oldblock in existingImages)
+                            {
+                                retVal.Add(oldblock.MediaBlock?.Image?.File?.FilePath);
+                            }
+                        }
+
+                        var existingImageCarousel = allBlocks.Where(x => x.BlockType == BlockType.ImageCarousel && x.ImageCarouselBlock != null && x.ImageCarouselBlock.ImageBlockCollection != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks != null).ToList();
+                        if (existingImageCarousel.Any())
+                        {
+                            foreach (var imageBlock in existingImageCarousel)
+                            {
+                                foreach (var oldblock in imageBlock?.ImageCarouselBlock?.ImageBlockCollection.Blocks)
+                                {
+                                    retVal.Add(oldblock.MediaBlock?.Image?.File?.FilePath);
+                                }
+                            }
+                        }
+
+                        var existingWholeSlideImages = allBlocks.Where(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Any()).ToList();
+                        if (existingWholeSlideImages.Any())
+                        {
+                            foreach (var wsi in existingWholeSlideImages)
+                            {
+                                foreach (var oldblock in wsi.WholeSlideImageBlock?.WholeSlideImageBlockItems)
+                                {
+                                    retVal.Add(oldblock.WholeSlideImage?.File?.FilePath);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             return retVal;
         }

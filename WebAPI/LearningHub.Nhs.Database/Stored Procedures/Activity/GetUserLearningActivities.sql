@@ -7,7 +7,8 @@
 -- Modification History
 
 -- Sarathlal	14-12-2023
--- Sarathlal	08-03-2023
+-- Sarathlal	08-03-2024
+-- Sarathlal	23-04-2024 TD-2954: Audio/Video/Assessment issue resolved and duplicate issue also resolved
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserLearningActivities] (
 	 @userId INT	
@@ -217,10 +218,10 @@ FROM (
 				(
 					(
 					   -- resource type is not video/audio and launch resource activity doesn't exists
-					   [Res].[ResourceTypeId] NOT IN (7,2) AND NOT (EXISTS
+					   NOT (EXISTS
 								(
 									SELECT 1 FROM   [activity].[ResourceActivity] AS [ResAct1]
-									WHERE  [ResAct1].[Deleted] = 0 AND [ResourceActivity].[Id] = [ResAct1].[LaunchResourceActivityId]
+									WHERE  [ResAct1].[Deleted] = 0 AND [ResourceActivity].[Id] = [ResAct1].[LaunchResourceActivityId] 
 								))
 					)
 				OR  
@@ -228,14 +229,9 @@ FROM (
 					EXISTS
 					(
 							SELECT 1	FROM   [activity].[ResourceActivity] AS [ResAct2]
-							WHERE  [ResAct2].[Deleted] = 0 AND  [ResourceActivity].[Id] = [ResAct2].[LaunchResourceActivityId] AND  [ResAct2].[ActivityStatusId] = 3
+							WHERE  [ResAct2].[Deleted] = 0 AND  [ResourceActivity].[Id] = [ResAct2].[LaunchResourceActivityId] AND  [ResAct2].[ActivityStatusId] in (3,7)
 					)
 					
-				)
-		AND
-				(
-					-- resource type is not assessment and activity status is launched
-					[Res].[ResourceTypeId] <> 11 OR [ResourceActivity].[ActivityStatusId] = 1
 				)
 		AND
 				(

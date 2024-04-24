@@ -43,7 +43,8 @@
             return {
                 FileStore: FileStore,
                 MediaTypeEnum: MediaTypeEnum,
-                contributeResourceAVFlag: true
+                contributeResourceAVFlag: true,
+                audioVideoUnavailableView: ''
             }
         },
         created() {
@@ -51,6 +52,7 @@
             // So, when the file processing succeeds/fails, this is can be reflected in the published view.
             this.FileStore.enablePolling();
             this.getContributeResAVResourceFlag();
+            this.getContributeResAVUnavailableView();
         },
         computed: {
             mediaType(): MediaTypeEnum {
@@ -64,15 +66,17 @@
             },
             video(): VideoMediaModel {
                 return this.mediaBlock.video;
-            },
-            audioVideoUnavailableView(): string {
-                return this.$store.state.getAVUnavailableView;
             }
         },
         methods: {
             getContributeResAVResourceFlag() {
                 resourceData.getContributeAVResourceFlag().then(response => {
                     this.contributeResourceAVFlag = response;
+                });
+            },
+            getContributeResAVUnavailableView() {
+                resourceData.getAVUnavailableView().then(response => {
+                    this.audioVideoUnavailableView = response;
                 });
             },
         }

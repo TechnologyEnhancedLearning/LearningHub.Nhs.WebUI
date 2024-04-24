@@ -34,6 +34,7 @@ obj
 /AdminUI/LearningHub.Nhs.AdminUI/appsettings.Development.json
 /AdminUI/LearningHub.Nhs.AdminUI/node_modules
 /AdminUI/LearningHub.Nhs.AdminUI/wwwroot/js/bundle
+/AdminUI/LearningHub.Nhs.AdminUI/wwwroot/css
 /AdminUI/LearningHub.Nhs.AdminUI/web.config
 /AdminUI/LearningHub.Nhs.AdminUI/internal-nlog-lhadminui.txt
 /AdminUI/LearningHub.Nhs.AdminUI/yarn.lock

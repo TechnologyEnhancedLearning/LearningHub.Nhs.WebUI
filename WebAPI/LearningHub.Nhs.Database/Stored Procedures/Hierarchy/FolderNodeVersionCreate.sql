@@ -6,9 +6,11 @@
 -- Modification History
 --
 -- 25-08-2021  KD	Initial Revision.
+-- 22-04-2024  DB	Included NodeId as an input so that editiing of a folder creates a new node version.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[FolderNodeVersionCreate]
 (
+	@NodeId INT NULL,
 	@FolderName NVARCHAR(128),
 	@FolderDescription NVARCHAR(4000),
 	@CreatedNodeVersionId INT output
@@ -18,18 +20,16 @@ AS
 
 BEGIN
 
-	-- Node
-	DECLARE @CreatedNodeId INT
+	IF (@NodeId IS NULL)
+	BEGIN
+		INSERT INTO hierarchy.[Node] (NodeTypeId, CurrentNodeVersionId, Name, Description, Hidden, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
+		VALUES (3, null, 'Folder', 'Folder', 0, 0, 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET())
 
-	INSERT INTO hierarchy.[Node] (NodeTypeId, CurrentNodeVersionId, Name, Description, Hidden, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
-	VALUES (3, null, 'Folder', 'Folder', 0, 0, 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET())
+		SELECT @NodeId = SCOPE_IDENTITY()
+	END
 
-	SELECT @CreatedNodeId = SCOPE_IDENTITY()
-
-	-- NodeVersion
-	DECLARE @NodeVersionId int
 	INSERT INTO hierarchy.NodeVersion (NodeId, VersionStatusId, PublicationId, MajorVersion, MinorVersion, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
-	VALUES (@CreatedNodeId, 1, NULL, NULL, NULL, 0, 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET()) -- Draft VersionStatusId=1
+	VALUES (@NodeId, 1, NULL, NULL, NULL, 0, 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET()) -- Draft VersionStatusId=1
 	SELECT @CreatedNodeVersionId = SCOPE_IDENTITY()
 
 	-- FolderNodeVersion

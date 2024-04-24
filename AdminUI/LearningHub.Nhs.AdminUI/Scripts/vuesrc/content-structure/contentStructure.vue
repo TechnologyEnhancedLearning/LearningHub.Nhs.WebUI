@@ -60,9 +60,6 @@
                     <label class="control-label">Folder location</label>
                     <div> {{ editingFolderNode.path }} </div>
                 </div>
-                <div class="col-12" style="margin-top: 40px;">
-                    * Changes to a published folder will be visible immediately.
-                </div>
                 <div class="col-12 d-flex" style="margin-top: 40px; margin-bottom: 40px;">
                     <input type="button" class="btn btn-custom-green mr-3" @click="onSaveFolderEdit()" v-bind:class="{disabled: !canSaveFolderEdit}" v-bind:disabled="!canSaveFolderEdit" value="Save changes" />
                     <input type="button" class="btn btn-admin btn-cancel" @click="onCancelFolderEdit()" value="Cancel" />

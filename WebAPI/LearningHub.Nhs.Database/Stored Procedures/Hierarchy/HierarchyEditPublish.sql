@@ -10,6 +10,7 @@
 --
 -- 23-09-2021  KD	Initial Revision.
 -- 20-01-2022  KD	IT2 - inclusion of Resources in HierarchyEdit.
+-- 23-04-2024  DB	Updated to manage publishing of draft NodeVersions during edits
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditPublish] 
 (
@@ -239,27 +240,7 @@ BEGIN
 
 		----------------------------------------------------------
 		-- NodeVersion
-		-- IT1 - no creation of draft nodes when applying changes to existing nodes
 		----------------------------------------------------------
-		-- Add / Edit operations
-		UPDATE 
-			nv
-		SET
-			VersionStatusId = 2,
-			PublicationId = @PublicationId,
-			AmendUserId = @AmendUserId,
-			AmendDate = @AmendDate
-		FROM
-			hierarchy.NodeVersion nv
-		INNER JOIN
-			hierarchy.HierarchyEditDetail hed ON nv.Id = hed.NodeVersionId
-		WHERE
-			hed.HierarchyEditId = @HierarchyEditId
-			AND hed.HierarchyEditDetailOperationId IN (1,2) -- Add, Edit
-			AND hed.HierarchyEditDetailTypeId = 3 -- Folder Node
-			AND nv.Deleted = 0
-			AND hed.Deleted = 0
-
 		-- Add / Edit operations
 		UPDATE 
 			n
@@ -275,8 +256,51 @@ BEGIN
 			hierarchy.HierarchyEditDetail hed ON nv.Id = hed.NodeVersionId
 		WHERE
 			hed.HierarchyEditId = @HierarchyEditId
-			AND hed.HierarchyEditDetailOperationId IN (1) -- Add, Edit
-			AND hed.HierarchyEditDetailTypeId = 3 -- Folder Node
+			AND (
+					(
+						hed.HierarchyEditDetailOperationId = 1 -- Add
+						AND
+						hed.HierarchyEditDetailTypeId = 3 -- Folder Node
+					)
+					OR
+					(
+						hed.HierarchyEditDetailOperationId = 2 -- Edit
+						AND
+						hed.HierarchyEditDetailTypeId = 4 -- Node Link
+					)
+				)
+			AND nv.VersionStatusId = 1 -- Draft
+			AND nv.Deleted = 0
+			AND hed.Deleted = 0
+
+		-- Add / Edit operations
+		UPDATE 
+			nv
+		SET
+			VersionStatusId = 2,
+			PublicationId = @PublicationId,
+			AmendUserId = @AmendUserId,
+			AmendDate = @AmendDate
+		FROM
+			hierarchy.NodeVersion nv
+		INNER JOIN
+			hierarchy.HierarchyEditDetail hed ON nv.Id = hed.NodeVersionId
+		WHERE
+			hed.HierarchyEditId = @HierarchyEditId
+			AND (
+					(
+						hed.HierarchyEditDetailOperationId = 1 -- Add
+						AND
+						hed.HierarchyEditDetailTypeId = 3 -- Folder Node
+					)
+					OR
+					(
+						hed.HierarchyEditDetailOperationId = 2 -- Edit
+						AND
+						hed.HierarchyEditDetailTypeId = 4 -- Node Link
+					)
+				)
+			AND nv.VersionStatusId = 1 -- Draft
 			AND nv.Deleted = 0
 			AND hed.Deleted = 0
 

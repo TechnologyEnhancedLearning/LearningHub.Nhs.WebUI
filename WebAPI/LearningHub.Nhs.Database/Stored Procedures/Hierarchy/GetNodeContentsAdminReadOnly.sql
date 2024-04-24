@@ -9,6 +9,7 @@
 -- 05-01-2022  KD	Initial Revision.
 -- 09-02-2022  KD	Explicitly exclude External Orgs from NodePath lookup.
 -- 22-02-2022  RS	Explicitly exclude External Orgs from ResourceReference lookup.
+-- 23-04-2022  DB	Restrict published resourceVersions by current published node version Id.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsAdminReadOnly]
 (
@@ -18,10 +19,6 @@ CREATE PROCEDURE [hierarchy].[GetNodeContentsAdminReadOnly]
 AS
 
 BEGIN
-	
-	-- IT1 - only consider the most recent HierarchyEdit for a draft.
-	DECLARE @HierarchyEditId int
-	SELECT TOP 1 @HierarchyEditId = Id FROM hierarchy.HierarchyEdit WHERE Deleted = 0 ORDER BY Id DESC
 
 	SELECT 
 		ROW_NUMBER() OVER(ORDER BY DisplayOrder) AS Id,
@@ -68,7 +65,7 @@ BEGIN
 		INNER JOIN 
 			hierarchy.[Node] cn ON nl.ChildNodeId = cn.Id
 		INNER JOIN 
-			hierarchy.NodeVersion nv ON nv.NodeId = cn.Id
+			hierarchy.NodeVersion nv ON nv.Id = cn.CurrentNodeVersionId
 		INNER JOIN
 			hierarchy.FolderNodeVersion fnv ON fnv.NodeVersionId = nv.Id
 		LEFT JOIN
@@ -77,6 +74,7 @@ BEGIN
 			(SELECT DISTINCT NodeId FROM hierarchy.NodeResourceLookup WHERE Deleted = 0) nrl ON cn.Id = nrl.NodeId
 		WHERE
 			nl.ParentNodeId = @NodeId 
+			AND nv.VersionStatusId = 2 -- Published
 			AND nl.Deleted = 0
 			AND cn.Deleted = 0
 			AND fnv.Deleted = 0

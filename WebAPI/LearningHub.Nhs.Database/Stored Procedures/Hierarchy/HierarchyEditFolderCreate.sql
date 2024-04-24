@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 25-08-2021  KD	Initial Revision.
+-- 22-04-2024  DB	Included NULL NodeId in call to [hierarchy].[FolderNodeVersionCreate].
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditFolderCreate]
 (
@@ -30,7 +31,7 @@ BEGIN
 
 		DECLARE @CreatedNodeVersionId int
 
-		EXECUTE [hierarchy].[FolderNodeVersionCreate] @Name, @Description, @CreatedNodeVersionId OUTPUT
+		EXECUTE [hierarchy].[FolderNodeVersionCreate] NULL, @Name, @Description, @CreatedNodeVersionId OUTPUT
 
 		-- Create new HierarchyEditDetail with details of the link to parent node.
 		UPDATE [hierarchy].[HierarchyEditDetail] SET DisplayOrder = DisplayOrder + 1 WHERE ParentNodeId = @ParentNodeId AND HierarchyEditId = @HierarchyEditId AND ResourceId IS NULL

@@ -13,8 +13,7 @@
 -- 11-05-2023  RS   Removed Description and AuthoredBy as no longer required for screen.
 -- 15-05-2023  RS   Added AuthoredBy back in following design decision change.
 -- 23-06-2023  RS   Removed AverageRating and RatingCount as not required from this proc. That data comes separately from RatingService.
--- 23-06-2023  RS   Removed AverageRating and RatingCount as not required from this proc. That data comes separately from RatingService.
--- 17-04-2024  DB	Resources limited to the correct NodeId.
+-- 17-04-2024  DB	Resources limited to the correct NodeId and published only node versions.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsForCatalogueBrowse]
 (
@@ -62,13 +61,14 @@ BEGIN
 		INNER JOIN 
 			hierarchy.[Node] cn ON nl.ChildNodeId = cn.Id
 		INNER JOIN 
-			hierarchy.NodeVersion nv ON nv.NodeId = cn.Id
+			hierarchy.NodeVersion nv ON nv.Id = cn.CurrentNodeVersionId
 		INNER JOIN
 			hierarchy.FolderNodeVersion fnv ON fnv.NodeVersionId = nv.Id
 		INNER JOIN -- Exclude folders with no published resources.
 			(SELECT DISTINCT NodeId FROM hierarchy.NodeResourceLookup WHERE Deleted = 0) nrl ON cn.Id = nrl.NodeId
 		WHERE
 			nl.ParentNodeId = @NodeId 
+			AND nv.VersionStatusId = 2 -- Published
 			AND nl.Deleted = 0
 			AND cn.Deleted = 0
 			AND fnv.Deleted = 0

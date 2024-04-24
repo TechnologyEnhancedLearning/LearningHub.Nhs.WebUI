@@ -259,7 +259,7 @@
             if (cnv != null)
             {
                 var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
-                searchModel.Description = searchModel.Description.Substring(0, 2995) + "</p>";
+                searchModel.Description = searchModel.Description.Substring(0, this.settings.Findwise.DescriptionLengthLimit - 4) + "</p>";
                 await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
             }
 
@@ -481,6 +481,7 @@
             if (cnv != null)
             {
                 var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
+                searchModel.Description = searchModel.Description.Substring(0, this.settings.Findwise.DescriptionLengthLimit - 4) + "</p>";
                 await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
             }
 

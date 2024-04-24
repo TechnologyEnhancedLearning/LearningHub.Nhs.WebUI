@@ -358,7 +358,10 @@
         public int GetAttempts(int userId, int resourceVersionId)
         {
             return this.resourceActivityRepository.GetByUserId(userId)
-                .Count(x => x.ResourceVersionId == resourceVersionId);
+                .Where(x => x.ResourceVersionId == resourceVersionId)
+                .SelectMany(x => x.AssessmentResourceActivity)
+                .OrderByDescending(a => a.CreateDate)
+                .ToList().Count();
         }
 
         /// <summary>

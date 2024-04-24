@@ -111,11 +111,11 @@ namespace LearningHub.Nhs.Repository.Activity
                .ThenInclude(a => a.AssessmentResourceActivityInteractions)
                .Include(r => r.NodePath)
                .AsNoTracking()
-             .Where(r =>
-                      r.UserId == userId && r.ScormActivity.First().CmiCoreLessonStatus != (int)ActivityStatusEnum.Completed &&
-                     ((!r.InverseLaunchResourceActivity.Any()) ||
-                        (r.InverseLaunchResourceActivity.Any(y => y.ActivityStatusId == (int)ActivityStatusEnum.Completed) || r.InverseLaunchResourceActivity.Any(y => y.ActivityStatusId == (int)ActivityStatusEnum.Incomplete))))
-              .OrderByDescending(r => r.ActivityStart);
+               .Where(r =>
+                            r.UserId == userId && r.ScormActivity.First().CmiCoreLessonStatus != (int)ActivityStatusEnum.Completed &&
+                           ((!r.InverseLaunchResourceActivity.Any()) ||
+                              r.InverseLaunchResourceActivity.Any()))
+               .OrderByDescending(r => r.ActivityStart);
         }
 
         /// <summary>

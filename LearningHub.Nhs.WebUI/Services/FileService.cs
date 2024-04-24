@@ -397,6 +397,7 @@
                 {
                     var sourceFileClient = sourceDirectory.GetFileClient(fileDirectory.Name);
                     await this.DeleteSubdirectory(sourceFileClient.Path);
+                    await sourceFileClient.DeleteIfExistsAsync();
                 }
                 else
                 {

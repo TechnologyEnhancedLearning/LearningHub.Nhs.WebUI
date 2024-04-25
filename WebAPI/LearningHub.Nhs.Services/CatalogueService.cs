@@ -259,7 +259,11 @@
             if (cnv != null)
             {
                 var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
-                searchModel.Description = searchModel.Description.Substring(0, this.settings.Findwise.DescriptionLengthLimit - 4) + "</p>";
+                if (searchModel.Description.Length > this.settings.Findwise.DescriptionLengthLimit)
+                {
+                    searchModel.Description = searchModel.Description.Substring(0, this.settings.Findwise.DescriptionLengthLimit - 4) + "</p>";
+                }
+
                 await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
             }
 
@@ -481,7 +485,11 @@
             if (cnv != null)
             {
                 var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
-                searchModel.Description = searchModel.Description.Substring(0, this.settings.Findwise.DescriptionLengthLimit - 4) + "</p>";
+                if (searchModel.Description.Length > this.settings.Findwise.DescriptionLengthLimit)
+                {
+                    searchModel.Description = searchModel.Description.Substring(0, this.settings.Findwise.DescriptionLengthLimit - 4) + "</p>";
+                }
+
                 await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
             }
 
@@ -570,6 +578,11 @@
             if (cnv != null)
             {
                 var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
+                if (searchModel.Description.Length > this.settings.Findwise.DescriptionLengthLimit)
+                {
+                    searchModel.Description = searchModel.Description.Substring(0, this.settings.Findwise.DescriptionLengthLimit - 4) + "</p>";
+                }
+
                 await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
             }
 
@@ -602,6 +615,11 @@
             if (cnv != null)
             {
                 var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
+                if (searchModel.Description.Length > this.settings.Findwise.DescriptionLengthLimit)
+                {
+                    searchModel.Description = searchModel.Description.Substring(0, this.settings.Findwise.DescriptionLengthLimit - 4) + "</p>";
+                }
+
                 await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
             }
         }

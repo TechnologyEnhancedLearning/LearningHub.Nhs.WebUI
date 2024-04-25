@@ -502,12 +502,17 @@ namespace LearningHub.Nhs.Repository.Activity
                 i.Resource.Deleted = i.Resource_Deleted;
                 int resourceTypeId = i.Resource_ResourceTypeId;
                 i.Resource.ResourceTypeEnum = (ResourceTypeEnum)resourceTypeId;
-                ResourceReference resourceReference = new ResourceReference();
-                resourceReference.OriginalResourceReferenceId = i.ResourceReference_OriginalResourceReferenceId;
-                resourceReference.NodePathId = i.ResourceReference_NodePathId;
-                resourceReference.ResourceId = i.ResourceReference_ResourceId;
+                var resourceReferences = result.Where(x => x.Id == i.Id && x.ResourceVersionId == i.ResourceVersionId).ToList();
                 List<ResourceReference> resourceReferenceList = new List<ResourceReference>();
-                resourceReferenceList.Add(resourceReference);
+                foreach (var b in resourceReferences)
+                {
+                    ResourceReference resourceReference = new ResourceReference();
+                    resourceReference.OriginalResourceReferenceId = b.ResourceReference_OriginalResourceReferenceId;
+                    resourceReference.NodePathId = b.ResourceReference_NodePathId;
+                    resourceReference.ResourceId = b.ResourceReference_ResourceId;
+                    resourceReferenceList.Add(resourceReference);
+                }
+
                 i.Resource.ResourceReference = resourceReferenceList;
             });
         }

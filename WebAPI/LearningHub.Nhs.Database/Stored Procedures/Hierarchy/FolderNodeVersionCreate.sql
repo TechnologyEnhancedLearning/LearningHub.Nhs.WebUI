@@ -13,6 +13,7 @@ CREATE PROCEDURE [hierarchy].[FolderNodeVersionCreate]
 	@NodeId INT NULL,
 	@FolderName NVARCHAR(128),
 	@FolderDescription NVARCHAR(4000),
+	@UserId INT,
 	@CreatedNodeVersionId INT output
 )
 
@@ -28,13 +29,23 @@ BEGIN
 		SELECT @NodeId = SCOPE_IDENTITY()
 	END
 
+	-- Get the current maximum MajorVersion and MinorVersion numbers for a node version for the current nodeid
+	DECLARE @MajorVersion INT
+	DECLARE @MinorVersion INT
+	SELECT	@MajorVersion = ISNULL(MAX(MajorVersion), 1),
+			@MinorVersion = ISNULL(MAX(MinorVersion), 0)
+	FROM	hierarchy.NodeVersion
+	WHERE	NodeId = @NodeId
+		AND Deleted = 0
+
+	--NodeVersion
 	INSERT INTO hierarchy.NodeVersion (NodeId, VersionStatusId, PublicationId, MajorVersion, MinorVersion, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
-	VALUES (@NodeId, 1, NULL, NULL, NULL, 0, 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET()) -- Draft VersionStatusId=1
+	VALUES (@NodeId, 1, NULL, @MajorVersion, @MinorVersion + 1, 0, @UserId, SYSDATETIMEOFFSET(), @UserId, SYSDATETIMEOFFSET()) -- Draft VersionStatusId=1
 	SELECT @CreatedNodeVersionId = SCOPE_IDENTITY()
 
 	-- FolderNodeVersion
 	INSERT INTO hierarchy.FolderNodeVersion (NodeVersionId, Name, Description, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
-	VALUES (@CreatedNodeVersionId, @FolderName, @FolderDescription, 0, 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET())
+	VALUES (@CreatedNodeVersionId, @FolderName, @FolderDescription, 0, @UserId, SYSDATETIMEOFFSET(), @UserId, SYSDATETIMEOFFSET())
 
 END
 GO

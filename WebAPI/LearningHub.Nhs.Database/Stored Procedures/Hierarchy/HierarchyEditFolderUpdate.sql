@@ -68,7 +68,7 @@ BEGIN
 		END
 		ELSE
 		BEGIN
-			EXECUTE [hierarchy].[FolderNodeVersionCreate] @NodeId, @Name, @Description, @CreatedNodeVersionId OUTPUT
+			EXECUTE [hierarchy].[FolderNodeVersionCreate] @NodeId, @Name, @Description, @UserId, @CreatedNodeVersionId OUTPUT
 		END
 
 

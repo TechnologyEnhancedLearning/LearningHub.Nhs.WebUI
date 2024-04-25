@@ -7,6 +7,7 @@
 -- Modification History
 -- Sarathlal	20-02-2024
 -- Sarathlal	23-04-2024 TD-2954: Audio/Video/Assessment issue resolved and duplicate issue also resolved
+-- Sarathlal	25-04-2024 TD-4067: Resource with muliple version issue resolved
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [activity].[GetUserLatestActivityCheck] (
@@ -17,7 +18,7 @@ AS
 BEGIN
 	SELECT 
 	--Resource activity starts here
-	[t2].[Id] as Id,[t2].[UserId] as UserId,[t7].[ResourceId] as ResourceId,[t2].[ResourceVersionId] as ResourceVersionId,[t7].[NodePathId],[t2].[AmendDate],[t2].[Deleted],[t2].[CreateUserId],[t2].[CreateDate],[t2].[AmendUserId]
+	[t2].[Id] as Id,[t2].[UserId] as UserId,[t7].[ResourceId] as ResourceId,[t2].[ResourceVersionId] as ResourceVersionId,[t2].[NodePathId],[t2].[AmendDate],[t2].[Deleted],[t2].[CreateUserId],[t2].[CreateDate],[t2].[AmendUserId]
 	,[t2].[LaunchResourceActivityId],[t2].[MajorVersion],[t2].[MinorVersion],[t2].[ActivityStatusId],[t2].[ActivityStart],[t2].[ActivityEnd],[t9].[DurationSeconds],[t2].[Score]
 	--Node path clumns starts here
 	,[t6].[AmendDate] as NodePath_AmendDate,[t6].[AmendUserId] as NodePath_AmendUserId,[t6].[CatalogueNodeId] as NodePath_CatalogueNode, [t6].[CreateDate] as NodePath_CreateDate, [t6].[CreateUserId] as NodePath_CreateUserId, [t6].[Deleted] as NodePath_Deleted, [t6].[IsActive] as NodePath_IsActive

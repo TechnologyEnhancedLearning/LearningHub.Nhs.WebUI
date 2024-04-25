@@ -245,7 +245,11 @@
                 var assessmentResourceActivity = this.mapper.Map<AssessmentResourceActivity>(createAssessmentResourceActivityViewModel);
                 var resourceVersionId = (await this.resourceActivityRepository.GetByIdAsync(assessmentResourceActivity.ResourceActivityId)).ResourceVersionId;
                 var resourceType = await this.resourceVersionRepository.GetResourceType(resourceVersionId);
-                var numberAttempts = (await this.resourceActivityRepository.GetByUserId(userId).ToListAsync()).Count(r => r.ResourceVersionId == resourceVersionId);
+                var numberAttempts = this.resourceActivityRepository.GetByUserId(userId)
+                              .Where(x => x.ResourceVersionId == resourceVersionId)
+                              .SelectMany(x => x.AssessmentResourceActivity)
+                              .OrderByDescending(a => a.CreateDate)
+                              .ToList().Count();
                 var maxAttempts = (await this.assessmentResourceVersionRepository.GetByResourceVersionIdAsync(resourceVersionId)).MaximumAttempts;
                 if ((!maxAttempts.HasValue || numberAttempts <= maxAttempts ||
                      createAssessmentResourceActivityViewModel.ExtraAttemptReason != null)
@@ -796,8 +800,11 @@
         /// <returns>The task that resolves to true if the user has used up all attempts for a resource version.</returns>
         private async Task<bool> UserHasUsedAllAttempts(int userId, int resourceVersionId)
         {
-            var resourceActivities = await this.resourceActivityRepository.GetByUserId(userId).ToListAsync();
-            var numberAttempts = resourceActivities.Count(r => r.ResourceVersionId == resourceVersionId);
+            var numberAttempts = this.resourceActivityRepository.GetByUserId(userId)
+               .Where(x => x.ResourceVersionId == resourceVersionId)
+               .SelectMany(x => x.AssessmentResourceActivity)
+               .OrderByDescending(a => a.CreateDate)
+               .ToList().Count();
             var assessmentResourceActivity = await this.assessmentResourceVersionRepository.GetByResourceVersionIdAsync(resourceVersionId);
             var maxAttempts = assessmentResourceActivity.MaximumAttempts;
             return numberAttempts >= maxAttempts;

@@ -493,7 +493,11 @@
         {
             var existingResourceState = await this.resourceService.GetResourceVersionExtendedAsync(request.ResourceVersionId);
             int resourceVersionId = await this.contributeService.SaveCaseDetailAsync(request);
-            this.RemoveDeletedCaseFiles(existingResourceState?.CaseDetails, request);
+            if (existingResourceState.CaseDetails?.BlockCollection != null)
+            {
+                this.RemoveBlockCollectionFiles(existingResourceState.CaseDetails.BlockCollection, request.BlockCollection);
+            }
+
             return this.Ok(resourceVersionId);
         }
 
@@ -506,7 +510,13 @@
         [Route("SaveAssessmentDetail")]
         public async Task<ActionResult> SaveAssessmentDetailAsync([FromBody] AssessmentViewModel request)
         {
+            var existingResourceState = await this.resourceService.GetResourceVersionExtendedAsync(request.ResourceVersionId);
             int resourceVersionId = await this.contributeService.SaveAssessmentDetailAsync(request);
+            if (existingResourceState != null)
+            {
+                this.RemoveBlockCollectionFiles(existingResourceState.AssessmentDetails, request);
+            }
+
             return this.Ok(resourceVersionId);
         }
 
@@ -627,15 +637,28 @@
             return await this.catalogueService.CanCurrentUserEditCatalogue(catalogueId);
         }
 
-        private void RemoveDeletedCaseFiles(CaseViewModel existingResource, CaseViewModel newResource)
+        private void RemoveBlockCollectionFiles(AssessmentViewModel existingModel, AssessmentViewModel newModel)
+        {
+            if (existingModel is { EndGuidance: { } } && existingModel.EndGuidance.Blocks != null)
+            {
+               this.RemoveBlockCollectionFiles(existingModel.EndGuidance, newModel.EndGuidance);
+            }
+
+            if (existingModel is { AssessmentContent: { } } && existingModel.AssessmentContent.Blocks != null)
+            {
+                this.RemoveBlockCollectionFiles(existingModel.AssessmentContent, newModel.AssessmentContent);
+            }
+        }
+
+        private void RemoveBlockCollectionFiles(BlockCollectionViewModel existingResource, BlockCollectionViewModel newResource)
         {
             try
             {
                 var filePaths = new List<string>();
-                if (existingResource != null && existingResource.BlockCollection != null)
+                if (existingResource != null)
                 {
-                    var allBlocks = existingResource.BlockCollection.Blocks.ToList();
-                    var newBlocks = newResource.BlockCollection.Blocks.ToList();
+                    var allBlocks = existingResource.Blocks.ToList();
+                    var newBlocks = newResource.Blocks.ToList();
                     if (allBlocks.Any())
                     {
                         var existingAttachements = allBlocks.Where(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Attachment && x.MediaBlock.Attachment != null).ToList();
@@ -713,6 +736,27 @@
                             }
                         }
                     }
+
+                    var existingQuestionFiles = this.CheckQuestionBlock(existingResource);
+                    var newQuestionFiles = this.CheckQuestionBlock(newResource);
+                    if (existingQuestionFiles.Any())
+                    {
+                        if (!newQuestionFiles.Any())
+                        {
+                            filePaths.AddRange(existingQuestionFiles);
+                        }
+                        else
+                        {
+                            foreach (var file in existingQuestionFiles)
+                            {
+                                var entry = newQuestionFiles.FirstOrDefault(x => x.Equals(file));
+                                if (entry == null)
+                                {
+                                    filePaths.Add(file);
+                                }
+                            }
+                        }
+                    }
                 }
 
                 if (filePaths != null && filePaths.Any())
@@ -723,6 +767,118 @@
             catch (Exception ex)
             {
             }
+        }
+
+        private List<string> CheckQuestionBlock(BlockCollectionViewModel model)
+        {
+            var filePath = new List<string>();
+            foreach (var block in model.Blocks)
+            {
+                if (block.BlockType == BlockType.Question && block.QuestionBlock != null)
+                {
+                    if (block.QuestionBlock.QuestionType == QuestionTypeEnum.MatchGame && block.QuestionBlock.Answers != null)
+                    {
+                        foreach (var answerBlock in block.QuestionBlock.Answers)
+                        {
+                            if (answerBlock.BlockCollection != null && answerBlock.BlockCollection.Blocks != null)
+                            {
+                                foreach (var imageBlock in answerBlock.BlockCollection.Blocks)
+                                {
+                                    if (imageBlock.BlockType == BlockType.Media && imageBlock.MediaBlock != null)
+                                    {
+                                        filePath.Add(imageBlock.MediaBlock.Image.File.FilePath);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    var questionBlockCollection = block.QuestionBlock.QuestionBlockCollection;
+                    if (questionBlockCollection != null && questionBlockCollection.Blocks != null)
+                    {
+                        foreach (var questionBlock in questionBlockCollection.Blocks)
+                        {
+                            if (questionBlock.BlockType == BlockType.Media && questionBlock.MediaBlock != null)
+                            {
+                                if (questionBlock.MediaBlock.Image != null)
+                                {
+                                    filePath.Add(questionBlock.MediaBlock.Image.File.FilePath);
+                                }
+
+                                if (questionBlock.MediaBlock.Video != null)
+                                {
+                                    if (questionBlock.MediaBlock.Video.File != null)
+                                    {
+                                        filePath.Add(questionBlock.MediaBlock.Video.File.FilePath);
+                                    }
+
+                                    if (questionBlock.MediaBlock.Video.VideoFile != null)
+                                    {
+                                        if (questionBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
+                                        {
+                                            filePath.Add(questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
+                                        }
+
+                                        if (questionBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
+                                        {
+                                            filePath.Add(questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (questionBlock.BlockType == BlockType.WholeSlideImage && questionBlock.WholeSlideImageBlock != null)
+                            {
+                                var existingWholeSlideImages = questionBlock.WholeSlideImageBlock.WholeSlideImageBlockItems.ToList();
+                                if (existingWholeSlideImages.Any())
+                                {
+                                    foreach (var wsi in existingWholeSlideImages)
+                                    {
+                                        filePath.Add(wsi.WholeSlideImage?.File?.FilePath);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    var feedbackBlockCollection = block.QuestionBlock.FeedbackBlockCollection;
+                    if (feedbackBlockCollection != null && feedbackBlockCollection.Blocks != null)
+                    {
+                        foreach (var feedbackBlock in feedbackBlockCollection.Blocks)
+                        {
+                            if (feedbackBlock.BlockType == BlockType.Media && feedbackBlock.MediaBlock != null)
+                            {
+                                if (feedbackBlock.MediaBlock.Image != null)
+                                {
+                                    filePath.Add(feedbackBlock.MediaBlock.Image.File.FilePath);
+                                }
+
+                                if (feedbackBlock.MediaBlock.Video != null)
+                                {
+                                    if (feedbackBlock.MediaBlock.Video.File != null)
+                                    {
+                                        filePath.Add(feedbackBlock.MediaBlock.Video.File.FilePath);
+                                    }
+
+                                    if (feedbackBlock.MediaBlock.Video.VideoFile != null)
+                                    {
+                                        if (feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
+                                        {
+                                            filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
+                                        }
+
+                                        if (feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
+                                        {
+                                            filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return filePath;
         }
     }
 }

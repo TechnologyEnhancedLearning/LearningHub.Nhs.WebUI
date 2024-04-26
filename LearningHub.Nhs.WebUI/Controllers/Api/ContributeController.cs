@@ -512,7 +512,7 @@
         {
             var existingResourceState = await this.resourceService.GetResourceVersionExtendedAsync(request.ResourceVersionId);
             int resourceVersionId = await this.contributeService.SaveAssessmentDetailAsync(request);
-            if (existingResourceState != null)
+            if (existingResourceState != null && existingResourceState.AssessmentDetails != null)
             {
                 this.RemoveBlockCollectionFiles(existingResourceState.AssessmentDetails, request);
             }

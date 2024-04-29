@@ -4907,10 +4907,19 @@ namespace LearningHub.Nhs.Services
                     {
                         foreach (var oldblock in existingVideos)
                         {
-                            retVal.Add(oldblock.MediaBlock?.Video?.VideoFile?.File?.FilePath);
-                            if (oldblock.MediaBlock?.Video?.VideoFile?.TranscriptFile?.File?.FilePath != null)
+                            if (!string.IsNullOrWhiteSpace(oldblock.MediaBlock.Video.File.FilePath))
                             {
-                                retVal.Add(oldblock.MediaBlock.Video?.VideoFile?.TranscriptFile?.File?.FilePath);
+                                retVal.Add(oldblock.MediaBlock.Video.File.FilePath);
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(oldblock.MediaBlock.Video?.File?.VideoFile?.File?.FilePath))
+                            {
+                                retVal.Add(oldblock.MediaBlock.Video.File.VideoFile.File.FilePath);
+                            }
+
+                            if (oldblock.MediaBlock?.Video?.File?.VideoFile?.TranscriptFile?.File?.FilePath != null)
+                            {
+                                retVal.Add(oldblock.MediaBlock.Video.File.VideoFile.TranscriptFile.File.FilePath);
                             }
                         }
                     }

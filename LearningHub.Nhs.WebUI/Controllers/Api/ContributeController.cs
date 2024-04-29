@@ -7,6 +7,7 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
+    using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.Blocks;
@@ -682,10 +683,19 @@
                                 var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Video && x.MediaBlock.Video != null && x.MediaBlock.Video.VideoFile?.File?.FileId == oldblock.MediaBlock?.Video?.VideoFile?.File?.FileId);
                                 if (entry == null)
                                 {
-                                    filePaths.Add(oldblock.MediaBlock.Video?.VideoFile?.File?.FilePath);
-                                    if (oldblock.MediaBlock?.Video?.VideoFile?.TranscriptFile?.File?.FilePath != null)
+                                    if (!string.IsNullOrWhiteSpace(oldblock.MediaBlock.Video.File.FilePath))
                                     {
-                                        filePaths.Add(oldblock.MediaBlock.Video?.VideoFile?.TranscriptFile?.File?.FilePath);
+                                        filePaths.Add(oldblock.MediaBlock.Video.File.FilePath);
+                                    }
+
+                                    if (!string.IsNullOrWhiteSpace(oldblock.MediaBlock.Video?.File?.VideoFile?.File?.FilePath))
+                                    {
+                                        filePaths.Add(oldblock.MediaBlock.Video.File.VideoFile.File.FilePath);
+                                    }
+
+                                    if (oldblock.MediaBlock?.Video?.File?.VideoFile?.TranscriptFile?.File?.FilePath != null)
+                                    {
+                                        filePaths.Add(oldblock.MediaBlock.Video.File.VideoFile.TranscriptFile.File.FilePath);
                                     }
                                 }
                             }

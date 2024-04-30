@@ -263,23 +263,16 @@
                 ResourceActivity expectedActivity = null;
                 if (resourceActivity.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio || resourceActivity.Resource.ResourceTypeEnum == ResourceTypeEnum.Video)
                 {
-                    expectedActivity = latestActivityCheck.Where(x => x.Id == resourceActivity.Id && x.MediaResourceActivity != null && x.MediaResourceActivity.Any(x => x.PercentComplete == 100)).OrderByDescending(x => x.ActivityStart).FirstOrDefault();
+                    expectedActivity = latestActivityCheck.Where(x => x.LaunchResourceActivityId == resourceActivity.Id && resourceActivity.MediaResourceActivity != null && resourceActivity.MediaResourceActivity.Any(y => y.PercentComplete == 100)).OrderByDescending(y => y.ActivityStart).FirstOrDefault();
                 }
                 else
                 {
-                    expectedActivity = latestActivityCheck.Where(x => x.Id == resourceActivity.Id && (x.ActivityStatusId == ((int)ActivityStatusEnum.Completed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Launched) || x.ActivityStatusId == ((int)ActivityStatusEnum.Passed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Downloaded))).OrderByDescending(x => x.ActivityStart).FirstOrDefault();
+                    expectedActivity = latestActivityCheck.Where(x => x.LaunchResourceActivityId == resourceActivity.Id && (x.ActivityStatusId == ((int)ActivityStatusEnum.Completed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Launched) || x.ActivityStatusId == ((int)ActivityStatusEnum.Passed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Downloaded))).OrderByDescending(x => x.ActivityStart).FirstOrDefault();
                 }
 
-                if (latestActivityCheck.Any() && expectedActivity != null)
+                if (latestActivityCheck.Any() && expectedActivity != null && resourceActivity.ResourceVersion.CertificateEnabled == true)
                 {
-                    if (latestActivityCheck.OrderByDescending(x => x.ActivityStart).FirstOrDefault().Id == expectedActivity.Id)
-                    {
-                        viewModel.CertificateEnabled = resourceActivity.ResourceVersion.CertificateEnabled.GetValueOrDefault(false);
-                    }
-                    else
-                    {
-                        viewModel.CertificateEnabled = false;
-                    }
+                        viewModel.CertificateEnabled = true;
                 }
                 else
                 {

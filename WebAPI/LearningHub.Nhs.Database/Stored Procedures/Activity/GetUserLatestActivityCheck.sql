@@ -166,6 +166,11 @@ FROM (
 					)
 					
 				)
+			AND
+				(
+					-- resource type is not assessment and activity status is Complete/Incomplete
+					[Res].[ResourceTypeId] <> 11 OR [ResourceActivity].[ActivityStatusId] in (7,3)
+				)
 
 ) AS [t2]
 LEFT JOIN [resources].[VideoResourceVersion] AS [VideoResourceVersion] ON [t2].[Id1] = [VideoResourceVersion].[ResourceVersionId]

@@ -234,6 +234,11 @@ FROM (
 					)
 					
 				)
+			AND
+				(
+					-- resource type is not assessment and activity status is Complete/Incomplete
+					[Res].[ResourceTypeId] <> 11 OR [ResourceActivity].[ActivityStatusId] in (7,3)
+				)
 		AND
 				(
 						@filterActivityStatus = 0			

@@ -3,7 +3,7 @@
         <!--Node-->
         <div :id="'treenode' + item.nodeId" v-if="isNode && isVisible" class="treeview-node" :style="{marginLeft: indentNegativeMargin + 'px', paddingLeft: indentPostivePadding + 'px'}">
             <div class="treeview-node-inner d-flex">
-                <div class="treeview-node-inner-padding d-flex flex-row flex-grow-1" v-bind:class="{ 'moving-highlight': isMovingNode }">
+                <div class="treeview-node-inner-padding d-flex flex-row flex-grow-1" v-bind:class="{ 'moving-highlight': isMovingOrReferencingNode }">
                     <div class="pr-4" style="cursor:pointer" @click.prevent="toggle">
                         <i v-if="isOpen" class="fa-regular fa-folder-open fa-lg content-structure-folder" aria-hidden="true"></i>
                         <i v-if="!isOpen" class="fa-regular fa-folder fa-lg content-structure-folder" aria-hidden="true"></i>
@@ -16,11 +16,12 @@
                                 <a class="dropdown-toggle no-wrap" href="#" role="button" id="dropdownNodeItems" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="recomputeNodeOptions">
                                     options
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="dropdownNodeItems">
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownNodeItems">
                                     <a class="dropdown-item" v-if="canEditNode" @click="onEditFolder">Edit</a>
                                     <a class="dropdown-item" v-if="canMoveNodeUp" @click="onMoveNodeUp">Move up</a>
                                     <a class="dropdown-item" v-if="canMoveNodeDown" @click="onMoveNodeDown">Move down</a>
                                     <a class="dropdown-item" v-if="canMoveNode" @click="onInitiateMoveNode">Move</a>
+                                    <a class="dropdown-item" @click="onInitiateReferenceNode">Create reference</a>
                                     <a class="dropdown-item" v-if="canDeleteNode" @click="onDeleteFolder">Delete</a>
                                 </div>
                             </div>
@@ -29,6 +30,10 @@
                     <div v-if="editMode === EditModeEnum.MoveNode" class="ml-auto">
                         <a v-if="canMoveHere" href="#" @click.prevent="onMoveNode">Move here</a>
                         <span v-if="editingTreeNode.nodeId === item.nodeId" class="mr-3">Move this folder or <a id="cancelMoveNode" href="#" @click.prevent="onCancelMoveNode">Cancel move</a></span>
+                    </div>
+                    <div v-if="editMode === EditModeEnum.ReferenceNode" class="ml-auto">
+                        <a v-if="canReferenceHere" href="#" @click.prevent="onReferenceNode">Create reference here</a>
+                        <span v-if="editingTreeNode.nodeId === item.nodeId" class="mr-3">Create a reference to this folder or <a id="cancelReferenceNode" href="#" @click.prevent="onCancelReferenceNode">Cancel create reference</a></span>
                     </div>
                     <div v-if="editMode === EditModeEnum.MoveResource" class="ml-auto">
                         <a v-if="editingTreeNode.nodeId != item.nodeId" href="#" @click.prevent="onMoveResource">Move here</a>
@@ -215,8 +220,22 @@
                 }
                 return this.editingTreeNode.nodeId != this.item.nodeId && this.editingTreeNode.parent.nodeId != this.item.nodeId && !underEditingTreeNode;
             },
-            isMovingNode: function (): boolean {
-                return (this.editMode === EditModeEnum.MoveNode) && this.editingTreeNode && this.editingTreeNode.nodeId === this.item.nodeId;
+            canReferenceHere(): boolean {
+                var underEditingTreeNode: boolean = false;
+                if (this.item.depth > this.editingTreeNode.depth) {
+                    var parent = this.item.parent;
+                    while (parent.depth >= this.editingTreeNode.depth) {
+                        if (parent.nodeId == this.editingTreeNode.nodeId) {
+                            underEditingTreeNode = true;
+                            break;
+                        }
+                        parent = parent.parent;
+                    }
+                }
+                return this.editingTreeNode.nodeId != this.item.nodeId && this.editingTreeNode.parent.nodeId != this.item.nodeId && !underEditingTreeNode;
+            },
+            isMovingOrReferencingNode: function (): boolean {
+                return (this.editMode === EditModeEnum.MoveNode || this.editMode === EditModeEnum.ReferenceNode) && this.editingTreeNode && this.editingTreeNode.nodeId === this.item.nodeId;
             },
             canNavigateToResourceInfo: function (): boolean {
                 return this.item.versionStatusId == VersionStatus.PUBLISHED && this.editMode === EditModeEnum.None;
@@ -331,11 +350,20 @@
             onInitiateMoveNode: function () {
                 this.$store.commit('contentStructureState/setMovingNode', { node: this.item });
             },
+            onInitiateReferenceNode: function () {
+                this.$store.commit('contentStructureState/setReferencingNode', { node: this.item });
+            },
             onMoveNode: function () {
                 this.$store.dispatch('contentStructureState/moveNode', { destinationNode: this.item });
             },
+            onReferenceNode: function () {
+                this.$store.dispatch('contentStructureState/referenceNode', { destinationNode: this.item });
+            },
             onCancelMoveNode: function () {
                 this.$store.commit('contentStructureState/cancelMoveNode');
+            },
+            onCancelReferenceNode: function () {
+                this.$store.commit('contentStructureState/cancelReferenceNode');
             },
             onMoveResourceUp: function () {
                 this.$store.dispatch('contentStructureState/moveResourceUp', { node: this.item });

@@ -516,6 +516,19 @@
         }
 
         /// <summary>
+        /// Creates a reference to a node.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel <see cref="MoveNodeViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        public async Task<LearningHubValidationResult> ReferenceNode(MoveNodeViewModel moveNodeViewModel, int userId)
+        {
+            await this.hierarchyEditRepository.ReferenceNode(moveNodeViewModel, userId);
+            var retVal = new LearningHubValidationResult(true);
+            return retVal;
+        }
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The id.</param>

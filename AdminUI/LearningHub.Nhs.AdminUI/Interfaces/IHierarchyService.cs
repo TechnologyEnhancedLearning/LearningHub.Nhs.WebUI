@@ -105,6 +105,13 @@
         Task<ApiResponse> MoveNodeAsync(MoveNodeViewModel moveNodeViewModel);
 
         /// <summary>
+        /// Create a reference to a node.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> ReferenceNodeAsync(MoveNodeViewModel moveNodeViewModel);
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>

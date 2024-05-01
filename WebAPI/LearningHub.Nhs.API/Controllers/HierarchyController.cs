@@ -318,6 +318,25 @@
         }
 
         /// <summary>
+        /// Create reference to a node.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost("ReferenceNode")]
+        public async Task<IActionResult> ReferenceNode(MoveNodeViewModel moveNodeViewModel)
+        {
+            try
+            {
+                var retVal = await this.hierarchyService.ReferenceNode(moveNodeViewModel, this.CurrentUserId);
+                return this.Ok(new ApiResponse(true, retVal));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
+        }
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The id.</param>

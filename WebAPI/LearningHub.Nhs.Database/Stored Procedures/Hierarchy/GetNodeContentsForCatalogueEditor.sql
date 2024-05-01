@@ -10,6 +10,7 @@
 -- 23-12-2021  RS	Initial Revision. Split out from original GetNodeContents proc.
 -- 09-02-2022  KD	Explicitly exclude External Orgs from NodePath lookup.
 -- 22-02-2022  RS	Explicitly exclude External Orgs from ResourceReference lookup.
+-- 29-04-2024  DB	Link node and node version by CurrentNodeVersionId and ensure the NodeVersion is published.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsForCatalogueEditor]
 (
@@ -61,11 +62,12 @@ BEGIN
 		INNER JOIN 
 			hierarchy.[Node] cn ON nl.ChildNodeId = cn.Id
 		INNER JOIN 
-			hierarchy.NodeVersion nv ON nv.NodeId = cn.Id
+			hierarchy.NodeVersion nv ON nv.Id = cn.CurrentNodeVersionId
 		INNER JOIN
 			hierarchy.FolderNodeVersion fnv ON fnv.NodeVersionId = nv.Id
 		WHERE
 			nl.ParentNodeId = @NodeId 
+			AND nv.VersionStatusId = 2 -- Published
 			AND nl.Deleted = 0
 			AND cn.Deleted = 0
 			AND fnv.Deleted = 0

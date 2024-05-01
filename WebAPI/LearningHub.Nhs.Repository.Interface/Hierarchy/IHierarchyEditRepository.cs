@@ -89,6 +89,14 @@
         Task MoveNode(MoveNodeViewModel moveNodeViewModel, int userId);
 
         /// <summary>
+        /// References a node.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel <see cref="MoveNodeViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task ReferenceNode(MoveNodeViewModel moveNodeViewModel, int userId);
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The id.</param>

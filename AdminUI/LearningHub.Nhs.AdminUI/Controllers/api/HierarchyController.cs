@@ -264,6 +264,18 @@
         }
 
         /// <summary>
+        /// The ReferenceNode.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("ReferenceNode")]
+        public async Task<IActionResult> ReferenceNode(MoveNodeViewModel moveNodeViewModel)
+        {
+            var apiResponse = await this.hierarchyService.ReferenceNodeAsync(moveNodeViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>

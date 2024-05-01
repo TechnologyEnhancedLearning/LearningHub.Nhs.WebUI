@@ -167,6 +167,16 @@
         }
 
         /// <summary>
+        /// Create a reference to a Node.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<ApiResponse> ReferenceNodeAsync(MoveNodeViewModel moveNodeViewModel)
+        {
+            return await this.facade.PostAsync<ApiResponse, MoveNodeViewModel>("Hierarchy/referenceNode", moveNodeViewModel);
+        }
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>

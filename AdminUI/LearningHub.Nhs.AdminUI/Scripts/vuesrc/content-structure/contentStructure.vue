@@ -33,7 +33,7 @@
                     <div>Changes to the content structure of this Catalogue are currently being published. Editing will be possible once this process has completed.</div>
                 </div>
             </div>
-            <div id="treeView" v-if="!publishInProgress" v-show="editMode === EditModeEnum.Structure || editMode === EditModeEnum.None || editMode === EditModeEnum.MoveNode || editMode === EditModeEnum.MoveResource" class="node-contents-treeview">
+            <div id="treeView" v-if="!publishInProgress" v-show="editMode === EditModeEnum.Structure || editMode === EditModeEnum.None || editMode === EditModeEnum.MoveNode || editMode === EditModeEnum.ReferenceNode || editMode === EditModeEnum.MoveResource" class="node-contents-treeview">
                 <tree-item id="1" class="root-tree-item-container"
                            :key="rootKey"
                            :item="rootNode"

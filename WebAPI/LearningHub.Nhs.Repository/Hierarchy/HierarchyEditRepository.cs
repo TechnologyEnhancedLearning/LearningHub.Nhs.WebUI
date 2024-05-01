@@ -208,6 +208,25 @@
         }
 
         /// <summary>
+        /// Moves a node.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel <see cref="MoveNodeViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task ReferenceNode(MoveNodeViewModel moveNodeViewModel, int userId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = moveNodeViewModel.HierarchyEditDetailId };
+            var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = moveNodeViewModel.MoveToHierarchyEditDetailId };
+            var param3 = new SqlParameter("@p2", SqlDbType.Int) { Value = userId };
+            var param2 = new SqlParameter("@p3", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+            string sql = "hierarchy.HierarchyEditReferenceNode @p0, @p1, @p2, @p3";
+            var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3 };
+
+            await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+        }
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The id.</param>

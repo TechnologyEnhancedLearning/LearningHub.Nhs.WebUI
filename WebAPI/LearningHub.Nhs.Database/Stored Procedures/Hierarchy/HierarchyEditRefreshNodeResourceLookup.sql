@@ -8,6 +8,7 @@
 -- 05-02-2021  KD	Initial Revision (IT2).
 --					Provide details of Resource placement within a HierarchyEdit (for all Resource statuses)
 --					Required when lazy loading Node contents.
+-- 29-04-2024  DB	Avoid duplicates when the content referencing exists.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditRefreshNodeResourceLookup]
 (
@@ -54,7 +55,7 @@ BEGIN
 			AND hed.Deleted = 0
 		)
 	INSERT INTO hierarchy.HierarchyEditNodeResourceLookup ([HierarchyEditId],[NodeId],[ResourceId])
-	SELECT @HierarchyEditId AS HierarchyEditId, cte.NodeId, cte.ResourceId
+	SELECT DISTINCT @HierarchyEditId AS HierarchyEditId, cte.NodeId, cte.ResourceId
 	FROM cteNodeResourceLookup cte
 
 END

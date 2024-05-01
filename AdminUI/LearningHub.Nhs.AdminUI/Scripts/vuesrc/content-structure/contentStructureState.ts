@@ -203,7 +203,14 @@ const mutations = {
         state.editingTreeNode = payload.node;
         state.editMode = EditModeEnum.MoveNode;
     },
+    setReferencingNode(state: State, payload: { node: NodeContentAdminModel }) {
+        state.editingTreeNode = payload.node;
+        state.editMode = EditModeEnum.ReferenceNode;
+    },
     cancelMoveNode(state: State, payload: { node: NodeContentAdminModel }) {
+        state.editMode = EditModeEnum.Structure;
+    },
+    cancelReferenceNode(state: State, payload: { node: NodeContentAdminModel }) {
         state.editMode = EditModeEnum.Structure;
     },
     cancelEdit(state: State) {
@@ -334,6 +341,19 @@ const actions = <ActionTree<State, any>>{
         }).catch(e => {
             state.inError = true;
             state.lastErrorMessage = `Error moving Node ${state.editingTreeNode.name}`;
+        });
+    },
+    async referenceNode(context: ActionContext<State, State>, payload: { destinationNode: NodeContentAdminModel }) {
+        state.inError = false;
+        contentStructureData.referenceNode(state.editingTreeNode.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(async response => {
+            context.commit("setEditMode", EditModeEnum.Structure);
+            await refreshNodeContents(payload.destinationNode, true).then(async x => {
+                await refreshNodeContents(state.editingTreeNode.parent, true).then(y => {
+                });
+            });
+        }).catch(e => {
+            state.inError = true;
+            state.lastErrorMessage = `Error referencing Node ${state.editingTreeNode.name}`;
         });
     },
     async moveResourceUp(context: ActionContext<State, State>, payload: { node: NodeContentAdminModel }) {

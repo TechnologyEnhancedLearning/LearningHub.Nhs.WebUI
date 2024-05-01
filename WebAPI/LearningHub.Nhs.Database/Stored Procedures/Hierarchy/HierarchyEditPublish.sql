@@ -11,6 +11,7 @@
 -- 23-09-2021  KD	Initial Revision.
 -- 20-01-2022  KD	IT2 - inclusion of Resources in HierarchyEdit.
 -- 23-04-2024  DB	Updated to manage publishing of draft NodeVersions during edits
+-- 30-04-2024  DB	Handle referencing of folders
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditPublish] 
 (
@@ -66,7 +67,11 @@ BEGIN
 			hierarchy.HierarchyEditDetail 
 		WHERE
 			HierarchyEditId = @HierarchyEditId
-			AND HierarchyEditDetailOperationId = 1 -- Add
+			AND (
+				HierarchyEditDetailOperationId = 1 -- Add
+				OR
+				HierarchyEditDetailOperationId = 4 -- Reference
+				)
 			AND NodeLinkId IS NULL
 			AND [Deleted] = 0
 
@@ -499,10 +504,22 @@ BEGIN
 		-- ResourceReference
 		----------------------------------------------------------		
 		----------------------------------------------------------
-		-- Cater for ResourceReference changes that have arisen from 'Move Node or Move Resource'
+		-- Cater for ResourceReference changes that have arisen from 'Move Node or Reference Node or Move Resource'
 		-- Compare initial node path on creation of the HierarchyEdit with the current path up to the root.
 		-- Set 'OriginalResourceReference' where applicable
 		----------------------------------------------------------		
+		
+		-- New Parent/Child node links arising from referencing of a node.
+		SELECT
+				ParentNodeId, 
+				NodeId as ChildNodeId
+		INTO	#NewNodeReferences
+		FROM
+				[hierarchy].[HierarchyEditDetail]
+		WHERE	HierarchyEditId = @HierarchyEditId
+				AND HierarchyEditDetailOperationId = 4 -- Add Reference
+				AND Deleted = 0
+
 		-- Determine updated Node Paths
 		; WITH cteResourceNodePathChanges (NodeId, ResourceId, InitialNode, InitialNodePath, NodePath, CompletePathInd)
 		AS
@@ -547,22 +564,29 @@ BEGIN
 				AND hed.Deleted = 0
 		)
 		SELECT
-			ResourceId,
-			InitialNodePath,
-			NodePath
+			cte.ResourceId,
+			cte.InitialNodePath,
+			cte.NodePath,
+            CASE WHEN nnr.ParentNodeId IS NULL THEN 0 ELSE 1 END AS IsNewReference -- Has the ResourceReference been created as a result of the referencing of a node.
 		INTO
 			#cteResourceNodePathChanges
 		FROM
-			cteResourceNodePathChanges
+			cteResourceNodePathChanges cte
+        LEFT OUTER JOIN
+            #NewNodeReferences nnr ON ('\' + cte.NodePath + '\') Like ('%\' + CAST(nnr.ParentNodeId AS varchar(10)) + '\' + CAST(nnr.ChildNodeId AS varchar(10)) + '\%')
 		WHERE	
-			CompletePathInd = 1
+			cte.CompletePathInd = 1
 
-		-- Create new ResourceReference/s arising from MoveNode or MoveResource operations.
+		-- Create new ResourceReference/s arising from MoveNode or ReferenceNode or MoveResource operations.
 		INSERT INTO resources.ResourceReference([ResourceId],[NodePathId],[OriginalResourceReferenceId],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
 		SELECT 
 			rr.ResourceId, 
 			np_new.Id AS NodePathId, 
-			rr.OriginalResourceReferenceId,
+			CASE
+				WHEN npc.IsNewReference = 1 
+				THEN NULL 
+				ELSE rr.OriginalResourceReferenceId
+			END, -- if this is a new node (rather then a move) then this will be the newly created ResourceReferenceId (set later on)
 			0 AS Deleted, 
 			@AmendUserId AS CreateUserId, 
 			@AmendDate AS CreateDate, 
@@ -657,7 +681,7 @@ BEGIN
 				nl.Deleted = 0
 				AND nl.Deleted = 0
 		  )
-		SELECT NodeId, ParentNodeId, ResourceId
+		SELECT DISTINCT NodeId, ParentNodeId, ResourceId
 		INTO #cteNodeResource
 		FROM cteNodeResource
 

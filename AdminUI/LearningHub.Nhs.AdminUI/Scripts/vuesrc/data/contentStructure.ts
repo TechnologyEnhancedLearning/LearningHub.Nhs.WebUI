@@ -196,6 +196,20 @@ const moveNode = async function (hierarchyEditDetailId: number, moveToHierarchyE
         });
 };
 
+const referenceNode = async function (hierarchyEditDetailId: number, moveToHierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+
+    const url = `/api/hierarchy/ReferenceNode`;
+
+    return await axios.post<LearningHubValidationResultModel>(url, { hierarchyEditDetailId: hierarchyEditDetailId, moveToHierarchyEditDetailId: moveToHierarchyEditDetailId })
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('referenceNode:' + e);
+            throw e;
+        });
+};
+
 const hierarchyEditMoveResourceUp = async function (hierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
 
     const url = `/api/hierarchy/HierarchyEditMoveResourceUp/${hierarchyEditDetailId}`;
@@ -311,6 +325,7 @@ export const contentStructureData = {
     moveNodeUp,
     moveNodeDown,
     moveNode,
+    referenceNode,
     hierarchyEditMoveResourceUp,
     hierarchyEditMoveResourceDown,
     hierarchyEditMoveResource,

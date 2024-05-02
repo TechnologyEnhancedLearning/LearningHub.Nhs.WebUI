@@ -175,7 +175,7 @@ FROM (
 			@searchText IS NULL
             OR 
 				(
-						Charindex(@searchText, [ResVer].[Title]) > 0
+						(Charindex(@searchText, [ResVer].[Title]) > 0
 					OR                          
 						Charindex(@searchText, [ResVer].[Description]) > 0
 					OR  
@@ -189,8 +189,10 @@ FROM (
 									[ResVer].[Id] = [ResourceVersionKeyword].[ResourceVersionId]
 								AND   
 									Charindex(@searchText, [ResourceVersionKeyword].[Keyword]) > 0
-								)
-					)
+									
+								) 
+					)) AND [ResourceActivity].ActivityStart is not null 
+					
 				)
 		)
 		AND

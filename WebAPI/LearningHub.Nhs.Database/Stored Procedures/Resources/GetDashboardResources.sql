@@ -239,7 +239,7 @@ BEGIN
 				    OR (r.ResourceTypeId IN (2, 7) AND (mar.Id IS NULL OR (mar.Id IS NOT NULL AND mar.PercentComplete < 100) OR ra.ActivityStart < '2020-09-07 00:00:00 +00:00'))
 					OR  (r.ResourceTypeId = 6 AND (sa.CmiCoreLesson_status NOT IN (3, 5) AND (ra.ActivityStatusId NOT IN(3, 5))))
 					OR (r.ResourceTypeId IN (9) AND ra.ActivityStatusId NOT IN (3))
-					OR (r.ResourceTypeId = 11 AND ((ara.Id IS NOT NULL AND ara.score < arv.PassMark) OR ra.ActivityStatusId IN (1))) 
+					OR (r.ResourceTypeId = 11 AND ((ara.Id IS NOT NULL AND ara.score < arv.PassMark) OR ra.ActivityStatusId = 7)) 
 					)		
 				GROUP BY ra.ResourceId	
 				ORDER BY ResourceActivityId DESC

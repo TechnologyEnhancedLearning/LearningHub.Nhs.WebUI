@@ -156,6 +156,10 @@
         .search-filter-items {
             border-top: 1px $nhsuk-grey-light solid;
             background-color: $nhsuk-grey-white;
+
+            h2 {
+                font-size: larger;
+            }
         }
     }
 

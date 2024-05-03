@@ -111,12 +111,11 @@ namespace LearningHub.Nhs.Repository.Activity
                .ThenInclude(a => a.AssessmentResourceActivityInteractions)
                .Include(r => r.NodePath)
                .AsNoTracking()
-             .Where(r =>
-                      r.UserId == userId && r.ScormActivity.First().CmiCoreLessonStatus != (int)ActivityStatusEnum.Completed &&
-                     ((r.Resource.ResourceTypeEnum != ResourceTypeEnum.Video && r.Resource.ResourceTypeEnum != ResourceTypeEnum.Audio && !r.InverseLaunchResourceActivity.Any()) ||
-                        r.InverseLaunchResourceActivity.Any(y => y.ActivityStatusId == (int)ActivityStatusEnum.Completed)) &&
-                     (r.Resource.ResourceTypeEnum != ResourceTypeEnum.Assessment || r.ActivityStatusId == (int)ActivityStatusEnum.Launched))
-              .OrderByDescending(r => r.ActivityStart);
+               .Where(r =>
+                            r.UserId == userId && r.ScormActivity.First().CmiCoreLessonStatus != (int)ActivityStatusEnum.Completed &&
+                           ((!r.InverseLaunchResourceActivity.Any()) ||
+                              r.InverseLaunchResourceActivity.Any()))
+               .OrderByDescending(r => r.ActivityStart);
         }
 
         /// <summary>
@@ -503,12 +502,17 @@ namespace LearningHub.Nhs.Repository.Activity
                 i.Resource.Deleted = i.Resource_Deleted;
                 int resourceTypeId = i.Resource_ResourceTypeId;
                 i.Resource.ResourceTypeEnum = (ResourceTypeEnum)resourceTypeId;
-                ResourceReference resourceReference = new ResourceReference();
-                resourceReference.OriginalResourceReferenceId = i.ResourceReference_OriginalResourceReferenceId;
-                resourceReference.NodePathId = i.ResourceReference_NodePathId;
-                resourceReference.ResourceId = i.ResourceReference_ResourceId;
+                var resourceReferences = result.Where(x => x.Id == i.Id && x.ResourceVersionId == i.ResourceVersionId).ToList();
                 List<ResourceReference> resourceReferenceList = new List<ResourceReference>();
-                resourceReferenceList.Add(resourceReference);
+                foreach (var b in resourceReferences)
+                {
+                    ResourceReference resourceReference = new ResourceReference();
+                    resourceReference.OriginalResourceReferenceId = b.ResourceReference_OriginalResourceReferenceId;
+                    resourceReference.NodePathId = b.ResourceReference_NodePathId;
+                    resourceReference.ResourceId = b.ResourceReference_ResourceId;
+                    resourceReferenceList.Add(resourceReference);
+                }
+
                 i.Resource.ResourceReference = resourceReferenceList;
             });
         }

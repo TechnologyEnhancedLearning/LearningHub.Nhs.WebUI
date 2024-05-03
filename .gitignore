@@ -47,3 +47,4 @@ obj
 /WebAPI/LearningHub.Nhs.Database/LearningHub.Nhs.Database.jfm
 /WebAPI/MigrationTool/LearningHub.Nhs.Migration.Staging.Database/LearningHub.Nhs.Migration.Staging.Database.dbmdl
 /WebAPI/MigrationTool/LearningHub.Nhs.Migration.Staging.Database/LearningHub.Nhs.Migration.Staging.Database.jfm
+/LearningHub.Nhs.WebUI.AutomatedUiTests/appsettings.Development.json

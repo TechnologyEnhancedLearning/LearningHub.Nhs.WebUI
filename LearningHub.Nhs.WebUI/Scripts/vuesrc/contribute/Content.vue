@@ -501,6 +501,7 @@
                 localScormDetail: null as ScormResourceModel,
                 showError: false,
                 errorMessage: '',
+                contributeResourceAVFlag: true,
             }
         },
         computed: {
@@ -608,9 +609,6 @@
             hierarchyEditLoaded(): boolean {
                 return this.$store.state.hierarchyEditLoaded;
             },
-            contributeResourceAVFlag(): boolean {
-                return this.$store.state.contributeAVResourceFlag;
-            },
             audioVideoUnavailableView(): string {
                 return this.$store.state.getAVUnavailableView;
             },
@@ -631,6 +629,7 @@
             if (!this.$store.state.fileTypes) {
                 this.$store.commit('populateFileTypes');
             }
+            this.getContributeResAVResourceFlag();
             this.uploadResourceTypes = await resourceData.getUploadResourceTypes();
             const allResourceTypes = this.uploadResourceTypes.slice();
             const allowedTypes = this.resourceTypesSupported.split(',');
@@ -647,6 +646,11 @@
             this.localScormDetail = _.cloneDeep(this.scormDetail);
         },
         methods: {
+            getContributeResAVResourceFlag() {
+                resourceData.getContributeAVResourceFlag().then(response => {
+                    this.contributeResourceAVFlag = response;
+                });
+            },
             setSpecificContentLocalValid(val: boolean) {
                 this.specificContentLocalValid = val;
             },
@@ -906,7 +910,7 @@
                         if (this.selectedResourceType != ResourceType.UNDEFINED) {
                             let fileExtension = this.uploadingFile.name.split(".").pop();
                             let resourceType: ResourceType = ResourceType.GENERICFILE;
-                           if (fileExtension.toLowerCase() == 'zip' && this.selectedResourceType == ResourceType.SCORM) {
+                            if (fileExtension.toLowerCase() == 'zip' && this.selectedResourceType == ResourceType.SCORM) {
                                 resourceType = ResourceType.SCORM;
                             } else if (fileExtension.toLowerCase() == 'zip' && this.selectedResourceType == ResourceType.HTML) {
                                 resourceType = ResourceType.HTML;

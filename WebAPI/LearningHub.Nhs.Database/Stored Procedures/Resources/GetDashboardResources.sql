@@ -226,7 +226,7 @@ BEGIN
 	INSERT INTO @MyActivity					
 			SELECT TOP (@MaxRows) ra.ResourceId, MAX(ra.Id) ResourceActivityId
 				FROM 
-				(SELECT a.* FROM activity.ResourceActivity a INNER JOIN (SELECT ResourceId, MAX(Id) as id FROM activity.ResourceActivity GROUP BY ResourceId,ActivityStatusId ) AS b ON a.ResourceId = b.ResourceId AND a.id = b.id  order by a.Id desc OFFSET 0 ROWS) ra	
+				(SELECT a.* FROM activity.ResourceActivity a INNER JOIN (SELECT ResourceId, MAX(Id) as id FROM activity.ResourceActivity GROUP BY ResourceId) AS b ON a.ResourceId = b.ResourceId AND a.id = b.id  order by a.Id desc OFFSET 0 ROWS) ra	
 				JOIN [resources].[Resource] r ON  ra.ResourceId = r.Id
 				JOIN [resources].[ResourceVersion] rv ON  rv.Id = ra.ResourceVersionId
 				LEFT JOIN [resources].[AssessmentResourceVersion] arv ON arv.ResourceVersionId = ra.ResourceVersionId
@@ -238,7 +238,6 @@ BEGIN
 					 (r.ResourceTypeId IN (1, 5, 8, 9,10, 12) AND ra.ActivityStatusId <> 3)
 				    OR (r.ResourceTypeId IN (2, 7) AND (mar.Id IS NULL OR (mar.Id IS NOT NULL AND mar.PercentComplete < 100) OR ra.ActivityStart < '2020-09-07 00:00:00 +00:00'))
 					OR  (r.ResourceTypeId = 6 AND (sa.CmiCoreLesson_status NOT IN (3, 5) AND (ra.ActivityStatusId NOT IN(3, 5))))
-					OR (r.ResourceTypeId IN (9) AND ra.ActivityStatusId NOT IN (3))
 					OR (r.ResourceTypeId = 11 AND ((ara.Id IS NOT NULL AND ara.score < arv.PassMark) OR ra.ActivityStatusId = 7)) 
 					)		
 				GROUP BY ra.ResourceId	

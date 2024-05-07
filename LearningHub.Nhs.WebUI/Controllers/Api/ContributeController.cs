@@ -493,12 +493,12 @@
         public async Task<ActionResult> SaveCaseDetailAsync([FromBody] CaseViewModel request)
         {
             var existingResourceState = await this.resourceService.GetResourceVersionExtendedAsync(request.ResourceVersionId);
-            int resourceVersionId = await this.contributeService.SaveCaseDetailAsync(request);
             if (existingResourceState.CaseDetails?.BlockCollection != null)
             {
-               await this.RemoveBlockCollectionFiles(request.ResourceVersionId, existingResourceState.CaseDetails.BlockCollection, request.BlockCollection);
+                await this.RemoveBlockCollectionFiles(request.ResourceVersionId, existingResourceState.CaseDetails.BlockCollection, request.BlockCollection);
             }
 
+            int resourceVersionId = await this.contributeService.SaveCaseDetailAsync(request);
             return this.Ok(resourceVersionId);
         }
 
@@ -512,12 +512,12 @@
         public async Task<ActionResult> SaveAssessmentDetailAsync([FromBody] AssessmentViewModel request)
         {
             var existingResourceState = await this.resourceService.GetResourceVersionExtendedAsync(request.ResourceVersionId);
-            int resourceVersionId = await this.contributeService.SaveAssessmentDetailAsync(request);
             if (existingResourceState != null && existingResourceState.AssessmentDetails != null)
             {
-               await this.RemoveBlockCollectionFiles(request.ResourceVersionId, existingResourceState.AssessmentDetails, request);
+                await this.RemoveBlockCollectionFiles(request.ResourceVersionId, existingResourceState.AssessmentDetails, request);
             }
 
+            int resourceVersionId = await this.contributeService.SaveAssessmentDetailAsync(request);
             return this.Ok(resourceVersionId);
         }
 

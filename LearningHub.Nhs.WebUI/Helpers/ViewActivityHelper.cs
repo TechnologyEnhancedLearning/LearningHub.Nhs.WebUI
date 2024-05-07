@@ -256,7 +256,7 @@
         /// <returns>The <see cref="bool"/>bool.</returns>
         public static bool CanViewProgress(this ActivityDetailedItemViewModel activityDetailedItemViewModel)
         {
-            if ((activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Video || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Audio) && activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.InProgress)
+            if ((activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Video || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Audio) && activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.InProgress && activityDetailedItemViewModel.IsCurrentResourceVersion)
             {
                 return true;
             }

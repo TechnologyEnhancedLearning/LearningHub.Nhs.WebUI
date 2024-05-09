@@ -272,12 +272,22 @@
                 }
                 else
                 {
-                    expectedActivity = latestActivityCheck.Where(x => x.Id == resourceActivity.Id && (x.ActivityStatusId == ((int)ActivityStatusEnum.Completed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Incomplete) || x.ActivityStatusId == ((int)ActivityStatusEnum.Passed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Downloaded))).OrderByDescending(x => x.ActivityStart).FirstOrDefault();
+                    expectedActivity = latestActivityCheck.Where(x => x.Id == resourceActivity.Id && (x.ActivityStatusId == ((int)ActivityStatusEnum.Completed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Passed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Downloaded))).OrderByDescending(x => x.ActivityStart).FirstOrDefault();
                 }
 
-                if (latestActivityCheck.Any() && expectedActivity != null && resourceActivity.ResourceVersion.CertificateEnabled == true)
+                if (latestActivityCheck.Any() && expectedActivity != null)
                 {
-                    viewModel.CertificateEnabled = true;
+                    bool isExpectedActivityIdMatched = false;
+                    if (resourceActivity.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio || resourceActivity.Resource.ResourceTypeEnum == ResourceTypeEnum.Video)
+                    {
+                        isExpectedActivityIdMatched = latestActivityCheck.OrderByDescending(x => x.ActivityStart).FirstOrDefault().Id == expectedActivity.LaunchResourceActivityId;
+                    }
+                    else
+                    {
+                        isExpectedActivityIdMatched = latestActivityCheck.OrderByDescending(x => x.ActivityStart).FirstOrDefault().Id == expectedActivity.Id;
+                    }
+
+                    viewModel.CertificateEnabled = isExpectedActivityIdMatched && resourceActivity.ResourceVersion.CertificateEnabled.GetValueOrDefault(false);
                 }
                 else
                 {

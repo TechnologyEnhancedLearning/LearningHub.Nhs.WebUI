@@ -11,14 +11,14 @@
     public interface IHierarchyService
     {
         /// <summary>
-        /// Gets the contents of a node (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
+        /// Gets the contents of a node path (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// Set returnPublishedOnly to true if only published resource data is needed.
         /// </summary>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <param name="readOnly">Set to true if read only data set is required.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodeId, bool readOnly);
+        Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodePathId, bool readOnly);
 
         /// <summary>
         /// The get node paths.
@@ -28,18 +28,18 @@
         Task<List<NodePathViewModel>> GetNodePathsForNodeAsync(int nodeId);
 
         /// <summary>
-        /// Gets the hierarchy edits for the supplied root node id.
+        /// Gets the hierarchy edits for the supplied root node path id.
         /// </summary>
-        /// <param name="rootNodeId">The root node id.</param>
+        /// <param name="rootNodePathId">The root node path id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<List<HierarchyEditViewModel>> GetHierarchyEdits(int rootNodeId);
+        Task<List<HierarchyEditViewModel>> GetHierarchyEdits(int rootNodePathId);
 
         /// <summary>
         /// The CreateHierarchyEditAsync.
         /// </summary>
-        /// <param name="rootNodeId">The rootNodeId<see cref="int"/>.</param>
+        /// <param name="rootNodePathId">The rootNodePathId<see cref="int"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<ApiResponse> CreateHierarchyEditAsync(int rootNodeId);
+        Task<ApiResponse> CreateHierarchyEditAsync(int rootNodePathId);
 
         /// <summary>
         /// The DiscardHierarchyEditAsync.

@@ -469,7 +469,7 @@
         /// <param name="nodes">The list of folder nodes to display.</param>
         /// <param name="catalogueUrl">The URL reference of the catalogue.</param>
         /// <returns>A list of tuples, composed of Title and Url.</returns>
-        public static List<(string Title, string Url)> GetBreadcrumbsForFolderNodes(List<NodeViewModel> nodes, string catalogueUrl)
+        public static List<(string Title, string Url)> GetBreadcrumbsForFolderNodes(List<NodePathViewModel> nodes, string catalogueUrl)
         {
             // Create breadcrumb tuple data
             var breadcrumbs = new List<(string Title, string Url)> { ("Home", "/") };
@@ -479,7 +479,7 @@
                 string nodeUrl = $"/catalogue/{catalogueUrl}";
                 if (i > 0)
                 {
-                    nodeUrl += $"?nodeId={nodes[i].NodeId}";
+                    nodeUrl += $"?nodePathId={nodes[i].Id}";
                 }
 
                 breadcrumbs.Add((nodes[i].Name, nodeUrl));

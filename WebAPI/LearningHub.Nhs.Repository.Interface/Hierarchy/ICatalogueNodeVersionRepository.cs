@@ -30,7 +30,7 @@
         /// </summary>
         /// <param name="userId">The userId.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        IQueryable<CatalogueNodeVersion> GetPublishedCataloguesForUserAsync(int userId);
+        IEnumerable<CatalogueNodeVersion> GetPublishedCataloguesForUserAsync(int userId);
 
         /// <summary>
         /// The get basic catalogue.

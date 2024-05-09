@@ -143,7 +143,7 @@
         public async Task<CatalogueViewModel> GetCatalogueAsync(int id)
         {
             var catalogue = await this.catalogueNodeVersionRepository.GetAll()
-                .Include(x => x.NodeVersion).ThenInclude(x => x.Node)
+                .Include(x => x.NodeVersion).ThenInclude(x => x.Node).ThenInclude(x => x.NodePaths.Where(np => !np.Deleted && np.CatalogueNodeId.ToString() == np.NodePathString))
                 .Include(x => x.Keywords)
                 .Include(x => x.CatalogueNodeVersionProvider).Where(x => !x.Deleted)
                 .SingleOrDefaultAsync(x => x.Id == id);
@@ -224,7 +224,7 @@
                     CardImageUrl = catalogue.CardImageUrl,
                     Url = catalogue.Url,
                     Name = catalogue.Name,
-                    NodePathId = catalogue.NodeVersion.Node.NodePaths?.FirstOrDefault()?.Id ?? 0,
+                    RootNodePathId = catalogue.NodeVersion.Node.NodePaths?.FirstOrDefault()?.Id ?? 0,
                     RestrictedAccess = catalogue.RestrictedAccess,
                 });
             }

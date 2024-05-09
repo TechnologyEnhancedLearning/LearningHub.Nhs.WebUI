@@ -10,10 +10,12 @@
 -- 09-02-2022  KD	Explicitly exclude External Orgs from NodePath lookup.
 -- 22-02-2022  RS	Explicitly exclude External Orgs from ResourceReference lookup.
 -- 23-04-2022  DB	Restrict published resourceVersions by current published node version Id.
+-- 07-05-2024  DB	Change input parameter to NodePathId to prevent all referenced resources and child nodes being returned multiple times
+--					Also return Child NodePathId to allow the client to navigate to the child node.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsAdminReadOnly]
 (
-	@NodeId INT
+	@NodePathId INT
 )
 
 AS
@@ -22,6 +24,7 @@ BEGIN
 
 	SELECT 
 		ROW_NUMBER() OVER(ORDER BY DisplayOrder) AS Id,
+		NodePathId,
 		[Name],
 		[Description],
 		NodeTypeId,
@@ -43,6 +46,7 @@ BEGIN
 	(
 		-- Published Folder Node/s
 		SELECT 
+			cnp.Id AS NodePathId,
 			fnv.[Name],
 			fnv.[Description],
 			cn.NodeTypeId,
@@ -61,9 +65,13 @@ BEGIN
 			CASE WHEN nrl.NodeId IS NULL THEN 0 ELSE 1 END AS HasResourcesInBranchInd,
 			NULL AS HierarchyEditDetailId
 		FROM 
-			hierarchy.NodeLink nl
+            hierarchy.NodePath pnp
+		INNER JOIN
+			hierarchy.NodeLink nl ON pnp.NodeId = nl.ParentNodeId
 		INNER JOIN 
 			hierarchy.[Node] cn ON nl.ChildNodeId = cn.Id
+		INNER JOIN 
+			hierarchy.NodePath cnp ON cn.Id = cnp.NodeId AND pnp.NodePath + '\' + CONVERT(VARCHAR(10), cn.Id) = cnp.NodePath
 		INNER JOIN 
 			hierarchy.NodeVersion nv ON nv.Id = cn.CurrentNodeVersionId
 		INNER JOIN
@@ -73,7 +81,7 @@ BEGIN
 		LEFT JOIN
 			(SELECT DISTINCT NodeId FROM hierarchy.NodeResourceLookup WHERE Deleted = 0) nrl ON cn.Id = nrl.NodeId
 		WHERE
-			nl.ParentNodeId = @NodeId 
+			pnp.Id = @NodePathId 
 			AND nv.VersionStatusId = 2 -- Published
 			AND nl.Deleted = 0
 			AND cn.Deleted = 0
@@ -83,6 +91,7 @@ BEGIN
 
 		-- Resources
 		SELECT 
+			np.Id AS NodePathId,
 			rv.Title as [Name],
 			NULL As [Description],
 			0 as NodeTypeId, 
@@ -101,23 +110,21 @@ BEGIN
 			0 AS HasResourcesInBranchInd,
 			NULL AS HierarchyEditDetailId
 		FROM 
-			hierarchy.NodeResource nr 
+            hierarchy.NodePath np
+        INNER JOIN
+			hierarchy.NodeResource nr ON np.NodeId = nr.NodeId
 		INNER JOIN 
 			resources.[Resource] r ON nr.ResourceId = r.Id
 		INNER JOIN 
 			resources.ResourceVersion rv ON rv.resourceId = nr.ResourceId
 		LEFT JOIN 
-			resources.ResourceReference rr ON rr.ResourceId = nr.ResourceId AND rr.Deleted = 0
-									 AND rr.NodePathId NOT IN (SELECT np.Id FROM hierarchy.NodePath np INNER JOIN [hub].[ExternalOrganisation] eo ON eo.NodeId = np.NodeId)
-		LEFT JOIN 
-			hierarchy.NodePath np ON rr.NodePathId = np.Id AND nr.NodeId = np.NodeId AND np.IsActive = 1 AND np.Deleted = 0
-									 AND np.Id NOT IN (SELECT np.Id FROM hierarchy.NodePath np INNER JOIN [hub].[ExternalOrganisation] eo ON eo.NodeId = np.NodeId)
+			resources.ResourceReference rr ON rr.ResourceId = nr.ResourceId AND rr.NodePathId = np.Id AND rr.Deleted = 0
 		LEFT JOIN
 			resources.ResourceVersionEvent rve ON rve.ResourceVersionId = rv.Id AND rve.ResourceVersionEventTypeId = 6 /* Unpublished by admin */
 		LEFT JOIN 
 			resources.ResourceVersion rvd ON r.Id = rvd.ResourceId AND rvd.Id > rv.Id AND rvd.Deleted = 0
 		WHERE 
-			nr.NodeId = @NodeId
+			np.Id = @NodePathId
 			AND (r.CurrentResourceVersionId = rv.Id OR r.CurrentResourceVersionId IS NULL)
 			AND ((nr.VersionStatusId IN (2,3) AND np.Id IS NOT NULL) OR nr.VersionStatusId = 1)
 			AND nr.Deleted = 0

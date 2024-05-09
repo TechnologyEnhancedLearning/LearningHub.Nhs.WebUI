@@ -8,22 +8,30 @@
 --
 -- 05-01-2022  KD	Initial Revision.
 -- 09-02-2022  KD	Explicitly exclude External Orgs from Resource Reference lookup.
+-- 07-05-2024  DB	Change input parameter to NodePathId to prevent all referenced resources and child nodes being returned multiple times
+--					Also return Child NodePathId to allow the client to navigate to the child node.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsAdmin]
 (
-	@NodeId INT
+	@NodePathId INT
 )
 
 AS
 
 BEGIN
-	
-	-- IT1 - only consider the most recent HierarchyEdit for a draft.
+
 	DECLARE @HierarchyEditId int
-	SELECT TOP 1 @HierarchyEditId = Id FROM hierarchy.HierarchyEdit WHERE Deleted = 0 ORDER BY Id DESC
+	SELECT TOP 1 @HierarchyEditId = he.Id 
+	FROM	hierarchy.HierarchyEdit he
+    INNER JOIN hierarchy.HierarchyEditDetail hed ON he.Id = hed.HierarchyEditId 
+	WHERE	hed.NodePathId = @NodePathId
+		AND he.HierarchyEditStatusId = 1 -- Draft
+		AND he.Deleted = 0
+	ORDER BY he.Id DESC
 
 	SELECT 
 		ROW_NUMBER() OVER(ORDER BY DisplayOrder) AS Id,
+		NodePathId,
 		[Name],
 		[Description],
 		NodeTypeId,
@@ -45,6 +53,7 @@ BEGIN
 	(
 		-- Folder Node/s in Edit
 		SELECT 
+			hed.NodePathId,
 			fnv.[Name],
 			fnv.[Description],
 			n.NodeTypeId,
@@ -75,7 +84,7 @@ BEGIN
 		LEFT JOIN
 			(SELECT DISTINCT NodeId FROM hierarchy.HierarchyEditNodeResourceLookup WHERE HierarchyEditId = @HierarchyEditId) nrl ON n.Id = nrl.NodeId
 		WHERE 
-			hed.ParentNodeId = @NodeId
+			hed.ParentNodePathId = @NodePathId
 			AND he.Id = @HierarchyEditId
 			AND he.HierarchyEditStatusId = 1 -- Draft
 			AND ISNULL(hed.HierarchyEditDetailOperationId, 0) != 3 -- excluded deleted
@@ -89,6 +98,7 @@ BEGIN
 
 		-- Resources
 		SELECT 
+			hed.NodePathId AS NodePathId,
 			rv.Title as [Name],
 			NULL As [Description],
 			0 as NodeTypeId, 
@@ -115,22 +125,17 @@ BEGIN
 		INNER JOIN 
 			resources.ResourceVersion rv ON rv.Id = hed.ResourceVersionId
 		LEFT JOIN 
-			resources.ResourceReference rr ON rr.ResourceId = hed.ResourceId AND rr.Deleted = 0
-		LEFT JOIN 
-			hierarchy.NodePath np ON rr.NodePathId = np.Id
-								  AND np.Id NOT IN (SELECT np.Id FROM hierarchy.NodePath np INNER JOIN [hub].[ExternalOrganisation] eo ON eo.NodeId = np.NodeId)
-								  AND np.Deleted = 0
+			resources.ResourceReference rr ON rr.Id = hed.ResourceReferenceId AND rr.Deleted = 0
 		LEFT JOIN
 			resources.ResourceVersionEvent rve ON rve.ResourceVersionId = rv.Id AND rve.ResourceVersionEventTypeId = 6 /* Unpublished by admin */
 		LEFT JOIN 
 			resources.ResourceVersion rvd ON r.Id = rvd.ResourceId AND rvd.Id > rv.Id AND rvd.Deleted = 0
 		WHERE 
-			hed.NodeId = @NodeId
+			hed.NodePathId = @NodePathId
 			AND he.Id = @HierarchyEditId
 			AND he.HierarchyEditStatusId = 1 -- Draft
 			AND ISNULL(hed.HierarchyEditDetailOperationId, 0) != 3 -- excluded deleted
 			AND hed.ResourceId IS NOT NULL
-			AND (rr.Id IS NULL OR np.Id IS NOT NULL)
 			AND hed.Deleted = 0 
 			AND he.Deleted = 0
 	) AS t1

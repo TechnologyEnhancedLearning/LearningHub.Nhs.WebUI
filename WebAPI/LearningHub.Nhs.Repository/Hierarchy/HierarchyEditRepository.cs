@@ -38,28 +38,28 @@
         }
 
         /// <summary>
-        /// The get by root node id async.
+        /// The get by root node path id async.
         /// </summary>
-        /// <param name="rootNodeId">The id.</param>
+        /// <param name="rootNodePathId">The id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<HierarchyEdit>> GetByRootNodeIdAsync(int rootNodeId)
+        public async Task<List<HierarchyEdit>> GetByRootNodePathIdAsync(int rootNodePathId)
         {
             return await this.DbContext.HierarchyEdit.AsNoTracking()
                 .Include(x => x.Publication)
                 .Include(x => x.CreateUser)
-                .Where(x => x.RootNodeId == rootNodeId && !x.Deleted).ToListAsync();
+                .Where(x => x.RootNodePathId == rootNodePathId && !x.Deleted).ToListAsync();
         }
 
         /// <summary>
         /// The create.
         /// </summary>
-        /// <param name="rootNodeId">The root node id.</param>
+        /// <param name="rootNodePathId">The root node path id.</param>
         /// <param name="userId">The user id.</param>
         /// <returns>The hierarchy edit id.</returns>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<int> Create(int rootNodeId, int userId)
+        public async Task<int> Create(int rootNodePathId, int userId)
         {
-            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = rootNodeId };
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = rootNodePathId };
             var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = userId };
             var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
             var param3 = new SqlParameter("@p3", SqlDbType.Int) { Direction = ParameterDirection.Output };

@@ -77,6 +77,7 @@ export class State {
         }
     }
     loadHierarchyEdit(): void{
+        // TODO: resourceCatalogueId needs to be replaced by the root node path id
         contentStructureData.getHierarchyEdit(this.resourceDetail.resourceCatalogueId).then(response => {
             this.hierarchyEdit = response[0];
             this.hierarchyEditLoaded = true;
@@ -465,6 +466,7 @@ const mutations = {
     setInitialCatalogue(state: State, catalogueId: number) {
         state.resourceDetail.resourceCatalogueId = Number(catalogueId);
 
+        // TODO: catalogueId needs to be replaced by rootNodePathId
         contentStructureData.getHierarchyEdit(catalogueId).then(response => {
             state.hierarchyEdit = response[0];
         });

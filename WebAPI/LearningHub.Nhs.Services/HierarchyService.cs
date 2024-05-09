@@ -207,14 +207,22 @@
             this.internalSystemService = internalSystemService;
         }
 
-        /// <summary>
-        /// Gets the basic details of a node. Currently catalogues or folders.
-        /// </summary>
-        /// <param name="nodeId">The node id.</param>
-        /// <returns>The node details.</returns>
-        public NodeViewModel GetNodeDetails(int nodeId)
+        /////// <summary>
+        /////// Gets the basic details of a node. Currently catalogues or folders.
+        /////// </summary>
+        /////// <param name="nodeId">The node id.</param>
+        /////// <returns>The node details.</returns>
+        ////public NodeViewModel GetNodeDetails(int nodeId)
+        ////{
+        ////    var retVal = this.nodeRepository.GetNodeDetails(nodeId);
+
+        ////    return retVal;
+        ////}
+
+        /// <inheritdoc />
+        public NodePathViewModel GetNodePathDetails(int nodePathId)
         {
-            var retVal = this.nodeRepository.GetNodeDetails(nodeId);
+            var retVal = this.nodePathRepository.GetNodePathDetails(nodePathId);
 
             return retVal;
         }
@@ -224,7 +232,7 @@
         /// </summary>
         /// <param name="nodePathId">The NodePath id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<NodePathNodeViewModel>> GetNodePathNodes(int nodePathId)
+        public async Task<List<NodePathViewModel>> GetNodePathNodes(int nodePathId)
         {
             var retVal = await this.nodePathRepository.GetNodePathNodes(nodePathId);
 
@@ -251,19 +259,19 @@
         }
 
         /// <summary>
-        /// Gets the contents of a node for the catalogue landing page - i.e. published folders and published resources only.
-        /// Only returns the items found directly in the specified node, does not recurse down through subfolders.
+        /// Gets the contents of a node path for the catalogue landing page - i.e. published folders and published resources only.
+        /// Only returns the items found directly in the specified node path, does not recurse down through subfolders.
         /// </summary>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <param name="includeEmptyFolder">Include Empty Folder or not.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<NodeContentBrowseViewModel>> GetNodeContentsForCatalogueBrowse(int nodeId, bool includeEmptyFolder)
+        public async Task<List<NodeContentBrowseViewModel>> GetNodeContentsForCatalogueBrowse(int nodePathId, bool includeEmptyFolder)
         {
             // Attempt to retrieve from cache. If not found then add to cache.
             // Note: include basic resource rating information when serving from the cache.
             var retVal = new List<NodeContentBrowseViewModel>();
 
-            string cacheKey = $"{CacheKeys.PublishedNodeContents}:{nodeId}";
+            string cacheKey = $"{CacheKeys.PublishedNodeContents}:{nodePathId}";
             var nodeContents = await this.cachingService.GetAsync<List<NodeContentBrowseViewModel>>(cacheKey);
             if (includeEmptyFolder)
             {
@@ -276,13 +284,13 @@
             }
             else
             {
-                retVal = await this.nodeRepository.GetNodeContentsForCatalogueBrowse(nodeId, includeEmptyFolder);
+                retVal = await this.nodeRepository.GetNodeContentsForCatalogueBrowse(nodePathId, includeEmptyFolder);
 
                 // Ensure that any Node only exists once in the returned data set.
                 var duplicateNodes = retVal.Where(n => n.NodeId.HasValue).GroupBy(x => x.NodeId).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
                 if (duplicateNodes.Count > 0)
                 {
-                    throw new Exception($"Corrupt data. Duplicate Nodes returned in NodeContent for NodeId={nodeId}");
+                    throw new Exception($"Corrupt data. Duplicate Nodes returned in NodeContent for NodepathId={nodePathId}");
                 }
 
                 if (!includeEmptyFolder)
@@ -323,53 +331,53 @@
         /// Gets the contents of a node for the My Contributions page - i.e. published folders only, and all resources (i.e. all statuses).
         /// Only returns the items found directly in the specified node, does not recurse down through subfolders.
         /// </summary>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<NodeContentEditorViewModel>> GetNodeContentsForCatalogueEditor(int nodeId)
+        public async Task<List<NodeContentEditorViewModel>> GetNodeContentsForCatalogueEditor(int nodePathId)
         {
             // Not cached, retrieve directly from the database.
-            var vm = await this.nodeRepository.GetNodeContentsForCatalogueEditor(nodeId);
+            var vm = await this.nodeRepository.GetNodeContentsForCatalogueEditor(nodePathId);
 
             // Ensure that any Node only exists once in the returned data set.
             var duplicateNodes = vm.Where(n => n.NodeId.HasValue).GroupBy(x => x.NodeId).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
             if (duplicateNodes.Count > 0)
             {
-                throw new Exception($"Corrupt data. Duplicate Nodes returned in NodeContent for NodeId={nodeId}");
+                throw new Exception($"Corrupt data. Duplicate Nodes returned in NodeContent for NodepathId={nodePathId}");
             }
 
             return vm;
         }
 
         /// <summary>
-        /// Gets the contents of a node (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
+        /// Gets the contents of a node path (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// </summary>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <param name="readOnly">Set to true if read only data set is required.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodeId, bool readOnly)
+        public async Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodePathId, bool readOnly)
         {
             // Other parameter combinations served from the database.
-            var vm = await this.nodeRepository.GetNodeContentsAdminAsync(nodeId, readOnly);
+            var vm = await this.nodeRepository.GetNodeContentsAdminAsync(nodePathId, readOnly);
 
             // Ensure that any Node only exists once in the returned data set.
             var duplicateNodes = vm.Where(n => n.NodeId.HasValue).GroupBy(x => x.NodeId).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
             if (duplicateNodes.Count > 0)
             {
-                throw new Exception($"Error. Duplicate Nodes returned in NodeContent for NodeId={nodeId}");
+                throw new Exception($"Error. Duplicate Nodes returned in NodeContent for NodePathId={nodePathId}");
             }
 
             return vm;
         }
 
         /// <summary>
-        /// Gets hierarchy edit detail for the supplied root node id.
+        /// Gets hierarchy edit detail for the supplied root node path id.
         /// </summary>
-        /// <param name="rootNodeId">The root node id.</param>
+        /// <param name="rootNodePathId">The root node id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<HierarchyEditViewModel>> GetHierarchyEdits(int rootNodeId)
+        public async Task<List<HierarchyEditViewModel>> GetHierarchyEdits(int rootNodePathId)
         {
-            var hierarchyEdits = await this.hierarchyEditRepository.GetByRootNodeIdAsync(rootNodeId);
+            var hierarchyEdits = await this.hierarchyEditRepository.GetByRootNodePathIdAsync(rootNodePathId);
 
             var vms = this.mapper.Map<List<HierarchyEditViewModel>>(hierarchyEdits);
 
@@ -379,7 +387,7 @@
                 // Refactor to obtain via sotred proc / use include filter on upgrade of EFCore.
                 if (he.HierarchyEditStatus == HierarchyEditStatusEnum.Draft)
                 {
-                    var hed = await this.hierarchyEditDetailRepository.GetByNodeIdAsync(he.Id, rootNodeId);
+                    var hed = await this.hierarchyEditDetailRepository.GetByNodePathIdAsync(he.Id, rootNodePathId);
                     he.RootHierarchyEditDetailId = hed.Id;
                 }
             }
@@ -390,12 +398,12 @@
         /// <summary>
         /// The create.
         /// </summary>
-        /// <param name="rootNodeId">The root node id.</param>
+        /// <param name="rootNodePathId">The root node path id.</param>
         /// <param name="userId">The user id.</param>
         /// <returns>The hierarchy edit id.</returns>
-        public async Task<int> CreateHierarchyEdit(int rootNodeId, int userId)
+        public async Task<int> CreateHierarchyEdit(int rootNodePathId, int userId)
         {
-            return await this.hierarchyEditRepository.Create(rootNodeId, userId);
+            return await this.hierarchyEditRepository.Create(rootNodePathId, userId);
         }
 
         /// <summary>

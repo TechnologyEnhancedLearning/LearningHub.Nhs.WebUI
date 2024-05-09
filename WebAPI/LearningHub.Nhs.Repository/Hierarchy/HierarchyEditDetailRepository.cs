@@ -25,13 +25,13 @@
         /// The get root hierarchy detail by hierarchy edit id async.
         /// </summary>
         /// <param name="hierarchyEditId">The hierarchy edit id.</param>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<HierarchyEditDetail> GetByNodeIdAsync(long hierarchyEditId, int nodeId)
+        public async Task<HierarchyEditDetail> GetByNodePathIdAsync(long hierarchyEditId, int nodePathId)
         {
             try
             {
-                var retVal = await this.DbContext.HierarchyEditDetail.AsNoTracking().FirstOrDefaultAsync(r => r.HierarchyEditId == hierarchyEditId && r.NodeId == nodeId && !r.Deleted);
+                var retVal = await this.DbContext.HierarchyEditDetail.AsNoTracking().FirstOrDefaultAsync(r => r.HierarchyEditId == hierarchyEditId && r.NodePathId == nodePathId && !r.Deleted);
                 return retVal;
             }
             catch

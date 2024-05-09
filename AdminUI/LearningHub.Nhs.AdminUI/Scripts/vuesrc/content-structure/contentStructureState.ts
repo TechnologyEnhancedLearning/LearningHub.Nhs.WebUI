@@ -39,7 +39,7 @@ function refreshHierarchyEdit(state: State) {
     state.isLoading = true;
     state.inError = false;
 
-    contentStructureData.getHierarchyEdit(state.catalogue.nodeId).then(response => {
+    contentStructureData.getHierarchyEdit(state.catalogue.rootNodePathId).then(response => {
         state.hierarchyEdit = response[0];
         state.hierarchyEditLastPublished = response[1];
     }).then(x => {
@@ -70,7 +70,7 @@ function refreshHierarchyEdit(state: State) {
                 state.rootNode.inEdit = state.editMode == EditModeEnum.Structure;
                 state.rootNode.showInTreeView = false;
             }).then(async y => {
-                await contentStructureData.getNodeContentsAdmin(state.catalogue.nodeId, state.readOnly).then(response => {
+                await contentStructureData.getNodeContentsAdmin(state.catalogue.rootNodePathId, state.readOnly).then(response => {
                     state.rootNode.children = response;
                     state.rootNode.children.forEach((child) => {
                         processChildNodeContents(child, state.rootNode);
@@ -88,7 +88,7 @@ function refreshHierarchyEdit(state: State) {
 
 async function refreshNodeContents(node: NodeContentAdminModel, refreshParentPath: boolean) {
     state.updatedNode = null;
-    await contentStructureData.getNodeContentsAdmin(node.nodeId, state.readOnly).then(async response => {
+    await contentStructureData.getNodeContentsAdmin(node.nodePathId, state.readOnly).then(async response => {
 
         if (!node.childrenLoaded) {
             node.children = response;

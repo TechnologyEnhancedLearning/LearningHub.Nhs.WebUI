@@ -17,12 +17,12 @@
         /// <returns>The <see cref="Task"/>.</returns>
         Task<Node> GetByIdAsync(int id);
 
-        /// <summary>
-        /// Gets the basic details of a node. Currently catalogues or folders.
-        /// </summary>
-        /// <param name="nodeId">The node id.</param>
-        /// <returns>The node details.</returns>
-        NodeViewModel GetNodeDetails(int nodeId);
+        /////// <summary>
+        /////// Gets the basic details of a node. Currently catalogues or folders.
+        /////// </summary>
+        /////// <param name="nodeId">The node id.</param>
+        /////// <returns>The node details.</returns>
+        ////NodeViewModel GetNodeDetails(int nodeId);
 
         /// <summary>
         /// Gets the contents of a node for the catalogue landing page - i.e. published folders and published resources only.

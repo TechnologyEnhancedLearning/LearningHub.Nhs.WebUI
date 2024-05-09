@@ -397,15 +397,20 @@ namespace LearningHub.Nhs.Repository
         /// </summary>
         public virtual DbSet<NodeResourceLookup> NodeResourceLookup { get; set; }
 
-        /// <summary>
-        /// Gets or sets the NodeViewModel.
-        /// </summary>
-        public virtual DbSet<NodeViewModel> NodeViewModel { get; set; }
+        /////// <summary>
+        /////// Gets or sets the NodeViewModel.
+        /////// </summary>
+        ////public virtual DbSet<NodeViewModel> NodeViewModel { get; set; }
 
         /// <summary>
-        /// Gets or sets the NodePathNodeViewModel.
+        /// Gets or sets the NodePathViewModel.
         /// </summary>
-        public virtual DbSet<NodePathNodeViewModel> NodePathNodeViewModel { get; set; }
+        public virtual DbSet<NodePathViewModel> NodePathViewModel { get; set; }
+
+        /////// <summary>
+        /////// Gets or sets the NodePathNodeViewModel.
+        /////// </summary>
+        ////public virtual DbSet<NodePathNodeViewModel> NodePathNodeViewModel { get; set; }
 
         /// <summary>
         /// Gets or sets the NodeContentBrowseViewModel.

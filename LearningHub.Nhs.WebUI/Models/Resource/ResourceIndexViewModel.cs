@@ -47,8 +47,8 @@
         public CatalogueAccessRequestViewModel CatalogueAccessRequest { get; set; }
 
         /// <summary>
-        /// Gets or sets the node details for each node in the node path.
+        /// Gets or sets the node path details for each node in the node path.
         /// </summary>
-        public List<NodeViewModel> NodePathNodes { get; set; }
+        public List<NodePathViewModel> NodePathNodes { get; set; }
     }
 }

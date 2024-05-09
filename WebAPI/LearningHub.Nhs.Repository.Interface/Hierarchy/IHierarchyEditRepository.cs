@@ -18,19 +18,19 @@
         Task<HierarchyEdit> GetByIdAsync(int id);
 
         /// <summary>
-        /// The get by root node id async.
+        /// The get by root node path id async.
         /// </summary>
-        /// <param name="rootNodeId">The id.</param>
+        /// <param name="rootNodePathId">The id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<List<HierarchyEdit>> GetByRootNodeIdAsync(int rootNodeId);
+        Task<List<HierarchyEdit>> GetByRootNodePathIdAsync(int rootNodePathId);
 
         /// <summary>
         /// The create.
         /// </summary>
-        /// <param name="rootNodeId">The root node id.</param>
+        /// <param name="rootNodePathId">The root node path id.</param>
         /// <param name="userId">The user id.</param>
         /// <returns>The hierarchy edit id.</returns>
-        Task<int> Create(int rootNodeId, int userId);
+        Task<int> Create(int rootNodePathId, int userId);
 
         /// <summary>
         /// The discard.

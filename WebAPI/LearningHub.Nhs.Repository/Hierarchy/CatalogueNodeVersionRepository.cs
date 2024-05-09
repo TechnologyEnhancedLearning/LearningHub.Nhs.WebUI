@@ -79,15 +79,19 @@
         /// </summary>
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public IQueryable<CatalogueNodeVersion> GetPublishedCataloguesForUserAsync(int userId)
+        public IEnumerable<CatalogueNodeVersion> GetPublishedCataloguesForUserAsync(int userId)
         {
             var communityCatalogue = this.DbContext.CatalogueNodeVersion.AsNoTracking()
                     .Include(cnv => cnv.NodeVersion.Node)
+                    .ThenInclude(n => n.NodePaths.Where(np => np.CatalogueNodeId.ToString() == np.NodePathString && !np.Deleted)) // ensure the root catalogue NodePath
                     .Where(cnv => cnv.NodeVersion.VersionStatusEnum == VersionStatusEnum.Published
-                            && cnv.NodeVersion.NodeId == 1 /* Community Catalogue */);
+                            && cnv.NodeVersion.NodeId == 1 /* Community Catalogue */)
+                    .ToList();
 
-            var cataloguesForUser = from cnv in this.DbContext.CatalogueNodeVersion.Include(cnv => cnv.NodeVersion.Node).AsNoTracking()
-                                    join nv in this.DbContext.NodeVersion.Where(cnv => cnv.VersionStatusEnum == VersionStatusEnum.Published && !cnv.Deleted) // .Include(nv => nv.Node)
+            var cataloguesForUser = from cnv in this.DbContext.CatalogueNodeVersion.Include(cnv => cnv.NodeVersion.Node)
+                                                                                    .ThenInclude(n => n.NodePaths)
+                                                                                    .AsNoTracking()
+                                    join nv in this.DbContext.NodeVersion.Where(cnv => cnv.VersionStatusEnum == VersionStatusEnum.Published && !cnv.Deleted)
                                         on cnv.NodeVersionId equals nv.Id
                                     join s in this.DbContext.Scope.Where(x => !x.Deleted)
                                         on nv.NodeId equals s.CatalogueNodeId
@@ -97,9 +101,11 @@
                                         on rug.UserGroupId equals uug.UserGroupId
                                     join n in this.DbContext.Node.Where(x => !x.Deleted)
                                         on nv.Id equals n.CurrentNodeVersionId
+                                    join np in this.DbContext.NodePath.Where(y => !y.Deleted && y.CatalogueNodeId.ToString() == y.NodePathString) // ensure the root catalogue NodePath
+                                        on n.Id equals np.NodeId
                                     select cnv;
 
-            var returnedCatalogues = communityCatalogue.Union(cataloguesForUser).Distinct()
+            var returnedCatalogues = communityCatalogue.Union(cataloguesForUser.ToList()).Distinct()
                                                         .OrderBy(cnv => cnv.NodeVersion.NodeId != 1)
                                                         .ThenBy(cnv => cnv.Name);
 
@@ -229,6 +235,7 @@
             return await (from cnv in this.DbContext.CatalogueNodeVersion.AsNoTracking()
                           join nv in this.DbContext.NodeVersion.AsNoTracking() on cnv.NodeVersionId equals nv.Id
                           join n in this.DbContext.Node.AsNoTracking() on cnv.NodeVersionId equals n.CurrentNodeVersionId
+                          join np in this.DbContext.NodePath.AsNoTracking() on new { n.Id, NodePathString = n.Id.ToString() } equals new { Id = np.NodeId, np.NodePathString } // ensure the root catalogue NodePath
                           where cnv.Url != null && cnv.Url.ToLower() == reference.ToLower() && cnv.Deleted == false && nv.VersionStatusEnum == VersionStatusEnum.Published
                           select new CatalogueViewModel
                           {
@@ -246,6 +253,7 @@
                               ResourceOrder = cnv.Order,
                               RestrictedAccess = cnv.RestrictedAccess,
                               Hidden = n.Hidden,
+                              RootNodePathId = n.NodePaths.FirstOrDefault().Id,
                           }).SingleOrDefaultAsync();
         }
 

@@ -33,14 +33,20 @@
             this.facade = learningHubApiFacade;
         }
 
-        /// <summary>
-        /// Gets the basic details of a node. Currently catalogues or folders.
-        /// </summary>
-        /// <param name="nodeId">The node id.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<NodeViewModel> GetNodeDetails(int nodeId)
+        /////// <summary>
+        /////// Gets the basic details of a node. Currently catalogues or folders.
+        /////// </summary>
+        /////// <param name="nodeId">The node id.</param>
+        /////// <returns>The <see cref="Task"/>.</returns>
+        ////public async Task<NodeViewModel> GetNodeDetails(int nodeId)
+        ////{
+        ////    return await this.facade.GetAsync<NodeViewModel>($"Hierarchy/GetNodeDetails/{nodeId}");
+        ////}
+
+        /// <inheritdoc />
+        public async Task<NodePathViewModel> GetNodePathDetails(int nodePathId)
         {
-            return await this.facade.GetAsync<NodeViewModel>($"Hierarchy/GetNodeDetails/{nodeId}");
+            return await this.facade.GetAsync<NodePathViewModel>($"Hierarchy/GetNodePathDetails/{nodePathId}");
         }
 
         /// <summary>
@@ -48,32 +54,32 @@
         /// </summary>
         /// <param name="nodePathId">The node path id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<NodeViewModel>> GetNodePathNodes(int nodePathId)
+        public async Task<List<NodePathViewModel>> GetNodePathNodes(int nodePathId)
         {
-            return await this.facade.GetAsync<List<NodeViewModel>>($"Hierarchy/GetNodePathNodes/{nodePathId}");
+            return await this.facade.GetAsync<List<NodePathViewModel>>($"Hierarchy/GetNodePathNodes/{nodePathId}");
         }
 
         /// <summary>
-        /// Gets the contents of a node for the catalogue landing page - i.e. published folders and published resources only.
-        /// Only returns the items found directly in the specified node, does not recurse down through subfolders.
+        /// Gets the contents of a node path for the catalogue landing page - i.e. published folders and published resources only.
+        /// Only returns the items found directly in the specified node path, does not recurse down through subfolders.
         /// </summary>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <param name="includeEmptyFolder">Include Empty Folder or not.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<NodeContentBrowseViewModel>> GetNodeContentsForCatalogueBrowse(int nodeId, bool includeEmptyFolder)
+        public async Task<List<NodeContentBrowseViewModel>> GetNodeContentsForCatalogueBrowse(int nodePathId, bool includeEmptyFolder)
         {
-            return await this.facade.GetAsync<List<NodeContentBrowseViewModel>>($"Hierarchy/GetNodeContentsForCatalogueBrowse/{nodeId}/{includeEmptyFolder}");
+            return await this.facade.GetAsync<List<NodeContentBrowseViewModel>>($"Hierarchy/GetNodeContentsForCatalogueBrowse/{nodePathId}/{includeEmptyFolder}");
         }
 
         /// <summary>
         /// Gets the contents of a node for the My Contributions page - i.e. published folders only, and all resources (i.e. all statuses).
         /// Only returns the items found directly in the specified node, does not recurse down through subfolders.
         /// </summary>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<NodeContentEditorViewModel>> GetNodeContentsForCatalogueEditor(int nodeId)
+        public async Task<List<NodeContentEditorViewModel>> GetNodeContentsForCatalogueEditor(int nodePathId)
         {
-            return await this.facade.GetAsync<List<NodeContentEditorViewModel>>($"Hierarchy/GetNodeContentsForCatalogueEditor/{nodeId}");
+            return await this.facade.GetAsync<List<NodeContentEditorViewModel>>($"Hierarchy/GetNodeContentsForCatalogueEditor/{nodePathId}");
         }
 
         /// <summary>
@@ -100,23 +106,23 @@
         }
 
         /// <summary>
-        /// Gets the hierarchy edits for the supplied root node id.
+        /// Gets the hierarchy edits for the supplied root node path id.
         /// </summary>
-        /// <param name="rootNodeId">The root node id.</param>
+        /// <param name="rootNodePathId">The root node path id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<HierarchyEditViewModel>> GetHierarchyEdits(int rootNodeId)
+        public async Task<List<HierarchyEditViewModel>> GetHierarchyEdits(int rootNodePathId)
         {
-            return await this.facade.GetAsync<List<HierarchyEditViewModel>>($"Hierarchy/GetHierarchyEdits/{rootNodeId}");
+            return await this.facade.GetAsync<List<HierarchyEditViewModel>>($"Hierarchy/GetHierarchyEdits/{rootNodePathId}");
         }
 
         /// <summary>
         /// The CreateHierarchyEditAsync.
         /// </summary>
-        /// <param name="rootNodeId">The rootNodeId<see cref="int"/>.</param>
+        /// <param name="rootNodePathId">The rootNodePathId<see cref="int"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<ApiResponse> CreateHierarchyEditAsync(int rootNodeId)
+        public async Task<ApiResponse> CreateHierarchyEditAsync(int rootNodePathId)
         {
-            return await this.facade.PutAsync($"Hierarchy/CreateHierarchyEdit/{rootNodeId}");
+            return await this.facade.PutAsync($"Hierarchy/CreateHierarchyEdit/{rootNodePathId}");
         }
 
         /// <summary>

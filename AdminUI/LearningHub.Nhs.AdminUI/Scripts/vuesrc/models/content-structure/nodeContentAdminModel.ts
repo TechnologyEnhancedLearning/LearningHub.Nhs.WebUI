@@ -5,6 +5,7 @@ export class NodeContentAdminModel {
     description: string;
     nodeTypeId: number;
     nodeId: number;
+    nodePathId: number;
     nodeVersionId: number;
     hasResourcesInd: boolean;
     hasResourcesInBranchInd: boolean;

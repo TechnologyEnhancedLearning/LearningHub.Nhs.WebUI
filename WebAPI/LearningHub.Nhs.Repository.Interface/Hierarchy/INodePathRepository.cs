@@ -29,6 +29,13 @@
         /// </summary>
         /// <param name="nodePathId">The NodePath id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<List<NodePathNodeViewModel>> GetNodePathNodes(int nodePathId);
+        Task<List<NodePathViewModel>> GetNodePathNodes(int nodePathId);
+
+        /// <summary>
+        /// Gets the basic details of a node path. Currently catalogues or folders.
+        /// </summary>
+        /// <param name="nodePathId">The node path id.</param>
+        /// <returns>The node path details.</returns>
+        NodePathViewModel GetNodePathDetails(int nodePathId);
     }
 }

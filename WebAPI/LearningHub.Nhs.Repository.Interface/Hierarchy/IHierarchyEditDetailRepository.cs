@@ -12,8 +12,8 @@
         /// The get root hierarchy detail by hierarchy edit id async.
         /// </summary>
         /// <param name="hierarchyEditId">The hierarchy edit id.</param>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<HierarchyEditDetail> GetByNodeIdAsync(long hierarchyEditId, int nodeId);
+        Task<HierarchyEditDetail> GetByNodePathIdAsync(long hierarchyEditId, int nodePathId);
     }
 }

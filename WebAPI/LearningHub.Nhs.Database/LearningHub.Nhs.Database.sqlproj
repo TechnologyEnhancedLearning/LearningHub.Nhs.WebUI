@@ -514,6 +514,7 @@
     <Build Include="Stored Procedures\Activity\GetUserLearningActivitiesCount.sql" />
     <Build Include="Tables\Hierarchy\NodePathVersion.sql" />
     <Build Include="Stored Procedures\Hierarchy\HierarchyEditReferenceNode.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetNodePathDetails.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

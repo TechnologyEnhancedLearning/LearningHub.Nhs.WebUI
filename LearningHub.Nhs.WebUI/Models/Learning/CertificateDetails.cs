@@ -28,7 +28,7 @@
         /// <summary>
         /// Gets or sets NodeViewModels.
         /// </summary>
-        public List<NodeViewModel> NodeViewModels { get; set; }
+        public List<NodePathViewModel> NodeViewModels { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether gets or sets DownloadCertificate.

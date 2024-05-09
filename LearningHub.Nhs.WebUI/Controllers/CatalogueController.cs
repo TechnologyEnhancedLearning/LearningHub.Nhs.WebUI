@@ -159,14 +159,14 @@
         /// </summary>
         /// <param name="reference">Catalogue URL reference.</param>
         /// <param name="tab">The tab name to display.</param>
-        /// <param name="nodeId">The nodeId of the current folder. If not supplied, catalogue root contents are displayed.</param>
+        /// <param name="nodePathId">The nodePathId of the current folder. If not supplied, catalogue root contents are displayed.</param>
         /// <param name="search">The SearchRequestViewModel.</param>
         /// <returns>IActionResult.</returns>
         [AllowAnonymous]
         [ServiceFilter(typeof(SsoLoginFilterAttribute))]
         [HttpGet]
         [Route("catalogue/{reference}/{tab?}")]
-        public async Task<IActionResult> IndexAsync(string reference, string tab, int? nodeId, SearchRequestViewModel search)
+        public async Task<IActionResult> IndexAsync(string reference, string tab, int? nodePathId, SearchRequestViewModel search)
         {
             if (tab == null || (tab == "search" && !this.User.Identity.IsAuthenticated))
             {
@@ -220,26 +220,26 @@
 
             if (tab == "browse")
             {
-                if (nodeId.HasValue)
+                if (nodePathId.HasValue)
                 {
-                    // if nodeId has a value it means the user is looking at a subfolder of the catalogue.
+                    // if nodePathId has a value it means the user is looking at a subfolder of the catalogue.
                     // Get the folder name and description, plus folder path data needed for the breadcrumbs.
-                    viewModel.NodeDetails = await this.hierarchyService.GetNodeDetails(nodeId.Value);
-                    viewModel.NodePathNodes = await this.hierarchyService.GetNodePathNodes(viewModel.NodeDetails.NodePathId);
+                    viewModel.NodePathDetails = await this.hierarchyService.GetNodePathDetails(nodePathId.Value);
+                    viewModel.NodePathNodes = await this.hierarchyService.GetNodePathNodes(viewModel.NodePathDetails.Id);
                 }
                 else
                 {
                     // Otherwise user is looking at catalogue root.
-                    nodeId = catalogue.NodeId;
+                    nodePathId = catalogue.RootNodePathId;
 
-                    viewModel.NodePathNodes = new List<NodeViewModel>
+                    viewModel.NodePathNodes = new List<NodePathViewModel>
                     {
-                        new NodeViewModel { Name = catalogue.Name },
+                        new NodePathViewModel { Name = catalogue.Name },
                     };
                 }
 
                 bool includeEmptyFolder = viewModel.UserGroups.Any(x => x.RoleId == (int)RoleEnum.LocalAdmin || x.RoleId == (int)RoleEnum.Editor || x.RoleId == (int)RoleEnum.Previewer) || this.User.IsInRole("Administrator");
-                var nodeContents = await this.hierarchyService.GetNodeContentsForCatalogueBrowse(nodeId.Value, includeEmptyFolder);
+                var nodeContents = await this.hierarchyService.GetNodeContentsForCatalogueBrowse(nodePathId.Value, includeEmptyFolder);
                 viewModel.NodeContents = nodeContents;
             }
             else if (tab == "search")

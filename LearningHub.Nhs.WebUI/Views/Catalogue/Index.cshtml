@@ -118,7 +118,7 @@
         </div>
         </div>
       }
-      @if (ViewBag.ActiveTab == "browse" && Model.NodeDetails != null)
+      @if (ViewBag.ActiveTab == "browse" && Model.NodePathDetails != null)
       {
         <span class="nhsuk-caption-l nhsuk-u-margin-bottom-2">@Model.Catalogue.Name</span>
       }
@@ -129,7 +129,7 @@
           <img alt="catalogue badge" src="@GetBadgeUrl()" class="catalogue-badge" />
         }
 
-        <h1 class="heading-lg title nhsuk-u-margin-bottom-0">@(ViewBag.ActiveTab == "browse" && Model.NodeDetails != null ? Model.NodeDetails.Name : Model.Catalogue.Name)</h1>
+        <h1 class="heading-lg title nhsuk-u-margin-bottom-0">@(ViewBag.ActiveTab == "browse" && Model.NodePathDetails != null ? Model.NodePathDetails.Name : Model.Catalogue.Name)</h1>
       </div>
 
       @if (ViewBag.UserAuthenticated && Model.Catalogue.RestrictedAccess && Unlocked())
@@ -150,15 +150,15 @@
         </div>
       }
 
-      @if (!string.IsNullOrEmpty(Model.Catalogue.BannerUrl) && Model.NodeDetails == null)
+      @if (!string.IsNullOrEmpty(Model.Catalogue.BannerUrl) && Model.NodePathDetails == null)
       {
         <img alt="banner image" src="@GetBannerUrl()" class="nhsuk-u-width-full" />
       }
 
-      @if (Model.NodeDetails != null && !string.IsNullOrEmpty(Model.NodeDetails.Description))
+      @if (Model.NodePathDetails != null && !string.IsNullOrEmpty(Model.NodePathDetails.Description))
       {
         <div class="folder-description">
-          @Html.Raw(Model.NodeDetails.Description)
+          @Html.Raw(Model.NodePathDetails.Description)
         </div>
       }
     </div>

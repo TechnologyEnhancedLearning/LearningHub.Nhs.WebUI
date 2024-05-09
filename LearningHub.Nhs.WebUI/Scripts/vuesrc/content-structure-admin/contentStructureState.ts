@@ -39,7 +39,7 @@ function refreshHierarchyEdit(state: State) {
     state.isLoading = true;
     state.inError = false;
 
-    contentStructureData.getHierarchyEdit(state.catalogue.nodeId).then(response => {
+    contentStructureData.getHierarchyEdit(state.catalogue.rootNodePathId).then(response => {
         state.hierarchyEdit = response[0];
         state.hierarchyEditLastPublished = response[1];
     }).then(x => {

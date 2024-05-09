@@ -341,7 +341,7 @@
                 document.BannerUrl = catalogue.BannerUrl;
                 document.BadgeUrl = catalogue.BadgeUrl;
                 document.CardImageUrl = catalogue.CardImageUrl;
-                document.NodePathId = catalogue.NodePathId;
+                document.NodePathId = catalogue.RootNodePathId;
                 if (catalogue.RestrictedAccess)
                 {
                     document.RestrictedAccess = catalogue.RestrictedAccess;

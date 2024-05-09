@@ -253,7 +253,7 @@ export default Vue.extend({
         },
         onEdit() {
             this.editFolderStructureButtonDisabled = true;
-            this.$store.dispatch('contentStructureState/createHierarchyEdit', this.catalogue.nodeId);
+            this.$store.dispatch('contentStructureState/createHierarchyEdit', this.catalogue.rootNodePathId);
         },
         onCancelModal() {
             $('#cancelHierarchyEditModal').modal('show');

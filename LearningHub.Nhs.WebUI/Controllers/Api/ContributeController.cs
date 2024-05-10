@@ -493,7 +493,7 @@
         public async Task<ActionResult> SaveCaseDetailAsync([FromBody] CaseViewModel request)
         {
             var existingResourceState = await this.resourceService.GetResourceVersionExtendedAsync(request.ResourceVersionId);
-            if (existingResourceState.CaseDetails?.BlockCollection != null)
+            if (existingResourceState?.CaseDetails?.BlockCollection != null)
             {
                 await this.RemoveBlockCollectionFiles(request.ResourceVersionId, existingResourceState.CaseDetails.BlockCollection, request.BlockCollection);
             }
@@ -903,7 +903,7 @@
                 }
             }
 
-            return filePath;
+            return filePath.Where(x => x != null).ToList();
         }
     }
 }

@@ -254,6 +254,7 @@
                 };
 
                 var latestActivityCheck = await this.resourceActivityRepository.GetAllTheActivitiesFromSP(resourceActivity.CreateUserId, resourceActivity.ResourceVersionId);
+                var allAttempts = latestActivityCheck;
                 latestActivityCheck.RemoveAll(x => x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && (x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded || x.ActivityStatusId == (int)ActivityStatusEnum.Incomplete || x.ActivityStatusId == (int)ActivityStatusEnum.InProgress));
                 if (latestActivityCheck.Any() && latestActivityCheck.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
                 {
@@ -351,7 +352,6 @@
                         viewModel.CompletionPercentage = totalQuestions == 0 ? 0 : Convert.ToInt32(100 * completedQuestions / Convert.ToDecimal(totalQuestions));
                         viewModel.ScorePercentage = activity.Score.HasValue ? (int)Math.Round(activity.Score.Value, MidpointRounding.AwayFromZero) : 0;
 
-                        var allAttempts = await this.resourceActivityRepository.GetAllTheActivitiesFor(userId, resourceActivity.ResourceVersionId);
                         var currentAttempt = allAttempts.FindIndex(a => a.Id == resourceActivity.Id) + 1;
 
                         if (viewModel.CompletionPercentage == 100)

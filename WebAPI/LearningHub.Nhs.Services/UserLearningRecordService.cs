@@ -111,19 +111,22 @@
                 var presetFilterCriteria = JsonConvert.DeserializeObject<List<PagingColumnFilter>>(presetFilter);
                 var userIdFilter = presetFilterCriteria.Where(f => f.Column == "userid").FirstOrDefault();
 
-                var activityQuery = this.resourceActivityRepository.GetByUserId(int.Parse(userIdFilter.Value));
+                MyLearningRequestModel requestModel = new MyLearningRequestModel();
+                requestModel.Skip = (page - 1) * pageSize;
+                requestModel.Take = pageSize;
+                var activityQuery = this.resourceActivityRepository.GetByUserIdFromSP(int.Parse(userIdFilter.Value), requestModel, this.settings.Value.DetailedMediaActivityRecordingStartDate).Result.OrderByDescending(r => r.ActivityStart).DistinctBy(l => l.Id);
                 MyLearningDetailedViewModel viewModel = new MyLearningDetailedViewModel()
                 {
-                    TotalCount = activityQuery.Count(),
+                    TotalCount = this.resourceActivityRepository.GetTotalCount(int.Parse(userIdFilter.Value), requestModel, this.settings.Value.DetailedMediaActivityRecordingStartDate),
                 };
 
-                var activityEntities = await activityQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                var activityEntities = activityQuery.ToList();
 
                 viewModel.Activities = await this.myLearningService.PopulateMyLearningDetailedItemViewModels(activityEntities, int.Parse(userIdFilter.Value));
                 if (userIdFilter != null)
                 {
                     result.Items = viewModel.Activities; /*this.mapper.Map<List<UserLearningRecordViewModel>>(viewModel.Activities);*/
-                    result.TotalItemCount = activityQuery.Count();
+                    result.TotalItemCount = viewModel.TotalCount;
                 }
 
                 return result;

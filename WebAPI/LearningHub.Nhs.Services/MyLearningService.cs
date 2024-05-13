@@ -169,7 +169,12 @@
             activityEntities.RemoveAll(x => x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && (x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded || x.ActivityStatusId == (int)ActivityStatusEnum.Incomplete || x.ActivityStatusId == (int)ActivityStatusEnum.InProgress));
             if (activityEntities.Any() && activityEntities.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
             {
+                totalNumberOfAccess = activityQuery.SelectMany(x => x.AssessmentResourceActivity).OrderByDescending(a => a.CreateDate).ToList().Count();
                 activityEntities = activityEntities.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && x.AssessmentResourceActivity.FirstOrDefault().Score.HasValue && ((int)Math.Round(x.AssessmentResourceActivity.FirstOrDefault().Score.Value, MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark)).ToList();
+            }
+            else if (activityEntities.Any() && (activityEntities.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Video || activityEntities.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio))
+            {
+                totalNumberOfAccess = activityQuery.SelectMany(x => x.MediaResourceActivity).OrderByDescending(a => a.CreateDate).ToList().Count();
             }
 
             if (activityEntities.Any())
@@ -271,9 +276,19 @@
                     expectedActivity = latestActivityCheck.Where(x => x.Id == resourceActivity.Id && (x.ActivityStatusId == ((int)ActivityStatusEnum.Completed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Incomplete) || x.ActivityStatusId == ((int)ActivityStatusEnum.Passed) || x.ActivityStatusId == ((int)ActivityStatusEnum.Downloaded))).OrderByDescending(x => x.ActivityStart).FirstOrDefault();
                 }
 
-                if (latestActivityCheck.Any() && expectedActivity != null && resourceActivity.ResourceVersion.CertificateEnabled == true)
+                if (latestActivityCheck.Any() && expectedActivity != null)
                 {
-                        viewModel.CertificateEnabled = true;
+                    bool isExpectedActivityIdMatched = false;
+                    if (resourceActivity.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio || resourceActivity.Resource.ResourceTypeEnum == ResourceTypeEnum.Video)
+                    {
+                        isExpectedActivityIdMatched = latestActivityCheck.OrderByDescending(x => x.ActivityStart).FirstOrDefault().Id == expectedActivity.LaunchResourceActivityId;
+                    }
+                    else
+                    {
+                        isExpectedActivityIdMatched = latestActivityCheck.OrderByDescending(x => x.ActivityStart).FirstOrDefault().Id == expectedActivity.Id;
+                    }
+
+                    viewModel.CertificateEnabled = isExpectedActivityIdMatched && resourceActivity.ResourceVersion.CertificateEnabled.GetValueOrDefault(false);
                 }
                 else
                 {
@@ -490,7 +505,7 @@
 
             if (requestModel.CertificateEnabled)
             {
-               query = query.Where(x => x.ResourceVersion.CertificateEnabled.Equals(true));
+                query = query.Where(x => x.ResourceVersion.CertificateEnabled.Equals(true));
             }
 
             return query;

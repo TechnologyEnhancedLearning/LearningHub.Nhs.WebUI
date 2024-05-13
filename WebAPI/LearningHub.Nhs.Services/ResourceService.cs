@@ -1471,38 +1471,60 @@ namespace LearningHub.Nhs.Services
                         }
                     }
                 }
-                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Assessment)
                 {
-                    if (deletedResource)
-                    {
-                        if (resource.AssessmentDetails is { EndGuidance: { } } && resource.AssessmentDetails.EndGuidance.Blocks != null)
+                    var endGuidanceFiles = new List<string>();
+                    var assessmentContentFiles = new List<string>();
+
+                    if (resource.AssessmentDetails is { EndGuidance: { } } && resource.AssessmentDetails.EndGuidance.Blocks != null)
                         {
-                            var assessmentFiles = this.CheckBlockFile(resource.AssessmentDetails.EndGuidance);
-                            if (assessmentFiles.Any())
+                            if (deletedResource)
                             {
-                                retVal.AddRange(assessmentFiles);
+                                endGuidanceFiles = this.CheckBlockFile(extendedResourceVersion.AssessmentDetails.EndGuidance, resource.AssessmentDetails.EndGuidance);
+                            }
+                            else
+                            {
+                                endGuidanceFiles = this.CheckBlockFile(resource.AssessmentDetails.EndGuidance, extendedResourceVersion.AssessmentDetails.EndGuidance);
+                            }
+
+                            if (endGuidanceFiles.Any())
+                            {
+                                retVal.AddRange(endGuidanceFiles);
                             }
                         }
 
-                        if (resource.AssessmentDetails is { AssessmentContent: { } } && resource.AssessmentDetails.AssessmentContent.Blocks != null)
+                    if (resource.AssessmentDetails is { AssessmentContent: { } } && resource.AssessmentDetails.AssessmentContent.Blocks != null)
                         {
-                            var assessmentFiles = this.CheckBlockFile(resource.AssessmentDetails.AssessmentContent);
-                            if (assessmentFiles.Any())
+                            if (deletedResource)
                             {
-                                retVal.AddRange(assessmentFiles);
+                                assessmentContentFiles = this.CheckBlockFile(extendedResourceVersion.AssessmentDetails.AssessmentContent, resource.AssessmentDetails.AssessmentContent);
+                            }
+                            else
+                            {
+                                assessmentContentFiles = this.CheckBlockFile(resource.AssessmentDetails.AssessmentContent, extendedResourceVersion.AssessmentDetails.AssessmentContent);
+                            }
+
+                            if (assessmentContentFiles.Any())
+                            {
+                                retVal.AddRange(assessmentContentFiles);
                             }
                         }
-                    }
                 }
-                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Case)
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Case)
                 {
+                    var caseFiles = new List<string>();
                     if (deletedResource)
                     {
-                        var caseFiles = this.CheckBlockFile(resource.CaseDetails.BlockCollection);
-                        if (caseFiles.Any())
-                        {
-                            retVal.AddRange(caseFiles);
-                        }
+                        caseFiles = this.CheckBlockFile(extendedResourceVersion.CaseDetails.BlockCollection, resource.CaseDetails.BlockCollection);
+                    }
+                    else
+                    {
+                        caseFiles = this.CheckBlockFile(resource.CaseDetails.BlockCollection, extendedResourceVersion.CaseDetails.BlockCollection);
+                    }
+
+                    if (caseFiles.Any())
+                    {
+                        retVal.AddRange(caseFiles);
                     }
                 }
             }
@@ -1557,7 +1579,7 @@ namespace LearningHub.Nhs.Services
                     {
                         if (resource.AssessmentDetails is { EndGuidance: { } } && resource.AssessmentDetails.EndGuidance.Blocks != null)
                         {
-                            var assessmentFiles = this.CheckBlockFile(resource.AssessmentDetails.EndGuidance);
+                            var assessmentFiles = this.CheckBlockFile(null, resource.AssessmentDetails.EndGuidance);
                             if (assessmentFiles.Any())
                             {
                                 retVal.AddRange(assessmentFiles);
@@ -1566,7 +1588,7 @@ namespace LearningHub.Nhs.Services
 
                         if (resource.AssessmentDetails is { AssessmentContent: { } } && resource.AssessmentDetails.AssessmentContent.Blocks != null)
                         {
-                            var assessmentFiles = this.CheckBlockFile(resource.AssessmentDetails.AssessmentContent);
+                            var assessmentFiles = this.CheckBlockFile(null, resource.AssessmentDetails.AssessmentContent);
                             if (assessmentFiles.Any())
                             {
                                 retVal.AddRange(assessmentFiles);
@@ -1576,7 +1598,7 @@ namespace LearningHub.Nhs.Services
                 }
                 else if (resource.ResourceTypeEnum == ResourceTypeEnum.Case)
                 {
-                    var caseFiles = this.CheckBlockFile(resource.CaseDetails.BlockCollection);
+                    var caseFiles = this.CheckBlockFile(null, resource.CaseDetails.BlockCollection);
                     if (caseFiles.Any())
                     {
                         retVal.AddRange(caseFiles);
@@ -4884,7 +4906,7 @@ namespace LearningHub.Nhs.Services
             return resourceVersionId;
         }
 
-        private List<string> CheckBlockFile(BlockCollectionViewModel model)
+        private List<string> CheckBlockFile(BlockCollectionViewModel? publishedBlock, BlockCollectionViewModel model)
         {
             var retVal = new List<string>();
             var caseBlockCollection = model;
@@ -4898,7 +4920,11 @@ namespace LearningHub.Nhs.Services
                     {
                         foreach (var oldblock in existingAttachements)
                         {
-                            retVal.Add(oldblock.MediaBlock.Attachment?.File?.FilePath);
+                            var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Attachment && x.MediaBlock.Attachment != null && x.MediaBlock.Attachment.File?.FileId == oldblock.MediaBlock.Attachment?.File?.FileId) : null;
+                            if (publishedEntry == null)
+                            {
+                                retVal.Add(oldblock.MediaBlock.Attachment?.File?.FilePath);
+                            }
                         }
                     }
 
@@ -4907,19 +4933,23 @@ namespace LearningHub.Nhs.Services
                     {
                         foreach (var oldblock in existingVideos)
                         {
-                            if (!string.IsNullOrWhiteSpace(oldblock.MediaBlock.Video.File.FilePath))
+                            var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Video && x.MediaBlock.Video != null && x.MediaBlock.Video.VideoFile?.File?.FileId == oldblock.MediaBlock?.Video?.VideoFile?.File?.FileId) : null;
+                            if (publishedEntry == null)
                             {
-                                retVal.Add(oldblock.MediaBlock.Video.File.FilePath);
-                            }
+                                if (!string.IsNullOrWhiteSpace(oldblock.MediaBlock.Video.File.FilePath))
+                                {
+                                    retVal.Add(oldblock.MediaBlock.Video.File.FilePath);
+                                }
 
-                            if (!string.IsNullOrWhiteSpace(oldblock.MediaBlock.Video?.File?.VideoFile?.File?.FilePath))
-                            {
-                                retVal.Add(oldblock.MediaBlock.Video.File.VideoFile.File.FilePath);
-                            }
+                                if (!string.IsNullOrWhiteSpace(oldblock.MediaBlock.Video?.File?.VideoFile?.File?.FilePath))
+                                {
+                                    retVal.Add(oldblock.MediaBlock.Video.File.VideoFile.File.FilePath);
+                                }
 
-                            if (oldblock.MediaBlock?.Video?.File?.VideoFile?.TranscriptFile?.File?.FilePath != null)
-                            {
-                                retVal.Add(oldblock.MediaBlock.Video.File.VideoFile.TranscriptFile.File.FilePath);
+                                if (oldblock.MediaBlock?.Video?.File?.VideoFile?.TranscriptFile?.File?.FilePath != null)
+                                {
+                                    retVal.Add(oldblock.MediaBlock.Video.File.VideoFile.TranscriptFile.File.FilePath);
+                                }
                             }
                         }
                     }
@@ -4929,7 +4959,11 @@ namespace LearningHub.Nhs.Services
                     {
                         foreach (var oldblock in existingImages)
                         {
-                            retVal.Add(oldblock.MediaBlock?.Image?.File?.FilePath);
+                            var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null && x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId) : null;
+                            if (publishedEntry == null)
+                            {
+                                retVal.Add(oldblock.MediaBlock?.Image?.File?.FilePath);
+                            }
                         }
                     }
 
@@ -4940,7 +4974,11 @@ namespace LearningHub.Nhs.Services
                         {
                             foreach (var oldblock in imageBlock.ImageCarouselBlock.ImageBlockCollection.Blocks)
                             {
-                                retVal.Add(oldblock.MediaBlock?.Image?.File?.FilePath);
+                                var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.ImageCarousel && x.ImageCarouselBlock != null && x.ImageCarouselBlock.ImageBlockCollection != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks.Where(x => x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId).Any()) : null;
+                                if (publishedEntry == null)
+                                {
+                                    retVal.Add(oldblock.MediaBlock?.Image?.File?.FilePath);
+                                }
                             }
                         }
                     }
@@ -4952,20 +4990,36 @@ namespace LearningHub.Nhs.Services
                         {
                             foreach (var oldblock in wsi?.WholeSlideImageBlock?.WholeSlideImageBlockItems)
                             {
-                                retVal.Add(oldblock.WholeSlideImage?.File?.FilePath);
+                                var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Where(x => x.WholeSlideImage?.File?.FileId == oldblock.WholeSlideImage?.File?.FileId).Any()) : null;
+                                if (publishedEntry == null)
+                                {
+                                    retVal.Add(oldblock.WholeSlideImage?.File?.FilePath);
+                                }
                             }
                         }
                     }
                 }
 
                 var questionFiles = this.CheckQuestionBlock(caseBlockCollection);
-                if (questionFiles.Any())
+                var publishedQuestionFiles = (publishedBlock != null && publishedBlock.Blocks.Any()) ? this.CheckQuestionBlock(publishedBlock) : new List<string>();
+                if (questionFiles.Any() && !publishedQuestionFiles.Any())
                 {
                     retVal.AddRange(questionFiles);
                 }
+                else if (questionFiles.Any() && publishedQuestionFiles.Any())
+                {
+                    foreach (var file in questionFiles)
+                    {
+                        var publishedEntry = publishedQuestionFiles.FirstOrDefault(x => x.Equals(file));
+                        if (publishedEntry == null)
+                        {
+                            retVal.Add(file);
+                        }
+                    }
+                }
             }
 
-            return retVal;
+            return retVal.Where(x => x != null).ToList();
         }
 
         private List<string> CheckQuestionBlock(BlockCollectionViewModel model)
@@ -5027,12 +5081,15 @@ namespace LearningHub.Nhs.Services
                             }
                             else if (questionBlock.BlockType == BlockType.WholeSlideImage && questionBlock.WholeSlideImageBlock != null)
                             {
-                                var existingWholeSlideImages = questionBlock.WholeSlideImageBlock.WholeSlideImageBlockItems.ToList();
+                                var existingWholeSlideImages = questionBlock.WholeSlideImageBlock.WholeSlideImageBlockItems;
                                 if (existingWholeSlideImages.Any())
                                 {
                                     foreach (var wsi in existingWholeSlideImages)
                                     {
-                                        filePath.Add(wsi.WholeSlideImage?.File?.FilePath);
+                                        if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null)
+                                        {
+                                            filePath.Add(wsi.WholeSlideImage.File.FilePath);
+                                        }
                                     }
                                 }
                             }
@@ -5077,7 +5134,7 @@ namespace LearningHub.Nhs.Services
                 }
             }
 
-            return filePath;
+            return filePath.Where(x => x != null).ToList();
         }
     }
 }

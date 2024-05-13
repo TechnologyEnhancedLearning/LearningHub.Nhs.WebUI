@@ -493,12 +493,12 @@
         public async Task<ActionResult> SaveCaseDetailAsync([FromBody] CaseViewModel request)
         {
             var existingResourceState = await this.resourceService.GetResourceVersionExtendedAsync(request.ResourceVersionId);
-            int resourceVersionId = await this.contributeService.SaveCaseDetailAsync(request);
-            if (existingResourceState.CaseDetails?.BlockCollection != null)
+            if (existingResourceState?.CaseDetails?.BlockCollection != null)
             {
-                this.RemoveBlockCollectionFiles(existingResourceState.CaseDetails.BlockCollection, request.BlockCollection);
+                await this.RemoveBlockCollectionFiles(request.ResourceVersionId, existingResourceState.CaseDetails.BlockCollection, request.BlockCollection);
             }
 
+            int resourceVersionId = await this.contributeService.SaveCaseDetailAsync(request);
             return this.Ok(resourceVersionId);
         }
 
@@ -512,12 +512,12 @@
         public async Task<ActionResult> SaveAssessmentDetailAsync([FromBody] AssessmentViewModel request)
         {
             var existingResourceState = await this.resourceService.GetResourceVersionExtendedAsync(request.ResourceVersionId);
-            int resourceVersionId = await this.contributeService.SaveAssessmentDetailAsync(request);
             if (existingResourceState != null && existingResourceState.AssessmentDetails != null)
             {
-                this.RemoveBlockCollectionFiles(existingResourceState.AssessmentDetails, request);
+                await this.RemoveBlockCollectionFiles(request.ResourceVersionId, existingResourceState.AssessmentDetails, request);
             }
 
+            int resourceVersionId = await this.contributeService.SaveAssessmentDetailAsync(request);
             return this.Ok(resourceVersionId);
         }
 
@@ -638,23 +638,24 @@
             return await this.catalogueService.CanCurrentUserEditCatalogue(catalogueId);
         }
 
-        private void RemoveBlockCollectionFiles(AssessmentViewModel existingModel, AssessmentViewModel newModel)
+        private async Task RemoveBlockCollectionFiles(int resourceVersionId, AssessmentViewModel existingModel, AssessmentViewModel newModel)
         {
             if (existingModel is { EndGuidance: { } } && existingModel.EndGuidance.Blocks != null)
             {
-               this.RemoveBlockCollectionFiles(existingModel.EndGuidance, newModel.EndGuidance);
+               await this.RemoveBlockCollectionFiles(resourceVersionId, existingModel.EndGuidance, newModel.EndGuidance);
             }
 
             if (existingModel is { AssessmentContent: { } } && existingModel.AssessmentContent.Blocks != null)
             {
-                this.RemoveBlockCollectionFiles(existingModel.AssessmentContent, newModel.AssessmentContent);
+                await this.RemoveBlockCollectionFiles(resourceVersionId, existingModel.AssessmentContent, newModel.AssessmentContent);
             }
         }
 
-        private void RemoveBlockCollectionFiles(BlockCollectionViewModel existingResource, BlockCollectionViewModel newResource)
+        private async Task RemoveBlockCollectionFiles(int resourceVersionId, BlockCollectionViewModel existingResource, BlockCollectionViewModel newResource)
         {
             try
             {
+                var obsoleteFiles = await this.resourceService.GetObsoleteResourceFile(resourceVersionId, true);
                 var filePaths = new List<string>();
                 if (existingResource != null)
                 {
@@ -706,8 +707,8 @@
                         {
                             foreach (var oldblock in existingImages)
                             {
-                                var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null && x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId);
-                                if (entry == null)
+                               var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null && x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId);
+                               if (entry == null)
                                 {
                                     filePaths.Add(oldblock?.MediaBlock?.Image?.File?.FilePath);
                                 }
@@ -771,7 +772,18 @@
 
                 if (filePaths != null && filePaths.Any())
                 {
-                    _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, filePaths); });
+                    var deleteList = new List<string>();
+                    foreach (var e in filePaths)
+                    {
+                        if (!obsoleteFiles.Contains(e))
+                        {
+                            continue;
+                        }
+
+                        deleteList.Add(e);
+                    }
+
+                    _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, deleteList); });
                 }
             }
             catch (Exception ex)
@@ -838,12 +850,15 @@
                             }
                             else if (questionBlock.BlockType == BlockType.WholeSlideImage && questionBlock.WholeSlideImageBlock != null)
                             {
-                                var existingWholeSlideImages = questionBlock.WholeSlideImageBlock.WholeSlideImageBlockItems.ToList();
-                                if (existingWholeSlideImages.Any())
+                                var existingWholeSlideImages = questionBlock.WholeSlideImageBlock?.WholeSlideImageBlockItems;
+                                if (existingWholeSlideImages != null && existingWholeSlideImages.Any())
                                 {
                                     foreach (var wsi in existingWholeSlideImages)
                                     {
-                                        filePath.Add(wsi.WholeSlideImage?.File?.FilePath);
+                                        if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null)
+                                        {
+                                            filePath.Add(wsi.WholeSlideImage.File.FilePath);
+                                        }
                                     }
                                 }
                             }
@@ -888,7 +903,7 @@
                 }
             }
 
-            return filePath;
+            return filePath.Where(x => x != null).ToList();
         }
     }
 }

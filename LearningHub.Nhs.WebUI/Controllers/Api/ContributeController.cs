@@ -829,13 +829,13 @@
 
                                 if (questionBlock.MediaBlock.Video != null)
                                 {
-                                    if (questionBlock.MediaBlock.Video.File != null)
-                                    {
-                                        filePath.Add(questionBlock.MediaBlock.Video.File.FilePath);
-                                    }
-
                                     if (questionBlock.MediaBlock.Video.VideoFile != null)
                                     {
+                                        if (questionBlock.MediaBlock.Video.File != null)
+                                        {
+                                            filePath.Add(questionBlock.MediaBlock.Video.File.FilePath);
+                                        }
+
                                         if (questionBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
                                         {
                                             filePath.Add(questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
@@ -855,7 +855,7 @@
                                 {
                                     foreach (var wsi in existingWholeSlideImages)
                                     {
-                                        if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null)
+                                        if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.WholeSlideImageFile != null)
                                         {
                                             filePath.Add(wsi.WholeSlideImage.File.FilePath);
                                         }
@@ -879,13 +879,13 @@
 
                                 if (feedbackBlock.MediaBlock.Video != null)
                                 {
-                                    if (feedbackBlock.MediaBlock.Video.File != null)
-                                    {
-                                        filePath.Add(feedbackBlock.MediaBlock.Video.File.FilePath);
-                                    }
-
                                     if (feedbackBlock.MediaBlock.Video.VideoFile != null)
                                     {
+                                        if (feedbackBlock.MediaBlock.Video.File != null)
+                                        {
+                                            filePath.Add(feedbackBlock.MediaBlock.Video.File.FilePath);
+                                        }
+
                                         if (feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
                                         {
                                             filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);

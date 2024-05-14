@@ -309,7 +309,7 @@
                                 }
                             }
 
-                            await directory.DeleteAsync();
+                            await directory.DeleteIfExistsAsync();
                         }
                     }
                 }
@@ -365,6 +365,8 @@
                     await sourceFileClient.DeleteIfExistsAsync();
                 }
             }
+
+            await sourceDirectory.DeleteIfExistsAsync();
         }
 
         private async Task MoveInPutDirectoryToArchive(List<string> allDirectoryRef)

@@ -855,7 +855,7 @@
                                 {
                                     foreach (var wsi in existingWholeSlideImages)
                                     {
-                                        if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.WholeSlideImageFile != null)
+                                        if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.WholeSlideImageFile != null && (wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingComplete || wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingFailed))
                                         {
                                             filePath.Add(wsi.WholeSlideImage.File.FilePath);
                                         }

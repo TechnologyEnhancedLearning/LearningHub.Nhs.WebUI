@@ -29,6 +29,7 @@ namespace LearningHub.Nhs.Services
     using LearningHub.Nhs.Models.Resource.AzureMediaAsset;
     using LearningHub.Nhs.Models.Resource.Blocks;
     using LearningHub.Nhs.Models.Resource.Contribute;
+    using LearningHub.Nhs.Models.Resource.Files;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.Repository;
@@ -5086,7 +5087,7 @@ namespace LearningHub.Nhs.Services
                                 {
                                     foreach (var wsi in existingWholeSlideImages)
                                     {
-                                        if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.WholeSlideImageFile != null)
+                                        if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.WholeSlideImageFile != null && (wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingComplete || wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingFailed))
                                         {
                                             filePath.Add(wsi.WholeSlideImage.File.FilePath);
                                         }

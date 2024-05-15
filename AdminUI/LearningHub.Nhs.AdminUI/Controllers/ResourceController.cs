@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.AdminUI.Configuration;
     using LearningHub.Nhs.AdminUI.Extensions;
+    using LearningHub.Nhs.AdminUI.Helpers;
     using LearningHub.Nhs.AdminUI.Interfaces;
     using LearningHub.Nhs.AdminUI.Models;
     using LearningHub.Nhs.Models.Common;
@@ -16,6 +17,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Microsoft.FeatureManagement;
 
     /// <summary>
     /// Defines the <see cref="ResourceController" />.
@@ -31,6 +33,11 @@
         /// Defines the websettings.
         /// </summary>
         private readonly IOptions<WebSettings> websettings;
+
+        /// <summary>
+        /// Defines the featureManager.
+        /// </summary>
+        private readonly IFeatureManager featureManager;
 
         /// <summary>
         /// Defines the _logger.
@@ -55,18 +62,21 @@
         /// <param name="logger">The logger<see cref="ILogger{HomeController}"/>.</param>
         /// <param name="resourceService">The resourceService<see cref="IResourceService"/>.</param>
         /// /// <param name="websettings">The websettings<see cref="IOptions{WebSettings}"/>.</param>
+        /// <param name="featureManager">The featureManager<see cref="IFeatureManager"/>.</param>
         public ResourceController(
             IWebHostEnvironment hostingEnvironment,
             IOptions<WebSettings> config,
             ILogger<HomeController> logger,
             IResourceService resourceService,
-            IOptions<WebSettings> websettings)
+            IOptions<WebSettings> websettings,
+            IFeatureManager featureManager)
         : base(hostingEnvironment)
         {
             this.logger = logger;
             this.websettings = websettings;
             this.config = config.Value;
             this.resourceService = resourceService;
+            this.featureManager = featureManager;
         }
 
         /// <summary>
@@ -308,6 +318,33 @@
                 });
             }
         }
+
+        /// <summary>
+        /// The GetAVUnavailableView.
+        /// </summary>
+        /// <returns> partial view.  </returns>
+        [Route("Resource/GetAVUnavailableView")]
+        [HttpGet("GetAVUnavailableView")]
+        public IActionResult GetAVUnavailableView()
+        {
+            return this.PartialView("_AudioVideoUnavailable");
+        }
+
+        /// <summary>
+        /// The GetAddAVFlag.
+        /// </summary>
+        /// <returns> Return AV Flag.</returns>
+        [Route("Resource/GetAddAVFlag")]
+        [HttpGet("GetAddAVFlag")]
+        public bool GetAddAVFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.AddAudioVideo).Result;
+
+        /// <summary>
+        /// The GetDisplayAVFlag.
+        /// </summary>
+        /// <returns> Return display AV flag.</returns>
+        [Route("Resource/GetDisplayAVFlag")]
+        [HttpGet("GetDisplayAVFlag")]
+        public bool GetDisplayAVFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.DisplayAudioVideo).Result;
 
         private static List<PagingOptionPair> FilterOptions()
         {

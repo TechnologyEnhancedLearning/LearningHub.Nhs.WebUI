@@ -7,7 +7,8 @@
 -- Modification History
 
 -- Sarathlal	18-12-2023
--- Sarathlal	08-03-2023
+-- Sarathlal	08-03-2024
+-- Sarathlal	23-04-2024	TD-2954: Audio/Video/Assessment issue resolved and duplicate issue also resolved
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserLearningActivitiesCount] (
 	 @userId INT	
@@ -89,7 +90,7 @@ FROM (
 			@searchText IS NULL
             OR 
 				(
-						Charindex(@searchText, [ResVer].[Title]) > 0
+						(Charindex(@searchText, [ResVer].[Title]) > 0
 					OR                          
 						Charindex(@searchText, [ResVer].[Description]) > 0
 					OR  
@@ -103,8 +104,8 @@ FROM (
 									[ResVer].[Id] = [ResourceVersionKeyword].[ResourceVersionId]
 								AND   
 									Charindex(@searchText, [ResourceVersionKeyword].[Keyword]) > 0
-								)
-					)
+								) 
+					)) AND [ResourceActivity].ActivityStart is not null 
 				)
 		)
 		AND
@@ -128,7 +129,31 @@ FROM (
                      WHERE  ([ScormActivity].[Deleted] = 0 AND [ResourceActivity].[Id] = [ScormActivity].[ResourceActivityId])										 
 				) 
 					IS NULL
-			)		
+			)	
+		AND   
+				(
+					(
+					   -- resource type is not video/audio and launch resource activity doesn't exists
+					   NOT (EXISTS
+								(
+									SELECT 1 FROM   [activity].[ResourceActivity] AS [ResAct1]
+									WHERE  [ResAct1].[Deleted] = 0 AND [ResourceActivity].[Id] = [ResAct1].[LaunchResourceActivityId] 
+								))
+					)
+				OR  
+					-- or launch resource activity completed
+					EXISTS
+					(
+							SELECT 1	FROM   [activity].[ResourceActivity] AS [ResAct2]
+							WHERE  [ResAct2].[Deleted] = 0 AND  [ResourceActivity].[Id] = [ResAct2].[LaunchResourceActivityId] AND  [ResAct2].[ActivityStatusId] in (3,7,5,4)
+					)
+					
+				)
+			AND
+				(
+					-- resource type is not assessment and activity status is Complete/Incomplete
+					[Res].[ResourceTypeId] <> 11 OR [ResourceActivity].[ActivityStatusId] in (7,3)
+				)
 		AND   
 					(
 						@filterActivityStatus = 0			
@@ -160,6 +185,9 @@ FROM (
 														)	
 												)
 										  )
+										  OR
+												([Res].[ResourceTypeId]  IN (6,11) AND  [ResourceActivity].[ActivityStatusId] = 3)
+												 OR	([Res].[ResourceTypeId]  IN (11) AND  [ResourceActivity].[ActivityStatusId] = 3 AND [AssessResVer].[AssessmentType]=1)
 
 										--OR         
 										--(
@@ -261,7 +289,7 @@ FROM (
 								EXISTS (SELECT 1 FROM @tmpActivityStatus WHERE ActivityStatusId = 5) 
 								AND
 								(
-									[Res].[ResourceTypeId] = 11
+									[Res].[ResourceTypeId] = 11 AND  [AssessResVer].[AssessmentType]=2
 									AND
 										EXISTS
 										(
@@ -294,7 +322,7 @@ FROM (
 				
 								AND
 								(
-									[Res].[ResourceTypeId] = 11
+									[Res].[ResourceTypeId] = 11 and [AssessResVer].[AssessmentType]=2
 									AND 
 										EXISTS
 											(

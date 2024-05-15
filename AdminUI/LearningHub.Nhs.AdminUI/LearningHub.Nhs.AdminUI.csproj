@@ -89,11 +89,13 @@
     <PackageReference Include="HtmlSanitizer" Version="6.0.453" />
 	<PackageReference Include="IdentityModel" Version="4.4.0" />
     <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.2" />
-    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.29" />
+    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.31" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
     <PackageReference Include="Microsoft.Azure.Management.Media" Version="5.0.0" />
+    <PackageReference Include="Microsoft.FeatureManagement" Version="3.2.0" />
+    <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="3.2.0" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.9" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.14.1" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.14.1" />

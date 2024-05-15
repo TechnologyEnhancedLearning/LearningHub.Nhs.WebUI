@@ -29,6 +29,7 @@ namespace LearningHub.Nhs.Services
     using LearningHub.Nhs.Models.Resource.AzureMediaAsset;
     using LearningHub.Nhs.Models.Resource.Blocks;
     using LearningHub.Nhs.Models.Resource.Contribute;
+    using LearningHub.Nhs.Models.Resource.Files;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.Repository;
@@ -1320,12 +1321,12 @@ namespace LearningHub.Nhs.Services
         /// Get file directory for unpublished or deleted versions.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="deletedResource">.</param>
         /// <returns>The <see cref="List{String}"/>.</returns>
-        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId)
+        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId, bool deletedResource = false)
         {
             var retVal = new List<string>();
-            File fileDetails = null;
-            var resource = await this.GetResourceVersionByIdAsync(resourceVersionId);
+            var resource = await this.GetResourceVersionExtendedViewModelAsync(resourceVersionId);
             var rvs = await this.resourceVersionRepository.GetResourceVersionsAsync(resource.ResourceId);
             rvs = rvs.Where(x => x.Id != resourceVersionId && x.PublicationId > 0).OrderByDescending(x => x.PublicationId).ToList();
             var rv = rvs.FirstOrDefault();
@@ -1334,21 +1335,275 @@ namespace LearningHub.Nhs.Services
                 var extendedResourceVersion = await this.GetResourceVersionExtendedViewModelAsync(rv.Id);
                 if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Scorm)
                 {
-                    retVal.Add(extendedResourceVersion.ScormDetails.ContentFilePath);
+                    if (resource.ScormDetails?.ContentFilePath != extendedResourceVersion.ScormDetails.ContentFilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.ScormDetails.ContentFilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.ScormDetails?.File?.FilePath);
+                        }
+                    }
                 }
                 else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Html)
                 {
-                    retVal.Add(extendedResourceVersion.HtmlDetails.ContentFilePath);
+                    if (resource.HtmlDetails?.ContentFilePath != extendedResourceVersion.HtmlDetails.ContentFilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.HtmlDetails.ContentFilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.HtmlDetails?.File?.FilePath);
+                        }
+                    }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
+                {
+                    if (resource.GenericFileDetails.File.FilePath != extendedResourceVersion.GenericFileDetails.File.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.GenericFileDetails.File.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.GenericFileDetails.File.FilePath);
+                        }
+                    }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Image)
+                {
+                    if (resource.ImageDetails.File.FilePath != extendedResourceVersion.ImageDetails.File.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.ImageDetails.File.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.ImageDetails.File.FilePath);
+                        }
+                    }
                 }
                 else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Audio)
                 {
-                    retVal.Add(extendedResourceVersion.AudioDetails.File.FilePath);
-                    retVal.Add(extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                    if (resource.AudioDetails?.File?.FilePath != extendedResourceVersion.AudioDetails.File.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.AudioDetails.File.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.AudioDetails.File.FilePath);
+                        }
+                    }
+
+                    if (resource.AudioDetails?.ResourceAzureMediaAsset?.FilePath != extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                        }
+                    }
                 }
                 else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Video)
                 {
-                    retVal.Add(extendedResourceVersion.VideoDetails.File.FilePath);
-                    retVal.Add(extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                    if (resource.VideoDetails?.File?.FilePath != extendedResourceVersion.VideoDetails.File.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.VideoDetails.File.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.VideoDetails.File.FilePath);
+                        }
+                    }
+
+                    if (resource.VideoDetails?.ResourceAzureMediaAsset?.FilePath != extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath)
+                    {
+                        if (!deletedResource)
+                        {
+                            retVal.Add(extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                        }
+                        else
+                        {
+                            retVal.Add(resource.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                        }
+                    }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Article)
+                {
+                    var inputResourceFiles = resource.ArticleDetails.Files.ToList();
+                    var previousPublishedfiles = extendedResourceVersion.ArticleDetails?.Files?.ToList();
+                    if (!deletedResource)
+                    {
+                        if (previousPublishedfiles.Any())
+                        {
+                            foreach (var file in previousPublishedfiles)
+                            {
+                                if (!inputResourceFiles.Where(x => x.FilePath == file.FilePath).Any())
+                                {
+                                    retVal.Add(file.FilePath);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (inputResourceFiles.Any())
+                        {
+                            foreach (var file in inputResourceFiles)
+                            {
+                                if (!previousPublishedfiles.Where(x => x.FilePath == file.FilePath).Any())
+                                {
+                                    retVal.Add(file.FilePath);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Assessment)
+                {
+                    var endGuidanceFiles = new List<string>();
+                    var assessmentContentFiles = new List<string>();
+
+                    if (resource.AssessmentDetails is { EndGuidance: { } } && resource.AssessmentDetails.EndGuidance.Blocks != null)
+                        {
+                            if (deletedResource)
+                            {
+                                endGuidanceFiles = this.CheckBlockFile(extendedResourceVersion.AssessmentDetails.EndGuidance, resource.AssessmentDetails.EndGuidance);
+                            }
+                            else
+                            {
+                                endGuidanceFiles = this.CheckBlockFile(resource.AssessmentDetails.EndGuidance, extendedResourceVersion.AssessmentDetails.EndGuidance);
+                            }
+
+                            if (endGuidanceFiles.Any())
+                            {
+                                retVal.AddRange(endGuidanceFiles);
+                            }
+                        }
+
+                    if (resource.AssessmentDetails is { AssessmentContent: { } } && resource.AssessmentDetails.AssessmentContent.Blocks != null)
+                        {
+                            if (deletedResource)
+                            {
+                                assessmentContentFiles = this.CheckBlockFile(extendedResourceVersion.AssessmentDetails.AssessmentContent, resource.AssessmentDetails.AssessmentContent);
+                            }
+                            else
+                            {
+                                assessmentContentFiles = this.CheckBlockFile(resource.AssessmentDetails.AssessmentContent, extendedResourceVersion.AssessmentDetails.AssessmentContent);
+                            }
+
+                            if (assessmentContentFiles.Any())
+                            {
+                                retVal.AddRange(assessmentContentFiles);
+                            }
+                        }
+                }
+                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Case)
+                {
+                    var caseFiles = new List<string>();
+                    if (deletedResource)
+                    {
+                        caseFiles = this.CheckBlockFile(extendedResourceVersion.CaseDetails.BlockCollection, resource.CaseDetails.BlockCollection);
+                    }
+                    else
+                    {
+                        caseFiles = this.CheckBlockFile(resource.CaseDetails.BlockCollection, extendedResourceVersion.CaseDetails.BlockCollection);
+                    }
+
+                    if (caseFiles.Any())
+                    {
+                        retVal.AddRange(caseFiles);
+                    }
+                }
+            }
+            else if (rv == null && deletedResource)
+            {
+                if (resource.ResourceTypeEnum == ResourceTypeEnum.Scorm)
+                {
+                      retVal.Add(resource.ScormDetails.ContentFilePath);
+                }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Html)
+                {
+                      retVal.Add(resource.HtmlDetails.ContentFilePath);
+                }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
+                {
+                    retVal.Add(resource.GenericFileDetails.File.FilePath);
+                }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Image)
+                {
+                    retVal.Add(resource.ImageDetails.File.FilePath);
+                }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Audio)
+                {
+                    retVal.Add(resource.AudioDetails?.File?.FilePath);
+                    if (resource.AudioDetails?.ResourceAzureMediaAsset?.FilePath != null)
+                    {
+                            retVal.Add(resource.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                    }
+                }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Video)
+                {
+                    retVal.Add(resource.VideoDetails?.File?.FilePath);
+                    if (resource.VideoDetails?.ResourceAzureMediaAsset?.FilePath != null)
+                    {
+                         retVal.Add(resource.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                    }
+                }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Article)
+                {
+                        var inputResourceFiles = resource.ArticleDetails.Files.ToList();
+                        if (inputResourceFiles.Any())
+                        {
+                            foreach (var file in inputResourceFiles)
+                            {
+                                    retVal.Add(file.FilePath);
+                            }
+                        }
+                    }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
+                {
+                    if (deletedResource)
+                    {
+                        if (resource.AssessmentDetails is { EndGuidance: { } } && resource.AssessmentDetails.EndGuidance.Blocks != null)
+                        {
+                            var assessmentFiles = this.CheckBlockFile(null, resource.AssessmentDetails.EndGuidance);
+                            if (assessmentFiles.Any())
+                            {
+                                retVal.AddRange(assessmentFiles);
+                            }
+                        }
+
+                        if (resource.AssessmentDetails is { AssessmentContent: { } } && resource.AssessmentDetails.AssessmentContent.Blocks != null)
+                        {
+                            var assessmentFiles = this.CheckBlockFile(null, resource.AssessmentDetails.AssessmentContent);
+                            if (assessmentFiles.Any())
+                            {
+                                retVal.AddRange(assessmentFiles);
+                            }
+                        }
+                    }
+                }
+                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Case)
+                {
+                    var caseFiles = this.CheckBlockFile(null, resource.CaseDetails.BlockCollection);
+                    if (caseFiles.Any())
+                    {
+                        retVal.AddRange(caseFiles);
+                    }
                 }
             }
 
@@ -4650,6 +4905,237 @@ namespace LearningHub.Nhs.Services
             }
 
             return resourceVersionId;
+        }
+
+        private List<string> CheckBlockFile(BlockCollectionViewModel? publishedBlock, BlockCollectionViewModel model)
+        {
+            var retVal = new List<string>();
+            var caseBlockCollection = model;
+            if (caseBlockCollection != null)
+            {
+                var allBlocks = caseBlockCollection.Blocks.ToList();
+                if (allBlocks.Any())
+                {
+                    var existingAttachements = allBlocks.Where(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Attachment && x.MediaBlock.Attachment != null).ToList();
+                    if (existingAttachements.Any())
+                    {
+                        foreach (var oldblock in existingAttachements)
+                        {
+                            var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Attachment && x.MediaBlock.Attachment != null && x.MediaBlock.Attachment.File?.FileId == oldblock.MediaBlock.Attachment?.File?.FileId) : null;
+                            if (publishedEntry == null)
+                            {
+                                retVal.Add(oldblock.MediaBlock.Attachment?.File?.FilePath);
+                            }
+                        }
+                    }
+
+                    var existingVideos = allBlocks.Where(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Video && x.MediaBlock.Video != null).ToList();
+                    if (existingVideos.Any())
+                    {
+                        foreach (var oldblock in existingVideos)
+                        {
+                            var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Video && x.MediaBlock.Video != null && x.MediaBlock.Video.VideoFile?.File?.FileId == oldblock.MediaBlock?.Video?.VideoFile?.File?.FileId) : null;
+                            if (publishedEntry == null)
+                            {
+                                if (!string.IsNullOrWhiteSpace(oldblock.MediaBlock.Video.File.FilePath))
+                                {
+                                    retVal.Add(oldblock.MediaBlock.Video.File.FilePath);
+                                }
+
+                                if (!string.IsNullOrWhiteSpace(oldblock.MediaBlock.Video?.File?.VideoFile?.File?.FilePath))
+                                {
+                                    retVal.Add(oldblock.MediaBlock.Video.File.VideoFile.File.FilePath);
+                                }
+
+                                if (oldblock.MediaBlock?.Video?.File?.VideoFile?.TranscriptFile?.File?.FilePath != null)
+                                {
+                                    retVal.Add(oldblock.MediaBlock.Video.File.VideoFile.TranscriptFile.File.FilePath);
+                                }
+                            }
+                        }
+                    }
+
+                    var existingImages = allBlocks.Where(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null).ToList();
+                    if (existingImages.Any())
+                    {
+                        foreach (var oldblock in existingImages)
+                        {
+                            var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null && x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId) : null;
+                            if (publishedEntry == null)
+                            {
+                                retVal.Add(oldblock.MediaBlock?.Image?.File?.FilePath);
+                            }
+                        }
+                    }
+
+                    var existingImageCarousel = allBlocks.Where(x => x.BlockType == BlockType.ImageCarousel && x.ImageCarouselBlock != null && x.ImageCarouselBlock.ImageBlockCollection != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks != null).ToList();
+                    if (existingImageCarousel.Any())
+                    {
+                        foreach (var imageBlock in existingImageCarousel)
+                        {
+                            foreach (var oldblock in imageBlock.ImageCarouselBlock.ImageBlockCollection.Blocks)
+                            {
+                                var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.ImageCarousel && x.ImageCarouselBlock != null && x.ImageCarouselBlock.ImageBlockCollection != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks.Where(x => x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId).Any()) : null;
+                                if (publishedEntry == null)
+                                {
+                                    retVal.Add(oldblock.MediaBlock?.Image?.File?.FilePath);
+                                }
+                            }
+                        }
+                    }
+
+                    var existingWholeSlideImages = allBlocks.Where(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Any()).ToList();
+                    if (existingWholeSlideImages.Any())
+                    {
+                        foreach (var wsi in existingWholeSlideImages)
+                        {
+                            foreach (var oldblock in wsi?.WholeSlideImageBlock?.WholeSlideImageBlockItems)
+                            {
+                                var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Where(x => x.WholeSlideImage?.File?.FileId == oldblock.WholeSlideImage?.File?.FileId).Any()) : null;
+                                if (publishedEntry == null)
+                                {
+                                    retVal.Add(oldblock.WholeSlideImage?.File?.FilePath);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                var questionFiles = this.CheckQuestionBlock(caseBlockCollection);
+                var publishedQuestionFiles = (publishedBlock != null && publishedBlock.Blocks.Any()) ? this.CheckQuestionBlock(publishedBlock) : new List<string>();
+                if (questionFiles.Any() && !publishedQuestionFiles.Any())
+                {
+                    retVal.AddRange(questionFiles);
+                }
+                else if (questionFiles.Any() && publishedQuestionFiles.Any())
+                {
+                    foreach (var file in questionFiles)
+                    {
+                        var publishedEntry = publishedQuestionFiles.FirstOrDefault(x => x.Equals(file));
+                        if (publishedEntry == null)
+                        {
+                            retVal.Add(file);
+                        }
+                    }
+                }
+            }
+
+            return retVal.Where(x => x != null).ToList();
+        }
+
+        private List<string> CheckQuestionBlock(BlockCollectionViewModel model)
+        {
+            var filePath = new List<string>();
+            foreach (var block in model.Blocks)
+            {
+                if (block.BlockType == BlockType.Question && block.QuestionBlock != null)
+                {
+                    if (block.QuestionBlock.QuestionType == QuestionTypeEnum.MatchGame && block.QuestionBlock.Answers != null)
+                    {
+                        foreach (var answerBlock in block.QuestionBlock.Answers)
+                        {
+                            if (answerBlock.BlockCollection != null && answerBlock.BlockCollection.Blocks != null)
+                            {
+                                foreach (var imageBlock in answerBlock.BlockCollection.Blocks)
+                                {
+                                    if (imageBlock.BlockType == BlockType.Media && imageBlock.MediaBlock != null)
+                                    {
+                                        filePath.Add(imageBlock.MediaBlock.Image.File.FilePath);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    var questionBlockCollection = block.QuestionBlock.QuestionBlockCollection;
+                    if (questionBlockCollection != null && questionBlockCollection.Blocks != null)
+                    {
+                        foreach (var questionBlock in questionBlockCollection.Blocks)
+                        {
+                            if (questionBlock.BlockType == BlockType.Media && questionBlock.MediaBlock != null)
+                            {
+                                if (questionBlock.MediaBlock.Image != null)
+                                {
+                                    filePath.Add(questionBlock.MediaBlock.Image.File.FilePath);
+                                }
+
+                                if (questionBlock.MediaBlock.Video != null)
+                                {
+                                    if (questionBlock.MediaBlock.Video.VideoFile != null)
+                                    {
+                                        if (questionBlock.MediaBlock.Video.File != null)
+                                        {
+                                            filePath.Add(questionBlock.MediaBlock.Video.File.FilePath);
+                                        }
+
+                                        if (questionBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
+                                        {
+                                            filePath.Add(questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
+                                        }
+
+                                        if (questionBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
+                                        {
+                                            filePath.Add(questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (questionBlock.BlockType == BlockType.WholeSlideImage && questionBlock.WholeSlideImageBlock != null)
+                            {
+                                var existingWholeSlideImages = questionBlock.WholeSlideImageBlock.WholeSlideImageBlockItems;
+                                if (existingWholeSlideImages.Any())
+                                {
+                                    foreach (var wsi in existingWholeSlideImages)
+                                    {
+                                        if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.WholeSlideImageFile != null && (wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingComplete || wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingFailed))
+                                        {
+                                            filePath.Add(wsi.WholeSlideImage.File.FilePath);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    var feedbackBlockCollection = block.QuestionBlock.FeedbackBlockCollection;
+                    if (feedbackBlockCollection != null && feedbackBlockCollection.Blocks != null)
+                    {
+                        foreach (var feedbackBlock in feedbackBlockCollection.Blocks)
+                        {
+                            if (feedbackBlock.BlockType == BlockType.Media && feedbackBlock.MediaBlock != null)
+                            {
+                                if (feedbackBlock.MediaBlock.Image != null)
+                                {
+                                    filePath.Add(feedbackBlock.MediaBlock.Image.File.FilePath);
+                                }
+
+                                if (feedbackBlock.MediaBlock.Video != null)
+                                {
+                                    if (feedbackBlock.MediaBlock.Video.VideoFile != null)
+                                    {
+                                        if (feedbackBlock.MediaBlock.Video.File != null)
+                                        {
+                                            filePath.Add(feedbackBlock.MediaBlock.Video.File.FilePath);
+                                        }
+
+                                        if (feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
+                                        {
+                                            filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
+                                        }
+
+                                        if (feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
+                                        {
+                                            filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return filePath.Where(x => x != null).ToList();
         }
     }
 }

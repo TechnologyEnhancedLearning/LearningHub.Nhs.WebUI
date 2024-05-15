@@ -226,7 +226,7 @@
         /// <returns>The <see cref="bool"/>.</returns>
         public static bool CanShowScore(this ActivityDetailedItemViewModel activityDetailedItemViewModel)
         {
-            if ((activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Scorm && (activityDetailedItemViewModel.MasteryScore > 0 || activityDetailedItemViewModel.MasteryScore == null) && ((activityDetailedItemViewModel.ScorePercentage > 0 && activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Passed) || activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Failed)) || ((activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Case) && activityDetailedItemViewModel.Complete))
+            if ((activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Scorm && (activityDetailedItemViewModel.MasteryScore > 0 || activityDetailedItemViewModel.MasteryScore == null) && ((activityDetailedItemViewModel.ScorePercentage > 0 && activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Passed) || activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Failed)) || (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment && (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed || activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Passed || activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Failed)) || (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Case && activityDetailedItemViewModel.Complete))
             {
                 return true;
             }
@@ -241,7 +241,7 @@
         /// <returns>The <see cref="bool"/>bool.</returns>
         public static bool CanViewPercentage(this ActivityDetailedItemViewModel activityDetailedItemViewModel)
         {
-            if (((activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Video || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Audio) && activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.InProgress) || (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment && activityDetailedItemViewModel.Complete == false))
+            if (((activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Video || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Audio) && activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.InProgress) || (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment && activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.InProgress))
             {
                 return true;
             }
@@ -300,7 +300,7 @@
                     else
                     {
                         duration = $"{t.Minutes}min {t.Seconds}sec";
-                        duration = duration.Replace("0min", string.Empty);
+                        duration = duration.StartsWith("0min") ? duration.Replace("0min", string.Empty) : duration;
                     }
                 }
             }

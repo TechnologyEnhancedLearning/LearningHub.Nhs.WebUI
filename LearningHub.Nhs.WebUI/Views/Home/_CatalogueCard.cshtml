@@ -50,7 +50,7 @@
             }
           </div>
           <div>
-            <a class="nhsuk-u-font-size-16 nhsuk-u-margin-right-3" role="button" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
+            <a class="nhsuk-u-font-size-16 nhsuk-u-margin-right-3" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
                asp-route-bookmarked="@Model.IsBookmarked"
                asp-route-id="@Model.BookmarkId"
                asp-route-title="@Model.Name.Truncate(60)"
@@ -63,11 +63,11 @@
           @if (providerExists)
           {
             var provider = @Model.Providers.First();
-            <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name" class="provider-badge" />
+            <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
           }
           else if (!string.IsNullOrEmpty(Model.BadgeUrl))
           {
-            <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(Model.BadgeUrl))" alt="@(Model.Name)" class="catalogue-badge" />
+            <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(Model.BadgeUrl))" alt="Provider's catalogue badge" class="catalogue-badge" />
           }
         </div>
       </div>

@@ -4,9 +4,12 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using elfhHub.Nhs.Models.Common;
+    using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Models.Account;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
+    using NuGet.Common;
 
     /// <summary>
     /// Defines the <see cref="JobRoleService" />.
@@ -101,7 +104,7 @@
 
             var client = await this.userApiHttpClient.GetClientAsync();
 
-            var request = $"JobRole/GetPagedFilteredWithStaffGroup/{filter}/{page}/{pageSize}";
+            var request = $"JobRole/GetPagedFilteredWithStaffGroup/{Uri.EscapeDataString(filter.EncodeParameter())}/{page}/{pageSize}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)

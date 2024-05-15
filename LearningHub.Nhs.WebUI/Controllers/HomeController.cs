@@ -12,6 +12,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Filters;
+    using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
     using Microsoft.ApplicationInsights.AspNetCore;
@@ -23,6 +24,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Microsoft.FeatureManagement;
     using Settings = LearningHub.Nhs.WebUI.Configuration.Settings;
 
     /// <summary>
@@ -36,6 +38,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         private readonly IUserService userService;
         private readonly IDashboardService dashboardService;
         private readonly IContentService contentService;
+        private readonly IFeatureManager featureManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController"/> class.
@@ -49,6 +52,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="authConfig">Auth config.</param>
         /// <param name="dashboardService">Dashboard service.</param>
         /// <param name="contentService">Content service.</param>
+        /// <param name="featureManager"> featureManager.</param>
         public HomeController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
@@ -58,7 +62,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
             IResourceService resourceService,
             LearningHubAuthServiceConfig authConfig,
             IDashboardService dashboardService,
-            IContentService contentService)
+            IContentService contentService,
+            IFeatureManager featureManager)
         : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.authConfig = authConfig;
@@ -66,6 +71,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             this.resourceService = resourceService;
             this.dashboardService = dashboardService;
             this.contentService = contentService;
+            this.featureManager = featureManager;
         }
 
         /// <summary>
@@ -246,17 +252,29 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     Catalogues = new Nhs.Models.Dashboard.DashboardCatalogueResponseViewModel { Type = catalogueDashBoard },
                 };
 
-                switch (dashBoardTray)
+                bool isAjax = this.HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest";
+
+                if (isAjax)
                 {
-                    case "my-learning":
-                        model.MyLearnings = await this.dashboardService.GetMyAccessLearningsAsync(myLearningDashBoard, pageNumber);
-                        return this.PartialView("_MyAccessedLearningTray", model);
-                    case "resources":
-                        model.Resources = await this.dashboardService.GetResourcesAsync(resourceDashBoard, pageNumber);
-                        return this.PartialView("_ResourceTray", model);
-                    case "catalogues":
-                        model.Catalogues = await this.dashboardService.GetCataloguesAsync(catalogueDashBoard, pageNumber);
-                        return this.PartialView("_CatalogueTray", model);
+                    switch (dashBoardTray)
+                    {
+                        case "my-learning":
+                            model.MyLearnings = await this.dashboardService.GetMyAccessLearningsAsync(myLearningDashBoard, pageNumber);
+                            return this.PartialView("_MyAccessedLearningTray", model);
+                        case "resources":
+                            model.Resources = await this.dashboardService.GetResourcesAsync(resourceDashBoard, pageNumber);
+                            return this.PartialView("_ResourceTray", model);
+                        case "catalogues":
+                            model.Catalogues = await this.dashboardService.GetCataloguesAsync(catalogueDashBoard, pageNumber);
+                            return this.PartialView("_CatalogueTray", model);
+                    }
+                }
+                else
+                {
+                    model.MyLearnings = await this.dashboardService.GetMyAccessLearningsAsync(myLearningDashBoard, dashBoardTray == "my-learning" ? pageNumber : 1);
+                    model.Resources = await this.dashboardService.GetResourcesAsync(resourceDashBoard, dashBoardTray == "resources" ? pageNumber : 1);
+                    model.Catalogues = await this.dashboardService.GetCataloguesAsync(catalogueDashBoard, dashBoardTray == "catalogues" ? pageNumber : 1);
+                    return this.View("Dashboard", model);
                 }
             }
 
@@ -355,6 +373,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             var model = new LandingPageViewModel { PageSectionDetailViewModels = new List<PageSectionDetailViewModel>() };
             var pageViewModel = await this.contentService.GetPageByIdAsync(1, preview);
             model.PageViewModel = pageViewModel;
+            model.DisplayAudioVideo = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.DisplayAudioVideoResource)).Result;
             if (pageViewModel != null && pageViewModel.PageSections.Any())
             {
                 foreach (var item in pageViewModel.PageSections)

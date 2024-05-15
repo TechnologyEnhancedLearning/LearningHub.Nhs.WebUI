@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 11-06-2021  Killian Davies	Initial Revision
+-- 17-04-2024  Swapna Abraham	Reverted TD-1325 changes
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[ScormActivityComplete]
 (

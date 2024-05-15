@@ -2,6 +2,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
 {
     using System;
     using System.Collections.Generic;
+    using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
@@ -25,7 +26,10 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
             bool hasCurrentResourceVersion = true,
             bool hasRatingSummary = true,
             decimal rating = 0m,
-            ResourceTypeEnum? resourceType = ResourceTypeEnum.Article)
+            ResourceTypeEnum? resourceType = ResourceTypeEnum.Article,
+            int? userId = null,
+            int? activityStatusId = null
+            )
         {
             var resourceReference = new List<ResourceReference>()
             {
@@ -54,9 +58,10 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
                 ResourceReference = resourceReference,
                 Deleted = deleted,
                 ResourceTypeEnum = resourceType ?? default,
+                ResourceActivity = (userId != null && activityStatusId != null) ? CreateResourceActivityList(userId.Value, id, activityStatusId.Value) : null,
             };
         }
-
+        
         public static ResourceReference CreateResourceReferenceWithDetails(
             int id = 1,
             int originalResourceReferenceId = 2,
@@ -265,6 +270,39 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
                 NodeTypeEnum = NodeTypeEnum.Catalogue,
                 NodeVersion = null,
             };
+        }
+
+        private static List<ResourceActivity> CreateResourceActivityList(
+            int userId,
+            int resourceId,
+            int activityStatusId, //out of order for prepopulated parameters
+            int resourceVersionId = 0,
+            int? launchResourceActivityId = null,
+            int majorVerson = 0,
+            int minorVersion = 0,
+            int nodePathId = 0,
+            // int activityStatusId,
+            DateTimeOffset? activityStart = null,
+            DateTimeOffset? activityEnd = null,
+            int durationSeconds = 0,
+            decimal? score = null
+            )
+        {
+            return new List<ResourceActivity>(){ new ResourceActivity
+            {
+                UserId = userId,
+                ResourceId = resourceId,
+                ResourceVersionId = resourceVersionId,
+                LaunchResourceActivityId = launchResourceActivityId,
+                MajorVersion = majorVerson,
+                MinorVersion = minorVersion,
+                NodePathId = nodePathId,
+                ActivityStatusId = activityStatusId,
+                ActivityStart = activityStart,
+                ActivityEnd = activityEnd,
+                DurationSeconds = durationSeconds,
+                Score = score,
+            }, };
         }
     }
 }

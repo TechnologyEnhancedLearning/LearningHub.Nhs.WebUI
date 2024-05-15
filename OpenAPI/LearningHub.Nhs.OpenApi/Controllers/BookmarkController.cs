@@ -1,6 +1,9 @@
-﻿namespace LearningHub.NHS.OpenAPI.Controllers
+﻿
+
+namespace LearningHub.NHS.OpenAPI.Controllers
 {
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Net;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Bookmark;
@@ -17,7 +20,7 @@
     [Authorize]
     [Route("Bookmark")]
     [ApiController]
-    public class BookmarkController : Controller
+    public class BookmarkController : OpenApiControllerBase
     {
         private readonly IBookmarkService bookmarkService;
 
@@ -38,17 +41,7 @@
         [Route("GetAllByParent")]
         public async Task<IEnumerable<UserBookmarkViewModel>> GetAllByParent()
         {
-                string accessToken = this.HttpContext.Request.Headers["Authorization"].ToString();
-
-                if (string.IsNullOrEmpty(accessToken))
-                 {
-                     throw new HttpResponseException($"No token", HttpStatusCode.Unauthorized);
-                 }
-
-                string tokenWithoutBearer = accessToken.StartsWith("Bearer ") ? accessToken.Substring("Bearer ".Length) : accessToken;
-
-                return await this.bookmarkService.GetAllByParent(tokenWithoutBearer);
-
+                return await this.bookmarkService.GetAllByParent(this.TokenWithoutBearer);
         }
     }
 }

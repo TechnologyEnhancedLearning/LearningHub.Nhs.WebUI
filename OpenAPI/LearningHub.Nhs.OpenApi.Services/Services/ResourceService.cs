@@ -6,11 +6,14 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using System.Net;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Resource.AzureMediaAsset;
     using LearningHub.Nhs.OpenApi.Models.Exceptions;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Services.Helpers;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
     /// <summary>
@@ -44,15 +47,18 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         }
 
         /// <summary>
-        /// the get by id async.
+        /// the get by original resource reference id async.
         /// </summary>
         /// <param name="originalResourceReferenceId">the id.</param>
+        /// <param name="currentUserId">.</param>
         /// <returns>the resource.</returns>
-        public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId)
+        public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId, int? currentUserId)
         {
             var list = new List<int>() { originalResourceReferenceId };
+            var resourceReferences = currentUserId == null ?
+                 await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(list) :
+                 await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(list, currentUserId.Value);
 
-            var resourceReferences = await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(list);
             var resourceReferencesList = resourceReferences.ToList();
 
             try
@@ -74,13 +80,51 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         }
 
         /// <summary>
+        /// the get by  resource reference id async.
+        /// </summary>
+        /// <param name="resourceId">the id.</param>
+        /// <param name="currentUserId">.</param>
+        /// <returns>the resource.</returns>
+        public async Task<ResourceMetadataViewModel> GetResourceById(int resourceId, int? currentUserId)
+        {
+            var resourceIdList = new List<int>() { resourceId };
+
+            var resource = (currentUserId == null ?
+                            await this.resourceRepository.GetResourcesFromIds(resourceIdList)
+                            : await this.resourceRepository.GetResourcesFromIds(resourceIdList, (int)currentUserId))
+                        .SingleOrDefault();
+
+            if (resource == null)
+            {
+                throw new Exception($"Resource with ID {resourceId} not found. Provided userId was {(currentUserId.HasValue ? currentUserId.Value.ToString() : "null")}");
+            }
+
+            return new ResourceMetadataViewModel(
+                resource.Id,
+                resource.CurrentResourceVersion?.Title ?? ResourceHelpers.NoResourceVersionText,
+                resource.CurrentResourceVersion?.Description ?? string.Empty,
+                resource.ResourceReference.Select(rr => new ResourceReferenceViewModel(
+                                                        rr.OriginalResourceReferenceId,
+                                                        rr.GetCatalogue(),
+                                                        this.learningHubService.GetResourceLaunchUrl(rr.OriginalResourceReferenceId)))
+                                                        .ToList(),
+                resource.GetResourceTypeNameOrEmpty(),
+                resource.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0.0m,
+                ActivityStatusHelper.UserSummaryActvityStatus((ActivityStatusEnum?)resource?.ResourceActivity?.FirstOrDefault()?.ActivityStatusId) ?? string.Empty);
+        }
+
+        /// <summary>
         /// bulk get by ids async.
         /// </summary>
         /// <param name="originalResourceReferenceIds">the resource reference ids.</param>
+        /// <param name="currentUserId">.</param>
         /// <returns>the resource.</returns>
-        public async Task<BulkResourceReferenceViewModel> GetResourceReferencesByOriginalIds(List<int> originalResourceReferenceIds)
+        public async Task<BulkResourceReferenceViewModel> GetResourceReferencesByOriginalIds(List<int> originalResourceReferenceIds, int? currentUserId)
         {
-            var resourceReferences = await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(originalResourceReferenceIds);
+            var resourceReferences = currentUserId == null ?
+                await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(originalResourceReferenceIds)
+                :await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(originalResourceReferenceIds, currentUserId.Value);
+
             var resourceReferencesList = resourceReferences.ToList();
             var matchedIds = resourceReferencesList.Select(r => r.OriginalResourceReferenceId).ToList();
             var unmatchedIds = originalResourceReferenceIds.Except(matchedIds).ToList();
@@ -136,7 +180,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resourceReference.GetCatalogue(),
                 resourceTypeNameOrEmpty,
                 resourceReference.Resource?.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0,
-                this.learningHubService.GetResourceLaunchUrl(resourceReference.OriginalResourceReferenceId));
+                this.learningHubService.GetResourceLaunchUrl(resourceReference.OriginalResourceReferenceId),
+                ActivityStatusHelper.UserSummaryActvityStatus((ActivityStatusEnum?)resourceReference.Resource?.ResourceActivity?.FirstOrDefault()?.ActivityStatusId) ?? string.Empty);
         }
     }
 }

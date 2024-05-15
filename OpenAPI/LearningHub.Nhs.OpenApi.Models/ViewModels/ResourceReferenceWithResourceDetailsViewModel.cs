@@ -3,8 +3,8 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
     /// <summary>
     /// Class.
     /// </summary>
-    public class ResourceReferenceWithResourceDetailsViewModel
-    {
+    public class ResourceReferenceWithResourceDetailsViewModel 
+    { 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceReferenceWithResourceDetailsViewModel"/> class.
         /// </summary>
@@ -16,7 +16,8 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <param name="resourceType"><see cref="ResourceType"/>.</param>
         /// <param name="rating"><see cref="Rating"/>.</param>
         /// <param name="link"><see cref="Link"/>.</param>
-        public ResourceReferenceWithResourceDetailsViewModel(
+        /// <param name="userSummaryActvityStatus"><see cref="UserSummaryActvityStatus"/>.</param>
+        public ResourceReferenceWithResourceDetailsViewModel( 
             int resourceId,
             int refId,
             string title,
@@ -24,7 +25,9 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             CatalogueViewModel catalogueViewModel,
             string resourceType,
             decimal rating,
-            string link)
+            string link,
+            string userSummaryActvityStatus
+            )
         {
             this.ResourceId = resourceId;
             this.RefId = refId;
@@ -34,6 +37,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             this.ResourceType = resourceType;
             this.Rating = rating;
             this.Link = link;
+            this.UserSummaryActvityStatus = userSummaryActvityStatus;
         }
 
         /// <summary>
@@ -75,5 +79,10 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// Gets <see cref="Link"/>.
         /// </summary>
         public string Link { get; }
+
+        /// <summary>
+        /// Gets <see cref="UserSummaryActvityStatus"/>.
+        /// </summary>
+        public string UserSummaryActvityStatus { get;  }
     }
 }

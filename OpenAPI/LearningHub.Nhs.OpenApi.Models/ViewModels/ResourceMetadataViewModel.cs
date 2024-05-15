@@ -23,13 +23,15 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <param name="references"><see cref="References"/>.</param>
         /// <param name="resourceType"><see cref="ResourceType"/>.</param>
         /// <param name="rating"><see cref="Rating"/>.</param>
+        /// <param name="userSummaryActvityStatus"><see cref="UserSummaryActvityStatus"/>.</param>
         public ResourceMetadataViewModel(
             int resourceId,
             string title,
             string description,
             List<ResourceReferenceViewModel> references,
             string resourceType,
-            decimal rating)
+            decimal rating,
+            string userSummaryActvityStatus)
         {
             this.ResourceId = resourceId;
             this.Title = title;
@@ -37,6 +39,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             this.References = references;
             this.ResourceType = resourceType;
             this.Rating = rating;
+            this.UserSummaryActvityStatus = userSummaryActvityStatus;
         }
 
         /// <summary>
@@ -68,5 +71,10 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// Gets or sets <see cref="Rating"/>.
         /// </summary>
         public decimal Rating { get; set; }
+
+        /// <summary>
+        /// Gets or sets <see cref="UserSummaryActvityStatus"/>.
+        /// </summary>
+        public string UserSummaryActvityStatus { get; set; }
     }
 }

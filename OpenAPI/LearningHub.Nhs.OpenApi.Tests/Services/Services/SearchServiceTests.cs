@@ -29,9 +29,16 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         private readonly Mock<IResourceRepository> resourceRepository;
         private readonly Mock<IResourceService> resourceService;
         private readonly SearchService searchService;
+        private readonly int currentUserId;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SearchServiceTests"/> class.
+        /// </summary>
         public SearchServiceTests()
         {
+            // This Id is the development accountId
+            this.currentUserId = 57541;
+
             this.findwiseClient = new Mock<IFindwiseClient>();
             this.learningHubService = new Mock<ILearningHubService>();
             this.resourceRepository = new Mock<IResourceRepository>();
@@ -73,7 +80,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(FindwiseResultModel.Failure(FindwiseRequestStatus.Timeout));
 
             // When
-            await this.searchService.Search(searchRequest);
+            await this.searchService.Search(searchRequest, this.currentUserId);
 
             // Then
             this.findwiseClient.Verify(fc => fc.Search(searchRequest));
@@ -85,12 +92,12 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             // Given
             var searchRequest = new ResourceSearchRequest("search-text", 0, 100);
             var resources = Builder<Resource>.CreateListOfSize(34).Build();
-            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(It.IsAny<IEnumerable<int>>()))
+            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(It.IsAny<IEnumerable<int>>(), this.currentUserId))
                 .ReturnsAsync(resources);
             this.GivenFindwiseReturnsSuccessfulResponse(74, Enumerable.Range(1, 34));
 
             // When
-            var searchResult = await this.searchService.Search(searchRequest);
+            var searchResult = await this.searchService.Search(searchRequest, this.currentUserId);
 
             // Then
             searchResult.Resources.Count.Should().Be(34);
@@ -132,12 +139,12 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .With(r => r.ResourceTypeEnum = ResourceTypeEnum.Article)
                 .Build();
 
-            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(It.IsAny<IEnumerable<int>>()))
+            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(It.IsAny<IEnumerable<int>>(), this.currentUserId))
                 .ReturnsAsync(resources);
             this.GivenFindwiseReturnsSuccessfulResponse(2, new[] { 1, 2, 3 });
 
             // When
-            var searchResult = await this.searchService.Search(searchRequest);
+            var searchResult = await this.searchService.Search(searchRequest, this.currentUserId);
 
             // Then
             searchResult.Resources.Count.Should().Be(2);
@@ -176,11 +183,11 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                     }));
 
             var resources = Builder<Resource>.CreateListOfSize(3).Build();
-            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(new[] { 1, 3, 2 }))
+            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(new[] { 1, 3, 2 }, this.currentUserId))
                 .ReturnsAsync(resources);
 
             // When
-            var searchResultModel = await this.searchService.Search(new ResourceSearchRequest("text", 0, 10));
+            var searchResultModel = await this.searchService.Search(new ResourceSearchRequest("text", 0, 10), this.currentUserId);
 
             // Then
             searchResultModel.Resources.Select(r => r.ResourceId).Should().ContainInOrder(new[] { 1, 3, 2 });
@@ -206,13 +213,13 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                     .With(r => r.ResourceTypeEnum = ResourceTypeEnum.Article)
                     .Build(),
             };
-            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(It.IsAny<IEnumerable<int>>()))
+            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(It.IsAny<IEnumerable<int>>(), this.currentUserId))
                 .ReturnsAsync(resource);
             this.learningHubService.Setup(lhs => lhs.GetResourceLaunchUrl(It.IsAny<int>())).Returns(string.Empty);
             this.GivenFindwiseReturnsSuccessfulResponse(1, new[] { 1 });
 
             // When
-            var searchResult = await this.searchService.Search(new ResourceSearchRequest("text", 0, 10));
+            var searchResult = await this.searchService.Search(new ResourceSearchRequest("text", 0, 10), this.currentUserId);
 
             // Then
             using var scope = new AssertionScope();
@@ -233,7 +240,8 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                     string.Empty,
                     expectedResourceReferences,
                     "Article",
-                    0));
+                    0,
+                    string.Empty));
         }
 
         private void GivenFindwiseReturnsSuccessfulResponse(int totalHits, IEnumerable<int> resourceIds)

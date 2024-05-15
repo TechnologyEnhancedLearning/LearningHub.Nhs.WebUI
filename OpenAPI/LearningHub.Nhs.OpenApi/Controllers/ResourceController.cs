@@ -16,12 +16,13 @@ namespace LearningHub.NHS.OpenAPI.Controllers
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
 
+
     /// <summary>
     /// Resource controller.
     /// </summary>
     [Route("Resource")]
     [Authorize]
-    public class ResourceController : Controller
+    public class ResourceController : OpenApiControllerBase
     {
         private const int MaxNumberOfReferenceIds = 1000;
         private readonly ISearchService searchService;
@@ -75,7 +76,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
                         offset,
                         limit ?? this.findwiseConfig.DefaultItemLimitForSearch,
                         catalogueId,
-                        resourceTypes));
+                        resourceTypes), this.CurrentUserId);
 
             switch (resourceSearchResult.FindwiseRequestStatus)
             {
@@ -102,15 +103,28 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         }
 
         /// <summary>
-        /// GET by Id.
+        /// GET by original ref Id.
         /// </summary>
         /// <param name="originalResourceReferenceId">id.</param>
         /// <returns>Resource data.</returns>
         [HttpGet("{originalResourceReferenceId}")]
         public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId)
         {
-            return await this.resourceService.GetResourceReferenceByOriginalId(originalResourceReferenceId);
+                return await this.resourceService.GetResourceReferenceByOriginalId(originalResourceReferenceId, this.CurrentUserId);
         }
+
+        /// <summary>
+        /// GET by Id.
+        /// </summary>
+        /// <param name="resourceId">id.</param>
+        /// <returns>Resource data.</returns>
+        [HttpGet("ResourceId/{resourceId}")]
+        public async Task<ResourceMetadataViewModel> GetResourceById(int resourceId)
+        {
+            return await this.resourceService.GetResourceById(resourceId, this.CurrentUserId);
+        }
+
+
 
         /// <summary>
         /// Bulk get by Ids.
@@ -120,12 +134,13 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         [HttpGet("Bulk")]
         public async Task<BulkResourceReferenceViewModel> GetResourceReferencesByOriginalIds([FromQuery]List<int> resourceReferenceIds)
         {
+
             if (resourceReferenceIds.Count > MaxNumberOfReferenceIds)
             {
                 throw new HttpResponseException($"Too many resources requested. The maximum is {MaxNumberOfReferenceIds}", HttpStatusCode.BadRequest);
             }
 
-            return await this.resourceService.GetResourceReferencesByOriginalIds(resourceReferenceIds.ToList());
+            return await this.resourceService.GetResourceReferencesByOriginalIds(resourceReferenceIds.ToList(), this.CurrentUserId);
         }
 
         /// <summary>
@@ -148,7 +163,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
                 throw new HttpResponseException($"Too many resources requested. The maximum is {MaxNumberOfReferenceIds}", HttpStatusCode.BadRequest);
             }
 
-            return await this.resourceService.GetResourceReferencesByOriginalIds(bulkResourceReferences.ResourceReferenceIds);
+            return await this.resourceService.GetResourceReferencesByOriginalIds(bulkResourceReferences.ResourceReferenceIds, this.CurrentUserId);
         }
     }
 }

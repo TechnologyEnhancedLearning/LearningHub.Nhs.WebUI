@@ -4,6 +4,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Findwise;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource;
@@ -23,7 +24,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         private readonly IResourceRepository resourceRepository;
         private readonly IFindwiseClient findwiseClient;
         private readonly ILogger logger;
-        private readonly IResourceService resourceService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchService"/> class.
@@ -52,12 +52,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             this.learningHubService = learningHubService;
             this.findwiseClient = findwiseClient;
             this.resourceRepository = resourceRepository;
-            this.resourceService = resourceService;
             this.logger = logger;
         }
 
         /// <inheritdoc />
-        public async Task<ResourceSearchResultModel> Search(ResourceSearchRequest query)
+        public async Task<ResourceSearchResultModel> Search(ResourceSearchRequest query, int? currentUserId)
         {
             var findwiseResultModel = await this.findwiseClient.Search(query);
 
@@ -66,7 +65,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 return ResourceSearchResultModel.FailedWithStatus(findwiseResultModel.FindwiseRequestStatus);
             }
 
-            var resourceMetadataViewModels = await this.GetResourceMetadataViewModels(findwiseResultModel);
+            var resourceMetadataViewModels = await this.GetResourceMetadataViewModels(findwiseResultModel, currentUserId);
 
             var totalHits = findwiseResultModel.SearchResults?.Stats.TotalHits;
 
@@ -77,7 +76,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         }
 
         private async Task<List<ResourceMetadataViewModel>> GetResourceMetadataViewModels(
-            FindwiseResultModel findwiseResultModel)
+            FindwiseResultModel findwiseResultModel, int? currentUserId)
         {
             var documentsFound = findwiseResultModel.SearchResults?.DocumentList.Documents?.ToList() ??
                                  new List<Document>();
@@ -88,7 +87,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 return new List<ResourceMetadataViewModel>();
             }
 
-            var resourcesFound = await this.resourceRepository.GetResourcesFromIds(findwiseResourceIds);
+            var resourcesFound = currentUserId == null ?
+                await this.resourceRepository.GetResourcesFromIds(findwiseResourceIds)
+                : await this.resourceRepository.GetResourcesFromIds(findwiseResourceIds, (int)currentUserId);
 
             var resourceMetadataViewModels = resourcesFound.Select(this.MapToViewModel)
                 .OrderBySequence(findwiseResourceIds)
@@ -108,7 +109,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             return resourceMetadataViewModels;
         }
 
-        private ResourceMetadataViewModel MapToViewModel(Resource resource)
+        public ResourceMetadataViewModel MapToViewModel(Resource resource)
         {
             var hasCurrentResourceVersion = resource.CurrentResourceVersion != null;
             var hasRating = resource.CurrentResourceVersion?.ResourceVersionRatingSummary != null;
@@ -137,7 +138,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resource.CurrentResourceVersion?.Description ?? string.Empty,
                 resource.ResourceReference.Select(this.GetResourceReferenceViewModel).ToList(),
                 resourceTypeNameOrEmpty,
-                resource.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0.0m);
+                resource.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0.0m,
+                ActivityStatusHelper.UserSummaryActvityStatus((ActivityStatusEnum?)resource?.ResourceActivity?.FirstOrDefault()?.ActivityStatusId) ?? string.Empty
+                );
         }
 
         private ResourceReferenceViewModel GetResourceReferenceViewModel(

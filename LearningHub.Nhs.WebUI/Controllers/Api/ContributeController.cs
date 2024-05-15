@@ -794,106 +794,109 @@
         private List<string> CheckQuestionBlock(BlockCollectionViewModel model)
         {
             var filePath = new List<string>();
-            foreach (var block in model.Blocks)
+            if (model != null && model.Blocks.Any())
             {
-                if (block.BlockType == BlockType.Question && block.QuestionBlock != null)
+                foreach (var block in model.Blocks)
                 {
-                    if (block.QuestionBlock.QuestionType == QuestionTypeEnum.MatchGame && block.QuestionBlock.Answers != null)
+                    if (block.BlockType == BlockType.Question && block.QuestionBlock != null)
                     {
-                        foreach (var answerBlock in block.QuestionBlock.Answers)
+                        if (block.QuestionBlock.QuestionType == QuestionTypeEnum.MatchGame && block.QuestionBlock.Answers != null)
                         {
-                            if (answerBlock.BlockCollection != null && answerBlock.BlockCollection.Blocks != null)
+                            foreach (var answerBlock in block.QuestionBlock.Answers)
                             {
-                                foreach (var imageBlock in answerBlock.BlockCollection.Blocks)
+                                if (answerBlock.BlockCollection != null && answerBlock.BlockCollection.Blocks != null && answerBlock.BlockCollection.Blocks.Any())
                                 {
-                                    if (imageBlock.BlockType == BlockType.Media && imageBlock.MediaBlock != null)
+                                    foreach (var imageBlock in answerBlock.BlockCollection.Blocks)
                                     {
-                                        filePath.Add(imageBlock.MediaBlock.Image.File.FilePath);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    var questionBlockCollection = block.QuestionBlock.QuestionBlockCollection;
-                    if (questionBlockCollection != null && questionBlockCollection.Blocks != null)
-                    {
-                        foreach (var questionBlock in questionBlockCollection.Blocks)
-                        {
-                            if (questionBlock.BlockType == BlockType.Media && questionBlock.MediaBlock != null)
-                            {
-                                if (questionBlock.MediaBlock.Image != null)
-                                {
-                                    filePath.Add(questionBlock.MediaBlock.Image.File.FilePath);
-                                }
-
-                                if (questionBlock.MediaBlock.Video != null)
-                                {
-                                    if (questionBlock.MediaBlock.Video.VideoFile != null)
-                                    {
-                                        if (questionBlock.MediaBlock.Video.File != null)
+                                        if (imageBlock.BlockType == BlockType.Media && imageBlock.MediaBlock != null)
                                         {
-                                            filePath.Add(questionBlock.MediaBlock.Video.File.FilePath);
-                                        }
-
-                                        if (questionBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
-                                        {
-                                            filePath.Add(questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
-                                        }
-
-                                        if (questionBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
-                                        {
-                                            filePath.Add(questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
-                                        }
-                                    }
-                                }
-                            }
-                            else if (questionBlock.BlockType == BlockType.WholeSlideImage && questionBlock.WholeSlideImageBlock != null)
-                            {
-                                var existingWholeSlideImages = questionBlock.WholeSlideImageBlock?.WholeSlideImageBlockItems;
-                                if (existingWholeSlideImages != null && existingWholeSlideImages.Any())
-                                {
-                                    foreach (var wsi in existingWholeSlideImages)
-                                    {
-                                        if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.WholeSlideImageFile != null && (wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingComplete || wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingFailed))
-                                        {
-                                            filePath.Add(wsi.WholeSlideImage.File.FilePath);
+                                            filePath.Add(imageBlock.MediaBlock.Image.File.FilePath);
                                         }
                                     }
                                 }
                             }
                         }
-                    }
 
-                    var feedbackBlockCollection = block.QuestionBlock.FeedbackBlockCollection;
-                    if (feedbackBlockCollection != null && feedbackBlockCollection.Blocks != null)
-                    {
-                        foreach (var feedbackBlock in feedbackBlockCollection.Blocks)
+                        var questionBlockCollection = block.QuestionBlock.QuestionBlockCollection;
+                        if (questionBlockCollection != null && questionBlockCollection.Blocks != null && questionBlockCollection.Blocks.Any())
                         {
-                            if (feedbackBlock.BlockType == BlockType.Media && feedbackBlock.MediaBlock != null)
+                            foreach (var questionBlock in questionBlockCollection.Blocks)
                             {
-                                if (feedbackBlock.MediaBlock.Image != null)
+                                if (questionBlock.BlockType == BlockType.Media && questionBlock.MediaBlock != null)
                                 {
-                                    filePath.Add(feedbackBlock.MediaBlock.Image.File.FilePath);
-                                }
-
-                                if (feedbackBlock.MediaBlock.Video != null)
-                                {
-                                    if (feedbackBlock.MediaBlock.Video.VideoFile != null)
+                                    if (questionBlock.MediaBlock.Image != null)
                                     {
-                                        if (feedbackBlock.MediaBlock.Video.File != null)
-                                        {
-                                            filePath.Add(feedbackBlock.MediaBlock.Video.File.FilePath);
-                                        }
+                                        filePath.Add(questionBlock.MediaBlock.Image.File.FilePath);
+                                    }
 
-                                        if (feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
+                                    if (questionBlock.MediaBlock.Video != null)
+                                    {
+                                        if (questionBlock.MediaBlock.Video.VideoFile != null)
                                         {
-                                            filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
-                                        }
+                                            if (questionBlock.MediaBlock.Video.File != null)
+                                            {
+                                                filePath.Add(questionBlock.MediaBlock.Video.File.FilePath);
+                                            }
 
-                                        if (feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
+                                            if (questionBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
+                                            {
+                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
+                                            }
+
+                                            if (questionBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
+                                            {
+                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
+                                            }
+                                        }
+                                    }
+                                }
+                                else if (questionBlock.BlockType == BlockType.WholeSlideImage && questionBlock.WholeSlideImageBlock != null && questionBlock.WholeSlideImageBlock.WholeSlideImageBlockItems.Any())
+                                {
+                                    var existingWholeSlideImages = questionBlock.WholeSlideImageBlock?.WholeSlideImageBlockItems;
+                                    if (existingWholeSlideImages != null && existingWholeSlideImages.Any())
+                                    {
+                                        foreach (var wsi in existingWholeSlideImages)
                                         {
-                                            filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
+                                            if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.WholeSlideImageFile != null && (wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingComplete || wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingFailed))
+                                            {
+                                                filePath.Add(wsi.WholeSlideImage.File.FilePath);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        var feedbackBlockCollection = block.QuestionBlock.FeedbackBlockCollection;
+                        if (feedbackBlockCollection != null && feedbackBlockCollection.Blocks != null && feedbackBlockCollection.Blocks.Any())
+                        {
+                            foreach (var feedbackBlock in feedbackBlockCollection.Blocks)
+                            {
+                                if (feedbackBlock.BlockType == BlockType.Media && feedbackBlock.MediaBlock != null)
+                                {
+                                    if (feedbackBlock.MediaBlock.Image != null)
+                                    {
+                                        filePath.Add(feedbackBlock.MediaBlock.Image.File.FilePath);
+                                    }
+
+                                    if (feedbackBlock.MediaBlock.Video != null)
+                                    {
+                                        if (feedbackBlock.MediaBlock.Video.VideoFile != null)
+                                        {
+                                            if (feedbackBlock.MediaBlock.Video.File != null)
+                                            {
+                                                filePath.Add(feedbackBlock.MediaBlock.Video.File.FilePath);
+                                            }
+
+                                            if (feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
+                                            {
+                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
+                                            }
+
+                                            if (feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
+                                            {
+                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
+                                            }
                                         }
                                     }
                                 }

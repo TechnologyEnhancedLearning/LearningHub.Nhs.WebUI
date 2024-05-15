@@ -6,7 +6,7 @@
 {
     <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-3 nhsuk-u-margin-bottom-3">
         <div class="nhsuk-width-container app-width-container">
-            @if (Model.CatalogueAccessRequest == null)
+            @if (Model.CatalogueAccessRequest == null || Model.UserGroups.Count == 0)
             {
                 <h2>@Model.TitleText</h2>
                 <p class="nhsuk-u-reading-width">@Model.BodyText</p>

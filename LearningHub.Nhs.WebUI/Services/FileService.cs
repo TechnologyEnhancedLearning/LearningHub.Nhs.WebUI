@@ -10,7 +10,6 @@
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
-    using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.Extensions.Options;
 
@@ -22,6 +21,7 @@
         private readonly Settings settings;
         private ShareClient shareClient;
         private ShareClient archiveShareClient;
+        private ShareClient contentArchiveShareClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileService"/> class.
@@ -58,21 +58,21 @@
         {
             get
             {
-                if (this.archiveShareClient == null)
+                if (this.contentArchiveShareClient == null)
                 {
                     var options = new ShareClientOptions();
                     options.Retry.MaxRetries = 3;
                     options.Retry.Delay = TimeSpan.FromSeconds(10);
 
-                    this.archiveShareClient = new ShareClient(this.settings.AzureContentArchiveStorageConnectionString, this.settings.AzureFileStorageResourceShareName, options);
+                    this.contentArchiveShareClient = new ShareClient(this.settings.AzureContentArchiveStorageConnectionString, this.settings.AzureFileStorageResourceShareName, options);
 
-                    if (!this.archiveShareClient.Exists())
+                    if (!this.contentArchiveShareClient.Exists())
                     {
                         throw new Exception($"Unable to access azure content archive file storage resource {this.settings.AzureFileStorageResourceShareName}");
                     }
                 }
 
-                return this.archiveShareClient;
+                return this.contentArchiveShareClient;
             }
         }
 
@@ -88,13 +88,13 @@
 
                     this.archiveShareClient = new ShareClient(this.settings.AzureSourceArchiveStorageConnectionString, this.settings.AzureFileStorageResourceShareName, options);
 
-                    if (!this.shareClient.Exists())
+                    if (!this.archiveShareClient.Exists())
                     {
                         throw new Exception($"Unable to access azure file storage resource {this.settings.AzureFileStorageResourceShareName}");
                     }
                 }
 
-                return this.shareClient;
+                return this.archiveShareClient;
             }
         }
 
@@ -129,6 +129,7 @@
         public async Task<ShareFileDownloadInfo> DownloadFileAsync(string filePath, string fileName)
         {
             var directory = this.ShareClient.GetDirectoryClient(filePath);
+            var sourceDirectory = this.InputArchiveShareClient.GetDirectoryClient(filePath);
 
             if (await directory.ExistsAsync())
             {
@@ -137,6 +138,38 @@
                 if (await file.ExistsAsync())
                 {
                     return await file.DownloadAsync();
+                }
+            }
+            else if (await sourceDirectory.ExistsAsync())
+            {
+                var file = sourceDirectory.GetFileClient(fileName);
+
+                if (await file.ExistsAsync())
+                {
+                    return await file.DownloadAsync();
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// The StreamFileAsync.
+        /// </summary>
+        /// <param name="filePath">The filePath.</param>
+        /// <param name="fileName">The fileName.</param>
+        /// <returns>The <see cref="Task{Stream}"/>.</returns>
+        public async Task<Stream> StreamFileAsync(string filePath, string fileName)
+        {
+            var directory = this.ShareClient.GetDirectoryClient(filePath);
+
+            if (await directory.ExistsAsync())
+            {
+                var file = directory.GetFileClient(fileName);
+
+                if (await file.ExistsAsync())
+                {
+                    return await file.OpenReadAsync();
                 }
             }
 
@@ -178,9 +211,17 @@
         /// The PurgeResourceFile.
         /// </summary>
         /// <param name="vm">The vm.<see cref="ResourceVersionExtendedViewModel"/>.</param>
+        /// <param name="filePaths">.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task PurgeResourceFile(ResourceVersionExtendedViewModel vm)
+        public async Task PurgeResourceFile(ResourceVersionExtendedViewModel vm = null, List<string> filePaths = null)
         {
+            if (filePaths != null
+                && filePaths.Any())
+            {
+                await this.MoveInPutDirectoryToArchive(filePaths);
+                return;
+            }
+
             if (vm != null)
             {
                 var allContentPath = new List<string>();
@@ -189,30 +230,12 @@
                 {
                     allContentPath.Add(vm.ScormDetails.ContentFilePath);
                 }
-                else if (vm.GenericFileDetails != null && !string.IsNullOrWhiteSpace(vm.GenericFileDetails.File.FilePath))
-                {
-                    allFilePath.Add(vm.GenericFileDetails.File.FilePath);
-                }
                 else if (vm.HtmlDetails != null && !string.IsNullOrWhiteSpace(vm.HtmlDetails.ContentFilePath))
                 {
                     allContentPath.Add(vm.HtmlDetails.ContentFilePath);
                 }
-                else if (vm.ImageDetails != null && !string.IsNullOrWhiteSpace(vm.ImageDetails.File?.FilePath))
-                {
-                    allFilePath.Add(vm.ImageDetails.File?.FilePath);
-                }
-                else if (vm.ArticleDetails != null)
-                {
-                    var files = vm.ArticleDetails.Files.ToList();
-                    if (files.Any())
-                    {
-                        foreach (var file in files)
-                        {
-                            allFilePath.Add(file.FilePath);
-                        }
-                    }
-                }
 
+                // audio and video to be added
                 await this.MoveInPutDirectoryToArchive(allFilePath);
                 await this.MoveOutPutDirectoryToArchive(allContentPath);
             }
@@ -286,7 +309,7 @@
                                 }
                             }
 
-                            await directory.DeleteAsync();
+                            await directory.DeleteIfExistsAsync();
                         }
                     }
                 }
@@ -334,6 +357,7 @@
                 {
                     var sourceFileClient = sourceDirectory.GetFileClient(fileDirectory.Name);
                     await this.DeleteSubdirectory(sourceFileClient.Path);
+                    await sourceFileClient.DeleteIfExistsAsync();
                 }
                 else
                 {
@@ -341,6 +365,8 @@
                     await sourceFileClient.DeleteIfExistsAsync();
                 }
             }
+
+            await sourceDirectory.DeleteIfExistsAsync();
         }
 
         private async Task MoveInPutDirectoryToArchive(List<string> allDirectoryRef)
@@ -351,6 +377,20 @@
                 {
                     var directory = this.ShareClient.GetDirectoryClient(directoryRef);
                     var archiveDirectory = this.InputArchiveShareClient.GetDirectoryClient(directoryRef);
+                    if (!directory.Exists())
+                    {
+                        continue;
+                    }
+
+                    if (directory.Exists())
+                    {
+                        var inputCheck = directory.GetFilesAndDirectories();
+                        if (inputCheck.Count() > 1)
+                        {
+                            await this.MoveOutPutDirectoryToArchive(new List<string> { directoryRef });
+                            continue;
+                        }
+                    }
 
                     await foreach (var fileItem in directory.GetFilesAndDirectoriesAsync())
                     {

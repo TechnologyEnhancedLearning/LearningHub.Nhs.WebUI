@@ -190,7 +190,7 @@
                         </form>
                     }
                 </div>
-                <a class="nhsuk-u-font-size-16" role="button" asp-controller="Bookmark" asp-action="BookmarkResource"
+                <a class="nhsuk-u-font-size-16" asp-controller="Bookmark" asp-action="BookmarkResource"
                    asp-route-bookmarked="@Model.ResourceItem.IsBookmarked"
                    asp-route-id="@Model.ResourceItem.BookmarkId"
                    asp-route-title="@Model.ResourceItem.Title.Truncate(60)"
@@ -256,7 +256,7 @@
                                 </form>
                             }
                         </div>
-                        <a class="nhsuk-u-font-size-16" role="button" asp-controller="Bookmark" asp-action="BookmarkResource"
+                        <a class="nhsuk-u-font-size-16" asp-controller="Bookmark" asp-action="BookmarkResource"
                            asp-route-bookmarked="@Model.ResourceItem.IsBookmarked"
                            asp-route-id="@Model.ResourceItem.BookmarkId"
                            asp-route-title="@Model.ResourceItem.Title.Truncate(60)"

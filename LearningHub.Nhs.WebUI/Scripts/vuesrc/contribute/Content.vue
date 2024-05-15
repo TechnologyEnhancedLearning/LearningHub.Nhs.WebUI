@@ -295,6 +295,23 @@
                             </transition>
                         </div>
 
+                        <div v-if="avUnavailableMessage">
+                            <transition name="modal">
+                                <div class="modal-mask">
+                                    <div class="modal-wrapper">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div v-html="audioVideoUnavailableView"></div>
+                                                <div class="modal-footer modal-footer--buttons">
+                                                    <button type="button" class="nhsuk-button nhsuk-button--secondary" @click="cancelAVUnavailModal">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </transition>
+                        </div>
+
                         <div v-if="invalidFileTypeError">
                             <transition name="modal">
                                 <div class="modal-mask">
@@ -472,6 +489,7 @@
                 flags: [] as FlagModel[],
                 displayType: '' as string,
                 commonContentKey: 0,
+                avUnavailableMessage: false,
                 // Some of the Content components have local state
                 // which isn't in the vuex store.
                 // This means those fields are validated using an
@@ -483,6 +501,7 @@
                 localScormDetail: null as ScormResourceModel,
                 showError: false,
                 errorMessage: '',
+                contributeResourceAVFlag: true,
             }
         },
         computed: {
@@ -589,7 +608,10 @@
             },
             hierarchyEditLoaded(): boolean {
                 return this.$store.state.hierarchyEditLoaded;
-            }
+            },
+            audioVideoUnavailableView(): string {
+                return this.$store.state.getAVUnavailableView;
+            },
         },
         async created() {
             if (this.$store.state.currentUserName == '') {
@@ -607,6 +629,7 @@
             if (!this.$store.state.fileTypes) {
                 this.$store.commit('populateFileTypes');
             }
+            this.getContributeResAVResourceFlag();
             this.uploadResourceTypes = await resourceData.getUploadResourceTypes();
             const allResourceTypes = this.uploadResourceTypes.slice();
             const allowedTypes = this.resourceTypesSupported.split(',');
@@ -623,6 +646,11 @@
             this.localScormDetail = _.cloneDeep(this.scormDetail);
         },
         methods: {
+            getContributeResAVResourceFlag() {
+                resourceData.getContributeAVResourceFlag().then(response => {
+                    this.contributeResourceAVFlag = response;
+                });
+            },
             setSpecificContentLocalValid(val: boolean) {
                 this.specificContentLocalValid = val;
             },
@@ -779,6 +807,9 @@
             cancelChangeFile() {
                 this.fileTypeChangeWarning = false;
             },
+            cancelAVUnavailModal() {
+                this.avUnavailableMessage = false;
+            },
             processChangeFile() {
                 this.fileTypeChangeWarning = false;
                 this.acceptUploadedFile();
@@ -889,6 +920,10 @@
                                 if (fileType) {
                                     resourceType = fileType.defaultResourceTypeId;
                                 }
+                            }
+                            if ((resourceType == 2 || resourceType == 7) && !this.contributeResourceAVFlag) {
+                                this.avUnavailableMessage = true;
+                                return;
                             }
                             if (resourceType != this.selectedResourceType && this.isFileAlreadyUploaded) {
                                 if (this.previousVersionExists) {

@@ -1274,5 +1274,35 @@ namespace LearningHub.Nhs.WebUI.Services
 
             return apiResponse.ValidationResult;
         }
+
+        /// <summary>
+        /// The GetObsoleteResourceFile.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <param name="deletedResource">.</param>
+        /// <returns>The <see cref="T:Task{List{FileTypeViewModel}}"/>.</returns>
+        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId, bool deletedResource = false)
+        {
+            List<string> filePaths = null;
+
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+
+            var request = $"Resource/GetObsoleteResourceFile/{resourceVersionId}/{deletedResource}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                filePaths = JsonConvert.DeserializeObject<List<string>>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return filePaths;
+        }
     }
 }

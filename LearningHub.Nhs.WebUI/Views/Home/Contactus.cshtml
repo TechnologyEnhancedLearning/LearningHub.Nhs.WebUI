@@ -86,7 +86,7 @@
     <div class="nhsuk-grid-row">
       <div class="nhsuk-grid-column-full">
         @{
-          var now = new DateTime(2020, 4, 30);
+          var now = new DateTime(2024, 4, 30);
         }
         @await Html.PartialAsync("~/Views/Shared/_PageReviewPartial.cshtml", new PageReviewModel { LastReviewedDate = now, NextReviewDate = now.AddYears(3) })
 

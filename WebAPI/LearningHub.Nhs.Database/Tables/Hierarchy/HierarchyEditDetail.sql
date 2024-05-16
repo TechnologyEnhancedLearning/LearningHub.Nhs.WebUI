@@ -15,6 +15,7 @@
 	[NodeResourceId] [int] NULL,
 	[DisplayOrder] [int] NULL,
 	[InitialNodePath] [nvarchar](256) NULL,
+	[NewNodePath] [nvarchar](256) NULL,
 	[Deleted] [bit] NOT NULL,
 	[CreateUserId] [int] NOT NULL,
 	[CreateDate] [datetimeoffset](7) NOT NULL,

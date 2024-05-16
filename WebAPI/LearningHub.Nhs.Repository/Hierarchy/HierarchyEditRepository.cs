@@ -101,7 +101,7 @@
             var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = folderEditViewModel.HierarchyEditId };
             var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = folderEditViewModel.Name };
             var param2 = new SqlParameter("@p2", SqlDbType.NVarChar) { Value = folderEditViewModel.Description };
-            var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = folderEditViewModel.ParentNodeId };
+            var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = folderEditViewModel.ParentNodePathId };
             var param4 = new SqlParameter("@p4", SqlDbType.Int) { Value = userId };
             var param5 = new SqlParameter("@p5", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
             var param6 = new SqlParameter("@p6", SqlDbType.Int) { Direction = ParameterDirection.Output };

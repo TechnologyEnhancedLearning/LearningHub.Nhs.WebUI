@@ -82,17 +82,10 @@
             return await this.facade.GetAsync<List<NodeContentEditorViewModel>>($"Hierarchy/GetNodeContentsForCatalogueEditor/{nodePathId}");
         }
 
-        /// <summary>
-        /// Gets the contents of a node (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
-        /// items from the first level down. Doesn't recurse through subfolders.
-        /// Set readOnly to true if read only data is needed.
-        /// </summary>
-        /// <param name="nodeId">The node id.</param>
-        /// <param name="readOnly">Set to true if read only data set is required.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodeId, bool readOnly)
+        /// <inheritdoc />
+        public async Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodePathId, bool readOnly)
         {
-            return await this.facade.GetAsync<List<NodeContentAdminViewModel>>($"Hierarchy/GetNodeContentsAdmin/{nodeId}/{readOnly}");
+            return await this.facade.GetAsync<List<NodeContentAdminViewModel>>($"Hierarchy/GetNodeContentsAdmin/{nodePathId}/{readOnly}");
         }
 
         /// <summary>

@@ -8,6 +8,7 @@ export class FolderNodeModel {
     name: string;
     description: string;
     parentNodeId: number;
+    parentNodePathId: number;
     path: string;
     parentNode: NodeContentAdminModel;
     public constructor(init?: Partial<FolderNodeModel>) {

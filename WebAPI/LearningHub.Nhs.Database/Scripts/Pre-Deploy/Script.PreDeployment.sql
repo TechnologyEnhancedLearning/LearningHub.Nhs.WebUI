@@ -10,11 +10,10 @@
 --------------------------------------------------------------------------------------
 */
 
--- TD-2902 - IF the [Title] column in [Content].[PageSectionDetail] has not been removed then raise error, script needs to be run manually
-IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES
-                WHERE TABLE_SCHEMA = 'resources'
-                  AND TABLE_NAME = 'ResourceReferenceEvent'))
+-- Content Referencing changes
+IF EXISTS (SELECT * from hierarchy.HierarchyEdit WHERE HierarchyEditStatusId = 1)-- Draft
 BEGIN
-    RAISERROR (N'TD-2902 Add resource types to Content Server.sql must be run manually before release.', 16, 127) WITH NOWAIT
+    RAISERROR ('Script ''Content Referencing Initialise.sql'' must be manually run before deploy', 16, 1)
+    RETURN
 END
 GO

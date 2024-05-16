@@ -41,8 +41,8 @@ const getNodeContentsForCatalogueEditor = async function (nodePathId: number): P
         });
 };
 
-const getNodeContentsAdmin = async function (nodeId: number, readOnly: boolean): Promise<NodeContentAdminModel[]> {
-    return await axios.get<NodeContentAdminModel[]>('/api/hierarchy/GetNodeContentsAdmin/' + nodeId + '/' + readOnly + `?timestamp=${new Date().getTime()}`)
+const getNodeContentsAdmin = async function (nodePathId: number, readOnly: boolean): Promise<NodeContentAdminModel[]> {
+    return await axios.get<NodeContentAdminModel[]>('/api/hierarchy/GetNodeContentsAdmin/' + nodePathId + '/' + readOnly + `?timestamp=${new Date().getTime()}`)
         .then(response => {
             return response.data;
         })

@@ -354,7 +354,7 @@
             },
             async loadNodeContents() {
                 this.isError = false;
-                await contentStructureData.getNodeContentsAdmin(this.item.nodeId, this.readOnly && !this.item.inEdit).then(response => {
+                await contentStructureData.getNodeContentsAdmin(this.item.nodePathId, this.readOnly && !this.item.inEdit).then(response => {
 
                     this.item.children = response;
                     this.item.children.forEach((child) => {

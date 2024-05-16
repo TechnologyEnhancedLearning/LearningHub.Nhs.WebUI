@@ -109,18 +109,18 @@
         }
 
         /// <summary>
-        /// Gets the contents of a node (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
+        /// Gets the contents of a node path (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// Set readOnly to true if read only data is needed.
         /// </summary>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <param name="readOnly">Set to true if read only data set is required.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [HttpGet]
-        [Route("GetNodeContentsAdmin/{nodeId}/{readOnly}")]
-        public async Task<ActionResult> GetNodeContentsAdmin(int nodeId, bool readOnly)
+        [Route("GetNodeContentsAdmin/{nodePathId}/{readOnly}")]
+        public async Task<ActionResult> GetNodeContentsAdmin(int nodePathId, bool readOnly)
         {
-            List<NodeContentAdminViewModel> viewModels = await this.hierarchyService.GetNodeContentsAdminAsync(nodeId, readOnly);
+            List<NodeContentAdminViewModel> viewModels = await this.hierarchyService.GetNodeContentsAdminAsync(nodePathId, readOnly);
             return this.Ok(viewModels);
         }
 

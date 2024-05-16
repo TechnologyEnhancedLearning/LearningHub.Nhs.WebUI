@@ -1,6 +1,5 @@
 ﻿CREATE TABLE [hierarchy].[HierarchyEdit](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[RootNodeId] [int] NULL,
 	[RootNodePathId] [int] NULL,
 	[HierarchyEditStatusId] [int] NULL,
 	[PublicationId] [int] NULL,
@@ -37,12 +36,6 @@ GO
 ALTER TABLE [hierarchy].[HierarchyEdit] CHECK CONSTRAINT [FK_HierarchyEdit_HierarchyEditStatus]
 GO
 
-ALTER TABLE [hierarchy].[HierarchyEdit]  WITH CHECK ADD  CONSTRAINT [FK_HierarchyEdit_Node] FOREIGN KEY([RootNodeId])
-REFERENCES [hierarchy].[Node] ([Id])
-GO
-
-ALTER TABLE [hierarchy].[HierarchyEdit] CHECK CONSTRAINT [FK_HierarchyEdit_Node]
-GO
 
 ALTER TABLE [hierarchy].[HierarchyEdit]  WITH CHECK ADD  CONSTRAINT [FK_HierarchyEdit_NodePath] FOREIGN KEY([RootNodePathId])
 REFERENCES [hierarchy].[NodePath] ([Id])

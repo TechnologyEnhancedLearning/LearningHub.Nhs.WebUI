@@ -7,6 +7,8 @@
 --
 -- 25-08-2021  KD	Initial Revision.
 -- 05-01-2021  KD	IT2 - refresh hierarchy.HierarchyEditNodeResourceLookup if required.
+-- 13-05-2024  DB	Addition of ParentNodePathId to the update statement.
+-- 20-05-2024  DB	Added the creation of a new NodePath record for the moved node and update child nodes.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditMoveNode]
 (
@@ -27,8 +29,10 @@ BEGIN
 		DECLARE @AmendDate datetimeoffset(7) = ISNULL(TODATETIMEOFFSET(DATEADD(mi, @UserTimezoneOffset, GETUTCDATE()), @UserTimezoneOffset), SYSDATETIMEOFFSET())
 
 		DECLARE @HierarchyEditId int
-		DECLARE @NodeId int
-		SELECT @HierarchyEditId = HierarchyEditId, @NodeId = NodeId FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @HierarchyEditDetailId
+		DECLARE @ChildNodeId int
+		SELECT	@HierarchyEditId = HierarchyEditId,
+				@ChildNodeId = NodeId
+		FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @HierarchyEditDetailId
 
 		-- Decrement display order of sibling nodes with higher display order.
 		UPDATE 
@@ -68,6 +72,13 @@ BEGIN
 			AND hed_moveTo.Deleted = 0
 			AND hed_moveTo_children.Deleted = 0
 
+		DECLARE @ParentNodeId int
+		DECLARE @ParentNodePathId int
+		SELECT	@ParentNodeId = NodeId,
+				@ParentNodePathId = NodePathId
+		FROM	[hierarchy].[HierarchyEditDetail]
+		WHERE	Id = @MoveToHierarchyEditDetailId
+
 		-- Move the node.
 		-- Is there an existing NodeLink between the Nodes (i.e. from delete / move away & reinstate scenario)
 		DECLARE @nodeLinkId int
@@ -76,15 +87,23 @@ BEGIN
 		FROM 
 			hierarchy.NodeLink
 		WHERE
-			ParentNodeId = (SELECT NodeId FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @MoveToHierarchyEditDetailId)
-			AND ChildNodeId = (SELECT NodeId FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @hierarchyEditDetailId)
+			ParentNodeId = @ParentNodeId
+			AND ChildNodeId = @ChildNodeId
 			AND Deleted = 0
+
+
+
+		-- TODO: Create a new NodePath record for the moved node - Might Not be needed
+		-- As long as we record the Initial an New NodePath, can we keep the same NodePath record and NodePathId
+
+		-- ********************************************************************************************************************
 
 		UPDATE 
 			hed
 		SET
 			HierarchyEditDetailOperationId = CASE WHEN HierarchyEditDetailOperationId = 1 THEN HierarchyEditDetailOperationId ELSE 2 END, -- Set to Edit if existing Node
-			ParentNodeId = (SELECT NodeId FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @MoveToHierarchyEditDetailId),
+			ParentNodeId = @ParentNodeId,
+			ParentNodePathId = @ParentNodePathId,
 			DisplayOrder = 1,
 			NodeLinkId = CASE WHEN @nodeLinkId IS NOT NULL THEN @nodeLinkId ELSE hed.NodeLinkId END,
 			AmendUserId = @UserId,
@@ -95,10 +114,18 @@ BEGIN
 			hed.Id = @HierarchyEditDetailId
 			AND hed.Deleted = 0
 
+		-- TODO: SET THE NewNodePath column for all the children of the moved NodePath
+
+
+
+		-- ********************************************************************************************************************
+
+
+
 		------------------------------------------------------------ 
 		-- Refresh HierarchyEditNodeResourceLookup
 		------------------------------------------------------------
-		IF EXISTS (SELECT 'X' FROM hierarchy.HierarchyEditNodeResourceLookup WHERE HierarchyEditId = @HierarchyEditId AND NodeId = @NodeId)
+		IF EXISTS (SELECT 'X' FROM hierarchy.HierarchyEditNodeResourceLookup WHERE HierarchyEditId = @HierarchyEditId AND NodeId = @ChildNodeId)
 		BEGIN
 			EXEC hierarchy.HierarchyEditRefreshNodeResourceLookup @HierarchyEditId
 		END

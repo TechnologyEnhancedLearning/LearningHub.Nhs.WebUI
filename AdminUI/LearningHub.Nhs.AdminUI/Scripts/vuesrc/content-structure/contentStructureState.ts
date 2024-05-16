@@ -61,6 +61,7 @@ function refreshHierarchyEdit(state: State) {
                 state.rootNode = new NodeContentAdminModel();
                 state.rootNode.nodeTypeId = NodeType.Catalogue;
                 state.rootNode.nodeId = state.catalogue.nodeId;
+                state.rootNode.nodePathId = state.catalogue.rootNodePathId;
                 if (!(state.hierarchyEdit === null)) state.rootNode.hierarchyEditDetailId = state.hierarchyEdit.rootHierarchyEditDetailId;
                 state.rootNode.depth = 0;
                 state.rootNode.parent = null;
@@ -175,6 +176,7 @@ const mutations = {
             name: "",
             description: "",
             parentNodeId: payload.parentNode.nodeId,
+            parentNodePathId: payload.parentNode.nodePathId,
             path: payload.parentNode.path,
             parentNode: null
         }

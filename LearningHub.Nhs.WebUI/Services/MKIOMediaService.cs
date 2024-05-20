@@ -70,8 +70,10 @@
 
             // Get a reference to the blob
             BlobClient blobClient = containerClient.GetBlobClient(filename);
-
-            await blobClient.UploadAsync(file.OpenReadStream());
+            using (var stream = file.OpenReadStream())
+            {
+                await blobClient.UploadAsync(stream);
+            }
 
             return asset.Name;
         }
@@ -85,7 +87,7 @@
         {
             byte[] tokenSigningKey = Convert.FromBase64String(this.settings.AzureMediaJWTPrimaryKeySecret);
 
-            var keyidentifier = await this.GetContentKeyIdentifier(encodedAssetId);
+            var keyidentifier = string.Empty; // await this.GetContentKeyIdentifier(encodedAssetId);
 
             return GetJWTToken(this.settings.AzureMediaIssuer, this.settings.AzureMediaAudience, keyidentifier, tokenSigningKey, this.settings.AzureMediaJWTTokenExpiryMinutes);
         }
@@ -196,19 +198,18 @@
                 SecurityAlgorithms.HmacSha256, // Use the  HmacSha256 and not the HmacSha256Signature option, or the token will not work!
                 SecurityAlgorithms.Sha256Digest);
 
-            Claim[] claims = new Claim[]
-            {
-                new Claim(ContentKeyPolicyTokenClaim.ContentKeyIdentifierClaim.ClaimType, keyIdentifier),
-            };
-
+            // Claim[] claims = new Claim[]
+            // {
+            //    new Claim(ContentKeyPolicyTokenClaim.ContentKeyIdentifierClaim.ClaimType, keyIdentifier),
+            // };
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: issuer,
                 audience: audience,
-                claims: claims,
-                notBefore: DateTime.Now.AddMinutes(-5),
-                expires: DateTime.Now.AddMinutes(expiryMinutes),
                 signingCredentials: cred);
 
+            // claims: claims,
+            // notBefore: DateTime.Now.AddMinutes(-5),
+            // expires: DateTime.Now.AddMinutes(expiryMinutes),
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
 
             return handler.WriteToken(token);

@@ -17,6 +17,11 @@
                                 To view this media please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
                             </p>
                         </video>
+                        <!--<VideoPlayer v-if="isVideoReadyToShow"
+                                     :fileId="video.getFileModel().fileId"
+                                     :videoFile="video.getFileModel().videoFile"
+                                     :azureMediaServicesToken="azureMediaServicesAuthToken" />-->
+
                         <div v-if="resourceItem.videoDetails && resourceItem.videoDetails.transcriptFile">
                             <p class="nhsuk-u-margin-bottom-7">
                                 <a :href="getFileLink(resourceItem.videoDetails.transcriptFile.filePath, resourceItem.videoDetails.transcriptFile.fileName)">Download transcription</a>
@@ -85,7 +90,7 @@
     import { assessmentResourceHelper } from './helpers/assessmentResourceHelper';
     import { AssessmentProgressModel } from '../models/mylearning/assessmentProgressModel';
     import { getQueryParam } from './helpers/getQueryParam';
-    import {setResourceCetificateLink} from './helpers/resourceCertificateHelper';
+    import { setResourceCetificateLink } from './helpers/resourceCertificateHelper';
 
     Vue.use(Vuelidate as any);
 
@@ -141,6 +146,9 @@
             },
             hasCaseAssessmentAccees(): boolean {
                 return this.userAuthenticated && (this.resourceItem.resourceTypeEnum == this.ResourceType.CASE || this.resourceItem.resourceTypeEnum == this.ResourceType.ASSESSMENT) && (!(this.isGeneralUser && this.resourceItem.resourceAccessibilityEnum == this.ResourceAccessibility.FullAccess))
+            },
+            isVideoReadyToShow(): boolean {
+                return true;;//!!this.azureMediaServicesAuthToken;
             }
         },
         async created(): Promise<void> {
@@ -249,7 +257,7 @@
                 if (!this.activityLogged) {
                     this.activityLogged = true;
                     await activityRecorder.recordActivityLaunched(this.resourceItem.resourceTypeEnum, this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
-                   // await activityRecorder.recordActivityLaunched(this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
+                        // await activityRecorder.recordActivityLaunched(this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
                         .then(response => {
                             this.launchedResourceActivityId = response.createdId;
                             this.checkUserCertificateAvailability();
@@ -425,7 +433,7 @@
 
                 if (interactionType == "ended") {
                     setTimeout(() => { this.checkUserCertificateAvailability() }, 10000);
-                    await this.recordActivityComplete();                 
+                    await this.recordActivityComplete();
                 }
             },
             async recordMediaPlayingEvent(): Promise<void> {
@@ -539,8 +547,8 @@
                 else if (this.userAuthenticated && this.resourceItem.certificateEnabled && this.initialCertificateStatus == false) {
                     let check = await resourceData.userHasResourceCertificate(this.$route.params.resId);
                     if (check == true) {
-                         this.initialCertificateStatus = true;
-                         setResourceCetificateLink(this.$route.params.resId);
+                        this.initialCertificateStatus = true;
+                        setResourceCetificateLink(this.$route.params.resId);
                     }
                 }
 

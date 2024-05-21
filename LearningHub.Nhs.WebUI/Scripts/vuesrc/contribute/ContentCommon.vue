@@ -90,11 +90,11 @@
                     To help learners find this resource, type one or more relevant keywords separated by commas and click 'Add'.
                 </div>
                 <div class="col-12 mt-4 input-with-button">
-                    <input id="newKeyword" aria-labelledby="keyword-label" type="text" class="form-control" maxlength="50" v-model="newKeyword" v-bind:class="{ 'input-validation-error': keywordError }" @input="keywordError=false" @change="keywordChange" />
+                    <input id="newKeyword" aria-labelledby="keyword-label" type="text" class="form-control" maxlength="2000" v-model="newKeyword" v-bind:class="{ 'input-validation-error': keywordError }" @input="keywordError=false" @change="keywordChange" />
                     <button type="button" class="nhsuk-button nhsuk-button--secondary ml-3 nhsuk-u-margin-bottom-0" @click="addKeyword">&nbsp;Add</button>
                 </div>
                 <div class="col-12 footer-text">
-                    You can enter a maximum of 50 characters
+                    You can enter a maximum of 50 characters per keyword
                 </div>
             </div>
         </div>
@@ -529,7 +529,7 @@
                         if (!this.keywords.find(_keyword => allTrimmedKeyword.includes(_keyword.keyword.toLowerCase()))) {
                             for (var i = 0; i < allTrimmedKeyword.length; i++) {
                                 let item = allTrimmedKeyword[i];
-                                if (item.length > 0) {
+                                if (item.length > 0 && item.length <= 50) {
                                     let newkeywordObj = new KeywordModel();
                                     newkeywordObj.keyword = item;
                                     newkeywordObj.resourceVersionId = this.resourceDetail.resourceVersionId;

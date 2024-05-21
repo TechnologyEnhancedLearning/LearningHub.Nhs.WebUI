@@ -215,7 +215,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
 
 
         [Fact]
-        private void CurrentUserIdSetByAuth()
+        public void CurrentUserIdSetByAuth()
         {
             //Arrange
             ResourceController resourceController = new ResourceController(

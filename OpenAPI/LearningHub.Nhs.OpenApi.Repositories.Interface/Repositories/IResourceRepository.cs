@@ -40,16 +40,5 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         /// <returns>Resource references.</returns>
         public Task<IEnumerable<ResourceReference>> GetResourceReferencesByOriginalResourceReferenceIds(
             IEnumerable<int> originalResourceReferenceIds, int currentUserId);
-        ///// <summary>
-        ///// Gets resource references by their  resource reference Ids.
-        ///// </summary>
-        ///// <param name="resourceReferenceIds"><see cref="resourceReferenceIds"/>.</param>
-        ///// <param name="currentUserId"></param>
-        ///// <returns>Resource references.</returns>
-        //public Task<IEnumerable<ResourceReference>> GetResourceReferencesByResourceReferenceIds(
-        //    IEnumerable<int> resourceReferenceIds, int currentUserId);
-
-        //public Task<IEnumerable<ResourceReference>> GetResourceReferencesByResourceReferenceIds(
-        //IEnumerable<int> resourceReferenceIds);
     }
 }

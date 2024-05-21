@@ -66,7 +66,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 userId : this.currentUserId,
                 activityStatusId : 3 //activityStatusIdCompleted
                 ),
-                     ResourceTestHelper.CreateResourceWithDetails(
+            ResourceTestHelper.CreateResourceWithDetails(
                 id: 302,
                 resourceReferenceId:303,
                 deleted:false,
@@ -460,8 +460,8 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             // Given
             this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(singleResourceIdList, currentUserId.Value))
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(rangeStart, rangeLength).Select(x => x.Resource).ToList());
-            this.resourceRepository.Setup(expression: rr => rr.GetResourcesFromIds(singleResourceIdList)) 
-                .ReturnsAsync(this.ResourceReferenceList.GetRange(rangeStart, rangeLength).Select(x=>x.Resource).ToList());
+            this.resourceRepository.Setup(expression: rr => rr.GetResourcesFromIds(singleResourceIdList))
+                .ReturnsAsync(this.ResourceReferenceList.GetRange(rangeStart, rangeLength).Select(x => x.Resource).ToList());
 
 
             // When

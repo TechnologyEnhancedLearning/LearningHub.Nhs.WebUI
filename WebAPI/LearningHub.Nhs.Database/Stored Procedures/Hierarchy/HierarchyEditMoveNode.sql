@@ -30,8 +30,11 @@ BEGIN
 
 		DECLARE @HierarchyEditId int
 		DECLARE @ChildNodeId int
+		DECLARE @OriginalNodePath varchar(256)
+
 		SELECT	@HierarchyEditId = HierarchyEditId,
-				@ChildNodeId = NodeId
+				@ChildNodeId = NodeId,
+				@OriginalNodePath = ISNULL(NewNodePath, InitialNodePath)
 		FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @HierarchyEditDetailId
 
 		-- Decrement display order of sibling nodes with higher display order.
@@ -72,10 +75,12 @@ BEGIN
 			AND hed_moveTo.Deleted = 0
 			AND hed_moveTo_children.Deleted = 0
 
-		DECLARE @ParentNodeId int
-		DECLARE @ParentNodePathId int
-		SELECT	@ParentNodeId = NodeId,
-				@ParentNodePathId = NodePathId
+		DECLARE @NewParentNodeId int
+		DECLARE @NewParentNodePathId int
+		DECLARE @NewParentNodePath varchar(256)
+		SELECT	@NewParentNodeId = NodeId,
+				@NewParentNodePathId = NodePathId,
+				@NewParentNodePath = ISNULL(NewNodePath, InitialNodePath)
 		FROM	[hierarchy].[HierarchyEditDetail]
 		WHERE	Id = @MoveToHierarchyEditDetailId
 
@@ -87,23 +92,16 @@ BEGIN
 		FROM 
 			hierarchy.NodeLink
 		WHERE
-			ParentNodeId = @ParentNodeId
+			ParentNodeId = @NewParentNodeId
 			AND ChildNodeId = @ChildNodeId
 			AND Deleted = 0
-
-
-
-		-- TODO: Create a new NodePath record for the moved node - Might Not be needed
-		-- As long as we record the Initial an New NodePath, can we keep the same NodePath record and NodePathId
-
-		-- ********************************************************************************************************************
 
 		UPDATE 
 			hed
 		SET
 			HierarchyEditDetailOperationId = CASE WHEN HierarchyEditDetailOperationId = 1 THEN HierarchyEditDetailOperationId ELSE 2 END, -- Set to Edit if existing Node
-			ParentNodeId = @ParentNodeId,
-			ParentNodePathId = @ParentNodePathId,
+			ParentNodeId = @NewParentNodeId,
+			ParentNodePathId = @NewParentNodePathId,
 			DisplayOrder = 1,
 			NodeLinkId = CASE WHEN @nodeLinkId IS NOT NULL THEN @nodeLinkId ELSE hed.NodeLinkId END,
 			AmendUserId = @UserId,
@@ -114,12 +112,11 @@ BEGIN
 			hed.Id = @HierarchyEditDetailId
 			AND hed.Deleted = 0
 
-		-- TODO: SET THE NewNodePath column for all the children of the moved NodePath
-
-
-
-		-- ********************************************************************************************************************
-
+		-- Set NewNodePath column for all the children of the moved NodePath
+		UPDATE	hierarchy.HierarchyEditDetail
+		SET		NewNodePath = REPLACE(ISNULL(NewNodePath, InitialNodePath), @OriginalNodePath, CONCAT(@NewParentNodePath, '\', @ChildNodeId))
+		WHERE	HierarchyEditId = @HierarchyEditId
+    		AND ISNULL(NewNodePath, InitialNodePath) Like CONCAT(@OriginalNodePath, '%')
 
 
 		------------------------------------------------------------ 

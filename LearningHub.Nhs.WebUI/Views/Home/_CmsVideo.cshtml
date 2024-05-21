@@ -1,6 +1,9 @@
 ﻿@using LearningHub.Nhs.Models.Content
 @model PageSectionDetailViewModel
-@if (Model != null)
+@* <link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" /> *@
+<script type="text/javascript" src="~/js/mkplayer.js" asp-append-version="true"></script>
+
+@* @if (Model != null)
 {
     @if (Model.VideoAsset != null)
     {
@@ -40,4 +43,126 @@
 
     </script>
 
-}
+} *@
+<div class="video-container"  id="@($"{"videoContainer"}{Model.Id}")"></div>
+
+<script>
+
+    var model = @Json.Serialize(Model);
+    // 1. Grab the video container
+    var videoContainer = document.getElementById("@($"{"videoContainer"}{Model.Id}")");
+
+    // 2. Prepare the player configuration
+    var playerConfig = {
+        key: "d0167b1c-9767-4287-9ddc-e0fa09d31e02",
+        ui: false,
+        playback: {
+            muted: true,
+            autoplay: false
+        },
+
+        // Subscribe to player events
+        events: {
+            [mkplayer.MKPlayerEvent.Error]: (event) => {
+                console.log("Encountered player error: ", JSON.stringify(event));
+            },
+            [mkplayer.MKPlayerEvent.TimeChanged]: (event) => {
+                console.log("Current player position: ", event.time);
+            },
+            [mkplayer.MKPlayerEvent.Muted]: (data) => {
+                console.log("Audio muted!")
+            },
+            [mkplayer.MKPlayerEvent.Unmuted]: onUnmute,
+
+            [mkplayer.MKPlayerEvent.Ready]: () => {
+                var subtitleTrack = {
+                    id: "sub1",
+                    lang: "en",
+                    label: "Custom Subtitle",
+                    url: "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt",
+                    kind: "subtitle"
+                };
+                player.addSubtitle(subtitleTrack);
+            },
+            [mkplayer.MKPlayerEvent.SubtitleAdded]: () => {
+                player.enableSubtitle("sub1");
+            },
+            [mkplayer.MKPlayerEvent.playbackSpeed]: (data) => {
+                alert("Video playback quality changed to: ");
+            },
+        }
+    };
+
+    // 3. Initialize the player with video container and player configuration
+    var player = new mkplayer.MKPlayer(videoContainer, playerConfig);
+
+    player.on("loaded", () => {
+        playerElement.addEventListener("mousemove", () => {            
+        });
+    });
+
+    player.on(mkplayer.MKPlayerEvent.SourceLoaded, (event) => {
+        console.log("Source loaded successfully!");
+    });
+
+    player.on(mkplayer.MKPlayerEvent.Ready, (event) => {
+        document.getElementById("@($"{"bitmovinplayer-video-videoContainer"}{Model.Id}")").controls = true;
+        console.log("Player is ready for playback!");
+    });
+
+    var url = model.videoAsset.azureMediaAsset.locatorUri;
+    url = url.substring(0, url.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
+
+    var sourceConfig = {
+        hls: url,
+        // Custom subtitle track
+        // subtitleTracks: [{
+        //     id: "sub1",
+        //     lang: "en",
+        //     label: "Custom Subtitle",
+        //     url: "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt",
+        //     kind: "subtitle"
+        // }],
+        drm: {
+            clearkey: {
+                LA_URL: "HLS_AES",
+                headers: {
+                    "Authorization": "Bearer=" + model.videoAsset.azureMediaAsset.authenticationToken
+                }
+            }
+        }
+    };
+
+    player.load(sourceConfig)
+        .then(() => {
+            // you can also get notified when subscribed to `SourceLoaded` event.
+            console.log("Source loaded successfull!");
+        })
+        .catch((error) => {
+            console.error("An error occurred while loading the source!");
+        });
+
+    function onUnmute(data) {
+        console.log("Audio unmuted!");
+    }
+</script>
+
+<style>
+   
+    .video-container {
+        height: 0;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        padding-top: 56.25%; /* 16:9 aspect ratio */
+        background-color: #000;
+    }
+
+    video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>

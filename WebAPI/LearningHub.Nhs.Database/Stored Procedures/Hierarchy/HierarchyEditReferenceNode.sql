@@ -70,17 +70,17 @@ BEGIN
 		DECLARE @OriginalParentNodePath NVARCHAR(256)
 		DECLARE @DestinationParentNodePath NVARCHAR(256)
 
-		SELECT  @OriginalNodePath = hed.InitialNodePath,
-				@OriginalParentNodePath = p_hed.InitialNodePath
+		SELECT  @OriginalNodePath = ISNULL(hed.NewNodePath, hed.InitialNodePath),
+				@OriginalParentNodePath = ISNULL(p_hed.NewNodePath, p_hed.InitialNodePath)
 		FROM    hierarchy.HierarchyEditDetail hed
 		INNER JOIN hierarchy.HierarchyEditDetail p_hed ON hed.ParentNodePathId = p_hed.NodePathId AND hed.HierarchyEditId = p_hed.HierarchyEditId
 		WHERE   hed.Id = @HierarchyEditDetailId
 
-		SELECT  @DestinationParentNodePath = InitialNodePath
+		SELECT  @DestinationParentNodePath = ISNULL(NewNodePath, InitialNodePath)
 		FROM    hierarchy.HierarchyEditDetail
 		WHERE   Id = @ReferenceToHierarchyEditDetailId
 
-		INSERT INTO hierarchy.HierarchyEditDetail (HierarchyEditId,HierarchyEditDetailTypeId,HierarchyEditDetailOperationId,NodeId,NodePathId,NodeVersionId,ParentNodeId,ParentNodePathId,NodeLinkId,ResourceId,ResourceVersionId,ResourceReferenceId,NodeResourceId,DisplayOrder,InitialNodePath,Deleted,CreateUserId,CreateDate,AmendUserId,AmendDate)
+		INSERT INTO hierarchy.HierarchyEditDetail (HierarchyEditId,HierarchyEditDetailTypeId,HierarchyEditDetailOperationId,NodeId,NodePathId,NodeVersionId,ParentNodeId,ParentNodePathId,NodeLinkId,ResourceId,ResourceVersionId,ResourceReferenceId,NodeResourceId,DisplayOrder,InitialNodePath,NewNodePath,Deleted,CreateUserId,CreateDate,AmendUserId,AmendDate)
 		SELECT  HierarchyEditId,
 				HierarchyEditDetailTypeId, -- Node Link (4) OR OR Node Resource (5)
 				4 AS HierarchyEditDetailOperationId,  -- Add Reference
@@ -95,7 +95,8 @@ BEGIN
 				NULL AS ResourceReferenceId,
 				NodeResourceId,
 				DisplayOrder,
-				@DestinationParentNodePath + SUBSTRING(InitialNodePath, LEN(@OriginalParentNodePath)+1, LEN(InitialNodePath)) AS NewNodePath, -- Not using REPLACE incase number of digits in nodeIds are not consistant
+				NULL AS InitialNodePath,
+				@DestinationParentNodePath + SUBSTRING(ISNULL(NewNodePath, InitialNodePath), LEN(@OriginalParentNodePath)+1, LEN(ISNULL(NewNodePath, InitialNodePath))) AS NewNodePath, -- Not using REPLACE incase number of digits in nodeIds are not consistant
 				0 AS Deleted,
 				@UserId AS CreateUserId,
 				@AmendDate AS CreateDate,
@@ -104,14 +105,14 @@ BEGIN
 		FROM hierarchy.HierarchyEditDetail
 		where HierarchyEditID = @HierarchyEditID
 			AND (HierarchyEditDetailTypeId = 4 OR HierarchyEditDetailTypeId = 5) -- Node Link OR Node Resource
-			AND InitialNodePath like @OriginalNodePath +'%'
+			AND ISNULL(NewNodePath, InitialNodePath) like @OriginalNodePath +'%'
 			AND Deleted = 0
 
 		-- Create the new NodePath records for the new referenced nodes (Created as IsActive = 0).
 		INSERT INTO hierarchy.NodePath (NodeId, NodePath, CatalogueNodeId, IsActive, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
-		SELECT  hed.NodeId, InitialNodePath, @RootNodeId AS CatalogueNodeId, 0 AS IsActive, 0, @UserId, @AmendDate, @UserId, @AmendDate
+		SELECT  hed.NodeId, ISNULL(hed.NewNodePath, hed.InitialNodePath), @RootNodeId AS CatalogueNodeId, 0 AS IsActive, 0, @UserId, @AmendDate, @UserId, @AmendDate
 		FROM hierarchy.HierarchyEditDetail hed
-		LEFT OUTER JOIN hierarchy.NodePath np ON hed.NodeId = np.NodeId AND hed.InitialNodePath = np.NodePath AND np.Deleted = 0
+		LEFT OUTER JOIN hierarchy.NodePath np ON hed.NodeId = np.NodeId AND ISNULL(hed.NewNodePath, hed.InitialNodePath) = np.NodePath AND np.Deleted = 0
 		WHERE hed.HierarchyEditID = @HierarchyEditID
 			AND hed.HierarchyEditDetailOperationId = 4 -- Add Reference
 			AND HierarchyEditDetailTypeId = 4 -- Node Link
@@ -124,7 +125,7 @@ BEGIN
 				AmendUserId = @UserId,
 				AmendDate = @AmendDate
 		FROM	hierarchy.HierarchyEditDetail hed
-		INNER JOIN hierarchy.NodePath np ON hed.NodeId = np.NodeId AND hed.InitialNodePath = np.NodePath AND np.Deleted = 0
+		INNER JOIN hierarchy.NodePath np ON hed.NodeId = np.NodeId AND ISNULL(hed.NewNodePath, hed.InitialNodePath) = np.NodePath AND np.Deleted = 0
 		WHERE	hed.HierarchyEditID = @HierarchyEditID
 			AND hed.HierarchyEditDetailOperationId = 4 -- Add Reference
 			AND hed.NodePathId is NULL
@@ -136,7 +137,7 @@ BEGIN
 				AmendUserId = @UserId,
 				AmendDate = @AmendDate
 		FROM    hierarchy.HierarchyEditDetail hed
-		INNER JOIN hierarchy.HierarchyEditDetail p_hed ON hed.InitialNodePath = p_hed.InitialNodePath + '\' + CAST(hed.NodeId AS VARCHAR(10))
+		INNER JOIN hierarchy.HierarchyEditDetail p_hed ON ISNULL(hed.NewNodePath, hed.InitialNodePath) = ISNULL(p_hed.NewNodePath, p_hed.InitialNodePath) + '\' + CAST(hed.NodeId AS VARCHAR(10))
 		WHERE   hed.HierarchyEditID = @HierarchyEditID
 			AND p_hed.HierarchyEditId = @HierarchyEditID
 			AND hed.HierarchyEditDetailOperationId = 4 -- Add Reference

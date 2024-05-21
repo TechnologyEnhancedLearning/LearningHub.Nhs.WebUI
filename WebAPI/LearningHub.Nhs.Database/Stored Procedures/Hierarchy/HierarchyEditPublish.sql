@@ -439,7 +439,28 @@ BEGIN
 		--	cte.NodePathId IS NULL
 
 
--- TODO: Can the following be dome more simply by usind the NodeId and NodePath(s) from the HierarchyEditDetail table?
+		DECLARE @rootNodeId int
+		SELECT @rootNodeId = np.NodeId
+		FROM hierarchy.HierarchyEdit he
+		INNER JOIN hierarchy.NodePath np ON he.RootNodePathId = np.Id
+		WHERE he.Id = @HierarchyEditId
+
+		-- Update NodePaths for moved nodes
+		UPDATE 
+			np
+		SET
+			NodePath = ISNULL(hed.NewNodePath, hed.InitialNodePath),
+			AmendUserId = @AmendUserId,
+			AmendDate = @AmendDate
+		FROM
+			hierarchy.NodePath np
+		INNER JOIN
+			hierarchy.HierarchyEditDetail hed ON np.Id = hed.NodePathId
+		WHERE 
+			hed.InitialNodePath IS NOT NULL
+			AND hed.HierarchyEditId = @HierarchyEditId
+			AND np.Deleted = 0
+			AND np.NodePath != ISNULL(hed.NewNodePath, hed.InitialNodePath)
 
 		-- Reactivate any matched existing NodePath/s that are currently inactive
 		UPDATE 
@@ -451,20 +472,14 @@ BEGIN
 		FROM 
 			hierarchy.NodePath np
 		INNER JOIN
-			#cteNodePath cte ON np.Id = cte.NodePathId AND cte.NodePathIsActive = 0
+			hierarchy.HierarchyEditDetail hed ON np.NodeId = hed.NodeId AND np.NodePath = ISNULL(hed.NewNodePath, hed.InitialNodePath)
 		WHERE 
-			np.Deleted = 0 
+			np.CatalogueNodeId = @rootNodeId
+			AND hed.HierarchyEditId = @HierarchyEditId
+			AND np.Deleted = 0 
 			AND np.IsActive = 0
 
 		-- Deactivate redundant NodePath/s
-		-- IT1: note - Root node is the Catalogue node.
-		-- Logic may be appropriate for IT2 but will need to be confirmed.
-		DECLARE @rootNodeId int
-		SELECT @rootNodeId = np.NodeId
-		FROM hierarchy.HierarchyEdit he
-		INNER JOIN hierarchy.NodePath np ON he.RootNodePathId = np.Id
-		WHERE he.Id = @HierarchyEditId
-
 		UPDATE 
 			np
 		SET 
@@ -474,53 +489,146 @@ BEGIN
 		FROM 
 			hierarchy.NodePath np
 		LEFT JOIN
-			#cteNodePath cte_nodePath ON np.NodeId = np.NodeId AND np.CatalogueNodeId = np.CatalogueNodeId AND np.NodePath = cte_nodePath.NodePath
+			hierarchy.HierarchyEditDetail hed ON np.NodeId = hed.NodeId AND np.NodePath = ISNULL(hed.NewNodePath, hed.InitialNodePath)
 		WHERE 
 			np.CatalogueNodeId = @rootNodeId
+			AND hed.HierarchyEditId = @HierarchyEditId
 			AND np.IsActive = 1 
 			AND np.CatalogueNodeId != np.NodeId
-			AND cte_nodePath.NodeId IS NULL
+			AND hed.NodeId IS NULL
+
+		---- Reactivate any matched existing NodePath/s that are currently inactive
+		--UPDATE 
+		--	np
+		--SET 
+		--	IsActive = 1,
+		--	AmendUserId = @AmendUserId,
+		--	AmendDate = @AmendDate
+		--FROM 
+		--	hierarchy.NodePath np
+		--INNER JOIN
+		--	#cteNodePath cte ON np.Id = cte.NodePathId AND cte.NodePathIsActive = 0
+		--WHERE 
+		--	np.Deleted = 0 
+		--	AND np.IsActive = 0
+
+		---- Deactivate redundant NodePath/s
+		---- IT1: note - Root node is the Catalogue node.
+		---- Logic may be appropriate for IT2 but will need to be confirmed.
+		--DECLARE @rootNodeId int
+		--SELECT @rootNodeId = np.NodeId
+		--FROM hierarchy.HierarchyEdit he
+		--INNER JOIN hierarchy.NodePath np ON he.RootNodePathId = np.Id
+		--WHERE he.Id = @HierarchyEditId
+
+		--UPDATE 
+		--	np
+		--SET 
+		--	IsActive = 0,
+		--	AmendUserId = @AmendUserId,
+		--	AmendDate = @AmendDate
+		--FROM 
+		--	hierarchy.NodePath np
+		--LEFT JOIN
+		--	#cteNodePath cte_nodePath ON np.NodeId = np.NodeId AND np.CatalogueNodeId = np.CatalogueNodeId AND np.NodePath = cte_nodePath.NodePath
+		--WHERE 
+		--	np.CatalogueNodeId = @rootNodeId
+		--	AND np.IsActive = 1 
+		--	AND np.CatalogueNodeId != np.NodeId
+		--	AND cte_nodePath.NodeId IS NULL
 
 		----------------------------------------------------------
 		-- NodePathNode
 		----------------------------------------------------------		
 		-- Generate NodePathNode entries
-		DECLARE @Id int
-		DECLARE @NodePath as NVARCHAR(256)
+		DECLARE @NodePathId int
+        DECLARE @NodeId int
+        DECLARE @ParentNodeId int
+		DECLARE @InitialNodePath as NVARCHAR(256)
+		DECLARE @NewNodePath as NVARCHAR(256)
+		DECLARE @HierarchyEditDetailOperationId int
 		DECLARE @NodePathCursor as CURSOR
  
 		SET @NodePathCursor = CURSOR FORWARD_ONLY FOR
-		SELECT
-			np.Id,
-			np.NodePath
-		FROM
-			hierarchy.[NodePath] np
-		INNER JOIN
-			#cteNodePath ON np.NodePath = #cteNodePath.NodePath
-		LEFT JOIN
-			(SELECT DISTINCT NodePathId FROM [hierarchy].[NodePathNode]) npn ON np.Id = npn.NodePathId
-		WHERE
-			npn.NodePathId IS NULL
+        SELECT  NodePathId, NodeId, ParentNodeId, InitialNodePath, NewNodePath, HierarchyEditDetailOperationId
+        FROM    hierarchy.HierarchyEditDetail
+        WHERE   HierarchyEditId = 80
+            AND ISNULL(InitialNodePath, '') != ISNULL(NewNodePath, InitialNodePath)
+            AND (
+                HierarchyEditDetailTypeId = 4 -- Node Link
+                OR
+                HierarchyEditDetailTypeId = 3 -- Folder Node
+                )
 
 		OPEN @NodePathCursor;
-		FETCH NEXT FROM @NodePathCursor INTO @Id, @NodePath;
+		FETCH NEXT FROM @NodePathCursor INTO @NodePathId, @NodeId, @ParentNodeId, @InitialNodePath, @NewNodePath, @HierarchyEditDetailOperationId;
 			WHILE @@FETCH_STATUS = 0
 		BEGIN
-	
-			INSERT INTO [hierarchy].[NodePathNode]([NodePathId],[NodeId],[Depth],Deleted,[CreateUserID],[CreateDate],[AmendUserID],[AmendDate])
-			SELECT
-				NodePathId = @Id,
-				NodeId = nodeInPath.[Value],
-				Depth = nodeInPath.idx,
-				Deleted = 0,
-				CreateUserID = @AmendUserId,
-				CreateDate = @AmendDate,
-				AmendUserID = @AmendUserId,
-				AmendDate = @AmendDate
-			FROM
-				hub.[fn_Split](@NodePath, '\') nodeInPath
 
-			FETCH NEXT FROM @NodePathCursor INTO @Id, @NodePath;
+			IF (@HierarchyEditDetailOperationId = 3) -- Delete
+			BEGIN
+				-- Mark as deleted for removed nodepaths
+				UPDATE npn
+				SET Deleted = 1,
+					AmendUserID = @AmendUserId,
+					AmendDate = @AmendDate
+				FROM
+					hierarchy.NodePathNode npn
+				WHERE NodePathId = @NodePathId
+					AND Deleted = 0
+			END
+			Else
+			BEGIN
+				-- Update for changed nodepaths
+				UPDATE npn
+				SET NodeId = nodeInPath.[Value],
+					AmendUserID = @AmendUserId,
+					AmendDate = @AmendDate
+				FROM
+					hub.[fn_Split](@NewNodePath, '\') nodeInPath
+				INNER JOIN
+					hierarchy.NodePathNode npn ON npn.NodePathId = @NodePathId 
+												AND npn.Depth = nodeInPath.idx
+												AND npn.NodeId != nodeInPath.[Value]
+				WHERE npn.Deleted = 0
+
+				-- Insert for changed nodepaths
+				INSERT INTO [hierarchy].[NodePathNode]([NodePathId],[NodeId],[Depth],Deleted,[CreateUserID],[CreateDate],[AmendUserID],[AmendDate])
+				SELECT
+					NodePathId = @NodePathId,
+					NodeId = nodeInPath.[Value],
+					Depth = nodeInPath.idx,
+					Deleted = 0,
+					CreateUserID = @AmendUserId,
+					CreateDate = @AmendDate,
+					AmendUserID = @AmendUserId,
+					AmendDate = @AmendDate
+				FROM
+					hub.[fn_Split](@NewNodePath, '\') nodeInPath
+				LEFT OUTER JOIN
+					hierarchy.NodePathNode npn ON npn.NodePathId = @NodePathId 
+												AND npn.Depth = nodeInPath.idx
+												AND npn.NodeId = nodeInPath.[Value]
+												AND npn.Deleted = 0
+				WHERE   npn.Id IS NULL
+
+				-- Mark as deleted for changed nodepaths
+				UPDATE npn
+				SET Deleted = 1,
+					AmendUserID = @AmendUserId,
+					AmendDate = @AmendDate
+				FROM
+					hierarchy.NodePathNode npn
+				LEFT OUTER JOIN
+					hub.[fn_Split](@NewNodePath, '\') nodeInPath ON npn.Depth = nodeInPath.idx
+																AND npn.NodeId = nodeInPath.[Value]
+																AND npn.Deleted = 0
+				WHERE npn.NodePathId = @NodePathId
+                    AND nodeInPath.[value] IS NULL
+			END
+
+
+			FETCH NEXT FROM @NodePathCursor INTO @NodePathId, @NodeId, @ParentNodeId, @InitialNodePath, @NewNodePath, @HierarchyEditDetailOperationId;
 
 		END
 

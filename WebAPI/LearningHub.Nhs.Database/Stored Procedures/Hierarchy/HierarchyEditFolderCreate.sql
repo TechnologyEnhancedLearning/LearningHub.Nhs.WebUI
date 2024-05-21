@@ -7,7 +7,7 @@
 --
 -- 25-08-2021  KD	Initial Revision.
 -- 22-04-2024  DB	Included NULL NodeId and UserId in call to [hierarchy].[FolderNodeVersionCreate].
--- 15-05-2024  DB	Accept @ParentNodePathId as imput parameter,create NodePath and populate NodePathId and ParentNodePathId in HierarchyEditDetail.
+-- 15-05-2024  DB	Accept @ParentNodePathId as input parameter, create NodePath and populate NodePathId and ParentNodePathId in HierarchyEditDetail.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditFolderCreate]
 (
@@ -33,12 +33,14 @@ BEGIN
 		DECLARE @CreatedNodeId int
 		DECLARE @CreatedNodeVersionId int
 		DECLARE @ParentNodeId int
+		DECLARE @ParentNodePath varchar(256)
 
 		EXECUTE [hierarchy].[FolderNodeVersionCreate] NULL, @Name, @Description, @UserId, @CreatedNodeVersionId OUTPUT
 
 		SELECT @CreatedNodeId = NodeId FROM hierarchy.NodeVersion WHERE Id = @CreatedNodeVersionId
 
-		SELECT @ParentNodeId = NodeId
+		SELECT	@ParentNodeId = NodeId,
+				@ParentNodePath = ISNULL(NewNodePath, InitialNodePath)
 		FROM hierarchy.HierarchyEditDetail
 		WHERE HierarchyEditId = @HierarchyEditId
 			AND NodePathId = @ParentNodePathId
@@ -64,7 +66,11 @@ BEGIN
 		SET @NewNodePathId = SCOPE_IDENTITY()
 
 		-- Create new HierarchyEditDetail with details of the link to parent node.
-		UPDATE [hierarchy].[HierarchyEditDetail] SET DisplayOrder = DisplayOrder + 1 WHERE ParentNodeId = @ParentNodeId AND HierarchyEditId = @HierarchyEditId AND ResourceId IS NULL
+		UPDATE	[hierarchy].[HierarchyEditDetail]
+		SET		DisplayOrder = DisplayOrder + 1
+		WHERE	ParentNodeId = @ParentNodeId
+			AND HierarchyEditId = @HierarchyEditId
+			AND ResourceId IS NULL
 
 		INSERT INTO [hierarchy].[HierarchyEditDetail](HierarchyEditId,
 														HierarchyEditDetailTypeId,
@@ -77,6 +83,7 @@ BEGIN
 														NodeLinkId,
 														DisplayOrder,
 														InitialNodePath,
+														NewNodePath,
 														Deleted,
 														CreateUserId,
 														CreateDate,
@@ -94,6 +101,7 @@ BEGIN
 			NULL AS NodeLinkId,
 			1 AS DisplayOrder,
 			NULL AS InitialNodePath,
+			CONCAT(@ParentNodePath, '\', CAST(@CreatedNodeId AS VARCHAR(10))) AS NewNodePath,
 			0 AS Deleted,
 			@UserId AS CreateUserId,
 			@AmendDate AS CreateDate,

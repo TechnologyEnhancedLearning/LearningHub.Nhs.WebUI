@@ -103,7 +103,7 @@ BEGIN
 			ParentNodeId = @NewParentNodeId,
 			ParentNodePathId = @NewParentNodePathId,
 			DisplayOrder = 1,
-			NodeLinkId = CASE WHEN @nodeLinkId IS NOT NULL THEN @nodeLinkId ELSE hed.NodeLinkId END,
+			NodeLinkId = @nodeLinkId, -- CASE WHEN @nodeLinkId IS NOT NULL THEN @nodeLinkId ELSE hed.NodeLinkId END,
 			AmendUserId = @UserId,
 			AmendDate = @AmendDate
 		FROM

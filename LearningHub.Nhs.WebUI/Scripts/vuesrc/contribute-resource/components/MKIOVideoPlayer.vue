@@ -55,8 +55,8 @@
                 ui: false,
                 theme: "dark",
                 playback: {
-                    muted: true,
-                    autoplay: true,
+                    muted: false,
+                    autoplay: false,
                 },             
                 events: {
                     //error: this.onPlayerError,
@@ -85,11 +85,7 @@
                             "Authorization": this.getBearerToken()
                         }
                     }
-                },
-                playback: {
-                    muted: false,
-                    autoplay: false
-                },               
+                }           
             };
 
             this.player.load(sourceConfig)

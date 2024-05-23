@@ -29,13 +29,14 @@
                     <!--Audio-->
                     <div id="mediacontainer" data-setup='{"logo": { "enabled": false }, "techOrder": ["azureHtml5JS", "flashSS",  "silverlightSS", "html5"], "nativeControlsForTouch": false}' controls class="resource-item" v-if="hasMediaAccess && (resourceItem.resourceTypeEnum == ResourceType.AUDIO)">
 
-                        <video id="resourceAzureMediaPlayer" controls="controls" data-setup='{}' class="azuremediaplayer amp-default-skin amp-big-play-centered resource-video nhsuk-u-margin-bottom-7">
+                        <!--<video id="resourceAzureMediaPlayer" controls="controls" data-setup='{}' class="azuremediaplayer amp-default-skin amp-big-play-centered resource-video nhsuk-u-margin-bottom-7">
                             <source :src="resourceItem.audioDetails.resourceAzureMediaAsset.locatorUri" type="application/vnd.ms-sstr+xml" :data-setup='getAESProtection(resourceItem.audioDetails.resourceAzureMediaAsset.authenticationToken)' />
                             <source :src="getMediaAssetProxyUrl(resourceItem.audioDetails.resourceAzureMediaAsset)" type="application/vnd.apple.mpegurl" disableUrlRewriter="true" />
                             <p class="amp-no-js">
                                 To view this media please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
                             </p>
-                        </video>
+                        </video>-->
+                        <div id="resourceMediaPlayer" class="video-container"></div>
                         <div v-if="resourceItem.audioDetails && resourceItem.audioDetails.transcriptFile">
                             <p class="nhsuk-u-margin-bottom-7">
                                 <a :href="getFileLink(resourceItem.audioDetails.transcriptFile.filePath, resourceItem.audioDetails.transcriptFile.fileName)">Download transcription</a>
@@ -234,36 +235,16 @@
                     if (captionsInfo) {
                         const trackElement = document.createElement('track');
                         var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
-                        trackElement.kind = 'subtitles'; // Or 'subtitles' or 'descriptions' depending on your track type
-                        trackElement.label = 'Track'; // Optional label for the track
+                        trackElement.kind = 'captions'; // Or 'subtitles' or 'descriptions' depending on your track type
+                        trackElement.label = 'Track'; 
                         trackElement.src = srcPath;
 
                         // Append the track to the video element
                         videoElement.appendChild(trackElement);
-                    }                 
+                    }
                 }
 
-                //debugger;
-                //var cap = this.resourceItem.videoDetails.closedCaptionsFile;
-                //var src = '/api/resource/DownloadResource?filePath=' + cap.filePath + '&fileName=' + cap.fileName;
-                //var test = this.getFileLink(cap.filePath, cap.fileName);
-                //debugger;
-                //var subtitleTrack = {
-                //    id: "subid",
-                //    lang: "en",
-                //    label: "Custom Subtitle",
-                //    kind: "captions",
-                //    url: "https://lh-web.dev.local" + src,
-                //};
-                //this.player.subtitles.add(subtitleTrack);
-
-                // this.player.subtitles.enable("subid");
-
-                //  this.player.play();
-                //this.player.seek(10);
-                //  this.player.unmute();
-                let player = this.player;
-                this.checkForAutoplay(player);
+                this.checkForAutoplay(this.player);
             },
             onSubtitleAdded() {
                 // this.player.subtitles.enable("subid");
@@ -278,8 +259,8 @@
                     ui: false,
                     theme: "dark",
                     playback: {
-                        muted: true,
-                        autoplay: false,
+                        muted: false,
+                        autoplay: true,
                     },
                     events: {
                         //error: this.onPlayerError,
@@ -308,11 +289,7 @@
                                 "Authorization": this.getBearerToken()
                             }
                         }
-                    },
-                    playback: {
-                        muted: false,
-                        autoplay: false
-                    },
+                    }                   
                 };
 
                 this.player.load(sourceConfig)
@@ -329,11 +306,21 @@
                 this.mkioKey = 'd0167b1c-9767-4287-9ddc-e0fa09d31e02';
             },
             getBearerToken() {
-                var token = this.resourceItem.videoDetails.resourceAzureMediaAsset.authenticationToken;
+                var token;
+                if (this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) {
+                    token = this.resourceItem.audioDetails.resourceAzureMediaAsset.authenticationToken;
+                }
+                else {
+                    token = this.resourceItem.videoDetails.resourceAzureMediaAsset.authenticationToken;
+                }
                 return "Bearer=" + token;
             },
             getMediaPlayUrl() {
-                this.playBackUrl = this.resourceItem.videoDetails.resourceAzureMediaAsset.locatorUri;
+                if (this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) {
+                    this.playBackUrl = this.resourceItem.audioDetails.resourceAzureMediaAsset.locatorUri;
+                } else {
+                    this.playBackUrl = this.resourceItem.videoDetails.resourceAzureMediaAsset.locatorUri;
+                }
                 this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
                 // this.playBackUrl = "https://ep-defaultlhdev-mediakind02-dev-by-am-sl.uksouth.streaming.mediakind.com" + this.playBackUrl;
             },
@@ -633,10 +620,8 @@
                 return "/api/resource/DownloadResource?filePath=" + filePath + "&fileName=" + encodeURIComponent(fileName);
             },
             downloadResource(filePath: string, fileName: string): void {
-                debugger;
                 let downloadLocation = this.getFileLink(filePath, fileName);
                 window.open(downloadLocation);
-                debugger;
             },
             getMediaAssetProxyUrl(azureMediaAsset: ResourceAzureMediaAssetModel): string {
 

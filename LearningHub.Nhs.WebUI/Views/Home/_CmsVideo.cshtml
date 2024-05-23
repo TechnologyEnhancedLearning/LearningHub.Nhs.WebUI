@@ -44,7 +44,7 @@
     </script>
 
 } *@
-<div class="video-container"  id="@($"{"videoContainer"}{Model.Id}")"></div>
+<div class="video-container" id="@($"{"videoContainer"}{Model.Id}")"></div>
 
 <script>
 
@@ -75,17 +75,21 @@
             [mkplayer.MKPlayerEvent.Unmuted]: onUnmute,
 
             [mkplayer.MKPlayerEvent.Ready]: () => {
-                var subtitleTrack = {
-                    id: "sub1",
-                    lang: "en",
-                    label: "Custom Subtitle",
-                    url: "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt",
-                    kind: "subtitle"
-                };
-                player.addSubtitle(subtitleTrack);
+
+                // debugger;
+                //var caption = model.videoAsset.closedCaptionsFile.fileName;
+
+                // var subtitleTrack = {
+                //     id: "@($"{"subid"}{Model.Id}")",
+                //     lang: "en",
+                //     label: "Custom Subtitle",
+                //     url: "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt",
+                //     kind: "subtitle"
+                // };
+                // player.addSubtitle(subtitleTrack);
             },
             [mkplayer.MKPlayerEvent.SubtitleAdded]: () => {
-                player.enableSubtitle("sub1");
+                //  player.enableSubtitle("@($"{"subid"}{Model.Id}")");
             },
             [mkplayer.MKPlayerEvent.playbackSpeed]: (data) => {
                 alert("Video playback quality changed to: ");
@@ -97,7 +101,7 @@
     var player = new mkplayer.MKPlayer(videoContainer, playerConfig);
 
     player.on("loaded", () => {
-        playerElement.addEventListener("mousemove", () => {            
+        playerElement.addEventListener("mousemove", () => {
         });
     });
 
@@ -106,8 +110,29 @@
     });
 
     player.on(mkplayer.MKPlayerEvent.Ready, (event) => {
-        document.getElementById("@($"{"bitmovinplayer-video-videoContainer"}{Model.Id}")").controls = true;
-        console.log("Player is ready for playback!");
+
+        debugger;
+        const videoElement = document.getElementById("@($"{"bitmovinplayer-video-videoContainer"}{Model.Id}")");
+        if (videoElement) {
+            videoElement.controls = true;
+
+            // Add the track element
+            var captionsInfo = @Json.Serialize(Model.VideoAsset.ClosedCaptionsFile);
+            if (captionsInfo.filePath) {
+                var trackElement = document.createElement('track');
+                //var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
+                var srcPath = "/file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
+                trackElement.kind = 'subtitles'; // Or 'subtitles' or 'descriptions' depending on your track type
+                trackElement.label = 'Track'; // Optional label for the track
+                trackElement.src = srcPath;
+
+                // Append the track to the video element
+                videoElement.appendChild(trackElement);
+            }
+        }
+
+        // document.getElementById("@($"{"bitmovinplayer-video-videoContainer"}{Model.Id}")").controls = true;
+        // console.log("Player is ready for playback!");
     });
 
     var url = model.videoAsset.azureMediaAsset.locatorUri;
@@ -148,7 +173,7 @@
 </script>
 
 <style>
-   
+
     .video-container {
         height: 0;
         width: 100%;

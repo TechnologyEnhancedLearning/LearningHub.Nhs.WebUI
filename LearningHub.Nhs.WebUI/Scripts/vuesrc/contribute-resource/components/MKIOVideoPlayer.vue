@@ -38,32 +38,7 @@
                 videoContainer: null,
                 mkioKey: '',
                 playBackUrl: '',
-                sourceLoaded: true,
-                playerConfig: {
-                    key: "d0167b1c-9767-4287-9ddc-e0fa09d31e02", // Replace with your actual license key
-                    //ui: false,
-                    //hls: "https://ep-defaultlhdev-mediakind02-dev-by-am-sl.uksouth.streaming.mediakind.com/d01d30e4-461f-4045-bc10-3c88a296f3af/manifest.ism/manifest(format=m3u8-cmaf,encryption=cbc)",
-                    //playback: {
-                    //    muted: true,
-                    //    autoplay: true,
-                    //},
-                    //drm: {
-                    //        clearkey: {
-                    //            LA_URL: "HLS_AES",
-                    //            headers: {
-                    //                "Authorization": "Bearer=" + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJMZWFybmluZ0h1YiIsImF1ZCI6IkxlYXJuaW5nSHViVXNlcnMifQ.gb6H6k4cazXCQHqWxPucV0fWdOlU3Y5rYahCNV8HB2Y"
-                    //            }
-                    //        }
-                    //    },
-                    //subtitles: [
-                    //    {
-                    //        src: 'https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt', // VTT subtitle file URL
-                    //        label: 'English', // Human-readable label for the track
-                    //    },
-                    //    // ... more subtitle track objects
-                    //],
-                    // Add other player configuration options here
-                },
+                sourceLoaded: true,                
             };
         },
         created() {
@@ -82,24 +57,7 @@
                 playback: {
                     muted: true,
                     autoplay: true,
-                },
-                tracks: [
-                    {
-                        kind: "captions",
-                        src: "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt",
-                        srclang: "en",
-                        label: "English",
-                    },
-                ],
-                subtitles: [
-                    {
-                        id: "sub1",
-                        lang: "en",
-                        label: "Custom Subtitle",
-                        url: "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt",
-                        kind: "subtitle"
-                    }
-                ],
+                },             
                 events: {
                     //error: this.onPlayerError,
                     //timechanged: this.onTimeChanged,
@@ -131,14 +89,7 @@
                 playback: {
                     muted: false,
                     autoplay: false
-                },
-                tracks: [
-                    {
-                        src: 'https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt', // VTT subtitle file URL
-                        label: 'English', // Human-readable label for the track
-                    },
-                    // ... more subtitle track objects
-                ],
+                },               
             };
 
             this.player.load(sourceConfig)
@@ -154,30 +105,23 @@
                 const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
                 if (videoElement) {
                     videoElement.controls = true;
-                }
-                //document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId).controls = true;
-               // const mkPlayer = MKPlayer.createPlayer(document.getElementById('bitmovinplayer-video-videoContainer'));
-                //    console.log("Player is ready for playback!");
-                // Add subtitles
-                var subtitleTrack = {
-                    id: "sub1",
-                    lang: "en",
-                    label: "Custom Subtitle",
-                    url: "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt",
-                    kind: "subtitle"
-                };
-                //  this.player.seek(10);
-                this.player.addSubtitle(subtitleTrack);
+                   
+                    // Add the track element
+                    var captionsInfo = this.captionsTrackAvailable;
+                    if (captionsInfo) {
+                        const trackElement = document.createElement('track');
+                        var srcPath = this.captionsUrl;
+                        trackElement.kind = 'captions'; 
+                        trackElement.label = 'Track'; 
+                        trackElement.src = srcPath;
+
+                        // Append the track to the video element
+                        videoElement.appendChild(trackElement);
+                    }
+                }              
             },
             onSubtitleAdded() {
-                //const subtitleTrack = {
-                //    id: "sub1",
-                //    lang: "en",
-                //    label: "Custom Subtitle",
-                //    url: "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt",
-                //    kind: "subtitle"
-                //};
-                //this.player.addSubtitle(subtitleTrack);
+             
             },
             getMKIOPlayerKey() {
                 this.mkioKey = 'd0167b1c-9767-4287-9ddc-e0fa09d31e02';

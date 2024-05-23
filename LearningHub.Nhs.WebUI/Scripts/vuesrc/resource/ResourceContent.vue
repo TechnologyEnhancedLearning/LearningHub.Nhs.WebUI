@@ -9,18 +9,15 @@
                     <!--Video-->
                     <div id="mediacontainer" class="resource-item nhsuk-u-margin-bottom-7" v-if="hasMediaAccess && (resourceItem.resourceTypeEnum === ResourceType.VIDEO)">
 
-                        <video id="resourceAzureMediaPlayer" data-setup='{"logo": { "enabled": false }, "techOrder": ["azureHtml5JS", "flashSS",  "silverlightSS", "html5"], "nativeControlsForTouch": false}' controls class="azuremediaplayer amp-default-skin amp-big-play-centered resource-video nhsuk-u-margin-bottom-4">
+                        <!--<video id="resourceAzureMediaPlayer" data-setup='{"logo": { "enabled": false }, "techOrder": ["azureHtml5JS", "flashSS",  "silverlightSS", "html5"], "nativeControlsForTouch": false}' controls class="azuremediaplayer amp-default-skin amp-big-play-centered resource-video nhsuk-u-margin-bottom-4">
                             <source :src="resourceItem.videoDetails.resourceAzureMediaAsset.locatorUri" type="application/vnd.ms-sstr+xml" :data-setup='getAESProtection(resourceItem.videoDetails.resourceAzureMediaAsset.authenticationToken)' />
                             <source :src="getMediaAssetProxyUrl(resourceItem.videoDetails.resourceAzureMediaAsset)" type="application/vnd.apple.mpegurl" disableUrlRewriter="true" />
                             <track v-if="resourceItem.videoDetails.closedCaptionsFile" default srclang="en" kind="captions" label="english" :src="'/api/resource/DownloadResource?filePath=' +  resourceItem.videoDetails.closedCaptionsFile.filePath + '&fileName=' +  resourceItem.videoDetails.closedCaptionsFile.fileName" />
                             <p class="amp-no-js">
                                 To view this media please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
                             </p>
-                        </video>
-                        <!--<VideoPlayer v-if="isVideoReadyToShow"
-                                     :fileId="video.getFileModel().fileId"
-                                     :videoFile="video.getFileModel().videoFile"
-                                     :azureMediaServicesToken="azureMediaServicesAuthToken" />-->
+                        </video>-->
+                        <div id="resourceMediaPlayer" class="video-container"></div>
 
                         <div v-if="resourceItem.videoDetails && resourceItem.videoDetails.transcriptFile">
                             <p class="nhsuk-u-margin-bottom-7">
@@ -91,6 +88,7 @@
     import { AssessmentProgressModel } from '../models/mylearning/assessmentProgressModel';
     import { getQueryParam } from './helpers/getQueryParam';
     import { setResourceCetificateLink } from './helpers/resourceCertificateHelper';
+    import { MKPlayer } from '@mediakind/mkplayer';
 
     Vue.use(Vuelidate as any);
 
@@ -128,6 +126,14 @@
                 isGeneralUser: false,
                 isSystemAdmin: false,
                 initialCertificateStatus: null,
+                player: null,
+                videoContainer: null,
+                mkioKey: 'd0167b1c-9767-4287-9ddc-e0fa09d31e02',
+                playBackUrl: '',
+                sourceLoaded: true,
+                playerConfig: {
+                    key: "d0167b1c-9767-4287-9ddc-e0fa09d31e02",
+                }
             }
         },
         computed: {
@@ -148,7 +154,7 @@
                 return this.userAuthenticated && (this.resourceItem.resourceTypeEnum == this.ResourceType.CASE || this.resourceItem.resourceTypeEnum == this.ResourceType.ASSESSMENT) && (!(this.isGeneralUser && this.resourceItem.resourceAccessibilityEnum == this.ResourceAccessibility.FullAccess))
             },
             isVideoReadyToShow(): boolean {
-                return true;;//!!this.azureMediaServicesAuthToken;
+                return true;// this.azureMediaServicesAuthToken;
             }
         },
         async created(): Promise<void> {
@@ -159,6 +165,9 @@
             await this.getGeneralUser();
             await this.getUserRole();
             await this.loadResourceItem(Number(this.$route.params.resId));
+            await this.getMKIOPlayerKey();
+            await this.getMediaPlayUrl();
+            await this.setupMKPlayer();
 
             if (this.userAuthenticated && this.resourceItem.catalogue.restrictedAccess) {
                 await this.loadRoleUserGroups();
@@ -210,7 +219,124 @@
         beforeDestroy(): void {
             window.clearInterval(this.mediaPlayingTimer);
         },
+        mounted() {
+
+        },
         methods: {
+            onPlayerReady() {
+
+                const videoElement = document.getElementById("bitmovinplayer-video-resourceMediaPlayer") as HTMLVideoElement;
+                if (videoElement) {
+                    videoElement.controls = true;
+
+                    // Add the track element
+                    var captionsInfo = this.resourceItem.videoDetails.closedCaptionsFile;
+                    if (captionsInfo) {
+                        const trackElement = document.createElement('track');
+                        var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
+                        trackElement.kind = 'subtitles'; // Or 'subtitles' or 'descriptions' depending on your track type
+                        trackElement.label = 'Track'; // Optional label for the track
+                        trackElement.src = srcPath;
+
+                        // Append the track to the video element
+                        videoElement.appendChild(trackElement);
+                    }                 
+                }
+
+                //debugger;
+                //var cap = this.resourceItem.videoDetails.closedCaptionsFile;
+                //var src = '/api/resource/DownloadResource?filePath=' + cap.filePath + '&fileName=' + cap.fileName;
+                //var test = this.getFileLink(cap.filePath, cap.fileName);
+                //debugger;
+                //var subtitleTrack = {
+                //    id: "subid",
+                //    lang: "en",
+                //    label: "Custom Subtitle",
+                //    kind: "captions",
+                //    url: "https://lh-web.dev.local" + src,
+                //};
+                //this.player.subtitles.add(subtitleTrack);
+
+                // this.player.subtitles.enable("subid");
+
+                //  this.player.play();
+                //this.player.seek(10);
+                //  this.player.unmute();
+                let player = this.player;
+                this.checkForAutoplay(player);
+            },
+            onSubtitleAdded() {
+                // this.player.subtitles.enable("subid");
+            },
+            setupMKPlayer() {
+                // Grab the video container
+                this.videoContainer = document.getElementById("resourceMediaPlayer");
+
+                // Prepare the player configuration
+                const playerConfig = {
+                    key: this.mkioKey,
+                    ui: false,
+                    theme: "dark",
+                    playback: {
+                        muted: true,
+                        autoplay: false,
+                    },
+                    events: {
+                        //error: this.onPlayerError,
+                        //timechanged: this.onTimeChanged,
+                        onpause: this.onpause,
+                        onplay: this.onplay,
+                        muted: this.onMuted,
+                        //unmuted: this.onUnmuted,
+                        ready: this.onPlayerReady,
+                        subtitleadded: this.onSubtitleAdded,
+
+                        //playbackspeed: this.onPlaybackSpeed
+                    }
+                };
+
+                // Initialize the player with video container and player configuration
+                this.player = new MKPlayer(this.videoContainer, playerConfig);
+
+                // Load source
+                const sourceConfig = {
+                    hls: this.playBackUrl,
+                    drm: {
+                        clearkey: {
+                            LA_URL: "HLS_AES",
+                            headers: {
+                                "Authorization": this.getBearerToken()
+                            }
+                        }
+                    },
+                    playback: {
+                        muted: false,
+                        autoplay: false
+                    },
+                };
+
+                this.player.load(sourceConfig)
+                    .then(() => {
+                        console.log("Source loaded successfully!");
+                    })
+                    .catch(() => {
+                        console.error("An error occurred while loading the source!");
+                    });
+
+
+            },
+            getMKIOPlayerKey() {
+                this.mkioKey = 'd0167b1c-9767-4287-9ddc-e0fa09d31e02';
+            },
+            getBearerToken() {
+                var token = this.resourceItem.videoDetails.resourceAzureMediaAsset.authenticationToken;
+                return "Bearer=" + token;
+            },
+            getMediaPlayUrl() {
+                this.playBackUrl = this.resourceItem.videoDetails.resourceAzureMediaAsset.locatorUri;
+                this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
+                // this.playBackUrl = "https://ep-defaultlhdev-mediakind02-dev-by-am-sl.uksouth.streaming.mediakind.com" + this.playBackUrl;
+            },
             initialise(): void {
                 // record activity on page created for resource article
                 if (this.userAuthenticated && this.resourceItem.resourceTypeEnum === ResourceType.CASE) {
@@ -223,15 +349,19 @@
                     window.setTimeout(this.handleResize, 100);
                 }
             },
-            checkForAutoplay(): void {
+            checkForAutoplay(player: MKPlayer): void {
                 // Autoplay the media if the mediaStartTime has been set. Happens if user came to screen via a "Play" link on My Learning progress dialog.
                 if ((this.resourceItem.resourceTypeEnum === ResourceType.VIDEO || this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) && this.mediaStartTime > 0) {
 
                     // Remove the mediaStartTime query string parameter so that if the user refreshes the page the video plays from the beginning.
                     this.$router.replace({ query: Object.assign({}, this.$route.query, { mediaStartTime: undefined }) });
 
-                    let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
-                    resourceAzureMediaPlayer.play();
+                    //[BY]
+                    //let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
+                    //resourceAzureMediaPlayer.play();
+                    if (player) {
+                        player.play();
+                    }
                 }
             },
             async loadResourceItem(id: number): Promise<void> {
@@ -492,19 +622,21 @@
                 }
             },
             addMediaEventListeners(): void {
-                let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer", AzureMediaPlayerOptions);
+                //let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer", AzureMediaPlayerOptions);
 
-                resourceAzureMediaPlayer.addEventListener(amp.eventName.play, this.recordMediaResourceActivityInteraction);
-                resourceAzureMediaPlayer.addEventListener("pause", this.recordMediaResourceActivityInteraction);
-                resourceAzureMediaPlayer.addEventListener("ended", this.recordMediaResourceActivityInteraction);
-                $(resourceAzureMediaPlayer).bind("fullscreenchange", this.handleResize);
+                //resourceAzureMediaPlayer.addEventListener(amp.eventName.play, this.recordMediaResourceActivityInteraction);
+                //resourceAzureMediaPlayer.addEventListener("pause", this.recordMediaResourceActivityInteraction);
+                //resourceAzureMediaPlayer.addEventListener("ended", this.recordMediaResourceActivityInteraction);
+                //$(resourceAzureMediaPlayer).bind("fullscreenchange", this.handleResize);
             },
             getFileLink(filePath: string, fileName: string): string {
                 return "/api/resource/DownloadResource?filePath=" + filePath + "&fileName=" + encodeURIComponent(fileName);
             },
             downloadResource(filePath: string, fileName: string): void {
+                debugger;
                 let downloadLocation = this.getFileLink(filePath, fileName);
                 window.open(downloadLocation);
+                debugger;
             },
             getMediaAssetProxyUrl(azureMediaAsset: ResourceAzureMediaAssetModel): string {
 
@@ -672,5 +804,26 @@
         color: $nhsuk-black;
         background-color: $govuk-focus-highlight-yellow;
         box-shadow: 0 -2px $govuk-focus-highlight-yellow,0 4px $nhsuk-black;
+    }
+
+    .video-container {
+        height: 0;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        padding-top: 56.25%; /* 16:9 aspect ratio */
+        background-color: #000;
+    }
+
+    video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    video[id^="bitmovinplayer-video"] {
+        width: 100%;
     }
 </style>

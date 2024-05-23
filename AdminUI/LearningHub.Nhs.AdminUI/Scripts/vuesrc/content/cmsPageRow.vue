@@ -170,7 +170,7 @@
             onPlayerReady() {
                 const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
                 if (videoElement) {
-                    videoElement.controls = true;
+                    videoElement.controls = true;                   
                 }
             },
             getMKIOPlayerKey() {
@@ -286,7 +286,21 @@
         pointer-events: none;
         opacity: 0.5;
     }
-
+    .video-container {
+        height: 0;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        padding-top: 56.25%; /* 16:9 aspect ratio */
+        background-color: #000;
+    }
+    video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
     video[id^="bitmovinplayer-video"] {
         width: 100%;
     }

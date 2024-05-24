@@ -246,6 +246,15 @@
 
                 this.checkForAutoplay(this.player);
             },
+            onpause() {
+                this.recordMediaResourceActivityInteraction(this.player,"pause");
+            },
+            onplay() {
+                this.recordMediaResourceActivityInteraction(this.player, "play");
+            },
+            onplaybackfinished() {
+                this.recordMediaResourceActivityInteraction(this.player, "ended");
+            },
             onSubtitleAdded() {
                 // this.player.subtitles.enable("subid");
             },
@@ -263,13 +272,15 @@
                         autoplay: true,
                     },
                     events: {
+                        
                         //error: this.onPlayerError,
                         //timechanged: this.onTimeChanged,
-                        onpause: this.onpause,
-                        onplay: this.onplay,
-                        muted: this.onMuted,
-                        //unmuted: this.onUnmuted,
-                        ready: this.onPlayerReady,
+                        paused: this.onpause,
+                        play: this.onplay,
+                        playbackfinished: this.onplaybackfinished,
+                        //muted: this.onMuted,
+                        ////unmuted: this.onUnmuted,
+                        ready: this.onPlayerReady,                        
                         subtitleadded: this.onSubtitleAdded,
 
                         //playbackspeed: this.onPlaybackSpeed
@@ -348,6 +359,7 @@
                     //resourceAzureMediaPlayer.play();
                     if (player) {
                         player.play();
+                        player.seek(this.mediaStartTime);
                     }
                 }
             },
@@ -405,7 +417,7 @@
                 }
             },
             async recordActivity(activityStart: Date, activityEnd: Date, activityStatus: ActivityStatus): Promise<void> {
-
+                debugger;
                 if (!this.activityLogged) {
                     this.activityLogged = true;
 
@@ -421,16 +433,18 @@
                 }
             },
             async recordActivityComplete(): Promise<void> {
+                debugger;
                 if (this.activityLogged && this.launchedResourceActivityId > 0 && !this.activityEndLogged) {
                     this.activityEndLogged = true;
                     var completeDate = new Date();
 
                     // If media is still playing, we need to record the end of the activity AND a pause media interaction all in one call.
                     if (this.resourceItem.resourceTypeEnum === ResourceType.VIDEO || this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) {
-                        let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
-                        if (!resourceAzureMediaPlayer.paused()) {
+                        //let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
+                        debugger;
+                        if (!this.player.paused) {
 
-                            let currentMediaTime = this.getMediaPlayerDisplayTime();
+                            let currentMediaTime = this.player.getCurrentTime();
                             let clientDateTime = new Date();
 
                             await activityRecorder.recordActivityAndInteractionTogether(
@@ -469,13 +483,12 @@
                         });
                 }
             },
-            async recordMediaResourceActivityInteraction(event: Event): Promise<void> {
-                let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
-
+            async recordMediaResourceActivityInteraction(player: MKPlayer, event: string): Promise<void> {
+               // let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
                 // If user has come via the 'Play' link in My Learning, set the video start time.
                 if (this.isFirstPlay && this.mediaStartTime > 0) {
                     this.isFirstPlay = false;
-                    resourceAzureMediaPlayer.currentTime(this.mediaStartTime);
+                    this.player.currentTime(this.mediaStartTime);
                 }
 
                 // On iPhone/iPad, if the user uses the browser back/forward buttons to come to the page the browser doesn't reload it from scratch. So we have to reset the tracking variables to create a whole new activity session.
@@ -488,14 +501,14 @@
                     this.createdFirstInteraction = false;
                 }
 
-                let currentMediaTime = this.getMediaPlayerDisplayTime();
+                let currentMediaTime = player.getCurrentTime();
                 let clientDateTime = new Date();
 
                 // If this is the first interaction, we need to create the ResourceActivity first, then the MediaResourceActivity, then the MediaResourceActivityInteraction.
                 // Any further interactions can't be recorded until this first one has finished being recorded, but they cannot be lost!
                 if (this.createFirstInteraction) {
                     this.createFirstInteraction = false;
-                    this.interactionQueue.push(new InteractionQueueModel({ mediaResourceActivityType: event.type, clientDateTime: clientDateTime, currentMediaTime: currentMediaTime }));
+                    this.interactionQueue.push(new InteractionQueueModel({ mediaResourceActivityType: event, clientDateTime: clientDateTime, currentMediaTime: currentMediaTime }));
                     await this.recordActivityLaunched();
                     await this.recordMediaResourceActivity();
                     await this.createQueuedInteractions();
@@ -504,13 +517,55 @@
                 else if (!this.createdFirstInteraction) {
                     // If more interactions take place whilst the above is still in the process of being recorded (i.e. this event handler gets triggered again), we need to queue the new
                     // interactions to be created in the last step of the above code block.
-                    this.interactionQueue.push(new InteractionQueueModel({ mediaResourceActivityType: event.type, clientDateTime: clientDateTime, currentMediaTime: currentMediaTime }));
+                    this.interactionQueue.push(new InteractionQueueModel({ mediaResourceActivityType: event, clientDateTime: clientDateTime, currentMediaTime: currentMediaTime }));
                 }
                 else {
                     // Otherwise the top level activities have already been created, so just go ahead and create the a new interaction.
-                    this.createInteraction(event.type, clientDateTime, currentMediaTime);
+                    this.createInteraction(event, clientDateTime, currentMediaTime);
                 }
             },
+            //async recordMediaResourceActivityInteraction(event: Event): Promise<void> {
+            //    let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
+
+            //    // If user has come via the 'Play' link in My Learning, set the video start time.
+            //    if (this.isFirstPlay && this.mediaStartTime > 0) {
+            //        this.isFirstPlay = false;
+            //        resourceAzureMediaPlayer.currentTime(this.mediaStartTime);
+            //    }
+
+            //    // On iPhone/iPad, if the user uses the browser back/forward buttons to come to the page the browser doesn't reload it from scratch. So we have to reset the tracking variables to create a whole new activity session.
+            //    if (this.activityEndLogged) {
+            //        this.activityLogged = false;
+            //        this.activityEndLogged = false;
+            //        this.mediaResourceActivityLogged = false;
+            //        this.launchedResourceActivityId = undefined;
+            //        this.createFirstInteraction = true;
+            //        this.createdFirstInteraction = false;
+            //    }
+
+            //    let currentMediaTime = this.getMediaPlayerDisplayTime();
+            //    let clientDateTime = new Date();
+
+            //    // If this is the first interaction, we need to create the ResourceActivity first, then the MediaResourceActivity, then the MediaResourceActivityInteraction.
+            //    // Any further interactions can't be recorded until this first one has finished being recorded, but they cannot be lost!
+            //    if (this.createFirstInteraction) {
+            //        this.createFirstInteraction = false;
+            //        this.interactionQueue.push(new InteractionQueueModel({ mediaResourceActivityType: event.type, clientDateTime: clientDateTime, currentMediaTime: currentMediaTime }));
+            //        await this.recordActivityLaunched();
+            //        await this.recordMediaResourceActivity();
+            //        await this.createQueuedInteractions();
+            //        this.createdFirstInteraction = true;
+            //    }
+            //    else if (!this.createdFirstInteraction) {
+            //        // If more interactions take place whilst the above is still in the process of being recorded (i.e. this event handler gets triggered again), we need to queue the new
+            //        // interactions to be created in the last step of the above code block.
+            //        this.interactionQueue.push(new InteractionQueueModel({ mediaResourceActivityType: event.type, clientDateTime: clientDateTime, currentMediaTime: currentMediaTime }));
+            //    }
+            //    else {
+            //        // Otherwise the top level activities have already been created, so just go ahead and create the a new interaction.
+            //        this.createInteraction(event.type, clientDateTime, currentMediaTime);
+            //    }
+            //},
             async createQueuedInteractions(): Promise<void> {
                 while (this.interactionQueue.length > 0) {
                     let interaction: InteractionQueueModel = this.interactionQueue.shift();
@@ -554,7 +609,7 @@
                 }
             },
             async recordMediaPlayingEvent(): Promise<void> {
-                let currentMediaTime = this.getMediaPlayerDisplayTime();
+                let currentMediaTime = this.player.getCurrentTime();// this.getMediaPlayerDisplayTime();
                 let clientDateTime = new Date();
 
                 await activityRecorder.recordMediaResourceActivityInteraction(this.mediaResourceActivityId, currentMediaTime, MediaResourceActivityType.Playing, clientDateTime)
@@ -589,7 +644,8 @@
                     duration = Math.round(this.resourceItem.audioDetails.durationInMilliseconds / 1000);
                 }
 
-                let currentMediaTime = Math.round(this.getMediaPlayerDisplayTime());
+                let currentMediaTime = Math.round(this.player.getCurrentTime());
+                debugger;
                 return currentMediaTime == duration;
             },
             handleResize() {

@@ -1,6 +1,6 @@
 ﻿@using LearningHub.Nhs.Models.Content
 @model PageSectionDetailViewModel
-@* <link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" /> *@
+<link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" />
 <script type="text/javascript" src="~/js/mkplayer.js" asp-append-version="true"></script>
 
 @* @if (Model != null)
@@ -111,23 +111,63 @@
 
     player.on(mkplayer.MKPlayerEvent.Ready, (event) => {
 
-        debugger;
         const videoElement = document.getElementById("@($"{"bitmovinplayer-video-videoContainer"}{Model.Id}")");
         if (videoElement) {
             videoElement.controls = true;
+           // debugger;
+            // Check if captions available
+            if (model.videoAsset.closedCaptionsFile) {
+                const captionsInfo = model.videoAsset.closedCaptionsFile;
+                if (captionsInfo.filePath) {
+                    const trackElement = document.createElement('track');
+                  //  const srcPath = "/file/download?filePath=" + captionsInfo.filePath + "&fileName=" + captionsInfo.fileName;
+                    const srcPath = "/file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
+                    trackElement.kind = 'captions'; // Or 'subtitles' or 'descriptions' depending on your track type
+                    trackElement.label = captionsInfo.language || 'Track'; // Use language information if available
+                   // trackElement.src = "/api/resource/DownloadResource?filePath=396eb836-5cf5-4255-b33f-66a31fdbef39&amp;fileName=samplecaption.vtt";
+                   // trackElement.src = "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt";
+                   trackElement.src =   srcPath;
+                    
 
-            // Add the track element
-            var captionsInfo = @Json.Serialize(Model.VideoAsset.ClosedCaptionsFile);
-            if (captionsInfo.filePath) {
-                var trackElement = document.createElement('track');
-                //var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
-                var srcPath = "/file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
-                trackElement.kind = 'subtitles'; // Or 'subtitles' or 'descriptions' depending on your track type
-                trackElement.label = 'Track'; // Optional label for the track
-                trackElement.src = srcPath;
+                    // Append the track to the video element
+                    videoElement.appendChild(trackElement);
 
-                // Append the track to the video element
-                videoElement.appendChild(trackElement);
+                    // Add event listener to TextTrackList for when a new text track is added
+                    // videoElement.textTracks.addEventListener('addtrack', function (event) {
+                    //     let track = event.track;
+                    //     console.log('Track added:', track);
+
+                    //     if (track.kind === 'subtitles' || track.kind === 'captions') {
+                    //         track.mode = 'showing'; // Automatically show captions
+                    //         console.log('Track showing:', track);
+                    //     }
+                    // });
+
+                    // trackElement.addEventListener('load', function () {
+                    //     debugger;
+                    //     this.track.mode = 'showing'; // Automatically show captions
+                    //     alert('Track loaded and showing:', this.track);
+                    // });
+
+                    // Manually check and set track mode after a slight delay
+                    // setTimeout(() => {                       
+                    //     var textTracks = videoElement.textTracks;
+                    //     for (let i = 0; i < textTracks.length; i++) {
+                    //         if ((textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') && textTracks[i].src === srcPath) {
+                    //             textTracks[i].mode = 'showing';
+                    //             debugger;
+                    //             console.log('Track set to showing:', textTracks[i]);
+                    //         }
+                    //     }
+                    // }, 1000);
+
+                    // Ensure the track is loaded and ready
+                    // trackElement.addEventListener('load', function () {
+                    //     debugger;
+                    //     this.mode = 'showing'; // Automatically show captions
+                    // });
+
+                }
             }
         }
 

@@ -417,7 +417,6 @@
                 }
             },
             async recordActivity(activityStart: Date, activityEnd: Date, activityStatus: ActivityStatus): Promise<void> {
-                debugger;
                 if (!this.activityLogged) {
                     this.activityLogged = true;
 
@@ -433,7 +432,7 @@
                 }
             },
             async recordActivityComplete(): Promise<void> {
-                debugger;
+               // debugger;
                 if (this.activityLogged && this.launchedResourceActivityId > 0 && !this.activityEndLogged) {
                     this.activityEndLogged = true;
                     var completeDate = new Date();
@@ -441,8 +440,8 @@
                     // If media is still playing, we need to record the end of the activity AND a pause media interaction all in one call.
                     if (this.resourceItem.resourceTypeEnum === ResourceType.VIDEO || this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) {
                         //let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
-                        debugger;
-                        if (!this.player.paused) {
+                   //     debugger;
+                        if (!this.player.isPaused()) {
 
                             let currentMediaTime = this.player.getCurrentTime();
                             let clientDateTime = new Date();
@@ -645,7 +644,7 @@
                 }
 
                 let currentMediaTime = Math.round(this.player.getCurrentTime());
-                debugger;
+              //  debugger;
                 return currentMediaTime == duration;
             },
             handleResize() {

@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Net;
     using System.Net.Cache;
-    using System.Security.Claims;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
@@ -65,6 +64,10 @@
 
             // Get a reference to the container
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(asset.Properties.Container);
+            if (!await containerClient.ExistsAsync().ConfigureAwait(false))
+            {
+                await containerClient.CreateIfNotExistsAsync().ConfigureAwait(false);
+            }
 
             var filename = Regex.Replace(file.FileName, "[^a-zA-Z0-9.]", string.Empty);
             filename = string.IsNullOrEmpty(filename) ? "file.txt" : filename;
@@ -74,7 +77,6 @@
 
             using (var stream = file.OpenReadStream())
             {
-                stream.Position = 0;
                 await blobClient.UploadAsync(stream).ConfigureAwait(false);
             }
 

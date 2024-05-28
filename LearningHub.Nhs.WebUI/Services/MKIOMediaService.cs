@@ -12,6 +12,7 @@
     using System.Threading.Tasks;
     using System.Web;
     using Azure.Storage.Blobs;
+    using Azure.Storage.Blobs.Models;
     using Azure.Storage.Blobs.Specialized;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -64,6 +65,10 @@
 
             // Get a reference to the container
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(asset.Properties.Container);
+            if (!await containerClient.ExistsAsync().ConfigureAwait(false))
+            {
+                await containerClient.CreateIfNotExistsAsync().ConfigureAwait(false);
+            }
 
             var filename = Regex.Replace(file.FileName, "[^a-zA-Z0-9.]", string.Empty);
             filename = string.IsNullOrEmpty(filename) ? "file.txt" : filename;

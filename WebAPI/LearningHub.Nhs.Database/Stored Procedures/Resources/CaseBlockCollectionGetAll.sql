@@ -336,4 +336,3 @@ BEGIN
     INNER JOIN @BlockResult b ON icb.BlockId = b.Id
     WHERE icb.Deleted = 0;
 END
-GO

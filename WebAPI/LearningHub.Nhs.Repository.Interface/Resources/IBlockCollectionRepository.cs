@@ -1,8 +1,10 @@
 ﻿namespace LearningHub.Nhs.Repository.Interface.Resources
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Resource.Blocks;
+    using LearningHub.Nhs.Models.Enums;
 
     /// <summary>
     /// The BlockRepository interface.
@@ -30,5 +32,13 @@
         /// <param name="blockCollectionId">The Block Collection Id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<List<Block>> GetQuestionBlocks(int blockCollectionId);
+
+        /// <summary>
+        /// Gets the Case, AssessmentContent, AssessmentGuidance Block Collections (including child Blocks, TextBlocks, WholeSlideImageBlocks and Files) except that of the provided resource version.
+        /// </summary>
+        /// <param name="excludeResourceVersionId">The excluded ResourceVersion Id.</param>
+        /// <param name="resourceTypeEnum">The resource type.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<Tuple<BlockCollection, BlockCollection, BlockCollection>> GetAllBlockCollections(int excludeResourceVersionId, ResourceTypeEnum resourceTypeEnum);
     }
 }

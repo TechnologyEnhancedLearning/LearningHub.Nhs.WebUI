@@ -9,6 +9,7 @@
 -- 05-01-2021  KD	IT2 - refresh hierarchy.HierarchyEditNodeResourceLookup if required.
 -- 13-05-2024  DB	Addition of ParentNodePathId to the update statement.
 -- 20-05-2024  DB	Added the creation of a new NodePath record for the moved node and update child nodes.
+-- 29-05-2024  DB	Clear the NodePathId for moved nodes. NodePaths can not be updated incase susequent references are made to the original path.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditMoveNode]
 (
@@ -31,11 +32,19 @@ BEGIN
 		DECLARE @HierarchyEditId int
 		DECLARE @ChildNodeId int
 		DECLARE @OriginalNodePath varchar(256)
+		DECLARE @RootNodeId INT
 
 		SELECT	@HierarchyEditId = HierarchyEditId,
-				@ChildNodeId = NodeId,
-				@OriginalNodePath = ISNULL(NewNodePath, InitialNodePath)
-		FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @HierarchyEditDetailId
+				@ChildNodeId = hed.NodeId,
+				@OriginalNodePath = ISNULL(hed.NewNodePath, hed.InitialNodePath),
+                @RootNodeId = np.NodeId
+		FROM
+			[hierarchy].[HierarchyEditDetail] hed
+        INNER JOIN
+			[hierarchy].[HierarchyEdit] he ON he.Id = hed.HierarchyEditId
+		INNER JOIN
+			hierarchy.NodePath np ON he.RootNodePathId = np.Id
+		WHERE hed.Id = @HierarchyEditDetailId
 
 		-- Decrement display order of sibling nodes with higher display order.
 		UPDATE 
@@ -100,23 +109,78 @@ BEGIN
 			hed
 		SET
 			HierarchyEditDetailOperationId = CASE WHEN HierarchyEditDetailOperationId = 1 THEN HierarchyEditDetailOperationId ELSE 2 END, -- Set to Edit if existing Node
-			ParentNodeId = @NewParentNodeId,
-			ParentNodePathId = @NewParentNodePathId,
-			DisplayOrder = 1,
-			NodeLinkId = @nodeLinkId, -- CASE WHEN @nodeLinkId IS NOT NULL THEN @nodeLinkId ELSE hed.NodeLinkId END,
+			ParentNodeId = CASE WHEN hed.Id = @HierarchyEditDetailId THEN null ELSE hed.ParentNodeId END, -- Populated further down if root of move
+			ParentNodePathId = NULL, -- Populated further down
+			NodePathId = NULL, -- Populated further down
+			DisplayOrder = CASE WHEN hed.Id = @HierarchyEditDetailId THEN 1 ELSE hed.DisplayOrder END,
+			NodeLinkId = CASE WHEN hed.Id = @HierarchyEditDetailId THEN @nodeLinkId ELSE hed.NodeLinkId END,
 			AmendUserId = @UserId,
 			AmendDate = @AmendDate
 		FROM
 			[hierarchy].[HierarchyEditDetail] hed
 		WHERE	
-			hed.Id = @HierarchyEditDetailId
+			HierarchyEditID = @HierarchyEditID
+			AND hed.Id = @HierarchyEditDetailId
 			AND hed.Deleted = 0
+			AND (HierarchyEditDetailTypeId = 4 OR HierarchyEditDetailTypeId = 5) -- Node Link OR Node Resource
+			AND ISNULL(NewNodePath, InitialNodePath) like @OriginalNodePath +'%'
+			AND Deleted = 0
 
-		-- Set NewNodePath column for all the children of the moved NodePath
+		-- Set the ParentNodeId and @NewParentNodePathId for the moved Node
+		UPDATE 
+			[hierarchy].[HierarchyEditDetail]
+		SET
+			ParentNodeId = @NewParentNodeId,
+			ParentNodePathId = @NewParentNodePathId,
+			HierarchyEditDetailOperationId = CASE WHEN HierarchyEditDetailOperationId IS NULL THEN 2 ELSE HierarchyEditDetailOperationId END, -- Set to Edit if first update
+			AmendUserId = @UserId,
+			AmendDate = @AmendDate
+		WHERE	
+			Id = @HierarchyEditDetailId
+
+		-- Set NewNodePath column for all the children of the moved NodePath and clear the NodePathId
 		UPDATE	hierarchy.HierarchyEditDetail
-		SET		NewNodePath = REPLACE(ISNULL(NewNodePath, InitialNodePath), @OriginalNodePath, CONCAT(@NewParentNodePath, '\', @ChildNodeId))
+		SET		NewNodePath = REPLACE(ISNULL(NewNodePath, InitialNodePath), @OriginalNodePath, CONCAT(@NewParentNodePath, '\', @ChildNodeId)),
+				HierarchyEditDetailOperationId = CASE WHEN HierarchyEditDetailOperationId IS NULL THEN 2 ELSE HierarchyEditDetailOperationId END, -- Set to Edit if first update
+				NodePathId = NULL, -- Populated further down
+				ParentNodePathId = NULL, -- Populated further down
+				AmendUserId = @UserId,
+				AmendDate = @AmendDate
 		WHERE	HierarchyEditId = @HierarchyEditId
     		AND ISNULL(NewNodePath, InitialNodePath) Like CONCAT(@OriginalNodePath, '%')
+
+		-- Create the new NodePath records resulting from the move (Created as IsActive = 0).
+		INSERT INTO hierarchy.NodePath (NodeId, NodePath, CatalogueNodeId, IsActive, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
+		SELECT  hed.NodeId, ISNULL(hed.NewNodePath, hed.InitialNodePath), @RootNodeId AS CatalogueNodeId, 0 AS IsActive, 0, @UserId, @AmendDate, @UserId, @AmendDate
+		FROM hierarchy.HierarchyEditDetail hed
+		LEFT OUTER JOIN hierarchy.NodePath np ON hed.NodeId = np.NodeId AND ISNULL(hed.NewNodePath, hed.InitialNodePath) = np.NodePath AND np.Deleted = 0
+		WHERE hed.HierarchyEditID = @HierarchyEditID
+			AND HierarchyEditDetailTypeId != 5 -- Exclude Node Resource
+			AND hed.NodePathId is NULL
+			AND np.Id IS NULL
+
+		-- Update HierarchyEditDetail records with the new NodePathIds.
+		UPDATE	hed
+		SET		NodePathId = np.Id,
+				HierarchyEditDetailOperationId = CASE WHEN hed.HierarchyEditDetailOperationId IS NULL THEN 2 ELSE hed.HierarchyEditDetailOperationId END, -- Set to Edit if first update
+				AmendUserId = @UserId,
+				AmendDate = @AmendDate
+		FROM	hierarchy.HierarchyEditDetail hed
+		INNER JOIN hierarchy.NodePath np ON hed.NodeId = np.NodeId AND ISNULL(hed.NewNodePath, hed.InitialNodePath) = np.NodePath AND np.Deleted = 0
+		WHERE	hed.HierarchyEditID = @HierarchyEditID
+			AND hed.NodePathId is NULL
+
+		-- Populate the Parent Node Path Ids for the new reference nodes.
+		UPDATE  hed
+		SET     ParentNodePathId = p_hed.NodePathId,
+				HierarchyEditDetailOperationId = CASE WHEN hed.HierarchyEditDetailOperationId IS NULL THEN 2 ELSE hed.HierarchyEditDetailOperationId END, -- Set to Edit if first update
+				AmendUserId = @UserId,
+				AmendDate = @AmendDate
+		FROM    hierarchy.HierarchyEditDetail hed
+		INNER JOIN hierarchy.HierarchyEditDetail p_hed ON ISNULL(hed.NewNodePath, hed.InitialNodePath) = ISNULL(p_hed.NewNodePath, p_hed.InitialNodePath) + '\' + CAST(hed.NodeId AS VARCHAR(10))
+		WHERE   hed.HierarchyEditID = @HierarchyEditID
+			AND hed.HierarchyEditDetailTypeId != 5 -- Exclude Node Resource
+			AND hed.ParentNodePathId IS NULL
 
 
 		------------------------------------------------------------ 

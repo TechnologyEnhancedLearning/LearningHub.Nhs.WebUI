@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Hierarchy;
 
@@ -48,6 +49,6 @@
         /// <param name="nodeId">The node id.</param>
         /// <param name="readOnly">Set to true if read only data set is required.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodeId, bool readOnly);
+        Task<List<NodeContentAdminDto>> GetNodeContentsAdminAsync(int nodeId, bool readOnly);
     }
 }

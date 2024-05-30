@@ -358,16 +358,37 @@
         public async Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodePathId, bool readOnly)
         {
             // Other parameter combinations served from the database.
-            var vm = await this.nodeRepository.GetNodeContentsAdminAsync(nodePathId, readOnly);
+            var nodeContentAdminDto = await this.nodeRepository.GetNodeContentsAdminAsync(nodePathId, readOnly);
 
             // Ensure that any Node only exists once in the returned data set.
-            var duplicateNodes = vm.Where(n => n.NodeId.HasValue).GroupBy(x => x.NodeId).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+            var duplicateNodes = nodeContentAdminDto.Where(n => n.NodeId.HasValue).GroupBy(x => x.NodeId).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
             if (duplicateNodes.Count > 0)
             {
                 throw new Exception($"Error. Duplicate Nodes returned in NodeContent for NodePathId={nodePathId}");
             }
 
-            return vm;
+            var nodeContentAdminVm = this.mapper.Map<List<NodeContentAdminViewModel>>(nodeContentAdminDto);
+            var nodePathBreakdownListDto = await this.hierarchyEditDetailRepository.GetChildNodePathBreakdownAsync(nodePathId);
+            var nodePathBreakdownList = this.mapper.Map<List<NodePathBreakdownItemViewModel>>(nodePathBreakdownListDto);
+
+            foreach (var nodeContent in nodeContentAdminVm)
+            {
+                // get the distinct nodePathIds for the current node
+                var nodePathIds = nodePathBreakdownList.Where(np => np.NodeId == nodeContent.NodeId).Select(n => n.NodePathId).Distinct().ToList();
+
+                nodeContent.NodePaths = new List<NodePathBreakdownViewModel>();
+
+                // Add the node breakdown for each nodePathId
+                foreach (var item in nodePathIds)
+                {
+                    nodeContent.NodePaths.Add(new NodePathBreakdownViewModel()
+                    {
+                        NodePathBreakdown = nodePathBreakdownList.Where(np => np.NodeId == nodeContent.NodeId && np.NodePathId == item).ToList(),
+                    });
+                }
+            }
+
+            return nodeContentAdminVm;
         }
 
         /// <summary>

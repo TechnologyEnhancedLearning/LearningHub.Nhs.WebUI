@@ -515,6 +515,7 @@
     <Build Include="Stored Procedures\Hierarchy\HierarchyEditReferenceNode.sql" />
     <Build Include="Stored Procedures\Hierarchy\GetNodePathDetails.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\Content Referencing Initialise.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditGetChildNodePathBreakdown.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

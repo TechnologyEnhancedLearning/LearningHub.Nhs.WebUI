@@ -3,6 +3,7 @@ namespace LearningHub.Nhs.Repository
     using LearningHub.Nhs.Entities.Resource;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Dashboard;
+    using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Content;
@@ -423,9 +424,14 @@ namespace LearningHub.Nhs.Repository
         public virtual DbSet<NodeContentEditorViewModel> NodeContentEditorViewModel { get; set; }
 
         /// <summary>
-        /// Gets or sets the NodeContentAdminViewModel.
+        /// Gets or sets the NodeContentAdminDto.
         /// </summary>
-        public virtual DbSet<NodeContentAdminViewModel> NodeContentAdminViewModel { get; set; }
+        public virtual DbSet<NodeContentAdminDto> NodeContentAdminDto { get; set; }
+
+        /// <summary>
+        /// Gets or sets the NodePathBreakdownItemDto.
+        /// </summary>
+        public virtual DbSet<NodePathBreakdownItemDto> NodePathBreakdownItemDto { get; set; }
 
         /// <summary>
         /// Gets or sets the CacheOperationViewModel.

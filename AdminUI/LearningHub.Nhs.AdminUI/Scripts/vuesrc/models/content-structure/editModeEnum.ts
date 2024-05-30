@@ -4,5 +4,6 @@
     Folder = 2,
     MoveNode = 3,
     MoveResource = 4,
-    ReferenceNode = 5
+    ReferenceNode = 5,
+    FolderReference = 6,
 }

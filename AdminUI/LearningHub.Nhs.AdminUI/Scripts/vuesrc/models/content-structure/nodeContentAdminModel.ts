@@ -1,4 +1,5 @@
-﻿
+﻿import { NodePathBreakdownModel } from "./NodePathBreakdownModel";
+
 export class NodeContentAdminModel {
     hierarchyEditDetailId: number;
     name: string;
@@ -27,6 +28,7 @@ export class NodeContentAdminModel {
     parent: NodeContentAdminModel;
     children: NodeContentAdminModel[];
     path: string;
+    nodePaths: NodePathBreakdownModel[];
 
     public constructor(init?: Partial<NodeContentAdminModel>) {
         Object.assign(this, init);

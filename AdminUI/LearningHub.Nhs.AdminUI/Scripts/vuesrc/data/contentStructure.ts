@@ -154,6 +154,20 @@ const deleteFolder = async function (hierarchyEditDetailId: number): Promise<Lea
         });
 };
 
+const deleteFolderReference = async function (hierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+
+    const url = `/api/hierarchy/DeleteFolderReference/${hierarchyEditDetailId}`;
+
+    return await axios.put<LearningHubValidationResultModel>(url)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('deleteFolderReference:' + e);
+            throw e;
+        });
+};
+
 const moveNodeUp = async function (hierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
 
     const url = `/api/hierarchy/MoveNodeUp/${hierarchyEditDetailId}`;
@@ -321,6 +335,7 @@ export const contentStructureData = {
     createFolder,
     updateFolder,
     deleteFolder,
+    deleteFolderReference,
     getFolder,
     moveNodeUp,
     moveNodeDown,

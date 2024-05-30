@@ -9,6 +9,7 @@ namespace LearningHub.Nhs.Services
     using System.Threading.Tasks;
     using AutoMapper;
     using Azure.Storage.Blobs;
+    using Azure.Storage.Blobs.Models;
     using Azure.Storage.Blobs.Specialized;
     using LearningHub.Nhs.Api.Shared.Configuration;
     using LearningHub.Nhs.Entities.Resource;
@@ -1326,201 +1327,63 @@ namespace LearningHub.Nhs.Services
         public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId, bool deletedResource = false)
         {
             var retVal = new List<string>();
-            var resource = await this.GetResourceVersionExtendedViewModelAsync(resourceVersionId);
-            var rvs = await this.resourceVersionRepository.GetResourceVersionsAsync(resource.ResourceId);
-            rvs = rvs.Where(x => x.Id != resourceVersionId && x.PublicationId > 0).OrderByDescending(x => x.PublicationId).ToList();
-            var rv = rvs.FirstOrDefault();
-            if (rv != null)
+            var resourceVersion = await this.GetResourceVersionByIdAsync(resourceVersionId);
+            if (resourceVersion != null)
             {
-                var extendedResourceVersion = await this.GetResourceVersionExtendedViewModelAsync(rv.Id);
-                if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Scorm)
+                if (resourceVersion.ResourceType == ResourceTypeEnum.Assessment)
                 {
-                    if (resource.ScormDetails?.ContentFilePath != extendedResourceVersion.ScormDetails.ContentFilePath)
-                    {
-                        if (!deletedResource)
-                        {
-                            retVal.Add(extendedResourceVersion.ScormDetails.ContentFilePath);
-                        }
-                        else
-                        {
-                            retVal.Add(resource.ScormDetails?.File?.FilePath);
-                        }
-                    }
-                }
-                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Html)
-                {
-                    if (resource.HtmlDetails?.ContentFilePath != extendedResourceVersion.HtmlDetails.ContentFilePath)
-                    {
-                        if (!deletedResource)
-                        {
-                            retVal.Add(extendedResourceVersion.HtmlDetails.ContentFilePath);
-                        }
-                        else
-                        {
-                            retVal.Add(resource.HtmlDetails?.File?.FilePath);
-                        }
-                    }
-                }
-                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
-                {
-                    if (resource.GenericFileDetails.File.FilePath != extendedResourceVersion.GenericFileDetails.File.FilePath)
-                    {
-                        if (!deletedResource)
-                        {
-                            retVal.Add(extendedResourceVersion.GenericFileDetails.File.FilePath);
-                        }
-                        else
-                        {
-                            retVal.Add(resource.GenericFileDetails.File.FilePath);
-                        }
-                    }
-                }
-                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Image)
-                {
-                    if (resource.ImageDetails.File.FilePath != extendedResourceVersion.ImageDetails.File.FilePath)
-                    {
-                        if (!deletedResource)
-                        {
-                            retVal.Add(extendedResourceVersion.ImageDetails.File.FilePath);
-                        }
-                        else
-                        {
-                            retVal.Add(resource.ImageDetails.File.FilePath);
-                        }
-                    }
-                }
-                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Audio)
-                {
-                    if (resource.AudioDetails?.File?.FilePath != extendedResourceVersion.AudioDetails.File.FilePath)
-                    {
-                        if (!deletedResource)
-                        {
-                            retVal.Add(extendedResourceVersion.AudioDetails.File.FilePath);
-                        }
-                        else
-                        {
-                            retVal.Add(resource.AudioDetails.File.FilePath);
-                        }
-                    }
-
-                    if (resource.AudioDetails?.ResourceAzureMediaAsset?.FilePath != extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath)
-                    {
-                        if (!deletedResource)
-                        {
-                            retVal.Add(extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath);
-                        }
-                        else
-                        {
-                            retVal.Add(resource.AudioDetails.ResourceAzureMediaAsset.FilePath);
-                        }
-                    }
-                }
-                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Video)
-                {
-                    if (resource.VideoDetails?.File?.FilePath != extendedResourceVersion.VideoDetails.File.FilePath)
-                    {
-                        if (!deletedResource)
-                        {
-                            retVal.Add(extendedResourceVersion.VideoDetails.File.FilePath);
-                        }
-                        else
-                        {
-                            retVal.Add(resource.VideoDetails.File.FilePath);
-                        }
-                    }
-
-                    if (resource.VideoDetails?.ResourceAzureMediaAsset?.FilePath != extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath)
-                    {
-                        if (!deletedResource)
-                        {
-                            retVal.Add(extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath);
-                        }
-                        else
-                        {
-                            retVal.Add(resource.VideoDetails.ResourceAzureMediaAsset.FilePath);
-                        }
-                    }
-                }
-                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Article)
-                {
-                    var inputResourceFiles = resource.ArticleDetails.Files.ToList();
-                    var previousPublishedfiles = extendedResourceVersion.ArticleDetails?.Files?.ToList();
-                    if (!deletedResource)
-                    {
-                        if (previousPublishedfiles.Any())
-                        {
-                            foreach (var file in previousPublishedfiles)
-                            {
-                                if (!inputResourceFiles.Where(x => x.FilePath == file.FilePath).Any())
-                                {
-                                    retVal.Add(file.FilePath);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (inputResourceFiles.Any())
-                        {
-                            foreach (var file in inputResourceFiles)
-                            {
-                                if (!previousPublishedfiles.Where(x => x.FilePath == file.FilePath).Any())
-                                {
-                                    retVal.Add(file.FilePath);
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Assessment)
-                {
+                    var assessmentDetails = await this.GetAssessmentViewModel(resourceVersionId);
                     var endGuidanceFiles = new List<string>();
                     var assessmentContentFiles = new List<string>();
 
-                    if (resource.AssessmentDetails is { EndGuidance: { } } && resource.AssessmentDetails.EndGuidance.Blocks != null)
-                        {
-                            if (deletedResource)
-                            {
-                                endGuidanceFiles = this.CheckBlockFile(extendedResourceVersion.AssessmentDetails.EndGuidance, resource.AssessmentDetails.EndGuidance);
-                            }
-                            else
-                            {
-                                endGuidanceFiles = this.CheckBlockFile(resource.AssessmentDetails.EndGuidance, extendedResourceVersion.AssessmentDetails.EndGuidance);
-                            }
+                    var allOtherAssessmentBlocks = await this.GetAssessmentBlockCollectionAsync(resourceVersionId, ResourceTypeEnum.Assessment);
 
-                            if (endGuidanceFiles.Any())
-                            {
-                                retVal.AddRange(endGuidanceFiles);
-                            }
+                    if (assessmentDetails is { EndGuidance: { } } && assessmentDetails.EndGuidance.Blocks != null)
+                    {
+                        if (deletedResource)
+                        {
+                            endGuidanceFiles = this.CheckBlockFile(allOtherAssessmentBlocks.Item2, assessmentDetails.EndGuidance);
+                        }
+                        else
+                        {
+                            endGuidanceFiles = this.CheckBlockFile(assessmentDetails.EndGuidance, allOtherAssessmentBlocks.Item2);
                         }
 
-                    if (resource.AssessmentDetails is { AssessmentContent: { } } && resource.AssessmentDetails.AssessmentContent.Blocks != null)
+                        if (endGuidanceFiles.Any())
                         {
-                            if (deletedResource)
-                            {
-                                assessmentContentFiles = this.CheckBlockFile(extendedResourceVersion.AssessmentDetails.AssessmentContent, resource.AssessmentDetails.AssessmentContent);
-                            }
-                            else
-                            {
-                                assessmentContentFiles = this.CheckBlockFile(resource.AssessmentDetails.AssessmentContent, extendedResourceVersion.AssessmentDetails.AssessmentContent);
-                            }
-
-                            if (assessmentContentFiles.Any())
-                            {
-                                retVal.AddRange(assessmentContentFiles);
-                            }
+                            retVal.AddRange(endGuidanceFiles);
                         }
+                    }
+
+                    if (assessmentDetails is { AssessmentContent: { } } && assessmentDetails.AssessmentContent.Blocks != null)
+                    {
+                        if (deletedResource)
+                        {
+                            assessmentContentFiles = this.CheckBlockFile(allOtherAssessmentBlocks.Item1, assessmentDetails.AssessmentContent);
+                        }
+                        else
+                        {
+                            assessmentContentFiles = this.CheckBlockFile(assessmentDetails.AssessmentContent, allOtherAssessmentBlocks.Item1);
+                        }
+
+                        if (assessmentContentFiles.Any())
+                        {
+                            retVal.AddRange(assessmentContentFiles);
+                        }
+                    }
                 }
-                else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Case)
+                else if (resourceVersion.ResourceType == ResourceTypeEnum.Case)
                 {
+                    var caseDetails = await this.GetCaseDetailsByIdAsync(resourceVersionId);
                     var caseFiles = new List<string>();
+                    var allBlocks = await this.GetAllCaseBlockCollectionsAsync(resourceVersionId, ResourceTypeEnum.Case);
                     if (deletedResource)
                     {
-                        caseFiles = this.CheckBlockFile(extendedResourceVersion.CaseDetails.BlockCollection, resource.CaseDetails.BlockCollection);
+                        caseFiles = this.CheckBlockFile(allBlocks, caseDetails.BlockCollection);
                     }
                     else
                     {
-                        caseFiles = this.CheckBlockFile(resource.CaseDetails.BlockCollection, extendedResourceVersion.CaseDetails.BlockCollection);
+                        caseFiles = this.CheckBlockFile(caseDetails.BlockCollection, allBlocks);
                     }
 
                     if (caseFiles.Any())
@@ -1528,86 +1391,230 @@ namespace LearningHub.Nhs.Services
                         retVal.AddRange(caseFiles);
                     }
                 }
-            }
-            else if (rv == null && deletedResource)
-            {
-                if (resource.ResourceTypeEnum == ResourceTypeEnum.Scorm)
+                else
                 {
-                      retVal.Add(resource.ScormDetails.ContentFilePath);
-                }
-                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Html)
-                {
-                      retVal.Add(resource.HtmlDetails.ContentFilePath);
-                }
-                else if (resource.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
-                {
-                    retVal.Add(resource.GenericFileDetails.File.FilePath);
-                }
-                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Image)
-                {
-                    retVal.Add(resource.ImageDetails.File.FilePath);
-                }
-                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Audio)
-                {
-                    retVal.Add(resource.AudioDetails?.File?.FilePath);
-                    if (resource.AudioDetails?.ResourceAzureMediaAsset?.FilePath != null)
+                    // get latest published resource version
+                    var rvs = await this.resourceVersionRepository.GetResourceVersionsAsync(resourceVersion.ResourceId);
+                    rvs = rvs.Where(x => x.Id != resourceVersionId && x.PublicationId > 0).OrderByDescending(x => x.PublicationId).ToList();
+                    var rv = rvs.FirstOrDefault();
+                    var extendedResourceVersion = await this.GetResourceVersionExtendedViewModelAsync(rv.Id);
+                    switch (resourceVersion.ResourceType)
                     {
-                            retVal.Add(resource.AudioDetails.ResourceAzureMediaAsset.FilePath);
-                    }
-                }
-                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Video)
-                {
-                    retVal.Add(resource.VideoDetails?.File?.FilePath);
-                    if (resource.VideoDetails?.ResourceAzureMediaAsset?.FilePath != null)
-                    {
-                         retVal.Add(resource.VideoDetails.ResourceAzureMediaAsset.FilePath);
-                    }
-                }
-                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Article)
-                {
-                        var inputResourceFiles = resource.ArticleDetails.Files.ToList();
-                        if (inputResourceFiles.Any())
-                        {
-                            foreach (var file in inputResourceFiles)
+                        case ResourceTypeEnum.Scorm:
+                            var scormResource = await this.GetScormDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
                             {
-                                    retVal.Add(file.FilePath);
+                                if (scormResource?.ContentFilePath != extendedResourceVersion.ScormDetails.ContentFilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.ScormDetails.ContentFilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(scormResource?.File?.FilePath);
+                                    }
+                                }
                             }
-                        }
-                    }
-                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
-                {
-                    if (deletedResource)
-                    {
-                        if (resource.AssessmentDetails is { EndGuidance: { } } && resource.AssessmentDetails.EndGuidance.Blocks != null)
-                        {
-                            var assessmentFiles = this.CheckBlockFile(null, resource.AssessmentDetails.EndGuidance);
-                            if (assessmentFiles.Any())
+                            else if (rv == null && deletedResource)
                             {
-                                retVal.AddRange(assessmentFiles);
+                                retVal.Add(scormResource.ContentFilePath);
                             }
-                        }
 
-                        if (resource.AssessmentDetails is { AssessmentContent: { } } && resource.AssessmentDetails.AssessmentContent.Blocks != null)
-                        {
-                            var assessmentFiles = this.CheckBlockFile(null, resource.AssessmentDetails.AssessmentContent);
-                            if (assessmentFiles.Any())
+                            break;
+                        case ResourceTypeEnum.Html:
+                            var htmlResource = await this.GetHtmlDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
                             {
-                                retVal.AddRange(assessmentFiles);
+                                if (htmlResource?.ContentFilePath != extendedResourceVersion.HtmlDetails.ContentFilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.HtmlDetails.ContentFilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(htmlResource?.File?.FilePath);
+                                    }
+                                }
                             }
-                        }
-                    }
-                }
-                else if (resource.ResourceTypeEnum == ResourceTypeEnum.Case)
-                {
-                    var caseFiles = this.CheckBlockFile(null, resource.CaseDetails.BlockCollection);
-                    if (caseFiles.Any())
-                    {
-                        retVal.AddRange(caseFiles);
+                            else if (rv == null && deletedResource)
+                            {
+                                retVal.Add(htmlResource.ContentFilePath);
+                            }
+
+                            break;
+                        case ResourceTypeEnum.GenericFile:
+                            var fileResource = await this.GetGenericFileDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
+                            {
+                                if (fileResource?.File.FilePath != extendedResourceVersion.GenericFileDetails.File.FilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.GenericFileDetails.File.FilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(fileResource?.File?.FilePath);
+                                    }
+                                }
+                            }
+                            else if (rv == null && deletedResource)
+                            {
+                                retVal.Add(fileResource.File.FilePath);
+                            }
+
+                            break;
+                        case ResourceTypeEnum.Image:
+                            var imageResource = await this.GetImageDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
+                            {
+                                if (imageResource?.File.FilePath != extendedResourceVersion.ImageDetails.File.FilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.ImageDetails.File.FilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(imageResource.File.FilePath);
+                                    }
+                                }
+                            }
+                            else if (rv == null && deletedResource)
+                            {
+                                retVal.Add(imageResource.File.FilePath);
+                            }
+
+                            break;
+                        case ResourceTypeEnum.Audio:
+                            var audioResource = await this.GetAudioDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
+                            {
+                                if (audioResource?.File?.FilePath != extendedResourceVersion.AudioDetails.File.FilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.AudioDetails.File.FilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(audioResource.File.FilePath);
+                                    }
+                                }
+
+                                if (audioResource?.ResourceAzureMediaAsset?.FilePath != extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(audioResource.ResourceAzureMediaAsset.FilePath);
+                                    }
+                                }
+                            }
+                            else if (rv == null && deletedResource)
+                            {
+                                retVal.Add(audioResource?.File?.FilePath);
+                                if (audioResource?.ResourceAzureMediaAsset?.FilePath != null)
+                                {
+                                    retVal.Add(audioResource.ResourceAzureMediaAsset.FilePath);
+                                }
+                            }
+
+                            break;
+                        case ResourceTypeEnum.Video:
+                            var videoResource = await this.GetVideoDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
+                            {
+                                if (videoResource?.File?.FilePath != extendedResourceVersion.VideoDetails.File.FilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.VideoDetails.File.FilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(videoResource.File.FilePath);
+                                    }
+                                }
+
+                                if (videoResource?.ResourceAzureMediaAsset?.FilePath != extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(videoResource.ResourceAzureMediaAsset.FilePath);
+                                    }
+                                }
+                            }
+                            else if (rv == null && deletedResource)
+                            {
+                                retVal.Add(videoResource?.File?.FilePath);
+                                if (videoResource?.ResourceAzureMediaAsset?.FilePath != null)
+                                {
+                                    retVal.Add(videoResource.ResourceAzureMediaAsset.FilePath);
+                                }
+                            }
+
+                            break;
+                        case ResourceTypeEnum.Article:
+                            var articleResource = await this.GetArticleDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
+                            {
+                                var inputResourceFiles = articleResource.Files.ToList();
+                                var previousPublishedfiles = extendedResourceVersion.ArticleDetails?.Files?.ToList();
+                                if (!deletedResource)
+                                {
+                                    if (previousPublishedfiles.Any())
+                                    {
+                                        foreach (var file in previousPublishedfiles)
+                                        {
+                                            if (!inputResourceFiles.Where(x => x.FilePath == file.FilePath).Any())
+                                            {
+                                                retVal.Add(file.FilePath);
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (inputResourceFiles.Any())
+                                    {
+                                        foreach (var file in inputResourceFiles)
+                                        {
+                                            if (!previousPublishedfiles.Where(x => x.FilePath == file.FilePath).Any())
+                                            {
+                                                retVal.Add(file.FilePath);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else if (rv == null && deletedResource)
+                            {
+                                var inputResourceFiles = articleResource.Files.ToList();
+                                if (inputResourceFiles.Any())
+                                {
+                                    foreach (var file in inputResourceFiles)
+                                    {
+                                        retVal.Add(file.FilePath);
+                                    }
+                                }
+                            }
+
+                            break;
                     }
                 }
             }
 
-            return retVal;
+            return retVal.Distinct().ToList();
         }
 
         /// <summary>
@@ -2191,6 +2198,28 @@ namespace LearningHub.Nhs.Services
         }
 
         /// <summary>
+        /// The get case resource version async.
+        /// </summary>
+        /// <param name="excludeResourceVersionId">The resource version id.</param>
+        /// <param name="resourceType">The resource type.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<BlockCollectionViewModel> GetAllCaseBlockCollectionsAsync(int excludeResourceVersionId, ResourceTypeEnum resourceType)
+        {
+            var blockList = new List<BlockViewModel>();
+            var collection = await this.blockCollectionRepository.GetAllBlockCollections(excludeResourceVersionId, resourceType);
+            if (collection != null && collection.Item1 != null)
+            {
+                var blocks = this.mapper.Map<BlockCollectionViewModel>(collection.Item1);
+                if (blocks.Blocks.Any())
+                {
+                    blockList.AddRange(blocks.Blocks);
+                }
+            }
+
+            return new BlockCollectionViewModel { Blocks = blockList };
+        }
+
+        /// <summary>
         /// The update case resource version async.
         /// </summary>
         /// <param name="caseViewModel">The case view model.</param>
@@ -2270,6 +2299,45 @@ namespace LearningHub.Nhs.Services
             var assessmentResourceVersion = await this.assessmentResourceVersionRepository.GetByResourceVersionIdAsync(resourceVersionId);
 
             return assessmentResourceVersion;
+        }
+
+        /// <summary>
+        /// The assessment blocks for all published(current) and non published resource version async.
+        /// </summary>
+        /// <param name="excludeResourceVersionId">The resource version id to exclude.</param>
+        /// <param name="resourceType">The resource type enum.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<Tuple<BlockCollectionViewModel, BlockCollectionViewModel>> GetAssessmentBlockCollectionAsync(int excludeResourceVersionId, ResourceTypeEnum resourceType)
+        {
+            var collection = await this.blockCollectionRepository.GetAllBlockCollections(excludeResourceVersionId, resourceType);
+
+            var assessmentBlocks = new List<BlockViewModel>();
+            var endGuidanceBlocks = new List<BlockViewModel>();
+
+            if (collection != null)
+            {
+                if (collection.Item2 != null)
+                {
+                    var assessmentContentBlocks = this.mapper.Map<BlockCollectionViewModel>(collection.Item2);
+                    if (assessmentContentBlocks.Blocks.Any())
+                    {
+                        assessmentBlocks.AddRange(assessmentContentBlocks.Blocks);
+                    }
+                }
+
+                if (collection.Item3 != null)
+                {
+                    var endGuidanceBlocksView = this.mapper.Map<BlockCollectionViewModel>(collection.Item3);
+                    if (endGuidanceBlocksView.Blocks.Any())
+                    {
+                        endGuidanceBlocks.AddRange(endGuidanceBlocksView.Blocks);
+                    }
+                }
+            }
+
+            return new Tuple<BlockCollectionViewModel, BlockCollectionViewModel>(
+                new BlockCollectionViewModel { Blocks = assessmentBlocks },
+                new BlockCollectionViewModel { Blocks = endGuidanceBlocks });
         }
 
         /// <summary>
@@ -4921,7 +4989,7 @@ namespace LearningHub.Nhs.Services
                     {
                         foreach (var oldblock in existingAttachements)
                         {
-                            var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Attachment && x.MediaBlock.Attachment != null && x.MediaBlock.Attachment.File?.FileId == oldblock.MediaBlock.Attachment?.File?.FileId) : null;
+                            var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Attachment && x.MediaBlock.Attachment != null && (x.MediaBlock.Attachment.File?.FilePath == oldblock.MediaBlock.Attachment?.File?.FilePath || x.MediaBlock.Attachment.File?.FileId == oldblock.MediaBlock.Attachment?.File?.FileId)) : null;
                             if (publishedEntry == null)
                             {
                                 retVal.Add(oldblock.MediaBlock.Attachment?.File?.FilePath);
@@ -4934,7 +5002,7 @@ namespace LearningHub.Nhs.Services
                     {
                         foreach (var oldblock in existingVideos)
                         {
-                            var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Video && x.MediaBlock.Video != null && x.MediaBlock.Video.VideoFile?.File?.FileId == oldblock.MediaBlock?.Video?.VideoFile?.File?.FileId) : null;
+                            var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Video && x.MediaBlock.Video != null && (x.MediaBlock.Video.VideoFile?.File?.FilePath == oldblock.MediaBlock?.Video?.VideoFile?.File?.FilePath || x.MediaBlock.Video.VideoFile?.File?.FileId == oldblock.MediaBlock?.Video?.VideoFile?.File?.FileId)) : null;
                             if (publishedEntry == null)
                             {
                                 if (!string.IsNullOrWhiteSpace(oldblock.MediaBlock.Video.File.FilePath))
@@ -4960,7 +5028,7 @@ namespace LearningHub.Nhs.Services
                     {
                         foreach (var oldblock in existingImages)
                         {
-                            var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null && x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId) : null;
+                            var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null && (x.MediaBlock?.Image?.File?.FilePath == oldblock.MediaBlock?.Image?.File?.FilePath || x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId)) : null;
                             if (publishedEntry == null)
                             {
                                 retVal.Add(oldblock.MediaBlock?.Image?.File?.FilePath);
@@ -4975,7 +5043,7 @@ namespace LearningHub.Nhs.Services
                         {
                             foreach (var oldblock in imageBlock.ImageCarouselBlock.ImageBlockCollection.Blocks)
                             {
-                                var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.ImageCarousel && x.ImageCarouselBlock != null && x.ImageCarouselBlock.ImageBlockCollection != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks.Where(x => x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId).Any()) : null;
+                                var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.BlockType == BlockType.ImageCarousel && x.ImageCarouselBlock != null && x.ImageCarouselBlock.ImageBlockCollection != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks.Where(x => x.MediaBlock?.Image?.File?.FilePath == oldblock.MediaBlock?.Image?.File?.FilePath || x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId).Any()) : null;
                                 if (publishedEntry == null)
                                 {
                                     retVal.Add(oldblock.MediaBlock?.Image?.File?.FilePath);
@@ -4991,7 +5059,7 @@ namespace LearningHub.Nhs.Services
                         {
                             foreach (var oldblock in wsi?.WholeSlideImageBlock?.WholeSlideImageBlockItems)
                             {
-                                var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Where(x => x.WholeSlideImage?.File?.FileId == oldblock.WholeSlideImage?.File?.FileId).Any()) : null;
+                                var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Where(x => x.WholeSlideImage?.File?.FilePath == oldblock.WholeSlideImage?.File?.FilePath || x.WholeSlideImage?.File?.FileId == oldblock.WholeSlideImage?.File?.FileId).Any()) : null;
                                 if (publishedEntry == null)
                                 {
                                     retVal.Add(oldblock.WholeSlideImage?.File?.FilePath);

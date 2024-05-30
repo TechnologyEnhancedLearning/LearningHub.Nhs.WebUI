@@ -5,11 +5,13 @@ namespace LearningHub.Nhs.Services.Interface
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.Models.Provider;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.Admin;
     using LearningHub.Nhs.Models.Resource.AzureMediaAsset;
+    using LearningHub.Nhs.Models.Resource.Blocks;
     using LearningHub.Nhs.Models.Resource.Contribute;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.Validation;
@@ -437,6 +439,14 @@ namespace LearningHub.Nhs.Services.Interface
         Task<CaseViewModel> GetCaseDetailsByIdAsync(int resourceVersionId);
 
         /// <summary>
+        /// The get case resource version async.
+        /// </summary>
+        /// <param name="excludeResourceVersionId">The resource version id.</param>
+        /// <param name="resourceType">The resource type.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<BlockCollectionViewModel> GetAllCaseBlockCollectionsAsync(int excludeResourceVersionId, ResourceTypeEnum resourceType);
+
+        /// <summary>
         /// The update case resource version async.
         /// </summary>
         /// <param name="caseViewModel">The case view model.</param>
@@ -458,6 +468,14 @@ namespace LearningHub.Nhs.Services.Interface
         /// <param name="resourceVersionId">The resource version id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<AssessmentResourceVersion> GetAssessmentBasicDetailsByIdAsync(int resourceVersionId);
+
+        /// <summary>
+        /// The assessment blocks for all published(current) and non published resource version async.
+        /// </summary>
+        /// <param name="excludeResourceVersionId">The resource version id to exclude.</param>
+        /// <param name="resourceType">The resource type enum.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<Tuple<BlockCollectionViewModel, BlockCollectionViewModel>> GetAssessmentBlockCollectionAsync(int excludeResourceVersionId, ResourceTypeEnum resourceType);
 
         /// <summary>
         /// This method updates the database entry with the assessment details, passed down as a parameter.

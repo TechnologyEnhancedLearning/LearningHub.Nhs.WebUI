@@ -668,7 +668,7 @@
                         {
                             foreach (var oldblock in existingAttachements)
                             {
-                                var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Attachment && x.MediaBlock.Attachment != null && x.MediaBlock.Attachment.File?.FileId == oldblock.MediaBlock.Attachment?.File?.FileId);
+                                var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Attachment && x.MediaBlock.Attachment != null && (x.MediaBlock.Attachment.File?.FileId == oldblock.MediaBlock.Attachment?.File?.FileId || x.MediaBlock.Attachment.File?.FilePath == oldblock.MediaBlock.Attachment?.File?.FilePath));
                                 if (entry == null)
                                 {
                                     filePaths.Add(oldblock.MediaBlock.Attachment?.File?.FilePath);
@@ -681,7 +681,7 @@
                         {
                             foreach (var oldblock in existingVideos)
                             {
-                                var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Video && x.MediaBlock.Video != null && x.MediaBlock.Video.VideoFile?.File?.FileId == oldblock.MediaBlock?.Video?.VideoFile?.File?.FileId);
+                                var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Video && x.MediaBlock.Video != null && (x.MediaBlock.Video.VideoFile?.File?.FileId == oldblock.MediaBlock?.Video?.VideoFile?.File?.FileId || x.MediaBlock.Video.VideoFile?.File?.FilePath == oldblock.MediaBlock?.Video?.VideoFile?.File?.FilePath));
                                 if (entry == null)
                                 {
                                     if (!string.IsNullOrWhiteSpace(oldblock.MediaBlock.Video.File.FilePath))
@@ -707,7 +707,7 @@
                         {
                             foreach (var oldblock in existingImages)
                             {
-                               var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null && x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId);
+                               var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null && (x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId || x.MediaBlock?.Image?.File?.FilePath == oldblock.MediaBlock?.Image?.File?.FilePath));
                                if (entry == null)
                                 {
                                     filePaths.Add(oldblock?.MediaBlock?.Image?.File?.FilePath);
@@ -722,7 +722,7 @@
                             {
                                 foreach (var oldblock in imageBlock?.ImageCarouselBlock?.ImageBlockCollection?.Blocks)
                                 {
-                                    var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.ImageCarousel && x.ImageCarouselBlock != null && x.ImageCarouselBlock.ImageBlockCollection != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks.Where(x => x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId).Any());
+                                    var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.ImageCarousel && x.ImageCarouselBlock != null && x.ImageCarouselBlock.ImageBlockCollection != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks.Where(x => x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId || x.MediaBlock?.Image?.File?.FilePath == oldblock.MediaBlock?.Image?.File?.FilePath).Any());
                                     if (entry == null)
                                     {
                                         filePaths.Add(oldblock.MediaBlock?.Image?.File?.FilePath);
@@ -738,7 +738,7 @@
                             {
                                 foreach (var oldblock in wsi?.WholeSlideImageBlock?.WholeSlideImageBlockItems)
                                 {
-                                    var entry = newBlocks.FirstOrDefault(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Where(x => x.WholeSlideImage?.File?.FileId == oldblock.WholeSlideImage?.File?.FileId).Any());
+                                    var entry = newBlocks.FirstOrDefault(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Where(x => x.WholeSlideImage?.File?.FileId == oldblock.WholeSlideImage?.File?.FileId || x.WholeSlideImage?.File?.FilePath == oldblock.WholeSlideImage?.File?.FilePath).Any());
                                     if (entry == null)
                                     {
                                         filePaths.Add(oldblock.WholeSlideImage?.File?.FilePath);

@@ -156,28 +156,61 @@ BEGIN
 			AND hed.HierarchyEditDetailTypeId = 4 -- Node link
 			AND hed.NodeLinkId IS NULL
 
+		------ Create new ResourceReference records for the new referenced resources.
+		----INSERT INTO resources.ResourceReference (ResourceId, NodePathId, OriginalResourceReferenceId, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
+		----SELECT  hed.ResourceId, hed.NodePathId, NULL AS OriginalResourceReferenceId, 0, @UserId, @AmendDate, @UserId, @AmendDate
+		----FROM hierarchy.HierarchyEditDetail hed
+		----LEFT OUTER JOIN resources.ResourceReference rr ON hed.ResourceId = rr.ResourceId AND hed.NodePathId = rr.NodePathId AND rr.Deleted = 0
+		----WHERE hed.HierarchyEditID = @HierarchyEditID
+		----	AND hed.HierarchyEditDetailOperationId = 4 -- Add Reference
+		----	AND hed.HierarchyEditDetailTypeId = 5 -- Node Resource
+		----	AND hed.ResourceReferenceId is NULL
+		----	AND rr.Id IS NULL
+
 		-- Create new ResourceReference records for the new referenced resources.
 		INSERT INTO resources.ResourceReference (ResourceId, NodePathId, OriginalResourceReferenceId, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
 		SELECT  hed.ResourceId, hed.NodePathId, NULL AS OriginalResourceReferenceId, 0, @UserId, @AmendDate, @UserId, @AmendDate
 		FROM hierarchy.HierarchyEditDetail hed
 		LEFT OUTER JOIN resources.ResourceReference rr ON hed.ResourceId = rr.ResourceId AND hed.NodePathId = rr.NodePathId AND rr.Deleted = 0
+        LEFT OUTER JOIN hierarchy.NodePath np ON rr.NodePathId = np.Id 
+        LEFT OUTER JOIN hierarchy.HierarchyEditDetail hed2 ON hed2.HierarchyEditID = @HierarchyEditID
+                                                            AND hed2.HierarchyEditDetailTypeId = 5 -- Node Resource
+                                                            AND hed2.Id != hed.Id
+                                                            AND np.NodePath = ISNULL(hed2.NewNodePath, hed2.InitialNodePath)
 		WHERE hed.HierarchyEditID = @HierarchyEditID
 			AND hed.HierarchyEditDetailOperationId = 4 -- Add Reference
 			AND hed.HierarchyEditDetailTypeId = 5 -- Node Resource
 			AND hed.ResourceReferenceId is NULL
-			AND rr.Id IS NULL
+			AND (
+                rr.Id IS NULL
+                OR
+                hed2.Id IS NULL-- If rr.Id is NOT NULL check if the original resource has been moved, so the original ResourceReference will be deleted during publish
+            )
+
+		---- Update the HierarcyEditDetail records with the new ResourceReferenceIds.
+		--UPDATE  hed
+		--SET     ResourceReferenceId = MAX(rr.Id), -- MAX is needed as the resorce reference for a moved resource will not have been deleted yet.
+		--		AmendUserId = @UserId,
+		--		AmendDate = @AmendDate
+		--FROM	hierarchy.HierarchyEditDetail hed
+		--INNER JOIN resources.ResourceReference rr ON hed.ResourceId = rr.ResourceId AND hed.NodePathId = rr.NodePathId AND rr.Deleted = 0
+		--WHERE	hed.HierarchyEditID = @HierarchyEditID
+		--	AND hed.HierarchyEditDetailOperationId = 4 -- Add Reference
+		--	AND hed.HierarchyEditDetailTypeId = 5 -- Node Resource
+		--	AND hed.ResourceReferenceId IS NULL
 
 		-- Update the HierarcyEditDetail records with the new ResourceReferenceIds.
 		UPDATE  hed
-		SET     ResourceReferenceId = rr.Id,
+		SET     ResourceReferenceId = (	SELECT MAX(rr.Id) -- MAX is needed as the resource reference for a moved resource will not have been deleted yet.
+										FROM resources.ResourceReference rr
+										WHERE hed.ResourceId = rr.ResourceId AND hed.NodePathId = rr.NodePathId AND rr.Deleted = 0),
 				AmendUserId = @UserId,
 				AmendDate = @AmendDate
-		FROM	hierarchy.HierarchyEditDetail hed
-		INNER JOIN resources.ResourceReference rr ON hed.ResourceId = rr.ResourceId AND hed.NodePathId = rr.NodePathId AND rr.Deleted = 0
-		WHERE	hed.HierarchyEditID = @HierarchyEditID
-			AND hed.HierarchyEditDetailOperationId = 4 -- Add Reference
-			AND hed.HierarchyEditDetailTypeId = 5 -- Node Resource
-			AND hed.ResourceReferenceId IS NULL
+		FROM    hierarchy.HierarchyEditDetail hed
+		WHERE   hed.HierarchyEditID = @HierarchyEditID
+				AND hed.HierarchyEditDetailOperationId = 4 -- Add Reference
+				AND hed.HierarchyEditDetailTypeId = 5 -- Node Resource
+				AND hed.ResourceReferenceId IS NULL
 
 		-- Update the OriginalResourceReferenceId for the new ResourceReference records.
 		UPDATE  rr

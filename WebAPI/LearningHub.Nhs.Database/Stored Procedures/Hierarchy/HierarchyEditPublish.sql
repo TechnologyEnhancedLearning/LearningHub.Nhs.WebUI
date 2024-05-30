@@ -13,6 +13,8 @@
 -- 23-04-2024  DB	Updated to manage publishing of draft NodeVersions during edits
 -- 30-04-2024  DB	Handle referencing of folders
 -- 02-05-2024  DB	Remove creation of NodePaths as this needs to be handled during the edit process.
+-- 28-05-2024  DB	Moved nodes can not have their nodepaths updated in case a subsequent reference is made to the original position.
+-- 30-05-2024  DB	Added the creation of a new ResourceReference records for the moved resources.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditPublish] 
 (
@@ -79,30 +81,32 @@ BEGIN
 			AND (
 				HierarchyEditDetailOperationId = 1 -- Add
 				OR
-				HierarchyEditDetailOperationId = 4 -- Reference
+				HierarchyEditDetailOperationId = 2 -- Edit
+				OR
+				HierarchyEditDetailOperationId = 4 -- Add Reference
 				)
 			AND NodeLinkId IS NULL
 			AND [Deleted] = 0
 
-		-- Update NodeLink parent for Moved Node/s (arising from Move Node)
-		UPDATE 
-			nl
-		SET
-			ParentNodeId = hed.ParentNodeId,
-			AmendUserId = @AmendUserId,
-			AmendDate = @AmendDate
-		FROM
-			hierarchy.HierarchyEditDetail hed
-		INNER JOIN
-			hierarchy.NodeLink nl ON hed.NodeLinkId = nl.Id
-		WHERE 
-			HierarchyEditId = @HierarchyEditId
-            AND HierarchyEditDetailTypeId = 4 -- Node Link
-			AND HierarchyEditDetailOperationId = 2 -- Edit
-			AND hed.NodeId = nl.ChildNodeId
-			AND hed.ParentNodeId != nl.ParentNodeId
-			AND hed.Deleted = 0
-			AND nl.Deleted = 0
+		---- Update NodeLink parent for Moved Node/s (arising from Move Node)
+		--UPDATE 
+		--	nl
+		--SET
+		--	ParentNodeId = hed.ParentNodeId,
+		--	AmendUserId = @AmendUserId,
+		--	AmendDate = @AmendDate
+		--FROM
+		--	hierarchy.HierarchyEditDetail hed
+		--INNER JOIN
+		--	hierarchy.NodeLink nl ON hed.NodeLinkId = nl.Id
+		--WHERE 
+		--	HierarchyEditId = @HierarchyEditId
+  --          AND HierarchyEditDetailTypeId = 4 -- Node Link
+		--	AND HierarchyEditDetailOperationId = 2 -- Edit
+		--	AND hed.NodeId = nl.ChildNodeId
+		--	AND hed.ParentNodeId != nl.ParentNodeId
+		--	AND hed.Deleted = 0
+		--	AND nl.Deleted = 0
 
 		-- Update NodeLink 'DisplayOrder' for Edits (may be required due to create, move, move up, move down)
 		-- note: requires publication log entry for cache update when display order changes in a folder with published resource.
@@ -139,6 +143,29 @@ BEGIN
 			AND hed.Deleted = 0
 			AND nl.Deleted = 0
 
+		-- For moved nodes, delete the original NodeLinks, providing they have not been used (by a reference to the original position).
+		UPDATE 
+			nl
+		SET
+			Deleted = 1,
+			AmendUserId = @AmendUserId,
+			AmendDate = @AmendDate
+		FROM
+			hierarchy.HierarchyEditDetail hed
+		INNER JOIN
+			hierarchy.NodeLink nl ON hed.NodeId = nl.ChildNodeId
+								 AND hed.InitialParentNodeId = nl.ParentNodeId
+		LEFT OUTER JOIN 
+			hierarchy.HierarchyEditDetail hed2 ON nl.Id = hed2.NodeLinkId AND hed2.HierarchyEditId = @HierarchyEditId AND hed2.Deleted = 0 -- Check NodeLink has not been re-used
+		WHERE
+			hed.HierarchyEditId = @HierarchyEditId
+			AND hed.InitialParentNodeId != hed.ParentNodeId
+			AND hed.HierarchyEditDetailTypeId = 4 -- Node Link
+			AND hed.HierarchyEditDetailOperationId = 2 -- Edit
+			AND hed2.Id IS NULL
+			AND hed.Deleted = 0
+			AND nl.Deleted = 0
+
 		-- Delete NodeLinks
 		UPDATE 
 			nl
@@ -152,8 +179,8 @@ BEGIN
 			hierarchy.NodeLink nl ON hed.NodeLinkId = nl.Id
 		WHERE 
 			HierarchyEditId = @HierarchyEditId
-            AND HierarchyEditDetailTypeId = 4 -- Node Link
-			AND HierarchyEditDetailOperationId = 3 -- Delete
+            AND hed.HierarchyEditDetailTypeId = 4 -- Node Link
+			AND hed.HierarchyEditDetailOperationId = 3 -- Delete
 			AND hed.Deleted = 0
 			AND nl.Deleted = 0
 
@@ -445,22 +472,22 @@ BEGIN
 		INNER JOIN hierarchy.NodePath np ON he.RootNodePathId = np.Id
 		WHERE he.Id = @HierarchyEditId
 
-		-- Update NodePaths for moved nodes
-		UPDATE 
-			np
-		SET
-			NodePath = ISNULL(hed.NewNodePath, hed.InitialNodePath),
-			AmendUserId = @AmendUserId,
-			AmendDate = @AmendDate
-		FROM
-			hierarchy.NodePath np
-		INNER JOIN
-			hierarchy.HierarchyEditDetail hed ON np.Id = hed.NodePathId
-		WHERE 
-			hed.InitialNodePath IS NOT NULL
-			AND hed.HierarchyEditId = @HierarchyEditId
-			AND np.Deleted = 0
-			AND np.NodePath != ISNULL(hed.NewNodePath, hed.InitialNodePath)
+		---- Update NodePaths for moved nodes
+		--UPDATE 
+		--	np
+		--SET
+		--	NodePath = ISNULL(hed.NewNodePath, hed.InitialNodePath),
+		--	AmendUserId = @AmendUserId,
+		--	AmendDate = @AmendDate
+		--FROM
+		--	hierarchy.NodePath np
+		--INNER JOIN
+		--	hierarchy.HierarchyEditDetail hed ON np.Id = hed.NodePathId
+		--WHERE 
+		--	hed.InitialNodePath IS NOT NULL
+		--	AND hed.HierarchyEditId = @HierarchyEditId
+		--	AND np.Deleted = 0
+		--	AND np.NodePath != ISNULL(hed.NewNodePath, hed.InitialNodePath)
 
 		-- Reactivate any matched existing NodePath/s that are currently inactive
 		UPDATE 
@@ -634,6 +661,49 @@ BEGIN
 
 		CLOSE @NodePathCursor;
 		DEALLOCATE @NodePathCursor;
+
+
+		--------------------------------------------------------------
+		------ ResourceReference
+		--------------------------------------------------------------		
+		------ Update ResourceReference records for moved resources
+		--------------------------------------------------------------		
+
+		-- Create new ResourceReference records for the new referenced resources.
+		INSERT INTO resources.ResourceReference (ResourceId, NodePathId, OriginalResourceReferenceId, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
+		select  hed.ResourceId, hed.NodePathId, null, 0, @AmendUserId, @AmendDate, @AmendUserId, @AmendDate
+		FROM    hierarchy.HierarchyEditDetail hed
+		WHERE   hed.HierarchyEditId = @HierarchyEditId
+			AND hed.HierarchyEditDetailTypeId = 5 -- Resource Node
+			AND hed.HierarchyEditDetailOperationId = 2 -- Edit
+			AND hed.InitialNodePath != hed.NewNodePath
+
+		-- Update the OriginalResourceReferenceId for the new ResourceReference records. This may not be the same as the hed.ResourceReferenceId as it have moved previously.
+		UPDATE  rr
+		SET     OriginalResourceReferenceId = o_rr.OriginalResourceReferenceId,
+				AmendUserId = @AmendUserId,
+				AmendDate = @AmendDate
+		FROM    hierarchy.HierarchyEditDetail hed
+		INNER JOIN resources.ResourceReference rr ON hed.ResourceId = rr.ResourceId AND hed.NodePathId = rr.NodePathId AND rr.Deleted = 0
+		INNER JOIN resources.ResourceReference o_rr on hed.ResourceReferenceId = o_rr.Id
+		WHERE hed.HierarchyEditID = @HierarchyEditID
+			AND hed.HierarchyEditDetailTypeId = 5 -- Resource Node
+			AND hed.HierarchyEditDetailOperationId = 2 -- Edit
+			AND hed.InitialNodePath != hed.NewNodePath
+			AND rr.OriginalResourceReferenceId IS NULL
+
+		-- Delete old Resource reference records no longer used after move.
+		UPDATE  rr
+		SET     Deleted = 1,
+				AmendUserId = @AmendUserId,
+				AmendDate = @AmendDate
+		FROM    hierarchy.HierarchyEditDetail hed
+		INNER JOIN resources.ResourceReference rr ON hed.ResourceReferenceId = rr.Id
+		WHERE hed.HierarchyEditID = @HierarchyEditID
+			AND hed.HierarchyEditDetailTypeId = 5 -- Resource Node
+			AND hed.HierarchyEditDetailOperationId = 2 -- Edit
+			AND hed.InitialNodePath != hed.NewNodePath
+
 
 --IS THIS NEEDED
 		--------------------------------------------------------------

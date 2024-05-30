@@ -11,6 +11,7 @@ import { NodeType } from '../constants';
 import { CatalogueBasicModel } from '../models/content-structure/catalogueModel';
 import { FolderNodeModel } from '../models/content-structure/folderNodeModel';
 import { forEach } from 'lodash';
+import { FolderNodeReferenceModel } from '../models/content-structure/folderNodeReferenceModel';
 
 Vue.use(Vuex);
 
@@ -25,6 +26,7 @@ export class State {
     moveToRootNode: NodeContentAdminModel = new NodeContentAdminModel();
     editMode: EditModeEnum = EditModeEnum.None;
     editingFolderNode: FolderNodeModel = null;
+    editingFolderNodeReference: FolderNodeReferenceModel = null;
     editingTreeNode: NodeContentAdminModel = null;
     movingResource: NodeContentAdminModel = null;
     updatedNode: NodeContentAdminModel = null;
@@ -178,6 +180,7 @@ const mutations = {
             parentNodeId: payload.parentNode.nodeId,
             parentNodePathId: payload.parentNode.nodePathId,
             path: payload.parentNode.path,
+            nodePaths: payload.parentNode.nodePaths,
             parentNode: null
         }
         state.editingFolderNode = editingFolderNode;
@@ -193,10 +196,30 @@ const mutations = {
             editingFolderNode.hierarchyEditId = state.hierarchyEdit.id;
             editingFolderNode.hierarchyEditDetailId = payload.folderNode.hierarchyEditDetailId;
             editingFolderNode.path = payload.folderNode.path;
+            editingFolderNode.nodePaths = payload.folderNode.nodePaths;
             state.editingFolderNode = editingFolderNode;
             state.editingTreeNode = payload.folderNode;
             state.editMode = EditModeEnum.Folder;
         });
+    },
+    setEditingFolderReference(state: State, payload: { folderNode: NodeContentAdminModel }) {
+        state.inError = false;
+        //contentStructureData.getNodeReference(payload.folderNode.nodePathId).then(response => { // Do I have all data without hittng database again?
+        //    var editingNodeReference = response;
+        //});
+
+        var editingFolderNodeReference: FolderNodeReferenceModel = new FolderNodeReferenceModel;
+
+        editingFolderNodeReference.hierarchyEditId = state.hierarchyEdit.id;
+        editingFolderNodeReference.hierarchyEditDetailId = payload.folderNode.hierarchyEditDetailId;
+        editingFolderNodeReference.path = payload.folderNode.path;
+        editingFolderNodeReference.nodePaths = payload.folderNode.nodePaths;
+        editingFolderNodeReference.name = payload.folderNode.name;
+        editingFolderNodeReference.nodeId = payload.folderNode.nodeId;
+        editingFolderNodeReference.parentNode = payload.folderNode.parent;
+        state.editingFolderNodeReference = editingFolderNodeReference;
+        state.editingTreeNode = payload.folderNode; // Is this needed?
+        state.editMode = EditModeEnum.FolderReference;
     },
     setDeletingFolder(state: State, payload: { folderNode: NodeContentAdminModel }) {
         state.editingTreeNode = payload.folderNode;
@@ -314,6 +337,25 @@ const actions = <ActionTree<State, any>>{
             state.lastErrorMessage = "Error deleting folder.";
         });
     },
+    deleteFolderReference(context: ActionContext<State, State>) {
+        state.inError = false;
+        state.updatedNode = null;
+        contentStructureData.deleteFolderReference(state.editingTreeNode.hierarchyEditDetailId).then(async response => {
+            if (response.isValid) {
+                var parent = state.editingTreeNode.parent;
+                await refreshNodeContents(parent, false);
+                state.updatedNode = parent;
+                context.commit("setEditMode", EditModeEnum.Structure);
+            }
+            else {
+                state.inError = true;
+                state.lastErrorMessage = "Error: " + response.details.join(",");
+            }
+        }).catch(e => {
+            state.inError = true;
+            state.lastErrorMessage = "Error deleting folder reference.";
+        });
+    },
     async moveNodeUp(context: ActionContext<State, State>, payload: { node: NodeContentAdminModel }) {
         state.inError = false;
         contentStructureData.moveNodeUp(payload.node.hierarchyEditDetailId).then(async response => {
@@ -350,6 +392,7 @@ const actions = <ActionTree<State, any>>{
         contentStructureData.referenceNode(state.editingTreeNode.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(async response => {
             context.commit("setEditMode", EditModeEnum.Structure);
             await refreshNodeContents(payload.destinationNode, true).then(async x => {
+                state.editingTreeNode.parent.childrenLoaded = false; // force reload of current now to show references
                 await refreshNodeContents(state.editingTreeNode.parent, true).then(y => {
                 });
             });
@@ -406,6 +449,10 @@ const actions = <ActionTree<State, any>>{
                 state.lastErrorMessage = "Error updating folder.";
             });
         }
+    },
+    async saveFolderReference(context: ActionContext<State, State>) {
+        //TODO
+        alert("Not implemented");
     }
 };
 

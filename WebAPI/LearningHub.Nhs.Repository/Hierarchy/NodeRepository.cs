@@ -4,6 +4,7 @@
     using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Repository.Interface;
@@ -92,7 +93,7 @@
         /// <param name="nodePathId">The node path id.</param>
         /// <param name="readOnly">Set to true if read only data set is required.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodePathId, bool readOnly)
+        public async Task<List<NodeContentAdminDto>> GetNodeContentsAdminAsync(int nodePathId, bool readOnly)
         {
             try
             {
@@ -100,12 +101,12 @@
 
                 if (readOnly)
                 {
-                    var retVal = await this.DbContext.NodeContentAdminViewModel.FromSqlRaw("hierarchy.GetNodeContentsAdminReadOnly @p0", param0).AsNoTracking().ToListAsync();
+                    var retVal = await this.DbContext.NodeContentAdminDto.FromSqlRaw("hierarchy.GetNodeContentsAdminReadOnly @p0", param0).AsNoTracking().ToListAsync();
                     return retVal;
                 }
                 else
                 {
-                    var retVal = await this.DbContext.NodeContentAdminViewModel.FromSqlRaw("hierarchy.GetNodeContentsAdmin @p0", param0).AsNoTracking().ToListAsync();
+                    var retVal = await this.DbContext.NodeContentAdminDto.FromSqlRaw("hierarchy.GetNodeContentsAdmin @p0", param0).AsNoTracking().ToListAsync();
                     return retVal;
                 }
             }

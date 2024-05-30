@@ -11,6 +11,20 @@
                     </div>
                     <div v-if="editMode === EditModeEnum.Structure" class="ml-auto">
                         <div class="d-flex">
+                            <div class="dropdown references-dropdown" v-if="item.nodePaths && item.nodePaths.length>1">
+                                <a class="dropdown-toggle no-wrap" href="#" role="button" id="referencesDisplayLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{item.nodePaths.length}} references
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="referencesDisplayLink">
+                                    <ul>
+                                        <li class="dropdown-item" v-for="(item, index) in item.nodePaths" :key="index">
+                                            <span v-for="(subItem, index) in item.nodePathBreakdown" :key="index">
+                                                {{index > 0 ? ">" : ""}} {{subItem.nodeName}}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                             <div :class="{ 'has-resources-indicator' : item.hasResourcesInBranchInd, 'no-resources-indicator' : !item.hasResourcesInBranchInd }" />
                             <div class="dropdown options-dropdown">
                                 <a class="dropdown-toggle no-wrap" href="#" role="button" id="dropdownNodeItems" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="recomputeNodeOptions">
@@ -22,6 +36,7 @@
                                     <a class="dropdown-item" v-if="canMoveNodeDown" @click="onMoveNodeDown">Move down</a>
                                     <a class="dropdown-item" v-if="canMoveNode" @click="onInitiateMoveNode">Move</a>
                                     <a class="dropdown-item" @click="onInitiateReferenceNode">Create reference</a>
+                                    <a class="dropdown-item" v-if="canEditFolderReference" @click="onEditFolderReference">Edit reference details</a>
                                     <a class="dropdown-item" v-if="canDeleteNode" @click="onDeleteFolder">Delete</a>
                                 </div>
                             </div>
@@ -181,6 +196,7 @@
                 canMoveNodeUp: false,
                 canDeleteNode: false,
                 canEditNode: false,
+                canEditFolderReference: false,
                 canMoveNode: false,
                 canMoveResourceDown: false,
                 canMoveResourceUp: false,
@@ -294,6 +310,7 @@
                 this.canDeleteNode = !this.item.hasResourcesInBranchInd;
                 this.canEditNode = true;
                 this.canMoveNode = this.item.parent != null;
+                this.canEditFolderReference = this.item.nodePaths && this.item.nodePaths.length > 1; // TODO also show if only one reference but an edit exists
             },
             recomputeResourceOptions: function () {
                 this.canMoveResourceUp = this.item.displayOrder > 1;
@@ -340,6 +357,9 @@
             },
             onEditFolder: function () {
                 this.$store.commit('contentStructureState/setEditingFolder', { folderNode: this.item });
+            },
+            onEditFolderReference: function () {
+                this.$store.commit('contentStructureState/setEditingFolderReference', { folderNode: this.item });
             },
             onMoveNodeUp: function () {
                 this.$store.dispatch('contentStructureState/moveNodeUp', { node: this.item });
@@ -550,58 +570,66 @@
         margin-top: 8px;
     }
 
-    div.options-dropdown {
+    div.options-dropdown,
+    div.references-dropdown {
         color: $nhsuk-black;
-        .dropdown-menu
 
-    {
-        border: 2px solid $nhsuk-grey;
-        box-sizing: border-box;
-        border-radius: 5px;
-        margin: 0;
-        padding: 0;
-        margin-top: 10px;
-    }
+        .dropdown-menu {
+            border: 2px solid $nhsuk-grey;
+            box-sizing: border-box;
+            border-radius: 5px;
+            margin: 0;
+            padding: 0;
+            margin-top: 10px;
+        }
 
-    .dropdown-toggle::after {
-        vertical-align: middle;
-        border-top: 0.5em solid;
-        border-right: 0.5em solid transparent;
-        border-bottom: 0;
-        border-left: 0.5em solid transparent;
-    }
+        .dropdown-toggle::after {
+            vertical-align: middle;
+            border-top: 0.5em solid;
+            border-right: 0.5em solid transparent;
+            border-bottom: 0;
+            border-left: 0.5em solid transparent;
+        }
 
-    a.dropdown-item {
-        height: 35px !important;
-        font-size: 1.6rem;
-        text-decoration: none;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        border-top: 1px solid $nhsuk-grey-lighter;
-        &:hover
+        a.dropdown-item {
+            height: 35px !important;
+            font-size: 1.6rem;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-top: 1px solid $nhsuk-grey-lighter;
 
-    {
-        cursor: pointer;
-        background-color: $nhsuk-blue;
-        color: $nhsuk-white;
-    }
+            &:hover {
+                cursor: pointer;
+                background-color: $nhsuk-blue;
+                color: $nhsuk-white;
+            }
+        }
 
-    }
-
-    a.dropdown-item:first-child {
-        border: none;
-    }
-
+        a.dropdown-item:first-child {
+            border: none;
+        }
     }
 
     div.options-dropdown {
         a .dropdown-item
-
-    {
-        width: 182px !important;
+        {
+            width: 182px !important;
+        }
     }
 
+    div.references-dropdown {
+        margin-right: 15px;
+
+        ul {
+            padding: 2.5px 0;
+            margin: 0;
+
+            li {
+                padding: 2.5px 5px;
+            }
+        }
     }
 
     #cancelMoveNode {

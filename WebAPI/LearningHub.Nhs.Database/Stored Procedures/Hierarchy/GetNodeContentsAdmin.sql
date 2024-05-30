@@ -20,6 +20,7 @@ AS
 
 BEGIN
 
+	-- Get the latest Hierarchy Edit in Draft status, the NodePathId can only be in one Draft Hierarchy Edit at a time
 	DECLARE @HierarchyEditId int
 	SELECT TOP 1 @HierarchyEditId = he.Id 
 	FROM	hierarchy.HierarchyEdit he

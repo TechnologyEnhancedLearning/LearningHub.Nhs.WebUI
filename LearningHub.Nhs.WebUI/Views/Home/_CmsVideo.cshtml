@@ -123,7 +123,8 @@
                   //  const srcPath = "/file/download?filePath=" + captionsInfo.filePath + "&fileName=" + captionsInfo.fileName;
                     const srcPath = "/file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
                     trackElement.kind = 'captions'; // Or 'subtitles' or 'descriptions' depending on your track type
-                    trackElement.label = captionsInfo.language || 'Track'; // Use language information if available
+                    trackElement.label = captionsInfo.language || 'english';
+                    trackElement.srclang = captionsInfo.language || 'en'; 
                    // trackElement.src = "/api/resource/DownloadResource?filePath=396eb836-5cf5-4255-b33f-66a31fdbef39&amp;fileName=samplecaption.vtt";
                    // trackElement.src = "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt";
                    trackElement.src =   srcPath;

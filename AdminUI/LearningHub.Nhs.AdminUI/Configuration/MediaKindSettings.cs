@@ -39,5 +39,15 @@
         /// Gets or sets media kind media service jwt primary key secret.
         /// </summary>
         public string JWTPrimaryKeySecret { get; set; }
+
+        /// <summary>
+        /// Gets or sets the media kind media kind MKPlayer licence key.
+        /// </summary>
+        public string MKPlayerLicence { get; set; }
+
+        /// <summary>
+        /// Gets or sets the media kind blob connection string.
+        /// </summary>
+        public string MediaKindStorageConnectionString { get; set; }
     }
 }

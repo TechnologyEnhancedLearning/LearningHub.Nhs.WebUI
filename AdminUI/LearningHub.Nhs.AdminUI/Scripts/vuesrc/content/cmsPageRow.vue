@@ -174,7 +174,9 @@
                 }
             },
             getMKIOPlayerKey() {
-                this.mkioKey = 'd0167b1c-9767-4287-9ddc-e0fa09d31e02';
+                contentData.getAVUnavailableView().then(response => {
+                    this.mkioKey = response;
+                });
             },           
             load() {
                 if (this.sectionTemplateType === SectionTemplateType.Video) {

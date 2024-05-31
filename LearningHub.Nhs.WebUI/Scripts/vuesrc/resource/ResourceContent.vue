@@ -129,11 +129,10 @@
                 initialCertificateStatus: null,
                 player: null,
                 videoContainer: null,
-                mkioKey: 'd0167b1c-9767-4287-9ddc-e0fa09d31e02',
+                mkioKey: '',
                 playBackUrl: '',
                 sourceLoaded: true,
                 playerConfig: {
-                    key: "d0167b1c-9767-4287-9ddc-e0fa09d31e02",
                 }
             }
         },
@@ -236,7 +235,8 @@
                         const trackElement = document.createElement('track');
                         var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
                         trackElement.kind = 'captions'; // Or 'subtitles' or 'descriptions' depending on your track type
-                        trackElement.label = 'Track'; 
+                        trackElement.label = captionsInfo.language || 'english';
+                        trackElement.srclang = captionsInfo.language || 'en'; 
                         trackElement.src = srcPath;
 
                         // Append the track to the video element
@@ -314,7 +314,7 @@
 
             },
             getMKIOPlayerKey() {
-                this.mkioKey = 'd0167b1c-9767-4287-9ddc-e0fa09d31e02';
+                this.mkioKey = this.$store.state.getMKPlayerLicenceKey;
             },
             getBearerToken() {
                 var token;

@@ -108,7 +108,8 @@
                         const trackElement = document.createElement('track');
                         var srcPath = this.captionsUrl;
                         trackElement.kind = 'captions'; 
-                        trackElement.label = 'Track'; 
+                        trackElement.label = 'english';
+                        trackElement.srclang = 'en'; 
                         trackElement.src = srcPath;
 
                         // Append the track to the video element
@@ -120,7 +121,7 @@
              
             },
             getMKIOPlayerKey() {
-                this.mkioKey = 'd0167b1c-9767-4287-9ddc-e0fa09d31e02';
+                this.mkioKey = this.$store.state.getMKPlayerLicenceKey; 
             },
             getBearerToken() {
                 return "Bearer=" + this.azureMediaServicesToken;

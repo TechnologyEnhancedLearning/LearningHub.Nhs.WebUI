@@ -60,7 +60,7 @@
             string containerName = "asset-" + Guid.NewGuid().ToString();
             var asset = await client.Assets.CreateOrUpdateAsync(inputAssetName, containerName, this.settings.MediaKindSettings.StorageAccountName);
 
-            BlobServiceClient blobServiceClient = new BlobServiceClient(this.settings.AzureFileStorageConnectionString);
+            BlobServiceClient blobServiceClient = new BlobServiceClient(this.settings.MediaKindSettings.MediaKindStorageConnectionString);
 
             // Get a reference to the container
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(asset.Properties.Container);

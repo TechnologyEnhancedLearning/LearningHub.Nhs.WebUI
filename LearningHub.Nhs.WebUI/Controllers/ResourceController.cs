@@ -180,7 +180,7 @@
             }
 
             // For article/image resources, immediately record the resource activity for this user.
-            if ((resource.ResourceTypeEnum == ResourceTypeEnum.Article || resource.ResourceTypeEnum == ResourceTypeEnum.Image) && (!resource.SensitiveContent))
+            if ((resource.ResourceTypeEnum == ResourceTypeEnum.Article || resource.ResourceTypeEnum == ResourceTypeEnum.Image) && (!resource.SensitiveContent) && this.User.Identity.IsAuthenticated)
             {
                 var activity = new CreateResourceActivityViewModel()
                 {

@@ -162,9 +162,14 @@ FROM (
 					EXISTS
 					(
 							SELECT 1	FROM   [activity].[ResourceActivity] AS [ResAct2]
-							WHERE  [ResAct2].[Deleted] = 0 AND  [ResourceActivity].[Id] = [ResAct2].[LaunchResourceActivityId] AND  [ResAct2].[ActivityStatusId] in (3,7)
+							WHERE  [ResAct2].[Deleted] = 0 AND  [ResourceActivity].[Id] = [ResAct2].[LaunchResourceActivityId] AND  [ResAct2].[ActivityStatusId] in (3,7,5,4)
 					)
 					
+				)
+			AND
+				(
+					-- resource type is not assessment and activity status is Complete/Incomplete
+					[Res].[ResourceTypeId] <> 11 OR [ResourceActivity].[ActivityStatusId] in (7,3)
 				)
 
 ) AS [t2]

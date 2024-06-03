@@ -91,10 +91,10 @@
             };
         },
         created() {
+            this.getMKIOPlayerKey();
             this.load();
             this.getDisplayAVFlag();
             this.getAudioVideoUnavailableView();
-            this.getMKIOPlayerKey();
         },
         computed: {
             getStyle() {
@@ -170,14 +170,13 @@
             onPlayerReady() {
                 const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
                 if (videoElement) {
-                    videoElement.controls = true;                   
+                    videoElement.controls = true;
                 }
             },
-            getMKIOPlayerKey() {
-                contentData.getAVUnavailableView().then(response => {
-                    this.mkioKey = response;
-                });
-            },           
+            async getMKIOPlayerKey() {
+                this.mkioKey = await contentData.getMKPlayerKey();
+                //return this.mkioKey;
+            },
             load() {
                 if (this.sectionTemplateType === SectionTemplateType.Video) {
                     contentData.getPageSectionDetailVideo(this.section.id).then(response => {
@@ -189,19 +188,21 @@
                         // Grab the video container
                         this.videoContainer = document.getElementById(this.getPlayerUniqueId);
 
+                        var licenceKey = this.mkioKey;// this.getMKIOPlayerKey();
+
                         // Prepare the player configuration
                         const playerConfig = {
-                            key: this.mkioKey,
+                            key: licenceKey,
                             ui: false,
                             theme: "dark",
                             events: {
-                                ready: this.onPlayerReady,                                
+                                ready: this.onPlayerReady,
                             }
                         };
 
                         // Initialize the player with video container and player configuration
                         this.player = new MKPlayer(this.videoContainer, playerConfig);
-                                                
+
                         // Load source
                         const sourceConfig = {
                             hls: this.getMediaPlayUrl(this.pageSectionDetail.videoAsset.azureMediaAsset.locatorUri),
@@ -288,6 +289,7 @@
         pointer-events: none;
         opacity: 0.5;
     }
+
     .video-container {
         height: 0;
         width: 100%;
@@ -296,6 +298,7 @@
         padding-top: 56.25%; /* 16:9 aspect ratio */
         background-color: #000;
     }
+
     video {
         position: absolute;
         top: 0;
@@ -303,7 +306,8 @@
         width: 100%;
         height: 100%;
     }
-    video[id^="bitmovinplayer-video"] {
-        width: 100%;
-    }
+
+        video[id^="bitmovinplayer-video"] {
+            width: 100%;
+        }
 </style>

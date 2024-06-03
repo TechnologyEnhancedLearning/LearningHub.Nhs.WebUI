@@ -172,28 +172,19 @@ namespace LearningHub.Nhs.Repository.Resources
         /// <param name="excludeResourceVersionId">The excluded ResourceVersion Id.</param>
         /// <param name="resourceTypeEnum">The resource type.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<Tuple<BlockCollection, BlockCollection, BlockCollection>> GetAllBlockCollections(int excludeResourceVersionId, ResourceTypeEnum resourceTypeEnum)
+        public async Task<string> GetResourceBlockCollectionsFileAsync(int excludeResourceVersionId, ResourceTypeEnum resourceTypeEnum)
         {
-            if (resourceTypeEnum == ResourceTypeEnum.Case)
+            if (excludeResourceVersionId > 0)
             {
-                var caseContent = await this.GetAllCaseBlockCollections(excludeResourceVersionId);
-                return new Tuple<BlockCollection, BlockCollection, BlockCollection>(caseContent, null, null);
-            }
-            else if (resourceTypeEnum == ResourceTypeEnum.Assessment)
-            {
-                var assessmentContentTask = this.GetAllAssessmentContentBlockCollections(excludeResourceVersionId);
-                var assessmentGuidanceTask = this.GetAllAssessmentGuidanceBlockCollections(excludeResourceVersionId);
-
-                await Task.WhenAll(assessmentContentTask, assessmentGuidanceTask);
-
-                return new Tuple<BlockCollection, BlockCollection, BlockCollection>(
-                    null,
-                    await assessmentContentTask,
-                    await assessmentGuidanceTask);
+                var param0 = new SqlParameter("@excludeResourceVersionId", SqlDbType.Int) { Value = excludeResourceVersionId };
+                var param1 = new SqlParameter("@resourceType", SqlDbType.Int) { Value = (int)resourceTypeEnum };
+                var param2 = new SqlParameter("@filePath", SqlDbType.NVarChar) { Direction = ParameterDirection.Output, Size = -1 };
+                await this.DbContext.Database.ExecuteSqlRawAsync("[resources].[BlockCollectionFileSearch] @excludeResourceVersionId, @resourceType, @filePath output", param0, param1, param2);
+                return param2.Value.ToString();
             }
             else
             {
-                return new Tuple<BlockCollection, BlockCollection, BlockCollection>(null, null, null);
+                return string.Empty;
             }
         }
 
@@ -448,148 +439,12 @@ namespace LearningHub.Nhs.Repository.Resources
             this.SetAuditFieldsOnChildren(userId, imageCarouselBlock.ImageBlockCollection, isCreate);
         }
 
-        private async Task<BlockCollection> GetAllCaseBlockCollections(int excludeResourceVersionId)
+        private async Task<BlockCollection> GetResourceBlockCollectionsFilePath(int excludeResourceVersionId)
         {
             var command = new SqlCommand
             {
                 CommandType = CommandType.StoredProcedure,
                 CommandText = "[resources].[CaseBlockCollectionGetAll]",
-                Parameters = { new SqlParameter("@excludeResourceVersionId", SqlDbType.Int) { Value = excludeResourceVersionId } },
-            };
-
-            var results = this.DbContext.MultipleResults(command)
-                            .With<Block>()
-                            .With<TextBlock>()
-                            .With<WholeSlideImageBlock>()
-                            .With<WholeSlideImageBlockItem>()
-                            .With<WholeSlideImage>()
-                            .With<File>()
-                            .With<PartialFile>()
-                            .With<WholeSlideImageFile>()
-                            .With<ImageAnnotation>()
-                            .With<ImageAnnotationMark>()
-                            .With<MediaBlock>()
-                            .With<Attachment>()
-                            .With<File>()
-                            .With<PartialFile>()
-                            .With<Image>()
-                            .With<File>()
-                            .With<PartialFile>()
-                            .With<Video>()
-                            .With<File>()
-                            .With<PartialFile>()
-                            .With<VideoFile>()
-                            .With<QuestionBlock>()
-                            .With<QuestionAnswer>()
-                            .With<ImageCarouselBlock>()
-                            .Execute();
-
-            var blocks = results[0].OfType<Block>().ToArray();
-            var textBlocks = results[1].OfType<TextBlock>();
-            var wholeSlideImgBlocks = GetWholeSlideImageBlocks(results);
-            var mediaBlocks = GetMediaBlocks(results);
-            var questionBlocks = GetQuestionBlocks(results);
-            var imgCarouselBlocks = results[23].OfType<ImageCarouselBlock>();
-
-            foreach (var block in blocks)
-            {
-                block.TextBlock = textBlocks.FirstOrDefault(t => t.BlockId == block.Id);
-                block.WholeSlideImageBlock = wholeSlideImgBlocks.FirstOrDefault(w => w.BlockId == block.Id);
-                block.MediaBlock = mediaBlocks.FirstOrDefault(m => m.BlockId == block.Id);
-                block.QuestionBlock = questionBlocks.FirstOrDefault(q => q.BlockId == block.Id);
-                block.ImageCarouselBlock = imgCarouselBlocks.FirstOrDefault(i => i.BlockId == block.Id);
-            }
-
-            var blockCollection = new BlockCollection
-            {
-                Blocks = blocks,
-            };
-
-            await Task.WhenAll(blockCollection.Blocks
-                .Where(block => block.QuestionBlock != null)
-                .Select(block => this.FillInPartialQuestionBlock(block.QuestionBlock)));
-
-            await Task.WhenAll(blockCollection.Blocks
-                .Where(block => block.ImageCarouselBlock != null)
-                .Select(block => this.FillInPartialImageCarouselBlock(block.ImageCarouselBlock)));
-
-            return blockCollection;
-        }
-
-        private async Task<BlockCollection> GetAllAssessmentContentBlockCollections(int excludeResourceVersionId)
-        {
-            var command = new SqlCommand
-            {
-                CommandType = CommandType.StoredProcedure,
-                CommandText = "[resources].[AssessmentContentBlockCollectionGetAll]",
-                Parameters = { new SqlParameter("@excludeResourceVersionId", SqlDbType.Int) { Value = excludeResourceVersionId } },
-            };
-
-            var results = this.DbContext.MultipleResults(command)
-                            .With<Block>()
-                            .With<TextBlock>()
-                            .With<WholeSlideImageBlock>()
-                            .With<WholeSlideImageBlockItem>()
-                            .With<WholeSlideImage>()
-                            .With<File>()
-                            .With<PartialFile>()
-                            .With<WholeSlideImageFile>()
-                            .With<ImageAnnotation>()
-                            .With<ImageAnnotationMark>()
-                            .With<MediaBlock>()
-                            .With<Attachment>()
-                            .With<File>()
-                            .With<PartialFile>()
-                            .With<Image>()
-                            .With<File>()
-                            .With<PartialFile>()
-                            .With<Video>()
-                            .With<File>()
-                            .With<PartialFile>()
-                            .With<VideoFile>()
-                            .With<QuestionBlock>()
-                            .With<QuestionAnswer>()
-                            .With<ImageCarouselBlock>()
-                            .Execute();
-
-            var blocks = results[0].OfType<Block>().ToArray();
-            var textBlocks = results[1].OfType<TextBlock>();
-            var wholeSlideImgBlocks = GetWholeSlideImageBlocks(results);
-            var mediaBlocks = GetMediaBlocks(results);
-            var questionBlocks = GetQuestionBlocks(results);
-            var imgCarouselBlocks = results[23].OfType<ImageCarouselBlock>();
-
-            foreach (var block in blocks)
-            {
-                block.TextBlock = textBlocks.FirstOrDefault(t => t.BlockId == block.Id);
-                block.WholeSlideImageBlock = wholeSlideImgBlocks.FirstOrDefault(w => w.BlockId == block.Id);
-                block.MediaBlock = mediaBlocks.FirstOrDefault(m => m.BlockId == block.Id);
-                block.QuestionBlock = questionBlocks.FirstOrDefault(q => q.BlockId == block.Id);
-                block.ImageCarouselBlock = imgCarouselBlocks.FirstOrDefault(i => i.BlockId == block.Id);
-            }
-
-            var blockCollection = new BlockCollection
-            {
-                Blocks = blocks,
-            };
-
-            await Task.WhenAll(blockCollection.Blocks
-                .Where(block => block.QuestionBlock != null)
-                .Select(block => this.FillInPartialQuestionBlock(block.QuestionBlock)));
-
-            await Task.WhenAll(blockCollection.Blocks
-                .Where(block => block.ImageCarouselBlock != null)
-                .Select(block => this.FillInPartialImageCarouselBlock(block.ImageCarouselBlock)));
-
-            return blockCollection;
-        }
-
-        private async Task<BlockCollection> GetAllAssessmentGuidanceBlockCollections(int excludeResourceVersionId)
-        {
-            var command = new SqlCommand
-            {
-                CommandType = CommandType.StoredProcedure,
-                CommandText = "[resources].[AssessmentGuidanceBlockCollectionGetAll]",
                 Parameters = { new SqlParameter("@excludeResourceVersionId", SqlDbType.Int) { Value = excludeResourceVersionId } },
             };
 

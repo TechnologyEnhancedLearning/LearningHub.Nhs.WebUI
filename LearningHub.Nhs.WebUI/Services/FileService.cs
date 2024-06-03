@@ -230,49 +230,9 @@
                 {
                     allContentPath.Add(vm.ScormDetails.ContentFilePath);
                 }
-                else if (vm.GenericFileDetails != null && !string.IsNullOrWhiteSpace(vm.GenericFileDetails.File.FilePath))
-                {
-                    allFilePath.Add(vm.GenericFileDetails.File.FilePath);
-                }
                 else if (vm.HtmlDetails != null && !string.IsNullOrWhiteSpace(vm.HtmlDetails.ContentFilePath))
                 {
                     allContentPath.Add(vm.HtmlDetails.ContentFilePath);
-                }
-                else if (vm.ImageDetails != null && !string.IsNullOrWhiteSpace(vm.ImageDetails.File?.FilePath))
-                {
-                    allFilePath.Add(vm.ImageDetails.File?.FilePath);
-                }
-                else if (vm.ArticleDetails != null)
-                {
-                    var files = vm.ArticleDetails.Files.ToList();
-                    if (files.Any())
-                    {
-                        foreach (var file in files)
-                        {
-                            allFilePath.Add(file.FilePath);
-                        }
-                    }
-                }
-                else if (vm.CaseDetails != null)
-                {
-                    var blockCollection = vm.CaseDetails.BlockCollection;
-                    foreach (var entry in blockCollection.Blocks)
-                    {
-                        if (entry.ImageCarouselBlock != null)
-                        {
-                            foreach (var item in entry.ImageCarouselBlock?.ImageBlockCollection?.Blocks)
-                            {
-                                allFilePath.Add(item?.MediaBlock?.Image?.File.FilePath);
-                            }
-                        }
-                        else if (entry.WholeSlideImageBlock != null)
-                        {
-                            foreach (var item in entry.WholeSlideImageBlock.WholeSlideImageBlockItems)
-                            {
-                                allFilePath.Add(item?.WholeSlideImage?.File.FilePath);
-                            }
-                        }
-                    }
                 }
 
                 // audio and video to be added
@@ -349,7 +309,7 @@
                                 }
                             }
 
-                            await directory.DeleteAsync();
+                            await directory.DeleteIfExistsAsync();
                         }
                     }
                 }
@@ -405,6 +365,8 @@
                     await sourceFileClient.DeleteIfExistsAsync();
                 }
             }
+
+            await sourceDirectory.DeleteIfExistsAsync();
         }
 
         private async Task MoveInPutDirectoryToArchive(List<string> allDirectoryRef)

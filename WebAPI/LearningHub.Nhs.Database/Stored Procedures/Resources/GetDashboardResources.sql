@@ -17,6 +17,8 @@
 -- 08 Nov 2023  OA  Fixed latest resource activity entry selection(with updated logic for media activities) and  status check for incomplete assessment.
 -- 17 Jan 2024  SA  Changes to accomadate activity status changes
 -- 27 Feb 2024  SS  Fixed missing In progress resources in the My Accessed Learning tray issue
+-- 2 May 2024   SA  Fixed the issue on showing statuses on 'My accessed Learning' for resource type file
+-- 13 May 2024  SA  TD-4115
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [resources].[GetDashboardResources]
@@ -225,7 +227,7 @@ BEGIN
 	INSERT INTO @MyActivity					
 			SELECT TOP (@MaxRows) ra.ResourceId, MAX(ra.Id) ResourceActivityId
 				FROM 
-				(SELECT a.* FROM activity.ResourceActivity a INNER JOIN (SELECT ResourceId, MAX(Id) as id FROM activity.ResourceActivity GROUP BY ResourceId,ActivityStatusId ) AS b ON a.ResourceId = b.ResourceId AND a.id = b.id  order by a.Id desc OFFSET 0 ROWS) ra	
+				(SELECT a.* FROM activity.ResourceActivity a INNER JOIN (SELECT ResourceId, MAX(Id) as id FROM activity.ResourceActivity GROUP BY ResourceId) AS b ON a.ResourceId = b.ResourceId AND a.id = b.id  order by a.Id desc OFFSET 0 ROWS) ra	
 				JOIN [resources].[Resource] r ON  ra.ResourceId = r.Id
 				JOIN [resources].[ResourceVersion] rv ON  rv.Id = ra.ResourceVersionId
 				LEFT JOIN [resources].[AssessmentResourceVersion] arv ON arv.ResourceVersionId = ra.ResourceVersionId
@@ -237,12 +239,12 @@ BEGIN
 					 (r.ResourceTypeId IN (1, 5, 8, 9,10, 12) AND ra.ActivityStatusId <> 3)
 				    OR (r.ResourceTypeId IN (2, 7) AND (mar.Id IS NULL OR (mar.Id IS NOT NULL AND mar.PercentComplete < 100) OR ra.ActivityStart < '2020-09-07 00:00:00 +00:00'))
 					OR  (r.ResourceTypeId = 6 AND (sa.CmiCoreLesson_status NOT IN (3, 5) AND (ra.ActivityStatusId NOT IN(3, 5))))
-					OR (r.ResourceTypeId IN (9) AND ra.ActivityStatusId NOT IN (6))
-					OR (r.ResourceTypeId = 11 AND ((ara.Id IS NOT NULL AND ara.score < arv.PassMark) OR ra.ActivityStatusId IN (1))) 
+					OR ((r.ResourceTypeId = 11 AND arv.AssessmentType = 2) AND ((ara.Id IS NOT NULL AND ara.score < arv.PassMark) OR ra.ActivityStatusId IN (7))) 
+					OR ((r.ResourceTypeId = 11 AND arv.AssessmentType = 1) AND ra.ActivityStatusId = 7) 
 					)		
 				GROUP BY ra.ResourceId	
 				ORDER BY ResourceActivityId DESC
-
+				
 		SELECT ma.ResourceActivityId, r.Id AS ResourceId
 			,(	SELECT TOP 1 rr.OriginalResourceReferenceId
 				FROM [resources].[ResourceReference] rr
@@ -312,7 +314,7 @@ BEGIN
 					 (r.ResourceTypeId IN (2, 7) AND ra.ActivityStatusId IN (3) AND ((mar.Id IS NOT NULL AND mar.PercentComplete = 100) OR ra.ActivityStart < '2020-09-07 00:00:00 +00:00'))
 					OR (r.ResourceTypeId = 6 AND (sa.CmiCoreLesson_status IN(3,5) OR (ra.ActivityStatusId IN(3, 5))))
 					OR (r.ResourceTypeId = 11 AND ara.Score >= arv.PassMark OR ra.ActivityStatusId IN( 3, 5))
-					OR (r.ResourceTypeId IN (1, 5, 8, 9, 10, 12) AND ra.ActivityStatusId IN (3)))		
+					OR (r.ResourceTypeId IN (1, 5, 8, 9, 10, 12) AND ra.ActivityStatusId = 3))		
 				GROUP BY ra.ResourceId
 				ORDER BY ResourceActivityId DESC
 
@@ -384,8 +386,9 @@ BEGIN
 				AND (					
 					 (r.ResourceTypeId IN (2, 7) AND ra.ActivityStatusId IN (3) OR ra.ActivityStart < '2020-09-07 00:00:00 +00:00' OR mar.Id IS NOT NULL AND mar.PercentComplete = 100)
 					OR (r.ResourceTypeId = 6 AND (sa.CmiCoreLesson_status IN(3,5) OR (ra.ActivityStatusId IN(3, 5))))
-					OR (r.ResourceTypeId = 11 AND ara.Score >= arv.PassMark OR ra.ActivityStatusId IN(3, 5))
-					OR (r.ResourceTypeId IN (1, 5, 8, 9, 10, 12) AND ra.ActivityStatusId IN (3)))		
+					OR ((r.ResourceTypeId = 11 AND arv.AssessmentType = 2) AND (ara.Score >= arv.PassMark OR ra.ActivityStatusId IN(3, 5)))
+					OR ((r.ResourceTypeId = 11 AND arv.AssessmentType =1) AND (ara.Score >= arv.PassMark AND ra.ActivityStatusId IN(3, 5,7)))
+					OR (r.ResourceTypeId IN (1, 5, 8, 9, 10, 12) AND ra.ActivityStatusId = 3))		
 				GROUP BY ra.ResourceId
 				ORDER BY ResourceActivityId DESC
 

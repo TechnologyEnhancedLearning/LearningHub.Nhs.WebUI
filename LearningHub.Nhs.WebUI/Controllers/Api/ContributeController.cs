@@ -349,10 +349,17 @@
             {
                 if (associatedResource.ResourceTypeEnum != ResourceTypeEnum.Scorm && associatedResource.ResourceTypeEnum != ResourceTypeEnum.Html)
                 {
-                    var obsoleteFiles = await this.resourceService.GetObsoleteResourceFile(publishViewModel.ResourceVersionId);
-                    if (obsoleteFiles != null && obsoleteFiles.Any())
+                    try
                     {
-                        await this.fileService.PurgeResourceFile(null, obsoleteFiles);
+                        var obsoleteFiles = await this.resourceService.GetObsoleteResourceFile(publishViewModel.ResourceVersionId);
+                        if (obsoleteFiles != null && obsoleteFiles.Any())
+                        {
+                            await this.fileService.PurgeResourceFile(null, obsoleteFiles);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        this.Logger.LogInformation($"Error occurred while checking for obsolete files {ex.Message}, UserId: {this.CurrentUserId}.");
                     }
                 }
             }
@@ -789,6 +796,7 @@
             }
             catch (Exception ex)
             {
+                this.Logger.LogInformation($"Error occurred while checking blockCollection files {ex.Message}, UserId: {this.CurrentUserId}.");
             }
         }
 

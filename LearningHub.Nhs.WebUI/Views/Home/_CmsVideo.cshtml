@@ -1,6 +1,10 @@
 ﻿@using LearningHub.Nhs.Models.Content
 @model PageSectionDetailViewModel
-<link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" />
+@{
+    string mkPlayerLicence = (string) ViewData["mkPlayerLicenceKey"];
+}
+
+@* <link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" /> *@
 <script type="text/javascript" src="~/js/mkplayer.js" asp-append-version="true"></script>
 
 @* @if (Model != null)
@@ -54,7 +58,7 @@
 
     // 2. Prepare the player configuration
     var playerConfig = {
-        key: "d0167b1c-9767-4287-9ddc-e0fa09d31e02",
+        key: "@mkPlayerLicence",
         ui: false,
         playback: {
             muted: true,

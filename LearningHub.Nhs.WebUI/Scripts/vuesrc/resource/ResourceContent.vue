@@ -313,8 +313,8 @@
 
 
             },
-            getMKIOPlayerKey() {
-                this.mkioKey = this.$store.state.getMKPlayerLicenceKey;
+            async getMKIOPlayerKey() {
+                this.mkioKey = await resourceData.getMKPlayerKey();
             },
             getBearerToken() {
                 var token;

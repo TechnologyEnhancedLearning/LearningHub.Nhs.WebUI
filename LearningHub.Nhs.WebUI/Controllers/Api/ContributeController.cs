@@ -343,24 +343,17 @@
         [Route("PublishResourceVersion")]
         public async Task<ActionResult> PublishResourceVersionAsync([FromBody] PublishViewModel publishViewModel)
         {
-            var associatedResource = await this.resourceService.GetResourceVersionExtendedAsync(publishViewModel.ResourceVersionId);
+            var associatedResource = await this.resourceService.GetResourceVersionAsync(publishViewModel.ResourceVersionId);
             var validationResult = await this.contributeService.SubmitResourceVersionForPublishAsync(publishViewModel);
             if (validationResult.IsValid)
             {
-                if (associatedResource.ResourceTypeEnum != ResourceTypeEnum.Scorm && associatedResource.ResourceTypeEnum != ResourceTypeEnum.Html)
+                if (associatedResource.ResourceType != ResourceTypeEnum.Scorm && associatedResource.ResourceType != ResourceTypeEnum.Html)
                 {
-                    try
-                    {
                         var obsoleteFiles = await this.resourceService.GetObsoleteResourceFile(publishViewModel.ResourceVersionId);
                         if (obsoleteFiles != null && obsoleteFiles.Any())
                         {
                             await this.fileService.PurgeResourceFile(null, obsoleteFiles);
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        this.Logger.LogInformation($"Error occurred while checking for obsolete files {ex.Message}, UserId: {this.CurrentUserId}.");
-                    }
                 }
             }
 
@@ -794,9 +787,8 @@
                     _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, deleteList); });
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                this.Logger.LogInformation($"Error occurred while checking blockCollection files {ex.Message}, UserId: {this.CurrentUserId}.");
             }
         }
 

@@ -1332,58 +1332,58 @@ namespace LearningHub.Nhs.Services
             {
                 if (resourceVersion.ResourceType == ResourceTypeEnum.Assessment)
                 {
-                    var assessmentDetails = await this.GetAssessmentViewModel(resourceVersionId);
-                    var endGuidanceFiles = new List<string>();
-                    var assessmentContentFiles = new List<string>();
-
-                    var allOtherAssessmentBlocks = await this.GetAssessmentBlockCollectionAsync(resourceVersionId, ResourceTypeEnum.Assessment);
-
-                    if (assessmentDetails is { EndGuidance: { } } && assessmentDetails.EndGuidance.Blocks != null)
+                   if (deletedResource)
                     {
-                        if (deletedResource)
+                        var assessmentFiles = await this.GetResourceBlockCollectionsFilePathAsync(resourceVersionId, ResourceTypeEnum.Assessment);
+                        if (assessmentFiles.Any())
                         {
-                            endGuidanceFiles = this.CheckBlockFile(allOtherAssessmentBlocks.Item2, assessmentDetails.EndGuidance);
-                        }
-                        else
-                        {
-                            endGuidanceFiles = this.CheckBlockFile(assessmentDetails.EndGuidance, allOtherAssessmentBlocks.Item2);
-                        }
-
-                        if (endGuidanceFiles.Any())
-                        {
-                            retVal.AddRange(endGuidanceFiles);
+                            retVal.AddRange(assessmentFiles);
                         }
                     }
-
-                    if (assessmentDetails is { AssessmentContent: { } } && assessmentDetails.AssessmentContent.Blocks != null)
+                    else
                     {
-                        if (deletedResource)
+                        var assessmentDetails = await this.GetAssessmentViewModel(resourceVersionId);
+                        var rvs = await this.resourceVersionRepository.GetResourceVersionsAsync(resourceVersion.ResourceId);
+                        rvs = rvs.Where(x => x.Id != resourceVersionId && x.PublicationId > 0).OrderByDescending(x => x.PublicationId).ToList();
+                        var rv = rvs.FirstOrDefault();
+                        var currentAssessmentVersion = await this.GetAssessmentViewModel(rv.Id);
+                        if (assessmentDetails is { EndGuidance: { } } && assessmentDetails.EndGuidance.Blocks != null)
                         {
-                            assessmentContentFiles = this.CheckBlockFile(allOtherAssessmentBlocks.Item1, assessmentDetails.AssessmentContent);
-                        }
-                        else
-                        {
-                            assessmentContentFiles = this.CheckBlockFile(assessmentDetails.AssessmentContent, allOtherAssessmentBlocks.Item1);
+                           var endGuidanceFiles = this.CheckBlockFile(assessmentDetails.EndGuidance, currentAssessmentVersion.EndGuidance);
+                           if (endGuidanceFiles.Any())
+                            {
+                                retVal.AddRange(endGuidanceFiles);
+                            }
                         }
 
-                        if (assessmentContentFiles.Any())
+                        if (assessmentDetails is { AssessmentContent: { } } && assessmentDetails.AssessmentContent.Blocks != null)
                         {
-                            retVal.AddRange(assessmentContentFiles);
+                            var assessmentContentFiles = this.CheckBlockFile(assessmentDetails.AssessmentContent, currentAssessmentVersion.AssessmentContent);
+                            if (assessmentContentFiles.Any())
+                            {
+                                retVal.AddRange(assessmentContentFiles);
+                            }
                         }
                     }
                 }
                 else if (resourceVersion.ResourceType == ResourceTypeEnum.Case)
                 {
-                    var caseDetails = await this.GetCaseDetailsByIdAsync(resourceVersionId);
                     var caseFiles = new List<string>();
-                    var allBlocks = await this.GetAllCaseBlockCollectionsAsync(resourceVersionId, ResourceTypeEnum.Case);
                     if (deletedResource)
                     {
-                        caseFiles = this.CheckBlockFile(allBlocks, caseDetails.BlockCollection);
+                        caseFiles = await this.GetResourceBlockCollectionsFilePathAsync(resourceVersionId, ResourceTypeEnum.Case);
                     }
                     else
                     {
-                        caseFiles = this.CheckBlockFile(caseDetails.BlockCollection, allBlocks);
+                        var caseDetails = await this.GetCaseDetailsByIdAsync(resourceVersionId);
+                        var rvs = await this.resourceVersionRepository.GetResourceVersionsAsync(resourceVersion.ResourceId);
+                        rvs = rvs.Where(x => x.Id != resourceVersionId && x.PublicationId > 0).OrderByDescending(x => x.PublicationId).ToList();
+                        var rv = rvs.FirstOrDefault();
+                        if (rv != null)
+                        {
+                            var currentCaseVersion = await this.GetCaseDetailsByIdAsync(rv.Id);
+                            caseFiles = this.CheckBlockFile(caseDetails.BlockCollection, currentCaseVersion.BlockCollection);
+                        }
                     }
 
                     if (caseFiles.Any())
@@ -2203,20 +2203,19 @@ namespace LearningHub.Nhs.Services
         /// <param name="excludeResourceVersionId">The resource version id.</param>
         /// <param name="resourceType">The resource type.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<BlockCollectionViewModel> GetAllCaseBlockCollectionsAsync(int excludeResourceVersionId, ResourceTypeEnum resourceType)
+        public async Task<List<string>> GetResourceBlockCollectionsFilePathAsync(int excludeResourceVersionId, ResourceTypeEnum resourceType)
         {
-            var blockList = new List<BlockViewModel>();
-            var collection = await this.blockCollectionRepository.GetAllBlockCollections(excludeResourceVersionId, resourceType);
-            if (collection != null && collection.Item1 != null)
+            var pathList = new List<string>();
+            var collection = await this.blockCollectionRepository.GetResourceBlockCollectionsFileAsync(excludeResourceVersionId, resourceType);
+            if (!string.IsNullOrWhiteSpace(collection))
             {
-                var blocks = this.mapper.Map<BlockCollectionViewModel>(collection.Item1);
-                if (blocks.Blocks.Any())
-                {
-                    blockList.AddRange(blocks.Blocks);
-                }
+                pathList = collection.Split(',')
+                                    .Select(item => item.Trim())
+                                    .Where(item => !string.IsNullOrEmpty(item))
+                                    .ToList();
             }
 
-            return new BlockCollectionViewModel { Blocks = blockList };
+            return pathList;
         }
 
         /// <summary>
@@ -2299,45 +2298,6 @@ namespace LearningHub.Nhs.Services
             var assessmentResourceVersion = await this.assessmentResourceVersionRepository.GetByResourceVersionIdAsync(resourceVersionId);
 
             return assessmentResourceVersion;
-        }
-
-        /// <summary>
-        /// The assessment blocks for all published(current) and non published resource version async.
-        /// </summary>
-        /// <param name="excludeResourceVersionId">The resource version id to exclude.</param>
-        /// <param name="resourceType">The resource type enum.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<Tuple<BlockCollectionViewModel, BlockCollectionViewModel>> GetAssessmentBlockCollectionAsync(int excludeResourceVersionId, ResourceTypeEnum resourceType)
-        {
-            var collection = await this.blockCollectionRepository.GetAllBlockCollections(excludeResourceVersionId, resourceType);
-
-            var assessmentBlocks = new List<BlockViewModel>();
-            var endGuidanceBlocks = new List<BlockViewModel>();
-
-            if (collection != null)
-            {
-                if (collection.Item2 != null)
-                {
-                    var assessmentContentBlocks = this.mapper.Map<BlockCollectionViewModel>(collection.Item2);
-                    if (assessmentContentBlocks.Blocks.Any())
-                    {
-                        assessmentBlocks.AddRange(assessmentContentBlocks.Blocks);
-                    }
-                }
-
-                if (collection.Item3 != null)
-                {
-                    var endGuidanceBlocksView = this.mapper.Map<BlockCollectionViewModel>(collection.Item3);
-                    if (endGuidanceBlocksView.Blocks.Any())
-                    {
-                        endGuidanceBlocks.AddRange(endGuidanceBlocksView.Blocks);
-                    }
-                }
-            }
-
-            return new Tuple<BlockCollectionViewModel, BlockCollectionViewModel>(
-                new BlockCollectionViewModel { Blocks = assessmentBlocks },
-                new BlockCollectionViewModel { Blocks = endGuidanceBlocks });
         }
 
         /// <summary>
@@ -5070,19 +5030,20 @@ namespace LearningHub.Nhs.Services
                 }
 
                 var questionFiles = this.CheckQuestionBlock(caseBlockCollection);
-                var publishedQuestionFiles = (publishedBlock != null && publishedBlock.Blocks.Any()) ? this.CheckQuestionBlock(publishedBlock) : new List<string>();
+                var publishedQuestionFiles = (publishedBlock != null && publishedBlock.Blocks.Any()) ? this.CheckQuestionBlock(publishedBlock) : new Dictionary<int, string>();
                 if (questionFiles.Any() && !publishedQuestionFiles.Any())
                 {
-                    retVal.AddRange(questionFiles);
+                    retVal.AddRange(questionFiles.Values.ToList());
                 }
                 else if (questionFiles.Any() && publishedQuestionFiles.Any())
                 {
                     foreach (var file in questionFiles)
                     {
-                        var publishedEntry = publishedQuestionFiles.FirstOrDefault(x => x.Equals(file));
-                        if (publishedEntry == null)
+                        bool found = false;
+                        var publishedEntry = publishedQuestionFiles.FirstOrDefault(x => (x.Key == file.Key || x.Value == file.Value) && (found = true));
+                        if (!found)
                         {
-                            retVal.Add(file);
+                            retVal.Add(file.Value);
                         }
                     }
                 }
@@ -5091,9 +5052,9 @@ namespace LearningHub.Nhs.Services
             return retVal.Where(x => x != null).ToList();
         }
 
-        private List<string> CheckQuestionBlock(BlockCollectionViewModel model)
+        private Dictionary<int, string> CheckQuestionBlock(BlockCollectionViewModel model)
         {
-            var filePath = new List<string>();
+            var filePath = new Dictionary<int, string>();
             if (model != null && model.Blocks.Any())
             {
                 foreach (var block in model.Blocks)
@@ -5110,7 +5071,7 @@ namespace LearningHub.Nhs.Services
                                     {
                                         if (imageBlock.BlockType == BlockType.Media && imageBlock.MediaBlock != null)
                                         {
-                                            filePath.Add(imageBlock.MediaBlock.Image.File.FilePath);
+                                            filePath.Add(imageBlock.MediaBlock.Image.File.FileId, imageBlock.MediaBlock.Image.File.FilePath);
                                         }
                                     }
                                 }
@@ -5126,7 +5087,7 @@ namespace LearningHub.Nhs.Services
                                 {
                                     if (questionBlock.MediaBlock.Image != null)
                                     {
-                                        filePath.Add(questionBlock.MediaBlock.Image.File.FilePath);
+                                        filePath.Add(questionBlock.MediaBlock.Image.File.FileId, questionBlock.MediaBlock.Image.File.FilePath);
                                     }
 
                                     if (questionBlock.MediaBlock.Video != null)
@@ -5135,17 +5096,17 @@ namespace LearningHub.Nhs.Services
                                         {
                                             if (questionBlock.MediaBlock.Video.File != null)
                                             {
-                                                filePath.Add(questionBlock.MediaBlock.Video.File.FilePath);
+                                                filePath.Add(questionBlock.MediaBlock.Video.File.FileId, questionBlock.MediaBlock.Video.File.FilePath);
                                             }
 
                                             if (questionBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
                                             {
-                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
+                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FileId, questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
                                             }
 
                                             if (questionBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
                                             {
-                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
+                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FileId, questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
                                             }
                                         }
                                     }
@@ -5159,7 +5120,7 @@ namespace LearningHub.Nhs.Services
                                         {
                                             if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.WholeSlideImageFile != null && (wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingComplete || wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingFailed))
                                             {
-                                                filePath.Add(wsi.WholeSlideImage.File.FilePath);
+                                                filePath.Add(wsi.WholeSlideImage.File.FileId, wsi.WholeSlideImage.File.FilePath);
                                             }
                                         }
                                     }
@@ -5176,7 +5137,7 @@ namespace LearningHub.Nhs.Services
                                 {
                                     if (feedbackBlock.MediaBlock.Image != null)
                                     {
-                                        filePath.Add(feedbackBlock.MediaBlock.Image.File.FilePath);
+                                        filePath.Add(feedbackBlock.MediaBlock.Image.File.FileId, feedbackBlock.MediaBlock.Image.File.FilePath);
                                     }
 
                                     if (feedbackBlock.MediaBlock.Video != null)
@@ -5185,17 +5146,17 @@ namespace LearningHub.Nhs.Services
                                         {
                                             if (feedbackBlock.MediaBlock.Video.File != null)
                                             {
-                                                filePath.Add(feedbackBlock.MediaBlock.Video.File.FilePath);
+                                                filePath.Add(feedbackBlock.MediaBlock.Video.File.FileId, feedbackBlock.MediaBlock.Video.File.FilePath);
                                             }
 
                                             if (feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
                                             {
-                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
+                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FileId, feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
                                             }
 
                                             if (feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
                                             {
-                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
+                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FileId, feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
                                             }
                                         }
                                     }
@@ -5206,7 +5167,7 @@ namespace LearningHub.Nhs.Services
                 }
             }
 
-            return filePath.Where(x => x != null).ToList();
+            return filePath;
         }
     }
 }

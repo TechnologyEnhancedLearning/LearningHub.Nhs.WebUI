@@ -39,6 +39,6 @@
         /// <param name="excludeResourceVersionId">The excluded ResourceVersion Id.</param>
         /// <param name="resourceTypeEnum">The resource type.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<Tuple<BlockCollection, BlockCollection, BlockCollection>> GetAllBlockCollections(int excludeResourceVersionId, ResourceTypeEnum resourceTypeEnum);
+        Task<string> GetResourceBlockCollectionsFileAsync(int excludeResourceVersionId, ResourceTypeEnum resourceTypeEnum);
     }
 }

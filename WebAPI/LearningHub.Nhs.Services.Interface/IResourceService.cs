@@ -443,8 +443,8 @@ namespace LearningHub.Nhs.Services.Interface
         /// </summary>
         /// <param name="excludeResourceVersionId">The resource version id.</param>
         /// <param name="resourceType">The resource type.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        Task<BlockCollectionViewModel> GetAllCaseBlockCollectionsAsync(int excludeResourceVersionId, ResourceTypeEnum resourceType);
+        /// <returns>The <see cref="List{T}"/>.</returns>
+        Task<List<string>> GetResourceBlockCollectionsFilePathAsync(int excludeResourceVersionId, ResourceTypeEnum resourceType);
 
         /// <summary>
         /// The update case resource version async.
@@ -468,14 +468,6 @@ namespace LearningHub.Nhs.Services.Interface
         /// <param name="resourceVersionId">The resource version id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<AssessmentResourceVersion> GetAssessmentBasicDetailsByIdAsync(int resourceVersionId);
-
-        /// <summary>
-        /// The assessment blocks for all published(current) and non published resource version async.
-        /// </summary>
-        /// <param name="excludeResourceVersionId">The resource version id to exclude.</param>
-        /// <param name="resourceType">The resource type enum.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        Task<Tuple<BlockCollectionViewModel, BlockCollectionViewModel>> GetAssessmentBlockCollectionAsync(int excludeResourceVersionId, ResourceTypeEnum resourceType);
 
         /// <summary>
         /// This method updates the database entry with the assessment details, passed down as a parameter.

@@ -754,16 +754,17 @@
                     {
                         if (!newQuestionFiles.Any())
                         {
-                            filePaths.AddRange(existingQuestionFiles);
+                            filePaths.AddRange(existingQuestionFiles.Values.ToList());
                         }
                         else
                         {
                             foreach (var file in existingQuestionFiles)
                             {
-                                var entry = newQuestionFiles.FirstOrDefault(x => x.Equals(file));
-                                if (entry == null)
+                                bool found = false;
+                                var entry = newQuestionFiles.FirstOrDefault(x => (x.Key == file.Key || x.Value == file.Value) && (found = true));
+                                if (!found)
                                 {
-                                    filePaths.Add(file);
+                                    filePaths.Add(file.Value);
                                 }
                             }
                         }
@@ -791,9 +792,9 @@
             }
         }
 
-        private List<string> CheckQuestionBlock(BlockCollectionViewModel model)
+        private Dictionary<int, string> CheckQuestionBlock(BlockCollectionViewModel model)
         {
-            var filePath = new List<string>();
+            var filePath = new Dictionary<int, string>();
             if (model != null && model.Blocks.Any())
             {
                 foreach (var block in model.Blocks)
@@ -810,7 +811,7 @@
                                     {
                                         if (imageBlock.BlockType == BlockType.Media && imageBlock.MediaBlock != null)
                                         {
-                                            filePath.Add(imageBlock.MediaBlock.Image.File.FilePath);
+                                            filePath.Add(imageBlock.MediaBlock.Image.File.FileId, imageBlock.MediaBlock.Image.File.FilePath);
                                         }
                                     }
                                 }
@@ -826,7 +827,7 @@
                                 {
                                     if (questionBlock.MediaBlock.Image != null)
                                     {
-                                        filePath.Add(questionBlock.MediaBlock.Image.File.FilePath);
+                                        filePath.Add(questionBlock.MediaBlock.Image.File.FileId, questionBlock.MediaBlock.Image.File.FilePath);
                                     }
 
                                     if (questionBlock.MediaBlock.Video != null)
@@ -835,17 +836,17 @@
                                         {
                                             if (questionBlock.MediaBlock.Video.File != null)
                                             {
-                                                filePath.Add(questionBlock.MediaBlock.Video.File.FilePath);
+                                                filePath.Add(questionBlock.MediaBlock.Video.File.FileId, questionBlock.MediaBlock.Video.File.FilePath);
                                             }
 
                                             if (questionBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
                                             {
-                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
+                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FileId, questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
                                             }
 
                                             if (questionBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
                                             {
-                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
+                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FileId, questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
                                             }
                                         }
                                     }
@@ -859,7 +860,7 @@
                                         {
                                             if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.WholeSlideImageFile != null && (wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingComplete || wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingFailed))
                                             {
-                                                filePath.Add(wsi.WholeSlideImage.File.FilePath);
+                                                filePath.Add(wsi.WholeSlideImage.File.FileId, wsi.WholeSlideImage.File.FilePath);
                                             }
                                         }
                                     }
@@ -876,7 +877,7 @@
                                 {
                                     if (feedbackBlock.MediaBlock.Image != null)
                                     {
-                                        filePath.Add(feedbackBlock.MediaBlock.Image.File.FilePath);
+                                        filePath.Add(feedbackBlock.MediaBlock.Image.File.FileId, feedbackBlock.MediaBlock.Image.File.FilePath);
                                     }
 
                                     if (feedbackBlock.MediaBlock.Video != null)
@@ -885,17 +886,17 @@
                                         {
                                             if (feedbackBlock.MediaBlock.Video.File != null)
                                             {
-                                                filePath.Add(feedbackBlock.MediaBlock.Video.File.FilePath);
+                                                filePath.Add(feedbackBlock.MediaBlock.Video.File.FileId, feedbackBlock.MediaBlock.Video.File.FilePath);
                                             }
 
                                             if (feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
                                             {
-                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
+                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FileId, feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
                                             }
 
                                             if (feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
                                             {
-                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
+                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FileId, feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
                                             }
                                         }
                                     }
@@ -906,7 +907,7 @@
                 }
             }
 
-            return filePath.Where(x => x != null).ToList();
+            return filePath;
         }
     }
 }

@@ -5033,10 +5033,13 @@ namespace LearningHub.Nhs.Services
                         {
                             foreach (var oldblock in wsi?.WholeSlideImageBlock?.WholeSlideImageBlockItems)
                             {
-                                var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Where(x => x.WholeSlideImage?.File?.FilePath == oldblock.WholeSlideImage?.File?.FilePath || x.WholeSlideImage?.File?.FileId == oldblock.WholeSlideImage?.File?.FileId).Any()) : null;
-                                if (publishedEntry == null)
+                                if (oldblock != null && (oldblock.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingComplete || oldblock.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingFailed))
                                 {
-                                    retVal.Add(oldblock.WholeSlideImage?.File?.FilePath);
+                                    var publishedEntry = (publishedBlock != null && publishedBlock.Blocks.Any()) ? publishedBlock.Blocks.FirstOrDefault(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Where(x => x.WholeSlideImage?.File?.FilePath == oldblock.WholeSlideImage?.File?.FilePath || x.WholeSlideImage?.File?.FileId == oldblock.WholeSlideImage?.File?.FileId).Any()) : null;
+                                    if (publishedEntry == null)
+                                    {
+                                        retVal.Add(oldblock.WholeSlideImage?.File?.FilePath);
+                                    }
                                 }
                             }
                         }
@@ -5083,7 +5086,7 @@ namespace LearningHub.Nhs.Services
                                 {
                                     foreach (var imageBlock in answerBlock.BlockCollection.Blocks)
                                     {
-                                        if (imageBlock.BlockType == BlockType.Media && imageBlock.MediaBlock != null)
+                                        if (imageBlock.BlockType == BlockType.Media && imageBlock.MediaBlock != null && imageBlock.MediaBlock.Image.File != null)
                                         {
                                             filePath.Add(imageBlock.MediaBlock.Image.File.FileId, imageBlock.MediaBlock.Image.File.FilePath);
                                         }

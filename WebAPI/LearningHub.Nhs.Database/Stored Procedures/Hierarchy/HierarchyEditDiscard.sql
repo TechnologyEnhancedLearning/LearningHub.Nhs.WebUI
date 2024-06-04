@@ -8,6 +8,7 @@
 -- 25-08-2021  KD	Initial Revision.
 -- 24-04-2024  DB	Delete draft NodeVersion and Node records that were created by this edit.
 -- 15-05-2024  DB	Delete NodePath and ResourceReference records that were created by this edit.
+-- 03-06-2024  DB	Delete NodePathDisplayVersion records that were created by this edit.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditDiscard]
 (
@@ -92,6 +93,18 @@ BEGIN
 	WHERE hed.HierarchyEditId = @HierarchyEditId
 		  AND hed.HierarchyEditDetailTypeId = 5 -- Node Resource
 		  AND hed.HierarchyEditDetailOperationId = 4 -- Add Reference
+
+	-- Delete and draft NodePathDisplayVersion records that were created by this edit
+	UPDATE npdv
+	Set 
+		Deleted = 1,
+		AmendUserId = @AmendUserId,
+		AmendDate = @AmendDate
+	FROM hierarchy.NodePathDisplayVersion npdv
+	INNER JOIN hierarchy.HierarchyEditDetail hed ON npdv.NodePathId = hed.NodePathId
+	WHERE hed.HierarchyEditId = @HierarchyEditId
+		AND npdv.VersionStatusId = 1 -- Draft
+		AND npdv.Deleted = 0
 
 END
 GO

@@ -467,6 +467,34 @@
             return retVal;
         }
 
+        /////// <summary>
+        /////// Creates a new nodePathDisplayVersion.
+        /////// </summary>
+        /////// <param name="nodePathDisplayVersion">The nodePathDisplayVersion<see cref="NodePathDisplayVersionModel"/>.</param>
+        /////// <param name="userId">The user id.</param>
+        /////// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        ////public async Task<LearningHubValidationResult> CreateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersion, int userId)
+        ////{
+        ////    int createdId = await this.hierarchyEditRepository.CreateNodePathDisplayVersionAsync(nodePathDisplayVersion, userId);
+        ////    var retVal = new LearningHubValidationResult(true);
+        ////    retVal.CreatedId = createdId;
+        ////    return retVal;
+        ////}
+
+        /// <summary>
+        /// Updates a folder.
+        /// </summary>
+        /// <param name="nodePathDisplayVersion">The nodePathDisplayVersion<see cref="NodePathDisplayVersionModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        public async Task<LearningHubValidationResult> UpdateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersion, int userId)
+        {
+            int createdId = await this.hierarchyEditRepository.UpdateNodePathDisplayVersionAsync(nodePathDisplayVersion, userId);
+            var retVal = new LearningHubValidationResult(true);
+            retVal.CreatedId = createdId;
+            return retVal;
+        }
+
         /// <summary>
         /// Deletes a folder.
         /// </summary>

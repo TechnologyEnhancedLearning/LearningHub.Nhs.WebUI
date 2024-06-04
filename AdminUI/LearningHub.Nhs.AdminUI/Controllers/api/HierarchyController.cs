@@ -6,6 +6,7 @@
     using LearningHub.Nhs.AdminUI.Configuration;
     using LearningHub.Nhs.AdminUI.Controllers.Api;
     using LearningHub.Nhs.AdminUI.Interfaces;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.WebUI.Models.Contribute;
     using Microsoft.AspNetCore.Mvc;
@@ -209,6 +210,30 @@
         public async Task<IActionResult> UpdateFolder(FolderEditViewModel folderEditViewModel)
         {
             var apiResponse = await this.hierarchyService.UpdateFolderAsync(folderEditViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /////// <summary>
+        /////// The CreateNodePathDisplayVersion.
+        /////// </summary>
+        /////// <param name="nodePathDisplayVersionModel">The folderEditViewModel<see cref="NodePathDisplayVersionModel"/>.</param>
+        /////// <returns>IActionResult.</returns>
+        ////[HttpPost("CreateNodePathDisplayVersion")]
+        ////public async Task<IActionResult> CreateNodePathDisplayVersion(NodePathDisplayVersionModel nodePathDisplayVersionModel)
+        ////{
+        ////    var apiResponse = await this.hierarchyService.CreateNodePathDisplayVersionAsync(nodePathDisplayVersionModel);
+        ////    return this.Ok(apiResponse.ValidationResult);
+        ////}
+
+        /// <summary>
+        /// The UpdateNodePathDisplayVersion.
+        /// </summary>
+        /// <param name="nodePathDisplayVersionModel">The folderEditViewModel<see cref="NodePathDisplayVersionModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("UpdateNodePathDisplayVersion")]
+        public async Task<IActionResult> UpdateNodePathDisplayVersion(NodePathDisplayVersionModel nodePathDisplayVersionModel)
+        {
+            var apiResponse = await this.hierarchyService.UpdateNodePathDisplayVersionAsync(nodePathDisplayVersionModel);
             return this.Ok(apiResponse.ValidationResult);
         }
 

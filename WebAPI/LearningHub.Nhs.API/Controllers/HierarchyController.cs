@@ -239,6 +239,44 @@
             }
         }
 
+        /////// <summary>
+        /////// Creates a new NodePathDisplayVersion.
+        /////// </summary>
+        /////// <param name="nodePathDisplayVersionModel">The nodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
+        /////// <returns>The <see cref="IActionResult"/>.</returns>
+        ////[HttpPost("CreateNodePathDisplayVersion")]
+        ////public async Task<IActionResult> CreateNodePathDisplayVersion(NodePathDisplayVersionModel nodePathDisplayVersionModel)
+        ////{
+        ////    try
+        ////    {
+        ////        var retVal = await this.hierarchyService.CreateNodePathDisplayVersionAsync(nodePathDisplayVersionModel, this.CurrentUserId);
+        ////        return this.Ok(new ApiResponse(true, retVal));
+        ////    }
+        ////    catch (Exception ex)
+        ////    {
+        ////        return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+        ////    }
+        ////}
+
+        /// <summary>
+        /// Updates a folder.
+        /// </summary>
+        /// <param name="nodePathDisplayVersionModel">The nodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost("UpdateNodePathDisplayVersion")]
+        public async Task<IActionResult> UpdateNodePathDisplayVersion(NodePathDisplayVersionModel nodePathDisplayVersionModel)
+        {
+            try
+            {
+                var retVal = await this.hierarchyService.UpdateNodePathDisplayVersionAsync(nodePathDisplayVersionModel, this.CurrentUserId);
+                return this.Ok(new ApiResponse(true, retVal));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
+        }
+
         /// <summary>
         /// The DeleteFolder.
         /// </summary>

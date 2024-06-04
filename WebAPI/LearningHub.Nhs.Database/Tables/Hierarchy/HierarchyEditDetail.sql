@@ -6,6 +6,7 @@
 	[NodeId] [int] NULL,
 	[NodePathId] [int] NULL,
 	[NodeVersionId] [int] NULL,
+	[NodePathDisplayVersionId] [int] NULL,
 	[InitialParentNodeId] [int] NULL,
 	[ParentNodeId] [int] NULL,
 	[ParentNodePathId] [int] NULL,

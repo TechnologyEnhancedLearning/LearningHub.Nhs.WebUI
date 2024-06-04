@@ -1,15 +1,16 @@
 ﻿import { NodeContentAdminModel } from "./NodeContentAdminModel";
 import { NodePathBreakdownModel } from "./NodePathBreakdownModel";
 
-export class FolderNodeReferenceModel {
+export class NodePathDisplayVersionModel {
     hierarchyEditId: number;
     hierarchyEditDetailId: number;
-    nodeId: number;
+    nodePathId: number;
+    nodePathDisplayVersionId: number;
     name: string;
     path: string;
     nodePaths: NodePathBreakdownModel[];
-    parentNode: NodeContentAdminModel;
-    public constructor(init?: Partial<FolderNodeReferenceModel>) {
+/*    parentNode: NodeContentAdminModel;*/
+    public constructor(init?: Partial<NodePathDisplayVersionModel>) {
         Object.assign(this, init);
     }
 }

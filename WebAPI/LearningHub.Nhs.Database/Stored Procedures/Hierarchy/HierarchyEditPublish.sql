@@ -15,6 +15,7 @@
 -- 02-05-2024  DB	Remove creation of NodePaths as this needs to be handled during the edit process.
 -- 28-05-2024  DB	Moved nodes can not have their nodepaths updated in case a subsequent reference is made to the original position.
 -- 30-05-2024  DB	Added the creation of a new ResourceReference records for the moved resources.
+-- 03-06-2024  DB	Publish NodePathDisplayVersion records.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditPublish] 
 (
@@ -366,6 +367,77 @@ BEGIN
 			AND hed.HierarchyEditDetailTypeId = 3 -- Folder Node
 			AND nv.Deleted = 0
 			AND hed.Deleted = 0
+
+		----------------------------------------------------------
+		-- NodePathDisplayVersion
+		----------------------------------------------------------
+		-- Add / Edit operations
+		UPDATE 
+			npdv
+		SET
+			VersionStatusId = 2, -- Published
+			PublicationId = @PublicationId,
+			AmendUserId = @AmendUserId,
+			AmendDate = @AmendDate
+		FROM
+			hierarchy.NodePathDisplayVersion npdv
+		INNER JOIN
+			hierarchy.HierarchyEditDetail hed ON npdv.NodePathId = hed.NodePathId
+		WHERE
+			hed.HierarchyEditId = @HierarchyEditId
+			AND (
+					(
+						hed.HierarchyEditDetailOperationId = 1 -- Add
+						AND
+						hed.HierarchyEditDetailTypeId = 3 -- Folder Node
+					)
+					OR
+					(
+						hed.HierarchyEditDetailOperationId = 2 -- Edit
+						AND
+						hed.HierarchyEditDetailTypeId = 4 -- Node Link
+					)
+				)
+			AND npdv.VersionStatusId = 1 -- Draft
+			AND npdv.Deleted = 0
+			AND hed.Deleted = 0
+
+			-- Delete replaced NodePathDisplayVersion records
+			UPDATE 
+				npdv
+			SET
+				Deleted = 1,
+				AmendUserId = @AmendUserId,
+				AmendDate = @AmendDate
+			FROM
+				hierarchy.NodePathDisplayVersion npdv
+			INNER JOIN
+				hierarchy.HierarchyEditDetail hed ON npdv.NodePathId = hed.NodePathId
+			LEFT OUTER JOIN
+				hierarchy.HierarchyEditDetail hed2 ON hed2.NodePathId = npdv.NodePathId 
+												  AND hed2.HierarchyEditId = @HierarchyEditId 
+												  AND hed2.NodePathDisplayVersionId = npdv.Id 
+												  AND hed2.Deleted = 0
+			WHERE
+				hed.HierarchyEditId = @HierarchyEditId
+				AND (
+						(
+							hed.HierarchyEditDetailOperationId = 1 -- Add
+							AND
+							hed.HierarchyEditDetailTypeId = 3 -- Folder Node
+						)
+						OR
+						(
+							hed.HierarchyEditDetailOperationId = 2 -- Edit
+							AND
+							hed.HierarchyEditDetailTypeId = 4 -- Node Link
+						)
+					)
+				AND npdv.VersionStatusId = 2 -- Published
+				AND npdv.Deleted = 0
+				AND hed.Deleted = 0
+				AND hed2.Id IS NULL
+
 
 		----------------------------------------------------------
 		-- NodePath: generate new NodePath/s and mark redundant NodePaths as inactive

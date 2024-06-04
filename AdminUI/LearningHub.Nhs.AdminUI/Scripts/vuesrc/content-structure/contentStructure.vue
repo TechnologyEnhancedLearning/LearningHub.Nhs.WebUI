@@ -33,7 +33,7 @@
                     <div>Changes to the content structure of this Catalogue are currently being published. Editing will be possible once this process has completed.</div>
                 </div>
             </div>
-            <div id="treeView" v-if="!publishInProgress" v-show="editMode === EditModeEnum.Structure || editMode === EditModeEnum.None || editMode === EditModeEnum.MoveNode || editMode === EditModeEnum.ReferenceNode || editMode === EditModeEnum.MoveResource" class="node-contents-treeview">
+            <div id="treeView" v-if="!publishInProgress" v-show="editMode === EditModeEnum.Structure || editMode === EditModeEnum.None || editMode === EditModeEnum.MoveNode || editMode === EditModeEnum.ReferenceNode || editMode === EditModeEnum.MoveResource || editMode === EditModeEnum.ReferenceResource" class="node-contents-treeview">
                 <tree-item id="1" class="root-tree-item-container"
                            :key="rootKey"
                            :item="rootNode"
@@ -201,7 +201,7 @@ import { NodeContentAdminModel } from '../models/content-structure/NodeContentAd
 import { EditModeEnum } from '../models/content-structure/editModeEnum';
 import { CatalogueBasicModel } from '../models/content-structure/catalogueModel';
 import { FolderNodeModel } from '../models/content-structure/folderNodeModel';
-import { FolderNodeReferenceModel } from '../models/content-structure/folderNodeReferenceModel';
+import { NodePathDisplayVersionModel } from '../models/content-structure/nodePathDisplayVersionModel';
 import { NodeType } from '../constants';
 import CKEditorToolbar from '../models/ckeditorToolbar';
 import ckeditorwithhint from '../ckeditorwithhint.vue';
@@ -280,7 +280,7 @@ export default Vue.extend({
         editingFolderNode(): FolderNodeModel {
             return this.$store.state.contentStructureState.editingFolderNode;
         },
-        editingFolderNodeReference(): FolderNodeReferenceModel {
+        editingFolderNodeReference(): NodePathDisplayVersionModel {
             return this.$store.state.contentStructureState.editingFolderNodeReference;
         },
         editingFolderCanBeDeleted(): boolean {
@@ -322,7 +322,7 @@ export default Vue.extend({
             this.$store.dispatch('contentStructureState/saveFolder');
         },
         onSaveFolderReferenceEdit() {
-            this.$store.dispatch('contentStructureState/saveFolderReference');
+            this.$store.dispatch('contentStructureState/saveNodePathDisplayVersion');
         },
         onTreeItemDeleteFolder: function (item: NodeContentAdminModel) {
             this.$store.commit('contentStructureState/setDeletingFolder', { folderNode: item });

@@ -70,6 +70,20 @@
         Task<ApiResponse> UpdateFolderAsync(FolderEditViewModel folderEditViewModel);
 
         /// <summary>
+        /// The UpdateNodePathDisplayVersionAsync.
+        /// </summary>
+        /// <param name="nodePathDisplayVersionModel">The NodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> UpdateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel);
+
+        /////// <summary>
+        /////// The CreateNodePathDisplayVersionAsync.
+        /////// </summary>
+        /////// <param name="nodePathDisplayVersionModel">The NodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
+        /////// <returns>IActionResult.</returns>
+        ////Task<ApiResponse> CreateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel);
+
+        /// <summary>
         /// The DeleteFolder.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>

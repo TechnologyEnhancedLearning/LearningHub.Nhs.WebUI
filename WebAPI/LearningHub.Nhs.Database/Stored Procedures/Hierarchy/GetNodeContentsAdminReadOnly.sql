@@ -12,6 +12,7 @@
 -- 23-04-2022  DB	Restrict published resourceVersions by current published node version Id.
 -- 07-05-2024  DB	Change input parameter to NodePathId to prevent all referenced resources and child nodes being returned multiple times
 --					Also return Child NodePathId to allow the client to navigate to the child node.
+-- 03-06-2024  DB	Return the NodePathDisplayVersion properties (where they exist).
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsAdminReadOnly]
 (
@@ -30,6 +31,7 @@ BEGIN
 		NodeTypeId,
 		NodeId,
 		NodeVersionId,
+		NodePathDisplayVersionId,
 		ResourceId,
 		ResourceVersionId,
 		ResourceReferenceId,
@@ -47,11 +49,12 @@ BEGIN
 		-- Published Folder Node/s
 		SELECT 
 			cnp.Id AS NodePathId,
-			fnv.[Name],
+			COALESCE(p_npdv.DisplayName, fnv.[Name]) AS [Name],
 			fnv.[Description],
 			cn.NodeTypeId,
 			nl.ChildNodeId AS NodeId,
 			fnv.NodeVersionId,
+			ISNULL(p_npdv.Id, 0) AS NodePathDisplayVersionId,
 			NULL AS ResourceId,
 			NULL AS ResourceVersionId,
 			NULL AS ResourceReferenceId,
@@ -80,10 +83,13 @@ BEGIN
 			(SELECT DISTINCT NodeId FROM hierarchy.NodeResource WHERE Deleted = 0 AND VersionStatusId = 2) nr ON cn.Id = nr.NodeId
 		LEFT JOIN
 			(SELECT DISTINCT NodeId FROM hierarchy.NodeResourceLookup WHERE Deleted = 0) nrl ON cn.Id = nrl.NodeId
+		LEFT OUTER JOIN
+			hierarchy.NodePathDisplayVersion p_npdv ON cnp.Id = p_npdv.NodePathId AND p_npdv.VersionStatusId = 2 /* Published */ AND p_npdv.Deleted = 0
 		WHERE
 			pnp.Id = @NodePathId 
 			AND nv.VersionStatusId = 2 -- Published
 			AND nl.Deleted = 0
+            and cnp.Deleted = 0
 			AND cn.Deleted = 0
 			AND fnv.Deleted = 0
 
@@ -97,6 +103,7 @@ BEGIN
 			0 as NodeTypeId, 
 			NULL AS NodeId,
 			NULL AS NodeVersionId,
+			NULL AS NodePathDisplayVersionId,
 			r.Id AS ResourceId,
 			rv.Id AS ResourceVersionId,
 			rr.OriginalResourceReferenceId AS ResourceReferenceId,

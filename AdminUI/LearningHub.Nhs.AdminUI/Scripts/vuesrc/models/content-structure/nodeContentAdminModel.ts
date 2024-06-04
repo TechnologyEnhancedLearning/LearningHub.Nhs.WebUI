@@ -8,6 +8,7 @@ export class NodeContentAdminModel {
     nodeId: number;
     nodePathId: number;
     nodeVersionId: number;
+    nodePathDisplayVersionId: number;
     hasResourcesInd: boolean;
     hasResourcesInBranchInd: boolean;
     resourceId: number;

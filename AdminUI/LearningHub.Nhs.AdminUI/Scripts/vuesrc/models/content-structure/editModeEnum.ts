@@ -6,4 +6,5 @@
     MoveResource = 4,
     ReferenceNode = 5,
     FolderReference = 6,
+    ReferenceResource = 7,
 }

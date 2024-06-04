@@ -8,7 +8,7 @@
 --
 -- Modification History
 --
--- 28-05-2021  DB	Initial Revision.
+-- 28-05-2024  DB	Initial Revision.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditGetChildNodePathBreakdown]
 (
@@ -82,21 +82,28 @@ BEGIN
     )
 
     SELECT  CAST(SUBSTRING(NodePathIdPath, LEN(NodePathIdPath) - (CHARINDEX('\', REVERSE(NodePathIdPath)) - 2), LEN(NodePathIdPath)) AS INT) AS NodePathId, 
+            sp2.[value] AS DepthNodePathId,
             NodePathIdPath,
             NodeVersionIdPath,
-            sp.idx AS Depth,
-            sp.[value] as NodeVersionId,
-            ISNULL(cnv.Name, fnv.Name) AS NodeName
+            sp1.idx AS Depth,
+            sp1.[value] as NodeVersionId,
+            COALESCE(d_npdv.DisplayName, p_npdv.DisplayName, cnv.Name, fnv.Name) AS NodeName
     INTO    #NodePathDetails
     FROM    cteNodepathDetails cte
-    CROSS APPLY hub.fn_Split(NodeVersionIdPath, '\') as sp
+    CROSS APPLY hub.fn_Split(NodeVersionIdPath, '\') as sp1
+    CROSS APPLY hub.fn_Split(NodePathIdPath, '\') as sp2
     LEFT JOIN
-            hierarchy.FolderNodeVersion fnv ON fnv.NodeVersionId = sp.[value]
+            hierarchy.FolderNodeVersion fnv ON fnv.NodeVersionId = sp1.[value]
     LEFT JOIN
-            hierarchy.CatalogueNodeVersion cnv ON cnv.NodeVersionId = sp.[value]
-    WHERE   CompletePathInd = 1
+            hierarchy.CatalogueNodeVersion cnv ON cnv.NodeVersionId = sp1.[value]
+    LEFT JOIN
+            hierarchy.NodePathDisplayVersion d_npdv ON sp2.[value] = d_npdv.NodePathId AND d_npdv.VersionStatusId = 1 /* Draft */ AND d_npdv.Deleted = 0
+    LEFT JOIN
+            hierarchy.NodePathDisplayVersion p_npdv ON sp2.[value] = p_npdv.NodePathId AND p_npdv.VersionStatusId = 2 /* Published */ AND p_npdv.Deleted = 0
 
-    
+    WHERE   sp1.idx = sp2.idx
+        AND CompletePathInd = 1
+   
     SELECT  ROW_NUMBER() OVER(ORDER BY hed.NodeId, npd.NodePathId) AS Id,
             hed.NodeId,
             npd.NodePathId,

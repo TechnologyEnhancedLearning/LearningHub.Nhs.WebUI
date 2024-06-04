@@ -12,6 +12,7 @@
 -- 12-12-2022  DB	Addition of call to hierarchy.HierarchyEditHouseKeeping to remove old temporary data.
 -- 07-05-2024  DB	Change input parameter to NodePathId to enable specific instances of node to be edited.
 --					Also add Child NodePathId NodeLink type detail entries.
+-- 03-06-2024  DB	Populate the NodePathDisplayVersionIds in the HierarchyEditDetail table.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditCreate]
 (
@@ -92,6 +93,7 @@ BEGIN
 													   NodePathId,
 													   NodeId,
 													   NodeVersionId,
+													   NodePathDisplayVersionId,
 													   InitialParentNodeId,
 													   ParentNodeId,
 													   ParentNodePathId,
@@ -113,6 +115,7 @@ BEGIN
 			np.Id AS NodePathId,
 			cte.NodeId,
 			cte.NodeVersionId,
+			npdv.Id,
 			cte.ParentNodeId AS InitialParentNodeId,
 			cte.ParentNodeId,
 			pnp.Id AS ParentNodePathId,
@@ -130,9 +133,11 @@ BEGIN
 		FROM
 			cteEditBranch cte
         LEFT OUTER JOIN
-            hierarchy.NodePath np ON cte.NodeId = np.NodeId AND cte.InitialNodePath = np.NodePath
+            hierarchy.NodePath np ON cte.NodeId = np.NodeId AND cte.InitialNodePath = np.NodePath AND np.Deleted = 0
         LEFT OUTER JOIN
-            hierarchy.NodePath pnp ON cte.ParentNodeId = pnp.NodeId AND LEFT(cte.InitialNodePath, LEN(cte.InitialNodePath) - CHARINDEX('\', REVERSE(cte.InitialNodePath))) = pnp.NodePath
+            hierarchy.NodePath pnp ON cte.ParentNodeId = pnp.NodeId AND LEFT(cte.InitialNodePath, LEN(cte.InitialNodePath) - CHARINDEX('\', REVERSE(cte.InitialNodePath))) = pnp.NodePath AND pnp.Deleted = 0
+		LEFT OUTER JOIN
+			hierarchy.NodePathDisplayVersion npdv ON np.Id = npdv.NodePathId AND npdv.VersionStatusId = 2 AND npdv.Deleted = 0
 
 		-- Add all Resources to the HierarchyEdit structure
 		INSERT INTO [hierarchy].[HierarchyEditDetail] (HierarchyEditId,

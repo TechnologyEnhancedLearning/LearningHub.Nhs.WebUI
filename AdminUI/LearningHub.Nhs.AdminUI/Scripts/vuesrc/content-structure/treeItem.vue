@@ -35,9 +35,9 @@
                                     <a class="dropdown-item" v-if="canMoveNodeUp" @click="onMoveNodeUp">Move up</a>
                                     <a class="dropdown-item" v-if="canMoveNodeDown" @click="onMoveNodeDown">Move down</a>
                                     <a class="dropdown-item" v-if="canMoveNode" @click="onInitiateMoveNode">Move</a>
-                                    <a class="dropdown-item" @click="onInitiateReferenceNode">Create reference</a>
-                                    <a class="dropdown-item" v-if="canEditFolderReference" @click="onEditFolderReference">Edit reference details</a>
                                     <a class="dropdown-item" v-if="canDeleteNode" @click="onDeleteFolder">Delete</a>
+                                    <a class="dropdown-item" @click="onInitiateReferenceNode">Create reference</a>
+                                    <a class="dropdown-item" v-if="canEditFolderReference" @click="onEditFolderReference">{{item.nodePathDisplayVersionId == 0 ? "Create" : "Edit"}} reference details</a>
                                 </div>
                             </div>
                         </div>
@@ -52,6 +52,9 @@
                     </div>
                     <div v-if="editMode === EditModeEnum.MoveResource" class="ml-auto">
                         <a v-if="editingTreeNode.nodeId != item.nodeId" href="#" @click.prevent="onMoveResource">Move here</a>
+                    </div>
+                    <div v-if="editMode === EditModeEnum.ReferenceResource" class="ml-auto">
+                        <a v-if="editingTreeNode.nodeId != item.nodeId" href="#" @click.prevent="onReferenceResource">Create reference here</a>
                     </div>
                 </div>
             </div>
@@ -72,6 +75,10 @@
 
                         <div v-if="editMode === EditModeEnum.MoveResource && item.depth === 0 " class="ml-auto my-auto">
                             <a v-if="canMoveResourceToRoot" href="#" @click.prevent="onMoveResource">Move here</a>
+                        </div>
+
+                        <div v-if="editMode === EditModeEnum.ReferenceResource && item.depth === 0 " class="ml-auto my-auto">
+                            <a v-if="canReferenceResourceToRoot" href="#" @click.prevent="onReferenceResource">Create reference here</a>
                         </div>
                     </div>
                 </div>
@@ -118,16 +125,20 @@
                                 <a class="dropdown-toggle no-wrap" href="#" role="button" id="dropdownResourceItems" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="recomputeResourceOptions">
                                     options
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="dropdownNodeItems">
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownNodeItems">
                                     <a class="dropdown-item" v-if="canMoveResourceUp" @click="onMoveResourceUp">Move up</a>
                                     <a class="dropdown-item" v-if="canMoveResourceDown" @click="onMoveResourceDown">Move down</a>
                                     <a class="dropdown-item" v-if="canMoveResource" @click="onInitiateMoveResource">Move</a>
+                                    <a class="dropdown-item" @click="onInitiateReferenceResource">Create reference</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div v-if="editMode === EditModeEnum.MoveResource && movingResource.resourceVersionId == item.resourceVersionId" class="my-auto ml-auto pr-2">
                         <span class="small">Move this resource or <a id="cancelMoveResource" class="red" href="#" @click.prevent="onCancelMoveResource">Cancel move</a></span>
+                    </div>
+                    <div v-if="editMode === EditModeEnum.ReferenceResource && referencingResource.resourceVersionId == item.resourceVersionId" class="my-auto ml-auto pr-2">
+                        <span class="small">Create reference to resource or <a id="cancelReferenceResource" class="red" href="#" @click.prevent="onCancelReferenceResource">Cancel reference</a></span>
                     </div>
                 </div>
             </div>
@@ -268,8 +279,14 @@
             canMoveResourceToRoot(): boolean {
                 return this.editMode === EditModeEnum.MoveResource && this.movingResource.parent.depth > 0 && this.item.depth === 0;
             },
+            canReferenceResourceToRoot(): boolean {
+                return this.editMode === EditModeEnum.ReferenceResource && this.referencingResource.parent.depth > 0 && this.item.depth === 0;
+            },
             movingResource(): NodeContentAdminModel {
                 return this.$store.state.contentStructureState.movingResource;
+            },
+            referencingResource(): NodeContentAdminModel {
+                return this.$store.state.contentStructureState.referencingResource;
             },
             isMovingResource: function (): boolean {
                 return (this.editMode === EditModeEnum.MoveResource) && this.movingResource && this.movingResource.resourceVersionId === this.item.resourceVersionId;
@@ -359,7 +376,7 @@
                 this.$store.commit('contentStructureState/setEditingFolder', { folderNode: this.item });
             },
             onEditFolderReference: function () {
-                this.$store.commit('contentStructureState/setEditingFolderReference', { folderNode: this.item });
+                this.$store.commit('contentStructureState/setEditingNodePathDisplayVersion', { folderNode: this.item });
             },
             onMoveNodeUp: function () {
                 this.$store.dispatch('contentStructureState/moveNodeUp', { node: this.item });
@@ -394,11 +411,20 @@
             onInitiateMoveResource: function () {
                 this.$store.commit('contentStructureState/setMovingResource', { node: this.item });
             },
+            onInitiateReferenceResource: function () {
+                this.$store.commit('contentStructureState/setReferencingResource', { node: this.item });
+            },
             onMoveResource: function () {
                 this.$store.dispatch('contentStructureState/moveResource', { destinationNode: this.item });
             },
             onCancelMoveResource: function () {
                 this.$store.commit('contentStructureState/cancelMoveResource');
+            },
+            onReferenceResource: function () {
+                this.$store.dispatch('contentStructureState/referenceResource', { destinationNode: this.item });
+            },
+            onCancelReferenceResource: function () {
+                this.$store.commit('contentStructureState/cancelReferenceResource');
             },
             async loadNodeContents() {
                 this.isError = false;

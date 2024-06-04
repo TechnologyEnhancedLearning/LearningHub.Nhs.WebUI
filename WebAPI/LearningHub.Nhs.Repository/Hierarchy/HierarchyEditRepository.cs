@@ -134,6 +134,53 @@
             await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
         }
 
+        /////// <summary>
+        /////// Creates a new folder.
+        /////// </summary>
+        /////// <param name="nodePathDisplayVersionModel">The nodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
+        /////// <param name="userId">The user id.</param>
+        /////// <returns>The <see cref="int"/>.</returns>
+        ////public async Task<int> CreateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel, int userId)
+        ////{
+        ////    var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = nodePathDisplayVersionModel.HierarchyEditDetailId };
+        ////    var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = nodePathDisplayVersionModel.Name };
+        ////    var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = nodePathDisplayVersionModel.NodePathId };
+        ////    var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = userId };
+        ////    var param4 = new SqlParameter("@p4", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+        ////    var param5 = new SqlParameter("@p5", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+        ////    string sql = "hierarchy.HierarchyEditNodePathDisplayVersionCreate @p0, @p1, @p2, @p3, @p4, @p5 output";
+        ////    var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3, param4, param5 };
+
+        ////    await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+
+        ////    return (int)param5.Value;
+        ////}
+
+        /// <summary>
+        /// Updates a folder.
+        /// </summary>
+        /// <param name="nodePathDisplayVersionModel">The nodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<int> UpdateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel, int userId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = nodePathDisplayVersionModel.HierarchyEditDetailId };
+            var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = nodePathDisplayVersionModel.Name };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = nodePathDisplayVersionModel.NodePathId };
+            var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = nodePathDisplayVersionModel.NodePathDisplayVersionId };
+            var param4 = new SqlParameter("@p4", SqlDbType.Int) { Value = userId };
+            var param5 = new SqlParameter("@p5", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+            var param6 = new SqlParameter("@p6", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+            string sql = "hierarchy.HierarchyEditNodePathDisplayVersionUpdate @p0, @p1, @p2, @p3, @p4, @p5, @p6 output";
+            var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3, param4, param5, param6 };
+
+            await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+
+            return (int)param6.Value;
+        }
+
         /// <summary>
         /// Deletes a folder.
         /// </summary>

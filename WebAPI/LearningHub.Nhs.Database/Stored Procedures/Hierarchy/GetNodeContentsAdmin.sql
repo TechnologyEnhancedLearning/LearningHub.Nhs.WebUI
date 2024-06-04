@@ -10,6 +10,7 @@
 -- 09-02-2022  KD	Explicitly exclude External Orgs from Resource Reference lookup.
 -- 07-05-2024  DB	Change input parameter to NodePathId to prevent all referenced resources and child nodes being returned multiple times
 --					Also return Child NodePathId to allow the client to navigate to the child node.
+-- 03-06-2024  DB	Return the NodePathDisplayVersion properties (where they exist).
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsAdmin]
 (
@@ -38,6 +39,7 @@ BEGIN
 		NodeTypeId,
 		NodeId,
 		NodeVersionId,
+		NodePathDisplayVersionId,
 		ResourceId,
 		ResourceVersionId,
 		ResourceReferenceId,
@@ -55,11 +57,12 @@ BEGIN
 		-- Folder Node/s in Edit
 		SELECT 
 			hed.NodePathId,
-			fnv.[Name],
+			COALESCE(d_npdv.DisplayName, p_npdv.DisplayName, fnv.[Name]) AS [Name],
 			fnv.[Description],
 			n.NodeTypeId,
 			hed.NodeId,
 			fnv.NodeVersionId,
+			COALESCE(d_npdv.Id, p_npdv.Id, 0) AS NodePathDisplayVersionId,
 			NULL AS ResourceId,
 			NULL AS ResourceVersionId,
 			NULL AS ResourceReferenceId,
@@ -84,6 +87,10 @@ BEGIN
 			(SELECT DISTINCT NodeId FROM hierarchy.HierarchyEditDetail WHERE HierarchyEditId = @HierarchyEditId AND Deleted = 0 AND ResourceId IS NOT NULL) nr ON n.Id = nr.NodeId
 		LEFT JOIN
 			(SELECT DISTINCT NodeId FROM hierarchy.HierarchyEditNodeResourceLookup WHERE HierarchyEditId = @HierarchyEditId) nrl ON n.Id = nrl.NodeId
+		LEFT OUTER JOIN
+			hierarchy.NodePathDisplayVersion d_npdv ON hed.NodePathId = d_npdv.NodePathId AND d_npdv.VersionStatusId = 1 /* Draft */ AND d_npdv.Deleted = 0
+		LEFT OUTER JOIN
+			hierarchy.NodePathDisplayVersion p_npdv ON hed.NodePathId = p_npdv.NodePathId AND p_npdv.VersionStatusId = 2 /* Published */ AND p_npdv.Deleted = 0
 		WHERE 
 			hed.ParentNodePathId = @NodePathId
 			AND he.Id = @HierarchyEditId
@@ -105,6 +112,7 @@ BEGIN
 			0 as NodeTypeId, 
 			NULL AS NodeId,
 			NULL AS NodeVersionId,
+			NULL AS NodePathDisplayVersionId,
 			hed.ResourceId AS ResourceId,
 			hed.ResourceVersionId AS ResourceVersionId,
 			rr.OriginalResourceReferenceId AS ResourceReferenceId,

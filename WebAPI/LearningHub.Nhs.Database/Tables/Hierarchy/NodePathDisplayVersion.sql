@@ -3,6 +3,7 @@
 	[NodePathId] [int] NOT NULL,
 	[DisplayName] [nvarchar](255) NULL,
 	[VersionStatusId] [int] NOT NULL,
+	[PublicationId] [int] NULL,
 	[Deleted] [bit] NOT NULL,
 	[CreateUserID] [int] NOT NULL,
 	[CreateDate] [datetimeoffset](7) NOT NULL,

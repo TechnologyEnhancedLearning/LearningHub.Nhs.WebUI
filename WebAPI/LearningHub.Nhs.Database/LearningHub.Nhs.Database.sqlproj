@@ -511,11 +511,12 @@
     <Build Include="Stored Procedures\Activity\GetUserLatestActivityCheck.sql" />
     <Build Include="Stored Procedures\Activity\GetUserLearningActivities.sql" />
     <Build Include="Stored Procedures\Activity\GetUserLearningActivitiesCount.sql" />
-    <Build Include="Tables\Hierarchy\NodePathVersion.sql" />
+    <Build Include="Tables\Hierarchy\NodePathDisplayVersion.sql" />
     <Build Include="Stored Procedures\Hierarchy\HierarchyEditReferenceNode.sql" />
     <Build Include="Stored Procedures\Hierarchy\GetNodePathDetails.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\Content Referencing Initialise.sql" />
     <Build Include="Stored Procedures\Hierarchy\HierarchyEditGetChildNodePathBreakdown.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditNodePathDisplayVersionUpdate.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

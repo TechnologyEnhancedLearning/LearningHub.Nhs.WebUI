@@ -2,7 +2,13 @@
 <template>
     <div>
         <div :id="getPlayerUniqueId" class="video-container"></div>
+        <noscript>
+            <p class="amp-no-js">
+                To view this media please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
+            </p>
+        </noscript>
     </div>
+
     <!--<div class="video-player mt-5 border-bottom" ref="videoPlayer">
         <video :id="getAMPUniqueId"
                data-setup='{"logo": { "enabled": false }, "techOrder": ["azureHtml5JS", "flashSS",  "silverlightSS", "html5"], "nativeControlsForTouch": false}'
@@ -38,7 +44,7 @@
                 videoContainer: null,
                 mkioKey: '',
                 playBackUrl: '',
-                sourceLoaded: true,                
+                sourceLoaded: true,
             };
         },
         created() {
@@ -57,7 +63,7 @@
                 playback: {
                     muted: false,
                     autoplay: false,
-                },             
+                },
                 events: {
                     //error: this.onPlayerError,
                     //timechanged: this.onTimeChanged,
@@ -75,21 +81,25 @@
             // Initialize the player with video container and player configuration
             this.player = new MKPlayer(this.videoContainer, playerConfig);
 
+            // ClearKey DRM configuration
+            var clearKeyConfig = {
+                //LA_URL: "https://ottapp-appgw-amp.prodc.mkio.tv3cloud.com/drm/clear-key?ownerUid=azuki",
+                LA_URL:"HLS_AES",
+                headers: {
+                    "Authorization": this.getBearerToken()
+                }
+            };
+
             // Load source
             const sourceConfig = {
                 hls: this.playBackUrl,
                 drm: {
-                    clearkey: {
-                        LA_URL: "HLS_AES",
-                        headers: {
-                            "Authorization": this.getBearerToken()
-                        }
-                    }
-                }           
+                    clearkey: clearKeyConfig
+                }
             };
 
             this.player.load(sourceConfig)
-                .then(() => {                  
+                .then(() => {
                     console.log("Source loaded successfully!");
                 })
                 .catch(() => {
@@ -101,27 +111,27 @@
                 const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
                 if (videoElement) {
                     videoElement.controls = true;
-                   
+
                     // Add the track element
                     var captionsInfo = this.captionsTrackAvailable;
                     if (captionsInfo) {
                         const trackElement = document.createElement('track');
                         var srcPath = this.captionsUrl;
-                        trackElement.kind = 'captions'; 
+                        trackElement.kind = 'captions';
                         trackElement.label = 'english';
-                        trackElement.srclang = 'en'; 
+                        trackElement.srclang = 'en';
                         trackElement.src = srcPath;
 
                         // Append the track to the video element
                         videoElement.appendChild(trackElement);
                     }
-                }              
+                }
             },
             onSubtitleAdded() {
-             
+
             },
             getMKIOPlayerKey() {
-                this.mkioKey = this.$store.state.getMKPlayerLicenceKey; 
+                this.mkioKey = this.$store.state.getMKPlayerLicenceKey;
             },
             getBearerToken() {
                 return "Bearer=" + this.azureMediaServicesToken;
@@ -139,7 +149,8 @@
                 // So, when we switch between tabs on the Case resource creation page, the video player unmounts and then remounts if
                 // we go back to the Contents tab. As a result, a new unique ID is needed so that the media player knows it has to
                 // initalise itself again, which we do in the `mounted()` lifecycle method above.
-                return `videoContainer_${this.fileId}`
+                const time = new Date().getTime()
+                return `videoContainer_${this.fileId}_${time}`
             },
             captionsTrackAvailable(): boolean {
                 return !!this.videoFile
@@ -170,7 +181,8 @@
 <style>
     .video-player {
         overflow-x: auto;
-    }  
+    }
+
     video[id^="bitmovinplayer-video"] {
         width: 100%;
     }

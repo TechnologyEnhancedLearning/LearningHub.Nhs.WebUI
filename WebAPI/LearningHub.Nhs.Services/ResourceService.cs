@@ -5135,7 +5135,7 @@ namespace LearningHub.Nhs.Services
                                     {
                                         foreach (var wsi in existingWholeSlideImages)
                                         {
-                                            if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.WholeSlideImageFile != null)
+                                            if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.FileId > 0)
                                             {
                                                 filePath.Add(wsi.WholeSlideImage.File.FileId, wsi.WholeSlideImage.File.FilePath);
                                             }

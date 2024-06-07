@@ -7,6 +7,7 @@
 -- Modification History
 --
 -- 31-05-2024  TD-3023	Initial Revision
+-- 04-06-2024  TD-3023  Included answer blocks to the search
 -------------------------------------------------------------------------------
 
 
@@ -93,6 +94,14 @@ END
         BlockCollectionId INT
     );
 
+	DECLARE @QABlock TABLE (
+        Id INT,
+        [Order] INT,
+        Title NVARCHAR(200),
+        BlockType INT,
+        BlockCollectionId INT
+    );
+
     -- Table to hold results for blocks
     DECLARE @BlockResult TABLE (
         Id INT,
@@ -128,6 +137,20 @@ END
 	FROM resources.QuestionBlock qb
 	INNER JOIN @TempBlockResult b ON qb.BlockId = b.Id
 	WHERE qb.Deleted = 0;
+
+	-- Insert answer question block data
+    INSERT INTO @QABlock
+	SELECT qb.Id, [Order], Title, BlockType, BlockCollectionId
+    FROM resources.QuestionBlock qb
+    INNER JOIN @TempBlockResult b ON qb.BlockId = b.Id
+    WHERE qb.Deleted = 0;
+
+    --Insert AnswerBlockcollectionId
+	 	INSERT INTO @BlockCollectionId (Id)
+	SELECT qa.BlockCollectionId
+    FROM resources.QuestionAnswer qa
+    INNER JOIN @QABlock b ON qa.QuestionBlockId = b.Id
+    WHERE qa.Deleted = 0;
 
 
 	 -- Insert block data
@@ -344,6 +367,7 @@ END
 	DECLARE @_QuestionBlockCollectionId TABLE (Id INT);
 	DECLARE @_ImageCarouselBlockCollectionId TABLE (Id INT);
 	DECLARE @_AllBlockAssociatedFiles TABLE (FileId INT, FilePath NVARCHAR(200));
+	DECLARE @_QABlock TABLE (Id INT,[Order] INT,Title NVARCHAR(200),BlockType INT,BlockCollectionId INT);
 
     -- Insert BlockCollectionIds based on the provided query
 IF @resourceType = 10
@@ -443,7 +467,19 @@ END
 	INNER JOIN @_TempBlockResult b ON qb.BlockId = b.Id
 	WHERE qb.Deleted = 0;
 
+	-- Insert answer question block data
+    INSERT INTO @_QABlock
+	SELECT qb.Id, [Order], Title, BlockType, BlockCollectionId
+    FROM resources.QuestionBlock qb
+    INNER JOIN @_TempBlockResult b ON qb.BlockId = b.Id
+    WHERE qb.Deleted = 0;
 
+    --Insert AnswerBlockcollectionId
+	 	INSERT INTO @_BlockCollectionId (Id)
+	SELECT qa.BlockCollectionId
+    FROM resources.QuestionAnswer qa
+    INNER JOIN @_QABlock b ON qa.QuestionBlockId = b.Id
+    WHERE qa.Deleted = 0;
 
 
 

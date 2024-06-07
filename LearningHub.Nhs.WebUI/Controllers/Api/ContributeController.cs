@@ -343,17 +343,17 @@
         [Route("PublishResourceVersion")]
         public async Task<ActionResult> PublishResourceVersionAsync([FromBody] PublishViewModel publishViewModel)
         {
-            var associatedResource = await this.resourceService.GetResourceVersionExtendedAsync(publishViewModel.ResourceVersionId);
+            var associatedResource = await this.resourceService.GetResourceVersionAsync(publishViewModel.ResourceVersionId);
             var validationResult = await this.contributeService.SubmitResourceVersionForPublishAsync(publishViewModel);
             if (validationResult.IsValid)
             {
-                if (associatedResource.ResourceTypeEnum != ResourceTypeEnum.Scorm && associatedResource.ResourceTypeEnum != ResourceTypeEnum.Html)
+                if (associatedResource.ResourceType != ResourceTypeEnum.Scorm && associatedResource.ResourceType != ResourceTypeEnum.Html)
                 {
-                    var obsoleteFiles = await this.resourceService.GetObsoleteResourceFile(publishViewModel.ResourceVersionId);
-                    if (obsoleteFiles != null && obsoleteFiles.Any())
-                    {
-                        await this.fileService.PurgeResourceFile(null, obsoleteFiles);
-                    }
+                        var obsoleteFiles = await this.resourceService.GetObsoleteResourceFile(publishViewModel.ResourceVersionId);
+                        if (obsoleteFiles != null && obsoleteFiles.Any())
+                        {
+                            await this.fileService.PurgeResourceFile(null, obsoleteFiles);
+                        }
                 }
             }
 
@@ -738,10 +738,13 @@
                             {
                                 foreach (var oldblock in wsi?.WholeSlideImageBlock?.WholeSlideImageBlockItems)
                                 {
-                                    var entry = newBlocks.FirstOrDefault(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Where(x => x.WholeSlideImage?.File?.FileId == oldblock.WholeSlideImage?.File?.FileId || x.WholeSlideImage?.File?.FilePath == oldblock.WholeSlideImage?.File?.FilePath).Any());
-                                    if (entry == null)
+                                    if (oldblock != null && (oldblock.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingComplete || oldblock.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingFailed))
                                     {
-                                        filePaths.Add(oldblock.WholeSlideImage?.File?.FilePath);
+                                        var entry = newBlocks.FirstOrDefault(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Where(x => x.WholeSlideImage?.File?.FileId == oldblock.WholeSlideImage?.File?.FileId || x.WholeSlideImage?.File?.FilePath == oldblock.WholeSlideImage?.File?.FilePath).Any());
+                                        if (entry == null)
+                                        {
+                                            filePaths.Add(oldblock.WholeSlideImage?.File?.FilePath);
+                                        }
                                     }
                                 }
                             }
@@ -787,7 +790,7 @@
                     _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, deleteList); });
                 }
             }
-            catch (Exception ex)
+            catch
             {
             }
         }
@@ -809,7 +812,7 @@
                                 {
                                     foreach (var imageBlock in answerBlock.BlockCollection.Blocks)
                                     {
-                                        if (imageBlock.BlockType == BlockType.Media && imageBlock.MediaBlock != null)
+                                        if (imageBlock.BlockType == BlockType.Media && imageBlock.MediaBlock != null && imageBlock.MediaBlock.Image.File != null)
                                         {
                                             filePath.Add(imageBlock.MediaBlock.Image.File.FileId, imageBlock.MediaBlock.Image.File.FilePath);
                                         }
@@ -832,13 +835,13 @@
 
                                     if (questionBlock.MediaBlock.Video != null)
                                     {
+                                        if (questionBlock.MediaBlock.Video.File != null)
+                                        {
+                                            filePath.Add(questionBlock.MediaBlock.Video.File.FileId, questionBlock.MediaBlock.Video.File.FilePath);
+                                        }
+
                                         if (questionBlock.MediaBlock.Video.VideoFile != null)
                                         {
-                                            if (questionBlock.MediaBlock.Video.File != null)
-                                            {
-                                                filePath.Add(questionBlock.MediaBlock.Video.File.FileId, questionBlock.MediaBlock.Video.File.FilePath);
-                                            }
-
                                             if (questionBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
                                             {
                                                 filePath.Add(questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FileId, questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
@@ -858,7 +861,7 @@
                                     {
                                         foreach (var wsi in existingWholeSlideImages)
                                         {
-                                            if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.WholeSlideImageFile != null && (wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingComplete || wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingFailed))
+                                            if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.FileId > 0)
                                             {
                                                 filePath.Add(wsi.WholeSlideImage.File.FileId, wsi.WholeSlideImage.File.FilePath);
                                             }
@@ -882,13 +885,13 @@
 
                                     if (feedbackBlock.MediaBlock.Video != null)
                                     {
+                                        if (feedbackBlock.MediaBlock.Video.File != null)
+                                        {
+                                            filePath.Add(feedbackBlock.MediaBlock.Video.File.FileId, feedbackBlock.MediaBlock.Video.File.FilePath);
+                                        }
+
                                         if (feedbackBlock.MediaBlock.Video.VideoFile != null)
                                         {
-                                            if (feedbackBlock.MediaBlock.Video.File != null)
-                                            {
-                                                filePath.Add(feedbackBlock.MediaBlock.Video.File.FileId, feedbackBlock.MediaBlock.Video.File.FilePath);
-                                            }
-
                                             if (feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
                                             {
                                                 filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FileId, feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);

@@ -86,11 +86,10 @@
         /// The LogResourceReferenceEventAsync.
         /// </summary>
         /// <param name="resourceReferenceEventViewModel">The resourceReferenceEventViewModel<see cref="ResourceReferenceEventViewModel"/>.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        public async Task LogResourceReferenceEventAsync(ResourceReferenceEventViewModel resourceReferenceEventViewModel)
+        public void LogResourceReferenceEventAsync(ResourceReferenceEventViewModel resourceReferenceEventViewModel)
         {
              var resourceReferenceEvent = this.mapper.Map<ResourceReferenceEvent>(resourceReferenceEventViewModel);
-             var id = await this.resourceReferenceEventRepository.CreateAsync(SystemUserId, resourceReferenceEvent);
+             var id = this.resourceReferenceEventRepository.CreateAsync(SystemUserId, resourceReferenceEvent);
         }
     }
 }

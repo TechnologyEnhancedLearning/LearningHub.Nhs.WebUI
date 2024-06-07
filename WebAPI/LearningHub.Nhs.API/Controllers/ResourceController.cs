@@ -496,9 +496,9 @@ namespace LearningHub.Nhs.Api.Controllers
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
         /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
         [HttpGet("GetExternalContentDetailsById/{resourceVersionId}")]
-        public ActionResult GetScormContentDetailsById(int resourceVersionId)
+        public async Task<ActionResult> GetScormContentDetailsById(int resourceVersionId)
         {
-            return this.Ok(this.resourceService.GetExternalContentDetails(resourceVersionId, this.CurrentUserId));
+            return this.Ok(await this.resourceService.GetExternalContentDetails(resourceVersionId, this.CurrentUserId));
         }
 
         /// <summary>

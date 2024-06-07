@@ -34,7 +34,11 @@
                                     @{
                                         var videoPageSectionDetail = @Model.PageSectionDetailViewModels.FirstOrDefault(x => x.Id == pageModel.PageSectionDetail.Id);
                                     }
+                                    @{
+                                        ViewData["mkPlayerLicenceKey"] = Model.MKPlayerLicence;
+                                    }                                    
                                     <partial name="_CmsVideo" model="@videoPageSectionDetail" />
+
                                     @if (videoPageSectionDetail.VideoAsset != null && videoPageSectionDetail.VideoAsset.TranscriptFile != null)
                                     {
                                         <div class="information-page__asset-link-container" @(string.IsNullOrEmpty(pageModel.PageSectionDetail.TextBackgroundColour) ? "" : "style=background-color:" + pageModel.PageSectionDetail.TextBackgroundColour)>

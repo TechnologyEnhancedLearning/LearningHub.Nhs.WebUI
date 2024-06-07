@@ -541,5 +541,13 @@
         [Route("Resource/GetDisplayAVResourceFlag")]
         [HttpGet("GetDisplayAVResourceFlag")]
         public bool GetDisplayAVResourceFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.DisplayAudioVideoResource).Result;
+
+        /// <summary>
+        /// The GetMKPlayerKey.
+        /// </summary>
+        /// <returns>Mediakind MK Player Key.</returns>
+        [Route("Resource/GetMKPlayerKey")]
+        [HttpGet("GetMKPlayerKey")]
+        public string GetMKPlayerKey() => this.Settings.MediaKindSettings.MKPlayerLicence;
     }
 }

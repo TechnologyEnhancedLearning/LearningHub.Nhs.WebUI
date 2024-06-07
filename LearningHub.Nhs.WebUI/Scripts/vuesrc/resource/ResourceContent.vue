@@ -9,14 +9,21 @@
                     <!--Video-->
                     <div id="mediacontainer" class="resource-item nhsuk-u-margin-bottom-7" v-if="hasMediaAccess && (resourceItem.resourceTypeEnum === ResourceType.VIDEO)">
 
-                        <video id="resourceAzureMediaPlayer" data-setup='{"logo": { "enabled": false }, "techOrder": ["azureHtml5JS", "flashSS",  "silverlightSS", "html5"], "nativeControlsForTouch": false}' controls class="azuremediaplayer amp-default-skin amp-big-play-centered resource-video nhsuk-u-margin-bottom-4">
+                        <!--<video id="resourceAzureMediaPlayer" data-setup='{"logo": { "enabled": false }, "techOrder": ["azureHtml5JS", "flashSS",  "silverlightSS", "html5"], "nativeControlsForTouch": false}' controls class="azuremediaplayer amp-default-skin amp-big-play-centered resource-video nhsuk-u-margin-bottom-4">
                             <source :src="resourceItem.videoDetails.resourceAzureMediaAsset.locatorUri" type="application/vnd.ms-sstr+xml" :data-setup='getAESProtection(resourceItem.videoDetails.resourceAzureMediaAsset.authenticationToken)' />
                             <source :src="getMediaAssetProxyUrl(resourceItem.videoDetails.resourceAzureMediaAsset)" type="application/vnd.apple.mpegurl" disableUrlRewriter="true" />
                             <track v-if="resourceItem.videoDetails.closedCaptionsFile" default srclang="en" kind="captions" label="english" :src="'/api/resource/DownloadResource?filePath=' +  resourceItem.videoDetails.closedCaptionsFile.filePath + '&fileName=' +  resourceItem.videoDetails.closedCaptionsFile.fileName" />
                             <p class="amp-no-js">
                                 To view this media please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
                             </p>
-                        </video>
+                        </video>-->
+                        <div id="resourceMediaPlayer" class="video-container"></div>
+                        <noscript>
+                            <p class="amp-no-js">
+                                To view this media please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
+                            </p>
+                        </noscript>
+
                         <div v-if="resourceItem.videoDetails && resourceItem.videoDetails.transcriptFile">
                             <p class="nhsuk-u-margin-bottom-7">
                                 <a :href="getFileLink(resourceItem.videoDetails.transcriptFile.filePath, resourceItem.videoDetails.transcriptFile.fileName)">Download transcription</a>
@@ -27,13 +34,19 @@
                     <!--Audio-->
                     <div id="mediacontainer" data-setup='{"logo": { "enabled": false }, "techOrder": ["azureHtml5JS", "flashSS",  "silverlightSS", "html5"], "nativeControlsForTouch": false}' controls class="resource-item" v-if="hasMediaAccess && (resourceItem.resourceTypeEnum == ResourceType.AUDIO)">
 
-                        <video id="resourceAzureMediaPlayer" controls="controls" data-setup='{}' class="azuremediaplayer amp-default-skin amp-big-play-centered resource-video nhsuk-u-margin-bottom-7">
+                        <!--<video id="resourceAzureMediaPlayer" controls="controls" data-setup='{}' class="azuremediaplayer amp-default-skin amp-big-play-centered resource-video nhsuk-u-margin-bottom-7">
                             <source :src="resourceItem.audioDetails.resourceAzureMediaAsset.locatorUri" type="application/vnd.ms-sstr+xml" :data-setup='getAESProtection(resourceItem.audioDetails.resourceAzureMediaAsset.authenticationToken)' />
                             <source :src="getMediaAssetProxyUrl(resourceItem.audioDetails.resourceAzureMediaAsset)" type="application/vnd.apple.mpegurl" disableUrlRewriter="true" />
                             <p class="amp-no-js">
                                 To view this media please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
                             </p>
-                        </video>
+                        </video>-->
+                        <div id="resourceMediaPlayer" class="video-container"></div>
+                        <noscript>
+                            <p class="amp-no-js">
+                                To view this media please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
+                            </p>
+                        </noscript>
                         <div v-if="resourceItem.audioDetails && resourceItem.audioDetails.transcriptFile">
                             <p class="nhsuk-u-margin-bottom-7">
                                 <a :href="getFileLink(resourceItem.audioDetails.transcriptFile.filePath, resourceItem.audioDetails.transcriptFile.fileName)">Download transcription</a>
@@ -85,7 +98,8 @@
     import { assessmentResourceHelper } from './helpers/assessmentResourceHelper';
     import { AssessmentProgressModel } from '../models/mylearning/assessmentProgressModel';
     import { getQueryParam } from './helpers/getQueryParam';
-    import {setResourceCetificateLink} from './helpers/resourceCertificateHelper';
+    import { setResourceCetificateLink } from './helpers/resourceCertificateHelper';
+    import { MKPlayer } from '@mediakind/mkplayer';
 
     Vue.use(Vuelidate as any);
 
@@ -123,6 +137,14 @@
                 isGeneralUser: false,
                 isSystemAdmin: false,
                 initialCertificateStatus: null,
+                player: null,
+                videoContainer: null,
+                mkioKey: '',
+                playBackUrl: '',
+                playBackDashUrl: '',
+                sourceLoaded: true,
+                playerConfig: {
+                }
             }
         },
         computed: {
@@ -141,6 +163,9 @@
             },
             hasCaseAssessmentAccees(): boolean {
                 return this.userAuthenticated && (this.resourceItem.resourceTypeEnum == this.ResourceType.CASE || this.resourceItem.resourceTypeEnum == this.ResourceType.ASSESSMENT) && (!(this.isGeneralUser && this.resourceItem.resourceAccessibilityEnum == this.ResourceAccessibility.FullAccess))
+            },
+            isVideoReadyToShow(): boolean {
+                return true;// this.azureMediaServicesAuthToken;
             }
         },
         async created(): Promise<void> {
@@ -151,6 +176,9 @@
             await this.getGeneralUser();
             await this.getUserRole();
             await this.loadResourceItem(Number(this.$route.params.resId));
+            await this.getMKIOPlayerKey();
+            await this.getMediaPlayUrl();
+            await this.setupMKPlayer();
 
             if (this.userAuthenticated && this.resourceItem.catalogue.restrictedAccess) {
                 await this.loadRoleUserGroups();
@@ -159,7 +187,7 @@
 
             if (this.userAuthenticated && (this.resourceItem.resourceTypeEnum == ResourceType.VIDEO || this.resourceItem.resourceTypeEnum == ResourceType.AUDIO) && this.hasResourceAccess()) {
                 this.addMediaEventListeners();
-                this.checkForAutoplay();
+                //this.checkForAutoplay();
             }
 
             if (this.userAuthenticated && (this.resourceItem.resourceTypeEnum === ResourceType.VIDEO || this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) && this.hasResourceAccess()) {
@@ -202,7 +230,154 @@
         beforeDestroy(): void {
             window.clearInterval(this.mediaPlayingTimer);
         },
+        mounted() {
+
+        },
         methods: {
+            onPlayerReady() {
+
+                const videoElement = document.getElementById("bitmovinplayer-video-resourceMediaPlayer") as HTMLVideoElement;
+                if (videoElement) {
+                    videoElement.controls = true;
+
+                    // Add the track element
+                    var captionsInfo = this.resourceItem.videoDetails.closedCaptionsFile;
+                    if (captionsInfo) {
+                        const trackElement = document.createElement('track');
+                        var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
+                        trackElement.kind = 'captions'; // Or 'subtitles' or 'descriptions' depending on your track type
+                        trackElement.label = captionsInfo.language || 'english';
+                        trackElement.srclang = captionsInfo.language || 'en';
+                        trackElement.src = srcPath;
+
+                        // Append the track to the video element
+                        videoElement.appendChild(trackElement);
+                    }
+                }
+
+                this.checkForAutoplay(this.player);
+            },
+            onpause() {
+                this.recordMediaResourceActivityInteraction(this.player, "pause");
+            },
+            onplay() {
+                this.recordMediaResourceActivityInteraction(this.player, "play");
+            },
+            onplaybackfinished() {
+                this.recordMediaResourceActivityInteraction(this.player, "ended");
+            },
+            onSubtitleAdded() {
+                // this.player.subtitles.enable("subid");
+            },
+            setupMKPlayer() {
+                // Grab the video container
+                this.videoContainer = document.getElementById("resourceMediaPlayer");
+
+                // Prepare the player configuration
+                const playerConfig = {
+                    key: this.mkioKey,
+                    ui: false,
+                    theme: "dark",
+                    playback: {
+                        muted: true,
+                        autoplay: false,
+                    },
+                    events: {
+                        //error: this.onPlayerError,
+                        //timechanged: this.onTimeChanged,
+                        paused: this.onpause,
+                        play: this.onplay,
+                        playbackfinished: this.onplaybackfinished,
+                        //muted: this.onMuted,
+                        ////unmuted: this.onUnmuted,
+                        ready: this.onPlayerReady,
+                        subtitleadded: this.onSubtitleAdded,
+                        //playbackspeed: this.onPlaybackSpeed
+                    }
+                };
+
+                // Initialize the player with video container and player configuration
+                this.player = new MKPlayer(this.videoContainer, playerConfig);
+
+                // ClearKey DRM configuration
+                var clearKeyConfig = {
+                    //LA_URL: "https://ottapp-appgw-amp.prodc.mkio.tv3cloud.com/drm/clear-key?ownerUid=azuki",
+                    LA_URL:"HLS_AES",
+                    headers: {
+                        "Authorization": this.getBearerToken()
+                    }
+                };
+
+                // Load source
+                const sourceConfig = {
+                    hls: this.playBackUrl,
+                    //dash: this.playBackDashUrl,
+                    drm: {
+                        clearkey: clearKeyConfig
+                    }
+                };
+
+                // Load source
+                //const sourceConfig = {
+                //    source: {
+                //        options: [
+                //            //{
+                //            //    type: 'application/vnd.apple.mpegurl',
+                //            //    src: getMediaAssetProxyUrl(resourceItem.videoDetails.resourceAzureMediaAsset),
+                //            //    drm: {
+                //            //        clearkey: clearKeyConfig
+                //            //    }
+                //            //},
+                //            {
+                //                type: 'application/vnd.ms-sstr+xml',
+                //                src: this.playBackUrl,
+                //                drm: {
+                //                    clearkey: clearKeyConfig
+                //                }
+                //            }
+                //        ]
+                //    }
+                //};
+
+
+                this.player.load(sourceConfig)
+                    .then(() => {
+                        console.log("Source loaded successfully!");
+                    })
+                    .catch(() => {
+                        console.error("An error occurred while loading the source!");
+                    });
+
+
+            },
+            async getMKIOPlayerKey() {
+                this.mkioKey = await resourceData.getMKPlayerKey();
+            },
+            getBearerToken() {
+                var token;
+                if (this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) {
+                    token = this.resourceItem.audioDetails.resourceAzureMediaAsset.authenticationToken;
+                }
+                else {
+                    token = this.resourceItem.videoDetails.resourceAzureMediaAsset.authenticationToken;
+                }
+                return "Bearer=" + token;
+            },
+            getMediaPlayUrl() {
+                if (this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) {
+                    this.playBackUrl = this.resourceItem.audioDetails.resourceAzureMediaAsset.locatorUri;
+                    this.playBackDashUrl = this.resourceItem.audioDetails.resourceAzureMediaAsset.locatorUri;
+                } else {
+                    this.playBackUrl = this.resourceItem.videoDetails.resourceAzureMediaAsset.locatorUri;
+                    this.playBackDashUrl = this.resourceItem.videoDetails.resourceAzureMediaAsset.locatorUri;
+                }
+                this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
+                // this.playBackUrl = "https://ep-defaultlhdev-mediakind02-dev-by-am-sl.uksouth.streaming.mediakind.com" + this.playBackUrl;
+            },
+            getMediaAssetProxyUrl(playBackUrl: string): string {
+                playBackUrl = playBackUrl.substring(0, playBackUrl.lastIndexOf("manifest")) + "manifest(format=mpd-time-cmaf,encryption=cenc)";
+                return playBackUrl;
+            },
             initialise(): void {
                 // record activity on page created for resource article
                 if (this.userAuthenticated && this.resourceItem.resourceTypeEnum === ResourceType.CASE) {
@@ -215,15 +390,20 @@
                     window.setTimeout(this.handleResize, 100);
                 }
             },
-            checkForAutoplay(): void {
+            checkForAutoplay(player: MKPlayer): void {
                 // Autoplay the media if the mediaStartTime has been set. Happens if user came to screen via a "Play" link on My Learning progress dialog.
                 if ((this.resourceItem.resourceTypeEnum === ResourceType.VIDEO || this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) && this.mediaStartTime > 0) {
 
                     // Remove the mediaStartTime query string parameter so that if the user refreshes the page the video plays from the beginning.
                     this.$router.replace({ query: Object.assign({}, this.$route.query, { mediaStartTime: undefined }) });
 
-                    let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
-                    resourceAzureMediaPlayer.play();
+                    //[BY]
+                    //let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
+                    //resourceAzureMediaPlayer.play();
+                    if (player) {
+                        player.play();
+                        player.seek(this.mediaStartTime);
+                    }
                 }
             },
             async loadResourceItem(id: number): Promise<void> {
@@ -249,7 +429,7 @@
                 if (!this.activityLogged) {
                     this.activityLogged = true;
                     await activityRecorder.recordActivityLaunched(this.resourceItem.resourceTypeEnum, this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
-                   // await activityRecorder.recordActivityLaunched(this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
+                        // await activityRecorder.recordActivityLaunched(this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
                         .then(response => {
                             this.launchedResourceActivityId = response.createdId;
                             this.checkUserCertificateAvailability();
@@ -280,7 +460,6 @@
                 }
             },
             async recordActivity(activityStart: Date, activityEnd: Date, activityStatus: ActivityStatus): Promise<void> {
-
                 if (!this.activityLogged) {
                     this.activityLogged = true;
 
@@ -302,10 +481,10 @@
 
                     // If media is still playing, we need to record the end of the activity AND a pause media interaction all in one call.
                     if (this.resourceItem.resourceTypeEnum === ResourceType.VIDEO || this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) {
-                        let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
-                        if (!resourceAzureMediaPlayer.paused()) {
+                        //let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
+                        if (!this.player.isPaused()) {
 
-                            let currentMediaTime = this.getMediaPlayerDisplayTime();
+                            let currentMediaTime = this.player.getCurrentTime();
                             let clientDateTime = new Date();
 
                             await activityRecorder.recordActivityAndInteractionTogether(
@@ -344,13 +523,12 @@
                         });
                 }
             },
-            async recordMediaResourceActivityInteraction(event: Event): Promise<void> {
-                let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
-
+            async recordMediaResourceActivityInteraction(player: MKPlayer, event: string): Promise<void> {
+                // let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
                 // If user has come via the 'Play' link in My Learning, set the video start time.
                 if (this.isFirstPlay && this.mediaStartTime > 0) {
                     this.isFirstPlay = false;
-                    resourceAzureMediaPlayer.currentTime(this.mediaStartTime);
+                    player.seek(this.mediaStartTime);
                 }
 
                 // On iPhone/iPad, if the user uses the browser back/forward buttons to come to the page the browser doesn't reload it from scratch. So we have to reset the tracking variables to create a whole new activity session.
@@ -363,14 +541,14 @@
                     this.createdFirstInteraction = false;
                 }
 
-                let currentMediaTime = this.getMediaPlayerDisplayTime();
+                let currentMediaTime = player.getCurrentTime();
                 let clientDateTime = new Date();
 
                 // If this is the first interaction, we need to create the ResourceActivity first, then the MediaResourceActivity, then the MediaResourceActivityInteraction.
                 // Any further interactions can't be recorded until this first one has finished being recorded, but they cannot be lost!
                 if (this.createFirstInteraction) {
                     this.createFirstInteraction = false;
-                    this.interactionQueue.push(new InteractionQueueModel({ mediaResourceActivityType: event.type, clientDateTime: clientDateTime, currentMediaTime: currentMediaTime }));
+                    this.interactionQueue.push(new InteractionQueueModel({ mediaResourceActivityType: event, clientDateTime: clientDateTime, currentMediaTime: currentMediaTime }));
                     await this.recordActivityLaunched();
                     await this.recordMediaResourceActivity();
                     await this.createQueuedInteractions();
@@ -379,13 +557,14 @@
                 else if (!this.createdFirstInteraction) {
                     // If more interactions take place whilst the above is still in the process of being recorded (i.e. this event handler gets triggered again), we need to queue the new
                     // interactions to be created in the last step of the above code block.
-                    this.interactionQueue.push(new InteractionQueueModel({ mediaResourceActivityType: event.type, clientDateTime: clientDateTime, currentMediaTime: currentMediaTime }));
+                    this.interactionQueue.push(new InteractionQueueModel({ mediaResourceActivityType: event, clientDateTime: clientDateTime, currentMediaTime: currentMediaTime }));
                 }
                 else {
                     // Otherwise the top level activities have already been created, so just go ahead and create the a new interaction.
-                    this.createInteraction(event.type, clientDateTime, currentMediaTime);
+                    this.createInteraction(event, clientDateTime, currentMediaTime);
                 }
             },
+
             async createQueuedInteractions(): Promise<void> {
                 while (this.interactionQueue.length > 0) {
                     let interaction: InteractionQueueModel = this.interactionQueue.shift();
@@ -425,11 +604,11 @@
 
                 if (interactionType == "ended") {
                     setTimeout(() => { this.checkUserCertificateAvailability() }, 10000);
-                    await this.recordActivityComplete();                 
+                    await this.recordActivityComplete();
                 }
             },
             async recordMediaPlayingEvent(): Promise<void> {
-                let currentMediaTime = this.getMediaPlayerDisplayTime();
+                let currentMediaTime = this.player.getCurrentTime();// this.getMediaPlayerDisplayTime();
                 let clientDateTime = new Date();
 
                 await activityRecorder.recordMediaResourceActivityInteraction(this.mediaResourceActivityId, currentMediaTime, MediaResourceActivityType.Playing, clientDateTime)
@@ -464,7 +643,7 @@
                     duration = Math.round(this.resourceItem.audioDetails.durationInMilliseconds / 1000);
                 }
 
-                let currentMediaTime = Math.round(this.getMediaPlayerDisplayTime());
+                let currentMediaTime = Math.round(this.player.getCurrentTime());
                 return currentMediaTime == duration;
             },
             handleResize() {
@@ -484,12 +663,12 @@
                 }
             },
             addMediaEventListeners(): void {
-                let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer", AzureMediaPlayerOptions);
+                //let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer", AzureMediaPlayerOptions);
 
-                resourceAzureMediaPlayer.addEventListener(amp.eventName.play, this.recordMediaResourceActivityInteraction);
-                resourceAzureMediaPlayer.addEventListener("pause", this.recordMediaResourceActivityInteraction);
-                resourceAzureMediaPlayer.addEventListener("ended", this.recordMediaResourceActivityInteraction);
-                $(resourceAzureMediaPlayer).bind("fullscreenchange", this.handleResize);
+                //resourceAzureMediaPlayer.addEventListener(amp.eventName.play, this.recordMediaResourceActivityInteraction);
+                //resourceAzureMediaPlayer.addEventListener("pause", this.recordMediaResourceActivityInteraction);
+                //resourceAzureMediaPlayer.addEventListener("ended", this.recordMediaResourceActivityInteraction);
+                //$(resourceAzureMediaPlayer).bind("fullscreenchange", this.handleResize);
             },
             getFileLink(filePath: string, fileName: string): string {
                 return "/api/resource/DownloadResource?filePath=" + filePath + "&fileName=" + encodeURIComponent(fileName);
@@ -498,13 +677,13 @@
                 let downloadLocation = this.getFileLink(filePath, fileName);
                 window.open(downloadLocation);
             },
-            getMediaAssetProxyUrl(azureMediaAsset: ResourceAzureMediaAssetModel): string {
+            //getMediaAssetProxyUrl(azureMediaAsset: ResourceAzureMediaAssetModel): string {
 
-                let playBackUrl = azureMediaAsset.locatorUri;
-                playBackUrl = playBackUrl.substring(0, playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-aapl)";
+            //    let playBackUrl = azureMediaAsset.locatorUri;
+            //    playBackUrl = playBackUrl.substring(0, playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-aapl)";
 
-                return "/Media/MediaManifest?playBackUrl=" + playBackUrl + "&token=" + azureMediaAsset.authenticationToken;
-            },
+            //    return "/Media/MediaManifest?playBackUrl=" + playBackUrl + "&token=" + azureMediaAsset.authenticationToken;
+            //},
             getAESProtection(token: string): string {
                 return '{"protectionInfo": [{"type": "AES", "authenticationToken":"Bearer=' + token + '"}], "streamingFormats":["SMOOTH","DASH"]}';
             },
@@ -539,8 +718,8 @@
                 else if (this.userAuthenticated && this.resourceItem.certificateEnabled && this.initialCertificateStatus == false) {
                     let check = await resourceData.userHasResourceCertificate(this.$route.params.resId);
                     if (check == true) {
-                         this.initialCertificateStatus = true;
-                         setResourceCetificateLink(this.$route.params.resId);
+                        this.initialCertificateStatus = true;
+                        setResourceCetificateLink(this.$route.params.resId);
                     }
                 }
 
@@ -664,5 +843,26 @@
         color: $nhsuk-black;
         background-color: $govuk-focus-highlight-yellow;
         box-shadow: 0 -2px $govuk-focus-highlight-yellow,0 4px $nhsuk-black;
+    }
+
+    .video-container {
+        height: 0;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        padding-top: 56.25%; /* 16:9 aspect ratio */
+        background-color: #000;
+    }
+
+    video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    video[id^="bitmovinplayer-video"] {
+        width: 100%;
     }
 </style>

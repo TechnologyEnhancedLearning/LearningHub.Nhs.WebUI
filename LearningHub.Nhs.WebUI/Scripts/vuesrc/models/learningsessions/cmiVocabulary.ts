@@ -18,7 +18,8 @@
     Entry = 16,
     Interaction = 17,
     Result = 18,
-    TimeLimitAction = 19
+    TimeLimitAction = 19,
+    CMIString64000 = 20
 };
 
 export enum CMIVocabularyMode {

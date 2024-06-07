@@ -127,7 +127,7 @@
         /// <returns>The .</returns>
         public static string GetActivityStatusDisplayText(this ActivityDetailedItemViewModel activityDetailedItemViewModel)
         {
-            if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Launched
+            if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
                      && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Article
                          || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.WebLink
                          || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Image
@@ -136,7 +136,7 @@
             {
                 return "Completed";
             }
-            else if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Launched
+            else if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
                 && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.GenericFile))
             {
                 return "Downloaded";
@@ -163,36 +163,33 @@
         /// </summary>
         /// <param name="activityDetailedItemViewModel">The activityDetailedItemViewModel.</param>
         /// <returns>The <see cref="ActivityStatusEnum"/>.</returns>
-        public static ActivityStatusEnum GetActivityStatus(this ActivityDetailedItemViewModel activityDetailedItemViewModel)
+        public static string GetActivityStatus(this ActivityDetailedItemViewModel activityDetailedItemViewModel)
         {
-            if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Launched
+            if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
                 && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Article
-                    || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.WebLink
                     || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Image
                     || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Html
                     || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Case))
             {
-                return ActivityStatusEnum.Completed;
+                return "Viewed";
             }
-            else if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Launched
-                && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.GenericFile))
+            else if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
+               && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.WebLink))
             {
-                return ActivityStatusEnum.Downloaded;
+                return "Launched";
             }
-            else if (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment)
+            else if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
+                      && (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.GenericFile))
             {
-                if (activityDetailedItemViewModel.Complete)
-                {
-                    return activityDetailedItemViewModel.ScorePercentage >= activityDetailedItemViewModel.AssessmentDetails.PassMark ? ActivityStatusEnum.Passed : ActivityStatusEnum.Failed;
-                }
-                else
-                {
-                    return activityDetailedItemViewModel.ScorePercentage >= activityDetailedItemViewModel.AssessmentDetails.PassMark ? ActivityStatusEnum.Passed : ActivityStatusEnum.InProgress;
-                }
+                return ActivityStatusEnum.Downloaded.ToString();
+            }
+            else if (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Incomplete)
+            {
+                return ActivityStatusEnum.InProgress.ToString();
             }
             else
             {
-                return activityDetailedItemViewModel.ActivityStatus;
+                return activityDetailedItemViewModel.ActivityStatus.ToString();
             }
         }
 
@@ -229,7 +226,7 @@
         /// <returns>The <see cref="bool"/>.</returns>
         public static bool CanShowScore(this ActivityDetailedItemViewModel activityDetailedItemViewModel)
         {
-            if ((activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Scorm && (activityDetailedItemViewModel.MasteryScore > 0 || activityDetailedItemViewModel.MasteryScore == null) && ((activityDetailedItemViewModel.ScorePercentage > 0 && activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Passed) || activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Failed)) || ((activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Case) && activityDetailedItemViewModel.Complete))
+            if ((activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Scorm && (activityDetailedItemViewModel.MasteryScore > 0 || activityDetailedItemViewModel.MasteryScore == null) && ((activityDetailedItemViewModel.ScorePercentage > 0 && activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Passed) || activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Failed)) || (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment && (activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed || activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Passed || activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Failed)) || (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Case && activityDetailedItemViewModel.Complete))
             {
                 return true;
             }
@@ -244,7 +241,7 @@
         /// <returns>The <see cref="bool"/>bool.</returns>
         public static bool CanViewPercentage(this ActivityDetailedItemViewModel activityDetailedItemViewModel)
         {
-            if (((activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Video || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Audio) && activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.InProgress) || (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment && activityDetailedItemViewModel.Complete == false))
+            if (((activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Video || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Audio) && activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.InProgress) || (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment && activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.InProgress))
             {
                 return true;
             }

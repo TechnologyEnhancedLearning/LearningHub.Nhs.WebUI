@@ -128,7 +128,7 @@
         /// <returns>The .</returns>
         public static string GetActivityStatusDisplayText(this MyLearningDetailedItemViewModel myLearningDetailedItemViewModel)
         {
-            if (myLearningDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Launched
+            if (myLearningDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
                      && (myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.Article
                          || myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.WebLink
                          || myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.Image
@@ -137,7 +137,7 @@
             {
                 return "Completed";
             }
-            else if (myLearningDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Launched
+            else if (myLearningDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
                 && (myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.GenericFile))
             {
                 return "Downloaded";
@@ -164,36 +164,33 @@
         /// </summary>
         /// <param name="myLearningDetailedItemViewModel">The myLearningDetailedItemViewModel.</param>
         /// <returns>The <see cref="ActivityStatusEnum"/>.</returns>
-        public static ActivityStatusEnum GetActivityStatus(this MyLearningDetailedItemViewModel myLearningDetailedItemViewModel)
+        public static string GetActivityStatus(this MyLearningDetailedItemViewModel myLearningDetailedItemViewModel)
         {
-            if (myLearningDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Launched
+            if (myLearningDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
                 && (myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.Article
-                    || myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.WebLink
                     || myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.Image
                     || myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.Html
                     || myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.Case))
             {
-                return ActivityStatusEnum.Completed;
+                return "Viewed";
             }
-            else if (myLearningDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Launched
-                && (myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.GenericFile))
+            else if (myLearningDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
+               && (myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.WebLink))
             {
-                return ActivityStatusEnum.Downloaded;
+                return "Launched";
             }
-            else if (myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment)
+            else if (myLearningDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Completed
+                      && (myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.GenericFile))
             {
-                if (myLearningDetailedItemViewModel.Complete)
-                {
-                    return myLearningDetailedItemViewModel.ScorePercentage >= myLearningDetailedItemViewModel.AssessmentDetails.PassMark ? ActivityStatusEnum.Passed : ActivityStatusEnum.Failed;
-                }
-                else
-                {
-                    return myLearningDetailedItemViewModel.ScorePercentage >= myLearningDetailedItemViewModel.AssessmentDetails.PassMark ? ActivityStatusEnum.Passed : ActivityStatusEnum.InProgress;
-                }
+                return ActivityStatusEnum.Downloaded.ToString();
+            }
+            else if (myLearningDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.Incomplete)
+            {
+                return ActivityStatusEnum.InProgress.ToString();
             }
             else
             {
-                return myLearningDetailedItemViewModel.ActivityStatus;
+                return myLearningDetailedItemViewModel.ActivityStatus.ToString();
             }
         }
 

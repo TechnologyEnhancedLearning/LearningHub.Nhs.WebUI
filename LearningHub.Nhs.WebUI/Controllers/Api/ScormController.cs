@@ -260,6 +260,7 @@
 
                 // Persist update.
                 await this.activityService.UpdateScormActivityAsync(scoObject);
+
                 return true;
             }
             catch (Exception ex)

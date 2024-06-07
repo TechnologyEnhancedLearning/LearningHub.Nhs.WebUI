@@ -48,7 +48,8 @@
             }"
             v-bind:disabled="disabled">
         <i v-bind:class="iconClasses"
-           v-bind:aria-label="ariaLabel"></i>
+           v-bind:aria-label="ariaLabel"
+           v-bind:role="iconRole"></i>
         <span>{{ label }}</span>
     </button>
 </template>
@@ -65,6 +66,7 @@
             color: String,
             shape: String,
             size: String,
+            iconRole: String,
         },
     });
 </script>

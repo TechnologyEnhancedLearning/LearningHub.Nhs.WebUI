@@ -23,6 +23,7 @@
     using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Microsoft.FeatureManagement;
 
     /// <summary>
     /// Defines the <see cref="ResourceController" />.
@@ -41,6 +42,7 @@
         private readonly IMyLearningService myLearningService;
         private readonly IFileService fileService;
         private readonly ICacheService cacheService;
+        private readonly IFeatureManager featureManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceController"/> class.
@@ -60,6 +62,7 @@
         /// <param name="hierarchyService">The hierarchyService.</param>
         /// <param name="fileService">The fileService.</param>
         /// <param name="cacheService">The cacheService.</param>
+        /// <param name="featureManager"> The Feature flag manager.</param>
         public ResourceController(
             IWebHostEnvironment hostingEnvironment,
             ILogger<ResourceController> logger,
@@ -75,7 +78,8 @@
             IMyLearningService myLearningService,
             IHierarchyService hierarchyService,
             IFileService fileService,
-            ICacheService cacheService)
+            ICacheService cacheService,
+            IFeatureManager featureManager)
             : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.azureMediaService = azureMediaService;
@@ -89,6 +93,7 @@
             this.myLearningService = myLearningService;
             this.fileService = fileService;
             this.cacheService = cacheService;
+            this.featureManager = featureManager;
         }
 
         /// <summary>
@@ -108,6 +113,8 @@
             this.ViewBag.MediaActivityPlayingEventIntervalSeconds = this.Settings.MediaActivityPlayingEventIntervalSeconds;
             this.ViewBag.KeepUserSessionAliveIntervalSeconds = Convert.ToInt32(this.Settings.KeepUserSessionAliveIntervalMins) * 60000;
             this.ViewBag.SupportUrl = this.Settings.SupportUrls.SupportForm;
+            var displayAVResourceFlag = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.DisplayAudioVideoResource)).Result;
+            this.ViewBag.DisplayAVResourceFlag = displayAVResourceFlag;
 
             if (resourceReferenceId == 0)
             {
@@ -173,14 +180,14 @@
             }
 
             // For article/image resources, immediately record the resource activity for this user.
-            if ((resource.ResourceTypeEnum == ResourceTypeEnum.Article || resource.ResourceTypeEnum == ResourceTypeEnum.Image) && ((resource.SensitiveContent && acceptSensitiveContent.HasValue && acceptSensitiveContent.Value) || !resource.SensitiveContent) && canAccessResource)
+            if ((resource.ResourceTypeEnum == ResourceTypeEnum.Article || resource.ResourceTypeEnum == ResourceTypeEnum.Image) && (!resource.SensitiveContent))
             {
                 var activity = new CreateResourceActivityViewModel()
                 {
                     ResourceVersionId = resource.ResourceVersionId,
                     NodePathId = resource.NodePathId,
                     ActivityStart = DateTime.UtcNow, // TODO: What about user's timezone offset when Javascript is disabled? Needs JavaScript.
-                    ActivityStatus = ActivityStatusEnum.Launched,
+                    ActivityStatus = ActivityStatusEnum.Completed,
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
             }
@@ -400,11 +407,17 @@
         [Route("Resource/UnpublishConfirmPost")]
         public async Task<IActionResult> UnpublishConfirm(ResourceUnpublishConfirmViewModel viewModel)
         {
+            var associatedFile = await this.resourceService.GetResourceVersionExtendedAsync(viewModel.ResourceVersionId);
             var validationResult = await this.resourceService.UnpublishResourceVersionAsync(viewModel.ResourceVersionId);
             var catalogue = await this.catalogueService.GetCatalogueAsync(viewModel.CatalogueNodeVersionId);
 
             if (validationResult.IsValid)
             {
+                if (associatedFile.ScormDetails != null || associatedFile.HtmlDetails != null)
+                {
+                    _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(associatedFile, null); });
+                }
+
                 if (viewModel.CatalogueNodeVersionId == 1)
                 {
                     return this.Redirect("/my-contributions/unpublished");
@@ -472,7 +485,7 @@
                     ResourceVersionId = resourceVersionId,
                     NodePathId = nodePathId,
                     ActivityStart = DateTime.UtcNow, // TODO: What about user's timezone offset when Javascript is disabled? Needs JavaScript.
-                    ActivityStatus = ActivityStatusEnum.Launched,
+                    ActivityStatus = ActivityStatusEnum.Completed,
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
             }
@@ -501,5 +514,32 @@
 
             return this.Ok(this.Content("No file found"));
         }
+
+        /// <summary>
+        /// The GetAVUnavailableView.
+        /// </summary>
+        /// <returns> partial view.  </returns>
+        [Route("Resource/GetAVUnavailableView")]
+        [HttpGet("GetAVUnavailableView")]
+        public IActionResult GetAVUnavailableView()
+        {
+            return this.PartialView("_AudioVideoUnavailable");
+        }
+
+        /// <summary>
+        /// The GetContributeAVResourceFlag.
+        /// </summary>
+        /// <returns> Return Contribute Resource AV Flag.</returns>
+        [Route("Resource/GetContributeAVResourceFlag")]
+        [HttpGet("GetContributeAVResourceFlag")]
+        public bool GetContributeResourceAVFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.ContributeAudioVideoResource).Result;
+
+        /// <summary>
+        /// The GetDisplayAVResourceFlag.
+        /// </summary>
+        /// <returns> Return Display AV Resource Flag.</returns>
+        [Route("Resource/GetDisplayAVResourceFlag")]
+        [HttpGet("GetDisplayAVResourceFlag")]
+        public bool GetDisplayAVResourceFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.DisplayAudioVideoResource).Result;
     }
 }

@@ -167,6 +167,28 @@ namespace LearningHub.Nhs.Repository.Resources
         }
 
         /// <summary>
+        /// Gets the Case, AssessmentContent, AssessmentGuidance Block Collections (including child Blocks, TextBlocks, WholeSlideImageBlocks and Files) except that of the provided resource version.
+        /// </summary>
+        /// <param name="excludeResourceVersionId">The excluded ResourceVersion Id.</param>
+        /// <param name="resourceTypeEnum">The resource type.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<string> GetResourceBlockCollectionsFileAsync(int excludeResourceVersionId, ResourceTypeEnum resourceTypeEnum)
+        {
+            if (excludeResourceVersionId > 0)
+            {
+                var param0 = new SqlParameter("@excludeResourceVersionId", SqlDbType.Int) { Value = excludeResourceVersionId };
+                var param1 = new SqlParameter("@resourceType", SqlDbType.Int) { Value = (int)resourceTypeEnum };
+                var param2 = new SqlParameter("@filePath", SqlDbType.NVarChar) { Direction = ParameterDirection.Output, Size = -1 };
+                await this.DbContext.Database.ExecuteSqlRawAsync("[resources].[BlockCollectionFileSearch] @excludeResourceVersionId, @resourceType, @filePath output", param0, param1, param2);
+                return param2.Value.ToString();
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
         /// Gets the Question blocks for a particular blockCollectionId.
         /// </summary>
         /// <param name="blockCollectionId">The Block Collection Id.</param>

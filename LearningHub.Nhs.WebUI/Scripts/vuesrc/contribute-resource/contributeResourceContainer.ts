@@ -12,5 +12,6 @@ new Vue({
     created() {
         this.$store.commit('populateContributeAVResourceFlag'); 
         this.$store.commit('populateAVUnavailableView'); 
+        this.$store.commit('populateMKPlayerLicenceKey');
     }
 });

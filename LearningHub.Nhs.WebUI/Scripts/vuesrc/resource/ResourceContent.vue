@@ -279,7 +279,7 @@
                     ui: false,
                     theme: "dark",
                     playback: {
-                        muted: true,
+                        muted: false,
                         autoplay: false,
                     },
                     events: {

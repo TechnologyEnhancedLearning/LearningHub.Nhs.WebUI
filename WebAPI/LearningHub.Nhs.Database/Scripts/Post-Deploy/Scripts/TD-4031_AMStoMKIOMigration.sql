@@ -20,3 +20,9 @@ WHERE LocatorUri LIKE '%https://ukslearninghubdevcontent-ukso1.streaming.media.a
 
 
 
+Update [resources].[ResourceAzureMediaAsset]
+SET LocatorUri = REPLACE(LocatorUri, 'https://ukslearninghubdevcontent-ukso1.streaming.media.azure.net', 'https://ep-defaultlhdev-mediakind02-dev-by-am-sl.uksouth.streaming.mediakind.com')
+WHERE LocatorUri LIKE '%https://ukslearninghubdevcontent-ukso1.streaming.media.azure.net%';
+
+
+

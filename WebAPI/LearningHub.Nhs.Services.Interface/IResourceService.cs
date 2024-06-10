@@ -104,7 +104,7 @@ namespace LearningHub.Nhs.Services.Interface
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
         /// <param name="userId">userId.</param>
         /// <returns>The <see cref="Task{ScormContentDetailsViewModel}"/>.</returns>
-        ExternalContentDetailsViewModel GetExternalContentDetails(int resourceVersionId, int userId);
+        Task<ExternalContentDetailsViewModel> GetExternalContentDetails(int resourceVersionId, int userId);
 
         /// <summary>
         /// The get image details by id async.

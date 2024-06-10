@@ -176,16 +176,15 @@
             await this.getGeneralUser();
             await this.getUserRole();
             await this.loadResourceItem(Number(this.$route.params.resId));
-            await this.getMKIOPlayerKey();
-            await this.getMediaPlayUrl();
-            await this.setupMKPlayer();
 
             if (this.userAuthenticated && this.resourceItem.catalogue.restrictedAccess) {
                 await this.loadRoleUserGroups();
             }
 
-
             if (this.userAuthenticated && (this.resourceItem.resourceTypeEnum == ResourceType.VIDEO || this.resourceItem.resourceTypeEnum == ResourceType.AUDIO) && this.hasResourceAccess()) {
+                await this.getMKIOPlayerKey();
+                await this.getMediaPlayUrl();
+                await this.setupMKPlayer();
                 this.addMediaEventListeners();
                 //this.checkForAutoplay();
             }
@@ -372,7 +371,6 @@
                     this.playBackDashUrl = this.resourceItem.videoDetails.resourceAzureMediaAsset.locatorUri;
                 }
                 this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
-                // this.playBackUrl = "https://ep-defaultlhdev-mediakind02-dev-by-am-sl.uksouth.streaming.mediakind.com" + this.playBackUrl;
             },
             getMediaAssetProxyUrl(playBackUrl: string): string {
                 playBackUrl = playBackUrl.substring(0, playBackUrl.lastIndexOf("manifest")) + "manifest(format=mpd-time-cmaf,encryption=cenc)";

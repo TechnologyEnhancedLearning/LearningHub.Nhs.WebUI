@@ -32,6 +32,7 @@
     import { FileModel } from '../../models/contribute-resource/files/fileModel';
     import { VideoFileModel } from '../../models/contribute-resource/blocks/videoFileModel';
     import { MKPlayer } from '@mediakind/mkplayer';
+    import { resourceData } from '../../data/resource';
     export default Vue.extend({
         props: {
             fileId: Number,
@@ -47,65 +48,11 @@
                 sourceLoaded: true,
             };
         },
-        created() {
-            this.getMKIOPlayerKey();
+        async created() {
+            await this.getMKIOPlayerKey();
             this.getMediaPlayUrl();
-        },
-        mounted() {
-            // Grab the video container
-            this.videoContainer = document.getElementById(this.getPlayerUniqueId);
-
-            // Prepare the player configuration
-            const playerConfig = {
-                key: this.mkioKey,
-                ui: false,
-                theme: "dark",
-                playback: {
-                    muted: false,
-                    autoplay: false,
-                },
-                events: {
-                    //error: this.onPlayerError,
-                    //timechanged: this.onTimeChanged,
-                    //onpause: this.onpause,
-                    //onplay: this.onplay,
-                    //muted: this.onMuted,
-                    //unmuted: this.onUnmuted,
-                    ready: this.onPlayerReady,
-                    subtitleadded: this.onSubtitleAdded,
-
-                    //playbackspeed: this.onPlaybackSpeed
-                }
-            };
-
-            // Initialize the player with video container and player configuration
-            this.player = new MKPlayer(this.videoContainer, playerConfig);
-
-            // ClearKey DRM configuration
-            var clearKeyConfig = {
-                //LA_URL: "https://ottapp-appgw-amp.prodc.mkio.tv3cloud.com/drm/clear-key?ownerUid=azuki",
-                LA_URL:"HLS_AES",
-                headers: {
-                    "Authorization": this.getBearerToken()
-                }
-            };
-
-            // Load source
-            const sourceConfig = {
-                hls: this.playBackUrl,
-                drm: {
-                    clearkey: clearKeyConfig
-                }
-            };
-
-            this.player.load(sourceConfig)
-                .then(() => {
-                    console.log("Source loaded successfully!");
-                })
-                .catch(() => {
-                    console.error("An error occurred while loading the source!");
-                });
-        },
+            this.load();
+        },        
         methods: {
             onPlayerReady() {
                 const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
@@ -130,8 +77,8 @@
             onSubtitleAdded() {
 
             },
-            getMKIOPlayerKey() {
-                this.mkioKey = this.$store.state.getMKPlayerLicenceKey;
+            async getMKIOPlayerKey(): Promise<void> {
+                this.mkioKey = await resourceData.getMKPlayerKey();
             },
             getBearerToken() {
                 return "Bearer=" + this.azureMediaServicesToken;
@@ -141,6 +88,65 @@
                 this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
                 // this.playBackUrl = "https://ep-defaultlhdev-mediakind02-dev-by-am-sl.uksouth.streaming.mediakind.com/d01d30e4-461f-4045-bc10-3c88a296f3af/manifest.ism/manifest(format=m3u8-cmaf,encryption=cbc)"
             },
+            load() {
+                 // Grab the video container
+                 this.videoContainer = document.getElementById(this.getPlayerUniqueId);
+
+                 if(!this.mkioKey) {
+                     this.getMKIOPlayerKey();
+                 }
+
+                 // Prepare the player configuration
+                 const playerConfig = {
+                     key: this.mkioKey,
+                     ui: false,
+                     theme: "dark",
+                     playback: {
+                         muted: false,
+                         autoplay: false,
+                     },
+                     events: {
+                         //error: this.onPlayerError,
+                         //timechanged: this.onTimeChanged,
+                         //onpause: this.onpause,
+                         //onplay: this.onplay,
+                         //muted: this.onMuted,
+                         //unmuted: this.onUnmuted,
+                         ready: this.onPlayerReady,
+                         subtitleadded: this.onSubtitleAdded,
+
+                         //playbackspeed: this.onPlaybackSpeed
+                     }
+                 };
+
+                 // Initialize the player with video container and player configuration
+                 this.player = new MKPlayer(this.videoContainer, playerConfig);
+
+                 // ClearKey DRM configuration
+                 var clearKeyConfig = {
+                     //LA_URL: "https://ottapp-appgw-amp.prodc.mkio.tv3cloud.com/drm/clear-key?ownerUid=azuki",
+                     LA_URL:"HLS_AES",
+                     headers: {
+                         "Authorization": this.getBearerToken()
+                     }
+                 };
+
+                 // Load source
+                 const sourceConfig = {
+                     hls: this.playBackUrl,
+                     drm: {
+                         clearkey: clearKeyConfig
+                     }
+                 };
+
+                 this.player.load(sourceConfig)
+                     .then(() => {
+                         console.log("Source loaded successfully!");
+                     })
+                     .catch(() => {
+                         console.error("An error occurred while loading the source!");
+                     });
+                }
         },
         computed: {
             getPlayerUniqueId(): string {

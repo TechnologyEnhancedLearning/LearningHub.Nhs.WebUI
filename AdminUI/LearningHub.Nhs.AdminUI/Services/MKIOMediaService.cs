@@ -116,11 +116,12 @@
         /// <returns>The <see cref="string"/>.</returns>
         public async Task<string> GetContentAuthenticationTokenAsync(string encodedAssetId)
         {
-            byte[] tokenSigningKey = Convert.FromBase64String(this.settings.AzureMediaJWTPrimaryKeySecret);
+            byte[] tokenSigningKey = Convert.FromBase64String(this.settings.MediaKindSettings.JWTPrimaryKeySecret);
 
             var keyidentifier = string.Empty; // await this.GetContentKeyIdentifier(encodedAssetId);
+            int expiryMinutes = 0; // this.settings.AzureMediaJWTTokenExpiryMinutes;
 
-            return GetJWTToken(this.settings.AzureMediaIssuer, this.settings.AzureMediaAudience, keyidentifier, tokenSigningKey, this.settings.AzureMediaJWTTokenExpiryMinutes);
+            return GetJWTToken(this.settings.MediaKindSettings.Issuer, this.settings.MediaKindSettings.Audience, keyidentifier, tokenSigningKey, expiryMinutes);
         }
 
         /// <summary>

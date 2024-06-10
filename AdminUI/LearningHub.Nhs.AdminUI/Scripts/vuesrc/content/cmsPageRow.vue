@@ -194,6 +194,10 @@
                         const playerConfig = {
                             key: licenceKey,
                             ui: false,
+                            playback: {
+                                muted: false,
+                                autoplay: false
+                            },
                             theme: "dark",
                             events: {
                                 ready: this.onPlayerReady,

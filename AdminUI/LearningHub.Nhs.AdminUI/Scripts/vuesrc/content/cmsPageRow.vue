@@ -90,8 +90,8 @@
                 mkioKey: '',
             };
         },
-        created() {
-            this.getMKIOPlayerKey();
+         async created(): Promise<void> {
+            await this.getMKIOPlayerKey();
             this.load();
             this.getDisplayAVFlag();
             this.getAudioVideoUnavailableView();
@@ -173,7 +173,7 @@
                     videoElement.controls = true;
                 }
             },
-            async getMKIOPlayerKey() {
+            async getMKIOPlayerKey(): Promise<void> {
                 this.mkioKey = await contentData.getMKPlayerKey();
                 //return this.mkioKey;
             },
@@ -188,11 +188,13 @@
                         // Grab the video container
                         this.videoContainer = document.getElementById(this.getPlayerUniqueId);
 
-                        var licenceKey = this.mkioKey;// this.getMKIOPlayerKey();
+                        if(!this.mkioKey) {
+                            this.getMKIOPlayerKey();
+                        }
 
                         // Prepare the player configuration
                         const playerConfig = {
-                            key: licenceKey,
+                            key: this.mkioKey,
                             ui: false,
                             playback: {
                                 muted: false,

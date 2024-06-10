@@ -53,7 +53,7 @@
 
                 <dd class="nhsuk-summary-list__actions">
                     <a asp-action="ChangeFirstName">
-                        Change<span class="nhsuk-u-visually-hidden"> firstname</span>
+                        Change <span class="nhsuk-u-visually-hidden">first name</span>
                     </a>
 
                 </dd>
@@ -70,7 +70,7 @@
                 <dd class="nhsuk-summary-list__actions">
 
                     <a asp-action="ChangeLastName">
-                        Change<span class="nhsuk-u-visually-hidden"> lastname</span>
+                        Change<span class="nhsuk-u-visually-hidden">&nbsp;last name</span>
                     </a>
 
                 </dd>
@@ -86,7 +86,7 @@
 
                 <dd class="nhsuk-summary-list__actions">
                     <a asp-action="ChangePreferredName">
-                        Change<span class="nhsuk-u-visually-hidden"> preferredname</span>
+                        Change<span class="nhsuk-u-visually-hidden">&nbsp;preferred name</span>
                     </a>
 
                 </dd>
@@ -108,7 +108,7 @@
                 <dd class="nhsuk-summary-list__actions">
 
                     <a asp-action="ChangeCountry">
-                        Change<span class="nhsuk-u-visually-hidden"> country</span>
+                        Change<span class="nhsuk-u-visually-hidden">&nbsp;country</span>
                     </a>
 
                 </dd>
@@ -127,7 +127,7 @@
                     <dd class="nhsuk-summary-list__actions">
 
                         <a asp-action="ChangeRegion">
-                            Change<span class="nhsuk-u-visually-hidden"> region</span>
+                            Change<span class="nhsuk-u-visually-hidden">&nbsp;region</span>
                         </a>
 
                     </dd>
@@ -159,7 +159,7 @@
                 <dd class="nhsuk-summary-list__actions">
 
                     <a asp-action="ChangePrimaryEmail">
-                        Change<span class="nhsuk-u-visually-hidden"> primaryemail</span>
+                        Change<span class="nhsuk-u-visually-hidden">&nbsp;primary email</span>
                     </a>
 
                 </dd>
@@ -177,7 +177,7 @@
                 <dd class="nhsuk-summary-list__actions">
 
                     <a asp-action="ChangeSecondaryEmail">
-                        Change<span class="nhsuk-u-visually-hidden"> secondryemail</span>
+                        Change<span class="nhsuk-u-visually-hidden">&nbsp;secondry email</span>
                     </a>
 
                 </dd>
@@ -209,7 +209,7 @@
                 <dd class="nhsuk-summary-list__actions">
 
                     <a asp-action="ConfirmPassword">
-                        Change<span class="nhsuk-u-visually-hidden"> password</span>
+                        Change<span class="nhsuk-u-visually-hidden">&nbsp;password</span>
                     </a>
 
                 </dd>
@@ -227,7 +227,7 @@
                 <dd class="nhsuk-summary-list__actions">
 
                     <a asp-action="SecurityQuestionsDetails" asp-route-questionIndex="0">
-                        Change<span class="nhsuk-u-visually-hidden"> security question 1</span>
+                        Change<span class="nhsuk-u-visually-hidden">&nbsp;security question 1</span>
                     </a>
 
                 </dd>
@@ -244,7 +244,7 @@
                 <dd class="nhsuk-summary-list__actions">
 
                     <a asp-action="SecurityQuestionsDetails" asp-route-questionIndex="1">
-                        Change<span class="nhsuk-u-visually-hidden"> security question 2</span>
+                        Change<span class="nhsuk-u-visually-hidden">&nbsp;security question 2</span>
                     </a>
 
                 </dd>
@@ -260,7 +260,7 @@
                 <dd class="nhsuk-summary-list__value">@Model.JobRole</dd>
                 <dd class="nhsuk-summary-list__actions">
                     <a asp-action="ChangeCurrentRole">
-                        Change<span class="nhsuk-u-visually-hidden"> current role</span>
+                        Change<span class="nhsuk-u-visually-hidden">&nbsp;current role</span>
                     </a>
                 </dd>
             </div>
@@ -272,7 +272,7 @@
                     <dd class="nhsuk-summary-list__value">@Model.MedicalCouncilNo</dd>
                     <dd class="nhsuk-summary-list__actions">
                         <a asp-action="ChangeMedicalCouncilNo" asp-route-selectedJobRoleId="@Model.JobRoleId" asp-route-direct="true">
-                            Change<span class="nhsuk-u-visually-hidden"> professional registration number</span>
+                            Change<span class="nhsuk-u-visually-hidden">&nbsp;professional registration number</span>
                         </a>
                     </dd>
                 </div>
@@ -284,7 +284,7 @@
                     <dd class="nhsuk-summary-list__value">@Model.Grade</dd>
                     <dd class="nhsuk-summary-list__actions">
                         <a asp-action="ChangeGrade" asp-route-selectedJobRoleId="@Model.JobRoleId" asp-route-direct="true">
-                            Change<span class="nhsuk-u-visually-hidden"> grade</span>
+                            Change<span class="nhsuk-u-visually-hidden">&nbsp;grade</span>
                         </a>
                     </dd>
                 </div>
@@ -294,7 +294,7 @@
                     <dd class="nhsuk-summary-list__value">@Model.PrimarySpecialty</dd>
                     <dd class="nhsuk-summary-list__actions">
                         <a asp-action="ChangePrimarySpecialty">
-                            Change<span class="nhsuk-u-visually-hidden"> primary specialty</span>
+                            Change<span class="nhsuk-u-visually-hidden">&nbsp;primary specialty</span>
                         </a>
                     </dd>
                 </div>
@@ -304,7 +304,7 @@
                     <dd class="nhsuk-summary-list__value">@Model.JobStartDate?.ToString("dd MMMM yyyy")</dd>
                     <dd class="nhsuk-summary-list__actions">
                         <a asp-action="ChangeStartDate">
-                            Change<span class="nhsuk-u-visually-hidden"> start date</span>
+                            Change<span class="nhsuk-u-visually-hidden">&nbsp;start date</span>
                         </a>
                     </dd>
                 </div>
@@ -314,7 +314,7 @@
                 <dd class="nhsuk-summary-list__value">@Html.Raw(Model.PlaceOfWork)</dd>
                 <dd class="nhsuk-summary-list__actions">
                     <a asp-action="ChangeWorkPlace">
-                        Change<span class="nhsuk-u-visually-hidden"> place of work</span>
+                        Change<span class="nhsuk-u-visually-hidden">&nbsp;place of work</span>
                     </a>
                 </dd>
             </div>

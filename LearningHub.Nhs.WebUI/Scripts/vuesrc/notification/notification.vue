@@ -45,8 +45,7 @@
                             </td>
                             <td class="px-sm-3 py-sm-3">
                                 <div class="d-flex justify-content-between" v-if="notification.userDismissable">
-                                    <a href="#deleteModal" data-toggle="modal" @click="selectNotification(notification)">Delete</a>
-                                    &nbsp;<i class="fa-solid fa-trash-can-alt pt-1"></i>
+                                    <button data-target="#deleteModal" data-toggle="modal" @click="selectNotification(notification)">Delete <i class="fa-solid fa-trash-can-alt pt-1"></i></button>
                                 </div>
                             </td>
                         </tr>

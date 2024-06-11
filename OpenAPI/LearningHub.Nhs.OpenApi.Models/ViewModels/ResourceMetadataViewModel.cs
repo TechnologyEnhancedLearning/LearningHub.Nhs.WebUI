@@ -30,14 +30,16 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             string description,
             List<ResourceReferenceViewModel> references,
             string resourceType,
+            int? majorVersion,
             decimal rating,
-            string userSummaryActvityStatus)
+            Dictionary<int,string>? userSummaryActvityStatus)
         {
             this.ResourceId = resourceId;
             this.Title = title;
             this.Description = description;
             this.References = references;
             this.ResourceType = resourceType;
+            this.MajorVersion = majorVersion;
             this.Rating = rating;
             this.UserSummaryActvityStatus = userSummaryActvityStatus;
         }
@@ -68,6 +70,11 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         public string ResourceType { get; set; }
 
         /// <summary>
+        /// Gets or sets <see cref="MajorVersion"/>.
+        /// </summary>
+        public int? MajorVersion { get; set; }
+
+        /// <summary>
         /// Gets or sets <see cref="Rating"/>.
         /// </summary>
         public decimal Rating { get; set; }
@@ -75,6 +82,6 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <summary>
         /// Gets or sets <see cref="UserSummaryActvityStatus"/>.
         /// </summary>
-        public string UserSummaryActvityStatus { get; set; }
+        public Dictionary<int, string>? UserSummaryActvityStatus { get; set; }
     }
 }

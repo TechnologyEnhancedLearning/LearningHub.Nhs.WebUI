@@ -23,5 +23,6 @@
                 default: throw new ArgumentOutOfRangeException(nameof(activityStatus), activityStatus, "is not valid in Enum");
             }
         }
+
     }
 }

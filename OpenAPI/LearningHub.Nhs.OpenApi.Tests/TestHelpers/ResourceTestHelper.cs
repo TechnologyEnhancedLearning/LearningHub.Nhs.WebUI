@@ -27,8 +27,10 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
             bool hasRatingSummary = true,
             decimal rating = 0m,
             ResourceTypeEnum? resourceType = ResourceTypeEnum.Article,
+            int? MajorVersion = null,
             int? userId = null,
             int? activityStatusId = null
+            //Dictionary<int, int>? majorVersionUserActivityStatusId = null //qqqq this is based on the database so should just be activity statusid i think
             )
         {
             var resourceReference = new List<ResourceReference>()
@@ -112,7 +114,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
                 ResourceId = 0,
                 PublicationId = null,
                 MajorVersion = null,
-                MinorVersion = null,
+                MinorVersion = null,//qqqq should we make them match?
                 Title = title,
                 Description = description,
                 AdditionalInformation = null,
@@ -276,12 +278,13 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
             int userId,
             int resourceId,
             int activityStatusId, //out of order for prepopulated parameters
+                                   //Dictionary<int,int>? majorVersionUserActivityStatusId, //out of order for prepopulated parameters qqq but its making the db object
             int resourceVersionId = 0,
             int? launchResourceActivityId = null,
             int majorVerson = 0,
             int minorVersion = 0,
             int nodePathId = 0,
-            // int activityStatusId,
+            //int activityStatusId,
             DateTimeOffset? activityStart = null,
             DateTimeOffset? activityEnd = null,
             int durationSeconds = 0,

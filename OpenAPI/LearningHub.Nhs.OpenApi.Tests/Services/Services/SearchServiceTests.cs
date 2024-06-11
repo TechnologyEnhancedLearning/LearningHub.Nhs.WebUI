@@ -240,8 +240,9 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                     string.Empty,
                     expectedResourceReferences,
                     "Article",
+                    1, //Major version
                     0,
-                    string.Empty));
+                    new Dictionary<int, string>() { }));
         }
 
         private void GivenFindwiseReturnsSuccessfulResponse(int totalHits, IEnumerable<int> resourceIds)

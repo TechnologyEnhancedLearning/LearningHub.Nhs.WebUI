@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace LearningHub.Nhs.OpenApi.Models.ViewModels
 {
     /// <summary>
@@ -17,16 +19,17 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <param name="rating"><see cref="Rating"/>.</param>
         /// <param name="link"><see cref="Link"/>.</param>
         /// <param name="userSummaryActvityStatus"><see cref="UserSummaryActvityStatus"/>.</param>
-        public ResourceReferenceWithResourceDetailsViewModel( 
+        public ResourceReferenceWithResourceDetailsViewModel(
             int resourceId,
             int refId,
             string title,
             string description,
             CatalogueViewModel catalogueViewModel,
             string resourceType,
+            int? majorVersion,
             decimal rating,
             string link,
-            string userSummaryActvityStatus
+            Dictionary<int, string>? userSummaryActvityStatus
             )
         {
             this.ResourceId = resourceId;
@@ -35,6 +38,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             this.Description = description;
             this.Catalogue = catalogueViewModel;
             this.ResourceType = resourceType;
+            this.MajorVersion = majorVersion;
             this.Rating = rating;
             this.Link = link;
             this.UserSummaryActvityStatus = userSummaryActvityStatus;
@@ -70,9 +74,17 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// </summary>
         public string ResourceType { get; }
 
+
+        /// <summary>
+        /// Gets <see cref="MajorVersion"/>.
+        /// </summary>
+        public int? MajorVersion { get; }
+
+
         /// <summary>
         /// Gets <see cref="Rating"/>.
         /// </summary>
+        /// 
         public decimal Rating { get; }
 
         /// <summary>
@@ -83,6 +95,6 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <summary>
         /// Gets <see cref="UserSummaryActvityStatus"/>.
         /// </summary>
-        public string UserSummaryActvityStatus { get;  }
+        public Dictionary<int, string>? UserSummaryActvityStatus { get;  }
     }
 }

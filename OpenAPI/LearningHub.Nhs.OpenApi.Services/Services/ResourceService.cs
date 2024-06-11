@@ -109,8 +109,17 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                                                         this.learningHubService.GetResourceLaunchUrl(rr.OriginalResourceReferenceId)))
                                                         .ToList(),
                 resource.GetResourceTypeNameOrEmpty(),
+                resource.ResourceVersion.FirstOrDefault()?.MajorVersion,/*qqqq wont stay first or default because of logic in stored procedure*/
                 resource.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0.0m,
-                ActivityStatusHelper.UserSummaryActvityStatus((ActivityStatusEnum?)resource?.ResourceActivity?.FirstOrDefault()?.ActivityStatusId) ?? string.Empty);
+                new Dictionary<int, string>() {
+                    {2, "Downloaded" },
+                    {3, "Passed" },
+                    {5, "Failed"  },
+                    {6, "Completed" },
+                    {9, "In progress" },
+                    {10,"Launched" }
+                }); //qqqq
+                //ActivityStatusHelper.UserSummaryActvityStatus((ActivityStatusEnum?)resource?.ResourceActivity?.FirstOrDefault()?.ActivityStatusId) ?? string.Empty);
         }
 
         /// <summary>
@@ -123,7 +132,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         {
             var resourceReferences = currentUserId == null ?
                 await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(originalResourceReferenceIds)
-                :await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(originalResourceReferenceIds, currentUserId.Value);
+                : await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(originalResourceReferenceIds, currentUserId.Value);
 
             var resourceReferencesList = resourceReferences.ToList();
             var matchedIds = resourceReferencesList.Select(r => r.OriginalResourceReferenceId).ToList();
@@ -179,9 +188,20 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resourceReference.Resource.CurrentResourceVersion?.Description ?? string.Empty,
                 resourceReference.GetCatalogue(),
                 resourceTypeNameOrEmpty,
+                resourceReference.Resource.ResourceVersion.FirstOrDefault()?.MajorVersion, /*qqqq will be replace by procedure*/
                 resourceReference.Resource?.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0,
                 this.learningHubService.GetResourceLaunchUrl(resourceReference.OriginalResourceReferenceId),
-                ActivityStatusHelper.UserSummaryActvityStatus((ActivityStatusEnum?)resourceReference.Resource?.ResourceActivity?.FirstOrDefault()?.ActivityStatusId) ?? string.Empty);
+                //qqqq
+                new Dictionary<int, string>() {
+                    {2, "Downloaded" },
+                    {3, "Passed" },
+                    {5, "Failed"  },
+                    {6, "Completed" },
+                    {9, "In progress" },
+                    {10,"Launched" }
+                    }
+                );
+            //ActivityStatusHelper.UserSummaryActvityStatus((ActivityStatusEnum?)resourceReference.Resource?.ResourceActivity?.FirstOrDefault()?.ActivityStatusId) ?? string.Empty);
         }
     }
 }

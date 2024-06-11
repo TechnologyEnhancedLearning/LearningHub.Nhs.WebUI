@@ -138,8 +138,17 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resource.CurrentResourceVersion?.Description ?? string.Empty,
                 resource.ResourceReference.Select(this.GetResourceReferenceViewModel).ToList(),
                 resourceTypeNameOrEmpty,
+                resource.ResourceVersion.FirstOrDefault()?.MajorVersion,/*qqqq would be returned by procedure so not first or default*/
                 resource.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0.0m,
-                ActivityStatusHelper.UserSummaryActvityStatus((ActivityStatusEnum?)resource?.ResourceActivity?.FirstOrDefault()?.ActivityStatusId) ?? string.Empty
+                new Dictionary<int, string>() {
+                    {2, "Downloaded" },
+                    {3, "Passed" },
+                    {5, "Failed"  },
+                    {6, "Completed" },
+                    {9, "In progress" },
+                    {10,"Launched" }
+                }//qqqq
+                //ActivityStatusHelper.UserSummaryActvityStatus((ActivityStatusEnum?)resource?.ResourceActivity?.FirstOrDefault()?.ActivityStatusId) ?? string.Empty
                 );
         }
 

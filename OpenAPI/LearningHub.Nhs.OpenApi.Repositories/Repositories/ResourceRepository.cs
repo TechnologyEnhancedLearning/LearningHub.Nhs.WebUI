@@ -62,6 +62,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
             var resources = await this.dbContext.Resource
                                                     .AsNoTracking()
                                                     .Where(r => resourceIds.Contains(r.Id) && !r.Deleted)
+                                                    .Include(r => r.ResourceVersion)
                                                     .Include(r => r.ResourceReference)
                                                         .ThenInclude(rr => rr.NodePath.CatalogueNode.CurrentNodeVersion.CatalogueNodeVersion)
                                                     .Include(r => r.CurrentResourceVersion.ResourceVersionRatingSummary)
@@ -114,6 +115,12 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                 .Include(rr => rr.NodePath.CatalogueNode.CurrentNodeVersion.CatalogueNodeVersion)
                 .Include(rr => rr.Resource.CurrentResourceVersion.ResourceVersionRatingSummary)
                 .ToListAsync();
+        }
+
+
+        private void qqqqTest() 
+        { 
+        
         }
     }
 }

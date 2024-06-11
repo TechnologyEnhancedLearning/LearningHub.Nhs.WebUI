@@ -39,6 +39,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.resourceService = new ResourceService(this.learningHubService.Object, this.resourceRepository.Object, new NullLogger<ResourceService>());
         }
 
+        //qqqq this isnt working because we are not returning an database table for userActivitySummary so maybe need dto.
         private List<Resource> ResourceList => new List<Resource>()
         {
             ResourceTestHelper.CreateResourceWithDetails(id: 1, title: "title1", description: "description1", rating: 3m, resourceType: ResourceTypeEnum.Article),
@@ -46,7 +47,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             ResourceTestHelper.CreateResourceWithDetails(id: 3, title: "title2", description: "description2"),
             ResourceTestHelper.CreateResourceWithDetails(id: 4),
             ResourceTestHelper.CreateResourceWithDetails(id: 5, hasRatingSummary: false),
-            ResourceTestHelper.CreateResourceWithDetails(id: 6, resourceReferenceId:6,deleted:false, resourceType: (ResourceTypeEnum)999), // resource with resourceType that does not exist on ResourceTypeEnum to check error handling
+            ResourceTestHelper.CreateResourceWithDetails(id: 6, resourceReferenceId:6,deleted:false, resourceType: (ResourceTypeEnum)999,MajorVersion: 99), // resource with resourceType that does not exist on ResourceTypeEnum to check error handling
             ResourceTestHelper.CreateResourceWithDetails(
                 id: 302,
                 resourceReferenceId:303,
@@ -63,8 +64,17 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 hasRatingSummary:true,
                 rating: 3m,
                 resourceType: ResourceTypeEnum.Article,
+                MajorVersion: 99,
                 userId : this.currentUserId,
-                activityStatusId : 3 //activityStatusIdCompleted
+                activityStatusId : null //qqqq
+                //majorVersionUserActivityStatusId : new Dictionary<int, int>(){//qqqq not sure should it be a class/struct
+                //    {10,1 },//1
+                //    {9, 2 },//2
+                //    {6, 3 },//3
+                //    {5, 4 },//4
+                //    {3, 5 },//5
+                //    {2, 6 }//6
+                //} //activityStatusIdCompleted qqqq No we are making db response 
                 ),
             ResourceTestHelper.CreateResourceWithDetails(
                 id: 302,
@@ -82,6 +92,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 hasRatingSummary:true,
                 rating: 3m,
                 resourceType: ResourceTypeEnum.Article,
+                MajorVersion: 99,
                 userId : this.currentUserId,
                 activityStatusId : null //No activity status present
                 ),
@@ -119,7 +130,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             x.Catalogue.Name.Should().Be("catalogue1");
             x.Title.Should().Be("title1");
             x.ResourceType.Should().Be("Article");
-            x.UserSummaryActvityStatus.Should().Be(String.Empty);
+            x.UserSummaryActvityStatus.Should().BeEmpty();
         }
 
        [Fact]
@@ -142,7 +153,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             result.Rating.Should().Be(3);
             result.Title.Should().Be("title1");
             result.ResourceType.Should().Be("Article");
-            result.UserSummaryActvityStatus.Should().Be(String.Empty);
+            result.UserSummaryActvityStatus.Should().BeEmpty();//Empty dictionary or null dictionary? qqqq
         }
 
         [Fact]
@@ -162,7 +173,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             result.Rating.Should().Be(3);
             result.Title.Should().Be("titleTwoOneWithOneWithoutSummary");
             result.ResourceType.Should().Be("Article");
-            result.UserSummaryActvityStatus.Should().Be("Completed");
+            result.UserSummaryActvityStatus.First().Should().Be("Completed");//qqqq add a test for second as well check whole dictionary
         }
 
         [Fact]
@@ -301,7 +312,8 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             x.ResourceReferences[0].ResourceType.Should().Be("Article");
             x.ResourceReferences[1].ResourceId.Should().Be(1);
             x.ResourceReferences[1].ResourceType.Should().Be("Assessment");
-            x.ResourceReferences[0].UserSummaryActvityStatus.Should().Be(String.Empty);
+            x.ResourceReferences[6].MajorVersion.Should().Be(99);
+            x.ResourceReferences[0].UserSummaryActvityStatus.Should().BeEmpty();
         }
 
         [Fact]
@@ -339,7 +351,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             x.ResourceReferences[1].Title.Should().Be("No current resource version");
             x.ResourceReferences[2].Catalogue.Name.Should().Be("No catalogue for resource reference");
             x.ResourceReferences[3].Title.Should().Be("title1");
-            x.ResourceReferences[0].UserSummaryActvityStatus.Should().Be(String.Empty);
+            x.ResourceReferences[0].UserSummaryActvityStatus.Should().BeEmpty();
         }
 
         [Fact]
@@ -431,7 +443,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         [InlineData("302,301", 57541, "", 12, 1)]
         [InlineData("302", 57541, "", 12, 1)]
         [InlineData("302,301", 57541, "Completed", 11, 2)]
-        public async Task GetResourceReferencesByOriginalIdsReturnsResourceWithCorrectUserSummaryActvityStatus(string originalResourceIdsStr, int currentUserId, string expectedUserSummaryActvityStatus, int rangeStart, int rangeLength) 
+        public async Task GetResourceReferencesByOriginalIdsReturnsResourceWithCorrectUserSummaryActvityStatus(string originalResourceIdsStr, int currentUserId, string expectedFirstUserSummaryActvityStatus, int rangeStart, int rangeLength) 
         {
             // Given
             List<int> originalResourceIds = originalResourceIdsStr.Split(",").Select(x=>Int32.Parse(x)).ToList();
@@ -446,14 +458,15 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             var result = await this.resourceService.GetResourceReferencesByOriginalIds(originalResourceIds, currentUserId);
 
             // Then
-            result.ResourceReferences[0].UserSummaryActvityStatus.Should().Be(expectedUserSummaryActvityStatus);
+
+            result.ResourceReferences[0].UserSummaryActvityStatus.First().Should().Be(expectedFirstUserSummaryActvityStatus);
         }
 
         [Theory]
         [InlineData(303, 57541, "Completed", 11, 1)]
-        [InlineData(303, 57541, "", 12, 1)]
+        [InlineData(303, 57541, "", 12, 1)]//qqqq try to handle with first or default?
         [InlineData(1, null, "", 0, 1)]
-        public async Task GetResourceByIdReturnsResourceWithCorrectUserSummaryActivityStatus(int resourceId, int? currentUserId, string expectedUserSummaryActivityStatus, int rangeStart, int rangeLength)
+        public async Task GetResourceByIdReturnsResourceWithCorrectUserSummaryActivityStatus(int resourceId, int? currentUserId, string expectedFirstUserSummaryActivityStatus, int rangeStart, int rangeLength)
         {
             List<int> singleResourceIdList = new List<int>() { resourceId };
             currentUserId = currentUserId ?? 0; //zero is to allow for the null there is no user with id 0
@@ -468,7 +481,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             var result = await this.resourceService.GetResourceById(resourceId, currentUserId);
 
             // Then
-            result.UserSummaryActvityStatus.Should().Be(expectedUserSummaryActivityStatus);
+            result.UserSummaryActvityStatus.FirstOrDefault().Should().Be(expectedFirstUserSummaryActivityStatus);
     }
 
 

@@ -27,6 +27,7 @@
         /// The LogResourceReferenceEventAsync.
         /// </summary>
         /// <param name="resourceReferenceEventViewModel">The ResourceReferenceEventViewModel<see cref="ResourceReferenceEventViewModel"/>.</param>
-        void LogResourceReferenceEventAsync(ResourceReferenceEventViewModel resourceReferenceEventViewModel);
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task LogResourceReferenceEventAsync(ResourceReferenceEventViewModel resourceReferenceEventViewModel);
     }
 }

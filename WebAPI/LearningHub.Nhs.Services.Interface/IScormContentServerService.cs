@@ -14,14 +14,14 @@
         /// </summary>
         /// <param name="externalUrl">The externalUrl<see cref="string"/>.</param>
         /// <returns>The <see cref="ContentServerViewModel"/>.</returns>
-        ContentServerViewModel GetContentDetailsByExternalUrl(string externalUrl);
+        Task<ContentServerViewModel> GetContentDetailsByExternalUrl(string externalUrl);
 
         /// <summary>
         /// The GetContentDetailsByExternalReference.
         /// </summary>
         /// <param name="externalReference">The externalReference<see cref="Guid"/>.</param>
         /// <returns>The <see cref="ContentServerViewModel"/>.</returns>
-        ContentServerViewModel GetContentDetailsByExternalReference(string externalReference);
+        Task<ContentServerViewModel> GetContentDetailsByExternalReference(string externalReference);
 
         /// <summary>
         /// The LogResourceReferenceEventAsync.

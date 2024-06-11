@@ -59,7 +59,7 @@ namespace LearningHub.Nhs.Repository.Resources
         {
             var param0 = new SqlParameter("@externalReference", SqlDbType.NVarChar) { Value = externalReference };
 
-            var scormContentData = await this.DbContext.ContentServerViewModel.FromSqlRaw("[resources].[GetContentServerDetailsForLHExternalReference] @externalReference", param0).ToListAsync();
+            var scormContentData = await this.DbContext.ContentServerViewModel.FromSqlRaw("[resources].[GetContentServerDetailsForLHExternalReference] @externalReference", param0).AsNoTracking().ToListAsync();
 
             ContentServerViewModel scormContentServerViewModel = scormContentData.AsEnumerable().FirstOrDefault();
             return scormContentServerViewModel;
@@ -75,9 +75,8 @@ namespace LearningHub.Nhs.Repository.Resources
         {
             var param0 = new SqlParameter("@externalUrl", SqlDbType.NVarChar) { Value = externalUrl };
 
-            var scormContentData = await this.DbContext.ContentServerViewModel.ToListAsync();
+            var scormContentData = await this.DbContext.ContentServerViewModel.FromSqlRaw("[resources].[GetScormContentServerDetailsForHistoricExternalUrl] @externalUrl", param0).AsNoTracking().ToListAsync();
             ContentServerViewModel scormContentServerViewModel = scormContentData.FirstOrDefault<ContentServerViewModel>();
-
             return scormContentServerViewModel;
         }
 

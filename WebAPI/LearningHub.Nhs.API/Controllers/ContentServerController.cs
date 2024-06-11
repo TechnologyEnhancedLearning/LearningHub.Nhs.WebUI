@@ -75,9 +75,9 @@
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         [HttpPost]
         [Route("LogResourceReferenceEvent")]
-        public IActionResult LogResourceReferenceEventAsync([FromBody] ResourceReferenceEventViewModel resourceReferenceEventViewModel)
+        public async Task<IActionResult> LogResourceReferenceEventAsync([FromBody] ResourceReferenceEventViewModel resourceReferenceEventViewModel)
         {
-            this.scormContentServerService.LogResourceReferenceEventAsync(resourceReferenceEventViewModel);
+            await this.scormContentServerService.LogResourceReferenceEventAsync(resourceReferenceEventViewModel);
             return this.Ok();
         }
     }

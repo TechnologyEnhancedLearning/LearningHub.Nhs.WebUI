@@ -92,6 +92,7 @@ BEGIN
 													   HierarchyEditDetailOperationId,
 													   NodePathId,
 													   NodeId,
+													   --InitialNodeId,
 													   NodeVersionId,
 													   NodePathDisplayVersionId,
 													   InitialParentNodeId,
@@ -100,6 +101,8 @@ BEGIN
 													   NodeLinkId,
 													   ResourceId,
 													   ResourceVersionId,
+													   ResourceReferenceId,
+													   ResourceReferenceDisplayVersionId,
 													   NodeResourceId,
 													   DisplayOrder,
 													   InitialNodePath,
@@ -113,15 +116,18 @@ BEGIN
 			4 AS HierarchyEditDetailTypeId, -- NodeLink
 			NULL AS HierarchyEditDetailOperationId,
 			np.Id AS NodePathId,
+			--cte.NodeId AS InitialNodeId,
 			cte.NodeId,
 			cte.NodeVersionId,
-			npdv.Id,
+			npdv.Id AS NodePathDisplayVersionId,
 			cte.ParentNodeId AS InitialParentNodeId,
 			cte.ParentNodeId,
 			pnp.Id AS ParentNodePathId,
 			cte.NodeLinkId,
 			NULL AS ResourceId,
 			NULL AS ResourceVersionId,
+			NULL AS ResourceReferenceId,
+			NULL AS ResourceReferenceDisplayVersionId,
 			NULL AS NodeResourceId,
 			cte.DisplayOrder,
 			cte.InitialNodePath,
@@ -137,21 +143,24 @@ BEGIN
         LEFT OUTER JOIN
             hierarchy.NodePath pnp ON cte.ParentNodeId = pnp.NodeId AND LEFT(cte.InitialNodePath, LEN(cte.InitialNodePath) - CHARINDEX('\', REVERSE(cte.InitialNodePath))) = pnp.NodePath AND pnp.Deleted = 0
 		LEFT OUTER JOIN
-			hierarchy.NodePathDisplayVersion npdv ON np.Id = npdv.NodePathId AND npdv.VersionStatusId = 2 AND npdv.Deleted = 0
+			hierarchy.NodePathDisplayVersion npdv ON np.Id = npdv.NodePathId AND npdv.VersionStatusId = 2 /* Published */ AND npdv.Deleted = 0
 
 		-- Add all Resources to the HierarchyEdit structure
 		INSERT INTO [hierarchy].[HierarchyEditDetail] (HierarchyEditId,
 														HierarchyEditDetailTypeId,
 														HierarchyEditDetailOperationId,
-														NodePathId,
 														NodeId,
+														NodePathId,
+														--InitialNodeId,
 														NodeVersionId,
+														InitialParentNodeId,
 														ParentNodeId,
 														ParentNodePathId,
 														NodeLinkId,
 														ResourceId,
 														ResourceVersionId,
 														ResourceReferenceId,
+														ResourceReferenceDisplayVersionId,
 														NodeResourceId,
 														DisplayOrder,
 														InitialNodePath,
@@ -164,15 +173,19 @@ BEGIN
 			@HierarchyEditId, 
 			5 AS HierarchyEditDetailTypeId, -- NodeResource
 			NULL AS HierarchyEditDetailOperationId,													
-			hed.NodePathId,
-			hed.NodeId,
-			hed.NodeVersionId,
-			NULL AS ParentNodeId,
-			NULL AS ParentNodePathId,
+			NULL AS NodeId,
+			NULL AS NodePathId,
+			--hed.NodeId AS InitialNodeId,
+			NULL AS NodeVersionId,
+			--hed.NodeVersionId,
+			hed.NodeId AS InitialParentNodeId,
+			hed.NodeId AS ParentNodeId,
+			hed.NodePathId AS ParentNodePathId,
 			NULL AS NodeLinkId,
 			r.Id AS ResourceId,
 			CASE WHEN r.CurrentResourceVersionId IS NOT NULL THEN r.CurrentResourceVersionId ELSE rv.Id END AS ResourceVersionId,
 			rr.Id AS ResourceReferenceId,
+			rrdv.Id AS ResourceReferenceDisplayVersionId,
 			nr.Id AS NodeResourceId,
 			nr.DisplayOrder AS DisplayOrder,
 			hed.InitialNodePath,
@@ -191,6 +204,8 @@ BEGIN
 			resources.ResourceReference rr ON rr.ResourceId = r.Id AND rr.NodePathId = hed.NodePathId AND rr.Deleted = 0
 		LEFT JOIN
 			resources.ResourceVersion rv ON nr.ResourceId = rv.ResourceId AND rv.VersionStatusId = 1 AND rv.Deleted = 0
+		LEFT OUTER JOIN
+			resources.ResourceReferenceDisplayVersion rrdv ON rr.Id = rrdv.ResourceReferenceId AND rrdv.VersionStatusId = 2 /* Published */ AND rrdv.Deleted = 0
 		WHERE
 			hed.HierarchyEditId = @HierarchyEditId
 			AND nr.Deleted = 0

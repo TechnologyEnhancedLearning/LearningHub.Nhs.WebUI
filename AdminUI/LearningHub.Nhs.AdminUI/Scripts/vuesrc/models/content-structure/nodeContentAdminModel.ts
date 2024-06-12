@@ -14,6 +14,7 @@ export class NodeContentAdminModel {
     resourceId: number;
     resourceVersionId: number;
     resourceReferenceId: number;
+    resourceReferenceDisplayVersionId: number;
     resourceTypeId: number;
     versionStatusId: number;
     unpublishedByAdmin: boolean;

@@ -283,18 +283,16 @@ const hierarchyEditMoveResource = async function (hierarchyEditDetailId: number,
 
 
 const hierarchyEditReferenceResource = async function (hierarchyEditDetailId: number, moveToHierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
-    alert('Not implemented yet!');
-    return null;
-    //const url = `/api/hierarchy/HierarchyEditReferenceResource`;
+    const url = `/api/hierarchy/HierarchyEditReferenceResource`;
 
-    //return await axios.post<LearningHubValidationResultModel>(url, { hierarchyEditDetailId: hierarchyEditDetailId, moveToHierarchyEditDetailId: moveToHierarchyEditDetailId })
-    //    .then(response => {
-    //        return response.data;
-    //    })
-    //    .catch(e => {
-    //        console.log('hierarchyEditReferenceResource:' + e);
-    //        throw e;
-    //    });
+    return await axios.post<LearningHubValidationResultModel>(url, { hierarchyEditDetailId: hierarchyEditDetailId, moveToHierarchyEditDetailId: moveToHierarchyEditDetailId })
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('hierarchyEditReferenceResource:' + e);
+            throw e;
+        });
 };
 
 const moveResourceUp = async function (nodeId: number, resourceId: number): Promise<LearningHubValidationResultModel> {

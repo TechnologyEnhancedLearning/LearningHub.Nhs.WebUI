@@ -140,7 +140,7 @@ BEGIN
 		LEFT JOIN 
 			resources.ResourceVersion rvd ON r.Id = rvd.ResourceId AND rvd.Id > rv.Id AND rvd.Deleted = 0
 		WHERE 
-			hed.NodePathId = @NodePathId
+			hed.ParentNodePathId = @NodePathId
 			AND he.Id = @HierarchyEditId
 			AND he.HierarchyEditStatusId = 1 -- Draft
 			AND ISNULL(hed.HierarchyEditDetailOperationId, 0) != 3 -- excluded deleted

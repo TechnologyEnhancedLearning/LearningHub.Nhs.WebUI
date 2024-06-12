@@ -137,6 +137,14 @@
         Task HierarchyEditMoveResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId);
 
         /// <summary>
+        /// References a resource in a HierarchyEdit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The view model <see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId);
+
+        /// <summary>
         /// Moves a resource up.
         /// ITERATION 1 - Not moved within a hierarchy edit, update happens immediately.
         /// </summary>

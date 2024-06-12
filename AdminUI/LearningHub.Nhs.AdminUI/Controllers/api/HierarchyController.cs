@@ -213,18 +213,6 @@
             return this.Ok(apiResponse.ValidationResult);
         }
 
-        /////// <summary>
-        /////// The CreateNodePathDisplayVersion.
-        /////// </summary>
-        /////// <param name="nodePathDisplayVersionModel">The folderEditViewModel<see cref="NodePathDisplayVersionModel"/>.</param>
-        /////// <returns>IActionResult.</returns>
-        ////[HttpPost("CreateNodePathDisplayVersion")]
-        ////public async Task<IActionResult> CreateNodePathDisplayVersion(NodePathDisplayVersionModel nodePathDisplayVersionModel)
-        ////{
-        ////    var apiResponse = await this.hierarchyService.CreateNodePathDisplayVersionAsync(nodePathDisplayVersionModel);
-        ////    return this.Ok(apiResponse.ValidationResult);
-        ////}
-
         /// <summary>
         /// The UpdateNodePathDisplayVersion.
         /// </summary>
@@ -335,6 +323,18 @@
         public async Task<IActionResult> HierarchyEditMoveResource(HierarchyEditMoveResourceViewModel moveResourceViewModel)
         {
             var apiResponse = await this.hierarchyService.HierarchyEditMoveResource(moveResourceViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// References a resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The moveResourceViewModel<see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("HierarchyEditReferenceResource")]
+        public async Task<IActionResult> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel)
+        {
+            var apiResponse = await this.hierarchyService.HierarchyEditReferenceResource(moveResourceViewModel);
             return this.Ok(apiResponse.ValidationResult);
         }
 

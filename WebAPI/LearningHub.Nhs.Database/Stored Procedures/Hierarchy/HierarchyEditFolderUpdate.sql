@@ -81,12 +81,10 @@ BEGIN
 			AmendDate = @AmendDate
 		FROM
 			[hierarchy].[HierarchyEditDetail] hed
-		INNER JOIN
-			hierarchy.FolderNodeVersion fnv ON hed.NodeVersionId = fnv.NodeVersionId
 		WHERE	
-			hed.Id = @HierarchyEditDetailId
+			hed.HierarchyEditId = @HierarchyEditId
+			AND hed.NodeVersionId = @NodeVersionId
 			AND hed.Deleted = 0
-			AND fnv.Deleted = 0
 
 		COMMIT
 

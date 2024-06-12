@@ -147,6 +147,13 @@
         Task<ApiResponse> HierarchyEditMoveResource(HierarchyEditMoveResourceViewModel moveResourceViewModel);
 
         /// <summary>
+        /// References a resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The moveResourceViewModel<see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel);
+
+        /// <summary>
         /// The MoveResourceUp.
         /// </summary>
         /// <param name="nodeId">The id of the node containing the resource.</param>

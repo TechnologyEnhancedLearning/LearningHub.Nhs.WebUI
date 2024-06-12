@@ -368,23 +368,32 @@
             }
 
             var nodeContentAdminVm = this.mapper.Map<List<NodeContentAdminViewModel>>(nodeContentAdminDto);
-            var nodePathBreakdownListDto = await this.hierarchyEditDetailRepository.GetChildNodePathBreakdownAsync(nodePathId);
-            var nodePathBreakdownList = this.mapper.Map<List<NodePathBreakdownItemViewModel>>(nodePathBreakdownListDto);
 
-            foreach (var nodeContent in nodeContentAdminVm)
+            if (!readOnly)
             {
-                // get the distinct nodePathIds for the current node
-                var nodePathIds = nodePathBreakdownList.Where(np => np.NodeId == nodeContent.NodeId).Select(n => n.NodePathId).Distinct().ToList();
+                var nodePathBreakdownListDto = await this.hierarchyEditDetailRepository.GetChildNodePathBreakdownAsync(nodePathId);
+                var nodePathBreakdownList = this.mapper.Map<List<NodePathBreakdownItemViewModel>>(nodePathBreakdownListDto);
 
-                nodeContent.NodePaths = new List<NodePathBreakdownViewModel>();
-
-                // Add the node breakdown for each nodePathId
-                foreach (var item in nodePathIds)
+                foreach (var nodeContent in nodeContentAdminVm)
                 {
-                    nodeContent.NodePaths.Add(new NodePathBreakdownViewModel()
+                    var nodePathIds = nodePathBreakdownList.Where(np => (!nodeContent.ResourceId.HasValue && np.NodeId == nodeContent.NodeId)
+                                                                    ||
+                                                                    (nodeContent.ResourceId.HasValue && np.ResourceId == nodeContent.ResourceId))
+                                                            .Select(n => n.NodePathId).Distinct().ToList();
+
+                    nodeContent.NodePaths = new List<NodePathBreakdownViewModel>();
+
+                    // Add the node breakdown for each nodePathId
+                    foreach (var item in nodePathIds)
                     {
-                        NodePathBreakdown = nodePathBreakdownList.Where(np => np.NodeId == nodeContent.NodeId && np.NodePathId == item).ToList(),
-                    });
+                        nodeContent.NodePaths.Add(new NodePathBreakdownViewModel()
+                        {
+                            NodePathBreakdown = nodePathBreakdownList.Where(np => ((nodeContent.ResourceId.HasValue && np.ResourceId == nodeContent.ResourceId)
+                                                                                    ||
+                                                                                    (!nodeContent.ResourceId.HasValue && np.NodeId == nodeContent.NodeId))
+                                                                                    && np.NodePathId == item).ToList(),
+                        });
+                    }
                 }
             }
 
@@ -466,20 +475,6 @@
             var retVal = new LearningHubValidationResult(true);
             return retVal;
         }
-
-        /////// <summary>
-        /////// Creates a new nodePathDisplayVersion.
-        /////// </summary>
-        /////// <param name="nodePathDisplayVersion">The nodePathDisplayVersion<see cref="NodePathDisplayVersionModel"/>.</param>
-        /////// <param name="userId">The user id.</param>
-        /////// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
-        ////public async Task<LearningHubValidationResult> CreateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersion, int userId)
-        ////{
-        ////    int createdId = await this.hierarchyEditRepository.CreateNodePathDisplayVersionAsync(nodePathDisplayVersion, userId);
-        ////    var retVal = new LearningHubValidationResult(true);
-        ////    retVal.CreatedId = createdId;
-        ////    return retVal;
-        ////}
 
         /// <summary>
         /// Updates a folder.
@@ -620,6 +615,19 @@
         public async Task<LearningHubValidationResult> HierarchyEditMoveResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId)
         {
             await this.hierarchyEditRepository.HierarchyEditMoveResource(moveResourceViewModel, userId);
+            var retVal = new LearningHubValidationResult(true);
+            return retVal;
+        }
+
+        /// <summary>
+        /// References a resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The moveResourceViewModel <see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        public async Task<LearningHubValidationResult> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId)
+        {
+            await this.hierarchyEditRepository.HierarchyEditReferenceResource(moveResourceViewModel, userId);
             var retVal = new LearningHubValidationResult(true);
             return retVal;
         }

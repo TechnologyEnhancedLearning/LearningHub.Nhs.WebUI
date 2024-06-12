@@ -207,9 +207,6 @@ const mutations = {
     },
     setEditingNodePathDisplayVersion(state: State, payload: { folderNode: NodeContentAdminModel }) {
         state.inError = false;
-        //contentStructureData.getNodeReference(payload.folderNode.nodePathId).then(response => { // Do I have all data without hittng database again?
-        //    var editingNodeReference = response;
-        //});
 
         var nodePathDisplayVersionModel: NodePathDisplayVersionModel = new NodePathDisplayVersionModel;
 
@@ -220,9 +217,25 @@ const mutations = {
         nodePathDisplayVersionModel.nodePaths = payload.folderNode.nodePaths;
         nodePathDisplayVersionModel.name = payload.folderNode.name;
         nodePathDisplayVersionModel.nodePathId = payload.folderNode.nodePathId;
-        //nodePathDisplayVersionModel.parentNode = payload.folderNode.parent;
         state.editingFolderNodeReference = nodePathDisplayVersionModel;
         state.editingTreeNode = payload.folderNode; // Is this needed?
+        state.editMode = EditModeEnum.FolderReference;
+    },
+    setEditingResourceReferenceDisplayVersion(state: State, payload: { resourceNode: NodeContentAdminModel }) {
+        state.inError = false;
+
+        alert("Not implemented yet.");
+        //var nodePathDisplayVersionModel: NodePathDisplayVersionModel = new NodePathDisplayVersionModel;
+
+        //nodePathDisplayVersionModel.hierarchyEditId = state.hierarchyEdit.id;
+        //nodePathDisplayVersionModel.nodePathDisplayVersionId = payload.folderNode.nodePathDisplayVersionId;
+        //nodePathDisplayVersionModel.hierarchyEditDetailId = payload.folderNode.hierarchyEditDetailId;
+        //nodePathDisplayVersionModel.path = payload.folderNode.path;
+        //nodePathDisplayVersionModel.nodePaths = payload.folderNode.nodePaths;
+        //nodePathDisplayVersionModel.name = payload.folderNode.name;
+        //nodePathDisplayVersionModel.nodePathId = payload.folderNode.nodePathId;
+        //state.editingFolderNodeReference = nodePathDisplayVersionModel;
+        //state.editingTreeNode = payload.folderNode; // Is this needed?
         state.editMode = EditModeEnum.FolderReference;
     },
     setDeletingFolder(state: State, payload: { folderNode: NodeContentAdminModel }) {

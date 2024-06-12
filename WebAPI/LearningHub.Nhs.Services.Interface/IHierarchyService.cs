@@ -191,6 +191,14 @@
         Task<LearningHubValidationResult> HierarchyEditMoveResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId);
 
         /// <summary>
+        /// References a resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The moveResourceViewModel <see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        Task<LearningHubValidationResult> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId);
+
+        /// <summary>
         /// Moves a resource up.
         /// </summary>
         /// <param name="nodeId">The id of the node containing the resource.</param>

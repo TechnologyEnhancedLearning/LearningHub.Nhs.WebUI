@@ -343,17 +343,17 @@
         [Route("PublishResourceVersion")]
         public async Task<ActionResult> PublishResourceVersionAsync([FromBody] PublishViewModel publishViewModel)
         {
-            var associatedResource = await this.resourceService.GetResourceVersionExtendedAsync(publishViewModel.ResourceVersionId);
+            var associatedResource = await this.resourceService.GetResourceVersionAsync(publishViewModel.ResourceVersionId);
             var validationResult = await this.contributeService.SubmitResourceVersionForPublishAsync(publishViewModel);
             if (validationResult.IsValid)
             {
-                if (associatedResource.ResourceTypeEnum != ResourceTypeEnum.Scorm && associatedResource.ResourceTypeEnum != ResourceTypeEnum.Html)
+                if (associatedResource.ResourceType != ResourceTypeEnum.Scorm && associatedResource.ResourceType != ResourceTypeEnum.Html)
                 {
-                    var obsoleteFiles = await this.resourceService.GetObsoleteResourceFile(publishViewModel.ResourceVersionId);
-                    if (obsoleteFiles != null && obsoleteFiles.Any())
-                    {
-                        await this.fileService.PurgeResourceFile(null, obsoleteFiles);
-                    }
+                        var obsoleteFiles = await this.resourceService.GetObsoleteResourceFile(publishViewModel.ResourceVersionId);
+                        if (obsoleteFiles != null && obsoleteFiles.Any())
+                        {
+                            await this.fileService.PurgeResourceFile(null, obsoleteFiles);
+                        }
                 }
             }
 
@@ -668,7 +668,7 @@
                         {
                             foreach (var oldblock in existingAttachements)
                             {
-                                var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Attachment && x.MediaBlock.Attachment != null && x.MediaBlock.Attachment.File?.FileId == oldblock.MediaBlock.Attachment?.File?.FileId);
+                                var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Attachment && x.MediaBlock.Attachment != null && (x.MediaBlock.Attachment.File?.FileId == oldblock.MediaBlock.Attachment?.File?.FileId || x.MediaBlock.Attachment.File?.FilePath == oldblock.MediaBlock.Attachment?.File?.FilePath));
                                 if (entry == null)
                                 {
                                     filePaths.Add(oldblock.MediaBlock.Attachment?.File?.FilePath);
@@ -681,7 +681,7 @@
                         {
                             foreach (var oldblock in existingVideos)
                             {
-                                var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Video && x.MediaBlock.Video != null && x.MediaBlock.Video.VideoFile?.File?.FileId == oldblock.MediaBlock?.Video?.VideoFile?.File?.FileId);
+                                var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Video && x.MediaBlock.Video != null && (x.MediaBlock.Video.VideoFile?.File?.FileId == oldblock.MediaBlock?.Video?.VideoFile?.File?.FileId || x.MediaBlock.Video.VideoFile?.File?.FilePath == oldblock.MediaBlock?.Video?.VideoFile?.File?.FilePath));
                                 if (entry == null)
                                 {
                                     if (!string.IsNullOrWhiteSpace(oldblock.MediaBlock.Video.File.FilePath))
@@ -707,7 +707,7 @@
                         {
                             foreach (var oldblock in existingImages)
                             {
-                               var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null && x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId);
+                               var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null && (x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId || x.MediaBlock?.Image?.File?.FilePath == oldblock.MediaBlock?.Image?.File?.FilePath));
                                if (entry == null)
                                 {
                                     filePaths.Add(oldblock?.MediaBlock?.Image?.File?.FilePath);
@@ -722,7 +722,7 @@
                             {
                                 foreach (var oldblock in imageBlock?.ImageCarouselBlock?.ImageBlockCollection?.Blocks)
                                 {
-                                    var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.ImageCarousel && x.ImageCarouselBlock != null && x.ImageCarouselBlock.ImageBlockCollection != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks.Where(x => x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId).Any());
+                                    var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.ImageCarousel && x.ImageCarouselBlock != null && x.ImageCarouselBlock.ImageBlockCollection != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks != null && x.ImageCarouselBlock.ImageBlockCollection.Blocks.Where(x => x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId || x.MediaBlock?.Image?.File?.FilePath == oldblock.MediaBlock?.Image?.File?.FilePath).Any());
                                     if (entry == null)
                                     {
                                         filePaths.Add(oldblock.MediaBlock?.Image?.File?.FilePath);
@@ -738,10 +738,13 @@
                             {
                                 foreach (var oldblock in wsi?.WholeSlideImageBlock?.WholeSlideImageBlockItems)
                                 {
-                                    var entry = newBlocks.FirstOrDefault(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Where(x => x.WholeSlideImage?.File?.FileId == oldblock.WholeSlideImage?.File?.FileId).Any());
-                                    if (entry == null)
+                                    if (oldblock != null && (oldblock.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingComplete || oldblock.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingFailed))
                                     {
-                                        filePaths.Add(oldblock.WholeSlideImage?.File?.FilePath);
+                                        var entry = newBlocks.FirstOrDefault(x => x.WholeSlideImageBlock != null && x.WholeSlideImageBlock.WholeSlideImageBlockItems.Where(x => x.WholeSlideImage?.File?.FileId == oldblock.WholeSlideImage?.File?.FileId || x.WholeSlideImage?.File?.FilePath == oldblock.WholeSlideImage?.File?.FilePath).Any());
+                                        if (entry == null)
+                                        {
+                                            filePaths.Add(oldblock.WholeSlideImage?.File?.FilePath);
+                                        }
                                     }
                                 }
                             }
@@ -754,16 +757,17 @@
                     {
                         if (!newQuestionFiles.Any())
                         {
-                            filePaths.AddRange(existingQuestionFiles);
+                            filePaths.AddRange(existingQuestionFiles.Values.ToList());
                         }
                         else
                         {
                             foreach (var file in existingQuestionFiles)
                             {
-                                var entry = newQuestionFiles.FirstOrDefault(x => x.Equals(file));
-                                if (entry == null)
+                                bool found = false;
+                                var entry = newQuestionFiles.FirstOrDefault(x => (x.Key == file.Key || x.Value == file.Value) && (found = true));
+                                if (!found)
                                 {
-                                    filePaths.Add(file);
+                                    filePaths.Add(file.Value);
                                 }
                             }
                         }
@@ -786,14 +790,14 @@
                     _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, deleteList); });
                 }
             }
-            catch (Exception ex)
+            catch
             {
             }
         }
 
-        private List<string> CheckQuestionBlock(BlockCollectionViewModel model)
+        private Dictionary<int, string> CheckQuestionBlock(BlockCollectionViewModel model)
         {
-            var filePath = new List<string>();
+            var filePath = new Dictionary<int, string>();
             if (model != null && model.Blocks.Any())
             {
                 foreach (var block in model.Blocks)
@@ -808,9 +812,9 @@
                                 {
                                     foreach (var imageBlock in answerBlock.BlockCollection.Blocks)
                                     {
-                                        if (imageBlock.BlockType == BlockType.Media && imageBlock.MediaBlock != null)
+                                        if (imageBlock.BlockType == BlockType.Media && imageBlock.MediaBlock != null && imageBlock.MediaBlock.Image.File != null)
                                         {
-                                            filePath.Add(imageBlock.MediaBlock.Image.File.FilePath);
+                                            filePath.Add(imageBlock.MediaBlock.Image.File.FileId, imageBlock.MediaBlock.Image.File.FilePath);
                                         }
                                     }
                                 }
@@ -826,26 +830,26 @@
                                 {
                                     if (questionBlock.MediaBlock.Image != null)
                                     {
-                                        filePath.Add(questionBlock.MediaBlock.Image.File.FilePath);
+                                        filePath.Add(questionBlock.MediaBlock.Image.File.FileId, questionBlock.MediaBlock.Image.File.FilePath);
                                     }
 
                                     if (questionBlock.MediaBlock.Video != null)
                                     {
+                                        if (questionBlock.MediaBlock.Video.File != null)
+                                        {
+                                            filePath.Add(questionBlock.MediaBlock.Video.File.FileId, questionBlock.MediaBlock.Video.File.FilePath);
+                                        }
+
                                         if (questionBlock.MediaBlock.Video.VideoFile != null)
                                         {
-                                            if (questionBlock.MediaBlock.Video.File != null)
-                                            {
-                                                filePath.Add(questionBlock.MediaBlock.Video.File.FilePath);
-                                            }
-
                                             if (questionBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
                                             {
-                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
+                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FileId, questionBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
                                             }
 
                                             if (questionBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
                                             {
-                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
+                                                filePath.Add(questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FileId, questionBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
                                             }
                                         }
                                     }
@@ -857,9 +861,9 @@
                                     {
                                         foreach (var wsi in existingWholeSlideImages)
                                         {
-                                            if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.WholeSlideImageFile != null && (wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingComplete || wsi.WholeSlideImage.File.WholeSlideImageFile.Status == WholeSlideImageFileStatus.ProcessingFailed))
+                                            if (wsi.WholeSlideImage != null && wsi.WholeSlideImage.File != null && wsi.WholeSlideImage.File.FileId > 0)
                                             {
-                                                filePath.Add(wsi.WholeSlideImage.File.FilePath);
+                                                filePath.Add(wsi.WholeSlideImage.File.FileId, wsi.WholeSlideImage.File.FilePath);
                                             }
                                         }
                                     }
@@ -876,26 +880,26 @@
                                 {
                                     if (feedbackBlock.MediaBlock.Image != null)
                                     {
-                                        filePath.Add(feedbackBlock.MediaBlock.Image.File.FilePath);
+                                        filePath.Add(feedbackBlock.MediaBlock.Image.File.FileId, feedbackBlock.MediaBlock.Image.File.FilePath);
                                     }
 
                                     if (feedbackBlock.MediaBlock.Video != null)
                                     {
+                                        if (feedbackBlock.MediaBlock.Video.File != null)
+                                        {
+                                            filePath.Add(feedbackBlock.MediaBlock.Video.File.FileId, feedbackBlock.MediaBlock.Video.File.FilePath);
+                                        }
+
                                         if (feedbackBlock.MediaBlock.Video.VideoFile != null)
                                         {
-                                            if (feedbackBlock.MediaBlock.Video.File != null)
-                                            {
-                                                filePath.Add(feedbackBlock.MediaBlock.Video.File.FilePath);
-                                            }
-
                                             if (feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile != null)
                                             {
-                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
+                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FileId, feedbackBlock.MediaBlock.Video.VideoFile.TranscriptFile.File.FilePath);
                                             }
 
                                             if (feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile != null)
                                             {
-                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
+                                                filePath.Add(feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FileId, feedbackBlock.MediaBlock.Video.VideoFile.CaptionsFile.File.FilePath);
                                             }
                                         }
                                     }
@@ -906,7 +910,7 @@
                 }
             }
 
-            return filePath.Where(x => x != null).ToList();
+            return filePath;
         }
     }
 }

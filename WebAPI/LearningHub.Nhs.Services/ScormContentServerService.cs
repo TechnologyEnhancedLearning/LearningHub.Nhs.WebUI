@@ -63,9 +63,9 @@
         /// </summary>
         /// <param name="externalUrl">The externalUrl<see cref="string"/>.</param>
         /// <returns>The <see cref="ContentServerViewModel"/>.</returns>
-        public ContentServerViewModel GetContentDetailsByExternalUrl(string externalUrl)
+        public async Task<ContentServerViewModel> GetContentDetailsByExternalUrl(string externalUrl)
         {
-            var response = this.scormResourceVersionRepository.GetScormContentServerDetailsByHistoricExternalUrl(externalUrl);
+            var response = await this.scormResourceVersionRepository.GetScormContentServerDetailsByHistoricExternalUrl(externalUrl);
 
             return response;
         }
@@ -75,9 +75,9 @@
         /// </summary>
         /// <param name="externalReference">The externalReference<see cref="string"/>.</param>
         /// <returns>The <see cref="Task{ContentServerViewModel}"/>.</returns>
-        public ContentServerViewModel GetContentDetailsByExternalReference(string externalReference)
+        public async Task<ContentServerViewModel> GetContentDetailsByExternalReference(string externalReference)
         {
-            var response = this.scormResourceVersionRepository.GetContentServerDetailsByLHExternalReference(externalReference);
+            var response = await this.scormResourceVersionRepository.GetContentServerDetailsByLHExternalReference(externalReference);
 
             return response;
         }

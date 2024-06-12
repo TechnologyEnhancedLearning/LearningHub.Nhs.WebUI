@@ -513,6 +513,7 @@
     <Build Include="Stored Procedures\Activity\GetUserLearningActivities.sql" />
     <Build Include="Stored Procedures\Activity\GetUserLearningActivitiesCount.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-2929_ActivityStatusUpdates.sql" />
+    <Build Include="Stored Procedures\Resources\BlockCollectionFileSearch.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

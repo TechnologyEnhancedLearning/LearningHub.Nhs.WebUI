@@ -1,13 +1,13 @@
 ﻿-------------------------------------------------------------------------------
--- Author       Killian Davies
--- Created      09-08-2021
--- Purpose      Move Resource within a Hierarchy Edit.
+-- Author       Dave Brown
+-- Created      04-06-2024
+-- Purpose      References Resource within a Hierarchy Edit.
 --
 -- Modification History
 --
--- 11-01-2022  KD	Initial Revision.
+-- 04-06-2024  DB	Initial Revision.
 -------------------------------------------------------------------------------
-CREATE PROCEDURE [hierarchy].[HierarchyEditMoveResource]
+CREATE PROCEDURE [hierarchy].[HierarchyEditReferenceResource]
 (
 	@HierarchyEditDetailId int,
 	@MoveToHierarchyEditDetailId int,
@@ -29,27 +29,6 @@ BEGIN
 		DECLARE @ResourceId int
 		SELECT @HierarchyEditId = HierarchyEditId, @ResourceId = ResourceId FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @HierarchyEditDetailId
 
-		-- Decrement display order of sibling resources with higher display order.
-		UPDATE 
-			hed
-		SET
-			HierarchyEditDetailOperationId = CASE WHEN hed.HierarchyEditDetailOperationId IS NULL THEN 2 ELSE hed.HierarchyEditDetailOperationId END,
-			DisplayOrder = hed.DisplayOrder - 1,
-			AmendUserId = @UserId,
-			AmendDate = @AmendDate
-		FROM
-			[hierarchy].[HierarchyEditDetail] hed
-		INNER JOIN
-			[hierarchy].[HierarchyEditDetail] hed_moveFrom ON hed.HierarchyEditId = hed_moveFrom.HierarchyEditId 
-															  AND hed.ParentNodeId = hed_moveFrom.ParentNodeId
-															  AND hed.Id != hed_moveFrom.Id
-		WHERE	
-			hed_moveFrom.Id = @HierarchyEditDetailId
-			AND hed.ResourceId IS NOT NULL
-			AND hed.DisplayOrder > hed_moveFrom.DisplayOrder
-			AND hed.Deleted = 0
-			AND hed_moveFrom.Deleted = 0
-
 		-- Increment display order of resources in destination.
 		UPDATE  
 			hed_moveTo_children 
@@ -61,7 +40,7 @@ BEGIN
 			[hierarchy].[HierarchyEditDetail] hed_moveTo
 		INNER JOIN
 			[hierarchy].[HierarchyEditDetail] hed_moveTo_children ON hed_moveTo_children.HierarchyEditId = hed_moveTo.HierarchyEditId
-															AND hed_moveTo_children.ParentNodeId = hed_moveTo.ParentNodeId
+															AND hed_moveTo_children.NodeId = hed_moveTo.NodeId
 		WHERE	
 			hed_moveTo.Id = @MoveToHierarchyEditDetailId
 			AND hed_moveTo_children.ResourceId IS NOT NULL
@@ -82,7 +61,7 @@ BEGIN
 		WHERE
 			Id = @MoveToHierarchyEditDetailId
 
-		-- Move the resource.
+		-- Reference the resource.
 		-- Is there an existing link between the Node and Resource (i.e. from delete / move away & reinstate scenario)
 		DECLARE @nodeResourceId int
 		SELECT 
@@ -94,23 +73,62 @@ BEGIN
 			AND ResourceId = @ResourceId
 			AND Deleted = 0
 
-		UPDATE 
-			hed
-		SET
-			HierarchyEditDetailOperationId = CASE WHEN HierarchyEditDetailOperationId = 1 THEN HierarchyEditDetailOperationId ELSE 2 END, -- Set to Edit if existing Node
-			ParentNodeId = @NewParentNodeId,
-			ParentNodePathId = @NewParentNodePathId,
-			--NodeVersionId = @NewNodeVersionId,
-			DisplayOrder = 1,
-			NodeResourceId = @nodeResourceId,
-			NewNodepath = @NewParentNodePath,
-			AmendUserId = @UserId,
-			AmendDate = @AmendDate
+		INSERT INTO [hierarchy].[HierarchyEditDetail]
+		(
+			HierarchyEditId,
+			HierarchyEditDetailTypeId,
+			HierarchyEditDetailOperationId,
+			NodePathId,
+			--InitialNodeId,
+			NodeId,
+			NodeVersionId,
+			InitialParentNodeId,
+			ParentNodeId,
+			ParentNodePathId,
+			NodeLinkId,
+			ResourceId,
+			ResourceVersionId,
+			ResourceReferenceId,
+			NodeResourceId,
+			DisplayOrder,
+			InitialNodePath,
+			NewNodePath,
+			Deleted,
+			CreateUserId,
+			CreateDate,
+			AmendUserId,
+			AmendDate)
+		SELECT
+			@HierarchyEditId, 
+			5 AS HierarchyEditDetailTypeId, -- Node Resource
+			4 AS HierarchyEditDetailOperationId, -- Add Reference											
+			NULL AS NodePathId,
+			--NULL AS InitialNodeId,
+			NULL AS NodeId,
+			--@NewNodeVersionId AS NodeVersionId,
+			NULL AS NodeVersionId,
+			NULL AS InitialParentNodeId,
+			@NewParentNodeId AS ParentNodeId,
+			@NewParentNodePathId AS ParentNodePathId,
+			NULL AS NodeLinkId,
+			hed.ResourceId AS ResourceId,
+			hed.ResourceVersionId AS ResourceVersionId,
+			NULL AS ResourceReferenceId,
+			@nodeResourceId AS NodeResourceId,
+			1 AS DisplayOrder,
+			NULL AS InitialNodePath,
+			@NewParentNodePath AS NewNodePath,
+			0 AS Deleted,
+			@UserId AS CreateUserId,
+			@AmendDate AS CreateDate,
+			@UserId AS AmendUserId,
+			@AmendDate AS AmendDate
 		FROM
 			[hierarchy].[HierarchyEditDetail] hed
-		WHERE	
+		WHERE
 			hed.Id = @HierarchyEditDetailId
 			AND hed.Deleted = 0
+
 
 		------------------------------------------------------------ 
 		-- Refresh HierarchyEditNodeResourceLookup

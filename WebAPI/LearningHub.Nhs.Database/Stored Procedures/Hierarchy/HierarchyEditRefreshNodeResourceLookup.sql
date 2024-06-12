@@ -31,7 +31,7 @@ BEGIN
 			hierarchy.HierarchyEditDetail hed_resource
 		INNER JOIN
 			hierarchy.HierarchyEditDetail hed_node ON hed_resource.HierarchyEditId = hed_node.HierarchyEditId 
-													AND hed_resource.NodeId = hed_node.NodeId
+													AND hed_resource.ParentNodeId = hed_node.NodeId
 													AND hed_resource.Id != hed_node.Id
 		WHERE
 			hed_resource.HierarchyEditId = @HierarchyEditId

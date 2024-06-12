@@ -177,10 +177,46 @@ BEGIN
 				AmendUserId = @UserId,
 				AmendDate = @AmendDate
 		FROM    hierarchy.HierarchyEditDetail hed
-		INNER JOIN hierarchy.HierarchyEditDetail p_hed ON ISNULL(hed.NewNodePath, hed.InitialNodePath) = ISNULL(p_hed.NewNodePath, p_hed.InitialNodePath) + '\' + CAST(hed.NodeId AS VARCHAR(10))
+		INNER JOIN hierarchy.HierarchyEditDetail p_hed ON ISNULL(hed.NewNodePath, hed.InitialNodePath) = ISNULL(p_hed.NewNodePath, p_hed.InitialNodePath) + '\' + CAST(hed.NodeId AS VARCHAR(10)) AND hed.HierarchyEditDetailTypeId != 5 -- Exclude Node Resources
+                                                            OR
+                                                          ISNULL(hed.NewNodePath, hed.InitialNodePath) = ISNULL(p_hed.NewNodePath, p_hed.InitialNodePath) AND hed.HierarchyEditDetailTypeId = 5 -- Node Resources
 		WHERE   hed.HierarchyEditID = @HierarchyEditID
-			AND hed.HierarchyEditDetailTypeId != 5 -- Exclude Node Resource
 			AND hed.ParentNodePathId IS NULL
+
+		-- Create new NodePathDisplayVersion records where the NodePathId has changed. i.e. the NodePathId against the NodePathDisplayVersion record is different
+		INSERT INTO hierarchy.NodePathDisplayVersion (NodePathId, DisplayName, VersionStatusId, PublicationId, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
+		SELECT hed.NodePathId, DisplayName, 1 /* Draft */, NULL, 0, @UserId, @AmendDate, @UserId, @AmendDate
+		FROM	hierarchy.NodePathDisplayVersion npdv
+		INNER JOIN hierarchy.HierarchyEditDetail hed ON npdv.Id = hed.NodePathDisplayVersionId
+		WHERE	hed.HierarchyEditID = @HierarchyEditID
+			AND npdv.NodePathId != hed.NodePathId
+			AND npdv.Deleted = 0
+			AND hed.Deleted = 0
+
+		-- Delete any Draft and Unused NodePathDisplayVersion records (resulting from creation and then subsequent move of node to different NodePath)
+		UPDATE npdv
+		SET		Deleted = 1,
+				AmendUserId = @UserId,
+				AmendDate = @AmendDate
+		FROM	hierarchy.NodePathDisplayVersion npdv
+		INNER JOIN hierarchy.HierarchyEditDetail hed ON npdv.Id = hed.NodePathDisplayVersionId
+		WHERE	hed.HierarchyEditID = @HierarchyEditID
+			AND npdv.NodePathId != hed.NodePathId
+			AND npdv.VersionStatusId = 1 -- Draft
+			AND npdv.Deleted = 0
+			AND hed.Deleted = 0
+
+		-- Update to the new NodePathDisplayVersion records where the NodePathId has changed.
+		UPDATE	hed
+		SET		NodePathDisplayVersionId = npdv.Id,
+				HierarchyEditDetailOperationId = CASE WHEN hed.HierarchyEditDetailOperationId IS NULL THEN 2 ELSE hed.HierarchyEditDetailOperationId END, -- Set to Edit if first update
+				AmendUserId = @UserId,
+				AmendDate = @AmendDate
+		FROM	hierarchy.NodePathDisplayVersion npdv
+		INNER JOIN hierarchy.HierarchyEditDetail hed ON npdv.NodePathId = hed.NodePathId
+		WHERE	hed.HierarchyEditID = @HierarchyEditID
+			AND npdv.Deleted = 0
+			AND hed.Deleted = 0
 
 
 		------------------------------------------------------------ 

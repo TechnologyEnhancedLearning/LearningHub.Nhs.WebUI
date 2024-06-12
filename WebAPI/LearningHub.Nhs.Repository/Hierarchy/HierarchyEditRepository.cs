@@ -329,6 +329,25 @@
         }
 
         /// <summary>
+        /// References a resource in a HierarchyEdit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The view model <see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = moveResourceViewModel.HierarchyEditDetailId };
+            var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = moveResourceViewModel.MoveToHierarchyEditDetailId };
+            var param3 = new SqlParameter("@p2", SqlDbType.Int) { Value = userId };
+            var param2 = new SqlParameter("@p3", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+            string sql = "hierarchy.HierarchyEditReferenceResource @p0, @p1, @p2, @p3";
+            var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3 };
+
+            await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+        }
+
+        /// <summary>
         /// Moves a resource up.
         /// ITERATION 1 - Not moved within a hierarchy edit, update happens immediately.
         /// </summary>

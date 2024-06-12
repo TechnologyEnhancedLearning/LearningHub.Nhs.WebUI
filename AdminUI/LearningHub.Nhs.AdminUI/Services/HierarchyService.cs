@@ -227,6 +227,16 @@
         }
 
         /// <summary>
+        /// References a resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The moveResourceViewModel<see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<ApiResponse> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel)
+        {
+            return await this.facade.PostAsync<ApiResponse, HierarchyEditMoveResourceViewModel>("Hierarchy/HierarchyEditReferenceResource", moveResourceViewModel);
+        }
+
+        /// <summary>
         /// The MoveResourceUp.
         /// </summary>
         /// <param name="nodeId">The id of the node containing the resource.</param>

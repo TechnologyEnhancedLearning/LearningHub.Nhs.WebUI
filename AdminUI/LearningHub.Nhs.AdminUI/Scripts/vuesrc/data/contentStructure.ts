@@ -6,6 +6,7 @@ import { LearningHubValidationResultModel } from '../models/learningHubValidatio
 import { FolderNodeModel } from '../models/content-structure/folderNodeModel';
 import { NodePathModel } from '../models/nodePathModel';
 import { NodePathDisplayVersionModel } from '../models/content-structure/nodePathDisplayVersionModel';
+import { ResourceReferenceDisplayVersionModel } from '../models/content-structure/resourceReferenceDisplayVersionModel';
 
 const getCatalogue = async function (id: number): Promise<CatalogueBasicModel> {
     return await axios.get<CatalogueBasicModel>('/api/hierarchy/GetCatalogue/' + id)
@@ -151,6 +152,20 @@ const updateNodePathDisplayVersion = async function (requestModel: NodePathDispl
         })
         .catch(e => {
             console.log('updateNodePathDisplayVersion:' + e);
+            throw e;
+        });
+};
+
+const updateResourceReferenceDisplayVersion = async function (requestModel: ResourceReferenceDisplayVersionModel): Promise<LearningHubValidationResultModel> {
+
+    const url = `/api/hierarchy/UpdateResourceReferenceDisplayVersion`;
+
+    return await axios.post<LearningHubValidationResultModel>(url, requestModel)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('UpdateResourceReferenceDisplayVersion:' + e);
             throw e;
         });
 };
@@ -362,8 +377,8 @@ export const contentStructureData = {
     submitHierarchyEditForPublish,
     createFolder,
     updateFolder,
-    //createNodePathDisplayVersion,
     updateNodePathDisplayVersion,
+    updateResourceReferenceDisplayVersion,
     deleteFolder,
     deleteFolderReference,
     getFolder,

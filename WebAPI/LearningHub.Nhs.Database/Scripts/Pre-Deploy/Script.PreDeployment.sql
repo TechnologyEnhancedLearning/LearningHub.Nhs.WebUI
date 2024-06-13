@@ -11,9 +11,9 @@
 */
 
 -- Content Referencing changes
-IF EXISTS (SELECT * from hierarchy.HierarchyEdit WHERE HierarchyEditStatusId = 1)-- Draft
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'HierarchyEdit' AND COLUMN_NAME = 'RootNodeId')
 BEGIN
-    RAISERROR ('Script ''Content Referencing Initialise.sql'' must be manually run before deploy', 16, 1)
+    RAISERROR ('Script ''Content Referencing Initialise.sql'' must be manually run before deployment', 16, 1)
     RETURN
 END
 GO

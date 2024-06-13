@@ -56,21 +56,21 @@
         /// <returns>The <see cref="Task"/>.</returns>
         Task UpdateFolder(FolderEditViewModel folderEditViewModel, int userId);
 
-        /////// <summary>
-        /////// Creates a new nodePathDisplayVersion.
-        /////// </summary>
-        /////// <param name="nodePathDisplayVersion">The nodePathDisplayVersion<see cref="NodePathDisplayVersionModel"/>.</param>
-        /////// <param name="userId">The user id.</param>
-        /////// <returns>The <see cref="int"/>.</returns>
-        ////Task<int> CreateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersion, int userId);
-
         /// <summary>
         /// Updates a nodePathDisplayVersion.
         /// </summary>
-        /// <param name="nodePathDisplayVersion">The nodePathDisplayVersion<see cref="FolderEditViewModel"/>.</param>
+        /// <param name="nodePathDisplayVersion">The nodePathDisplayVersion<see cref="NodePathDisplayVersionModel"/>.</param>
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="int"/>.</returns>
         Task<int> UpdateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersion, int userId);
+
+        /// <summary>
+        /// Updates a resourceReferenceDisplayVersion.
+        /// </summary>
+        /// <param name="resourceReferenceDisplayVersion">The resourceReferenceDisplayVersion<see cref="ResourceReferenceDisplayVersionModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="int"/>.</returns>
+        Task<int> UpdateResourceReferenceDisplayVersionAsync(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersion, int userId);
 
         /// <summary>
         /// Deletes a folder.

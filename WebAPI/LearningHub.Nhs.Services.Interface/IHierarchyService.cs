@@ -103,14 +103,6 @@
         /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
         Task<LearningHubValidationResult> UpdateFolder(FolderEditViewModel folderEditViewModel, int userId);
 
-        /////// <summary>
-        /////// Creates a new nodePathDisplayVersionModel.
-        /////// </summary>
-        /////// <param name="nodePathDisplayVersionModel">The nodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
-        /////// <param name="userId">The user id.</param>
-        /////// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
-        ////Task<LearningHubValidationResult> CreateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel, int userId);
-
         /// <summary>
         /// Updates a nodePathDisplayVersionModel.
         /// </summary>
@@ -118,6 +110,14 @@
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
         Task<LearningHubValidationResult> UpdateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel, int userId);
+
+        /// <summary>
+        /// Updates a resourceReferenceDisplayVersionModel.
+        /// </summary>
+        /// <param name="resourceReferenceDisplayVersionModel">The resourceReferenceDisplayVersionModel<see cref="ResourceReferenceDisplayVersionModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        Task<LearningHubValidationResult> UpdateResourceReferenceDisplayVersionAsync(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersionModel, int userId);
 
         /// <summary>
         /// Deletes a folder.

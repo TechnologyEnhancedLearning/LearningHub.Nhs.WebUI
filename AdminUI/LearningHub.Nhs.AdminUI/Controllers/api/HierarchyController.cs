@@ -226,6 +226,18 @@
         }
 
         /// <summary>
+        /// The UpdateResourceReferenceDisplayVersion.
+        /// </summary>
+        /// <param name="resourceReferenceDisplayVersionModel">The resourceReferenceEditViewModel<see cref="ResourceReferenceDisplayVersionModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("UpdateResourceReferenceDisplayVersion")]
+        public async Task<IActionResult> UpdateResourceReferenceDisplayVersion(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersionModel)
+        {
+            var apiResponse = await this.hierarchyService.UpdateResourceReferenceDisplayVersionAsync(resourceReferenceDisplayVersionModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
         /// The MoveNodeUp.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>

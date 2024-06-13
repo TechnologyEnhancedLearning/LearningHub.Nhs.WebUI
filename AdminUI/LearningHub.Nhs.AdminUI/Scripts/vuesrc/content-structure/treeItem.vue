@@ -129,9 +129,9 @@
                     </div>
                     <div class="ml-auto">
                         <div v-if="showResourceOptions" class="d-flex">
-                            <!--<div class="node-path-edit-indicator" v-if="item.nodePathDisplayVersionId > 0">
+                            <div class="node-path-edit-indicator" v-if="item.resourceReferenceDisplayVersionId > 0">
                                 <i class="fa-solid fa-pencil"></i>
-                            </div>-->
+                            </div>
                             <div class="dropdown references-dropdown" v-if="item.nodePaths && item.nodePaths.length>1">
                                 <a class="dropdown-toggle no-wrap" href="#" role="button" id="resourceReferencesDisplayLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     {{item.nodePaths.length}} references

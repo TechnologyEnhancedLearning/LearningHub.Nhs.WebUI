@@ -7,4 +7,5 @@
     ReferenceNode = 5,
     FolderReference = 6,
     ReferenceResource = 7,
+    ResourceReference = 8,
 }

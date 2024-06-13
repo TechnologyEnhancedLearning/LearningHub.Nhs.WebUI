@@ -118,6 +118,44 @@
                 </div>
             </div>
 
+            <div v-if="editMode === EditModeEnum.ResourceReference" id="editResourceReference">
+                <div class="col-12">
+                    <label class="control-label">Resource location</label>
+                    <div>{{ editingResourceNodeReference.path }} </div>
+                </div>
+                <div class="col-12" style="margin-top: 40px;">
+                    <div>
+                        <label class="control-label">Resource reference title</label>
+                    </div>
+                    <input v-model="editingResourceNodeReference.name" class="form-control" autocomplete="arandomstring" maxlength="255" />
+                    <div class="small mt-3">
+                        You have {{ resourceReferenceNameCharactersRemaining }} characters remaining.
+                    </div>
+                </div>
+                <div class="col-12" style="margin-top: 40px;">
+                    <label class="control-label">All resource location<span v-if="editingResourceNodeReference.nodePaths && editingResourceNodeReference.nodePaths.length>1">s</span></label>
+                    <div>
+                        <ul class="node-path-list">
+                            <li class="" v-for="(item, index) in editingResourceNodeReference.nodePaths" :key="index">
+                                <span v-for="(subItem, index) in item.nodePathBreakdown" :key="index">
+                                    {{index > 0 ? ">" : ""}} {{subItem.nodeName}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 d-flex" style="margin-top: 40px; margin-bottom: 40px;">
+                    <input type="button" class="btn btn-custom-green mr-3" @click="onSaveResourceReferenceEdit()" v-bind:class="{disabled: !canSaveResourceReferenceEdit}" v-bind:disabled="!canSaveResourceReferenceEdit" value="Save changes" />
+                    <input type="button" class="btn btn-admin btn-cancel" @click="onCancelResourceReferenceEdit()" value="Cancel" />
+
+                    <span class="ml-auto mt-3">
+                        <a class="delete-folder-link" @click.prevent="onEditResourceReferenceDeleteFolder" href="#">
+                            Delete this resource reference <i class="fa-solid fa-trash-can delete-folder ml-2"></i>
+                        </a>
+                    </span>
+                </div>
+            </div>
+
             <div id="deleteFolderModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
                 <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                     <div class="modal-content">
@@ -164,6 +202,29 @@
                 </div>
             </div>
 
+            <div id="deleteResourceReferenceModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+                <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header alert-modal-header text-center">
+                            <h2 class="heading-lg w-100"><i class="delete-folder-warning-triangle fas fa-exclamation-triangle pr-3"></i>Delete resource reference</h2>
+                        </div>
+
+                        <div class="modal-body alert-modal-body">
+                            <div class="mt-3">You have chosen to delete the resource reference <span id="deleteResourceReferenceName">{{ deleteResourceReferenceName}}</span>. The resource will display using the default resource properties.</div>
+                        </div>
+
+                        <div class="modal-footer alert-modal-footer">
+                            <div class="form-group col-12 p-0 m-0">
+                                <div class="d-flex">
+                                    <input type="button" class="btn btn-action-cancel" data-dismiss="modal" value="Cancel" />
+                                    <input type="button" class="btn btn-action-red ml-auto" @click="onDeleteResourceReference()" value="Continue" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="cancelHierarchyEditModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
                 <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                     <div class="modal-content">
@@ -202,6 +263,7 @@ import { EditModeEnum } from '../models/content-structure/editModeEnum';
 import { CatalogueBasicModel } from '../models/content-structure/catalogueModel';
 import { FolderNodeModel } from '../models/content-structure/folderNodeModel';
 import { NodePathDisplayVersionModel } from '../models/content-structure/nodePathDisplayVersionModel';
+import { ResourceReferenceDisplayVersionModel } from '../models/content-structure/resourceReferenceDisplayVersionModel';
 import { NodeType } from '../constants';
 import CKEditorToolbar from '../models/ckeditorToolbar';
 import ckeditorwithhint from '../ckeditorwithhint.vue';
@@ -239,6 +301,7 @@ export default Vue.extend({
             editorConfig: { toolbar: CKEditorToolbar.default },
             deleteFolderName: '',
             deleteFolderReferenceName: '',
+            deleteResourceReferenceName: '',
             editFolderStructureButtonText: '',
             editFolderStructureButtonDisabled: true,
             selectedResourceId: 0,
@@ -283,6 +346,9 @@ export default Vue.extend({
         editingFolderNodeReference(): NodePathDisplayVersionModel {
             return this.$store.state.contentStructureState.editingFolderNodeReference;
         },
+        editingResourceNodeReference(): ResourceReferenceDisplayVersionModel {
+            return this.$store.state.contentStructureState.editingResourceNodeReference;
+        },
         editingFolderCanBeDeleted(): boolean {
             return !this.$store.state.contentStructureState.editingTreeNode.hasResourcesInBranchInd;
         },
@@ -291,6 +357,9 @@ export default Vue.extend({
         },
         folderReferenceNameCharactersRemaining(): number {
             return 255 - this.editingFolderNodeReference.name.length;
+        },
+        resourceReferenceNameCharactersRemaining(): number {
+            return 255 - this.editingResourceNodeReference.name.length;
         },
         canCreateEdit(): boolean {
             return this.$store.state.contentStructureState.canCreateEdit;
@@ -303,6 +372,9 @@ export default Vue.extend({
         },
         canSaveFolderReferenceEdit(): boolean {
             return this.editingFolderNodeReference.name.trim().length > 0;
+        },
+        canSaveResourceReferenceEdit(): boolean {
+            return this.editingResourceNodeReference.name.trim().length > 0;
         },
     },
     created() {
@@ -318,11 +390,17 @@ export default Vue.extend({
         onCancelFolderReferenceEdit() {
             this.$store.commit('contentStructureState/cancelEdit');
         },
+        onCancelResourceReferenceEdit() {
+            this.$store.commit('contentStructureState/cancelEdit');
+        },
         onSaveFolderEdit() {
             this.$store.dispatch('contentStructureState/saveFolder');
         },
         onSaveFolderReferenceEdit() {
             this.$store.dispatch('contentStructureState/saveNodePathDisplayVersion');
+        },
+        onSaveResourceReferenceEdit() {
+            this.$store.dispatch('contentStructureState/saveResourceReferenceDisplayVersion');
         },
         onTreeItemDeleteFolder: function (item: NodeContentAdminModel) {
             this.$store.commit('contentStructureState/setDeletingFolder', { folderNode: item });
@@ -331,11 +409,15 @@ export default Vue.extend({
         },
         onEditFolderDeleteFolder() {
             this.deleteFolderName = this.editingFolderNode.name;
-            $('#deleteFolderModal').modal('show');
+            $('#deleteFolderReferenceModal').modal('show');
         },
         onEditFolderReferenceDeleteFolder() {
             this.deleteFolderReferenceName = this.editingFolderNodeReference.name;
             $('#deleteFolderReferenceModal').modal('show');
+        },
+        onEditResourceReferenceDeleteFolder() {
+            this.deleteResourceReferenceName = this.editingResourceNodeReference.name;
+            $('#deleteResourceReferenceModal').modal('show');
         },
         onDeleteFolder() {
             this.$store.dispatch('contentStructureState/deleteFolder');
@@ -343,6 +425,10 @@ export default Vue.extend({
         },
         onDeleteFolderReference() {
             this.$store.dispatch('contentStructureState/deleteFolderReference');
+            $('#deleteFolderModal').modal('hide');
+        },
+        onDeleteResourceReference() {
+            this.$store.dispatch('contentStructureState/deleteResourceReference');
             $('#deleteFolderModal').modal('hide');
         },
         onEdit() {

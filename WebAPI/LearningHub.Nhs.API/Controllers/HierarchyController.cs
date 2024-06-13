@@ -239,27 +239,8 @@
             }
         }
 
-        /////// <summary>
-        /////// Creates a new NodePathDisplayVersion.
-        /////// </summary>
-        /////// <param name="nodePathDisplayVersionModel">The nodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
-        /////// <returns>The <see cref="IActionResult"/>.</returns>
-        ////[HttpPost("CreateNodePathDisplayVersion")]
-        ////public async Task<IActionResult> CreateNodePathDisplayVersion(NodePathDisplayVersionModel nodePathDisplayVersionModel)
-        ////{
-        ////    try
-        ////    {
-        ////        var retVal = await this.hierarchyService.CreateNodePathDisplayVersionAsync(nodePathDisplayVersionModel, this.CurrentUserId);
-        ////        return this.Ok(new ApiResponse(true, retVal));
-        ////    }
-        ////    catch (Exception ex)
-        ////    {
-        ////        return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
-        ////    }
-        ////}
-
         /// <summary>
-        /// Updates a folder.
+        /// Updates a folder reference.
         /// </summary>
         /// <param name="nodePathDisplayVersionModel">The nodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
@@ -269,6 +250,25 @@
             try
             {
                 var retVal = await this.hierarchyService.UpdateNodePathDisplayVersionAsync(nodePathDisplayVersionModel, this.CurrentUserId);
+                return this.Ok(new ApiResponse(true, retVal));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
+        }
+
+        /// <summary>
+        /// Updates a resource reference.
+        /// </summary>
+        /// <param name="resourceReferenceDisplayVersionModel">The resourceReferenceDisplayVersionModel<see cref="ResourceReferenceDisplayVersionModel"/>.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost("UpdateResourceReferenceDisplayVersion")]
+        public async Task<IActionResult> UpdateResourceReferenceDisplayVersion(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersionModel)
+        {
+            try
+            {
+                var retVal = await this.hierarchyService.UpdateResourceReferenceDisplayVersionAsync(resourceReferenceDisplayVersionModel, this.CurrentUserId);
                 return this.Ok(new ApiResponse(true, retVal));
             }
             catch (Exception ex)

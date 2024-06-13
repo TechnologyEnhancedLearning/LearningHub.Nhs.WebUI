@@ -76,12 +76,12 @@
         /// <returns>IActionResult.</returns>
         Task<ApiResponse> UpdateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel);
 
-        /////// <summary>
-        /////// The CreateNodePathDisplayVersionAsync.
-        /////// </summary>
-        /////// <param name="nodePathDisplayVersionModel">The NodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
-        /////// <returns>IActionResult.</returns>
-        ////Task<ApiResponse> CreateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel);
+        /// <summary>
+        /// The UpdateResourceReferenceDisplayVersionAsync.
+        /// </summary>
+        /// <param name="resourceReferenceDisplayVersionModel">The ResourceReferenceDisplayVersionModel<see cref="ResourceReferenceDisplayVersionModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> UpdateResourceReferenceDisplayVersionAsync(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersionModel);
 
         /// <summary>
         /// The DeleteFolder.

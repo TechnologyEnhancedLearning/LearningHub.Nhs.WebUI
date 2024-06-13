@@ -477,7 +477,7 @@
         }
 
         /// <summary>
-        /// Updates a folder.
+        /// Updates a folder reference.
         /// </summary>
         /// <param name="nodePathDisplayVersion">The nodePathDisplayVersion<see cref="NodePathDisplayVersionModel"/>.</param>
         /// <param name="userId">The user id.</param>
@@ -485,6 +485,15 @@
         public async Task<LearningHubValidationResult> UpdateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersion, int userId)
         {
             int createdId = await this.hierarchyEditRepository.UpdateNodePathDisplayVersionAsync(nodePathDisplayVersion, userId);
+            var retVal = new LearningHubValidationResult(true);
+            retVal.CreatedId = createdId;
+            return retVal;
+        }
+
+        /// <inheritdoc/>
+        public async Task<LearningHubValidationResult> UpdateResourceReferenceDisplayVersionAsync(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersion, int userId)
+        {
+            int createdId = await this.hierarchyEditRepository.UpdateResourceReferenceDisplayVersionAsync(resourceReferenceDisplayVersion, userId);
             var retVal = new LearningHubValidationResult(true);
             retVal.CreatedId = createdId;
             return retVal;

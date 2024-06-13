@@ -12,6 +12,7 @@ import { CatalogueBasicModel } from '../models/content-structure/catalogueModel'
 import { FolderNodeModel } from '../models/content-structure/folderNodeModel';
 import { forEach } from 'lodash';
 import { NodePathDisplayVersionModel } from '../models/content-structure/nodePathDisplayVersionModel';
+import { ResourceReferenceDisplayVersionModel } from '../models/content-structure/resourceReferenceDisplayVersionModel';
 
 Vue.use(Vuex);
 
@@ -27,6 +28,7 @@ export class State {
     editMode: EditModeEnum = EditModeEnum.None;
     editingFolderNode: FolderNodeModel = null;
     editingFolderNodeReference: NodePathDisplayVersionModel = null;
+    editingResourceNodeReference: ResourceReferenceDisplayVersionModel = null;
     editingTreeNode: NodeContentAdminModel = null;
     movingResource: NodeContentAdminModel = null;
     referencingResource: NodeContentAdminModel = null;
@@ -224,19 +226,18 @@ const mutations = {
     setEditingResourceReferenceDisplayVersion(state: State, payload: { resourceNode: NodeContentAdminModel }) {
         state.inError = false;
 
-        alert("Not implemented yet.");
-        //var nodePathDisplayVersionModel: NodePathDisplayVersionModel = new NodePathDisplayVersionModel;
+        var resourceReferenceDisplayVersionModel: ResourceReferenceDisplayVersionModel = new ResourceReferenceDisplayVersionModel;
 
-        //nodePathDisplayVersionModel.hierarchyEditId = state.hierarchyEdit.id;
-        //nodePathDisplayVersionModel.nodePathDisplayVersionId = payload.folderNode.nodePathDisplayVersionId;
-        //nodePathDisplayVersionModel.hierarchyEditDetailId = payload.folderNode.hierarchyEditDetailId;
-        //nodePathDisplayVersionModel.path = payload.folderNode.path;
-        //nodePathDisplayVersionModel.nodePaths = payload.folderNode.nodePaths;
-        //nodePathDisplayVersionModel.name = payload.folderNode.name;
-        //nodePathDisplayVersionModel.nodePathId = payload.folderNode.nodePathId;
-        //state.editingFolderNodeReference = nodePathDisplayVersionModel;
-        //state.editingTreeNode = payload.folderNode; // Is this needed?
-        state.editMode = EditModeEnum.FolderReference;
+        resourceReferenceDisplayVersionModel.hierarchyEditId = state.hierarchyEdit.id;
+        resourceReferenceDisplayVersionModel.resourceReferenceDisplayVersionId = payload.resourceNode.resourceReferenceDisplayVersionId;
+        resourceReferenceDisplayVersionModel.hierarchyEditDetailId = payload.resourceNode.hierarchyEditDetailId;
+        resourceReferenceDisplayVersionModel.path = payload.resourceNode.path;
+        resourceReferenceDisplayVersionModel.nodePaths = payload.resourceNode.nodePaths;
+        resourceReferenceDisplayVersionModel.name = payload.resourceNode.name;
+        resourceReferenceDisplayVersionModel.resourceReferenceId = payload.resourceNode.resourceReferenceId;
+        state.editingResourceNodeReference = resourceReferenceDisplayVersionModel;
+        state.editingTreeNode = payload.resourceNode; // Is this needed?
+        state.editMode = EditModeEnum.ResourceReference;
     },
     setDeletingFolder(state: State, payload: { folderNode: NodeContentAdminModel }) {
         state.editingTreeNode = payload.folderNode;
@@ -489,7 +490,6 @@ const actions = <ActionTree<State, any>>{
         }
     },
     async saveNodePathDisplayVersion(context: ActionContext<State, State>) {
-        //if (state.editingFolderNodeReference.nodePathDisplayVersionId == 0) {
         contentStructureData.updateNodePathDisplayVersion(state.editingFolderNodeReference).then(async response => {
             state.editingFolderNodeReference.nodePathDisplayVersionId = response.createdId;
             await refreshNodeContents(state.editingTreeNode.parent, false);
@@ -498,17 +498,16 @@ const actions = <ActionTree<State, any>>{
             state.lastErrorMessage = "Error creating folder reference.";
         });
         context.commit("setEditMode", EditModeEnum.Structure);
-        //}
-        //else {
-        //    contentStructureData.updateNodePathDisplayVersion(state.editingFolderNodeReference).then(async response => {
-        //        state.editingTreeNode.name = state.editingFolderNodeReference.name;
-        //        state.updatedNode = state.editingTreeNode.parent;
-        //        context.commit("setEditMode", EditModeEnum.Structure);
-        //    }).catch(e => {
-        //        state.inError = true;
-        //        state.lastErrorMessage = "Error updating folder reference.";
-        //    });
-        //}
+    },
+    async saveResourceReferenceDisplayVersion(context: ActionContext<State, State>) {
+        contentStructureData.updateResourceReferenceDisplayVersion(state.editingResourceNodeReference).then(async response => {
+            state.editingResourceNodeReference.resourceReferenceDisplayVersionId = response.createdId;
+            await refreshNodeContents(state.editingTreeNode.parent, false);
+        }).catch(e => {
+            state.inError = true;
+            state.lastErrorMessage = "Error creating folder reference.";
+        });
+        context.commit("setEditMode", EditModeEnum.Structure);
     }
 };
 

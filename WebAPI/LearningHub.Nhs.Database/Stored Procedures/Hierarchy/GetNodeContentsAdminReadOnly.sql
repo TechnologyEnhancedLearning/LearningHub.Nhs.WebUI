@@ -13,6 +13,7 @@
 -- 07-05-2024  DB	Change input parameter to NodePathId to prevent all referenced resources and child nodes being returned multiple times
 --					Also return Child NodePathId to allow the client to navigate to the child node.
 -- 03-06-2024  DB	Return the NodePathDisplayVersion properties (where they exist).
+-- 13-06-2024  DB	Return the ResourceReferenceDisplayVersion properties (where they exist).
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsAdminReadOnly]
 (
@@ -35,6 +36,7 @@ BEGIN
 		ResourceId,
 		ResourceVersionId,
 		ResourceReferenceId,
+		ResourceReferenceDisplayVersionId,
 		DisplayOrder,
 		ResourceTypeId,
 		VersionStatusId,
@@ -58,6 +60,7 @@ BEGIN
 			NULL AS ResourceId,
 			NULL AS ResourceVersionId,
 			NULL AS ResourceReferenceId,
+			NULL AS ResourceReferenceDisplayVersionId,
 			nl.DisplayOrder,
 			NULL AS ResourceTypeId,
 			NULL AS VersionStatusId,
@@ -98,7 +101,7 @@ BEGIN
 		-- Resources
 		SELECT 
 			np.Id AS NodePathId,
-			rv.Title as [Name],
+			ISNULL(p_rrdv.DisplayName, rv.Title) as [Name],
 			NULL As [Description],
 			0 as NodeTypeId, 
 			NULL AS NodeId,
@@ -107,6 +110,7 @@ BEGIN
 			r.Id AS ResourceId,
 			rv.Id AS ResourceVersionId,
 			rr.OriginalResourceReferenceId AS ResourceReferenceId,
+			ISNULL(p_rrdv.Id, 0) AS ResourceReferenceDisplayVersionId,
 			nr.DisplayOrder,
 			r.ResourceTypeId,
 			CASE WHEN rvd.Id IS NOT NULL AND rvd.VersionStatusId > 1 THEN rvd.VersionStatusId ELSE rv.VersionStatusId END AS VersionStatusId, --rv.VersionStatusId,
@@ -130,6 +134,8 @@ BEGIN
 			resources.ResourceVersionEvent rve ON rve.ResourceVersionId = rv.Id AND rve.ResourceVersionEventTypeId = 6 /* Unpublished by admin */
 		LEFT JOIN 
 			resources.ResourceVersion rvd ON r.Id = rvd.ResourceId AND rvd.Id > rv.Id AND rvd.Deleted = 0
+		LEFT OUTER JOIN
+			resources.ResourceReferenceDisplayVersion p_rrdv ON rr.Id = p_rrdv.ResourceReferenceId AND p_rrdv.VersionStatusId = 2 /* Published */ AND p_rrdv.Deleted = 0
 		WHERE 
 			np.Id = @NodePathId
 			AND (r.CurrentResourceVersionId = rv.Id OR r.CurrentResourceVersionId IS NULL)

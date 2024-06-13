@@ -110,8 +110,8 @@ BEGIN
 		SET
 			HierarchyEditDetailOperationId = CASE WHEN HierarchyEditDetailOperationId = 1 THEN HierarchyEditDetailOperationId ELSE 2 END, -- Set to Edit if existing Node
 			ParentNodeId = CASE WHEN hed.Id = @HierarchyEditDetailId THEN null ELSE hed.ParentNodeId END, -- Populated further down if root of move
-			ParentNodePathId = NULL, -- Populated further down
-			NodePathId = NULL, -- Populated further down
+			ParentNodePathId = NULL, -- Populated further down for nodes
+			NodePathId = NULL, -- Populated further down for nodes
 			DisplayOrder = CASE WHEN hed.Id = @HierarchyEditDetailId THEN 1 ELSE hed.DisplayOrder END,
 			NodeLinkId = CASE WHEN hed.Id = @HierarchyEditDetailId THEN @nodeLinkId ELSE hed.NodeLinkId END,
 			AmendUserId = @UserId,
@@ -120,7 +120,6 @@ BEGIN
 			[hierarchy].[HierarchyEditDetail] hed
 		WHERE	
 			HierarchyEditID = @HierarchyEditID
-			AND hed.Id = @HierarchyEditDetailId
 			AND hed.Deleted = 0
 			AND (HierarchyEditDetailTypeId = 4 OR HierarchyEditDetailTypeId = 5) -- Node Link OR Node Resource
 			AND ISNULL(NewNodePath, InitialNodePath) like @OriginalNodePath +'%'
@@ -168,7 +167,7 @@ BEGIN
 		FROM	hierarchy.HierarchyEditDetail hed
 		INNER JOIN hierarchy.NodePath np ON hed.NodeId = np.NodeId AND ISNULL(hed.NewNodePath, hed.InitialNodePath) = np.NodePath AND np.Deleted = 0
 		WHERE	hed.HierarchyEditID = @HierarchyEditID
-			AND hed.NodePathId is NULL
+			AND hed.NodePathId IS NULL
 
 		-- Populate the Parent Node Path Ids for the new reference nodes.
 		UPDATE  hed
@@ -216,6 +215,69 @@ BEGIN
 		INNER JOIN hierarchy.HierarchyEditDetail hed ON npdv.NodePathId = hed.NodePathId
 		WHERE	hed.HierarchyEditID = @HierarchyEditID
 			AND npdv.Deleted = 0
+			AND hed.Deleted = 0
+
+
+		-- Create the new ResourceReference records resulting from the move (Created as IsActive = 0).
+		INSERT INTO resources.ResourceReference (ResourceId, NodePathId, OriginalResourceReferenceId, IsActive, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
+		SELECT  hed.ResourceId, hed.ParentNodePathId, o_rr.OriginalResourceReferenceId, 0 AS IsActive, 0, @UserId, @AmendDate, @UserId, @AmendDate
+		FROM hierarchy.HierarchyEditDetail hed
+		INNER JOIN resources.ResourceReference o_rr ON hed.ResourceReferenceId = o_rr.Id AND o_rr.Deleted = 0
+		LEFT OUTER JOIN resources.ResourceReference rr ON hed.ResourceId = rr.ResourceId AND hed.ParentNodePathId = rr.NodePathId AND rr.Deleted = 0
+		WHERE hed.HierarchyEditID = @HierarchyEditID
+			AND HierarchyEditDetailTypeId = 5 -- Node Resource
+			--AND hed.ResourceReferenceId is NULL
+			AND rr.Id IS NULL
+
+
+		-- Update HierarchyEditDetail records with the new ResourceReferenceIds.
+		UPDATE	hed
+		SET		ResourceReferenceId = rr.Id,
+				HierarchyEditDetailOperationId = CASE WHEN hed.HierarchyEditDetailOperationId IS NULL THEN 2 ELSE hed.HierarchyEditDetailOperationId END, -- Set to Edit if first update
+				AmendUserId = @UserId,
+				AmendDate = @AmendDate
+		FROM	hierarchy.HierarchyEditDetail hed
+		INNER JOIN resources.ResourceReference rr ON hed.ResourceId = rr.ResourceId AND hed.ParentNodePathId = rr.NodePathId AND rr.Deleted = 0
+		WHERE	hed.HierarchyEditID = @HierarchyEditID
+			AND hed.ResourceReferenceId != rr.Id
+			--AND hed.ResourceReferenceId IS NULL
+
+
+		-- Create new ResourceReferenceDisplayVersion records where the ResourceReferenceId has changed. i.e. the ResourceReferenceId against the ResourceReferenceDisplayVersion record is different
+		INSERT INTO resources.ResourceReferenceDisplayVersion (ResourceReferenceId, DisplayName, VersionStatusId, PublicationId, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
+		SELECT hed.ResourceReferenceId, DisplayName, 1 /* Draft */, NULL, 0, @UserId, @AmendDate, @UserId, @AmendDate
+		FROM	resources.ResourceReferenceDisplayVersion rrdv
+		INNER JOIN hierarchy.HierarchyEditDetail hed ON rrdv.Id = hed.ResourceReferenceDisplayVersionId
+		WHERE	hed.HierarchyEditID = @HierarchyEditID
+			AND rrdv.ResourceReferenceId != hed.ResourceReferenceId
+			AND rrdv.Deleted = 0
+			AND hed.Deleted = 0
+
+
+		-- Delete any Draft and Unused ResourceReferenceDisplayVersion records (resulting from creation and then subsequent move of node to different ResourceReference)
+		UPDATE	rrdv
+		SET		Deleted = 1,
+				AmendUserId = @UserId,
+				AmendDate = @AmendDate
+		FROM	resources.ResourceReferenceDisplayVersion rrdv
+		INNER JOIN hierarchy.HierarchyEditDetail hed ON rrdv.Id = hed.ResourceReferenceDisplayVersionId
+		WHERE	hed.HierarchyEditID = @HierarchyEditID
+			AND rrdv.ResourceReferenceId != hed.ResourceReferenceId
+			AND rrdv.VersionStatusId = 1 -- Draft
+			AND rrdv.Deleted = 0
+			AND hed.Deleted = 0
+
+
+		-- Update to the new ResourceReferenceDisplayVersion records where the ResourceReferenceId has changed.
+		UPDATE	hed
+		SET		ResourceReferenceDisplayVersionId = rrdv.Id,
+				HierarchyEditDetailOperationId = CASE WHEN hed.HierarchyEditDetailOperationId IS NULL THEN 2 ELSE hed.HierarchyEditDetailOperationId END, -- Set to Edit if first update
+				AmendUserId = @UserId,
+				AmendDate = @AmendDate
+		FROM	resources.ResourceReferenceDisplayVersion rrdv
+		INNER JOIN hierarchy.HierarchyEditDetail hed ON rrdv.ResourceReferenceId = hed.ResourceReferenceId
+		WHERE	hed.HierarchyEditID = @HierarchyEditID
+			AND rrdv.Deleted = 0
 			AND hed.Deleted = 0
 
 

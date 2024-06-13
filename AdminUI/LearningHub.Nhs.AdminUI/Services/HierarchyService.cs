@@ -116,16 +116,6 @@
             return await this.facade.PostAsync<ApiResponse, FolderEditViewModel>("Hierarchy/UpdateFolder", folderEditViewModel);
         }
 
-        /////// <summary>
-        /////// The CreateFolder.
-        /////// </summary>
-        /////// <param name="nodePathDisplayVersionModel">The nodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
-        /////// <returns>IActionResult.</returns>
-        ////public async Task<ApiResponse> CreateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel)
-        ////{
-        ////    return await this.facade.PostAsync<ApiResponse, NodePathDisplayVersionModel>("Hierarchy/CreateNodePathDisplayVersion", nodePathDisplayVersionModel);
-        ////}
-
         /// <summary>
         /// The UpdateFolder.
         /// </summary>
@@ -134,6 +124,12 @@
         public async Task<ApiResponse> UpdateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel)
         {
             return await this.facade.PostAsync<ApiResponse, NodePathDisplayVersionModel>("Hierarchy/UpdateNodePathDisplayVersion", nodePathDisplayVersionModel);
+        }
+
+        /// <inheritdoc/>
+        public async Task<ApiResponse> UpdateResourceReferenceDisplayVersionAsync(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersionModel)
+        {
+            return await this.facade.PostAsync<ApiResponse, ResourceReferenceDisplayVersionModel>("Hierarchy/UpdateResourceReferenceDisplayVersion", resourceReferenceDisplayVersionModel);
         }
 
         /// <summary>

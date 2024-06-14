@@ -8,7 +8,8 @@ Remove WebM from the list of Learning Hub supported filetypes (it is not support
 */
 
 Update [resources].[FileType] Set  [NotAllowed] = 1 Where Extension = 'webm';
-
+Update [resources].[FileType] Set  [NotAllowed] = 1 Where Extension = 'wmv';
+Update [resources].[FileType] Set  [NotAllowed] = 1 Where Extension = 'mpeg';
 
 /* 	https://hee-tis.atlassian.net/browse/TD-4102
 Update AMS streaming locators to MediaKind streaming locators in tables

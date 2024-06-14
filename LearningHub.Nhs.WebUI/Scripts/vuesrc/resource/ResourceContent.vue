@@ -522,11 +522,13 @@
                 }
             },
             async recordMediaResourceActivityInteraction(player: MKPlayer, event: string): Promise<void> {
+                let currentMediaTime = player.getCurrentTime();
                 // let resourceAzureMediaPlayer = amp("resourceAzureMediaPlayer");
                 // If user has come via the 'Play' link in My Learning, set the video start time.
                 if (this.isFirstPlay && this.mediaStartTime > 0) {
                     this.isFirstPlay = false;
-                    player.seek(this.mediaStartTime);
+                    this.player.seek(this.mediaStartTime);
+                    currentMediaTime = this.mediaStartTime;
                 }
 
                 // On iPhone/iPad, if the user uses the browser back/forward buttons to come to the page the browser doesn't reload it from scratch. So we have to reset the tracking variables to create a whole new activity session.
@@ -538,8 +540,6 @@
                     this.createFirstInteraction = true;
                     this.createdFirstInteraction = false;
                 }
-
-                let currentMediaTime = player.getCurrentTime();
                 let clientDateTime = new Date();
 
                 // If this is the first interaction, we need to create the ResourceActivity first, then the MediaResourceActivity, then the MediaResourceActivityInteraction.

@@ -2793,7 +2793,7 @@ namespace LearningHub.Nhs.Services
             var vm = this.mapper.Map<GenericFileViewModel>(genericFile);
 
             // User id is used to populate a field we aren't going to use, so we can just pass in the system user id.
-            var externalContentDetails = this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, 4);
+            var externalContentDetails = await this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, 4);
             if (!string.IsNullOrEmpty(externalContentDetails?.ExternalReference))
             {
                 vm.HostedContentUrl = $"{this.settings.LearningHubContentServerUrl}/{externalContentDetails.ExternalReference}/".ToLower();
@@ -2814,7 +2814,7 @@ namespace LearningHub.Nhs.Services
             var vm = this.mapper.Map<HtmlResourceViewModel>(htmlFile);
 
             // User id is used to populate a field we aren't going to use, so we can just pass in the system user id.
-            var externalContentDetails = this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, 4);
+            var externalContentDetails = await this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, 4);
             if (!string.IsNullOrEmpty(externalContentDetails?.ExternalReference))
             {
                 vm.HostedContentUrl = $"{this.settings.LearningHubContentServerUrl}/{externalContentDetails.ExternalReference}/".ToLower();
@@ -2835,7 +2835,7 @@ namespace LearningHub.Nhs.Services
             var vm = this.mapper.Map<ScormViewModel>(scorm);
 
             // User id is used to populate a field we aren't going to use, so we can just pass in the system user id.
-            var externalContentDetails = this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, 4);
+            var externalContentDetails = await this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, 4);
             if (!string.IsNullOrEmpty(externalContentDetails?.ExternalReference))
             {
                 vm.HostedContentUrl = $"{this.settings.LearningHubContentServerUrl}/{externalContentDetails.ExternalReference}/".ToLower();
@@ -2851,9 +2851,9 @@ namespace LearningHub.Nhs.Services
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
         /// <param name="userId">userId.</param>
         /// <returns>The <see cref="Task{ExternalContentDetailsViewModel}"/>.</returns>
-        public ExternalContentDetailsViewModel GetExternalContentDetails(int resourceVersionId, int userId)
+        public async Task<ExternalContentDetailsViewModel> GetExternalContentDetails(int resourceVersionId, int userId)
         {
-            var viewModel = this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, userId);
+            var viewModel = await this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, userId);
             if (viewModel != null)
             {
                 viewModel.HostedContentUrl = $"{this.settings.LearningHubContentServerUrl}/{viewModel.ExternalReference}/".ToLower();

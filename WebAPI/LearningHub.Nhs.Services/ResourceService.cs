@@ -1411,7 +1411,7 @@ namespace LearningHub.Nhs.Services
                     var rvs = await this.resourceVersionRepository.GetResourceVersionsAsync(resourceVersion.ResourceId);
                     rvs = rvs.Where(x => x.Id != resourceVersionId && x.PublicationId > 0).OrderByDescending(x => x.PublicationId).ToList();
                     var rv = rvs.FirstOrDefault();
-                    var extendedResourceVersion = await this.GetResourceVersionExtendedViewModelAsync(rv.Id);
+                    var extendedResourceVersion = rv != null ? await this.GetResourceVersionExtendedViewModelAsync(rv.Id) : null;
                     switch (resourceVersion.ResourceType)
                     {
                         case ResourceTypeEnum.Scorm:
@@ -1432,7 +1432,7 @@ namespace LearningHub.Nhs.Services
                             }
                             else if (rv == null && deletedResource)
                             {
-                                retVal.Add(scormResource.ContentFilePath);
+                                retVal.Add(scormResource?.File?.FilePath);
                             }
 
                             break;
@@ -1454,7 +1454,7 @@ namespace LearningHub.Nhs.Services
                             }
                             else if (rv == null && deletedResource)
                             {
-                                retVal.Add(htmlResource.ContentFilePath);
+                                retVal.Add(htmlResource?.File?.FilePath);
                             }
 
                             break;

@@ -502,6 +502,8 @@
                 showError: false,
                 errorMessage: '',
                 contributeResourceAVFlag: true,
+                filePathBeforeFileChange: [] as string[],
+                filePathAfterFileChange: [] as string[]
             }
         },
         computed: {
@@ -837,6 +839,19 @@
                     if (uploadResult.resourceType === ResourceType.SCORM) {
                         this.$store.commit('populateScormDetails', uploadResult.resourceVersionId);
                     }
+
+                    if (this.filePathBeforeFileChange.length > 0) {
+                        this.getResourceFilePath('completed');
+                        if (this.filePathBeforeFileChange.length > 0 && this.filePathAfterFileChange.length > 0) {
+                            let filePaths = this.filePathBeforeFileChange.filter(item => !this.filePathAfterFileChange.includes(item));
+                            if (filePaths.length > 0) {
+                                resourceData.archiveResourceFile(filePaths);
+                                this.filePathBeforeFileChange.length = 0;
+                                this.filePathAfterFileChange.length = 0;
+                            }
+                        }
+                    }
+                   
                 } else {
                     this.fileUploadServerError = 'There was a problem uploading this file to the Learning Hub. Please try again and if it still does not upload, contact the support team.';
                     this.$store.commit('setSaveStatus', '');
@@ -894,6 +909,7 @@
             },
             fileChangedScorm() {
                 (this.$refs.fileUploadScorm as any).click();
+                this.getResourceFilePath('initialised');
             },
             childResourceFileChanged(newFile: File) {
                 this.uploadingFile = newFile;
@@ -943,6 +959,7 @@
             fileChanged() {
                 this.fileUploadRef.value = null;
                 this.fileUploadRef.click();
+                this.getResourceFilePath('initialised');
             },
             childFileUploadError(errorType: FileErrorTypeEnum, customError: string) {
                 this.fileErrorType = errorType;
@@ -1015,6 +1032,21 @@
                         break;
                 }
                 return errorTitle;
+            },
+            async getResourceFilePath(fileChangeStatus: string) {
+                let resource = this.$store.state.resourceDetail;
+                if (resource != null && resource.resourceVersionId > 0 &&(resource.resourceType != this.resourceType.CASE || resource.resourceType != this.resourceType.ASSESSMENT))
+                {
+                    await resourceData.getObsoleteResourceFile(resource.resourceVersionId).then(response => {
+                        if (fileChangeStatus == 'initialised') {
+                            this.filePathBeforeFileChange = response;
+                        }
+                        else if (fileChangeStatus == 'completed') {
+                            this.filePathAfterFileChange = response;
+                        }
+                    });
+                }
+
             }
         },
         validations: {

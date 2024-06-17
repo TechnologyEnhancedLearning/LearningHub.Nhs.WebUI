@@ -5,11 +5,13 @@ namespace LearningHub.Nhs.Services.Interface
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.Models.Provider;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.Admin;
     using LearningHub.Nhs.Models.Resource.AzureMediaAsset;
+    using LearningHub.Nhs.Models.Resource.Blocks;
     using LearningHub.Nhs.Models.Resource.Contribute;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.Validation;
@@ -102,7 +104,7 @@ namespace LearningHub.Nhs.Services.Interface
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
         /// <param name="userId">userId.</param>
         /// <returns>The <see cref="Task{ScormContentDetailsViewModel}"/>.</returns>
-        ExternalContentDetailsViewModel GetExternalContentDetails(int resourceVersionId, int userId);
+        Task<ExternalContentDetailsViewModel> GetExternalContentDetails(int resourceVersionId, int userId);
 
         /// <summary>
         /// The get image details by id async.
@@ -233,8 +235,9 @@ namespace LearningHub.Nhs.Services.Interface
         /// Get file directory for unpublished or deleted versions.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="deletedResource">.</param>
         /// <returns>The <see cref="List{String}"/>.</returns>
-        Task<List<string>> GetObsoleteResourceFile(int resourceVersionId);
+        Task<List<string>> GetObsoleteResourceFile(int resourceVersionId, bool deletedResource = false);
 
         /// <summary>
         /// Delete resource version async.
@@ -434,6 +437,14 @@ namespace LearningHub.Nhs.Services.Interface
         /// <param name="resourceVersionId">The resource version id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<CaseViewModel> GetCaseDetailsByIdAsync(int resourceVersionId);
+
+        /// <summary>
+        /// The get case resource version async.
+        /// </summary>
+        /// <param name="excludeResourceVersionId">The resource version id.</param>
+        /// <param name="resourceType">The resource type.</param>
+        /// <returns>The <see cref="List{T}"/>.</returns>
+        Task<List<string>> GetResourceBlockCollectionsFilePathAsync(int excludeResourceVersionId, ResourceTypeEnum resourceType);
 
         /// <summary>
         /// The update case resource version async.

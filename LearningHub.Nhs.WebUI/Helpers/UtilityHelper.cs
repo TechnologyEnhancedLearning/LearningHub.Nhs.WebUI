@@ -110,7 +110,7 @@
         /// <param name="resourceType">The resource type.</param>
         /// <param name="durationInMilliseconds">The media duration in milliseconds.</param>
         /// <returns>The resource type name, and duration if applicable.</returns>
-        public static string GetPrettifiedResourceTypeName(ResourceTypeEnum resourceType, int? durationInMilliseconds)
+        public static string GetPrettifiedResourceTypeName(ResourceTypeEnum resourceType, int? durationInMilliseconds = 0)
         {
             switch (resourceType)
             {
@@ -119,7 +119,9 @@
                 case ResourceTypeEnum.Article:
                     return "Article";
                 case ResourceTypeEnum.Audio:
-                    return "Audio - " + GetDurationText(durationInMilliseconds.Value);
+                    string durationText = GetDurationText(durationInMilliseconds ?? 0);
+                    durationText = string.IsNullOrEmpty(durationText) ? string.Empty : " - " + durationText;
+                    return "Audio" + durationText;
                 case ResourceTypeEnum.Equipment:
                     return "Equipment";
                 case ResourceTypeEnum.Image:
@@ -127,7 +129,9 @@
                 case ResourceTypeEnum.Scorm:
                     return "elearning";
                 case ResourceTypeEnum.Video:
-                    return "Video - " + GetDurationText(durationInMilliseconds.Value);
+                    durationText = GetDurationText(durationInMilliseconds ?? 0);
+                    durationText = string.IsNullOrEmpty(durationText) ? string.Empty : " - " + durationText;
+                    return "Video" + durationText;
                 case ResourceTypeEnum.WebLink:
                     return "Web link";
                 case ResourceTypeEnum.GenericFile:

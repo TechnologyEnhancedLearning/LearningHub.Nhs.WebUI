@@ -45,11 +45,11 @@
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [HttpPost]
         [Route("GetContentDetailsByExternalUrl")]
-        public IActionResult GetContentDetailsByExternalUrl([FromBody] string externalUrl)
+        public async Task<IActionResult> GetContentDetailsByExternalUrl([FromBody] string externalUrl)
         {
             string decodedUrl = HttpUtility.UrlDecode(externalUrl);
 
-            var details = this.scormContentServerService.GetContentDetailsByExternalUrl(decodedUrl);
+            var details = await this.scormContentServerService.GetContentDetailsByExternalUrl(decodedUrl);
 
             return this.Ok(details);
         }
@@ -61,9 +61,9 @@
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [HttpGet]
         [Route("GetContentDetailsByExternalReference/{externalReference}")]
-        public IActionResult GetContentDetailsByExternalReference(string externalReference)
+        public async Task<IActionResult> GetContentDetailsByExternalReference(string externalReference)
         {
-            var details = this.scormContentServerService.GetContentDetailsByExternalReference(externalReference);
+            var details = await this.scormContentServerService.GetContentDetailsByExternalReference(externalReference);
 
             return this.Ok(details);
         }

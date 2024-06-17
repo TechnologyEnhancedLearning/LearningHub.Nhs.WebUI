@@ -55,12 +55,18 @@
         private IResourceService resourceService;
 
         /// <summary>
+        /// Defines the _fileService.
+        /// </summary>
+        private IFileService fileService;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ResourceController"/> class.
         /// </summary>
         /// <param name="hostingEnvironment">The hostingEnvironment<see cref="IWebHostEnvironment"/>.</param>
         /// <param name="config">The config<see cref="IOptions{WebSettings}"/>.</param>
         /// <param name="logger">The logger<see cref="ILogger{HomeController}"/>.</param>
         /// <param name="resourceService">The resourceService<see cref="IResourceService"/>.</param>
+        /// <param name="fileService">The fileService<see cref="IResourceService"/>.</param>
         /// /// <param name="websettings">The websettings<see cref="IOptions{WebSettings}"/>.</param>
         /// <param name="featureManager">The featureManager<see cref="IFeatureManager"/>.</param>
         public ResourceController(
@@ -68,6 +74,7 @@
             IOptions<WebSettings> config,
             ILogger<HomeController> logger,
             IResourceService resourceService,
+            IFileService fileService,
             IOptions<WebSettings> websettings,
             IFeatureManager featureManager)
         : base(hostingEnvironment)
@@ -76,6 +83,7 @@
             this.websettings = websettings;
             this.config = config.Value;
             this.resourceService = resourceService;
+            this.fileService = fileService;
             this.featureManager = featureManager;
         }
 
@@ -298,11 +306,17 @@
         [HttpPost]
         public async Task<IActionResult> Unpublish(int resourceVersionId, string details)
         {
+            var associatedFile = await this.resourceService.GetResourceVersionExtendedViewModelAsync(resourceVersionId);
             var vr = await this.resourceService.UnpublishResourceVersionAsync(resourceVersionId, details);
             await this.resourceService.CreateResourceVersionEvent(resourceVersionId, Nhs.Models.Enums.ResourceVersionEventTypeEnum.UnpublishedByAdmin, "Unpublish using Admin UI", 0);
 
             if (vr.IsValid)
             {
+                if (associatedFile.ScormDetails != null || associatedFile.HtmlDetails != null)
+                {
+                    _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(associatedFile, null); });
+                }
+
                 return this.Json(new
                 {
                     success = true,

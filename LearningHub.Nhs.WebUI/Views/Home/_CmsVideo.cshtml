@@ -1,6 +1,13 @@
 ﻿@using LearningHub.Nhs.Models.Content
 @model PageSectionDetailViewModel
-@if (Model != null)
+@{
+    string mkPlayerLicence = (string) ViewData["mkPlayerLicenceKey"];
+}
+
+@* <link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" /> *@
+<script type="text/javascript" src="~/js/mkplayer.js" asp-append-version="true"></script>
+
+@* @if (Model != null)
 {
     @if (Model.VideoAsset != null)
     {
@@ -40,4 +47,193 @@
 
     </script>
 
-}
+} *@
+<div class="video-container" id="@($"{"videoContainer"}{Model.Id}")"></div>
+
+<script>
+
+    var model = @Json.Serialize(Model);
+    // 1. Grab the video container
+    var videoContainer = document.getElementById("@($"{"videoContainer"}{Model.Id}")");
+
+    // 2. Prepare the player configuration
+    var playerConfig = {
+        key: "@mkPlayerLicence",
+        ui: false,
+        theme: "dark",
+        playback: {
+            muted: false,
+            autoplay: false
+        },
+
+        // Subscribe to player events
+        events: {
+            [mkplayer.MKPlayerEvent.Error]: (event) => {
+                console.log("Encountered player error: ", JSON.stringify(event));
+            },
+            [mkplayer.MKPlayerEvent.TimeChanged]: (event) => {
+                console.log("Current player position: ", event.time);
+            },
+            [mkplayer.MKPlayerEvent.Muted]: (data) => {
+                console.log("Audio muted!")
+            },
+            [mkplayer.MKPlayerEvent.Unmuted]: onUnmute,
+
+            [mkplayer.MKPlayerEvent.Ready]: () => {
+
+                // debugger;
+                //var caption = model.videoAsset.closedCaptionsFile.fileName;
+
+                // var subtitleTrack = {
+                //     id: "@($"{"subid"}{Model.Id}")",
+                //     lang: "en",
+                //     label: "Custom Subtitle",
+                //     url: "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt",
+                //     kind: "subtitle"
+                // };
+                // player.addSubtitle(subtitleTrack);
+            },
+            [mkplayer.MKPlayerEvent.SubtitleAdded]: () => {
+                //  player.enableSubtitle("@($"{"subid"}{Model.Id}")");
+            },
+            [mkplayer.MKPlayerEvent.playbackSpeed]: (data) => {
+                alert("Video playback quality changed to: ");
+            },
+        }
+    };
+
+    // 3. Initialize the player with video container and player configuration
+    var player = new mkplayer.MKPlayer(videoContainer, playerConfig);
+
+    player.on("loaded", () => {
+        playerElement.addEventListener("mousemove", () => {
+        });
+    });
+
+    player.on(mkplayer.MKPlayerEvent.SourceLoaded, (event) => {
+        console.log("Source loaded successfully!");
+    });
+
+    player.on(mkplayer.MKPlayerEvent.Ready, (event) => {
+
+        const videoElement = document.getElementById("@($"{"bitmovinplayer-video-videoContainer"}{Model.Id}")");
+        if (videoElement) {
+            videoElement.controls = true;
+           // debugger;
+            // Check if captions available
+            if (model.videoAsset.closedCaptionsFile) {
+                const captionsInfo = model.videoAsset.closedCaptionsFile;
+                if (captionsInfo.filePath) {
+                    const trackElement = document.createElement('track');
+                  //  const srcPath = "/file/download?filePath=" + captionsInfo.filePath + "&fileName=" + captionsInfo.fileName;
+                    const srcPath = "/file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
+                    trackElement.kind = 'captions'; // Or 'subtitles' or 'descriptions' depending on your track type
+                    trackElement.label = captionsInfo.language || 'english';
+                    trackElement.srclang = captionsInfo.language || 'en'; 
+                   // trackElement.src = "/api/resource/DownloadResource?filePath=396eb836-5cf5-4255-b33f-66a31fdbef39&amp;fileName=samplecaption.vtt";
+                   // trackElement.src = "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt";
+                   trackElement.src =   srcPath;
+                    
+
+                    // Append the track to the video element
+                    videoElement.appendChild(trackElement);
+
+                    // Add event listener to TextTrackList for when a new text track is added
+                    // videoElement.textTracks.addEventListener('addtrack', function (event) {
+                    //     let track = event.track;
+                    //     console.log('Track added:', track);
+
+                    //     if (track.kind === 'subtitles' || track.kind === 'captions') {
+                    //         track.mode = 'showing'; // Automatically show captions
+                    //         console.log('Track showing:', track);
+                    //     }
+                    // });
+
+                    // trackElement.addEventListener('load', function () {
+                    //     debugger;
+                    //     this.track.mode = 'showing'; // Automatically show captions
+                    //     alert('Track loaded and showing:', this.track);
+                    // });
+
+                    // Manually check and set track mode after a slight delay
+                    // setTimeout(() => {                       
+                    //     var textTracks = videoElement.textTracks;
+                    //     for (let i = 0; i < textTracks.length; i++) {
+                    //         if ((textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') && textTracks[i].src === srcPath) {
+                    //             textTracks[i].mode = 'showing';
+                    //             debugger;
+                    //             console.log('Track set to showing:', textTracks[i]);
+                    //         }
+                    //     }
+                    // }, 1000);
+
+                    // Ensure the track is loaded and ready
+                    // trackElement.addEventListener('load', function () {
+                    //     debugger;
+                    //     this.mode = 'showing'; // Automatically show captions
+                    // });
+
+                }
+            }
+        }
+
+        // document.getElementById("@($"{"bitmovinplayer-video-videoContainer"}{Model.Id}")").controls = true;
+        // console.log("Player is ready for playback!");
+    });
+
+    var url = model.videoAsset.azureMediaAsset.locatorUri;
+    url = url.substring(0, url.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
+
+    var sourceConfig = {
+        hls: url,
+        // Custom subtitle track
+        // subtitleTracks: [{
+        //     id: "sub1",
+        //     lang: "en",
+        //     label: "Custom Subtitle",
+        //     url: "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt",
+        //     kind: "subtitle"
+        // }],
+        drm: {
+            clearkey: {
+                LA_URL: "HLS_AES",
+                headers: {
+                    "Authorization": "Bearer=" + model.videoAsset.azureMediaAsset.authenticationToken
+                }
+            }
+        }
+    };
+
+    player.load(sourceConfig)
+        .then(() => {
+            // you can also get notified when subscribed to `SourceLoaded` event.
+            console.log("Source loaded successfull!");
+        })
+        .catch((error) => {
+            console.error("An error occurred while loading the source!");
+        });
+
+    function onUnmute(data) {
+        console.log("Audio unmuted!");
+    }
+</script>
+
+<style>
+
+    .video-container {
+        height: 0;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        padding-top: 56.25%; /* 16:9 aspect ratio */
+        background-color: #000;
+    }
+
+    video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>

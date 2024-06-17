@@ -25,7 +25,7 @@
     import Vue, { PropOptions } from 'vue';
     
     import Spinner from '../../globalcomponents/Spinner.vue';
-    import VideoPlayer from './VideoPlayer.vue';
+    import VideoPlayer from './MKIOVideoPlayer.vue';
     
     import { VideoMediaModel } from '../../models/contribute-resource/blocks/videoMediaModel';
     

@@ -679,15 +679,15 @@
         /// <param name="resourceVersionId">resourceVersionId.</param>
         /// <param name="userId">userId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public ExternalContentDetailsViewModel GetExternalContentDetails(int resourceVersionId, int userId)
+        public async Task<ExternalContentDetailsViewModel> GetExternalContentDetails(int resourceVersionId, int userId)
         {
             try
             {
                 var param0 = new SqlParameter("@resourceVersionId", SqlDbType.Int) { Value = resourceVersionId };
                 var param1 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
 
-                var externalContentDetailsViewModel = this.DbContext.ExternalContentDetailsViewModel.FromSqlRaw("[resources].[GetExternalContentDetails] @resourceVersionId, @userId", param0, param1).AsEnumerable().FirstOrDefault();
-
+                var retVal = await this.DbContext.ExternalContentDetailsViewModel.FromSqlRaw("[resources].[GetExternalContentDetails] @resourceVersionId, @userId", param0, param1).AsNoTracking().ToListAsync();
+                ExternalContentDetailsViewModel externalContentDetailsViewModel = retVal.AsEnumerable().FirstOrDefault();
                 return externalContentDetailsViewModel;
             }
             catch (Exception ex)

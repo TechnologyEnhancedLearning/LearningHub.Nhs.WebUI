@@ -511,6 +511,8 @@
     <Build Include="Stored Procedures\Activity\GetUserLatestActivityCheck.sql" />
     <Build Include="Stored Procedures\Activity\GetUserLearningActivities.sql" />
     <Build Include="Stored Procedures\Activity\GetUserLearningActivitiesCount.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-2929_ActivityStatusUpdates.sql" />
+    <Build Include="Stored Procedures\Resources\BlockCollectionFileSearch.sql" />
     <Build Include="Tables\Hierarchy\NodePathDisplayVersion.sql" />
     <Build Include="Stored Procedures\Hierarchy\HierarchyEditReferenceNode.sql" />
     <Build Include="Stored Procedures\Hierarchy\GetNodePathDetails.sql" />

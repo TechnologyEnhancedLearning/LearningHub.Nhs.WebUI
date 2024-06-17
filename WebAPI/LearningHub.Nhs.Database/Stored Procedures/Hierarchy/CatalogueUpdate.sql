@@ -9,6 +9,7 @@
 -- 01-08-2023  Swapnamol Abraham Provided BY
 -- 11-08-2023  RS               Added CardImageUrl parameter
 -- 08-02-2024  SA               Added Previewer user group 
+-- 24-04-2024  SS               Changed Description size to max 
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[CatalogueUpdate]
 (
@@ -19,7 +20,7 @@ CREATE PROCEDURE [hierarchy].[CatalogueUpdate]
 	@BannerUrl nvarchar(128),
 	@CertificateUrl nvarchar(128),
 	@Order int,
-	@Description nvarchar(4000),
+	@Description nvarchar(max),
 	@UserId int,
 	@Keywords nvarchar(max),
 	@CatalogueNodeVersionId int,

@@ -96,6 +96,7 @@ namespace LearningHub.Nhs.Repository.Activity
             //
             // For assessment activities, only include the original activities that were created when starting the assessment. The created end record is only for consistency.
             // It's easier to get the real assessment resource activity from the original resource activity, so only fetch that one.
+            // TD-4047: As part of this defect bringing back the removed code which then used for the new stored procedure created as part of performance improvement.
             return this.DbContext.ResourceActivity
                .Include(r => r.Resource)
                .ThenInclude(r => r.ResourceReference)
@@ -110,11 +111,11 @@ namespace LearningHub.Nhs.Repository.Activity
                .ThenInclude(a => a.AssessmentResourceActivityInteractions)
                .Include(r => r.NodePath)
                .AsNoTracking()
-             .Where(r =>
+               .Where(r =>
                             r.UserId == userId && r.ScormActivity.First().CmiCoreLessonStatus != (int)ActivityStatusEnum.Completed &&
                            ((!r.InverseLaunchResourceActivity.Any()) ||
                               r.InverseLaunchResourceActivity.Any()))
-              .OrderByDescending(r => r.ActivityStart);
+               .OrderByDescending(r => r.ActivityStart);
         }
 
         /// <summary>
@@ -400,11 +401,14 @@ namespace LearningHub.Nhs.Repository.Activity
                     List<AssessmentResourceActivityInteraction> assessmentResourceActivityInteractionList = new List<AssessmentResourceActivityInteraction>();
                     foreach (var item in c)
                     {
-                        AssessmentResourceActivityInteraction assessmentResourceActivityInteraction = new AssessmentResourceActivityInteraction();
-                        assessmentResourceActivityInteraction.AssessmentResourceActivityId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_AssessmentResourceActivityId ?? 0;
-                        assessmentResourceActivityInteraction.Id = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id ?? 0;
-                        assessmentResourceActivityInteraction.QuestionBlockId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId ?? 0;
-                        assessmentResourceActivityInteractionList.Add(assessmentResourceActivityInteraction);
+                        if (i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id != null)
+                        {
+                            AssessmentResourceActivityInteraction assessmentResourceActivityInteraction = new AssessmentResourceActivityInteraction();
+                            assessmentResourceActivityInteraction.AssessmentResourceActivityId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_AssessmentResourceActivityId ?? 0;
+                            assessmentResourceActivityInteraction.Id = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id ?? 0;
+                            assessmentResourceActivityInteraction.QuestionBlockId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId ?? 0;
+                            assessmentResourceActivityInteractionList.Add(assessmentResourceActivityInteraction);
+                        }
                     }
 
                     assessmentResourceActivity.AssessmentResourceActivityInteractions = assessmentResourceActivityInteractionList;
@@ -498,12 +502,17 @@ namespace LearningHub.Nhs.Repository.Activity
                 i.Resource.Deleted = i.Resource_Deleted;
                 int resourceTypeId = i.Resource_ResourceTypeId;
                 i.Resource.ResourceTypeEnum = (ResourceTypeEnum)resourceTypeId;
-                ResourceReference resourceReference = new ResourceReference();
-                resourceReference.OriginalResourceReferenceId = i.ResourceReference_OriginalResourceReferenceId;
-                resourceReference.NodePathId = i.ResourceReference_NodePathId;
-                resourceReference.ResourceId = i.ResourceReference_ResourceId;
+                var resourceReferences = result.Where(x => x.Id == i.Id && x.ResourceVersionId == i.ResourceVersionId).ToList();
                 List<ResourceReference> resourceReferenceList = new List<ResourceReference>();
-                resourceReferenceList.Add(resourceReference);
+                foreach (var b in resourceReferences)
+                {
+                    ResourceReference resourceReference = new ResourceReference();
+                    resourceReference.OriginalResourceReferenceId = b.ResourceReference_OriginalResourceReferenceId;
+                    resourceReference.NodePathId = b.ResourceReference_NodePathId;
+                    resourceReference.ResourceId = b.ResourceReference_ResourceId;
+                    resourceReferenceList.Add(resourceReference);
+                }
+
                 i.Resource.ResourceReference = resourceReferenceList;
             });
         }

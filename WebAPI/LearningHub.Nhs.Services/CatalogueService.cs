@@ -259,6 +259,11 @@
             if (cnv != null)
             {
                 var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
+                if (searchModel.Description.Length > this.settings.Findwise.DescriptionLengthLimit)
+                {
+                    searchModel.Description = searchModel.Description.Substring(0, this.settings.Findwise.DescriptionLengthLimit - 4) + "</p>";
+                }
+
                 await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
             }
 
@@ -480,6 +485,11 @@
             if (cnv != null)
             {
                 var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
+                if (searchModel.Description.Length > this.settings.Findwise.DescriptionLengthLimit)
+                {
+                    searchModel.Description = searchModel.Description.Substring(0, this.settings.Findwise.DescriptionLengthLimit - 4) + "</p>";
+                }
+
                 await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
             }
 
@@ -568,6 +578,11 @@
             if (cnv != null)
             {
                 var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
+                if (searchModel.Description.Length > this.settings.Findwise.DescriptionLengthLimit)
+                {
+                    searchModel.Description = searchModel.Description.Substring(0, this.settings.Findwise.DescriptionLengthLimit - 4) + "</p>";
+                }
+
                 await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
             }
 
@@ -600,6 +615,11 @@
             if (cnv != null)
             {
                 var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
+                if (searchModel.Description.Length > this.settings.Findwise.DescriptionLengthLimit)
+                {
+                    searchModel.Description = searchModel.Description.Substring(0, this.settings.Findwise.DescriptionLengthLimit - 4) + "</p>";
+                }
+
                 await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
             }
         }
@@ -680,10 +700,13 @@
         {
             var u = await this.userRepository.GetByIdIncludeRolesAsync(userId);
 
-            var ug = u.UserUserGroup.Where(uug => uug.UserGroup.RoleUserGroup.Where(rug => rug.Scope != null && rug.Scope.CatalogueNodeId == catalogueId
-                                                                                            && (rug.RoleId == (int)RoleEnum.Editor)).ToList().Count > 0).ToList();
+            if (u != null)
+            {
+                var ug = u.UserUserGroup.Where(uug => uug.UserGroup.RoleUserGroup.Where(rug => rug.Scope != null && rug.Scope.CatalogueNodeId == catalogueId && (rug.RoleId == (int)RoleEnum.Editor)).ToList().Count > 0).ToList();
+                return ug.Count > 0;
+            }
 
-            return ug.Count > 0;
+            return false;
         }
 
         /// <summary>

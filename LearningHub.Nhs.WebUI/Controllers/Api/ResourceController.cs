@@ -1,6 +1,7 @@
 namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Resource;
@@ -556,6 +557,33 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         {
             var validationResult = await this.resourceService.DeleteAllResourceVersionProviderAsync(resourceVersionId);
             return this.Ok(validationResult);
+        }
+
+        /// <summary>
+        /// The ArchiveResourceFile.
+        /// </summary>
+        /// <param name="filePaths">filePaths.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        [HttpPost]
+        [Route("ArchiveResourceFile")]
+        public ActionResult ArchiveResourceFile(List<string> filePaths)
+        {
+            _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, filePaths); });
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// The GetObsoleteResourceFile.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <param name="deletedResource">.</param>
+        /// <returns>The <see cref="T:Task{List{FileTypeViewModel}}"/>.</returns>
+        [HttpGet]
+        [Route("GetObsoleteResourceFile/{resourceVersionId}/{deletedResource}")]
+        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId, bool deletedResource)
+        {
+            var result = await this.resourceService.GetObsoleteResourceFile(resourceVersionId, deletedResource);
+            return result;
         }
     }
 }

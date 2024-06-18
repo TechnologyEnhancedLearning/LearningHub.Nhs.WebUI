@@ -35,5 +35,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <returns><see cref="Task"/>The resourceReferenceMetaDataViewModel.</returns>
         Task<BulkResourceReferenceViewModel> GetResourceReferencesByOriginalIds(List<int> originalResourceReferenceIds, int? currentUserId);
 
+        /// <summary>
+        /// delete me.
+        /// </summary>
+        public void QqqqTest();
     }
 }

@@ -2,6 +2,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Findwise;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource;
@@ -19,8 +20,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <returns><see cref="ResourceSearchResultViewModel"/>.</returns>
         Task<ResourceSearchResultModel> Search(ResourceSearchRequest query, int? currentUserId);
 
-        ResourceMetadataViewModel MapToViewModel(Resource resource);
-
-
+        ResourceMetadataViewModel MapToViewModel(Resource resource, List<ResourceActivity> resourceActivities);
     }
 }

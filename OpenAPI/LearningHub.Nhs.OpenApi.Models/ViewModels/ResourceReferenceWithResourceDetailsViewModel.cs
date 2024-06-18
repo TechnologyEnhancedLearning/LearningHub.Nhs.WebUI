@@ -1,3 +1,4 @@
+using LearningHub.Nhs.OpenApi.Models.NugetTemp;
 using System.Collections.Generic;
 
 namespace LearningHub.Nhs.OpenApi.Models.ViewModels
@@ -29,7 +30,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             int? majorVersion,
             decimal rating,
             string link,
-            Dictionary<int, string>? userSummaryActvityStatus
+            List<MajorVersionIdActivityStatusDescription>? userSummaryActvityStatus
             )
         {
             this.ResourceId = resourceId;
@@ -95,6 +96,6 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <summary>
         /// Gets <see cref="UserSummaryActvityStatus"/>.
         /// </summary>
-        public Dictionary<int, string>? UserSummaryActvityStatus { get;  }
+        public List<MajorVersionIdActivityStatusDescription>? UserSummaryActvityStatus { get;  }
     }
 }

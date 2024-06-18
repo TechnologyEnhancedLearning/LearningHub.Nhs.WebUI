@@ -187,8 +187,11 @@ BEGIN
         LEFT OUTER JOIN hierarchy.NodePath np ON rr.NodePathId = np.Id 
         LEFT OUTER JOIN hierarchy.HierarchyEditDetail hed2 ON hed2.HierarchyEditID = @HierarchyEditID
                                                             AND hed2.HierarchyEditDetailTypeId = 5 -- Node Resource
+                                                            AND hed2.HierarchyEditDetailOperationId = 2 -- Edit
                                                             AND hed2.Id != hed.Id
-                                                            AND np.NodePath = ISNULL(hed2.NewNodePath, hed2.InitialNodePath)
+                                                            AND hed2.ResourceId = hed.ResourceId
+                                                            AND ISNULL(hed2.InitialNodePath, '') != ISNULL(hed2.NewNodePath, hed2.InitialNodePath) -- The original resource has been moved
+                                                            AND ISNULL(hed2.InitialNodePath, '') = ISNULL(hed.NewNodePath, hed.InitialNodePath) -- The resource has been moved to the original location that it was moved from
 		WHERE hed.HierarchyEditID = @HierarchyEditID
 			AND hed.HierarchyEditDetailOperationId = 4 -- Add Reference
 			AND hed.HierarchyEditDetailTypeId = 5 -- Node Resource

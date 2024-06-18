@@ -156,6 +156,10 @@
                 </div>
             </div>
 
+            <div v-if="editMode === EditModeEnum.ReferenceExternalContent" id="referenceExternalContentContainer">
+                <content-search :editingCatalogueNodePathId="catalogue.rootNodePathId"></content-search>
+            </div>
+
             <div id="deleteFolderModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
                 <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                     <div class="modal-content">
@@ -249,12 +253,13 @@
             </div>
 
         </div>
-    </div>
+        </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
 import treeItem from './treeItem.vue';
+import contentSearch from './contentSearch.vue';
 import '../filters';
 import { contentStructureData } from '../data/contentStructure';
 import { HierarchyEditModel, HierarchyEditStatusEnum } from '../models/content-structure/hierarchyEditModel';
@@ -272,6 +277,7 @@ export default Vue.extend({
     name: 'contentStructure',
     components: {
         'treeItem': treeItem,
+        'contentSearch': contentSearch,
         ckeditorwithhint
     },
     props: {

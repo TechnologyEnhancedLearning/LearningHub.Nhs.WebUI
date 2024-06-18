@@ -401,7 +401,7 @@
                 this.$store.commit('contentStructureState/setCreatingFolder', { parentNode: this.item });
             },
             addReference: function () {
-                this.$store.commit('contentStructureState/addReference', { parentNode: this.item });
+                this.$store.commit('contentStructureState/setReferencingExternalContent', { parentNode: this.item });
             },
             onEditFolder: function () {
                 this.$store.commit('contentStructureState/setEditingFolder', { folderNode: this.item });

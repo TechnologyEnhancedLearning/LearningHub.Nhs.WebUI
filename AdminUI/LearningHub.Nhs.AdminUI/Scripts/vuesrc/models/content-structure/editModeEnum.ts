@@ -8,4 +8,5 @@
     FolderReference = 6,
     ReferenceResource = 7,
     ResourceReference = 8,
+    ReferenceExternalContent = 9,
 }

@@ -1477,38 +1477,38 @@ namespace LearningHub.Nhs.Services
                     var assessmentContentFiles = new List<string>();
 
                     if (resource.AssessmentDetails is { EndGuidance: { } } && resource.AssessmentDetails.EndGuidance.Blocks != null)
+                    {
+                        if (deletedResource)
                         {
-                            if (deletedResource)
-                            {
-                                endGuidanceFiles = this.CheckBlockFile(extendedResourceVersion.AssessmentDetails.EndGuidance, resource.AssessmentDetails.EndGuidance);
-                            }
-                            else
-                            {
-                                endGuidanceFiles = this.CheckBlockFile(resource.AssessmentDetails.EndGuidance, extendedResourceVersion.AssessmentDetails.EndGuidance);
-                            }
-
-                            if (endGuidanceFiles.Any())
-                            {
-                                retVal.AddRange(endGuidanceFiles);
-                            }
+                            endGuidanceFiles = this.CheckBlockFile(extendedResourceVersion.AssessmentDetails.EndGuidance, resource.AssessmentDetails.EndGuidance);
                         }
+                        else
+                        {
+                            endGuidanceFiles = this.CheckBlockFile(resource.AssessmentDetails.EndGuidance, extendedResourceVersion.AssessmentDetails.EndGuidance);
+                        }
+
+                        if (endGuidanceFiles.Any())
+                        {
+                            retVal.AddRange(endGuidanceFiles);
+                        }
+                    }
 
                     if (resource.AssessmentDetails is { AssessmentContent: { } } && resource.AssessmentDetails.AssessmentContent.Blocks != null)
+                    {
+                        if (deletedResource)
                         {
-                            if (deletedResource)
-                            {
-                                assessmentContentFiles = this.CheckBlockFile(extendedResourceVersion.AssessmentDetails.AssessmentContent, resource.AssessmentDetails.AssessmentContent);
-                            }
-                            else
-                            {
-                                assessmentContentFiles = this.CheckBlockFile(resource.AssessmentDetails.AssessmentContent, extendedResourceVersion.AssessmentDetails.AssessmentContent);
-                            }
-
-                            if (assessmentContentFiles.Any())
-                            {
-                                retVal.AddRange(assessmentContentFiles);
-                            }
+                            assessmentContentFiles = this.CheckBlockFile(extendedResourceVersion.AssessmentDetails.AssessmentContent, resource.AssessmentDetails.AssessmentContent);
                         }
+                        else
+                        {
+                            assessmentContentFiles = this.CheckBlockFile(resource.AssessmentDetails.AssessmentContent, extendedResourceVersion.AssessmentDetails.AssessmentContent);
+                        }
+
+                        if (assessmentContentFiles.Any())
+                        {
+                            retVal.AddRange(assessmentContentFiles);
+                        }
+                    }
                 }
                 else if (extendedResourceVersion.ResourceTypeEnum == ResourceTypeEnum.Case)
                 {
@@ -1532,11 +1532,11 @@ namespace LearningHub.Nhs.Services
             {
                 if (resource.ResourceTypeEnum == ResourceTypeEnum.Scorm)
                 {
-                      retVal.Add(resource.ScormDetails.ContentFilePath);
+                    retVal.Add(resource.ScormDetails.ContentFilePath);
                 }
                 else if (resource.ResourceTypeEnum == ResourceTypeEnum.Html)
                 {
-                      retVal.Add(resource.HtmlDetails.ContentFilePath);
+                    retVal.Add(resource.HtmlDetails.ContentFilePath);
                 }
                 else if (resource.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
                 {
@@ -1551,7 +1551,7 @@ namespace LearningHub.Nhs.Services
                     retVal.Add(resource.AudioDetails?.File?.FilePath);
                     if (resource.AudioDetails?.ResourceAzureMediaAsset?.FilePath != null)
                     {
-                            retVal.Add(resource.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                        retVal.Add(resource.AudioDetails.ResourceAzureMediaAsset.FilePath);
                     }
                 }
                 else if (resource.ResourceTypeEnum == ResourceTypeEnum.Video)
@@ -1559,20 +1559,20 @@ namespace LearningHub.Nhs.Services
                     retVal.Add(resource.VideoDetails?.File?.FilePath);
                     if (resource.VideoDetails?.ResourceAzureMediaAsset?.FilePath != null)
                     {
-                         retVal.Add(resource.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                        retVal.Add(resource.VideoDetails.ResourceAzureMediaAsset.FilePath);
                     }
                 }
                 else if (resource.ResourceTypeEnum == ResourceTypeEnum.Article)
                 {
-                        var inputResourceFiles = resource.ArticleDetails.Files.ToList();
-                        if (inputResourceFiles.Any())
+                    var inputResourceFiles = resource.ArticleDetails.Files.ToList();
+                    if (inputResourceFiles.Any())
+                    {
+                        foreach (var file in inputResourceFiles)
                         {
-                            foreach (var file in inputResourceFiles)
-                            {
-                                    retVal.Add(file.FilePath);
-                            }
+                            retVal.Add(file.FilePath);
                         }
                     }
+                }
                 else if (resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
                 {
                     if (deletedResource)
@@ -1959,6 +1959,11 @@ namespace LearningHub.Nhs.Services
                 }
 
                 var erv = await this.GetResourceVersionExtendedViewModelAsync(rv.Id, userId);
+
+                if (erv == null)
+                {
+                    return null;
+                }
 
                 var retVal = new ResourceItemViewModel(erv);
                 retVal.Id = resourceReferenceId;
@@ -4471,11 +4476,14 @@ namespace LearningHub.Nhs.Services
             {
                 return true;
             }
-            else
+
+            var resourceVersion = await this.GetResourceVersionByIdAsync(resourceVersionId);
+            if (resourceVersion == null)
             {
-                var resourceVersion = await this.GetResourceVersionByIdAsync(resourceVersionId);
-                return await this.catalogueService.CanUserEditCatalogueAsync(currentUserId, (int)resourceVersion.ResourceCatalogueId);
+                return false;
             }
+
+            return await this.catalogueService.CanUserEditCatalogueAsync(currentUserId, (int)resourceVersion.ResourceCatalogueId);
         }
 
         private async Task<bool> IsAudioVideoResource(int resourceVersionId, ResourceTypeEnum resourceType)

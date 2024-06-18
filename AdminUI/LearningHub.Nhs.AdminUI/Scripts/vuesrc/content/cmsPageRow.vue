@@ -10,7 +10,6 @@
                     <h4 v-if="pageSectionDetail.sectionTitleElement=='h4'">{{pageSectionDetail.sectionTitle}}</h4>
                 </div>
             </div>
-
             <div :class="[`nhsuk-grid-row  ${section.topMargin && (!pageSectionDetail || !pageSectionDetail.sectionTitle) ? 'information-page__row--padding-top' : '' } ${section.bottomMargin ? 'information-page__row--padding-bottom' : '' }`]">
 
                 <div v-if="sectionTemplateType === SectionTemplateType.Video" class="nhsuk-grid-column-two-thirds">
@@ -19,13 +18,15 @@
                     </div>
                     <div class="information-page__asset-container">
                         <div id="mediaContainer" :class="[`${disableVideoControl ? 'videoControlDisabled' : ''}`]" v-show="sectionTemplateType === SectionTemplateType.Video && displayAVFlag" class="w-100">
-                            <video controls v-show="section.id" :id="[`azureMediaPlayer${section.id}`]"
+                            <!--<video controls v-show="section.id" :id="[`azureMediaPlayer${section.id}`]"
                                    data-setup='{"logo": { "enabled": false }, "techOrder": ["azureHtml5JS", "flashSS",  "silverlightSS", "html5"], "nativeControlsForTouch": false, "fluid": true}'
                                    class="azuremediaplayer amp-default-skin amp-big-play-centered" style="height:250px;">
                                 <p class="amp-no-js">
                                     To view this media please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
                                 </p>
-                            </video>
+                            </video>-->
+                            <div class="video-container" :id="getPlayerUniqueId"></div>
+
                             <div class="information-page__asset-link-container" v-if="pageSectionDetail && pageSectionDetail.videoAsset && pageSectionDetail.videoAsset.transcriptFile" :style="getTextBackbroundStyle">
                                 <a download :style="getLinkStyle" :href="[`/file/download/${pageSectionDetail.videoAsset.transcriptFile.filePath}/${pageSectionDetail.videoAsset.transcriptFile.fileName}`]">
                                     Download transcript
@@ -68,6 +69,7 @@
     import { PageSectionDetailModel, SectionLayoutType, } from '../models/content/pageSectionDetailModel';
     import { contentData } from '../data/content';
     import { AzureMediaAssetModel } from '../models/content/videoAssetModel';
+    import { MKPlayer } from '@mediakind/mkplayer';
 
     export default Vue.extend({
         props: {
@@ -82,10 +84,14 @@
                 pageSectionDetail: null as PageSectionDetailModel,
                 disableVideoControl: false,
                 displayAVFlag: false,
-                audioVideoUnavailableView : '' as string,
+                audioVideoUnavailableView: '' as string,
+                player: null,
+                videoContainer: null,
+                mkioKey: '',
             };
         },
-        created() {
+         async created(): Promise<void> {
+            await this.getMKIOPlayerKey();
             this.load();
             this.getDisplayAVFlag();
             this.getAudioVideoUnavailableView();
@@ -145,18 +151,31 @@
             },
             isRightSectionLayout() {
                 return this.section.sectionLayoutType == SectionLayoutType.Right;
-            },            
+            },
+            getPlayerUniqueId(): string {
+                return `videoContainer_${this.section.id}`
+            },
         },
         methods: {
             getDisplayAVFlag() {
                 contentData.getDisplayAVFlag().then(response => {
-                this.displayAVFlag = response;
-               });
+                    this.displayAVFlag = response;
+                });
             },
             getAudioVideoUnavailableView() {
                 contentData.getAVUnavailableView().then(response => {
-                this.audioVideoUnavailableView =  response;
+                    this.audioVideoUnavailableView = response;
                 });
+            },
+            onPlayerReady() {
+                const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
+                if (videoElement) {
+                    videoElement.controls = true;
+                }
+            },
+            async getMKIOPlayerKey(): Promise<void> {
+                this.mkioKey = await contentData.getMKPlayerKey();
+                //return this.mkioKey;
             },
             load() {
                 if (this.sectionTemplateType === SectionTemplateType.Video) {
@@ -166,45 +185,89 @@
                         if (!this.pageSectionDetail.videoAsset)
                             return;
 
-                        const id = 'azureMediaPlayer' + this.pageSectionDetail.id;
-                        let azureMediaPlayer = amp(id);
+                        // Grab the video container
+                        this.videoContainer = document.getElementById(this.getPlayerUniqueId);
 
-                        if (this.pageSectionDetail.videoAsset.azureMediaAsset) {
-                            $(`#${id}`).css({ 'height': '', 'border': '1px solid #768692' });
-                            this.disableVideoControl = false;
-                        } else {
-                            this.disableVideoControl = true;
+                        if(!this.mkioKey) {
+                            this.getMKIOPlayerKey();
                         }
 
-                        if (this.pageSectionDetail.videoAsset.thumbnailImageFile) {
-                            azureMediaPlayer.poster(`/file/download/${this.pageSectionDetail.videoAsset.thumbnailImageFile.filePath}/${this.pageSectionDetail.videoAsset.thumbnailImageFile.fileName}`);
-                        }
-                        if (this.pageSectionDetail.videoAsset.azureMediaAsset && this.pageSectionDetail.videoAsset.closedCaptionsFile) {
-                            azureMediaPlayer.src([{
-                                type: "application/vnd.ms-sstr+xml",
-                                src: this.pageSectionDetail.videoAsset.azureMediaAsset.locatorUri,
-                                protectionInfo: [{ type: 'AES', authenticationToken: `Bearer=${this.pageSectionDetail.videoAsset.azureMediaAsset.authenticationToken}` }]
-                            }],
-                                [{ kind: "captions", src: `/file/download/${this.pageSectionDetail.videoAsset.closedCaptionsFile.filePath}/${this.pageSectionDetail.videoAsset.closedCaptionsFile.fileName}`, srclang: "en", label: "english" }]);
-                        }
-                        else if (this.pageSectionDetail.videoAsset.azureMediaAsset && !this.pageSectionDetail.videoAsset.closedCaptionsFile) {
-                            azureMediaPlayer.src([{
-                                type: "application/vnd.ms-sstr+xml",
-                                src: this.pageSectionDetail.videoAsset.azureMediaAsset.locatorUri,
-                                protectionInfo: [{ type: 'AES', authenticationToken: `Bearer=${this.pageSectionDetail.videoAsset.azureMediaAsset.authenticationToken}` }]
-                            }]);
-                        }
+                        // Prepare the player configuration
+                        const playerConfig = {
+                            key: this.mkioKey,
+                            ui: false,
+                            playback: {
+                                muted: false,
+                                autoplay: false
+                            },
+                            theme: "dark",
+                            events: {
+                                ready: this.onPlayerReady,
+                            }
+                        };
+
+                        // Initialize the player with video container and player configuration
+                        this.player = new MKPlayer(this.videoContainer, playerConfig);
+
+                        // Load source
+                        const sourceConfig = {
+                            hls: this.getMediaPlayUrl(this.pageSectionDetail.videoAsset.azureMediaAsset.locatorUri),
+                            drm: {
+                                clearkey: {
+                                    LA_URL: "HLS_AES",
+                                    headers: {
+                                        "Authorization": this.getBearerToken(this.pageSectionDetail.videoAsset.azureMediaAsset.authenticationToken)
+                                    }
+                                }
+                            }
+                        };
+
+                        this.player.load(sourceConfig)
+                            .then(() => {
+                                console.log("Source loaded successfully!");
+                            })
+                            .catch(() => {
+                                console.error("An error occurred while loading the source!");
+                            });
+
+                        //const id = 'azureMediaPlayer' + this.pageSectionDetail.id;
+                        //let azureMediaPlayer = amp(id);
+
+                        //if (this.pageSectionDetail.videoAsset.azureMediaAsset) {
+                        //    $(`#${id}`).css({ 'height': '', 'border': '1px solid #768692' });
+                        //    this.disableVideoControl = false;
+                        //} else {
+                        //    this.disableVideoControl = true;
+                        //}
+
+                        //if (this.pageSectionDetail.videoAsset.thumbnailImageFile) {
+                        //    azureMediaPlayer.poster(`/file/download/${this.pageSectionDetail.videoAsset.thumbnailImageFile.filePath}/${this.pageSectionDetail.videoAsset.thumbnailImageFile.fileName}`);
+                        //}
+                        //if (this.pageSectionDetail.videoAsset.azureMediaAsset && this.pageSectionDetail.videoAsset.closedCaptionsFile) {
+                        //    azureMediaPlayer.src([{
+                        //        type: "application/vnd.ms-sstr+xml",
+                        //        src: this.pageSectionDetail.videoAsset.azureMediaAsset.locatorUri,
+                        //        protectionInfo: [{ type: 'AES', authenticationToken: `Bearer=${this.pageSectionDetail.videoAsset.azureMediaAsset.authenticationToken}` }]
+                        //    }],
+                        //        [{ kind: "captions", src: `/file/download/${this.pageSectionDetail.videoAsset.closedCaptionsFile.filePath}/${this.pageSectionDetail.videoAsset.closedCaptionsFile.fileName}`, srclang: "en", label: "english" }]);
+                        //}
+                        //else if (this.pageSectionDetail.videoAsset.azureMediaAsset && !this.pageSectionDetail.videoAsset.closedCaptionsFile) {
+                        //    azureMediaPlayer.src([{
+                        //        type: "application/vnd.ms-sstr+xml",
+                        //        src: this.pageSectionDetail.videoAsset.azureMediaAsset.locatorUri,
+                        //        protectionInfo: [{ type: 'AES', authenticationToken: `Bearer=${this.pageSectionDetail.videoAsset.azureMediaAsset.authenticationToken}` }]
+                        //    }]);
+                        //}
                     });
                 } else {
                     contentData.getPageSectionDetail(this.section.id).then(x => this.pageSectionDetail = x);
                 }
-            },           
+            },
             getAESProtection(token: string): string {
                 var aesProtectionInfo = '{"protectionInfo": [{"type": "AES", "authenticationToken":"Bearer=' + token + '"}], "streamingFormats":["SMOOTH","DASH"]}';
                 return aesProtectionInfo;
             },
             getMediaAssetProxyUrl(azureMediaAsset: AzureMediaAssetModel): string {
-
                 let playBackUrl = azureMediaAsset.locatorUri;
                 playBackUrl = playBackUrl.substring(0, playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-aapl)";
 
@@ -212,10 +275,17 @@
 
                 return sourceUrl;
             },
+            getBearerToken(token: string): string {
+                return "Bearer=" + token;
+            },
+            getMediaPlayUrl(url: string): string {
+                let sourceUrl = url.substring(0, url.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
+                return sourceUrl;
+            },
         },
         watch: {
             section() {
-                this.load();               
+                this.load();
             }
         }
     })
@@ -225,4 +295,25 @@
         pointer-events: none;
         opacity: 0.5;
     }
+
+    .video-container {
+        height: 0;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        padding-top: 56.25%; /* 16:9 aspect ratio */
+        background-color: #000;
+    }
+
+    video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+        video[id^="bitmovinplayer-video"] {
+            width: 100%;
+        }
 </style>

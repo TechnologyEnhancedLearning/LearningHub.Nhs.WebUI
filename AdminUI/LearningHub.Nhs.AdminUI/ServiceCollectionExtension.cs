@@ -95,7 +95,7 @@
             services.AddScoped<ILogService, LogService>();
             services.AddScoped<IRoadmapService, RoadmapService>();
             services.AddScoped<IFileService, FileService>();
-            services.AddScoped<IAzureMediaService, AzureMediaService>();
+            services.AddScoped<IAzureMediaService, MKIOMediaService>();
             services.AddScoped<IResourceSyncService, ResourceSyncService>();
             services.AddScoped<ICatalogueService, CatalogueService>();
             services.AddScoped<IContentService, ContentService>();

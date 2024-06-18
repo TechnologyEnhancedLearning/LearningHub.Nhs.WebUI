@@ -246,14 +246,21 @@ const mutations = {
         state.editingTreeNode = payload.node;
         state.editMode = EditModeEnum.MoveNode;
     },
+    cancelMoveNode(state: State, payload: { node: NodeContentAdminModel }) {
+        state.editMode = EditModeEnum.Structure;
+    },
     setReferencingNode(state: State, payload: { node: NodeContentAdminModel }) {
         state.editingTreeNode = payload.node;
         state.editMode = EditModeEnum.ReferenceNode;
     },
-    cancelMoveNode(state: State, payload: { node: NodeContentAdminModel }) {
+    cancelReferenceNode(state: State, payload: { node: NodeContentAdminModel }) {
         state.editMode = EditModeEnum.Structure;
     },
-    cancelReferenceNode(state: State, payload: { node: NodeContentAdminModel }) {
+    setReferencingExternalContent(state: State, payload: { node: NodeContentAdminModel }) {
+        state.editingTreeNode = payload.node;
+        state.editMode = EditModeEnum.ReferenceExternalContent;
+    },
+    canceReferencingExternalContent(state: State, payload: { node: NodeContentAdminModel }) {
         state.editMode = EditModeEnum.Structure;
     },
     cancelEdit(state: State) {

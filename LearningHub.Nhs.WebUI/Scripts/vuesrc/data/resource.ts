@@ -534,6 +534,16 @@ const getAVUnavailableView = async function (): Promise<string> {
             throw e;
         });
 };
+const getMKPlayerKey = async function (): Promise<string> {
+    return await AxiosWrapper.axios.get('/Resource/GetMKPlayerKey')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.error('Error fetching Media Kind MKPlayer Key', e)
+            throw e;
+        });
+};
 
 export const resourceData = {
     getContributeConfiguration,
@@ -575,5 +585,6 @@ export const resourceData = {
     getMyContributions,
     getContributeAVResourceFlag,
     getDisplayAVResourceFlag,
-    getAVUnavailableView
+    getAVUnavailableView,
+    getMKPlayerKey
 };

@@ -31,7 +31,7 @@ function loadNodeContents(state: State) {
     state.isLoading = true;
     state.inError = false;
 
-    contentStructureData.getHierarchyEdit(state.catalogue.nodeId).then(response => {
+    contentStructureData.getHierarchyEdit(state.catalogue.rootNodePathId).then(response => {
         state.hierarchyEdit = response[0];
     }).then(x => {
         contentStructureData.getCurrentUserId()
@@ -43,6 +43,7 @@ function loadNodeContents(state: State) {
                 state.rootNode = new NodeContentEditorModel();
                 state.rootNode.nodeTypeId = NodeType.Catalogue;
                 state.rootNode.nodeId = state.catalogue.nodeId;
+                state.rootNode.nodePathId = state.catalogue.rootNodePathId;
                 state.rootNode.depth = 0;
                 state.rootNode.parent = null;
                 state.rootNode.path = state.catalogue.name;
@@ -51,7 +52,7 @@ function loadNodeContents(state: State) {
                 state.rootNode.inEdit = state.editMode == EditModeEnum.Structure;
                 state.rootNode.showInTreeView = false;
             }).then(async y => {
-                await contentStructureData.getNodeContentsForCatalogueEditor(state.catalogue.nodeId).then(response => {
+                await contentStructureData.getNodeContentsForCatalogueEditor(state.catalogue.rootNodePathId).then(response => {
                     state.rootNode.children = response;
                     state.rootNode.children.forEach((child) => {
                         processChildNodeContents(child, state.rootNode);

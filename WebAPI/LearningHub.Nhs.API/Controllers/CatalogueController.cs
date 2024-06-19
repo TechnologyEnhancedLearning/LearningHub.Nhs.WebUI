@@ -59,6 +59,19 @@
         }
 
         /// <summary>
+        /// The GetReferencableCatalogues.
+        /// </summary>
+        /// <param name="nodePathId">The catalogue node path id.</param>
+        /// <returns>The catalogues that can be referenced by the edited catalogue.</returns>
+        [HttpGet]
+        [Route("GetReferencableCatalogues/{nodePathId}")]
+        public async Task<IActionResult> GetReferencableCatalogues(int nodePathId)
+        {
+            var catalogues = await this.catalogueService.GetReferencableCataloguesAsync(nodePathId);
+            return this.Ok(catalogues);
+        }
+
+        /// <summary>
         /// Get Catalogue by reference.
         /// </summary>
         /// <param name="reference">The reference.</param>

@@ -26,10 +26,10 @@
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_HierarchyEdit_CreateUser");
 
-            modelBuilder.HasOne(d => d.RootNode)
+            modelBuilder.HasOne(d => d.RootNodePath)
                 .WithMany()
-                .HasForeignKey(d => d.RootNodeId)
-                .HasConstraintName("FK_HierarchyEdit_Node");
+                .HasForeignKey(d => d.RootNodePathId)
+                .HasConstraintName("FK_HierarchyEdit_NodePath");
 
             modelBuilder.HasOne(d => d.Publication)
                 .WithMany()

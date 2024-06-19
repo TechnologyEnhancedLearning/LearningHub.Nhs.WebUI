@@ -13,10 +13,13 @@
 -- 11-05-2023  RS   Removed Description and AuthoredBy as no longer required for screen.
 -- 15-05-2023  RS   Added AuthoredBy back in following design decision change.
 -- 23-06-2023  RS   Removed AverageRating and RatingCount as not required from this proc. That data comes separately from RatingService.
+-- 17-04-2024  DB	Resources limited to the correct NodeId and published only node versions.
+-- 09-05-2024  DB	Change input parameter to NodePathId to prevent all referenced resources and child nodes being returned multiple times
+--					Also return Child NodePathId to allow the client to navigate to the child node path.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsForCatalogueBrowse]
 (
-	@NodeId INT
+	@NodePathId INT
 )
 
 AS
@@ -25,6 +28,7 @@ BEGIN
 
 	SELECT 
 		ROW_NUMBER() OVER(ORDER BY DisplayOrder) AS Id,
+		NodePathId,
 		[Name],
 		NodeTypeId,
 		NodeId,
@@ -42,6 +46,7 @@ BEGIN
 	(
 		-- Published Folder Node/s
 		SELECT 
+			cnp.Id AS NodePathId,
 			fnv.[Name],
 			cn.NodeTypeId,
 			nl.ChildNodeId AS NodeId,
@@ -56,17 +61,22 @@ BEGIN
 			NULL AS DurationInMilliseconds,
 			CAST(1 AS BIT) AS IsEmptyFolder
 		FROM 
-			hierarchy.NodeLink nl
+            hierarchy.NodePath pnp
+		INNER JOIN
+			hierarchy.NodeLink nl ON pnp.NodeId = nl.ParentNodeId
 		INNER JOIN 
 			hierarchy.[Node] cn ON nl.ChildNodeId = cn.Id
 		INNER JOIN 
-			hierarchy.NodeVersion nv ON nv.NodeId = cn.Id
+			hierarchy.NodePath cnp ON cn.Id = cnp.NodeId AND pnp.NodePath + '\' + CONVERT(VARCHAR(10), cn.Id) = cnp.NodePath
+		INNER JOIN 
+			hierarchy.NodeVersion nv ON nv.Id = cn.CurrentNodeVersionId
 		INNER JOIN
 			hierarchy.FolderNodeVersion fnv ON fnv.NodeVersionId = nv.Id
 		INNER JOIN -- Exclude folders with no published resources.
 			(SELECT DISTINCT NodeId FROM hierarchy.NodeResourceLookup WHERE Deleted = 0) nrl ON cn.Id = nrl.NodeId
 		WHERE
-			nl.ParentNodeId = @NodeId 
+			pnp.Id = @NodePathId 
+			AND nv.VersionStatusId = 2 -- Published
 			AND nl.Deleted = 0
 			AND cn.Deleted = 0
 			AND fnv.Deleted = 0
@@ -75,6 +85,7 @@ BEGIN
 
 		-- Resources
 		SELECT 
+			np.Id AS NodePathId,
 			rv.Title as [Name],
 			0 as NodeTypeId, 
 			NULL AS NodeId,
@@ -96,15 +107,15 @@ BEGIN
 			COALESCE(vrv.DurationInMilliseconds, arv.DurationInMilliseconds) AS DurationInMilliseconds,
 			CAST(0 AS BIT) AS IsEmptyFolder
 		FROM 
-			hierarchy.NodeResource nr 
+            hierarchy.NodePath np
+        INNER JOIN
+			hierarchy.NodeResource nr ON np.NodeId = nr.NodeId
 		INNER JOIN 
 			resources.[Resource] r ON nr.ResourceId = r.Id
 		INNER JOIN 
 			resources.ResourceVersion rv ON rv.resourceId = nr.ResourceId
 		INNER JOIN 
-			resources.ResourceReference rr ON rr.ResourceId = nr.ResourceId AND rr.Deleted = 0
-		INNER JOIN 
-			hierarchy.NodePath np ON rr.NodePathId = np.Id AND np.Deleted = 0
+			resources.ResourceReference rr ON rr.ResourceId = nr.ResourceId AND rr.NodePathId = np.Id AND rr.Deleted = 0
 		INNER JOIN 
 			hierarchy.[Node] n ON np.NodeId = n.Id AND n.Deleted = 0
 		LEFT JOIN
@@ -112,7 +123,7 @@ BEGIN
 		LEFT JOIN 
 			resources.AudioResourceVersion arv ON arv.ResourceVersionId = rv.Id AND arv.Deleted = 0
 		WHERE 
-			nr.NodeId = @NodeId
+			np.Id = @NodePathId
 			AND r.CurrentResourceVersionId = rv.Id
 			AND rv.VersionStatusId = 2 AND nr.VersionStatusId = 2
 			AND n.NodeTypeId IN (1, 2, 3) -- Catalogue, Course, Folder only
@@ -120,6 +131,7 @@ BEGIN
 			AND nr.Deleted = 0
 			AND r.Deleted = 0
 			AND rv.Deleted = 0
+			AND np.Deleted = 0
 
 	) AS t1
 	ORDER BY NodeTypeId DESC,DisplayOrder ASC

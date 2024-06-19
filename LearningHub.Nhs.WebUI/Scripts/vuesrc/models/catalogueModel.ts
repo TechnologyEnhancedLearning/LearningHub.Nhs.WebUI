@@ -4,6 +4,7 @@
 export class CatalogueBasicModel {
     id: number;
     nodeId: number;
+    rootNodePathId: number;
     name: string;
     hidden: boolean;
     url: string;

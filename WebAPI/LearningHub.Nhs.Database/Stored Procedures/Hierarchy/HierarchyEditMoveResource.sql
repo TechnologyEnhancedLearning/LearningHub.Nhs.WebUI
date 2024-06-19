@@ -41,7 +41,7 @@ BEGIN
 			[hierarchy].[HierarchyEditDetail] hed
 		INNER JOIN
 			[hierarchy].[HierarchyEditDetail] hed_moveFrom ON hed.HierarchyEditId = hed_moveFrom.HierarchyEditId 
-															  AND hed.NodeId = hed_moveFrom.NodeId
+															  AND hed.ParentNodeId = hed_moveFrom.ParentNodeId
 															  AND hed.Id != hed_moveFrom.Id
 		WHERE	
 			hed_moveFrom.Id = @HierarchyEditDetailId
@@ -61,12 +61,26 @@ BEGIN
 			[hierarchy].[HierarchyEditDetail] hed_moveTo
 		INNER JOIN
 			[hierarchy].[HierarchyEditDetail] hed_moveTo_children ON hed_moveTo_children.HierarchyEditId = hed_moveTo.HierarchyEditId
-															AND hed_moveTo_children.NodeId = hed_moveTo.NodeId
+															AND hed_moveTo_children.ParentNodeId = hed_moveTo.ParentNodeId
 		WHERE	
 			hed_moveTo.Id = @MoveToHierarchyEditDetailId
 			AND hed_moveTo_children.ResourceId IS NOT NULL
 			AND hed_moveTo.Deleted = 0
 			AND hed_moveTo_children.Deleted = 0
+
+		DECLARE @NewParentNodeId int
+		DECLARE @NewParentNodePathId int
+		--DECLARE @NewNodeVersionId int
+		DECLARE @NewParentNodePath varchar(256)
+		SELECT 
+			@NewParentNodeId = NodeId,
+			@NewParentNodePathId = NodePathId,
+			--@NewNodeVersionId = NodeVersionId,
+			@NewParentNodePath = ISNULL(NewNodePath, InitialNodePath)
+		FROM
+			[hierarchy].[HierarchyEditDetail]
+		WHERE
+			Id = @MoveToHierarchyEditDetailId
 
 		-- Move the resource.
 		-- Is there an existing link between the Node and Resource (i.e. from delete / move away & reinstate scenario)
@@ -76,7 +90,7 @@ BEGIN
 		FROM 
 			hierarchy.NodeResource
 		WHERE
-			NodeId = (SELECT NodeId FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @MoveToHierarchyEditDetailId)
+			NodeId = @NewParentNodeId
 			AND ResourceId = @ResourceId
 			AND Deleted = 0
 
@@ -84,10 +98,12 @@ BEGIN
 			hed
 		SET
 			HierarchyEditDetailOperationId = CASE WHEN HierarchyEditDetailOperationId = 1 THEN HierarchyEditDetailOperationId ELSE 2 END, -- Set to Edit if existing Node
-			NodeId = (SELECT NodeId FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @MoveToHierarchyEditDetailId),
-			NodeVersionId = (SELECT NodeVersionId FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @MoveToHierarchyEditDetailId),
+			ParentNodeId = @NewParentNodeId,
+			ParentNodePathId = @NewParentNodePathId,
+			--NodeVersionId = @NewNodeVersionId,
 			DisplayOrder = 1,
-			NodeResourceId = CASE WHEN @nodeResourceId IS NOT NULL THEN @nodeResourceId ELSE hed.NodeResourceId END,
+			NodeResourceId = @nodeResourceId,
+			NewNodepath = @NewParentNodePath,
 			AmendUserId = @UserId,
 			AmendDate = @AmendDate
 		FROM

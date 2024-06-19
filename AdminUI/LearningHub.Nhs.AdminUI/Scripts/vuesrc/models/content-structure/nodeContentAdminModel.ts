@@ -1,16 +1,20 @@
-﻿
+﻿import { NodePathBreakdownModel } from "./NodePathBreakdownModel";
+
 export class NodeContentAdminModel {
     hierarchyEditDetailId: number;
     name: string;
     description: string;
     nodeTypeId: number;
     nodeId: number;
+    nodePathId: number;
     nodeVersionId: number;
+    nodePathDisplayVersionId: number;
     hasResourcesInd: boolean;
     hasResourcesInBranchInd: boolean;
     resourceId: number;
     resourceVersionId: number;
     resourceReferenceId: number;
+    resourceReferenceDisplayVersionId: number;
     resourceTypeId: number;
     versionStatusId: number;
     unpublishedByAdmin: boolean;
@@ -26,6 +30,7 @@ export class NodeContentAdminModel {
     parent: NodeContentAdminModel;
     children: NodeContentAdminModel[];
     path: string;
+    nodePaths: NodePathBreakdownModel[];
 
     public constructor(init?: Partial<NodeContentAdminModel>) {
         Object.assign(this, init);

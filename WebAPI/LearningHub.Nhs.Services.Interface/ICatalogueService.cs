@@ -55,6 +55,13 @@
         Task<CatalogueViewModel> GetCatalogueAsync(int id);
 
         /// <summary>
+        /// The GetCatalogue.
+        /// </summary>
+        /// <param name="nodePathId">The nodePathId.</param>
+        /// <returns>The catalogues that can be referenced by the edited catalogue.</returns>
+        Task<List<CatalogueBasicViewModel>> GetReferencableCataloguesAsync(int nodePathId);
+
+        /// <summary>
         /// Get Catalogue by reference.
         /// </summary>
         /// <param name="reference">The reference.</param>

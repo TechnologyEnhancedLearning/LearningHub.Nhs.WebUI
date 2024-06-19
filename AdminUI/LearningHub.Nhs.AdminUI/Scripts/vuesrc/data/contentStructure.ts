@@ -352,6 +352,16 @@ const moveResource = async function (sourceNodeId: number, destinationNodeId: nu
         });
 };
 
+const getReferencableCatalogues = async function (nodePathId: number): Promise<CatalogueBasicModel[]> {
+    return await axios.get<CatalogueBasicModel[]>('/api/hierarchy/GetReferencableCatalogues/' + nodePathId + `?timestamp=${new Date().getTime()}`)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('GetReferencableCatalogues:' + e);
+            throw e;
+        });
+};
 
 const getCurrentUserId = async function (): Promise<number> {
 
@@ -393,5 +403,6 @@ export const contentStructureData = {
     moveResourceUp,
     moveResourceDown,
     moveResource,
+    getReferencableCatalogues,
     getCurrentUserId
 }

@@ -13,67 +13,61 @@
             </div>
         </div>
 
-
-
-        <div>
-            editingCatalogueNodePathId = {{editingCatalogueNodePathId}}
+        <div class="content-structure">
+            <div id="treeView" class="node-contents-treeview">
+                <content-search-item id="1" class="root-tree-item-container"
+                           :key="1"
+                           :item="rootNode">
+                </content-search-item>
+            </div>
         </div>
-        <!--<div v-if="(!isLoading && isReady)">
-        <div id="treeView" class="node-contents-treeview">
-            <tree-item id="1" class="root-tree-item-container"
-                       :key="rootKey"
-                       :item="rootNode"
-                       :expandNodes="expandNodes"
-                       @delete-folder="onTreeItemDeleteFolder">
-            </tree-item>
-        </div>
-    </div>-->
     </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
+import contentSearchItem from './contentSearchItem.vue';
 import { CatalogueBasicModel } from '../models/content-structure/catalogueModel';
+import { NodeContentAdminModel } from '../models/content-structure/NodeContentAdminModel';
 
 export default Vue.extend({
     name: 'contentSearch',
     components: {
-
+        'contentSearchItem': contentSearchItem,
     },
     props: {
         editingCatalogueNodePathId: { Type: Number, required: true } as PropOptions<number>,
     },
     watch: {
-
+        catalogues: function (newVal, oldVal) {
+            this.selectedCatalogue = this.catalogues.find(c => c.rootNodePathId === this.editingCatalogueNodePathId);
+        }
+    //    selectedCatalogue: function (newVal, oldVal) {
+    //        alert('selectedCatalogue: ' + newVal.name);
+    //    }
     },
     data: function () {
         return {
-            catalogues: [] as CatalogueBasicModel[],
             selectedCatalogue: { rootNodePathId: 0, name: '' } as CatalogueBasicModel,
         };
     },
     computed: {
+        catalogues(): CatalogueBasicModel[] {
+            return this.$store.state.contentStructureState.availableReferenceCatalogues;
+        },
+        rootNode(): NodeContentAdminModel {
+            return this.$store.state.contentStructureState.rootExtReferencedNode;
+        },
     },
     created() {
-        //this.populateCatalogues();
+        this.$store.dispatch('contentStructureState/populateReferencableCatalogues', { editingCatalogueNodePathId: this.editingCatalogueNodePathId });
     },
     mounted() {
 
     },
     methods: {
-        populateCatalogues() {
-            // TODO: Get catalogues from API
-            this.catalogues = [
-                { rootNodePathId: 1, name: 'Catalogue 1', catalogueNodeVersionId: 0, nodeId: 1, hidden: true, url: '', restrictedAccess: false },
-                { rootNodePathId: 2, name: 'Catalogue 2', catalogueNodeVersionId: 0, nodeId: 2, hidden: true, url: '', restrictedAccess: false },
-                { rootNodePathId: 3, name: 'Catalogue 3', catalogueNodeVersionId: 0, nodeId: 3, hidden: true, url: '', restrictedAccess: false },
-                { rootNodePathId: 4, name: 'Catalogue 4', catalogueNodeVersionId: 0, nodeId: 4, hidden: true, url: '', restrictedAccess: false },
-                { rootNodePathId: 5, name: 'Catalogue 5', catalogueNodeVersionId: 0, nodeId: 5, hidden: true, url: '', restrictedAccess: false },
-            ];
-        },
         catalogueChange() {
-            // TODO: Process selected catalogue
-            console.log('catalogueChange: ' + this.selectedCatalogue.name);
+            this.$store.commit('contentStructureState/selectReferencableCatalogue', { catalogueNodePathId: this.selectedCatalogue.rootNodePathId });
         },
     },
 });
@@ -82,7 +76,17 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
     @use "../../../Styles/Abstracts/all" as *;
-    
+
+
+    .node-contents-treeview {
+        border-bottom: 1px solid $nhsuk-grey-divider;
+    }
+
+    .content-structure {
+        ul {
+            list-style-type: none;
+        }
+    }
 
 
 </style>

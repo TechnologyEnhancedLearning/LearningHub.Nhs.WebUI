@@ -313,6 +313,37 @@
         }
 
         /// <summary>
+        /// Gets referencable catalogues for the editing catalogue.
+        /// </summary>
+        /// <param name="nodePathId">The nodePathId.</param>
+        /// <returns>resources.</returns>
+        public async Task<List<CatalogueBasicViewModel>> GetReferencableCataloguesAsync(int nodePathId)
+        {
+            var catalogues = await (from np in this.DbContext.NodePath.AsNoTracking()
+                         join n in this.DbContext.Node.AsNoTracking() on np.CatalogueNodeId equals n.Id
+                         join nv in this.DbContext.NodeVersion.AsNoTracking() on n.CurrentNodeVersionId equals nv.Id
+                         join cnv in this.DbContext.CatalogueNodeVersion.AsNoTracking() on nv.Id equals cnv.NodeVersionId
+                         join cnvp in this.DbContext.CatalogueNodeVersionProvider.AsNoTracking() on cnv.Id equals cnvp.CatalogueNodeVersionId
+                         join cnvp2 in this.DbContext.CatalogueNodeVersionProvider.AsNoTracking() on cnvp.ProviderId equals cnvp2.ProviderId
+                         join cnv2 in this.DbContext.CatalogueNodeVersion.AsNoTracking() on cnvp2.CatalogueNodeVersionId equals cnv2.Id
+                         join nv2 in this.DbContext.NodeVersion.AsNoTracking() on cnv2.NodeVersionId equals nv2.Id
+                         join n2 in this.DbContext.Node.AsNoTracking() on nv2.NodeId equals n2.Id
+                         where np.Id == nodePathId && nv2.VersionStatusEnum == VersionStatusEnum.Published
+                         select new CatalogueBasicViewModel
+                         {
+                             Id = cnv2.Id,
+                             NodeId = nv2.NodeId,
+                             BadgeUrl = cnv2.BadgeUrl,
+                             Name = cnv2.Name,
+                             Url = cnv2.Url,
+                             RestrictedAccess = cnv2.RestrictedAccess,
+                             Hidden = n2.Hidden,
+                             RootNodePathId = n2.NodePaths.Where(np => np.NodeId == np.CatalogueNodeId).FirstOrDefault().Id,
+                         }).ToListAsync();
+            return catalogues;
+        }
+
+        /// <summary>
         /// Gets catalogues for dashboard based on type.
         /// </summary>
         /// <param name="dashboardType">The dashboard type.</param>

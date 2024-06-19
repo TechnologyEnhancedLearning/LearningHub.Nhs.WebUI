@@ -5,8 +5,6 @@
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Paging;
-    using LearningHub.Nhs.Models.Provider;
-    using LearningHub.Nhs.Models.Validation;
 
     /// <summary>
     /// Defines the <see cref="ICatalogueService" />.
@@ -26,6 +24,13 @@
         /// <param name="id">The id<see cref="int"/>.</param>
         /// <returns>The <see cref="Task{CatalogueViewModel}"/>.</returns>
         Task<CatalogueViewModel> GetCatalogueAsync(int id);
+
+        /// <summary>
+        /// The GetReferencableCataloguesAsync.
+        /// </summary>
+        /// <param name="nodePathId">The id<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<List<CatalogueBasicViewModel>> GetReferencableCataloguesAsync(int nodePathId);
 
         /// <summary>
         /// The GetCataloguesAsync.

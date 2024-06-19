@@ -10,19 +10,26 @@
     /// </summary>
     public interface IHierarchyService
     {
-        /// <summary>
-        /// Gets the basic details of a node. Currently catalogues or folders.
-        /// </summary>
-        /// <param name="nodeId">The node id.</param>
-        /// <returns>The node details.</returns>
-        NodeViewModel GetNodeDetails(int nodeId);
+        /////// <summary>
+        /////// Gets the basic details of a node. Currently catalogues or folders.
+        /////// </summary>
+        /////// <param name="nodeId">The node id.</param>
+        /////// <returns>The node details.</returns>
+        ////NodeViewModel GetNodeDetails(int nodeId);
 
         /// <summary>
-        /// Gets the basic details of all Nodes in a particular NodePath.
+        /// Gets the basic details of a node path. Currently catalogues or folders.
+        /// </summary>
+        /// <param name="nodePathId">The node path id.</param>
+        /// <returns>The node path details.</returns>
+        NodePathViewModel GetNodePathDetails(int nodePathId);
+
+        /// <summary>
+        /// Gets the basic details of all Node paths in a particular NodePath.
         /// </summary>
         /// <param name="nodePathId">The NodePath id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<List<NodePathNodeViewModel>> GetNodePathNodes(int nodePathId);
+        Task<List<NodePathViewModel>> GetNodePathNodes(int nodePathId);
 
         /// <summary>
         /// The get catalogue locations for resource reference.
@@ -32,45 +39,45 @@
         Task<CatalogueLocationsViewModel> GetCatalogueLocationsForResourceReference(int resourceReferenceId);
 
         /// <summary>
-        /// Gets the contents of a node for the catalogue landing page - i.e. published folders and published resources only.
-        /// Only returns the items found directly in the specified node, does not recurse down through subfolders.
+        /// Gets the contents of a node path for the catalogue landing page - i.e. published folders and published resources only.
+        /// Only returns the items found directly in the specified node path, does not recurse down through subfolders.
         /// </summary>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <param name="includeEmptyFolder">Include Empty Folder or not.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<List<NodeContentBrowseViewModel>> GetNodeContentsForCatalogueBrowse(int nodeId, bool includeEmptyFolder);
+        Task<List<NodeContentBrowseViewModel>> GetNodeContentsForCatalogueBrowse(int nodePathId, bool includeEmptyFolder);
 
         /// <summary>
         /// Gets the contents of a node for the My Contributions page - i.e. published folders only, and all resources (i.e. all statuses).
         /// Only returns the items found directly in the specified node, does not recurse down through subfolders.
         /// </summary>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<List<NodeContentEditorViewModel>> GetNodeContentsForCatalogueEditor(int nodeId);
+        Task<List<NodeContentEditorViewModel>> GetNodeContentsForCatalogueEditor(int nodePathId);
 
         /// <summary>
-        /// Gets the contents of a node (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
+        /// Gets the contents of a node path (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// </summary>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <param name="readOnly">Set to true if read only data set is required.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodeId, bool readOnly);
+        Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodePathId, bool readOnly);
 
         /// <summary>
-        /// Gets hierarchy edit detail for the supplied root node id.
+        /// Gets hierarchy edit detail for the supplied root node path id.
         /// </summary>
-        /// <param name="rootNodeId">The root node id.</param>
+        /// <param name="rootNodePathId">The root node path id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<List<HierarchyEditViewModel>> GetHierarchyEdits(int rootNodeId);
+        Task<List<HierarchyEditViewModel>> GetHierarchyEdits(int rootNodePathId);
 
         /// <summary>
         /// The create.
         /// </summary>
-        /// <param name="rootNodeId">The root node id.</param>
+        /// <param name="rootNodePathId">The root node path id.</param>
         /// <param name="userId">The user id.</param>
         /// <returns>The hierarchy edit id.</returns>
-        Task<int> CreateHierarchyEdit(int rootNodeId, int userId);
+        Task<int> CreateHierarchyEdit(int rootNodePathId, int userId);
 
         /// <summary>
         /// The discard.
@@ -95,6 +102,22 @@
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
         Task<LearningHubValidationResult> UpdateFolder(FolderEditViewModel folderEditViewModel, int userId);
+
+        /// <summary>
+        /// Updates a nodePathDisplayVersionModel.
+        /// </summary>
+        /// <param name="nodePathDisplayVersionModel">The nodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        Task<LearningHubValidationResult> UpdateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel, int userId);
+
+        /// <summary>
+        /// Updates a resourceReferenceDisplayVersionModel.
+        /// </summary>
+        /// <param name="resourceReferenceDisplayVersionModel">The resourceReferenceDisplayVersionModel<see cref="ResourceReferenceDisplayVersionModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        Task<LearningHubValidationResult> UpdateResourceReferenceDisplayVersionAsync(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersionModel, int userId);
 
         /// <summary>
         /// Deletes a folder.
@@ -136,6 +159,14 @@
         Task<LearningHubValidationResult> MoveNode(MoveNodeViewModel moveNodeViewModel, int userId);
 
         /// <summary>
+        /// Creates a reference to a node.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel <see cref="MoveNodeViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        Task<LearningHubValidationResult> ReferenceNode(MoveNodeViewModel moveNodeViewModel, int userId);
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The id.</param>
@@ -158,6 +189,14 @@
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
         Task<LearningHubValidationResult> HierarchyEditMoveResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId);
+
+        /// <summary>
+        /// References a resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The moveResourceViewModel <see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        Task<LearningHubValidationResult> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId);
 
         /// <summary>
         /// Moves a resource up.

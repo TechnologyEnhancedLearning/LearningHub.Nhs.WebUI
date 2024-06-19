@@ -59,7 +59,6 @@
     <Folder Include="Properties" />
     <Folder Include="Tables" />
     <Folder Include="Scripts" />
-    <Folder Include="Snapshots" />
     <Folder Include="Scripts\Post-Deploy" />
     <Folder Include="Scripts\Pre-Deploy" />
     <Folder Include="Stored Procedures" />
@@ -515,6 +514,15 @@
     <None Include="Scripts\Post-Deploy\Scripts\TD-2929_ActivityStatusUpdates.sql" />
     <Build Include="Stored Procedures\Resources\BlockCollectionFileSearch.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-4031_AMStoMKIOMigration.sql" />
+    <Build Include="Tables\Hierarchy\NodePathDisplayVersion.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditReferenceNode.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetNodePathDetails.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\Content Referencing Initialise.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditGetChildNodePathBreakdown.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditNodePathDisplayVersionUpdate.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditReferenceResource.sql" />
+    <Build Include="Tables\Resource\ResourceReferenceDisplayVersion.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditResourceReferenceDisplayVersionUpdate.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

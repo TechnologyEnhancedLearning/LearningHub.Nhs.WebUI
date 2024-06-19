@@ -5,6 +5,8 @@ import { HierarchyEditModel } from '../models/content-structure/hierarchyEditMod
 import { LearningHubValidationResultModel } from '../models/learningHubValidationResultModel';
 import { FolderNodeModel } from '../models/content-structure/folderNodeModel';
 import { NodePathModel } from '../models/nodePathModel';
+import { NodePathDisplayVersionModel } from '../models/content-structure/nodePathDisplayVersionModel';
+import { ResourceReferenceDisplayVersionModel } from '../models/content-structure/resourceReferenceDisplayVersionModel';
 
 const getCatalogue = async function (id: number): Promise<CatalogueBasicModel> {
     return await axios.get<CatalogueBasicModel>('/api/hierarchy/GetCatalogue/' + id)
@@ -17,8 +19,8 @@ const getCatalogue = async function (id: number): Promise<CatalogueBasicModel> {
         });
 };
 
-const getNodeContentsAdmin = async function (nodeId: number, readOnly: boolean): Promise<NodeContentAdminModel[]> {
-    return await axios.get<NodeContentAdminModel[]>('/api/hierarchy/GetNodeContentsAdmin/' + nodeId + '/' + readOnly + `?timestamp=${new Date().getTime()}`)
+const getNodeContentsAdmin = async function (nodePathId: number, readOnly: boolean): Promise<NodeContentAdminModel[]> {
+    return await axios.get<NodeContentAdminModel[]>('/api/hierarchy/GetNodeContentsAdmin/' + nodePathId + '/' + readOnly + `?timestamp=${new Date().getTime()}`)
         .then(response => {
             return response.data;
         })
@@ -39,9 +41,9 @@ const getActiveNodePathToNode = async function (nodeId: number): Promise<NodePat
         });
 };
 
-const getHierarchyEdit = async function (rootNodeId: number): Promise<HierarchyEditModel[]> {
+const getHierarchyEdit = async function (rootNodePathId: number): Promise<HierarchyEditModel[]> {
 
-    const url = `/api/hierarchy/GetHierarchyEdit/${rootNodeId}`;
+    const url = `/api/hierarchy/GetHierarchyEdit/${rootNodePathId}`;
 
     return await axios.get<HierarchyEditModel[]>(url)
         .then(response => {
@@ -53,9 +55,9 @@ const getHierarchyEdit = async function (rootNodeId: number): Promise<HierarchyE
         });
 };
 
-const createHierarchyEdit = async function (rootNodeId: number): Promise<LearningHubValidationResultModel> {
+const createHierarchyEdit = async function (rootNodePathId: number): Promise<LearningHubValidationResultModel> {
 
-    const url = `/api/hierarchy/CreateHierarchyEdit/${rootNodeId}`;
+    const url = `/api/hierarchy/CreateHierarchyEdit/${rootNodePathId}`;
 
     return await axios.put<LearningHubValidationResultModel>(url)
         .then(response => {
@@ -140,6 +142,34 @@ const updateFolder = async function (requestModel: FolderNodeModel): Promise<Lea
         });
 };
 
+const updateNodePathDisplayVersion = async function (requestModel: NodePathDisplayVersionModel): Promise<LearningHubValidationResultModel> {
+
+    const url = `/api/hierarchy/UpdateNodePathDisplayVersion`;
+
+    return await axios.post<LearningHubValidationResultModel>(url, requestModel)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('updateNodePathDisplayVersion:' + e);
+            throw e;
+        });
+};
+
+const updateResourceReferenceDisplayVersion = async function (requestModel: ResourceReferenceDisplayVersionModel): Promise<LearningHubValidationResultModel> {
+
+    const url = `/api/hierarchy/UpdateResourceReferenceDisplayVersion`;
+
+    return await axios.post<LearningHubValidationResultModel>(url, requestModel)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('UpdateResourceReferenceDisplayVersion:' + e);
+            throw e;
+        });
+};
+
 const deleteFolder = async function (hierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
 
     const url = `/api/hierarchy/DeleteFolder/${hierarchyEditDetailId}`;
@@ -150,6 +180,20 @@ const deleteFolder = async function (hierarchyEditDetailId: number): Promise<Lea
         })
         .catch(e => {
             console.log('deleteFolder:' + e);
+            throw e;
+        });
+};
+
+const deleteFolderReference = async function (hierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+
+    const url = `/api/hierarchy/DeleteFolderReference/${hierarchyEditDetailId}`;
+
+    return await axios.put<LearningHubValidationResultModel>(url)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('deleteFolderReference:' + e);
             throw e;
         });
 };
@@ -192,6 +236,20 @@ const moveNode = async function (hierarchyEditDetailId: number, moveToHierarchyE
         })
         .catch(e => {
             console.log('moveNode:' + e);
+            throw e;
+        });
+};
+
+const referenceNode = async function (hierarchyEditDetailId: number, moveToHierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+
+    const url = `/api/hierarchy/ReferenceNode`;
+
+    return await axios.post<LearningHubValidationResultModel>(url, { hierarchyEditDetailId: hierarchyEditDetailId, moveToHierarchyEditDetailId: moveToHierarchyEditDetailId })
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('referenceNode:' + e);
             throw e;
         });
 };
@@ -239,6 +297,19 @@ const hierarchyEditMoveResource = async function (hierarchyEditDetailId: number,
 };
 
 
+const hierarchyEditReferenceResource = async function (hierarchyEditDetailId: number, moveToHierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+    const url = `/api/hierarchy/HierarchyEditReferenceResource`;
+
+    return await axios.post<LearningHubValidationResultModel>(url, { hierarchyEditDetailId: hierarchyEditDetailId, moveToHierarchyEditDetailId: moveToHierarchyEditDetailId })
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('hierarchyEditReferenceResource:' + e);
+            throw e;
+        });
+};
+
 const moveResourceUp = async function (nodeId: number, resourceId: number): Promise<LearningHubValidationResultModel> {
 
     const url = `/api/hierarchy/MoveResourceUp/${nodeId}/${resourceId}`;
@@ -281,6 +352,16 @@ const moveResource = async function (sourceNodeId: number, destinationNodeId: nu
         });
 };
 
+const getReferencableCatalogues = async function (nodePathId: number): Promise<CatalogueBasicModel[]> {
+    return await axios.get<CatalogueBasicModel[]>('/api/hierarchy/GetReferencableCatalogues/' + nodePathId + `?timestamp=${new Date().getTime()}`)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('GetReferencableCatalogues:' + e);
+            throw e;
+        });
+};
 
 const getCurrentUserId = async function (): Promise<number> {
 
@@ -306,16 +387,22 @@ export const contentStructureData = {
     submitHierarchyEditForPublish,
     createFolder,
     updateFolder,
+    updateNodePathDisplayVersion,
+    updateResourceReferenceDisplayVersion,
     deleteFolder,
+    deleteFolderReference,
     getFolder,
     moveNodeUp,
     moveNodeDown,
     moveNode,
+    referenceNode,
     hierarchyEditMoveResourceUp,
     hierarchyEditMoveResourceDown,
     hierarchyEditMoveResource,
+    hierarchyEditReferenceResource,
     moveResourceUp,
     moveResourceDown,
     moveResource,
+    getReferencableCatalogues,
     getCurrentUserId
 }

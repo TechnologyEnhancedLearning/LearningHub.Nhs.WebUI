@@ -33,7 +33,7 @@
                     <div>Changes to the content structure of this Catalogue are currently being published. Editing will be possible once this process has completed.</div>
                 </div>
             </div>
-            <div id="treeView" v-if="!publishInProgress" v-show="editMode === EditModeEnum.Structure || editMode === EditModeEnum.None || editMode === EditModeEnum.MoveNode || editMode === EditModeEnum.MoveResource" class="node-contents-treeview">
+            <div id="treeView" v-if="!publishInProgress" v-show="editMode === EditModeEnum.Structure || editMode === EditModeEnum.None || editMode === EditModeEnum.MoveNode || editMode === EditModeEnum.ReferenceNode || editMode === EditModeEnum.MoveResource || editMode === EditModeEnum.ReferenceResource" class="node-contents-treeview">
                 <tree-item id="1" class="root-tree-item-container"
                            :key="rootKey"
                            :item="rootNode"
@@ -54,14 +54,19 @@
                 </div>
                 <div class="col-12" style="margin-top: 40px;">
                     <label class="control-label">Folder description (optional)</label>
-                    <ckeditorwithhint :key="editingFolderNode.nodeId" :initialValue="editingFolderNode.description" :maxLength="1800" @change="changeFolderDescription"  />
+                    <ckeditorwithhint :key="editingFolderNode.nodeId" :initialValue="editingFolderNode.description" :maxLength="1800" @change="changeFolderDescription" />
                 </div>
                 <div class="col-12" style="margin-top: 40px;">
-                    <label class="control-label">Folder location</label>
-                    <div> {{ editingFolderNode.path }} </div>
-                </div>
-                <div class="col-12" style="margin-top: 40px;">
-                    * Changes to a published folder will be visible immediately.
+                    <label class="control-label">Folder location<span v-if="editingFolderNode.nodePaths && editingFolderNode.nodePaths.length>1">s</span></label>
+                    <div>
+                        <ul class="node-path-list">
+                            <li class="" v-for="(item, index) in editingFolderNode.nodePaths" :key="index">
+                                <span v-for="(subItem, index) in item.nodePathBreakdown" :key="index">
+                                    {{index > 0 ? ">" : ""}} {{subItem.nodeName}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="col-12 d-flex" style="margin-top: 40px; margin-bottom: 40px;">
                     <input type="button" class="btn btn-custom-green mr-3" @click="onSaveFolderEdit()" v-bind:class="{disabled: !canSaveFolderEdit}" v-bind:disabled="!canSaveFolderEdit" value="Save changes" />
@@ -73,6 +78,86 @@
                         </a>
                     </span>
                 </div>
+            </div>
+            <div v-if="editMode === EditModeEnum.FolderReference" id="editFolderReference">
+                <div class="col-12">
+                    <label class="control-label">Folder location</label>
+                    <div>{{ editingFolderNodeReference.path }} </div>
+                </div>
+                <div class="col-12" style="margin-top: 40px;">
+                    <div>
+                        <i class="fa-regular fa-folder" aria-hidden="true"></i>
+                        <label class="control-label">Folder reference title</label>
+                    </div>
+                    <input v-model="editingFolderNodeReference.name" class="form-control" autocomplete="arandomstring" maxlength="255" />
+                    <div class="small mt-3">
+                        You have {{ folderReferenceNameCharactersRemaining }} characters remaining.
+                    </div>
+                </div>
+                <div class="col-12" style="margin-top: 40px;">
+                    <label class="control-label">All folder location<span v-if="editingFolderNodeReference.nodePaths && editingFolderNodeReference.nodePaths.length>1">s</span></label>
+                    <div>
+                        <ul class="node-path-list">
+                            <li class="" v-for="(item, index) in editingFolderNodeReference.nodePaths" :key="index">
+                                <span v-for="(subItem, index) in item.nodePathBreakdown" :key="index">
+                                    {{index > 0 ? ">" : ""}} {{subItem.nodeName}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 d-flex" style="margin-top: 40px; margin-bottom: 40px;">
+                    <input type="button" class="btn btn-custom-green mr-3" @click="onSaveFolderReferenceEdit()" v-bind:class="{disabled: !canSaveFolderReferenceEdit}" v-bind:disabled="!canSaveFolderReferenceEdit" value="Save changes" />
+                    <input type="button" class="btn btn-admin btn-cancel" @click="onCancelFolderReferenceEdit()" value="Cancel" />
+
+                    <span class="ml-auto mt-3">
+                        <a class="delete-folder-link" @click.prevent="onEditFolderReferenceDeleteFolder" href="#">
+                            Delete this folder reference <i class="fa-solid fa-trash-can delete-folder ml-2"></i>
+                        </a>
+                    </span>
+                </div>
+            </div>
+
+            <div v-if="editMode === EditModeEnum.ResourceReference" id="editResourceReference">
+                <div class="col-12">
+                    <label class="control-label">Resource location</label>
+                    <div>{{ editingResourceNodeReference.path }} </div>
+                </div>
+                <div class="col-12" style="margin-top: 40px;">
+                    <div>
+                        <label class="control-label">Resource reference title</label>
+                    </div>
+                    <input v-model="editingResourceNodeReference.name" class="form-control" autocomplete="arandomstring" maxlength="255" />
+                    <div class="small mt-3">
+                        You have {{ resourceReferenceNameCharactersRemaining }} characters remaining.
+                    </div>
+                </div>
+                <div class="col-12" style="margin-top: 40px;">
+                    <label class="control-label">All resource location<span v-if="editingResourceNodeReference.nodePaths && editingResourceNodeReference.nodePaths.length>1">s</span></label>
+                    <div>
+                        <ul class="node-path-list">
+                            <li class="" v-for="(item, index) in editingResourceNodeReference.nodePaths" :key="index">
+                                <span v-for="(subItem, index) in item.nodePathBreakdown" :key="index">
+                                    {{index > 0 ? ">" : ""}} {{subItem.nodeName}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 d-flex" style="margin-top: 40px; margin-bottom: 40px;">
+                    <input type="button" class="btn btn-custom-green mr-3" @click="onSaveResourceReferenceEdit()" v-bind:class="{disabled: !canSaveResourceReferenceEdit}" v-bind:disabled="!canSaveResourceReferenceEdit" value="Save changes" />
+                    <input type="button" class="btn btn-admin btn-cancel" @click="onCancelResourceReferenceEdit()" value="Cancel" />
+
+                    <span class="ml-auto mt-3">
+                        <a class="delete-folder-link" @click.prevent="onEditResourceReferenceDeleteFolder" href="#">
+                            Delete this resource reference <i class="fa-solid fa-trash-can delete-folder ml-2"></i>
+                        </a>
+                    </span>
+                </div>
+            </div>
+
+            <div v-if="editMode === EditModeEnum.ReferenceExternalContent" id="referenceExternalContentContainer">
+                <content-search :editingCatalogueNodePathId="catalogue.rootNodePathId"></content-search>
             </div>
 
             <div id="deleteFolderModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
@@ -91,6 +176,52 @@
                                 <div class="d-flex">
                                     <input type="button" class="btn btn-action-cancel" data-dismiss="modal" value="Cancel" />
                                     <input type="button" class="btn btn-action-red ml-auto" @click="onDeleteFolder()" value="Continue" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="deleteFolderReferenceModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+                <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header alert-modal-header text-center">
+                            <h2 class="heading-lg w-100"><i class="delete-folder-warning-triangle fas fa-exclamation-triangle pr-3"></i>Delete folder reference</h2>
+                        </div>
+
+                        <div class="modal-body alert-modal-body">
+                            <div class="mt-3">You have chosen to delete the folder reference <span id="deleteFolderReferenceName">{{ deleteFolderReferenceName}}</span>. The folder will display using the default folder properties.</div>
+                        </div>
+
+                        <div class="modal-footer alert-modal-footer">
+                            <div class="form-group col-12 p-0 m-0">
+                                <div class="d-flex">
+                                    <input type="button" class="btn btn-action-cancel" data-dismiss="modal" value="Cancel" />
+                                    <input type="button" class="btn btn-action-red ml-auto" @click="onDeleteFolderReference()" value="Continue" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="deleteResourceReferenceModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+                <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header alert-modal-header text-center">
+                            <h2 class="heading-lg w-100"><i class="delete-folder-warning-triangle fas fa-exclamation-triangle pr-3"></i>Delete resource reference</h2>
+                        </div>
+
+                        <div class="modal-body alert-modal-body">
+                            <div class="mt-3">You have chosen to delete the resource reference <span id="deleteResourceReferenceName">{{ deleteResourceReferenceName}}</span>. The resource will display using the default resource properties.</div>
+                        </div>
+
+                        <div class="modal-footer alert-modal-footer">
+                            <div class="form-group col-12 p-0 m-0">
+                                <div class="d-flex">
+                                    <input type="button" class="btn btn-action-cancel" data-dismiss="modal" value="Cancel" />
+                                    <input type="button" class="btn btn-action-red ml-auto" @click="onDeleteResourceReference()" value="Continue" />
                                 </div>
                             </div>
                         </div>
@@ -122,12 +253,13 @@
             </div>
 
         </div>
-    </div>
+        </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
 import treeItem from './treeItem.vue';
+import contentSearch from './contentSearch.vue';
 import '../filters';
 import { contentStructureData } from '../data/contentStructure';
 import { HierarchyEditModel, HierarchyEditStatusEnum } from '../models/content-structure/hierarchyEditModel';
@@ -135,6 +267,8 @@ import { NodeContentAdminModel } from '../models/content-structure/NodeContentAd
 import { EditModeEnum } from '../models/content-structure/editModeEnum';
 import { CatalogueBasicModel } from '../models/content-structure/catalogueModel';
 import { FolderNodeModel } from '../models/content-structure/folderNodeModel';
+import { NodePathDisplayVersionModel } from '../models/content-structure/nodePathDisplayVersionModel';
+import { ResourceReferenceDisplayVersionModel } from '../models/content-structure/resourceReferenceDisplayVersionModel';
 import { NodeType } from '../constants';
 import CKEditorToolbar from '../models/ckeditorToolbar';
 import ckeditorwithhint from '../ckeditorwithhint.vue';
@@ -143,6 +277,7 @@ export default Vue.extend({
     name: 'contentStructure',
     components: {
         'treeItem': treeItem,
+        'contentSearch': contentSearch,
         ckeditorwithhint
     },
     props: {
@@ -171,6 +306,8 @@ export default Vue.extend({
             HierarchyEditStatusEnum: HierarchyEditStatusEnum,
             editorConfig: { toolbar: CKEditorToolbar.default },
             deleteFolderName: '',
+            deleteFolderReferenceName: '',
+            deleteResourceReferenceName: '',
             editFolderStructureButtonText: '',
             editFolderStructureButtonDisabled: true,
             selectedResourceId: 0,
@@ -212,11 +349,23 @@ export default Vue.extend({
         editingFolderNode(): FolderNodeModel {
             return this.$store.state.contentStructureState.editingFolderNode;
         },
+        editingFolderNodeReference(): NodePathDisplayVersionModel {
+            return this.$store.state.contentStructureState.editingFolderNodeReference;
+        },
+        editingResourceNodeReference(): ResourceReferenceDisplayVersionModel {
+            return this.$store.state.contentStructureState.editingResourceNodeReference;
+        },
         editingFolderCanBeDeleted(): boolean {
             return !this.$store.state.contentStructureState.editingTreeNode.hasResourcesInBranchInd;
         },
         folderNameCharactersRemaining(): number {
             return 255 - this.editingFolderNode.name.length;
+        },
+        folderReferenceNameCharactersRemaining(): number {
+            return 255 - this.editingFolderNodeReference.name.length;
+        },
+        resourceReferenceNameCharactersRemaining(): number {
+            return 255 - this.editingResourceNodeReference.name.length;
         },
         canCreateEdit(): boolean {
             return this.$store.state.contentStructureState.canCreateEdit;
@@ -226,6 +375,12 @@ export default Vue.extend({
         },
         canSaveFolderEdit(): boolean {
             return this.editingFolderNode.name.trim().length > 0 && this.folderDescriptionValid;
+        },
+        canSaveFolderReferenceEdit(): boolean {
+            return this.editingFolderNodeReference.name.trim().length > 0;
+        },
+        canSaveResourceReferenceEdit(): boolean {
+            return this.editingResourceNodeReference.name.trim().length > 0;
         },
     },
     created() {
@@ -238,8 +393,20 @@ export default Vue.extend({
         onCancelFolderEdit() {
             this.$store.commit('contentStructureState/cancelEdit');
         },
+        onCancelFolderReferenceEdit() {
+            this.$store.commit('contentStructureState/cancelEdit');
+        },
+        onCancelResourceReferenceEdit() {
+            this.$store.commit('contentStructureState/cancelEdit');
+        },
         onSaveFolderEdit() {
             this.$store.dispatch('contentStructureState/saveFolder');
+        },
+        onSaveFolderReferenceEdit() {
+            this.$store.dispatch('contentStructureState/saveNodePathDisplayVersion');
+        },
+        onSaveResourceReferenceEdit() {
+            this.$store.dispatch('contentStructureState/saveResourceReferenceDisplayVersion');
         },
         onTreeItemDeleteFolder: function (item: NodeContentAdminModel) {
             this.$store.commit('contentStructureState/setDeletingFolder', { folderNode: item });
@@ -248,15 +415,31 @@ export default Vue.extend({
         },
         onEditFolderDeleteFolder() {
             this.deleteFolderName = this.editingFolderNode.name;
-            $('#deleteFolderModal').modal('show');
+            $('#deleteFolderReferenceModal').modal('show');
+        },
+        onEditFolderReferenceDeleteFolder() {
+            this.deleteFolderReferenceName = this.editingFolderNodeReference.name;
+            $('#deleteFolderReferenceModal').modal('show');
+        },
+        onEditResourceReferenceDeleteFolder() {
+            this.deleteResourceReferenceName = this.editingResourceNodeReference.name;
+            $('#deleteResourceReferenceModal').modal('show');
         },
         onDeleteFolder() {
             this.$store.dispatch('contentStructureState/deleteFolder');
             $('#deleteFolderModal').modal('hide');
         },
+        onDeleteFolderReference() {
+            this.$store.dispatch('contentStructureState/deleteFolderReference');
+            $('#deleteFolderModal').modal('hide');
+        },
+        onDeleteResourceReference() {
+            this.$store.dispatch('contentStructureState/deleteResourceReference');
+            $('#deleteFolderModal').modal('hide');
+        },
         onEdit() {
             this.editFolderStructureButtonDisabled = true;
-            this.$store.dispatch('contentStructureState/createHierarchyEdit', this.catalogue.nodeId);
+            this.$store.dispatch('contentStructureState/createHierarchyEdit', this.catalogue.rootNodePathId);
         },
         onCancelModal() {
             $('#cancelHierarchyEditModal').modal('show');
@@ -299,7 +482,8 @@ export default Vue.extend({
         color: $nhsuk-red;
     }
     
-    #deleteFolderName {
+    #deleteFolderName,
+    #deleteFolderReferenceName {
         font-weight: bold;
     }
     
@@ -374,5 +558,11 @@ export default Vue.extend({
         ul {
             list-style-type: none;
         }
+    }
+
+    ul.node-path-list {
+        list-style-type: none;
+        font-size: 19px;
+        padding: 0;
     }
 </style>

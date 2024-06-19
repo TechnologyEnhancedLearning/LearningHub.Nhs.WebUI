@@ -497,6 +497,7 @@
                 }
             },
             loadHierarchyEdit() {
+                // TODO: resourceCatalogueId needs to be replaced by the root node path id
                 contentStructureData.getHierarchyEdit(this.resourceDetails.resourceCatalogueId).then(response => {
                     this.hierarchyEdit = response[0];
                     this.hierarchyEditLoaded = true;

@@ -1,4 +1,5 @@
 ﻿import { NodeContentAdminModel } from "./NodeContentAdminModel";
+import { NodePathBreakdownModel } from "./NodePathBreakdownModel";
 
 export class FolderNodeModel {
     hierarchyEditId: number;
@@ -8,7 +9,9 @@ export class FolderNodeModel {
     name: string;
     description: string;
     parentNodeId: number;
+    parentNodePathId: number;
     path: string;
+    nodePaths: NodePathBreakdownModel[];
     parentNode: NodeContentAdminModel;
     public constructor(init?: Partial<FolderNodeModel>) {
         Object.assign(this, init);

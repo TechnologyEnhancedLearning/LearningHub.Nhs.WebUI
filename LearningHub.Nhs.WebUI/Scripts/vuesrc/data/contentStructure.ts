@@ -30,8 +30,8 @@ const getNodeContentsForCatalogueBrowse = async function (nodeId: number): Promi
         });
 };
 
-const getNodeContentsForCatalogueEditor = async function (nodeId: number): Promise<NodeContentEditorModel[]> {
-    return await axios.get<NodeContentEditorModel[]>('/api/hierarchy/GetNodeContentsForCatalogueEditor/' + nodeId + `?timestamp=${new Date().getTime()}`)
+const getNodeContentsForCatalogueEditor = async function (nodePathId: number): Promise<NodeContentEditorModel[]> {
+    return await axios.get<NodeContentEditorModel[]>('/api/hierarchy/GetNodeContentsForCatalogueEditor/' + nodePathId + `?timestamp=${new Date().getTime()}`)
         .then(response => {
             return response.data;
         })
@@ -41,8 +41,8 @@ const getNodeContentsForCatalogueEditor = async function (nodeId: number): Promi
         });
 };
 
-const getNodeContentsAdmin = async function (nodeId: number, readOnly: boolean): Promise<NodeContentAdminModel[]> {
-    return await axios.get<NodeContentAdminModel[]>('/api/hierarchy/GetNodeContentsAdmin/' + nodeId + '/' + readOnly + `?timestamp=${new Date().getTime()}`)
+const getNodeContentsAdmin = async function (nodePathId: number, readOnly: boolean): Promise<NodeContentAdminModel[]> {
+    return await axios.get<NodeContentAdminModel[]>('/api/hierarchy/GetNodeContentsAdmin/' + nodePathId + '/' + readOnly + `?timestamp=${new Date().getTime()}`)
         .then(response => {
             return response.data;
         })
@@ -63,9 +63,9 @@ const getActiveNodePathToNode = async function (nodeId: number): Promise<NodePat
         });
 };
 
-const getHierarchyEdit = async function (rootNodeId: number): Promise<HierarchyEditModel[]> {
+const getHierarchyEdit = async function (rootNodePathId: number): Promise<HierarchyEditModel[]> {
 
-    const url = `/api/hierarchy/GetHierarchyEdit/${rootNodeId}`;
+    const url = `/api/hierarchy/GetHierarchyEdit/${rootNodePathId}`;
 
     return await axios.get<HierarchyEditModel[]>(url)
         .then(response => {
@@ -77,9 +77,9 @@ const getHierarchyEdit = async function (rootNodeId: number): Promise<HierarchyE
         });
 };
 
-const createHierarchyEdit = async function (rootNodeId: number): Promise<LearningHubValidationResultModel> {
+const createHierarchyEdit = async function (rootNodePathId: number): Promise<LearningHubValidationResultModel> {
 
-    const url = `/api/hierarchy/CreateHierarchyEdit/${rootNodeId}`;
+    const url = `/api/hierarchy/CreateHierarchyEdit/${rootNodePathId}`;
 
     return await axios.put<LearningHubValidationResultModel>(url)
         .then(response => {

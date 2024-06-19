@@ -11,6 +11,8 @@ import { NodeType } from '../constants';
 import { CatalogueBasicModel } from '../models/content-structure/catalogueModel';
 import { FolderNodeModel } from '../models/content-structure/folderNodeModel';
 import { forEach } from 'lodash';
+import { NodePathDisplayVersionModel } from '../models/content-structure/nodePathDisplayVersionModel';
+import { ResourceReferenceDisplayVersionModel } from '../models/content-structure/resourceReferenceDisplayVersionModel';
 
 Vue.use(Vuex);
 
@@ -25,12 +27,18 @@ export class State {
     moveToRootNode: NodeContentAdminModel = new NodeContentAdminModel();
     editMode: EditModeEnum = EditModeEnum.None;
     editingFolderNode: FolderNodeModel = null;
+    editingFolderNodeReference: NodePathDisplayVersionModel = null;
+    editingResourceNodeReference: ResourceReferenceDisplayVersionModel = null;
     editingTreeNode: NodeContentAdminModel = null;
     movingResource: NodeContentAdminModel = null;
+    referencingResource: NodeContentAdminModel = null;
     updatedNode: NodeContentAdminModel = null;
     inError: boolean = false;
     lastErrorMessage: string = "";
     readOnly = true;
+    availableReferenceCatalogues: CatalogueBasicModel[] = null;
+    rootExtReferencedNode: NodeContentAdminModel = new NodeContentAdminModel();
+    //selectedLinkedCatalogue: CatalogueBasicModel = null;
 }
 
 const state = new State();
@@ -39,7 +47,7 @@ function refreshHierarchyEdit(state: State) {
     state.isLoading = true;
     state.inError = false;
 
-    contentStructureData.getHierarchyEdit(state.catalogue.nodeId).then(response => {
+    contentStructureData.getHierarchyEdit(state.catalogue.rootNodePathId).then(response => {
         state.hierarchyEdit = response[0];
         state.hierarchyEditLastPublished = response[1];
     }).then(x => {
@@ -61,6 +69,7 @@ function refreshHierarchyEdit(state: State) {
                 state.rootNode = new NodeContentAdminModel();
                 state.rootNode.nodeTypeId = NodeType.Catalogue;
                 state.rootNode.nodeId = state.catalogue.nodeId;
+                state.rootNode.nodePathId = state.catalogue.rootNodePathId;
                 if (!(state.hierarchyEdit === null)) state.rootNode.hierarchyEditDetailId = state.hierarchyEdit.rootHierarchyEditDetailId;
                 state.rootNode.depth = 0;
                 state.rootNode.parent = null;
@@ -70,7 +79,7 @@ function refreshHierarchyEdit(state: State) {
                 state.rootNode.inEdit = state.editMode == EditModeEnum.Structure;
                 state.rootNode.showInTreeView = false;
             }).then(async y => {
-                await contentStructureData.getNodeContentsAdmin(state.catalogue.nodeId, state.readOnly).then(response => {
+                await contentStructureData.getNodeContentsAdmin(state.catalogue.rootNodePathId, state.readOnly).then(response => {
                     state.rootNode.children = response;
                     state.rootNode.children.forEach((child) => {
                         processChildNodeContents(child, state.rootNode);
@@ -88,14 +97,14 @@ function refreshHierarchyEdit(state: State) {
 
 async function refreshNodeContents(node: NodeContentAdminModel, refreshParentPath: boolean) {
     state.updatedNode = null;
-    await contentStructureData.getNodeContentsAdmin(node.nodeId, state.readOnly).then(async response => {
+    await contentStructureData.getNodeContentsAdmin(node.nodePathId, state.readOnly).then(async response => {
 
         if (!node.childrenLoaded) {
             node.children = response;
         }
         else {
             // If node content item is not in the existing collection then add it.
-            // Ensure display order and name are up to date (IT1)
+            // Ensure display order, name, node path display version id and node paths are up to date (IT1)
             response.forEach((child) => {
                 var existing = node.children.filter(r => (r.nodeId != null && r.nodeId == child.nodeId) || (r.resourceId != null && r.resourceId == child.resourceId))[0];
                 if (existing === undefined) {
@@ -104,6 +113,8 @@ async function refreshNodeContents(node: NodeContentAdminModel, refreshParentPat
                 else {
                     existing.displayOrder = child.displayOrder;
                     existing.name = child.name;
+                    existing.nodePathDisplayVersionId = child.nodePathDisplayVersionId;
+                    existing.nodePaths = child.nodePaths;
                 }
             });
 
@@ -175,7 +186,9 @@ const mutations = {
             name: "",
             description: "",
             parentNodeId: payload.parentNode.nodeId,
+            parentNodePathId: payload.parentNode.nodePathId,
             path: payload.parentNode.path,
+            nodePaths: payload.parentNode.nodePaths,
             parentNode: null
         }
         state.editingFolderNode = editingFolderNode;
@@ -191,10 +204,43 @@ const mutations = {
             editingFolderNode.hierarchyEditId = state.hierarchyEdit.id;
             editingFolderNode.hierarchyEditDetailId = payload.folderNode.hierarchyEditDetailId;
             editingFolderNode.path = payload.folderNode.path;
+            editingFolderNode.nodePaths = payload.folderNode.nodePaths;
             state.editingFolderNode = editingFolderNode;
             state.editingTreeNode = payload.folderNode;
             state.editMode = EditModeEnum.Folder;
         });
+    },
+    setEditingNodePathDisplayVersion(state: State, payload: { folderNode: NodeContentAdminModel }) {
+        state.inError = false;
+
+        var nodePathDisplayVersionModel: NodePathDisplayVersionModel = new NodePathDisplayVersionModel;
+
+        nodePathDisplayVersionModel.hierarchyEditId = state.hierarchyEdit.id;
+        nodePathDisplayVersionModel.nodePathDisplayVersionId = payload.folderNode.nodePathDisplayVersionId;
+        nodePathDisplayVersionModel.hierarchyEditDetailId = payload.folderNode.hierarchyEditDetailId;
+        nodePathDisplayVersionModel.path = payload.folderNode.path;
+        nodePathDisplayVersionModel.nodePaths = payload.folderNode.nodePaths;
+        nodePathDisplayVersionModel.name = payload.folderNode.name;
+        nodePathDisplayVersionModel.nodePathId = payload.folderNode.nodePathId;
+        state.editingFolderNodeReference = nodePathDisplayVersionModel;
+        state.editingTreeNode = payload.folderNode; // Is this needed?
+        state.editMode = EditModeEnum.FolderReference;
+    },
+    setEditingResourceReferenceDisplayVersion(state: State, payload: { resourceNode: NodeContentAdminModel }) {
+        state.inError = false;
+
+        var resourceReferenceDisplayVersionModel: ResourceReferenceDisplayVersionModel = new ResourceReferenceDisplayVersionModel;
+
+        resourceReferenceDisplayVersionModel.hierarchyEditId = state.hierarchyEdit.id;
+        resourceReferenceDisplayVersionModel.resourceReferenceDisplayVersionId = payload.resourceNode.resourceReferenceDisplayVersionId;
+        resourceReferenceDisplayVersionModel.hierarchyEditDetailId = payload.resourceNode.hierarchyEditDetailId;
+        resourceReferenceDisplayVersionModel.path = payload.resourceNode.path;
+        resourceReferenceDisplayVersionModel.nodePaths = payload.resourceNode.nodePaths;
+        resourceReferenceDisplayVersionModel.name = payload.resourceNode.name;
+        resourceReferenceDisplayVersionModel.resourceReferenceId = payload.resourceNode.resourceReferenceId;
+        state.editingResourceNodeReference = resourceReferenceDisplayVersionModel;
+        state.editingTreeNode = payload.resourceNode; // Is this needed?
+        state.editMode = EditModeEnum.ResourceReference;
     },
     setDeletingFolder(state: State, payload: { folderNode: NodeContentAdminModel }) {
         state.editingTreeNode = payload.folderNode;
@@ -204,6 +250,20 @@ const mutations = {
         state.editMode = EditModeEnum.MoveNode;
     },
     cancelMoveNode(state: State, payload: { node: NodeContentAdminModel }) {
+        state.editMode = EditModeEnum.Structure;
+    },
+    setReferencingNode(state: State, payload: { node: NodeContentAdminModel }) {
+        state.editingTreeNode = payload.node;
+        state.editMode = EditModeEnum.ReferenceNode;
+    },
+    cancelReferenceNode(state: State, payload: { node: NodeContentAdminModel }) {
+        state.editMode = EditModeEnum.Structure;
+    },
+    setReferencingExternalContent(state: State, payload: { node: NodeContentAdminModel }) {
+        state.editingTreeNode = payload.node;
+        state.editMode = EditModeEnum.ReferenceExternalContent;
+    },
+    canceReferencingExternalContent(state: State, payload: { node: NodeContentAdminModel }) {
         state.editMode = EditModeEnum.Structure;
     },
     cancelEdit(state: State) {
@@ -218,6 +278,15 @@ const mutations = {
         state.editMode = EditModeEnum.Structure;
         state.movingResource = null;
     },
+    setReferencingResource(state: State, payload: { node: NodeContentAdminModel }) {
+        state.editingTreeNode = payload.node.parent;
+        state.referencingResource = payload.node;
+        state.editMode = EditModeEnum.ReferenceResource;
+    },
+    cancelReferenceResource(state: State, payload: { node: NodeContentAdminModel }) {
+        state.editMode = EditModeEnum.Structure;
+        state.referencingResource = null;
+    },
     setError(state: State, payload: { errorMessage: string }) {
         state.inError = true;
         state.lastErrorMessage = payload.errorMessage;
@@ -225,8 +294,22 @@ const mutations = {
     removeError(state: State) {
         state.inError = false;
         state.lastErrorMessage = null;
+    },
+    selectReferencableCatalogue(state: State, payload: { catalogueNodePathId: number }) {
+        var selectedCatalogue = state.availableReferenceCatalogues.find(c => c.rootNodePathId === payload.catalogueNodePathId);
+        state.rootExtReferencedNode = new NodeContentAdminModel();
+        state.rootExtReferencedNode.nodeTypeId = NodeType.Catalogue;
+        state.rootExtReferencedNode.nodeId = selectedCatalogue.nodeId;
+        state.rootExtReferencedNode.nodePathId = selectedCatalogue.rootNodePathId;
+        state.rootExtReferencedNode.depth = 0;
+        state.rootExtReferencedNode.parent = null;
+        state.rootExtReferencedNode.path = selectedCatalogue.name;
+        state.rootExtReferencedNode.name = selectedCatalogue.name;
+        state.rootExtReferencedNode.childrenLoaded = false;
+        state.rootExtReferencedNode.inEdit = false;
+        state.rootExtReferencedNode.showInTreeView = true;
+        state.rootExtReferencedNode.children = [];
     }
-
 } as MutationTree<State>;
 
 const getters = <GetterTree<State, any>>{};
@@ -305,6 +388,25 @@ const actions = <ActionTree<State, any>>{
             state.lastErrorMessage = "Error deleting folder.";
         });
     },
+    deleteFolderReference(context: ActionContext<State, State>) {
+        state.inError = false;
+        state.updatedNode = null;
+        contentStructureData.deleteFolderReference(state.editingTreeNode.hierarchyEditDetailId).then(async response => {
+            if (response.isValid) {
+                var parent = state.editingTreeNode.parent;
+                await refreshNodeContents(parent, false);
+                state.updatedNode = parent;
+                context.commit("setEditMode", EditModeEnum.Structure);
+            }
+            else {
+                state.inError = true;
+                state.lastErrorMessage = "Error: " + response.details.join(",");
+            }
+        }).catch(e => {
+            state.inError = true;
+            state.lastErrorMessage = "Error deleting folder reference.";
+        });
+    },
     async moveNodeUp(context: ActionContext<State, State>, payload: { node: NodeContentAdminModel }) {
         state.inError = false;
         contentStructureData.moveNodeUp(payload.node.hierarchyEditDetailId).then(async response => {
@@ -336,6 +438,20 @@ const actions = <ActionTree<State, any>>{
             state.lastErrorMessage = `Error moving Node ${state.editingTreeNode.name}`;
         });
     },
+    async referenceNode(context: ActionContext<State, State>, payload: { destinationNode: NodeContentAdminModel }) {
+        state.inError = false;
+        contentStructureData.referenceNode(state.editingTreeNode.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(async response => {
+            context.commit("setEditMode", EditModeEnum.Structure);
+            await refreshNodeContents(payload.destinationNode, true).then(async x => {
+                state.editingTreeNode.parent.childrenLoaded = false; // force reload of current now to show references
+                await refreshNodeContents(state.editingTreeNode.parent, true).then(y => {
+                });
+            });
+        }).catch(e => {
+            state.inError = true;
+            state.lastErrorMessage = `Error referencing Node ${state.editingTreeNode.name}`;
+        });
+    },
     async moveResourceUp(context: ActionContext<State, State>, payload: { node: NodeContentAdminModel }) {
         contentStructureData.hierarchyEditMoveResourceUp(payload.node.hierarchyEditDetailId).then(async response => {
             await refreshNodeContents(payload.node.parent, false);
@@ -364,6 +480,18 @@ const actions = <ActionTree<State, any>>{
             state.lastErrorMessage = "Error moving resource.";
         });
     },
+    async referenceResource(context: ActionContext<State, State>, payload: { destinationNode: NodeContentAdminModel }) {
+        contentStructureData.hierarchyEditReferenceResource(state.referencingResource.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(async response => {
+            await refreshNodeContents(state.referencingResource.parent, true).then(async x => {
+                await refreshNodeContents(payload.destinationNode, true);
+            });
+
+            context.commit("setEditMode", EditModeEnum.Structure);
+        }).catch(e => {
+            state.inError = true;
+            state.lastErrorMessage = "Error referencing resource.";
+        });
+    },
     async saveFolder(context: ActionContext<State, State>) {
         if (state.editingFolderNode.nodeVersionId == 0) {
             contentStructureData.createFolder(state.editingFolderNode).then(async response => {
@@ -384,7 +512,86 @@ const actions = <ActionTree<State, any>>{
                 state.lastErrorMessage = "Error updating folder.";
             });
         }
-    }
+    },
+    async saveNodePathDisplayVersion(context: ActionContext<State, State>) {
+        contentStructureData.updateNodePathDisplayVersion(state.editingFolderNodeReference).then(async response => {
+            state.editingFolderNodeReference.nodePathDisplayVersionId = response.createdId;
+            await refreshNodeContents(state.editingTreeNode.parent, false);
+        }).catch(e => {
+            state.inError = true;
+            state.lastErrorMessage = "Error creating folder reference.";
+        });
+        context.commit("setEditMode", EditModeEnum.Structure);
+    },
+    async saveResourceReferenceDisplayVersion(context: ActionContext<State, State>) {
+        contentStructureData.updateResourceReferenceDisplayVersion(state.editingResourceNodeReference).then(async response => {
+            state.editingResourceNodeReference.resourceReferenceDisplayVersionId = response.createdId;
+            await refreshNodeContents(state.editingTreeNode.parent, false);
+        }).catch(e => {
+            state.inError = true;
+            state.lastErrorMessage = "Error creating folder reference.";
+        });
+        context.commit("setEditMode", EditModeEnum.Structure);
+    },
+    async populateReferencableCatalogues(context: ActionContext<State, State>) {
+        contentStructureData.getReferencableCatalogues(state.rootNode.nodePathId).then(async response => {
+            state.availableReferenceCatalogues = response;
+
+            var originalCatalogue = state.availableReferenceCatalogues.find(c => c.rootNodePathId === state.rootNode.nodePathId);
+            state.rootExtReferencedNode = new NodeContentAdminModel();
+            state.rootExtReferencedNode.nodeTypeId = NodeType.Catalogue;
+            state.rootExtReferencedNode.nodeId = originalCatalogue.nodeId;
+            state.rootExtReferencedNode.nodePathId = originalCatalogue.rootNodePathId;
+            state.rootExtReferencedNode.depth = 0;
+            state.rootExtReferencedNode.parent = null;
+            state.rootExtReferencedNode.path = originalCatalogue.name;
+            state.rootExtReferencedNode.name = originalCatalogue.name;
+            state.rootExtReferencedNode.childrenLoaded = false;
+            state.rootExtReferencedNode.inEdit = false;
+            state.rootExtReferencedNode.showInTreeView = true;
+        }).catch(e => {
+            state.inError = true;
+            state.lastErrorMessage = "Error populating referencable catalogues.";
+        });
+    },
+    async referenceExternalItem(context: ActionContext<State, State>, payload: { selectedNode: NodeContentAdminModel }) {
+        // TODO: Implement this.
+        if (state.rootExtReferencedNode.nodePathId === state.rootNode.nodePathId) { // same as editing catalogue
+            if (payload.selectedNode.nodeTypeId === NodeType.Folder) {
+                // folder
+                alert("Not implemented");
+
+            //    state.inError = false;
+            //    contentStructureData.referenceNode(payload.selectedNode.hierarchyEditDetailId, state.editingTreeNode.hierarchyEditDetailId).then(async response => {
+            //        context.commit("setEditMode", EditModeEnum.Structure);
+            //        await refreshNodeContents(payload.selectedNode, true).then(async x => {
+            //            state.editingTreeNode.parent.childrenLoaded = false; // force reload of current now to show references
+            //            await refreshNodeContents(state.editingTreeNode.parent, true).then(y => {
+            //            });
+            //        });
+            //    }).catch(e => {
+            //        state.inError = true;
+            //        state.lastErrorMessage = `Error referencing Node ${state.editingTreeNode.name}`;
+            //    });
+            } else {
+                // resource
+                alert("Not implemented");
+            }
+        }
+        else {
+            alert("Not implemented");
+        }
+        //contentStructureData.hierarchyEditMoveResource(state.movingResource.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(async response => {
+        //    await refreshNodeContents(state.movingResource.parent, true).then(async x => {
+        //        await refreshNodeContents(payload.destinationNode, true);
+        //    });
+
+        //    context.commit("setEditMode", EditModeEnum.Structure);
+        //}).catch(e => {
+        //    state.inError = true;
+        //    state.lastErrorMessage = "Error moving resource.";
+        //});
+    },
 };
 
 export const contentStructureState = {

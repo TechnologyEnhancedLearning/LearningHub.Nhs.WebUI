@@ -370,7 +370,7 @@
             },
             async loadNodeContents() {
                 this.isError = false;
-                await contentStructureData.getNodeContentsForCatalogueEditor(this.item.nodeId).then(response => {
+                await contentStructureData.getNodeContentsForCatalogueEditor(this.item.nodePathId).then(response => {
 
                     this.item.children = response;
                     this.item.children.forEach((child) => {

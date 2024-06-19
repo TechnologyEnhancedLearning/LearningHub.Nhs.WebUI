@@ -3,6 +3,7 @@ namespace LearningHub.Nhs.Repository
     using LearningHub.Nhs.Entities.Resource;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Dashboard;
+    using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Content;
@@ -397,15 +398,20 @@ namespace LearningHub.Nhs.Repository
         /// </summary>
         public virtual DbSet<NodeResourceLookup> NodeResourceLookup { get; set; }
 
-        /// <summary>
-        /// Gets or sets the NodeViewModel.
-        /// </summary>
-        public virtual DbSet<NodeViewModel> NodeViewModel { get; set; }
+        /////// <summary>
+        /////// Gets or sets the NodeViewModel.
+        /////// </summary>
+        ////public virtual DbSet<NodeViewModel> NodeViewModel { get; set; }
 
         /// <summary>
-        /// Gets or sets the NodePathNodeViewModel.
+        /// Gets or sets the NodePathViewModel.
         /// </summary>
-        public virtual DbSet<NodePathNodeViewModel> NodePathNodeViewModel { get; set; }
+        public virtual DbSet<NodePathViewModel> NodePathViewModel { get; set; }
+
+        /////// <summary>
+        /////// Gets or sets the NodePathNodeViewModel.
+        /////// </summary>
+        ////public virtual DbSet<NodePathNodeViewModel> NodePathNodeViewModel { get; set; }
 
         /// <summary>
         /// Gets or sets the NodeContentBrowseViewModel.
@@ -418,9 +424,14 @@ namespace LearningHub.Nhs.Repository
         public virtual DbSet<NodeContentEditorViewModel> NodeContentEditorViewModel { get; set; }
 
         /// <summary>
-        /// Gets or sets the NodeContentAdminViewModel.
+        /// Gets or sets the NodeContentAdminDto.
         /// </summary>
-        public virtual DbSet<NodeContentAdminViewModel> NodeContentAdminViewModel { get; set; }
+        public virtual DbSet<NodeContentAdminDto> NodeContentAdminDto { get; set; }
+
+        /// <summary>
+        /// Gets or sets the NodePathBreakdownItemDto.
+        /// </summary>
+        public virtual DbSet<NodePathBreakdownItemDto> NodePathBreakdownItemDto { get; set; }
 
         /// <summary>
         /// Gets or sets the CacheOperationViewModel.

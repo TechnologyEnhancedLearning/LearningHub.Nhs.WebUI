@@ -2,6 +2,7 @@
     catalogueNodeVersionId: number;
     nodeId: number;
     name: string;
+    rootNodePathId: number;
     hidden: boolean;
     url: string;
     restrictedAccess: boolean;

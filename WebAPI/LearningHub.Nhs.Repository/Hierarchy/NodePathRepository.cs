@@ -52,16 +52,21 @@
                             .ToListAsync();
         }
 
-        /// <summary>
-        /// Gets the basic details of all Nodes in a particular NodePath.
-        /// </summary>
-        /// <param name="nodePathId">The NodePath id.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<NodePathNodeViewModel>> GetNodePathNodes(int nodePathId)
+        /// <inheritdoc />
+        public async Task<List<NodePathViewModel>> GetNodePathNodes(int nodePathId)
         {
             var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = nodePathId };
 
-            var retVal = await this.DbContext.NodePathNodeViewModel.FromSqlRaw("hierarchy.GetNodePathNodes @p0", param0).AsNoTracking().ToListAsync();
+            var retVal = await this.DbContext.NodePathViewModel.FromSqlRaw("hierarchy.GetNodePathNodes @p0", param0).AsNoTracking().ToListAsync();
+            return retVal;
+        }
+
+        /// <inheritdoc />
+        public NodePathViewModel GetNodePathDetails(int nodePathId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = nodePathId };
+
+            var retVal = this.DbContext.NodePathViewModel.FromSqlRaw("hierarchy.GetNodePathDetails @p0", param0).AsEnumerable().FirstOrDefault();
             return retVal;
         }
     }

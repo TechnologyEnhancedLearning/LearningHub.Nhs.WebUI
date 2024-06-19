@@ -17,7 +17,7 @@
         {
             entity.ToTable("PageSectionDetail", "content");
 
-            entity.Property(e => e.AssetPositionId).HasDefaultValueSql("((2))");
+            //entity.Property(e => e.AssetPositionId).HasDefaultValueSql("((2))");  // qqqq come back to this does it need reloading from db
 
             entity.Property(e => e.BackgroundColour).HasMaxLength(20);
 
@@ -31,7 +31,7 @@
 
             entity.Property(e => e.TextColour).HasMaxLength(20);
 
-            entity.Property(e => e.Title).HasMaxLength(128);
+          //  entity.Property(e => e.Title).HasMaxLength(128);  qqqq compare to db and come back to this
 
             entity.Property(e => e.DeletePending).IsRequired(false);
 

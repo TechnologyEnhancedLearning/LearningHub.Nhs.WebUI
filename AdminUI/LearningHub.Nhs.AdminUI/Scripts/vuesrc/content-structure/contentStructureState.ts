@@ -36,6 +36,9 @@ export class State {
     inError: boolean = false;
     lastErrorMessage: string = "";
     readOnly = true;
+    availableReferenceCatalogues: CatalogueBasicModel[] = null;
+    rootExtReferencedNode: NodeContentAdminModel = new NodeContentAdminModel();
+    //selectedLinkedCatalogue: CatalogueBasicModel = null;
 }
 
 const state = new State();
@@ -291,8 +294,22 @@ const mutations = {
     removeError(state: State) {
         state.inError = false;
         state.lastErrorMessage = null;
+    },
+    selectReferencableCatalogue(state: State, payload: { catalogueNodePathId: number }) {
+        var selectedCatalogue = state.availableReferenceCatalogues.find(c => c.rootNodePathId === payload.catalogueNodePathId);
+        state.rootExtReferencedNode = new NodeContentAdminModel();
+        state.rootExtReferencedNode.nodeTypeId = NodeType.Catalogue;
+        state.rootExtReferencedNode.nodeId = selectedCatalogue.nodeId;
+        state.rootExtReferencedNode.nodePathId = selectedCatalogue.rootNodePathId;
+        state.rootExtReferencedNode.depth = 0;
+        state.rootExtReferencedNode.parent = null;
+        state.rootExtReferencedNode.path = selectedCatalogue.name;
+        state.rootExtReferencedNode.name = selectedCatalogue.name;
+        state.rootExtReferencedNode.childrenLoaded = false;
+        state.rootExtReferencedNode.inEdit = false;
+        state.rootExtReferencedNode.showInTreeView = true;
+        state.rootExtReferencedNode.children = [];
     }
-
 } as MutationTree<State>;
 
 const getters = <GetterTree<State, any>>{};
@@ -515,7 +532,66 @@ const actions = <ActionTree<State, any>>{
             state.lastErrorMessage = "Error creating folder reference.";
         });
         context.commit("setEditMode", EditModeEnum.Structure);
-    }
+    },
+    async populateReferencableCatalogues(context: ActionContext<State, State>) {
+        contentStructureData.getReferencableCatalogues(state.rootNode.nodePathId).then(async response => {
+            state.availableReferenceCatalogues = response;
+
+            var originalCatalogue = state.availableReferenceCatalogues.find(c => c.rootNodePathId === state.rootNode.nodePathId);
+            state.rootExtReferencedNode = new NodeContentAdminModel();
+            state.rootExtReferencedNode.nodeTypeId = NodeType.Catalogue;
+            state.rootExtReferencedNode.nodeId = originalCatalogue.nodeId;
+            state.rootExtReferencedNode.nodePathId = originalCatalogue.rootNodePathId;
+            state.rootExtReferencedNode.depth = 0;
+            state.rootExtReferencedNode.parent = null;
+            state.rootExtReferencedNode.path = originalCatalogue.name;
+            state.rootExtReferencedNode.name = originalCatalogue.name;
+            state.rootExtReferencedNode.childrenLoaded = false;
+            state.rootExtReferencedNode.inEdit = false;
+            state.rootExtReferencedNode.showInTreeView = true;
+        }).catch(e => {
+            state.inError = true;
+            state.lastErrorMessage = "Error populating referencable catalogues.";
+        });
+    },
+    async referenceExternalItem(context: ActionContext<State, State>, payload: { selectedNode: NodeContentAdminModel }) {
+        // TODO: Implement this.
+        if (state.rootExtReferencedNode.nodePathId === state.rootNode.nodePathId) { // same as editing catalogue
+            if (payload.selectedNode.nodeTypeId === NodeType.Folder) {
+                // folder
+                alert("Not implemented");
+
+            //    state.inError = false;
+            //    contentStructureData.referenceNode(payload.selectedNode.hierarchyEditDetailId, state.editingTreeNode.hierarchyEditDetailId).then(async response => {
+            //        context.commit("setEditMode", EditModeEnum.Structure);
+            //        await refreshNodeContents(payload.selectedNode, true).then(async x => {
+            //            state.editingTreeNode.parent.childrenLoaded = false; // force reload of current now to show references
+            //            await refreshNodeContents(state.editingTreeNode.parent, true).then(y => {
+            //            });
+            //        });
+            //    }).catch(e => {
+            //        state.inError = true;
+            //        state.lastErrorMessage = `Error referencing Node ${state.editingTreeNode.name}`;
+            //    });
+            } else {
+                // resource
+                alert("Not implemented");
+            }
+        }
+        else {
+            alert("Not implemented");
+        }
+        //contentStructureData.hierarchyEditMoveResource(state.movingResource.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(async response => {
+        //    await refreshNodeContents(state.movingResource.parent, true).then(async x => {
+        //        await refreshNodeContents(payload.destinationNode, true);
+        //    });
+
+        //    context.commit("setEditMode", EditModeEnum.Structure);
+        //}).catch(e => {
+        //    state.inError = true;
+        //    state.lastErrorMessage = "Error moving resource.";
+        //});
+    },
 };
 
 export const contentStructureState = {

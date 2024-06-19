@@ -33,6 +33,13 @@
         IEnumerable<CatalogueNodeVersion> GetPublishedCataloguesForUserAsync(int userId);
 
         /// <summary>
+        /// The get referencable catalogues for the editing nodePathId.
+        /// </summary>
+        /// <param name="nodePathId">The nodePathId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<List<CatalogueBasicViewModel>> GetReferencableCataloguesAsync(int nodePathId);
+
+        /// <summary>
         /// The get basic catalogue.
         /// </summary>
         /// <param name="catalogueNodeId">The catalogueNodeId.</param>

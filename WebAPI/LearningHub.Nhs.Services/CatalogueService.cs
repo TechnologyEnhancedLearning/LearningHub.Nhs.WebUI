@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
+    using elfhHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Api.Shared.Configuration;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Common;
@@ -158,6 +159,12 @@
             vm.HasUserGroup = this.GetRoleUserGroupsForCatalogue(vm.NodeId).Any();
             vm.Providers = await this.providerService.GetAllAsync();
             return vm;
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<CatalogueBasicViewModel>> GetReferencableCataloguesAsync(int nodePathId)
+        {
+            return await this.catalogueNodeVersionRepository.GetReferencableCataloguesAsync(nodePathId);
         }
 
         /// <summary>

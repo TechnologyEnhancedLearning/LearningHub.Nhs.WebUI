@@ -80,6 +80,18 @@
         }
 
         /// <summary>
+        /// The GetCatalogue.
+        /// </summary>
+        /// <param name="nodePathId">The nodePathId of the catalogue being edited<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpGet("GetReferencableCatalogues/{nodePathId}")]
+        public async Task<IActionResult> GetRelatedCatalogues(int nodePathId)
+        {
+            var catalogue = await this.catalogueService.GetReferencableCataloguesAsync(nodePathId);
+            return this.Ok(catalogue);
+        }
+
+        /// <summary>
         /// The GetFolder.
         /// </summary>
         /// <param name="nodeVersionId">The id<see cref="int"/>.</param>

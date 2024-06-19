@@ -7,7 +7,7 @@
     /// <summary>
     /// The whole slide image annotation map.
     /// </summary>
-    public class WholeSlideImageAnnotationMarkMap : BaseEntityMap<WholeSlideImageAnnotationMark>
+    public class ImageAnnotationMarkMap : BaseEntityMap<ImageAnnotationMark>
     {
         /// <summary>
         /// The internal map.
@@ -15,15 +15,15 @@
         /// <param name="modelBuilder">
         /// The model builder.
         /// </param>
-        protected override void InternalMap(EntityTypeBuilder<WholeSlideImageAnnotationMark> modelBuilder)
+        protected override void InternalMap(EntityTypeBuilder<ImageAnnotationMark> modelBuilder)
         {
-            modelBuilder.ToTable("WholeSlideImageAnnotationMark", "resources");
+            modelBuilder.ToTable("ImageAnnotationMark", "resources");
 
-            modelBuilder.HasOne(a => a.WholeSlideImageAnnotation)
-                .WithMany(i => i.WholeSlideImageAnnotationMarks)
-                .HasForeignKey(a => a.WholeSlideImageAnnotationId)
+            modelBuilder.HasOne(a => a.ImageAnnotation)
+                .WithMany(i => i.ImageAnnotationMarks)
+                .HasForeignKey(a => a.ImageAnnotationId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK_WholeSlideImageAnnotationMark_WholeSlideImageAnnotationId");
+                .HasConstraintName("FK_ImageAnnotationMark_WholeSlideImageAnnotationId");
         }
     }
 }

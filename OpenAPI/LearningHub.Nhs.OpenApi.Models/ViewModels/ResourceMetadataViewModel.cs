@@ -1,5 +1,6 @@
 namespace LearningHub.Nhs.OpenApi.Models.ViewModels
 {
+    using LearningHub.Nhs.OpenApi.Models.NugetTemp;
     using System.Collections.Generic;
 
     /// <summary>
@@ -23,20 +24,25 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <param name="references"><see cref="References"/>.</param>
         /// <param name="resourceType"><see cref="ResourceType"/>.</param>
         /// <param name="rating"><see cref="Rating"/>.</param>
+        /// <param name="userSummaryActvityStatuses"><see cref="UserSummaryActvityStatuses"/>.</param>
         public ResourceMetadataViewModel(
             int resourceId,
             string title,
             string description,
             List<ResourceReferenceViewModel> references,
             string resourceType,
-            decimal rating)
+            int? majorVersion,
+            decimal rating,
+            List<MajorVersionIdActivityStatusDescription>? userSummaryActvityStatuses)
         {
             this.ResourceId = resourceId;
             this.Title = title;
             this.Description = description;
             this.References = references;
             this.ResourceType = resourceType;
+            this.MajorVersion = majorVersion;
             this.Rating = rating;
+            this.UserSummaryActvityStates = userSummaryActvityStatuses;
         }
 
         /// <summary>
@@ -65,8 +71,18 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         public string ResourceType { get; set; }
 
         /// <summary>
+        /// Gets or sets <see cref="MajorVersion"/>.
+        /// </summary>
+        public int? MajorVersion { get; set; }
+
+        /// <summary>
         /// Gets or sets <see cref="Rating"/>.
         /// </summary>
         public decimal Rating { get; set; }
+
+        /// <summary>
+        /// Gets or sets <see cref="UserSummaryActvityStates"/>.
+        /// </summary>
+        public List<MajorVersionIdActivityStatusDescription>? UserSummaryActvityStates { get; set; }
     }
 }

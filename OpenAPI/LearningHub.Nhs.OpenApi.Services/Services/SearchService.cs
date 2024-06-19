@@ -3,8 +3,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.OpenApi.Models.NugetTemp;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Findwise;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
@@ -23,7 +26,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         private readonly IResourceRepository resourceRepository;
         private readonly IFindwiseClient findwiseClient;
         private readonly ILogger logger;
-        private readonly IResourceService resourceService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchService"/> class.
@@ -52,12 +54,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             this.learningHubService = learningHubService;
             this.findwiseClient = findwiseClient;
             this.resourceRepository = resourceRepository;
-            this.resourceService = resourceService;
             this.logger = logger;
         }
 
         /// <inheritdoc />
-        public async Task<ResourceSearchResultModel> Search(ResourceSearchRequest query)
+        public async Task<ResourceSearchResultModel> Search(ResourceSearchRequest query, int? currentUserId)
         {
             var findwiseResultModel = await this.findwiseClient.Search(query);
 
@@ -66,7 +67,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 return ResourceSearchResultModel.FailedWithStatus(findwiseResultModel.FindwiseRequestStatus);
             }
 
-            var resourceMetadataViewModels = await this.GetResourceMetadataViewModels(findwiseResultModel);
+            var resourceMetadataViewModels = await this.GetResourceMetadataViewModels(findwiseResultModel, currentUserId);
 
             var totalHits = findwiseResultModel.SearchResults?.Stats.TotalHits;
 
@@ -77,8 +78,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         }
 
         private async Task<List<ResourceMetadataViewModel>> GetResourceMetadataViewModels(
-            FindwiseResultModel findwiseResultModel)
+            FindwiseResultModel findwiseResultModel, int? currentUserId)
         {
+            List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
+            List<Nhs.Models.Entities.Activity.ResourceActivity> resourceActivities = new List<Nhs.Models.Entities.Activity.ResourceActivity>() { };
+
             var documentsFound = findwiseResultModel.SearchResults?.DocumentList.Documents?.ToList() ??
                                  new List<Document>();
             var findwiseResourceIds = documentsFound.Select(d => int.Parse(d.Id)).ToList();
@@ -88,9 +92,19 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 return new List<ResourceMetadataViewModel>();
             }
 
-            var resourcesFound = await this.resourceRepository.GetResourcesFromIds(findwiseResourceIds);
+            var resourcesFound = (await this.resourceRepository.GetResourcesFromIds(findwiseResourceIds)).ToList();
 
-            var resourceMetadataViewModels = resourcesFound.Select(this.MapToViewModel)
+            if (currentUserId.HasValue)
+            {
+                List<int> resourceIds = resourcesFound.Select(x => x.Id).ToList();
+                List<int> userIds = new List<int>() { currentUserId.Value };
+
+                // qqqq do i need to null handle with this
+                resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<Nhs.Models.Entities.Activity.ResourceActivity>() { };
+            }
+
+            //qqqq
+            var resourceMetadataViewModels = resourcesFound.Select(resource => MapToViewModel(resource, resourceActivities.Where(x => x.ResourceId == resource.Id).ToList()))
                 .OrderBySequence(findwiseResourceIds)
                 .ToList();
 
@@ -108,8 +122,16 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             return resourceMetadataViewModels;
         }
 
-        private ResourceMetadataViewModel MapToViewModel(Resource resource)
+        public ResourceMetadataViewModel MapToViewModel(Resource resource, List<ResourceActivity> resourceActivities)
         {
+            List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
+
+            if (resourceActivities != null && resourceActivities.Count != 0)
+            {
+                majorVersionIdActivityStatusDescription = ActivityStatusHelper.GetMajorVersionIdActivityStatusDescriptionLSPerResource(resource, resourceActivities)
+                    .ToList();
+            }
+
             var hasCurrentResourceVersion = resource.CurrentResourceVersion != null;
             var hasRating = resource.CurrentResourceVersion?.ResourceVersionRatingSummary != null;
 
@@ -137,7 +159,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resource.CurrentResourceVersion?.Description ?? string.Empty,
                 resource.ResourceReference.Select(this.GetResourceReferenceViewModel).ToList(),
                 resourceTypeNameOrEmpty,
-                resource.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0.0m);
+                resource.ResourceVersion.FirstOrDefault()?.MajorVersion,/*qqqq would be returned by procedure so not first or default*/
+                resource.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0.0m,
+                majorVersionIdActivityStatusDescription); // qqqq
         }
 
         private ResourceReferenceViewModel GetResourceReferenceViewModel(

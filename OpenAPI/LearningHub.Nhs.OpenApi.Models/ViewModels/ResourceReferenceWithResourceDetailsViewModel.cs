@@ -1,10 +1,13 @@
+using LearningHub.Nhs.OpenApi.Models.NugetTemp;
+using System.Collections.Generic;
+
 namespace LearningHub.Nhs.OpenApi.Models.ViewModels
 {
     /// <summary>
     /// Class.
     /// </summary>
-    public class ResourceReferenceWithResourceDetailsViewModel
-    {
+    public class ResourceReferenceWithResourceDetailsViewModel 
+    { 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceReferenceWithResourceDetailsViewModel"/> class.
         /// </summary>
@@ -16,6 +19,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <param name="resourceType"><see cref="ResourceType"/>.</param>
         /// <param name="rating"><see cref="Rating"/>.</param>
         /// <param name="link"><see cref="Link"/>.</param>
+        /// <param name="userSummaryActvityStatus"><see cref="UserSummaryActvityStatus"/>.</param>
         public ResourceReferenceWithResourceDetailsViewModel(
             int resourceId,
             int refId,
@@ -23,8 +27,11 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             string description,
             CatalogueViewModel catalogueViewModel,
             string resourceType,
+            int? majorVersion,
             decimal rating,
-            string link)
+            string link,
+            List<MajorVersionIdActivityStatusDescription>? userSummaryActvityStatus
+            )
         {
             this.ResourceId = resourceId;
             this.RefId = refId;
@@ -32,8 +39,10 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             this.Description = description;
             this.Catalogue = catalogueViewModel;
             this.ResourceType = resourceType;
+            this.MajorVersion = majorVersion;
             this.Rating = rating;
             this.Link = link;
+            this.UserSummaryActvityStatus = userSummaryActvityStatus;
         }
 
         /// <summary>
@@ -66,14 +75,27 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// </summary>
         public string ResourceType { get; }
 
+
+        /// <summary>
+        /// Gets <see cref="MajorVersion"/>.
+        /// </summary>
+        public int? MajorVersion { get; }
+
+
         /// <summary>
         /// Gets <see cref="Rating"/>.
         /// </summary>
+        /// 
         public decimal Rating { get; }
 
         /// <summary>
         /// Gets <see cref="Link"/>.
         /// </summary>
         public string Link { get; }
+
+        /// <summary>
+        /// Gets <see cref="UserSummaryActvityStatus"/>.
+        /// </summary>
+        public List<MajorVersionIdActivityStatusDescription>? UserSummaryActvityStatus { get;  }
     }
 }

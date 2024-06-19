@@ -111,7 +111,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, WholeSlideImageBlockItemMap>();
             services.AddSingleton<IEntityTypeMap, WholeSlideImageMap>();
             services.AddSingleton<IEntityTypeMap, WholeSlideImageAnnotationMap>();
-            services.AddSingleton<IEntityTypeMap, WholeSlideImageAnnotationMarkMap>();
+            services.AddSingleton<IEntityTypeMap, ImageAnnotationMarkMap>();
             services.AddSingleton<IEntityTypeMap, WholeSlideImageFileMap>();
             services.AddSingleton<IEntityTypeMap, UrlRewritingMap>();
             services.AddSingleton<IEntityTypeMap, ResourceSyncMap>();

@@ -16,10 +16,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.31" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\LearningHub.Nhs.OpenApi.Models\LearningHub.Nhs.OpenApi.Models.csproj" />
     </ItemGroup>
 

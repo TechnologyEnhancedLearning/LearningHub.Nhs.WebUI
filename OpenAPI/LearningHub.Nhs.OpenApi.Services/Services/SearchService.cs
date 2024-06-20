@@ -7,7 +7,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Search;
-    using LearningHub.Nhs.OpenApi.Models.NugetTemp;
+    using LearningHub.Nhs.Models.ViewModels.Helpers;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Findwise;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
@@ -81,7 +81,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             FindwiseResultModel findwiseResultModel, int? currentUserId)
         {
             List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
-            List<Nhs.Models.Entities.Activity.ResourceActivity> resourceActivities = new List<Nhs.Models.Entities.Activity.ResourceActivity>() { };
+            List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
 
             var documentsFound = findwiseResultModel.SearchResults?.DocumentList.Documents?.ToList() ??
                                  new List<Document>();
@@ -100,7 +100,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 List<int> userIds = new List<int>() { currentUserId.Value };
 
                 // qqqq do i need to null handle with this
-                resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<Nhs.Models.Entities.Activity.ResourceActivity>() { };
+                resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
             }
 
             //qqqq
@@ -122,7 +122,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             return resourceMetadataViewModels;
         }
 
-        public ResourceMetadataViewModel MapToViewModel(Resource resource, List<ResourceActivity> resourceActivities)
+        public ResourceMetadataViewModel MapToViewModel(Resource resource, List<ResourceActivityDTO> resourceActivities)
         {
             List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
 

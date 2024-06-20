@@ -20,6 +20,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <returns><see cref="ResourceSearchResultViewModel"/>.</returns>
         Task<ResourceSearchResultModel> Search(ResourceSearchRequest query, int? currentUserId);
 
-        ResourceMetadataViewModel MapToViewModel(Resource resource, List<ResourceActivity> resourceActivities);
+        ResourceMetadataViewModel MapToViewModel(Resource resource, List<ResourceActivityDTO> resourceActivities);
     }
 }

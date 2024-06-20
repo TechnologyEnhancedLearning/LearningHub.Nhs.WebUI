@@ -1,7 +1,8 @@
 namespace LearningHub.Nhs.OpenApi.Models.ViewModels
 {
-    using LearningHub.Nhs.OpenApi.Models.NugetTemp;
+    using LearningHub.Nhs.Models.Entities.Activity;
     using System.Collections.Generic;
+
 
     /// <summary>
     /// Class.
@@ -24,7 +25,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <param name="references"><see cref="References"/>.</param>
         /// <param name="resourceType"><see cref="ResourceType"/>.</param>
         /// <param name="rating"><see cref="Rating"/>.</param>
-        /// <param name="userSummaryActvityStatuses"><see cref="UserSummaryActvityStatuses"/>.</param>
+        /// <param name="userSummaryActivityStatuses"><see cref="UserSummaryActivityStatuses"/>.</param>
         public ResourceMetadataViewModel(
             int resourceId,
             string title,
@@ -33,7 +34,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             string resourceType,
             int? majorVersion,
             decimal rating,
-            List<MajorVersionIdActivityStatusDescription>? userSummaryActvityStatuses)
+            List<MajorVersionIdActivityStatusDescription>? userSummaryActivityStatuses)
         {
             this.ResourceId = resourceId;
             this.Title = title;
@@ -42,7 +43,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             this.ResourceType = resourceType;
             this.MajorVersion = majorVersion;
             this.Rating = rating;
-            this.UserSummaryActvityStates = userSummaryActvityStatuses;
+            this.UserSummaryActivityStates = userSummaryActivityStatuses;
         }
 
         /// <summary>
@@ -81,8 +82,8 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         public decimal Rating { get; set; }
 
         /// <summary>
-        /// Gets or sets <see cref="UserSummaryActvityStates"/>.
+        /// Gets or sets <see cref="UserSummaryActivityStates"/>.
         /// </summary>
-        public List<MajorVersionIdActivityStatusDescription>? UserSummaryActvityStates { get; set; }
+        public List<MajorVersionIdActivityStatusDescription>? UserSummaryActivityStates { get; set; }
     }
 }

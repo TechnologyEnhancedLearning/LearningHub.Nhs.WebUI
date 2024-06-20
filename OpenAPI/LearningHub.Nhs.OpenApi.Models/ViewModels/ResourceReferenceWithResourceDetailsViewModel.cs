@@ -1,4 +1,4 @@
-using LearningHub.Nhs.OpenApi.Models.NugetTemp;
+using LearningHub.Nhs.Models.Entities.Activity;
 using System.Collections.Generic;
 
 namespace LearningHub.Nhs.OpenApi.Models.ViewModels
@@ -19,7 +19,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <param name="resourceType"><see cref="ResourceType"/>.</param>
         /// <param name="rating"><see cref="Rating"/>.</param>
         /// <param name="link"><see cref="Link"/>.</param>
-        /// <param name="userSummaryActvityStatus"><see cref="UserSummaryActvityStatus"/>.</param>
+        /// <param name="userSummaryActivityStatus"><see cref="UserSummaryActivityStatus"/>.</param>
         public ResourceReferenceWithResourceDetailsViewModel(
             int resourceId,
             int refId,
@@ -30,7 +30,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             int? majorVersion,
             decimal rating,
             string link,
-            List<MajorVersionIdActivityStatusDescription>? userSummaryActvityStatus
+            List<MajorVersionIdActivityStatusDescription>? userSummaryActivityStatus
             )
         {
             this.ResourceId = resourceId;
@@ -42,7 +42,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             this.MajorVersion = majorVersion;
             this.Rating = rating;
             this.Link = link;
-            this.UserSummaryActvityStatus = userSummaryActvityStatus;
+            this.UserSummaryActivityStatus = userSummaryActivityStatus;
         }
 
         /// <summary>
@@ -94,8 +94,8 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         public string Link { get; }
 
         /// <summary>
-        /// Gets <see cref="UserSummaryActvityStatus"/>.
+        /// Gets <see cref="UserSummaryActivityStatus"/>.
         /// </summary>
-        public List<MajorVersionIdActivityStatusDescription>? UserSummaryActvityStatus { get;  }
+        public List<MajorVersionIdActivityStatusDescription>? UserSummaryActivityStatus { get;  }
     }
 }

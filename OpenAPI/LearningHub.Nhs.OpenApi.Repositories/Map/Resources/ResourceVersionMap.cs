@@ -39,6 +39,9 @@
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ResourceVersion_Resource");
 
+            modelBuilder.Property(e => e.ResourceAccessibilityEnum).HasColumnName("ResourceAccessibilityId")
+              .HasConversion<int>();
+
             modelBuilder.Property(e => e.VersionStatusEnum).HasColumnName("VersionStatusId")
                .HasConversion<int>();
 

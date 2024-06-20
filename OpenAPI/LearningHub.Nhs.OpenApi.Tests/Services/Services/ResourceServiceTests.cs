@@ -130,7 +130,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             x.Catalogue.Name.Should().Be("catalogue1");
             x.Title.Should().Be("title1");
             x.ResourceType.Should().Be("Article");
-            x.UserSummaryActvityStatus.Should().BeEmpty();
+            x.UserSummaryActivityStatus.Should().BeEmpty();
         }
 
        [Fact]
@@ -153,7 +153,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             result.Rating.Should().Be(3);
             result.Title.Should().Be("title1");
             result.ResourceType.Should().Be("Article");
-            result.UserSummaryActvityStatus.Should().BeEmpty();//Empty dictionary or null dictionary? qqqq
+            result.UserSummaryActivityStatus.Should().BeEmpty();//Empty dictionary or null dictionary? qqqq
         }
 
         [Fact]
@@ -173,7 +173,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             result.Rating.Should().Be(3);
             result.Title.Should().Be("titleTwoOneWithOneWithoutSummary");
             result.ResourceType.Should().Be("Article");
-            result.UserSummaryActvityStatus.First().Should().Be("Completed");//qqqq add a test for second as well check whole dictionary
+            result.UserSummaryActivityStatus.First().Should().Be("Completed");//qqqq add a test for second as well check whole dictionary
         }
 
         [Fact]
@@ -313,7 +313,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             x.ResourceReferences[1].ResourceId.Should().Be(1);
             x.ResourceReferences[1].ResourceType.Should().Be("Assessment");
             x.ResourceReferences[6].MajorVersion.Should().Be(99);
-            x.ResourceReferences[0].UserSummaryActvityStatus.Should().BeEmpty();
+            x.ResourceReferences[0].UserSummaryActivityStatus.Should().BeEmpty();
         }
 
         [Fact]
@@ -351,7 +351,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             x.ResourceReferences[1].Title.Should().Be("No current resource version");
             x.ResourceReferences[2].Catalogue.Name.Should().Be("No catalogue for resource reference");
             x.ResourceReferences[3].Title.Should().Be("title1");
-            x.ResourceReferences[0].UserSummaryActvityStatus.Should().BeEmpty();
+            x.ResourceReferences[0].UserSummaryActivityStatus.Should().BeEmpty();
         }
 
         [Fact]
@@ -443,7 +443,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         [InlineData("302,301", 57541, "", 12, 1)]
         [InlineData("302", 57541, "", 12, 1)]
         [InlineData("302,301", 57541, "Completed", 11, 2)]
-        public async Task GetResourceReferencesByOriginalIdsReturnsResourceWithCorrectUserSummaryActvityStatus(string originalResourceIdsStr, int currentUserId, string expectedFirstUserSummaryActvityStatus, int rangeStart, int rangeLength) 
+        public async Task GetResourceReferencesByOriginalIdsReturnsResourceWithCorrectUserSummaryActivityStatus(string originalResourceIdsStr, int currentUserId, string expectedFirstUserSummaryActivityStatus, int rangeStart, int rangeLength) 
         {
             // Given
             List<int> originalResourceIds = originalResourceIdsStr.Split(",").Select(x=>Int32.Parse(x)).ToList();
@@ -459,7 +459,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
 
             // Then
 
-            result.ResourceReferences[0].UserSummaryActvityStatus.First().Should().Be(expectedFirstUserSummaryActvityStatus);
+            result.ResourceReferences[0].UserSummaryActivityStatus.First().Should().Be(expectedFirstUserSummaryActivityStatus);
         }
 
         [Theory]
@@ -481,7 +481,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             var result = await this.resourceService.GetResourceById(resourceId, currentUserId);
 
             // Then
-            result.UserSummaryActvityStatus.FirstOrDefault().Should().Be(expectedFirstUserSummaryActivityStatus);
+            result.UserSummaryActivityStatus.FirstOrDefault().Should().Be(expectedFirstUserSummaryActivityStatus);
     }
 
 

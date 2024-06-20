@@ -38,26 +38,37 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         public async Task<IEnumerable<Resource>> GetResourcesFromIds(IEnumerable<int> resourceIds)
         {
-            var resources = await this.dbContext.Resource
-                                                    .AsNoTracking()
-                                                    .Where(r => resourceIds.Contains(r.Id) && !r.Deleted)
-                                                    .Include(r => r.ResourceReference)
-                                                        .ThenInclude(rr => rr.NodePath.CatalogueNode.CurrentNodeVersion.CatalogueNodeVersion)
-                                                    .Include(r => r.CurrentResourceVersion.ResourceVersionRatingSummary)
-                                                    .Include(r => r.ResourceReference)
-                                                        .ThenInclude(rr => rr.NodePath.Node)
-                                                    .ToListAsync();
-
-            resources.ForEach(r =>
+            try
             {
-                var nonExternalReferences = r.ResourceReference
-                    .Where(rr => rr?.NodePath?.Node?.NodeTypeEnum != null && (int)rr.NodePath.Node.NodeTypeEnum != 4)
-                    .ToList();
+                var resources = await this.dbContext.Resource // qqqqqq
+                                                        .AsNoTracking()
+                                                        .Where(r => resourceIds.Contains(r.Id) && !r.Deleted)
+                                                        .Include(r => r.ResourceReference)
+                                                            .ThenInclude(rr => rr.NodePath.CatalogueNode.CurrentNodeVersion.CatalogueNodeVersion)
+                                                        .Include(r => r.CurrentResourceVersion.ResourceVersionRatingSummary)
+                                                        .Include(r => r.ResourceReference)
+                                                            .ThenInclude(rr => rr.NodePath.Node)
+                                                        .ToListAsync();
 
-                r.ResourceReference = nonExternalReferences;
-            });
+                resources.ForEach(r =>
+                {
+                    var nonExternalReferences = r.ResourceReference
+                        .Where(rr => rr?.NodePath?.Node?.NodeTypeEnum != null && (int)rr.NodePath.Node.NodeTypeEnum != 4)
+                        .ToList();
 
-            return resources;
+                    r.ResourceReference = nonExternalReferences;
+                });
+
+                return resources;
+            }
+            catch (Exception e)
+            {
+                // qqqq
+                var z = e;
+                return null;
+            }
+
+           
         }
 
         ///// <inheritdoc />
@@ -136,9 +147,9 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
         /// <param name="userIds"></param>
         /// <param name="originalResourceReferenceIds">.</param>
         /// <returns>A <see cref="Task{ResourceReference}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<IEnumerable<ResourceActivity>> GetResourceActivityPerResourceMajorVersion(
+        public async Task<IEnumerable<ResourceActivityDTO>> GetResourceActivityPerResourceMajorVersion(
           IEnumerable<int>? resourceReferenceIds, IEnumerable<int>? userIds)
-        { // qqqq compare with GetByUserIdWithResourceVersionId
+        {
             var resourceIdsParam = resourceReferenceIds != null
                 ? string.Join(",", resourceReferenceIds)
                 : null;
@@ -147,11 +158,10 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                 ? string.Join(",", userIds)
                 : null;
 
-            //var param1 = new SqlParameter("@searchText", SqlDbType.NVarChar) { Value = requestModel.SearchText == null ? DBNull.Value : requestModel.SearchText };
             var resourceIdsParameter = new SqlParameter("@p0", resourceIdsParam ?? (object)DBNull.Value);
             var userIdsParameter = new SqlParameter("@p1", userIdsParam ?? (object)DBNull.Value);
 
-            //Test 
+            //Test //qqqqq any advantage in binding it
             // resourceIdsParameter = new SqlParameter("@p0", (object)DBNull.Value);
             // userIdsParameter = new SqlParameter("@p1",  (object)DBNull.Value);
 
@@ -196,93 +206,17 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 
             try
             {
-                //var result = await this.dbContext.MyLearningActivity.FromSqlRaw("[activity].[GetUserLatestActivityCheck] @userId, @resourceVersionId ", param0, param1)
-                //    .AsNoTracking().ToListAsync();
 
-                //var results = dbContext.ResourceActivity
-                //.FromSqlRaw(
-                //    "[activity].[GetResourceActivityPerResourceMajorVersion] @ResourceIds, @UserIds",
-                //    resourceIdsParameter,
-                //    userIdsParameter)
-                //.AsNoTracking()
-                //.AsEnumerable<ResourceActivity>();
+                List<ResourceActivityDTO> resourceActivityDTOs = await dbContext.ResourceActivityDTO
+                .FromSqlRaw(
+                    "[activity].[GetResourceActivityPerResourceMajorVersion] @p0, @p1",
+                    resourceIdsParameter,
+                    userIdsParameter)
+                .AsNoTracking()
+                .ToListAsync<ResourceActivityDTO>();
 
-                //var results = await this.dbContext.ResourceActivity
-                //    .FromSqlRaw("[resource].[GetResourceActivityPerResourceMajorVersion]")
-                //    .AsNoTracking()
-                //    .ToListAsync();
+                return resourceActivityDTOs;
 
-                //var results = await dbContext.ResourceActivity
-                //.FromSqlRaw("[resource].[GetResourceActivityPerResourceMajorVersion]")
-                //.AsNoTracking()
-                //.ToListAsync();
-
-                //var results = await this.dbContext.ResourceActivity
-                //.FromSqlRaw("[activity].[GetResourceActivity]")
-                //.AsNoTracking()
-                //.ToListAsync();
-
-                //var results = await this.dbContext.ResourceActivity
-                //.FromSqlRaw("[resource].[GetResourceActivity]")
-                //.AsNoTracking()
-                //.ToListAsync();
-
-                var query = await this.dbContext.ResourceActivity.FromSqlRaw("[activity].[GetResourceActivity]")
-                   .AsNoTracking()
-                    .ToListAsync();
-                //var ls = query.ToList();
-
-                //var query = this.dbContext.ResourceActivity.FromSqlRaw("[activity].[GetResourceActivity]").AsEnumerable();
-
-                // var queryResult2 =  query.AsEnumerable().Cast<dynamic>().ToList();
-                //  var results2 = queryResult2.ToList();
-                // Step 2: Execute the query and materialize the results using AsEnumerable()
-                //var queryResult = query.AsEnumerable();
-
-                // Step 3: Conver//t query result to a list
-                // var results = queryResult.ToList();
-                var results = query;
-                // Step 4: Return the results
-                return (IEnumerable<ResourceActivity>)results;
-
-
-                //.ToListAsync();
-
-                //.Select(ra => new ResourceActivity
-                //{
-                //    Id = ra.Id,
-                //    UserId = ra.UserId,
-                //    //LaunchResourceActivityId = ra.LaunchResourceActivityId,
-                //    //ResourceId = ra.ResourceId,
-                //    //ResourceVersionId = ra.ResourceVersionId,
-                //    //MajorVersion = ra.MajorVersion,
-                //    //MinorVersion = ra.MinorVersion,
-                //    //NodePathId = ra.NodePathId,
-                //    //ActivityStatusId = ra.ActivityStatusId,
-                //    //ActivityStart = ra.ActivityStart,
-                //    //ActivityEnd = ra.ActivityEnd,
-                //    //DurationSeconds = ra.DurationSeconds,
-                //    //Score = ra.Score,
-                //    //Deleted = ra.Deleted,
-                //    //CreateUserId = ra.CreateUserId,
-                //    //CreateDate = ra.CreateDate,
-                //    //AmendUserId = ra.AmendUserId,
-                //    //AmendDate = ra.AmendDate,
-                //    //////Resource = ra.Resource,
-                //    //////ResourceVersion = ra.ResourceVersion,
-                //    //////ActivityStatus = ra.ActivityStatus,
-                //    //////LaunchResourceActivity = ra.LaunchResourceActivity,
-                //    //////NodePath = ra.NodePath,
-                //    //////InverseLaunchResourceActivity = ra.InverseLaunchResourceActivity,
-                //    //////MediaResourceActivity = ra.MediaResourceActivity,
-                //    //////AssessmentResourceActivity = ra.AssessmentResourceActivity,
-                //    //////ScormActivity = ra.ScormActivity,
-                //})
-
-
-                //var resourceActivityForMajorVersions = results;
-                //var qqqq = resourceActivityForMajorVersions.ToList();
-                //return (IEnumerable<ResourceActivity>)resourceActivityForMajorVersions;
             }
             catch(Exception e)
             {

@@ -9,8 +9,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Resource.AzureMediaAsset;
+    using LearningHub.Nhs.Models.ViewModels.Helpers;
     using LearningHub.Nhs.OpenApi.Models.Exceptions;
-    using LearningHub.Nhs.OpenApi.Models.NugetTemp;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Services.Helpers;
@@ -57,7 +57,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId, int? currentUserId)
         {
             var resourceReferencesList = (await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(new List<int>() { originalResourceReferenceId })).ToList();
-            List<Nhs.Models.Entities.Activity.ResourceActivity> resourceActivities = new List<Nhs.Models.Entities.Activity.ResourceActivity>() { };
+            List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
 
             try
             {
@@ -73,7 +73,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     List<int> userIds = new List<int>() { currentUserId.Value };
 
                     // qqqq do i need to null handle with this
-                    resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<Nhs.Models.Entities.Activity.ResourceActivity>() { };
+                    resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
 
                 }
 
@@ -94,7 +94,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <returns>the resource.</returns>
         public async Task<ResourceMetadataViewModel> GetResourceById(int resourceId, int? currentUserId)
         {
-            List<Nhs.Models.Entities.Activity.ResourceActivity> resourceActivities = new List<Nhs.Models.Entities.Activity.ResourceActivity>() { };
+            List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
             List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
 
             var resourceIdList = new List<int>() { resourceId };
@@ -112,14 +112,13 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 List<int> userIds = new List<int>() { currentUserId.Value };
 
                 // qqqq do i need to null handle with this
-                resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<Nhs.Models.Entities.Activity.ResourceActivity>() { };
+                resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
 
             }
 
-            if (resourceActivities != null && resourceActivities.Count != 0)
-            {
-                majorVersionIdActivityStatusDescription = ActivityStatusHelper.GetMajorVersionIdActivityStatusDescriptionLSPerResource(resource, resourceActivities).ToList();
-            }
+
+            majorVersionIdActivityStatusDescription = resourceActivities.Count != 0 ? ActivityStatusHelper.GetMajorVersionIdActivityStatusDescriptionLSPerResource(resource, resourceActivities).ToList() : new List<MajorVersionIdActivityStatusDescription>() { } ;
+
 
 
             return new ResourceMetadataViewModel(
@@ -145,11 +144,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <returns>the resource.</returns>
         public async Task<BulkResourceReferenceViewModel> GetResourceReferencesByOriginalIds(List<int> originalResourceReferenceIds, int? currentUserId)
         {
-
-
-            List<Nhs.Models.Entities.Activity.ResourceActivity> resourceActivities = new List<Nhs.Models.Entities.Activity.ResourceActivity>() { };
+            List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
             List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
-
 
             var resourceReferencesList = (await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(originalResourceReferenceIds)).ToList();
 
@@ -161,8 +157,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 List<int> resourceIds = resourceReferencesList.Select(rrl => rrl.ResourceId).ToList();
                 List<int> userIds = new List<int>() { currentUserId.Value };
 
-                // qqqq do i need to null handle with this
-                resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<Nhs.Models.Entities.Activity.ResourceActivity>() { };
+                resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
 
             }
 
@@ -183,7 +178,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             return new BulkResourceReferenceViewModel(matchedResources, unmatchedIds);
         }
 
-        private ResourceReferenceWithResourceDetailsViewModel GetResourceReferenceWithResourceDetailsViewModel(ResourceReference resourceReference, List<ResourceActivity> resourceActivities)
+        private ResourceReferenceWithResourceDetailsViewModel GetResourceReferenceWithResourceDetailsViewModel(ResourceReference resourceReference, List<ResourceActivityDTO> resourceActivities)
         {
 
             List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };

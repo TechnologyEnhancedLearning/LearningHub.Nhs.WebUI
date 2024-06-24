@@ -782,6 +782,8 @@ namespace LearningHub.Nhs.Repository
             {
                 mapping.Map(modelBuilder);
             }
+
+            modelBuilder.Entity<RoleUserGroupViewModel>().HasNoKey();
         }
     }
 }

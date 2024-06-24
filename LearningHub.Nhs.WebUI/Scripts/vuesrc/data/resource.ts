@@ -535,6 +535,29 @@ const getAVUnavailableView = async function (): Promise<string> {
         });
 };
 
+const getObsoleteResourceFile = async function (id: number): Promise<string[]> {
+    return await AxiosWrapper.axios.get<string[]>('/api/Resource/GetObsoleteResourceFile/' + id + '/' + true + `?timestamp=${new Date().getTime()}`)
+        .then(response => {
+            console.log(response.data);
+            return response.data;
+        })
+        .catch(e => {
+            console.log('getObsoleteResourceFiles:' + e);
+            throw e;
+        });
+};
+
+const archiveResourceFile = async function (filepaths: string[]): Promise<boolean> {
+    const params = {filePaths:filepaths};
+    return await AxiosWrapper.axios.post('/api/Resource/DuplicateBlocks', params).then(() => {
+        return true
+    }).catch(e => {
+            console.log('archiveResourceFile:' + e);
+            throw e;
+        });
+};
+
+
 export const resourceData = {
     getContributeConfiguration,
     getContributeSettings,
@@ -575,5 +598,7 @@ export const resourceData = {
     getMyContributions,
     getContributeAVResourceFlag,
     getDisplayAVResourceFlag,
-    getAVUnavailableView
+    getAVUnavailableView,
+    getObsoleteResourceFile,
+    archiveResourceFile
 };

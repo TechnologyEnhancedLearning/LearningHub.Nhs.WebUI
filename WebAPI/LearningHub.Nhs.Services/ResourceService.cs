@@ -1434,7 +1434,6 @@ namespace LearningHub.Nhs.Services
                             {
                                 retVal.Add(scormResource?.File?.FilePath);
                             }
-
                             break;
                         case ResourceTypeEnum.Html:
                             var htmlResource = await this.GetHtmlDetailsByIdAsync(resourceVersionId);
@@ -1981,6 +1980,11 @@ namespace LearningHub.Nhs.Services
                 }
 
                 var erv = await this.GetResourceVersionExtendedViewModelAsync(rv.Id, userId);
+
+                if (erv == null)
+                {
+                    return null;
+                }
 
                 var retVal = new ResourceItemViewModel(erv);
                 retVal.Id = resourceReferenceId;
@@ -4514,11 +4518,14 @@ namespace LearningHub.Nhs.Services
             {
                 return true;
             }
-            else
+
+            var resourceVersion = await this.GetResourceVersionByIdAsync(resourceVersionId);
+            if (resourceVersion == null)
             {
-                var resourceVersion = await this.GetResourceVersionByIdAsync(resourceVersionId);
-                return await this.catalogueService.CanUserEditCatalogueAsync(currentUserId, (int)resourceVersion.ResourceCatalogueId);
+                return false;
             }
+
+            return await this.catalogueService.CanUserEditCatalogueAsync(currentUserId, (int)resourceVersion.ResourceCatalogueId);
         }
 
         private async Task<bool> IsAudioVideoResource(int resourceVersionId, ResourceTypeEnum resourceType)

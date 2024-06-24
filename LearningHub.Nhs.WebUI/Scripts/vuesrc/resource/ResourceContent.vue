@@ -100,6 +100,7 @@
     import { getQueryParam } from './helpers/getQueryParam';
     import { setResourceCetificateLink } from './helpers/resourceCertificateHelper';
     import { MKPlayer } from '@mediakind/mkplayer';
+    import { MKPlayerType, MKStreamType } from '../MKPlayerConfigEnum';
 
     Vue.use(Vuelidate as any);
 
@@ -280,6 +281,7 @@
                     playback: {
                         muted: false,
                         autoplay: false,
+                        preferredTech: [{ player: MKPlayerType.Html5, streaming: MKStreamType.Hls }]   // to force the player to use html5 player instead of native on safari
                     },
                     events: {
                         //error: this.onPlayerError,
@@ -301,7 +303,7 @@
                 // ClearKey DRM configuration
                 var clearKeyConfig = {
                     //LA_URL: "https://ottapp-appgw-amp.prodc.mkio.tv3cloud.com/drm/clear-key?ownerUid=azuki",
-                    LA_URL:"HLS_AES",
+                    LA_URL: "HLS_AES",
                     headers: {
                         "Authorization": this.getBearerToken()
                     }

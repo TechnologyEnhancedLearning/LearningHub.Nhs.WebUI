@@ -191,7 +191,7 @@
         }
 
         @* Description / Additional Information *@
-        @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Case && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Assessment && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Html)
+        @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Case && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Assessment)
         {
             <div class="nhsuk-u-margin-bottom-7">
                 @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Article || (resourceItem.Catalogue.RestrictedAccess && !Model.HasCatalogueAccess))

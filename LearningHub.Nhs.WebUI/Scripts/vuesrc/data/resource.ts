@@ -610,7 +610,6 @@ export const resourceData = {
     getDisplayAVResourceFlag,
     getAVUnavailableView,
     getObsoleteResourceFile,
-    archiveResourceFile
-    getAVUnavailableView,
+    archiveResourceFile,
     getMKPlayerKey
 };

@@ -240,5 +240,10 @@ namespace LearningHub.Nhs.WebUI.Configuration
         /// Gets or sets the FindwiseSettings.
         /// </summary>
         public FindwiseSettings FindwiseSettings { get; set; } = new FindwiseSettings();
+
+        /// <summary>
+        /// Gets or sets the MediaKindSettings.
+        /// </summary>
+        public MediaKindSettings MediaKindSettings { get; set; } = new MediaKindSettings();
     }
 }

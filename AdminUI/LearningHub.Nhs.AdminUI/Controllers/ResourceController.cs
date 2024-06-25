@@ -360,6 +360,14 @@
         [HttpGet("GetDisplayAVFlag")]
         public bool GetDisplayAVFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.DisplayAudioVideo).Result;
 
+        /// <summary>
+        /// The GetMKPlayerKey.
+        /// </summary>
+        /// <returns>Mediakind MK Player Key.</returns>
+        [Route("Resource/GetMKPlayerKey")]
+        [HttpGet("GetMKPlayerKey")]
+        public string GetMKPlayerKey() => this.websettings.Value.MediaKindSettings.MKPlayerLicence;
+
         private static List<PagingOptionPair> FilterOptions()
         {
             List<PagingOptionPair> options = new List<PagingOptionPair>();

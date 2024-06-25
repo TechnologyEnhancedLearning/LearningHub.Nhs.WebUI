@@ -19,7 +19,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories
         public static void AddRepositories(this IServiceCollection services, IConfiguration config)
         {
             services.ConfigureAutomapper();
-            services.AddLearningHubMappings(config);// qqqq breaking with new models 3.0.31 speak anju
+            services.AddLearningHubMappings(config);
             services.AddRepositoryImplementations();
         }
 

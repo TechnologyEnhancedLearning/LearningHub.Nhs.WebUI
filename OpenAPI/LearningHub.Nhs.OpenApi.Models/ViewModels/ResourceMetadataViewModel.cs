@@ -64,7 +64,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <summary>
         /// Gets or sets <see cref="References"/>.
         /// </summary>
-        public List<ResourceReferenceViewModel> References { get; set; } //qqqq carefyl may mean need to handle stored procedure differently
+        public List<ResourceReferenceViewModel> References { get; set; }
 
         /// <summary>
         /// Gets or sets <see cref="ResourceType"/>.

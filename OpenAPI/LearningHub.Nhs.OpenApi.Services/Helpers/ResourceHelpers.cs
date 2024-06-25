@@ -2,7 +2,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
+    using System.Security.AccessControl;
     using System.Xml.Linq;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
@@ -89,9 +91,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
         {
             var catalogue = new CatalogueViewModel(0, NoCatalogueText, false);
 
-            if (catalogueDTOs.CatalogueNodeId != null) //qqqq check if it is null
+            if (catalogueDTOs.CatalogueNodeId != null)
             {
-                // resourceReference.NodePath.CatalogueNode.CurrentNodeVersion.CatalogueNodeVersion; qqqq
                 catalogue = new CatalogueViewModel
                 {
                     Id = catalogueDTOs.CatalogueNodeId.Value,
@@ -101,6 +102,34 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
             }
 
             return catalogue;
+        }
+
+        public static List<ResourceReferenceAndCatalogueDTO> FlattenResourceReferenceAndCatalogueDTOLS(List<ResourceReferenceAndCatalogueDTO> resourceReferenceAndCatalogueDTOs)
+        {
+            List<ResourceReferenceAndCatalogueDTO> resourceReferenceAndCatalogueDTOsFlattened = new List<ResourceReferenceAndCatalogueDTO>();
+            resourceReferenceAndCatalogueDTOsFlattened = resourceReferenceAndCatalogueDTOs
+                .SelectMany(rRACD => rRACD.CatalogueDTOs.Select(cD => new ResourceReferenceAndCatalogueDTO
+                    {
+                        ResourceId = rRACD.ResourceId,
+                        Title = rRACD.Title,
+                        Description = rRACD.Description,
+                        ResourceTypeEnum = rRACD.ResourceTypeEnum,
+                        MajorVersion = rRACD.MajorVersion,
+                        Rating = rRACD.Rating,
+                        CatalogueDTOs = new List<CatalogueDTO>
+                            {
+                                new CatalogueDTO
+                                {
+                                    CatalogueNodeId = cD.CatalogueNodeId,
+                                    CatalogueNodeName = cD.CatalogueNodeName,
+                                    IsRestricted = cD.IsRestricted,
+                                    OriginalResourceReferenceId = cD.OriginalResourceReferenceId,
+                                },
+                            },
+                    }))
+                .ToList<ResourceReferenceAndCatalogueDTO>();
+
+            return resourceReferenceAndCatalogueDTOsFlattened;
         }
     }
 }

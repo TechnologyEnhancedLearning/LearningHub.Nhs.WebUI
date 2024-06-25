@@ -100,12 +100,10 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 List<int> resourceIds = resourcesReferenceAndCatalogueDTOsFound.Select(x => x.ResourceId).ToList();
                 List<int> userIds = new List<int>() { currentUserId.Value };
 
-                // qqqq do i need to null handle with this
                 resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
             }
 
-            //qqqq
-            var resourceMetadataViewModels = resourcesReferenceAndCatalogueDTOsFound.Select(resource => MapToViewModel(resource, resourceActivities.Where(x => x.ResourceId == resource.ResourceId).ToList()))
+            var resourceMetadataViewModels = resourcesReferenceAndCatalogueDTOsFound.Select(resourcesReferenceAndCatalogueDTO => MapToViewModel(resourcesReferenceAndCatalogueDTO, resourceActivities.Where(x => x.ResourceId == resourcesReferenceAndCatalogueDTO.ResourceId).ToList()))
                 .OrderBySequence(findwiseResourceIds)
                 .ToList();
 
@@ -123,6 +121,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             return resourceMetadataViewModels;
         }
 
+        /// <inheritdoc/>
         public ResourceMetadataViewModel MapToViewModel(ResourceReferenceAndCatalogueDTO resourceReferenceAndCatalogueDTO, List<ResourceActivityDTO> resourceActivities)
         {
             List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
@@ -133,15 +132,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     .ToList();
             }
 
-            // qqqq again i dont think this is needed now
-            //var hasCurrentResourceVersion = resourceReferenceAndCatalogueDTO.ResourceReferenceId != null;
-            var hasRating = resourceReferenceAndCatalogueDTO.Rating != null; // qqqq was resource.resourcereference RatingSummary != null; check it
-
-            //if (!hasCurrentResourceVersion)
-            //{
-            //    this.logger.LogInformation(
-            //        $"Resource with id {resourceReferenceAndCatalogueDTO.ResourceId} is missing a current resource version");
-            //}
+            bool hasRating = resourceReferenceAndCatalogueDTO.Rating != null;
 
             if (!hasRating)
             {
@@ -149,7 +140,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     $"Resource with id {resourceReferenceAndCatalogueDTO.ResourceId} is missing a ResourceVersionRatingSummary");
             }
 
-            var resourceTypeNameOrEmpty = resourceReferenceAndCatalogueDTO.GetResourceTypeNameOrEmpty();
+            string resourceTypeNameOrEmpty = resourceReferenceAndCatalogueDTO.GetResourceTypeNameOrEmpty();
             if (resourceTypeNameOrEmpty == string.Empty)
             {
                 this.logger.LogError($"Resource has unrecognised type: {resourceReferenceAndCatalogueDTO.ResourceTypeEnum}");
@@ -159,69 +150,18 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resourceReferenceAndCatalogueDTO.ResourceId,
                 resourceReferenceAndCatalogueDTO.Title ?? ResourceHelpers.NoResourceVersionText,
                 resourceReferenceAndCatalogueDTO.Description ?? string.Empty,
-                resourceReferenceAndCatalogueDTO.CatalogueDTOs.Select(this.GetResourceReferenceViewModel).ToList(), // qqqq not handling list currently
+                resourceReferenceAndCatalogueDTO.CatalogueDTOs.Select(this.GetResourceReferenceViewModel).ToList(),
                 resourceTypeNameOrEmpty,
-                resourceReferenceAndCatalogueDTO.MajorVersion, /*qqqq would be returned by procedure so not first or default*/
+                resourceReferenceAndCatalogueDTO.MajorVersion,
                 resourceReferenceAndCatalogueDTO.Rating ?? 0.0m,
-                majorVersionIdActivityStatusDescription); // qqqq
-        }
-
-        public ResourceMetadataViewModel MapToViewModel(Resource resource, List<ResourceActivityDTO> resourceActivities)
-        {
-            List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
-
-            if (resourceActivities != null && resourceActivities.Count != 0)
-            {
-                majorVersionIdActivityStatusDescription = ActivityStatusHelper.GetMajorVersionIdActivityStatusDescriptionLSPerResource(resource, resourceActivities)
-                    .ToList();
-            }
-
-            var hasCurrentResourceVersion = resource.CurrentResourceVersion != null;
-            var hasRating = resource.CurrentResourceVersion?.ResourceVersionRatingSummary != null;
-
-            if (!hasCurrentResourceVersion)
-            {
-                this.logger.LogInformation(
-                    $"Resource with id {resource.Id} is missing a current resource version");
-            }
-
-            if (!hasRating)
-            {
-                this.logger.LogInformation(
-                    $"Resource with id {resource.Id} is missing a ResourceVersionRatingSummary");
-            }
-
-            var resourceTypeNameOrEmpty = resource.GetResourceTypeNameOrEmpty();
-            if (resourceTypeNameOrEmpty == string.Empty)
-            {
-                this.logger.LogError($"Resource has unrecognised type: {resource.ResourceTypeEnum}");
-            }
-
-            return new ResourceMetadataViewModel(
-                resource.Id,
-                resource.CurrentResourceVersion?.Title ?? ResourceHelpers.NoResourceVersionText,
-                resource.CurrentResourceVersion?.Description ?? string.Empty,
-                resource.ResourceReference.Select(this.GetResourceReferenceViewModel).ToList(), //qqqq will it actually be a list
-                resourceTypeNameOrEmpty,
-                resource.ResourceVersion.FirstOrDefault()?.MajorVersion,/*qqqq would be returned by procedure so not first or default*/
-                resource.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0.0m,
-                majorVersionIdActivityStatusDescription); // qqqq
+                majorVersionIdActivityStatusDescription);
         }
 
         private ResourceReferenceViewModel GetResourceReferenceViewModel(
-            ResourceReference resourceReference)
+        CatalogueDTO catalogueDTOs)
         {
             return new ResourceReferenceViewModel(
-                resourceReference.OriginalResourceReferenceId,
-                resourceReference.GetCatalogue(),
-                this.learningHubService.GetResourceLaunchUrl(resourceReference.OriginalResourceReferenceId));
-        }
-
-        private ResourceReferenceViewModel GetResourceReferenceViewModel(
-        CatalogueDTO catalogueDTOs) // qqqq it cant be this is needs to be some kind of catalogue object
-        {
-            return new ResourceReferenceViewModel(
-                catalogueDTOs.OriginalResourceReferenceId,//resourceReferenceAndCatalogueDTO.OriginalResourceReferenceId,
+                catalogueDTOs.OriginalResourceReferenceId,
                 catalogueDTOs.GetCatalogue(),
                 this.learningHubService.GetResourceLaunchUrl(catalogueDTOs.OriginalResourceReferenceId));
         }

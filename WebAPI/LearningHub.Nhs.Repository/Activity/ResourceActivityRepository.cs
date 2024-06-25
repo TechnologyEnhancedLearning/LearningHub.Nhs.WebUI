@@ -279,7 +279,7 @@ namespace LearningHub.Nhs.Repository.Activity
         /// <param name="resourceVersionId">The resource Version Id.</param>
         /// <returns>ResourceActivity.</returns>
         public async Task<IQueryable<ResourceActivity>> GetByUserIdWithResourceVersionId(int userId, int resourceVersionId)
-        {// qqqq
+        {
             var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
             var param1 = new SqlParameter("@resourceVersionId", SqlDbType.Int) { Value = resourceVersionId };
             var result = await this.DbContext.MyLearningActivity.FromSqlRaw("[activity].[GetUserLatestActivityCheck] @userId, @resourceVersionId ", param0, param1)

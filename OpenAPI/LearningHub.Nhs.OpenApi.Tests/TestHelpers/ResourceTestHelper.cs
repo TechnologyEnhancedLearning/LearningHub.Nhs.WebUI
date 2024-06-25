@@ -30,7 +30,6 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
             int? MajorVersion = null,
             int? userId = null,
             int? activityStatusId = null
-            //Dictionary<int, int>? majorVersionUserActivityStatusId = null //qqqq this is based on the database so should just be activity statusid i think
             )
         {
             var resourceReference = new List<ResourceReference>()
@@ -114,7 +113,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
                 ResourceId = 0,
                 PublicationId = null,
                 MajorVersion = null,
-                MinorVersion = null,//qqqq should we make them match?
+                MinorVersion = null,
                 Title = title,
                 Description = description,
                 AdditionalInformation = null,

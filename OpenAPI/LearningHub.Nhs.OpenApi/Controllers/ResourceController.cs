@@ -121,20 +121,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         [HttpGet("ResourceId/{resourceId}")]
         public async Task<ResourceMetadataViewModel> GetResourceById(int resourceId)
         {
-           
             return await this.resourceService.GetResourceById(resourceId, this.CurrentUserId);
-        }
-
-        /// <summary>
-        /// GET by Id.
-        /// </summary>
-        /// <param name="resourceId">id.</param>
-        /// <returns>Resource data.</returns>
-        [HttpGet("qqqqTest")]
-        public async Task<int> qqqqTest(int resourceId)
-        {
-            this.resourceService.QqqqTest();
-            return resourceId;
         }
 
         /// <summary>

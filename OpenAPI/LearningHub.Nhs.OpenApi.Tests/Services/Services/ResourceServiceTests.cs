@@ -39,7 +39,6 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.resourceService = new ResourceService(this.learningHubService.Object, this.resourceRepository.Object, new NullLogger<ResourceService>());
         }
 
-        //qqqq this isnt working because we are not returning an database table for userActivitySummary so maybe need dto.
         private List<Resource> ResourceList => new List<Resource>()
         {
             ResourceTestHelper.CreateResourceWithDetails(id: 1, title: "title1", description: "description1", rating: 3m, resourceType: ResourceTypeEnum.Article),

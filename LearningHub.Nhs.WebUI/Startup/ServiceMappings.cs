@@ -85,7 +85,7 @@
             services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IContributeService, ContributeService>();
-            services.AddSingleton<IAzureMediaService, AzureMediaService>();
+            services.AddSingleton<IAzureMediaService, MKIOMediaService>();
             services.AddSingleton<IRoadMapService, RoadMapService>();
             services.AddSingleton<IMyLearningService, MyLearningService>();
             services.AddSingleton<IDashboardService, DashboardService>();

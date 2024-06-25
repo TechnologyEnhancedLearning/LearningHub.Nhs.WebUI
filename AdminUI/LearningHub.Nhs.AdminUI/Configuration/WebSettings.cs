@@ -156,5 +156,10 @@
         /// Gets or sets the FileUploadSettings.
         /// </summary>
         public FileUploadSettingsModel FileUploadSettings { get; set; } = new FileUploadSettingsModel();
+
+        /// <summary>
+        /// Gets or sets the MediaKindSettings.
+        /// </summary>
+        public MediaKindSettings MediaKindSettings { get; set; } = new MediaKindSettings();
     }
 }

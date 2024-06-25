@@ -59,6 +59,7 @@ export class State {
     contributeAVResourceFlag: boolean;
     learnAVResourceFlag: boolean;
     getAVUnavailableView: string = '';
+    getMKPlayerLicenceKey: string = '';
 
     get previousVersionExists(): boolean {
         if (this.resourceDetail.currentResourceVersionId) {
@@ -253,6 +254,9 @@ const mutations = {
     },
     async populateAVUnavailableView(state: State) {
         state.getAVUnavailableView = await resourceData.getAVUnavailableView();
+    },
+    async populateMKPlayerLicenceKey(state: State) {
+        state.getMKPlayerLicenceKey = await resourceData.getMKPlayerKey();
     },
     async populateScormDetails(state: State, payload: number) {
         const scormDetail = await resourceData.getScormDetail(payload);

@@ -534,6 +534,16 @@ const getAVUnavailableView = async function (): Promise<string> {
             throw e;
         });
 };
+const getMKPlayerKey = async function (): Promise<string> {
+    return await AxiosWrapper.axios.get('/Resource/GetMKPlayerKey')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.error('Error fetching Media Kind MKPlayer Key', e)
+            throw e;
+        });
+};
 
 const getObsoleteResourceFile = async function (id: number): Promise<string[]> {
     return await AxiosWrapper.axios.get<string[]>('/api/Resource/GetObsoleteResourceFile/' + id + '/' + true + `?timestamp=${new Date().getTime()}`)
@@ -600,5 +610,6 @@ export const resourceData = {
     getDisplayAVResourceFlag,
     getAVUnavailableView,
     getObsoleteResourceFile,
-    archiveResourceFile
+    archiveResourceFile,
+    getMKPlayerKey
 };

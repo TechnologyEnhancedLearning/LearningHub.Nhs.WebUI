@@ -374,6 +374,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
             var pageViewModel = await this.contentService.GetPageByIdAsync(1, preview);
             model.PageViewModel = pageViewModel;
             model.DisplayAudioVideo = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.DisplayAudioVideoResource)).Result;
+            model.MKPlayerLicence = this.Settings.MediaKindSettings.MKPlayerLicence;
+
             if (pageViewModel != null && pageViewModel.PageSections.Any())
             {
                 foreach (var item in pageViewModel.PageSections)

@@ -165,7 +165,7 @@
 
             </div>
             <div class="col-12">
-                <p class="hint">You can enter a maximum of 50 characters</p>
+                <p class="hint">You can enter a maximum of 50 characters per keyword.</p>
                 <div class="keyword-list">
                     @{
                         var i = 0;
@@ -334,29 +334,31 @@
             });
 
             $('#add-keyword').on('click', function () {
-                var $keywordInput = $('#add-keyword-input');
-                var value = $keywordInput.val();
-                if (!value) {
-                    return;
+              var $keywordInput = $('#add-keyword-input');
+              var value = $keywordInput.val();
+              if (!value) {
+                return;
+              }
+
+              // Split the input value by commas and trim each keyword
+              var values = value.split(',').map(function (item) {
+                return item.trim();
+              });
+
+              values.forEach(function (value) {
+                if (value && keywords.indexOf(value) === -1) {
+                  keywords.push(value);
+                  $('#Keywords').val(keywords);
+                  var tag = $('<div class="keyword-tag"><p>' + value + '</p><i class="fa fa-times"></i><input class="keyword-value" type="hidden" value="' + value + '" /></div>');
+                  tag.find('.fa-times').on('click', removeKeyword);
+                  $('.keyword-list').append(tag);
+
+                  // reindex the keyword inputs
+                  $('.keyword-value').each(function (i, x) {
+                    $(x).attr('name', "Keywords[" + i + "]");
+                  });
                 }
-                value = value.trim();
-                if (keywords.indexOf(value) === -1) {
-                    keywords.push(value);
-                    $('#Keywords').val(keywords);
-                    var tag = $('<div class="keyword-tag"><p>' + value + '</p><i class="fa fa-times"></i><input class="keyword-value" type="hidden" value="' + value + '" /></div>');
-                    tag.find('.fa-times').on('click', removeKeyword);
-                    $('.keyword-list').append(tag);
-                    $keywordInput.val("");
-                    // reindex the keyword inputs
-                    $('.keyword-value').each(function (i, x) {
-                        $(x).attr('name', "Keywords[" + i + "]");
-                    });
-                }
-                if (keywords.length > 4) {
-                    $('#add-keyword').attr('disabled', 'disabled');
-                    $('#add-keyword-input').attr('disabled', 'disabled');
-                }
-            });
+              });
 
             // url
             var oldUrl = "";

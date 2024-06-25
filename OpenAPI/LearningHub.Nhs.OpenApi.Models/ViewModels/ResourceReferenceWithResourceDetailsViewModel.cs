@@ -1,4 +1,5 @@
 using LearningHub.Nhs.Models.Entities.Activity;
+using LearningHub.Nhs.Models.Resource;
 using System.Collections.Generic;
 
 namespace LearningHub.Nhs.OpenApi.Models.ViewModels
@@ -7,7 +8,14 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
     /// Class.
     /// </summary>
     public class ResourceReferenceWithResourceDetailsViewModel 
-    { 
+    {
+        public ResourceReferenceWithResourceDetailsViewModel(ResourceReferenceAndCatalogueDTO resourceReferenceAndCatalogueDTO, List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescriptionLS)
+        {
+
+
+        }
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceReferenceWithResourceDetailsViewModel"/> class.
         /// </summary>

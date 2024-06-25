@@ -4,18 +4,20 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.Resource;
 
     /// <summary>
     /// Resource repository interface.
     /// </summary>
     public interface IResourceRepository
     {
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="resourceIds"></param>
-        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public Task<IEnumerable<Resource>> GetResourcesFromIds(IEnumerable<int> resourceIds);
+        // qqqq
+        ///// <summary>
+        /////
+        ///// </summary>
+        ///// <param name="resourceIds"></param>
+        ///// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        //public Task<IEnumerable<Resource>> GetResourcesFromIds(IEnumerable<int> resourceIds);
 
         ///// <summary>
         ///// Gets resources from ids.
@@ -25,13 +27,13 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         ///// <returns>Resources with details.</returns>
         //public Task<IEnumerable<Resource>> GetResourcesFromIds(IEnumerable<int> resourceIds, int currentUserId);//qqqq
 
-        /// <summary>
-        /// Gets resource references by their original resource reference Ids.
-        /// </summary>
-        /// <param name="originalResourceReferenceIds"><see cref="originalResourceReferenceIds"/>.</param>
-        /// <returns>Resource references.</returns>
-        public Task<IEnumerable<ResourceReference>> GetResourceReferencesByOriginalResourceReferenceIds(
-        IEnumerable<int> originalResourceReferenceIds);
+        ///// <summary> qqqq
+        ///// Gets resource references by their original resource reference Ids.
+        ///// </summary>
+        ///// <param name="originalResourceReferenceIds"><see cref="originalResourceReferenceIds"/>.</param>
+        ///// <returns>Resource references.</returns>
+        //public Task<IEnumerable<ResourceReference>> GetResourceReferencesByOriginalResourceReferenceIds(
+        //IEnumerable<int> originalResourceReferenceIds);
 
         ///// <summary>
         ///// Gets resource references by their original resource reference Ids.
@@ -45,7 +47,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         /// delete me.
         /// </summary>
         public void QqqqTest();
-        // qqqq
+
         /// <summary>
         /// Gets resource activity for resourceReferenceIds and userIds.
         /// </summary>
@@ -53,5 +55,12 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         /// <param name="userIds"></param>
         /// <returns>ResourceActivityDTO.</returns>
         Task<IEnumerable<ResourceActivityDTO>> GetResourceActivityPerResourceMajorVersion(IEnumerable<int>? resourceReferenceIds, IEnumerable<int>? userIds);
+        /// <summary>
+        /// Gets GetResourceReferenceAndCatalogues using stored procedure GetResourceReferenceAndCatalogues.
+        /// </summary>
+        /// <param name="resourceReferenceIds">.</param>
+        /// <param name="originalResourceReferenceIds">.</param>
+        /// <returns>ResourceActivityDTO.</returns>
+        Task<IEnumerable<ResourceReferenceAndCatalogueDTO>> GetResourceReferenceAndCatalogues(IEnumerable<int> resourceReferenceIds, IEnumerable<int> originalResourceReferenceIds);
     }
 }

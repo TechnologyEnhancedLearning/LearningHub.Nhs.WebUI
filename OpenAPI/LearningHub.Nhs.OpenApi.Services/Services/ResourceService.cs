@@ -8,6 +8,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.AzureMediaAsset;
     using LearningHub.Nhs.Models.ViewModels.Helpers;
     using LearningHub.Nhs.OpenApi.Models.Exceptions;
@@ -56,20 +57,23 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <returns>the resource.</returns>
         public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId, int? currentUserId)
         {
-            var resourceReferencesList = (await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(new List<int>() { originalResourceReferenceId })).ToList();
+            // qqqqq do via constructor on the model
+
+            List<ResourceReferenceAndCatalogueDTO> resourceReferenceAndCatalogueDTOs = (await this.resourceRepository.GetResourceReferenceAndCatalogues(new List<int>() { },new List<int>() { originalResourceReferenceId })).ToList();
             List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
 
             try
             {
-                var resourceReference = resourceReferencesList.SingleOrDefault();
+                ResourceReferenceAndCatalogueDTO? resourceReferenceAndCatalogueDTO = resourceReferenceAndCatalogueDTOs.SingleOrDefault(); // qqqq this could fail i think as it may need to be grouped
 
-                if (resourceReference == null)
+                if (resourceReferenceAndCatalogueDTO == null)
                 {
                     throw new HttpResponseException("No matching resource reference", HttpStatusCode.NotFound);
                 }
 
+
                 if (currentUserId.HasValue) {
-                    List<int> resourceIds = resourceReferencesList.Select(x => x.ResourceId).ToList<int>();
+                    List<int> resourceIds = new List<int>() { resourceReferenceAndCatalogueDTO.ResourceId }; // QQQQ the single or default means it has to be single rewrite function logic 
                     List<int> userIds = new List<int>() { currentUserId.Value };
 
                     // qqqq do i need to null handle with this
@@ -77,7 +81,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
                 }
 
-                return this.GetResourceReferenceWithResourceDetailsViewModel(resourceReference, resourceActivities);
+                return this.GetResourceReferenceWithResourceDetailsViewModel(resourceReferenceAndCatalogueDTO, resourceActivities);
             }
             catch (InvalidOperationException exception)
             {
@@ -94,14 +98,16 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <returns>the resource.</returns>
         public async Task<ResourceMetadataViewModel> GetResourceById(int resourceId, int? currentUserId)
         {
+            // qqqqq do via constructor on the model
+
             List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
             List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
 
             var resourceIdList = new List<int>() { resourceId };
 
-            var resource = (await this.resourceRepository.GetResourcesFromIds(resourceIdList)).SingleOrDefault();
+            ResourceReferenceAndCatalogueDTO resourceReferenceAndCatalogueDTO = (await this.resourceRepository.GetResourceReferenceAndCatalogues(resourceIdList, new List<int>() { })).SingleOrDefault() ?? new ResourceReferenceAndCatalogueDTO();
 
-            if (resource == null)
+            if (resourceReferenceAndCatalogueDTO == null)
             {
                 throw new Exception($"Resource with ID {resourceId} not found. Provided userId was {(currentUserId.HasValue ? currentUserId.Value.ToString() : "null")}");
             }
@@ -113,26 +119,22 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
                 // qqqq do i need to null handle with this
                 resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
-
             }
 
-
-            majorVersionIdActivityStatusDescription = resourceActivities.Count != 0 ? ActivityStatusHelper.GetMajorVersionIdActivityStatusDescriptionLSPerResource(resource, resourceActivities).ToList() : new List<MajorVersionIdActivityStatusDescription>() { } ;
-
-
+            majorVersionIdActivityStatusDescription = resourceActivities.Count != 0 ? ActivityStatusHelper.GetMajorVersionIdActivityStatusDescriptionLSPerResource(resourceReferenceAndCatalogueDTO, resourceActivities).ToList() : new List<MajorVersionIdActivityStatusDescription>() { } ;
 
             return new ResourceMetadataViewModel(
-                resource.Id,
-                resource.CurrentResourceVersion?.Title ?? ResourceHelpers.NoResourceVersionText,
-                resource.CurrentResourceVersion?.Description ?? string.Empty,
-                resource.ResourceReference.Select(rr => new ResourceReferenceViewModel(
+                resourceReferenceAndCatalogueDTO.ResourceId,
+                resourceReferenceAndCatalogueDTO.Title ?? ResourceHelpers.NoResourceVersionText,
+                resourceReferenceAndCatalogueDTO.Description ?? string.Empty,
+                resourceReferenceAndCatalogueDTO.CatalogueDTOs.Select(rr => new ResourceReferenceViewModel(
                                                         rr.OriginalResourceReferenceId,
                                                         rr.GetCatalogue(),
                                                         this.learningHubService.GetResourceLaunchUrl(rr.OriginalResourceReferenceId)))
                                                         .ToList(),
-                resource.GetResourceTypeNameOrEmpty(),
-                resource.ResourceVersion.FirstOrDefault()?.MajorVersion,/*qqqq wont stay first or default because of logic in stored procedure*/
-                resource.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0.0m,
+                resourceReferenceAndCatalogueDTO.GetResourceTypeNameOrEmpty(),
+                resourceReferenceAndCatalogueDTO.MajorVersion, /*qqqq wont stay first or default because of logic in stored procedure*/
+                resourceReferenceAndCatalogueDTO.Rating ?? 0.0m,
                 majorVersionIdActivityStatusDescription); //qqqq
         }
 
@@ -144,89 +146,88 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <returns>the resource.</returns>
         public async Task<BulkResourceReferenceViewModel> GetResourceReferencesByOriginalIds(List<int> originalResourceReferenceIds, int? currentUserId)
         {
+            // qqqqq do via constructor on the model
+
             List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
             List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
 
-            var resourceReferencesList = (await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(originalResourceReferenceIds)).ToList();
+            List<ResourceReferenceAndCatalogueDTO> resourceReferenceAndCatalogueDTOs = (await this.resourceRepository.GetResourceReferenceAndCatalogues(new List<int>() { }, originalResourceReferenceIds)).ToList();
 
-            var matchedIds = resourceReferencesList.Select(r => r.OriginalResourceReferenceId).ToList();
-            var unmatchedIds = originalResourceReferenceIds.Except(matchedIds).ToList();
+            List<int> matchedOriginalResourceIds = resourceReferenceAndCatalogueDTOs.SelectMany(r => r.CatalogueDTOs.Select(x => x.OriginalResourceReferenceId)).Distinct().ToList<int>();
+            List<int> unmatchedOriginalResourceIds = originalResourceReferenceIds.Except(matchedOriginalResourceIds).ToList();
 
             if (currentUserId.HasValue)
             {
-                List<int> resourceIds = resourceReferencesList.Select(rrl => rrl.ResourceId).ToList();
+                List<int> resourceIds = resourceReferenceAndCatalogueDTOs.Select(rrl => rrl.ResourceId).ToList();
                 List<int> userIds = new List<int>() { currentUserId.Value };
 
                 resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
-
             }
 
-            if (unmatchedIds.Any())
+            if (unmatchedOriginalResourceIds.Any())
             {
                 this.logger.LogInformation("Some resource ids not matched");
             }
 
-            foreach (var duplicateIds in matchedIds.GroupBy(id => id).Where(groupOfIds => groupOfIds.Count() > 1))
+            foreach (var duplicateIds in unmatchedOriginalResourceIds.GroupBy(id => id).Where(groupOfIds => groupOfIds.Count() > 1))
             {
-                this.logger.LogWarning($"Multiple resource references found with OriginalResourceReferenceId {duplicateIds.First()}");
+                // qqqq so this is suggesting by design we shouldnt have multiple originalIds
+                this.logger.LogWarning($"Duplicate originalResourceId requested and not found with OriginalResourceReferenceId {duplicateIds.First()}");
             }
 
-            var matchedResources = resourceReferencesList
+            var matchedResources = resourceReferenceAndCatalogueDTOs
                 .Select(rr => this.GetResourceReferenceWithResourceDetailsViewModel(rr, resourceActivities.Where(ra => ra.ResourceId == rr.ResourceId).ToList()))
                 .ToList();
 
-            return new BulkResourceReferenceViewModel(matchedResources, unmatchedIds);
+            return new BulkResourceReferenceViewModel(matchedResources, unmatchedOriginalResourceIds);
         }
 
-        private ResourceReferenceWithResourceDetailsViewModel GetResourceReferenceWithResourceDetailsViewModel(ResourceReference resourceReference, List<ResourceActivityDTO> resourceActivities)
+        private ResourceReferenceWithResourceDetailsViewModel GetResourceReferenceWithResourceDetailsViewModel(ResourceReferenceAndCatalogueDTO resourceReferenceAndCatalogueDTO, List<ResourceActivityDTO> resourceActivities)
         {
-
             List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
 
             if (resourceActivities != null && resourceActivities.Count != 0)
             {
-                majorVersionIdActivityStatusDescription = ActivityStatusHelper.GetMajorVersionIdActivityStatusDescriptionLSPerResource(resourceReference.Resource, resourceActivities).ToList();
+                majorVersionIdActivityStatusDescription = ActivityStatusHelper.GetMajorVersionIdActivityStatusDescriptionLSPerResource(resourceReferenceAndCatalogueDTO, resourceActivities).ToList();
             }
 
-            var hasCurrentResourceVersion = resourceReference.Resource.CurrentResourceVersion != null;
-            var hasRating = resourceReference.Resource.CurrentResourceVersion?.ResourceVersionRatingSummary != null;
+            //qqqq is it possible not to have a currentResourceVersion i dont think so ... check this - but based on proc its not needed
+            // var hasCurrentResourceVersion = resourceReferenceAndCatalogueDTO.CurrentResourceVersion != null;
+            //var hasCurrentResourceVersion = resourceReferenceAndCatalogueDTO.ResourceReferenceId != null;
+            var hasRating = resourceReferenceAndCatalogueDTO.Rating != null;
 
-            if (resourceReference.Resource == null)
+            if (resourceReferenceAndCatalogueDTO == null)
             {
                 throw new Exception("No matching resource");
             }
 
-            if (!hasCurrentResourceVersion)
-            {
-                this.logger.LogInformation($"Resource with OriginalResourceReferenceId {resourceReference.Id} is missing a current resource version");
-            }
+            //if (!hasCurrentResourceVersion)//qqqq can it not have one??
+            //{
+            //    this.logger.LogInformation($"Resource with OriginalResourceReferenceId {resourceReferenceAndCatalogueDTO.OriginalResourceReferenceId} is missing a current resource version");
+            //}
 
             if (!hasRating)
             {
-                this.logger.LogInformation($"Resource with Id: {resourceReference.ResourceId} is missing a ResourceVersionRatingSummary");
+                this.logger.LogInformation($"Resource with Id: {resourceReferenceAndCatalogueDTO.ResourceId} is missing a ResourceVersionRatingSummary");
             }
 
-            var resourceTypeNameOrEmpty = resourceReference.Resource.GetResourceTypeNameOrEmpty();
+            var resourceTypeNameOrEmpty = ResourceHelpers.GetResourceTypeNameOrEmpty(resourceReferenceAndCatalogueDTO);
             if (resourceTypeNameOrEmpty == string.Empty)
             {
-                this.logger.LogError($"Resource has unrecognised type: {resourceReference.Resource.ResourceTypeEnum}");
+                this.logger.LogError($"Resource has unrecognised type: {resourceReferenceAndCatalogueDTO.ResourceTypeEnum}");
             }
 
-
-
             return new ResourceReferenceWithResourceDetailsViewModel(
-                resourceReference.ResourceId,
-                resourceReference.OriginalResourceReferenceId,
-                resourceReference.Resource.CurrentResourceVersion?.Title ?? ResourceHelpers.NoResourceVersionText,
-                resourceReference.Resource.CurrentResourceVersion?.Description ?? string.Empty,
-                resourceReference.GetCatalogue(),
+                resourceReferenceAndCatalogueDTO.ResourceId,
+                resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().OriginalResourceReferenceId, // qqqq assumes that when got by originalResourceId there is only one catalogue and it hasnt been nulled because it is external
+                resourceReferenceAndCatalogueDTO.Title ?? ResourceHelpers.NoResourceVersionText,
+                resourceReferenceAndCatalogueDTO.Description ?? string.Empty,
+                resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().GetCatalogue(), // qqqq assumes that when got by originalResourceId there is only one catalogue and it hasnt been nulled because it is external
                 resourceTypeNameOrEmpty,
-                resourceReference.Resource.ResourceVersion.FirstOrDefault()?.MajorVersion, /*qqqq will be replace by procedure*/
-                resourceReference.Resource?.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0,
-                this.learningHubService.GetResourceLaunchUrl(resourceReference.OriginalResourceReferenceId),
-                //qqqq
-                majorVersionIdActivityStatusDescription
-                );
+                resourceReferenceAndCatalogueDTO.MajorVersion,
+                resourceReferenceAndCatalogueDTO.Rating ?? 0,
+                this.learningHubService.GetResourceLaunchUrl(resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().OriginalResourceReferenceId), // qqqq assumes that when got by originalResourceId there is only one catalogue and it hasnt been nulled because it is external
+                majorVersionIdActivityStatusDescription);
         }
 
         /// <summary>

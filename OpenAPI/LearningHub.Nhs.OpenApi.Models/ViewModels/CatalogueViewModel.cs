@@ -23,6 +23,13 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="CatalogueViewModel"/> class.
         /// </summary>
+        public CatalogueViewModel()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CatalogueViewModel"/> class.
+        /// </summary>
         /// <param name="catalogueNodeVersion"><see cref="CatalogueNodeVersion"/>.</param>
         public CatalogueViewModel(CatalogueNodeVersion catalogueNodeVersion)
         {

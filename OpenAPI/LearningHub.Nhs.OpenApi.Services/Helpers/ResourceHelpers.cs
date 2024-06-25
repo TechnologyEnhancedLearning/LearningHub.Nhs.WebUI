@@ -3,8 +3,10 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Xml.Linq;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
 
     /// <summary>
@@ -64,6 +66,41 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
             var resourceTypeName = Enum.GetName(typeof(ResourceTypeEnum), resource.ResourceTypeEnum);
 
             return resourceTypeName ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Gets the string resource type name.
+        /// </summary>
+        /// <param name="ResourceReferenceAndCatalogueDTO"><see cref="ResourceReferenceAndCatalogueDTO"/>.</param>
+        /// <returns>The resource type name or an empty string if the resource isn't recognised.</returns>
+        public static string GetResourceTypeNameOrEmpty(this ResourceReferenceAndCatalogueDTO resourceReferenceAndCatalogueDTO)
+        {
+            var resourceTypeName = Enum.GetName(typeof(ResourceTypeEnum), resourceReferenceAndCatalogueDTO.ResourceTypeEnum);
+
+            return resourceTypeName ?? string.Empty;
+        }
+
+        /// <summary>
+        /// The get catalogue from resource reference method.
+        /// </summary>
+        /// <param name="CatalogueDTO">The catalogueDTOs.</param>
+        /// <returns>The catalogue the resource reference is part of.</returns>
+        public static CatalogueViewModel GetCatalogue(this CatalogueDTO catalogueDTOs)
+        {
+            var catalogue = new CatalogueViewModel(0, NoCatalogueText, false);
+
+            if (catalogueDTOs.CatalogueNodeId != null) //qqqq check if it is null
+            {
+                // resourceReference.NodePath.CatalogueNode.CurrentNodeVersion.CatalogueNodeVersion; qqqq
+                catalogue = new CatalogueViewModel
+                {
+                    Id = catalogueDTOs.CatalogueNodeId.Value,
+                    Name = catalogueDTOs.CatalogueNodeName ?? string.Empty,
+                    IsRestricted = catalogueDTOs.IsRestricted.Value,
+                };
+            }
+
+            return catalogue;
         }
     }
 }

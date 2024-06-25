@@ -6,6 +6,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.ViewModels.Helpers;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Findwise;
@@ -92,11 +93,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 return new List<ResourceMetadataViewModel>();
             }
 
-            var resourcesFound = (await this.resourceRepository.GetResourcesFromIds(findwiseResourceIds)).ToList();
+            List<ResourceReferenceAndCatalogueDTO> resourcesReferenceAndCatalogueDTOsFound = (await this.resourceRepository.GetResourceReferenceAndCatalogues(findwiseResourceIds, new List<int>() { })).ToList();
 
             if (currentUserId.HasValue)
             {
-                List<int> resourceIds = resourcesFound.Select(x => x.Id).ToList();
+                List<int> resourceIds = resourcesReferenceAndCatalogueDTOsFound.Select(x => x.ResourceId).ToList();
                 List<int> userIds = new List<int>() { currentUserId.Value };
 
                 // qqqq do i need to null handle with this
@@ -104,7 +105,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             }
 
             //qqqq
-            var resourceMetadataViewModels = resourcesFound.Select(resource => MapToViewModel(resource, resourceActivities.Where(x => x.ResourceId == resource.Id).ToList()))
+            var resourceMetadataViewModels = resourcesReferenceAndCatalogueDTOsFound.Select(resource => MapToViewModel(resource, resourceActivities.Where(x => x.ResourceId == resource.ResourceId).ToList()))
                 .OrderBySequence(findwiseResourceIds)
                 .ToList();
 
@@ -120,6 +121,49 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             }
 
             return resourceMetadataViewModels;
+        }
+
+        public ResourceMetadataViewModel MapToViewModel(ResourceReferenceAndCatalogueDTO resourceReferenceAndCatalogueDTO, List<ResourceActivityDTO> resourceActivities)
+        {
+            List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
+
+            if (resourceActivities != null && resourceActivities.Count != 0)
+            {
+                majorVersionIdActivityStatusDescription = ActivityStatusHelper.GetMajorVersionIdActivityStatusDescriptionLSPerResource(resourceReferenceAndCatalogueDTO, resourceActivities)
+                    .ToList();
+            }
+
+            // qqqq again i dont think this is needed now
+            //var hasCurrentResourceVersion = resourceReferenceAndCatalogueDTO.ResourceReferenceId != null;
+            var hasRating = resourceReferenceAndCatalogueDTO.Rating != null; // qqqq was resource.resourcereference RatingSummary != null; check it
+
+            //if (!hasCurrentResourceVersion)
+            //{
+            //    this.logger.LogInformation(
+            //        $"Resource with id {resourceReferenceAndCatalogueDTO.ResourceId} is missing a current resource version");
+            //}
+
+            if (!hasRating)
+            {
+                this.logger.LogInformation(
+                    $"Resource with id {resourceReferenceAndCatalogueDTO.ResourceId} is missing a ResourceVersionRatingSummary");
+            }
+
+            var resourceTypeNameOrEmpty = resourceReferenceAndCatalogueDTO.GetResourceTypeNameOrEmpty();
+            if (resourceTypeNameOrEmpty == string.Empty)
+            {
+                this.logger.LogError($"Resource has unrecognised type: {resourceReferenceAndCatalogueDTO.ResourceTypeEnum}");
+            }
+
+            return new ResourceMetadataViewModel(
+                resourceReferenceAndCatalogueDTO.ResourceId,
+                resourceReferenceAndCatalogueDTO.Title ?? ResourceHelpers.NoResourceVersionText,
+                resourceReferenceAndCatalogueDTO.Description ?? string.Empty,
+                resourceReferenceAndCatalogueDTO.CatalogueDTOs.Select(this.GetResourceReferenceViewModel).ToList(), // qqqq not handling list currently
+                resourceTypeNameOrEmpty,
+                resourceReferenceAndCatalogueDTO.MajorVersion, /*qqqq would be returned by procedure so not first or default*/
+                resourceReferenceAndCatalogueDTO.Rating ?? 0.0m,
+                majorVersionIdActivityStatusDescription); // qqqq
         }
 
         public ResourceMetadataViewModel MapToViewModel(Resource resource, List<ResourceActivityDTO> resourceActivities)
@@ -157,7 +201,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resource.Id,
                 resource.CurrentResourceVersion?.Title ?? ResourceHelpers.NoResourceVersionText,
                 resource.CurrentResourceVersion?.Description ?? string.Empty,
-                resource.ResourceReference.Select(this.GetResourceReferenceViewModel).ToList(),
+                resource.ResourceReference.Select(this.GetResourceReferenceViewModel).ToList(), //qqqq will it actually be a list
                 resourceTypeNameOrEmpty,
                 resource.ResourceVersion.FirstOrDefault()?.MajorVersion,/*qqqq would be returned by procedure so not first or default*/
                 resource.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0.0m,
@@ -171,6 +215,15 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resourceReference.OriginalResourceReferenceId,
                 resourceReference.GetCatalogue(),
                 this.learningHubService.GetResourceLaunchUrl(resourceReference.OriginalResourceReferenceId));
+        }
+
+        private ResourceReferenceViewModel GetResourceReferenceViewModel(
+        CatalogueDTO catalogueDTOs) // qqqq it cant be this is needs to be some kind of catalogue object
+        {
+            return new ResourceReferenceViewModel(
+                catalogueDTOs.OriginalResourceReferenceId,//resourceReferenceAndCatalogueDTO.OriginalResourceReferenceId,
+                catalogueDTOs.GetCatalogue(),
+                this.learningHubService.GetResourceLaunchUrl(catalogueDTOs.OriginalResourceReferenceId));
         }
     }
 }

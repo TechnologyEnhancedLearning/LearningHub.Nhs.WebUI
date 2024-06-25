@@ -295,13 +295,25 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// </summary>
         public virtual DbSet<FileChunkDetail> FileChunkDetail { get; set; }
 
-
-
         /// <summary>
         /// Gets or sets the ResourceActivityDto. These are not entities. They are returned from the [activity].[GetResourceActivityPerResourceMajorVersion] stored proc..
         /// </summary>
         public virtual DbSet<ResourceActivityDTO> ResourceActivityDTO { get; set; }
 
+        /// <summary>
+        /// Gets or sets the ResourceActivityDto. These are not entities. They are returned from the [activity].[GetResourceActivityPerResourceMajorVersion] stored proc..
+        /// </summary>
+        public virtual DbSet<ResourceReferenceAndCatalogueDTO> ResourceReferenceAndCatalogueDTO { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ResourceReferenceAndCatalogueTempConstructionDTO. These are not entities. They are returned from the [activity].[GetResourceActivityPerResourceMajorVersion] stored proc..
+        /// </summary>
+        public virtual DbSet<ResourceReferenceAndCatalogueTempConstructionDTO> ResourceReferenceAndCatalogueTempConstructionDTO { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ResourceActivityDto. These are not entities. They are returned from the [activity].[GetResourceActivityPerResourceMajorVersion] stored proc..
+        /// </summary>
+        public virtual DbSet<CatalogueDTO> CatalogueDTO { get; set; }
         /// <summary>
         /// Gets or sets the RecentlyAddedResources. These are not entities. They are returned from the [resources].[GetRecentlyAddedResources] stored proc..
         /// </summary>

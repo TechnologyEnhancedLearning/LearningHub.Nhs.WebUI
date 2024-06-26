@@ -1434,6 +1434,7 @@ namespace LearningHub.Nhs.Services
                             {
                                 retVal.Add(scormResource?.File?.FilePath);
                             }
+
                             break;
                         case ResourceTypeEnum.Html:
                             var htmlResource = await this.GetHtmlDetailsByIdAsync(resourceVersionId);

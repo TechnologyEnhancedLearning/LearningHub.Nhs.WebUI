@@ -77,15 +77,16 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                     g.Key.ResourceTypeId,
                     g.Key.MajorVersion,
                     g.Key.Rating,
-                    g.Select(r => new CatalogueDTO
+                    g.Where(c => c.CatalogueNodeId.HasValue)
+                    .Select(r => new CatalogueDTO
                     {
-                        CatalogueNodeId = r.CatalogueNodeId,
+                        CatalogueNodeId = r.CatalogueNodeId.Value,
                         CatalogueNodeName = r.CatalogueNodeName,
-                        IsRestricted = r.IsRestricted,
-                        OriginalResourceReferenceId = r.OriginalResourceReferenceId,
+                        IsRestricted = r.IsRestricted.Value,
+                        OriginalResourceReferenceId = r.OriginalResourceReferenceId.Value,
                     })
-                        .Where(c => c.CatalogueNodeId.HasValue).ToList())
-                ) // Filter out null catalogue entries (the external ones)
+                        .ToList()))
+                 // Filter out null catalogue entries (the external ones)
                         .ToList<ResourceReferenceAndCatalogueDTO>();
 
             return resourceReferenceAndCatalogueDTOs;

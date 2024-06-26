@@ -138,7 +138,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
                 throw new HttpResponseException($"Too many resources requested. The maximum is {MaxNumberOfReferenceIds}", HttpStatusCode.BadRequest);
             }
 
-            return await this.resourceService.GetResourceReferencesByOriginalIds(resourceReferenceIds.ToList(), this.CurrentUserId);
+            return await this.resourceService.GetResourceReferencesByOriginalIds(resourceReferenceIds.Distinct().ToList(), this.CurrentUserId);
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
                 throw new HttpResponseException($"Too many resources requested. The maximum is {MaxNumberOfReferenceIds}", HttpStatusCode.BadRequest);
             }
 
-            return await this.resourceService.GetResourceReferencesByOriginalIds(bulkResourceReferences.ResourceReferenceIds, this.CurrentUserId);
+            return await this.resourceService.GetResourceReferencesByOriginalIds(bulkResourceReferences.ResourceReferenceIds.Distinct().ToList(), this.CurrentUserId);
         }
     }
 }

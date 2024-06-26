@@ -1,6 +1,7 @@
 namespace LearningHub.Nhs.OpenApi.Services.Services
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Activity;
@@ -68,7 +69,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 return ResourceSearchResultModel.FailedWithStatus(findwiseResultModel.FindwiseRequestStatus);
             }
 
-            var resourceMetadataViewModels = await this.GetResourceMetadataViewModels(findwiseResultModel, currentUserId);
+            List<ResourceMetadataViewModel> resourceMetadataViewModels = await this.GetResourceMetadataViewModels(findwiseResultModel, currentUserId);
 
             var totalHits = findwiseResultModel.SearchResults?.Stats.TotalHits;
 
@@ -103,16 +104,16 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
             }
 
-            var resourceMetadataViewModels = resourcesReferenceAndCatalogueDTOsFound.Select(resourcesReferenceAndCatalogueDTO => MapToViewModel(resourcesReferenceAndCatalogueDTO, resourceActivities.Where(x => x.ResourceId == resourcesReferenceAndCatalogueDTO.ResourceId).ToList()))
+            List<ResourceMetadataViewModel> resourceMetadataViewModels = resourcesReferenceAndCatalogueDTOsFound.Select(resourcesReferenceAndCatalogueDTO => MapToViewModel(resourcesReferenceAndCatalogueDTO, resourceActivities.Where(x => x.ResourceId == resourcesReferenceAndCatalogueDTO.ResourceId).ToList()))
                 .OrderBySequence(findwiseResourceIds)
                 .ToList();
 
-            var unmatchedResources = findwiseResourceIds
+            List<int> unmatchedResources = findwiseResourceIds
                 .Except(resourceMetadataViewModels.Select(r => r.ResourceId)).ToList();
 
             if (unmatchedResources.Any())
             {
-                var unmatchedResourcesIdsString = string.Join(", ", unmatchedResources);
+                string? unmatchedResourcesIdsString = string.Join(", ", unmatchedResources);
                 this.logger.LogWarning(
                     "Findwise returned documents that were not found in the database with IDs: " +
                     unmatchedResourcesIdsString);

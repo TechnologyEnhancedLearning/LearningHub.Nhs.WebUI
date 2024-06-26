@@ -95,9 +95,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
             {
                 catalogue = new CatalogueViewModel
                 {
-                    Id = catalogueDTOs.CatalogueNodeId.Value,
+                    Id = catalogueDTOs.CatalogueNodeId,
                     Name = catalogueDTOs.CatalogueNodeName ?? string.Empty,
-                    IsRestricted = catalogueDTOs.IsRestricted.Value,
+                    IsRestricted = catalogueDTOs.IsRestricted,
                 };
             }
 

@@ -43,7 +43,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             this.ResourceType = resourceType;
             this.MajorVersion = majorVersion;
             this.Rating = rating;
-            this.UserSummaryActivityStates = userSummaryActivityStatuses;
+            this.UserSummaryActivityStatuses = userSummaryActivityStatuses;
         }
 
         /// <summary>
@@ -82,8 +82,8 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         public decimal Rating { get; set; }
 
         /// <summary>
-        /// Gets or sets <see cref="UserSummaryActivityStates"/>.
+        /// Gets or sets <see cref="UserSummaryActivityStatuses"/>.
         /// </summary>
-        public List<MajorVersionIdActivityStatusDescription>? UserSummaryActivityStates { get; set; }
+        public List<MajorVersionIdActivityStatusDescription>? UserSummaryActivityStatuses { get; set; }
     }
 }

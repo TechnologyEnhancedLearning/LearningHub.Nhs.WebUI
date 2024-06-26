@@ -6,7 +6,9 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Resource;
 
+    // qqqq will have to review which are still in use
     public static class ResourceTestHelper
     {
         private const string DefaultCatalogueName = "default catalogue name";
@@ -277,7 +279,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
             int userId,
             int resourceId,
             int activityStatusId, //out of order for prepopulated parameters
-                                   //Dictionary<int,int>? majorVersionUserActivityStatusId, //out of order for prepopulated parameters qqq but its making the db object
+                                   //Dictionary<int,int>? majorVersionUserActivityStatusId, //out of order for prepopulated parameters qqq but its making the db object //qqqq
             int resourceVersionId = 0,
             int? launchResourceActivityId = null,
             int majorVerson = 0,

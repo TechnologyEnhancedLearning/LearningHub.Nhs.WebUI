@@ -520,7 +520,6 @@
     <Build Include="Stored Procedures\Resources\GetPopularDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetRatedDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetMyCertificatesDashboardResources.sql" />
-    <Build Include="Scripts\Pre-Deploy\Scripts\TD-4271_Dasboard_Index.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

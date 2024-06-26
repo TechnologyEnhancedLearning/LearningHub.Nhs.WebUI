@@ -70,6 +70,7 @@
     import { contentData } from '../data/content';
     import { AzureMediaAssetModel } from '../models/content/videoAssetModel';
     import { MKPlayer } from '@mediakind/mkplayer';
+    import { MKPlayerType, MKStreamType } from '../MKPlayerConfigEnum';
 
     export default Vue.extend({
         props: {
@@ -198,7 +199,8 @@
                             ui: false,
                             playback: {
                                 muted: false,
-                                autoplay: false
+                                autoplay: false,
+                                preferredTech: [{ player: MKPlayerType.Html5, streaming: MKStreamType.Hls }]   // to force the player to use html5 player instead of native on safari
                             },
                             theme: "dark",
                             events: {

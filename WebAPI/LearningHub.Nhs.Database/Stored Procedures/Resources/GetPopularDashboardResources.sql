@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 24 Jun 2024	OA	Initial Revision
+-- 27 Jun 2024  SA  Removed unused temp tables
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [resources].[GetPopularDashboardResources]
@@ -25,7 +26,6 @@ BEGIN
 	DECLARE @MaxRows INT = @MaxPageNUmber * @FetchRows
 	DECLARE @OffsetRows INT = (@PageNumber - 1) * @FetchRows
 
-	DECLARE @MyActivity TABLE (ResourceId [int] NOT NULL PRIMARY KEY, ResourceActivityId [int] NOT NULL);
 	DECLARE @Resources TABLE (ResourceId [int] NOT NULL PRIMARY KEY, ResourceActivityCount [int] NOT NULL);
 
 

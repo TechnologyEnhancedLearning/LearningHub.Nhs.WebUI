@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 24 Jun 2024	OA	Initial Revision
+-- 27 Jun 2024	SA My Learning Dashboard Tray showing Wrong Counts
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [resources].[GetMyInProgressDashboardResources]
@@ -100,6 +101,24 @@ BEGIN
 	OFFSET @OffsetRows ROWS
 	FETCH NEXT @FetchRows ROWS ONLY	
 
-	SELECT @TotalRecords = CASE WHEN COUNT(*)  > 12 THEN @MaxRows ELSE COUNT(*) END FROM @MyActivity
+	SELECT @TotalRecords = CASE WHEN COUNT(ma.ResourceActivityId)  > 12 THEN @MaxRows ELSE COUNT(*) END 
+	FROM @MyActivity ma 		
+	JOIN activity.ResourceActivity ra ON ra.id = ma.ResourceActivityId
+	JOIN resources.resourceversion rv ON rv.id = ra.ResourceVersionId AND rv.Deleted = 0		
+	JOIN Resources.Resource r ON r.Id = rv.ResourceId
+	JOIN hierarchy.Publication p ON rv.PublicationId = p.Id AND p.Deleted = 0
+	JOIN resources.ResourceVersionRatingSummary rvrs ON rv.Id = rvrs.ResourceVersionId	AND rvrs.Deleted = 0
+	JOIN hierarchy.NodeResource nr ON r.Id = nr.ResourceId AND nr.Deleted = 0
+	JOIN hierarchy.Node n ON n.Id = nr.NodeId AND n.Hidden = 0 AND n.Deleted = 0
+	JOIN hierarchy.NodePath np ON np.NodeId = n.Id AND np.Deleted = 0 AND np.IsActive = 1
+	JOIN hierarchy.NodeVersion nv ON nv.NodeId = np.CatalogueNodeId	AND nv.VersionStatusId = 2 AND nv.Deleted = 0
+	JOIN hierarchy.CatalogueNodeVersion cnv ON cnv.NodeVersionId = nv.Id AND cnv.Deleted = 0
+	LEFT JOIN hub.UserBookmark ub ON ub.UserId = @UserId AND ub.ResourceReferenceId = (SELECT TOP 1 rr.OriginalResourceReferenceId
+			FROM [resources].[ResourceReference] rr
+			JOIN hierarchy.NodePath np on np.id = rr.NodePathId and np.NodeId = n.Id and np.Deleted = 0
+			WHERE rr.ResourceId = rv.ResourceId AND rr.Deleted = 0)
+	LEFT JOIN (  SELECT DISTINCT CatalogueNodeId 
+					FROM [hub].[RoleUserGroupView] rug JOIN hub.UserUserGroup uug ON rug.UserGroupId = uug.UserGroupId
+					WHERE rug.ScopeTypeId = 1 and rug.RoleId in (1,2,3) and uug.Deleted = 0 and uug.UserId = @userId) auth ON n.Id = auth.CatalogueNodeId
 	
 END

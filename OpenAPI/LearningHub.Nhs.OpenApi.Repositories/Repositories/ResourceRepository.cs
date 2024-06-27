@@ -119,6 +119,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                     resourceIdsParameter,
                     userIdsParameter)
                 .AsNoTracking()
+                .OrderByDescending(r => r.MajorVersion)
                 .ToListAsync<ResourceActivityDTO>();
 
             return resourceActivityDTOs;

@@ -26,23 +26,24 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
         /// </summary>
         public const string NoCatalogueText = "No catalogue for resource reference";
 
-        /// <summary>
-        /// The get catalogue from resource reference method.
-        /// </summary>
-        /// <param name="resourceReference">The resourceReference.</param>
-        /// <returns>The catalogue the resource reference is part of.</returns>
-        public static CatalogueViewModel GetCatalogue(this ResourceReference resourceReference)
-        {
-            var catalogue = new CatalogueViewModel(0, NoCatalogueText, false);
+        /// qqqqq
+        ///// <summary>
+        ///// The get catalogue from resource reference method.
+        ///// </summary>
+        ///// <param name="resourceReference">The resourceReference.</param>
+        ///// <returns>The catalogue the resource reference is part of.</returns>
+        //public static CatalogueViewModel GetCatalogue(this ResourceReference resourceReference)
+        //{
+        //    var catalogue = new CatalogueViewModel(0, NoCatalogueText, false);
 
-            if (resourceReference.NodePath?.CatalogueNode?.CurrentNodeVersion?.CatalogueNodeVersion != null)
-            {
-                var catalogueNodeVersion = resourceReference.NodePath.CatalogueNode.CurrentNodeVersion.CatalogueNodeVersion;
-                catalogue = new CatalogueViewModel(catalogueNodeVersion);
-            }
+        //    if (resourceReference.NodePath?.CatalogueNode?.CurrentNodeVersion?.CatalogueNodeVersion != null)
+        //    {
+        //        var catalogueNodeVersion = resourceReference.NodePath.CatalogueNode.CurrentNodeVersion.CatalogueNodeVersion;
+        //        catalogue = new CatalogueViewModel(catalogueNodeVersion);
+        //    }
 
-            return catalogue;
-        }
+        //    return catalogue;
+        //}
 
         /// <summary>
         /// Orders the IEnumerable of resources according to the sequence of ids given.
@@ -91,7 +92,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
         {
             var catalogue = new CatalogueViewModel(0, NoCatalogueText, false);
 
-            if (catalogueDTOs.CatalogueNodeId != null)
+            if (catalogueDTOs != null && catalogueDTOs.CatalogueNodeId != null)
             {
                 catalogue = new CatalogueViewModel
                 {
@@ -106,9 +107,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
 
         public static List<ResourceReferenceAndCatalogueDTO> FlattenResourceReferenceAndCatalogueDTOLS(List<ResourceReferenceAndCatalogueDTO> resourceReferenceAndCatalogueDTOs)
         {
-            List<ResourceReferenceAndCatalogueDTO> resourceReferenceAndCatalogueDTOsFlattened = new List<ResourceReferenceAndCatalogueDTO>();
-            resourceReferenceAndCatalogueDTOsFlattened = resourceReferenceAndCatalogueDTOs
-                .SelectMany(rRACD => rRACD.CatalogueDTOs.Select(cD => new ResourceReferenceAndCatalogueDTO
+            List<ResourceReferenceAndCatalogueDTO> resourceReferenceAndCatalogueDTOsFlattened = resourceReferenceAndCatalogueDTOs
+                .SelectMany(rRACD => (rRACD.CatalogueDTOs ?? new List<CatalogueDTO>()).DefaultIfEmpty(), // handle null CatalogueDTOs for where we have nullified external catalogue data
+                    (rRACD, cD) => new ResourceReferenceAndCatalogueDTO
                     {
                         ResourceId = rRACD.ResourceId,
                         Title = rRACD.Title,
@@ -116,20 +117,21 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
                         ResourceTypeEnum = rRACD.ResourceTypeEnum,
                         MajorVersion = rRACD.MajorVersion,
                         Rating = rRACD.Rating,
-                        CatalogueDTOs = new List<CatalogueDTO>
+                        CatalogueDTOs = cD == null ? new List<CatalogueDTO>() : new List<CatalogueDTO>
+                        {
+                            new CatalogueDTO
                             {
-                                new CatalogueDTO
-                                {
-                                    CatalogueNodeId = cD.CatalogueNodeId,
-                                    CatalogueNodeName = cD.CatalogueNodeName,
-                                    IsRestricted = cD.IsRestricted,
-                                    OriginalResourceReferenceId = cD.OriginalResourceReferenceId,
-                                },
+                                CatalogueNodeId = cD.CatalogueNodeId,
+                                CatalogueNodeName = cD.CatalogueNodeName,
+                                IsRestricted = cD.IsRestricted,
+                                OriginalResourceReferenceId = cD.OriginalResourceReferenceId,
                             },
-                    }))
-                .ToList<ResourceReferenceAndCatalogueDTO>();
+                        },
+                    })
+                .ToList();
 
             return resourceReferenceAndCatalogueDTOsFlattened;
+
         }
     }
 }

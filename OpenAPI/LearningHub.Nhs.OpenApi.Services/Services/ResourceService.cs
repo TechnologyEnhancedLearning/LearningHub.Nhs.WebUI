@@ -70,6 +70,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     throw new HttpResponseException("No matching resource reference", HttpStatusCode.NotFound);
                 }
 
+                // qqqq this check suggests it doesnt want an empty list
                 // Check only one CatalogueDTOs for single originalResourceId
                 if (resourceReferenceAndCatalogueDTO.CatalogueDTOs.Count != 1)
                 {
@@ -191,14 +192,14 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
         private ResourceReferenceWithResourceDetailsViewModel GetResourceReferenceWithResourceDetailsViewModel(ResourceReferenceAndCatalogueDTO resourceReferenceAndCatalogueDTO, List<ResourceActivityDTO> resourceActivities)
         {
-            /*
+            /*-------------------------------
                 This model requires a flattened ResourceReferenceAndCatalogueDTO
             */
 
-            if (resourceReferenceAndCatalogueDTO.CatalogueDTOs.Count != 1)
+            if (resourceReferenceAndCatalogueDTO.CatalogueDTOs != null && resourceReferenceAndCatalogueDTO.CatalogueDTOs.Count > 1)
             {
                 throw new ArgumentException(
-                    $"Flat resourceReferenceAndCatalogueDTO with a single CatalogueDTO for one originalResourceId required. Count was {resourceReferenceAndCatalogueDTO.CatalogueDTOs.Count}.");
+                    $"Flat resourceReferenceAndCatalogueDTO with a single CatalogueDTO or null for one originalResourceId required. Count was {resourceReferenceAndCatalogueDTO.CatalogueDTOs.Count}.");
             }
 
             List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
@@ -228,14 +229,14 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
             return new ResourceReferenceWithResourceDetailsViewModel(
                 resourceReferenceAndCatalogueDTO.ResourceId,
-                resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().OriginalResourceReferenceId,
+                resourceReferenceAndCatalogueDTO.CatalogueDTOs.SingleOrDefault()?.OriginalResourceReferenceId ?? 0,// qqqq it can have no catalogue though and we dont want to populate it with zero
                 resourceReferenceAndCatalogueDTO.Title ?? ResourceHelpers.NoResourceVersionText,
                 resourceReferenceAndCatalogueDTO.Description ?? string.Empty,
-                resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().GetCatalogue(),
+                resourceReferenceAndCatalogueDTO.CatalogueDTOs.SingleOrDefault().GetCatalogue(),
                 resourceTypeNameOrEmpty,
                 resourceReferenceAndCatalogueDTO.MajorVersion,
                 resourceReferenceAndCatalogueDTO.Rating ?? 0,
-                this.learningHubService.GetResourceLaunchUrl(resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().OriginalResourceReferenceId), 
+                this.learningHubService.GetResourceLaunchUrl(resourceReferenceAndCatalogueDTO.CatalogueDTOs.SingleOrDefault()?.OriginalResourceReferenceId ?? 0), // qqqq this wont have a link if no originalResourceId which is another reason to have it as a seperate list
                 majorVersionIdActivityStatusDescription);
         }
     }

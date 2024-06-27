@@ -26,9 +26,7 @@ BEGIN
 	DECLARE @MaxRows INT = @MaxPageNUmber * @FetchRows
 	DECLARE @OffsetRows INT = (@PageNumber - 1) * @FetchRows
 
-	DECLARE @MyActivity TABLE (ResourceId [int] NOT NULL PRIMARY KEY, ResourceActivityId [int] NOT NULL);
-	DECLARE @Resources TABLE (ResourceId [int] NOT NULL PRIMARY KEY, ResourceActivityCount [int] NOT NULL);
-
+	DECLARE @MyActivity TABLE (ResourceId [int] NOT NULL PRIMARY KEY, ResourceActivityId [int] NOT NULL);  
 
 	INSERT INTO @MyActivity					
 			SELECT TOP (@MaxRows) ra.ResourceId, MAX(ra.Id) ResourceActivityId

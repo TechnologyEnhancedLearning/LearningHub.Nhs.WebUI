@@ -14,6 +14,7 @@ CREATE VIEW [hub].[RoleUserGroupView]
 AS
 
 SELECT 
+    ROW_NUMBER() OVER(ORDER BY rug.Id) AS [Sequence],
 	rug.Id AS RoleUserGroupId,
 	ug.Id AS UserGroupId,
 	ug.[Name] AS UserGroupName,

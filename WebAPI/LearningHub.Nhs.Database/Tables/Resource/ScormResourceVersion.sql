@@ -40,3 +40,5 @@ GO
 ALTER TABLE [resources].[ScormResourceVersion]  ADD CONSTRAINT [FK_ScormResourceVersion_EsrLinkType] FOREIGN KEY([EsrLinkTypeId])
 REFERENCES [resources].[EsrLinkType] ([Id])
 GO
+CREATE NONCLUSTERED INDEX [IX_Resources_ScormResourceVersion_ResourceVersionId] ON [resources].[ScormResourceVersion]([ResourceVersionId])
+GO

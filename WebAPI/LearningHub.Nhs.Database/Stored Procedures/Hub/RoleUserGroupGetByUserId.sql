@@ -18,6 +18,7 @@ AS
 BEGIN
 
 	SELECT	
+	    CAST([Sequence] AS int) AS [Key],
 		RoleUserGroupId,
 		rug.UserGroupId,
 		UserGroupName,

@@ -8,7 +8,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Resource;
 
-    // qqqq will have to review which are still in use
+    // qqqqdelete whole helper
     public static class ResourceTestHelper
     {
         private const string DefaultCatalogueName = "default catalogue name";
@@ -64,7 +64,6 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
                 ResourceActivity = (userId != null && activityStatusId != null) ? CreateResourceActivityList(userId.Value, id, activityStatusId.Value) : null,
             };
         }
-        
         public static ResourceReference CreateResourceReferenceWithDetails(
             int id = 1,
             int originalResourceReferenceId = 2,
@@ -279,7 +278,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestHelpers
             int userId,
             int resourceId,
             int activityStatusId, //out of order for prepopulated parameters
-                                   //Dictionary<int,int>? majorVersionUserActivityStatusId, //out of order for prepopulated parameters qqq but its making the db object //qqqq
+                                   //Dictionary<int,int>? majorVersionUserActivityStatusId, //out of order for prepopulated parameters qqq but its making the db object
             int resourceVersionId = 0,
             int? launchResourceActivityId = null,
             int majorVerson = 0,

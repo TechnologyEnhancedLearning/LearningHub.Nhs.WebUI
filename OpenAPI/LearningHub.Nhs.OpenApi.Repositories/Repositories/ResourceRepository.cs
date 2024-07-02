@@ -52,14 +52,16 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
             var resourceIdsParameter = new SqlParameter("@p0", resourceIdsParam ?? (object)DBNull.Value);
             var originalResourceReferenceIdsParameter = new SqlParameter("@p1", originalResourceReferenceIdsParam ?? (object)DBNull.Value);
 
-            List<ResourceReferenceAndCatalogueDTO> resourceReferenceAndCatalogueDTOs =
-                dbContext.ResourceReferenceAndCatalogueTempConstructionDTO
+            List<ResourceReferenceAndCatalogueTempConstructionDTO> resourceReferenceAndCatalogueTempConstructionDTOs =
+                await dbContext.ResourceReferenceAndCatalogueTempConstructionDTO
                 .FromSqlRaw(
                     "[resources].[GetResourceReferencesAndCatalogue] @p0, @p1",
                     resourceIdsParameter,
                     originalResourceReferenceIdsParameter)
                 .AsNoTracking()
-                .ToList<ResourceReferenceAndCatalogueTempConstructionDTO>()
+                .ToListAsync<ResourceReferenceAndCatalogueTempConstructionDTO>();
+
+            List<ResourceReferenceAndCatalogueDTO> resourceReferenceAndCatalogueDTOs = resourceReferenceAndCatalogueTempConstructionDTOs
                 .GroupBy(r => new
                 {
                     r.ResourceId,
@@ -77,16 +79,21 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                     g.Key.ResourceTypeId,
                     g.Key.MajorVersion,
                     g.Key.Rating,
-                    g.Where(c => c.CatalogueNodeId.HasValue)
-                    .Select(r => new CatalogueDTO
-                    {
-                        CatalogueNodeId = r.CatalogueNodeId.Value,
-                        CatalogueNodeName = r.CatalogueNodeName,
-                        IsRestricted = r.IsRestricted.Value,
-                        OriginalResourceReferenceId = r.OriginalResourceReferenceId.Value,
-                    })
+                    g.Select(r => r.CatalogueNodeId.HasValue ? new CatalogueDTO
+                         {
+                             CatalogueNodeId = r.CatalogueNodeId.Value,
+                             CatalogueNodeName = r.CatalogueNodeName,
+                             IsRestricted = r.IsRestricted.Value,
+                             OriginalResourceReferenceId = r.OriginalResourceReferenceId.Value,
+                         }
+                        : new CatalogueDTO
+                         {
+                             OriginalResourceReferenceId = 0, // qqqqa if we provide empty catalogue maybe this should be nullable, or we should provide the originalResourceId just 
+                             CatalogueNodeId = 0, // qqqqa maybe should be null
+                             CatalogueNodeName = "No catalogue for resource reference", // NoCatalogueText,
+                             IsRestricted = false,
+                         })
                         .ToList()))
-                 // Filter out null catalogue entries (the external ones)
                         .ToList<ResourceReferenceAndCatalogueDTO>();
 
             return resourceReferenceAndCatalogueDTOs;
@@ -119,7 +126,6 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                     resourceIdsParameter,
                     userIdsParameter)
                 .AsNoTracking()
-                .OrderByDescending(r => r.MajorVersion)
                 .ToListAsync<ResourceActivityDTO>();
 
             return resourceActivityDTOs;

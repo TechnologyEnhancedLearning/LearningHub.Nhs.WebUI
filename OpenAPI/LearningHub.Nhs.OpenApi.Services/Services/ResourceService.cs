@@ -70,8 +70,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     throw new HttpResponseException("No matching resource reference", HttpStatusCode.NotFound);
                 }
 
-                // qqqq this check suggests it doesnt want an empty list
-                // Check only one CatalogueDTOs for single originalResourceId
+                // Check only one CatalogueDTOs for single originalResourceId if its an external catalogue it would have data nullified and replaced with a default catalogue model
                 if (resourceReferenceAndCatalogueDTO.CatalogueDTOs.Count != 1)
                 {
                     throw new ArgumentException(
@@ -139,8 +138,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
             return new ResourceMetadataViewModel(
                 resourceReferenceAndCatalogueDTO.ResourceId,
-                resourceReferenceAndCatalogueDTO.Title ?? ResourceHelpers.NoResourceVersionText,
-                resourceReferenceAndCatalogueDTO.Description ?? string.Empty,
+                resourceReferenceAndCatalogueDTO.Title ?? ResourceHelpers.NoResourceVersionText, // qqqqc always joined in stored procedure so always has value
+                resourceReferenceAndCatalogueDTO.Description ?? string.Empty, // qqqqc always joined in stored procedure so always has value
                 resourceReferenceAndCatalogueDTO.CatalogueDTOs.Select(rr => new ResourceReferenceViewModel(
                                                         rr.OriginalResourceReferenceId,
                                                         rr.GetCatalogue(),
@@ -148,7 +147,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                                                         .ToList(),
                 resourceReferenceAndCatalogueDTO.GetResourceTypeNameOrEmpty(),
                 resourceReferenceAndCatalogueDTO.MajorVersion,
-                resourceReferenceAndCatalogueDTO.Rating ?? 0.0m,
+                resourceReferenceAndCatalogueDTO.Rating ?? 0.0m, // qqqqc set in stored procedure
                 majorVersionIdActivityStatusDescription);
         }
 
@@ -192,7 +191,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
         private ResourceReferenceWithResourceDetailsViewModel GetResourceReferenceWithResourceDetailsViewModel(ResourceReferenceAndCatalogueDTO resourceReferenceAndCatalogueDTO, List<ResourceActivityDTO> resourceActivities)
         {
-            /*-------------------------------
+            /*
                 This model requires a flattened ResourceReferenceAndCatalogueDTO
             */
 
@@ -229,14 +228,14 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
             return new ResourceReferenceWithResourceDetailsViewModel(
                 resourceReferenceAndCatalogueDTO.ResourceId,
-                resourceReferenceAndCatalogueDTO.CatalogueDTOs.SingleOrDefault()?.OriginalResourceReferenceId ?? 0,// qqqq it can have no catalogue though and we dont want to populate it with zero
+                resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().OriginalResourceReferenceId,
                 resourceReferenceAndCatalogueDTO.Title ?? ResourceHelpers.NoResourceVersionText,
                 resourceReferenceAndCatalogueDTO.Description ?? string.Empty,
-                resourceReferenceAndCatalogueDTO.CatalogueDTOs.SingleOrDefault().GetCatalogue(),
+                resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().GetCatalogue(),
                 resourceTypeNameOrEmpty,
                 resourceReferenceAndCatalogueDTO.MajorVersion,
                 resourceReferenceAndCatalogueDTO.Rating ?? 0,
-                this.learningHubService.GetResourceLaunchUrl(resourceReferenceAndCatalogueDTO.CatalogueDTOs.SingleOrDefault()?.OriginalResourceReferenceId ?? 0), // qqqq this wont have a link if no originalResourceId which is another reason to have it as a seperate list
+                this.learningHubService.GetResourceLaunchUrl(resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().OriginalResourceReferenceId), // qqqqa this wont have a link if no originalResourceId which is another reason to have it as a seperate list
                 majorVersionIdActivityStatusDescription);
         }
     }

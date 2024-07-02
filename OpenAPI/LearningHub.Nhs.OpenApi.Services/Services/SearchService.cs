@@ -151,7 +151,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resourceReferenceAndCatalogueDTO.ResourceId,
                 resourceReferenceAndCatalogueDTO.Title ?? ResourceHelpers.NoResourceVersionText,
                 resourceReferenceAndCatalogueDTO.Description ?? string.Empty,
-                resourceReferenceAndCatalogueDTO.CatalogueDTOs.Select(this.GetResourceReferenceViewModel).ToList(), // qqqq this extension method is probably not going to provide SingleResourceEndpointReturnsAMessageSayingNoCatalogueIfThereIsNoCatalogueNodeVersion Test woth its
+                resourceReferenceAndCatalogueDTO.CatalogueDTOs.Select(this.GetResourceReferenceViewModel).ToList(),
                 resourceTypeNameOrEmpty,
                 resourceReferenceAndCatalogueDTO.MajorVersion,
                 resourceReferenceAndCatalogueDTO.Rating ?? 0.0m,

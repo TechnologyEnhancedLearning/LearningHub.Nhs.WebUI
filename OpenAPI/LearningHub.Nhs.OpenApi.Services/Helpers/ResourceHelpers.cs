@@ -26,7 +26,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
         /// </summary>
         public const string NoCatalogueText = "No catalogue for resource reference";
 
-        /// qqqqq
+        /// qqqqdelete
         ///// <summary>
         ///// The get catalogue from resource reference method.
         ///// </summary>
@@ -104,6 +104,22 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
 
             return catalogue;
         }
+        /// <summary> // qqqqdelete
+        /// The get catalogue from resource reference method.
+        /// </summary>
+        /// <param name="CatalogueDTO">The catalogueDTOs.</param>
+        /// <returns>The catalogue the resource reference is part of.</returns>
+        //public static CatalogueDTO GetCatalogueDTONone() //qqqqdelete cant seem to call from resourceRepository
+        //{
+        //    return new CatalogueDTO
+        //    {
+        //        OriginalResourceReferenceId = 0,
+        //        CatalogueNodeId = 0,
+        //        CatalogueNodeName = NoCatalogueText,
+        //        IsRestricted = false,
+        //    };
+
+        //}
 
         public static List<ResourceReferenceAndCatalogueDTO> FlattenResourceReferenceAndCatalogueDTOLS(List<ResourceReferenceAndCatalogueDTO> resourceReferenceAndCatalogueDTOs)
         {

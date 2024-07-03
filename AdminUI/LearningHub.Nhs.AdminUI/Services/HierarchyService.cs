@@ -193,6 +193,16 @@
         }
 
         /// <summary>
+        /// Create a reference to a Node.
+        /// </summary>
+        /// <param name="referenceExternalNodeViewModel">The referenceExternalNodeViewModel<see cref="ReferenceExternalNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<ApiResponse> ReferenceExternalNodeAsync(ReferenceExternalNodeViewModel referenceExternalNodeViewModel)
+        {
+            return await this.facade.PostAsync<ApiResponse, ReferenceExternalNodeViewModel>("Hierarchy/referenceExternalNode", referenceExternalNodeViewModel);
+        }
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
@@ -230,6 +240,16 @@
         public async Task<ApiResponse> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel)
         {
             return await this.facade.PostAsync<ApiResponse, HierarchyEditMoveResourceViewModel>("Hierarchy/HierarchyEditReferenceResource", moveResourceViewModel);
+        }
+
+        /// <summary>
+        /// References an external resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="referenceExternalResourceViewModel">The referenceExternalResourceViewModel<see cref="ReferenceExternalResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<ApiResponse> HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel)
+        {
+            return await this.facade.PostAsync<ApiResponse, ReferenceExternalResourceViewModel>("Hierarchy/HierarchyEditReferenceExternalResource", referenceExternalResourceViewModel);
         }
 
         /// <summary>

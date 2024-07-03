@@ -38,7 +38,6 @@ export class State {
     readOnly = true;
     availableReferenceCatalogues: CatalogueBasicModel[] = null;
     rootExtReferencedNode: NodeContentAdminModel = new NodeContentAdminModel();
-    //selectedLinkedCatalogue: CatalogueBasicModel = null;
 }
 
 const state = new State();
@@ -108,6 +107,7 @@ async function refreshNodeContents(node: NodeContentAdminModel, refreshParentPat
             response.forEach((child) => {
                 var existing = node.children.filter(r => (r.nodeId != null && r.nodeId == child.nodeId) || (r.resourceId != null && r.resourceId == child.resourceId))[0];
                 if (existing === undefined) {
+                    child.isResource = child.nodeTypeId === NodeType.Resource;
                     node.children.splice(0, 0, child);
                 }
                 else {
@@ -259,8 +259,8 @@ const mutations = {
     cancelReferenceNode(state: State, payload: { node: NodeContentAdminModel }) {
         state.editMode = EditModeEnum.Structure;
     },
-    setReferencingExternalContent(state: State, payload: { node: NodeContentAdminModel }) {
-        state.editingTreeNode = payload.node;
+    setReferencingExternalContent(state: State, payload: { parentNode: NodeContentAdminModel }) {
+        state.editingTreeNode = payload.parentNode;
         state.editMode = EditModeEnum.ReferenceExternalContent;
     },
     canceReferencingExternalContent(state: State, payload: { node: NodeContentAdminModel }) {
@@ -554,43 +554,57 @@ const actions = <ActionTree<State, any>>{
             state.lastErrorMessage = "Error populating referencable catalogues.";
         });
     },
-    async referenceExternalItem(context: ActionContext<State, State>, payload: { selectedNode: NodeContentAdminModel }) {
-        // TODO: Implement this.
+    async referenceExternalItem(context: ActionContext<State, State>, payload: { selectedItem: NodeContentAdminModel }) {
         if (state.rootExtReferencedNode.nodePathId === state.rootNode.nodePathId) { // same as editing catalogue
-            if (payload.selectedNode.nodeTypeId === NodeType.Folder) {
+            if (payload.selectedItem.nodeTypeId === NodeType.Folder) {
                 // folder
-                alert("Not implemented");
-
-            //    state.inError = false;
-            //    contentStructureData.referenceNode(payload.selectedNode.hierarchyEditDetailId, state.editingTreeNode.hierarchyEditDetailId).then(async response => {
-            //        context.commit("setEditMode", EditModeEnum.Structure);
-            //        await refreshNodeContents(payload.selectedNode, true).then(async x => {
-            //            state.editingTreeNode.parent.childrenLoaded = false; // force reload of current now to show references
-            //            await refreshNodeContents(state.editingTreeNode.parent, true).then(y => {
-            //            });
-            //        });
-            //    }).catch(e => {
-            //        state.inError = true;
-            //        state.lastErrorMessage = `Error referencing Node ${state.editingTreeNode.name}`;
-            //    });
+                state.inError = false;
+                contentStructureData.referenceNode(payload.selectedItem.hierarchyEditDetailId, state.editingTreeNode.hierarchyEditDetailId).then(async response => {
+                    context.commit("setEditMode", EditModeEnum.Structure);
+                    state.editingTreeNode.childrenLoaded = false; // force reload of current now to show references
+                    await refreshNodeContents(state.editingTreeNode, true).then(y => {
+                    });
+                }).catch(e => {
+                    state.inError = true;
+                    state.lastErrorMessage = `Error referencing Node ${state.editingTreeNode.name}`;
+                });
             } else {
                 // resource
-                alert("Not implemented");
+                contentStructureData.hierarchyEditReferenceResource(payload.selectedItem.hierarchyEditDetailId, state.editingTreeNode.hierarchyEditDetailId).then(async response => {
+                    await refreshNodeContents(state.editingTreeNode, true).then(async x => {
+                    });
+                    context.commit("setEditMode", EditModeEnum.Structure);
+                }).catch(e => {
+                    state.inError = true;
+                    state.lastErrorMessage = "Error referencing resource.";
+                });
             }
         }
         else {
-            alert("Not implemented");
+            if (payload.selectedItem.nodeTypeId === NodeType.Folder || payload.selectedItem.nodeTypeId === NodeType.Catalogue) {
+                // folder or catalogue
+                state.inError = false;
+                contentStructureData.referenceExternalNode(payload.selectedItem.nodePathId, state.editingTreeNode.hierarchyEditDetailId).then(async response => {
+                    context.commit("setEditMode", EditModeEnum.Structure);
+                    state.editingTreeNode.childrenLoaded = false; // force reload of current now to show references
+                    await refreshNodeContents(state.editingTreeNode, true).then(y => {
+                    });
+                }).catch(e => {
+                    state.inError = true;
+                    state.lastErrorMessage = `Error referencing External Node ${state.editingTreeNode.name}`;
+                });
+            } else {
+                // resource
+                contentStructureData.hierarchyEditReferenceExternalResource(payload.selectedItem.resourceId, state.editingTreeNode.hierarchyEditDetailId).then(async response => {
+                    await refreshNodeContents(state.editingTreeNode, true).then(async x => {
+                    });
+                    context.commit("setEditMode", EditModeEnum.Structure);
+                }).catch(e => {
+                    state.inError = true;
+                    state.lastErrorMessage = "Error referencing resource.";
+                });
+            }
         }
-        //contentStructureData.hierarchyEditMoveResource(state.movingResource.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(async response => {
-        //    await refreshNodeContents(state.movingResource.parent, true).then(async x => {
-        //        await refreshNodeContents(payload.destinationNode, true);
-        //    });
-
-        //    context.commit("setEditMode", EditModeEnum.Structure);
-        //}).catch(e => {
-        //    state.inError = true;
-        //    state.lastErrorMessage = "Error moving resource.";
-        //});
     },
 };
 

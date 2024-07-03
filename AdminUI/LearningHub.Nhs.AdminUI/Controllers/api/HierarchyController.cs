@@ -313,6 +313,18 @@
         }
 
         /// <summary>
+        /// The ReferenceExternalNode.
+        /// </summary>
+        /// <param name="referenceExternalNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("ReferenceExternalNode")]
+        public async Task<IActionResult> ReferenceExternalNode(ReferenceExternalNodeViewModel referenceExternalNodeViewModel)
+        {
+            var apiResponse = await this.hierarchyService.ReferenceExternalNodeAsync(referenceExternalNodeViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
@@ -359,6 +371,18 @@
         public async Task<IActionResult> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel)
         {
             var apiResponse = await this.hierarchyService.HierarchyEditReferenceResource(moveResourceViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// References an external resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="referenceExternalResourceViewModel">The referenceExternalResourceViewModel<see cref="ReferenceExternalResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("HierarchyEditReferenceExternalResource")]
+        public async Task<IActionResult> HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel)
+        {
+            var apiResponse = await this.hierarchyService.HierarchyEditReferenceExternalResource(referenceExternalResourceViewModel);
             return this.Ok(apiResponse.ValidationResult);
         }
 

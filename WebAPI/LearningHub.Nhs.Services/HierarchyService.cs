@@ -590,6 +590,19 @@
         }
 
         /// <summary>
+        /// Creates a reference to a node.
+        /// </summary>
+        /// <param name="referenceExternalNodeViewModel">The referenceExternalNodeViewModel <see cref="ReferenceExternalNodeViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        public async Task<LearningHubValidationResult> ReferenceExternalNode(ReferenceExternalNodeViewModel referenceExternalNodeViewModel, int userId)
+        {
+            await this.hierarchyEditRepository.ReferenceExternalNode(referenceExternalNodeViewModel, userId);
+            var retVal = new LearningHubValidationResult(true);
+            return retVal;
+        }
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The id.</param>
@@ -637,6 +650,14 @@
         public async Task<LearningHubValidationResult> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId)
         {
             await this.hierarchyEditRepository.HierarchyEditReferenceResource(moveResourceViewModel, userId);
+            var retVal = new LearningHubValidationResult(true);
+            return retVal;
+        }
+
+        /// <inheritdoc/>
+        public async Task<LearningHubValidationResult> HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel, int userId)
+        {
+            await this.hierarchyEditRepository.HierarchyEditReferenceExternalResource(referenceExternalResourceViewModel, userId);
             var retVal = new LearningHubValidationResult(true);
             return retVal;
         }

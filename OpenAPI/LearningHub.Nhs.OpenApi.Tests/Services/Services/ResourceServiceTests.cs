@@ -159,7 +159,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             x.Catalogue.Name.Should().Be("No catalogue for resource reference");
         }
         /*
-                qqqqd based on the data dont think this should occur
+                qqqqc based on the data dont think this should occur
                 nodepathid in rref is nullable but never is in the data
                 currentNodeVersion is nullable in node has only 40 null entries that arnt deleted
                 catalogueNodeVersion nodeversionId is nullable has no null entries
@@ -334,7 +334,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
 
             // Then
             x.ResourceReferences.Count.Should().Be(5); //One for each originalResourceId because it returns flattened data and they each have 
-            x.UnmatchedResourceReferenceIds.Count().Should().Be(0); // I think this should be 0 not 1 for originalResourceId 104 because we do match it, it just has no catalogue so its resource is found and so i think we need a list of originalResourceIds in the resourceReferenceAndCatalogueDTO qqqqa
+            x.UnmatchedResourceReferenceIds.Count().Should().Be(0); // I think this should be 0 not 1 for originalResourceId 104 because we do match it, it just has no catalogue so its resource is found qqqqa
             x.ResourceReferences[0].Rating.Should().Be(3);
             x.ResourceReferences[4].Catalogue.Name.Should().Be("title4NullifiedExternalCatalogue"); 
             x.ResourceReferences[1].Title.Should().Be("title2Article");
@@ -356,7 +356,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             // Then
             x.ResourceReferences.Count.Should().Be(1);
             x.ResourceReferences[0].Title.Should().Be("title1AudioNoActivitySummaryData");
-            x.UnmatchedResourceReferenceIds.Count.Should().Be(1); // qqqqc again fails because originalResourceId nullified
+            x.UnmatchedResourceReferenceIds.Count.Should().Be(1); // qqqqa again fails because originalResourceId nullified
         }
 
         [Fact]

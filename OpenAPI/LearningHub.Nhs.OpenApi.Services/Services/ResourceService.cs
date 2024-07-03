@@ -235,7 +235,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resourceTypeNameOrEmpty,
                 resourceReferenceAndCatalogueDTO.MajorVersion,
                 resourceReferenceAndCatalogueDTO.Rating ?? 0,
-                this.learningHubService.GetResourceLaunchUrl(resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().OriginalResourceReferenceId), // qqqqa this wont have a link if no originalResourceId which is another reason to have it as a seperate list
+                this.learningHubService.GetResourceLaunchUrl(resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().OriginalResourceReferenceId), // qqqqa this wont have a link if no originalResourceId
                 majorVersionIdActivityStatusDescription);
         }
     }

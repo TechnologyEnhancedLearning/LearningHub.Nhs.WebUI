@@ -137,7 +137,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             //var resources = Builder<ResourceReferenceAndCatalogueDTO>.CreateListOfSize(2) // qqqqdelete instead of builder maybe we to use TestMockData
             //    .TheFirst(1)
             //    .With(r => r.ResourceId = 1)
-            //    .With(r => r.CurrentResourceVersion = currentResourceVersions[0]) // qqqqe doesnt exist are we missing something
+            //    .With(r => r.CurrentResourceVersion = currentResourceVersions[0]) // qqqqdelete doesnt exist are we missing something
             //    .With(
             //        r => r.ResourceReference = new[]
             //        {
@@ -176,7 +176,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         }
 
         [Fact]
-        public async Task SearchReturnsResourcesInOrderMatchingFindwise() // qqqqf 
+        public async Task SearchReturnsResourcesInOrderMatchingFindwise()
         {
             // Given
             this.findwiseClient.Setup(fc => fc.Search(It.IsAny<ResourceSearchRequest>())).ReturnsAsync(
@@ -235,7 +235,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             }.ToList();
             outputResource.Should().BeEquivalentTo(
                 new ResourceMetadataViewModel(
-                    4, // qqqqc maybe should be null
+                    4,
                     "title4NullifiedExternalCatalogue",   // qqqqc no because its never null -> ResourceHelpers.NoResourceVersionText,
                     "description4NullifiedExternalCatalogue",                                      // qqqqc no because its never null -> string.Empty,
                     expectedResourceReferences,

@@ -93,8 +93,27 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                              CatalogueNodeName = "No catalogue for resource reference", // NoCatalogueText,
                              IsRestricted = false,
                          })
+                    // qqqqa .Distinct() we could get multiple nulled if multiple originalResourceId entries that are external
                         .ToList()))
                         .ToList<ResourceReferenceAndCatalogueDTO>();
+
+
+            // qqqqc could do this instead but dont think this is right
+            // Check for empty catalogues and add the default one if necessary
+            //foreach (var resourceReference in resourceReferenceAndCatalogueDTOs)
+            //{
+            //    if (!resourceReference.Catalogues.Any())
+            //    {
+            //        resourceReference.Catalogues.Add(new CatalogueDTO
+            //        {
+            //            OriginalResourceReferenceId = 0, // or make this nullable if preferred
+            //            CatalogueNodeId = 0, // or make this nullable if preferred
+            //            CatalogueNodeName = "No catalogue for resource reference", // NoCatalogueText
+            //            IsRestricted = false,
+            //        });
+            //    }
+            //}
+
 
             return resourceReferenceAndCatalogueDTOs;
         }

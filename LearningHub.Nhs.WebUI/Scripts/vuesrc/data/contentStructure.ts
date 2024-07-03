@@ -7,6 +7,8 @@ import { HierarchyEditModel } from '../models/content-structure/hierarchyEditMod
 import { LearningHubValidationResultModel } from '../models/learningHubValidationResultModel';
 import { FolderNodeModel } from '../models/content-structure/folderNodeModel';
 import { NodePathModel } from '../models/nodePathModel';
+import { NodePathDisplayVersionModel } from '../models/content-structure/nodePathDisplayVersionModel';
+import { ResourceReferenceDisplayVersionModel } from '../models/content-structure/resourceReferenceDisplayVersionModel';
 
 const getCatalogue = async function (id: number): Promise<CatalogueBasicModel> {
     return await axios.get<CatalogueBasicModel>('/api/hierarchy/GetCatalogue/' + id)
@@ -319,7 +321,80 @@ const getCurrentUserId = async function (): Promise<number> {
             throw e;
         });
 };
+const updateNodePathDisplayVersion = async function (requestModel: NodePathDisplayVersionModel): Promise<LearningHubValidationResultModel> {
 
+    const url = `/api/hierarchy/UpdateNodePathDisplayVersion`;
+
+    return await axios.post<LearningHubValidationResultModel>(url, requestModel)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('updateNodePathDisplayVersion:' + e);
+            throw e;
+        });
+};
+const updateResourceReferenceDisplayVersion = async function (requestModel: ResourceReferenceDisplayVersionModel): Promise<LearningHubValidationResultModel> {
+
+    const url = `/api/hierarchy/UpdateResourceReferenceDisplayVersion`;
+
+    return await axios.post<LearningHubValidationResultModel>(url, requestModel)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('UpdateResourceReferenceDisplayVersion:' + e);
+            throw e;
+        });
+};
+const getReferencableCatalogues = async function (nodePathId: number): Promise<CatalogueBasicModel[]> {
+    return await axios.get<CatalogueBasicModel[]>('/api/hierarchy/GetReferencableCatalogues/' + nodePathId + `?timestamp=${new Date().getTime()}`)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('GetReferencableCatalogues:' + e);
+            throw e;
+        });
+};
+const deleteFolderReference = async function (hierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+
+    const url = `/api/hierarchy/DeleteFolderReference/${hierarchyEditDetailId}`;
+
+    return await axios.put<LearningHubValidationResultModel>(url)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('deleteFolderReference:' + e);
+            throw e;
+        });
+};
+const referenceNode = async function (hierarchyEditDetailId: number, moveToHierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+
+    const url = `/api/hierarchy/ReferenceNode`;
+
+    return await axios.post<LearningHubValidationResultModel>(url, { hierarchyEditDetailId: hierarchyEditDetailId, moveToHierarchyEditDetailId: moveToHierarchyEditDetailId })
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('referenceNode:' + e);
+            throw e;
+        });
+};
+const hierarchyEditReferenceResource = async function (hierarchyEditDetailId: number, moveToHierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+    const url = `/api/hierarchy/HierarchyEditReferenceResource`;
+
+    return await axios.post<LearningHubValidationResultModel>(url, { hierarchyEditDetailId: hierarchyEditDetailId, moveToHierarchyEditDetailId: moveToHierarchyEditDetailId })
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('hierarchyEditReferenceResource:' + e);
+            throw e;
+        });
+};
 export const contentStructureData = {
     getCatalogue,
     getNodeContentsForCatalogueBrowse,
@@ -343,5 +418,11 @@ export const contentStructureData = {
     moveResourceUp,
     moveResourceDown,
     moveResource,
-    getCurrentUserId
+    getCurrentUserId,
+    referenceNode,
+    hierarchyEditReferenceResource,
+    deleteFolderReference,
+    updateNodePathDisplayVersion,
+    updateResourceReferenceDisplayVersion,
+    getReferencableCatalogues
 }

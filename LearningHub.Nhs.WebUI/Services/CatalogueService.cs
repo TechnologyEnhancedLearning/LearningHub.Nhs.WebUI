@@ -10,6 +10,7 @@
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.Models.Validation;
+    using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
@@ -19,6 +20,10 @@
     /// </summary>
     public class CatalogueService : BaseService<CatalogueService>, ICatalogueService
     {
+        /// <summary>
+        /// Defines the _facade.
+        /// </summary>
+        private readonly ILearningHubApiFacade facade;
         private readonly ICacheService cacheService;
 
         /// <summary>
@@ -27,10 +32,12 @@
         /// <param name="learningHubHttpClient">The learning hub http client.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="cacheService">The cacheService.</param>
-        public CatalogueService(ILearningHubHttpClient learningHubHttpClient, ILogger<CatalogueService> logger, ICacheService cacheService)
+        /// <param name="learningHubApiFacade">The learningHubApiFacade<see cref="ILearningHubApiFacade"/>.</param>
+        public CatalogueService(ILearningHubHttpClient learningHubHttpClient, ILogger<CatalogueService> logger, ICacheService cacheService, ILearningHubApiFacade learningHubApiFacade)
         : base(learningHubHttpClient, logger)
         {
             this.cacheService = cacheService;
+            this.facade = learningHubApiFacade;
         }
 
         /// <summary>
@@ -601,6 +608,12 @@
             }
 
             return apiResponse.ValidationResult;
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<CatalogueBasicViewModel>> GetReferencableCataloguesAsync(int nodePathId)
+        {
+            return await this.facade.GetAsync<List<CatalogueBasicViewModel>>($"Catalogue/GetReferencableCatalogues/{nodePathId}");
         }
     }
 }

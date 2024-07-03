@@ -271,5 +271,25 @@
         {
             return await this.facade.PutAsync($"Hierarchy/MoveResource/{sourceNodeId}/{destinationNodeId}/{resourceId}");
         }
+
+        /// <summary>
+        /// Create a reference to a Node.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<ApiResponse> ReferenceNodeAsync(MoveNodeViewModel moveNodeViewModel)
+        {
+            return await this.facade.PostAsync<ApiResponse, MoveNodeViewModel>("Hierarchy/referenceNode", moveNodeViewModel);
+        }
+
+        /// <summary>
+        /// References a resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The moveResourceViewModel<see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<ApiResponse> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel)
+        {
+            return await this.facade.PostAsync<ApiResponse, HierarchyEditMoveResourceViewModel>("Hierarchy/HierarchyEditReferenceResource", moveResourceViewModel);
+        }
     }
 }

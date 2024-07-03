@@ -523,6 +523,8 @@
     <Build Include="Stored Procedures\Hierarchy\HierarchyEditReferenceResource.sql" />
     <Build Include="Tables\Resource\ResourceReferenceDisplayVersion.sql" />
     <Build Include="Stored Procedures\Hierarchy\HierarchyEditResourceReferenceDisplayVersionUpdate.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditReferenceExternalNode.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditReferenceExternalResource.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

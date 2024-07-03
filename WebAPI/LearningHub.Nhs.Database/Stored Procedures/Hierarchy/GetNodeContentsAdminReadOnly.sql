@@ -14,6 +14,7 @@
 --					Also return Child NodePathId to allow the client to navigate to the child node.
 -- 03-06-2024  DB	Return the NodePathDisplayVersion properties (where they exist).
 -- 13-06-2024  DB	Return the ResourceReferenceDisplayVersion properties (where they exist).
+-- 02-07-2024  DB   Allow catalogue node types to be nested.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsAdminReadOnly]
 (
@@ -51,11 +52,11 @@ BEGIN
 		-- Published Folder Node/s
 		SELECT 
 			cnp.Id AS NodePathId,
-			COALESCE(p_npdv.DisplayName, fnv.[Name]) AS [Name],
-			fnv.[Description],
+			COALESCE(p_npdv.DisplayName, fnv.[Name], cnv.[Name]) AS [Name],
+			ISNULL(fnv.[Description], cnv.[Description]) AS [Description],
 			cn.NodeTypeId,
 			nl.ChildNodeId AS NodeId,
-			fnv.NodeVersionId,
+			ISNULL(fnv.NodeVersionId, cnv.NodeVersionId) AS NodeVersionId,
 			ISNULL(p_npdv.Id, 0) AS NodePathDisplayVersionId,
 			NULL AS ResourceId,
 			NULL AS ResourceVersionId,
@@ -80,8 +81,10 @@ BEGIN
 			hierarchy.NodePath cnp ON cn.Id = cnp.NodeId AND pnp.NodePath + '\' + CONVERT(VARCHAR(10), cn.Id) = cnp.NodePath
 		INNER JOIN 
 			hierarchy.NodeVersion nv ON nv.Id = cn.CurrentNodeVersionId
-		INNER JOIN
-			hierarchy.FolderNodeVersion fnv ON fnv.NodeVersionId = nv.Id
+		LEFT JOIN
+			hierarchy.CatalogueNodeVersion cnv ON nv.Id = cnv.NodeVersionId AND cnv.Deleted = 0
+		LEFT JOIN
+			hierarchy.FolderNodeVersion fnv ON nv.Id = fnv.NodeVersionId AND fnv.Deleted = 0
 		LEFT JOIN
 			(SELECT DISTINCT NodeId FROM hierarchy.NodeResource WHERE Deleted = 0 AND VersionStatusId = 2) nr ON cn.Id = nr.NodeId
 		LEFT JOIN
@@ -94,7 +97,6 @@ BEGIN
 			AND nl.Deleted = 0
             and cnp.Deleted = 0
 			AND cn.Deleted = 0
-			AND fnv.Deleted = 0
 
 		UNION
 
@@ -144,7 +146,7 @@ BEGIN
 			AND r.Deleted = 0
 			AND rv.Deleted = 0
 	) AS t1
-	ORDER BY NodeTypeId DESC, DisplayOrder ASC
+	ORDER BY CASE WHEN NodeTypeId = 0 THEN 1 ELSE 0 END ASC, DisplayOrder ASC
 
 END
 GO

@@ -226,7 +226,6 @@ BEGIN
 		LEFT OUTER JOIN resources.ResourceReference rr ON hed.ResourceId = rr.ResourceId AND hed.ParentNodePathId = rr.NodePathId AND rr.Deleted = 0
 		WHERE hed.HierarchyEditID = @HierarchyEditID
 			AND HierarchyEditDetailTypeId = 5 -- Node Resource
-			--AND hed.ResourceReferenceId is NULL
 			AND rr.Id IS NULL
 
 
@@ -240,7 +239,6 @@ BEGIN
 		INNER JOIN resources.ResourceReference rr ON hed.ResourceId = rr.ResourceId AND hed.ParentNodePathId = rr.NodePathId AND rr.Deleted = 0
 		WHERE	hed.HierarchyEditID = @HierarchyEditID
 			AND hed.ResourceReferenceId != rr.Id
-			--AND hed.ResourceReferenceId IS NULL
 
 
 		-- Create new ResourceReferenceDisplayVersion records where the ResourceReferenceId has changed. i.e. the ResourceReferenceId against the ResourceReferenceDisplayVersion record is different

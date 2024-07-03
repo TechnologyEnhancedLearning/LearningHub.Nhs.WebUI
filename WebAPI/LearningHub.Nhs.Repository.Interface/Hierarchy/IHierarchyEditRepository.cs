@@ -113,6 +113,14 @@
         Task ReferenceNode(MoveNodeViewModel moveNodeViewModel, int userId);
 
         /// <summary>
+        /// References an external node.
+        /// </summary>
+        /// <param name="referenceExternalNodeViewModel">The referenceExternalNodeViewModel <see cref="ReferenceExternalNodeViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task ReferenceExternalNode(ReferenceExternalNodeViewModel referenceExternalNodeViewModel, int userId);
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The id.</param>
@@ -143,6 +151,14 @@
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId);
+
+        /// <summary>
+        /// References a resource in a HierarchyEdit.
+        /// </summary>
+        /// <param name="referenceExternalResourceViewModel">The view model <see cref="ReferenceExternalResourceViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel, int userId);
 
         /// <summary>
         /// Moves a resource up.

@@ -11,6 +11,7 @@ export class NodeContentAdminModel {
     nodePathDisplayVersionId: number;
     hasResourcesInd: boolean;
     hasResourcesInBranchInd: boolean;
+    isResource: boolean;
     resourceId: number;
     resourceVersionId: number;
     resourceReferenceId: number;

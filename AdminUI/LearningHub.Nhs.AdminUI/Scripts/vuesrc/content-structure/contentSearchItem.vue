@@ -116,7 +116,7 @@
                 return this.item.nodeTypeId > 0;
             },
             orderedChildren: function (): NodeContentAdminModel[] {
-                return _.orderBy(this.childNodeList, ['nodeTypeId', 'displayOrder'], ['desc', 'asc'])
+                return _.orderBy(this.childNodeList, ['isResource', 'displayOrder'], ['asc', 'asc'])
             },
             childrenLoaded: function (): boolean {
                 return this.item.childrenLoaded;
@@ -201,11 +201,10 @@
             },
             selectItem: function () {
                 //alert("Item selected.");
-                this.$store.dispatch('contentStructureState/referenceExternalItem', { selectedNode: this.item });
+                this.$store.dispatch('contentStructureState/referenceExternalItem', { selectedItem: this.item });
             },
             async loadNodeContents() {
                 this.isError = false;
-                //await contentStructureData.getNodeContentsAdmin(this.item.nodePathId, this.readOnly && !this.item.inEdit).then(response => {
                 await contentStructureData.getNodeContentsAdmin(this.item.nodePathId, !this.isEditingCatalogue).then(response => {
 
                     this.item.children = response;
@@ -215,6 +214,7 @@
                         child.showInTreeView = true;
                         child.depth = child.parent.depth + 1;
                         child.path = child.depth === 0 ? child.name : `${child.parent.path} > ${child.name}`;
+                        child.isResource = child.nodeTypeId === NodeType.Resource;
                     });
                 }).catch(e => {
                     console.log(e);

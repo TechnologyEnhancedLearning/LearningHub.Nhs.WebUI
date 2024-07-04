@@ -187,5 +187,19 @@
         /// <param name="resourceId">The resource id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<ApiResponse> MoveResourceAsync(int sourceNodeId, int destinationNodeId, int resourceId);
+
+        /// <summary>
+        /// Create a reference to a node.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> ReferenceNodeAsync(MoveNodeViewModel moveNodeViewModel);
+
+        /// <summary>
+        /// References a resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The moveResourceViewModel<see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel);
     }
 }

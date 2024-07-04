@@ -354,5 +354,41 @@
             var apiResponse = await this.hierarchyService.MoveResourceAsync(sourceNodeId, destinationNodeId, resourceId);
             return this.Ok(apiResponse.ValidationResult);
         }
+
+        /// <summary>
+        /// The GetCatalogue.
+        /// </summary>
+        /// <param name="nodePathId">The nodePathId of the catalogue being edited<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpGet("GetReferencableCatalogues/{nodePathId}")]
+        public async Task<IActionResult> GetRelatedCatalogues(int nodePathId)
+        {
+            var catalogue = await this.catalogueService.GetReferencableCataloguesAsync(nodePathId);
+            return this.Ok(catalogue);
+        }
+
+        /// <summary>
+        /// The ReferenceNode.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("ReferenceNode")]
+        public async Task<IActionResult> ReferenceNode(MoveNodeViewModel moveNodeViewModel)
+        {
+            var apiResponse = await this.hierarchyService.ReferenceNodeAsync(moveNodeViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// References a resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The moveResourceViewModel<see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("HierarchyEditReferenceResource")]
+        public async Task<IActionResult> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel)
+        {
+            var apiResponse = await this.hierarchyService.HierarchyEditReferenceResource(moveResourceViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
     }
 }

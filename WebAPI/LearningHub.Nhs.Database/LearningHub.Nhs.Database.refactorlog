@@ -133,4 +133,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="TextBackgroundColour" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="7aa1878a-1177-4391-a324-315d74fe3ad5" ChangeDateTime="07/03/2024 15:11:59">
+    <Property Name="ElementName" Value="[resources].[ResourceVersion].[OwnerCatalogueId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[resources].[ResourceVersion]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PrimaryCatalogueId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="70f4b170-33c6-43a4-bf02-54dfc53b428c" ChangeDateTime="07/03/2024 15:30:36">
+    <Property Name="ElementName" Value="[hierarchy].[FK_NodeVersion_ToTable]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[hierarchy].[NodeVersion]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_NodeVersion_PrimaryCatalogueNode]" />
+  </Operation>
 </Operations>

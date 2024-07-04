@@ -42,9 +42,6 @@ export default Vue.extend({
         catalogues: function (newVal, oldVal) {
             this.selectedCatalogue = this.catalogues.find(c => c.rootNodePathId === this.editingCatalogueNodePathId);
         }
-    //    selectedCatalogue: function (newVal, oldVal) {
-    //        alert('selectedCatalogue: ' + newVal.name);
-    //    }
     },
     data: function () {
         return {

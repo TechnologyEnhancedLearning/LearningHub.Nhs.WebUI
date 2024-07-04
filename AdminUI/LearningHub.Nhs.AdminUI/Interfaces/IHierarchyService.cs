@@ -126,6 +126,13 @@
         Task<ApiResponse> ReferenceNodeAsync(MoveNodeViewModel moveNodeViewModel);
 
         /// <summary>
+        /// Create a reference to an external node.
+        /// </summary>
+        /// <param name="referenceExternalNodeViewModel">The referenceExternalNodeViewModel<see cref="ReferenceExternalNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> ReferenceExternalNodeAsync(ReferenceExternalNodeViewModel referenceExternalNodeViewModel);
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
@@ -152,6 +159,13 @@
         /// <param name="moveResourceViewModel">The moveResourceViewModel<see cref="HierarchyEditMoveResourceViewModel"/>.</param>
         /// <returns>IActionResult.</returns>
         Task<ApiResponse> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel);
+
+        /// <summary>
+        /// References an external resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="referenceExternalResourceViewModel">The referenceExternalResourceViewModel<see cref="ReferenceExternalResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel);
 
         /// <summary>
         /// The MoveResourceUp.

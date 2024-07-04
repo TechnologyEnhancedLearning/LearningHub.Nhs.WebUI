@@ -1,15 +1,15 @@
 ﻿-------------------------------------------------------------------------------
 -- Author       Dave Brown
--- Created      04-06-2024
--- Purpose      References Resource within a Hierarchy Edit.
+-- Created      02-07-2024
+-- Purpose      References and external resource within a Hierarchy Edit.
 --
 -- Modification History
 --
--- 04-06-2024  DB	Initial Revision.
+-- 02-07-2024  DB	Initial Revision.
 -------------------------------------------------------------------------------
-CREATE PROCEDURE [hierarchy].[HierarchyEditReferenceResource]
+CREATE PROCEDURE [hierarchy].[HierarchyEditReferenceExternalResource]
 (
-	@HierarchyEditDetailId int,
+	@ResourceId int,
 	@MoveToHierarchyEditDetailId int,
 	@UserId int,
 	@UserTimezoneOffset int = NULL
@@ -26,8 +26,9 @@ BEGIN
 		DECLARE @AmendDate datetimeoffset(7) = ISNULL(TODATETIMEOFFSET(DATEADD(mi, @UserTimezoneOffset, GETUTCDATE()), @UserTimezoneOffset), SYSDATETIMEOFFSET())
 
 		DECLARE @HierarchyEditId int
-		DECLARE @ResourceId int
-		SELECT @HierarchyEditId = HierarchyEditId, @ResourceId = ResourceId FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @HierarchyEditDetailId
+		SELECT	@HierarchyEditId = HierarchyEditId
+		FROM	[hierarchy].[HierarchyEditDetail]
+		WHERE	Id = @MoveToHierarchyEditDetailId
 
 		-- Increment display order of resources in destination.
 		UPDATE  
@@ -106,8 +107,8 @@ BEGIN
 			@NewParentNodeId AS ParentNodeId,
 			@NewParentNodePathId AS ParentNodePathId,
 			NULL AS NodeLinkId,
-			hed.ResourceId AS ResourceId,
-			hed.ResourceVersionId AS ResourceVersionId,
+			r.Id AS ResourceId,
+			rv.Id AS ResourceVersionId,
 			NULL AS ResourceReferenceId,
 			@nodeResourceId AS NodeResourceId,
 			1 AS DisplayOrder,
@@ -119,10 +120,13 @@ BEGIN
 			@UserId AS AmendUserId,
 			@AmendDate AS AmendDate
 		FROM
-			[hierarchy].[HierarchyEditDetail] hed
+			[resources].[Resource] r
+		INNER JOIN
+			[resources].ResourceVersion rv ON rv.Id = r.CurrentResourceVersionId
 		WHERE
-			hed.Id = @HierarchyEditDetailId
-			AND hed.Deleted = 0
+			r.Id = @ResourceId
+			AND rv.VersionStatusId = 2 -- Published
+			AND r.Deleted = 0
 
 
 		------------------------------------------------------------ 

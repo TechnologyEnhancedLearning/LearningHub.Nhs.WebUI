@@ -199,6 +199,7 @@
     <None Include="Scripts\Pre-Deploy\Scripts\TD-807_AlterTable_HierarchyEditNodeResourceLookup.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\TD-887_PreLoginLandingPageChanges.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\TD-2902 Add resource types to Content Server.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\Content_Referencing_DataSetup.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="LearningHub.Nhs.Database.refactorlog" />
@@ -523,6 +524,8 @@
     <Build Include="Stored Procedures\Hierarchy\HierarchyEditReferenceResource.sql" />
     <Build Include="Tables\Resource\ResourceReferenceDisplayVersion.sql" />
     <Build Include="Stored Procedures\Hierarchy\HierarchyEditResourceReferenceDisplayVersionUpdate.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditReferenceExternalNode.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyEditReferenceExternalResource.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

@@ -14,6 +14,7 @@
 }
 
 export enum NodeType {
+    Resource = 0,
     Catalogue = 1,
     Course = 2,
     Folder = 3, 

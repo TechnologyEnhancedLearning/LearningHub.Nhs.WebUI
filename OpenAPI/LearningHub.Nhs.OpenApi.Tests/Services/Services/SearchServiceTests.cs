@@ -107,7 +107,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                      .All()
                     .With(x => x.CatalogueDTOs = new List<CatalogueDTO>())
                     .Build();
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(It.IsAny<IEnumerable<int>>(), emptyOriginalResourceIdLS))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(It.IsAny<IEnumerable<int>>(), emptyOriginalResourceIdLS, true))
                 .ReturnsAsync(resources);
             this.GivenFindwiseReturnsSuccessfulResponse(74, Enumerable.Range(1, 34));
 
@@ -134,27 +134,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .With(r => r.Description = "resource description")
                 .Build().ToList();
 
-            //var resources = Builder<ResourceReferenceAndCatalogueDTO>.CreateListOfSize(2) // qqqqdelete instead of builder maybe we to use TestMockData
-            //    .TheFirst(1)
-            //    .With(r => r.ResourceId = 1)
-            //    .With(r => r.CurrentResourceVersion = currentResourceVersions[0]) // qqqqdelete doesnt exist are we missing something
-            //    .With(
-            //        r => r.ResourceReference = new[]
-            //        {
-            //            ResourceTestHelper.CreateResourceReferenceWithDetails(catalogueName: "catalogue1", id: 1),
-            //        })
-            //    .TheNext(1)
-            //    .With(r => r.Id = 2)
-            //    .With(r => r.CurrentResourceVersion = currentResourceVersions[1])
-            //    .With(
-            //        r => r.ResourceReference = new[]
-            //        {
-            //            ResourceTestHelper.CreateResourceReferenceWithDetails(catalogueName: "catalogue2", id: 2),
-            //        })
-            //    .With(r => r.ResourceTypeEnum = ResourceTypeEnum.Article)
-            //    .Build();
-
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(It.IsAny<IEnumerable<int>>(), emptyOriginalResourceIdLS))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(It.IsAny<IEnumerable<int>>(), emptyOriginalResourceIdLS, true))
                 .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(0, 2).ToList());
             this.GivenFindwiseReturnsSuccessfulResponse(2, new[] { 1, 2, 3 });
 
@@ -198,7 +178,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                     }));
 
             var resources = Builder<Resource>.CreateListOfSize(3).Build();
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(new List<int>(){ 1, 3, 2 }, emptyOriginalResourceIdLS))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(new List<int>(){ 1, 3, 2 }, emptyOriginalResourceIdLS, true))
                 .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(0, 3).ToList());
 
             // When
@@ -206,44 +186,6 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
 
             // Then
             searchResultModel.Resources.Select(r => r.ResourceId).Should().ContainInOrder(new[] { 1, 3, 2 });
-        }
-
-        [Fact]
-        public async Task SearchReplacesNullPropertiesOfResourceWithDefaultValues()
-        {
-            // Given
-
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(It.IsAny<IEnumerable<int>>(), emptyOriginalResourceIdLS))
-                .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(3, 1).ToList());
-            this.learningHubService.Setup(lhs => lhs.GetResourceLaunchUrl(It.IsAny<int>())).Returns(string.Empty);
-            this.GivenFindwiseReturnsSuccessfulResponse(1, new[] { 1 });
-
-            // When
-            var searchResult = await this.searchService.Search(new ResourceSearchRequest("text", 0, 10), null);
-
-            // Then
-            using var scope = new AssertionScope();
-
-            searchResult.Resources.Count.Should().Be(1);
-            var outputResource = searchResult.Resources.Single();
-            var expectedResourceReferences = new[]
-            {
-                new ResourceReferenceViewModel(
-                    0, // qqqqc originalResourceId
-                    new CatalogueViewModel(0, ResourceHelpers.NoCatalogueText, false),
-                    string.Empty),
-            }.ToList();
-            outputResource.Should().BeEquivalentTo(
-                new ResourceMetadataViewModel(
-                    4,
-                    "title4NullifiedExternalCatalogue",   // qqqqc no because its never null -> ResourceHelpers.NoResourceVersionText,
-                    "description4NullifiedExternalCatalogue",                                      // qqqqc no because its never null -> string.Empty,
-                    expectedResourceReferences,
-                    "WebLink",
-                    1, //Major version
-                    0,
-                    new List<MajorVersionIdActivityStatusDescription>() { }));
-
         }
 
         private void GivenFindwiseReturnsSuccessfulResponse(int totalHits, IEnumerable<int> resourceIds)

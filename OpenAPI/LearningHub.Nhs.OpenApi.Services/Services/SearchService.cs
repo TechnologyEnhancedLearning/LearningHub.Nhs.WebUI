@@ -62,6 +62,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <inheritdoc />
         public async Task<ResourceSearchResultModel> Search(ResourceSearchRequest query, int? currentUserId)
         {
+            
             var findwiseResultModel = await this.findwiseClient.Search(query);
 
             if (findwiseResultModel.FindwiseRequestStatus != FindwiseRequestStatus.Success)
@@ -82,6 +83,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         private async Task<List<ResourceMetadataViewModel>> GetResourceMetadataViewModels(
             FindwiseResultModel findwiseResultModel, int? currentUserId)
         {
+            bool includeExternalResources = true;
             List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
             List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
 
@@ -94,7 +96,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 return new List<ResourceMetadataViewModel>();
             }
 
-            List<ResourceReferenceAndCatalogueDTO> resourcesReferenceAndCatalogueDTOsFound = (await this.resourceRepository.GetResourceReferenceAndCatalogues(findwiseResourceIds, new List<int>() { })).ToList();
+            List<ResourceReferenceAndCatalogueDTO> resourcesReferenceAndCatalogueDTOsFound = (await this.resourceRepository.GetResourceReferenceAndCatalogues(findwiseResourceIds, new List<int>() { }, includeExternalResources)).ToList();
+
 
             if (currentUserId.HasValue)
             {
@@ -149,12 +152,12 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
             return new ResourceMetadataViewModel(
                 resourceReferenceAndCatalogueDTO.ResourceId,
-                resourceReferenceAndCatalogueDTO.Title ?? ResourceHelpers.NoResourceVersionText,
-                resourceReferenceAndCatalogueDTO.Description ?? string.Empty,
+                resourceReferenceAndCatalogueDTO.Title,
+                resourceReferenceAndCatalogueDTO.Description,
                 resourceReferenceAndCatalogueDTO.CatalogueDTOs.Select(this.GetResourceReferenceViewModel).ToList(),
                 resourceTypeNameOrEmpty,
                 resourceReferenceAndCatalogueDTO.MajorVersion,
-                resourceReferenceAndCatalogueDTO.Rating ?? 0.0m,
+                resourceReferenceAndCatalogueDTO.Rating,
                 majorVersionIdActivityStatusDescription);
         }
 

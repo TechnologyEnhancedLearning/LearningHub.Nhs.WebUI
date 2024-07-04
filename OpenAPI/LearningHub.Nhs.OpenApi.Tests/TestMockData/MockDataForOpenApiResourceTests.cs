@@ -149,7 +149,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestMockData
             new CatalogueDTO(originalResourceReferenceId: 103, catalogueNodeId: 4, catalogueNodeName: "catalogue4", isRestricted: true),
             new CatalogueDTO(originalResourceReferenceId: 302, catalogueNodeId: 5, catalogueNodeName: "catalogue5", isRestricted: false),
             new CatalogueDTO(originalResourceReferenceId: 303, catalogueNodeId: 6, catalogueNodeName: "catalogue6", isRestricted: false),
-            new CatalogueDTO(originalResourceReferenceId: 0, catalogueNodeId: 0, catalogueNodeName: "No catalogue for resource reference", isRestricted: false), //qqqqa External catalogue replaced with default data, concerned zero not null
+            
         };
 
         public static List<ResourceReferenceAndCatalogueDTO> GetResourceReferenceAndCatalogueDTOList => new List<ResourceReferenceAndCatalogueDTO>()
@@ -177,9 +177,12 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestMockData
             ),
 
             // Entry for originalResourceId 102, 103
-            // Warning because searching the by originalResourceId would return a single record and calendar
-            // but by resourceId would return two calendars and two originalResourceIds
-            // Then this would mock originalResourceIds 102, 103 but not mock well either individually
+            /*
+                Warning because searching the by originalResourceId would return a single record and catalogue
+                but by resourceId could return two calendars and two originalResourceIds
+                Then this would mock originalResourceIds 102, 103 but not mock calls for either well individually
+            */
+             
             new ResourceReferenceAndCatalogueDTO(
                 resourceId: 3,
                 title: "title3Image",
@@ -189,7 +192,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestMockData
                 rating: 0m,
                 catalogueDTOs: new List<CatalogueDTO> { CatalogueDTOList[2], CatalogueDTOList[3] }
             ),
-            // Entry for originalResourceId 104 which is not producted in the catalogue because it is is to represent external catalogue data where information is nulled
+            //  No catalogue can occur only by nullified external data aas currently the stored procedure does not left join on currentVersion. This data should be used with includeExternalResources true
             new ResourceReferenceAndCatalogueDTO(
                 resourceId: 4,
                 title: "title4NullifiedExternalCatalogue",
@@ -197,7 +200,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.TestMockData
                 resourceTypeId: 8, // Weblink -> Launched
                 majorVersion: 1,
                 rating: 0m,
-                catalogueDTOs: new List<CatalogueDTO>() { CatalogueDTOList[6] }
+                catalogueDTOs: new List<CatalogueDTO>() {}
             ),
             // Entry for originalResourceId 302
             new ResourceReferenceAndCatalogueDTO(

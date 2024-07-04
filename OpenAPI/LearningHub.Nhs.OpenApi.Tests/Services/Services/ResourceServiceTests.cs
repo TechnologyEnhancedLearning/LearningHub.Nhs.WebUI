@@ -57,7 +57,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         {
             // Given
             int originalResourceId = 100;
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, new List<int>() { originalResourceId }))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, new List<int>() { originalResourceId }, false))
                 .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(0, 1));
 
             // When
@@ -79,7 +79,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             int? currentUserIdNull = null;
 
             // Given
-            this.resourceRepository.Setup(expression: rr => rr.GetResourceReferenceAndCatalogues(singleResourceIdList, emptyOriginalResourceIdLS))
+            this.resourceRepository.Setup(expression: rr => rr.GetResourceReferenceAndCatalogues(singleResourceIdList, emptyOriginalResourceIdLS, false))
                 .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(0, 1).ToList());
 
             // When
@@ -99,7 +99,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             List<int> singleResourceIdList = new List<int>() { resourceId };
 
             // Given
-            this.resourceRepository.Setup(expression: rr => rr.GetResourceReferenceAndCatalogues(singleResourceIdList, emptyOriginalResourceIdLS))
+            this.resourceRepository.Setup(expression: rr => rr.GetResourceReferenceAndCatalogues(singleResourceIdList, emptyOriginalResourceIdLS, false))
                 .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(1, 1).ToList());
 
             this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(singleResourceIdList, currentUserIdLS))
@@ -120,7 +120,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         public async Task SingleResourceReturnsA404IfTheresNoResourceReferenceWithAMatchingId()
         {
             // Given
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, new List<int>() { 999 }))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, new List<int>() { 999 }, false))
                 .ReturnsAsync(new List<ResourceReferenceAndCatalogueDTO>() { });
 
             // When / Then
@@ -129,118 +129,6 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             exception.ResponseBody.Should().Be("No matching resource reference");
         }
 
-        [Fact] // qqqqc not currently possible because no longer left joining resourceVersion, but it is nullable in the db, and title isnt
-        public async Task SingleResourceEndpointReturnsAResourceMetadataViewModelObjectWithAMessageSayingNoResourceIfThereIsNoCurrentResourceVersion()
-        {
-            // Given
-            int originalResourceId = 101; // qqqqc we dont have example data mocked
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, new List<int>() { originalResourceId }))
-                .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(1, 1));
-
-            // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(originalResourceId, null);
-
-            // Then
-            x.Title.Should().Be("No current resource version");
-            x.Rating.Should().Be(0);
-        }
-
-        [Fact]
-        public async Task SingleResourceEndpointReturnsAMessageSayingNoCatalogueIfThereIsNoNodeVersion()
-        {
-            // Given
-            int originalResourceId = 104;
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, new List<int>() { originalResourceId }))
-                .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(3, 1));
-            // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(originalResourceId, null);
-
-            // Then
-            x.Catalogue.Name.Should().Be("No catalogue for resource reference");
-        }
-        /*
-                qqqqc based on the data dont think this should occur
-                nodepathid in rref is nullable but never is in the data
-                currentNodeVersion is nullable in node has only 40 null entries that arnt deleted
-                catalogueNodeVersion nodeversionId is nullable has no null entries
-         */
-        [Fact]
-        public async Task SingleResourceEndpointReturnsAMessageSayingNoCatalogueIfThereIsNoNodePath()
-        {
-            // Given
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, new List<int>() { 4 }))
-                .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(3, 1));
-
-            // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(4, null);
-
-            // Then
-            x.Catalogue.Name.Should().Be("No catalogue for resource reference");
-        }
-
-        [Fact]
-        public async Task SingleResourceEndpointReturnsAMessageSayingNoCatalogueIfThereIsNoCatalogueNodeVersion()
-        {
-            // The stored procedure joins so the only way this happens is if it nullifies the catalogue information because its an external catalogue qqqqc
-            // Removed the catalogue check
-            // Given
-            int originalResourceId = 104;
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, new List<int>() { originalResourceId }))
-                .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(3, 1));
-
-            // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(originalResourceId, null);
-
-            // Then
-            x.Catalogue.Name.Should().Be("No catalogue for resource reference");
-        }
-        [Fact]
-        public async Task SingleResourceEndpointNoCatalogueDefaultTest()
-        {
-            // The stored procedure joins so the only way this happens is if it nullifies the catalogue information because its an external catalogue
-            // Given
-            int originalResourceId = 104;
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, new List<int>() { originalResourceId }))
-                .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(3, 1));
-
-            // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(originalResourceId, null);
-
-            // Then
-            x.Catalogue.Name.Should().Be("No catalogue for resource reference");
-        }
-
-        //[Fact] // qqqqdelete happens in stored procedure so unneeded
-        //public async Task SingleResourceEndpointReturnsAZeroForRatingIfTheresNoRatingSummary()
-        //{
-        //    // Given
-        //    int originalResourceId = ;
-        //    this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, new List<int>() { 8 }))
-        //        .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(7, 1));
-
-        //    // When
-        //    var x = await this.resourceService.GetResourceReferenceByOriginalId(8, currentUserId);
-
-        //    // Then
-        //    x.Catalogue.Name.Should().Be("catalogue3");
-        //    x.Rating.Should().Be(0);
-        //}
-
-        //[Fact] qqqqdelete
-        //public async Task SingleResourceEndpointThrowsAnErrorAndReturnsABlankStringIfTheresANullResourceType() 
-        //{
-        //    // Given
-        //    int originalResourceId = 9;
-        //    this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, new List<int>() { originalResourceId }))
-        //        .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(8, 1));
-
-        //    // When
-        //    var x = await this.resourceService.GetResourceReferenceByOriginalId(originalResourceId, currentUserId);
-
-        //    // Then
-        //    x.ResourceType.Should().Be(string.Empty);
-        //}
-
         [Fact]
         public async Task SingleResourceEndpointThrowsAnErrorIfThereIsMoreThanOneResourceReference()
         {
@@ -248,7 +136,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             int originalResourceId = 102; // However the test deliberately returns data for if 102 and 103 had been requested
             // Note if searching by a single originalResourceId this resourceDTO would be the same except with a single catalogue for just that originalResourceId
             List<ResourceReferenceAndCatalogueDTO> resourceWithTwoOriginalResourceIdsS = this.ResourceReferenceAndCatalogueDTOList.GetRange(2, 1);
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, new List<int>() { originalResourceId }))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, new List<int>() { originalResourceId }, false))
                 .ReturnsAsync(resourceWithTwoOriginalResourceIdsS);
 
             // When / Then
@@ -272,7 +160,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             var idsToLookUp = new List<int>() { 100, 101 };
             List<int> foundResourceIds = new List<int>() { 1,2}; 
 
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, idsToLookUp))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, idsToLookUp, false))
                 .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(0, 2));
 
             this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(foundResourceIds, currentUserIdLS))
@@ -302,7 +190,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             var idsToLookUp = new List<int>() { 998, 999 };
             List<int> foundResourceIds = new List<int>() {  };
 
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, idsToLookUp))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, idsToLookUp, false))
                 .ReturnsAsync(new List<ResourceReferenceAndCatalogueDTO>());
 
             this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(foundResourceIds, currentUserIdLS))
@@ -320,23 +208,22 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         public async Task BulkEndpointReturnsResourcesWithIncompleteInformation()
         {
             // Given
-            var idsToLookUp = new List<int>() { 100, 101, 102, 103, 104 }; // 102, 103 are associated with resourceId 3 and 104 with 4 and having no catalogue data returned due to external catalogue wiping
-            List<int> foundResourceIds = new List<int>() { 1, 2, 3, 4 };
+            int originalResourceIdThatDoesntExist = 999;
+            var idsToLookUp = new List<int>() { 100, 101, 102, originalResourceIdThatDoesntExist }; // 102, 103 are associated with resourceId 3 and 104 with 4 and having no catalogue data returned due to external catalogue wiping
+            List<int> foundResourceIds = new List<int>() { 1, 2, 3 };
 
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, idsToLookUp))
-                .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(0, 4));
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, idsToLookUp, false))
+                .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(0, 3));
 
-            this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(foundResourceIds, currentUserIdLS))
-            .ReturnsAsync(this.ResourceActivityDTOList.GetRange(0, 4));
 
             // When
-            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp, currentUserId);
+            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp, null);
 
             // Then
-            x.ResourceReferences.Count.Should().Be(5); //One for each originalResourceId because it returns flattened data and they each have 
-            x.UnmatchedResourceReferenceIds.Count().Should().Be(0); // I think this should be 0 not 1 for originalResourceId 104 because we do match it, it just has no catalogue so its resource is found qqqqa
+            x.ResourceReferences.Count.Should().Be(4); //One for each originalResourceId because it returns flattened data
+            x.UnmatchedResourceReferenceIds.Count().Should().Be(1);
             x.ResourceReferences[0].Rating.Should().Be(3);
-            x.ResourceReferences[4].Catalogue.Name.Should().Be("title4NullifiedExternalCatalogue"); 
+            x.ResourceReferences[1].Catalogue.Name.Should().Be("catalogue2");
             x.ResourceReferences[1].Title.Should().Be("title2Article");
             x.ResourceReferences[0].UserSummaryActivityStatuses.Should().BeEmpty();
         }
@@ -345,18 +232,18 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         public async Task BulkEndpointReturnsUnmatchedResourcesWithMatchedResources()
         {
             // Given
-            var idsToLookUp = new List<int>() { 1, 999 };
+            var idsToLookUp = new List<int>() { 101, 999 };
 
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, idsToLookUp))
-                .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(0, 1));
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, idsToLookUp, false))
+                .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(1, 1));
 
             // When
             var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp, currentUserId);
 
             // Then
             x.ResourceReferences.Count.Should().Be(1);
-            x.ResourceReferences[0].Title.Should().Be("title1AudioNoActivitySummaryData");
-            x.UnmatchedResourceReferenceIds.Count.Should().Be(1); // qqqqa again fails because originalResourceId nullified
+            x.ResourceReferences[0].Title.Should().Be("title2Article");
+            x.UnmatchedResourceReferenceIds.Count.Should().Be(1);
         }
 
         [Fact]
@@ -367,7 +254,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             {
                 100, 101,
             };
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, list))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, list, false))
                 .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(0, 2));
 
             //, currentUserId
@@ -386,7 +273,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             // Given
             int originalResourceId = 100;
             List<int> list = new List<int>() { originalResourceId };
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, list))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, list, false))
                 .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(0, 1));
 
             // When
@@ -402,7 +289,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             // Given
             int originalResourceId = 101;
             List<int> list = new List<int>() { originalResourceId };
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, list))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, list, false))
                 .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(1, 1));
 
             // When
@@ -418,7 +305,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             // Given
             int originalResourceId = 100;
             List<int> originalResourceList = new List<int>() { originalResourceId };
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, originalResourceList))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(emptyResourceIdLS, originalResourceList, false))
                 .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(0, 1));
 
             // When
@@ -443,7 +330,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
  
 
             // Given
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(singleResourceIdList, emptyOriginalResourceIdLS))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(singleResourceIdList, emptyOriginalResourceIdLS, false))
                 .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(rangeStartGetResourceReferenceAndCataloguesLS, rangeLengthGetResourceReferenceAndCataloguesLS).ToList());
 
             this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(singleResourceIdList, currentUserIdList))
@@ -478,7 +365,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             List<int> singleResourceIdList = new List<int>() { resourceId };
 
             // Given
-            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(singleResourceIdList, emptyOriginalResourceIdLS))
+            this.resourceRepository.Setup(rr => rr.GetResourceReferenceAndCatalogues(singleResourceIdList, emptyOriginalResourceIdLS, false))
                 .ReturnsAsync(this.ResourceReferenceAndCatalogueDTOList.GetRange(rangeStartGetResourceReferenceAndCataloguesLS, rangeLengthGetResourceReferenceAndCataloguesLS).ToList());
 
             this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(singleResourceIdList, currentUserIdLS))

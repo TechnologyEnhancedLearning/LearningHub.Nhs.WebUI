@@ -37,9 +37,10 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
         /// </summary>
         /// <param name="resourceReferenceIds">.</param>
         /// <param name="originalResourceReferenceIds">.</param>
+        /// <param name="includeExternalReferences"></param>
         /// <returns>A <see cref="Task{ResourceReferenceAndCatalogueDTO}"/> representing the result of the asynchronous operation.</returns>
         public async Task<IEnumerable<ResourceReferenceAndCatalogueDTO>> GetResourceReferenceAndCatalogues(
-           IEnumerable<int> resourceReferenceIds, IEnumerable<int> originalResourceReferenceIds)
+           IEnumerable<int> resourceReferenceIds, IEnumerable<int> originalResourceReferenceIds, bool includeExternalReferences = false)
         {
             var resourceIdsParam = resourceReferenceIds != null
                 ? string.Join(",", resourceReferenceIds)
@@ -51,13 +52,15 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 
             var resourceIdsParameter = new SqlParameter("@p0", resourceIdsParam ?? (object)DBNull.Value);
             var originalResourceReferenceIdsParameter = new SqlParameter("@p1", originalResourceReferenceIdsParam ?? (object)DBNull.Value);
+            var includeExternalReferencesParameter = new SqlParameter("@includeExternalResources", SqlDbType.Bit) { Value = includeExternalReferences };
 
             List<ResourceReferenceAndCatalogueTempConstructionDTO> resourceReferenceAndCatalogueTempConstructionDTOs =
                 await dbContext.ResourceReferenceAndCatalogueTempConstructionDTO
                 .FromSqlRaw(
                     "[resources].[GetResourceReferencesAndCatalogue] @p0, @p1",
                     resourceIdsParameter,
-                    originalResourceReferenceIdsParameter)
+                    originalResourceReferenceIdsParameter,
+                    includeExternalReferencesParameter)
                 .AsNoTracking()
                 .ToListAsync<ResourceReferenceAndCatalogueTempConstructionDTO>();
 
@@ -79,41 +82,17 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                     g.Key.ResourceTypeId,
                     g.Key.MajorVersion,
                     g.Key.Rating,
-                    g.Select(r => r.CatalogueNodeId.HasValue ? new CatalogueDTO
-                         {
-                             CatalogueNodeId = r.CatalogueNodeId.Value,
-                             CatalogueNodeName = r.CatalogueNodeName,
-                             IsRestricted = r.IsRestricted.Value,
-                             OriginalResourceReferenceId = r.OriginalResourceReferenceId.Value,
-                         }
-                        : new CatalogueDTO
-                         {
-                             OriginalResourceReferenceId = 0, // qqqqa if we provide empty catalogue maybe this should be nullable, or we should provide the originalResourceId just 
-                             CatalogueNodeId = 0, // qqqqa maybe should be null
-                             CatalogueNodeName = "No catalogue for resource reference", // NoCatalogueText,
-                             IsRestricted = false,
-                         })
-                    // qqqqa .Distinct() we could get multiple nulled if multiple originalResourceId entries that are external
-                        .ToList()))
+                    g.Where(x => x.CatalogueNodeId.HasValue).Select(r => // exclude data nullified by the stored procedure
+                    new CatalogueDTO
+                    {
+                        CatalogueNodeId = r.CatalogueNodeId.Value,
+                        CatalogueNodeName = r.CatalogueNodeName,
+                        IsRestricted = r.IsRestricted.Value,
+                        OriginalResourceReferenceId = r.OriginalResourceReferenceId.Value,
+                    })
+                    .ToList<CatalogueDTO>()
+                        ))
                         .ToList<ResourceReferenceAndCatalogueDTO>();
-
-
-            // qqqqc could do this instead but dont think this is right
-            // Check for empty catalogues and add the default one if necessary
-            //foreach (var resourceReference in resourceReferenceAndCatalogueDTOs)
-            //{
-            //    if (!resourceReference.Catalogues.Any())
-            //    {
-            //        resourceReference.Catalogues.Add(new CatalogueDTO
-            //        {
-            //            OriginalResourceReferenceId = 0, // or make this nullable if preferred
-            //            CatalogueNodeId = 0, // or make this nullable if preferred
-            //            CatalogueNodeName = "No catalogue for resource reference", // NoCatalogueText
-            //            IsRestricted = false,
-            //        });
-            //    }
-            //}
-
 
             return resourceReferenceAndCatalogueDTOs;
         }

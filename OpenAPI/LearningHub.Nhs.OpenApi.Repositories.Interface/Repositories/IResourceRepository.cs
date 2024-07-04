@@ -24,6 +24,6 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         /// <param name="resourceReferenceIds">.</param>
         /// <param name="originalResourceReferenceIds">.</param>
         /// <returns>ResourceActivityDTO.</returns>
-        Task<IEnumerable<ResourceReferenceAndCatalogueDTO>> GetResourceReferenceAndCatalogues(IEnumerable<int> resourceReferenceIds, IEnumerable<int> originalResourceReferenceIds);
+        Task<IEnumerable<ResourceReferenceAndCatalogueDTO>> GetResourceReferenceAndCatalogues(IEnumerable<int> resourceReferenceIds, IEnumerable<int> originalResourceReferenceIds, bool includeExternalResources = false);
     }
 }

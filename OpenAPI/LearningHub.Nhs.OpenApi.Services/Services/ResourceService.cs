@@ -138,8 +138,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
             return new ResourceMetadataViewModel(
                 resourceReferenceAndCatalogueDTO.ResourceId,
-                resourceReferenceAndCatalogueDTO.Title ?? ResourceHelpers.NoResourceVersionText, // qqqqc always joined in stored procedure so always has value
-                resourceReferenceAndCatalogueDTO.Description ?? string.Empty, // qqqqc always joined in stored procedure so always has value
+                resourceReferenceAndCatalogueDTO.Title,
+                resourceReferenceAndCatalogueDTO.Description,
                 resourceReferenceAndCatalogueDTO.CatalogueDTOs.Select(rr => new ResourceReferenceViewModel(
                                                         rr.OriginalResourceReferenceId,
                                                         rr.GetCatalogue(),
@@ -147,7 +147,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                                                         .ToList(),
                 resourceReferenceAndCatalogueDTO.GetResourceTypeNameOrEmpty(),
                 resourceReferenceAndCatalogueDTO.MajorVersion,
-                resourceReferenceAndCatalogueDTO.Rating ?? 0.0m, // qqqqc set in stored procedure
+                resourceReferenceAndCatalogueDTO.Rating,
                 majorVersionIdActivityStatusDescription);
         }
 
@@ -229,13 +229,13 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             return new ResourceReferenceWithResourceDetailsViewModel(
                 resourceReferenceAndCatalogueDTO.ResourceId,
                 resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().OriginalResourceReferenceId,
-                resourceReferenceAndCatalogueDTO.Title ?? ResourceHelpers.NoResourceVersionText,
-                resourceReferenceAndCatalogueDTO.Description ?? string.Empty,
+                resourceReferenceAndCatalogueDTO.Title,
+                resourceReferenceAndCatalogueDTO.Description,
                 resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().GetCatalogue(),
                 resourceTypeNameOrEmpty,
                 resourceReferenceAndCatalogueDTO.MajorVersion,
-                resourceReferenceAndCatalogueDTO.Rating ?? 0,
-                this.learningHubService.GetResourceLaunchUrl(resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().OriginalResourceReferenceId), // qqqqa this wont have a link if no originalResourceId
+                resourceReferenceAndCatalogueDTO.Rating,
+                this.learningHubService.GetResourceLaunchUrl(resourceReferenceAndCatalogueDTO.CatalogueDTOs.Single().OriginalResourceReferenceId),
                 majorVersionIdActivityStatusDescription);
         }
     }

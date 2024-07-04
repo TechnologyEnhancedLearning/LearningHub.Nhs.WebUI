@@ -26,24 +26,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
         /// </summary>
         public const string NoCatalogueText = "No catalogue for resource reference";
 
-        /// qqqqdelete
-        ///// <summary>
-        ///// The get catalogue from resource reference method.
-        ///// </summary>
-        ///// <param name="resourceReference">The resourceReference.</param>
-        ///// <returns>The catalogue the resource reference is part of.</returns>
-        //public static CatalogueViewModel GetCatalogue(this ResourceReference resourceReference)
-        //{
-        //    var catalogue = new CatalogueViewModel(0, NoCatalogueText, false);
-
-        //    if (resourceReference.NodePath?.CatalogueNode?.CurrentNodeVersion?.CatalogueNodeVersion != null)
-        //    {
-        //        var catalogueNodeVersion = resourceReference.NodePath.CatalogueNode.CurrentNodeVersion.CatalogueNodeVersion;
-        //        catalogue = new CatalogueViewModel(catalogueNodeVersion);
-        //    }
-
-        //    return catalogue;
-        //}
 
         /// <summary>
         /// Orders the IEnumerable of resources according to the sequence of ids given.
@@ -104,22 +86,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
 
             return catalogue;
         }
-        /// <summary> // qqqqdelete
-        /// The get catalogue from resource reference method.
-        /// </summary>
-        /// <param name="CatalogueDTO">The catalogueDTOs.</param>
-        /// <returns>The catalogue the resource reference is part of.</returns>
-        //public static CatalogueDTO GetCatalogueDTONone() //qqqqdelete cant seem to call from resourceRepository
-        //{
-        //    return new CatalogueDTO
-        //    {
-        //        OriginalResourceReferenceId = 0,
-        //        CatalogueNodeId = 0,
-        //        CatalogueNodeName = NoCatalogueText,
-        //        IsRestricted = false,
-        //    };
-
-        //}
 
         public static List<ResourceReferenceAndCatalogueDTO> FlattenResourceReferenceAndCatalogueDTOLS(List<ResourceReferenceAndCatalogueDTO> resourceReferenceAndCatalogueDTOs)
         {

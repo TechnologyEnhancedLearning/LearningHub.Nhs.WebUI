@@ -138,5 +138,12 @@
         /// <param name="userUserGroupId">The user - user group id.</param>
         /// <returns>The validation result.</returns>
         Task<LearningHubValidationResult> RemoveUserFromRestrictedAccessUserGroup(int userUserGroupId);
+
+        /// <summary>
+        /// The GetReferencableCataloguesAsync.
+        /// </summary>
+        /// <param name="nodePathId">The id<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<List<CatalogueBasicViewModel>> GetReferencableCataloguesAsync(int nodePathId);
     }
 }

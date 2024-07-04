@@ -20,6 +20,8 @@
 --	(N'Status404NotFound', N'Status404NotFound', 4, SYSDATETIMEOFFSET(), 4, SYSDATETIMEOFFSET(), 0)
 --END
 
+/*
+
 IF EXISTS( SELECT 1 FROM [resources].[ResourceVersionKeyword] WHERE Keyword LIKE '%  %')
 BEGIN
 	UPDATE  [resources].[ResourceVersionKeyword] set 
@@ -82,3 +84,7 @@ UPDATE [resources].[ResourceVersion] SET CertificateEnabled = 0 WHERE VersionSta
 :r .\Scripts\TD-2929_ActivityStatusUpdates.sql
 :r .\Scripts\InitialiseDataForEmailTemplates.sql
 :r .\Scripts\AttributeData.sql
+
+*/
+
+:r .\Scripts\Content_Referencing_DataSetup.sql

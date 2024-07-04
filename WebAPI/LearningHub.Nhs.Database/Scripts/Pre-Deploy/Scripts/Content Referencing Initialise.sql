@@ -3,6 +3,7 @@ BEGIN
     RAISERROR ('Cannot delete hierarchy.RootNodeId column with an edit in Draft status', 16, 1)
     RETURN
 END
+GO
 
 -- delete column RootNodeId from hierarchy.HierarchyEdit if it exists
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'HierarchyEdit' AND COLUMN_NAME = 'RootNodeId')

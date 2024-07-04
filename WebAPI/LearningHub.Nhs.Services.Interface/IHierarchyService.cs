@@ -167,6 +167,14 @@
         Task<LearningHubValidationResult> ReferenceNode(MoveNodeViewModel moveNodeViewModel, int userId);
 
         /// <summary>
+        /// Creates a reference to an external node.
+        /// </summary>
+        /// <param name="referenceExternalNodeViewModel">The referenceExternalNodeViewModel <see cref="ReferenceExternalNodeViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        Task<LearningHubValidationResult> ReferenceExternalNode(ReferenceExternalNodeViewModel referenceExternalNodeViewModel, int userId);
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The id.</param>
@@ -197,6 +205,14 @@
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
         Task<LearningHubValidationResult> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId);
+
+        /// <summary>
+        /// References an external resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="referenceExternalResourceViewModel">The referenceExternalResourceViewModel <see cref="ReferenceExternalResourceViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        Task<LearningHubValidationResult> HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel, int userId);
 
         /// <summary>
         /// Moves a resource up.

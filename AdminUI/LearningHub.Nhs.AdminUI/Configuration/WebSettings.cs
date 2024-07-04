@@ -78,6 +78,16 @@
         public string AzureFileStorageConnectionString { get; set; }
 
         /// <summary>
+        /// Gets or sets the AzureSourceFileStorageConnectionString.
+        /// </summary>
+        public string AzureSourceArchiveStorageConnectionString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the AzurePurgedFileStorageConnectionString.
+        /// </summary>
+        public string AzureContentArchiveStorageConnectionString { get; set; }
+
+        /// <summary>
         /// Gets or sets the azure file storage resource share name.
         /// </summary>
         public string AzureFileStorageResourceShareName { get; set; }
@@ -146,5 +156,10 @@
         /// Gets or sets the FileUploadSettings.
         /// </summary>
         public FileUploadSettingsModel FileUploadSettings { get; set; } = new FileUploadSettingsModel();
+
+        /// <summary>
+        /// Gets or sets the MediaKindSettings.
+        /// </summary>
+        public MediaKindSettings MediaKindSettings { get; set; } = new MediaKindSettings();
     }
 }

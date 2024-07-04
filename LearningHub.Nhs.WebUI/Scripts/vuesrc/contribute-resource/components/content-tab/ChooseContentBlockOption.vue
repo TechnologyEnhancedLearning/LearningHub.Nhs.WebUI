@@ -1,11 +1,14 @@
 <template>
     <div class="contribute-add-content-block-component-option">
         <div class="contribute-add-content-block-component-option--icon">
-            <img v-bind:src="imgSrc" class="flexible-image"/>
+            <img v-bind:src="imgSrc" class="flexible-image" />
         </div>
         <div class="contribute-add-content-block-component-option--description">
             <h5>{{blockTypeName}}</h5>
             <p>{{blockDescription}}</p>
+            <div v-if="!contributeResourceAVFlag && blockTypeName === 'Media'">
+                <div v-html="audioVideoUnavailableView"></div>
+            </div>
         </div>
         <Button v-on:click="$emit('choose')">Select</Button>
     </div>
@@ -13,6 +16,7 @@
 
 <script lang="ts">
     import Vue, { PropOptions } from 'vue';
+    import { resourceData } from '../../../data/resource';
 
     import Button from "../../../globalcomponents/Button.vue";
 
@@ -27,6 +31,26 @@
             blockTypeName: String,
             blockDescription: String,
         },
+        data() {
+            return {
+                contributeResourceAVFlag: true
+            }
+        },
+        created() {
+            this.getContributeResAVResourceFlag();
+        },
+        computed: {
+            audioVideoUnavailableView(): string {
+                return this.$store.state.getAVUnavailableView;
+            },
+        },
+        methods: {
+            getContributeResAVResourceFlag() {
+                resourceData.getContributeAVResourceFlag().then(response => {
+                    this.contributeResourceAVFlag = response;
+                });
+            }
+        }
     })
 </script>
 

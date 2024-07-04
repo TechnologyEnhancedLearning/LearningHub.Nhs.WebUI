@@ -7,7 +7,8 @@
 -- Modification History
 
 -- Sarathlal	18-12-2023
--- Sarathlal	08-03-2023
+-- Sarathlal	08-03-2024
+-- Sarathlal	23-04-2024	TD-2954: Audio/Video/Assessment issue resolved and duplicate issue also resolved
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserLearningActivitiesCount] (
 	 @userId INT	
@@ -89,7 +90,7 @@ FROM (
 			@searchText IS NULL
             OR 
 				(
-						Charindex(@searchText, [ResVer].[Title]) > 0
+						(Charindex(@searchText, [ResVer].[Title]) > 0
 					OR                          
 						Charindex(@searchText, [ResVer].[Description]) > 0
 					OR  
@@ -103,8 +104,8 @@ FROM (
 									[ResVer].[Id] = [ResourceVersionKeyword].[ResourceVersionId]
 								AND   
 									Charindex(@searchText, [ResourceVersionKeyword].[Keyword]) > 0
-								)
-					)
+								) 
+					)) AND [ResourceActivity].ActivityStart is not null 
 				)
 		)
 		AND
@@ -133,10 +134,10 @@ FROM (
 				(
 					(
 					   -- resource type is not video/audio and launch resource activity doesn't exists
-					   [Res].[ResourceTypeId] NOT IN (7,2) AND NOT (EXISTS
+					   NOT (EXISTS
 								(
 									SELECT 1 FROM   [activity].[ResourceActivity] AS [ResAct1]
-									WHERE  [ResAct1].[Deleted] = 0 AND [ResourceActivity].[Id] = [ResAct1].[LaunchResourceActivityId]
+									WHERE  [ResAct1].[Deleted] = 0 AND [ResourceActivity].[Id] = [ResAct1].[LaunchResourceActivityId] 
 								))
 					)
 				OR  
@@ -144,14 +145,14 @@ FROM (
 					EXISTS
 					(
 							SELECT 1	FROM   [activity].[ResourceActivity] AS [ResAct2]
-							WHERE  [ResAct2].[Deleted] = 0 AND  [ResourceActivity].[Id] = [ResAct2].[LaunchResourceActivityId] AND  [ResAct2].[ActivityStatusId] = 3
+							WHERE  [ResAct2].[Deleted] = 0 AND  [ResourceActivity].[Id] = [ResAct2].[LaunchResourceActivityId] AND  [ResAct2].[ActivityStatusId] in (3,7,5,4)
 					)
 					
 				)
-		AND
+			AND
 				(
-					-- resource type is not assessment and activity status is launched
-					[Res].[ResourceTypeId] <> 11 OR [ResourceActivity].[ActivityStatusId] = 1
+					-- resource type is not assessment and activity status is Complete/Incomplete
+					[Res].[ResourceTypeId] <> 11 OR [ResourceActivity].[ActivityStatusId] in (7,3)
 				)
 		AND   
 					(

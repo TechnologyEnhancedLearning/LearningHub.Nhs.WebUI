@@ -172,7 +172,7 @@
 
                     @* Video/Audio/Scorm/Case/Assessment require JavaScript - use Vue.js resource app. *@
 
-                    if (!@ViewBag.DisplayAVResourceFlag)
+                    if (!@ViewBag.DisplayAVResourceFlag && (resourceItem.AudioDetails !=null || resourceItem.VideoDetails !=null))
                     {
                         <partial name="_AudioVideoUnavailable" />
                     }
@@ -191,7 +191,7 @@
         }
 
         @* Description / Additional Information *@
-        @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Case && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Assessment && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Html)
+        @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Case && resourceItem.ResourceTypeEnum != ResourceTypeEnum.Assessment)
         {
             <div class="nhsuk-u-margin-bottom-7">
                 @if (resourceItem.ResourceTypeEnum != ResourceTypeEnum.Article || (resourceItem.Catalogue.RestrictedAccess && !Model.HasCatalogueAccess))

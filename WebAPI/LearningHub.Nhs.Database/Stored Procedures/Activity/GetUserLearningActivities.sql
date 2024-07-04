@@ -7,7 +7,9 @@
 -- Modification History
 
 -- Sarathlal	14-12-2023
--- Sarathlal	08-03-2023
+-- Sarathlal	08-03-2024
+-- Sarathlal	23-04-2024 TD-2954: Audio/Video/Assessment issue resolved and duplicate issue also resolved
+-- Sarathlal	25-04-2024 TD-4067: Resource with muliple version issue resolved
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserLearningActivities] (
 	 @userId INT	
@@ -56,7 +58,7 @@ BEGIN
 
 	SELECT 
 	--Resource activity starts here
-	[t2].[Id] as Id,[t2].[UserId] as UserId,[t7].[ResourceId] as ResourceId,[t2].[ResourceVersionId] as ResourceVersionId,[t7].[NodePathId],[t2].[AmendDate],[t2].[Deleted],[t2].[CreateUserId],[t2].[CreateDate],[t2].[AmendUserId]
+	[t2].[Id] as Id,[t2].[UserId] as UserId,[t7].[ResourceId] as ResourceId,[t2].[ResourceVersionId] as ResourceVersionId,[t2].[NodePathId],[t2].[AmendDate],[t2].[Deleted],[t2].[CreateUserId],[t2].[CreateDate],[t2].[AmendUserId]
 	,[t2].[LaunchResourceActivityId],[t2].[MajorVersion],[t2].[MinorVersion],[t2].[ActivityStatusId],[t2].[ActivityStart],[t2].[ActivityEnd],[t9].[DurationSeconds],[t2].[Score]
 	--Node path clumns starts here
 	,[t6].[AmendDate] as NodePath_AmendDate,[t6].[AmendUserId] as NodePath_AmendUserId,[t6].[CatalogueNodeId] as NodePath_CatalogueNode, [t6].[CreateDate] as NodePath_CreateDate, [t6].[CreateUserId] as NodePath_CreateUserId, [t6].[Deleted] as NodePath_Deleted, [t6].[IsActive] as NodePath_IsActive
@@ -173,7 +175,7 @@ FROM (
 			@searchText IS NULL
             OR 
 				(
-						Charindex(@searchText, [ResVer].[Title]) > 0
+						(Charindex(@searchText, [ResVer].[Title]) > 0
 					OR                          
 						Charindex(@searchText, [ResVer].[Description]) > 0
 					OR  
@@ -187,8 +189,8 @@ FROM (
 									[ResVer].[Id] = [ResourceVersionKeyword].[ResourceVersionId]
 								AND   
 									Charindex(@searchText, [ResourceVersionKeyword].[Keyword]) > 0
-								)
-					)
+								) 
+					)) AND [ResourceActivity].ActivityStart is not null 
 				)
 		)
 		AND
@@ -217,10 +219,10 @@ FROM (
 				(
 					(
 					   -- resource type is not video/audio and launch resource activity doesn't exists
-					   [Res].[ResourceTypeId] NOT IN (7,2) AND NOT (EXISTS
+					   NOT (EXISTS
 								(
 									SELECT 1 FROM   [activity].[ResourceActivity] AS [ResAct1]
-									WHERE  [ResAct1].[Deleted] = 0 AND [ResourceActivity].[Id] = [ResAct1].[LaunchResourceActivityId]
+									WHERE  [ResAct1].[Deleted] = 0 AND [ResourceActivity].[Id] = [ResAct1].[LaunchResourceActivityId] 
 								))
 					)
 				OR  
@@ -228,14 +230,14 @@ FROM (
 					EXISTS
 					(
 							SELECT 1	FROM   [activity].[ResourceActivity] AS [ResAct2]
-							WHERE  [ResAct2].[Deleted] = 0 AND  [ResourceActivity].[Id] = [ResAct2].[LaunchResourceActivityId] AND  [ResAct2].[ActivityStatusId] = 3
+							WHERE  [ResAct2].[Deleted] = 0 AND  [ResourceActivity].[Id] = [ResAct2].[LaunchResourceActivityId] AND  [ResAct2].[ActivityStatusId] in (3,7,5,4)
 					)
 					
 				)
-		AND
+			AND
 				(
-					-- resource type is not assessment and activity status is launched
-					[Res].[ResourceTypeId] <> 11 OR [ResourceActivity].[ActivityStatusId] = 1
+					-- resource type is not assessment and activity status is Complete/Incomplete
+					[Res].[ResourceTypeId] <> 11 OR [ResourceActivity].[ActivityStatusId] in (7,3)
 				)
 		AND
 				(

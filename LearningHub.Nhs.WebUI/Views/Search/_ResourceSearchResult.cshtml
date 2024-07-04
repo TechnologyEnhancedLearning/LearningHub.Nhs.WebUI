@@ -14,15 +14,21 @@
   var index = pagingModel.CurrentPage * pagingModel.PageSize;
   var searchString = HttpUtility.UrlEncode(Model.SearchString);
   var searchSignal = resourceResult.Feedback?.FeedbackAction?.Payload?.SearchSignal;
-
+  int qVectorIndex = searchSignal.Query?.IndexOf("q_vector") ?? -1;
+  var searchSignalQuery = searchSignal?.Query;
+  // Check if "q_vector" is found in the string. if Yes, Remove "q_vector" and everything after it
+  if (qVectorIndex != -1)
+  {
+    searchSignalQuery = searchSignal?.Query.Substring(0, qVectorIndex);
+  }
   string GetUrl(int resourceReferenceId, int itemIndex, int nodePathId)
   {
     string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
-    string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
+    string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignalQuery));
 
     return $@"/search/record-resource-click?url=/Resource/{resourceReferenceId}&nodePathId={nodePathId}&itemIndex={itemIndex}
 &pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={resourceResult.TotalHits}&searchText={searchString}&resourceReferenceId={resourceReferenceId}
-&groupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal?.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal?.UserQuery)}&query={searchSignalQueryEncoded}";
+&groupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal?.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal.UserQuery)}&query={searchSignalQueryEncoded}";
   }
 
   bool showCatalogueFieldsInResources = ViewBag.ShowCatalogueFieldsInResources == null || ViewBag.ShowCatalogueFieldsInResources == true;
@@ -82,7 +88,7 @@
     <div class="resource-author">
       @if (!string.IsNullOrWhiteSpace(item.CatalogueBadgeUrl) && showCatalogueFieldsInResources)
       {
-        <img class="resource-catalogue-badge" src="/search/image/@item.CatalogueBadgeUrl" alt="Resource catalog badge"/>
+        <img class="resource-catalogue-badge" src="/search/image/@item.CatalogueBadgeUrl" alt="Provider's catalogue badge"/>
       }
 
       @if (!string.IsNullOrEmpty(item.CatalogueName) && !this.Model.CatalogueId.HasValue && showCatalogueFieldsInResources)

@@ -44,5 +44,10 @@
         /// Gets or sets the collection ids.
         /// </summary>
         public FindwiseCollectionIdSettings CollectionIds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Description length limit.
+        /// </summary>
+        public int DescriptionLengthLimit { get; set; }
     }
 }

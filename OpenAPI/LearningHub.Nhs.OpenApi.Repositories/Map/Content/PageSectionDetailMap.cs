@@ -17,8 +17,6 @@
         {
             entity.ToTable("PageSectionDetail", "content");
 
-            entity.Property(e => e.AssetPositionId).HasDefaultValueSql("((2))");
-
             entity.Property(e => e.BackgroundColour).HasMaxLength(20);
 
             entity.Property(e => e.Description).HasMaxLength(512);
@@ -31,7 +29,7 @@
 
             entity.Property(e => e.TextColour).HasMaxLength(20);
 
-            entity.Property(e => e.Title).HasMaxLength(128);
+            entity.Property(e => e.SectionTitle).HasMaxLength(128);
 
             entity.Property(e => e.DeletePending).IsRequired(false);
 

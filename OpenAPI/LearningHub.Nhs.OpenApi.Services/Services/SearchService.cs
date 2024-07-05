@@ -57,7 +57,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         }
 
         /// <inheritdoc />
-        public async Task<ResourceSearchResultModel> Search(ResourceSearchRequest query)
+        public async Task<ResourceSearchResultModel> Search(ResourceSearchRequest query, int? currentUserId)
         {
             var findwiseResultModel = await this.findwiseClient.Search(query);
 
@@ -66,7 +66,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 return ResourceSearchResultModel.FailedWithStatus(findwiseResultModel.FindwiseRequestStatus);
             }
 
-            var resourceMetadataViewModels = await this.GetResourceMetadataViewModels(findwiseResultModel);
+            var resourceMetadataViewModels = await this.GetResourceMetadataViewModels(findwiseResultModel, currentUserId);
 
             var totalHits = findwiseResultModel.SearchResults?.Stats.TotalHits;
 
@@ -77,7 +77,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         }
 
         private async Task<List<ResourceMetadataViewModel>> GetResourceMetadataViewModels(
-            FindwiseResultModel findwiseResultModel)
+            FindwiseResultModel findwiseResultModel, int? currentUserId)
         {
             var documentsFound = findwiseResultModel.SearchResults?.DocumentList.Documents?.ToList() ??
                                  new List<Document>();

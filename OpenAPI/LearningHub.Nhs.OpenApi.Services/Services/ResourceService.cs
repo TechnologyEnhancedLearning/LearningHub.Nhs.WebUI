@@ -47,8 +47,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// the get by id async.
         /// </summary>
         /// <param name="originalResourceReferenceId">the id.</param>
+        /// <param name="currentUserId"></param>
         /// <returns>the resource.</returns>
-        public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId)
+        public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId, int? currentUserId)
         {
             var list = new List<int>() { originalResourceReferenceId };
 
@@ -102,7 +103,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             return new BulkResourceReferenceViewModel(matchedResources, unmatchedIds);
         }
 
-        private ResourceReferenceWithResourceDetailsViewModel GetResourceReferenceWithResourceDetailsViewModel(ResourceReference resourceReference)
+        private ResourceReferenceWithResourceDetailsViewModel GetResourceReferenceWithResourceDetailsViewModel(ResourceReference resourceReference, int? currentUserIdint? currentUserId)
         {
             var hasCurrentResourceVersion = resourceReference.Resource.CurrentResourceVersion != null;
             var hasRating = resourceReference.Resource.CurrentResourceVersion?.ResourceVersionRatingSummary != null;

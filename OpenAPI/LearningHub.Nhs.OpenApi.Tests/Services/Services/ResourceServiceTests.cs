@@ -22,9 +22,13 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         private readonly Mock<ILearningHubService> learningHubService;
         private readonly ResourceService resourceService;
         private readonly Mock<IResourceRepository> resourceRepository;
+        private readonly int currentUserId;
 
         public ResourceServiceTests()
         {
+            //This Id is the development accountId
+            this.currentUserId = 57541;
+
             this.learningHubService = new Mock<ILearningHubService>();
             this.resourceRepository = new Mock<IResourceRepository>();
             this.resourceService = new ResourceService(this.learningHubService.Object, this.resourceRepository.Object, new NullLogger<ResourceService>());
@@ -63,7 +67,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(0, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(1);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(1, null);
 
             // Then
             x.Rating.Should().Be(3);
@@ -80,7 +84,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(new List<ResourceReference>());
 
             // When / Then
-            var exception = await Assert.ThrowsAsync<HttpResponseException>(async () => await this.resourceService.GetResourceReferenceByOriginalId(999));
+            var exception = await Assert.ThrowsAsync<HttpResponseException>(async () => await this.resourceService.GetResourceReferenceByOriginalId(999, null));
             exception.StatusCode.Should().Be(HttpStatusCode.NotFound);
             exception.ResponseBody.Should().Be("No matching resource reference");
         }
@@ -93,7 +97,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(1, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(2);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(2, null);
 
             // Then
             x.Title.Should().Be("No current resource version");
@@ -108,7 +112,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(2, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(3);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(3, null);
 
             // Then
             x.Catalogue.Name.Should().Be("No catalogue for resource reference");
@@ -122,7 +126,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(3, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(4);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(4, null);
 
             // Then
             x.Catalogue.Name.Should().Be("No catalogue for resource reference");
@@ -136,7 +140,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(5, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(6);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(6, null);
 
             // Then
             x.Catalogue.Name.Should().Be("No catalogue for resource reference");
@@ -150,7 +154,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(7, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(8);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(8, null);
 
             // Then
             x.Catalogue.Name.Should().Be("catalogue3");
@@ -165,7 +169,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(8, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(9);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(9, null);
 
             // Then
             x.ResourceType.Should().Be(string.Empty);
@@ -179,7 +183,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(9, 2));
 
             // When / Then
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await this.resourceService.GetResourceReferenceByOriginalId(10));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await this.resourceService.GetResourceReferenceByOriginalId(10, null));
         }
 
         /*[Fact]
@@ -198,7 +202,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(0, 2));
 
             // When
-            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp);
+            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp, null);
 
             // Then
             x.ResourceReferences.Count.Should().Be(2);
@@ -220,7 +224,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(new List<ResourceReference>());
 
             // When
-            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp);
+            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp, null);
 
             // Then
             x.UnmatchedResourceReferenceIds.Count.Should().Be(2);
@@ -237,7 +241,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(0, 4));
 
             // When
-            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp);
+            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp, null);
 
             // Then
             x.ResourceReferences.Count.Should().Be(4);
@@ -257,7 +261,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(0, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp);
+            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp, null);
 
             // Then
             x.ResourceReferences.Count.Should().Be(1);
@@ -277,7 +281,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(5, 2));
 
             // When
-            var x = await this.resourceService.GetResourceReferencesByOriginalIds(list);
+            var x = await this.resourceService.GetResourceReferencesByOriginalIds(list, null);
 
             // Then
             x.ResourceReferences[0].RefId.Should().Be(6);
@@ -293,7 +297,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(5, 1));
 
              // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(6);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(6, null);
 
              // Then
             x.RefId.Should().Be(6);
@@ -308,7 +312,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(8, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(9);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(9, null);
 
             // Then
             x.Catalogue.IsRestricted.Should().BeTrue();
@@ -323,7 +327,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(7, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(8);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(8, null);
 
             // Then
             x.Catalogue.IsRestricted.Should().BeFalse();

@@ -3,8 +3,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.Models.ViewModels.Helpers;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Findwise;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
@@ -108,10 +111,18 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             return resourceMetadataViewModels;
         }
 
-        private ResourceMetadataViewModel MapToViewModel(Resource resource)
+        private ResourceMetadataViewModel MapToViewModel(Resource resource, List<ResourceActivityDTO> resourceActivities)
         {
             var hasCurrentResourceVersion = resource.CurrentResourceVersion != null;
             var hasRating = resource.CurrentResourceVersion?.ResourceVersionRatingSummary != null;
+
+            List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
+
+            if (resourceActivities != null && resourceActivities.Count != 0)
+            {
+                majorVersionIdActivityStatusDescription = ActivityStatusHelper.GetMajorVersionIdActivityStatusDescriptionLSPerResource(resource, resourceActivities)
+                    .ToList();
+            }
 
             if (!hasCurrentResourceVersion)
             {
@@ -131,13 +142,16 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 this.logger.LogError($"Resource has unrecognised type: {resource.ResourceTypeEnum}");
             }
 
+
             return new ResourceMetadataViewModel(
                 resource.Id,
                 resource.CurrentResourceVersion?.Title ?? ResourceHelpers.NoResourceVersionText,
                 resource.CurrentResourceVersion?.Description ?? string.Empty,
                 resource.ResourceReference.Select(this.GetResourceReferenceViewModel).ToList(),
                 resourceTypeNameOrEmpty,
-                resource.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0.0m);
+                resource.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0.0m,
+                majorVersionIdActivityStatusDescription
+                );
         }
 
         private ResourceReferenceViewModel GetResourceReferenceViewModel(

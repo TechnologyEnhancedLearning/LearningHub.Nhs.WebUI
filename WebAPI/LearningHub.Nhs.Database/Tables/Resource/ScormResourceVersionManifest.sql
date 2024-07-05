@@ -40,3 +40,5 @@ GO
 ALTER TABLE [resources].[ScormResourceVersionManifest]  ADD  CONSTRAINT [FK_ScormResourceVersionManifest_ScormResourceVersion] FOREIGN KEY([ScormResourceVersionId])
 REFERENCES [resources].[ScormResourceVersion] ([Id])
 GO
+CREATE NONCLUSTERED INDEX [IX_Resources_ScormResourceVersionManifest_ScormResourceVersionId_ManifestURL]ON [resources].[ScormResourceVersionManifest] ([ScormResourceVersionId])INCLUDE ([ManifestURL])
+GO

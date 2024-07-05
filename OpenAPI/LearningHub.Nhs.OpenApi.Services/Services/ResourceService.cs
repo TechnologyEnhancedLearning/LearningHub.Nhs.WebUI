@@ -2,9 +2,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.OpenApi.Models.Exceptions;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
@@ -51,6 +53,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <returns>the resource.</returns>
         public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId, int? currentUserId)
         {
+            List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
             var list = new List<int>() { originalResourceReferenceId };
 
             var resourceReferences = await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(list);
@@ -63,6 +66,14 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 if (resourceReference == null)
                 {
                     throw new HttpResponseException("No matching resource reference", HttpStatusCode.NotFound);
+                }
+
+                if (currentUserId.HasValue)
+                {
+                    List<int> resourceIds = new List<int>() { resourceReference.ResourceId };
+                    List<int> userIds = new List<int>() { currentUserId.Value };
+
+                    resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
                 }
 
                 return this.GetResourceReferenceWithResourceDetailsViewModel(resourceReference);

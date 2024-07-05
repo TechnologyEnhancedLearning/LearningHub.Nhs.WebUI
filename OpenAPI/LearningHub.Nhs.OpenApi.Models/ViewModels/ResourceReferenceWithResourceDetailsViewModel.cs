@@ -17,9 +17,11 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <param name="description"><see cref="Description"/>.</param>
         /// <param name="catalogueViewModel"><see cref="Catalogue"/>.</param>
         /// <param name="resourceType"><see cref="ResourceType"/>.</param>
+        /// <param name="majorVersion"></param>
         /// <param name="rating"><see cref="Rating"/>.</param>
         /// <param name="link"><see cref="Link"/>.</param>
-        public ResourceReferenceWithResourceDetailsViewModel( // qqqq may need major version id adding
+        /// <param name="userSummaryActivityStatuses"></param>
+        public ResourceReferenceWithResourceDetailsViewModel(
             int resourceId,
             int refId,
             string title,
@@ -29,7 +31,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             int? majorVersion,
             decimal rating,
             string link,
-            List<MajorVersionIdActivityStatusDescription>? userSummaryActivityStatuses)
+            List<MajorVersionIdActivityStatusDescription> userSummaryActivityStatuses)
         {
             this.ResourceId = resourceId;
             this.RefId = refId;
@@ -94,6 +96,6 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <summary>
         /// Gets <see cref="UserSummaryActivityStatuses"/>.
         /// </summary>
-        public List<MajorVersionIdActivityStatusDescription>? UserSummaryActivityStatuses { get; }
+        public List<MajorVersionIdActivityStatusDescription> UserSummaryActivityStatuses { get; }
     }
 }

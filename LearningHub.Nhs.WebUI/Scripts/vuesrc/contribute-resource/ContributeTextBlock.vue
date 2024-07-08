@@ -32,7 +32,7 @@
         data() {
             return {
                 textBlockContent: this.textBlock.content,
-                ckEditorConfig: { toolbar: CKEditorToolbar.default },
+                ckEditorConfig: { toolbar: CKEditorToolbar.default, versionCheck: false },
                 prevHeight: undefined,
             };
         },

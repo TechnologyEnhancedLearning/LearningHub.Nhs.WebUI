@@ -31,7 +31,12 @@
 	
 -------------------------------------------------------------------------------
 
-
+-- Create the new stored procedure
+CREATE PROCEDURE [activity].[GetResourceActivityPerResourceMajorVersion]
+    @ResourceIds VARCHAR(MAX) = NULL,
+    @UserIds VARCHAR(MAX) = NULL
+AS
+BEGIN
 
   -- Split the comma-separated list into a table of integers
     DECLARE @ResourceIdTable TABLE (ResourceId INT);

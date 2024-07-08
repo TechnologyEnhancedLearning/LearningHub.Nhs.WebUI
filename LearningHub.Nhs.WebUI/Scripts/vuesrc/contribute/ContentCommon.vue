@@ -282,7 +282,7 @@
                 currentUserAuthor: false,
                 certificateEnabled: null,
                 newKeyword: '',
-                editorConfig: { toolbar: CKEditorToolbar.default },
+                editorConfig: { toolbar: CKEditorToolbar.default, versionCheck: false },
                 ResourceType,
                 resourceProviderId: null,
             };

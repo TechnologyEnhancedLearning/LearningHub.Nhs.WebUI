@@ -75,7 +75,10 @@
         data() {
             return {
                 articleContent: '',
-                editorConfig: { toolbar: CKEditorToolbar.default },
+                editorConfig: {                
+                    toolbar: CKEditorToolbar.default,
+                     versionCheck: false
+                },
                 localArticleDetail: new ArticleResourceModel(),
                 uploadingFile: null as File,
                 changeingFileId: 0

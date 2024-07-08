@@ -2,10 +2,12 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using FizzWare.NBuilder;
     using FluentAssertions;
+    using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.OpenApi.Models.Exceptions;
@@ -33,7 +35,14 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.resourceRepository = new Mock<IResourceRepository>();
             this.resourceService = new ResourceService(this.learningHubService.Object, this.resourceRepository.Object, new NullLogger<ResourceService>());
         }
-
+        private List<ResourceActivityDTO> ResourceActivityDTOList => new List<ResourceActivityDTO>()
+        {
+            new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 5, MajorVersion = 5 },
+            new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 7, MajorVersion = 4 },
+            new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 3, MajorVersion = 3 },
+            new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 7, MajorVersion = 2 },
+            new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 3, MajorVersion = 1 },
+        };
         private List<Resource> ResourceList => new List<Resource>()
         {
             ResourceTestHelper.CreateResourceWithDetails(id: 1, title: "title1", description: "description1", rating: 3m, resourceType: ResourceTypeEnum.Article),
@@ -331,6 +340,54 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
 
             // Then
             x.Catalogue.IsRestricted.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task SingleResourceEndpointReturnsActivitySummaryWhenCurrentUserIdProvided()
+        {
+            // Given
+            this.resourceRepository.Setup(rr => rr.GetResourceReferencesByOriginalResourceReferenceIds(new List<int>() { 1 }))
+                .ReturnsAsync(this.ResourceReferenceList.GetRange(0, 1));
+
+            this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(new List<int>() { 1 }, new List<int>() { currentUserId }))
+                .ReturnsAsync(this.ResourceActivityDTOList.ToList());
+
+            // When
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(1, currentUserId);
+
+            // Then
+            x.UserSummaryActivityStatuses.Should().NotBeNull();
+            x.UserSummaryActivityStatuses[0].MajorVersionId.Should().Be(5);
+            x.UserSummaryActivityStatuses[1].MajorVersionId.Should().Be(4);
+            x.UserSummaryActivityStatuses[2].MajorVersionId.Should().Be(3);
+            x.UserSummaryActivityStatuses[3].MajorVersionId.Should().Be(2);
+            x.UserSummaryActivityStatuses[4].MajorVersionId.Should().Be(1);
+
+            x.UserSummaryActivityStatuses[0].ActivityStatusDescription.Should().Be("Passed");
+            x.UserSummaryActivityStatuses[1].ActivityStatusDescription.Should().Be("In progress");
+            x.UserSummaryActivityStatuses[2].ActivityStatusDescription.Should().Be("Viewed");
+            x.UserSummaryActivityStatuses[3].ActivityStatusDescription.Should().Be("In progress");
+            x.UserSummaryActivityStatuses[4].ActivityStatusDescription.Should().Be("Viewed");
+
+        }
+
+        [Fact]
+        public async Task SingleResourceEndpointReturnsEmptyActivitySummaryWhenNoCurrentUserIdProvided()
+        {
+            // Given
+            this.resourceRepository.Setup(rr => rr.GetResourceReferencesByOriginalResourceReferenceIds(new List<int>() { 1 }))
+                .ReturnsAsync(this.ResourceReferenceList.GetRange(0, 1));
+
+            // This should not be hit
+            this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(new List<int>() { 1 }, new List<int>() { currentUserId }))
+                .ReturnsAsync(this.ResourceActivityDTOList.ToList());
+
+            // When
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(1, null);
+
+            // Then
+            x.UserSummaryActivityStatuses.Should().BeEmpty();
+
         }
     }
 }

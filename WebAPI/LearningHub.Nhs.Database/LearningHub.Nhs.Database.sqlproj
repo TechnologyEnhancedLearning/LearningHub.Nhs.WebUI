@@ -515,6 +515,7 @@
     <None Include="Scripts\Post-Deploy\Scripts\TD-2929_ActivityStatusUpdates.sql" />
     <Build Include="Stored Procedures\Resources\BlockCollectionFileSearch.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-4031_AMStoMKIOMigration.sql" />
+    <Build Include="Stored Procedures\Activity\GetResourceActivityPerResourceMajorVersion.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

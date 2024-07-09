@@ -42,6 +42,14 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 3, MajorVersion = 3 },
             new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 7, MajorVersion = 2 },
             new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 3, MajorVersion = 1 },
+
+            new ResourceActivityDTO{ ResourceId = 2, ActivityStatusId = 5, MajorVersion = 5 }, // Passed
+            new ResourceActivityDTO{ ResourceId = 2, ActivityStatusId = 4, MajorVersion = 4 }, // Failed
+            new ResourceActivityDTO{ ResourceId = 2, ActivityStatusId = 3, MajorVersion = 3 }, // complete
+
+            new ResourceActivityDTO{ ResourceId = 3, ActivityStatusId = 4, MajorVersion = 2 }, // Failed
+            new ResourceActivityDTO{ ResourceId = 3, ActivityStatusId = 4, MajorVersion = 1 }, // Failed
+            new ResourceActivityDTO{ ResourceId = 3, ActivityStatusId = 7, MajorVersion = 4 }, // In complete
         };
         private List<Resource> ResourceList => new List<Resource>()
         {
@@ -389,5 +397,105 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             x.UserSummaryActivityStatuses.Should().BeEmpty();
 
         }
+
+        [Fact]
+        public async Task GetResourceReferencesByCompleteReturnsCorrectInformation()
+        {
+
+            // Given
+            List<int> resourceIds = new List<int>() { 1, 2 };
+            List<Resource> resources = this.ResourceList.GetRange(0,2);
+            resources[0].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 1, title: "title1", description: "description1", rating: 3m, resourceType: ResourceTypeEnum.Article);
+            resources[1].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 2, hasCurrentResourceVersion: false, hasNodePath: false, resourceType: ResourceTypeEnum.Assessment);
+
+            this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(It.IsAny<List<int>>(), It.IsAny<List<int>>()))
+                .ReturnsAsync(this.ResourceActivityDTOList);
+
+            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(resourceIds))
+                .ReturnsAsync(resources);
+
+            // When
+            var x = await this.resourceService.GetResourceReferenceByActivityStatus(new List<int>() { (int)ActivityStatusEnum.Completed }, currentUserId);
+
+            // Then
+
+            // Two groups resourceId 1 and 2 have completed for a major version. ResourceId 3 had resourceActivity data but not completed
+            x.Count().Should().Be(2);
+
+            // We are including all the major versions not just the matching ones if there exists one matching one
+            x[0].ResourceId.Should().Be(1);
+            x[0].UserSummaryActivityStatuses.Count().Should().Be(5);
+
+            // Return all the activitySummaries if one match
+            x[1].ResourceId.Should().Be(2);
+            x[1].UserSummaryActivityStatuses.Count().Should().Be(3);
+
+            // we are not excluding major version that are not completed. We return the resource and all its activitySummaries if one matches
+            x[0].UserSummaryActivityStatuses[1].ActivityStatusDescription.Should().Be("In progress");
+            x[0].UserSummaryActivityStatuses[2].ActivityStatusDescription.Should().Be("Viewed"); // Rename completed and still return it
+
+        }
+
+        [Fact]
+        public async Task GetResourceReferencesByInProgressReturnsCorrectInformation()
+        {
+            // Given
+            List<int> resourceIds = new List<int>() { 1, 3 };
+            List<Resource> resources = new List<Resource>() { this.ResourceList[0], this.ResourceList[2] };
+            resources[0].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 1, title: "title1", description: "description1", rating: 3m, resourceType: ResourceTypeEnum.Article);
+            resources[1].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 3, title: "title2", description: "description2");
+
+            this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(It.IsAny<List<int>>(), It.IsAny<List<int>>()))
+                .ReturnsAsync(this.ResourceActivityDTOList);
+
+            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(resourceIds))
+                .ReturnsAsync(resources);
+
+            // When
+            var x = await this.resourceService.GetResourceReferenceByActivityStatus(new List<int>() { (int)ActivityStatusEnum.Incomplete }, currentUserId); // In complete in the database is in progress im database
+
+            // Then
+
+            // Two groups resourceId 1 and 3 have completed for a major version. ResourceId 2 had resourceActivity data but not "in progress"
+            x.Count().Should().Be(2);
+
+            // We are including all the major versions not just the matching ones if there exists one matching one
+            x[0].ResourceId.Should().Be(1);
+            x[0].UserSummaryActivityStatuses.Count().Should().Be(5);
+
+            // Return all the activitySummaries if one match
+            x[1].ResourceId.Should().Be(3);
+            x[1].UserSummaryActivityStatuses.Count().Should().Be(3);
+
+            // we are not excluding major version that are not completed. We return the resource and all its activitySummaries if one matches
+            x[0].UserSummaryActivityStatuses[1].ActivityStatusDescription.Should().Be("In progress");
+            x[0].UserSummaryActivityStatuses[2].ActivityStatusDescription.Should().Be("Viewed"); // Rename completed and still return it
+
+        }
+
+        [Fact]
+        public async Task GetResourceReferencesByCertificatesReturnsCorrectInformation()
+        {
+
+            // Given
+            List<int> resourceIds = new List<int>() { 1,2 }; // Ids returned from activity
+
+            this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(It.IsAny<List<int>>(), It.IsAny<List<int>>()))
+                .ReturnsAsync(this.ResourceActivityDTOList);
+
+            this.resourceRepository.Setup(rr => rr.GetResourceReferencesForAssessments(resourceIds))
+                .ReturnsAsync(ResourceReferenceList.GetRange(1,1));
+
+            // When
+            var x = await this.resourceService.GetResourceReferencesForCertificates(currentUserId);
+
+            // Then
+            x.Count().Should().Be(1); // ActivityStatus passed and resourceType Assessment
+            x[0].ResourceId.Should().Be(1);
+            x[0].UserSummaryActivityStatuses.Count().Should().Be(3); // return passed and all other major version statuses for this resource
+            x[0].UserSummaryActivityStatuses[0].Should().Be("Passed");
+        }
+
+        // QQQQ EmptyList do it for nothing returned to check nulls and empty list
     }
 }

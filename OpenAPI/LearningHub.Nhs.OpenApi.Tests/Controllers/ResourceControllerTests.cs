@@ -239,6 +239,45 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
                 service => service.Search(It.Is<ResourceSearchRequest>(request => request.Limit == limit), currentUserId));
         }
 
+        [Fact]
+        public async Task GetResourceReferencesByCompleteThrowsErrorWhenNoUserId()
+        {
+            // When
+            var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
+            {
+                await this.resourceController.GetResourceReferencesByComplete();
+            });
+
+            // Then
+            Assert.Equal("User Id is required.", exception.Message);
+        }
+
+        [Fact]
+        public async Task GetResourceReferencesByInProgressThrowsErrorWhenNoUserId()
+        {
+            // When
+            var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
+            {
+                await this.resourceController.GetResourceReferencesByInProgress();
+            });
+
+            // Then
+            Assert.Equal("User Id is required.", exception.Message);
+        }
+
+        [Fact]
+        public async Task GetResourceReferencesByCertficatesThrowsErrorWhenNoUserId()
+        {
+            // When
+            var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
+            {
+                await this.resourceController.GetResourceReferencesByCertificates();
+            });
+
+            // Then
+            Assert.Equal("User Id is required.", exception.Message);
+        }
+
         private void GivenDefaultLimitForFindwiseSearchIs(int limit)
         {
             this.findwiseConfigOptions.Setup(options => options.Value)

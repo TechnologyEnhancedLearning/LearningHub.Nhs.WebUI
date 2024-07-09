@@ -73,6 +73,24 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<ResourceReference>> GetResourceReferencesForAssessments(List<int> resourceIds)
+        {
+
+            return await this.dbContext.ResourceReference
+                .Where(rr => resourceIds.Contains(rr.ResourceId))
+                .Where(rr => !rr.Deleted)
+                .Where(rr => (int)rr.NodePath.Node.NodeTypeEnum != 4)
+                .Include(rr => rr.NodePath)
+                .ThenInclude(np => np.CatalogueNode)
+                .ThenInclude(n => n.CurrentNodeVersion)
+                .ThenInclude(n => n.CatalogueNodeVersion)
+                .Include(rr => rr.Resource)
+                .ThenInclude(r => r.CurrentResourceVersion)
+                .ThenInclude(r => r.ResourceVersionRatingSummary)
+                .Where(r => r.Resource.ResourceTypeEnum == Nhs.Models.Enums.ResourceTypeEnum.Assessment)
+                .ToListAsync();
+        }
+
         /// </summary>
         /// <param name="resourceReferenceIds"></param>
         /// <param name="userIds"></param>

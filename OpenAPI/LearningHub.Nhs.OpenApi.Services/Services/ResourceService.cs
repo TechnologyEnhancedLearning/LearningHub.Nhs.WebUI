@@ -8,6 +8,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.ViewModels.Helpers;
     using LearningHub.Nhs.OpenApi.Models.Exceptions;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
@@ -124,6 +125,64 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             .ToList<ResourceReferenceWithResourceDetailsViewModel>();
 
             return new BulkResourceReferenceViewModel(matchedResources, unmatchedIds);
+        }
+
+
+        /// <summary>
+        /// the get by id async.
+        /// </summary>
+        /// <param name="originalResourceReferenceId">the id.</param>
+        /// <param name="currentUserId"></param>
+        /// <returns>list resource ViewModel.</returns>
+        public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferenceByActivityStatus(List<int> activityStatusIds, int currentUserId)
+        {
+            List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
+            List<ResourceReferenceWithResourceDetailsViewModel> ResourceReferenceWithResourceDetailsViewModelLS = new List<ResourceReferenceWithResourceDetailsViewModel>() { };
+
+            resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(new List<int>(){ }, new List<int>(){ currentUserId }))?.ToList() ?? new List<ResourceActivityDTO>() { };
+
+            // Removing resources that have no major versions with the required activitystatus
+            List<int> resourceIds = resourceActivities
+                .GroupBy(ra => ra.ResourceId)
+                .Where(group => group.Any(g => activityStatusIds.Contains(g.ActivityStatusId)))
+                .Select(group => group.Key)
+                .Distinct()
+                .ToList();
+
+            var resourceReferencesList = (await this.resourceRepository.GetResourcesFromIds(resourceIds)).SelectMany(r => r.ResourceReference).ToList();
+
+            ResourceReferenceWithResourceDetailsViewModelLS = resourceReferencesList.Select(rr => this.GetResourceReferenceWithResourceDetailsViewModel(rr, resourceActivities)).ToList();
+
+            return ResourceReferenceWithResourceDetailsViewModelLS;
+        }
+
+        /// <summary>
+        /// Gets ResourceReferences ForCertificates using the ResourceReferenceWithResourceDetailsViewModel .
+        /// </summary>
+        /// <param name="currentUserId">user Id.</param>
+        /// <returns>list resource reference ViewModel.</returns>
+        public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferencesForCertificates(int currentUserId)
+        {
+            //qqqq can some of this go into a helper
+            List<int> activityStatusesForCertificates = new List<int>() { (int)ActivityStatusEnum.Completed, (int)ActivityStatusEnum.Passed }; // qqqq maybe drop completed
+            List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
+            List<ResourceReferenceWithResourceDetailsViewModel> ResourceReferenceWithResourceDetailsViewModelLS = new List<ResourceReferenceWithResourceDetailsViewModel>() { };
+
+            resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(new List<int>() { }, new List<int>() { currentUserId }))?.ToList() ?? new List<ResourceActivityDTO>() { };
+
+            // Removing resources that have no major versions with the required activitystatus
+            List<int> resourceIds = resourceActivities
+                .GroupBy(ra => ra.ResourceId)
+                .Where(group => group.Any(g => activityStatusesForCertificates.Contains(g.ActivityStatusId)))
+                .Select(group => group.Key)
+                .Distinct()
+                .ToList();
+
+            var resourceReferencesList = (await this.resourceRepository.GetResourceReferencesForAssessments(resourceIds)).ToList();
+
+            ResourceReferenceWithResourceDetailsViewModelLS = resourceReferencesList.Select(rr => this.GetResourceReferenceWithResourceDetailsViewModel(rr, resourceActivities)).ToList();
+
+            return ResourceReferenceWithResourceDetailsViewModelLS;
         }
 
         private ResourceReferenceWithResourceDetailsViewModel GetResourceReferenceWithResourceDetailsViewModel(ResourceReference resourceReference, List<ResourceActivityDTO> resourceActivities)

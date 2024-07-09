@@ -5,6 +5,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Models.Exceptions;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Findwise;
@@ -150,5 +151,42 @@ namespace LearningHub.NHS.OpenAPI.Controllers
 
             return await this.resourceService.GetResourceReferencesByOriginalIds(bulkResourceReferences.ResourceReferenceIds, this.CurrentUserId);
         }
+        /// <summary>
+        /// Get resourceReferences that have an in progress activity summary
+        /// </summary>
+        /// <returns>ResourceReferenceViewModels for matching resources.</returns>
+        [HttpGet("User/InProgress")]
+        public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferencesByInProgress()
+        {
+            if (this.CurrentUserId == null) throw new UnauthorizedAccessException("User Id required");
+
+            return await this.resourceService.GetResourceReferenceByActivityStatus(new List<int>(){ (int)ActivityStatusEnum.Incomplete}, this.CurrentUserId.Value);// In complete value is renamed in progress once leaves db
+        }
+        /// <summary>
+        /// Get resourceReferences that have a complete activity summary
+        /// </summary>
+        /// <returns>ResourceReferenceViewModels for matching resources.</returns>
+        [HttpGet("User/Complete")]
+        public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferencesByComplete()
+        {
+            if (this.CurrentUserId == null) throw new UnauthorizedAccessException("User Id required");
+
+            return await this.resourceService.GetResourceReferenceByActivityStatus(new List<int>() { (int)ActivityStatusEnum.Completed }, this.CurrentUserId.Value);// Complete can be renamed to viewed etc
+        }
+
+        /// <summary>
+        /// Get resourceReferences that have certificates
+        /// </summary>
+        /// <returns>ResourceReferenceViewModels for matching resources.</returns>
+        [HttpGet("User/Certificates")]
+        public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferencesByCertificates()
+        {
+            if (this.CurrentUserId == null) throw new UnauthorizedAccessException("User Id required");
+
+            return await this.resourceService.GetResourceReferencesForCertificates(this.CurrentUserId.Value);
+        }
+
+
+
     }
 }

@@ -313,12 +313,12 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.resourceRepository.Setup(rr => rr.GetResourceReferencesByOriginalResourceReferenceIds(list))
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(5, 1));
 
-             // When
+            // When
             var x = await this.resourceService.GetResourceReferenceByOriginalId(6, null);
 
-             // Then
+            // Then
             x.RefId.Should().Be(6);
-         }
+        }
 
         [Fact]
         public async Task ResourceServiceReturnsThatARestrictedCatalogueIsRestricted()
@@ -404,7 +404,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
 
             // Given
             List<int> resourceIds = new List<int>() { 1, 2 };
-            List<Resource> resources = this.ResourceList.GetRange(0,2);
+            List<Resource> resources = this.ResourceList.GetRange(0, 2);
             resources[0].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 1, title: "title1", description: "description1", rating: 3m, resourceType: ResourceTypeEnum.Article);
             resources[1].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 2, hasCurrentResourceVersion: false, hasNodePath: false, resourceType: ResourceTypeEnum.Assessment);
 
@@ -478,13 +478,13 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         {
 
             // Given
-            List<int> resourceIds = new List<int>() { 1,2 }; // Ids returned from activity
+            List<int> resourceIds = new List<int>() { 1, 2 }; // Ids returned from activity
 
             this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(It.IsAny<List<int>>(), It.IsAny<List<int>>()))
                 .ReturnsAsync(this.ResourceActivityDTOList);
 
             this.resourceRepository.Setup(rr => rr.GetResourceReferencesForAssessments(resourceIds))
-                .ReturnsAsync(ResourceReferenceList.GetRange(1,1));
+                .ReturnsAsync(ResourceReferenceList.GetRange(1, 1));
 
             // When
             var x = await this.resourceService.GetResourceReferencesForCertificates(currentUserId);
@@ -493,9 +493,29 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             x.Count().Should().Be(1); // ActivityStatus passed and resourceType Assessment
             x[0].ResourceId.Should().Be(1);
             x[0].UserSummaryActivityStatuses.Count().Should().Be(3); // return passed and all other major version statuses for this resource
-            x[0].UserSummaryActivityStatuses[0].Should().Be("Passed");
+            x[0].UserSummaryActivityStatuses[0].ActivityStatusDescription.Should().Be("Passed");
         }
 
-        // QQQQ EmptyList do it for nothing returned to check nulls and empty list
+        [Fact]
+        public async Task GetResourceReferencesByCompleteNoActivitySummaryFound()
+        {
+            // Given
+            List<int> resourceIds = new List<int>() { };
+            List<Resource> resources = this.ResourceList.GetRange(0, 0);
+
+            this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(It.IsAny<List<int>>(), It.IsAny<List<int>>()))
+                .ReturnsAsync(this.ResourceActivityDTOList.GetRange(8, 3));
+
+            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(resourceIds))
+                .ReturnsAsync(resources);
+
+            // When
+            var x = await this.resourceService.GetResourceReferenceByActivityStatus(new List<int>() { (int)ActivityStatusEnum.Completed }, currentUserId);
+
+            // Then
+
+            x.Count().Should().Be(0);
+
+        }
     }
 }

@@ -249,7 +249,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
             });
 
             // Then
-            Assert.Equal("User Id is required.", exception.Message);
+            Assert.Equal("User Id required.", exception.Message);
         }
 
         [Fact]
@@ -262,7 +262,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
             });
 
             // Then
-            Assert.Equal("User Id is required.", exception.Message);
+            Assert.Equal("User Id required.", exception.Message);
         }
 
         [Fact]
@@ -275,7 +275,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
             });
 
             // Then
-            Assert.Equal("User Id is required.", exception.Message);
+            Assert.Equal("User Id required.", exception.Message);
         }
 
         private void GivenDefaultLimitForFindwiseSearchIs(int limit)

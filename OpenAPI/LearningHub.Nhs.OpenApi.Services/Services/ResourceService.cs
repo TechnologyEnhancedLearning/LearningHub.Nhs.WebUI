@@ -163,27 +163,48 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <returns>list resource reference ViewModel.</returns>
         public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferencesForCertificates(int currentUserId)
         {
-            //qqqq can some of this go into a helper
-            List<int> activityStatusesForCertificates = new List<int>() { (int)ActivityStatusEnum.Completed, (int)ActivityStatusEnum.Passed }; // qqqq maybe drop completed
+
             List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
             List<ResourceReferenceWithResourceDetailsViewModel> ResourceReferenceWithResourceDetailsViewModelLS = new List<ResourceReferenceWithResourceDetailsViewModel>() { };
+            List<int> acheivedCertificatedResourceIds = (await this.resourceRepository.GetAcheivedCertificatedResourceIds(currentUserId));
 
-            resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(new List<int>() { }, new List<int>() { currentUserId }))?.ToList() ?? new List<ResourceActivityDTO>() { };
+            resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(acheivedCertificatedResourceIds, new List<int>() { currentUserId }))?.ToList() ?? new List<ResourceActivityDTO>() { };
 
-            // Removing resources that have no major versions with the required activitystatus
-            List<int> resourceIds = resourceActivities
-                .GroupBy(ra => ra.ResourceId)
-                .Where(group => group.Any(g => activityStatusesForCertificates.Contains(g.ActivityStatusId)))
-                .Select(group => group.Key)
+            var resourceList = (await this.resourceRepository.GetResourcesFromIds(acheivedCertificatedResourceIds)).ToList();
+
+            //qqqq check this can return empty list of resourceActivity where there isnt any
+            //because we return resourceActivity but things are certified on other things could have strange looking results
+            ResourceReferenceWithResourceDetailsViewModelLS = resourceList.SelectMany(r => r.ResourceReference)
                 .Distinct()
-                .ToList();
-
-            var resourceReferencesList = (await this.resourceRepository.GetResourceReferencesForAssessments(resourceIds)).ToList();
-
-            ResourceReferenceWithResourceDetailsViewModelLS = resourceReferencesList.Select(rr => this.GetResourceReferenceWithResourceDetailsViewModel(rr, resourceActivities)).ToList();
+                .Select(rr => this.GetResourceReferenceWithResourceDetailsViewModel(rr, resourceActivities)).ToList();
 
             return ResourceReferenceWithResourceDetailsViewModelLS;
         }
+        // qqqq original
+        //public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferencesForCertificates(int currentUserId)
+        //{
+        //    // GetAcheivedCertificatedResourceIds
+        //    //qqqq can some of this go into a helper
+        //    List<int> activityStatusesForCertificates = new List<int>() { (int)ActivityStatusEnum.Completed, (int)ActivityStatusEnum.Passed }; // qqqq maybe drop completed
+        //    List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
+        //    List<ResourceReferenceWithResourceDetailsViewModel> ResourceReferenceWithResourceDetailsViewModelLS = new List<ResourceReferenceWithResourceDetailsViewModel>() { };
+
+        //    resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(new List<int>() { }, new List<int>() { currentUserId }))?.ToList() ?? new List<ResourceActivityDTO>() { };
+
+        //    // Removing resources that have no major versions with the required activitystatus
+        //    List<int> resourceIds = resourceActivities
+        //        .GroupBy(ra => ra.ResourceId)
+        //        .Where(group => group.Any(g => activityStatusesForCertificates.Contains(g.ActivityStatusId)))
+        //        .Select(group => group.Key)
+        //        .Distinct()
+        //        .ToList();
+
+        //    var resourceReferencesList = (await this.resourceRepository.GetResourceReferencesForAssessments(resourceIds)).ToList();
+
+        //    ResourceReferenceWithResourceDetailsViewModelLS = resourceReferencesList.Select(rr => this.GetResourceReferenceWithResourceDetailsViewModel(rr, resourceActivities)).ToList();
+
+        //    return ResourceReferenceWithResourceDetailsViewModelLS;
+        //}
 
         private ResourceReferenceWithResourceDetailsViewModel GetResourceReferenceWithResourceDetailsViewModel(ResourceReference resourceReference, List<ResourceActivityDTO> resourceActivities)
         {

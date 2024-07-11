@@ -2,8 +2,12 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Dashboard;
+    using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
@@ -73,7 +77,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<ResourceReference>> GetResourceReferencesForAssessments(List<int> resourceIds)
+        public async Task<IEnumerable<ResourceReference>> GetResourceReferencesForAssessments(List<int> resourceIds)// qqqq no more complex
         {
 
             return await this.dbContext.ResourceReference
@@ -91,16 +95,33 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<int>> GetAcheivedCertificatedResourceIds(int currentUserId) //qqqqq
+        {
+            // Use dashboard logic to ensure same resources determined has having acheived certificates
+            var param0 = new SqlParameter("@dashboardType", SqlDbType.NVarChar, 30) { Value = "my-certificates" };
+            var param1 = new SqlParameter("@userId", SqlDbType.Int) { Value = currentUserId };
+            var param2 = new SqlParameter("@pageNumber", SqlDbType.Int) { Value = 1 };
+            var param3 = new SqlParameter("@totalRows", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+            // qqqq originalResourceId instead?
+
+            // qqqq pagination so cant use this for that
+            var result = this.dbContext.DashboardResourceDto.FromSqlRaw("resources.GetDashboardResources @dashboardType, @userId, @pageNumber, @totalRows output", param0, param1, param2, param3).ToList();
+            List<int> acheivedCertificatedResourceIds = result.Select(drd => drd.ResourceId).Distinct().ToList<int>();
+
+            return acheivedCertificatedResourceIds;
+        }
+
         /// </summary>
         /// <param name="resourceReferenceIds"></param>
         /// <param name="userIds"></param>
         /// <param name="originalResourceReferenceIds">.</param>
         /// <returns>A <see cref="Task{ResourceReference}"/> representing the result of the asynchronous operation.</returns>
         public async Task<IEnumerable<ResourceActivityDTO>> GetResourceActivityPerResourceMajorVersion(
-          IEnumerable<int>? resourceReferenceIds, IEnumerable<int>? userIds)
+          IEnumerable<int>? resourceIds, IEnumerable<int>? userIds)
         {
-            var resourceIdsParam = resourceReferenceIds != null
-                ? string.Join(",", resourceReferenceIds)
+            var resourceIdsParam = resourceIds != null
+                ? string.Join(",", resourceIds)
                 : null;
 
             var userIdsParam = userIds != null

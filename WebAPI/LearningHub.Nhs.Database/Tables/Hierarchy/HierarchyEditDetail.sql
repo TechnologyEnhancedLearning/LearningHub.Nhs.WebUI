@@ -3,6 +3,7 @@
 	[HierarchyEditId] [int] NOT NULL,
 	[HierarchyEditDetailTypeId] [int] NOT NULL,
 	[HierarchyEditDetailOperationId] [int] NULL,
+	[PrimaryCatalogueNodeId] [int] NULL,
 	[NodeId] [int] NULL,
 	[NodePathId] [int] NULL,
 	[NodeVersionId] [int] NULL,

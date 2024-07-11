@@ -13,6 +13,8 @@
 -- 03-06-2024  DB	Return the NodePathDisplayVersion properties (where they exist).
 -- 12-06-2024  DB	Added ResourceReferenceDisplayVersion properties
 -- 02-07-2024  DB   Allow catalogue node types to be nested.
+-- 04-07-2024  DB   Include PrimaryCatalogueNodeId in the output.
+-- 10-07-2024  DB   Added PrimaryCatalogueNodeName to the output.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsAdmin]
 (
@@ -54,7 +56,9 @@ BEGIN
 		DraftResourceVersionId,
 		CAST(HasResourcesInd as bit) AS HasResourcesInd,
 		CAST(HasResourcesInBranchInd as bit) AS HasResourcesInBranchInd,
-		HierarchyEditDetailId
+		HierarchyEditDetailId,
+		PrimaryCatalogueNodeId,
+		PrimaryCatalogueNodeName
 	FROM
 	(
 		-- Folder Node/s in Edit
@@ -78,13 +82,19 @@ BEGIN
 			NULL AS DraftResourceVersionId,
 			CASE WHEN nr.NodeId IS NULL THEN 0 ELSE 1 END AS HasResourcesInd,
 			CASE WHEN nrl.NodeId IS NULL THEN 0 ELSE 1 END AS HasResourcesInBranchInd,
-			hed.Id AS HierarchyEditDetailId
+			hed.Id AS HierarchyEditDetailId,
+			hed.PrimaryCatalogueNodeId,
+			pc_nv.[Name] AS PrimaryCatalogueNodeName
 		FROM 
 			hierarchy.HierarchyEditDetail  hed
 		INNER JOIN
 			hierarchy.HierarchyEdit he ON hed.HierarchyEditId = he.Id
 		INNER JOIN
 			hierarchy.[Node] n ON hed.NodeId = n.Id
+		INNER JOIN
+			hierarchy.[Node] pc_n ON hed.PrimaryCatalogueNodeId = pc_n.Id
+		INNER JOIN
+			hierarchy.CatalogueNodeVersion pc_nv ON pc_n.CurrentNodeVersionId = pc_nv.NodeVersionId AND pc_nv.Deleted = 0
 		LEFT JOIN
 			hierarchy.CatalogueNodeVersion cnv ON hed.NodeVersionId = cnv.NodeVersionId AND cnv.Deleted = 0
 		LEFT JOIN
@@ -129,7 +139,9 @@ BEGIN
 			ISNULL(rvd.Id, rv.Id) AS DraftResourceVersionId,
 			0 AS HasResourcesInd,
 			0 AS HasResourcesInBranchInd,
-			hed.Id AS HierarchyEditDetailId
+			hed.Id AS HierarchyEditDetailId,
+			hed.PrimaryCatalogueNodeId,
+			pc_nv.[Name] AS PrimaryCatalogueNodeName
 		FROM 
 			hierarchy.HierarchyEditDetail  hed
 		INNER JOIN
@@ -138,6 +150,10 @@ BEGIN
 			resources.[Resource] r ON hed.ResourceId = r.Id
 		INNER JOIN 
 			resources.ResourceVersion rv ON rv.Id = hed.ResourceVersionId
+		INNER JOIN
+			hierarchy.[Node] pc_n ON hed.PrimaryCatalogueNodeId = pc_n.Id
+		INNER JOIN
+			hierarchy.CatalogueNodeVersion pc_nv ON pc_n.CurrentNodeVersionId = pc_nv.NodeVersionId AND pc_nv.Deleted = 0
 		LEFT JOIN 
 			resources.ResourceReference rr ON rr.Id = hed.ResourceReferenceId AND rr.Deleted = 0
 		LEFT JOIN

@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 01-07-2024  DB	Initial Revision.
+-- 08-07-2024  DB	Populate the PrimaryCatalogueNodeId based on the original catalogue.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditReferenceExternalNode]
 (
@@ -30,6 +31,7 @@ BEGIN
 		DECLARE @NewParentNodeId int
 		DECLARE @NewParentNodePathId int
 		DECLARE @RootNodeId INT
+		DECLARE @ExternalCatalogueNodeId INT
 		
 		SELECT	@HierarchyEditId = hed.HierarchyEditId,
                 @RootNodeId = np.NodeId,
@@ -40,10 +42,16 @@ BEGIN
 		INNER JOIN hierarchy.NodePath np ON he.RootNodePathId = np.Id
 		WHERE	hed.Id = @ReferenceToHierarchyEditDetailId
 
-		SELECT	@NodeId = NodeId
-		FROM	[hierarchy].[NodePath]
-		WHERE	Id = @NodePathId
-			AND Deleted = 0
+		SELECT	@NodeId = np.NodeId,
+				@ExternalCatalogueNodeId = nv.PrimaryCatalogueNodeId
+		FROM	[hierarchy].[NodePath] np
+		INNER JOIN [hierarchy].[Node] n ON np.NodeId = n.Id
+		INNER JOIN [hierarchy].NodeVersion nv ON n.CurrentNodeVersionId = nv.Id
+		WHERE	np.Id = @NodePathId
+			AND nv.VersionStatusId = 2 -- Published
+			AND np.Deleted = 0
+			AND n.Deleted = 0
+			AND nv.Deleted = 0
 
 		-- Increment display order of nodes in destination.
 		UPDATE  
@@ -81,10 +89,11 @@ BEGIN
 		WHERE   Id = @ReferenceToHierarchyEditDetailId
 		
 		-- Create the new HierarchyEditDetail records for the new referenced external nodes.
-		INSERT INTO hierarchy.HierarchyEditDetail (HierarchyEditId,HierarchyEditDetailTypeId,HierarchyEditDetailOperationId,NodeId,NodePathId,NodeVersionId,ParentNodeId,ParentNodePathId,NodeLinkId,ResourceId,ResourceVersionId,ResourceReferenceId,NodeResourceId,DisplayOrder,InitialNodePath,NewNodePath,Deleted,CreateUserId,CreateDate,AmendUserId,AmendDate)
+		INSERT INTO hierarchy.HierarchyEditDetail (HierarchyEditId,HierarchyEditDetailTypeId,HierarchyEditDetailOperationId,PrimaryCatalogueNodeId,NodeId,NodePathId,NodeVersionId,ParentNodeId,ParentNodePathId,NodeLinkId,ResourceId,ResourceVersionId,ResourceReferenceId,NodeResourceId,DisplayOrder,InitialNodePath,NewNodePath,Deleted,CreateUserId,CreateDate,AmendUserId,AmendDate)
 		SELECT  @HierarchyEditId,
 				4, -- Node Link (4)
 				4 AS HierarchyEditDetailOperationId,  -- Add Reference
+				@ExternalCatalogueNodeId AS PrimaryCatalogueNodeId,
 				np.NodeId, 
 				NULL as NodePathId, 
 				n.CurrentNodeVersionId, 
@@ -110,10 +119,11 @@ BEGIN
 			AND np.Deleted = 0
 
 		-- Create the new HierarchyEditDetail records for the new referenced external resources.
-		INSERT INTO hierarchy.HierarchyEditDetail (HierarchyEditId,HierarchyEditDetailTypeId,HierarchyEditDetailOperationId,NodeId,NodePathId,NodeVersionId,ParentNodeId,ParentNodePathId,NodeLinkId,ResourceId,ResourceVersionId,ResourceReferenceId,NodeResourceId,DisplayOrder,InitialNodePath,NewNodePath,Deleted,CreateUserId,CreateDate,AmendUserId,AmendDate)
+		INSERT INTO hierarchy.HierarchyEditDetail (HierarchyEditId,HierarchyEditDetailTypeId,HierarchyEditDetailOperationId,PrimaryCatalogueNodeId,NodeId,NodePathId,NodeVersionId,ParentNodeId,ParentNodePathId,NodeLinkId,ResourceId,ResourceVersionId,ResourceReferenceId,NodeResourceId,DisplayOrder,InitialNodePath,NewNodePath,Deleted,CreateUserId,CreateDate,AmendUserId,AmendDate)
 		SELECT	@HierarchyEditId AS HierarchyEditId,
 				5 AS HierarchyEditDetailTypeId, -- Node Resource (5)
 				4 AS HierarchyEditDetailOperationId,  -- Add Reference
+				@ExternalCatalogueNodeId AS PrimaryCatalogueNodeId,
 				NULL AS NodeId,
 				NULL as NodePathId,
 				NULL AS NodeVersionId,

@@ -7,12 +7,14 @@
 --
 -- 25-08-2021  KD	Initial Revision.
 -- 22-04-2024  DB	Included NodeId as an input so that editiing of a folder creates a new node version.
+-- 10-07-2024  DB	Added PrimaryCatalogueNodeId to the NodeVersion table.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[FolderNodeVersionCreate]
 (
 	@NodeId INT NULL,
 	@FolderName NVARCHAR(128),
 	@FolderDescription NVARCHAR(4000),
+	@PrimaryCatalogueNodeId INT,
 	@UserId INT,
 	@CreatedNodeVersionId INT output
 )
@@ -39,8 +41,8 @@ BEGIN
 		AND Deleted = 0
 
 	--NodeVersion
-	INSERT INTO hierarchy.NodeVersion (NodeId, VersionStatusId, PublicationId, MajorVersion, MinorVersion, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
-	VALUES (@NodeId, 1, NULL, @MajorVersion, @MinorVersion + 1, 0, @UserId, SYSDATETIMEOFFSET(), @UserId, SYSDATETIMEOFFSET()) -- Draft VersionStatusId=1
+	INSERT INTO hierarchy.NodeVersion (NodeId, VersionStatusId, PublicationId, MajorVersion, MinorVersion, PrimaryCatalogueNodeId, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
+	VALUES (@NodeId, 1, NULL, @MajorVersion, @MinorVersion + 1, @PrimaryCatalogueNodeId, 0, @UserId, SYSDATETIMEOFFSET(), @UserId, SYSDATETIMEOFFSET()) -- Draft VersionStatusId=1
 	SELECT @CreatedNodeVersionId = SCOPE_IDENTITY()
 
 	-- FolderNodeVersion

@@ -78,6 +78,7 @@ function refreshHierarchyEdit(state: State) {
                 state.rootNode.inEdit = state.editMode == EditModeEnum.Structure;
                 state.rootNode.showInTreeView = false;
                 state.rootNode.isReference = false;
+                state.rootNode.isResource = false;
             }).then(async y => {
                 await contentStructureData.getNodeContentsAdmin(state.catalogue.rootNodePathId, state.readOnly).then(response => {
                     state.rootNode.children = response;
@@ -116,7 +117,10 @@ async function refreshNodeContents(node: NodeContentAdminModel, refreshParentPat
                     existing.name = child.name;
                     existing.nodePathDisplayVersionId = child.nodePathDisplayVersionId;
                     existing.nodePaths = child.nodePaths;
-                    existing.isReference = child.nodePaths.length > 1;
+                    existing.isResource = child.nodeTypeId === NodeType.Resource;
+                    if (child.nodePaths) {
+                        existing.isReference = child.nodePaths.length > 1;
+                    }
                 }
             });
 
@@ -180,7 +184,10 @@ async function processChildNodeContents(child: NodeContentAdminModel, parent: No
     child.showInTreeView = true;
     child.depth = parent.depth + 1;
     child.path = child.depth === 0 ? child.name : `${child.parent.path} > ${child.name}`;
-    child.isReference = child.nodePaths.length > 1;
+    child.isResource = child.nodeTypeId === NodeType.Resource;
+    if (child.nodePaths) {
+        child.isReference = child.nodePaths.length > 1;
+    }
 }
 
 const mutations = {

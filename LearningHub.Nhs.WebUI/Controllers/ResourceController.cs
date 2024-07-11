@@ -192,7 +192,7 @@
                 await this.activityService.CreateResourceActivityAsync(activity);
             }
 
-            // Get node path data for breadcrumbs. //qqqqq
+            // Get node path data for breadcrumbs.
             var nodePathNodes = await this.hierarchyService.GetNodePathNodes(resource.NodePathId);
             bool userHasCertificate = false;
             if (resource.CertificateEnabled.GetValueOrDefault(false) && this.User.Identity.IsAuthenticated)

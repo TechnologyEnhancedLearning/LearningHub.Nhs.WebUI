@@ -41,9 +41,9 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         public Task<IEnumerable<ResourceReference>> GetResourceReferencesForAssessments(List<int> resourceIds);
 
         /// <summary>
-        /// GetAcheivedCertificatedResourceIds
+        /// GetAchievedCertificatedResourceIds
         /// </summary>
         /// <param name="currentUserId"><see cref="currentUserId"/>.</param>
-        public Task<List<int>> GetAcheivedCertificatedResourceIds(int currentUserId);
+        public Task<List<int>> GetAchievedCertificatedResourceIds(int currentUserId);
     }
 }

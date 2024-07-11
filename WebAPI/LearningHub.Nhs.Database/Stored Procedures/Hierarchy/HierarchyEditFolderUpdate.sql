@@ -7,6 +7,7 @@
 --
 -- 25-08-2021  KD	Initial Revision.
 -- 22-04-2024  DB	Updated so that a new draft NodeVersion is created if the existing NodeVersion is not in Draft status.
+-- 10-07-2024  DB	Added PrimaryCatalogueNodeId to the NodeVersion table.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditFolderUpdate]
 (
@@ -26,11 +27,13 @@ BEGIN
 	DECLARE @CreatedNodeVersionId INT
 	DECLARE @HierarchyEditId INT
 	DECLARE @ParentNodeId INT
+	DECLARE @PrimaryCatalogueNodeId INT
 
 	SELECT	@NodeId = NodeId, 
 			@NodeVersionId = NodeVersionId,
 			@HierarchyEditId = HierarchyEditId,
-			@ParentNodeId = ParentNodeId
+			@ParentNodeId = ParentNodeId,
+			@PrimaryCatalogueNodeId = PrimaryCatalogueNodeId
 	FROM [hierarchy].[HierarchyEditDetail]
 	WHERE Id = @HierarchyEditDetailId
 
@@ -68,7 +71,7 @@ BEGIN
 		END
 		ELSE
 		BEGIN
-			EXECUTE [hierarchy].[FolderNodeVersionCreate] @NodeId, @Name, @Description, @UserId, @CreatedNodeVersionId OUTPUT
+			EXECUTE [hierarchy].[FolderNodeVersionCreate] @NodeId, @Name, @Description, @PrimaryCatalogueNodeId, @UserId, @CreatedNodeVersionId OUTPUT
 		END
 
 

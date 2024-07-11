@@ -28,13 +28,14 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
 
         public ResourceServiceTests()
         {
-            //This Id is the development accountId
+            // This Id is the development accountId
             this.currentUserId = 57541;
 
             this.learningHubService = new Mock<ILearningHubService>();
             this.resourceRepository = new Mock<IResourceRepository>();
             this.resourceService = new ResourceService(this.learningHubService.Object, this.resourceRepository.Object, new NullLogger<ResourceService>());
         }
+
         private List<ResourceActivityDTO> ResourceActivityDTOList => new List<ResourceActivityDTO>()
         {
             new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 5, MajorVersion = 5 },
@@ -51,6 +52,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             new ResourceActivityDTO{ ResourceId = 3, ActivityStatusId = 4, MajorVersion = 1 }, // Failed
             new ResourceActivityDTO{ ResourceId = 3, ActivityStatusId = 7, MajorVersion = 4 }, // In complete
         };
+
         private List<Resource> ResourceList => new List<Resource>()
         {
             ResourceTestHelper.CreateResourceWithDetails(id: 1, title: "title1", description: "description1", rating: 3m, resourceType: ResourceTypeEnum.Article),
@@ -376,7 +378,6 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             x.UserSummaryActivityStatuses[2].ActivityStatusDescription.Should().Be("Viewed");
             x.UserSummaryActivityStatuses[3].ActivityStatusDescription.Should().Be("In progress");
             x.UserSummaryActivityStatuses[4].ActivityStatusDescription.Should().Be("Viewed");
-
         }
 
         [Fact]
@@ -395,13 +396,11 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
 
             // Then
             x.UserSummaryActivityStatuses.Should().BeEmpty();
-
         }
 
         [Fact]
         public async Task GetResourceReferencesByCompleteReturnsCorrectInformation()
         {
-
             // Given
             List<int> resourceIds = new List<int>() { 1, 2 };
             List<Resource> resources = this.ResourceList.GetRange(0, 2);
@@ -478,22 +477,41 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         {
 
             // Given
-            List<int> resourceIds = new List<int>() { 1, 2 }; // Ids returned from activity
+            List<int> resourceIds = new List<int>() { 1, 3 }; // Ids returned from activity
 
+            List<Resource> resources = new List<Resource>() { this.ResourceList[0], this.ResourceList[2] };
+            resources[0].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 1, title: "title1", description: "description1", rating: 3m, resourceType: ResourceTypeEnum.Article);
+            resources[1].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 3, title: "title2", description: "description2");
+
+
+            // Will be passed resourceIds and currentUserId
             this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(It.IsAny<List<int>>(), It.IsAny<List<int>>()))
                 .ReturnsAsync(this.ResourceActivityDTOList);
 
-            this.resourceRepository.Setup(rr => rr.GetResourceReferencesForAssessments(resourceIds))
-                .ReturnsAsync(ResourceReferenceList.GetRange(1, 1));
+            this.resourceRepository.Setup(rr => rr.GetAchievedCertificatedResourceIds(currentUserId))
+                .ReturnsAsync(resourceIds);
+
+            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(resourceIds))
+                .ReturnsAsync(resources);
 
             // When
             var x = await this.resourceService.GetResourceReferencesForCertificates(currentUserId);
 
             // Then
-            x.Count().Should().Be(1); // ActivityStatus passed and resourceType Assessment
+
+            x.Count().Should().Be(2);
+
+            // We are including all the major versions not just the matching ones if there exists one matching one
             x[0].ResourceId.Should().Be(1);
-            x[0].UserSummaryActivityStatuses.Count().Should().Be(3); // return passed and all other major version statuses for this resource
-            x[0].UserSummaryActivityStatuses[0].ActivityStatusDescription.Should().Be("Passed");
+            x[0].UserSummaryActivityStatuses.Count().Should().Be(5);
+
+            // Return all the activitySummaries if one match
+            x[1].ResourceId.Should().Be(3);
+            x[1].UserSummaryActivityStatuses.Count().Should().Be(3);
+
+            // we are not excluding major version that are not completed (assuming here that its completed and has certificated flag). We return the resource and all its activitySummaries if one matches
+            x[0].UserSummaryActivityStatuses[1].ActivityStatusDescription.Should().Be("In progress");
+            x[0].UserSummaryActivityStatuses[2].ActivityStatusDescription.Should().Be("Viewed"); // Rename completed and still return it
         }
 
         [Fact]
@@ -513,9 +531,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             var x = await this.resourceService.GetResourceReferenceByActivityStatus(new List<int>() { (int)ActivityStatusEnum.Completed }, currentUserId);
 
             // Then
-
             x.Count().Should().Be(0);
-
         }
     }
 }

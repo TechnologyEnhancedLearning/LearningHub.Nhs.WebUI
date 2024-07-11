@@ -152,6 +152,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
 
             return await this.resourceService.GetResourceReferencesByOriginalIds(bulkResourceReferences.ResourceReferenceIds, this.CurrentUserId);
         }
+
         /// <summary>
         /// Get resourceReferences that have an in progress activity summary
         /// </summary>
@@ -180,6 +181,5 @@ namespace LearningHub.NHS.OpenAPI.Controllers
 
             return await this.resourceService.GetResourceReferencesForCertificates(this.CurrentUserId.Value);
         }
-
     }
 }

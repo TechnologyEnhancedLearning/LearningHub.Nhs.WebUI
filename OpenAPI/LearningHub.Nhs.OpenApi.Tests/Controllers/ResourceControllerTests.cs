@@ -21,6 +21,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
+    using LearningHub.Nhs.Models.Enums;
 
     public sealed class ResourceControllerTests
     {
@@ -245,7 +246,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
             // When
             var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
             {
-                await this.resourceController.GetResourceReferencesByComplete();
+                await this.resourceController.GetResourceReferencesByActivityStatus((int)ActivityStatusEnum.Completed);
             });
 
             // Then
@@ -258,7 +259,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
             // When
             var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
             {
-                await this.resourceController.GetResourceReferencesByInProgress();
+                await this.resourceController.GetResourceReferencesByActivityStatus((int)ActivityStatusEnum.Incomplete);// in complete in db is in progress front endS
             });
 
             // Then

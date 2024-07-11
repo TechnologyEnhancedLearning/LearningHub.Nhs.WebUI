@@ -77,31 +77,12 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<ResourceReference>> GetResourceReferencesForAssessments(List<int> resourceIds)// qqqq no more complex
-        {
-
-            return await this.dbContext.ResourceReference
-                .Where(rr => resourceIds.Contains(rr.ResourceId))
-                .Where(rr => !rr.Deleted)
-                .Where(rr => (int)rr.NodePath.Node.NodeTypeEnum != 4)
-                .Include(rr => rr.NodePath)
-                .ThenInclude(np => np.CatalogueNode)
-                .ThenInclude(n => n.CurrentNodeVersion)
-                .ThenInclude(n => n.CatalogueNodeVersion)
-                .Include(rr => rr.Resource)
-                .ThenInclude(r => r.CurrentResourceVersion)
-                .ThenInclude(r => r.ResourceVersionRatingSummary)
-                .Where(r => r.Resource.ResourceTypeEnum == Nhs.Models.Enums.ResourceTypeEnum.Assessment)
-                .ToListAsync();
-        }
-
-        public async Task<List<int>> GetAchievedCertificatedResourceIds(int currentUserId) //qqqqq
+        public async Task<List<int>> GetAchievedCertificatedResourceIds(int currentUserId)
         {
             // Use dashboard logic to ensure same resources determined has having achieved certificates
             var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = currentUserId };
             var param4 = new SqlParameter("@TotalRecords", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
-            // qqqq pagination so cant use this for that
             var result = this.dbContext.DashboardResourceDto.FromSqlRaw("resources.GetAchievedCertificatedResourcesWithOptionalPagination @userId = @userId, @TotalRecords = @TotalRecords output", param0, param4).ToList();
             List<int> achievedCertificatedResourceIds = result.Select(drd => drd.ResourceId).Distinct().ToList<int>();
 

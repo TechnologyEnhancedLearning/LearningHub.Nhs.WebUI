@@ -1,7 +1,7 @@
 ﻿-- Content Referenincing data set up script
 
 
--- Only run the folling code if all PrimaryCatalogueNodeId values are set to 1 in the ResourceVersion table
+-- Only run the following code if all PrimaryCatalogueNodeId values are set to 1 in the ResourceVersion table
 IF NOT EXISTS (SELECT 1 FROM resources.ResourceVersion WHERE PrimaryCatalogueNodeId > 1)
 BEGIN
 
@@ -62,7 +62,7 @@ END
 GO
 
 
--- Only run the folling code if all PrimaryCatalogueNodeId values are set to 1 in the NodeVersion table
+-- Only run the following code if all PrimaryCatalogueNodeId values are set to 1 in the NodeVersion table
 IF NOT EXISTS (SELECT 1 FROM hierarchy.NodeVersion WHERE PrimaryCatalogueNodeId > 1)
 BEGIN
 

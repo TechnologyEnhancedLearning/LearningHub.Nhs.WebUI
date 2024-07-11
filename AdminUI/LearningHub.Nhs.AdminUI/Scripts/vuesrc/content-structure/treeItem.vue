@@ -11,7 +11,13 @@
                     </div>
                     <div v-if="editMode === EditModeEnum.Structure" class="ml-auto">
                         <div class="d-flex">
-                            <div class="node-path-edit-indicator" v-if="item.nodePathDisplayVersionId > 0">
+                            <div class="node-path-edit-indicator" v-if="isExternalCatalogue" :title="'Primary catalogue: ' + item.primaryCatalogueNodeName">
+                                <i class="fas fa-external-link-alt"></i>
+                            </div>
+                            <div class="node-path-edit-indicator" v-if="item.isReference && !item.parent.isReference" title="Reference root">
+                                <i class="fas fa-sitemap"></i>
+                            </div>
+                            <div class="node-path-edit-indicator" v-if="item.nodePathDisplayVersionId > 0" title="Reference edited">
                                 <i class="fa-solid fa-pencil"></i>
                             </div>
                             <div class="dropdown references-dropdown" v-if="item.nodePaths && item.nodePaths.length>1">
@@ -34,14 +40,15 @@
                                     options
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownNodeItems">
-                                    <a class="dropdown-item" v-if="canEditNode" @click="onEditFolder">Edit</a>
+                                    <a class="dropdown-item" v-if="canEditNode && !isExternalCatalogue" @click="onEditFolder">Edit</a>
                                     <a class="dropdown-item" v-if="canMoveNodeUp" @click="onMoveNodeUp">Move up</a>
                                     <a class="dropdown-item" v-if="canMoveNodeDown" @click="onMoveNodeDown">Move down</a>
-                                    <a class="dropdown-item" v-if="canMoveNode" @click="onInitiateMoveNode">Move</a>
-                                    <a class="dropdown-item" v-if="canDeleteNode" @click="onDeleteFolder">Delete</a>
-                                    <a class="dropdown-item" @click="onInitiateReferenceNode">Create reference to this folder</a>
+                                    <a class="dropdown-item" v-if="canMoveNode && !isExternalCatalogue" @click="onInitiateMoveNode">Move</a>
+                                    <a class="dropdown-item" v-if="canDeleteNode && !isExternalCatalogue" @click="onDeleteFolder">Delete</a>
+                                    <a class="dropdown-item" v-if="!isExternalCatalogue" @click="onInitiateReferenceNode">Create reference to this folder</a>
                                     <a class="dropdown-item" v-if="canEditFolderReference" @click="onEditFolderReference">{{item.nodePathDisplayVersionId == 0 ? "Create" : "Edit"}} reference details</a>
-                                    <a class="dropdown-item" @click="addReference">Add a reference here</a>
+                                    <a class="dropdown-item" v-if="!isExternalCatalogue" @click="addReference">Add a reference here</a>
+                                    <a class="dropdown-item" v-if="item.isReference && !item.parent.isReference" @click="removeReference">Remove this reference</a>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +136,13 @@
                     </div>
                     <div class="ml-auto">
                         <div v-if="showResourceOptions" class="d-flex">
-                            <div class="node-path-edit-indicator" v-if="item.resourceReferenceDisplayVersionId > 0">
+                            <div class="node-path-edit-indicator" v-if="isExternalCatalogue" :title="'Primary catalogue: ' + item.primaryCatalogueNodeName">
+                                <i class="fas fa-external-link-alt"></i>
+                            </div>
+                            <div class="node-path-edit-indicator" v-if="item.isReference && !item.parent.isReference" title="Reference root">
+                                <i class="fas fa-sitemap"></i>
+                            </div>
+                            <div class="node-path-edit-indicator" v-if="item.resourceReferenceDisplayVersionId > 0" title="Reference edited">
                                 <i class="fa-solid fa-pencil"></i>
                             </div>
                             <div class="dropdown references-dropdown" v-if="item.nodePaths && item.nodePaths.length>1">
@@ -153,9 +166,10 @@
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownNodeItems">
                                     <a class="dropdown-item" v-if="canMoveResourceUp" @click="onMoveResourceUp">Move up</a>
                                     <a class="dropdown-item" v-if="canMoveResourceDown" @click="onMoveResourceDown">Move down</a>
-                                    <a class="dropdown-item" v-if="canMoveResource" @click="onInitiateMoveResource">Move</a>
-                                    <a class="dropdown-item" @click="onInitiateReferenceResource">Create reference to this resource</a>
+                                    <a class="dropdown-item" v-if="canMoveResource && !isExternalCatalogue" @click="onInitiateMoveResource">Move</a>
+                                    <a class="dropdown-item" v-if="!isExternalCatalogue" @click="onInitiateReferenceResource">Create reference to this resource</a>
                                     <a class="dropdown-item" v-if="canEditResourceReference" @click="onEditResourceReference">{{item.resourceReferenceDisplayVersionId == 0 ? "Create" : "Edit"}} reference details</a>
+                                    <a class="dropdown-item" v-if="item.isReference && !item.parent.isReference" @click="removeReference">Remove this reference</a>
                                 </div>
                             </div>
                         </div>
@@ -330,6 +344,9 @@
                 }
                 else return 0;
             },
+            isExternalCatalogue(): boolean {
+                return this.item.primaryCatalogueNodeId != this.$store.state.contentStructureState.rootNode.nodeId;
+            },
         },
         mounted() {
             Vue.set(this, "isVisible", this.item.showInTreeView);
@@ -403,6 +420,9 @@
             addReference: function () {
                 this.$store.commit('contentStructureState/setReferencingExternalContent', { parentNode: this.item });
             },
+            removeReference: function () {
+                alert("Not yet implemented: Remove reference");
+            },
             onEditFolder: function () {
                 this.$store.commit('contentStructureState/setEditingFolder', { folderNode: this.item });
             },
@@ -472,6 +492,9 @@
                         child.depth = child.parent.depth + 1;
                         child.path = child.depth === 0 ? child.name : `${child.parent.path} > ${child.name}`;
                         child.isResource = child.nodeTypeId === NodeType.Resource;
+                        if (child.nodePaths) {
+                            child.isReference = child.nodePaths.length > 1;
+                        }
                     });
                 }).catch(e => {
                     console.log(e);

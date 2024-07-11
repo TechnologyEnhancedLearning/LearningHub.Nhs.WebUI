@@ -2,6 +2,13 @@
     <div class="content-structure">
 
         <div class="row">
+            <div class="form-group col-12 d-flex flex-row flex-grow-1">
+                <label class="">Reference location: {{pathLocation}}</label>
+                <input id="btnCancelReferencing" type="button" class="btn btn-admin btn-cancel ml-auto" @click="cancelReferencing()" value="Cancel Referencing" />
+            </div>
+        </div>
+
+        <div class="row">
             <div class="form-group col-12">
                 <label for="catalogueSelect" class="pt-10">Catalogue</label>
                 <select id="catalogueSelect" class="form-control" aria-labelledby="type-label" v-model="selectedCatalogue" @change="catalogueChange">
@@ -16,8 +23,8 @@
         <div class="content-structure">
             <div id="treeView" class="node-contents-treeview">
                 <content-search-item id="1" class="root-tree-item-container"
-                           :key="1"
-                           :item="rootNode">
+                                     :key="1"
+                                     :item="rootNode">
                 </content-search-item>
             </div>
         </div>
@@ -55,6 +62,9 @@ export default Vue.extend({
         rootNode(): NodeContentAdminModel {
             return this.$store.state.contentStructureState.rootExtReferencedNode;
         },
+        pathLocation() : string {
+            return this.$store.state.contentStructureState.editingTreeNode.path;
+        },
     },
     created() {
         this.$store.dispatch('contentStructureState/populateReferencableCatalogues', { editingCatalogueNodePathId: this.editingCatalogueNodePathId });
@@ -65,6 +75,9 @@ export default Vue.extend({
     methods: {
         catalogueChange() {
             this.$store.commit('contentStructureState/selectReferencableCatalogue', { catalogueNodePathId: this.selectedCatalogue.rootNodePathId });
+        },
+        cancelReferencing() {
+            this.$store.commit('contentStructureState/canceReferencingExternalContent');
         },
     },
 });

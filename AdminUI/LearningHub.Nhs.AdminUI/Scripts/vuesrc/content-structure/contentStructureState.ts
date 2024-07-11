@@ -77,6 +77,8 @@ function refreshHierarchyEdit(state: State) {
                 state.rootNode.childrenLoaded = false;
                 state.rootNode.inEdit = state.editMode == EditModeEnum.Structure;
                 state.rootNode.showInTreeView = false;
+                state.rootNode.isReference = false;
+                state.rootNode.isResource = false;
             }).then(async y => {
                 await contentStructureData.getNodeContentsAdmin(state.catalogue.rootNodePathId, state.readOnly).then(response => {
                     state.rootNode.children = response;
@@ -115,6 +117,10 @@ async function refreshNodeContents(node: NodeContentAdminModel, refreshParentPat
                     existing.name = child.name;
                     existing.nodePathDisplayVersionId = child.nodePathDisplayVersionId;
                     existing.nodePaths = child.nodePaths;
+                    existing.isResource = child.nodeTypeId === NodeType.Resource;
+                    if (child.nodePaths) {
+                        existing.isReference = child.nodePaths.length > 1;
+                    }
                 }
             });
 
@@ -159,12 +165,29 @@ async function refreshNodeContents(node: NodeContentAdminModel, refreshParentPat
     });
 }
 
+async function refreshNodeIfMatchingNodeId(node: NodeContentAdminModel, nodeId: number, hierarchyEditDetailId: number) {
+    if (node.nodeId === nodeId && node.hierarchyEditDetailId != hierarchyEditDetailId) {
+        await refreshNodeContents(node.parent, false);
+    }
+    if (node.childrenLoaded) {
+        if (node.children.filter(c => c.hierarchyEditDetailId === hierarchyEditDetailId).length == 0) {
+            for (const child of node.children) {
+                await refreshNodeIfMatchingNodeId(child, nodeId, hierarchyEditDetailId);
+            }
+        }
+    }
+}
+
 async function processChildNodeContents(child: NodeContentAdminModel, parent: NodeContentAdminModel) {
     child.parent = parent;
     child.inEdit = child.parent.inEdit;
     child.showInTreeView = true;
     child.depth = parent.depth + 1;
     child.path = child.depth === 0 ? child.name : `${child.parent.path} > ${child.name}`;
+    child.isResource = child.nodeTypeId === NodeType.Resource;
+    if (child.nodePaths) {
+        child.isReference = child.nodePaths.length > 1;
+    }
 }
 
 const mutations = {
@@ -504,7 +527,10 @@ const actions = <ActionTree<State, any>>{
         }
         else {
             contentStructureData.updateFolder(state.editingFolderNode).then(async response => {
-                state.editingTreeNode.name = state.editingFolderNode.name;
+                if (state.editingTreeNode.nodePathDisplayVersionId == 0) {
+                    state.editingTreeNode.name = state.editingFolderNode.name;
+                }
+                await refreshNodeIfMatchingNodeId(state.rootNode, state.editingTreeNode.nodeId, state.editingTreeNode.hierarchyEditDetailId);
                 state.updatedNode = state.editingTreeNode;
                 context.commit("setEditMode", EditModeEnum.Structure);
             }).catch(e => {

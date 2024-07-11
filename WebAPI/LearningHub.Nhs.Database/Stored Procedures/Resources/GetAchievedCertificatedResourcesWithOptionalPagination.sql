@@ -8,7 +8,7 @@
 -------------------------------------------------------------------------------
 
 
-CREATE PROCEDURE [resources].[GetAchievedCertficatedResourcesWithOptionalPagination]
+CREATE PROCEDURE [resources].[GetAchievedcertificatedResourcesWithOptionalPagination]
     @UserId INT,
 
 	-- Default values disable pagination
@@ -111,7 +111,7 @@ BEGIN
 		OFFSET @OffsetRows ROWS
 		FETCH NEXT @FetchRows ROWS ONLY	
 		SELECT @TotalRecords = CASE WHEN COUNT(*) > 12 THEN @MaxRows ELSE COUNT(*) END FROM @MyActivity
-		
-	END
+	END;
+GO
 
 

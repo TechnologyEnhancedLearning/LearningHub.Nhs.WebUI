@@ -2,13 +2,13 @@
 -------------------------------------------------------------------------------
 -- Author       PT
 -- Created      11 July 2024
--- Purpose      Get acheived certificated resources with optional pagination
--- Description  Extracted from the GetDashboardResources sproc to enable one source of truth for determining acheived certificated resources
+-- Purpose      Get achieved certificated resources with optional pagination
+-- Description  Extracted from the GetDashboardResources sproc to enable one source of truth for determining achieved certificated resources
 --              To support the GetDashboardResources it has pagination and to support other requests the default values disable pagination effects
 -------------------------------------------------------------------------------
 
 
-CREATE PROCEDURE [resources].[GetAcheivedCertficatedResourcesWithOptionalPagination]
+CREATE PROCEDURE [resources].[GetAchievedCertficatedResourcesWithOptionalPagination]
     @UserId INT,
 
 	-- Default values disable pagination

@@ -19,7 +19,7 @@
 -- 27 Feb 2024  SS  Fixed missing In progress resources in the My Accessed Learning tray issue
 -- 2 May 2024   SA  Fixed the issue on showing statuses on 'My accessed Learning' for resource type file
 -- 13 May 2024  SA  TD-4115
--- 11 Jul 2024  PT  Extract certification logic to GetAcheivedCertficatedResourcesWithOptionalPagination so logic can have one source of truth
+-- 11 Jul 2024  PT  Extract certification logic to GetAchievedCertficatedResourcesWithOptionalPagination so logic can have one source of truth
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [resources].[GetDashboardResources]
@@ -373,7 +373,7 @@ BEGIN
 	END
 	ELSE IF  @dashboardType IN ('my-certificates')
 	BEGIN
-		EXEC [resources].[GetAcheivedCertficatedResourcesWithOptionalPagination] @UserId = @UserId, @MaxRows= @MaxRows, @OffsetRows = @OffsetRows, @FetchRows = @FetchRows, @TotalRecords = @TotalRecords;
+		EXEC [resources].[GetAchievedCertficatedResourcesWithOptionalPagination] @UserId = @UserId, @MaxRows= @MaxRows, @OffsetRows = @OffsetRows, @FetchRows = @FetchRows, @TotalRecords = @TotalRecords;
 	END
 	
 END

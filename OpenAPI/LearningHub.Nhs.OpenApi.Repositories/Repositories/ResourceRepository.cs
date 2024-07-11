@@ -95,21 +95,19 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<int>> GetAcheivedCertificatedResourceIds(int currentUserId) //qqqqq
+        public async Task<List<int>> GetAchievedCertificatedResourceIds(int currentUserId) //qqqqq
         {
-            // Use dashboard logic to ensure same resources determined has having acheived certificates
-            var param0 = new SqlParameter("@dashboardType", SqlDbType.NVarChar, 30) { Value = "my-certificates" };
-            var param1 = new SqlParameter("@userId", SqlDbType.Int) { Value = currentUserId };
-            var param2 = new SqlParameter("@pageNumber", SqlDbType.Int) { Value = 1 };
-            var param3 = new SqlParameter("@totalRows", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            // Use dashboard logic to ensure same resources determined has having achieved certificates
+            var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = currentUserId };
+            var param1 = new SqlParameter("@totalRows", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
             // qqqq originalResourceId instead?
 
             // qqqq pagination so cant use this for that
-            var result = this.dbContext.DashboardResourceDto.FromSqlRaw("resources.GetDashboardResources @dashboardType, @userId, @pageNumber, @totalRows output", param0, param1, param2, param3).ToList();
-            List<int> acheivedCertificatedResourceIds = result.Select(drd => drd.ResourceId).Distinct().ToList<int>();
+            var result = this.dbContext.DashboardResourceDto.FromSqlRaw("resources.GetAchieved @userId, @totalRows output", param0, param1).ToList();
+            List<int> achievedCertificatedResourceIds = result.Select(drd => drd.ResourceId).Distinct().ToList<int>();
 
-            return acheivedCertificatedResourceIds;
+            return achievedCertificatedResourceIds;
         }
 
         /// </summary>

@@ -166,11 +166,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
             List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
             List<ResourceReferenceWithResourceDetailsViewModel> ResourceReferenceWithResourceDetailsViewModelLS = new List<ResourceReferenceWithResourceDetailsViewModel>() { };
-            List<int> acheivedCertificatedResourceIds = (await this.resourceRepository.GetAcheivedCertificatedResourceIds(currentUserId));
+            List<int> achievedCertificatedResourceIds = (await this.resourceRepository.GetAchievedCertificatedResourceIds(currentUserId));
 
-            resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(acheivedCertificatedResourceIds, new List<int>() { currentUserId }))?.ToList() ?? new List<ResourceActivityDTO>() { };
+            resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(achievedCertificatedResourceIds, new List<int>() { currentUserId }))?.ToList() ?? new List<ResourceActivityDTO>() { };
 
-            var resourceList = (await this.resourceRepository.GetResourcesFromIds(acheivedCertificatedResourceIds)).ToList();
+            var resourceList = (await this.resourceRepository.GetResourcesFromIds(achievedCertificatedResourceIds)).ToList();
 
             //qqqq check this can return empty list of resourceActivity where there isnt any
             //because we return resourceActivity but things are certified on other things could have strange looking results
@@ -183,7 +183,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         // qqqq original
         //public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferencesForCertificates(int currentUserId)
         //{
-        //    // GetAcheivedCertificatedResourceIds
+        //    // GetAchievedCertificatedResourceIds
         //    //qqqq can some of this go into a helper
         //    List<int> activityStatusesForCertificates = new List<int>() { (int)ActivityStatusEnum.Completed, (int)ActivityStatusEnum.Passed }; // qqqq maybe drop completed
         //    List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };

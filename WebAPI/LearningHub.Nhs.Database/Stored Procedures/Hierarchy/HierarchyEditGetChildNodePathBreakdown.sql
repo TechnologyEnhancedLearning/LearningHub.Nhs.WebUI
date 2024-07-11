@@ -10,6 +10,7 @@
 --
 -- 28-05-2024  DB	Initial Revision.
 -- 12-06-2024  DB	Updated to include Node Resources.
+-- 08-07-2024  DB	Updated to include external catalogues.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditGetChildNodePathBreakdown]
 (
@@ -21,13 +22,16 @@ BEGIN
 
 	DECLARE @HierarchyEditId int
     DECLARE @RootNodePathId INT
+    DECLARE @CatalogueNodeId INT
 
 	-- Get the latest Hierarchy Edit in Draft status, the NodePathId can only be in one Draft Hierarchy Edit at a time
 	SELECT  TOP 1 
             @HierarchyEditId = he.Id,
-            @RootNodePathId = he.RootNodePathId
+            @RootNodePathId = he.RootNodePathId,
+            @CatalogueNodeId = np.CatalogueNodeId
 	FROM	hierarchy.HierarchyEdit he
     INNER JOIN hierarchy.HierarchyEditDetail hed ON he.Id = hed.HierarchyEditId 
+    INNER JOIN hierarchy.NodePath np ON he.RootNodePathId = np.Id
 	WHERE	hed.NodePathId = @NodePathId
 		AND he.HierarchyEditStatusId = 1 -- Draft
 		AND he.Deleted = 0
@@ -92,13 +96,94 @@ BEGIN
             AND p_hed.Deleted = 0
     )
 
+    SELECT  NodeId, NodePathId, ComponentNodePathId, ResourceId, ResourceVersionId, NodePathIdPath, NodeVersionIdPath, CompletePathInd
+    INTO    #NodePathDetails
+    FROM    cteNodepathDetails
+    WHERE   CompletePathInd = 1;
+
+
+    -- Add paths from external catalogues
+    ; WITH cteExtNodepathDetails (NodeId, NodePathId, ComponentNodePathId, ResourceId, ResourceVersionId, NodePathIdPath, NodeVersionIdPath, CompletePathInd,ParentNodePath)
+    AS
+    (
+        SELECT 
+            n_np.NodeId AS NodeId,
+    		ISNULL(n_np.Id, r_np.Id) AS NodePathId,
+            ISNULL(n_np.Id, r_np.Id) AS ComponentNodePathId,
+            hed.ResourceId AS ResourceId,
+            hed.ResourceVersionId,
+    		NodePathIdPath = CAST(ISNULL(n_np.Id, r_np.Id) AS nvarchar(256)),
+            NodeVersionIdPath = CAST(ISNULL(hed.NodeVersionId, nv.Id) AS nvarchar(256)),
+                CASE WHEN CHARINDEX('\', ISNULL(n_np.NodePath, r_np.NodePath)) = 0 THEN 1 ELSE 0 END AS CompletePathInd,
+                CASE WHEN CHARINDEX('\', ISNULL(n_np.NodePath, r_np.NodePath)) = 0 THEN '' ELSE LEFT(ISNULL(n_np.NodePath, r_np.NodePath), LEN(ISNULL(n_np.NodePath, r_np.NodePath)) - CHARINDEX('\', REVERSE(ISNULL(n_np.NodePath, r_np.NodePath)))) END AS ParentNodePath
+    	FROM
+    		[hierarchy].[HierarchyEditDetail] hed
+        LEFT JOIN
+            [hierarchy].[NodePathNode] npn ON hed.NodeId = npn.NodeId
+        LEFT JOIN
+            [hierarchy].[NodePath] n_np on npn.NodePathId = n_np.Id
+                                            AND n_np.IsActive = 1
+                                            AND npn.NodeId = n_np.NodeId
+                                            AND n_np.CatalogueNodeId != @CatalogueNodeId
+                                            AND n_np.Deleted = 0
+        LEFT JOIN
+            [hierarchy].[NodeResource] nr ON hed.ResourceId = nr.ResourceId
+                                            AND nr.VersionStatusId = 2 -- Published
+                                            AND nr.Deleted = 0
+        LEFT JOIN
+            [hierarchy].[NodePath] r_np on nr.NodeId = r_np.NodeId
+                                            AND r_np.IsActive = 1
+                                            AND r_np.CatalogueNodeId != @CatalogueNodeId
+                                            AND r_np.Deleted = 0
+        LEFT JOIN
+			[hierarchy].[Node] n ON r_np.NodeId = n.Id
+                                            AND n.Deleted = 0
+        LEFT JOIN
+			[hierarchy].[NodeVersion] nv ON n.CurrentNodeVersionId = nv.Id
+                                            AND nv.VersionStatusId = 2 -- Published
+                                            AND nv.Deleted = 0
+
+
+        WHERE
+            hed.HierarchyEditId = @HierarchyEditId
+            AND hed.ParentNodePathId = @NodePathId
+
+    	UNION ALL
+
+        SELECT  
+                cte.NodeId,
+                np.Id AS NodePathId,
+                cte.ComponentNodePathId,
+                cte.ResourceId,
+                cte.ResourceVersionId,
+                CAST(CAST(np.Id AS nvarchar(10)) + '\' + cte.NodePathIdPath AS nvarchar(256)) AS NodePathIdPath,
+                CAST(CAST(nv.Id AS nvarchar(10)) + '\' + cte.NodeVersionIdPath AS nvarchar(256)) AS NodeVersionIdPath,
+                CASE WHEN CHARINDEX('\', np.NodePath) = 0 THEN 1 ELSE 0 END AS CompletePathInd,
+                CASE WHEN CHARINDEX('\', np.NodePath) = 0 THEN '' ELSE LEFT(np.NodePath, LEN(np.NodePath) - CHARINDEX('\', REVERSE(np.NodePath))) END AS ParentNodePath
+        FROM    cteExtNodepathDetails cte
+        INNER JOIN hierarchy.NodePath np ON cte.ParentNodePath = np.NodePath
+        INNER JOIN hierarchy.Node n ON np.NodeId = n.Id
+        INNER JOIN hierarchy.NodeVersion nv ON n.CurrentNodeVersionId = nv.Id
+        WHERE   np.IsActive = 1
+            AND nv.VersionStatusId = 2 -- Published
+            AND np.Deleted = 0
+            AND n.Deleted = 0
+            AND nv.Deleted = 0
+    )
+
+    INSERT INTO #NodePathDetails (NodeId, NodePathId, ComponentNodePathId, ResourceId, ResourceVersionId, NodePathIdPath, NodeVersionIdPath, CompletePathInd)
+    SELECT  NodeId, NodePathId, ComponentNodePathId, ResourceId, ResourceVersionId, NodePathIdPath, NodeVersionIdPath, CompletePathInd
+    FROM    cteExtNodepathDetails
+    WHERE   CompletePathInd = 1;
+
+
     SELECT  ROW_NUMBER() OVER(ORDER BY cte.NodeId, ComponentNodePathId) AS Id,
             ISNULL(cte.NodeId, 0) AS NodeId,
             ISNULL(cte.ResourceId, 0) AS ResourceId,
             ComponentNodePathId AS NodePathId,
             sp1.idx AS Depth,
             COALESCE(d_npdv.DisplayName, p_npdv.DisplayName, cnv.Name, fnv.Name, rv.Title) AS NodeName
-    FROM    cteNodepathDetails cte
+    FROM    #NodePathDetails cte
     CROSS APPLY hub.fn_Split(CASE WHEN cte.ResourceId IS NULL THEN NodeVersionIdPath ELSE NodeVersionIdPath + '\' + CAST(ResourceVersionId AS nvarchar(10)) END, '\') as sp1
     CROSS APPLY hub.fn_Split(CASE WHEN cte.ResourceId IS NULL THEN NodePathIdPath ELSE NodePathIdPath + '\0' END, '\') as sp2
     LEFT JOIN
@@ -112,8 +197,8 @@ BEGIN
     LEFT JOIN
             resources.ResourceVersion rv ON rv.Id = sp1.[value] AND cte.ResourceId IS NOT NULL
     WHERE   sp1.idx = sp2.idx
-        AND CompletePathInd = 1
     ORDER BY NodeId, NodePathId, ResourceId, Depth;
 
+    DROP TABLE #NodePathDetails;
 END
 

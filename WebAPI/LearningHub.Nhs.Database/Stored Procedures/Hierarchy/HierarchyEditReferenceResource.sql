@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 04-06-2024  DB	Initial Revision.
+-- 08-07-2024  DB	Populate the PrimaryCatalogueNodeId.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditReferenceResource]
 (
@@ -25,9 +26,15 @@ BEGIN
 
 		DECLARE @AmendDate datetimeoffset(7) = ISNULL(TODATETIMEOFFSET(DATEADD(mi, @UserTimezoneOffset, GETUTCDATE()), @UserTimezoneOffset), SYSDATETIMEOFFSET())
 
+		DECLARE @PrimaryCatalogueNodeId INT
+
 		DECLARE @HierarchyEditId int
 		DECLARE @ResourceId int
-		SELECT @HierarchyEditId = HierarchyEditId, @ResourceId = ResourceId FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @HierarchyEditDetailId
+		SELECT	@HierarchyEditId = HierarchyEditId,
+				@ResourceId = ResourceId,
+				@PrimaryCatalogueNodeId = PrimaryCatalogueNodeId
+		FROM [hierarchy].[HierarchyEditDetail]
+		WHERE Id = @HierarchyEditDetailId
 
 		-- Increment display order of resources in destination.
 		UPDATE  
@@ -76,6 +83,7 @@ BEGIN
 			HierarchyEditId,
 			HierarchyEditDetailTypeId,
 			HierarchyEditDetailOperationId,
+			PrimaryCatalogueNodeId,
 			NodePathId,
 			NodeId,
 			NodeVersionId,
@@ -98,7 +106,8 @@ BEGIN
 		SELECT
 			@HierarchyEditId, 
 			5 AS HierarchyEditDetailTypeId, -- Node Resource
-			4 AS HierarchyEditDetailOperationId, -- Add Reference											
+			4 AS HierarchyEditDetailOperationId, -- Add Reference
+			@PrimaryCatalogueNodeId AS PrimaryCatalogueNodeId,
 			NULL AS NodePathId,
 			NULL AS NodeId,
 			NULL AS NodeVersionId,

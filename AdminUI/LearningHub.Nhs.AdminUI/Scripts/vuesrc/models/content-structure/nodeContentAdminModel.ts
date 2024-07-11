@@ -32,6 +32,9 @@ export class NodeContentAdminModel {
     children: NodeContentAdminModel[];
     path: string;
     nodePaths: NodePathBreakdownModel[];
+    primaryCatalogueNodeId: number;
+    primaryCatalogueNodeName: string;
+    isReference: boolean;
 
     public constructor(init?: Partial<NodeContentAdminModel>) {
         Object.assign(this, init);

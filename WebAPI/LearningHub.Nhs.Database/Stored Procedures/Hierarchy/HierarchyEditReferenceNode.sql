@@ -7,6 +7,7 @@
 --
 -- 29-04-2024  DB	Initial Revision.
 -- 13-05-2024  DB	Set the parent node path id for the new reference node.
+-- 08-07-2024  DB	Populate the PrimaryCatalogueNodeId.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditReferenceNode]
 (
@@ -31,10 +32,12 @@ BEGIN
 		DECLARE @NewParentNodeId int
 		DECLARE @NewParentNodePathId int
 		DECLARE @RootNodeId INT
+		DECLARE @PrimaryCatalogueNodeId INT
 
 		SELECT	@HierarchyEditId = hed.HierarchyEditId,
 				@NodeId = hed.NodeId,
-                @RootNodeId = np.NodeId
+                @RootNodeId = np.NodeId,
+				@PrimaryCatalogueNodeId = PrimaryCatalogueNodeId
 		FROM [hierarchy].[HierarchyEditDetail] hed
         INNER JOIN [hierarchy].[HierarchyEdit] he ON he.Id = hed.HierarchyEditId
 		INNER JOIN hierarchy.NodePath np ON he.RootNodePathId = np.Id
@@ -80,10 +83,11 @@ BEGIN
 		FROM    hierarchy.HierarchyEditDetail
 		WHERE   Id = @ReferenceToHierarchyEditDetailId
 
-		INSERT INTO hierarchy.HierarchyEditDetail (HierarchyEditId,HierarchyEditDetailTypeId,HierarchyEditDetailOperationId,NodeId,NodePathId,NodeVersionId,ParentNodeId,ParentNodePathId,NodeLinkId,ResourceId,ResourceVersionId,ResourceReferenceId,NodeResourceId,DisplayOrder,InitialNodePath,NewNodePath,Deleted,CreateUserId,CreateDate,AmendUserId,AmendDate)
+		INSERT INTO hierarchy.HierarchyEditDetail (HierarchyEditId,HierarchyEditDetailTypeId,HierarchyEditDetailOperationId,PrimaryCatalogueNodeId,NodeId,NodePathId,NodeVersionId,ParentNodeId,ParentNodePathId,NodeLinkId,ResourceId,ResourceVersionId,ResourceReferenceId,NodeResourceId,DisplayOrder,InitialNodePath,NewNodePath,Deleted,CreateUserId,CreateDate,AmendUserId,AmendDate)
 		SELECT  HierarchyEditId,
 				HierarchyEditDetailTypeId, -- Folder Node (3) OR Node Link (4) OR OR Node Resource (5)
 				4 AS HierarchyEditDetailOperationId,  -- Add Reference
+				@PrimaryCatalogueNodeId AS PrimaryCatalogueNodeId,
 				NodeId, 
 				NULL as NodePathId, 
 				NodeVersionId, 

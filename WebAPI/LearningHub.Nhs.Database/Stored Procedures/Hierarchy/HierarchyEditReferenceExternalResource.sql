@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 02-07-2024  DB	Initial Revision.
+-- 08-07-2024  DB	Populate the PrimaryCatalogueNodeId based on the original catalogue.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditReferenceExternalResource]
 (
@@ -24,6 +25,15 @@ BEGIN
 		BEGIN TRAN	
 
 		DECLARE @AmendDate datetimeoffset(7) = ISNULL(TODATETIMEOFFSET(DATEADD(mi, @UserTimezoneOffset, GETUTCDATE()), @UserTimezoneOffset), SYSDATETIMEOFFSET())
+
+		DECLARE @ExternalCatalogueNodeId INT
+
+		SELECT	@ExternalCatalogueNodeId = rv.PrimaryCatalogueNodeId
+		FROM	[resources].[Resource] r
+		INNER JOIN [resources].[ResourceVersion] rv ON rv.Id = r.CurrentResourceVersionId
+		WHERE	r.Id = @ResourceId
+				AND rv.VersionStatusId = 2 -- Published
+				AND r.Deleted = 0
 
 		DECLARE @HierarchyEditId int
 		SELECT	@HierarchyEditId = HierarchyEditId
@@ -77,6 +87,7 @@ BEGIN
 			HierarchyEditId,
 			HierarchyEditDetailTypeId,
 			HierarchyEditDetailOperationId,
+			PrimaryCatalogueNodeId,
 			NodePathId,
 			NodeId,
 			NodeVersionId,
@@ -99,7 +110,8 @@ BEGIN
 		SELECT
 			@HierarchyEditId, 
 			5 AS HierarchyEditDetailTypeId, -- Node Resource
-			4 AS HierarchyEditDetailOperationId, -- Add Reference											
+			4 AS HierarchyEditDetailOperationId, -- Add Reference
+			@ExternalCatalogueNodeId AS PrimaryCatalogueNodeId,
 			NULL AS NodePathId,
 			NULL AS NodeId,
 			NULL AS NodeVersionId,

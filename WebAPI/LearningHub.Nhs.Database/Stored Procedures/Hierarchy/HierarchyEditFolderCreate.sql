@@ -8,6 +8,7 @@
 -- 25-08-2021  KD	Initial Revision.
 -- 22-04-2024  DB	Included NULL NodeId and UserId in call to [hierarchy].[FolderNodeVersionCreate].
 -- 15-05-2024  DB	Accept @ParentNodePathId as input parameter, create NodePath and populate NodePathId and ParentNodePathId in HierarchyEditDetail.
+-- 10-07-2024  DB	Added PrimaryCatalogueNodeId to the NodeVersion table.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditFolderCreate]
 (
@@ -34,18 +35,20 @@ BEGIN
 		DECLARE @CreatedNodeVersionId int
 		DECLARE @ParentNodeId int
 		DECLARE @ParentNodePath varchar(256)
-
-		EXECUTE [hierarchy].[FolderNodeVersionCreate] NULL, @Name, @Description, @UserId, @CreatedNodeVersionId OUTPUT
-
-		SELECT @CreatedNodeId = NodeId FROM hierarchy.NodeVersion WHERE Id = @CreatedNodeVersionId
+		DECLARE @PrimaryCatalogueNodeId INT
 
 		SELECT	@ParentNodeId = NodeId,
-				@ParentNodePath = ISNULL(NewNodePath, InitialNodePath)
-		FROM hierarchy.HierarchyEditDetail
-		WHERE HierarchyEditId = @HierarchyEditId
+				@ParentNodePath = ISNULL(NewNodePath, InitialNodePath),
+				@PrimaryCatalogueNodeId = PrimaryCatalogueNodeId
+		FROM	hierarchy.HierarchyEditDetail
+		WHERE	HierarchyEditId = @HierarchyEditId
 			AND NodePathId = @ParentNodePathId
 			AND HierarchyEditDetailTypeId = 4 -- Node Link
 			AND Deleted = 0
+
+		EXECUTE [hierarchy].[FolderNodeVersionCreate] NULL, @Name, @Description, @PrimaryCatalogueNodeId, @UserId, @CreatedNodeVersionId OUTPUT
+
+		SELECT @CreatedNodeId = NodeId FROM hierarchy.NodeVersion WHERE Id = @CreatedNodeVersionId
 
 		-- Create new NodePath for the new Folder Node.
 		DECLARE @NewNodePathId int
@@ -75,6 +78,7 @@ BEGIN
 		INSERT INTO [hierarchy].[HierarchyEditDetail](HierarchyEditId,
 														HierarchyEditDetailTypeId,
 														HierarchyEditDetailOperationId,
+														PrimaryCatalogueNodeId,
 														NodeId,
 														NodePathId,
 														NodeVersionId,
@@ -93,6 +97,7 @@ BEGIN
 			@HierarchyEditId, 
 			3 AS HierarchyEditDetailTypeId,			-- Folder Node
 			1 AS HierarchyEditDetailOperationId,	-- Add
+			@PrimaryCatalogueNodeId AS PrimaryCatalogueNodeId,
 			NodeId,
 			@NewNodePathId AS NodePathId,
 			@CreatedNodeVersionId AS NodeVersionId,

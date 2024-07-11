@@ -266,7 +266,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetResourceReferencesByCertficatesThrowsErrorWhenNoUserId()
+        public async Task GetResourceReferencesBycertificatesThrowsErrorWhenNoUserId()
         {
             // When
             var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>

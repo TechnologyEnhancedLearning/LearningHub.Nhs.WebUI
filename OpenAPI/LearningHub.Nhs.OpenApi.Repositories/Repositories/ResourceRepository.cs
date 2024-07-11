@@ -99,12 +99,10 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
         {
             // Use dashboard logic to ensure same resources determined has having achieved certificates
             var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = currentUserId };
-            var param1 = new SqlParameter("@totalRows", SqlDbType.Int) { Direction = ParameterDirection.Output };
-
-            // qqqq originalResourceId instead?
+            var param4 = new SqlParameter("@TotalRecords", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
             // qqqq pagination so cant use this for that
-            var result = this.dbContext.DashboardResourceDto.FromSqlRaw("resources.GetAchieved @userId, @totalRows output", param0, param1).ToList();
+            var result = this.dbContext.DashboardResourceDto.FromSqlRaw("resources.GetAchievedCertificatedResourcesWithOptionalPagination @userId = @userId, @TotalRecords = @TotalRecords output", param0, param4).ToList();
             List<int> achievedCertificatedResourceIds = result.Select(drd => drd.ResourceId).Distinct().ToList<int>();
 
             return achievedCertificatedResourceIds;

@@ -51,7 +51,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// the get by id async.
         /// </summary>
         /// <param name="originalResourceReferenceId">the id.</param>
-        /// <param name="currentUserId"></param>
+        /// <param name="currentUserId">.</param>
         /// <returns>the resource.</returns>
         public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId, int? currentUserId)
         {
@@ -131,8 +131,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <summary>
         /// the get by id async.
         /// </summary>
-        /// <param name="originalResourceReferenceId">the id.</param>
-        /// <param name="currentUserId"></param>
+        /// <param name="activityStatusIds">.</param>
+        /// <param name="currentUserId">.</param>
         /// <returns>list resource ViewModel.</returns>
         public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferenceByActivityStatus(List<int> activityStatusIds, int currentUserId)
         {
@@ -165,20 +165,18 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         {
 
             List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
-            List<ResourceReferenceWithResourceDetailsViewModel> ResourceReferenceWithResourceDetailsViewModelLS = new List<ResourceReferenceWithResourceDetailsViewModel>() { };
-            List<int> achievedCertificatedResourceIds = (await this.resourceRepository.GetAchievedCertificatedResourceIds(currentUserId));
+            List<ResourceReferenceWithResourceDetailsViewModel> resourceReferenceWithResourceDetailsViewModelLS = new List<ResourceReferenceWithResourceDetailsViewModel>() { };
+            List<int> achievedCertificatedResourceIds = (await this.resourceRepository.GetAchievedCertificatedResourceIds(currentUserId)).ToList();
 
             resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(achievedCertificatedResourceIds, new List<int>() { currentUserId }))?.ToList() ?? new List<ResourceActivityDTO>() { };
 
             var resourceList = (await this.resourceRepository.GetResourcesFromIds(achievedCertificatedResourceIds)).ToList();
 
-            //qqqq check this can return empty list of resourceActivity where there isnt any
-            //because we return resourceActivity but things are certified on other things could have strange looking results
-            ResourceReferenceWithResourceDetailsViewModelLS = resourceList.SelectMany(r => r.ResourceReference)
+            resourceReferenceWithResourceDetailsViewModelLS = resourceList.SelectMany(r => r.ResourceReference)
                 .Distinct()
                 .Select(rr => this.GetResourceReferenceWithResourceDetailsViewModel(rr, resourceActivities)).ToList();
 
-            return ResourceReferenceWithResourceDetailsViewModelLS;
+            return resourceReferenceWithResourceDetailsViewModelLS;
         }
 
         private ResourceReferenceWithResourceDetailsViewModel GetResourceReferenceWithResourceDetailsViewModel(ResourceReference resourceReference, List<ResourceActivityDTO> resourceActivities)

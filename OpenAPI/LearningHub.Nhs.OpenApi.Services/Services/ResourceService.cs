@@ -132,12 +132,12 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// the get by id async.
         /// </summary>
         /// <param name="activityStatusIds">.</param>
-        /// <param name="currentUserId">.</param>
+        /// <param name="currentUserId">c.</param>
         /// <returns>list resource ViewModel.</returns>
         public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferenceByActivityStatus(List<int> activityStatusIds, int currentUserId)
         {
             List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
-            List<ResourceReferenceWithResourceDetailsViewModel> ResourceReferenceWithResourceDetailsViewModelLS = new List<ResourceReferenceWithResourceDetailsViewModel>() { };
+            List<ResourceReferenceWithResourceDetailsViewModel> resourceReferenceWithResourceDetailsViewModelLS = new List<ResourceReferenceWithResourceDetailsViewModel>() { };
 
             resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(new List<int>(){ }, new List<int>(){ currentUserId }))?.ToList() ?? new List<ResourceActivityDTO>() { };
 
@@ -151,9 +151,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
             var resourceReferencesList = (await this.resourceRepository.GetResourcesFromIds(resourceIds)).SelectMany(r => r.ResourceReference).ToList();
 
-            ResourceReferenceWithResourceDetailsViewModelLS = resourceReferencesList.Select(rr => this.GetResourceReferenceWithResourceDetailsViewModel(rr, resourceActivities)).ToList();
+            resourceReferenceWithResourceDetailsViewModelLS = resourceReferencesList.Select(rr => this.GetResourceReferenceWithResourceDetailsViewModel(rr, resourceActivities)).ToList();
 
-            return ResourceReferenceWithResourceDetailsViewModelLS;
+            return resourceReferenceWithResourceDetailsViewModelLS;
         }
 
         /// <summary>

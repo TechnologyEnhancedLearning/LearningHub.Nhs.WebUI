@@ -1,6 +1,6 @@
 @inject LearningHub.Nhs.WebUI.Configuration.Settings settings
-
-@if (settings.GoogleTagManagerEnabled) 
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment hostingEnv
+@if (settings.GoogleTagManagerEnabled && hostingEnv.EnvironmentName == "Production")
 { 
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=@settings.GoogleTagManagerContainerId"

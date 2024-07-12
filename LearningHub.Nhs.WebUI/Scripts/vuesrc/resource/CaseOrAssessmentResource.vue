@@ -288,7 +288,7 @@
                 return questionBlockOrder - pageBreakOrder - 1;
             },
             setQuestionInFocus(pageIndex: number, value: number, remove: boolean) {
-                if ((remove && this.questionsInFocus[pageIndex] === value) || this.canContinue) {
+                if ((remove && this.questionsInFocus[pageIndex] === value)) {
                     this.questionsInFocus[pageIndex] = undefined;
                 } else {
                     this.questionsInFocus[pageIndex] = value;

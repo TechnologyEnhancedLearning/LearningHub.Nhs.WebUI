@@ -55,5 +55,10 @@
         /// Gets or sets PageNo.
         /// </summary>
         public int PageNo { get; set; }
+
+        /// <summary>
+        /// Gets or sets ResourseItem Url for certificate PDF Download.
+        /// </summary>
+        public string PdfResoureItemUrl { get; set; }
     }
 }

@@ -235,6 +235,13 @@ namespace LearningHub.Nhs.WebUI.Interfaces
         Task<IEnumerable<int>> GetAllPublishedResourceAsync();
 
         /// <summary>
+        /// The GetResourceVersionsAsync.
+        /// </summary>
+        /// <param name="resourceId">The resourceId<see cref="int"/>.</param>
+        /// <returns>The <see cref="List{ResourceVersionViewModel}"/>.</returns>
+        Task<List<ResourceVersionViewModel>> GetResourceVersionsAsync(int resourceId);
+
+        /// <summary>
         /// The DuplicateBlocksAsync.
         /// </summary>
         /// <param name="model">The duplicateBlocksRequestModel<see cref="DuplicateBlocksRequestModel"/>.</param>

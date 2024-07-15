@@ -1045,6 +1045,35 @@ namespace LearningHub.Nhs.WebUI.Services
         }
 
         /// <summary>
+        /// The GetResourceVersionsAsync.
+        /// </summary>
+        /// <param name="resourceId">The resourceId<see cref="int"/>.</param>
+        /// <returns>The <see cref="List{ResourceVersionViewModel}"/>.</returns>
+        public async Task<List<ResourceVersionViewModel>> GetResourceVersionsAsync(int resourceId)
+        {
+            List<ResourceVersionViewModel> viewmodel = null;
+
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+
+            var request = $"Resource/GetResourceVersions/{resourceId.ToString()}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewmodel = JsonConvert.DeserializeObject<List<ResourceVersionViewModel>>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewmodel;
+        }
+
+        /// <summary>
         /// The GetResourceVersionValidationResultAsync.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>

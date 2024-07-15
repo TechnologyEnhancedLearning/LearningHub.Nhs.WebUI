@@ -1,11 +1,13 @@
 ﻿namespace LearningHub.Nhs.WebUI.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.Resource;
@@ -549,5 +551,61 @@
         [Route("Resource/GetMKPlayerKey")]
         [HttpGet("GetMKPlayerKey")]
         public string GetMKPlayerKey() => this.Settings.MediaKindSettings.MKPlayerLicence;
+
+        /// <summary>
+        /// The ClearStorage.
+        /// </summary>
+        /// <returns>ClearStorage Task.</returns>
+        [HttpGet]
+        public async Task ClearStorage()
+        {
+            // get all published resource.
+            var listResourceVersionsToBePurged = new List<int>();
+            var resources = await this.resourceService.GetAllPublishedResourceAsync();
+            if (resources != null && resources.Any())
+            {
+                foreach (var resource in resources)
+                {
+                    try
+                    {
+                        var vm = await this.resourceService.GetResourceVersionsAsync(resource);
+                        if (vm != null & vm.Any())
+                        {
+                            // filter off current published version
+                            var currentVersion = vm.Where(x => x.VersionStatusEnum == VersionStatusEnum.Published).OrderByDescending(x => x.PublishedDate).FirstOrDefault();
+                            if (currentVersion != null)
+                            {
+                                var previousVersion = vm.Where(x => x.VersionStatusEnum == VersionStatusEnum.Published && x.ResourceVersionId != currentVersion.ResourceVersionId).Select(x => x.ResourceVersionId).ToList();
+                                if (previousVersion != null && previousVersion.Any())
+                                {
+                                    listResourceVersionsToBePurged.AddRange(previousVersion);
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+
+            if (listResourceVersionsToBePurged.Any())
+            {
+                foreach (var entry in listResourceVersionsToBePurged)
+                {
+                    try
+                    {
+                        var associatedFile = await this.resourceService.GetObsoleteResourceFile(entry, true);
+                        if (associatedFile != null && associatedFile.Any())
+                        {
+                            _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, associatedFile); });
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+        }
     }
 }

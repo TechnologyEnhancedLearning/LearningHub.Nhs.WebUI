@@ -60,6 +60,13 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         Task<ResourceVersion> GetCurrentForResourceAsync(int resourceId);
 
         /// <summary>
+        /// The get current resource for resourceid async.
+        /// </summary>
+        /// <param name="resourceId">The resource Id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ResourceVersion> GetCurrentResourceDetailsAsync(int resourceId);
+
+        /// <summary>
         /// The get current published for resource async.
         /// </summary>
         /// <param name="resourceId">The resource id.</param>
@@ -72,6 +79,13 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         /// <param name="resourceReferenceId">The resource reference id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<ResourceVersion> GetCurrentForResourceReferenceIdAsync(int resourceReferenceId);
+
+        /// <summary>
+        /// The get current resource for resource reference id async.
+        /// </summary>
+        /// <param name="resourceReferenceId">The resource reference id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ResourceVersion> GetCurrentResourceForResourceReferenceIdAsync(int resourceReferenceId);
 
         /// <summary>
         /// The get current published for resource reference id async.

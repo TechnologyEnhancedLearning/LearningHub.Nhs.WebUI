@@ -48,14 +48,14 @@
         /// </summary>
         /// <param name="userGroupId">The user group id.</param>
         /// <returns>The list of <see cref="RoleUserGroupViewModel"/>.</returns>
-        List<RoleUserGroupViewModel> GetUserGroupRoleDetailByUserGroupId(int userGroupId);
+        Task<List<RoleUserGroupViewModel>> GetUserGroupRoleDetailByUserGroupId(int userGroupId);
 
         /// <summary>
         /// Returns a list of role user group detail view models for the supplied user id.
         /// </summary>
         /// <param name="userId">The user group id.</param>
         /// <returns>The list of <see cref="RoleUserGroupViewModel"/>.</returns>
-        List<RoleUserGroupViewModel> GetRoleUserGroupDetailByUserId(int userId);
+        Task<List<RoleUserGroupViewModel>> GetRoleUserGroupDetailByUserId(int userId);
 
         /// <summary>
         /// Create a user group.

@@ -123,7 +123,7 @@
 
             var resource = await this.resourceService.GetItemByIdAsync(resourceReferenceId);
 
-            if (resource.Id == 0 || (resource.Catalogue != null && resource.Catalogue.Hidden))
+            if ((resource == null && resource.Id == 0) || (resource.Catalogue != null && resource.Catalogue.Hidden))
             {
                 this.ViewBag.SupportFormUrl = this.Settings.SupportUrls.SupportForm;
                 return this.View("Unavailable");
@@ -147,7 +147,7 @@
             var hasCatalogueAccess = false;
             if (resource.Catalogue.RestrictedAccess && this.User.Identity.IsAuthenticated)
             {
-                var userGroups = await this.userGroupService.GetRoleUserGroupDetailForUserAsync(this.CurrentUserId);
+                var userGroups = await this.userGroupService.GetRoleUserGroupDetailAsync();
 
                 hasCatalogueAccess = userGroups.Any(x => x.CatalogueNodeId == resource.Catalogue.NodeId &&
                     (x.RoleEnum == RoleEnum.LocalAdmin || x.RoleEnum == RoleEnum.Editor || x.RoleEnum == RoleEnum.Reader)) || this.User.IsInRole("Administrator");

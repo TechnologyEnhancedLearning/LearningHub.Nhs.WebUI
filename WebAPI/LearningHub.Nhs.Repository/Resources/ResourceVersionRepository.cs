@@ -161,6 +161,30 @@
         }
 
         /// <summary>
+        /// The get current for resource async.
+        /// </summary>
+        /// <param name="resourceId">The resource id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<ResourceVersion> GetCurrentResourceDetailsAsync(int resourceId)
+        {
+            return await this.DbContext.ResourceVersion.AsNoTracking()
+                       .Include(r => r.Resource)
+                       .Include(r => r.Publication).AsNoTracking()
+                       .Include(r => r.ResourceVersionKeyword).AsNoTracking()
+                       .Include(r => r.ResourceVersionAuthor).AsNoTracking()
+                       .Include(r => r.ResourceVersionFlag).AsNoTracking()
+                       .Include(r => r.ResourceVersionEvent).AsNoTracking()
+                       .Include(r => r.ResourceLicence).AsNoTracking()
+                       .Include(r => r.CreateUser).AsNoTracking()
+                       .Include(r => r.ResourceVersionProvider).ThenInclude(r => r.Provider).AsNoTracking()
+                       .OrderByDescending(r => r.Id)
+                       .FirstOrDefaultAsync(r => r.ResourceId == resourceId
+                                                 && r.VersionStatusEnum != VersionStatusEnum.FailedToPublish
+                                                 && r.VersionStatusEnum != VersionStatusEnum.Draft
+                                                 && !r.Deleted);
+        }
+
+        /// <summary>
         /// The get current published for resource async.
         /// </summary>
         /// <param name="resourceId">The resource id.</param>
@@ -228,6 +252,25 @@
             if (or != null)
             {
                 retVal = await this.GetCurrentForResourceAsync(or.ResourceId);
+            }
+
+            return retVal;
+        }
+
+        /// <summary>
+        /// The get current for resource reference id async.
+        /// </summary>
+        /// <param name="resourceReferenceId">The resource reference id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<ResourceVersion> GetCurrentResourceForResourceReferenceIdAsync(int resourceReferenceId)
+        {
+            ResourceVersion retVal = null;
+
+            var or = this.DbContext.ResourceReference.OrderByDescending(r => r.Id).FirstOrDefault(x => x.OriginalResourceReferenceId == resourceReferenceId);
+
+            if (or != null)
+            {
+                retVal = await this.GetCurrentResourceDetailsAsync(or.ResourceId);
             }
 
             return retVal;

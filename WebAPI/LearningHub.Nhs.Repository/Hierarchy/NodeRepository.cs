@@ -41,12 +41,13 @@
         /// </summary>
         /// <param name="nodeId">The node id.</param>
         /// <returns>The node details.</returns>
-        public NodeViewModel GetNodeDetails(int nodeId)
+        public async Task<NodeViewModel> GetNodeDetails(int nodeId)
         {
             var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = nodeId };
 
-            var retVal = this.DbContext.NodeViewModel.FromSqlRaw("hierarchy.GetNodeDetails @p0", param0).AsEnumerable().FirstOrDefault();
-            return retVal;
+            var retVal = await this.DbContext.NodeViewModel.FromSqlRaw("hierarchy.GetNodeDetails @p0", param0).AsNoTracking().ToListAsync();
+            NodeViewModel nodeViewModel = retVal.FirstOrDefault();
+            return nodeViewModel;
         }
 
         /// <summary>

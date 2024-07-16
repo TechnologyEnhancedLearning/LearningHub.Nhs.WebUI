@@ -418,18 +418,21 @@ namespace LearningHub.Nhs.WebUI.Services
 
                 resourceItem = JsonConvert.DeserializeObject<ResourceItemViewModel>(result);
 
-                resourceItem.LicenseUrl = this.settings.ResourceLicenseUrl;
-
-                // if resource type is video, add azure media content protection authentication token
-                if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Video && resourceItem.VideoDetails != null && resourceItem.VideoDetails.ResourceAzureMediaAsset != null && !string.IsNullOrEmpty(resourceItem.VideoDetails.ResourceAzureMediaAsset.FilePath))
+                if (resourceItem != null)
                 {
-                    resourceItem.VideoDetails.ResourceAzureMediaAsset.AuthenticationToken = await this.azureMediaService.GetContentAuthenticationTokenAsync(resourceItem.VideoDetails.ResourceAzureMediaAsset.FilePath);
-                }
+                    resourceItem.LicenseUrl = this.settings.ResourceLicenseUrl;
 
-                // if resource type is audio, add azure media content protection authentication token
-                if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Audio && resourceItem.AudioDetails != null && resourceItem.AudioDetails.ResourceAzureMediaAsset != null && !string.IsNullOrEmpty(resourceItem.AudioDetails.ResourceAzureMediaAsset.FilePath))
-                {
-                    resourceItem.AudioDetails.ResourceAzureMediaAsset.AuthenticationToken = await this.azureMediaService.GetContentAuthenticationTokenAsync(resourceItem.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                    // if resource type is video, add azure media content protection authentication token
+                    if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Video && resourceItem.VideoDetails != null && resourceItem.VideoDetails.ResourceAzureMediaAsset != null && !string.IsNullOrEmpty(resourceItem.VideoDetails.ResourceAzureMediaAsset.FilePath))
+                    {
+                        resourceItem.VideoDetails.ResourceAzureMediaAsset.AuthenticationToken = await this.azureMediaService.GetContentAuthenticationTokenAsync(resourceItem.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                    }
+
+                    // if resource type is audio, add azure media content protection authentication token
+                    if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Audio && resourceItem.AudioDetails != null && resourceItem.AudioDetails.ResourceAzureMediaAsset != null && !string.IsNullOrEmpty(resourceItem.AudioDetails.ResourceAzureMediaAsset.FilePath))
+                    {
+                        resourceItem.AudioDetails.ResourceAzureMediaAsset.AuthenticationToken = await this.azureMediaService.GetContentAuthenticationTokenAsync(resourceItem.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                    }
                 }
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized

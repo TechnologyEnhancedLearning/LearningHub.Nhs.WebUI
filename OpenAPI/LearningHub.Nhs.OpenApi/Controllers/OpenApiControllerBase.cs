@@ -17,7 +17,7 @@
         {
             get
             {
-                // This check is to determine between the two ways of authorising, OAuth and APIKey, where APIKey does not provide UserId
+                // This check is to determine between the two ways of authorising, OAuth and APIKey.OAuth provides userId and APIKey does not. For OpenApi we provide the data without specific user info.
                 if ((this.User?.Identity?.AuthenticationType ?? null) == "AuthenticationTypes.Federation")
                 {
                     int userId;

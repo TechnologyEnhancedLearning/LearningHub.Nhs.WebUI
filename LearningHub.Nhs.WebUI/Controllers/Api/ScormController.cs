@@ -335,10 +335,10 @@
             // 1. StudentDataMasteryScore, StudentDataMaxTimeAllowed, StudentDataTimeLimitAction, Credit
             sco.Credit = "credit";
             sco.CommentsFromLms = ScormContansts.CommentsFromLMS;
-            sco.LaunchData = rv.ScormDetails.ScormManifest.LaunchData ?? ScormContansts.LaunchData;
-            sco.StudentDataMasteryScore = rv.ScormDetails.ScormManifest.MasteryScore ?? ScormContansts.StudentDataMasteryScore;
-            sco.StudentDataMaxTimeAllowed = rv.ScormDetails.ScormManifest.MaxTimeAllowed ?? ScormContansts.StudentDataMaxTimeAllowed;
-            sco.StudentDataTimeLimitAction = rv.ScormDetails.ScormManifest.TimeLimitAction ?? ScormContansts.StudentDataTimeLimitAction;
+            sco.LaunchData = rv?.ScormDetails?.ScormManifest?.LaunchData ?? ScormContansts.LaunchData;
+            sco.StudentDataMasteryScore = rv?.ScormDetails?.ScormManifest?.MasteryScore ?? ScormContansts.StudentDataMasteryScore;
+            sco.StudentDataMaxTimeAllowed = rv?.ScormDetails?.ScormManifest?.MaxTimeAllowed ?? ScormContansts.StudentDataMaxTimeAllowed;
+            sco.StudentDataTimeLimitAction = rv?.ScormDetails?.ScormManifest?.TimeLimitAction ?? ScormContansts.StudentDataTimeLimitAction;
 
             // 2. LessonLocation, ScoreRaw, SuspendData, Entry
             // If previous Scorm Activity was "incomplete" then offer pick-up from previous lesson location.

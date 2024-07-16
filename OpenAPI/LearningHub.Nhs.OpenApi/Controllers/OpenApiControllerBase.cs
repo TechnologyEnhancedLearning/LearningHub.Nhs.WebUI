@@ -17,6 +17,7 @@
         {
             get
             {
+                // This check is to determine between the two ways of authorising, OAuth and APIKey, where APIKey does not provide UserId
                 if ((this.User?.Identity?.AuthenticationType ?? null) == "AuthenticationTypes.Federation")
                 {
                     int userId;

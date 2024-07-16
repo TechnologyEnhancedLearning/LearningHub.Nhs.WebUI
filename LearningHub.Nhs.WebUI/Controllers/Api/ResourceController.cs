@@ -97,15 +97,6 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
             var file = await this.fileService.DownloadFileAsync(filePath, fileName);
             if (file != null)
             {
-                var activity = new CreateResourceActivityViewModel()
-                {
-                    ResourceVersionId = resourceVersionId,
-                    NodePathId = nodePathId,
-                    ActivityStart = DateTime.UtcNow, // TODO: What about user's timezone offset when Javascript is disabled? Needs JavaScript.
-                    ActivityStatus = ActivityStatusEnum.Completed,
-                };
-                await this.activityService.CreateResourceActivityAsync(activity);
-
                 return this.File(file.Content, file.ContentType, fileName);
             }
             else

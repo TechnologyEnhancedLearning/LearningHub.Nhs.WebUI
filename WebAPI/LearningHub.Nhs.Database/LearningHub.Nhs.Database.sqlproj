@@ -518,7 +518,7 @@
     <None Include="Scripts\Post-Deploy\Scripts\TD-2929_ActivityStatusUpdates.sql" />
     <Build Include="Stored Procedures\Resources\BlockCollectionFileSearch.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-4031_AMStoMKIOMigration.sql" />
-    <Build Include="Scripts\Post-Deploy\Scripts\TD-4270_Archive_LogDb.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-4270_Archive_LogDb.sql" />
     <Build Include="Stored Procedures\Resources\GetPopularDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetRatedDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetMyCertificatesDashboardResources.sql" />

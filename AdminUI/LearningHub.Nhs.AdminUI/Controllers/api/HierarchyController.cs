@@ -6,6 +6,7 @@
     using LearningHub.Nhs.AdminUI.Configuration;
     using LearningHub.Nhs.AdminUI.Controllers.Api;
     using LearningHub.Nhs.AdminUI.Interfaces;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.WebUI.Models.Contribute;
     using Microsoft.AspNetCore.Mvc;
@@ -79,6 +80,18 @@
         }
 
         /// <summary>
+        /// The GetCatalogue.
+        /// </summary>
+        /// <param name="nodePathId">The nodePathId of the catalogue being edited<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpGet("GetReferencableCatalogues/{nodePathId}")]
+        public async Task<IActionResult> GetRelatedCatalogues(int nodePathId)
+        {
+            var catalogue = await this.catalogueService.GetReferencableCataloguesAsync(nodePathId);
+            return this.Ok(catalogue);
+        }
+
+        /// <summary>
         /// The GetFolder.
         /// </summary>
         /// <param name="nodeVersionId">The id<see cref="int"/>.</param>
@@ -107,23 +120,23 @@
         }
 
         /// <summary>
-        /// Gets the contents of a node (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
+        /// Gets the contents of a node path (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// Set readOnly to true if read only data is needed.
         /// </summary>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <param name="readOnly">Set to true if read only data set is required.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [HttpGet]
-        [Route("GetNodeContentsAdmin/{nodeId}/{readOnly}")]
-        public async Task<ActionResult> GetNodeContentsAdmin(int nodeId, bool readOnly)
+        [Route("GetNodeContentsAdmin/{nodePathId}/{readOnly}")]
+        public async Task<ActionResult> GetNodeContentsAdmin(int nodePathId, bool readOnly)
         {
-            List<NodeContentAdminViewModel> viewModels = await this.hierarchyService.GetNodeContentsAdminAsync(nodeId, readOnly);
+            List<NodeContentAdminViewModel> viewModels = await this.hierarchyService.GetNodeContentsAdminAsync(nodePathId, readOnly);
             return this.Ok(viewModels);
         }
 
         /// <summary>
-        /// Gets the latest hierarchy edit for the supplied root node id.
+        /// Gets the latest hierarchy edit for the supplied root node path id.
         /// ** Note that WebAPI method returns a list of all HierarchyEdits
         /// For IT1, there may only be a single edit in 'Draft'.
         /// ** Future iterations may be required to handle multiple edits within a hierarchy branch.
@@ -131,13 +144,13 @@
         /// The first element is the hierarchy edit in draft (if one exists).
         /// The second element is the last published hierarchy edit (if one exists).
         /// </summary>
-        /// <param name="rootNodeId">The root node id.</param>
+        /// <param name="rootNodePathId">The root node path id.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [HttpGet]
-        [Route("GetHierarchyEdit/{rootNodeId}")]
-        public async Task<ActionResult> GetHierarchyEditInDraft(int rootNodeId)
+        [Route("GetHierarchyEdit/{rootNodePathId}")]
+        public async Task<ActionResult> GetHierarchyEditInDraft(int rootNodePathId)
         {
-            var viewModels = await this.hierarchyService.GetHierarchyEdits(rootNodeId);
+            var viewModels = await this.hierarchyService.GetHierarchyEdits(rootNodePathId);
 
             var hierarchyEditInDraft = viewModels == null ? null : viewModels.OrderByDescending(he => he.Id).FirstOrDefault();
             var hierarchyEditLastPublished = viewModels == null ? null : viewModels.Where(he => he.HierarchyEditStatus == Nhs.Models.Enums.HierarchyEditStatusEnum.Published).OrderByDescending(he => he.Id).FirstOrDefault();
@@ -152,13 +165,13 @@
         /// <summary>
         /// The CreateHierarchyEdit.
         /// </summary>
-        /// <param name="rootNodeId">The rootNodeId<see cref="int"/>.</param>
+        /// <param name="rootNodePathId">The rootNodePathId<see cref="int"/>.</param>
         /// <returns>IActionResult.</returns>
         [HttpPut]
-        [Route("CreateHierarchyEdit/{rootNodeId}")]
-        public async Task<IActionResult> CreateHierarchyEditAsync(int rootNodeId)
+        [Route("CreateHierarchyEdit/{rootNodePathId}")]
+        public async Task<IActionResult> CreateHierarchyEditAsync(int rootNodePathId)
         {
-            var apiResponse = await this.hierarchyService.CreateHierarchyEditAsync(rootNodeId);
+            var apiResponse = await this.hierarchyService.CreateHierarchyEditAsync(rootNodePathId);
             return this.Ok(apiResponse.ValidationResult);
         }
 
@@ -209,6 +222,30 @@
         public async Task<IActionResult> UpdateFolder(FolderEditViewModel folderEditViewModel)
         {
             var apiResponse = await this.hierarchyService.UpdateFolderAsync(folderEditViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// The UpdateNodePathDisplayVersion.
+        /// </summary>
+        /// <param name="nodePathDisplayVersionModel">The folderEditViewModel<see cref="NodePathDisplayVersionModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("UpdateNodePathDisplayVersion")]
+        public async Task<IActionResult> UpdateNodePathDisplayVersion(NodePathDisplayVersionModel nodePathDisplayVersionModel)
+        {
+            var apiResponse = await this.hierarchyService.UpdateNodePathDisplayVersionAsync(nodePathDisplayVersionModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// The UpdateResourceReferenceDisplayVersion.
+        /// </summary>
+        /// <param name="resourceReferenceDisplayVersionModel">The resourceReferenceEditViewModel<see cref="ResourceReferenceDisplayVersionModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("UpdateResourceReferenceDisplayVersion")]
+        public async Task<IActionResult> UpdateResourceReferenceDisplayVersion(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersionModel)
+        {
+            var apiResponse = await this.hierarchyService.UpdateResourceReferenceDisplayVersionAsync(resourceReferenceDisplayVersionModel);
             return this.Ok(apiResponse.ValidationResult);
         }
 
@@ -264,6 +301,30 @@
         }
 
         /// <summary>
+        /// The ReferenceNode.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("ReferenceNode")]
+        public async Task<IActionResult> ReferenceNode(MoveNodeViewModel moveNodeViewModel)
+        {
+            var apiResponse = await this.hierarchyService.ReferenceNodeAsync(moveNodeViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// The ReferenceExternalNode.
+        /// </summary>
+        /// <param name="referenceExternalNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("ReferenceExternalNode")]
+        public async Task<IActionResult> ReferenceExternalNode(ReferenceExternalNodeViewModel referenceExternalNodeViewModel)
+        {
+            var apiResponse = await this.hierarchyService.ReferenceExternalNodeAsync(referenceExternalNodeViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
@@ -298,6 +359,30 @@
         public async Task<IActionResult> HierarchyEditMoveResource(HierarchyEditMoveResourceViewModel moveResourceViewModel)
         {
             var apiResponse = await this.hierarchyService.HierarchyEditMoveResource(moveResourceViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// References a resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The moveResourceViewModel<see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("HierarchyEditReferenceResource")]
+        public async Task<IActionResult> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel)
+        {
+            var apiResponse = await this.hierarchyService.HierarchyEditReferenceResource(moveResourceViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// References an external resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="referenceExternalResourceViewModel">The referenceExternalResourceViewModel<see cref="ReferenceExternalResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("HierarchyEditReferenceExternalResource")]
+        public async Task<IActionResult> HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel)
+        {
+            var apiResponse = await this.hierarchyService.HierarchyEditReferenceExternalResource(referenceExternalResourceViewModel);
             return this.Ok(apiResponse.ValidationResult);
         }
 

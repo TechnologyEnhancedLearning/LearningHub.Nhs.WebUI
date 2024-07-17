@@ -6,6 +6,8 @@
 -- Modification History
 --
 -- 25-08-2021  KD	Initial Revision.
+-- 22-04-2024  DB	Updated so that a new draft NodeVersion is created if the existing NodeVersion is not in Draft status.
+-- 10-07-2024  DB	Added PrimaryCatalogueNodeId to the NodeVersion table.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditFolderUpdate]
 (
@@ -20,46 +22,72 @@ AS
 
 BEGIN
 
+	DECLARE @NodeId INT
+	DECLARE @NodeVersionId INT
+	DECLARE @CreatedNodeVersionId INT
+	DECLARE @HierarchyEditId INT
+	DECLARE @ParentNodeId INT
+	DECLARE @PrimaryCatalogueNodeId INT
+
+	SELECT	@NodeId = NodeId, 
+			@NodeVersionId = NodeVersionId,
+			@HierarchyEditId = HierarchyEditId,
+			@ParentNodeId = ParentNodeId,
+			@PrimaryCatalogueNodeId = PrimaryCatalogueNodeId
+	FROM [hierarchy].[HierarchyEditDetail]
+	WHERE Id = @HierarchyEditDetailId
+
 	BEGIN TRY
 
 		BEGIN TRAN	
 
 		DECLARE @AmendDate datetimeoffset(7) = ISNULL(TODATETIMEOFFSET(DATEADD(mi, @UserTimezoneOffset, GETUTCDATE()), @UserTimezoneOffset), SYSDATETIMEOFFSET())
 
-		-- Update folder details.
-		-- IT1: maintaining a single published node version.
-		-- Future iterations will require refactoring to create a new 'draft' node version to cater for updates.
-		UPDATE
-			fnv
-		SET
-			[Name] = @Name,
-			[Description] = @Description,
-			AmendUserId = @UserId,
-			AmendDate = @AmendDate
-		FROM
-			hierarchy.FolderNodeVersion fnv
-		INNER JOIN
-			 [hierarchy].[HierarchyEditDetail] hed ON hed.NodeVersionId = fnv.NodeVersionId
-		WHERE	
-			hed.Id = @HierarchyEditDetailId
-			AND hed.Deleted = 0
-			AND fnv.Deleted = 0
+		-- If NodeVersion is in Draft status update it, otherwise create a new NodeVersion in Draft status.
+		IF EXISTS (SELECT 1 
+					FROM hierarchy.NodeVersion nv
+					INNER JOIN	[hierarchy].[HierarchyEditDetail] hed ON hed.NodeVersionId = nv.Id
+					WHERE	
+						hed.Id = @HierarchyEditDetailId
+						AND hed.Deleted = 0
+						AND nv.Deleted = 0
+						AND nv.VersionStatusId = 1) -- Draft
+		BEGIN
+			UPDATE
+				fnv
+			SET
+				[Name] = @Name,
+				[Description] = @Description,
+				AmendUserId = @UserId,
+				AmendDate = @AmendDate
+			FROM
+				hierarchy.FolderNodeVersion fnv
+			INNER JOIN
+				 [hierarchy].[HierarchyEditDetail] hed ON hed.NodeVersionId = fnv.NodeVersionId
+			WHERE	
+				hed.Id = @HierarchyEditDetailId
+				AND hed.Deleted = 0
+				AND fnv.Deleted = 0
+		END
+		ELSE
+		BEGIN
+			EXECUTE [hierarchy].[FolderNodeVersionCreate] @NodeId, @Name, @Description, @PrimaryCatalogueNodeId, @UserId, @CreatedNodeVersionId OUTPUT
+		END
+
 
 		UPDATE 
 			hed
 		SET
-			[HierarchyEditDetailOperationId] = 
-				CASE WHEN hed.HierarchyEditDetailOperationId IS NULL THEN 2 ELSE HierarchyEditDetailOperationId END,
+			[HierarchyEditDetailOperationId] = ISNULL(hed.HierarchyEditDetailOperationId, 2),
+			NodeVersionId = ISNULL(@CreatedNodeVersionId, @NodeVersionId),
 			AmendUserId = @UserId,
 			AmendDate = @AmendDate
 		FROM
 			[hierarchy].[HierarchyEditDetail] hed
-		INNER JOIN
-			hierarchy.FolderNodeVersion fnv ON hed.NodeVersionId = fnv.NodeVersionId
 		WHERE	
-			hed.Id = @HierarchyEditDetailId
+			hed.HierarchyEditId = @HierarchyEditId
+			AND hed.NodeVersionId = @NodeVersionId
 			AND hed.Deleted = 0
-			AND fnv.Deleted = 0
 
 		COMMIT
 

@@ -564,6 +564,12 @@ namespace LearningHub.Nhs.Services
 
             var vm = this.mapper.Map<ResourceDetailViewModel>(resourceVersion);
 
+            ////// TODO - ResourceCatalogueId to be populated by new resource version PrimaryCatalogueId attribute
+            ////vm.ResourceCatalogueId = resourceVersion.PrimaryCatalogueNodeId;
+            ////// TODO - Investigate how the following two properties are used so that they can be populated correctly
+            ////vm.NodeId
+            ////vm.PublishedResourceCatalogueId
+
             var nodeResources = await this.nodeResourceRepository.GetByResourceIdAsync(vm.ResourceId);
             var draftNodeResources = nodeResources.Where(x => x.VersionStatusEnum == VersionStatusEnum.Draft).ToList();
             var publishedNodeResources = nodeResources.Where(x => x.VersionStatusEnum == VersionStatusEnum.Published || x.VersionStatusEnum == VersionStatusEnum.Unpublished).ToList();

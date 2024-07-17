@@ -54,6 +54,12 @@
             return await this.facade.GetAsync<CatalogueViewModel>($"Catalogue/Catalogues/{id}");
         }
 
+        /// <inheritdoc/>
+        public async Task<List<CatalogueBasicViewModel>> GetReferencableCataloguesAsync(int nodePathId)
+        {
+            return await this.facade.GetAsync<List<CatalogueBasicViewModel>>($"Catalogue/GetReferencableCatalogues/{nodePathId}");
+        }
+
         /// <summary>
         /// The GetCataloguesAsync.
         /// </summary>

@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 19-10-2021  RS	Initial Revision.
+-- 13-05-2024  DB	Update to reflect the HierarchyEdit.RootNodeId change to HierarchyEdit.RootNodePathId
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[MoveResourceUp] 
 (
@@ -39,7 +40,10 @@ BEGIN
 		END
 
 		-- Check if the catalogue is currently locked for editing by admin.
-		IF EXISTS (SELECT Id FROM hierarchy.HierarchyEdit WHERE RootNodeId = @CatalogueNodeId AND HierarchyEditStatusId IN (1 /* Draft */, 4 /* Publishing */, 5 /* Submitted */) AND Deleted = 0)
+		IF EXISTS (	SELECT	he.Id FROM hierarchy.HierarchyEdit he
+					INNER JOIN hierarchy.NodePath np ON he.RootNodePathId = np.Id
+					WHERE	np.NodeId = @CatalogueNodeId
+						AND HierarchyEditStatusId IN (1 /* Draft */, 4 /* Publishing */, 5 /* Submitted */) AND he.Deleted = 0)
 		BEGIN
 			RAISERROR ('Unable to move the resource up because the catalogue is currently locked for editing',
 					16,	-- Severity.  

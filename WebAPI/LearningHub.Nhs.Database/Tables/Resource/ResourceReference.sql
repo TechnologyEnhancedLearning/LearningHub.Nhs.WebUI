@@ -3,6 +3,7 @@
 	[ResourceId] [int] NOT NULL,
 	[NodePathId] [int] NULL,
 	[OriginalResourceReferenceId] [int] NULL,
+	[IsActive] [bit] NOT NULL DEFAULT 1, -- Default set so that existing records are active and column can be added during release
 	[Deleted] [bit] NOT NULL,
 	[CreateUserId] [int] NOT NULL,
 	[CreateDate] [datetimeoffset](7) NOT NULL,

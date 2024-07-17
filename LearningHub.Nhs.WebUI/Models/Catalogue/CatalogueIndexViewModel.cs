@@ -17,14 +17,14 @@
         public CatalogueViewModel Catalogue { get; set; }
 
         /// <summary>
-        /// Gets or sets the node details view model.
+        /// Gets or sets the node path details view model.
         /// </summary>
-        public NodeViewModel NodeDetails { get; set; }
+        public NodePathViewModel NodePathDetails { get; set; }
 
         /// <summary>
-        /// Gets or sets the node details for each node in the node path.
+        /// Gets or sets the node path details for each node in the node path.
         /// </summary>
-        public List<NodeViewModel> NodePathNodes { get; set; }
+        public List<NodePathViewModel> NodePathNodes { get; set; }
 
         /// <summary>
         /// Gets or sets the contents of the node currently being displayed in the UI.

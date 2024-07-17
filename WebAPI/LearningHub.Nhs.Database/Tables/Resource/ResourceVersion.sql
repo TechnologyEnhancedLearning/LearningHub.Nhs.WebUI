@@ -16,6 +16,7 @@
 	[SensitiveContent] [bit] NOT NULL DEFAULT 0,
 	[CertificateEnabled] [bit] NULL,
 	[ProviderId] [int] NULL,
+	[PrimaryCatalogueNodeId] [int] NOT NULL DEFAULT 1,
 	[Deleted] [bit] NOT NULL,
 	[CreateUserId] [int] NOT NULL,
 	[CreateDate] [datetimeoffset](7) NOT NULL,
@@ -58,6 +59,13 @@ REFERENCES [hub].[Provider] ([Id])
 GO
 
 ALTER TABLE [resources].[ResourceVersion] CHECK CONSTRAINT [FK_ResourceVersion_Provider]
+GO
+
+ALTER TABLE [resources].[ResourceVersion]  WITH CHECK ADD  CONSTRAINT [FK_ResourceVersion_PrimaryCatalogueNode] FOREIGN KEY([PrimaryCatalogueNodeId])
+REFERENCES [hierarchy].[Node] ([Id])
+GO
+
+ALTER TABLE [resources].[ResourceVersion] CHECK CONSTRAINT [FK_ResourceVersion_PrimaryCatalogueNode]
 GO
 
 CREATE NONCLUSTERED INDEX [IX_ResourceVersion_VersionStatusId]

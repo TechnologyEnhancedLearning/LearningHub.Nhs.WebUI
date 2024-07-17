@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
+    using elfhHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Api.Shared.Configuration;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Common;
@@ -143,7 +144,7 @@
         public async Task<CatalogueViewModel> GetCatalogueAsync(int id)
         {
             var catalogue = await this.catalogueNodeVersionRepository.GetAll()
-                .Include(x => x.NodeVersion).ThenInclude(x => x.Node)
+                .Include(x => x.NodeVersion).ThenInclude(x => x.Node).ThenInclude(x => x.NodePaths.Where(np => !np.Deleted && np.CatalogueNodeId.ToString() == np.NodePathString))
                 .Include(x => x.Keywords)
                 .Include(x => x.CatalogueNodeVersionProvider).Where(x => !x.Deleted)
                 .SingleOrDefaultAsync(x => x.Id == id);
@@ -158,6 +159,12 @@
             vm.HasUserGroup = this.GetRoleUserGroupsForCatalogue(vm.NodeId).Any();
             vm.Providers = await this.providerService.GetAllAsync();
             return vm;
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<CatalogueBasicViewModel>> GetReferencableCataloguesAsync(int nodePathId)
+        {
+            return await this.catalogueNodeVersionRepository.GetReferencableCataloguesAsync(nodePathId);
         }
 
         /// <summary>
@@ -224,7 +231,7 @@
                     CardImageUrl = catalogue.CardImageUrl,
                     Url = catalogue.Url,
                     Name = catalogue.Name,
-                    NodePathId = catalogue.NodeVersion.Node.NodePaths?.FirstOrDefault()?.Id ?? 0,
+                    RootNodePathId = catalogue.NodeVersion.Node.NodePaths?.FirstOrDefault()?.Id ?? 0,
                     RestrictedAccess = catalogue.RestrictedAccess,
                 });
             }

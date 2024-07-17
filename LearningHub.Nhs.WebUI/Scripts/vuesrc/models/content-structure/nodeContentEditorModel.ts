@@ -3,6 +3,7 @@
     description: string;
     nodeTypeId: number;
     nodeId: number;
+    nodePathId: number;
     nodeVersionId: number;
     resourceId: number;
     resourceVersionId: number;

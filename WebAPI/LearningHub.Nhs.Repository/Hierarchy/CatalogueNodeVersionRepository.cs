@@ -8,7 +8,6 @@
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Dashboard;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
-    using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Repository.Interface;
     using LearningHub.Nhs.Repository.Interface.Hierarchy;

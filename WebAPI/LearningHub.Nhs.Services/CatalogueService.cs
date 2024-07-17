@@ -8,7 +8,6 @@
     using LearningHub.Nhs.Api.Shared.Configuration;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Common;
-    using LearningHub.Nhs.Models.Dashboard;
     using LearningHub.Nhs.Models.Email;
     using LearningHub.Nhs.Models.Email.Models;
     using LearningHub.Nhs.Models.Entities;
@@ -28,8 +27,6 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
-    using NLog.Filters;
-    using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
     /// <summary>
     /// The Catalogue Service.
@@ -398,13 +395,13 @@
         public List<RoleUserGroup> GetRoleUserGroupsForCatalogue(int catalogueNodeId, bool includeUser = false)
         {
             IQueryable<RoleUserGroup> query = this.roleUserGroupRepository.GetAll()
-                .Include(x => x.Scope).Where(x => x.Scope.CatalogueNodeId == catalogueNodeId);
+                .Include(x => x.Scope);
             if (includeUser)
             {
                 query = query.Include(x => x.UserGroup).ThenInclude(x => x.UserUserGroup);
             }
 
-            return query.ToList();
+            return query.Where(x => x.Scope.CatalogueNodeId == catalogueNodeId).ToList();
         }
 
         /// <summary>

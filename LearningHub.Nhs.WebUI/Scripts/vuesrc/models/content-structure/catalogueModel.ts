@@ -1,6 +1,7 @@
 ﻿export class CatalogueBasicModel {
     catalogueNodeVersionId: number;
     nodeId: number;
+    rootNodePathId: number;
     name: string;
     hidden: boolean;
     url: string;

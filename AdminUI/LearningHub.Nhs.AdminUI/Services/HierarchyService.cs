@@ -34,16 +34,16 @@
         }
 
         /// <summary>
-        /// Gets the contents of a node (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
+        /// Gets the contents of a node path (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// Set readOnly to true if read only data is needed.
         /// </summary>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <param name="readOnly">Set to true if read only data set is required.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodeId, bool readOnly)
+        public async Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodePathId, bool readOnly)
         {
-            return await this.facade.GetAsync<List<NodeContentAdminViewModel>>($"Hierarchy/GetNodeContentsAdmin/{nodeId}/{readOnly}");
+            return await this.facade.GetAsync<List<NodeContentAdminViewModel>>($"Hierarchy/GetNodeContentsAdmin/{nodePathId}/{readOnly}");
         }
 
         /// <summary>
@@ -57,23 +57,23 @@
         }
 
         /// <summary>
-        /// Gets the hierarchy edits for the supplied root node id.
+        /// Gets the hierarchy edits for the supplied root node path id.
         /// </summary>
-        /// <param name="rootNodeId">The root node id.</param>
+        /// <param name="rootNodePathId">The root node path id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<HierarchyEditViewModel>> GetHierarchyEdits(int rootNodeId)
+        public async Task<List<HierarchyEditViewModel>> GetHierarchyEdits(int rootNodePathId)
         {
-            return await this.facade.GetAsync<List<HierarchyEditViewModel>>($"Hierarchy/GetHierarchyEdits/{rootNodeId}");
+            return await this.facade.GetAsync<List<HierarchyEditViewModel>>($"Hierarchy/GetHierarchyEdits/{rootNodePathId}");
         }
 
         /// <summary>
         /// The CreateHierarchyEditAsync.
         /// </summary>
-        /// <param name="rootNodeId">The rootNodeId<see cref="int"/>.</param>
+        /// <param name="rootNodePathId">The rootNodePathId<see cref="int"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<ApiResponse> CreateHierarchyEditAsync(int rootNodeId)
+        public async Task<ApiResponse> CreateHierarchyEditAsync(int rootNodePathId)
         {
-            return await this.facade.PutAsync($"Hierarchy/CreateHierarchyEdit/{rootNodeId}");
+            return await this.facade.PutAsync($"Hierarchy/CreateHierarchyEdit/{rootNodePathId}");
         }
 
         /// <summary>
@@ -114,6 +114,22 @@
         public async Task<ApiResponse> UpdateFolderAsync(FolderEditViewModel folderEditViewModel)
         {
             return await this.facade.PostAsync<ApiResponse, FolderEditViewModel>("Hierarchy/UpdateFolder", folderEditViewModel);
+        }
+
+        /// <summary>
+        /// The UpdateFolder.
+        /// </summary>
+        /// <param name="nodePathDisplayVersionModel">The nodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<ApiResponse> UpdateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel)
+        {
+            return await this.facade.PostAsync<ApiResponse, NodePathDisplayVersionModel>("Hierarchy/UpdateNodePathDisplayVersion", nodePathDisplayVersionModel);
+        }
+
+        /// <inheritdoc/>
+        public async Task<ApiResponse> UpdateResourceReferenceDisplayVersionAsync(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersionModel)
+        {
+            return await this.facade.PostAsync<ApiResponse, ResourceReferenceDisplayVersionModel>("Hierarchy/UpdateResourceReferenceDisplayVersion", resourceReferenceDisplayVersionModel);
         }
 
         /// <summary>
@@ -167,6 +183,26 @@
         }
 
         /// <summary>
+        /// Create a reference to a Node.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<ApiResponse> ReferenceNodeAsync(MoveNodeViewModel moveNodeViewModel)
+        {
+            return await this.facade.PostAsync<ApiResponse, MoveNodeViewModel>("Hierarchy/referenceNode", moveNodeViewModel);
+        }
+
+        /// <summary>
+        /// Create a reference to a Node.
+        /// </summary>
+        /// <param name="referenceExternalNodeViewModel">The referenceExternalNodeViewModel<see cref="ReferenceExternalNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<ApiResponse> ReferenceExternalNodeAsync(ReferenceExternalNodeViewModel referenceExternalNodeViewModel)
+        {
+            return await this.facade.PostAsync<ApiResponse, ReferenceExternalNodeViewModel>("Hierarchy/referenceExternalNode", referenceExternalNodeViewModel);
+        }
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
@@ -194,6 +230,26 @@
         public async Task<ApiResponse> HierarchyEditMoveResource(HierarchyEditMoveResourceViewModel moveResourceViewModel)
         {
             return await this.facade.PostAsync<ApiResponse, HierarchyEditMoveResourceViewModel>("Hierarchy/HierarchyEditMoveResource", moveResourceViewModel);
+        }
+
+        /// <summary>
+        /// References a resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The moveResourceViewModel<see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<ApiResponse> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel)
+        {
+            return await this.facade.PostAsync<ApiResponse, HierarchyEditMoveResourceViewModel>("Hierarchy/HierarchyEditReferenceResource", moveResourceViewModel);
+        }
+
+        /// <summary>
+        /// References an external resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="referenceExternalResourceViewModel">The referenceExternalResourceViewModel<see cref="ReferenceExternalResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<ApiResponse> HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel)
+        {
+            return await this.facade.PostAsync<ApiResponse, ReferenceExternalResourceViewModel>("Hierarchy/HierarchyEditReferenceExternalResource", referenceExternalResourceViewModel);
         }
 
         /// <summary>

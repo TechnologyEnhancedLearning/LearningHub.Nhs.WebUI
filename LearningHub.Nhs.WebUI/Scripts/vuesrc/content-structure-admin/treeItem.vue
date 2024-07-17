@@ -1,9 +1,9 @@
 ﻿<template>
     <div>
         <!--Node-->
-        <div :id="'treenode' + item.nodeId" v-if="isNode && isVisible" class="treeview-node" :style="{marginLeft: indentNegativeMargin + 'px', paddingLeft: indentPostivePadding + 'px'}">
+        <div :id="'treenode' + item.nodePathId" v-if="isNode && isVisible" class="treeview-node" :style="{marginLeft: indentNegativeMargin + 'px', paddingLeft: indentPostivePadding + 'px'}">
             <div class="treeview-node-inner d-flex">
-                <div class="treeview-node-inner-padding d-flex flex-row flex-grow-1" v-bind:class="{ 'moving-highlight': isMovingNode }">
+                <div class="treeview-node-inner-padding d-flex flex-row flex-grow-1" v-bind:class="{ 'moving-highlight': isMovingOrReferencingNode }">
                     <div class="pr-4" style="cursor:pointer" @click.prevent="toggle">
                         <i v-if="isOpen" class="fa-regular fa-folder-open fa-lg content-structure-folder" aria-hidden="true"></i>
                         <i v-if="!isOpen" class="fa-regular fa-folder fa-lg content-structure-folder" aria-hidden="true"></i>
@@ -11,6 +11,23 @@
                     </div>
                     <div v-if="editMode === EditModeEnum.Structure" class="ml-auto">
                         <div class="d-flex">
+                            <div class="node-path-edit-indicator" v-if="item.nodePathDisplayVersionId > 0">
+                                <i class="fa-solid fa-pencil"></i>
+                            </div>
+                            <div class="dropdown references-dropdown" v-if="item.nodePaths && item.nodePaths.length>1">
+                                <a class="dropdown-toggle no-wrap" href="#" role="button" id="nodeReferencesDisplayLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{item.nodePaths.length}} references
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="nodeReferencesDisplayLink">
+                                    <ul>
+                                        <li class="dropdown-item" v-for="(item, index) in item.nodePaths" :key="index">
+                                            <span v-for="(subItem, index) in item.nodePathBreakdown" :key="index">
+                                                {{index > 0 ? ">" : ""}} {{subItem.nodeName}}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                             <div :class="{ 'has-resources-indicator' : item.hasResourcesInBranchInd, 'no-resources-indicator' : !item.hasResourcesInBranchInd }" />
                             <div class="dropdown options-dropdown">
                                 <a class="dropdown-toggle no-wrap" href="#" role="button" id="dropdownNodeItems" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="recomputeNodeOptions">
@@ -22,6 +39,9 @@
                                     <a class="dropdown-item" v-if="canMoveNodeDown" @click="onMoveNodeDown">Move down</a>
                                     <a class="dropdown-item" v-if="canMoveNode" @click="onInitiateMoveNode">Move</a>
                                     <a class="dropdown-item" v-if="canDeleteNode" @click="onDeleteFolder">Delete</a>
+                                    <a class="dropdown-item" @click="onInitiateReferenceNode">Create reference to this folder</a>
+                                    <a class="dropdown-item" v-if="canEditFolderReference" @click="onEditFolderReference">{{item.nodePathDisplayVersionId == 0 ? "Create" : "Edit"}} reference details</a>
+                                    <a class="dropdown-item" @click="addReference">Add a reference here</a>
                                 </div>
                             </div>
                         </div>
@@ -30,8 +50,15 @@
                         <a v-if="canMoveHere" href="#" @click.prevent="onMoveNode">Move here</a>
                         <span v-if="editingTreeNode.nodeId === item.nodeId" class="mr-3">Move this folder or <a id="cancelMoveNode" href="#" @click.prevent="onCancelMoveNode">Cancel move</a></span>
                     </div>
+                    <div v-if="editMode === EditModeEnum.ReferenceNode" class="ml-auto">
+                        <a v-if="canReferenceHere" href="#" @click.prevent="onReferenceNode">Create reference here</a>
+                        <span v-if="editingTreeNode.nodeId === item.nodeId" class="mr-3">Create a reference to this folder or <a id="cancelReferenceNode" href="#" @click.prevent="onCancelReferenceNode">Cancel create reference</a></span>
+                    </div>
                     <div v-if="editMode === EditModeEnum.MoveResource" class="ml-auto">
                         <a v-if="editingTreeNode.nodeId != item.nodeId" href="#" @click.prevent="onMoveResource">Move here</a>
+                    </div>
+                    <div v-if="editMode === EditModeEnum.ReferenceResource" class="ml-auto">
+                        <a v-if="editingTreeNode.nodeId != item.nodeId" href="#" @click.prevent="onReferenceResource">Create reference here</a>
                     </div>
                 </div>
             </div>
@@ -45,13 +72,19 @@
                             <i class="fa fa-plus-circle create-folder-circle" aria-hidden="true" @click="createFolder"></i>
                             <a @click.prevent="createFolder()" style="padding-left:5px" href="#">Create a folder</a>
                         </div>
-
+                        <div v-if="item.parent == null" class="treeview-node-inner-padding" style="cursor:pointer;margin-left:1rem;">
+                            <i class="fa fa-plus-circle create-folder-circle" aria-hidden="true" @click="addReference"></i>
+                            <a @click.prevent="addReference()" style="padding-left:5px" href="#">Add a reference here</a>
+                        </div>
                         <div v-if="editMode === EditModeEnum.MoveNode && item.depth === 0 " class="ml-auto my-auto">
                             <a v-if="canMoveHere" href="#" @click.prevent="onMoveNode">Move here</a>
                         </div>
 
                         <div v-if="editMode === EditModeEnum.MoveResource && item.depth === 0 " class="ml-auto my-auto">
                             <a v-if="canMoveResourceToRoot" href="#" @click.prevent="onMoveResource">Move here</a>
+                        </div>
+                        <div v-if="editMode === EditModeEnum.ReferenceResource && item.depth === 0 " class="ml-auto my-auto">
+                            <a v-if="canReferenceResourceToRoot" href="#" @click.prevent="onReferenceResource">Create reference here</a>
                         </div>
                     </div>
                 </div>
@@ -83,7 +116,7 @@
                 <div class="treeview-node-inner-padding d-flex flex-row flex-grow-1" v-bind:class="{ 'moving-highlight' : isMovingResource }">
                     <div>
                         <div>
-                            <a v-if="canNavigateToResourceInfo" :href="getResourceUrl(item.resourceReferenceId)">{{item.name}}</a>
+                            <a v-if="canNavigateToResourceInfo" :href="getResourceUrl(item.resourceVersionId)">{{item.name}}</a>
                             <span v-else>{{item.name}}</span>
                         </div>
                         <div class="resource-detail d-flex flex-row">
@@ -94,6 +127,23 @@
                     </div>
                     <div class="ml-auto">
                         <div v-if="showResourceOptions" class="d-flex">
+                            <div class="node-path-edit-indicator" v-if="item.resourceReferenceDisplayVersionId > 0">
+                                <i class="fa-solid fa-pencil"></i>
+                            </div>
+                            <div class="dropdown references-dropdown" v-if="item.nodePaths && item.nodePaths.length>1">
+                                <a class="dropdown-toggle no-wrap" href="#" role="button" id="resourceReferencesDisplayLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{item.nodePaths.length}} references
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="resourceReferencesDisplayLink">
+                                    <ul>
+                                        <li class="dropdown-item" v-for="(item, index) in item.nodePaths" :key="index">
+                                            <span v-for="(subItem, index) in item.nodePathBreakdown" :key="index">
+                                                {{index > 0 ? ">" : ""}} {{subItem.nodeName}}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                             <div class="dropdown options-dropdown">
                                 <a class="dropdown-toggle no-wrap" href="#" role="button" id="dropdownResourceItems" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="recomputeResourceOptions">
                                     options
@@ -102,12 +152,17 @@
                                     <a class="dropdown-item" v-if="canMoveResourceUp" @click="onMoveResourceUp">Move up</a>
                                     <a class="dropdown-item" v-if="canMoveResourceDown" @click="onMoveResourceDown">Move down</a>
                                     <a class="dropdown-item" v-if="canMoveResource" @click="onInitiateMoveResource">Move</a>
+                                    <a class="dropdown-item" @click="onInitiateReferenceResource">Create reference to this resource</a>
+                                    <a class="dropdown-item" v-if="canEditResourceReference" @click="onEditResourceReference">{{item.resourceReferenceDisplayVersionId == 0 ? "Create" : "Edit"}} reference details</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div v-if="editMode === EditModeEnum.MoveResource && movingResource.resourceVersionId == item.resourceVersionId" class="my-auto ml-auto pr-2">
                         <span>Move this resource or <a id="cancelMoveResource" class="red" href="#" @click.prevent="onCancelMoveResource">Cancel move</a></span>
+                    </div>
+                    <div v-if="editMode === EditModeEnum.ReferenceResource && referencingResource.resourceVersionId == item.resourceVersionId" class="my-auto ml-auto pr-2">
+                        <span class="small">Create reference to resource or <a id="cancelReferenceResource" class="red" href="#" @click.prevent="onCancelReferenceResource">Cancel reference</a></span>
                     </div>
                 </div>
             </div>
@@ -180,6 +235,8 @@
                 canMoveResourceDown: false,
                 canMoveResourceUp: false,
                 canMoveResource: false,
+                canEditFolderReference: false,
+                canEditResourceReference: false,
             };
         },
         computed: {
@@ -215,8 +272,22 @@
                 }
                 return this.editingTreeNode.nodeId != this.item.nodeId && this.editingTreeNode.parent.nodeId != this.item.nodeId && !underEditingTreeNode;
             },
-            isMovingNode: function (): boolean {
-                return (this.editMode === EditModeEnum.MoveNode) && this.editingTreeNode && this.editingTreeNode.nodeId === this.item.nodeId;
+            canReferenceHere(): boolean {
+                var underEditingTreeNode: boolean = false;
+                if (this.item.depth > this.editingTreeNode.depth) {
+                    var parent = this.item.parent;
+                    while (parent.depth >= this.editingTreeNode.depth) {
+                        if (parent.nodeId == this.editingTreeNode.nodeId) {
+                            underEditingTreeNode = true;
+                            break;
+                        }
+                        parent = parent.parent;
+                    }
+                }
+                return this.editingTreeNode.nodeId != this.item.nodeId && this.editingTreeNode.parent.nodeId != this.item.nodeId && !underEditingTreeNode;
+            },
+            isMovingOrReferencingNode: function (): boolean {
+                return (this.editMode === EditModeEnum.MoveNode || this.editMode === EditModeEnum.ReferenceNode) && this.editingTreeNode && this.editingTreeNode.nodeId === this.item.nodeId;
             },
             canNavigateToResourceInfo: function (): boolean {
                 return this.item.versionStatusId == VersionStatus.PUBLISHED && this.editMode === EditModeEnum.None;
@@ -238,6 +309,12 @@
             },
             isMovingResource: function (): boolean {
                 return (this.editMode === EditModeEnum.MoveResource) && this.movingResource && this.movingResource.resourceVersionId === this.item.resourceVersionId;
+            },
+            canReferenceResourceToRoot(): boolean {
+                return this.editMode === EditModeEnum.ReferenceResource && this.referencingResource.parent.depth > 0 && this.item.depth === 0;
+            },
+            referencingResource(): NodeContentAdminModel {
+                return this.$store.state.contentStructureState.referencingResource;
             },
             indentNegativeMargin(): number {
                 if (this.item.depth > 0) {
@@ -275,11 +352,13 @@
                 this.canDeleteNode = !this.item.hasResourcesInBranchInd;
                 this.canEditNode = true;
                 this.canMoveNode = this.item.parent != null;
+                this.canEditFolderReference = this.item.nodePathDisplayVersionId > 0 || (this.item.nodePaths && this.item.nodePaths.length > 1);
             },
             recomputeResourceOptions: function () {
                 this.canMoveResourceUp = this.item.displayOrder > 1;
                 this.canMoveResourceDown = this.item.parent && this.item.displayOrder < this.item.parent.children.filter(c => c.nodeTypeId === 0).length;
                 this.canMoveResource = this.item.versionStatusId != VersionStatus.PUBLISHING;
+                this.canEditResourceReference = this.item.resourceReferenceDisplayVersionId > 0 || (this.item.nodePaths && this.item.nodePaths.length > 1);
             },
             onDeleteFolder(event: MouseEvent) {
                 this.$emit('delete-folder', this.item)
@@ -289,9 +368,9 @@
                     // Automatically horizontally scroll the treeview if user opens a folder whose left edge is greater than 40% from the left.
                     if (!this.isOpen) {
                         var viewportWidth = $(window).width();
-                        var treenode = $('#treenode' + this.item.nodeId);
+                        var treenode = $('#treenode' + this.item.nodePathId);
                         if (treenode.position()) {
-                            var treeNodeLeft = $('#treenode' + this.item.nodeId).position().left;
+                            var treeNodeLeft = $('#treenode' + this.item.nodePathId).position().left;
                             var autoScrollTriggerPercentage = 40;
 
                             if (treeNodeLeft / viewportWidth * 100 > autoScrollTriggerPercentage) {
@@ -352,9 +431,36 @@
             onCancelMoveResource: function () {
                 this.$store.commit('contentStructureState/cancelMoveResource');
             },
+            onEditFolderReference: function () {
+                this.$store.commit('contentStructureState/setEditingNodePathDisplayVersion', { folderNode: this.item });
+            },
+            onInitiateReferenceResource: function () {
+                this.$store.commit('contentStructureState/setReferencingResource', { node: this.item });
+            },
+            addReference: function () {
+                this.$store.commit('contentStructureState/setReferencingExternalContent', { parentNode: this.item });
+            },
+            onEditResourceReference: function () {
+                this.$store.commit('contentStructureState/setEditingResourceReferenceDisplayVersion', { resourceNode: this.item });
+            },
+            onCancelReferenceResource: function () {
+                this.$store.commit('contentStructureState/cancelReferenceResource');
+            },
+            onInitiateReferenceNode: function () {
+                this.$store.commit('contentStructureState/setReferencingNode', { node: this.item });
+            },
+            onReferenceResource: function () {
+                this.$store.dispatch('contentStructureState/referenceResource', { destinationNode: this.item });
+            },
+            onCancelReferenceNode: function () {
+                this.$store.commit('contentStructureState/cancelReferenceNode');
+            },            
+            onReferenceNode: function () {
+                this.$store.dispatch('contentStructureState/referenceNode', { destinationNode: this.item });
+            },
             async loadNodeContents() {
                 this.isError = false;
-                await contentStructureData.getNodeContentsAdmin(this.item.nodeId, this.readOnly && !this.item.inEdit).then(response => {
+                await contentStructureData.getNodeContentsAdmin(this.item.nodePathId, this.readOnly && !this.item.inEdit).then(response => {
 
                     this.item.children = response;
                     this.item.children.forEach((child) => {
@@ -369,9 +475,9 @@
                     this.isError = true;
                 });
             },
-            getResourceUrl: function (resourceReferenceId: number) {
-                if (resourceReferenceId) {
-                    return `/Resource/${resourceReferenceId.toString()}/Item`;
+            getResourceUrl: function (resourceVersionId: number) {
+                if (resourceVersionId) {
+                    return `/Resource/${resourceVersionId.toString()}/Item`;
                 }
                 else {
                     return "";
@@ -522,49 +628,46 @@
         margin-top: 8px;
     }
 
-    div.options-dropdown {
+    div.options-dropdown,
+    div.references-dropdown {
         color: $nhsuk-black;
-        .dropdown-menu
 
-    {
-        border: 2px solid $nhsuk-grey;
-        box-sizing: border-box;
-        border-radius: 5px;
-        margin: 0;
-        padding: 0;
-        margin-top: 10px;
-    }
+        .dropdown-menu {
+            border: 2px solid $nhsuk-grey;
+            box-sizing: border-box;
+            border-radius: 5px;
+            margin: 0;
+            padding: 0;
+            margin-top: 10px;
+        }
 
-    .dropdown-toggle::after {
-        vertical-align: middle;
-        border-top: 0.5em solid;
-        border-right: 0.5em solid transparent;
-        border-bottom: 0;
-        border-left: 0.5em solid transparent;
-    }
+        .dropdown-toggle::after {
+            vertical-align: middle;
+            border-top: 0.5em solid;
+            border-right: 0.5em solid transparent;
+            border-bottom: 0;
+            border-left: 0.5em solid transparent;
+        }
 
-    a.dropdown-item {
-        height: 35px !important;
-        font-size: 16px;
-        text-decoration: none;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        border-top: 1px solid $nhsuk-grey-lighter;
-        &:hover
+        a.dropdown-item {
+            height: 35px !important;
+            font-size: 16px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-top: 1px solid $nhsuk-grey-lighter;
 
-    {
-        cursor: pointer;
-        background-color: $nhsuk-blue;
-        color: $nhsuk-white;
-    }
+            &:hover {
+                cursor: pointer;
+                background-color: $nhsuk-blue;
+                color: $nhsuk-white;
+            }
+        }
 
-    }
-
-    a.dropdown-item:first-child {
-        border: none;
-    }
-
+        a.dropdown-item:first-child {
+            border: none;
+        }
     }
 
     div.options-dropdown {
@@ -579,7 +682,29 @@
     #cancelMoveNode {
         color: $nhsuk-red;
     }
+    div.references-dropdown {
+        margin-right: 15px;
 
+        ul {
+            padding: 2.5px 0;
+            margin: 0;
+
+            li {
+                padding: 2.5px 5px;
+            }
+        }
+    }
+    .content-structure-folder {
+        font-size: 2rem;
+    }
+
+    i {
+        color: #4C6272;
+    }
+
+    .node-path-edit-indicator {
+        padding-right: 10px;
+    }
     @media (max-width: 768px) {
 
         .treeview-node-inner {

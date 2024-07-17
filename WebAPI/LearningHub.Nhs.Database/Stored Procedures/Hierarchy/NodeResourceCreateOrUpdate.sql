@@ -8,6 +8,7 @@
 -- Modification History
 --
 -- 15-11-2021  RS	Initial Revision. 
+-- 13-05-2024  DB	Update to reflect the HierarchyEdit.RootNodeId change to HierarchyEdit.RootNodePathId
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[NodeResourceCreateOrUpdate]
 (
@@ -24,7 +25,8 @@ BEGIN
 
 		-- Check if the destination catalogue is currently locked for editing by admin. Can't crete/move a resource into it when a hierarchy edit is taking place.
 		IF EXISTS (SELECT 1 FROM hierarchy.NodePath np
-					INNER JOIN hierarchy.HierarchyEdit he ON he.RootNodeId = np.CatalogueNodeId
+					INNER JOIN hierarchy.NodePath rnp ON np.CatalogueNodeId = rnp.NodeId
+					INNER JOIN hierarchy.HierarchyEdit he ON he.RootNodePathId = rnp.Id
 					WHERE np.NodeId = @NodeId AND np.Deleted = 0 AND np.IsActive = 1 AND he.Deleted = 0 AND
 					HierarchyEditStatusId IN (1 /* Draft */, 4 /* Publishing */, 5 /* Submitted */))
 		BEGIN
@@ -98,7 +100,8 @@ BEGIN
 
 			-- Check if the source catalogue is currently locked for editing by admin. Can't move resource out of it when a hierarchy edit is taking place.
 			IF EXISTS (SELECT 1 FROM hierarchy.NodePath np
-						INNER JOIN hierarchy.HierarchyEdit he ON he.RootNodeId = np.CatalogueNodeId
+						INNER JOIN hierarchy.NodePath rnp ON np.CatalogueNodeId = rnp.NodeId
+						INNER JOIN hierarchy.HierarchyEdit he ON he.RootNodePathId = rnp.Id
 						WHERE np.NodeId = @DraftNodeResourceNodeId AND np.Deleted = 0 AND np.IsActive = 1 AND he.Deleted = 0 AND
 						HierarchyEditStatusId IN (1 /* Draft */, 4 /* Publishing */, 5 /* Submitted */))
 			BEGIN

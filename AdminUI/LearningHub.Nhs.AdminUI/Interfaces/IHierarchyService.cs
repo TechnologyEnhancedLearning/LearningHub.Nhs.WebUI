@@ -11,14 +11,14 @@
     public interface IHierarchyService
     {
         /// <summary>
-        /// Gets the contents of a node (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
+        /// Gets the contents of a node path (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// Set returnPublishedOnly to true if only published resource data is needed.
         /// </summary>
-        /// <param name="nodeId">The node id.</param>
+        /// <param name="nodePathId">The node path id.</param>
         /// <param name="readOnly">Set to true if read only data set is required.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodeId, bool readOnly);
+        Task<List<NodeContentAdminViewModel>> GetNodeContentsAdminAsync(int nodePathId, bool readOnly);
 
         /// <summary>
         /// The get node paths.
@@ -28,18 +28,18 @@
         Task<List<NodePathViewModel>> GetNodePathsForNodeAsync(int nodeId);
 
         /// <summary>
-        /// Gets the hierarchy edits for the supplied root node id.
+        /// Gets the hierarchy edits for the supplied root node path id.
         /// </summary>
-        /// <param name="rootNodeId">The root node id.</param>
+        /// <param name="rootNodePathId">The root node path id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<List<HierarchyEditViewModel>> GetHierarchyEdits(int rootNodeId);
+        Task<List<HierarchyEditViewModel>> GetHierarchyEdits(int rootNodePathId);
 
         /// <summary>
         /// The CreateHierarchyEditAsync.
         /// </summary>
-        /// <param name="rootNodeId">The rootNodeId<see cref="int"/>.</param>
+        /// <param name="rootNodePathId">The rootNodePathId<see cref="int"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<ApiResponse> CreateHierarchyEditAsync(int rootNodeId);
+        Task<ApiResponse> CreateHierarchyEditAsync(int rootNodePathId);
 
         /// <summary>
         /// The DiscardHierarchyEditAsync.
@@ -68,6 +68,20 @@
         /// <param name="folderEditViewModel">The folderEditViewModel<see cref="FolderEditViewModel"/>.</param>
         /// <returns>IActionResult.</returns>
         Task<ApiResponse> UpdateFolderAsync(FolderEditViewModel folderEditViewModel);
+
+        /// <summary>
+        /// The UpdateNodePathDisplayVersionAsync.
+        /// </summary>
+        /// <param name="nodePathDisplayVersionModel">The NodePathDisplayVersionModel<see cref="NodePathDisplayVersionModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> UpdateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel);
+
+        /// <summary>
+        /// The UpdateResourceReferenceDisplayVersionAsync.
+        /// </summary>
+        /// <param name="resourceReferenceDisplayVersionModel">The ResourceReferenceDisplayVersionModel<see cref="ResourceReferenceDisplayVersionModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> UpdateResourceReferenceDisplayVersionAsync(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersionModel);
 
         /// <summary>
         /// The DeleteFolder.
@@ -105,6 +119,20 @@
         Task<ApiResponse> MoveNodeAsync(MoveNodeViewModel moveNodeViewModel);
 
         /// <summary>
+        /// Create a reference to a node.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> ReferenceNodeAsync(MoveNodeViewModel moveNodeViewModel);
+
+        /// <summary>
+        /// Create a reference to an external node.
+        /// </summary>
+        /// <param name="referenceExternalNodeViewModel">The referenceExternalNodeViewModel<see cref="ReferenceExternalNodeViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> ReferenceExternalNodeAsync(ReferenceExternalNodeViewModel referenceExternalNodeViewModel);
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
@@ -124,6 +152,20 @@
         /// <param name="moveResourceViewModel">The moveResourceViewModel<see cref="HierarchyEditMoveResourceViewModel"/>.</param>
         /// <returns>IActionResult.</returns>
         Task<ApiResponse> HierarchyEditMoveResource(HierarchyEditMoveResourceViewModel moveResourceViewModel);
+
+        /// <summary>
+        /// References a resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The moveResourceViewModel<see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel);
+
+        /// <summary>
+        /// References an external resource in a hierarchy edit.
+        /// </summary>
+        /// <param name="referenceExternalResourceViewModel">The referenceExternalResourceViewModel<see cref="ReferenceExternalResourceViewModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        Task<ApiResponse> HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel);
 
         /// <summary>
         /// The MoveResourceUp.

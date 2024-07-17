@@ -38,28 +38,28 @@
         }
 
         /// <summary>
-        /// The get by root node id async.
+        /// The get by root node path id async.
         /// </summary>
-        /// <param name="rootNodeId">The id.</param>
+        /// <param name="rootNodePathId">The id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<List<HierarchyEdit>> GetByRootNodeIdAsync(int rootNodeId)
+        public async Task<List<HierarchyEdit>> GetByRootNodePathIdAsync(int rootNodePathId)
         {
             return await this.DbContext.HierarchyEdit.AsNoTracking()
                 .Include(x => x.Publication)
                 .Include(x => x.CreateUser)
-                .Where(x => x.RootNodeId == rootNodeId && !x.Deleted).ToListAsync();
+                .Where(x => x.RootNodePathId == rootNodePathId && !x.Deleted).ToListAsync();
         }
 
         /// <summary>
         /// The create.
         /// </summary>
-        /// <param name="rootNodeId">The root node id.</param>
+        /// <param name="rootNodePathId">The root node path id.</param>
         /// <param name="userId">The user id.</param>
         /// <returns>The hierarchy edit id.</returns>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<int> Create(int rootNodeId, int userId)
+        public async Task<int> Create(int rootNodePathId, int userId)
         {
-            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = rootNodeId };
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = rootNodePathId };
             var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = userId };
             var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
             var param3 = new SqlParameter("@p3", SqlDbType.Int) { Direction = ParameterDirection.Output };
@@ -101,7 +101,7 @@
             var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = folderEditViewModel.HierarchyEditId };
             var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = folderEditViewModel.Name };
             var param2 = new SqlParameter("@p2", SqlDbType.NVarChar) { Value = folderEditViewModel.Description };
-            var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = folderEditViewModel.ParentNodeId };
+            var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = folderEditViewModel.ParentNodePathId };
             var param4 = new SqlParameter("@p4", SqlDbType.Int) { Value = userId };
             var param5 = new SqlParameter("@p5", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
             var param6 = new SqlParameter("@p6", SqlDbType.Int) { Direction = ParameterDirection.Output };
@@ -132,6 +132,44 @@
             var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3, param4 };
 
             await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+        }
+
+        /// <inheritdoc/>
+        public async Task<int> UpdateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersionModel, int userId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = nodePathDisplayVersionModel.HierarchyEditDetailId };
+            var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = nodePathDisplayVersionModel.Name };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = nodePathDisplayVersionModel.NodePathId };
+            var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = nodePathDisplayVersionModel.NodePathDisplayVersionId };
+            var param4 = new SqlParameter("@p4", SqlDbType.Int) { Value = userId };
+            var param5 = new SqlParameter("@p5", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+            var param6 = new SqlParameter("@p6", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+            string sql = "hierarchy.HierarchyEditNodePathDisplayVersionUpdate @p0, @p1, @p2, @p3, @p4, @p5, @p6 output";
+            var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3, param4, param5, param6 };
+
+            await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+
+            return (int)param6.Value;
+        }
+
+        /// <inheritdoc/>
+        public async Task<int> UpdateResourceReferenceDisplayVersionAsync(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersionModel, int userId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = resourceReferenceDisplayVersionModel.HierarchyEditDetailId };
+            var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = resourceReferenceDisplayVersionModel.Name };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = resourceReferenceDisplayVersionModel.ResourceReferenceId };
+            var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = resourceReferenceDisplayVersionModel.ResourceReferenceDisplayVersionId };
+            var param4 = new SqlParameter("@p4", SqlDbType.Int) { Value = userId };
+            var param5 = new SqlParameter("@p5", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+            var param6 = new SqlParameter("@p6", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+            string sql = "hierarchy.HierarchyEditResourceReferenceDisplayVersionUpdate @p0, @p1, @p2, @p3, @p4, @p5, @p6 output";
+            var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3, param4, param5, param6 };
+
+            await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+
+            return (int)param6.Value;
         }
 
         /// <summary>
@@ -207,6 +245,34 @@
             await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
         }
 
+        /// <inheritdoc/>
+        public async Task ReferenceNode(MoveNodeViewModel moveNodeViewModel, int userId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = moveNodeViewModel.HierarchyEditDetailId };
+            var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = moveNodeViewModel.MoveToHierarchyEditDetailId };
+            var param3 = new SqlParameter("@p2", SqlDbType.Int) { Value = userId };
+            var param2 = new SqlParameter("@p3", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+            string sql = "hierarchy.HierarchyEditReferenceNode @p0, @p1, @p2, @p3";
+            var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3 };
+
+            await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+        }
+
+        /// <inheritdoc/>
+        public async Task ReferenceExternalNode(ReferenceExternalNodeViewModel referenceExternalNodeViewModel, int userId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = referenceExternalNodeViewModel.NodePathId };
+            var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = referenceExternalNodeViewModel.MoveToHierarchyEditDetailId };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = userId };
+            var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+            string sql = "hierarchy.HierarchyEditReferenceExternalNode @p0, @p1, @p2, @p3";
+            var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3 };
+
+            await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+        }
+
         /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
@@ -257,6 +323,34 @@
             var param2 = new SqlParameter("@p3", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
 
             string sql = "hierarchy.HierarchyEditMoveResource @p0, @p1, @p2, @p3";
+            var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3 };
+
+            await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+        }
+
+        /// <inheritdoc/>
+        public async Task HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = moveResourceViewModel.HierarchyEditDetailId };
+            var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = moveResourceViewModel.MoveToHierarchyEditDetailId };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = userId };
+            var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+            string sql = "hierarchy.HierarchyEditReferenceResource @p0, @p1, @p2, @p3";
+            var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3 };
+
+            await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+        }
+
+        /// <inheritdoc/>
+        public async Task HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel, int userId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = referenceExternalResourceViewModel.ResourceId };
+            var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = referenceExternalResourceViewModel.MoveToHierarchyEditDetailId };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = userId };
+            var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+            string sql = "hierarchy.HierarchyEditReferenceExternalResource @p0, @p1, @p2, @p3";
             var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3 };
 
             await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);

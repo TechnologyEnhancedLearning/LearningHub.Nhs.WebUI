@@ -45,7 +45,8 @@ BEGIN
 		IF EXISTS (SELECT 1 FROM resources.ResourceVersion rv 
 					INNER JOIN hierarchy.NodeResource nr ON nr.ResourceId = rv.ResourceId
 					INNER JOIN hierarchy.NodePath np ON np.NodeId = nr.NodeId
-					INNER JOIN hierarchy.HierarchyEdit he ON he.RootNodeId = np.CatalogueNodeId
+					INNER JOIN hierarchy.NodePath rnp ON np.CatalogueNodeId = rnp.NodeId
+					INNER JOIN hierarchy.HierarchyEdit he ON he.RootNodePathId = rnp.Id
 					WHERE rv.Id = @ResourceVersionId AND nr.Deleted = 0 AND np.Deleted = 0 AND np.IsActive = 1 AND he.Deleted = 0 AND
 					HierarchyEditStatusId IN (1 /* Draft */, 4 /* Publishing */, 5 /* Submitted */))
 		BEGIN

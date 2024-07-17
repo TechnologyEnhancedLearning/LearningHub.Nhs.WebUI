@@ -18,19 +18,19 @@
         Task<HierarchyEdit> GetByIdAsync(int id);
 
         /// <summary>
-        /// The get by root node id async.
+        /// The get by root node path id async.
         /// </summary>
-        /// <param name="rootNodeId">The id.</param>
+        /// <param name="rootNodePathId">The id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<List<HierarchyEdit>> GetByRootNodeIdAsync(int rootNodeId);
+        Task<List<HierarchyEdit>> GetByRootNodePathIdAsync(int rootNodePathId);
 
         /// <summary>
         /// The create.
         /// </summary>
-        /// <param name="rootNodeId">The root node id.</param>
+        /// <param name="rootNodePathId">The root node path id.</param>
         /// <param name="userId">The user id.</param>
         /// <returns>The hierarchy edit id.</returns>
-        Task<int> Create(int rootNodeId, int userId);
+        Task<int> Create(int rootNodePathId, int userId);
 
         /// <summary>
         /// The discard.
@@ -55,6 +55,22 @@
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task UpdateFolder(FolderEditViewModel folderEditViewModel, int userId);
+
+        /// <summary>
+        /// Updates a nodePathDisplayVersion.
+        /// </summary>
+        /// <param name="nodePathDisplayVersion">The nodePathDisplayVersion<see cref="NodePathDisplayVersionModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="int"/>.</returns>
+        Task<int> UpdateNodePathDisplayVersionAsync(NodePathDisplayVersionModel nodePathDisplayVersion, int userId);
+
+        /// <summary>
+        /// Updates a resourceReferenceDisplayVersion.
+        /// </summary>
+        /// <param name="resourceReferenceDisplayVersion">The resourceReferenceDisplayVersion<see cref="ResourceReferenceDisplayVersionModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="int"/>.</returns>
+        Task<int> UpdateResourceReferenceDisplayVersionAsync(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersion, int userId);
 
         /// <summary>
         /// Deletes a folder.
@@ -89,6 +105,22 @@
         Task MoveNode(MoveNodeViewModel moveNodeViewModel, int userId);
 
         /// <summary>
+        /// References a node.
+        /// </summary>
+        /// <param name="moveNodeViewModel">The moveNodeViewModel <see cref="MoveNodeViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task ReferenceNode(MoveNodeViewModel moveNodeViewModel, int userId);
+
+        /// <summary>
+        /// References an external node.
+        /// </summary>
+        /// <param name="referenceExternalNodeViewModel">The referenceExternalNodeViewModel <see cref="ReferenceExternalNodeViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task ReferenceExternalNode(ReferenceExternalNodeViewModel referenceExternalNodeViewModel, int userId);
+
+        /// <summary>
         /// Moves a resource up in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The id.</param>
@@ -111,6 +143,22 @@
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task HierarchyEditMoveResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId);
+
+        /// <summary>
+        /// References a resource in a HierarchyEdit.
+        /// </summary>
+        /// <param name="moveResourceViewModel">The view model <see cref="HierarchyEditMoveResourceViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task HierarchyEditReferenceResource(HierarchyEditMoveResourceViewModel moveResourceViewModel, int userId);
+
+        /// <summary>
+        /// References a resource in a HierarchyEdit.
+        /// </summary>
+        /// <param name="referenceExternalResourceViewModel">The view model <see cref="ReferenceExternalResourceViewModel"/>.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel, int userId);
 
         /// <summary>
         /// Moves a resource up.

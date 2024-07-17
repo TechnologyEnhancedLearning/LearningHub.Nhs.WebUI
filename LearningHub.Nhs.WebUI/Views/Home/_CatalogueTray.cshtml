@@ -73,7 +73,11 @@
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
             <div class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred nhsuk-u-margin-bottom-1">
-                <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+                <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item nhsuk-u-padding-top-3">
+                    @if (Model.Catalogues.TotalCount > 0 )
+                    {
+                        <a tabindex="0" class="subnavwhite-link text-nowrap" asp-controller="Catalogue" asp-action="GetAllCatalogue">View all catalogues</a>
+                    }
                 </div>
                 <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item"></div>
                 <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item  nhsuk-u-padding-top-2 display--no-js-hide">

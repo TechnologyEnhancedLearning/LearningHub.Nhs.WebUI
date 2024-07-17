@@ -77,5 +77,12 @@
         /// <param name="catalogueSearchRequestModel">catalogue search request model.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<int> CreateCatalogueSearchTermEventAsync(CatalogueSearchRequestModel catalogueSearchRequestModel);
+
+        /// <summary>
+        /// Get AllCatalogue Search Result Async.
+        /// </summary>
+        /// <param name="catalogueSearchRequestModel">The catalogue Search Request Model.</param>
+        /// <returns>The <see cref="Task{SearchAllCatalogueViewModel}"/>.</returns>
+        Task<SearchAllCatalogueViewModel> GetAllCatalogueSearchResultAsync(AllCatalogueSearchRequestModel catalogueSearchRequestModel);
     }
 }

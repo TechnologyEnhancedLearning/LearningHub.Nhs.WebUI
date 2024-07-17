@@ -602,5 +602,33 @@
 
             return apiResponse.ValidationResult;
         }
+
+        /// <summary>
+        /// GetAllCatalogueAsync.
+        /// </summary>
+        /// <param name="filterChar">The filterChar.</param>
+        /// <param name="pageSize">the pageSize.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<AllCatalogueResponseViewModel> GetAllCatalogueAsync(string filterChar, int pageSize)
+        {
+            AllCatalogueResponseViewModel viewmodel = new AllCatalogueResponseViewModel { };
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+
+            var request = $"catalogue/allcatalogues/{pageSize}/{filterChar}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewmodel = JsonConvert.DeserializeObject<AllCatalogueResponseViewModel>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
+                       response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewmodel;
+        }
     }
 }

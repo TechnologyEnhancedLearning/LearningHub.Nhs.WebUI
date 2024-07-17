@@ -588,6 +588,53 @@ namespace LearningHub.Nhs.WebUI.Services
         }
 
         /// <summary>
+        /// GetAllCatalogueSearchResultAsync.
+        /// </summary>
+        /// <param name="catalogueSearchRequestModel">catalogueSearchRequestModel.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<SearchAllCatalogueViewModel> GetAllCatalogueSearchResultAsync(AllCatalogueSearchRequestModel catalogueSearchRequestModel)
+        {
+            SearchAllCatalogueViewModel searchViewModel = new SearchAllCatalogueViewModel();
+
+            try
+            {
+                var client = await this.LearningHubHttpClient.GetClientAsync();
+
+                catalogueSearchRequestModel.SearchText = this.DecodeProblemCharacters(catalogueSearchRequestModel.SearchText);
+
+                var json = JsonConvert.SerializeObject(catalogueSearchRequestModel);
+                var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+
+                var request = $"Search/GetAllCatalogueSearchResult";
+                var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadAsStringAsync();
+                    searchViewModel = JsonConvert.DeserializeObject<SearchAllCatalogueViewModel>(result);
+
+                    if (searchViewModel.DocumentModel != null
+                        && searchViewModel.DocumentModel.Count != 0)
+                    {
+                        searchViewModel.DocumentModel.ForEach(x => x.Description = this.RemoveHtmlTags(x.Description));
+                    }
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    throw new Exception("AccessDenied");
+                }
+
+                return searchViewModel;
+            }
+            catch (Exception ex)
+            {
+                searchViewModel.ErrorOnAPI = true;
+                this.Logger.LogError(string.Format("Error occurred in GetAllCatalogueSearchResultAsync: {0}", ex.Message));
+                return searchViewModel;
+            }
+        }
+
+        /// <summary>
         /// The RemoveHtmlTags.
         /// </summary>
         /// <param name="html">The html<see cref="string"/>.</param>

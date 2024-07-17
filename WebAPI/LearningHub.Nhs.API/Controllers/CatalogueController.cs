@@ -371,5 +371,19 @@
         {
             return this.Ok(await this.catalogueService.AccessRequestAsync(this.CurrentUserId, accessRequestId));
         }
+
+        /// <summary>
+        /// Gets AllCatalogues.
+        /// </summary>
+        /// <param name="pageSize">The pageSize.</param>
+        /// <param name="filterChar">The filterChar.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet]
+        [Route("allcatalogues/{pageSize}/{filterChar}")]
+        public async Task<IActionResult> GetAllCataloguesAsync(int pageSize, string filterChar = null)
+        {
+            var response = await this.catalogueService.GetAllCataloguesAsync(pageSize, filterChar, this.CurrentUserId);
+            return this.Ok(response);
+        }
     }
 }

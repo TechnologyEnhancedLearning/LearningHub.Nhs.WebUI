@@ -8,6 +8,7 @@
     using LearningHub.Nhs.Api.Shared.Configuration;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Models.Dashboard;
     using LearningHub.Nhs.Models.Email;
     using LearningHub.Nhs.Models.Email.Models;
     using LearningHub.Nhs.Models.Entities;
@@ -27,6 +28,8 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
+    using NLog.Filters;
+    using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
     /// <summary>
     /// The Catalogue Service.
@@ -395,14 +398,13 @@
         public List<RoleUserGroup> GetRoleUserGroupsForCatalogue(int catalogueNodeId, bool includeUser = false)
         {
             IQueryable<RoleUserGroup> query = this.roleUserGroupRepository.GetAll()
-                .Include(x => x.Scope);
+                .Include(x => x.Scope).Where(x => x.Scope.CatalogueNodeId == catalogueNodeId);
             if (includeUser)
             {
                 query = query.Include(x => x.UserGroup).ThenInclude(x => x.UserUserGroup);
             }
 
-            return query.Where(x => x.Scope.CatalogueNodeId == catalogueNodeId)
-                .ToList();
+            return query.ToList();
         }
 
         /// <summary>
@@ -949,6 +951,64 @@
             var vm = this.mapper.Map<CatalogueAccessRequestViewModel>(catalogueAccessRequest);
             vm.LastResponseMessage = lastResponseMessage;
             return vm;
+        }
+
+        /// <summary>
+        /// GetAllCataloguesAsync.
+        /// </summary>
+        /// <param name="pageSize">The pageSize.</param>
+        /// <param name="filterChar">The filterChar.</param>
+        /// <param name="userId">The userId.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<AllCatalogueResponseViewModel> GetAllCataloguesAsync(int pageSize, string filterChar, int userId)
+        {
+            var catalogueAlphaCount = this.catalogueNodeVersionRepository.GetAllCataloguesAlphaCount(userId);
+            var filterCharMod = filterChar.Trim() == "0-9" ? "[0-9]" : filterChar;
+            var count = catalogueAlphaCount.FirstOrDefault(ca => ca.Alphabet == filterChar.ToUpper()).Count;
+            string prevChar = null, nextChar = null, curChar = null;
+            var filterCharIndex = catalogueAlphaCount.FindIndex(ca => ca.Alphabet == filterChar.ToUpper());
+
+            // check count and assign prev and next letter
+            if (count != 0)
+            {
+                for (int i = 0; i < catalogueAlphaCount.Count; i++)
+                {
+                    if (i == filterCharIndex && i == 0)
+                    {
+                        prevChar = null;
+                    }
+
+                    if (i == filterCharIndex && i == catalogueAlphaCount.Count - 1)
+                    {
+                        nextChar = null;
+                    }
+
+                    if (catalogueAlphaCount[i].Count > 0 && i < filterCharIndex)
+                    {
+                        curChar = catalogueAlphaCount[i].Alphabet;
+                        prevChar = curChar;
+                    }
+
+                    if (catalogueAlphaCount[i].Count > 0 && i > filterCharIndex)
+                    {
+                        curChar = catalogueAlphaCount[i].Alphabet;
+                        nextChar = curChar;
+                        break;
+                    }
+                }
+            }
+
+            var catalogues = await this.catalogueNodeVersionRepository.GetAllCataloguesAsync(pageSize, filterCharMod, userId);
+
+            var response = new AllCatalogueResponseViewModel
+            {
+                CataloguesCount = catalogueAlphaCount,
+                Catalogues = catalogues,
+                FilterChar = filterChar.ToUpper(),
+                PrevChar = prevChar,
+                NextChar = nextChar,
+            };
+            return response;
         }
 
         /// <summary>

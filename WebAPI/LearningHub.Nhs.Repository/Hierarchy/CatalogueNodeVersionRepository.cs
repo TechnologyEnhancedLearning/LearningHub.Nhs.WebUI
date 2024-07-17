@@ -8,6 +8,7 @@
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Dashboard;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
+    using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Repository.Interface;
     using LearningHub.Nhs.Repository.Interface.Hierarchy;
@@ -354,6 +355,39 @@
                           join nv in this.DbContext.NodeVersion.AsNoTracking() on cnv.NodeVersionId equals nv.Id
                           where cnv.Name == catalogueName && cnv.Deleted == false
                           select nv.NodeId).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// Gets catalogues count based on alphabets.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <returns>resources.</returns>
+        public List<AllCatalogueAlphabetModel> GetAllCataloguesAlphaCount(int userId)
+        {
+            var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+
+            var result = this.DbContext.AllCatalogueAlphabetModel.FromSqlRaw("[hierarchy].[GetCataloguesCount] @userid", param0)
+              .AsNoTracking().ToList();
+            return result;
+        }
+
+        /// <summary>
+        /// Gets catalogues based on filter character.
+        /// </summary>
+        /// <param name="pageSize">The pageSize.</param>
+        /// <param name="filterChar">The filterChar.</param>
+        /// <param name="userId">The userId.</param>
+        /// <returns>resources.</returns>
+        public async Task<List<AllCatalogueViewModel>> GetAllCataloguesAsync(int pageSize, string filterChar, int userId)
+        {
+            var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+            var param1 = new SqlParameter("@filterChar", SqlDbType.NVarChar, 10) { Value = filterChar.Trim() };
+            var param2 = new SqlParameter("@OffsetRows", SqlDbType.Int) { Value = 0 };
+            var param3 = new SqlParameter("@fetchRows", SqlDbType.Int) { Value = pageSize };
+
+            var result = await this.DbContext.AllCatalogueViewModel.FromSqlRaw("[hierarchy].[GetCatalogues] @userId, @filterChar, @OffsetRows, @fetchRows", param0, param1, param2, param3)
+              .AsNoTracking().ToListAsync();
+            return result;
         }
     }
 }

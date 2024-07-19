@@ -3,6 +3,8 @@
     using System;
     using System.IdentityModel.Tokens.Jwt;
     using System.Net;
+    using Hangfire;
+    using Hangfire.SqlServer;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Binders;
     using LearningHub.Nhs.Models.Enums;
@@ -58,6 +60,16 @@
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            // Add Hangfire services.
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage("Server=localhost;Initial Catalog=HangfireDev;User Id=LHLocalDev;Password=QWERTY12345;TrustServerCertificate=True;"));
+
+            // Add the processing server as IHostedService
+            services.AddHangfireServer();
 
             services.AddMvc()
                 .AddMvcOptions(options =>

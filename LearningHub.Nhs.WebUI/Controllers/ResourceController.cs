@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Hangfire;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.Resource;
@@ -30,7 +31,6 @@
     /// <summary>
     /// Defines the <see cref="ResourceController" />.
     /// </summary>
-    [ServiceFilter(typeof(LoginWizardFilter))]
     public class ResourceController : BaseController
     {
         private readonly IAzureMediaService azureMediaService;
@@ -557,6 +557,7 @@
         /// </summary>
         /// <returns>ClearStorage Task.</returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task ClearStorage()
         {
             // get all published resource.
@@ -591,6 +592,7 @@
 
             if (listResourceVersionsToBePurged.Any())
             {
+                int counter = 10;
                 foreach (var entry in listResourceVersionsToBePurged)
                 {
                     try
@@ -598,7 +600,8 @@
                         var associatedFile = await this.resourceService.GetObsoleteResourceFile(entry, true);
                         if (associatedFile != null && associatedFile.Any())
                         {
-                            _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, associatedFile); });
+                            BackgroundJob.Schedule(() => this.fileService.PurgeResourceFile(null, associatedFile), TimeSpan.FromSeconds(counter));
+                            counter = counter + 10;
                         }
                     }
                     catch

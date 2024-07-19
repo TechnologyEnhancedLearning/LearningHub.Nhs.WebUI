@@ -1,6 +1,7 @@
 ﻿#pragma warning disable SA1200 // Using directives should be placed correctly
 using System;
 using System.Diagnostics;
+using Hangfire;
 using LearningHub.Nhs.WebUI;
 using LearningHub.Nhs.WebUI.Interfaces;
 using LearningHub.Nhs.WebUI.JsDetection;
@@ -87,9 +88,16 @@ try
 
     app.UseStaticFiles();
 
+    app.UseHangfireDashboard();
+
     app.Map(TimezoneInfoMiddleware.TimezoneInfoUrl, b => b.UseMiddleware<TimezoneInfoMiddleware>());
 
-    app.UseEndpoints(endpoints => endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}"));
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+        endpoints.MapHangfireDashboard();
+    });
+    BackgroundJob.Enqueue(() => Console.WriteLine("Hello world from Hangfire!"));
 
     app.UseTus(httpContext =>
     {

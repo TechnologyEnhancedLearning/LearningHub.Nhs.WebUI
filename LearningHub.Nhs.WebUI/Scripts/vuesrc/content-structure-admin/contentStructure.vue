@@ -376,6 +376,12 @@
             canSaveResourceReferenceEdit(): boolean {
                 return this.editingResourceNodeReference.name.trim().length > 0;
             },
+            folderReferenceNameCharactersRemaining(): number {
+                return 255 - this.editingFolderNodeReference.name.length;
+            },
+            resourceReferenceNameCharactersRemaining(): number {
+                return 255 - this.editingResourceNodeReference.name.length;
+            },
         },
         created() {
             this.$store.commit('contentStructureState/initialise', { readOnly: this.readOnly });

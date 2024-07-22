@@ -18,6 +18,9 @@
 </environment>
 <script type="text/javascript">
   // Add/remove class 'input-validation-error' to the div containing the control with error
+  
+  let errorElements = [];
+  
   $(function () {
     $('form').each(function () {
       if ($(this).data("validator")) {
@@ -32,15 +35,25 @@
     return function () {
       var args = Array.prototype.slice.call(arguments);
       beforeFunction.apply(this, args);
+
+      if(errorElements.length){
+          errorElements[0]['obj'].focus();
+      }
       return functionToWrap.apply(this, args);
     };
   };
 
   function highlightDecorator(element, errorClass, validClass) {
     $(element).closest("div").addClass(errorClass).removeClass(validClass);
+    let itemExists = errorElements.some(obj => obj['id'] == element.id);
+      if (!itemExists) {
+            errorElements.push({ 'id': element.id, 'obj': element });
+      }
+    $(element).closest("div").addClass(errorClass).removeClass(validClass);
   }
   function unhighlightDecorator(element, errorClass, validClass) {
     $(element).closest("div").addClass(validClass).removeClass(errorClass);
+    errorElements = errorElements.filter((elm) => elm.id != element.id);
   }
 
 </script>

@@ -30,7 +30,10 @@ export class NodeContentAdminModel {
     resourceReferenceDisplayVersionId: number;
     nodePaths: NodePathBreakdownModel[];
     nodePathDisplayVersionId: number;
-
+    isResource: boolean;
+    isReference: boolean;
+    primaryCatalogueNodeId: number;
+    primaryCatalogueNodeName: string;
     public constructor(init?: Partial<NodeContentAdminModel>) {
         Object.assign(this, init);
         this.children = new Array<NodeContentAdminModel>();

@@ -111,6 +111,10 @@
                         return "Accessed";
                     }
 
+                case ResourceTypeEnum.Assessment:
+                    return "Accessed";
+                case ResourceTypeEnum.Case:
+                    return "Accessed";
                 case ResourceTypeEnum.Video:
                     return "Played " + GetDurationText(activityDetailedItemViewModel.ActivityDurationSeconds * 1000);
                 case ResourceTypeEnum.WebLink:

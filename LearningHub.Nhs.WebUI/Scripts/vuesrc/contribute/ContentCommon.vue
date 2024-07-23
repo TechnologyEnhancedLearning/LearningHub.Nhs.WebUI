@@ -86,6 +86,12 @@
                 <div class="col-12 mb-0 error-text" v-if="keywordError">
                     <span class="text-danger">This keyword has already been added.</span>
                 </div>
+                <div class="col-12 mb-0 error-text" v-if="keywordLengthExceeded">
+                    <span class="text-danger">
+                        Each keyword must be no longer than 50 characters.
+                    </span>
+                </div>
+
                 <div class="col-12">
                     To help learners find this resource, type one or more relevant keywords separated by commas and click 'Add'.
                 </div>
@@ -285,6 +291,7 @@
                 editorConfig: { toolbar: CKEditorToolbar.default, versionCheck: false },
                 ResourceType,
                 resourceProviderId: null,
+                keywordLengthExceeded: false,
             };
         },
         computed: {
@@ -477,6 +484,7 @@
                 },
                 keywordChange() {
                     this.keywordError = false;
+                    this.keywordLengthExceeded = false;
                 },
                 resetSelectedLicence() {
                     this.resourceLicenceId = 0;
@@ -546,6 +554,10 @@
                                         this.keywordError = true;
                                         break;
                                     }
+                                }
+                                else {
+                                    this.keywordLengthExceeded = true;
+                                    break;
                                 }
                             }
                         }

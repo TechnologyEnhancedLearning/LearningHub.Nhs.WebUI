@@ -376,6 +376,12 @@
             canSaveResourceReferenceEdit(): boolean {
                 return this.editingResourceNodeReference.name.trim().length > 0;
             },
+            folderReferenceNameCharactersRemaining(): number {
+                return 255 - this.editingFolderNodeReference.name.length;
+            },
+            resourceReferenceNameCharactersRemaining(): number {
+                return 255 - this.editingResourceNodeReference.name.length;
+            },
         },
         created() {
             this.$store.commit('contentStructureState/initialise', { readOnly: this.readOnly });
@@ -538,7 +544,7 @@
         font-size: 1.9rem !important;
         text-align: center !important;
         border: 5px solid $nhsuk-red !important;
-        height: 40px;
+        /*height: 40px;*/
         border-radius: 6px;
         min-width: 94px;
         padding: 0px 25px 0px 25px;
@@ -562,7 +568,7 @@
         border: 1px solid $nhsuk-blue !important;
         font-size: 1.9rem !important;
         text-align: center !important;
-        height: 40px;
+        /*height: 40px;*/
         min-width: 108px;
         padding: 0px 25px 0px 25px;
         vertical-align: middle;

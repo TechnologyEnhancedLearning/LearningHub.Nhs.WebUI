@@ -83,7 +83,6 @@
                         for (var i = 0; i < allTrimmedKeyword.length; i++) {
                             let item = allTrimmedKeyword[i];
                             if (item.length > 0 && item.length <= 50) {
-                                debugger;
                                 let newKeywordObj = new KeywordModel({
                                     keyword: item,
                                     resourceVersionId: this.resourceVersionId,

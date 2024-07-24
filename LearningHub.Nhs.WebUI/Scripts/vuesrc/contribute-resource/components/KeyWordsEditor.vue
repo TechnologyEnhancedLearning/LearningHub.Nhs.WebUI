@@ -100,7 +100,6 @@
 
                             }
                             else {
-                                ////this.keywordError = true;
                                 this.keywordLengthExceeded = true;
                             }
                         }

@@ -395,6 +395,31 @@ const hierarchyEditReferenceResource = async function (hierarchyEditDetailId: nu
             throw e;
         });
 };
+const referenceExternalNode = async function (nodePathId: number, moveToHierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+
+    const url = `/api/hierarchy/referenceExternalNode`;
+
+    return await axios.post<LearningHubValidationResultModel>(url, { nodePathId: nodePathId, moveToHierarchyEditDetailId: moveToHierarchyEditDetailId })
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('referenceExternalNode:' + e);
+            throw e;
+        });
+};
+const hierarchyEditReferenceExternalResource = async function (resourceId: number, moveToHierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+    const url = `/api/hierarchy/HierarchyEditReferenceExternalResource`;
+
+    return await axios.post<LearningHubValidationResultModel>(url, { resourceId: resourceId, moveToHierarchyEditDetailId: moveToHierarchyEditDetailId })
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('HierarchyEditReferenceExternalResource:' + e);
+            throw e;
+        });
+};
 export const contentStructureData = {
     getCatalogue,
     getNodeContentsForCatalogueBrowse,
@@ -424,5 +449,7 @@ export const contentStructureData = {
     deleteFolderReference,
     updateNodePathDisplayVersion,
     updateResourceReferenceDisplayVersion,
-    getReferencableCatalogues
+    getReferencableCatalogues,
+    hierarchyEditReferenceExternalResource,
+    referenceExternalNode
 }

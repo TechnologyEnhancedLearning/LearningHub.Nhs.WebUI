@@ -340,6 +340,27 @@
                              Hidden = n2.Hidden,
                              RootNodePathId = n2.NodePaths.Where(np => np.NodeId == np.CatalogueNodeId).FirstOrDefault().Id,
                          }).ToListAsync();
+
+            if (catalogues.Count == 0)
+            {
+                catalogues = await (from np in this.DbContext.NodePath.AsNoTracking()
+                             join n in this.DbContext.Node.AsNoTracking() on np.CatalogueNodeId equals n.Id
+                             join nv in this.DbContext.NodeVersion.AsNoTracking() on n.CurrentNodeVersionId equals nv.Id
+                             join cnv in this.DbContext.CatalogueNodeVersion.AsNoTracking() on nv.Id equals cnv.NodeVersionId
+                             where np.Id == nodePathId && nv.VersionStatusEnum == VersionStatusEnum.Published
+                             select new CatalogueBasicViewModel
+                             {
+                                 Id = cnv.Id,
+                                 NodeId = nv.NodeId,
+                                 BadgeUrl = cnv.BadgeUrl,
+                                 Name = cnv.Name,
+                                 Url = cnv.Url,
+                                 RestrictedAccess = cnv.RestrictedAccess,
+                                 Hidden = n.Hidden,
+                                 RootNodePathId = n.NodePaths.Where(np => np.NodeId == np.CatalogueNodeId).FirstOrDefault().Id,
+                             }).ToListAsync();
+            }
+
             return catalogues;
         }
 

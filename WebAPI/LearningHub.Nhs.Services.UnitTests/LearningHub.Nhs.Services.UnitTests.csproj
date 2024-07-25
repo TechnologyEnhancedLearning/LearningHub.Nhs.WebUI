@@ -13,7 +13,7 @@
     <PackageReference Include="EntityFrameworkCore.Testing.Moq" Version="4.0.0" />
     <PackageReference Include="FluentAssertions" Version="6.2.0" />
     <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.32" />
+    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.33" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />

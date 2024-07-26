@@ -300,7 +300,6 @@ FROM (
 													)
 										
 											)
-										  -- OR	([Res].[ResourceTypeId]  IN (11) AND  [ResourceActivity].[ActivityStatusId] = 3 AND [AssessResVer].[AssessmentType]=1)
 										--OR         
 										--(
 										--		([Res].[ResourceTypeId] IN (1,5,10,12) AND  [ResourceActivity].[ActivityStatusId] = 3)

@@ -9,6 +9,7 @@
 -- Sarathlal	18-12-2023
 -- Sarathlal	08-03-2024
 -- Sarathlal	23-04-2024	TD-2954: Audio/Video/Assessment issue resolved and duplicate issue also resolved
+-- Arunima		26-07-2024  TD-4411: "Completed" filter along with "Assessment" doesn't display the correct results
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserLearningActivitiesCount] (
 	 @userId INT	
@@ -186,8 +187,35 @@ FROM (
 												)
 										  )
 										  OR
-												([Res].[ResourceTypeId]  IN (6,11) AND  [ResourceActivity].[ActivityStatusId] = 3)
-												 OR	([Res].[ResourceTypeId]  IN (11) AND  [ResourceActivity].[ActivityStatusId] = 3 AND [AssessResVer].[AssessmentType]=1)
+												([Res].[ResourceTypeId]  IN (6) AND  [ResourceActivity].[ActivityStatusId] = 3)
+										  OR (
+												EXISTS (SELECT 1 FROM @tmpActivityStatus WHERE ActivityStatusId = 3)
+												AND
+													(
+														[Res].[ResourceTypeId] = 11 AND [AssessResVer].[AssessmentType]=1
+														AND
+														EXISTS
+															(
+																SELECT 1
+																FROM   [activity].[AssessmentResourceActivity] AS [AssessmentResourceActivity6]
+																WHERE  
+																[AssessmentResourceActivity6].[Deleted] = 0
+																AND    
+																[ResourceActivity].[Id] = [AssessmentResourceActivity6].[ResourceActivityId]
+															)
+														AND 
+															(
+																(SELECT TOP(1)
+																[AssessmentResourceActivity7].[Score]
+																FROM   [activity].[AssessmentResourceActivity] AS [AssessmentResourceActivity7]
+																WHERE  
+																[AssessmentResourceActivity7].[Deleted] = 0
+																AND    [ResourceActivity].[Id] = [AssessmentResourceActivity7].[ResourceActivityId]) >= 0.0
+															)
+													)
+										
+											)
+												 --OR	([Res].[ResourceTypeId]  IN (11) AND  [ResourceActivity].[ActivityStatusId] = 3 AND [AssessResVer].[AssessmentType]=1)
 
 										--OR         
 										--(

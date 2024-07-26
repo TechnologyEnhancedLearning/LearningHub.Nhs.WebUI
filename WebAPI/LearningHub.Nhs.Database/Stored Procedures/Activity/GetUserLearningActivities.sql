@@ -10,6 +10,7 @@
 -- Sarathlal	08-03-2024
 -- Sarathlal	23-04-2024 TD-2954: Audio/Video/Assessment issue resolved and duplicate issue also resolved
 -- Sarathlal	25-04-2024 TD-4067: Resource with muliple version issue resolved
+-- Arunima		26-07-2024 TD-4411: "Completed" filter along with "Assessment" doesn't display the correct results
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserLearningActivities] (
 	 @userId INT	
@@ -271,8 +272,35 @@ FROM (
 												)
 										  )
 										  OR
-												([Res].[ResourceTypeId]  IN (6,11) AND  [ResourceActivity].[ActivityStatusId] = 3)
-										  OR	([Res].[ResourceTypeId]  IN (11) AND  [ResourceActivity].[ActivityStatusId] = 3 AND [AssessResVer].[AssessmentType]=1)
+												([Res].[ResourceTypeId]  IN (6) AND  [ResourceActivity].[ActivityStatusId] = 3)
+										OR (
+												EXISTS (SELECT 1 FROM @tmpActivityStatus WHERE ActivityStatusId = 3)
+												AND
+													(
+														[Res].[ResourceTypeId] = 11 AND [AssessResVer].[AssessmentType]=1
+														AND
+														EXISTS
+															(
+																SELECT 1
+																FROM   [activity].[AssessmentResourceActivity] AS [AssessmentResourceActivity6]
+																WHERE  
+																[AssessmentResourceActivity6].[Deleted] = 0
+																AND    
+																[ResourceActivity].[Id] = [AssessmentResourceActivity6].[ResourceActivityId]
+															)
+														AND 
+															(
+																(SELECT TOP(1)
+																[AssessmentResourceActivity7].[Score]
+																FROM   [activity].[AssessmentResourceActivity] AS [AssessmentResourceActivity7]
+																WHERE  
+																[AssessmentResourceActivity7].[Deleted] = 0
+																AND    [ResourceActivity].[Id] = [AssessmentResourceActivity7].[ResourceActivityId]) >= 0.0
+															)
+													)
+										
+											)
+										  -- OR	([Res].[ResourceTypeId]  IN (11) AND  [ResourceActivity].[ActivityStatusId] = 3 AND [AssessResVer].[AssessmentType]=1)
 										--OR         
 										--(
 										--		([Res].[ResourceTypeId] IN (1,5,10,12) AND  [ResourceActivity].[ActivityStatusId] = 3)
@@ -507,5 +535,3 @@ LEFT JOIN (
 ORDER BY [t2].[ActivityStart] DESC, [t2].[Id], [t2].[Id0], [t2].[Id1], [t2].[Id2], [VideoResourceVersion].[Id], [AudeoResourceVersion].[Id], [t3].[Id], [t4].[Id], [t5].[Id], [t6].[Id], [t7].[Id], [t8].[Id], [t9].[Id], [t10].[Id], [t11].[Id]
 		
 END
-
-

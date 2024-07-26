@@ -9,7 +9,7 @@
 -- Sarathlal	18-12-2023
 -- Sarathlal	08-03-2024
 -- Sarathlal	23-04-2024	TD-2954: Audio/Video/Assessment issue resolved and duplicate issue also resolved
--- Arunima		26-07-2024  TD-4411: "Completed" filter along with "Assessment" doesn't display the correct results
+-- Arunima	26-07-2024  TD-4411: "Completed" filter along with "Assessment" doesn't display the correct results
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserLearningActivitiesCount] (
 	 @userId INT	

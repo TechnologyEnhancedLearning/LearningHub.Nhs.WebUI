@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 13-01-2022  RS	Initial Revision.
+-- 29-07-2024  DB	Updated to use parent node id to find sibling.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditMoveResourceUp] 
 (
@@ -31,7 +32,7 @@ BEGIN
 			[hierarchy].[HierarchyEditDetail] hed
 		INNER JOIN
 			[hierarchy].[HierarchyEditDetail] hedSibling ON hed.HierarchyEditId = hedSibling.HierarchyEditId
-															AND hed.NodeId = hedSibling.NodeId 
+															AND hed.ParentNodeId = hedSibling.ParentNodeId 
 															AND hedSibling.DisplayOrder = hed.DisplayOrder - 1
 															AND hedSibling.ResourceId IS NOT NULL
 		WHERE

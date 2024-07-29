@@ -10,7 +10,7 @@
                         <span class="node-name-text"><a href="#">{{ item.name }}</a></span>
                     </div>
                     <div class="ml-auto">
-                        <a href="#" @click.prevent="selectItem">Select {{nodeTypeText()}}</a>
+                        <a href="#" v-if="!isAncestor" @click.prevent="selectItem">Select {{nodeTypeText()}}</a>
                     </div>
                 </div>
             </div>
@@ -138,6 +138,9 @@
             },
             isEditingCatalogue: function (): boolean {
                 return this.$store.state.contentStructureState.rootExtReferencedNode.nodePathId === this.$store.state.contentStructureState.rootNode.nodePathId;
+            },
+            isAncestor(): boolean {
+                return this.$store.state.contentStructureState.rootNode.parentNodeIds.includes(this.item.nodeId);
             },
         },
         mounted() {

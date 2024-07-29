@@ -37,6 +37,7 @@ export class State {
     editingResourceNodeReference: ResourceReferenceDisplayVersionModel = null;
     availableReferenceCatalogues: CatalogueBasicModel[] = null;
     rootExtReferencedNode: NodeContentAdminModel = new NodeContentAdminModel();
+    parentNodeIds: Number[] = null;
 }
 
 const state = new State();
@@ -73,6 +74,7 @@ function refreshHierarchyEdit(state: State) {
                 state.rootNode.parent = null;
                 state.rootNode.path = state.catalogue.name;
                 state.rootNode.name = state.catalogue.name;
+                state.rootNode.parentNodeIds = [];
                 state.rootNode.childrenLoaded = false;
                 state.rootNode.inEdit = state.editMode == EditModeEnum.Structure;
                 state.rootNode.showInTreeView = false;
@@ -83,6 +85,7 @@ function refreshHierarchyEdit(state: State) {
                     state.rootNode.children = response;
                     state.rootNode.children.forEach((child) => {
                         processChildNodeContents(child, state.rootNode);
+                        state.rootNode.parentNodeIds.push(child.nodeId);
                     });
                     state.rootNode.childrenLoaded = true;
                     state.isLoading = false;

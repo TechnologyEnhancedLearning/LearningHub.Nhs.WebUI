@@ -427,5 +427,17 @@
             var apiResponse = await this.hierarchyService.MoveResourceAsync(sourceNodeId, destinationNodeId, resourceId);
             return this.Ok(apiResponse.ValidationResult);
         }
+
+        /// <summary>
+        /// The remove ReferenceNode.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchyEditDetailId<see cref="hierarchyEditDetailId"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [Route("RemoveReferenceNode/{hierarchyEditDetailId}")]
+        public async Task<IActionResult> RemoveReferenceNode(int hierarchyEditDetailId)
+        {
+            var apiResponse = await this.hierarchyService.RemoveReferenceNodeAsync(hierarchyEditDetailId);
+            return this.Ok(apiResponse.ValidationResult);
+        }
     }
 }

@@ -421,7 +421,7 @@
                 this.$store.commit('contentStructureState/setReferencingExternalContent', { parentNode: this.item });
             },
             removeReference: function () {
-                alert("Not yet implemented: Remove reference");
+                this.$store.dispatch('contentStructureState/removeReferencingNode', { node: this.item });
             },
             onEditFolder: function () {
                 this.$store.commit('contentStructureState/setEditingFolder', { folderNode: this.item });

@@ -503,6 +503,16 @@ const actions = <ActionTree<State, any>>{
             state.lastErrorMessage = "Error moving resource.";
         });
     },
+    async removeReferencingNode(context: ActionContext<State, State>, payload: { node: NodeContentAdminModel }) {
+        debugger;
+        state.inError = false;
+        contentStructureData.removeReferenceNode(payload.node.hierarchyEditDetailId).then(async response => {
+            await refreshNodeContents(payload.node.parent, false);
+        }).catch(e => {
+            state.inError = true;
+            state.lastErrorMessage = "Error removing resource refrence.";
+        });
+    },
     async referenceResource(context: ActionContext<State, State>, payload: { destinationNode: NodeContentAdminModel }) {
         contentStructureData.hierarchyEditReferenceResource(state.referencingResource.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(async response => {
             await refreshNodeContents(state.referencingResource.parent, true).then(async x => {

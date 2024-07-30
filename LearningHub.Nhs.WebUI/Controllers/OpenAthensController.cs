@@ -235,6 +235,11 @@
                 return this.View();
             }
 
+            if (string.IsNullOrWhiteSpace(this.authConfig.ClientId) || string.IsNullOrWhiteSpace(this.Settings.LearningHubWebUiUrl))
+            {
+                throw new Exception("ClientId or origin are empty.");
+            }
+
             var authUri = OpenAthensOpenIdConnect.GetAuthServerUri(this.authConfig, this.Settings, returnUrl);
 
             return this.Redirect(authUri.AbsoluteUri);

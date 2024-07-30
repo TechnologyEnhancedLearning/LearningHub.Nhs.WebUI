@@ -364,8 +364,10 @@
         },
         methods: {
             recomputeNodeOptions: function () {
-                this.canMoveNodeUp = this.item.displayOrder > 1;
-                this.canMoveNodeDown = this.item.parent && this.item.displayOrder < this.item.parent.children.filter(c => c.nodeTypeId > 0).length;
+                this.canMoveNodeUp = this.item.displayOrder > 1
+                    && this.item.parent.primaryCatalogueNodeId == this.$store.state.contentStructureState.rootNode.nodeId;
+                this.canMoveNodeDown = this.item.parent && this.item.displayOrder < this.item.parent.children.filter(c => c.nodeTypeId > 0).length
+                    && this.item.parent.primaryCatalogueNodeId == this.$store.state.contentStructureState.rootNode.nodeId;
                 this.canDeleteNode = !this.item.hasResourcesInBranchInd;
                 this.canEditNode = true;
                 this.canMoveNode = this.item.parent != null;

@@ -42,6 +42,14 @@ namespace LearningHub.Nhs.Repository
         }
 
         /// <summary>
+        /// Gets the Options.
+        /// </summary>
+        public LearningHubDbContextOptions Options
+        {
+            get { return this.options; }
+        }
+
+        /// <summary>
         /// Gets or sets the Address.
         /// </summary>
         public virtual DbSet<Address> Address { get; set; }

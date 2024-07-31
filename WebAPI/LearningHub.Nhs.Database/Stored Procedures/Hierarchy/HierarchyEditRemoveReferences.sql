@@ -25,12 +25,24 @@ BEGIN
 		DECLARE @AmendDate datetimeoffset(7) = ISNULL(TODATETIMEOFFSET(DATEADD(mi, @UserTimezoneOffset, GETUTCDATE()), @UserTimezoneOffset), SYSDATETIMEOFFSET())
 
 		-- Remove references from the hierarchy edit 
+		UPDATE 
+			hed
+		SET
+			HierarchyEditDetailOperationId = CASE WHEN HierarchyEditDetailOperationId = 1 THEN HierarchyEditDetailOperationId ELSE 5 END, -- Remove reference
+			Deleted = 1, 
+			AmendUserId = @UserId,
+			AmendDate = @AmendDate
+		FROM
+			[hierarchy].[HierarchyEditDetail] hed
+		WHERE	
+			hed.Id = @HierarchyEditDetailId
 
-		UPDATE HierarchyEditDetail SET Deleted = 1 where Id = @HierarchyEditDetailId
+        -- Decrement display order of sibling nodes with higher display order
 
 		UPDATE 
 			hed
 		SET
+		    HierarchyEditDetailOperationId = CASE WHEN hed.HierarchyEditDetailOperationId IS NULL THEN 2 ELSE hed.HierarchyEditDetailOperationId END,
 			DisplayOrder = hed.DisplayOrder - 1,
 			AmendUserId = @UserId,
 			AmendDate = @AmendDate

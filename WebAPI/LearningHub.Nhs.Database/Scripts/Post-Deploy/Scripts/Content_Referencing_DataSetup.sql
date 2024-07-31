@@ -105,3 +105,24 @@ BEGIN
 
 END
 GO
+
+IF NOT EXISTS (SELECT 1 FROM  hierarchy.HierarchyEditDetailOperation Where Id =5)
+BEGIN
+	INSERT INTO [hierarchy].[HierarchyEditDetailOperation]
+           ([Id]
+           ,[Description]
+           ,[Deleted]
+           ,[AmendUserId]
+           ,[AmendDate]
+           ,[CreateUserId]
+           ,[CreateDate])
+     VALUES
+           (5
+           ,'Remove Reference'
+           ,0
+           ,4
+           ,SYSDATETIMEOFFSET()
+           ,4
+           ,SYSDATETIMEOFFSET())
+END
+GO

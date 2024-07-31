@@ -189,6 +189,13 @@
         Task<ApiResponse> MoveResourceAsync(int sourceNodeId, int destinationNodeId, int resourceId);
 
         /// <summary>
+        /// The Remove resource reference.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy Edit Detail Id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ApiResponse> RemoveReferenceNodeAsync(int hierarchyEditDetailId);
+
+        /// <summary>
         /// Create a reference to a node.
         /// </summary>
         /// <param name="moveNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>

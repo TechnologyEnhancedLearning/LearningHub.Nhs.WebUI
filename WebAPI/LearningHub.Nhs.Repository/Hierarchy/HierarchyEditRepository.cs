@@ -420,6 +420,24 @@
         }
 
         /// <summary>
+        /// Remove a resource reference in a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The id.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task RemoveReferenceNode(int hierarchyEditDetailId, int userId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = hierarchyEditDetailId };
+            var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = userId };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+            string sql = "hierarchy.HierarchyEditRemoveReferences @p0, @p1, @p2";
+            var sqlParams = new List<SqlParameter>() { param0, param1, param2 };
+
+            await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+        }
+
+        /// <summary>
         /// The publishing.
         /// </summary>
         /// <param name="hierarchyEditId">The hierarchy edit id.</param>

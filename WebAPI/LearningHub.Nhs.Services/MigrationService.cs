@@ -182,7 +182,7 @@
         public async Task<IEnumerable<MigrationSourceViewModel>> GetMigrationSourcesAsync()
         {
             var migrationSources = await this.migrationSourceRepository.GetAll().ToListAsync();
-            return this.mapper.Map<List<MigrationSourceViewModel>>(migrationSources).AsEnumerable();
+            return this.mapper.Map<List<MigrationSourceViewModel>>(migrationSources ?? new List<MigrationSource>()).AsEnumerable();
         }
 
         /// <summary>

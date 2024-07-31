@@ -41,9 +41,9 @@
         /// <returns>The node details.</returns>
         [HttpGet]
         [Route("GetNodeDetails/{nodeId}")]
-        public NodeViewModel GetNodeDetails(int nodeId)
+        public async Task<NodeViewModel> GetNodeDetails(int nodeId)
         {
-            var retVal = this.hierarchyService.GetNodeDetails(nodeId);
+            var retVal = await this.hierarchyService.GetNodeDetails(nodeId);
 
             return retVal;
         }

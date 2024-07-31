@@ -203,11 +203,17 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 this.Logger.LogInformation("User is authenticated: User is {fullname} and userId is: {lhuserid}", this.User.Identity.GetCurrentName(), this.User.Identity.GetCurrentUserId());
                 if (this.User.IsInRole("Administrator") || this.User.IsInRole("BlueUser") || this.User.IsInRole("ReadOnly") || this.User.IsInRole("BasicUser"))
                 {
+                    var learningTask = this.dashboardService.GetMyAccessLearningsAsync(myLearningDashboard, 1);
+                    var resourcesTask = this.dashboardService.GetResourcesAsync(resourceDashboard, 1);
+                    var cataloguesTask = this.dashboardService.GetCataloguesAsync(catalogueDashboard, 1);
+
+                    await Task.WhenAll(learningTask, resourcesTask, cataloguesTask);
+
                     var model = new DashboardViewModel()
                     {
-                        MyLearnings = await this.dashboardService.GetMyAccessLearningsAsync(myLearningDashboard, 1),
-                        Resources = await this.dashboardService.GetResourcesAsync(resourceDashboard, 1),
-                        Catalogues = await this.dashboardService.GetCataloguesAsync(catalogueDashboard, 1),
+                        MyLearnings = await learningTask,
+                        Resources = await resourcesTask,
+                        Catalogues = await cataloguesTask,
                     };
 
                     if (!string.IsNullOrEmpty(this.Request.Query["preview"]) && Convert.ToBoolean(this.Request.Query["preview"]))
@@ -271,9 +277,13 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 }
                 else
                 {
-                    model.MyLearnings = await this.dashboardService.GetMyAccessLearningsAsync(myLearningDashBoard, dashBoardTray == "my-learning" ? pageNumber : 1);
-                    model.Resources = await this.dashboardService.GetResourcesAsync(resourceDashBoard, dashBoardTray == "resources" ? pageNumber : 1);
-                    model.Catalogues = await this.dashboardService.GetCataloguesAsync(catalogueDashBoard, dashBoardTray == "catalogues" ? pageNumber : 1);
+                    var learningTask = this.dashboardService.GetMyAccessLearningsAsync(myLearningDashBoard, dashBoardTray == "my-learning" ? pageNumber : 1);
+                    var resourcesTask = this.dashboardService.GetResourcesAsync(resourceDashBoard, dashBoardTray == "resources" ? pageNumber : 1);
+                    var cataloguesTask = this.dashboardService.GetCataloguesAsync(catalogueDashBoard, dashBoardTray == "catalogues" ? pageNumber : 1);
+                    await Task.WhenAll(learningTask, resourcesTask, cataloguesTask);
+                    model.MyLearnings = await learningTask;
+                    model.Resources = await resourcesTask;
+                    model.Catalogues = await cataloguesTask;
                     return this.View("Dashboard", model);
                 }
             }

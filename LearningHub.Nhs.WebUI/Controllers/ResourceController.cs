@@ -123,7 +123,7 @@
 
             var resource = await this.resourceService.GetItemByIdAsync(resourceReferenceId);
 
-            if (resource.Id == 0 || (resource.Catalogue != null && resource.Catalogue.Hidden))
+            if ((resource == null && resource.Id == 0) || (resource.Catalogue != null && resource.Catalogue.Hidden))
             {
                 this.ViewBag.SupportFormUrl = this.Settings.SupportUrls.SupportForm;
                 return this.View("Unavailable");
@@ -147,7 +147,7 @@
             var hasCatalogueAccess = false;
             if (resource.Catalogue.RestrictedAccess && this.User.Identity.IsAuthenticated)
             {
-                var userGroups = await this.userGroupService.GetRoleUserGroupDetailForUserAsync(this.CurrentUserId);
+                var userGroups = await this.userGroupService.GetRoleUserGroupDetailAsync();
 
                 hasCatalogueAccess = userGroups.Any(x => x.CatalogueNodeId == resource.Catalogue.NodeId &&
                     (x.RoleEnum == RoleEnum.LocalAdmin || x.RoleEnum == RoleEnum.Editor || x.RoleEnum == RoleEnum.Reader)) || this.User.IsInRole("Administrator");
@@ -437,12 +437,13 @@
         /// View HTML resource content.
         /// </summary>
         /// <param name="resourceReferenceId">Resource reference id.</param>
+        /// <param name="currentResourceVersionId">Resource version id.</param>
         /// <param name="path">Html resource content relative path.</param>
         /// <returns>The file content.</returns>
         [HttpGet]
         [Authorize]
-        [Route("resource/html/{resourceReferenceId}/{*path}")]
-        public async Task<IActionResult> HtmlResourceContent(int resourceReferenceId, string path)
+        [Route("resource/html/{resourceReferenceId}/{CurrentResourceVersionId}/{*path}")]
+        public async Task<IActionResult> HtmlResourceContent(int resourceReferenceId, int currentResourceVersionId, string path)
         {
             if (resourceReferenceId == 0 || string.IsNullOrWhiteSpace(path))
             {
@@ -452,8 +453,14 @@
             var userId = this.User.Identity.GetCurrentUserId();
             var cacheKey = $"HtmlContent:{userId}:{resourceReferenceId}";
             var (cacheExists, cacheValue) = await this.cacheService.TryGetAsync<string>(cacheKey);
+            var oldresourceVersionId = 0;
+            if (cacheExists)
+            {
+                var cachesplits = cacheValue.Split(":");
+                oldresourceVersionId = int.Parse(cachesplits[0]);
+            }
 
-            if (!cacheExists)
+            if (!cacheExists || (oldresourceVersionId != currentResourceVersionId))
             {
                 var resource = await this.resourceService.GetItemByIdAsync(resourceReferenceId);
 

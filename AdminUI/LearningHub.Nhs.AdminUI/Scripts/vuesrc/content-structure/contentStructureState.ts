@@ -504,10 +504,11 @@ const actions = <ActionTree<State, any>>{
         });
     },
     async removeReferencingNode(context: ActionContext<State, State>, payload: { node: NodeContentAdminModel }) {
-        debugger;
         state.inError = false;
         contentStructureData.removeReferenceNode(payload.node.hierarchyEditDetailId).then(async response => {
             await refreshNodeContents(payload.node.parent, false);
+            await refreshNodeContents(payload.node.parent.parent, false);
+            await refreshNodeIfMatchingNodeId(payload.node.parent, state.editingTreeNode.nodeId, state.editingTreeNode.hierarchyEditDetailId);
         }).catch(e => {
             state.inError = true;
             state.lastErrorMessage = "Error removing resource refrence.";

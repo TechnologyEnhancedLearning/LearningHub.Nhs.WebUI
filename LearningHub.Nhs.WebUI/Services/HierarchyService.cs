@@ -273,6 +273,16 @@
         }
 
         /// <summary>
+        /// Moves a resource down in a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<ApiResponse> RemoveReferenceNodeAsync(int hierarchyEditDetailId)
+        {
+            return await this.facade.PutAsync($"Hierarchy/RemoveReferenceNode/{hierarchyEditDetailId}");
+        }
+
+        /// <summary>
         /// Create a reference to a Node.
         /// </summary>
         /// <param name="moveNodeViewModel">The moveNodeViewModel<see cref="MoveNodeViewModel"/>.</param>

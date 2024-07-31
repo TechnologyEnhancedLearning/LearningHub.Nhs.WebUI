@@ -476,7 +476,7 @@
                 this.$store.dispatch('contentStructureState/referenceNode', { destinationNode: this.item });
             },
             removeReference: function () {
-                alert("Not yet implemented: Remove reference");
+                this.$store.dispatch('contentStructureState/removeReferencingNode', { node: this.item });
             },
             async loadNodeContents() {
                 this.isError = false;

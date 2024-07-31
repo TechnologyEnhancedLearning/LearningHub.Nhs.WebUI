@@ -1982,6 +1982,11 @@ namespace LearningHub.Nhs.Services
 
                 var erv = await this.GetResourceVersionExtendedViewModelAsync(rv.Id, userId);
 
+                if (erv == null)
+                {
+                    return null;
+                }
+
                 var retVal = new ResourceItemViewModel(erv);
                 retVal.Id = resourceReferenceId;
                 var bookmark = this.bookmarkRepository.GetAll().Where(b => b.ResourceReferenceId == resourceReferenceId && b.UserId == userId).FirstOrDefault();
@@ -4514,11 +4519,14 @@ namespace LearningHub.Nhs.Services
             {
                 return true;
             }
-            else
+
+            var resourceVersion = await this.GetResourceVersionByIdAsync(resourceVersionId);
+            if (resourceVersion == null)
             {
-                var resourceVersion = await this.GetResourceVersionByIdAsync(resourceVersionId);
-                return await this.catalogueService.CanUserEditCatalogueAsync(currentUserId, (int)resourceVersion.ResourceCatalogueId);
+                return false;
             }
+
+            return await this.catalogueService.CanUserEditCatalogueAsync(currentUserId, (int)resourceVersion.ResourceCatalogueId);
         }
 
         private async Task<bool> IsAudioVideoResource(int resourceVersionId, ResourceTypeEnum resourceType)

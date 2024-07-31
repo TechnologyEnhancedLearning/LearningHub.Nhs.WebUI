@@ -35,6 +35,7 @@
                            :firstUnansweredQuestion="pagesProgress.map((e, i) => i < questionInFocus || e).findIndex(p => !p) === index"
                            :isQuestionInFocus="questionInFocus === index"
                            :answerInOrder="answerInOrder"
+                           :allQuestAnswered="allQuestionsAnswered"
                            @updateQuestionProgress="isComplete => pushUpdate(index, isComplete)"
                            @nextPage="$emit('nextPage')"
                            @submitAssessmentAnswers="answers => $emit(`submitAssessmentAnswers`, answers, block.blockRef)"

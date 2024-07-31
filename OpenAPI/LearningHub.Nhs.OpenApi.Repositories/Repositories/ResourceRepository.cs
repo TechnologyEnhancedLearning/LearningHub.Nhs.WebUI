@@ -77,6 +77,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                 .ToListAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<List<int>> GetAchievedCertificatedResourceIds(int currentUserId)
         {
             // Use dashboard logic to ensure same resources determined has having achieved certificates

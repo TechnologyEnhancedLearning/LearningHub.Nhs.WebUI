@@ -179,7 +179,8 @@
             isQuestionInFocus: { type: Boolean, default: false },
             firstUnansweredQuestion: Boolean,
             matchQuestionsState: { type: Array } as PropOptions<MatchQuestionState[]>,
-            answerInOrder: Boolean
+            answerInOrder: Boolean,
+            allQuestAnswered: { type: Boolean, default: false }
         },
         components: {
             MatchGameSubmissionView,
@@ -268,6 +269,9 @@
             },
             isQuestionInFocus(value) {
                 this.isOpen = value;
+                if (this.allQuestAnswered) {
+                    this.isOpen = false;
+                }
             }
         },
         methods: {

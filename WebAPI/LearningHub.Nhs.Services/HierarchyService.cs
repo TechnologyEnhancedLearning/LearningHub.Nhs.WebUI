@@ -212,9 +212,9 @@
         /// </summary>
         /// <param name="nodeId">The node id.</param>
         /// <returns>The node details.</returns>
-        public NodeViewModel GetNodeDetails(int nodeId)
+        public async Task<NodeViewModel> GetNodeDetails(int nodeId)
         {
-            var retVal = this.nodeRepository.GetNodeDetails(nodeId);
+            var retVal = await this.nodeRepository.GetNodeDetails(nodeId);
 
             return retVal;
         }

@@ -31,7 +31,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<ResourceVersionRating> GetUsersPreviousRatingForSameMajorVersionAsync(int resourceVersionId, int userId)
         {
-            var minorVersionIds = this.GetAllResourceVersionIdsForSameMajorVersion(resourceVersionId);
+            var minorVersionIds = await this.GetAllResourceVersionIdsForSameMajorVersion(resourceVersionId);
 
             return await this.DbContext.ResourceVersionRating.FirstOrDefaultAsync(x => minorVersionIds.Contains(x.ResourceVersionId) && x.UserId == userId && !x.Deleted);
         }
@@ -43,7 +43,7 @@
         /// <returns>An array of integers, which are the count for each star value, starting at 1 star and ending with 5 stars.</returns>
         public async Task<int[]> GetRatingCountsForResourceVersionAsync(int resourceVersionId)
         {
-            var minorVersionIds = this.GetAllResourceVersionIdsForSameMajorVersion(resourceVersionId);
+            var minorVersionIds = await this.GetAllResourceVersionIdsForSameMajorVersion(resourceVersionId);
 
             var allMajorVersionRatings = this.DbContext.ResourceVersionRating.Where(x => minorVersionIds.Contains(x.ResourceVersionId));
 
@@ -63,12 +63,12 @@
         /// </summary>
         /// <param name="resourceVersionId">The resource version id.</param>
         /// <returns>A list of resoruce verison ids.</returns>
-        private List<int> GetAllResourceVersionIdsForSameMajorVersion(int resourceVersionId)
+        private async Task<List<int>> GetAllResourceVersionIdsForSameMajorVersion(int resourceVersionId)
         {
-            var majorVersionInfo = this.DbContext.ResourceVersion.Where(x => x.Id == resourceVersionId).Select(x => new { ResourceId = x.ResourceId, MajorVersion = x.MajorVersion }).FirstOrDefault();
+            var majorVersionInfo = await this.DbContext.ResourceVersion.Where(x => x.Id == resourceVersionId).Select(x => new { ResourceId = x.ResourceId, MajorVersion = x.MajorVersion }).FirstOrDefaultAsync();
 
-            var minorVersionIds = this.DbContext.ResourceVersion
-                .Where(x => x.ResourceId == majorVersionInfo.ResourceId && x.MajorVersion == majorVersionInfo.MajorVersion).Select(x => x.Id).ToList();
+            var minorVersionIds = await this.DbContext.ResourceVersion
+                .Where(x => x.ResourceId == majorVersionInfo.ResourceId && x.MajorVersion == majorVersionInfo.MajorVersion).Select(x => x.Id).ToListAsync();
 
             return minorVersionIds;
         }

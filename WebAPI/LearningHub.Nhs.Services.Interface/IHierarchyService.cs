@@ -15,7 +15,7 @@
         /// </summary>
         /// <param name="nodeId">The node id.</param>
         /// <returns>The node details.</returns>
-        NodeViewModel GetNodeDetails(int nodeId);
+        Task<NodeViewModel> GetNodeDetails(int nodeId);
 
         /// <summary>
         /// Gets the basic details of all Nodes in a particular NodePath.

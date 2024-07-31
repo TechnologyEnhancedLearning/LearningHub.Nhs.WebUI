@@ -105,7 +105,6 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
                     ActivityStatus = ActivityStatusEnum.Completed,
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
-
                 return this.File(file.Content, file.ContentType, fileName);
             }
             else

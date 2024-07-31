@@ -203,6 +203,7 @@
     <Build Include="Stored Procedures\Resources\GetRecentDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetMyInProgressDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetMyRecentCompletedDashboardResources.sql" />
+    <None Include="Stored Procedures\Resources\backup getdashboardresource previous changes.txt" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="LearningHub.Nhs.Database.refactorlog" />

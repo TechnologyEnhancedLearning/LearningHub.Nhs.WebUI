@@ -116,6 +116,12 @@
                     return "Played " + GetDurationText(myLearningDetailedItemViewModel.ActivityDurationSeconds * 1000);
                 case ResourceTypeEnum.WebLink:
                     return "Visited";
+                case ResourceTypeEnum.Html:
+                    return "Viewed";
+                case ResourceTypeEnum.Case:
+                    return "Accessed";
+                case ResourceTypeEnum.Assessment:
+                    return "Accessed";
                 default:
                     return string.Empty;
             }

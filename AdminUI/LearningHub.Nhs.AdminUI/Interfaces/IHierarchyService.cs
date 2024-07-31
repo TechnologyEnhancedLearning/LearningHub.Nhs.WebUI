@@ -191,5 +191,12 @@
         /// <param name="resourceId">The resource id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<ApiResponse> MoveResourceAsync(int sourceNodeId, int destinationNodeId, int resourceId);
+
+        /// <summary>
+        /// The Remove resource reference.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy Edit Detail Id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ApiResponse> RemoveReferenceNodeAsync(int hierarchyEditDetailId);
     }
 }

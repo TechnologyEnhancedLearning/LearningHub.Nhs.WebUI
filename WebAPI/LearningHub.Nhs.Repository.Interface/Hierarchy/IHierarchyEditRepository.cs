@@ -192,6 +192,14 @@
         Task<List<MoveResourceResultViewModel>> MoveResource(int sourceNodeId, int destinationNodeId, int resourceId, int userId);
 
         /// <summary>
+        /// Removes a resource reference in a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The id.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task RemoveReferenceNode(int hierarchyEditDetailId, int userId);
+
+        /// <summary>
         /// The publishing.
         /// </summary>
         /// <param name="hierarchyEditId">The hierarchy edit id.</param>

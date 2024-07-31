@@ -264,6 +264,18 @@ const hierarchyEditMoveResource = async function (hierarchyEditDetailId: number,
         });
 };
 
+const removeReferenceNode = async function (hierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+    const url = `/api/hierarchy/RemoveReferenceNode/${hierarchyEditDetailId}`;
+
+    return await axios.put<LearningHubValidationResultModel>(url)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('removeReferenceNode:' + e);
+            throw e;
+        });
+};
 
 const moveResourceUp = async function (nodeId: number, resourceId: number): Promise<LearningHubValidationResultModel> {
 
@@ -359,7 +371,7 @@ const getReferencableCatalogues = async function (nodePathId: number): Promise<C
 };
 const deleteFolderReference = async function (hierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
 
-    const url = `/api/hierarchy/DeleteFolderReference/${hierarchyEditDetailId}`;
+    const url = `/api/hierarchy/RemoveReferenceNode/${hierarchyEditDetailId}`;
 
     return await axios.put<LearningHubValidationResultModel>(url)
         .then(response => {
@@ -451,5 +463,6 @@ export const contentStructureData = {
     updateResourceReferenceDisplayVersion,
     getReferencableCatalogues,
     hierarchyEditReferenceExternalResource,
-    referenceExternalNode
+    referenceExternalNode,
+    removeReferenceNode
 }

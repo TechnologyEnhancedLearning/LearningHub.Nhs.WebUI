@@ -655,5 +655,25 @@
                 return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
             }
         }
+
+        /// <summary>
+        /// remove a resource reference in a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The id.</param>
+        /// <returns>The validation result.</returns>
+        [HttpPut]
+        [Route("RemoveReferenceNode/{hierarchyEditDetailId}")]
+        public async Task<IActionResult> RemoveReferenceNode(int hierarchyEditDetailId)
+        {
+            try
+            {
+                var retVal = await this.hierarchyService.RemoveReferenceNode(hierarchyEditDetailId, this.CurrentUserId);
+                return this.Ok(new ApiResponse(true, retVal));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
+        }
     }
 }

@@ -17,6 +17,7 @@
 -- 30-05-2024  DB	Added the creation of a new ResourceReference records for the moved resources.
 -- 03-06-2024  DB	Publish NodePathDisplayVersion records.
 -- 13-06-2024  DB	Publish ResourceReferenceDisplayVersion records.
+-- 26-07-2024  SA   Remove references to be implemented
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditPublish] 
 (
@@ -124,6 +125,23 @@ BEGIN
 			AND hed.DisplayOrder != nl.DisplayOrder
 			AND hed.Deleted = 0
 			AND nl.Deleted = 0
+
+			-- UPDATE  NodeLink 'deleted' for remove reference
+
+			UPDATE 
+				nl
+			SET
+				Deleted = 1,
+				AmendUserId = @AmendUserId,
+				AmendDate = @AmendDate
+			FROM
+				hierarchy.HierarchyEditDetail hed
+			INNER JOIN
+				hierarchy.NodeLink nl ON hed.NodeLinkId = nl.Id
+			WHERE 
+				HierarchyEditId = @HierarchyEditId
+				AND hed.HierarchyEditDetailTypeId = 4 -- Node Link
+				AND hed.Deleted = 1
 
 		-- For moved nodes, delete the original NodeLinks, providing they have not been used (by a reference to the original position).
 		UPDATE 
@@ -264,6 +282,21 @@ BEGIN
 			AND hed.DisplayOrder != nr.DisplayOrder
 			AND hed.Deleted = 0
 			AND nr.Deleted = 0
+
+			-- Update NodeResource Deleted status , if the reference is removed.
+		UPDATE 
+			nr
+		SET
+			Deleted = 1,
+			AmendUserId = @AmendUserId,
+			AmendDate = @AmendDate
+		FROM
+			hierarchy.HierarchyEditDetail hed
+		INNER JOIN
+			hierarchy.NodeResource nr ON hed.NodeResourceId = nr.Id
+		WHERE 
+			HierarchyEditId = @HierarchyEditId
+			AND hed.Deleted =1
 
 		----------------------------------------------------------
 		-- NodeVersion

@@ -717,6 +717,19 @@
         }
 
         /// <summary>
+        /// Remove a resource reference in a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The id.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The validation result.</returns>
+        public async Task<LearningHubValidationResult> RemoveReferenceNode(int hierarchyEditDetailId, int userId)
+        {
+            await this.hierarchyEditRepository.RemoveReferenceNode(hierarchyEditDetailId, userId);
+            var retVal = new LearningHubValidationResult(true);
+            return retVal;
+        }
+
+        /// <summary>
         /// Submit hierarchy edit for publishing.
         /// </summary>
         /// <param name="publishViewModel">The publishViewModel<see cref="PublishHierarchyEditViewModel"/>.</param>

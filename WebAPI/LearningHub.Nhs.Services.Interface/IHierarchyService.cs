@@ -244,6 +244,14 @@
         Task<LearningHubValidationResult> MoveResource(int sourceNodeId, int destinationNodeId, int resourceId, int userId);
 
         /// <summary>
+        /// Remove a resource reference in a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The id.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The validation result.</returns>
+        Task<LearningHubValidationResult> RemoveReferenceNode(int hierarchyEditDetailId, int userId);
+
+        /// <summary>
         /// Submit hierarchy edit for publishing.
         /// </summary>
         /// <param name="publishViewModel">The publishViewModel<see cref="PublishHierarchyEditViewModel"/>.</param>

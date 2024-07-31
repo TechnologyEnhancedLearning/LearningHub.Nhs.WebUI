@@ -186,7 +186,7 @@ const deleteFolder = async function (hierarchyEditDetailId: number): Promise<Lea
 
 const deleteFolderReference = async function (hierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
 
-    const url = `/api/hierarchy/DeleteFolderReference/${hierarchyEditDetailId}`;
+    const url = `/api/hierarchy/RemoveReferenceNode/${hierarchyEditDetailId}`;
 
     return await axios.put<LearningHubValidationResultModel>(url)
         .then(response => {
@@ -379,6 +379,18 @@ const moveResource = async function (sourceNodeId: number, destinationNodeId: nu
         });
 };
 
+const removeReferenceNode = async function (hierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+    const url = `/api/hierarchy/RemoveReferenceNode/${hierarchyEditDetailId}`;
+
+    return await axios.put<LearningHubValidationResultModel>(url)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('removeReferenceNode:' + e);
+            throw e;
+        });
+};
 const getReferencableCatalogues = async function (nodePathId: number): Promise<CatalogueBasicModel[]> {
     return await axios.get<CatalogueBasicModel[]>('/api/hierarchy/GetReferencableCatalogues/' + nodePathId + `?timestamp=${new Date().getTime()}`)
         .then(response => {
@@ -433,5 +445,6 @@ export const contentStructureData = {
     moveResourceDown,
     moveResource,
     getReferencableCatalogues,
-    getCurrentUserId
+    getCurrentUserId,
+    removeReferenceNode
 }

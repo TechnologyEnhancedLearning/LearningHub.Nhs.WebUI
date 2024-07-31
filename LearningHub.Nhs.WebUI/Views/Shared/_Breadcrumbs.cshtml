@@ -15,9 +15,16 @@
     {
         @* "parent view *@
         var parent = Model.Breadcrumbs.ElementAt(Model.Breadcrumbs.Count - 1);
-
-        <i class="fa-solid fa-chevron-left nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
-        <a href="@parent.Url">@parent.Url</a>
+        if (Model.Breadcrumbs.Count > 2)
+        {
+            <i class="fa-solid fa-chevron-left nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+            <a href="@parent.Url">@parent.Title</a>
+        }
+        else
+        {
+            <i class="fa-solid fa-chevron-left nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+            <a href="@parent.Url">@parent.Title</a>
+        }
     }
     else
     {

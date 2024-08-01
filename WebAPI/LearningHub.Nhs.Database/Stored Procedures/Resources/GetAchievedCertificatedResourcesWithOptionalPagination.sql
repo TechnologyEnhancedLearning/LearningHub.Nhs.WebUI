@@ -8,6 +8,7 @@
 -------------------------------------------------------------------------------
 
 
+
 CREATE PROCEDURE [resources].[GetAchievedcertificatedResourcesWithOptionalPagination]
     @UserId INT,
 

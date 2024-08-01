@@ -65,15 +65,14 @@
 
                         <div class="d-flex">
                             <div class="selection pr-50">
-                                <div>Provide guidance for the learner at the end of this assessment.</div>
-                                <EditSaveFieldWithCharacterCount   
-                                                                    v-model="assessmentDetails.endGuidance.blocks[0].title"
-                                                                    addEditLabel="title"
-                                                                    v-bind:characterLimit="60"
-                                                                    v-bind:isH3="true" />
-                                <ckeditorwithhint v-on:blur="setEndGuidance" 
+                                <div>Provide guidance for the learner at the end of this assessment. <i class="warningTriangle fas fa-exclamation-triangle warm-yellow"></i></div>
+                                <EditSaveFieldWithCharacterCount v-model="assessmentDetails.endGuidance.blocks[0].title"
+                                                                 addEditLabel="title"
+                                                                 v-bind:characterLimit="60"
+                                                                 v-bind:isH3="true" />
+                                <ckeditorwithhint v-on:blur="setEndGuidance"
                                                   v-on:inputValidity="setGuidanceValidity"
-                                                  :maxLength="1000" 
+                                                  :maxLength="1000"
                                                   :initialValue="endGuidance" />
                             </div>
                             <div class="tip">

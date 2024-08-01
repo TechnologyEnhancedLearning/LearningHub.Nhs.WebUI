@@ -493,6 +493,11 @@
                         if (child.nodePaths) {
                             child.isReference = child.nodePaths.length > 1;
                         }
+                        child.parentNodeIds = [];
+                        if (child.parent.parentNodeIds) {
+                            child.parentNodeIds=child.parentNodeIds.concat(child.parent.parentNodeIds);
+                        }
+                        child.parentNodeIds.push(child.nodeId);
                     });
                 }).catch(e => {
                     console.log(e);

@@ -140,7 +140,10 @@
                 return this.$store.state.contentStructureState.rootExtReferencedNode.nodePathId === this.$store.state.contentStructureState.rootNode.nodePathId;
             },
             isAncestor(): boolean {
-                return this.$store.state.contentStructureState.rootNode.parentNodeIds.includes(this.item.nodeId);
+                if (this.item.depth > 0) {
+                    return this.$store.state.contentStructureState.editingTreeNode.parentNodeIds.includes(this.item.nodeId);
+                }
+                else return false;
             },
         },
         mounted() {

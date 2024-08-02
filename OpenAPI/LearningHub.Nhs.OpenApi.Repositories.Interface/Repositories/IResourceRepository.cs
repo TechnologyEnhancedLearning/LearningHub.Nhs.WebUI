@@ -32,5 +32,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         /// <param name="userIds"></param>
         /// <returns>ResourceActivityDTO.</returns>
         Task<IEnumerable<ResourceActivityDTO>> GetResourceActivityPerResourceMajorVersion(IEnumerable<int>? resourceReferenceIds, IEnumerable<int>? userIds);
+
+        /// <summary>
+        /// GetAchievedCertificatedResourceIds
+        /// </summary>
+        /// <param name="currentUserId"><see cref="currentUserId"/>.</param>
+        public Task<List<int>> GetAchievedCertificatedResourceIds(int currentUserId);
     }
 }

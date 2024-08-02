@@ -21,6 +21,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
+    using LearningHub.Nhs.Models.Enums;
 
     public sealed class ResourceControllerTests
     {
@@ -237,6 +238,45 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
             // Then
             this.searchService.Verify(
                 service => service.Search(It.Is<ResourceSearchRequest>(request => request.Limit == limit), currentUserId));
+        }
+
+        [Fact]
+        public async Task GetResourceReferencesByCompleteThrowsErrorWhenNoUserId()
+        {
+            // When
+            var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
+            {
+                await this.resourceController.GetResourceReferencesByActivityStatus((int)ActivityStatusEnum.Completed);
+            });
+
+            // Then
+            Assert.Equal("User Id required.", exception.Message);
+        }
+
+        [Fact]
+        public async Task GetResourceReferencesByInProgressThrowsErrorWhenNoUserId()
+        {
+            // When
+            var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
+            {
+                await this.resourceController.GetResourceReferencesByActivityStatus((int)ActivityStatusEnum.Incomplete);// in complete in db is in progress front endS
+            });
+
+            // Then
+            Assert.Equal("User Id required.", exception.Message);
+        }
+
+        [Fact]
+        public async Task GetResourceReferencesBycertificatesThrowsErrorWhenNoUserId()
+        {
+            // When
+            var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
+            {
+                await this.resourceController.GetResourceReferencesByCertificates();
+            });
+
+            // Then
+            Assert.Equal("User Id required.", exception.Message);
         }
 
         private void GivenDefaultLimitForFindwiseSearchIs(int limit)

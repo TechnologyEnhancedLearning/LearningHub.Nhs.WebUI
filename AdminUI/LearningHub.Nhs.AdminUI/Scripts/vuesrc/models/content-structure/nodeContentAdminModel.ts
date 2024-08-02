@@ -35,6 +35,7 @@ export class NodeContentAdminModel {
     primaryCatalogueNodeId: number;
     primaryCatalogueNodeName: string;
     isReference: boolean;
+    parentNodeIds: Number[] = null;
 
     public constructor(init?: Partial<NodeContentAdminModel>) {
         Object.assign(this, init);

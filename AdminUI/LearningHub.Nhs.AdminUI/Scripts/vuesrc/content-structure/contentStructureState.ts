@@ -188,6 +188,8 @@ async function processChildNodeContents(child: NodeContentAdminModel, parent: No
     if (child.nodePaths) {
         child.isReference = child.nodePaths.length > 1;
     }
+    child.parentNodeIds = [];
+    child.parentNodeIds.push(child.nodeId);
 }
 
 const mutations = {

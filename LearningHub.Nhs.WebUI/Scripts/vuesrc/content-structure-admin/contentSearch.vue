@@ -2,8 +2,8 @@
     <div class="content-structure">
         <div class="row">
             <div class="form-group col-12 d-flex flex-row flex-grow-1">
-                <label class="">Reference location: {{pathLocation}}</label>
-                <input id="btnCancelReferencing" type="button" class="btn btn-admin btn-cancel ml-auto" @click="cancelReferencing()" value="Cancel Referencing" />
+                <label class="" style="font-family: FrutigerLTW01-65Bold, Arial, sans-serif !important; font-size: 20px;">Reference location: {{pathLocation}}</label>
+                <input id="btnCancelReferencing" type="button" class="nhsuk-button nhsuk-button--secondary ml-auto" @click="cancelReferencing()" value="Cancel Referencing" />
             </div>
         </div>
         <div class="row">

@@ -364,8 +364,10 @@
         },
         methods: {
             recomputeNodeOptions: function () {
-                this.canMoveNodeUp = this.item.displayOrder > 1;
-                this.canMoveNodeDown = this.item.parent && this.item.displayOrder < this.item.parent.children.filter(c => c.nodeTypeId > 0).length;
+                this.canMoveNodeUp = this.item.displayOrder > 1
+                    && this.item.parent.primaryCatalogueNodeId == this.$store.state.contentStructureState.rootNode.nodeId;
+                this.canMoveNodeDown = this.item.parent && this.item.displayOrder < this.item.parent.children.filter(c => c.nodeTypeId > 0).length
+                    && this.item.parent.primaryCatalogueNodeId == this.$store.state.contentStructureState.rootNode.nodeId;
                 this.canDeleteNode = !this.item.hasResourcesInBranchInd;
                 this.canEditNode = true;
                 this.canMoveNode = this.item.parent != null;
@@ -476,7 +478,7 @@
                 this.$store.dispatch('contentStructureState/referenceNode', { destinationNode: this.item });
             },
             removeReference: function () {
-                alert("Not yet implemented: Remove reference");
+                this.$store.dispatch('contentStructureState/removeReferencingNode', { node: this.item });
             },
             async loadNodeContents() {
                 this.isError = false;
@@ -493,6 +495,11 @@
                         if (child.nodePaths) {
                             child.isReference = child.nodePaths.length > 1;
                         }
+                        child.parentNodeIds = [];
+                        if (child.parent.parentNodeIds) {
+                            child.parentNodeIds = child.parentNodeIds.concat(child.parent.parentNodeIds);
+                        }
+                        child.parentNodeIds.push(child.nodeId);
                     });
                 }).catch(e => {
                     console.log(e);

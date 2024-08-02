@@ -285,5 +285,15 @@
         {
             return await this.facade.PutAsync($"Hierarchy/MoveResource/{sourceNodeId}/{destinationNodeId}/{resourceId}");
         }
+
+        /// <summary>
+        /// Moves a resource down in a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<ApiResponse> RemoveReferenceNodeAsync(int hierarchyEditDetailId)
+        {
+            return await this.facade.PutAsync($"Hierarchy/RemoveReferenceNode/{hierarchyEditDetailId}");
+        }
     }
 }

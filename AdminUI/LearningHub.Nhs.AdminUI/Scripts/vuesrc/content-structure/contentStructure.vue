@@ -431,7 +431,8 @@ export default Vue.extend({
         },
         onDeleteFolderReference() {
             this.$store.dispatch('contentStructureState/deleteFolderReference');
-            $('#deleteFolderModal').modal('hide');
+            $('#deleteFolderReferenceModal').modal('hide');
+            this.onCancelFolderEdit()
         },
         onDeleteResourceReference() {
             this.$store.dispatch('contentStructureState/deleteResourceReference');

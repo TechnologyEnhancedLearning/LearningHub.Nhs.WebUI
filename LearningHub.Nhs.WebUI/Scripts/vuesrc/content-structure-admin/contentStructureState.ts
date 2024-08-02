@@ -185,6 +185,8 @@ async function processChildNodeContents(child: NodeContentAdminModel, parent: No
     if (child.nodePaths) {
         child.isReference = child.nodePaths.length > 1;
     }
+    child.parentNodeIds = [];
+    child.parentNodeIds.push(child.nodeId);
 }
 
 const mutations = {
@@ -484,6 +486,17 @@ const actions = <ActionTree<State, any>>{
         }).catch(e => {
             state.inError = true;
             state.lastErrorMessage = "Error moving resource.";
+        });
+    },
+    async removeReferencingNode(context: ActionContext<State, State>, payload: { node: NodeContentAdminModel }) {
+        state.inError = false;
+        contentStructureData.removeReferenceNode(payload.node.hierarchyEditDetailId).then(async response => {
+            await refreshNodeContents(payload.node.parent, false);
+            await refreshNodeContents(payload.node.parent.parent, false);
+            await refreshNodeIfMatchingNodeId(payload.node.parent, state.editingTreeNode.nodeId, state.editingTreeNode.hierarchyEditDetailId);
+        }).catch(e => {
+            state.inError = true;
+            state.lastErrorMessage = "Error removing resource refrence.";
         });
     },
     async saveFolder(context: ActionContext<State, State>) {

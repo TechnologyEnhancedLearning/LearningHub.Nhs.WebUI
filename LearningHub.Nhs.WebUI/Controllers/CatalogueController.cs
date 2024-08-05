@@ -190,8 +190,6 @@
             CatalogueAccessRequestViewModel catalogueAccessRequest = null;
             if (this.ViewBag.UserAuthenticated)
             {
-                var cacheKey = $"{this.CurrentUserId}:AllRolesWithPermissions";
-                await this.cacheService.RemoveAsync(cacheKey);
                 userGroups = await this.userGroupService.GetRoleUserGroupDetailAsync();
                 catalogueAccessRequest = await this.catalogueService.GetLatestCatalogueAccessRequestAsync(catalogue.NodeId);
             }

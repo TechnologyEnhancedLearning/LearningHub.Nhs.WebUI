@@ -276,6 +276,16 @@
         {
             if (!this.ModelState.IsValid)
             {
+                this.ModelState.Remove(nameof(bookmark.Title));
+                if (bookmark.BookmarkTypeId == 1)
+                {
+                    this.ModelState.AddModelError(nameof(bookmark.Title), "You must enter a folder name");
+                }
+                else
+                {
+                    this.ModelState.AddModelError(nameof(bookmark.Title), "You must enter a bookmark name");
+                }
+
                 this.ViewBag.ReturnUrl = returnUrl;
                 return this.View("Toggle", bookmark);
             }

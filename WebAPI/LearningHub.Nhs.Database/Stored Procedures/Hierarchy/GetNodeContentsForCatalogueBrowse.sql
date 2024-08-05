@@ -26,6 +26,14 @@ AS
 
 BEGIN
 
+    IF @NodeId IS NULL
+    BEGIN
+        RAISERROR('NodeId cannot be null', 16, 1)
+        RETURN
+    END
+
+	;WITH CTENode AS(SELECT DISTINCT NodeId FROM hierarchy.NodeResourceLookup WHERE Deleted = 0)
+
 	SELECT 
 		ROW_NUMBER() OVER(ORDER BY DisplayOrder) AS Id,
 		NodePathId,
@@ -73,7 +81,7 @@ BEGIN
 		INNER JOIN
 			hierarchy.FolderNodeVersion fnv ON fnv.NodeVersionId = nv.Id
 		INNER JOIN -- Exclude folders with no published resources.
-			(SELECT DISTINCT NodeId FROM hierarchy.NodeResourceLookup WHERE Deleted = 0) nrl ON cn.Id = nrl.NodeId
+			CTENode nrl ON cn.Id = nrl.NodeId
 		WHERE
 			pnp.Id = @NodePathId 
 			AND nv.VersionStatusId = 2 -- Published

@@ -52,26 +52,8 @@
         /// <inheritdoc />
         public async Task<List<RoleUserGroupViewModel>> GetRoleUserGroupDetailForUserAsync(int userId)
         {
-            List<RoleUserGroupViewModel> viewmodel = null;
-
-            var client = await this.LearningHubHttpClient.GetClientAsync();
-
-            var request = $"UserGroup/GetUserGroupRoleDetailByUserId/{userId}";
-            var response = await client.GetAsync(request).ConfigureAwait(false);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var result = response.Content.ReadAsStringAsync().Result;
-                viewmodel = JsonConvert.DeserializeObject<List<RoleUserGroupViewModel>>(result);
-            }
-            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
-                        ||
-                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-            {
-                throw new Exception("AccessDenied");
-            }
-
-            return viewmodel;
+            var cacheKey = $"{userId}:AllRolesWithPermissions";
+            return await this.cacheService.GetOrFetchAsync(cacheKey, () => this.FetchRoleUserGroupDetailForUserAsync(userId));
         }
 
         /// <inheritdoc />
@@ -97,6 +79,30 @@
             var client = await this.LearningHubHttpClient.GetClientAsync();
 
             var request = $"UserGroup/GetUserGroupRoleDetail";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewmodel = JsonConvert.DeserializeObject<List<RoleUserGroupViewModel>>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewmodel;
+        }
+
+        private async Task<List<RoleUserGroupViewModel>> FetchRoleUserGroupDetailForUserAsync(int userId)
+        {
+            List<RoleUserGroupViewModel> viewmodel = null;
+
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+
+            var request = $"UserGroup/GetUserGroupRoleDetailByUserId/{userId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)

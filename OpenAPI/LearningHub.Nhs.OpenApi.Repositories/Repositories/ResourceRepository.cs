@@ -1,11 +1,14 @@
 namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
+    using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
 
     /// <inheritdoc />
@@ -68,6 +71,36 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                 .ThenInclude(r => r.CurrentResourceVersion)
                 .ThenInclude(r => r.ResourceVersionRatingSummary)
                 .ToListAsync();
+        }
+
+        /// </summary>
+        /// <param name="resourceReferenceIds"></param>
+        /// <param name="userIds"></param>
+        /// <param name="originalResourceReferenceIds">.</param>
+        /// <returns>A <see cref="Task{ResourceReference}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<IEnumerable<ResourceActivityDTO>> GetResourceActivityPerResourceMajorVersion(
+          IEnumerable<int>? resourceReferenceIds, IEnumerable<int>? userIds)
+        {
+            var resourceIdsParam = resourceReferenceIds != null
+                ? string.Join(",", resourceReferenceIds)
+                : null;
+
+            var userIdsParam = userIds != null
+                ? string.Join(",", userIds)
+                : null;
+
+            var resourceIdsParameter = new SqlParameter("@p0", resourceIdsParam ?? (object)DBNull.Value);
+            var userIdsParameter = new SqlParameter("@p1", userIdsParam ?? (object)DBNull.Value);
+
+            List<ResourceActivityDTO> resourceActivityDTOs = await dbContext.ResourceActivityDTO
+                .FromSqlRaw(
+                    "[activity].[GetResourceActivityPerResourceMajorVersion] @p0, @p1",
+                    resourceIdsParameter,
+                    userIdsParameter)
+                .AsNoTracking()
+                .ToListAsync<ResourceActivityDTO>();
+
+            return resourceActivityDTOs;
         }
     }
 }

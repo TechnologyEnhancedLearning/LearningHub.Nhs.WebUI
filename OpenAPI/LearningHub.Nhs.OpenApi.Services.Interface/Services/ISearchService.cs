@@ -14,6 +14,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// </summary>
         /// <param name="query"><see cref="LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource.ResourceSearchRequest"/>.</param>
         /// <returns><see cref="ResourceSearchResultViewModel"/>.</returns>
-        Task<ResourceSearchResultModel> Search(ResourceSearchRequest query);
+        Task<ResourceSearchResultModel> Search(ResourceSearchRequest query, int? currentUserId);
     }
 }

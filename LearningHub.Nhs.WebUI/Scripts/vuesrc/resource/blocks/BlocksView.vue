@@ -35,6 +35,7 @@
                            :firstUnansweredQuestion="pagesProgress.map((e, i) => i < questionInFocus || e).findIndex(p => !p) === index"
                            :isQuestionInFocus="questionInFocus === index"
                            :answerInOrder="answerInOrder"
+                           :allQuestAnswered="allQuestionsAnswered"
                            @updateQuestionProgress="isComplete => pushUpdate(index, isComplete)"
                            @nextPage="$emit('nextPage')"
                            @submitAssessmentAnswers="answers => $emit(`submitAssessmentAnswers`, answers, block.blockRef)"
@@ -93,9 +94,9 @@
                 requestAnimationFrame(this.applyUpdates);
             },
             questionInFocus() {
-                const question = this.blocks[this.questionInFocus];
-                if (question && this.allQuestionsAnswered) {
-                    const element = document.getElementById(this.generateId(question.order - this.blocks[0].order));
+                const lastAnsweredIndex = this.blocks.findIndex(block => block.blockType === BlockTypeEnum.Question && this.pagesProgress[this.blocks.indexOf(block)]);
+                if (lastAnsweredIndex !== -1) {
+                    const element = document.getElementById(this.generateId(lastAnsweredIndex));
                     if (element) {
                         setTimeout(() => {
                             element.scrollIntoView({ behavior: "smooth" });

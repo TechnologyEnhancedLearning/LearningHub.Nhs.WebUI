@@ -86,15 +86,21 @@
                 <div class="col-12 mb-0 error-text" v-if="keywordError">
                     <span class="text-danger">This keyword has already been added.</span>
                 </div>
+                <div class="col-12 mb-0 error-text" v-if="keywordLengthExceeded">
+                    <span class="text-danger">
+                        Each keyword must be no longer than 50 characters.
+                    </span>
+                </div>
+
                 <div class="col-12">
                     To help learners find this resource, type one or more relevant keywords separated by commas and click 'Add'.
                 </div>
                 <div class="col-12 mt-4 input-with-button">
-                    <input id="newKeyword" aria-labelledby="keyword-label" type="text" class="form-control" maxlength="50" v-model="newKeyword" v-bind:class="{ 'input-validation-error': keywordError }" @input="keywordError=false" @change="keywordChange" />
+                    <input id="newKeyword" aria-labelledby="keyword-label" type="text" class="form-control" maxlength="260" v-model="newKeyword" v-bind:class="{ 'input-validation-error': keywordError }" @input="keywordError=false" @change="keywordChange" />
                     <button type="button" class="nhsuk-button nhsuk-button--secondary ml-3 nhsuk-u-margin-bottom-0" @click="addKeyword">&nbsp;Add</button>
                 </div>
                 <div class="col-12 footer-text">
-                    You can enter a maximum of 50 characters
+                    You can enter a maximum of 50 characters per keyword
                 </div>
             </div>
         </div>
@@ -282,9 +288,10 @@
                 currentUserAuthor: false,
                 certificateEnabled: null,
                 newKeyword: '',
-                editorConfig: { toolbar: CKEditorToolbar.default },
+                editorConfig: { toolbar: CKEditorToolbar.default, versionCheck: false },
                 ResourceType,
                 resourceProviderId: null,
+                keywordLengthExceeded: false,
             };
         },
         computed: {
@@ -477,6 +484,7 @@
                 },
                 keywordChange() {
                     this.keywordError = false;
+                    this.keywordLengthExceeded = false;
                 },
                 resetSelectedLicence() {
                     this.resourceLicenceId = 0;
@@ -529,7 +537,7 @@
                         if (!this.keywords.find(_keyword => allTrimmedKeyword.includes(_keyword.keyword.toLowerCase()))) {
                             for (var i = 0; i < allTrimmedKeyword.length; i++) {
                                 let item = allTrimmedKeyword[i];
-                                if (item.length > 0) {
+                                if (item.length > 0 && item.length <= 50) {
                                     let newkeywordObj = new KeywordModel();
                                     newkeywordObj.keyword = item;
                                     newkeywordObj.resourceVersionId = this.resourceDetail.resourceVersionId;
@@ -546,6 +554,10 @@
                                         this.keywordError = true;
                                         break;
                                     }
+                                }
+                                else {
+                                    this.keywordLengthExceeded = true;
+                                    break;
                                 }
                             }
                         }

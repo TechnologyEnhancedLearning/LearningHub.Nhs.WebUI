@@ -1128,7 +1128,7 @@
                             <h2> @Model.UserViewModel.FirstName @Model.UserViewModel.LastName</h2>
                             <p class="nhsuk-body-l nhsuk-u-margin-top-7 nhsuk-u-margin-bottom-3">has successfully completed the learning resource </p>
                             <h2 class="nhsuk-u-margin-bottom-9">
-                                @Model.ActivityDetailedItemViewModel.Title                             
+                                <a href="@Model.PdfResoureItemUrl" target="_blank">@Model.ActivityDetailedItemViewModel.Title</a>
                             </h2>
                             @if (resourceScore)
                             {
@@ -1192,7 +1192,7 @@
                                     <tr role="row" class="nhsuk-table__row">
                                         <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 word-wrapper summarytabledetailscells">
                                             <span class="nhsuk-table-responsive__heading">Learning resource </span>
-                                            @Model.ActivityDetailedItemViewModel.Title
+                                            <a href="@Model.PdfResoureItemUrl" target="_blank">@Model.ActivityDetailedItemViewModel.Title</a>
                                         </td>
                                         <td role="cell" class="nhsuk-table__cell nhsuk-u-padding-left-3 nhsuk-u-padding-top-2 summarytabledetailscells">
                                             <span class="nhsuk-table-responsive__heading">No. Of Times Accessed </span> @Model.AccessCount

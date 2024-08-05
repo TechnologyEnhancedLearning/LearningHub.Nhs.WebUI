@@ -933,24 +933,27 @@
         {
             var catalogueAccessRequest = this.catalogueAccessRequestRepository.GetAll().Include(x => x.UserProfile).SingleOrDefault(x => x.Id == catalogueAccessRequestId);
             string lastResponseMessage = null;
-            if (catalogueAccessRequest.Status == (int)CatalogueAccessRequestStatus.Pending)
+            if (catalogueAccessRequest != null)
             {
-                // Check for a previous access request which failed
-                // Will have the same userId and catalogueNodeId, not the same accessRequestId, a rejected status and a completed date.
-                var prevFailedRequest = this.catalogueAccessRequestRepository.GetAll()
-                    .Where(x => x.UserId == catalogueAccessRequest.UserId && x.CatalogueNodeId == catalogueAccessRequest.CatalogueNodeId)
-                    .Where(x => x.Id != catalogueAccessRequest.Id)
-                    .Where(x => x.Status == (int)CatalogueAccessRequestStatus.Rejected && x.CompletedDate.HasValue)
-                    .OrderByDescending(x => x.CompletedDate.Value)
-                    .FirstOrDefault();
-                lastResponseMessage = prevFailedRequest?.ResponseMessage;
-            }
+                if (catalogueAccessRequest.Status == (int)CatalogueAccessRequestStatus.Pending)
+                {
+                    // Check for a previous access request which failed
+                    // Will have the same userId and catalogueNodeId, not the same accessRequestId, a rejected status and a completed date.
+                    var prevFailedRequest = this.catalogueAccessRequestRepository.GetAll()
+                        .Where(x => x.UserId == catalogueAccessRequest.UserId && x.CatalogueNodeId == catalogueAccessRequest.CatalogueNodeId)
+                        .Where(x => x.Id != catalogueAccessRequest.Id)
+                        .Where(x => x.Status == (int)CatalogueAccessRequestStatus.Rejected && x.CompletedDate.HasValue)
+                        .OrderByDescending(x => x.CompletedDate.Value)
+                        .FirstOrDefault();
+                    lastResponseMessage = prevFailedRequest?.ResponseMessage;
+                }
 
-            var catalogue = this.catalogueNodeVersionRepository.GetBasicCatalogue(catalogueAccessRequest.CatalogueNodeId);
-            var canEdit = await this.IsUserLocalAdminAsync(userId, catalogue.NodeVersion.NodeId);
-            if (!canEdit)
-            {
-                throw new Exception($"User '{userId}' does not have access to manage catalogue '{catalogue.Url}'");
+                var catalogue = this.catalogueNodeVersionRepository.GetBasicCatalogue(catalogueAccessRequest.CatalogueNodeId);
+                var canEdit = await this.IsUserLocalAdminAsync(userId, catalogue.NodeVersion.NodeId);
+                if (!canEdit)
+                {
+                    throw new Exception($"User '{userId}' does not have access to manage catalogue '{catalogue.Url}'");
+                }
             }
 
             var vm = this.mapper.Map<CatalogueAccessRequestViewModel>(catalogueAccessRequest);

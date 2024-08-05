@@ -1,5 +1,4 @@
-﻿-------------------------------------------------------------------------------
--- Author       RS
+﻿-- Author       RS
 -- Created      23-12-2021
 -- Purpose      Returns the resources and sub-nodes located in a specified node. 
 --				Only returns the first level items, doesn't recurse through subfolders.
@@ -21,19 +20,11 @@ CREATE PROCEDURE [hierarchy].[GetNodeContentsForCatalogueBrowse]
 (
 	@NodePathId INT
 )
-
+ 
 AS
-
+ 
 BEGIN
-
-    IF @NodeId IS NULL
-    BEGIN
-        RAISERROR('NodeId cannot be null', 16, 1)
-        RETURN
-    END
-
-	;WITH CTENode AS(SELECT DISTINCT NodeId FROM hierarchy.NodeResourceLookup WHERE Deleted = 0)
-
+ 
 	SELECT 
 		ROW_NUMBER() OVER(ORDER BY DisplayOrder) AS Id,
 		NodePathId,
@@ -81,16 +72,16 @@ BEGIN
 		INNER JOIN
 			hierarchy.FolderNodeVersion fnv ON fnv.NodeVersionId = nv.Id
 		INNER JOIN -- Exclude folders with no published resources.
-			CTENode nrl ON cn.Id = nrl.NodeId
+			(SELECT DISTINCT NodeId FROM hierarchy.NodeResourceLookup WHERE Deleted = 0) nrl ON cn.Id = nrl.NodeId
 		WHERE
 			pnp.Id = @NodePathId 
 			AND nv.VersionStatusId = 2 -- Published
 			AND nl.Deleted = 0
 			AND cn.Deleted = 0
 			AND fnv.Deleted = 0
-
+ 
 		UNION
-
+ 
 		-- Resources
 		SELECT 
 			np.Id AS NodePathId,
@@ -140,8 +131,7 @@ BEGIN
 			AND r.Deleted = 0
 			AND rv.Deleted = 0
 			AND np.Deleted = 0
-
+ 
 	) AS t1
 	ORDER BY NodeTypeId DESC,DisplayOrder ASC
 END
-GO

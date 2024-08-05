@@ -304,7 +304,10 @@ export default Vue.extend({
             isReady: false,
             EditModeEnum: EditModeEnum,
             HierarchyEditStatusEnum: HierarchyEditStatusEnum,
-            editorConfig: { toolbar: CKEditorToolbar.default },
+            editorConfig: {
+                toolbar: CKEditorToolbar.default,
+                versionCheck: false
+            },
             deleteFolderName: '',
             deleteFolderReferenceName: '',
             deleteResourceReferenceName: '',

@@ -61,9 +61,9 @@
         /// <returns>The <see cref="Task"/>.</returns>
         [HttpGet]
         [Route("GetUserGroupAdminRoleDetailById/{id}")]
-        public IActionResult GetUserGroupAdminRoleDetailById(int id)
+        public async Task<IActionResult> GetUserGroupAdminRoleDetailById(int id)
         {
-            var retVal = this.userGroupService.GetUserGroupRoleDetailByUserGroupId(id);
+            var retVal = await this.userGroupService.GetUserGroupRoleDetailByUserGroupId(id);
 
             return this.Ok(retVal);
         }
@@ -75,9 +75,9 @@
         /// <returns>The <see cref="Task"/>.</returns>
         [HttpGet]
         [Route("GetUserGroupRoleDetailByUserId/{userId}")]
-        public IActionResult GetRoleUserGroupDetailByUserId(int userId)
+        public async Task<IActionResult> GetRoleUserGroupDetailByUserId(int userId)
         {
-            var retVal = this.userGroupService.GetRoleUserGroupDetailByUserId(userId);
+            var retVal = await this.userGroupService.GetRoleUserGroupDetailByUserId(userId);
 
             return this.Ok(retVal);
         }
@@ -88,9 +88,9 @@
         /// <returns>The <see cref="Task"/>.</returns>
         [HttpGet]
         [Route("GetUserGroupRoleDetail")]
-        public IActionResult GetRoleUserGroupDetail()
+        public async Task<IActionResult> GetRoleUserGroupDetail()
         {
-            var retVal = this.userGroupService.GetRoleUserGroupDetailByUserId(this.CurrentUserId);
+            var retVal = await this.userGroupService.GetRoleUserGroupDetailByUserId(this.CurrentUserId);
 
             return this.Ok(retVal);
         }

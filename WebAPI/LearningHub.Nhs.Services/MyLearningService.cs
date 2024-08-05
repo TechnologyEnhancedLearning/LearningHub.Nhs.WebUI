@@ -236,7 +236,7 @@
             var viewModels = new List<MyLearningDetailedItemViewModel>();
 
             var activityNodes = (from entity in resourceActivities
-                                 let data = entity.NodePath.NodeId
+                                 let data = entity.NodePath.CatalogueNodeId
                                  select data).Distinct().ToArray();
 
             var activityCatalogues = this.catalogueNodeVersionRepository.GetAll()
@@ -259,6 +259,7 @@
                 };
 
                 var latestActivityCheck = await this.resourceActivityRepository.GetAllTheActivitiesFromSP(resourceActivity.CreateUserId, resourceActivity.ResourceVersionId);
+                var allAttempts = latestActivityCheck;
                 latestActivityCheck.RemoveAll(x => x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && (x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded || x.ActivityStatusId == (int)ActivityStatusEnum.Incomplete || x.ActivityStatusId == (int)ActivityStatusEnum.InProgress));
                 if (latestActivityCheck.Any() && latestActivityCheck.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
                 {
@@ -295,7 +296,7 @@
                 }
 
                 var catalogueNodeVersion = await activityCatalogues
-                .SingleOrDefaultAsync(x => x.NodeVersion.NodeId == resourceActivity.NodePath.NodeId);
+                .SingleOrDefaultAsync(x => x.NodeVersion.NodeId == resourceActivity.NodePath.CatalogueNodeId);
                 if (catalogueNodeVersion != null)
                 {
                     viewModel.CertificateUrl = catalogueNodeVersion.CertificateUrl;
@@ -366,7 +367,6 @@
                         viewModel.CompletionPercentage = totalQuestions == 0 ? 0 : Convert.ToInt32(100 * completedQuestions / Convert.ToDecimal(totalQuestions));
                         viewModel.ScorePercentage = activity.Score.HasValue ? (int)Math.Round(activity.Score.Value, MidpointRounding.AwayFromZero) : 0;
 
-                        var allAttempts = await this.resourceActivityRepository.GetAllTheActivitiesFor(userId, resourceActivity.ResourceVersionId);
                         var currentAttempt = allAttempts.FindIndex(a => a.Id == resourceActivity.Id) + 1;
 
                         if (viewModel.CompletionPercentage == 100)

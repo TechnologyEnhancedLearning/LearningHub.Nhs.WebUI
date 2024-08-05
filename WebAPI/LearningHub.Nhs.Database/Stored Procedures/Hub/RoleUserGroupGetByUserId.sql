@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 21-01-2021  Killian Davies	Initial Revision
+-- 05-06-2023  SA   Modified the sp to fix the sql timeout issues.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hub].[RoleUserGroupGetByUserId]
 (
@@ -16,8 +17,8 @@ AS
 
 BEGIN
 
-	SELECT
-		CAST([Sequence] AS int) AS [Key],
+	SELECT	
+	    CAST([Sequence] AS int) AS [Key],
 		RoleUserGroupId,
 		rug.UserGroupId,
 		UserGroupName,

@@ -7,6 +7,7 @@
 --
 -- 25-03-2021  Killian Davies	Initial Revision
 -- 08-02-2024  SA				Included Role details.
+-- 31-05-2024  SS				Considering only active users
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hub].[RestrictedCatalogueGetAccessRequests] 
 (
@@ -38,7 +39,7 @@ BEGIN
 			hub.UserProfile up ON car.UserId = up.Id
 		WHERE
 			car.CatalogueNodeId = @catalogueNodeId
-			AND car.Deleted = 0
+			AND car.Deleted = 0 and up.Deleted=0
 	) AS T1
 	WHERE T1.[Sequence] = 1
 	AND ((@includeNew = 1 AND CatalogueAccessRequestStatus = 0)

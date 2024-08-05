@@ -438,7 +438,7 @@
             var scormActivitySummary = this.scormActivityRepository.GetScormActivitySummary(currentUserId, launchScormActivityViewModel.ResourceReferenceId);
             var scormActivityId = this.scormActivityRepository.Create(currentUserId, launchScormActivityViewModel.ResourceReferenceId);
 
-            var resourceVersion = await this.resourceVersionRepository.GetCurrentForResourceReferenceIdAsync(launchScormActivityViewModel.ResourceReferenceId);
+            var resourceVersion = await this.resourceVersionRepository.GetCurrentResourceForResourceReferenceIdAsync(launchScormActivityViewModel.ResourceReferenceId);
             var activeContent = new ActiveContentViewModel()
             {
                 ScormActivityId = scormActivityId,

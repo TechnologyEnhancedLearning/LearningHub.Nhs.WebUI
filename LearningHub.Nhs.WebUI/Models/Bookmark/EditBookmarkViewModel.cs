@@ -30,7 +30,7 @@
         /// <summary>
         /// Gets or sets Title.
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "You must edit bookmark name")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "You must enter a bookmark name")]
         [MinLength(2, ErrorMessage = "The bookmark name must be at least 2 characters")]
         [MaxLength(60, ErrorMessage = "The bookmark name must be no more than 60 characters")]
         public string Title { get; set; }

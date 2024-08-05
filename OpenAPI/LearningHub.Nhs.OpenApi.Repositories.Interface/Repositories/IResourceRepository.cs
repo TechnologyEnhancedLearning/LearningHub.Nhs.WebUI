@@ -2,6 +2,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
 
     /// <summary>
@@ -23,5 +24,13 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         /// <returns>Resource references.</returns>
         public Task<IEnumerable<ResourceReference>> GetResourceReferencesByOriginalResourceReferenceIds(
             IEnumerable<int> originalResourceReferenceIds);
+
+        /// <summary>
+        /// Gets resource activity for resourceReferenceIds and userIds.
+        /// </summary>
+        /// <param name="resourceReferenceIds"><see cref="resourceReferenceIds"/>.</param>
+        /// <param name="userIds"></param>
+        /// <returns>ResourceActivityDTO.</returns>
+        Task<IEnumerable<ResourceActivityDTO>> GetResourceActivityPerResourceMajorVersion(IEnumerable<int>? resourceReferenceIds, IEnumerable<int>? userIds);
     }
 }

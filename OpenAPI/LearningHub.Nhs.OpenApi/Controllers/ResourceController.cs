@@ -21,7 +21,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
     /// </summary>
     [Route("Resource")]
     [Authorize]
-    public class ResourceController : Controller
+    public class ResourceController : OpenApiControllerBase
     {
         private const int MaxNumberOfReferenceIds = 1000;
         private readonly ISearchService searchService;
@@ -75,7 +75,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
                         offset,
                         limit ?? this.findwiseConfig.DefaultItemLimitForSearch,
                         catalogueId,
-                        resourceTypes));
+                        resourceTypes), this.CurrentUserId);
 
             switch (resourceSearchResult.FindwiseRequestStatus)
             {
@@ -109,7 +109,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         [HttpGet("{originalResourceReferenceId}")]
         public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId)
         {
-            return await this.resourceService.GetResourceReferenceByOriginalId(originalResourceReferenceId);
+            return await this.resourceService.GetResourceReferenceByOriginalId(originalResourceReferenceId, this.CurrentUserId);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
                 throw new HttpResponseException($"Too many resources requested. The maximum is {MaxNumberOfReferenceIds}", HttpStatusCode.BadRequest);
             }
 
-            return await this.resourceService.GetResourceReferencesByOriginalIds(resourceReferenceIds.ToList());
+            return await this.resourceService.GetResourceReferencesByOriginalIds(resourceReferenceIds.ToList(), this.CurrentUserId);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
                 throw new HttpResponseException($"Too many resources requested. The maximum is {MaxNumberOfReferenceIds}", HttpStatusCode.BadRequest);
             }
 
-            return await this.resourceService.GetResourceReferencesByOriginalIds(bulkResourceReferences.ResourceReferenceIds);
+            return await this.resourceService.GetResourceReferencesByOriginalIds(bulkResourceReferences.ResourceReferenceIds, this.CurrentUserId);
         }
     }
 }

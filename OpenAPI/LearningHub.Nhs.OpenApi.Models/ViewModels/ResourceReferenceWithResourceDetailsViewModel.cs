@@ -1,3 +1,6 @@
+using LearningHub.Nhs.Models.Entities.Activity;
+using System.Collections.Generic;
+
 namespace LearningHub.Nhs.OpenApi.Models.ViewModels
 {
     /// <summary>
@@ -14,8 +17,10 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <param name="description"><see cref="Description"/>.</param>
         /// <param name="catalogueViewModel"><see cref="Catalogue"/>.</param>
         /// <param name="resourceType"><see cref="ResourceType"/>.</param>
+        /// <param name="majorVersion"></param>
         /// <param name="rating"><see cref="Rating"/>.</param>
         /// <param name="link"><see cref="Link"/>.</param>
+        /// <param name="userSummaryActivityStatuses"></param>
         public ResourceReferenceWithResourceDetailsViewModel(
             int resourceId,
             int refId,
@@ -23,17 +28,21 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
             string description,
             CatalogueViewModel catalogueViewModel,
             string resourceType,
+            int? majorVersion,
             decimal rating,
-            string link)
+            string link,
+            List<MajorVersionIdActivityStatusDescription> userSummaryActivityStatuses)
         {
             this.ResourceId = resourceId;
             this.RefId = refId;
             this.Title = title;
             this.Description = description;
             this.Catalogue = catalogueViewModel;
+            this.MajorVersion = majorVersion;
             this.ResourceType = resourceType;
             this.Rating = rating;
             this.Link = link;
+            this.UserSummaryActivityStatuses = userSummaryActivityStatuses;
         }
 
         /// <summary>
@@ -66,14 +75,27 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// </summary>
         public string ResourceType { get; }
 
+
+        /// <summary>
+        /// Gets <see cref="MajorVersion"/>.
+        /// </summary>
+        public int? MajorVersion { get; }
+
         /// <summary>
         /// Gets <see cref="Rating"/>.
         /// </summary>
+        /// 
+
         public decimal Rating { get; }
 
         /// <summary>
         /// Gets <see cref="Link"/>.
         /// </summary>
         public string Link { get; }
+
+        /// <summary>
+        /// Gets <see cref="UserSummaryActivityStatuses"/>.
+        /// </summary>
+        public List<MajorVersionIdActivityStatusDescription> UserSummaryActivityStatuses { get; }
     }
 }

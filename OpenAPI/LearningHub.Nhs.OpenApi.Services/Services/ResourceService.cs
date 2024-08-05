@@ -2,10 +2,13 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.ViewModels.Helpers;
     using LearningHub.Nhs.OpenApi.Models.Exceptions;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
@@ -47,9 +50,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// the get by id async.
         /// </summary>
         /// <param name="originalResourceReferenceId">the id.</param>
+        /// <param name="currentUserId"></param>
         /// <returns>the resource.</returns>
-        public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId)
+        public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId, int? currentUserId)
         {
+            List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
             var list = new List<int>() { originalResourceReferenceId };
 
             var resourceReferences = await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(list);
@@ -64,7 +69,15 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     throw new HttpResponseException("No matching resource reference", HttpStatusCode.NotFound);
                 }
 
-                return this.GetResourceReferenceWithResourceDetailsViewModel(resourceReference);
+                if (currentUserId.HasValue)
+                {
+                    List<int> resourceIds = new List<int>() { resourceReference.ResourceId };
+                    List<int> userIds = new List<int>() { currentUserId.Value };
+
+                    resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
+                }
+
+                return this.GetResourceReferenceWithResourceDetailsViewModel(resourceReference, resourceActivities);
             }
             catch (InvalidOperationException exception)
             {
@@ -78,8 +91,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// </summary>
         /// <param name="originalResourceReferenceIds">the resource reference ids.</param>
         /// <returns>the resource.</returns>
-        public async Task<BulkResourceReferenceViewModel> GetResourceReferencesByOriginalIds(List<int> originalResourceReferenceIds)
+        public async Task<BulkResourceReferenceViewModel> GetResourceReferencesByOriginalIds(List<int> originalResourceReferenceIds, int? currentUserId)
         {
+            List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
+            List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
+
             var resourceReferences = await this.resourceRepository.GetResourceReferencesByOriginalResourceReferenceIds(originalResourceReferenceIds);
             var resourceReferencesList = resourceReferences.ToList();
             var matchedIds = resourceReferencesList.Select(r => r.OriginalResourceReferenceId).ToList();
@@ -95,17 +111,32 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 this.logger.LogWarning($"Multiple resource references found with OriginalResourceReferenceId {duplicateIds.First()}");
             }
 
-            var matchedResources = resourceReferencesList
-                .Select(this.GetResourceReferenceWithResourceDetailsViewModel)
-                .ToList();
+            if (currentUserId.HasValue)
+            {
+                List<int> resourceIds = resourceReferencesList.Select(rrl => rrl.ResourceId).ToList();
+                List<int> userIds = new List<int>() { currentUserId.Value };
+
+                resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
+            }
+
+            List<ResourceReferenceWithResourceDetailsViewModel> matchedResources = resourceReferencesList
+            .Select(rr => this.GetResourceReferenceWithResourceDetailsViewModel(rr, resourceActivities.Where(ra => ra.ResourceId == rr.ResourceId).ToList()))
+            .ToList<ResourceReferenceWithResourceDetailsViewModel>();
 
             return new BulkResourceReferenceViewModel(matchedResources, unmatchedIds);
         }
 
-        private ResourceReferenceWithResourceDetailsViewModel GetResourceReferenceWithResourceDetailsViewModel(ResourceReference resourceReference)
+        private ResourceReferenceWithResourceDetailsViewModel GetResourceReferenceWithResourceDetailsViewModel(ResourceReference resourceReference, List<ResourceActivityDTO> resourceActivities)
         {
             var hasCurrentResourceVersion = resourceReference.Resource.CurrentResourceVersion != null;
             var hasRating = resourceReference.Resource.CurrentResourceVersion?.ResourceVersionRatingSummary != null;
+
+            List<MajorVersionIdActivityStatusDescription> majorVersionIdActivityStatusDescription = new List<MajorVersionIdActivityStatusDescription>() { };
+
+            if (resourceActivities != null && resourceActivities.Count != 0)
+            {
+                majorVersionIdActivityStatusDescription = ActivityStatusHelper.GetMajorVersionIdActivityStatusDescriptionLSPerResource(resourceReference.Resource, resourceActivities).ToList();
+            }
 
             if (resourceReference.Resource == null)
             {
@@ -135,8 +166,10 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resourceReference.Resource.CurrentResourceVersion?.Description ?? string.Empty,
                 resourceReference.GetCatalogue(),
                 resourceTypeNameOrEmpty,
+                resourceReference.Resource?.CurrentResourceVersion?.MajorVersion ?? 0,
                 resourceReference.Resource?.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0,
-                this.learningHubService.GetResourceLaunchUrl(resourceReference.OriginalResourceReferenceId));
+                this.learningHubService.GetResourceLaunchUrl(resourceReference.OriginalResourceReferenceId),
+                majorVersionIdActivityStatusDescription);
         }
     }
 }

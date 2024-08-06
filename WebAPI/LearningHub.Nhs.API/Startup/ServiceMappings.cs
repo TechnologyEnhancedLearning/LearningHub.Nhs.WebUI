@@ -1,6 +1,7 @@
 namespace LearningHub.Nhs.Api
 {
     using System;
+    using System.Configuration;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Migration.Interface.Mapping;
     using LearningHub.Nhs.Migration.Interface.Validation;
@@ -247,6 +248,11 @@ namespace LearningHub.Nhs.Api
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IInternalSystemService, InternalSystemService>();
             services.AddTransient<IUserLearningRecordService, UserLearningRecordService>();
+
+            services.AddDbContext<DLSDbContext>(options =>
+                options.UseSqlServer(
+                    configuration.GetConnectionString("DLSDbConnection"),
+                    providerOptions => { providerOptions.EnableRetryOnFailure(maxDatabaseRetryAttempts); }));
 
             // External
             services.AddScoped<IUserProfileService, UserProfileService>();

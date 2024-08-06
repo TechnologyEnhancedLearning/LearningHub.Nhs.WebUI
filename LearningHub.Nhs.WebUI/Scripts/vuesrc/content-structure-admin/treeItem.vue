@@ -62,31 +62,30 @@
                         <span v-if="editingTreeNode.nodeId === item.nodeId" class="mr-3">Create a reference to this folder or <a id="cancelReferenceNode" href="#" @click.prevent="onCancelReferenceNode">Cancel create reference</a></span>
                     </div>
                     <div v-if="editMode === EditModeEnum.MoveResource" class="ml-auto">
-                        <a v-if="editingTreeNode.nodeId != item.nodeId" href="#" @click.prevent="onMoveResource">Move here</a>
+                        <a v-if="editingTreeNode.nodeId != item.nodeId && resourceNotInFolder" href="#" @click.prevent="onMoveResource">Move here</a>
                     </div>
                     <div v-if="editMode === EditModeEnum.ReferenceResource" class="ml-auto">
-                        <a v-if="editingTreeNode.nodeId != item.nodeId" href="#" @click.prevent="onReferenceResource">Create reference here</a>
+                        <a v-if="resourceNotInFolder" href="#" @click.prevent="onReferenceResource">Create reference here</a>
                     </div>
                 </div>
             </div>
         </div>
 
         <div v-show="isOpen" v-if="isNode">
-            <div v-if="item.inEdit && !this.isError" class="tree-item-container">
+            <div v-if="item.inEdit && !this.isError && canShowHeaderOptions" class="tree-item-container">
                 <div class="treeview-node" :style="{marginLeft: (indentNegativeMargin - 32) + 'px', paddingLeft: (indentPostivePadding + 32) + 'px'}">
                     <div class="treeview-node-inner d-flex">
-                        <div class="treeview-node-inner-padding" style="cursor:pointer">
+                        <div v-if="editMode === EditModeEnum.Structure" class="treeview-node-inner-padding" style="cursor:pointer">
                             <i class="fa fa-plus-circle create-folder-circle" aria-hidden="true" @click="createFolder"></i>
                             <a @click.prevent="createFolder()" style="padding-left:5px" href="#">Create a folder</a>
                         </div>
-                        <div v-if="item.parent == null" class="treeview-node-inner-padding" style="cursor:pointer;margin-left:1rem;">
+                        <div v-if="editMode === EditModeEnum.Structure && item.parent == null" class="treeview-node-inner-padding" style="cursor:pointer;margin-left:1rem;">
                             <i class="fa fa-plus-circle create-folder-circle" aria-hidden="true" @click="addReference"></i>
                             <a @click.prevent="addReference()" style="padding-left:5px" href="#">Add a reference here</a>
                         </div>
                         <div v-if="editMode === EditModeEnum.MoveNode && item.depth === 0 " class="ml-auto my-auto">
                             <a v-if="canMoveHere" href="#" @click.prevent="onMoveNode">Move here</a>
                         </div>
-
                         <div v-if="editMode === EditModeEnum.MoveResource && item.depth === 0 " class="ml-auto my-auto">
                             <a v-if="canMoveResourceToRoot" href="#" @click.prevent="onMoveResource">Move here</a>
                         </div>
@@ -120,7 +119,7 @@
         <!--Resource-->
         <div v-if="!isNode" class="treeview-node" :style="{marginLeft: indentNegativeMargin + 'px', paddingLeft: indentPostivePadding + 'px'}">
             <div class="treeview-node-inner d-flex">
-                <div class="treeview-node-inner-padding d-flex flex-row flex-grow-1" v-bind:class="{ 'moving-highlight' : isMovingResource }">
+                <div class="treeview-node-inner-padding d-flex flex-row flex-grow-1" v-bind:class="{ 'moving-highlight' : isMovingOrReferencingResource }">
                     <div>
                         <div>
                             <a v-if="canNavigateToResourceInfo" :href="getResourceUrl(item.resourceVersionId)">{{item.name}}</a>
@@ -245,12 +244,12 @@
                 canMoveNodeUp: false,
                 canDeleteNode: false,
                 canEditNode: false,
+                canEditFolderReference: false,
+                canEditResourceReference: false,
                 canMoveNode: false,
                 canMoveResourceDown: false,
                 canMoveResourceUp: false,
                 canMoveResource: false,
-                canEditFolderReference: false,
-                canEditResourceReference: false,
             };
         },
         computed: {
@@ -300,6 +299,22 @@
                 }
                 return this.editingTreeNode.nodeId != this.item.nodeId && this.editingTreeNode.parent.nodeId != this.item.nodeId && !underEditingTreeNode;
             },
+            resourceNotInFolder(): boolean {
+                if (!this.item.childrenLoaded) {
+                    this.loadNodeContents().then(response => {
+                        Vue.set(this, "childNodeList", this.item.children);
+                        Vue.set(this.item, "childrenLoaded", true);
+                    });
+                    return false;
+                }
+                if (this.editMode === EditModeEnum.ReferenceResource) {
+                    return this.item.children.filter(c => c.resourceId == this.referencingResource.resourceId).length == 0;
+                }
+                else // this.editMode === EditModeEnum.MoveResource
+                {
+                    return this.item.children.filter(c => c.resourceId == this.movingResource.resourceId).length == 0;
+                }
+            },
             isMovingOrReferencingNode: function (): boolean {
                 return (this.editMode === EditModeEnum.MoveNode || this.editMode === EditModeEnum.ReferenceNode) && this.editingTreeNode && this.editingTreeNode.nodeId === this.item.nodeId;
             },
@@ -318,17 +333,24 @@
             canMoveResourceToRoot(): boolean {
                 return this.editMode === EditModeEnum.MoveResource && this.movingResource.parent.depth > 0 && this.item.depth === 0;
             },
-            movingResource(): NodeContentAdminModel {
-                return this.$store.state.contentStructureState.movingResource;
-            },
-            isMovingResource: function (): boolean {
-                return (this.editMode === EditModeEnum.MoveResource) && this.movingResource && this.movingResource.resourceVersionId === this.item.resourceVersionId;
-            },
             canReferenceResourceToRoot(): boolean {
                 return this.editMode === EditModeEnum.ReferenceResource && this.referencingResource.parent.depth > 0 && this.item.depth === 0;
             },
+            canShowHeaderOptions(): boolean {
+                return this.editMode === EditModeEnum.Structure
+                    || (this.item.depth === 0
+                        && (this.editMode === EditModeEnum.MoveNode || this.editMode === EditModeEnum.MoveResource || this.editMode === EditModeEnum.ReferenceResource)
+                    );
+            },
+            movingResource(): NodeContentAdminModel {
+                return this.$store.state.contentStructureState.movingResource;
+            },
             referencingResource(): NodeContentAdminModel {
                 return this.$store.state.contentStructureState.referencingResource;
+            },
+            isMovingOrReferencingResource: function (): boolean {
+                return (this.editMode === EditModeEnum.MoveResource && this.movingResource?.resourceVersionId === this.item.resourceVersionId)
+                    || (this.editMode === EditModeEnum.ReferenceResource && this.referencingResource?.resourceVersionId === this.item.resourceVersionId);
             },
             indentNegativeMargin(): number {
                 if (this.item.depth > 0) {
@@ -745,5 +767,8 @@
         .dropdown-toggle {
             display: block !important;
         }
+    }
+    .treeview-node-inner {
+        min-height: 44px;
     }
 </style>

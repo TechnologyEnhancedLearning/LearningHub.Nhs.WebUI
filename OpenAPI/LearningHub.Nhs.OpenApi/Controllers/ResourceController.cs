@@ -1,10 +1,12 @@
 namespace LearningHub.NHS.OpenAPI.Controllers
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Models.Exceptions;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Findwise;
@@ -149,6 +151,35 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             }
 
             return await this.resourceService.GetResourceReferencesByOriginalIds(bulkResourceReferences.ResourceReferenceIds, this.CurrentUserId);
+        }
+
+        /// <summary>
+        /// Get resourceReferences that have an in progress activity summary
+        /// </summary>
+        /// <returns>ResourceReferenceViewModels for matching resources.</returns>
+        [HttpGet("User/{activityStatusId}")]
+        public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferencesByActivityStatus(int activityStatusId)
+        {
+            // These activity statuses are set with other activity statuses and resource type within the ActivityStatusHelper.GetActivityStatusDescription
+            // Note In progress is in complete in the db
+            List<int> activityStatusIdsNotInUseInDB = new List<int>() { (int)ActivityStatusEnum.Launched, (int)ActivityStatusEnum.InProgress, (int)ActivityStatusEnum.Viewed, (int)ActivityStatusEnum.Downloaded };
+            if (this.CurrentUserId == null) throw new UnauthorizedAccessException("User Id required.");
+            if (!Enum.IsDefined(typeof(ActivityStatusEnum), activityStatusId)) throw new ArgumentOutOfRangeException($"activityStatusId : {activityStatusId} does not exist within ActivityStatusEnum");
+            if (activityStatusIdsNotInUseInDB.Contains(activityStatusId)) throw new ArgumentOutOfRangeException($"activityStatusId: {activityStatusId} does not exist within the database definitions");
+
+            return await this.resourceService.GetResourceReferenceByActivityStatus(new List<int>() { activityStatusId }, this.CurrentUserId.Value);
+        }
+
+        /// <summary>
+        /// Get resourceReferences that have certificates
+        /// </summary>
+        /// <returns>ResourceReferenceViewModels for matching resources.</returns>
+        [HttpGet("User/Certificates")]
+        public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferencesByCertificates()
+        {
+            if (this.CurrentUserId == null) throw new UnauthorizedAccessException("User Id required.");
+
+            return await this.resourceService.GetResourceReferencesForCertificates(this.CurrentUserId.Value);
         }
     }
 }

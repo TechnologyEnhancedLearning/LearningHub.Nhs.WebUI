@@ -295,6 +295,52 @@
           }
         }
       }
+    },
+    "/Resource/ActivityStatus/{activityStatusId}": {
+      "get": {
+        "tags": [ "Resource" ],
+        "summary": "Get resource references by activity status",
+        "operationId": "GetResourceReferencesByActivityStatus",
+        "parameters": [
+          {
+            "name": "activityStatusId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "The activity status Id to filter resource references. Valid values are Completed 3 (returned as Completed/Downloaded/Launched/Viewed), Incomplete 7 (returned as In progress), Passed 5, Failed 4."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResourceReferenceWithResourceDetailsViewModel"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request: The activityStatusId provided is not valid."
+          },
+          "401": {
+            "description": "Unauthorized: User Id required."
+          },
+          "403": {
+            "description": "Forbidden: The activityStatusId is not defined within ActivityStatusEnum or is in the list of activityStatusIdsNotInUseInDB."
+          },
+          "500": {
+            "description": "Internal server error: An unexpected error occurred while processing the request."
+          }
+        }
+      }
     }
   },
   "components": {

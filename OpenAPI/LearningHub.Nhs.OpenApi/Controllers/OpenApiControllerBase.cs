@@ -38,5 +38,23 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Gets the bearer token from OAuth and removes "Bearer " prepend.
+        /// </summary>
+        public string TokenWithoutBearer
+        {
+            get
+            {
+                string accessToken = this.HttpContext.Request.Headers["Authorization"].ToString();
+
+                if (string.IsNullOrEmpty(accessToken))
+                {
+                    throw new HttpResponseException($"No token provided please use OAuth", HttpStatusCode.Unauthorized);
+                }
+
+                return accessToken.StartsWith("Bearer ") ? accessToken.Substring("Bearer ".Length) : accessToken;
+            }
+        }
     }
 }

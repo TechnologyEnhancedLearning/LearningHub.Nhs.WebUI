@@ -8,7 +8,7 @@
         </div>
         <div class="load-more" v-if="roadMapResult && roadMapResult.roadMapItems &&  roadMapResult.roadMapItems.length <  roadMapResult.totalRecords">
             <div class="mt-40">
-                <button class="btn btn-outline-custom" @click="loadUpdates()">{{ getLoadMoreText() }}</button>
+                <button class="nhsuk-button nhsuk-button--secondary" @click="loadUpdates()">{{ getLoadMoreText() }}</button>
             </div>
         </div>
     </div>

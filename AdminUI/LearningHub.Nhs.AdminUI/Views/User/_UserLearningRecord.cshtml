@@ -46,7 +46,7 @@
               else
               {
                 <span class="learning-td">
-                  @userLearningRecord.Title
+                  @userLearningRecord.Title<br />
                   <b>Last @LearningActivityHelper.GetResourceTypeVerb(userLearningRecord).ToLower() on : </b>  @userLearningRecord.ActivityDate.DateTime.ToString("dd MMM yyyy") at @userLearningRecord.ActivityDate.DateTime.ToShortTimeString()<br />
                 </span>
 

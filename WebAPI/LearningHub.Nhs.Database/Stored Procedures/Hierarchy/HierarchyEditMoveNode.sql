@@ -10,6 +10,7 @@
 -- 13-05-2024  DB	Addition of ParentNodePathId to the update statement.
 -- 20-05-2024  DB	Added the creation of a new NodePath record for the moved node and update child nodes.
 -- 29-05-2024  DB	Clear the NodePathId for moved nodes. NodePaths can not be updated incase susequent references are made to the original path.
+-- 07-08-2024  SA   Remove all instance of the referenced path when moving a referenced folder
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditMoveNode]
 (
@@ -278,7 +279,9 @@ BEGIN
 			AND rrdv.Deleted = 0
 			AND hed.Deleted = 0
 
+        -- Remove all instance of the referenced path when moving a referenced folder
 
+		 EXEC hierarchy.HierarchyEditRemoveNodeReferencesOnMoveNode @HierarchyEditDetailId,@UserId,@UserTimezoneOffset
 		------------------------------------------------------------ 
 		-- Refresh HierarchyEditNodeResourceLookup
 		------------------------------------------------------------

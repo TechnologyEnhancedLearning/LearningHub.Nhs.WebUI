@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 11-01-2022  KD	Initial Revision.
+-- 08-08-2024 SA    Remove all instance of the referenced path when moving a referenced resource
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditMoveResource]
 (
@@ -26,8 +27,8 @@ BEGIN
 		DECLARE @AmendDate datetimeoffset(7) = ISNULL(TODATETIMEOFFSET(DATEADD(mi, @UserTimezoneOffset, GETUTCDATE()), @UserTimezoneOffset), SYSDATETIMEOFFSET())
 
 		DECLARE @HierarchyEditId int
-		DECLARE @ResourceId int
-		SELECT @HierarchyEditId = HierarchyEditId, @ResourceId = ResourceId FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @HierarchyEditDetailId
+		DECLARE @ResourceId int, @ParentNodeId INT
+		SELECT @HierarchyEditId = HierarchyEditId, @ResourceId = ResourceId,@ParentNodeId = ParentNodeId FROM [hierarchy].[HierarchyEditDetail] WHERE Id = @HierarchyEditDetailId
 
 		-- Decrement display order of sibling resources with higher display order.
 		UPDATE 
@@ -170,8 +171,10 @@ BEGIN
 		WHERE	hed.Id = @HierarchyEditDetailId
 			AND rrdv.Deleted = 0
 			AND hed.Deleted = 0
+        
+		-- Remove all instance of the referenced path when moving a referenced resource
 
-
+		EXEC hierarchy.HierarchyEditRemoveResourceReferencesOnMoveResource @HierarchyEditDetailId,@ParentNodeId,@UserId,@UserTimezoneOffset
 		------------------------------------------------------------ 
 		-- Refresh HierarchyEditNodeResourceLookup
 		------------------------------------------------------------

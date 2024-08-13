@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 11-01-2022  KD	Initial Revision.
+-- 08-08-2024 SA    Remove all instance of the referenced path when moving a referenced resource
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditMoveResource]
 (
@@ -171,7 +172,7 @@ BEGIN
 			AND rrdv.Deleted = 0
 			AND hed.Deleted = 0
 
-
+        EXEC hierarchy.HierarchyEditRemoveResourceReferencesOnMoveResource @HierarchyEditDetailId,@ParentNodeId,@UserId,@UserTimezoneOffset
 		------------------------------------------------------------ 
 		-- Refresh HierarchyEditNodeResourceLookup
 		------------------------------------------------------------

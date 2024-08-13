@@ -236,6 +236,7 @@ BEGIN
 			AND HierarchyEditDetailTypeId = 5 -- Node Resource
 			AND NodeResourceId IS NULL
 			AND ISNULL(InitialParentNodeId, 0) != ParentNodeId
+			AND Deleted =0
 
 		-- Create publication log entries for cache updates related to MoveResource.
 		INSERT INTO [hierarchy].[PublicationLog] ([PublicationId],[NodeId],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])

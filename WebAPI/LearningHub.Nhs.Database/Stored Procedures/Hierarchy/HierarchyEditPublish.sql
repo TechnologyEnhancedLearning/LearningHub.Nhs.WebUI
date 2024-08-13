@@ -126,22 +126,22 @@ BEGIN
 			AND hed.Deleted = 0
 			AND nl.Deleted = 0
 
-			-- UPDATE  NodeLink 'deleted' for remove reference
+		-- UPDATE  NodeLink 'deleted' for remove reference
 
-			UPDATE 
-				nl
-			SET
-				Deleted = 1,
-				AmendUserId = @AmendUserId,
-				AmendDate = @AmendDate
-			FROM
-				hierarchy.HierarchyEditDetail hed
-			INNER JOIN
-				hierarchy.NodeLink nl ON hed.NodeLinkId = nl.Id
-			WHERE 
-				HierarchyEditId = @HierarchyEditId
-				AND hed.HierarchyEditDetailTypeId = 4 -- Node Link
-				AND hed.Deleted = 1
+		UPDATE 
+			nl
+		SET
+			Deleted = 1,
+			AmendUserId = @AmendUserId,
+			AmendDate = @AmendDate
+		FROM
+			hierarchy.HierarchyEditDetail hed
+		INNER JOIN
+			hierarchy.NodeLink nl ON hed.NodeLinkId = nl.Id
+		WHERE 
+			HierarchyEditId = @HierarchyEditId
+            AND hed.HierarchyEditDetailTypeId = 4 -- Node Link
+			AND hed.Deleted = 1
 
 		-- For moved nodes, delete the original NodeLinks, providing they have not been used (by a reference to the original position).
 		UPDATE 
@@ -236,6 +236,7 @@ BEGIN
 			AND HierarchyEditDetailTypeId = 5 -- Node Resource
 			AND NodeResourceId IS NULL
 			AND ISNULL(InitialParentNodeId, 0) != ParentNodeId
+			AND Deleted =0
 
 		-- Create publication log entries for cache updates related to MoveResource.
 		INSERT INTO [hierarchy].[PublicationLog] ([PublicationId],[NodeId],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])

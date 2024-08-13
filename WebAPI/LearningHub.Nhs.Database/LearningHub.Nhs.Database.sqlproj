@@ -541,8 +541,8 @@
     <Build Include="Stored Procedures\Resources\GetRecentDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetScormContentDetails.sql" />
     <Build Include="Stored Procedures\Resources\GetScormContentServerDetailsForLHExternalReference.sql" />
-    <Build Include="Scripts\Post-Deploy\Scripts\Content_Referencing_DataSetup.sql" />
-    <Build Include="Scripts\Pre-Deploy\Scripts\Content Referencing Initialise.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\Content_Referencing_DataSetup.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\Content Referencing Initialise.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

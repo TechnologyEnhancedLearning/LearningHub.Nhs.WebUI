@@ -35,11 +35,6 @@ BEGIN
         FROM [hierarchy].[HierarchyEditDetail] hed
         WHERE hed.Id = @HierarchyEditDetailId
 
-        --SELECT @ReferenceHierarchyEditDetailId = hed.id,
-        --       @RootNodePathId = NodePathId
-        --FROM hierarchy.HierarchyEditDetail hed
-        --WHERE hed.NodeId = @CurrentNodeId
-        --      AND hed.Id != @HierarchyEditDetailId
         -- Declare the cursor
         DECLARE NodeCursor CURSOR FOR WITH RecursiveNodes
                                       AS (

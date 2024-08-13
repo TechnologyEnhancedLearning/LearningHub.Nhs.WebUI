@@ -7,7 +7,7 @@
 --
 -- 08-08-2024  SA	Initial Revision.
 -------------------------------------------------------------------------------
-ALTER PROCEDURE [hierarchy].[HierarchyEditRemoveResourceReferencesOnMoveResource]
+CREATE PROCEDURE [hierarchy].[HierarchyEditRemoveResourceReferencesOnMoveResource]
 (
     @HierarchyEditDetailId int,
 	@ParentNodeId INT,
@@ -30,7 +30,6 @@ BEGIN
         DECLARE @CurrentResourceId INT,
                 @ReferenceHierarchyEditDetailId INT,
                 @RootNodePathId INT
-               -- @ChildHierachyEditDetailId INT
 
         SELECT @CurrentResourceId = hed.ResourceId
         FROM [hierarchy].[HierarchyEditDetail] hed
@@ -39,8 +38,6 @@ BEGIN
         -- Declare the cursor
         DECLARE NodeCursor CURSOR FOR 
                   SELECT Id AS ReferenceHierarchyEditDetailId
-                         --NodePathId,
-                         --ParentNodePathId
                   FROM hierarchy.HierarchyEditDetail
 				  WHERE ResourceId = @CurrentResourceId
 				        AND ParentNodeId = @ParentNodeId

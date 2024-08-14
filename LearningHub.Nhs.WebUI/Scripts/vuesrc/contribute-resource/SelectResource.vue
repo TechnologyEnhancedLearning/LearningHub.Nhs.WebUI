@@ -71,11 +71,13 @@
             if (catalogueId && !isNaN(parseInt(catalogueId))) {
                 resourceDetails.resourceCatalogueId = parseInt(catalogueId);
                 resourceDetails.nodeId = parseInt(catalogueId);
+                resourceDetails.primaryCatalogueNodeId = resourceDetails.nodeId;
             }
 
             const nodeId = params.get('nodeId');
             if (nodeId && !isNaN(parseInt(nodeId))) {
                 resourceDetails.nodeId = parseInt(nodeId);
+                resourceDetails.primaryCatalogueNodeId = resourceDetails.nodeId;
             }
             
             return {

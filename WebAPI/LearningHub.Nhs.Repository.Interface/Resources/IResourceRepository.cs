@@ -22,9 +22,10 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         /// <param name="resourceType">The resource type.</param>
         /// <param name="title">The title.</param>
         /// <param name="description">The description.</param>
+        /// <param name="primaryCatalogueNodeId">The primaryCatalogueNodeId.</param>
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<int> CreateResourceAsync(ResourceTypeEnum resourceType, string title, string description, int userId);
+        Task<int> CreateResourceAsync(ResourceTypeEnum resourceType, string title, string description, int primaryCatalogueNodeId, int userId);
 
         /// <summary>
         /// The get by resourve version id async.

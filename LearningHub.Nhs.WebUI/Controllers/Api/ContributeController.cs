@@ -465,6 +465,10 @@
             request.Description = Regex.Replace(request.Description, "<p> ", "<p>");
             request.Description = Regex.Replace(request.Description, "<p></p>", string.Empty);
             request.Description = Regex.Replace(request.Description, "\\n", string.Empty);
+            if (request.NodeId > 0)
+            {
+                request.PrimaryCatalogueNodeId = (int)request.NodeId;
+            }
 
             int resourceVersionId = await this.contributeService.SaveResourceDetailAsync(request);
             return this.Ok(resourceVersionId);

@@ -9,6 +9,7 @@
 -- 11-08-2023  RS               Added CardImageUrl parameter
 -- 01-08-2023  SA               Provided BY
 -- 08-02-2024  SA               Added Previewer user group 
+-- 14-08-2024  SA               added primarycatalogueNodeId 
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[CatalogueCreate]
 (
@@ -98,6 +99,9 @@ BEGIN
 				[AmendDate] = @AmendDate,
 				[CreateUserId] = @UserId,
 				[CreateDate] = @AmendDate
+
+			UPDATE nv SET PrimaryCatalogueNodeId = CatalogueNodeId from hierarchy.NodePath np 
+            INNER JOIN hierarchy.NodeVersion nv ON nv.NodeId = np.NodeId where nv.NodeId =@NodeId
 
 			SELECT @NodeVersionId = SCOPE_IDENTITY()
 

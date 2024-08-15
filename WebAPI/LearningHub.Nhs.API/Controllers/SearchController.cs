@@ -212,6 +212,19 @@
         }
 
         /// <summary>
+        /// Get AllCatalogue search result.
+        /// </summary>
+        /// <param name="catalogueSearchRequestModel">The catalogue search request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpPost]
+        [Route("GetAllCatalogueSearchResult")]
+        public async Task<IActionResult> GetAllCatalogueSearchResult(AllCatalogueSearchRequestModel catalogueSearchRequestModel)
+        {
+            var vm = await this.GetAllCatalogueResults(catalogueSearchRequestModel);
+            return this.Ok(vm);
+        }
+
+        /// <summary>
         /// Get search result.
         /// </summary>
         /// <param name="searchRequestModel">The search request model.</param>
@@ -379,6 +392,78 @@
 
             searchViewModel.SearchId = catalogueSearchRequestModel.SearchId > 0 ? catalogueSearchRequestModel.SearchId : results.SearchId;
             searchViewModel.Feedback = results.Feedback;
+
+            return searchViewModel;
+        }
+
+        /// <summary>
+        /// Get All catalogue search results.
+        /// </summary>
+        /// <param name="catalogueSearchRequestModel">The catalog search request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        private async Task<SearchAllCatalogueViewModel> GetAllCatalogueResults(AllCatalogueSearchRequestModel catalogueSearchRequestModel)
+        {
+            var results = await this.searchService.GetAllCatalogueSearchResultsAsync(catalogueSearchRequestModel);
+
+            var documents = results.DocumentList.Documents.ToList();
+            var documentIds = documents.Select(x => int.Parse(x.Id)).ToList();
+            var catalogues = this.catalogueService.GetCataloguesByNodeId(documentIds);
+            var bookmarks = this.bookmarkRepository.GetAll().Where(b => documentIds.Contains(b.NodeId ?? -1) && b.UserId == this.CurrentUserId);
+            var allProviders = await this.providerService.GetAllAsync();
+
+            foreach (var document in documents)
+            {
+                var catalogue = catalogues.SingleOrDefault(x => x.NodeId == int.Parse(document.Id));
+                if (catalogue == null)
+                {
+                    continue;
+                }
+
+                var roleUserGroups = this.catalogueService.GetRoleUserGroupsForCatalogue(catalogue.NodeId, true);
+
+                // catalogue.No
+                document.Url = catalogue.Url;
+                document.BannerUrl = catalogue.BannerUrl;
+                document.BadgeUrl = catalogue.BadgeUrl;
+                document.CardImageUrl = catalogue.CardImageUrl;
+                document.NodePathId = catalogue.NodePathId;
+
+                if (catalogue.RestrictedAccess)
+                {
+                    document.RestrictedAccess = catalogue.RestrictedAccess;
+                    document.HasAccess = roleUserGroups.Any(x => x.UserGroup.UserUserGroup.Any(y => y.UserId == this.CurrentUserId)
+                       && (x.RoleId == (int)RoleEnum.Editor || x.RoleId == (int)RoleEnum.LocalAdmin || x.RoleId == (int)RoleEnum.Reader));
+                }
+
+                var bookmark = bookmarks.FirstOrDefault(x => x.NodeId == int.Parse(document.Id));
+                if (bookmark != null)
+                {
+                    document.BookmarkId = bookmark?.Id;
+                    document.IsBookmarked = !bookmark?.Deleted ?? false;
+                }
+
+                if (document.ProviderIds?.Count > 0)
+                {
+                    document.Providers = allProviders.Where(n => document.ProviderIds.Contains(n.Id)).ToList();
+                }
+            }
+
+            var searchViewModel = new SearchAllCatalogueViewModel
+            {
+                DocumentModel = documents,
+                SearchString = catalogueSearchRequestModel.SearchText,
+                Hits = results.DocumentList.Documents.Count(),
+                DescriptionMaximumLength = this.settings.Findwise.MaximumDescriptionLength,
+                ErrorOnAPI = results.ErrorsOnAPICall,
+                Facets = results.Facets,
+            };
+
+            if (results.Stats != null)
+            {
+                searchViewModel.TotalHits = results.Stats.TotalHits;
+            }
+
+            searchViewModel.SearchId = catalogueSearchRequestModel.SearchId > 0 ? catalogueSearchRequestModel.SearchId : results.SearchId;
 
             return searchViewModel;
         }

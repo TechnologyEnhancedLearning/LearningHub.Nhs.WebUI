@@ -238,5 +238,14 @@
         /// <param name="catalogueAccessRequestId">The catalogueAccessRequestId.</param>
         /// <returns>The catalogue access request.</returns>
         Task<CatalogueAccessRequestViewModel> AccessRequestAsync(int userId, int catalogueAccessRequestId);
+
+        /// <summary>
+        /// GetAllCataloguesAsync.
+        /// </summary>
+        /// <param name="pageSize">The pageSize.</param>
+        /// <param name="filterChar">filterChar.</param>
+        /// <param name="userId">userId.</param>
+        /// <returns>The allcatalogue result based on letters.</returns>
+        Task<AllCatalogueResponseViewModel> GetAllCataloguesAsync(int pageSize, string filterChar, int userId);
     }
 }

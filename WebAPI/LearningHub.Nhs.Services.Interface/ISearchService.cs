@@ -168,5 +168,12 @@
         /// The <see cref="Task"/>.
         /// </returns>
         Task<bool> SendCatalogueSearchEventAsync(SearchActionCatalogueModel searchActionCatalogueModel);
+
+        /// <summary>
+        /// Gets AllCatalogue search results async.
+        /// </summary>
+        /// <param name="catalogSearchRequestModel">The allcatalog search request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<SearchAllCatalogueResultModel> GetAllCatalogueSearchResultsAsync(AllCatalogueSearchRequestModel catalogSearchRequestModel);
     }
 }

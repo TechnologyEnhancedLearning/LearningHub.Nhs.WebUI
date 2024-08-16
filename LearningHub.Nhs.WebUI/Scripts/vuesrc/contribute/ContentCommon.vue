@@ -292,7 +292,6 @@
                 ResourceType,
                 resourceProviderId: null,
                 keywordLengthExceeded: false,
-                primaryCatalogueId: 1,
             };
         },
         computed: {

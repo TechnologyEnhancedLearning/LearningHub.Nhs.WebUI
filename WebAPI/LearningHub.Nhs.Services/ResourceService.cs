@@ -435,7 +435,7 @@ namespace LearningHub.Nhs.Services
         {
             var retVal = new LearningHubValidationResult(true);
 
-            retVal.CreatedId = await this.resourceRepository.CreateResourceAsync(resourceDetailViewModel.ResourceType, resourceDetailViewModel.Title, resourceDetailViewModel.Description, userId);
+            retVal.CreatedId = await this.resourceRepository.CreateResourceAsync(resourceDetailViewModel.ResourceType, resourceDetailViewModel.Title, resourceDetailViewModel.Description, resourceDetailViewModel.PrimaryCatalogueNodeId, userId);
 
             if (resourceDetailViewModel.ResourceLicenceId != 0
                 || (int)resourceDetailViewModel.ResourceCatalogueId != 0
@@ -2586,7 +2586,7 @@ namespace LearningHub.Nhs.Services
         {
             if (fileCreateRequestViewModel.ResourceVersionId == 0)
             {
-                fileCreateRequestViewModel.ResourceVersionId = await this.resourceRepository.CreateResourceAsync(fileCreateRequestViewModel.ResourceType, string.Empty, string.Empty, userId);
+                fileCreateRequestViewModel.ResourceVersionId = await this.resourceRepository.CreateResourceAsync(fileCreateRequestViewModel.ResourceType, string.Empty, string.Empty, 1, userId);
             }
             else
             {
@@ -4941,7 +4941,7 @@ namespace LearningHub.Nhs.Services
 
         private async Task<int> CreateNewResource(ResourceTypeEnum resourceType, string title, int userId, AssessmentTypeEnum? assessmentType)
         {
-            var resourceVersionId = await this.resourceRepository.CreateResourceAsync(resourceType, title, string.Empty, userId);
+            var resourceVersionId = await this.resourceRepository.CreateResourceAsync(resourceType, title, string.Empty, 1, userId);
             if (resourceType == ResourceTypeEnum.Case)
             {
                 await this.caseResourceVersionRepository.CreateAsync(userId, new CaseResourceVersion

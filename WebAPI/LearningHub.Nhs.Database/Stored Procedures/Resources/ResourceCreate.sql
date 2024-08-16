@@ -10,12 +10,14 @@
 -- 28-09-2020  Dave Brown		Creation of [resources].[ResourceReference] moved to publishing process
 -- 11-01-2021  Dharmendra Verma	Card-6516, Set correct timezone information 
 -- 26-01-2023  RobS             Increased @Title param from 128 to 255 chars to match table
+-- 14-08-2024  SA	            Included primary catalogue Node Id column into the resource version table
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [resources].[ResourceCreate]
 (
 	@ResourceTypeId int,
 	@Title nvarchar(255),
 	@Description nvarchar(1024),
+	@PrimaryCatalogueNodeId int,
 	@UserId int,
 	@UserTimezoneOffset int = NULL,
 	@ResourceVersionId int output
@@ -47,7 +49,7 @@ BEGIN
 		SELECT @ResourceId = SCOPE_IDENTITY()
 
 		INSERT INTO [resources].[ResourceVersion]
-			   ([ResourceId],[VersionStatusId],[PublicationId],[MajorVersion],[MinorVersion],[Title],[Description],[AdditionalInformation],[ReviewDate],[HasCost],[Cost],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
+			   ([ResourceId],[VersionStatusId],[PublicationId],[MajorVersion],[MinorVersion],[Title],[Description],[AdditionalInformation],[ReviewDate],[HasCost],[Cost],[PrimaryCatalogueNodeId],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
 		SELECT 
 			ResourceId = @ResourceId, 
 			VersionStatusId = 1, 
@@ -60,6 +62,7 @@ BEGIN
 			ReviewDate = NULL, 
 			HasCost = 0, 
 			Cost = 0, 
+			PrimaryCatalogueNodeId = @PrimaryCatalogueNodeId,
 			Deleted = 0, 
 			CreateUserId = @UserId, 
 			CreateDate = @AmendDate, 

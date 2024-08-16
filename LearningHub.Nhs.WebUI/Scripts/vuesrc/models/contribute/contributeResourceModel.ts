@@ -17,6 +17,7 @@ export class ContributeResourceDetailModel {
     publishedResourceCatalogueId: number = 0;
     resourceCatalogueId: number = 0;
     nodeId: number = 0;
+    primaryCatalogueNodeId: number = 1;
     sensitiveContent: boolean = false;
     resourceAuthors: AuthorModel[] = [] as AuthorModel[];
     resourceKeywords: KeywordModel[] = [] as KeywordModel[];

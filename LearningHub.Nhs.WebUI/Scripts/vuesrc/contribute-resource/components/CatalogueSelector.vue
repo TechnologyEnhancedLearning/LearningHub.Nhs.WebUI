@@ -71,6 +71,7 @@
             savePrimaryCatalogue() {
                 this.resourceDetails.resourceCatalogueId = this.selectedCatalogue.nodeId
                 this.resourceDetails.nodeId = this.selectedCatalogue.nodeId
+                this.resourceDetails.primaryCatalogueNodeId = this.selectedCatalogue.nodeId
                 this.$emit('save');
             }
         },

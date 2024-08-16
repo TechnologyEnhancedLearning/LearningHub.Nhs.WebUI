@@ -10,6 +10,7 @@ export class CatalogueBasicModel {
     url: string;
     badgeUrl: string;
     restrictedAccess: boolean;
+    primaryCatalogueNodeId: number;
     public constructor(init?: Partial<CatalogueBasicModel>) {
         Object.assign(this, init);
     }

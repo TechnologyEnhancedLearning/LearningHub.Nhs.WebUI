@@ -68,22 +68,24 @@
         /// <param name="resourceType">The resource type.</param>
         /// <param name="title">The title.</param>
         /// <param name="description">The description.</param>
+        /// <param name="primaryCatalogueNodeId">The primaryCatalogueNodeId.</param>
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<int> CreateResourceAsync(ResourceTypeEnum resourceType, string title, string description, int userId)
+        public async Task<int> CreateResourceAsync(ResourceTypeEnum resourceType, string title, string description, int primaryCatalogueNodeId, int userId)
         {
             try
             {
                 var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = (int)resourceType };
                 var param1 = new SqlParameter("@p1", SqlDbType.VarChar) { Value = title };
                 var param2 = new SqlParameter("@p2", SqlDbType.VarChar) { Value = description ?? string.Empty };
-                var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = userId };
-                var param4 = new SqlParameter("@p4", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
-                var param5 = new SqlParameter("@p5", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = primaryCatalogueNodeId };
+                var param4 = new SqlParameter("@p4", SqlDbType.Int) { Value = userId };
+                var param5 = new SqlParameter("@p5", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+                var param6 = new SqlParameter("@p6", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
-                await this.DbContext.Database.ExecuteSqlRawAsync("resources.ResourceCreate @p0, @p1, @p2, @p3, @p4, @p5 output", param0, param1, param2, param3, param4, param5);
+                await this.DbContext.Database.ExecuteSqlRawAsync("resources.ResourceCreate @p0, @p1, @p2, @p3, @p4, @p5,@p6 output", param0, param1, param2, param3, param4, param5, param6);
 
-                int resourceVersionId = (int)param5.Value;
+                int resourceVersionId = (int)param6.Value;
 
                 return resourceVersionId;
             }

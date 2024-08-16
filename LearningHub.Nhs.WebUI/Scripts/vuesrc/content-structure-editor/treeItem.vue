@@ -386,7 +386,7 @@
                 });
             },
             contributeResource: function () {
-                window.location.href = '/contribute-resource/select-resource?catalogueId=' + this.$store.state.contentStructureState.catalogue.nodeId + '&nodeId=' + this.item.nodeId.toString();
+                window.location.href = '/contribute-resource/select-resource?catalogueId=' + this.$store.state.contentStructureState.catalogue.nodeId + '&nodeId=' + this.item.nodeId.toString() + '&primaryCatalogueNodeId=' + this.$store.state.contentStructureState.catalogue.primaryCatalogueNodeId;
             },
             getResourceUrl: function (resourceReferenceId: number) {
                 if (resourceReferenceId) {

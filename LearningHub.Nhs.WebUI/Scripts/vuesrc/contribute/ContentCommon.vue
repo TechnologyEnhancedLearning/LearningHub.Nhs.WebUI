@@ -292,6 +292,7 @@
                 ResourceType,
                 resourceProviderId: null,
                 keywordLengthExceeded: false,
+                primaryCatalogueId: 1,
             };
         },
         computed: {
@@ -406,189 +407,201 @@
                     else{
                         this.resourceProviderId = 0;
                     }
-                    }
-                },
-                saveDescription(description: string, valid: boolean) {
-                    this.resourceDescription = description;
-                    this.resourceDescriptionValid = valid;
-                    let field: string = 'description';
-                    let value: string = this.resourceDescription;
-                    if (valid && this.$store.state.resourceDetail.description != value) {
-                        this.$store.commit("saveResourceDetail", { field, value });
-                    }
-                },
-                changeDescription(description: string, valid: boolean) {
-                    this.resourceDescription = description;
-                    this.resourceDescriptionValid = valid;
-                    if (this.$store.state.resourceDetail.description != description) {
-                        this.$store.commit("setCommonContentDirty", true);
-                    }
-                },
-                setSensitiveContent(value: boolean) {
-                    const field: string = 'sensitiveContent';
+                }
+            },
+            saveDescription(description: string, valid: boolean) {
+                this.resourceDescription = description;
+                this.resourceDescriptionValid = valid;
+                let field: string = 'description';
+                let value: string = this.resourceDescription;
+                if (valid && this.$store.state.resourceDetail.description != value) {
                     this.$store.commit("saveResourceDetail", { field, value });
-                },
-                licenceSelected() {
-                    let field: string = 'resourceLicenceId';
-                    let value: string = null;
-                    if (this.resourceLicenceId != 0) {
-                        value = this.resourceLicenceId.toString();
-                    }
-                    if (this.$store.state.resourceDetail.resourceLicenceId != value) {
-                        this.$store.commit("saveResourceDetail", { field, value });
-                    }
-                },
-                catalogueSelected() {
-                    let field: string = 'resourceCatalogueId';
-                    let value: string = null;
-                    if (this.resourceCatalogueId != 0) {
-                        value = this.resourceCatalogueId.toString();
-                    }
-                    if (this.$store.state.resourceDetail.resourceCatalogueId != this.resourceCatalogueId) {
-                        this.$store.commit("saveResourceDetail", { field, value });
-                        this.updateNodeId();
-                    }
-                },
-                updateNodeId() {
-                    // Update the nodeId. This determines where in the content structure that a resource will be saved to.
-                    // Iteration 1:
-                    // If a catalogue Id AND node Id were passed into the contribute screen, and that catalogue is being reselected,
-                    // we have to set the nodeId back to the nodeId originally passed in. If a different catalogue has been selected, the
-                    // nodeId has to be set to the catalogue Id, so the resource is saved into the root of that catalogue.
-                    let field: string = 'nodeId';
-                    let value: string = null;
-                    if (this.resourceCatalogueId == this.initialResourceCatalogueId) {
-                        value = this.initialNodeId.toString();
-                    }
-                    else {
-                        value = this.resourceCatalogueId.toString();
-                    }
+                }
+            },
+            changeDescription(description: string, valid: boolean) {
+                this.resourceDescription = description;
+                this.resourceDescriptionValid = valid;
+                if (this.$store.state.resourceDetail.description != description) {
+                    this.$store.commit("setCommonContentDirty", true);
+                }
+            },
+            setSensitiveContent(value: boolean) {
+                const field: string = 'sensitiveContent';
+                this.$store.commit("saveResourceDetail", { field, value });
+            },
+            licenceSelected() {
+                let field: string = 'resourceLicenceId';
+                let value: string = null;
+                if (this.resourceLicenceId != 0) {
+                    value = this.resourceLicenceId.toString();
+                }
+                if (this.$store.state.resourceDetail.resourceLicenceId != value) {
                     this.$store.commit("saveResourceDetail", { field, value });
-                },
-                currentUserAuthorChange() {
-                    this.authorError = false;
-                    if (this.currentUserAuthor) {
-                        this.authorName = this.$store.state.currentUserName;
-                    } else {
-                        this.authorName = '';
-                    }
-                },
-                certificateEnabledChange(useDefault: boolean) {
-                    this.certificateEnabled = useDefault;
-                    let value: boolean = this.certificateEnabled;
-                    let field: string = 'certificateEnabled';
-                    if (this.$store.state.resourceDetail.certificateEnabled != this.certificateEnabled) {
-                        this.$store.commit("saveResourceDetail", { field, value });
-                    }
+                }
+            },
+            catalogueSelected() {
+                let field: string = 'resourceCatalogueId';
+                let value: string = null;
+                if (this.resourceCatalogueId != 0) {
+                    value = this.resourceCatalogueId.toString();
+                }
+                if (this.$store.state.resourceDetail.resourceCatalogueId != this.resourceCatalogueId) {
+                    this.$store.commit("saveResourceDetail", { field, value });
+                    this.updateNodeId();
+                    this.updatePrimaryCatalogueNodeId();
+                }
+            },
+            updateNodeId() {
+                // Update the nodeId. This determines where in the content structure that a resource will be saved to.
+                // Iteration 1:
+                // If a catalogue Id AND node Id were passed into the contribute screen, and that catalogue is being reselected,
+                // we have to set the nodeId back to the nodeId originally passed in. If a different catalogue has been selected, the
+                // nodeId has to be set to the catalogue Id, so the resource is saved into the root of that catalogue.
+                let field: string = 'nodeId';
+                let value: string = null;
+                if (this.resourceCatalogueId == this.initialResourceCatalogueId) {
+                    value = this.initialNodeId.toString();
+                }
+                else {
+                    value = this.resourceCatalogueId.toString();
+                }
+                this.$store.commit("saveResourceDetail", { field, value });
+            },
+            updatePrimaryCatalogueNodeId() {
+                let field: string = 'primaryCatalogueNodeId';
+                let value: string = null;
+                if (this.resourceCatalogueId == this.initialResourceCatalogueId) {
+                    value = this.initialNodeId.toString();
+                }
+                else {
+                    value = this.resourceCatalogueId.toString();
+                }
+                this.$store.commit("saveResourceDetail", { field, value });
+            },
+            currentUserAuthorChange() {
+                this.authorError = false;
+                if (this.currentUserAuthor) {
+                    this.authorName = this.$store.state.currentUserName;
+                } else {
+                    this.authorName = '';
+                }
+            },
+            certificateEnabledChange(useDefault: boolean) {
+                this.certificateEnabled = useDefault;
+                let value: boolean = this.certificateEnabled;
+                let field: string = 'certificateEnabled';
+                if (this.$store.state.resourceDetail.certificateEnabled != this.certificateEnabled) {
+                    this.$store.commit("saveResourceDetail", { field, value });
+                }
 
-                },
-                keywordChange() {
-                    this.keywordError = false;
-                    this.keywordLengthExceeded = false;
-                },
-                resetSelectedLicence() {
-                    this.resourceLicenceId = 0;
-                },
-                setResourceProvider(value: string) {
-                    let field: string = 'resourceProviderId';
+            },
+            keywordChange() {
+                this.keywordError = false;
+                this.keywordLengthExceeded = false;
+            },
+            resetSelectedLicence() {
+                this.resourceLicenceId = 0;
+            },
+            setResourceProvider(value: string) {
+                let field: string = 'resourceProviderId';
 
-                    if (this.$store.state.resourceDetail.resourceProviderId != value) {
-                        this.$store.commit("saveResourceDetail", { field, value });
-                    }
-                },
+                if (this.$store.state.resourceDetail.resourceProviderId != value) {
+                    this.$store.commit("saveResourceDetail", { field, value });
+                }
+            },
             async addAuthor() {
-                    if (this.authorName.trim().length == 0 && this.authorOganisation.trim().length == 0) {
-                        this.authorError = true;
-                    } else {
-                        let newAuthor = new AuthorModel();
-                        newAuthor.authorName = this.authorName.trim();
-                        newAuthor.organisation = this.authorOganisation.trim();
-                        newAuthor.role = this.authorRole.trim();
-                        newAuthor.isContributor = this.currentUserAuthor;
-                        newAuthor.resourceVersionId = this.resourceDetail.resourceVersionId;
-                        newAuthor = await resourceData.addAuthor(this.resourceDetail.resourceVersionId, newAuthor);
-                        if (newAuthor.id > 0) {
-                            this.$store.commit('addAuthor', newAuthor);
-                            this.authors.push(newAuthor);
-                            if (this.resourceDetail.resourceVersionId == 0) {
-                                this.$store.commit('setResourceVersionId', newAuthor.resourceVersionId)
-                            }
+                if (this.authorName.trim().length == 0 && this.authorOganisation.trim().length == 0) {
+                    this.authorError = true;
+                } else {
+                    let newAuthor = new AuthorModel();
+                    newAuthor.authorName = this.authorName.trim();
+                    newAuthor.organisation = this.authorOganisation.trim();
+                    newAuthor.role = this.authorRole.trim();
+                    newAuthor.isContributor = this.currentUserAuthor;
+                    newAuthor.resourceVersionId = this.resourceDetail.resourceVersionId;
+                    newAuthor = await resourceData.addAuthor(this.resourceDetail.resourceVersionId, newAuthor);
+                    if (newAuthor.id > 0) {
+                        this.$store.commit('addAuthor', newAuthor);
+                        this.authors.push(newAuthor);
+                        if (this.resourceDetail.resourceVersionId == 0) {
+                            this.$store.commit('setResourceVersionId', newAuthor.resourceVersionId)
                         }
-                        this.authorName = '';
-                        this.authorOganisation = '';
-                        this.authorRole = '';
-                        this.currentUserAuthor = false;
-                        this.authorError = false;
                     }
-                },
+                    this.authorName = '';
+                    this.authorOganisation = '';
+                    this.authorRole = '';
+                    this.currentUserAuthor = false;
+                    this.authorError = false;
+                }
+            },
             async deleteAuthor(authorId: number) {
-                    let response = await resourceData.deleteAuthor(this.resourceDetail.resourceVersionId, authorId);
-                    if (response) {
-                        this.$store.commit('removeAuthor', authorId);
-                        this.authors = _.filter(this.authors, function (f) {
-                            return f.id != authorId;
-                        });
-                    }
-                },
+                let response = await resourceData.deleteAuthor(this.resourceDetail.resourceVersionId, authorId);
+                if (response) {
+                    this.$store.commit('removeAuthor', authorId);
+                    this.authors = _.filter(this.authors, function (f) {
+                        return f.id != authorId;
+                    });
+                }
+            },
             async addKeyword() {
-                    if (this.newKeyword && this.newKeywordTrimmed.length > 0) {
-                        let allTrimmedKeyword = this.newKeywordTrimmed.toLowerCase().split(',');
-                        allTrimmedKeyword = allTrimmedKeyword.filter(e => String(e).trim());
-                        if (!this.keywords.find(_keyword => allTrimmedKeyword.includes(_keyword.keyword.toLowerCase()))) {
-                            for (var i = 0; i < allTrimmedKeyword.length; i++) {
-                                let item = allTrimmedKeyword[i];
-                                if (item.length > 0 && item.length <= 50) {
-                                    let newkeywordObj = new KeywordModel();
-                                    newkeywordObj.keyword = item;
-                                    newkeywordObj.resourceVersionId = this.resourceDetail.resourceVersionId;
-                                    newkeywordObj = await resourceData.addKeyword(this.resourceDetail.resourceVersionId, newkeywordObj);
-                                    if (newkeywordObj.id > 0) {
-                                        this.$store.commit('addKeyword', newkeywordObj);
-                                        this.keywords.push(newkeywordObj);
-                                        if (this.resourceDetail.resourceVersionId == 0) {
-                                            this.$store.commit('setResourceVersionId', newkeywordObj.resourceVersionId)
-                                        }
-                                        this.keywordError = false;
-                                        this.newKeyword = '';
-                                    } else {
-                                        this.keywordError = true;
-                                        break;
+                if (this.newKeyword && this.newKeywordTrimmed.length > 0) {
+                    let allTrimmedKeyword = this.newKeywordTrimmed.toLowerCase().split(',');
+                    allTrimmedKeyword = allTrimmedKeyword.filter(e => String(e).trim());
+                    if (!this.keywords.find(_keyword => allTrimmedKeyword.includes(_keyword.keyword.toLowerCase()))) {
+                        for (var i = 0; i < allTrimmedKeyword.length; i++) {
+                            let item = allTrimmedKeyword[i];
+                            if (item.length > 0 && item.length <= 50) {
+                                let newkeywordObj = new KeywordModel();
+                                newkeywordObj.keyword = item;
+                                newkeywordObj.resourceVersionId = this.resourceDetail.resourceVersionId;
+                                newkeywordObj = await resourceData.addKeyword(this.resourceDetail.resourceVersionId, newkeywordObj);
+                                if (newkeywordObj.id > 0) {
+                                    this.$store.commit('addKeyword', newkeywordObj);
+                                    this.keywords.push(newkeywordObj);
+                                    if (this.resourceDetail.resourceVersionId == 0) {
+                                        this.$store.commit('setResourceVersionId', newkeywordObj.resourceVersionId)
                                     }
-                                }
-                                else {
-                                    this.keywordLengthExceeded = true;
+                                    this.keywordError = false;
+                                    this.newKeyword = '';
+                                } else {
+                                    this.keywordError = true;
                                     break;
                                 }
                             }
-                        }
-                        else {
-                            this.keywordError = true;
+                            else {
+                                this.keywordLengthExceeded = true;
+                                break;
+                            }
                         }
                     }
                     else {
-                        this.newKeyword = '';
+                        this.keywordError = true;
                     }
-                },
-            async deleteKeyword(keywordId: number) {
-                    let response = await resourceData.deleteKeyword(this.resourceDetail.resourceVersionId, keywordId);
-                    if (response) {
-                        this.$store.commit('removeKeyword', keywordId);
-                        this.keywords = _.filter(this.keywords, function (f) {
-                            return f.id != keywordId;
-                        });
-                    }
-                },
-            },
-            watch: {
-                resourceVersionId(value) {
-                    this.setInitialValues();
-                },
-            },
-            validations: {
-                resourceDescription: {
-                    required
                 }
+                else {
+                    this.newKeyword = '';
+                }
+            },
+            async deleteKeyword(keywordId: number) {
+                let response = await resourceData.deleteKeyword(this.resourceDetail.resourceVersionId, keywordId);
+                if (response) {
+                    this.$store.commit('removeKeyword', keywordId);
+                    this.keywords = _.filter(this.keywords, function (f) {
+                        return f.id != keywordId;
+                    });
+                }
+            },
+        },
+        watch: {
+            resourceVersionId(value) {
+                this.setInitialValues();
+            },
+        },
+        validations: {
+            resourceDescription: {
+                required
             }
-        })
+        }
+    })
 
 </script>

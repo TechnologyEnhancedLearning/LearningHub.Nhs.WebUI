@@ -276,7 +276,6 @@
                 }
             },
             catalogueChange(catalogueNodeVersionId: number, nodeId: number) {
-
                 this.expandNodes = "";
                 this.$store.commit("myContributionsState/setCatalogue", nodeId);
 

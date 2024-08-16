@@ -404,7 +404,7 @@
                     if (Boolean(this.$route.query.initialCreate)) {
                         this.resourceProviderId = null;
                     }
-                    else{
+                    else {
                         this.resourceProviderId = 0;
                     }
                 }

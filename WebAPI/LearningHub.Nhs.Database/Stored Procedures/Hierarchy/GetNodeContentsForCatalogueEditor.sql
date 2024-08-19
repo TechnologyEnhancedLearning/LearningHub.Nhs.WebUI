@@ -13,6 +13,7 @@
 -- 29-04-2024  DB	Link node and node version by CurrentNodeVersionId and ensure the NodeVersion is published.
 -- 02-05-2024  DB	Change input parameter to NodePathId to prevent all referenced resources and child nodes being returned multiple times
 --					Also return Child NodePathId to allow the client to navigate to the child node.
+-- 19-08-2024  DB	Include PrimaryCatalogueNodeId in results
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsForCatalogueEditor]
 (
@@ -30,6 +31,7 @@ BEGIN
 		[Description],
 		NodeTypeId,
 		NodeId,
+		PrimaryCatalogueNodeId,
 		NodeVersionId,
 		ResourceId,
 		ResourceVersionId,

@@ -47,3 +47,7 @@ obj
 /WebAPI/LearningHub.Nhs.Database/LearningHub.Nhs.Database.jfm
 /WebAPI/MigrationTool/LearningHub.Nhs.Migration.Staging.Database/LearningHub.Nhs.Migration.Staging.Database.dbmdl
 /WebAPI/MigrationTool/LearningHub.Nhs.Migration.Staging.Database/LearningHub.Nhs.Migration.Staging.Database.jfm
+/OpenAPI/LearningHub.Nhs.OpenApi/appsettings.Development.json
+/OpenAPI/LearningHub.Nhs.OpenApi/web.config
+/WebAPI/LearningHub.Nhs.Database/libman.json
+/OpenAPI/LearningHub.Nhs.OpenApi/LearningHub.NHS.OpenAPI.csproj.user

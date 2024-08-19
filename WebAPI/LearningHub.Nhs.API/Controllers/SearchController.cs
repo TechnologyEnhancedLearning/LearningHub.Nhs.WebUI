@@ -225,6 +225,21 @@
         }
 
         /// <summary>
+        /// Get AutoSuggestionResults.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpGet]
+        [Route("GetAutoSuggestionResult/{term}")]
+        public async Task<IActionResult> GetAutoSuggestionResults(string term)
+        {
+            var autosuggestionViewModel = new AutoSuggestionModel();
+
+            autosuggestionViewModel = await this.searchService.GetAutoSuggestionResultsAsync(term);
+            return this.Ok(autosuggestionViewModel);
+        }
+
+        /// <summary>
         /// Get search result.
         /// </summary>
         /// <param name="searchRequestModel">The search request model.</param>

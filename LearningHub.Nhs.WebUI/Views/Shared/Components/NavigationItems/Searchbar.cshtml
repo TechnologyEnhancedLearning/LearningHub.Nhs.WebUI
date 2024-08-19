@@ -17,6 +17,7 @@
         <div class="nhsuk-header__search-wrap" id="wrap-search">
             <form class="nhsuk-header__search-form" id="search" asp-controller="search" asp-action="results" method="get" role="search">
                 <label class="nhsuk-u-visually-hidden" for="search-field">Search the learning hub</label>
+                @* <auto-suggest></auto-suggest> *@
                 <input class="nhsuk-search__input" id="search-field" name="term" type="search" placeholder="Search the learning hub" autocomplete="off">
                 <button class="nhsuk-search__submit" type="submit">
                     <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="27" height="27">
@@ -37,3 +38,198 @@
 </div>
 
 <!-- end Searchbar -->
+@* <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        alert("hi6");
+        console.log("test11");
+    });
+
+</script> *@
+<style>
+    /* Basic CSS for autocomplete styling */
+    .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        top: 100%;
+        left: 0;
+        right: 0;
+    }
+
+        .autocomplete-items-div {
+            padding: 14px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #d4d4d4;
+            text-align: left;
+        line-height: normal;
+        }
+
+
+            .autocomplete-items-div:hover {
+                background-color: #e9e9e9;
+            }
+
+    .autocomplete-active {
+        background-color: DodgerBlue !important;
+        color: #ffffff;
+    }
+
+    .suggestions-category {
+        padding: 14px;
+        background-color: #005eb8 !important;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-align: left;
+    }
+</style>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        var searchInput = document.getElementById("search-field");
+
+        // Function to handle AJAX requests
+        function fetchSuggestions(term, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", '@Url.Action("GetAutoSuggestion", "Search")' + '?term=' + encodeURIComponent(term), true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    callback(data);
+                }
+            };
+            xhr.send();
+        }
+
+        // Function to create the autocomplete dropdown
+        function autocomplete(input, minLength) {
+            debugger;
+            var currentFocus;
+            console.log("testauto1");
+            input.addEventListener("input", function () {
+                var val = this.value;
+
+                if (val.length < minLength) {
+                    closeAllLists();
+                    return false;
+                }
+
+                fetchSuggestions(val, function (suggestions) {
+                    debugger;
+                    if (suggestions.stats != null) {
+                        closeAllLists();
+                        if (!suggestions.stats.totalHits) return;
+
+                        var listDiv = document.createElement("div");
+                        listDiv.setAttribute("id", input.id + "autocomplete-list");
+                        listDiv.setAttribute("class", "autocomplete-items");
+
+                        input.parentNode.appendChild(listDiv);
+                        if (suggestions.concepts_documents.numberOfHits > 0) {
+                            suggestions.concepts_documents.documents.forEach(function (item) {
+                                var itemDiv = document.createElement("div");
+                                // itemDiv.className = 'dropdown-item';
+                                itemDiv.className = 'autocomplete-items-div';
+                                itemDiv.innerHTML = item.concept;
+                                itemDiv.addEventListener("click", function () {
+                                    input.value = item.concept;
+                                    closeAllLists();
+                                });
+                                listDiv.appendChild(itemDiv);
+                            });
+                        }
+                        
+                        var catalogueHeading = document.createElement("div");
+                        catalogueHeading.className = 'suggestions-category';
+                        catalogueHeading.textContent = 'Resources';
+                        listDiv.appendChild(catalogueHeading);
+                        if (suggestions.catalogues_documents.numberOfHits > 0) {
+                            suggestions.catalogues_documents.documents.forEach(function (item) {
+                                var itemDiv = document.createElement("div");
+                                // itemDiv.className = 'dropdown-item';
+                                itemDiv.className = 'autocomplete-items-div';
+                                itemDiv.innerHTML = item.name;
+                                itemDiv.addEventListener("click", function () {
+                                    input.value = item.name;
+                                    closeAllLists();
+                                });
+                                listDiv.appendChild(itemDiv);
+                            });
+                        }
+
+                        var catalogueHeading = document.createElement("div");
+                        catalogueHeading.className = 'suggestions-category';
+                        catalogueHeading.textContent = 'Catalogues';
+                        listDiv.appendChild(catalogueHeading);
+                        if (suggestions.resources_documents.numberOfHits > 0) {
+                            suggestions.resources_documents.documents.forEach(function (item) {
+                                var itemDiv = document.createElement("div");
+                                // itemDiv.className = 'dropdown-item';
+                                itemDiv.className = 'autocomplete-items-div';
+                                itemDiv.innerHTML = item.title;
+                                itemDiv.addEventListener("click", function () {
+                                    input.value = item.title;
+                                    closeAllLists();
+                                });
+                                listDiv.appendChild(itemDiv);
+                            });
+                        }
+                    }
+                });
+            });
+
+            input.addEventListener("keydown", function (e) {
+                console.log("keydowncalled");
+                var listDiv = document.getElementById(this.id + "autocomplete-list");
+                if (listDiv) listDiv = listDiv.getElementsByTagName("div");
+                if (e.keyCode === 40) {
+                    currentFocus++;
+                    addActive(listDiv);
+                } else if (e.keyCode === 38) {
+                    currentFocus--;
+                    addActive(listDiv);
+                } else if (e.keyCode === 13) {
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                        if (listDiv) listDiv[currentFocus].click();
+                    }
+                }
+            });
+
+            function addActive(listDiv) {
+                console.log("keydowncalledadd");
+                if (!listDiv) return false;
+                removeActive(listDiv);
+                if (currentFocus >= listDiv.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (listDiv.length - 1);
+                listDiv[currentFocus].classList.add("autocomplete-active");
+            }
+
+            function removeActive(listDiv) {
+                console.log("keydowncalledremove");
+                for (var i = 0; i < listDiv.length; i++) {
+                    listDiv[i].classList.remove("autocomplete-active");
+                }
+            }
+
+            function closeAllLists(elmnt) {
+                console.log("closeAllListscalled");
+                var listDivs = document.getElementsByClassName("autocomplete-items");
+                for (var i = 0; i < listDivs.length; i++) {
+                    if (elmnt !== listDivs[i] && elmnt !== input) {
+                        listDivs[i].parentNode.removeChild(listDivs[i]);
+                    }
+                }
+            }
+
+            document.addEventListener("click", function (e) {
+                console.log("clickcalled");
+                closeAllLists(e.target);
+            });
+        }
+
+        autocomplete(searchInput, 3);
+    });
+</script>

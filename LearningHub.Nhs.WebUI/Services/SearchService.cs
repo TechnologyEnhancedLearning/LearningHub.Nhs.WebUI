@@ -16,6 +16,7 @@ namespace LearningHub.Nhs.WebUI.Services
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models.Search;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
@@ -585,6 +586,31 @@ namespace LearningHub.Nhs.WebUI.Services
             {
                 throw new Exception(string.Format("Error creating Catalog Search Term Action: {0}", ex.Message));
             }
+        }
+
+        /// <summary>
+        /// The GetAutoSuggestionList.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The auto suggestion list.</returns>
+        public async Task<AutoSuggestionModel> GetAutoSuggestionList(string term)
+        {
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var request = $"Search/GetAutoSuggestionResult/{term}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            var viewModel = new AutoSuggestionModel();
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewModel = JsonConvert.DeserializeObject<AutoSuggestionModel>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewModel;
         }
 
         /// <summary>

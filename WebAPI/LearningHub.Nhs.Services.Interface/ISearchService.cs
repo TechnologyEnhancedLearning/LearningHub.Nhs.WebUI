@@ -168,5 +168,12 @@
         /// The <see cref="Task"/>.
         /// </returns>
         Task<bool> SendCatalogueSearchEventAsync(SearchActionCatalogueModel searchActionCatalogueModel);
+
+        /// <summary>
+        /// The Auto suggetion result method.
+        /// </summary>
+        /// <param name="term">the term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term);
     }
 }

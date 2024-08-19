@@ -77,5 +77,12 @@
         /// <param name="catalogueSearchRequestModel">catalogue search request model.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<int> CreateCatalogueSearchTermEventAsync(CatalogueSearchRequestModel catalogueSearchRequestModel);
+
+        /// <summary>
+        /// The Get AutoSuggestion List.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<AutoSuggestionModel> GetAutoSuggestionList(string term);
     }
 }

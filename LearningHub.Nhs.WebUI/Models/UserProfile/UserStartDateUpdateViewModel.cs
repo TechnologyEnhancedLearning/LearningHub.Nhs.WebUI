@@ -1,8 +1,4 @@
-﻿// <copyright file="UserStartDateUpdateViewModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.UserProfile
+﻿namespace LearningHub.Nhs.WebUI.Models.UserProfile
 {
     using System;
     using System.Collections.Generic;

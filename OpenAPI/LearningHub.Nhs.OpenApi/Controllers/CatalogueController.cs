@@ -1,8 +1,4 @@
-﻿// <copyright file="CatalogueController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.NHS.OpenAPI.Controllers
+﻿namespace LearningHub.NHS.OpenAPI.Controllers
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;

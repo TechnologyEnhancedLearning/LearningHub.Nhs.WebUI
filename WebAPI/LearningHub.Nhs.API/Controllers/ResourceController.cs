@@ -1,7 +1,3 @@
-// <copyright file="ResourceController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.Api.Controllers
 {
     using System;
@@ -448,6 +444,20 @@ namespace LearningHub.Nhs.Api.Controllers
         }
 
         /// <summary>
+        /// Get file directory for unpublished or deleted versions.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="deletedResource">.</param>
+        /// <returns>The <see cref="Task{String}"/>.</returns>
+        [HttpGet]
+        [Route("GetObsoleteResourceFile/{resourceVersionId}")]
+        [Route("GetObsoleteResourceFile/{resourceVersionId}/{deletedResource}")]
+        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId, bool deletedResource = false)
+        {
+            return await this.resourceService.GetObsoleteResourceFile(resourceVersionId, deletedResource);
+        }
+
+        /// <summary>
         /// Get specific GenericFileDetails by ResourceVersionId.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
@@ -486,9 +496,9 @@ namespace LearningHub.Nhs.Api.Controllers
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
         /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
         [HttpGet("GetExternalContentDetailsById/{resourceVersionId}")]
-        public ActionResult GetScormContentDetailsById(int resourceVersionId)
+        public async Task<ActionResult> GetScormContentDetailsById(int resourceVersionId)
         {
-            return this.Ok(this.resourceService.GetExternalContentDetails(resourceVersionId, this.CurrentUserId));
+            return this.Ok(await this.resourceService.GetExternalContentDetails(resourceVersionId, this.CurrentUserId));
         }
 
         /// <summary>

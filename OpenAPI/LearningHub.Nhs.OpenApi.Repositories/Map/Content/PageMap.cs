@@ -1,8 +1,4 @@
-﻿// <copyright file="PageMap.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.OpenApi.Repositories.Map.Content
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.Content
 {
     using LearningHub.Nhs.Models.Entities.Content;
     using Microsoft.EntityFrameworkCore;

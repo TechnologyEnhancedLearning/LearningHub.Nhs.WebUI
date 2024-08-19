@@ -1,8 +1,4 @@
-﻿// <copyright file="ServiceCollectionExtension.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI
+﻿namespace LearningHub.Nhs.WebUI
 {
     using System;
     using System.IdentityModel.Tokens.Jwt;
@@ -24,6 +20,7 @@ namespace LearningHub.Nhs.WebUI
     using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.FeatureManagement;
     using Microsoft.IdentityModel.Logging;
 
     /// <summary>
@@ -133,6 +130,8 @@ namespace LearningHub.Nhs.WebUI
             });
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            services.AddFeatureManagement();
         }
     }
 }

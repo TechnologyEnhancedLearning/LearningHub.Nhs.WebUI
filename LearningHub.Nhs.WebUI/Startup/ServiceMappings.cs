@@ -1,8 +1,4 @@
-﻿// <copyright file="ServiceMappings.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Startup
+﻿namespace LearningHub.Nhs.WebUI.Startup
 {
     using System.Net.Http;
     using GDS.MultiPageFormData;
@@ -89,7 +85,7 @@ namespace LearningHub.Nhs.WebUI.Startup
             services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IContributeService, ContributeService>();
-            services.AddSingleton<IAzureMediaService, AzureMediaService>();
+            services.AddSingleton<IAzureMediaService, MKIOMediaService>();
             services.AddSingleton<IRoadMapService, RoadMapService>();
             services.AddSingleton<IMyLearningService, MyLearningService>();
             services.AddSingleton<IDashboardService, DashboardService>();

@@ -1,8 +1,4 @@
-﻿// <copyright file="ServiceCollectionExtension.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI
+﻿namespace LearningHub.Nhs.AdminUI
 {
     using System;
     using System.IdentityModel.Tokens.Jwt;
@@ -36,6 +32,7 @@ namespace LearningHub.Nhs.AdminUI
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.FeatureManagement;
     using Microsoft.IdentityModel.Protocols.OpenIdConnect;
     using Microsoft.IdentityModel.Tokens;
 
@@ -98,7 +95,7 @@ namespace LearningHub.Nhs.AdminUI
             services.AddScoped<ILogService, LogService>();
             services.AddScoped<IRoadmapService, RoadmapService>();
             services.AddScoped<IFileService, FileService>();
-            services.AddScoped<IAzureMediaService, AzureMediaService>();
+            services.AddScoped<IAzureMediaService, MKIOMediaService>();
             services.AddScoped<IResourceSyncService, ResourceSyncService>();
             services.AddScoped<ICatalogueService, CatalogueService>();
             services.AddScoped<IContentService, ContentService>();
@@ -223,6 +220,8 @@ namespace LearningHub.Nhs.AdminUI
             {
                 options.Filters.Add(typeof(CheckInitialLogonFilter));
             });
+
+            services.AddFeatureManagement();
         }
 
         private static async Task UserSessionBegins(TokenValidatedContext context)

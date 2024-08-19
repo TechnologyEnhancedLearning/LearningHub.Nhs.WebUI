@@ -51,3 +51,4 @@ obj
 /OpenAPI/LearningHub.Nhs.OpenApi/web.config
 /WebAPI/LearningHub.Nhs.Database/libman.json
 /OpenAPI/LearningHub.Nhs.OpenApi/LearningHub.NHS.OpenAPI.csproj.user
+/LearningHub.Nhs.WebUI.AutomatedUiTests/appsettings.Development.json

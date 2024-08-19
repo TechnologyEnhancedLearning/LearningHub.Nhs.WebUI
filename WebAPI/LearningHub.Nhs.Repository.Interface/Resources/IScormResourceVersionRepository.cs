@@ -1,8 +1,4 @@
-﻿// <copyright file="IScormResourceVersionRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface.Resources
+﻿namespace LearningHub.Nhs.Repository.Interface.Resources
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -34,7 +30,7 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         /// </summary>
         /// <param name="externalReference">The external reference (guid).</param>
         /// <returns>A ContentServerViewModel.</returns>
-        ContentServerViewModel GetContentServerDetailsByLHExternalReference(string externalReference);
+        Task<ContentServerViewModel> GetContentServerDetailsByLHExternalReference(string externalReference);
 
         /// <summary>
         /// Gets the SCORM content details for a particular historic external URL. These historic URLs have to be supported to
@@ -42,7 +38,7 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         /// </summary>
         /// <param name="externalUrl">The external Url.</param>
         /// <returns>A ContentServerViewModel.</returns>
-        ContentServerViewModel GetScormContentServerDetailsByHistoricExternalUrl(string externalUrl);
+        Task<ContentServerViewModel> GetScormContentServerDetailsByHistoricExternalUrl(string externalUrl);
 
         /// <summary>
         /// GetExternalReferenceByResourceId.

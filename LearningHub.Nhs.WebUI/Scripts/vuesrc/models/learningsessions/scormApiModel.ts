@@ -480,13 +480,13 @@ export class ScormApiModel {
 			}
 		}
 		else if (paramName === "cmi.suspend_data") {
-			if (this.isValidateDataType(paramValue, CMIDataType.CMIString4096)) {
+			if (this.isValidateDataType(paramValue, CMIDataType.CMIString64000)) {
 				this.sco.suspendData = paramValue;
 				result = true;
 			}
 		}
 		else if (paramName === "cmi.comments") {
-			if (this.isValidateDataType(paramValue, CMIDataType.CMIString4096)) {
+			if (this.isValidateDataType(paramValue, CMIDataType.CMIString64000)) {
 				this.sco.comments = paramValue;
 				result = true;
 			}
@@ -1016,6 +1016,11 @@ export class ScormApiModel {
 				break;
 			case CMIDataType.CMIString4096:
 				if (value.length < 4096) {
+					response = true;
+				}
+				break;
+			case CMIDataType.CMIString64000:
+				if (value.length < 64000) {
 					response = true;
 				}
 				break;

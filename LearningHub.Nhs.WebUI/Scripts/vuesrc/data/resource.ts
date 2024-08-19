@@ -502,6 +502,48 @@ const getMyContributions = async function (resourceType: ResourceType, status: V
         });
 };
 
+const getContributeAVResourceFlag = async function (): Promise<boolean> {
+    return await AxiosWrapper.axios.get<boolean>('/Resource/GetContributeAVResourceFlag')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('GetContributeAVResourceFlag:' + e);
+            throw e;
+        });
+};
+
+const getDisplayAVResourceFlag = async function (): Promise<boolean> {
+    return await AxiosWrapper.axios.get<boolean>('/Resource/GetDisplayAVResourceFlag')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('GetDisplayAVResourceFlag:' + e);
+            throw e;
+        });
+};
+
+const getAVUnavailableView = async function (): Promise<string> {
+    return await AxiosWrapper.axios.get('/Resource/GetAVUnavailableView')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.error('Error fetching shared partial view:', e)
+            throw e;
+        });
+};
+const getMKPlayerKey = async function (): Promise<string> {
+    return await AxiosWrapper.axios.get('/Resource/GetMKPlayerKey')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.error('Error fetching Media Kind MKPlayer Key', e)
+            throw e;
+        });
+};
 
 export const resourceData = {
     getContributeConfiguration,
@@ -541,4 +583,8 @@ export const resourceData = {
     getAssessmentDetail,
     duplicateBlocks,
     getMyContributions,
+    getContributeAVResourceFlag,
+    getDisplayAVResourceFlag,
+    getAVUnavailableView,
+    getMKPlayerKey
 };

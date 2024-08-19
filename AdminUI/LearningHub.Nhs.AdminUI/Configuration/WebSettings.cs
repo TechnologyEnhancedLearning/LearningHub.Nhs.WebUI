@@ -1,8 +1,4 @@
-﻿// <copyright file="WebSettings.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Configuration
+﻿namespace LearningHub.Nhs.AdminUI.Configuration
 {
     using System;
 
@@ -150,5 +146,10 @@ namespace LearningHub.Nhs.AdminUI.Configuration
         /// Gets or sets the FileUploadSettings.
         /// </summary>
         public FileUploadSettingsModel FileUploadSettings { get; set; } = new FileUploadSettingsModel();
+
+        /// <summary>
+        /// Gets or sets the MediaKindSettings.
+        /// </summary>
+        public MediaKindSettings MediaKindSettings { get; set; } = new MediaKindSettings();
     }
 }

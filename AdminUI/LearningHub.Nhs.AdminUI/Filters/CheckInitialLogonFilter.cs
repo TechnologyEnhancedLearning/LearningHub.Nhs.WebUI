@@ -1,8 +1,4 @@
-﻿// <copyright file="CheckInitialLogonFilter.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.AdminUI.Filters
+﻿namespace LearningHub.Nhs.AdminUI.Filters
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.AdminUI.Helpers;

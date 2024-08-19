@@ -241,6 +241,49 @@ const updateVideoAsset = async function (videoAsset: VideoAssetModel): Promise<b
         });
 };
 
+const getAddAVFlag = async function (): Promise<boolean> {
+    return await axios.get<boolean>('/Resource/GetAddAVFlag')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('getAddAVFlag:' + e);
+            throw e;
+        });
+};
+
+const getDisplayAVFlag = async function (): Promise<boolean> {
+    return await axios.get<boolean>('/Resource/GetDisplayAVFlag')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('getDisplayAVFlag:' + e);
+            throw e;
+        });
+};
+
+const getAVUnavailableView = async function (): Promise<string> {
+    return await axios.get('/Resource/GetAVUnavailableView')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.error('Error fetching shared partial view:', e)
+            throw e;
+        });
+};
+const getMKPlayerKey = async function (): Promise<string> {
+    return await axios.get('/Resource/GetMKPlayerKey')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.error('Error fetching Media Kind MKPlayer Key', e)
+            throw e;
+        });
+};
+
 
 export const contentData = {
     getUploadSettings,
@@ -260,5 +303,9 @@ export const contentData = {
     createPageSection,
     updatePageSectionDetail,
     getPageSectionDetailVideo,
-    updateVideoAsset
+    updateVideoAsset,
+    getAddAVFlag,
+    getDisplayAVFlag,
+    getAVUnavailableView,
+    getMKPlayerKey
 };

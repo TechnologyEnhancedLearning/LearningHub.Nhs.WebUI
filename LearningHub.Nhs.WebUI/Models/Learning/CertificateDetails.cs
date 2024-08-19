@@ -1,8 +1,4 @@
-﻿// <copyright file="CertificateDetails.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models.Learning
+﻿namespace LearningHub.Nhs.WebUI.Models.Learning
 {
     using System.Collections.Generic;
     using System.ComponentModel;

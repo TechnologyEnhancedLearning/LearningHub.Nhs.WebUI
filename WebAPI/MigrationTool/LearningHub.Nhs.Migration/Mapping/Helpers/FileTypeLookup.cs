@@ -1,8 +1,4 @@
-﻿// <copyright file="FileTypeLookup.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Migration.Mapping.Helpers
+﻿namespace LearningHub.Nhs.Migration.Mapping.Helpers
 {
     using System.Collections.Generic;
     using System.IO;

@@ -21,3 +21,5 @@ GO
 
 ALTER TABLE [resources].[ExternalReference] CHECK CONSTRAINT [FK_ExternalReference_ResourceReference]
 GO
+CREATE NONCLUSTERED INDEX [IX_Resources_ExternalReference_ExternalReference_Deleted] ON [resources].[ExternalReference]([ExternalReference], [Deleted]) 
+GO

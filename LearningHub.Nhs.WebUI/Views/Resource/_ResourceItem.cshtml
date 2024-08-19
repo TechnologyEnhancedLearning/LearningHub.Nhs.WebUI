@@ -107,7 +107,6 @@
                         </div>
                     </div>
                 }
-
                 @* Html Resource *@
                 @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Html)
                 {
@@ -128,45 +127,16 @@
                 @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
                 {
                     <div class="resource-panel-container">
-                        <!-- NON SCORM/AICC content-->
-                        @if (!resourceItem.GenericFileDetails.ScormAiccContent)
-                        {
-                            <div id="resourcePg" class="nhsuk-card nhsuk-bg-light-blue">
-                                <div class="nhsuk-card__content">
-                                    <p class="nhsuk-body-l nhsuk-u-margin-bottom-3">Download:</p>
-                                    <p class="nhsuk-body-l word-break__break-word">
-                                        <span class="nhsuk-u-margin-right-4 pill @UtilityHelper.GetPillColour(resourceItem.GenericFileDetails.File.FileName)">@GetFileExtension(resourceItem.GenericFileDetails.File.FileName)</span>
-                                        <a v-on:click=checkUserCertificateAvailability(@resourceItem.Id) class="nhsuk-u-margin-right-4" href="@GetDownloadResourceLink(resourceItem.GenericFileDetails.File.FilePath, resourceItem.GenericFileDetails.File.FileName)">@resourceItem.GenericFileDetails.File.FileName</a> (@resourceItem.GenericFileDetails.File.FileSizeKb KB)
-                                    </p>
-                                </div>
+                        <div id="resourcePg" class="nhsuk-card nhsuk-bg-light-blue">
+                            <div class="nhsuk-card__content">
+                                <p class="nhsuk-body-l nhsuk-u-margin-bottom-3">Download:</p>
+                                <p class="nhsuk-body-l word-break__break-word">
+                                    <span class="nhsuk-u-margin-right-4 pill @UtilityHelper.GetPillColour(resourceItem.GenericFileDetails.File.FileName)">@GetFileExtension(resourceItem.GenericFileDetails.File.FileName)</span>
+                                    <a v-on:click=checkUserCertificateAvailability(@resourceItem.Id) class="nhsuk-u-margin-right-4" href="@GetDownloadResourceLink(resourceItem.GenericFileDetails.File.FilePath, resourceItem.GenericFileDetails.File.FileName)">@resourceItem.GenericFileDetails.File.FileName</a> (@resourceItem.GenericFileDetails.File.FileSizeKb KB)
+                                </p>
                             </div>
-                        }
-                        else
-                        {
-                            <!-- SCORM/AICC content - User uploaded a zip file as a generic file and ticked the "SCORM/AICC content" checkbox -->
-                            <div class="nhsuk-card nhsuk-bg-light-blue">
-                                <div class="nhsuk-card__content">
-                                    <p>You will be able to launch SCORM/AICC elearning resources on the Learning Hub in the future.</p>
-                                    <p>In the meantime you can download this and add it to another system that supports this type of resource.</p>
-                                    <div>
-                                        <a href="@GetDownloadResourceLink(resourceItem.GenericFileDetails.File.FilePath, resourceItem.GenericFileDetails.File.FileName)" class="nhsuk-button">Download this elearning resource</a>
-                                    </div>
+                        </div>
 
-                                    <details class="nhsuk-details nhsuk-u-margin-top-2 nhsuk-u-margin-bottom-0">
-                                        <summary class="nhsuk-details__summary">
-                                            <span class="nhsuk-details__summary-text">
-                                                Why am I unable to view e-learning resources?
-                                            </span>
-                                        </summary>
-                                        <div class="nhsuk-details__text">
-                                            <p>
-                                                TBC
-                                            </p>
-                                        </div>
-                                    </details>
-                                </div>
-                            </div>
-                        }
                     </div>
                 }
 
@@ -191,7 +161,7 @@
                         </div>
                     }
                 }
-
+               
                 @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Video || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Audio || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Scorm ||
                resourceItem.ResourceTypeEnum == ResourceTypeEnum.Case || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Assessment)
                 {
@@ -202,11 +172,18 @@
 
                     @* Video/Audio/Scorm/Case/Assessment require JavaScript - use Vue.js resource app. *@
 
-                    <div id="resourcecontainer">
-                        <router-view user-authenticated="@ViewBag.UserAuthenticated"
-                                     :media-activity-playing-event-interval-seconds="@ViewBag.MediaActivityPlayingEventIntervalSeconds"
-                                     :keep-user-session-alive-interval-seconds="@ViewBag.KeepUserSessionAliveIntervalSeconds" />
-                    </div>
+                    if (!@ViewBag.DisplayAVResourceFlag && (resourceItem.AudioDetails !=null || resourceItem.VideoDetails !=null))
+                    {
+                        <partial name="_AudioVideoUnavailable" />
+                    }
+                    else
+                    {
+                        <div id="resourcecontainer">
+                            <router-view user-authenticated="@ViewBag.UserAuthenticated"
+                                         :media-activity-playing-event-interval-seconds="@ViewBag.MediaActivityPlayingEventIntervalSeconds"
+                                         :keep-user-session-alive-interval-seconds="@ViewBag.KeepUserSessionAliveIntervalSeconds" />
+                        </div>
+                    }
 
                     <partial name="_JavaScriptDisabled" />
                 }

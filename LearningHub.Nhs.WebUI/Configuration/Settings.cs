@@ -1,7 +1,3 @@
-// <copyright file="Settings.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.WebUI.Configuration
 {
     using System;
@@ -156,6 +152,16 @@ namespace LearningHub.Nhs.WebUI.Configuration
         public string AzureFileStorageConnectionString { get; set; }
 
         /// <summary>
+        /// Gets or sets the AzureSourceFileStorageConnectionString.
+        /// </summary>
+        public string AzureSourceArchiveStorageConnectionString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the AzurePurgedFileStorageConnectionString.
+        /// </summary>
+        public string AzureContentArchiveStorageConnectionString { get; set; }
+
+        /// <summary>
         /// Gets or sets the AzureFileStorageResourceShareName.
         /// </summary>
         public string AzureFileStorageResourceShareName { get; set; }
@@ -234,5 +240,10 @@ namespace LearningHub.Nhs.WebUI.Configuration
         /// Gets or sets the FindwiseSettings.
         /// </summary>
         public FindwiseSettings FindwiseSettings { get; set; } = new FindwiseSettings();
+
+        /// <summary>
+        /// Gets or sets the MediaKindSettings.
+        /// </summary>
+        public MediaKindSettings MediaKindSettings { get; set; } = new MediaKindSettings();
     }
 }

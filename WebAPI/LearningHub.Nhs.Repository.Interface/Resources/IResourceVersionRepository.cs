@@ -1,7 +1,3 @@
-// <copyright file="IResourceVersionRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.Repository.Interface.Resources
 {
     using System;
@@ -266,6 +262,6 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         /// <param name="resourceVersionId">resourceVersionId.</param>
         /// <param name="userId">userId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        ExternalContentDetailsViewModel GetExternalContentDetails(int resourceVersionId, int userId);
+        Task<ExternalContentDetailsViewModel> GetExternalContentDetails(int resourceVersionId, int userId);
     }
 }

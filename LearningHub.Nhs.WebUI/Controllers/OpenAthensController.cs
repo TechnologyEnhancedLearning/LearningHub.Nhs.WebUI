@@ -1,8 +1,4 @@
-﻿// <copyright file="OpenAthensController.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Controllers
+﻿namespace LearningHub.Nhs.WebUI.Controllers
 {
     using System;
     using System.Net.Http;
@@ -237,6 +233,11 @@ namespace LearningHub.Nhs.WebUI.Controllers
             if (invalidScope)
             {
                 return this.View();
+            }
+
+            if (string.IsNullOrWhiteSpace(this.authConfig.ClientId) || string.IsNullOrWhiteSpace(this.Settings.LearningHubWebUiUrl))
+            {
+                throw new Exception("ClientId or origin are empty.");
             }
 
             var authUri = OpenAthensOpenIdConnect.GetAuthServerUri(this.authConfig, this.Settings, returnUrl);

@@ -79,18 +79,22 @@
            && resource.ResourceVersionIdPublishing == 0
            && !resource.ReadOnly)
             {
-                <div class="nhsuk-u-text-align-right">
-                    <a class="nhsuk-button nhsuk-u-margin-right-4 nhsuk-u-margin-bottom-4" asp-controller="Resource" asp-action="EditConfirm" asp-route-resourceId="@resource.ResourceId"
-                       asp-route-resourceReferenceId="@Model.ResourceReferenceId" asp-route-resourceTitle="@Model.ResourceItem.Title">Edit resource</a>
-                    <a class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-4"
-                       asp-controller="Resource"
-                       asp-action="UnpublishConfirm"
-                       asp-route-resourceVersionId="@resource.ResourceVersionId"
-                       asp-route-resourceReferenceId="@Model.ResourceReferenceId"
-                       asp-route-resourceType="@((int)resource.ResourceTypeEnum)"
-                       asp-route-catalogueNodeVersionId="@resource.Catalogue.CatalogueNodeVersionId"
-                       asp-route-scormEsrLinkType="@((resource.ResourceTypeEnum == ResourceTypeEnum.Scorm || resource.ResourceTypeEnum == ResourceTypeEnum.GenericFile) ? (int)Model.ExternalContentDetails.EsrLinkType : null)"
-                       asp-route-resourceTitle="@resource.Title">Unpublish</a>
+                <div class="nhsuk-u-text-align-right  nhsuk-u-margin-right-4 nhsuk-u-margin-bottom-4">
+                    <form method="get" style="display:inline-block" action="~/Resource/EditConfirm">
+                        <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
+                        <input type="hidden" name="ResourceItem.ResourceId" value="@resource.ResourceId" />
+                        <input type="hidden" name="ResourceItem.Title" value="@Model.ResourceItem.Title" />
+                        <input type="submit" class="nhsuk-button" value="Edit resource" />
+                    </form>
+                    <form method="get" style="display:inline-block" action="~/Resource/UnpublishConfirm">
+                        <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
+                        <input type="hidden" name="ResourceItem.ResourceVersionId" value="@resource.ResourceVersionId" />
+                        <input type="hidden" name="ResourceItem.Title" value="@Model.ResourceItem.Title" />
+                        <input type="hidden" name="ResourceItem.ResourceTypeEnum" value="@(resource.ResourceTypeEnum)" />
+                        <input type="hidden" name="ResourceItem.Catalogue.CatalogueNodeVersionId" value="@resource.Catalogue.CatalogueNodeVersionId" />
+                        <input type="hidden" name="ExternalContentDetails.EsrLinkType" value="@((resource.ResourceTypeEnum == ResourceTypeEnum.Scorm || resource.ResourceTypeEnum == ResourceTypeEnum.GenericFile) ? Model.ExternalContentDetails.EsrLinkType : null)" />
+                        <input type="submit" class="nhsuk-button nhsuk-button--secondary" value="Unpublish" />
+                    </form>
                 </div>
             }
 
@@ -100,8 +104,12 @@
            && !resource.ReadOnly)
             {
                 <div class="nhsuk-u-text-align-right">
-                    <a class="nhsuk-button nhsuk-u-margin-bottom-4" asp-controller="Resource" asp-action="EditConfirm" asp-route-resourceId="@resource.ResourceId"
-                       asp-route-resourceReferenceId="@Model.ResourceReferenceId" asp-route-resourceTitle="@Model.ResourceItem.Title">Edit resource</a>
+                    <form method="get" class="nhsuk-u-margin-bottom-4" action="~/Resource/EditConfirm">
+                        <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
+                        <input type="hidden" name="ResourceItem.ResourceId" value="@resource.ResourceId" />
+                        <input type="hidden" name="ResourceItem.Title" value="@Model.ResourceItem.Title" />
+                        <input type="submit" class="nhsuk-button nhsuk-u-margin-bottom-4" value="Edit resource" />
+                    </form>
                 </div>
             }
         </div>
@@ -174,15 +182,15 @@
         {
             <div class="nhsuk-u-margin-bottom-4">
                 <div class="certificateDownload">
-                @if (Model.UserHasCertificate)
-                {
-                    <form method="get" action="~/MyLearning/Certificate">
-                        <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
-                        <input type="submit" formtarget="_blank" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-top-1" value="View Certificate" />
-                    </form>
-                }
+                    @if (Model.UserHasCertificate)
+                    {
+                        <form method="get" action="~/MyLearning/Certificate">
+                            <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
+                            <input type="submit" formtarget="_blank" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-top-1" value="View Certificate" />
+                        </form>
+                    }
                 </div>
-                <a class="nhsuk-u-font-size-16" role="button" asp-controller="Bookmark" asp-action="BookmarkResource"
+                <a class="nhsuk-u-font-size-16" asp-controller="Bookmark" asp-action="BookmarkResource"
                    asp-route-bookmarked="@Model.ResourceItem.IsBookmarked"
                    asp-route-id="@Model.ResourceItem.BookmarkId"
                    asp-route-title="@Model.ResourceItem.Title.Truncate(60)"
@@ -199,7 +207,7 @@
         </div>
 
         @if (resource.Id > 0 && !resource.Catalogue.Hidden && !(resource.VersionStatusEnum == VersionStatusEnum.Unpublished && !resource.DisplayForContributor))
-        {            
+        {
             <partial name="_ResourceItem" model="Model" />
             <hr />
             <div class="nhsuk-u-reading-width nhsuk-u-font-size-19">
@@ -215,14 +223,14 @@
                 {
                     <div class="nhsuk-u-margin-bottom-4">
                         <div class="certificateDownload">
-                        @if (Model.UserHasCertificate)
-                        {
-                            displayCertificateButton = false;
-                            <form method="get" action="~/MyLearning/Certificate">
-                                <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
-                                <input type="submit" formtarget="_blank" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-top-1" value="View Certificate" />
-                            </form>
-                        }
+                            @if (Model.UserHasCertificate)
+                            {
+                                displayCertificateButton = false;
+                                <form method="get" action="~/MyLearning/Certificate">
+                                    <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
+                                    <input type="submit" formtarget="_blank" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-top-1" value="View Certificate" />
+                                </form>
+                            }
                         </div>
 
                         @{
@@ -240,15 +248,15 @@
                 {
                     <div class="nhsuk-u-margin-bottom-4">
                         <div class="certificateDownload">
-                        @if (Model.UserHasCertificate && displayCertificateButton)
-                        {
-                            <form method="get" action="~/MyLearning/Certificate">
-                                <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
-                                <input type="submit" formtarget="_blank" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-top-1" value="View Certificate" />
-                            </form>
-                        }
+                            @if (Model.UserHasCertificate && displayCertificateButton)
+                            {
+                                <form method="get" action="~/MyLearning/Certificate">
+                                    <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
+                                    <input type="submit" formtarget="_blank" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-top-1" value="View Certificate" />
+                                </form>
+                            }
                         </div>
-                        <a class="nhsuk-u-font-size-16" role="button" asp-controller="Bookmark" asp-action="BookmarkResource"
+                        <a class="nhsuk-u-font-size-16" asp-controller="Bookmark" asp-action="BookmarkResource"
                            asp-route-bookmarked="@Model.ResourceItem.IsBookmarked"
                            asp-route-id="@Model.ResourceItem.BookmarkId"
                            asp-route-title="@Model.ResourceItem.Title.Truncate(60)"
@@ -276,7 +284,7 @@
 
 </div>
 
-@section Scripts{
+@section Scripts {
     @if (ViewBag.UserAuthenticated)
     {
         <script type="text/javascript" src="~/js/bundle/resourcecontainer.js" asp-append-version="true"></script>

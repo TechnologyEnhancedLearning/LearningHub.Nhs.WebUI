@@ -20,7 +20,7 @@ CREATE PROCEDURE [hierarchy].[CatalogueCreate]
 	@CardImageUrl nvarchar(128),
 	@BannerUrl nvarchar(128) null,
 	@Order int,
-	@Description nvarchar(4000),
+	@Description nvarchar(max),
 	@UserId int,
 	@Hidden bit,
 	@Keywords nvarchar(max),

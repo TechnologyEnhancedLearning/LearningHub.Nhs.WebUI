@@ -1,8 +1,4 @@
-﻿// <copyright file="ContributeService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Services
+﻿namespace LearningHub.Nhs.WebUI.Services
 {
     using System;
     using System.Collections.Generic;
@@ -28,6 +24,7 @@ namespace LearningHub.Nhs.WebUI.Services
     public class ContributeService : BaseService<ContributeService>, IContributeService
     {
         private readonly IAzureMediaService azureMediaService;
+        private readonly IAzureMediaService mediaService;
         private readonly IFileService fileService;
         private readonly IResourceService resourceService;
 
@@ -37,14 +34,16 @@ namespace LearningHub.Nhs.WebUI.Services
         /// <param name="fileService">File service.</param>
         /// <param name="resourceService">Resource service.</param>
         /// <param name="azureMediaService">Azure media service.</param>
+        /// <param name="mediaService">MKIO media service.</param>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
         /// <param name="logger">Logger.</param>
-        public ContributeService(IFileService fileService, IResourceService resourceService, IAzureMediaService azureMediaService, ILearningHubHttpClient learningHubHttpClient, ILogger<ContributeService> logger)
+        public ContributeService(IFileService fileService, IResourceService resourceService, IAzureMediaService azureMediaService,  ILearningHubHttpClient learningHubHttpClient, ILogger<ContributeService> logger, IAzureMediaService mediaService)
         : base(learningHubHttpClient, logger)
         {
             this.fileService = fileService;
             this.resourceService = resourceService;
             this.azureMediaService = azureMediaService;
+            this.mediaService = mediaService;
         }
 
         /// <summary>
@@ -512,7 +511,7 @@ namespace LearningHub.Nhs.WebUI.Services
             // if file is media (video or audio) then upload at Azure Media Storage
             if (fileType != null && (fileType.DefaultResourceTypeId == (int)ResourceTypeEnum.Video || fileType.DefaultResourceTypeId == (int)ResourceTypeEnum.Audio))
             {
-                filelocation = await this.azureMediaService.CreateMediaInputAsset(file);
+                filelocation = await this.mediaService.CreateMediaInputAsset(file);
             }
 
             // upload at Azure File Storage

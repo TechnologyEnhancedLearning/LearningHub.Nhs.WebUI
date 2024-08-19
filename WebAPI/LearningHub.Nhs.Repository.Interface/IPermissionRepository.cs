@@ -1,8 +1,4 @@
-﻿// <copyright file="IPermissionRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Repository.Interface
+﻿namespace LearningHub.Nhs.Repository.Interface
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

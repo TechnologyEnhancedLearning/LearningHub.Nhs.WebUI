@@ -1,7 +1,3 @@
-// <copyright file="QuestionAnswerRepository.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
 namespace LearningHub.Nhs.Repository.Resources
 {
     using LearningHub.Nhs.Models.Entities.Resource;

@@ -1,8 +1,4 @@
-﻿// <copyright file="MyLearningViewModel.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.WebUI.Models
+﻿namespace LearningHub.Nhs.WebUI.Models
 {
     using System;
     using System.Collections.Generic;
@@ -188,11 +184,13 @@ namespace LearningHub.Nhs.WebUI.Models
         {
             var checkboxes = new List<CheckboxListItemViewModel>()
             {
-                new CheckboxListItemViewModel("Complete", "Complete", null),
-                new CheckboxListItemViewModel("Incomplete", "Incomplete", null),
+                new CheckboxListItemViewModel("Complete", "Completed", null),
+                new CheckboxListItemViewModel("Incomplete", "In progress", null),
                 new CheckboxListItemViewModel("Passed", "Passed", null),
                 new CheckboxListItemViewModel("Failed", "Failed", null),
                 new CheckboxListItemViewModel("Downloaded", "Downloaded", null),
+                new CheckboxListItemViewModel("Viewed", "Viewed", null),
+                new CheckboxListItemViewModel("Launched", "Launched", null),
             };
             return checkboxes;
         }

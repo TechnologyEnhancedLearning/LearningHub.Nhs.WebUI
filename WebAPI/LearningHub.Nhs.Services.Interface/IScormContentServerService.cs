@@ -1,8 +1,4 @@
-﻿// <copyright file="IScormContentServerService.cs" company="HEE.nhs.uk">
-// Copyright (c) HEE.nhs.uk.
-// </copyright>
-
-namespace LearningHub.Nhs.Services.Interface
+﻿namespace LearningHub.Nhs.Services.Interface
 {
     using System;
     using System.Threading.Tasks;
@@ -18,14 +14,14 @@ namespace LearningHub.Nhs.Services.Interface
         /// </summary>
         /// <param name="externalUrl">The externalUrl<see cref="string"/>.</param>
         /// <returns>The <see cref="ContentServerViewModel"/>.</returns>
-        ContentServerViewModel GetContentDetailsByExternalUrl(string externalUrl);
+        Task<ContentServerViewModel> GetContentDetailsByExternalUrl(string externalUrl);
 
         /// <summary>
         /// The GetContentDetailsByExternalReference.
         /// </summary>
         /// <param name="externalReference">The externalReference<see cref="Guid"/>.</param>
         /// <returns>The <see cref="ContentServerViewModel"/>.</returns>
-        ContentServerViewModel GetContentDetailsByExternalReference(string externalReference);
+        Task<ContentServerViewModel> GetContentDetailsByExternalReference(string externalReference);
 
         /// <summary>
         /// The LogResourceReferenceEventAsync.

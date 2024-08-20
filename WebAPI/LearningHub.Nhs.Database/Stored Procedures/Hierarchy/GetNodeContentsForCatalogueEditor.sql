@@ -13,6 +13,7 @@
 -- 29-04-2024  DB	Link node and node version by CurrentNodeVersionId and ensure the NodeVersion is published.
 -- 02-05-2024  DB	Change input parameter to NodePathId to prevent all referenced resources and child nodes being returned multiple times
 --					Also return Child NodePathId to allow the client to navigate to the child node.
+-- 19-08-2024  DB	Include PrimaryCatalogueNodeId in results
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetNodeContentsForCatalogueEditor]
 (
@@ -30,6 +31,7 @@ BEGIN
 		[Description],
 		NodeTypeId,
 		NodeId,
+		PrimaryCatalogueNodeId,
 		NodeVersionId,
 		ResourceId,
 		ResourceVersionId,
@@ -50,6 +52,7 @@ BEGIN
 			fnv.[Description],
 			cn.NodeTypeId,
 			nl.ChildNodeId AS NodeId,
+			nv.PrimaryCatalogueNodeId AS PrimaryCatalogueNodeId,
 			fnv.NodeVersionId,
 			NULL AS ResourceId,
 			NULL AS ResourceVersionId,
@@ -90,6 +93,7 @@ BEGIN
 			NULL As [Description],
 			0 as NodeTypeId, 
 			NULL AS NodeId,
+			rv.PrimaryCatalogueNodeId AS PrimaryCatalogueNodeId,
 			NULL AS NodeVersionId,
 			r.Id AS ResourceId,
 			rv.Id AS ResourceVersionId,
@@ -111,18 +115,6 @@ BEGIN
             resources.ResourceVersion rv ON rv.resourceId = nr.ResourceId
         LEFT JOIN
             resources.ResourceReference rr ON rr.ResourceId = nr.ResourceId AND rr.NodePathId = np.Id AND rr.Deleted = 0
-		-- FROM 
-		-- 	hierarchy.NodeResource nr 
-		-- INNER JOIN 
-		-- 	resources.[Resource] r ON nr.ResourceId = r.Id
-		-- INNER JOIN 
-		-- 	resources.ResourceVersion rv ON rv.resourceId = nr.ResourceId
-		-- LEFT JOIN 
-		-- 	resources.ResourceReference rr ON rr.ResourceId = nr.ResourceId AND rr.Deleted = 0
-		-- 						  AND rr.NodePathId NOT IN (SELECT np.Id FROM hierarchy.NodePath np INNER JOIN [hub].[ExternalOrganisation] eo ON eo.NodeId = np.NodeId)
-		-- LEFT JOIN 
-		-- 	hierarchy.NodePath np ON rr.NodePathId = np.Id AND nr.NodeId = np.NodeId AND np.IsActive = 1 AND np.Deleted = 0
-		-- 						  AND np.Id NOT IN (SELECT np.Id FROM hierarchy.NodePath np INNER JOIN [hub].[ExternalOrganisation] eo ON eo.NodeId = np.NodeId)
 		LEFT JOIN
 			resources.VideoResourceVersion vrv ON vrv.ResourceVersionId = rv.Id AND vrv.Deleted = 0
 		LEFT JOIN 

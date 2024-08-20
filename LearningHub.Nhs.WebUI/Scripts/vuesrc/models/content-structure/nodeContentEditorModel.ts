@@ -3,6 +3,7 @@
     description: string;
     nodeTypeId: number;
     nodeId: number;
+    primaryCatalogueNodeId: number;
     nodePathId: number;
     nodeVersionId: number;
     resourceId: number;

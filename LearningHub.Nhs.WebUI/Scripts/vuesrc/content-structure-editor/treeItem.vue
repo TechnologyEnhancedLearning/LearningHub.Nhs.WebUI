@@ -217,7 +217,7 @@
                     this.editMode == EditModeEnum.None;
             },
             canContributeResource(): boolean {
-                return !this.item.inEdit && this.editMode !== EditModeEnum.MoveResource && !this.isError;
+                return !this.item.inEdit && this.item.primaryCatalogueNodeId == this.$store.state.contentStructureState.catalogue.nodeId && this.editMode !== EditModeEnum.MoveResource && !this.isError;
             },
             canMoveResourceToRoot(): boolean {
                 return this.editMode === EditModeEnum.MoveResource && this.movingResource.parent.depth > 0 && this.item.depth === 0;

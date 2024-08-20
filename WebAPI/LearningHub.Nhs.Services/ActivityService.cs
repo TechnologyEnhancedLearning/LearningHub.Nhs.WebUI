@@ -46,7 +46,7 @@
         /// </summary>
         /// <param name="resourceActivityRepository">The resource activity repository.</param>
         /// <param name="assessmentResourceActivityRepository">The assessment resource activity repository.</param>
-        /// <param name="assessmentResourceActivityInteractionRepository">The assessment resource activity interaction repository.</param>
+        /// <param name="assessmentResourceActivityInteractionRepository">The assessment resource activity interaction repository Test.</param>
         /// <param name="mediaResourceActivityRepository">The media resource activity repository.</param>
         /// <param name="mediaResourceActivityInteractionRepository">The media resource activity interaction repository.</param>
         /// <param name="userService">The user service.</param>

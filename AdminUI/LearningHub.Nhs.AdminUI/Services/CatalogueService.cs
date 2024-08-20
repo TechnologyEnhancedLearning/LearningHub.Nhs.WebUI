@@ -17,7 +17,7 @@
     public class CatalogueService : BaseService, ICatalogueService
     {
         /// <summary>
-        /// Defines the _facade.
+        /// Defines the _facade_TEST.
         /// </summary>
         private readonly ILearningHubApiFacade facade;
 

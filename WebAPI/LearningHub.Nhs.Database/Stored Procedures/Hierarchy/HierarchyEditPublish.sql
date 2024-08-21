@@ -21,6 +21,7 @@
 -- 27-08-2024  SA   Moving a folder into a referenced folder should affect all instances of the referenced folder.[added
                     -- condition to avoid duplicate entries in to NodeLink table]
 -- 02-09-2024  DB	Remove any deleted NodePathDisplayVersion anf ResourceReferenceDisplayVersion records.
+-- 21-08-2024  SS	Publishing catalogues needs to update referencing catalogues
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditPublish] 
 (
@@ -560,7 +561,11 @@ BEGIN
 			AND np.CatalogueNodeId != np.NodeId
 			AND hed.NodeId IS NULL
 
+	    ----------------------------------------------------------
+		-- NodePath: generate new NodePath/s for refered Catalogues
+		----------------------------------------------------------
 
+		EXEC [hierarchy].[HierarchyNewNodePathForReferedCatalogue] @HierarchyEditId,@AmendUserId,@AmendDate
 		----------------------------------------------------------
 		-- NodePathNode
 		----------------------------------------------------------		

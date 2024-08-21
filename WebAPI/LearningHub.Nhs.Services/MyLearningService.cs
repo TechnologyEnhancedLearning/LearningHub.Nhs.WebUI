@@ -110,6 +110,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<MyLearningDetailedViewModel> GetActivityDetailed(int userId, MyLearningRequestModel requestModel)
         {
+            // get data from SP Test
             var activityQuery = this.resourceActivityRepository.GetByUserIdFromSP(userId, requestModel, this.settings.Value.DetailedMediaActivityRecordingStartDate).Result.OrderByDescending(r => r.ActivityStart).DistinctBy(l => l.Id);
 
             // Count total records.

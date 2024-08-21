@@ -593,7 +593,7 @@ BEGIN
 		SET @NodePathCursor = CURSOR FORWARD_ONLY FOR
         SELECT  NodePathId, NodeId, ParentNodeId, InitialNodePath, NewNodePath, HierarchyEditDetailOperationId
         FROM    hierarchy.HierarchyEditDetail
-        WHERE   HierarchyEditId = 80
+        WHERE   HierarchyEditId = @HierarchyEditId
             AND ISNULL(InitialNodePath, '') != ISNULL(NewNodePath, InitialNodePath)
             AND (
                 HierarchyEditDetailTypeId = 4 -- Node Link

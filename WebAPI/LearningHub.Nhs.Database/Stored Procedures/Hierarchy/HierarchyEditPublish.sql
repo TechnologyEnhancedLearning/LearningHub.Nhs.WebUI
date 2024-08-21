@@ -18,6 +18,7 @@
 -- 03-06-2024  DB	Publish NodePathDisplayVersion records.
 -- 13-06-2024  DB	Publish ResourceReferenceDisplayVersion records.
 -- 26-07-2024  SA   Remove references to be implemented
+-- 21-08-2024  SS	Publishing catalogues needs to update referencing catalogues
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditPublish] 
 (
@@ -572,7 +573,11 @@ BEGIN
 			AND np.CatalogueNodeId != np.NodeId
 			AND hed.NodeId IS NULL
 
+	    ----------------------------------------------------------
+		-- NodePath: generate new NodePath/s for refered Catalogues
+		----------------------------------------------------------
 
+		EXEC [hierarchy].[HierarchyNewNodePathForReferedCatalogue] @HierarchyEditId,@AmendUserId,@AmendDate
 		----------------------------------------------------------
 		-- NodePathNode
 		----------------------------------------------------------		

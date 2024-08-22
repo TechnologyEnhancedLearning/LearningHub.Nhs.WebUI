@@ -558,8 +558,8 @@ const getObsoleteResourceFile = async function (id: number): Promise<string[]> {
 };
 
 const archiveResourceFile = async function (filepaths: string[]): Promise<boolean> {
-    const params = {filePaths:filepaths};
-    return await AxiosWrapper.axios.post('/api/Resource/DuplicateBlocks', params).then(() => {
+
+    return await AxiosWrapper.axios.post('/api/Resource/ArchiveResourceFile', filepaths).then(() => {
         return true
     }).catch(e => {
             console.log('archiveResourceFile:' + e);

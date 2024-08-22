@@ -337,6 +337,7 @@
                 resourceVersionUpdate.ResourceLicenceId = resourceVersion.ResourceLicenceId == 0 ? null : resourceVersion.ResourceLicenceId;
                 resourceVersionUpdate.SensitiveContent = resourceVersion.SensitiveContent;
                 resourceVersionUpdate.CertificateEnabled = resourceVersion.CertificateEnabled;
+                resourceVersionUpdate.PrimaryCatalogueNodeId = resourceVersion.PrimaryCatalogueNodeId;
                 this.SetAuditFieldsForUpdate(userId, resourceVersionUpdate);
             }
 

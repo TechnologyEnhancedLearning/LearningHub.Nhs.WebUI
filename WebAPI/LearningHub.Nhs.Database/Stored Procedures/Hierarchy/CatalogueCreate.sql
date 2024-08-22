@@ -101,6 +101,9 @@ BEGIN
 
 			SELECT @NodeVersionId = SCOPE_IDENTITY()
 
+			UPDATE nv SET PrimaryCatalogueNodeId = CatalogueNodeId from hierarchy.NodePath np 
+            INNER JOIN hierarchy.NodeVersion nv ON nv.NodeId = np.NodeId where nv.Id =@NodeVersionId
+
 			UPDATE [hierarchy].[Node]
 			SET CurrentNodeVersionId = @NodeVersionId
 			WHERE Id = @NodeId

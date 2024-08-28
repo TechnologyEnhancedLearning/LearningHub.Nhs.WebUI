@@ -11,6 +11,7 @@
 -- 20-05-2024  DB	Added the creation of a new NodePath record for the moved node and update child nodes.
 -- 29-05-2024  DB	Clear the NodePathId for moved nodes. NodePaths can not be updated incase susequent references are made to the original path.
 -- 07-08-2024  SA   Remove all instance of the referenced path when moving a referenced folder
+-- 23-08-2024  SA   Moving a folder into a referenced folder should affect all instances of the referenced folder.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditMoveNode]
 (
@@ -279,9 +280,48 @@ BEGIN
 			AND rrdv.Deleted = 0
 			AND hed.Deleted = 0
 
-        -- Remove all instance of the referenced path when moving a referenced folder
+		 -- Remove all instance of the referenced path when moving a referenced folder
 
 		 EXEC hierarchy.HierarchyEditRemoveNodeReferencesOnMoveNode @HierarchyEditDetailId,@UserId,@UserTimezoneOffset
+
+		-- Moving a folder into a referenced folder should affect all instances of the referenced folder.
+
+		DECLARE @CurrentNodeId INT,
+                @ReferenceHierarchyEditDetailId INT
+
+        SELECT @CurrentNodeId = hed.NodeId
+        FROM [hierarchy].[HierarchyEditDetail] hed
+        WHERE hed.Id = @MoveToHierarchyEditDetailId
+		
+        -- Declare the cursor
+
+		 DECLARE NodeCursor CURSOR FOR 
+                  SELECT Id AS ReferenceHierarchyEditDetailId
+                  FROM hierarchy.HierarchyEditDetail
+                                         WHERE NodeId = @CurrentNodeId
+                                               AND Id != @MoveToHierarchyEditDetailId         
+        -- Open the cursor
+        OPEN NodeCursor;
+
+        -- Fetch the first row from the cursor
+        FETCH NEXT FROM NodeCursor
+        INTO @ReferenceHierarchyEditDetailId;
+
+        -- Loop until no more rows are returned
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            -- Execute the script to add new folder references in all referenced instances
+            EXEC [hierarchy].[HierarchyEditReferenceNode] @HierarchyEditDetailId, @ReferenceHierarchyEditDetailId, @UserId,@UserTimezoneOffset
+
+            -- Fetch the next row from the cursor
+            FETCH NEXT FROM NodeCursor
+            INTO @ReferenceHierarchyEditDetailId;
+        END
+
+        -- Close and deallocate the cursor
+        CLOSE NodeCursor;
+        DEALLOCATE NodeCursor;
+       
 		------------------------------------------------------------ 
 		-- Refresh HierarchyEditNodeResourceLookup
 		------------------------------------------------------------

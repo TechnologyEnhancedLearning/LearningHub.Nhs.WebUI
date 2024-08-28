@@ -454,6 +454,12 @@ const actions = <ActionTree<State, any>>{
             await refreshNodeContents(payload.destinationNode, true).then(async x => {
                 await refreshNodeContents(state.editingTreeNode.parent, true).then(y => {
                 });
+                refreshHierarchyEdit(state);
+                state.rootNode.children.forEach(async (child) => {
+                    if (child.nodeId != null) {
+                        await refreshNodeContents(child, false);
+                    }
+                });
             });
         }).catch(e => {
             state.inError = true;
@@ -492,8 +498,9 @@ const actions = <ActionTree<State, any>>{
         state.inError = false;
         contentStructureData.removeReferenceNode(payload.node.hierarchyEditDetailId).then(async response => {
             await refreshNodeContents(payload.node.parent, false);
-            await refreshNodeContents(payload.node.parent.parent, false);
-            await refreshNodeIfMatchingNodeId(payload.node.parent, state.editingTreeNode.nodeId, state.editingTreeNode.hierarchyEditDetailId);
+            if (payload.node.parent.parent != null) {
+                await refreshNodeContents(payload.node.parent.parent, false);
+            }
         }).catch(e => {
             state.inError = true;
             state.lastErrorMessage = "Error removing resource refrence.";

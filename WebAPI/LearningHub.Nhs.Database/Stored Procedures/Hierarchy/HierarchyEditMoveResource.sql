@@ -7,6 +7,7 @@
 --
 -- 11-01-2022  KD	Initial Revision.
 -- 08-08-2024 SA    Remove all instance of the referenced path when moving a referenced resource
+-- 23-08-2024 SA    Moving a resource into a referenced folder should affect all instances of the referenced folder
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditMoveResource]
 (
@@ -175,6 +176,45 @@ BEGIN
 		-- Remove all instance of the referenced path when moving a referenced resource
 
 		EXEC hierarchy.HierarchyEditRemoveResourceReferencesOnMoveResource @HierarchyEditDetailId,@ParentNodeId,@UserId,@UserTimezoneOffset
+
+		-- Moving a resource into a referenced folder should affect all instances of the referenced folder
+
+		DECLARE @CurrentNodeId INT,
+                @ReferenceHierarchyEditDetailId INT
+
+        SELECT @CurrentNodeId = hed.NodeId
+        FROM [hierarchy].[HierarchyEditDetail] hed
+        WHERE hed.Id = @MoveToHierarchyEditDetailId
+		
+        -- Declare the cursor
+
+		 DECLARE NodeCursor CURSOR FOR 
+                  SELECT Id AS ReferenceHierarchyEditDetailId
+                  FROM hierarchy.HierarchyEditDetail
+                                         WHERE NodeId = @CurrentNodeId
+                                               AND Id != @MoveToHierarchyEditDetailId         
+        -- Open the cursor
+        OPEN NodeCursor;
+
+        -- Fetch the first row from the cursor
+        FETCH NEXT FROM NodeCursor
+        INTO @ReferenceHierarchyEditDetailId;
+
+        -- Loop until no more rows are returned
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            -- Execute the update statement for the current row
+          EXEC [hierarchy].[HierarchyEditReferenceResource] @HierarchyEditDetailId, @ReferenceHierarchyEditDetailId, @UserId,@UserTimezoneOffset
+
+            -- Fetch the next row from the cursor
+            FETCH NEXT FROM NodeCursor
+            INTO @ReferenceHierarchyEditDetailId;
+        END
+
+        -- Close and deallocate the cursor
+        CLOSE NodeCursor;
+        DEALLOCATE NodeCursor;
+
 		------------------------------------------------------------ 
 		-- Refresh HierarchyEditNodeResourceLookup
 		------------------------------------------------------------

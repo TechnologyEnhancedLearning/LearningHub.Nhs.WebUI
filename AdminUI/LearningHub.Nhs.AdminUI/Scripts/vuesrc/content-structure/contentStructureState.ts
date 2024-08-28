@@ -457,6 +457,7 @@ const actions = <ActionTree<State, any>>{
             await refreshNodeContents(payload.destinationNode, true).then(async x => {
                 await refreshNodeContents(state.editingTreeNode.parent, true).then(y => {
                 });
+                refreshHierarchyEdit(state);
                 state.rootNode.children.forEach(async (child) => {
                     if (child.nodeId != null) {
                         await refreshNodeContents(child, false);

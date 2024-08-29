@@ -115,6 +115,7 @@ async function refreshNodeContents(node: NodeContentAdminModel, refreshParentPat
                     existing.displayOrder = child.displayOrder;
                     existing.name = child.name;
                     existing.nodePathDisplayVersionId = child.nodePathDisplayVersionId;
+                    existing.resourceReferenceDisplayVersionId = child.resourceReferenceDisplayVersionId;
                     existing.nodePaths = child.nodePaths;
                     existing.isResource = child.nodeTypeId === NodeType.Resource;
                     if (child.nodePaths) {

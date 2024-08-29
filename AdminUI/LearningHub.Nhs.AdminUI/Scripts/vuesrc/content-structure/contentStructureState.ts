@@ -116,6 +116,7 @@ async function refreshNodeContents(node: NodeContentAdminModel, refreshParentPat
                     existing.displayOrder = child.displayOrder;
                     existing.name = child.name;
                     existing.nodePathDisplayVersionId = child.nodePathDisplayVersionId;
+                    existing.resourceReferenceDisplayVersionId = child.resourceReferenceDisplayVersionId;
                     existing.nodePaths = child.nodePaths;
                     existing.isResource = child.nodeTypeId === NodeType.Resource;
                     if (child.nodePaths) {
@@ -574,7 +575,7 @@ const actions = <ActionTree<State, any>>{
             await refreshNodeContents(state.editingTreeNode.parent, false);
         }).catch(e => {
             state.inError = true;
-            state.lastErrorMessage = "Error creating folder reference.";
+            state.lastErrorMessage = "Error creating resource reference.";
         });
         context.commit("setEditMode", EditModeEnum.Structure);
     },

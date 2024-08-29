@@ -117,9 +117,9 @@
                     <input type="button" class="btn btn-custom-green mr-3" @click="onSaveFolderReferenceEdit()" v-bind:class="{disabled: !canSaveFolderReferenceEdit}" v-bind:disabled="!canSaveFolderReferenceEdit" value="Save changes" />
                     <input type="button" class="btn btn-admin btn-cancel" @click="onCancelFolderReferenceEdit()" value="Cancel" />
 
-                    <span class="ml-auto mt-3">
+                    <span class="ml-auto mt-3" v-if="editingFolderNodeReference.nodePathDisplayVersionId>0">
                         <a class="delete-folder-link" @click.prevent="onEditFolderReferenceDeleteFolder" href="#">
-                            Delete this folder reference <i class="fa-solid fa-trash-can delete-folder ml-2"></i>
+                            Delete folder reference details <i class="fa-solid fa-trash-can delete-folder ml-2"></i>
                         </a>
                     </span>
                 </div>
@@ -154,9 +154,9 @@
                     <input type="button" class="btn btn-custom-green mr-3" @click="onSaveResourceReferenceEdit()" v-bind:class="{disabled: !canSaveResourceReferenceEdit}" v-bind:disabled="!canSaveResourceReferenceEdit" value="Save changes" />
                     <input type="button" class="btn btn-admin btn-cancel" @click="onCancelResourceReferenceEdit()" value="Cancel" />
 
-                    <span class="ml-auto mt-3">
+                    <span class="ml-auto mt-3" v-if="editingResourceNodeReference.resourceReferenceDisplayVersionId>0">
                         <a class="delete-folder-link" @click.prevent="onEditResourceReferenceDeleteFolder" href="#">
-                            Delete this resource reference <i class="fa-solid fa-trash-can delete-folder ml-2"></i>
+                            Delete resource reference details <i class="fa-solid fa-trash-can delete-folder ml-2"></i>
                         </a>
                     </span>
                 </div>

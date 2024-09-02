@@ -42,7 +42,16 @@ const getNodeContentsForCatalogueEditor = async function (nodePathId: number): P
             throw e;
         });
 };
-
+const checkCatalogueHasExternalReference = async function (nodeId: number): Promise<boolean> {
+    return await axios.get<boolean>('/api/hierarchy/CheckCatalogueHasExternalReference/' + nodeId + `?timestamp=${new Date().getTime()}`)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('CheckCatalogueHasExternalReference:' + e);
+            throw e;
+        });
+};
 const getNodeContentsAdmin = async function (nodePathId: number, readOnly: boolean): Promise<NodeContentAdminModel[]> {
     return await axios.get<NodeContentAdminModel[]>('/api/hierarchy/GetNodeContentsAdmin/' + nodePathId + '/' + readOnly + `?timestamp=${new Date().getTime()}`)
         .then(response => {
@@ -464,5 +473,6 @@ export const contentStructureData = {
     getReferencableCatalogues,
     hierarchyEditReferenceExternalResource,
     referenceExternalNode,
-    removeReferenceNode
+    removeReferenceNode,
+    checkCatalogueHasExternalReference
 }

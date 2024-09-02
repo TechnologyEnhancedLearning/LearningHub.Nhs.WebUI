@@ -232,7 +232,7 @@ BEGIN
 
 		-- Create moved NodeResource/s in their new locations
 		INSERT INTO [hierarchy].[NodeResource] ([NodeId],[ResourceId],[DisplayOrder],[VersionStatusId],[PublicationId],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
-		SELECT  ParentNodeId, ResourceId, DisplayOrder, 2 /* Published */, @PublicationId, 0, CreateUserId, CreateDate, AmendUserId, AmendDate  
+		SELECT  DISTINCT ParentNodeId, ResourceId, DisplayOrder, 2 /* Published */, @PublicationId, 0, @AmendUserId, @AmendDate, @AmendUserId, @AmendDate
 		FROM    hierarchy.HierarchyEditDetail
 		WHERE   HierarchyEditId = @HierarchyEditId
 			AND HierarchyEditDetailTypeId = 5 -- Node Resource

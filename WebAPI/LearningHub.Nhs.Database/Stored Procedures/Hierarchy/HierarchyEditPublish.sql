@@ -18,6 +18,8 @@
 -- 03-06-2024  DB	Publish NodePathDisplayVersion records.
 -- 13-06-2024  DB	Publish ResourceReferenceDisplayVersion records.
 -- 26-07-2024  SA   Remove references to be implemented
+-- 27-08-2024  SA   Moving a folder into a referenced folder should affect all instances of the referenced folder.[added
+                    -- condition to avoid duplicate entries in to NodeLink table]
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditPublish] 
 (
@@ -62,7 +64,7 @@ BEGIN
 		----------------------------------------------------------
 		-- Create new NodeLinks (arising from Create or Reference Node)
 		INSERT INTO [hierarchy].[NodeLink] ([ParentNodeId],[ChildNodeId],[DisplayOrder],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
-		SELECT
+		SELECT DISTINCT
 			ParentNodeId,
 			NodeId AS ChildNodeId, 
 			DisplayOrder,
@@ -230,7 +232,7 @@ BEGIN
 
 		-- Create moved NodeResource/s in their new locations
 		INSERT INTO [hierarchy].[NodeResource] ([NodeId],[ResourceId],[DisplayOrder],[VersionStatusId],[PublicationId],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
-		SELECT  ParentNodeId, ResourceId, DisplayOrder, 2 /* Published */, @PublicationId, 0, CreateUserId, CreateDate, AmendUserId, AmendDate  
+		SELECT  DISTINCT ParentNodeId, ResourceId, DisplayOrder, 2 /* Published */, @PublicationId, 0, @AmendUserId, @AmendDate, @AmendUserId, @AmendDate
 		FROM    hierarchy.HierarchyEditDetail
 		WHERE   HierarchyEditId = @HierarchyEditId
 			AND HierarchyEditDetailTypeId = 5 -- Node Resource
@@ -283,21 +285,6 @@ BEGIN
 			AND hed.DisplayOrder != nr.DisplayOrder
 			AND hed.Deleted = 0
 			AND nr.Deleted = 0
-
-			-- Update NodeResource Deleted status , if the reference is removed.
-		UPDATE 
-			nr
-		SET
-			Deleted = 1,
-			AmendUserId = @AmendUserId,
-			AmendDate = @AmendDate
-		FROM
-			hierarchy.HierarchyEditDetail hed
-		INNER JOIN
-			hierarchy.NodeResource nr ON hed.NodeResourceId = nr.Id
-		WHERE 
-			HierarchyEditId = @HierarchyEditId
-			AND hed.Deleted =1
 
 		----------------------------------------------------------
 		-- NodeVersion

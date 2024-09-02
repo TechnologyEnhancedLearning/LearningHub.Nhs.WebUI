@@ -349,11 +349,18 @@
             {
                 if (associatedResource.ResourceType != ResourceTypeEnum.Scorm && associatedResource.ResourceType != ResourceTypeEnum.Html)
                 {
+                    try
+                    {
                         var obsoleteFiles = await this.resourceService.GetObsoleteResourceFile(publishViewModel.ResourceVersionId);
                         if (obsoleteFiles != null && obsoleteFiles.Any())
                         {
-                            await this.fileService.PurgeResourceFile(null, obsoleteFiles);
+                            _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, obsoleteFiles); });
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        this.Logger.LogError($"File Archive Error: {ex.Message}", $"ResourceVersionId -{publishViewModel.ResourceVersionId}");
+                    }
                 }
             }
 
@@ -707,8 +714,8 @@
                         {
                             foreach (var oldblock in existingImages)
                             {
-                               var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null && (x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId || x.MediaBlock?.Image?.File?.FilePath == oldblock.MediaBlock?.Image?.File?.FilePath));
-                               if (entry == null)
+                                var entry = newBlocks.FirstOrDefault(x => x.BlockType == BlockType.Media && x.MediaBlock != null && x.MediaBlock.MediaType == MediaType.Image && x.MediaBlock.Image != null && (x.MediaBlock?.Image?.File?.FileId == oldblock.MediaBlock?.Image?.File?.FileId || x.MediaBlock?.Image?.File?.FilePath == oldblock.MediaBlock?.Image?.File?.FilePath));
+                                if (entry == null)
                                 {
                                     filePaths.Add(oldblock?.MediaBlock?.Image?.File?.FilePath);
                                 }
@@ -790,8 +797,10 @@
                     _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, deleteList); });
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                var param = new object[] { resourceVersionId, existingResource, newResource };
+                this.Logger.LogError($"BlockCollection Archive Error: {ex.Message}", param);
             }
         }
 

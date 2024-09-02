@@ -263,6 +263,7 @@ Vue.use(Vuelidate as any);
                 SectionLayoutType: SectionLayoutType,
                 editorConfig: {
                     toolbar: CKEditorToolbar.landingPages,
+                    versionCheck: false,
                     stylesSet: 'landing-pages-video-text'
                 },
 

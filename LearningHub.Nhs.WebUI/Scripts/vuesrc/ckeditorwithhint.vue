@@ -23,7 +23,10 @@
         },
         data() {
             return {
-                editorConfig: { toolbar: CKEditorToolbar.default },
+                editorConfig: {
+                    toolbar: CKEditorToolbar.default,
+                    versionCheck: false
+                },
                 description: this.initialValue,
                 hint: `You have ${this.maxLength} characters remaining`,
                 valid: getRemainingCharactersFromHtml(this.maxLength, this.initialValue) >= 0,

@@ -257,6 +257,7 @@
                 SectionLayoutType: SectionLayoutType,
                 editorConfig: {
                     toolbar: CKEditorToolbar.landingPages,
+                    versionCheck: false,
                     stylesSet: 'landing-pages-image-text'
                 },
 

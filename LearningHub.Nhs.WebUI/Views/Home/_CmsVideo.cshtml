@@ -1,7 +1,7 @@
 ﻿@using LearningHub.Nhs.Models.Content
 @model PageSectionDetailViewModel
 @{
-    string mkPlayerLicence = (string) ViewData["mkPlayerLicenceKey"];
+    string mkPlayerLicence = (string)ViewData["mkPlayerLicenceKey"];
 }
 
 @* <link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" /> *@
@@ -120,21 +120,21 @@
         const videoElement = document.getElementById("@($"{"bitmovinplayer-video-videoContainer"}{Model.Id}")");
         if (videoElement) {
             videoElement.controls = true;
-           // debugger;
+            // debugger;
             // Check if captions available
             if (model.videoAsset.closedCaptionsFile) {
                 const captionsInfo = model.videoAsset.closedCaptionsFile;
                 if (captionsInfo.filePath) {
                     const trackElement = document.createElement('track');
-                  //  const srcPath = "/file/download?filePath=" + captionsInfo.filePath + "&fileName=" + captionsInfo.fileName;
+                    //  const srcPath = "/file/download?filePath=" + captionsInfo.filePath + "&fileName=" + captionsInfo.fileName;
                     const srcPath = "/file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
                     trackElement.kind = 'captions'; // Or 'subtitles' or 'descriptions' depending on your track type
                     trackElement.label = captionsInfo.language || 'english';
-                    trackElement.srclang = captionsInfo.language || 'en'; 
-                   // trackElement.src = "/api/resource/DownloadResource?filePath=396eb836-5cf5-4255-b33f-66a31fdbef39&amp;fileName=samplecaption.vtt";
-                   // trackElement.src = "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt";
-                   trackElement.src =   srcPath;
-                    
+                    trackElement.srclang = captionsInfo.language || 'en';
+                    // trackElement.src = "/api/resource/DownloadResource?filePath=396eb836-5cf5-4255-b33f-66a31fdbef39&amp;fileName=samplecaption.vtt";
+                    // trackElement.src = "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt";
+                    trackElement.src = srcPath;
+
 
                     // Append the track to the video element
                     videoElement.appendChild(trackElement);
@@ -157,7 +157,7 @@
                     // });
 
                     // Manually check and set track mode after a slight delay
-                    // setTimeout(() => {                       
+                    // setTimeout(() => {
                     //     var textTracks = videoElement.textTracks;
                     //     for (let i = 0; i < textTracks.length; i++) {
                     //         if ((textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') && textTracks[i].src === srcPath) {

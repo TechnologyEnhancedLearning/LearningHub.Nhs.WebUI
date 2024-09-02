@@ -522,6 +522,8 @@
     <Build Include="Stored Procedures\Resources\GetPopularDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetRatedDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetMyCertificatesDashboardResources.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetCatalogues.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetCataloguesCount.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

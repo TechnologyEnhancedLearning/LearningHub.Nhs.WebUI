@@ -184,7 +184,8 @@ BEGIN
 
         SELECT @CurrentNodeId = hed.NodeId
         FROM [hierarchy].[HierarchyEditDetail] hed
-        WHERE hed.Id = @MoveToHierarchyEditDetailId
+        WHERE hed.Id = @MoveToHierarchyEditDetailId 
+		      AND HierarchyEditId = @HierarchyEditId
 		
         -- Declare the cursor
 
@@ -192,7 +193,9 @@ BEGIN
                   SELECT Id AS ReferenceHierarchyEditDetailId
                   FROM hierarchy.HierarchyEditDetail
                                          WHERE NodeId = @CurrentNodeId
-                                               AND Id != @MoveToHierarchyEditDetailId         
+                                               AND Id != @MoveToHierarchyEditDetailId       
+											   AND HierarchyEditId = @HierarchyEditId
+											   AND deleted = 0
         -- Open the cursor
         OPEN NodeCursor;
 

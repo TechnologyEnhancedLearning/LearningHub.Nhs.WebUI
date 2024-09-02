@@ -10,7 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
-        <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.37" />
+        <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.38" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
         <PackageReference Include="Moq" Version="4.16.1" />
         <PackageReference Include="NBuilder" Version="6.1.0" />

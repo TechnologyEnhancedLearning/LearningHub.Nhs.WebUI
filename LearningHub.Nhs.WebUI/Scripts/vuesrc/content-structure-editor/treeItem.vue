@@ -249,7 +249,7 @@
                 else return 0;
             },
             isExternalCatalogue(): boolean {
-                return this.item.primaryCatalogueNodeId != this.$store.state.contentStructureState.rootNode.nodeId;
+                return this.$store.state.contentStructureState.hasExternalReference;
             },
         },
         mounted() {
@@ -291,7 +291,7 @@
                             }
                         }
                     }
-
+                    
                     // Load the data.
                     if (!this.isOpen && (!this.item.childrenLoaded || this.isError)) {
                         this.isOpen = true;

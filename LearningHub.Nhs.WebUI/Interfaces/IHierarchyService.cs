@@ -236,5 +236,12 @@
         /// <param name="referenceExternalResourceViewModel">The referenceExternalResourceViewModel<see cref="ReferenceExternalResourceViewModel"/>.</param>
         /// <returns>IActionResult.</returns>
         Task<ApiResponse> HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel);
+
+        /// <summary>
+        /// Check catalogue has external reference.
+        /// </summary>
+        /// <param name="nodeId">The nodeId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<bool> CheckCatalogueHasExternalReference(int nodeId);
     }
 }

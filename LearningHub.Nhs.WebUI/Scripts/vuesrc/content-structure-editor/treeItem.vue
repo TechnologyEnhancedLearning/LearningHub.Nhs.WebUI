@@ -82,9 +82,9 @@
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownNodeItems">
                                         <a class="dropdown-item" v-if="canEditResource" @click="onEditResource">Edit</a>
-                                        <a class="dropdown-item" v-if="canMoveResourceUp && !isExternalCatalogue" @click="onMoveResourceUp">Move up</a>
-                                        <a class="dropdown-item" v-if="canMoveResourceDown && !isExternalCatalogue" @click="onMoveResourceDown">Move down</a>
-                                        <a class="dropdown-item" v-if="canMoveResource && !isExternalCatalogue" @click="onInitiateMoveResource">Move</a>
+                                        <a class="dropdown-item" v-if="canMoveResourceUp && !hasExternalCatalogueReference" @click="onMoveResourceUp">Move up</a>
+                                        <a class="dropdown-item" v-if="canMoveResourceDown && !hasExternalCatalogueReference" @click="onMoveResourceDown">Move down</a>
+                                        <a class="dropdown-item" v-if="canMoveResource && !hasExternalCatalogueReference" @click="onInitiateMoveResource">Move</a>
                                         <a class="dropdown-item" v-if="canDuplicateResource" @click="onDuplicateResource">Duplicate</a>
                                         <a class="dropdown-item" v-if="canDeleteResource" @click="confirmDeleteResource" data-toggle="modal" data-target="#showDeleteConfirm">Delete</a>
                                     </div>
@@ -248,7 +248,7 @@
                 }
                 else return 0;
             },
-            isExternalCatalogue(): boolean {
+            hasExternalCatalogueReference(): boolean {
                 return this.$store.state.contentStructureState.hasExternalReference;
             },
         },

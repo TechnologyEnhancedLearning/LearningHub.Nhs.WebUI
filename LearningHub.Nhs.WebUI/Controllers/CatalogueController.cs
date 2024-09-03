@@ -605,6 +605,11 @@
                     BadgeUrl = t.BadgeUrl,
                 }).ToList();
             }
+            else
+            {
+                catalogues.TotalCount = 0;
+                catalogues.Catalogues = new List<AllCatalogueViewModel>();
+            }
 
             this.ViewBag.PageIndex = pageIndex;
             return this.View("AllCatalogueSearch", catalogues);

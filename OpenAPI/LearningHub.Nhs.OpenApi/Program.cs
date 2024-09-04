@@ -1,3 +1,4 @@
+
 namespace LearningHub.NHS.OpenAPI
 {
     using System;

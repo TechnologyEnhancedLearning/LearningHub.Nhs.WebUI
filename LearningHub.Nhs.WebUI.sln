@@ -4,15 +4,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.Nhs.WebUI", "LearningHub.Nhs.WebUI\LearningHub.Nhs.WebUI.csproj", "{16BBF937-C1E9-4240-B56E-20E3E5FA2005}"
-	ProjectSection(ProjectDependencies) = postProject
-		{8E66D196-878E-4147-B532-E3BDB88A9BC7} = {8E66D196-878E-4147-B532-E3BDB88A9BC7}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B5D48B6A-D4A7-494E-89C0-64428232D242}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json
-		StyleCop.ruleset = StyleCop.ruleset
+		DISABLE_StyleCop.ruleset = DISABLE_StyleCop.ruleset
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebAPI", "WebAPI", "{A5FB4292-2736-4829-8E53-E5E5EC5A1D49}"
@@ -58,6 +55,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenAPI", "OpenAPI", "{66ED23A2-F15A-4ECB-A84D-736C95BEFC61}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.NHS.OpenAPI", "OpenAPI\LearningHub.Nhs.OpenApi\LearningHub.NHS.OpenAPI.csproj", "{D0CD7202-83B7-410B-86A5-01CAF262FAB7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{97A323A7-EC69-43DA-AF64-29A74E433315} = {97A323A7-EC69-43DA-AF64-29A74E433315}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.Nhs.OpenApi.Models", "OpenAPI\LearningHub.Nhs.OpenApi.Models\LearningHub.Nhs.OpenApi.Models.csproj", "{B29E83E6-9675-4B16-ACE3-B66CC4F33517}"
 EndProject

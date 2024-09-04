@@ -15,6 +15,14 @@
 		<ApplicationURL>http://localhost:5001</ApplicationURL>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+	  <CodeAnalysisRuleSet>..\DISABLE_StyleCop.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+	  <CodeAnalysisRuleSet>..\DISABLE_StyleCop.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<Compile Remove="Enums\**" />
 		<Compile Remove="wwwroot\lib\fontawesome-pro-5.9.0\**" />

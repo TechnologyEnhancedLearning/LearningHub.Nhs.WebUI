@@ -236,24 +236,24 @@
         methods: {
             onPlayerReady() {
 
-                const videoElement = document.getElementById("bitmovinplayer-video-resourceMediaPlayer") as HTMLVideoElement;
-                if (videoElement) {
-                    videoElement.controls = true;
+                //const videoElement = document.getElementById("bitmovinplayer-video-resourceMediaPlayer") as HTMLVideoElement;
+                //if (videoElement) {
+                //    videoElement.controls = true;
 
-                    // Add the track element
-                    var captionsInfo = this.resourceItem.videoDetails.closedCaptionsFile;
-                    if (captionsInfo) {
-                        const trackElement = document.createElement('track');
-                        var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
-                        trackElement.kind = 'captions'; // Or 'subtitles' or 'descriptions' depending on your track type
-                        trackElement.label = captionsInfo.language || 'english';
-                        trackElement.srclang = captionsInfo.language || 'en';
-                        trackElement.src = srcPath;
+                //    // Add the track element
+                //    var captionsInfo = this.resourceItem.videoDetails.closedCaptionsFile;
+                //    if (captionsInfo) {
+                //        const trackElement = document.createElement('track');
+                //        var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
+                //        trackElement.kind = 'captions'; // Or 'subtitles' or 'descriptions' depending on your track type
+                //        trackElement.label = captionsInfo.language || 'english';
+                //        trackElement.srclang = captionsInfo.language || 'en';
+                //        trackElement.src = srcPath;
 
-                        // Append the track to the video element
-                        videoElement.appendChild(trackElement);
-                    }
-                }
+                //        // Append the track to the video element
+                //        videoElement.appendChild(trackElement);
+                //    }
+                //}
 
                 this.checkForAutoplay(this.player);
             },
@@ -276,7 +276,7 @@
                 // Prepare the player configuration
                 const playerConfig = {
                     key: this.mkioKey,
-                    ui: false,
+                    ui: true,
                     theme: "dark",
                     playback: {
                         muted: false,
@@ -845,13 +845,13 @@
         box-shadow: 0 -2px $govuk-focus-highlight-yellow,0 4px $nhsuk-black;
     }
 
-    .video-container {
+    /*.video-container {
         height: 0;
         width: 100%;
         overflow: hidden;
         position: relative;
-        padding-top: 56.25%; /* 16:9 aspect ratio */
-        background-color: #000;
+        padding-top: 56.25%;*/ /* 16:9 aspect ratio */
+        /*background-color: #000;
     }
 
     video {
@@ -864,5 +864,5 @@
 
     video[id^="bitmovinplayer-video"] {
         width: 100%;
-    }
+    }*/
 </style>

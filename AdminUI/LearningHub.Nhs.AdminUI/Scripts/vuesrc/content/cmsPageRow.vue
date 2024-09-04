@@ -196,7 +196,7 @@
                         // Prepare the player configuration
                         const playerConfig = {
                             key: this.mkioKey,
-                            ui: false,
+                            ui: true,
                             playback: {
                                 muted: false,
                                 autoplay: false,

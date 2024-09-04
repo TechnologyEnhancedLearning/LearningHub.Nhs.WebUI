@@ -1,0 +1,6 @@
+{
+  "sdk": {
+    //"version": "6.0.29"
+    "version": "6.X.X"  //I can only find .net 8 sdk 
+  }
+}

@@ -52,3 +52,8 @@ obj
 /OpenAPI/LearningHub.Nhs.OpenApi/web.config
 /AdminUI/LearningHub.Nhs.AdminUI/LearningHub.Nhs.AdminUI.csproj.user
 /WebAPI/LearningHub.Nhs.API/LearningHub.Nhs.Api.csproj.user
+/BlazorEcommerce/BlazorEcommerce/Server/appsettings.json
+/BlazorEcommerce/BlazorEcommerce/Server/appsettings.Development.json
+/AdminUI/LearningHub.Nhs.AdminUI/appsettings.json
+/OpenAPI/LearningHub.Nhs.OpenApi/appsettings.json
+/ReportAPI/LearningHub.Nhs.ReportApi/appsettings.json

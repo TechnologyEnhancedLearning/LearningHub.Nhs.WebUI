@@ -4,10 +4,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.Nhs.WebUI", "LearningHub.Nhs.WebUI\LearningHub.Nhs.WebUI.csproj", "{16BBF937-C1E9-4240-B56E-20E3E5FA2005}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8E66D196-878E-4147-B532-E3BDB88A9BC7} = {8E66D196-878E-4147-B532-E3BDB88A9BC7}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B5D48B6A-D4A7-494E-89C0-64428232D242}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		global.json = global.json
 		StyleCop.ruleset = StyleCop.ruleset
 	EndProjectSection
 EndProject
@@ -78,6 +82,29 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.Nhs.ReportApi.Services.UnitTests", "ReportAPI\LearningHub.Nhs.ReportApi.Services.UnitTests\LearningHub.Nhs.ReportApi.Services.UnitTests.csproj", "{AAC8306E-1DEB-460D-84C7-40166D189B88}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.Nhs.ReportApi.Shared", "ReportAPI\LearningHub.Nhs.ReportApi.Shared\LearningHub.Nhs.ReportApi.Shared.csproj", "{6167F037-166C-4C5A-81BE-55618E77D4E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CentralisedPackageLibrary", "CentralisedPackageLibrary\CentralisedPackageLibrary.csproj", "{8E66D196-878E-4147-B532-E3BDB88A9BC7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BlazorEcommerceLH", "BlazorEcommerceLH", "{5E627A0D-7239-4D9A-BA02-2799A913D390}"
+	ProjectSection(SolutionItems) = preProject
+		BlazorEcommerce\.gitattributes = BlazorEcommerce\.gitattributes
+		BlazorEcommerce\.gitignore = BlazorEcommerce\.gitignore
+		BlazorEcommerce\BlazorEcommerce.sln = BlazorEcommerce\BlazorEcommerce.sln
+		BlazorEcommerce\global.json = BlazorEcommerce\global.json
+		BlazorEcommerce\nuget.config = BlazorEcommerce\nuget.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{C0FF93C7-1184-4ADE-AFD6-B133C3BB4E1A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{6EF018E3-8346-4081-BF78-2CE29BBBC1F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{07599903-74DC-4AC7-A721-706E8D95852E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorEcommerce.Shared", "BlazorEcommerce\BlazorEcommerce\Shared\BlazorEcommerce.Shared.csproj", "{97A323A7-EC69-43DA-AF64-29A74E433315}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorEcommerce.Server", "BlazorEcommerce\BlazorEcommerce\Server\BlazorEcommerce.Server.csproj", "{B0C9EBE7-37AF-4CB4-A5D8-CF898C52BAE9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorEcommerce.Client", "BlazorEcommerce\BlazorEcommerce\Client\BlazorEcommerce.Client.csproj", "{B271158C-AD46-4022-B380-B64D3D3A1417}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -335,6 +362,38 @@ Global
 		{6167F037-166C-4C5A-81BE-55618E77D4E8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6167F037-166C-4C5A-81BE-55618E77D4E8}.Release|x64.ActiveCfg = Release|Any CPU
 		{6167F037-166C-4C5A-81BE-55618E77D4E8}.Release|x64.Build.0 = Release|Any CPU
+		{8E66D196-878E-4147-B532-E3BDB88A9BC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E66D196-878E-4147-B532-E3BDB88A9BC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E66D196-878E-4147-B532-E3BDB88A9BC7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8E66D196-878E-4147-B532-E3BDB88A9BC7}.Debug|x64.Build.0 = Debug|Any CPU
+		{8E66D196-878E-4147-B532-E3BDB88A9BC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E66D196-878E-4147-B532-E3BDB88A9BC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E66D196-878E-4147-B532-E3BDB88A9BC7}.Release|x64.ActiveCfg = Release|Any CPU
+		{8E66D196-878E-4147-B532-E3BDB88A9BC7}.Release|x64.Build.0 = Release|Any CPU
+		{97A323A7-EC69-43DA-AF64-29A74E433315}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97A323A7-EC69-43DA-AF64-29A74E433315}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97A323A7-EC69-43DA-AF64-29A74E433315}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{97A323A7-EC69-43DA-AF64-29A74E433315}.Debug|x64.Build.0 = Debug|Any CPU
+		{97A323A7-EC69-43DA-AF64-29A74E433315}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97A323A7-EC69-43DA-AF64-29A74E433315}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97A323A7-EC69-43DA-AF64-29A74E433315}.Release|x64.ActiveCfg = Release|Any CPU
+		{97A323A7-EC69-43DA-AF64-29A74E433315}.Release|x64.Build.0 = Release|Any CPU
+		{B0C9EBE7-37AF-4CB4-A5D8-CF898C52BAE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0C9EBE7-37AF-4CB4-A5D8-CF898C52BAE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0C9EBE7-37AF-4CB4-A5D8-CF898C52BAE9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B0C9EBE7-37AF-4CB4-A5D8-CF898C52BAE9}.Debug|x64.Build.0 = Debug|Any CPU
+		{B0C9EBE7-37AF-4CB4-A5D8-CF898C52BAE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0C9EBE7-37AF-4CB4-A5D8-CF898C52BAE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0C9EBE7-37AF-4CB4-A5D8-CF898C52BAE9}.Release|x64.ActiveCfg = Release|Any CPU
+		{B0C9EBE7-37AF-4CB4-A5D8-CF898C52BAE9}.Release|x64.Build.0 = Release|Any CPU
+		{B271158C-AD46-4022-B380-B64D3D3A1417}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B271158C-AD46-4022-B380-B64D3D3A1417}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B271158C-AD46-4022-B380-B64D3D3A1417}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B271158C-AD46-4022-B380-B64D3D3A1417}.Debug|x64.Build.0 = Debug|Any CPU
+		{B271158C-AD46-4022-B380-B64D3D3A1417}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B271158C-AD46-4022-B380-B64D3D3A1417}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B271158C-AD46-4022-B380-B64D3D3A1417}.Release|x64.ActiveCfg = Release|Any CPU
+		{B271158C-AD46-4022-B380-B64D3D3A1417}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -370,6 +429,12 @@ Global
 		{E585A74A-F358-4446-B10E-0FF07B4FF601} = {A4209011-1740-4902-B889-2F2FAF98383F}
 		{AAC8306E-1DEB-460D-84C7-40166D189B88} = {A4209011-1740-4902-B889-2F2FAF98383F}
 		{6167F037-166C-4C5A-81BE-55618E77D4E8} = {A4209011-1740-4902-B889-2F2FAF98383F}
+		{C0FF93C7-1184-4ADE-AFD6-B133C3BB4E1A} = {5E627A0D-7239-4D9A-BA02-2799A913D390}
+		{6EF018E3-8346-4081-BF78-2CE29BBBC1F4} = {5E627A0D-7239-4D9A-BA02-2799A913D390}
+		{07599903-74DC-4AC7-A721-706E8D95852E} = {5E627A0D-7239-4D9A-BA02-2799A913D390}
+		{97A323A7-EC69-43DA-AF64-29A74E433315} = {07599903-74DC-4AC7-A721-706E8D95852E}
+		{B0C9EBE7-37AF-4CB4-A5D8-CF898C52BAE9} = {6EF018E3-8346-4081-BF78-2CE29BBBC1F4}
+		{B271158C-AD46-4022-B380-B64D3D3A1417} = {C0FF93C7-1184-4ADE-AFD6-B133C3BB4E1A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1ECA38C8-7C69-4DE6-8293-852C603F4217}

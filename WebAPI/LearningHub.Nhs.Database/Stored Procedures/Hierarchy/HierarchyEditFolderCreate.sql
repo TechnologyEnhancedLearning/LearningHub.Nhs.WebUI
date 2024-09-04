@@ -9,6 +9,7 @@
 -- 22-04-2024  DB	Included NULL NodeId and UserId in call to [hierarchy].[FolderNodeVersionCreate].
 -- 15-05-2024  DB	Accept @ParentNodePathId as input parameter, create NodePath and populate NodePathId and ParentNodePathId in HierarchyEditDetail.
 -- 10-07-2024  DB	Added PrimaryCatalogueNodeId to the NodeVersion table.
+-- 04-09-2024  SA   The problem with creating the subfolder has been resolved.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditFolderCreate]
 (
@@ -45,6 +46,22 @@ BEGIN
 			AND NodePathId = @ParentNodePathId
 			AND HierarchyEditDetailTypeId = 4 -- Node Link
 			AND Deleted = 0
+
+		IF @ParentNodeId IS NULL
+		BEGIN
+
+		SELECT	@ParentNodeId = NodeId,
+				@ParentNodePath = NodePath
+		FROM hierarchy.NodePath
+		WHERE Id = @ParentNodePathId
+			 AND Deleted = 0
+
+        SELECT TOP 1
+				 @PrimaryCatalogueNodeId = PrimaryCatalogueNodeId
+		FROM	hierarchy.HierarchyEditDetail
+		WHERE	HierarchyEditId = @HierarchyEditId
+			   AND Deleted = 0
+		END
 
 		EXECUTE [hierarchy].[FolderNodeVersionCreate] NULL, @Name, @Description, @PrimaryCatalogueNodeId, @UserId, @CreatedNodeVersionId OUTPUT
 

@@ -238,6 +238,13 @@
         Task<ApiResponse> HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel);
 
         /// <summary>
+        /// Check catalogue has external reference.
+        /// </summary>
+        /// <param name="nodeId">The nodeId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<bool> CheckCatalogueHasExternalReference(int nodeId);
+
+        /// <summary>
         /// Deletes the details of a node reference in a hierarchy edit.
         /// </summary>
         /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>

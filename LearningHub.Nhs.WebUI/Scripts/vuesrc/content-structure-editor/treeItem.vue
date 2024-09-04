@@ -82,9 +82,9 @@
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownNodeItems">
                                         <a class="dropdown-item" v-if="canEditResource" @click="onEditResource">Edit</a>
-                                        <a class="dropdown-item" v-if="canMoveResourceUp" @click="onMoveResourceUp">Move up</a>
-                                        <a class="dropdown-item" v-if="canMoveResourceDown" @click="onMoveResourceDown">Move down</a>
-                                        <a class="dropdown-item" v-if="canMoveResource" @click="onInitiateMoveResource">Move</a>
+                                        <a class="dropdown-item" v-if="canMoveResourceUp && !hasExternalCatalogueReference" @click="onMoveResourceUp">Move up</a>
+                                        <a class="dropdown-item" v-if="canMoveResourceDown && !hasExternalCatalogueReference" @click="onMoveResourceDown">Move down</a>
+                                        <a class="dropdown-item" v-if="canMoveResource && !hasExternalCatalogueReference" @click="onInitiateMoveResource">Move</a>
                                         <a class="dropdown-item" v-if="canDuplicateResource" @click="onDuplicateResource">Duplicate</a>
                                         <a class="dropdown-item" v-if="canDeleteResource" @click="confirmDeleteResource" data-toggle="modal" data-target="#showDeleteConfirm">Delete</a>
                                     </div>
@@ -248,6 +248,9 @@
                 }
                 else return 0;
             },
+            hasExternalCatalogueReference(): boolean {
+                return this.$store.state.contentStructureState.hasExternalReference;
+            },
         },
         mounted() {
             Vue.set(this, "isVisible", this.item.showInTreeView);
@@ -288,7 +291,7 @@
                             }
                         }
                     }
-
+                    
                     // Load the data.
                     if (!this.isOpen && (!this.item.childrenLoaded || this.isError)) {
                         this.isOpen = true;

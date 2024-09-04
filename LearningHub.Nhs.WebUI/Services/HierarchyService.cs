@@ -337,5 +337,25 @@
         {
             return await this.facade.PostAsync<ApiResponse, ReferenceExternalResourceViewModel>("Hierarchy/HierarchyEditReferenceExternalResource", referenceExternalResourceViewModel);
         }
+
+        /// <summary>
+        /// Deletes the node reference details asynchronously.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
+        /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<ApiResponse> DeleteNodeReferenceDetailsAsync(int hierarchyEditDetailId)
+        {
+            return await this.facade.PutAsync($"Hierarchy/DeleteNodeReferenceDetails/{hierarchyEditDetailId}");
+        }
+
+        /// <summary>
+        /// Deletes the resource reference details for the specified hierarchy edit detail ID.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail ID.</param>
+        /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<ApiResponse> DeleteResourceReferenceDetailsAsync(int hierarchyEditDetailId)
+        {
+            return await this.facade.PutAsync($"Hierarchy/DeleteResourceReferenceDetails/{hierarchyEditDetailId}");
+        }
     }
 }

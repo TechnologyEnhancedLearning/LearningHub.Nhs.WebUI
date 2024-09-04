@@ -64,7 +64,7 @@
                     <ckeditorwithhint :key="editingFolderNode.nodeId" :initialValue="editingFolderNode.description" :maxLength="1800" @change="changeFolderDescription" />
                 </div>
                 <div class="col-12" style="margin-top: 40px;">
-                    <label class="control-label">Folder location</label><span v-if="editingFolderNode.nodePaths && editingFolderNode.nodePaths.length>1">s</span></label>
+                    <label class="control-label">Folder location<span v-if="editingFolderNode.nodePaths && editingFolderNode.nodePaths.length>1">s</span></label>
                     <div>
                         <ul class="node-path-list">
                             <li class="" v-for="(item, index) in editingFolderNode.nodePaths" :key="index">
@@ -114,11 +114,11 @@
                     </div>
                 </div>
                 <div class="col-12 d-flex" style="margin-top: 40px; margin-bottom: 40px;">
-                    <input type="button" class="btn btn-custom-green mr-3" @click="onSaveFolderReferenceEdit()" v-bind:class="{disabled: !canSaveFolderReferenceEdit}" v-bind:disabled="!canSaveFolderReferenceEdit" value="Save changes" />
-                    <input type="button" class="btn btn-admin btn-cancel" @click="onCancelFolderReferenceEdit()" value="Cancel" />
+                    <input type="button" class="nhsuk-button nhsuk-u-margin-bottom-0 mr-3" @click="onSaveFolderReferenceEdit()" v-bind:class="{disabled: !canSaveFolderReferenceEdit}" v-bind:disabled="!canSaveFolderReferenceEdit" value="Save changes" />
+                    <input type="button" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-0" @click="onCancelFolderReferenceEdit()" value="Cancel" />
 
                     <span class="ml-auto mt-3" v-if="editingFolderNodeReference.nodePathDisplayVersionId>0">
-                        <a class="delete-folder-link" @click.prevent="onEditFolderReferenceDeleteFolder" href="#">
+                        <a class="delete-folder-link" @click.prevent="onEditFolderReferenceDetailsDeleteFolder" href="#">
                             Delete folder reference details <i class="fa-solid fa-trash-can delete-folder ml-2"></i>
                         </a>
                     </span>
@@ -151,8 +151,8 @@
                     </div>
                 </div>
                 <div class="col-12 d-flex" style="margin-top: 40px; margin-bottom: 40px;">
-                    <input type="button" class="btn btn-custom-green mr-3" @click="onSaveResourceReferenceEdit()" v-bind:class="{disabled: !canSaveResourceReferenceEdit}" v-bind:disabled="!canSaveResourceReferenceEdit" value="Save changes" />
-                    <input type="button" class="btn btn-admin btn-cancel" @click="onCancelResourceReferenceEdit()" value="Cancel" />
+                    <input type="button" class="nhsuk-button nhsuk-u-margin-bottom-0 mr-3" @click="onSaveResourceReferenceEdit()" v-bind:class="{disabled: !canSaveResourceReferenceEdit}" v-bind:disabled="!canSaveResourceReferenceEdit" value="Save changes" />
+                    <input type="button" class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-0" @click="onCancelResourceReferenceEdit()" value="Cancel" />
 
                     <span class="ml-auto mt-3" v-if="editingResourceNodeReference.resourceReferenceDisplayVersionId>0">
                         <a class="delete-folder-link" @click.prevent="onEditResourceReferenceDeleteFolder" href="#">
@@ -186,22 +186,22 @@
                     </div>
                 </div>
             </div>
-            <div id="deleteFolderReferenceModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+            <div id="deleteFolderReferenceDetailsModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
                 <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                     <div class="modal-content">
                         <div class="modal-header alert-modal-header text-center">
-                            <h2 class="heading-lg w-100"><i class="delete-folder-warning-triangle fas fa-exclamation-triangle pr-3"></i>Delete folder reference</h2>
+                            <h2 class="heading-lg w-100"><i class="delete-folder-warning-triangle fas fa-exclamation-triangle pr-3"></i>Delete folder reference details</h2>
                         </div>
 
                         <div class="modal-body alert-modal-body">
-                            <div class="mt-3">You have chosen to delete the folder reference <span id="deleteFolderReferenceName">{{ deleteFolderReferenceName}}</span>. The folder will display using the default folder properties.</div>
+                            <div class="mt-3">You have chosen to delete the folder reference details <span id="deleteFolderReferenceName">{{ deleteFolderReferenceName}}</span>. The folder will display using the default folder properties.</div>
                         </div>
 
                         <div class="modal-footer alert-modal-footer">
                             <div class="form-group col-12 p-0 m-0">
                                 <div class="d-flex">
                                     <input type="button" class="btn btn-action-cancel" data-dismiss="modal" value="Cancel" />
-                                    <input type="button" class="btn btn-action-red ml-auto" @click="onDeleteFolderReference()" value="Continue" />
+                                    <input type="button" class="btn btn-action-red ml-auto" @click="onDeleteFolderReferenceDetails()" value="Continue" />
                                 </div>
                             </div>
                         </div>
@@ -212,18 +212,18 @@
                 <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                     <div class="modal-content">
                         <div class="modal-header alert-modal-header text-center">
-                            <h2 class="heading-lg w-100"><i class="delete-folder-warning-triangle fas fa-exclamation-triangle pr-3"></i>Delete resource reference</h2>
+                            <h2 class="heading-lg w-100"><i class="delete-folder-warning-triangle fas fa-exclamation-triangle pr-3"></i>Delete resource reference details</h2>
                         </div>
 
                         <div class="modal-body alert-modal-body">
-                            <div class="mt-3">You have chosen to delete the resource reference <span id="deleteResourceReferenceName">{{ deleteResourceReferenceName}}</span>. The resource will display using the default resource properties.</div>
+                            <div class="mt-3">You have chosen to delete the resource reference details <span id="deleteResourceReferenceName">{{ deleteResourceReferenceName}}</span>. The resource will display using the default resource properties.</div>
                         </div>
 
                         <div class="modal-footer alert-modal-footer">
                             <div class="form-group col-12 p-0 m-0">
                                 <div class="d-flex">
                                     <input type="button" class="btn btn-action-cancel" data-dismiss="modal" value="Cancel" />
-                                    <input type="button" class="btn btn-action-red ml-auto" @click="onDeleteResourceReference()" value="Continue" />
+                                    <input type="button" class="btn btn-action-red ml-auto" @click="onDeleteResourceReferenceDetails()" value="Continue" />
                                 </div>
                             </div>
                         </div>
@@ -260,6 +260,7 @@
 <script lang="ts">
     import Vue, { PropOptions } from 'vue';
     import treeItem from './treeItem.vue';
+    import contentSearch from './contentSearch.vue';
     import '../filters';
     import { contentStructureData } from '../data/contentStructure';
     import { HierarchyEditModel, HierarchyEditStatusEnum } from '../models/content-structure/hierarchyEditModel';
@@ -267,12 +268,11 @@
     import { EditModeEnum } from '../models/content-structure/editModeEnum';
     import { CatalogueBasicModel } from '../models/content-structure/catalogueModel';
     import { FolderNodeModel } from '../models/content-structure/folderNodeModel';
+    import { NodePathDisplayVersionModel } from '../models/content-structure/nodePathDisplayVersionModel';
+    import { ResourceReferenceDisplayVersionModel } from '../models/content-structure/resourceReferenceDisplayVersionModel';
     import { NodeType } from '../constants';
     import CKEditorToolbar from '../models/ckeditorToolbar';
     import ckeditorwithhint from '../ckeditorwithhint.vue';
-    import contentSearch from './contentSearch.vue';
-    import { NodePathDisplayVersionModel } from '../models/content-structure/nodePathDisplayVersionModel';
-    import { ResourceReferenceDisplayVersionModel } from '../models/content-structure/resourceReferenceDisplayVersionModel';
     export default Vue.extend({
         name: 'contentStructure',
         components: {
@@ -309,13 +309,13 @@
                     versionCheck: false
                 },
                 deleteFolderName: '',
+                deleteFolderReferenceName: '',
+                deleteResourceReferenceName: '',
                 editFolderStructureButtonText: '',
                 editFolderStructureButtonDisabled: true,
                 selectedResourceId: 0,
                 rootKey: 1,
                 folderDescriptionValid: true,
-                deleteFolderReferenceName: '',
-                deleteResourceReferenceName: '',
             }
         },
         computed: {
@@ -352,11 +352,23 @@
             editingFolderNode(): FolderNodeModel {
                 return this.$store.state.contentStructureState.editingFolderNode;
             },
+            editingFolderNodeReference(): NodePathDisplayVersionModel {
+                return this.$store.state.contentStructureState.editingFolderNodeReference;
+            },
+            editingResourceNodeReference(): ResourceReferenceDisplayVersionModel {
+                return this.$store.state.contentStructureState.editingResourceNodeReference;
+            },
             editingFolderCanBeDeleted(): boolean {
                 return !this.$store.state.contentStructureState.editingTreeNode.hasResourcesInBranchInd;
             },
             folderNameCharactersRemaining(): number {
                 return 255 - this.editingFolderNode.name.length;
+            },
+            folderReferenceNameCharactersRemaining(): number {
+                return 255 - this.editingFolderNodeReference.name.length;
+            },
+            resourceReferenceNameCharactersRemaining(): number {
+                return 255 - this.editingResourceNodeReference.name.length;
             },
             canCreateEdit(): boolean {
                 return this.$store.state.contentStructureState.canCreateEdit;
@@ -367,23 +379,11 @@
             canSaveFolderEdit(): boolean {
                 return this.editingFolderNode.name.trim().length > 0 && this.folderDescriptionValid;
             },
-            editingFolderNodeReference(): NodePathDisplayVersionModel {
-                return this.$store.state.contentStructureState.editingFolderNodeReference;
-            },
-            editingResourceNodeReference(): ResourceReferenceDisplayVersionModel {
-                return this.$store.state.contentStructureState.editingResourceNodeReference;
-            },
             canSaveFolderReferenceEdit(): boolean {
                 return this.editingFolderNodeReference.name.trim().length > 0;
             },
             canSaveResourceReferenceEdit(): boolean {
                 return this.editingResourceNodeReference.name.trim().length > 0;
-            },
-            folderReferenceNameCharactersRemaining(): number {
-                return 255 - this.editingFolderNodeReference.name.length;
-            },
-            resourceReferenceNameCharactersRemaining(): number {
-                return 255 - this.editingResourceNodeReference.name.length;
             },
         },
         created() {
@@ -396,8 +396,20 @@
             onCancelFolderEdit() {
                 this.$store.commit('contentStructureState/cancelEdit');
             },
+            onCancelFolderReferenceEdit() {
+                this.$store.commit('contentStructureState/cancelEdit');
+            },
+            onCancelResourceReferenceEdit() {
+                this.$store.commit('contentStructureState/cancelEdit');
+            },
             onSaveFolderEdit() {
                 this.$store.dispatch('contentStructureState/saveFolder');
+            },
+            onSaveFolderReferenceEdit() {
+                this.$store.dispatch('contentStructureState/saveNodePathDisplayVersion');
+            },
+            onSaveResourceReferenceEdit() {
+                this.$store.dispatch('contentStructureState/saveResourceReferenceDisplayVersion');
             },
             onTreeItemDeleteFolder: function (item: NodeContentAdminModel) {
                 this.$store.commit('contentStructureState/setDeletingFolder', { folderNode: item });
@@ -406,11 +418,28 @@
             },
             onEditFolderDeleteFolder() {
                 this.deleteFolderName = this.editingFolderNode.name;
-                $('#deleteFolderReferenceModal').modal('show');
+                $('#deleteFolderModal').modal('show');
+            },
+            onEditFolderReferenceDetailsDeleteFolder() {
+                this.deleteFolderReferenceName = this.editingFolderNodeReference.name;
+                $('#deleteFolderReferenceDetailsModal').modal('show');
+            },
+            onEditResourceReferenceDeleteFolder() {
+                this.deleteResourceReferenceName = this.editingResourceNodeReference.name;
+                $('#deleteResourceReferenceModal').modal('show');
             },
             onDeleteFolder() {
                 this.$store.dispatch('contentStructureState/deleteFolder');
                 $('#deleteFolderModal').modal('hide');
+            },
+            onDeleteFolderReferenceDetails() {
+                this.$store.dispatch('contentStructureState/deleteFolderReferenceDetails');
+                $('#deleteFolderReferenceDetailsModal').modal('hide');
+                this.onCancelFolderEdit()
+            },
+            onDeleteResourceReferenceDetails() {
+                this.$store.dispatch('contentStructureState/deleteResourceReferenceDetails');
+                $('#deleteResourceReferenceModal').modal('hide');
             },
             onEdit() {
                 this.editFolderStructureButtonDisabled = true;
@@ -432,35 +461,6 @@
             },
             removeError() {
                 this.$store.commit('contentStructureState/removeError');
-            },
-            onCancelFolderReferenceEdit() {
-                this.$store.commit('contentStructureState/cancelEdit');
-            },
-            onCancelResourceReferenceEdit() {
-                this.$store.commit('contentStructureState/cancelEdit');
-            },
-            onSaveFolderReferenceEdit() {
-                this.$store.dispatch('contentStructureState/saveNodePathDisplayVersion');
-            },
-            onSaveResourceReferenceEdit() {
-                this.$store.dispatch('contentStructureState/saveResourceReferenceDisplayVersion');
-            },
-            onEditFolderReferenceDeleteFolder() {
-                this.deleteFolderReferenceName = this.editingFolderNodeReference.name;
-                $('#deleteFolderReferenceModal').modal('show');
-            },
-            onEditResourceReferenceDeleteFolder() {
-                this.deleteResourceReferenceName = this.editingResourceNodeReference.name;
-                $('#deleteResourceReferenceModal').modal('show');
-            },
-            onDeleteFolderReference() {
-                this.$store.dispatch('contentStructureState/deleteFolderReference');
-                $('#deleteFolderReferenceModal').modal('hide');
-                this.onCancelFolderEdit()
-            },
-            onDeleteResourceReference() {
-                this.$store.dispatch('contentStructureState/deleteResourceReference');
-                $('#deleteFolderModal').modal('hide');
             }
         },
     });

@@ -184,16 +184,30 @@ const deleteFolder = async function (hierarchyEditDetailId: number): Promise<Lea
         });
 };
 
-const deleteFolderReference = async function (hierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+const deleteFolderReferenceDetails = async function (hierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
 
-    const url = `/api/hierarchy/RemoveReferenceNode/${hierarchyEditDetailId}`;
+    const url = `/api/hierarchy/DeleteNodeReferenceDetails/${hierarchyEditDetailId}`;
 
     return await axios.put<LearningHubValidationResultModel>(url)
         .then(response => {
             return response.data;
         })
         .catch(e => {
-            console.log('deleteFolderReference:' + e);
+            console.log('deleteFolderReferenceDetails:' + e);
+            throw e;
+        });
+};
+
+const deleteResourceReferenceDetails = async function (hierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
+
+    const url = `/api/hierarchy/DeleteResourceReferenceDetails/${hierarchyEditDetailId}`;
+
+    return await axios.put<LearningHubValidationResultModel>(url)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('deleteResourceReferenceDetails:' + e);
             throw e;
         });
 };
@@ -309,7 +323,6 @@ const hierarchyEditMoveResource = async function (hierarchyEditDetailId: number,
             throw e;
         });
 };
-
 
 const hierarchyEditReferenceResource = async function (hierarchyEditDetailId: number, moveToHierarchyEditDetailId: number): Promise<LearningHubValidationResultModel> {
     const url = `/api/hierarchy/HierarchyEditReferenceResource`;
@@ -429,7 +442,8 @@ export const contentStructureData = {
     updateNodePathDisplayVersion,
     updateResourceReferenceDisplayVersion,
     deleteFolder,
-    deleteFolderReference,
+    deleteFolderReferenceDetails,
+    deleteResourceReferenceDetails,
     getFolder,
     moveNodeUp,
     moveNodeDown,

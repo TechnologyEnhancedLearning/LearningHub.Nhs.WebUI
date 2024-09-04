@@ -675,5 +675,45 @@
                 return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
             }
         }
+
+        /// <summary>
+        /// Deletes the node reference details.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail identifier.</param>
+        /// <returns>The action result.</returns>
+        [HttpPut]
+        [Route("DeleteNodeReferenceDetails/{hierarchyEditDetailId}")]
+        public async Task<IActionResult> DeleteNodeReferenceDetails(int hierarchyEditDetailId)
+        {
+            try
+            {
+                var retVal = await this.hierarchyService.DeleteNodeReferenceDetails(hierarchyEditDetailId, this.CurrentUserId);
+                return this.Ok(new ApiResponse(true, retVal));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
+        }
+
+        /// <summary>
+        /// Deletes the resource reference details for a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The ID of the hierarchy edit detail.</param>
+        /// <returns>An asynchronous task that represents the operation.</returns>
+        [HttpPut]
+        [Route("DeleteResourceReferenceDetails/{hierarchyEditDetailId}")]
+        public async Task<IActionResult> DeleteResourceReferenceDetails(int hierarchyEditDetailId)
+        {
+            try
+            {
+                var retVal = await this.hierarchyService.DeleteResourceReferenceDetails(hierarchyEditDetailId, this.CurrentUserId);
+                return this.Ok(new ApiResponse(true, retVal));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
+        }
     }
 }

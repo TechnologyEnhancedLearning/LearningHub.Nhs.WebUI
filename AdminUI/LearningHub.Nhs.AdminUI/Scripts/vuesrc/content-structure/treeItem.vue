@@ -220,6 +220,9 @@
                 if (this.item.nodeTypeId === NodeType.Catalogue) {
                     this.isOpen = true;
                     this.$forceUpdate();
+                } else if (!newVal.childrenLoaded && oldVal.childrenLoaded) { // If children are removed then close the node
+                    this.isOpen = false;
+                    this.$forceUpdate();
                 }
             },
             updatedNode: function (newVal, oldVal) {

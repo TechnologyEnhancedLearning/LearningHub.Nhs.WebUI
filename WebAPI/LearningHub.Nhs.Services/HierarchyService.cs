@@ -349,6 +349,19 @@
         }
 
         /// <summary>
+        /// Check catalogue has external reference.
+        /// </summary>
+        /// <param name="nodeId">The node path id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<bool> CheckCatalogueHasExternalReference(int nodeId)
+        {
+            // Not cached, retrieve directly from the database.
+            var vm = await this.nodeRepository.CheckCatalogueHasExternalReference(nodeId);
+
+            return vm;
+        }
+
+        /// <summary>
         /// Gets the contents of a node path (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// </summary>

@@ -50,5 +50,12 @@
         /// <param name="readOnly">Set to true if read only data set is required.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<List<NodeContentAdminDto>> GetNodeContentsAdminAsync(int nodeId, bool readOnly);
+
+        /// <summary>
+        /// Check catalogue has external reference.
+        /// </summary>
+        /// <param name="nodeId">The node id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<bool> CheckCatalogueHasExternalReference(int nodeId);
     }
 }

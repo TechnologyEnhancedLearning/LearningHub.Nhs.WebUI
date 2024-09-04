@@ -23,6 +23,7 @@ export class State {
     updatedNode: NodeContentEditorModel = null;
     inError: boolean = false;
     lastErrorMessage: string = "";
+    hasExternalReference: boolean = false;
 }
 
 const state = new State();
@@ -51,6 +52,13 @@ function loadNodeContents(state: State) {
                 state.rootNode.childrenLoaded = false;
                 state.rootNode.inEdit = state.editMode == EditModeEnum.Structure;
                 state.rootNode.showInTreeView = false;
+            }).then(async y => {
+                await contentStructureData.checkCatalogueHasExternalReference(state.catalogue.nodeId).then(response => {
+                    state.hasExternalReference = response;
+                })
+                    .catch(e => {
+                        console.log(e);
+                    });
             }).then(async y => {
                 await contentStructureData.getNodeContentsForCatalogueEditor(state.catalogue.rootNodePathId).then(response => {
                     state.rootNode.children = response;

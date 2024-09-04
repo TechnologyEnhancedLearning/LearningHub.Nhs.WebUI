@@ -18,6 +18,7 @@
 -- 03-06-2024  DB	Publish NodePathDisplayVersion records.
 -- 13-06-2024  DB	Publish ResourceReferenceDisplayVersion records.
 -- 26-07-2024  SA   Remove references to be implemented
+-- 02-09-2024  DB	Remove any deleted NodePathDisplayVersion anf ResourceReferenceDisplayVersion records.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditPublish] 
 (
@@ -857,6 +858,34 @@ BEGIN
 		INNER JOIN (SELECT DISTINCT ResourceId FROM #cteNodeResource) cte1 ON cte1.ResourceId = nrl.ResourceId
 		LEFT JOIN #cteNodeResource cte2 ON cte2.NodeId = nrl.NodeId AND cte2.ResourceId = nrl.ResourceId
 		WHERE cte2.NodeId IS NULL AND nrl.Deleted = 0
+
+		-------------------------------------------------------------
+		-- Mark any removed NodePathDisplayVersion records as deleted
+		-------------------------------------------------------------
+		UPDATE  npdv
+		SET     Deleted = 1,
+				AmendUserId = @AmendUserId,
+				AmendDate = @AmendDate        
+		FROM    hierarchy.HierarchyEditDetail hed
+		INNER JOIN hierarchy.NodePathDisplayVersion npdv ON hed.NodePathId = npdv.NodePathId
+		WHERE   HierarchyEditId = @HierarchyEditId
+			AND hed.NodePathDisplayVersionId IS NULL
+			AND hed.Deleted = 0
+			AND npdv.Deleted = 0
+
+		-------------------------------------------------------------
+		-- Mark any removed ResourceReferenceDisplayVersion records as deleted
+		-------------------------------------------------------------
+		UPDATE  rrdv
+		SET     Deleted = 1,
+				AmendUserId = @AmendUserId,
+				AmendDate = @AmendDate        
+		FROM    hierarchy.HierarchyEditDetail hed
+		INNER JOIN resources.ResourceReferenceDisplayVersion rrdv ON hed.ResourceReferenceId = rrdv.ResourceReferenceId
+		WHERE   HierarchyEditId = @HierarchyEditId
+			AND hed.ResourceReferenceDisplayVersionId IS NULL
+			AND hed.Deleted = 0
+			AND rrdv.Deleted = 0
 
 		----------------------------------------------------------
 		-- Mark the HierarchyEdit as 'Published'

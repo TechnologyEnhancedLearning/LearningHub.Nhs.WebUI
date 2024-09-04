@@ -500,5 +500,41 @@
 
             this.DbContext.Database.ExecuteSqlRaw("hierarchy.HierarchyEditFailedToPublish @p0, @p1", param0, param1);
         }
+
+        /// <summary>
+        /// Deletes the node reference details for a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The ID of the hierarchy edit detail.</param>
+        /// <param name="userId">The ID of the user performing the operation.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task DeleteNodeReferenceDetails(int hierarchyEditDetailId, int userId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = hierarchyEditDetailId };
+            var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = userId };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+            string sql = "hierarchy.HierarchyEditDeleteNodeReferenceDetails @p0, @p1, @p2";
+            var sqlParams = new List<SqlParameter>() { param0, param1, param2 };
+
+            await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+        }
+
+        /// <summary>
+        /// Deletes the resource reference details for a hierarchy edit detail.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The ID of the hierarchy edit detail.</param>
+        /// <param name="userId">The ID of the user performing the operation.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task DeleteResourceReferenceDetails(int hierarchyEditDetailId, int userId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = hierarchyEditDetailId };
+            var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = userId };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+            string sql = "hierarchy.HierarchyEditDeleteResourceReferenceDetails @p0, @p1, @p2";
+            var sqlParams = new List<SqlParameter>() { param0, param1, param2 };
+
+            await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+        }
     }
 }

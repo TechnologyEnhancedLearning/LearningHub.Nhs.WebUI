@@ -293,5 +293,21 @@
         /// <param name="nodeId">The nodeId<see cref="int"/>.</param>
         /// <returns>The <see cref="List{NodePathViewModel}"/>.</returns>
         Task<List<NodePathViewModel>> GetNodePathsForNodeAsync(int nodeId);
+
+        /// <summary>
+        /// Deletes the node reference details.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
+        /// <param name="currentUserId">The current user id.</param>
+        /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
+        Task<LearningHubValidationResult> DeleteNodeReferenceDetails(int hierarchyEditDetailId, int currentUserId);
+
+        /// <summary>
+        /// Deletes the resource reference details.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
+        /// <param name="currentUserId">The current user id.</param>
+        /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
+        Task<LearningHubValidationResult> DeleteResourceReferenceDetails(int hierarchyEditDetailId, int currentUserId);
     }
 }

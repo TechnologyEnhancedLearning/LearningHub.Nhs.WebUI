@@ -111,13 +111,12 @@
                     <input type="button" class="btn btn-admin btn-cancel" @click="onCancelFolderReferenceEdit()" value="Cancel" />
 
                     <span class="ml-auto mt-3" v-if="editingFolderNodeReference.nodePathDisplayVersionId>0">
-                        <a class="delete-folder-link" @click.prevent="onEditFolderReferenceDeleteFolder" href="#">
-                            Delete folder reference details<i class="fa-solid fa-trash-can delete-folder ml-2"></i>
+                        <a class="delete-folder-link" @click.prevent="onEditFolderReferenceDetailsDeleteFolder" href="#">
+                            Delete folder reference details <i class="fa-solid fa-trash-can delete-folder ml-2"></i>
                         </a>
                     </span>
                 </div>
             </div>
-
             <div v-if="editMode === EditModeEnum.ResourceReference" id="editResourceReference">
                 <div class="col-12">
                     <label class="control-label">Resource location</label>
@@ -155,11 +154,9 @@
                     </span>
                 </div>
             </div>
-
             <div v-if="editMode === EditModeEnum.ReferenceExternalContent" id="referenceExternalContentContainer">
                 <content-search :editingCatalogueNodePathId="catalogue.rootNodePathId"></content-search>
             </div>
-
             <div id="deleteFolderModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
                 <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                     <div class="modal-content">
@@ -182,53 +179,50 @@
                     </div>
                 </div>
             </div>
-
-            <div id="deleteFolderReferenceModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+            <div id="deleteFolderReferenceDetailsModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
                 <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                     <div class="modal-content">
                         <div class="modal-header alert-modal-header text-center">
-                            <h2 class="heading-lg w-100"><i class="delete-folder-warning-triangle fas fa-exclamation-triangle pr-3"></i>Delete folder reference</h2>
+                            <h2 class="heading-lg w-100"><i class="delete-folder-warning-triangle fas fa-exclamation-triangle pr-3"></i>Delete folder reference details</h2>
                         </div>
 
                         <div class="modal-body alert-modal-body">
-                            <div class="mt-3">You have chosen to delete the folder reference <span id="deleteFolderReferenceName">{{ deleteFolderReferenceName}}</span>. The folder will display using the default folder properties.</div>
+                            <div class="mt-3">You have chosen to delete the folder reference details <span id="deleteFolderReferenceName">{{ deleteFolderReferenceName}}</span>. The folder will display using the default folder properties.</div>
                         </div>
 
                         <div class="modal-footer alert-modal-footer">
                             <div class="form-group col-12 p-0 m-0">
                                 <div class="d-flex">
                                     <input type="button" class="btn btn-action-cancel" data-dismiss="modal" value="Cancel" />
-                                    <input type="button" class="btn btn-action-red ml-auto" @click="onDeleteFolderReference()" value="Continue" />
+                                    <input type="button" class="btn btn-action-red ml-auto" @click="onDeleteFolderReferenceDetails()" value="Continue" />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div id="deleteResourceReferenceModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
                 <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                     <div class="modal-content">
                         <div class="modal-header alert-modal-header text-center">
-                            <h2 class="heading-lg w-100"><i class="delete-folder-warning-triangle fas fa-exclamation-triangle pr-3"></i>Delete resource reference</h2>
+                            <h2 class="heading-lg w-100"><i class="delete-folder-warning-triangle fas fa-exclamation-triangle pr-3"></i>Delete resource reference details</h2>
                         </div>
 
                         <div class="modal-body alert-modal-body">
-                            <div class="mt-3">You have chosen to delete the resource reference <span id="deleteResourceReferenceName">{{ deleteResourceReferenceName}}</span>. The resource will display using the default resource properties.</div>
+                            <div class="mt-3">You have chosen to delete the resource reference details <span id="deleteResourceReferenceName">{{ deleteResourceReferenceName}}</span>. The resource will display using the default resource properties.</div>
                         </div>
 
                         <div class="modal-footer alert-modal-footer">
                             <div class="form-group col-12 p-0 m-0">
                                 <div class="d-flex">
                                     <input type="button" class="btn btn-action-cancel" data-dismiss="modal" value="Cancel" />
-                                    <input type="button" class="btn btn-action-red ml-auto" @click="onDeleteResourceReference()" value="Continue" />
+                                    <input type="button" class="btn btn-action-red ml-auto" @click="onDeleteResourceReferenceDetails()" value="Continue" />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div id="cancelHierarchyEditModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
                 <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                     <div class="modal-content">
@@ -272,7 +266,6 @@ import { ResourceReferenceDisplayVersionModel } from '../models/content-structur
 import { NodeType } from '../constants';
 import CKEditorToolbar from '../models/ckeditorToolbar';
 import ckeditorwithhint from '../ckeditorwithhint.vue';
-
 export default Vue.extend({
     name: 'contentStructure',
     components: {
@@ -418,13 +411,13 @@ export default Vue.extend({
         },
         onEditFolderDeleteFolder() {
             this.deleteFolderName = this.editingFolderNode.name;
-            $('#deleteFolderReferenceModal').modal('show');
+            $('#deleteFolderModal').modal('show');
         },
-        onEditFolderReferenceDeleteFolder() {
+        onEditFolderReferenceDetailsDeleteFolder() {
             this.deleteFolderReferenceName = this.editingFolderNodeReference.name;
-            $('#deleteFolderReferenceModal').modal('show');
+            $('#deleteFolderReferenceDetailsModal').modal('show');
         },
-        onEditResourceReferenceDeleteFolder() {
+         onEditResourceReferenceDeleteFolder() {
             this.deleteResourceReferenceName = this.editingResourceNodeReference.name;
             $('#deleteResourceReferenceModal').modal('show');
         },
@@ -432,14 +425,14 @@ export default Vue.extend({
             this.$store.dispatch('contentStructureState/deleteFolder');
             $('#deleteFolderModal').modal('hide');
         },
-        onDeleteFolderReference() {
-            this.$store.dispatch('contentStructureState/deleteFolderReference');
-            $('#deleteFolderReferenceModal').modal('hide');
+        onDeleteFolderReferenceDetails() {
+            this.$store.dispatch('contentStructureState/deleteFolderReferenceDetails');
+            $('#deleteFolderReferenceDetailsModal').modal('hide');
             this.onCancelFolderEdit()
         },
-        onDeleteResourceReference() {
-            this.$store.dispatch('contentStructureState/deleteResourceReference');
-            $('#deleteFolderModal').modal('hide');
+        onDeleteResourceReferenceDetails() {
+            this.$store.dispatch('contentStructureState/deleteResourceReferenceDetails');
+            $('#deleteResourceReferenceModal').modal('hide');
         },
         onEdit() {
             this.editFolderStructureButtonDisabled = true;

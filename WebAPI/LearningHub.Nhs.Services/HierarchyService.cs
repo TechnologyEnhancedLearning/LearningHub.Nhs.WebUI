@@ -855,6 +855,32 @@
             return this.mapper.Map<List<NodePathViewModel>>(nodePathList);
         }
 
+        /// <summary>
+        /// Deletes the node reference details for a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The ID of the hierarchy edit detail.</param>
+        /// <param name="currentUserId">The ID of the current user.</param>
+        /// <returns>A <see cref="Task{LearningHubValidationResult}"/> representing the asynchronous operation.</returns>
+        public async Task<LearningHubValidationResult> DeleteNodeReferenceDetails(int hierarchyEditDetailId, int currentUserId)
+        {
+            await this.hierarchyEditRepository.DeleteNodeReferenceDetails(hierarchyEditDetailId, currentUserId);
+            var retVal = new LearningHubValidationResult(true);
+            return retVal;
+        }
+
+        /// <summary>
+        /// Deletes the resource reference details for a hierarchy edit detail.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The ID of the hierarchy edit detail.</param>
+        /// <param name="currentUserId">The ID of the current user.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<LearningHubValidationResult> DeleteResourceReferenceDetails(int hierarchyEditDetailId, int currentUserId)
+        {
+            await this.hierarchyEditRepository.DeleteResourceReferenceDetails(hierarchyEditDetailId, currentUserId);
+            var retVal = new LearningHubValidationResult(true);
+            return retVal;
+        }
+
         private async Task RefreshCacheForNodeContents(int nodeId)
         {
             string cacheKey = $"{CacheKeys.PublishedNodeContents}:{nodeId}";

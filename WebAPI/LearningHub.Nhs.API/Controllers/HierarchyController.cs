@@ -104,6 +104,18 @@
         }
 
         /// <summary>
+        /// Check Catalogue has external reference.
+        /// </summary>
+        /// <param name="nodeId">The node id.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpGet]
+        [Route("checkCatalogueHasExternalReference/{nodeId}")]
+        public async Task<IActionResult> CheckCatalogueHasExternalReference(int nodeId)
+        {
+            return this.Ok(await this.hierarchyService.CheckCatalogueHasExternalReference(nodeId));
+        }
+
+        /// <summary>
         /// Gets the contents of a node path (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// </summary>

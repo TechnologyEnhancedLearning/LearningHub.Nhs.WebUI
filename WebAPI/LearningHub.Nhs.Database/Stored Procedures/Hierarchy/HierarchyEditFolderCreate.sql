@@ -47,6 +47,8 @@ BEGIN
 			AND HierarchyEditDetailTypeId = 4 -- Node Link
 			AND Deleted = 0
 
+		-- Sub folder node creation (HierachyDetail type 3)
+
 		IF @ParentNodeId IS NULL
 		BEGIN
 

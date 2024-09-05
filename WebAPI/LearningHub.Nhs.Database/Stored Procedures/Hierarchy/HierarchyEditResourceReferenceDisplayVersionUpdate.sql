@@ -30,7 +30,7 @@ BEGIN
 
 		IF EXISTS (SELECT 1 FROM resources.ResourceReferenceDisplayVersion WHERE Id = @ResourceReferenceDisplayVersionId AND VersionStatusId = 1) -- Does a draft version already exist
 		BEGIN
-			UPDATE	hierarchy.ResourceReferenceDisplayVersion
+			UPDATE	resources.ResourceReferenceDisplayVersion
 			SET		DisplayName = @Name,
 					AmendUserId = @UserId,
 					AmendDate = @AmendDate

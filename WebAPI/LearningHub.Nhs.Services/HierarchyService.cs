@@ -349,6 +349,19 @@
         }
 
         /// <summary>
+        /// Check catalogue has external reference.
+        /// </summary>
+        /// <param name="nodeId">The node path id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<bool> CheckCatalogueHasExternalReference(int nodeId)
+        {
+            // Not cached, retrieve directly from the database.
+            var vm = await this.nodeRepository.CheckCatalogueHasExternalReference(nodeId);
+
+            return vm;
+        }
+
+        /// <summary>
         /// Gets the contents of a node path (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// </summary>
@@ -853,6 +866,32 @@
             var nodePathList = await this.nodePathRepository.GetNodePathsForNodeId(nodeId);
 
             return this.mapper.Map<List<NodePathViewModel>>(nodePathList);
+        }
+
+        /// <summary>
+        /// Deletes the node reference details for a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The ID of the hierarchy edit detail.</param>
+        /// <param name="currentUserId">The ID of the current user.</param>
+        /// <returns>A <see cref="Task{LearningHubValidationResult}"/> representing the asynchronous operation.</returns>
+        public async Task<LearningHubValidationResult> DeleteNodeReferenceDetails(int hierarchyEditDetailId, int currentUserId)
+        {
+            await this.hierarchyEditRepository.DeleteNodeReferenceDetails(hierarchyEditDetailId, currentUserId);
+            var retVal = new LearningHubValidationResult(true);
+            return retVal;
+        }
+
+        /// <summary>
+        /// Deletes the resource reference details for a hierarchy edit detail.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The ID of the hierarchy edit detail.</param>
+        /// <param name="currentUserId">The ID of the current user.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<LearningHubValidationResult> DeleteResourceReferenceDetails(int hierarchyEditDetailId, int currentUserId)
+        {
+            await this.hierarchyEditRepository.DeleteResourceReferenceDetails(hierarchyEditDetailId, currentUserId);
+            var retVal = new LearningHubValidationResult(true);
+            return retVal;
         }
 
         private async Task RefreshCacheForNodeContents(int nodeId)

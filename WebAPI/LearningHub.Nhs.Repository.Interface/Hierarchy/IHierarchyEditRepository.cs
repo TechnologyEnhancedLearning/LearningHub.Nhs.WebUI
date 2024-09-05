@@ -229,5 +229,21 @@
         /// <param name="hierarchyEditId">The hierarchy edit id.</param>
         /// <param name="userId">The user id.</param>
         void FailedToPublish(int hierarchyEditId, int userId);
+
+        /// <summary>
+        /// Deletes the node reference details.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task DeleteNodeReferenceDetails(int hierarchyEditDetailId, int userId);
+
+        /// <summary>
+        /// Deletes the resource reference details.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task DeleteResourceReferenceDetails(int hierarchyEditDetailId, int userId);
     }
 }

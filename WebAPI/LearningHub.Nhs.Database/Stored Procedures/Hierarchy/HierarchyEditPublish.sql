@@ -19,6 +19,9 @@
 -- 13-06-2024  DB	Publish ResourceReferenceDisplayVersion records.
 -- 26-07-2024  SA   Remove references to be implemented
 -- 21-08-2024  SS	Publishing catalogues needs to update referencing catalogues
+-- 27-08-2024  SA   Moving a folder into a referenced folder should affect all instances of the referenced folder.[added
+                    -- condition to avoid duplicate entries in to NodeLink table]
+-- 02-09-2024  DB	Remove any deleted NodePathDisplayVersion anf ResourceReferenceDisplayVersion records.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditPublish] 
 (
@@ -63,7 +66,7 @@ BEGIN
 		----------------------------------------------------------
 		-- Create new NodeLinks (arising from Create or Reference Node)
 		INSERT INTO [hierarchy].[NodeLink] ([ParentNodeId],[ChildNodeId],[DisplayOrder],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
-		SELECT
+		SELECT DISTINCT
 			ParentNodeId,
 			NodeId AS ChildNodeId, 
 			DisplayOrder,
@@ -231,7 +234,7 @@ BEGIN
 
 		-- Create moved NodeResource/s in their new locations
 		INSERT INTO [hierarchy].[NodeResource] ([NodeId],[ResourceId],[DisplayOrder],[VersionStatusId],[PublicationId],[Deleted],[CreateUserId],[CreateDate],[AmendUserId],[AmendDate])
-		SELECT  ParentNodeId, ResourceId, DisplayOrder, 2 /* Published */, @PublicationId, 0, CreateUserId, CreateDate, AmendUserId, AmendDate  
+		SELECT  DISTINCT ParentNodeId, ResourceId, DisplayOrder, 2 /* Published */, @PublicationId, 0, @AmendUserId, @AmendDate, @AmendUserId, @AmendDate
 		FROM    hierarchy.HierarchyEditDetail
 		WHERE   HierarchyEditId = @HierarchyEditId
 			AND HierarchyEditDetailTypeId = 5 -- Node Resource
@@ -284,21 +287,6 @@ BEGIN
 			AND hed.DisplayOrder != nr.DisplayOrder
 			AND hed.Deleted = 0
 			AND nr.Deleted = 0
-
-			-- Update NodeResource Deleted status , if the reference is removed.
-		UPDATE 
-			nr
-		SET
-			Deleted = 1,
-			AmendUserId = @AmendUserId,
-			AmendDate = @AmendDate
-		FROM
-			hierarchy.HierarchyEditDetail hed
-		INNER JOIN
-			hierarchy.NodeResource nr ON hed.NodeResourceId = nr.Id
-		WHERE 
-			HierarchyEditId = @HierarchyEditId
-			AND hed.Deleted =1
 
 		----------------------------------------------------------
 		-- NodeVersion
@@ -862,6 +850,34 @@ BEGIN
 		INNER JOIN (SELECT DISTINCT ResourceId FROM #cteNodeResource) cte1 ON cte1.ResourceId = nrl.ResourceId
 		LEFT JOIN #cteNodeResource cte2 ON cte2.NodeId = nrl.NodeId AND cte2.ResourceId = nrl.ResourceId
 		WHERE cte2.NodeId IS NULL AND nrl.Deleted = 0
+
+		-------------------------------------------------------------
+		-- Mark any removed NodePathDisplayVersion records as deleted
+		-------------------------------------------------------------
+		UPDATE  npdv
+		SET     Deleted = 1,
+				AmendUserId = @AmendUserId,
+				AmendDate = @AmendDate        
+		FROM    hierarchy.HierarchyEditDetail hed
+		INNER JOIN hierarchy.NodePathDisplayVersion npdv ON hed.NodePathId = npdv.NodePathId
+		WHERE   HierarchyEditId = @HierarchyEditId
+			AND hed.NodePathDisplayVersionId IS NULL
+			AND hed.Deleted = 0
+			AND npdv.Deleted = 0
+
+		-------------------------------------------------------------
+		-- Mark any removed ResourceReferenceDisplayVersion records as deleted
+		-------------------------------------------------------------
+		UPDATE  rrdv
+		SET     Deleted = 1,
+				AmendUserId = @AmendUserId,
+				AmendDate = @AmendDate        
+		FROM    hierarchy.HierarchyEditDetail hed
+		INNER JOIN resources.ResourceReferenceDisplayVersion rrdv ON hed.ResourceReferenceId = rrdv.ResourceReferenceId
+		WHERE   HierarchyEditId = @HierarchyEditId
+			AND hed.ResourceReferenceDisplayVersionId IS NULL
+			AND hed.Deleted = 0
+			AND rrdv.Deleted = 0
 
 		----------------------------------------------------------
 		-- Mark the HierarchyEdit as 'Published'

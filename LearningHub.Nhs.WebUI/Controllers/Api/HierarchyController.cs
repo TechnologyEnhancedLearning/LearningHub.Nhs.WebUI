@@ -110,6 +110,19 @@
         }
 
         /// <summary>
+        /// Check Catalogue has external reference.
+        /// </summary>
+        /// <param name="nodeId">The node id.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpGet]
+        [Route("CheckCatalogueHasExternalReference/{nodeId}")]
+        public async Task<bool> CheckCatalogueHasExternalReference(int nodeId)
+        {
+            var val = await this.hierarchyService.CheckCatalogueHasExternalReference(nodeId);
+            return val;
+        }
+
+        /// <summary>
         /// Gets the contents of a node path (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// Set readOnly to true if read only data is needed.
@@ -222,6 +235,30 @@
         public async Task<IActionResult> UpdateFolder(FolderEditViewModel folderEditViewModel)
         {
             var apiResponse = await this.hierarchyService.UpdateFolderAsync(folderEditViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// The UpdateNodePathDisplayVersion.
+        /// </summary>
+        /// <param name="nodePathDisplayVersionModel">The folderEditViewModel<see cref="NodePathDisplayVersionModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("UpdateNodePathDisplayVersion")]
+        public async Task<IActionResult> UpdateNodePathDisplayVersion(NodePathDisplayVersionModel nodePathDisplayVersionModel)
+        {
+            var apiResponse = await this.hierarchyService.UpdateNodePathDisplayVersionAsync(nodePathDisplayVersionModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// The UpdateResourceReferenceDisplayVersion.
+        /// </summary>
+        /// <param name="resourceReferenceDisplayVersionModel">The resourceReferenceEditViewModel<see cref="ResourceReferenceDisplayVersionModel"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("UpdateResourceReferenceDisplayVersion")]
+        public async Task<IActionResult> UpdateResourceReferenceDisplayVersion(ResourceReferenceDisplayVersionModel resourceReferenceDisplayVersionModel)
+        {
+            var apiResponse = await this.hierarchyService.UpdateResourceReferenceDisplayVersionAsync(resourceReferenceDisplayVersionModel);
             return this.Ok(apiResponse.ValidationResult);
         }
 
@@ -425,6 +462,30 @@
         public async Task<IActionResult> HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel)
         {
             var apiResponse = await this.hierarchyService.HierarchyEditReferenceExternalResource(referenceExternalResourceViewModel);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// The DeleteNodeReferenceDetails.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchyEditDetailId<see cref="hierarchyEditDetailId"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [Route("DeleteNodeReferenceDetails/{hierarchyEditDetailId}")]
+        public async Task<IActionResult> DeleteNodeReferenceDetails(int hierarchyEditDetailId)
+        {
+            var apiResponse = await this.hierarchyService.DeleteNodeReferenceDetailsAsync(hierarchyEditDetailId);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// Deletes the resource reference details for a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [Route("DeleteResourceReferenceDetails/{hierarchyEditDetailId}")]
+        public async Task<IActionResult> DeleteResourceReferenceDetails(int hierarchyEditDetailId)
+        {
+            var apiResponse = await this.hierarchyService.DeleteResourceReferenceDetailsAsync(hierarchyEditDetailId);
             return this.Ok(apiResponse.ValidationResult);
         }
     }

@@ -999,6 +999,10 @@
             }
 
             var catalogues = await this.catalogueNodeVersionRepository.GetAllCataloguesAsync(pageSize, filterCharMod, userId);
+            foreach (var catalogue in catalogues)
+            {
+                catalogue.Providers = await this.providerService.GetByCatalogueVersionIdAsync(catalogue.NodeVersionId);
+            }
 
             var response = new AllCatalogueResponseViewModel
             {

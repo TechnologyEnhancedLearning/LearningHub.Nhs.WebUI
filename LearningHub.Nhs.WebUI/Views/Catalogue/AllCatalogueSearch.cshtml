@@ -8,6 +8,7 @@
     var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString().ToLower());
     var hasSearchTerm = queryParams.ContainsKey("term");
     var searchTerm = hasSearchTerm ? queryParams["term"].ToString() : null;
+    string cardStyle = "card-provider-details--blank";
 }
 
 @section styles {
@@ -55,6 +56,16 @@
                             <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
                         }
                     </div>
+                    @if (item.Providers?.Count > 0)
+                    {
+                        <div class="card-provider-details">
+                            @ProviderHelper.GetProviderString(item.Providers.FirstOrDefault().Name)
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="card-provider-details @cardStyle"></div>
+                    }
 
                     <div class="nhsuk-card__content catalogue-card-content">
 
@@ -88,7 +99,13 @@
                                     </div>
                                 </div>
                                 <div>
-                                    @if (!string.IsNullOrEmpty(item.BadgeUrl))
+
+                                    @if (item.Providers?.Count > 0)
+                                    {
+                                        var provider = item.Providers.First();
+                                        <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
+                                    }
+                                    else if (!string.IsNullOrEmpty(item.BadgeUrl))
                                     {
                                         <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="Provider's catalogue badge" class="catalogue-card-badge" />
                                     }

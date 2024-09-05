@@ -243,5 +243,19 @@
         /// <param name="nodeId">The nodeId<see cref="int"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<bool> CheckCatalogueHasExternalReference(int nodeId);
+
+        /// <summary>
+        /// Deletes the details of a node reference in a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ApiResponse> DeleteNodeReferenceDetailsAsync(int hierarchyEditDetailId);
+
+        /// <summary>
+        /// Deletes the resource reference details.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy Edit Detail Id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ApiResponse> DeleteResourceReferenceDetailsAsync(int hierarchyEditDetailId);
     }
 }

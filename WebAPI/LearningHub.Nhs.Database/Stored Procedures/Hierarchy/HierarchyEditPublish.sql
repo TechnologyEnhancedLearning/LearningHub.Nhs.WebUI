@@ -18,6 +18,7 @@
 -- 03-06-2024  DB	Publish NodePathDisplayVersion records.
 -- 13-06-2024  DB	Publish ResourceReferenceDisplayVersion records.
 -- 26-07-2024  SA   Remove references to be implemented
+-- 21-08-2024  SS	Publishing catalogues needs to update referencing catalogues
 -- 27-08-2024  SA   Moving a folder into a referenced folder should affect all instances of the referenced folder.[added
                     -- condition to avoid duplicate entries in to NodeLink table]
 -- 02-09-2024  DB	Remove any deleted NodePathDisplayVersion anf ResourceReferenceDisplayVersion records.
@@ -560,7 +561,11 @@ BEGIN
 			AND np.CatalogueNodeId != np.NodeId
 			AND hed.NodeId IS NULL
 
+	    ----------------------------------------------------------
+		-- NodePath: generate new NodePath/s for refered Catalogues
+		----------------------------------------------------------
 
+		EXEC [hierarchy].[HierarchyNewNodePathForReferedCatalogue] @HierarchyEditId,@AmendUserId,@AmendDate
 		----------------------------------------------------------
 		-- NodePathNode
 		----------------------------------------------------------		
@@ -576,7 +581,7 @@ BEGIN
 		SET @NodePathCursor = CURSOR FORWARD_ONLY FOR
         SELECT  NodePathId, NodeId, ParentNodeId, InitialNodePath, NewNodePath, HierarchyEditDetailOperationId
         FROM    hierarchy.HierarchyEditDetail
-        WHERE   HierarchyEditId = 80
+        WHERE   HierarchyEditId = @HierarchyEditId
             AND ISNULL(InitialNodePath, '') != ISNULL(NewNodePath, InitialNodePath)
             AND (
                 HierarchyEditDetailTypeId = 4 -- Node Link

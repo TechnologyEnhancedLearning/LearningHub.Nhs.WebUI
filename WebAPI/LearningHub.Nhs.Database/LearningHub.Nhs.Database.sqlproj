@@ -543,6 +543,7 @@
     <Build Include="Stored Procedures\Resources\GetScormContentServerDetailsForLHExternalReference.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\Content_Referencing_DataSetup.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\Content Referencing Initialise.sql" />
+    <Build Include="Stored Procedures\Hierarchy\HierarchyNewNodePathForReferedCatalogue.sql" />
     <Build Include="Stored Procedures\Hierarchy\CheckCatalogueHasExternalReference.sql" />
     <Build Include="Stored Procedures\Hierarchy\HierarchyEditDeleteNodeReferenceDetails.sql" />
     <Build Include="Stored Procedures\Hierarchy\HierarchyEditDeleteResourceReferenceDetails.sql" />

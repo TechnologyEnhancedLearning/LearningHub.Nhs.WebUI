@@ -5,12 +5,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>BlazorEcommerce</title>
-    <base href="/" />
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <base href="/SeperatelyHostedBlazor/" />
+    <!--<base href="https://blazorecommerce.dev.local/" /> upsets it in a different way-->
+    <!--<base href="/" />-->
+    <link href="https://blazorecommerce.dev.local/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://blazorecommerce.dev.local/css/app.css" rel="stylesheet" />
+    <link href="https://blazorecommerce.dev.local/BlazorEcommerce.Client.styles.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="https://blazorecommerce.dev.local/_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <!--qqqq for blazor redirect need to know exact route of statics-->
+    <!--<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="BlazorEcommerce.Client.styles.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />-->
 </head>
 
 <body>
@@ -21,8 +29,10 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
-    <script src="_framework/blazor.webassembly.js"></script>
-    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="https://blazorecommerce.dev.local/_framework/blazor.webassembly.js"></script>
+    <script src="https://blazorecommerce.dev.local/_content/MudBlazor/MudBlazor.min.js"></script>
+    <!--<script src="/SeperatelyHostedBlazor/_framework/blazor.webassembly.js"></script>
+    <script src="/SeperatelyHostedBlazor/_content/MudBlazor/MudBlazor.min.js"></script>-->
 </body>
 
 </html>

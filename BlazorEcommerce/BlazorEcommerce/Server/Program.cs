@@ -12,6 +12,7 @@ global using BlazorEcommerce.Server.Services.ProductTypeService;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using BlazorEcommerce.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,9 +51,38 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddHttpContextAccessor();
 
+// qqqq blazor so they can work together
+builder.Services.AddCors(options =>
+{
+
+    //options.AddPolicy("AllowMyOrigin",
+    //    builder =>
+    //    {
+    //        builder.WithOrigins("https://lh-web.dev.local")
+    //               .AllowAnyHeader()
+    //               .AllowAnyMethod()
+    //               .AllowCredentials();
+    //    });
+    options.AddPolicy("AllowSpecificOrigins",
+        builder =>
+        {
+            builder.WithOrigins("https://lh-web.dev.local")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials();
+        }); 
+});
+
+
+
 var app = builder.Build();
 
+app.UsePathBase("/SeperatelyHostedBlazor");
 app.UseSwaggerUI();
+
+// QQQQ blazor test only
+app.UseCors("AllowSpecificOrigins");
+app.UseCors("AllowMyOrigin");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

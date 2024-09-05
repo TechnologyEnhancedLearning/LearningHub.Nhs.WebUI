@@ -8,8 +8,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B5D48B6A-D4A7-494E-89C0-64428232D242}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
-		global.json = global.json
 		DISABLE_StyleCop.ruleset = DISABLE_StyleCop.ruleset
+		global.json = global.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebAPI", "WebAPI", "{A5FB4292-2736-4829-8E53-E5E5EC5A1D49}"
@@ -105,6 +105,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorEcommerce.Server", "BlazorEcommerce\BlazorEcommerce\Server\BlazorEcommerce.Server.csproj", "{B0C9EBE7-37AF-4CB4-A5D8-CF898C52BAE9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorEcommerce.Client", "BlazorEcommerce\BlazorEcommerce\Client\BlazorEcommerce.Client.csproj", "{B271158C-AD46-4022-B380-B64D3D3A1417}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHSUKViewComponents.Web", "NHSDesignSystemViewComponents\NHSUKViewComponents.Web\NHSUKViewComponents.Web.csproj", "{38D2BA49-60AE-425F-88DF-B94B3F40E51F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp1", "BlazorApp1\BlazorApp1.csproj", "{0A632137-D499-4D0A-BB1B-3DAC51F664BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -394,6 +398,22 @@ Global
 		{B271158C-AD46-4022-B380-B64D3D3A1417}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B271158C-AD46-4022-B380-B64D3D3A1417}.Release|x64.ActiveCfg = Release|Any CPU
 		{B271158C-AD46-4022-B380-B64D3D3A1417}.Release|x64.Build.0 = Release|Any CPU
+		{38D2BA49-60AE-425F-88DF-B94B3F40E51F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38D2BA49-60AE-425F-88DF-B94B3F40E51F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38D2BA49-60AE-425F-88DF-B94B3F40E51F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{38D2BA49-60AE-425F-88DF-B94B3F40E51F}.Debug|x64.Build.0 = Debug|Any CPU
+		{38D2BA49-60AE-425F-88DF-B94B3F40E51F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38D2BA49-60AE-425F-88DF-B94B3F40E51F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38D2BA49-60AE-425F-88DF-B94B3F40E51F}.Release|x64.ActiveCfg = Release|Any CPU
+		{38D2BA49-60AE-425F-88DF-B94B3F40E51F}.Release|x64.Build.0 = Release|Any CPU
+		{0A632137-D499-4D0A-BB1B-3DAC51F664BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A632137-D499-4D0A-BB1B-3DAC51F664BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A632137-D499-4D0A-BB1B-3DAC51F664BD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0A632137-D499-4D0A-BB1B-3DAC51F664BD}.Debug|x64.Build.0 = Debug|Any CPU
+		{0A632137-D499-4D0A-BB1B-3DAC51F664BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A632137-D499-4D0A-BB1B-3DAC51F664BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A632137-D499-4D0A-BB1B-3DAC51F664BD}.Release|x64.ActiveCfg = Release|Any CPU
+		{0A632137-D499-4D0A-BB1B-3DAC51F664BD}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

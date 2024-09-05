@@ -522,6 +522,7 @@
     <Build Include="Stored Procedures\Resources\GetPopularDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetRatedDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetMyCertificatesDashboardResources.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-4343_RemoveDuplicateUserGroup.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

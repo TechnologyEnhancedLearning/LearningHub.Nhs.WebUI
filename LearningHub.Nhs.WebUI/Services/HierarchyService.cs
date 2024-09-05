@@ -1,5 +1,6 @@
 ﻿namespace LearningHub.Nhs.WebUI.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;
@@ -336,6 +337,54 @@
         public async Task<ApiResponse> HierarchyEditReferenceExternalResource(ReferenceExternalResourceViewModel referenceExternalResourceViewModel)
         {
             return await this.facade.PostAsync<ApiResponse, ReferenceExternalResourceViewModel>("Hierarchy/HierarchyEditReferenceExternalResource", referenceExternalResourceViewModel);
+        }
+
+        /// <summary>
+        /// Check catalogue has external reference.
+        /// </summary>
+        /// <param name="nodeId">nodeId<see cref="Task"/>.</param>
+        /// <returns>IActionResult.</returns>
+        public async Task<bool> CheckCatalogueHasExternalReference(int nodeId)
+        {
+            var request = $"Hierarchy/CheckCatalogueHasExternalReference/{nodeId}";
+
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+            var hasExternalCatalogueReference = false;
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                hasExternalCatalogueReference = bool.Parse(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                    ||
+                    response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return hasExternalCatalogueReference;
+        }
+
+        /// <summary>
+        /// Deletes the node reference details asynchronously.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
+        /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<ApiResponse> DeleteNodeReferenceDetailsAsync(int hierarchyEditDetailId)
+        {
+            return await this.facade.PutAsync($"Hierarchy/DeleteNodeReferenceDetails/{hierarchyEditDetailId}");
+        }
+
+        /// <summary>
+        /// Deletes the resource reference details for the specified hierarchy edit detail ID.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail ID.</param>
+        /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<ApiResponse> DeleteResourceReferenceDetailsAsync(int hierarchyEditDetailId)
+        {
+            return await this.facade.PutAsync($"Hierarchy/DeleteResourceReferenceDetails/{hierarchyEditDetailId}");
         }
     }
 }

@@ -6,7 +6,6 @@
     using LearningHub.Nhs.AdminUI.Configuration;
     using LearningHub.Nhs.AdminUI.Controllers.Api;
     using LearningHub.Nhs.AdminUI.Interfaces;
-    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.WebUI.Models.Contribute;
     using Microsoft.AspNetCore.Mvc;
@@ -437,6 +436,30 @@
         public async Task<IActionResult> RemoveReferenceNode(int hierarchyEditDetailId)
         {
             var apiResponse = await this.hierarchyService.RemoveReferenceNodeAsync(hierarchyEditDetailId);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// The DeleteNodeReferenceDetails.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchyEditDetailId<see cref="hierarchyEditDetailId"/>.</param>
+        /// <returns>IActionResult.</returns>
+        [Route("DeleteNodeReferenceDetails/{hierarchyEditDetailId}")]
+        public async Task<IActionResult> DeleteNodeReferenceDetails(int hierarchyEditDetailId)
+        {
+            var apiResponse = await this.hierarchyService.DeleteNodeReferenceDetailsAsync(hierarchyEditDetailId);
+            return this.Ok(apiResponse.ValidationResult);
+        }
+
+        /// <summary>
+        /// Deletes the resource reference details for a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail id.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [Route("DeleteResourceReferenceDetails/{hierarchyEditDetailId}")]
+        public async Task<IActionResult> DeleteResourceReferenceDetails(int hierarchyEditDetailId)
+        {
+            var apiResponse = await this.hierarchyService.DeleteResourceReferenceDetailsAsync(hierarchyEditDetailId);
             return this.Ok(apiResponse.ValidationResult);
         }
     }

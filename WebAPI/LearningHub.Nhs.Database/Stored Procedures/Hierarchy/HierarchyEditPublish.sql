@@ -288,6 +288,29 @@ BEGIN
 			AND hed.Deleted = 0
 			AND nr.Deleted = 0
 
+		 -- Update NodeResource Deleted status, if the reference is removed. 
+		 UPDATE nr
+			SET nr.Deleted = 1
+			FROM hierarchy.NodeResource nr
+			INNER JOIN (
+			  -- Select the parent node ID and deleted resource ID
+				SELECT hed.ParentNodeId, hed.ResourceId
+				FROM hierarchy.HierarchyEditDetail hed
+				WHERE hed.HierarchyEditId = @HierarchyEditId
+				AND hed.Deleted = 1
+				--Only include rows where no corresponding non-deleted row exists
+				AND NOT EXISTS (
+					SELECT 1
+					FROM hierarchy.HierarchyEditDetail hed2
+					WHERE hed2.HierarchyEditId = @HierarchyEditId
+					AND hed2.Deleted = 0
+					AND hed2.ResourceId = hed.ResourceId
+					AND hed2.ParentNodeId = hed.ParentNodeId
+				)
+			) AS filtered
+			ON nr.NodeId = filtered.ParentNodeId
+			AND nr.ResourceId = filtered.ResourceId;
+
 		----------------------------------------------------------
 		-- NodeVersion
 		----------------------------------------------------------

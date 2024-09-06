@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Description>NHS Design System View Components</Description>
+    <PackageProjectUrl>https://github.com/TechnologyEnhancedLearning/NHSDesignSystemViewComponents</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/TechnologyEnhancedLearning/NHSDesignSystemViewComponents</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageId>NHSUKViewComponents.Web</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version></Version>
+    <Authors>HEE TEL</Authors>
+  </PropertyGroup>
+
+ 
+  <ItemGroup>
+	<None Include="Css\Shared\Components\*" Pack="true" PackagePath="wwwroot\css\shared\components\"></None>
+    <None Include="Views\Shared\**\*.*" Pack="true" PackagePath="Views\Shared"></None>
+	<None Include="build\NHSUKViewComponents.Web.props" Pack="true" PackagePath="build"></None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>

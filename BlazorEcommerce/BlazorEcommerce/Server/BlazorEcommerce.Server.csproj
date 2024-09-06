@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <AdditionalFiles Remove="C:\Users\philip.tate\Phil\repos\LHAndUserApiRepo\LHRepo\StyleCop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />

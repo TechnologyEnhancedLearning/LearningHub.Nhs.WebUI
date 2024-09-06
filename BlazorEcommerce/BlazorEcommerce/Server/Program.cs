@@ -55,14 +55,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddCors(options =>
 {
 
-    //options.AddPolicy("AllowMyOrigin",
-    //    builder =>
-    //    {
-    //        builder.WithOrigins("https://lh-web.dev.local")
-    //               .AllowAnyHeader()
-    //               .AllowAnyMethod()
-    //               .AllowCredentials();
-    //    });
+
     options.AddPolicy("AllowSpecificOrigins",
         builder =>
         {
@@ -83,7 +76,14 @@ app.UseSwaggerUI();
 // QQQQ blazor test only
 app.UseCors("AllowSpecificOrigins");
 app.UseCors("AllowMyOrigin");
-
+//options.AddPolicy("AllowMyOrigin",
+//    builder =>
+//    {
+//        builder.WithOrigins("https://lh-web.dev.local")
+//               .AllowAnyHeader()
+//               .AllowAnyMethod()
+//               .AllowCredentials();
+//    });
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

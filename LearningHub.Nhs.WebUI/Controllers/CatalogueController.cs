@@ -614,6 +614,7 @@
             }
 
             this.ViewBag.PageIndex = pageIndex;
+            this.ViewBag.PageSize = allCatalogueSearchPageSize;
             return this.View("AllCatalogueSearch", catalogues);
         }
     }

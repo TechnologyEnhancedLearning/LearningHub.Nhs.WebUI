@@ -5,10 +5,11 @@
 @{
     ViewData["Title"] = "All Catalogues Search";
 
-    var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString().ToLower());
+    var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString());
     var hasSearchTerm = queryParams.ContainsKey("term");
     var searchTerm = hasSearchTerm ? queryParams["term"].ToString() : null;
     string cardStyle = "card-provider-details--blank";
+    var pageSize = this.ViewBag.PageSize;
 }
 
 @section styles {
@@ -118,10 +119,10 @@
             </li>
         }
     </ul>
-    @if (Model.TotalCount > 9)
+    @if (Model.TotalCount > pageSize)
     {
         var currentPage = this.ViewBag.PageIndex;
-        int totalPage = (Model.TotalCount / 9) + (Model.TotalCount % 9 == 0 ? 0 : 1);
+        int totalPage = (Model.TotalCount / pageSize) + (Model.TotalCount % pageSize == 0 ? 0 : 1);
         var searchQueryParam = hasSearchTerm ? $"&term={searchTerm}" : string.Empty;
         var prevUrl = $"/allcataloguesearch?pageindex={currentPage - 1}{searchQueryParam}";
         var nextUrl = $"/allcataloguesearch?pageindex={currentPage + 1}{searchQueryParam}";

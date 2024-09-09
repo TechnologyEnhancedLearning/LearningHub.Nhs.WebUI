@@ -318,7 +318,7 @@
                     }
                 };
 
-                // Load source
+                //// Load source
                 //const sourceConfig = {
                 //    source: {
                 //        options: [
@@ -373,6 +373,12 @@
                     this.playBackDashUrl = this.resourceItem.videoDetails.resourceAzureMediaAsset.locatorUri;
                 }
                 this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
+
+                var token = this.resourceItem.videoDetails.resourceAzureMediaAsset.authenticationToken
+               // this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-aapl)";
+
+                this.playBackUrl = "/Media/MediaManifest?playBackUrl=" + this.playBackUrl + "&token=" + token;
+
             },
             getMediaAssetProxyUrl(playBackUrl: string): string {
                 playBackUrl = playBackUrl.substring(0, playBackUrl.lastIndexOf("manifest")) + "manifest(format=mpd-time-cmaf,encryption=cenc)";

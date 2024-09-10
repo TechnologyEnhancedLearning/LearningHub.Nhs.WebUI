@@ -193,6 +193,14 @@
         List<RoleUserGroup> GetRoleUserGroupsForCatalogue(int catalogueNodeId, bool includeUser = false);
 
         /// <summary>
+        /// The GetRolesForCatalogueSearch.
+        /// </summary>
+        /// <param name="catalogueNodeId">The catalogueNodeId.</param>
+        /// <param name="userId">The current user.</param>
+        /// <returns>The roleUserGroups.</returns>
+        Task<List<RoleUserGroup>> GetRoleUserGroupsForCatalogueSearch(int catalogueNodeId, int userId);
+
+        /// <summary>
         /// The GetLatestCatalogueAccessRequestAsync.
         /// </summary>
         /// <param name="catalogueNodeId">The catalogueNodeId.</param>

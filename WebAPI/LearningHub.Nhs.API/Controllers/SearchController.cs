@@ -257,14 +257,13 @@
                     continue;
                 }
 
-                var roleUserGroups = this.catalogueService.GetRoleUserGroupsForCatalogue(catalogue.NodeId, true);
-
                 document.CatalogueUrl = catalogue.Url;
                 document.CatalogueBadgeUrl = catalogue.BadgeUrl;
                 document.CatalogueName = catalogue.Name;
 
                 if (catalogue.RestrictedAccess)
                 {
+                    var roleUserGroups = await this.catalogueService.GetRoleUserGroupsForCatalogueSearch(catalogue.NodeId, this.CurrentUserId);
                     document.CatalogueRestrictedAccess = catalogue.RestrictedAccess;
                     document.CatalogueHasAccess = roleUserGroups.Any(x => x.UserGroup.UserUserGroup.Any(y => y.UserId == this.CurrentUserId)
                         && (x.RoleId == (int)RoleEnum.Editor || x.RoleId == (int)RoleEnum.LocalAdmin || x.RoleId == (int)RoleEnum.Reader));
@@ -347,8 +346,6 @@
                     continue;
                 }
 
-                var roleUserGroups = this.catalogueService.GetRoleUserGroupsForCatalogue(catalogue.NodeId, true);
-
                 // catalogue.No
                 document.Url = catalogue.Url;
                 document.BannerUrl = catalogue.BannerUrl;
@@ -357,6 +354,7 @@
                 document.NodePathId = catalogue.NodePathId;
                 if (catalogue.RestrictedAccess)
                 {
+                    var roleUserGroups = await this.catalogueService.GetRoleUserGroupsForCatalogueSearch(catalogue.NodeId, this.CurrentUserId);
                     document.RestrictedAccess = catalogue.RestrictedAccess;
                     document.HasAccess = roleUserGroups.Any(x => x.UserGroup.UserUserGroup.Any(y => y.UserId == this.CurrentUserId)
                         && (x.RoleId == (int)RoleEnum.Editor || x.RoleId == (int)RoleEnum.LocalAdmin || x.RoleId == (int)RoleEnum.Reader));
@@ -419,8 +417,6 @@
                     continue;
                 }
 
-                var roleUserGroups = this.catalogueService.GetRoleUserGroupsForCatalogue(catalogue.NodeId, true);
-
                 // catalogue.No
                 document.Url = catalogue.Url;
                 document.BannerUrl = catalogue.BannerUrl;
@@ -430,6 +426,7 @@
 
                 if (catalogue.RestrictedAccess)
                 {
+                    var roleUserGroups = await this.catalogueService.GetRoleUserGroupsForCatalogueSearch(catalogue.NodeId, this.CurrentUserId);
                     document.RestrictedAccess = catalogue.RestrictedAccess;
                     document.HasAccess = roleUserGroups.Any(x => x.UserGroup.UserUserGroup.Any(y => y.UserId == this.CurrentUserId)
                        && (x.RoleId == (int)RoleEnum.Editor || x.RoleId == (int)RoleEnum.LocalAdmin || x.RoleId == (int)RoleEnum.Reader));

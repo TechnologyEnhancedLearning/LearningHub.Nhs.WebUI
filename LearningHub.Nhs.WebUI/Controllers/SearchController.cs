@@ -304,23 +304,5 @@ namespace LearningHub.Nhs.WebUI.Controllers
             var autoSuggestions = await this.searchService.GetAutoSuggestionList(term);
             return this.Json(autoSuggestions);
         }
-
-        /// <summary>
-        /// GetAutoSuggestion returns the suto suggestion options.
-        /// </summary>
-        /// <param name="term">search term.</param>
-        /// <returns>Json.</returns>
-        [HttpGet("GetAutoSuggestionTest")]
-        public JsonResult GetAutoSuggestionTest(string term)
-        {
-            var suggestions = new List<string>
-            {
-                "C# Tutorial",
-                "ASP.NET Core",
-                "Entity Framework",
-                "LINQ",
-            };
-            return this.Json(suggestions);
-        }
     }
 }

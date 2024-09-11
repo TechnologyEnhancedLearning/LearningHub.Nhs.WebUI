@@ -183,6 +183,39 @@
     }
 }
 
+.autosuggestion-menu {
+    padding: 0;
+    padding-left: 0;
+    background-color: #fff;
+    border-bottom: 1px solid #d8dde0;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-left: 1px solid #d8dde0;
+    border-right: 1px solid #d8dde0;
+    box-shadow: 0 0 3px 0 rgba(66, 84, 98, .5);
+    list-style: none;
+    margin-top: 2px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    z-index: 1;
+    margin-bottom: 0;
+}
+
+.autosuggestion-option {
+    margin-bottom: 0;
+    padding: 16px;
+    border-bottom: 1px solid #f0f4f5;
+    color: #005eb8;
+    cursor: pointer;
+    font-size: 16px;
+    padding-bottom: 12px;
+    text-align: left;
+    text-decoration: underline;
+}
+
 /* large desktop */
 @media (min-width: px2rem(990)) {
 

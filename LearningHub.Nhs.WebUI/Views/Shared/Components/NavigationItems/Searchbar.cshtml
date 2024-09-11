@@ -19,6 +19,7 @@
                 <label class="nhsuk-u-visually-hidden" for="search-field">Search the learning hub</label>
                 @* <auto-suggest></auto-suggest> *@
                 <input class="nhsuk-search__input" id="search-field" name="term" type="search" placeholder="Search the learning hub" autocomplete="off">
+                <ul id="search-field_listbox" class="autosuggestion-menu"></ul>
                 <button class="nhsuk-search__submit" type="submit">
                     <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="27" height="27">
                         <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
@@ -38,3 +39,147 @@
 </div>
 
 <!-- end Searchbar -->
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        var searchInput = document.getElementById("search-field");
+        var suggestionsList = document.getElementById("search-field_listbox");
+
+        // Function to handle AJAX requests
+        function fetchSuggestions(term, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", '@Url.Action("GetAutoSuggestion", "Search")' + '?term=' + encodeURIComponent(term), true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    callback(data);
+                }
+            };
+            xhr.send();
+        }
+
+        // Function to create the autocomplete dropdown
+        function autocomplete(input, minLength) {
+            if (input != null) {
+                debugger;
+                var currentFocus = -1;
+                input.addEventListener("input", function () {
+                    var val = this.value;
+
+                    if (val.length < minLength) {
+                        closeAllLists();
+                        return false;
+                    }
+
+                    fetchSuggestions(val, function (suggestions) {
+                        debugger;
+                        if (suggestions.stats != null) {
+                            closeAllLists();
+                            if (!suggestions.stats.totalHits) return;
+
+                            // var listDiv = document.createElement("div");
+                            // listDiv.setAttribute("id", input.id + "autocomplete-list");
+                            // listDiv.setAttribute("class", "dropdown-menu dropdown-menu-right autocomplete-items");
+                            // input.parentNode.appendChild(listDiv);
+                            if (suggestions.concepts_documents.numberOfHits > 0) {
+                                suggestions.concepts_documents.documents.forEach(function (item) {
+                                    var itemDiv = document.createElement("li");
+                                    // itemDiv.className = 'dropdown-item';
+                                    itemDiv.className = 'autosuggestion-option';
+                                    itemDiv.innerHTML = item.concept;
+                                    itemDiv.addEventListener("click", function () {
+                                        input.value = item.concept;
+                                        closeAllLists();
+                                    });
+                                    suggestionsList.appendChild(itemDiv);
+                                });
+                            }
+
+                            // var catalogueHeading = document.createElement("li");
+                            // catalogueHeading.className = 'autosuggestion-option';
+                            // catalogueHeading.textContent = 'Resources';
+                            // suggestionsList.appendChild(catalogueHeading);
+                            if (suggestions.catalogues_documents.numberOfHits > 0) {
+                                suggestions.catalogues_documents.documents.forEach(function (item) {
+                                    var itemDiv = document.createElement("li");
+                                    // itemDiv.className = 'dropdown-item';
+                                    itemDiv.className = 'autosuggestion-option';
+                                    itemDiv.innerHTML = item.name;
+                                    itemDiv.addEventListener("click", function () {
+                                        input.value = item.name;
+                                        closeAllLists();
+                                    });
+                                    suggestionsList.appendChild(itemDiv);
+                                });
+                            }
+
+                            // var catalogueHeading = document.createElement("li");
+                            // catalogueHeading.className = 'autosuggestion-option';
+                            // catalogueHeading.textContent = 'Catalogues';
+                            // suggestionsList.appendChild(catalogueHeading);
+                            if (suggestions.resources_documents.numberOfHits > 0) {
+                                suggestions.resources_documents.documents.forEach(function (item) {
+                                    var itemDiv = document.createElement("li");
+                                    // itemDiv.className = 'dropdown-item';
+                                    itemDiv.className = 'autosuggestion-option';
+                                    itemDiv.innerHTML = item.title;
+                                    itemDiv.addEventListener("click", function () {
+                                        input.value = item.title;
+                                        closeAllLists();
+                                    });
+                                    suggestionsList.appendChild(itemDiv);
+                                });
+                            }
+                        }
+                    });
+                });
+
+                input.addEventListener("keydown", function (e) {
+                    var listDiv = document.getElementById(this.id);
+                    if (listDiv) listDiv = listDiv.getElementsByTagName("ul");
+                    if (e.keyCode === 40) {
+                        currentFocus++;
+                        addActive(listDiv);
+                    } else if (e.keyCode === 38) {
+                        currentFocus--;
+                        addActive(listDiv);
+                    } else if (e.keyCode === 13) {
+                        e.preventDefault();
+                        if (currentFocus > -1) {
+                            if (listDiv) listDiv[currentFocus].click();
+                        }
+                    }
+                });
+
+                function addActive(listDiv) {
+                    if (!listDiv) return false;
+                    removeActive(listDiv);
+                    if (currentFocus >= listDiv.length) currentFocus = 0;
+                    if (currentFocus < 0) currentFocus = (listDiv.length - 1);
+                    listDiv[currentFocus].classList.add("autosuggestion-option");
+                }
+
+                function removeActive(listDiv) {
+                    for (var i = 0; i < listDiv.length; i++) {
+                        listDiv[i].classList.remove("autosuggestion-option");
+                    }
+                }
+
+                function closeAllLists(elmnt) {
+                    suggestionsList.innerHTML = '';
+                    // var listDivs = document.getElementsByClassName("autosuggestion-option");
+                    // for (var i = 0; i < listDivs.length; i++) {
+                    //     if (elmnt !== listDivs[i] && elmnt !== input) {
+                    //         listDivs[i].parentNode.removeChild(listDivs[i]);
+                    //     }
+                    // }
+                }
+
+                document.addEventListener("click", function (e) {
+                    closeAllLists(e.target);
+                });
+            }
+        }
+
+        autocomplete(searchInput, 3);
+    });
+</script>

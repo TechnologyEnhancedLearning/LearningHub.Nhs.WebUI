@@ -7,7 +7,7 @@
 
     var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString());
     var hasSearchTerm = queryParams.ContainsKey("term");
-    var searchTerm = hasSearchTerm ? queryParams["term"].ToString() : null;
+    var searchTerm = hasSearchTerm ? queryParams["term"].ToString().Trim() : null;
     string cardStyle = "card-provider-details--blank";
     var pageSize = this.ViewBag.PageSize;
 }
@@ -22,9 +22,9 @@
         var parms = new Dictionary<string, string> { { "term", searchTerm } };
         <vc:back-link asp-controller="Catalogue" asp-action="GetAllCatalogue" link-text="Back to A-Z of catalogues" />
     }
-    <h1 class="nhsuk-u-margin-bottom-5">
-        @(hasSearchTerm ? $"Search results for {searchTerm}" : "All catalogues")
-    </h1>
+        <h1 class="nhsuk-u-margin-bottom-5">
+        Search results @(!string.IsNullOrEmpty(searchTerm) ? "for " + searchTerm : string.Empty)
+        </h1>
 
     <div class="nhsuk-grid-row">
         <div id="searchTab" class="search-page">
@@ -139,7 +139,7 @@
     {
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
-                <h2 class="nhsuk-heading-l">No results found for @searchTerm</h2>
+                    <h2 class="nhsuk-heading-l">No results found @(!string.IsNullOrEmpty(searchTerm) ? "for " + searchTerm : string.Empty)</h2>
                 <p>You could try:</p>
                 <ul class="nhsuk-list nhsuk-list--bullet">
                     <li>checking your spelling</li>

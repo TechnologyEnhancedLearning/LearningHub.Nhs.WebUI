@@ -589,6 +589,14 @@ BEGIN
 		----------------------------------------------------------
 
 		EXEC [hierarchy].[HierarchyNewNodePathForReferedCatalogue] @HierarchyEditId,@AmendUserId,@AmendDate
+
+		----------------------------------------------------------
+		-- ResourceReference: generate new resource reference
+		----------------------------------------------------------
+
+		EXEC [hierarchy].[HierarchyNewResourceReferenceForReferedCatalogue] @HierarchyEditId,@AmendUserId,@AmendDate
+
+
 		----------------------------------------------------------
 		-- NodePathNode
 		----------------------------------------------------------		

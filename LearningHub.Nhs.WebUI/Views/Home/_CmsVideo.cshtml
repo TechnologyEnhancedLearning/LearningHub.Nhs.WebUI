@@ -2,9 +2,9 @@
 @model PageSectionDetailViewModel
 @{
     string mkPlayerLicence = (string)ViewData["mkPlayerLicenceKey"];
-    var scheme = Context?.Request?.Scheme ?? "undefined"; 
-    var host = Context?.Request?.Host; 
-    var path = Context?.Request?.Path ?? "undefined"; 
+    var scheme = Context?.Request?.Scheme ?? "undefined";
+    var host = Context?.Request?.Host;
+    var path = Context?.Request?.Path ?? "undefined";
     var requestURL = $"{scheme}://{host}{path}";
 }
 
@@ -56,6 +56,8 @@
 <script type="text/javascript">
 
     var model = @Json.Serialize(Model);
+    let model_@Model.Id = @Html.Raw(Json.Serialize(Model));
+
     // 1. Grab the video container
     var videoContainer = document.getElementById("@($"{"videoContainer"}{Model.Id}")");
 
@@ -68,7 +70,7 @@
             muted: false,
             autoplay: false,
             preferredTech: [{ player: 'html5', streaming: 'hls' }]
-        }        
+        }
     };
 
     // 3. Initialize the player with video container and player configuration
@@ -76,7 +78,7 @@
 
     // [BY] Commenting and leaving this code here for future reference : When we set UI:false, we need to manually add controls
     // -----------------------------------------------------------------------------------------------------------------------
-    // player.on(mkplayer.MKPlayerEvent.Ready, (event) => {        
+    // player.on(mkplayer.MKPlayerEvent.Ready, (event) => {
     //     const videoElement = document.getElementById("@($"{"bitmovinplayer-video-videoContainer"}{Model.Id}")");
     //     if (videoElement) {
     //         videoElement.controls = true;
@@ -108,9 +110,9 @@
         const captionsInfo = model.videoAsset.closedCaptionsFile;
         var srcPath = "file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
         srcPath = '@requestURL' + srcPath;
-       
+
         subtitleTrack = {
-            id: "subtitle",
+            id: "@($"{"subtitle"}{Model.Id}")",
             lang: "en",
             label: "english",
             url: srcPath,
@@ -138,6 +140,12 @@
         .catch((error) => {
             console.error("An error occurred while loading the source!");
         });
+
+    player.on(mkplayer.MKPlayerEvent.Ready, (event) => {
+        var contanierId = (model_@Model.Id).id;
+        buildControlbar(contanierId);
+    });
+
 </script>
 
 <style>
@@ -157,5 +165,9 @@
         left: 0;
         width: 100%;
         height: 100%;
+    }
+
+    .bmpui-ui-controlbar .control-right {
+        float: right;
     }
 </style>

@@ -10,13 +10,13 @@
  * 6. Updates the playback toggle button state based on the player's state (playing or paused) when the container's class changes.
  */
 
-function buildControlbar(id) {
+function buildControlbar(id, player) {
     var mediacontainerId = 'mediaContainer-' + id;
 
     // Select the titlebar and controlbar elements from the DOM
     let titlebar = document.querySelector(`#${mediacontainerId} .bmpui-ui-titlebar`);
     let controlbar = document.querySelector(`#${mediacontainerId} .bmpui-ui-controlbar`);
-    debugger;
+
     // Check if both titlebar and controlbar elements exist
     if (titlebar && controlbar) {
 
@@ -25,6 +25,7 @@ function buildControlbar(id) {
         playbackToggleButton.classList.add('bmpui-ui-playbacktogglebutton', 'bmpui-off');
         playbackToggleButton.setAttribute('aria-label', 'Play');
         playbackToggleButton.innerHTML = '<span class="bmpui-label">Play</span>';
+        playbackToggleButton.id = 'playback-toggle-btn-' + id;
         controlbar.appendChild(playbackToggleButton);
 
         // Add an event listener to the playback toggle button
@@ -32,13 +33,13 @@ function buildControlbar(id) {
             // Toggle playback state based on the current state
             if (player.isPlaying()) {
                 player.pause();
-                playbackToggleButton.classList.add('bmpui-off');
                 playbackToggleButton.classList.remove('bmpui-on');
+                playbackToggleButton.classList.add('bmpui-off');
                 playbackToggleButton.innerHTML = '<span class="bmpui-label">Play</span>';
             } else {
                 player.play();
-                playbackToggleButton.classList.add('bmpui-on');
                 playbackToggleButton.classList.remove('bmpui-off');
+                playbackToggleButton.classList.add('bmpui-on');
                 playbackToggleButton.innerHTML = '<span class="bmpui-label">Pause</span>';
             }
         });
@@ -55,16 +56,16 @@ function buildControlbar(id) {
         });
 
         // Select the UI container element
-        let uiContainerElement = document.querySelector(`#${mediacontainerId} .bmpui-ui-uicontainer`);
-
-        uiContainerElement.addEventListener('click', function () {
+        let uiOverlayElement = document.querySelector(`#${mediacontainerId} .bmpui-ui-playbacktoggle-overlay`);
+        uiOverlayElement.addEventListener('click', function () {
+            let uiContainerElement = document.querySelector(`#${mediacontainerId} .bmpui-ui-uicontainer`);
             // Update the playback toggle button state based on the player's state
             if (uiContainerElement.classList.contains('bmpui-player-state-paused')) {
-                playbackToggleButton.classList.add('bmpui-off');
-                playbackToggleButton.classList.remove('bmpui-on');
-            } else {
-                playbackToggleButton.classList.add('bmpui-on');
                 playbackToggleButton.classList.remove('bmpui-off');
+                playbackToggleButton.classList.add('bmpui-on');
+            } else {
+                playbackToggleButton.classList.remove('bmpui-on');
+                playbackToggleButton.classList.add('bmpui-off');
             }
         });
 

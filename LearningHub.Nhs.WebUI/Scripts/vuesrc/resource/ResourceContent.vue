@@ -101,6 +101,7 @@
     import { setResourceCetificateLink } from './helpers/resourceCertificateHelper';
     import { MKPlayer } from '@mediakind/mkplayer';
     import { MKPlayerType, MKStreamType } from '../MKPlayerConfigEnum';
+    import { MKPlayerControlbar } from '../mkioplayer-controlbar';
 
     Vue.use(Vuelidate as any);
 
@@ -254,6 +255,8 @@
                 //        videoElement.appendChild(trackElement);
                 //    }
                 //}
+
+                MKPlayerControlbar("mediacontainer", this.player);
 
                 this.checkForAutoplay(this.player);
             },
@@ -837,6 +840,9 @@
     // NOTE: Not `scoped` because we want this section to apply to children
     @use '../../../Styles/abstracts/all' as *;
 
+    .bmpui-ui-controlbar .control-right {
+        float: right;
+    }
     .accessible-link:focus {
         outline: none;
         text-decoration: none;
@@ -851,7 +857,7 @@
         overflow: hidden;
         position: relative;
         padding-top: 56.25%;*/ /* 16:9 aspect ratio */
-        /*background-color: #000;
+    /*background-color: #000;
     }
 
     video {

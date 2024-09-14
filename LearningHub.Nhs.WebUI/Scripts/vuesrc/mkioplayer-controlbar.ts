@@ -10,22 +10,20 @@
  * 6. Updates the playback toggle button state based on the player's state (playing or paused) when the container's class changes.
  */
 
-function buildControlbar(id, player) {
-    var mediacontainerId = 'mediaContainer-' + id;
-
+function MKPlayerControlbar(playerContainerId: string, player: { isPlaying: () => boolean; pause: () => void; play: () => void; }): void {
     // Select the titlebar and controlbar elements from the DOM
-    let titlebar = document.querySelector(`#${mediacontainerId} .bmpui-ui-titlebar`);
-    let controlbar = document.querySelector(`#${mediacontainerId} .bmpui-ui-controlbar`);
+    const titlebar = document.querySelector(`#${playerContainerId} .bmpui-ui-titlebar`) as HTMLElement;
+    const controlbar = document.querySelector(`#${playerContainerId} .bmpui-ui-controlbar`) as HTMLElement;
 
     // Check if both titlebar and controlbar elements exist
     if (titlebar && controlbar) {
 
         // Create a playback toggle button and set its initial state and appearance
-        let playbackToggleButton = document.createElement('button');
+        const playbackToggleButton = document.createElement('button');
         playbackToggleButton.classList.add('bmpui-ui-playbacktogglebutton', 'bmpui-off');
         playbackToggleButton.setAttribute('aria-label', 'Play');
         playbackToggleButton.innerHTML = '<span class="bmpui-label">Play</span>';
-        playbackToggleButton.id = 'playback-toggle-btn-' + id;
+        playbackToggleButton.id = 'playback-toggle-btn-' + playerContainerId;
         controlbar.appendChild(playbackToggleButton);
 
         // Add an event listener to the playback toggle button
@@ -45,32 +43,33 @@ function buildControlbar(id, player) {
         });
 
         // Get all button elements from the titlebar
-        let buttons = titlebar.querySelectorAll('button');
+        const buttons = titlebar.querySelectorAll('button');
 
         // Reverse the button list and append each button to the controlbar
         Array.from(buttons).reverse().forEach(button => {
-            if (button.textContent != "Mute") {
+            if (button.textContent !== "Mute") {
                 button.classList.add('control-right'); // Add a class to align buttons to the right
             }
             controlbar.appendChild(button); // Append the button to the controlbar
         });
 
         // Select the UI container element
-        let uiOverlayElement = document.querySelector(`#${mediacontainerId} .bmpui-ui-playbacktoggle-overlay`);
+        const uiOverlayElement = document.querySelector(`#${playerContainerId} .bmpui-ui-playbacktoggle-overlay`) as HTMLElement;
         uiOverlayElement.addEventListener('click', function () {
-            let uiContainerElement = document.querySelector(`#${mediacontainerId} .bmpui-ui-uicontainer`);
+            const uiContainerElement = document.querySelector(`#${playerContainerId} .bmpui-ui-uicontainer`) as HTMLElement;
             // Update the playback toggle button state based on the player's state
             if (uiContainerElement.classList.contains('bmpui-player-state-playing')) {
-                playbackToggleButton.classList.remove('bmpui-off');
-                playbackToggleButton.classList.add('bmpui-on');
-            } else {
                 playbackToggleButton.classList.remove('bmpui-on');
                 playbackToggleButton.classList.add('bmpui-off');
+            } else {
+                playbackToggleButton.classList.remove('bmpui-off');
+                playbackToggleButton.classList.add('bmpui-on');
             }
         });
 
-    }
-    else {
+    } else {
         console.error('UI container element not found');
     }
 }
+
+export { MKPlayerControlbar };

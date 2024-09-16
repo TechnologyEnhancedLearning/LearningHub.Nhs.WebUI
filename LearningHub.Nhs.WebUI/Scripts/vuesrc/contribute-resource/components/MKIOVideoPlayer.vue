@@ -34,6 +34,7 @@
     import { MKPlayer } from '@mediakind/mkplayer';
     import { resourceData } from '../../data/resource';
     import { MKPlayerType, MKStreamType } from '../../MKPlayerConfigEnum';
+    import { MKPlayerControlbar } from '../../mkioplayer-controlbar';
     //import { MKPlayerType } from '@mediakind/mkplayer/types/enums/MKPlayerType.d';
     //import { MKStreamType } from '@mediakind/mkplayer/types/enums/MKStreamType.d';
     export default Vue.extend({
@@ -58,6 +59,7 @@
         },
         methods: {
             onPlayerReady() {
+                MKPlayerControlbar(this.player.videoContainer.id, this.player);
                 const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
                 if (videoElement) {
                     videoElement.controls = true;
@@ -94,7 +96,6 @@
                 // Grab the video container
                 this.videoContainer = document.getElementById(this.getPlayerUniqueId);
 
-
                 if (!this.mkioKey) {
                     this.getMKIOPlayerKey();
                 }
@@ -102,7 +103,7 @@
                 // Prepare the player configuration
                 const playerConfig = {
                     key: this.mkioKey,
-                    ui: false,
+                    ui: true,
                     theme: "dark",
                     playback: {
                         muted: false,
@@ -195,5 +196,65 @@
 
     video[id^="bitmovinplayer-video"] {
         width: 100%;
+    }
+
+    .bmpui-ui-controlbar .control-right {
+        float: right;
+    }
+
+    /* Base styles for video container */
+    .video-container {
+        width: 100%;
+        margin: auto;
+        position: relative;
+        --min-width: 0px; /* default value */
+    }
+
+    /* Media queries to set different min-width values */
+    @media (min-width: 576px) {
+        .video-container {
+            --min-width: 576px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .video-container {
+            --min-width: 768px;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .video-container {
+            --min-width: 992px;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .video-container {
+            --min-width: 1024px;
+        }
+    }
+
+    /* Applying min-width to the video container using the CSS variable */
+    .video-container {
+        min-width: var(--min-width) !important;
+    }
+
+    /* Targeting specific div with dynamic ID pattern */
+    [id^="videoContainer_"] {
+        min-width: var(--min-width) !important; /* Inheriting min-width */
+    }
+
+    /* Example child element inheriting min-width from video container */
+    .video-container .child-element {
+        min-width: var(--min-width) !important;
+        padding: 10px;
+        text-align: center;
+    }
+
+    /* Style for the video element */
+    .video-container video {
+        width: 100%;
+        height: auto;
     }
 </style>

@@ -256,7 +256,7 @@
                 //    }
                 //}
 
-                MKPlayerControlbar("mediacontainer", this.player);
+                MKPlayerControlbar(this.player.videoContainer.id, this.player);
 
                 this.checkForAutoplay(this.player);
             },

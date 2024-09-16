@@ -9,9 +9,10 @@
  * 5. Selects the UI container element and sets up a MutationObserver to monitor changes in the container's class attribute.
  * 6. Updates the playback toggle button state based on the player's state (playing or paused) when the container's class changes.
  */
-
-function MKPlayerControlbar(playerContainerId: string, player: { isPlaying: () => boolean; pause: () => void; play: () => void; }): void {
+import { MKPlayer, MKPlayerConfig } from '@mediakind/mkplayer';
+function MKPlayerControlbar(playerContainerId: string, player: MKPlayer): void {
     // Select the titlebar and controlbar elements from the DOM
+
     const titlebar = document.querySelector(`#${playerContainerId} .bmpui-ui-titlebar`) as HTMLElement;
     const controlbar = document.querySelector(`#${playerContainerId} .bmpui-ui-controlbar`) as HTMLElement;
 

@@ -235,7 +235,7 @@
 
                         @{
                             var file = resource.ScormDetails.File;
-                            var downloadAndRecordLink = $"/api/resource/DownloadResourceAndRecordActivity?resourceVersionId={resource.ResourceVersionId}&nodePathId={resource.NodePathId}&filePath={file.FilePath}&fileName={Uri.EscapeDataString(file.FileName)}";
+                            var downloadAndRecordLink = $"/api/resource/DownloadResource?filePath={file.FilePath}&fileName={Uri.EscapeDataString(file.FileName)}";
                         }
                         @if (!(User.IsInRole("BasicUser") && resource.ResourceAccessibilityEnum == ResourceAccessibilityEnum.FullAccess))
                         {

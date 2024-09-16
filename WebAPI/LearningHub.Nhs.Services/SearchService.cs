@@ -542,6 +542,53 @@ namespace LearningHub.Nhs.Services
         }
 
         /// <summary>
+        /// Gets AllCatalogue search results from findwise api call.
+        /// </summary>
+        /// <param name="catalogSearchRequestModel">The allcatalog search request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<SearchAllCatalogueResultModel> GetAllCatalogueSearchResultsAsync(AllCatalogueSearchRequestModel catalogSearchRequestModel)
+        {
+            var viewmodel = new SearchAllCatalogueResultModel();
+            try
+            {
+                var offset = catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize;
+                var client = await this.FindWiseHttpClient.GetClient(this.settings.Findwise.SearchUrl);
+                var request = string.Format(
+                    this.settings.Findwise.UrlSearchComponent + "?offset={1}&hits={2}&q={3}&token={4}",
+                    this.settings.Findwise.CollectionIds.Catalogue,
+                    offset,
+                    catalogSearchRequestModel.PageSize,
+                    this.EncodeSearchText(catalogSearchRequestModel.SearchText),
+                    this.settings.Findwise.Token);
+
+                var response = await client.GetAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    viewmodel = JsonConvert.DeserializeObject<SearchAllCatalogueResultModel>(result);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    this.Logger.LogError($"Get AllCatalogue Search Result failed in FindWise, HTTP Status Code:{response.StatusCode}");
+                    throw new Exception("AccessDenied to FindWise Server");
+                }
+                else
+                {
+                    var error = response.Content.ReadAsStringAsync().Result.ToString();
+                    this.Logger.LogError($"Get AllCatalogue Search Result failed in FindWise, HTTP Status Code:{response.StatusCode}, Error Message:{error}");
+                    throw new Exception("Error with FindWise Server");
+                }
+
+                return viewmodel;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Send search click payload.
         /// </summary>
         /// <param name="searchClickPayloadModel">search click payload model.</param>

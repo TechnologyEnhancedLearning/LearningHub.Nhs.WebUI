@@ -80,6 +80,7 @@
                 ShowRegister = false,
                 ShowSignOut = false,
                 ShowMyAccount = false,
+                ShowBrowseCatalogues = false,
             };
         }
 
@@ -104,6 +105,7 @@
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = true,
+                ShowBrowseCatalogues = true,
             };
         }
 
@@ -128,6 +130,7 @@
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = true,
+                ShowBrowseCatalogues = true,
             };
         }
 
@@ -151,6 +154,7 @@
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = false,
+                ShowBrowseCatalogues = false,
             };
         }
 
@@ -175,6 +179,7 @@
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = false,
+                ShowBrowseCatalogues = true,
             };
         }
 
@@ -198,6 +203,7 @@
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = true,
+                ShowBrowseCatalogues = true,
             };
         }
 
@@ -221,6 +227,7 @@
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = false,
+                ShowBrowseCatalogues = false,
             };
         }
     }

@@ -7,13 +7,14 @@
 -- Modification History
 --
 -- 11-01-2021  Killian Davies	Initial Revision
+-- 05-06-2023  SA   Modified the sp to fix the sql timeout issues.
 -------------------------------------------------------------------------------
 CREATE VIEW [hub].[RoleUserGroupView]
 
 AS
 
 SELECT 
-	ROW_NUMBER() OVER(ORDER BY rug.Id) AS [Sequence],
+    ROW_NUMBER() OVER(ORDER BY rug.Id) AS [Sequence],
 	rug.Id AS RoleUserGroupId,
 	ug.Id AS UserGroupId,
 	ug.[Name] AS UserGroupName,

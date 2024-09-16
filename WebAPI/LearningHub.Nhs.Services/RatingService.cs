@@ -116,8 +116,28 @@
         public async Task<RatingSummaryViewModel> GetRatingSummary(int userId, int entityVersionId)
         {
             var ratingSummary = await this.resourceVersionRatingSummaryRepository.GetByResourceVersionIdAsync(entityVersionId);
+            RatingSummaryViewModel ratingSummaryViewModel;
 
-            var ratingSummaryViewModel = this.mapper.Map<RatingSummaryViewModel>(ratingSummary);
+            if (ratingSummary != null)
+            {
+                ratingSummaryViewModel = this.mapper.Map<RatingSummaryViewModel>(ratingSummary);
+            }
+            else
+            {
+                ratingSummaryViewModel = new RatingSummaryViewModel
+                {
+                    AverageRating = 0,
+                    RatingCount = 0,
+                    Rating1StarPercent = 0,
+                    Rating2StarPercent = 0,
+                    Rating3StarPercent = 0,
+                    Rating4StarPercent = 0,
+                    Rating5StarPercent = 0,
+                    UserIsContributor = false,
+                    UserCanRate = false,
+                    UserRating = 0,
+                };
+            }
 
             if (ratingSummaryViewModel.RatingCount > 0)
             {

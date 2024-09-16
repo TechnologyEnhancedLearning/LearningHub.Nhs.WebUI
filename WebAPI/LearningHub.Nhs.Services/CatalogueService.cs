@@ -401,8 +401,18 @@
                 query = query.Include(x => x.UserGroup).ThenInclude(x => x.UserUserGroup);
             }
 
-            return query.Where(x => x.Scope.CatalogueNodeId == catalogueNodeId)
-                .ToList();
+            return query.Where(x => x.Scope.CatalogueNodeId == catalogueNodeId).ToList();
+        }
+
+        /// <summary>
+        /// The GetRolesForCatalogueSearch.
+        /// </summary>
+        /// <param name="catalogueNodeId">The catalogueNodeId.</param>
+        /// <param name="userId">The current user.</param>
+        /// <returns>The roleUserGroups.</returns>
+        public async Task<List<RoleUserGroup>> GetRoleUserGroupsForCatalogueSearch(int catalogueNodeId, int userId)
+        {
+            return await this.roleUserGroupRepository.GetAllforSearch(catalogueNodeId, userId);
         }
 
         /// <summary>
@@ -926,29 +936,94 @@
         {
             var catalogueAccessRequest = this.catalogueAccessRequestRepository.GetAll().Include(x => x.UserProfile).SingleOrDefault(x => x.Id == catalogueAccessRequestId);
             string lastResponseMessage = null;
-            if (catalogueAccessRequest.Status == (int)CatalogueAccessRequestStatus.Pending)
+            if (catalogueAccessRequest != null)
             {
-                // Check for a previous access request which failed
-                // Will have the same userId and catalogueNodeId, not the same accessRequestId, a rejected status and a completed date.
-                var prevFailedRequest = this.catalogueAccessRequestRepository.GetAll()
-                    .Where(x => x.UserId == catalogueAccessRequest.UserId && x.CatalogueNodeId == catalogueAccessRequest.CatalogueNodeId)
-                    .Where(x => x.Id != catalogueAccessRequest.Id)
-                    .Where(x => x.Status == (int)CatalogueAccessRequestStatus.Rejected && x.CompletedDate.HasValue)
-                    .OrderByDescending(x => x.CompletedDate.Value)
-                    .FirstOrDefault();
-                lastResponseMessage = prevFailedRequest?.ResponseMessage;
-            }
+                if (catalogueAccessRequest.Status == (int)CatalogueAccessRequestStatus.Pending)
+                {
+                    // Check for a previous access request which failed
+                    // Will have the same userId and catalogueNodeId, not the same accessRequestId, a rejected status and a completed date.
+                    var prevFailedRequest = this.catalogueAccessRequestRepository.GetAll()
+                        .Where(x => x.UserId == catalogueAccessRequest.UserId && x.CatalogueNodeId == catalogueAccessRequest.CatalogueNodeId)
+                        .Where(x => x.Id != catalogueAccessRequest.Id)
+                        .Where(x => x.Status == (int)CatalogueAccessRequestStatus.Rejected && x.CompletedDate.HasValue)
+                        .OrderByDescending(x => x.CompletedDate.Value)
+                        .FirstOrDefault();
+                    lastResponseMessage = prevFailedRequest?.ResponseMessage;
+                }
 
-            var catalogue = this.catalogueNodeVersionRepository.GetBasicCatalogue(catalogueAccessRequest.CatalogueNodeId);
-            var canEdit = await this.IsUserLocalAdminAsync(userId, catalogue.NodeVersion.NodeId);
-            if (!canEdit)
-            {
-                throw new Exception($"User '{userId}' does not have access to manage catalogue '{catalogue.Url}'");
+                var catalogue = this.catalogueNodeVersionRepository.GetBasicCatalogue(catalogueAccessRequest.CatalogueNodeId);
+                var canEdit = await this.IsUserLocalAdminAsync(userId, catalogue.NodeVersion.NodeId);
+                if (!canEdit)
+                {
+                    throw new Exception($"User '{userId}' does not have access to manage catalogue '{catalogue.Url}'");
+                }
             }
 
             var vm = this.mapper.Map<CatalogueAccessRequestViewModel>(catalogueAccessRequest);
             vm.LastResponseMessage = lastResponseMessage;
             return vm;
+        }
+
+        /// <summary>
+        /// GetAllCataloguesAsync.
+        /// </summary>
+        /// <param name="pageSize">The pageSize.</param>
+        /// <param name="filterChar">The filterChar.</param>
+        /// <param name="userId">The userId.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<AllCatalogueResponseViewModel> GetAllCataloguesAsync(int pageSize, string filterChar, int userId)
+        {
+            var catalogueAlphaCount = this.catalogueNodeVersionRepository.GetAllCataloguesAlphaCount(userId);
+            var filterCharMod = filterChar.Trim() == "0-9" ? "[0-9]" : filterChar;
+            var count = catalogueAlphaCount.FirstOrDefault(ca => ca.Alphabet == filterChar.ToUpper()).Count;
+            string prevChar = null, nextChar = null, curChar = null;
+            var filterCharIndex = catalogueAlphaCount.FindIndex(ca => ca.Alphabet == filterChar.ToUpper());
+
+            // check count and assign prev and next letter
+            if (count != 0)
+            {
+                for (int i = 0; i < catalogueAlphaCount.Count; i++)
+                {
+                    if (i == filterCharIndex && i == 0)
+                    {
+                        prevChar = null;
+                    }
+
+                    if (i == filterCharIndex && i == catalogueAlphaCount.Count - 1)
+                    {
+                        nextChar = null;
+                    }
+
+                    if (catalogueAlphaCount[i].Count > 0 && i < filterCharIndex)
+                    {
+                        curChar = catalogueAlphaCount[i].Alphabet;
+                        prevChar = curChar;
+                    }
+
+                    if (catalogueAlphaCount[i].Count > 0 && i > filterCharIndex)
+                    {
+                        curChar = catalogueAlphaCount[i].Alphabet;
+                        nextChar = curChar;
+                        break;
+                    }
+                }
+            }
+
+            var catalogues = await this.catalogueNodeVersionRepository.GetAllCataloguesAsync(pageSize, filterCharMod, userId);
+            foreach (var catalogue in catalogues)
+            {
+                catalogue.Providers = await this.providerService.GetByCatalogueVersionIdAsync(catalogue.NodeVersionId);
+            }
+
+            var response = new AllCatalogueResponseViewModel
+            {
+                CataloguesCount = catalogueAlphaCount,
+                Catalogues = catalogues,
+                FilterChar = filterChar.ToUpper(),
+                PrevChar = prevChar,
+                NextChar = nextChar,
+            };
+            return response;
         }
 
         /// <summary>

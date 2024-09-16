@@ -44,7 +44,7 @@
                         </div>
 
                         <div class="modal-body">
-                            You are about to make a change to this resource. If you continue, changes cannot be undone.
+                            You are about to make a change to this resource. Editing this page will create a new draft, nothing will change until this draft is published.
                         </div>
 
                         <div class="modal-footer">

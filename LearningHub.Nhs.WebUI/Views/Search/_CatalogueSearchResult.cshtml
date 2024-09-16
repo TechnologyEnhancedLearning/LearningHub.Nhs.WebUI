@@ -44,6 +44,20 @@
       <li class="nhsuk-grid-column-one-third nhsuk-card-group__item">
 
         <div class="nhsuk-card nhsuk-bg-light-blue catalogue-card">
+         <div class="nhsuk-card-banner-container">
+          @if (!string.IsNullOrWhiteSpace(item.CardImageUrl))
+           {
+                            <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.CardImageUrl" alt="@item.Name" />
+           }
+           else if (!string.IsNullOrWhiteSpace(item.BannerUrl))
+           {
+                            <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.BannerUrl" alt="@item.Name" />
+           }
+           else
+           {
+             <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
+           }
+         </div>
           @if (provider != null)
           {
             <div class="card-provider-details">
@@ -91,7 +105,7 @@
                   {
                     <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
                   }
-                  else @if (hasBadge)
+                  else if (hasBadge)
                   {
                     <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="Provider's catalogue badge" class="catalogue-card-badge" />
                   }

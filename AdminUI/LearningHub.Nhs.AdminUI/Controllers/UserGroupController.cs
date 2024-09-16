@@ -257,6 +257,7 @@
             var vr = await this.userGroupService.AddUsersToUserGroup(userGroupId, userIdList);
             if (vr.IsValid)
             {
+                this.ClearUserCachedPermissions(userIdList);
                 return this.Json(new
                 {
                     success = true,
@@ -526,6 +527,17 @@
             var catalogues = vm.Where(c => c.ScopeType == Nhs.Models.Enums.ScopeTypeEnum.Catalogue).ToList();
 
             return this.PartialView("_UserGroupCatalogues", catalogues);
+        }
+
+        private void ClearUserCachedPermissions(string userIdList)
+        {
+            if (!string.IsNullOrWhiteSpace(userIdList))
+            {
+                foreach (var userId in userIdList.Split(","))
+                {
+                    _ = Task.Run(async () => { await this.userService.ClearUserCachedPermissions(int.Parse(userId)); });
+                }
+            }
         }
     }
 }

@@ -146,7 +146,8 @@
                 playBackDashUrl: '',
                 sourceLoaded: true,
                 playerConfig: {
-                }
+                },
+                requestURL: ''
             }
         },
         computed: {
@@ -231,8 +232,8 @@
         beforeDestroy(): void {
             window.clearInterval(this.mediaPlayingTimer);
         },
-        mounted() {
-
+        mounted() {            
+            this.requestURL =window.location.origin;
         },
         methods: {
             onPlayerReady() {
@@ -312,10 +313,25 @@
                     }
                 };
 
+                var subtitleTrack = null;
+                var captionsInfo = this.resourceItem.videoDetails.closedCaptionsFile;
+
+                if (captionsInfo) {
+                    var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
+                    subtitleTrack = {
+                        id: "subtitle",
+                        lang: "en",
+                        label: "english",
+                        url: this.requestURL + srcPath,
+                        kind: "subtitle"
+                    };
+                }
+
                 // Load source
                 const sourceConfig = {
                     hls: this.playBackUrl,
                     //dash: this.playBackDashUrl,
+                    subtitleTracks: [subtitleTrack],
                     drm: {
                         clearkey: clearKeyConfig
                     }
@@ -850,25 +866,4 @@
         background-color: $govuk-focus-highlight-yellow;
         box-shadow: 0 -2px $govuk-focus-highlight-yellow,0 4px $nhsuk-black;
     }
-
-    /*.video-container {
-        height: 0;
-        width: 100%;
-        overflow: hidden;
-        position: relative;
-        padding-top: 56.25%;*/ /* 16:9 aspect ratio */
-    /*background-color: #000;
-    }
-
-    video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-
-    video[id^="bitmovinplayer-video"] {
-        width: 100%;
-    }*/
 </style>

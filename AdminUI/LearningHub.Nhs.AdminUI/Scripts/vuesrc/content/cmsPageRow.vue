@@ -91,6 +91,7 @@
                 player: null,
                 videoContainer: null,
                 mkioKey: '',
+                requestURL: ''
             };
         },
         async created(): Promise<void> {
@@ -98,6 +99,9 @@
             this.load();
             this.getDisplayAVFlag();
             this.getAudioVideoUnavailableView();
+        },
+        mounted() {
+            this.requestURL = window.location.origin;
         },
         computed: {
             getStyle() {
@@ -170,16 +174,16 @@
                     this.audioVideoUnavailableView = response;
                 });
             },
-            onSubtitleAdded() {
-                this.player.subtitles.enable("subtitle" + this.section.id.toString());
-            },
+            //onSubtitleAdded() {
+            //    this.player.subtitles.enable("subtitle" + this.section.id.toString());
+            //},
             onPlayerReady() {
                 const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
                 if (videoElement) {
                     videoElement.controls = true;
                 }
 
-                var subtitleTrack;
+                //  var subtitleTrack;
                 //if (this.pageSectionDetail.videoAsset.azureMediaAsset && this.pageSectionDetail.videoAsset.closedCaptionsFile) {
                 //    const captionsInfo = this.pageSectionDetail.videoAsset.closedCaptionsFile;
                 //    var srcPath = "file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
@@ -197,7 +201,7 @@
 
                 //this.player.addSubtitle(subtitleTrack);
 
-                var contanierId = this.section.id.toString();;
+                var contanierId = this.section.id.toString();
                 var uniquePlayer = this.player;// (player_@Model.Id);
                 buildControlbar(contanierId, uniquePlayer);
             },
@@ -232,34 +236,33 @@
                             theme: "dark",
                             events: {
                                 ready: this.onPlayerReady,
-                                subtitleadded: this.onSubtitleAdded,
+                                //subtitleadded: this.onSubtitleAdded,
                             }
                         };
 
                         // Initialize the player with video container and player configuration
                         this.player = new MKPlayer(this.videoContainer, playerConfig);
 
-                        //var subtitleTrack;
-                        //debugger;
-                        //if (this.pageSectionDetail.videoAsset.azureMediaAsset && this.pageSectionDetail.videoAsset.closedCaptionsFile) {
-                        //    const captionsInfo = this.pageSectionDetail.videoAsset.closedCaptionsFile;
-                        //    var srcPath = "file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
-                        //    //srcPath = '@requestURL' + srcPath;
-                        //    srcPath = "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt";  
+                        var subtitleTrack = null;
+                        var sectionId = this.section.id.toString();
+                        if (this.pageSectionDetail.videoAsset.azureMediaAsset && this.pageSectionDetail.videoAsset.closedCaptionsFile) {
+                            var captionsInfo = this.pageSectionDetail.videoAsset.closedCaptionsFile;;
 
-                        //    subtitleTrack = {
-                        //        id: "subtitle" + this.section.id.toString(),
-                        //        lang: "en",
-                        //        label: "english",
-                        //        url: srcPath,
-                        //        kind: "subtitle"
-                        //    };
-                        //};
-
+                            if (captionsInfo) {
+                                var srcPath = "/file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
+                                subtitleTrack = {
+                                    id: "subtitle" + sectionId,
+                                    lang: "en",
+                                    label: "english",
+                                    url: this.requestURL + srcPath,
+                                    kind: "subtitle"
+                                };
+                            }
+                        }
                         // Load source
                         const sourceConfig = {
                             hls: this.getMediaPlayUrl(this.pageSectionDetail.videoAsset.azureMediaAsset.locatorUri),
-                            //subtitleTracks: subtitleTrack,
+                            subtitleTracks: [subtitleTrack],
                             drm: {
                                 clearkey: {
                                     LA_URL: "HLS_AES",

@@ -3,7 +3,6 @@
 <form id="search" asp-controller="search" asp-action="results" method="get" role="search">
     <div class="nhsuk-u-margin-bottom-5 nhsuk-header__search-form--search-results" style="position:relative !important">
         <label class="nhsuk-label nhsuk-u-visually-hidden" for="sub-search-field">Search the learning hub</label>
-        @* <input class="nhsuk-search__input" id="search-field" name="term" type="search" placeholder="Search the learning hub" autocomplete="off"> *@
         <input class="nhsuk-input nhsuk-search__input" type="search" name="term" autocomplete="off" id="sub-search-field" placeholder="Search the learning hub" value="@Model">
         <ul id="sub-search-field_listbox" class="nhsuk-list autosuggestion-menu" style="display:none;top: 100%;"></ul>
         <button class="nhsuk-search__submit" type="submit">

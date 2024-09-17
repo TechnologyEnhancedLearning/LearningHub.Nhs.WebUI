@@ -234,7 +234,6 @@
         public async Task<IActionResult> GetAutoSuggestionResults(string term)
         {
             var autosuggestionViewModel = new AutoSuggestionModel();
-
             autosuggestionViewModel = await this.searchService.GetAutoSuggestionResultsAsync(term);
             return this.Ok(autosuggestionViewModel);
         }

@@ -1,0 +1,144 @@
+﻿@using LearningHub.Nhs.WebUI.Extensions
+@using Microsoft.AspNetCore.WebUtilities
+@model LearningHub.Nhs.Models.Catalogue.AllCatalogueResponseViewModel;
+
+@{
+    ViewData["Title"] = "All Catalogues";
+    string cardStyle = "card-provider-details--blank";
+}
+
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/catalogue.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/search.css" asp-append-version="true" />
+}
+<div class="all-catalogue">
+<div class="nhsuk-width-container app-width-container" style="width:100%">
+    <h1 class="nhsuk-u-margin-top-5">
+        A-Z of catalogues
+    </h1>
+        
+        <div class="nhsuk-grid-row">
+            <div id="searchTab" class="search-page">
+                <div class="nhsuk-grid-column-two-thirds">
+                    @await Html.PartialAsync("_AllCatalogueSearchBar", string.Empty)
+                </div>
+            </div>
+            
+            <div class="nhsuk-grid-column-two-thirds">
+                <nav class="nhsuk-u-margin-bottom-4 nhsuk-u-margin-top-4" id="nhsuk-nav-a-z" role="navigation" aria-label="A to Z Navigation">
+                    <ol class="nhsuk-list nhsuk-u-clear nhsuk-u-margin-0" role="list">
+                        @foreach (var activity in Model.CataloguesCount)
+                        {
+                            @if (activity.Count > 0)
+                            {
+                                <li class="nhsuk-u-margin-bottom-0 nhsuk-u-float-left nhsuk-u-margin-right-1 nhsuk-a-to-z-min-width">
+                                    <a class="nhsuk-u-font-size-19 nhsuk-u-padding-2 nhsuk-u-display-block" asp-controller="Catalogue" asp-action="GetAllCatalogue" asp-route-filterChar="@activity.Alphabet">@activity.Alphabet</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nhsuk-u-margin-bottom-0 nhsuk-u-float-left nhsuk-u-margin-right-1 nhsuk-a-to-z-min-width">
+                                    <span class="nhsuk-u-font-size-19 nhsuk-u-padding-2 nhsuk-u-display-block">
+                                        @activity.Alphabet
+                                    </span>
+                                </li>
+                            }
+                        }
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <h3 class="allCatalogue-lettercard nhsuk-u-font-size-36">@Model.FilterChar</h3>
+
+        </div>
+        <hr class="nhsuk-section-break nhsuk-section-break--m nhsuk-section-break--visible">
+    
+    <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred">
+
+        @foreach (var item in Model.Catalogues)
+        {
+            <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+
+                <div class="nhsuk-card catalogue-card">
+
+                    <div class="nhsuk-card-banner-container">
+                        @if (!string.IsNullOrWhiteSpace(item.CardImageUrl))
+                        {
+                            <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.CardImageUrl" alt="@item.Name" />
+                        }
+                        else if (!string.IsNullOrWhiteSpace(item.BannerUrl))
+                        {
+                            <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.BannerUrl" alt="@item.Name" />
+                        }
+                        else
+                        {
+                            <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
+                        }
+                    </div>
+                        @if (item.Providers?.Count > 0)
+                        {
+                            <div class="card-provider-details">
+                                @ProviderHelper.GetProviderString(item.Providers.FirstOrDefault().Name)
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="card-provider-details @cardStyle"></div>
+                        }
+
+                    <div class="nhsuk-card__content catalogue-card-content">
+
+                        <h3 class="nhsuk-card__heading nhsuk-heading-m">
+                            <a class="nhsuk-card__link line-clamp-2" asp-controller="Catalogue" asp-action="Index" asp-route-reference="@item.Url">@item.Name</a>
+                        </h3>
+
+                        <div class="nhsuk-card__description catalogue-card-body">
+                            <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
+                                @Html.Raw(item.Description)
+                            </div>
+
+                            <div class="catalogue-meta">
+                                <div>
+                                    <div>
+                                        @if (item.RestrictedAccess)
+                                        {
+                                            <div class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">@((item.HasAccess || this.User.IsInRole("Administrator")) ? "Access Granted" : "Access restricted")</div>
+                                        }
+                                    </div>
+                                    <div>
+                                        <a class="nhsuk-u-font-size-16 nhsuk-u-margin-right-3" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
+                                           asp-route-bookmarked="@item.IsBookmarked"
+                                           asp-route-id="@item.BookmarkId"
+                                           asp-route-title="@item.Name.Truncate(60)"
+                                           asp-route-nodeId="@item.NodeId"
+                                           asp-route-path="@item.Url"
+                                           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+                                            @(item.IsBookmarked ? "Remove from" : "Add to")  my bookmarks
+                                        </a>
+                                    </div>
+                                </div>
+                                <div>
+                                    @if (item.Providers?.Count > 0)
+                                    {
+                                         var provider = item.Providers.First();
+                                         <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
+                                    }
+                                    else if (!string.IsNullOrEmpty(item.BadgeUrl))
+                                    {
+                                        <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="Provider's catalogue badge" class="catalogue-card-badge" />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </li>
+        }
+    </ul>
+
+    @await Html.PartialAsync("_AllCataloguePagination", Model)
+
+</div>
+</div>

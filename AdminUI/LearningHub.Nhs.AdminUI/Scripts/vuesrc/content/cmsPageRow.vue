@@ -178,10 +178,15 @@
             //    this.player.subtitles.enable("subtitle" + this.section.id.toString());
             //},
             onPlayerReady() {
-                const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
-                if (videoElement) {
-                    videoElement.controls = true;
-                }
+                var contanierId = this.section.id.toString();
+                var uniquePlayer = this.player;// (player_@Model.Id);
+                buildControlbar(contanierId, uniquePlayer);
+
+                // [BY] When we set UI to false we need to manually add the controls to the video element
+                //const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
+                //if (videoElement) {
+                //    videoElement.controls = true;
+                //}
 
                 //  var subtitleTrack;
                 //if (this.pageSectionDetail.videoAsset.azureMediaAsset && this.pageSectionDetail.videoAsset.closedCaptionsFile) {
@@ -200,10 +205,6 @@
                 //};
 
                 //this.player.addSubtitle(subtitleTrack);
-
-                var contanierId = this.section.id.toString();
-                var uniquePlayer = this.player;// (player_@Model.Id);
-                buildControlbar(contanierId, uniquePlayer);
             },
             async getMKIOPlayerKey(): Promise<void> {
                 this.mkioKey = await contentData.getMKPlayerKey();

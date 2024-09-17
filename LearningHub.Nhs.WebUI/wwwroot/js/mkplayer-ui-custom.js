@@ -61,11 +61,11 @@ function buildControlbar(id, player) {
             let uiContainerElement = document.querySelector(`#${mediacontainerId} .bmpui-ui-uicontainer`);
             // Update the playback toggle button state based on the player's state
             if (uiContainerElement.classList.contains('bmpui-player-state-playing')) {
-                playbackToggleButton.classList.remove('bmpui-off');
-                playbackToggleButton.classList.add('bmpui-on');
-            } else {
                 playbackToggleButton.classList.remove('bmpui-on');
                 playbackToggleButton.classList.add('bmpui-off');
+            } else {
+                playbackToggleButton.classList.remove('bmpui-off');
+                playbackToggleButton.classList.add('bmpui-on');
             }
         });
 

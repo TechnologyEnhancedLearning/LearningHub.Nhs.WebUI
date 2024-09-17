@@ -60,24 +60,27 @@
         methods: {
             onPlayerReady() {
                 MKPlayerControlbar(this.player.videoContainer.id, this.player);
-                const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
-                if (videoElement) {
-                    videoElement.controls = true;
 
-                    // Add the track element
-                    var captionsInfo = this.captionsTrackAvailable;
-                    if (captionsInfo) {
-                        const trackElement = document.createElement('track');
-                        var srcPath = this.captionsUrl;
-                        trackElement.kind = 'captions';
-                        trackElement.label = 'english';
-                        trackElement.srclang = 'en';
-                        trackElement.src = srcPath;
+                // [BY] When we set UI to false we need to manually add the controls to the video element
+                //const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
 
-                        // Append the track to the video element
-                        videoElement.appendChild(trackElement);
-                    }
-                }
+                //if (videoElement) {
+                //    videoElement.controls = true;
+
+                //    // Add the track element
+                //    var captionsInfo = this.captionsTrackAvailable;
+                //    if (captionsInfo) {
+                //        const trackElement = document.createElement('track');
+                //        var srcPath = this.captionsUrl;
+                //        trackElement.kind = 'captions';
+                //        trackElement.label = 'english';
+                //        trackElement.srclang = 'en';
+                //        trackElement.src = srcPath;
+
+                //        // Append the track to the video element
+                //        videoElement.appendChild(trackElement);
+                //    }
+                //}
             },
             onSubtitleAdded() {
 
@@ -201,7 +204,9 @@
     .bmpui-ui-controlbar .control-right {
         float: right;
     }
+</style>
 
+<style scoped>
     /* Base styles for video container */
     .video-container {
         width: 100%;
@@ -236,9 +241,9 @@
     }
 
     /* Applying min-width to the video container using the CSS variable */
-    .video-container {
+    /*.video-container {
         min-width: var(--min-width) !important;
-    }
+    }*/
 
     /* Targeting specific div with dynamic ID pattern */
     [id^="videoContainer_"] {

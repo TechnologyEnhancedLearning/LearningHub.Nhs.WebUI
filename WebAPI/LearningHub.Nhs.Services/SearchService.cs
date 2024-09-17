@@ -593,7 +593,7 @@ namespace LearningHub.Nhs.Services
         /// </summary>
         /// <param name="term">The term.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term = null)
+        public async Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term)
         {
             var viewmodel = new AutoSuggestionModel();
 
@@ -612,8 +612,6 @@ namespace LearningHub.Nhs.Services
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
                     viewmodel = JsonConvert.DeserializeObject<AutoSuggestionModel>(result);
-
-                    // searchRequestModel.TotalNumberOfHits = viewmodel.Stats.TotalHits;
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                 {

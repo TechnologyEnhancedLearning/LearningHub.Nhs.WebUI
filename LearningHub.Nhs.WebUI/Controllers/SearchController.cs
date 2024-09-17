@@ -297,12 +297,12 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// GetAutoSuggestion returns the auto suggestion options.
         /// </summary>
         /// <param name="term">search term.</param>
-        /// <returns>Json.</returns>
+        /// <returns>ActionResult.</returns>
         [HttpGet("GetAutoSuggestion")]
-        public async Task<JsonResult> GetAutoSuggestion(string term)
+        public async Task<IActionResult> GetAutoSuggestion(string term)
         {
             var autoSuggestions = await this.searchService.GetAutoSuggestionList(term);
-            return this.Json(autoSuggestions);
+            return this.PartialView("_AutoComplete", autoSuggestions);
         }
     }
 }

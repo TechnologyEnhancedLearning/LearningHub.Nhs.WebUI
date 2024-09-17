@@ -184,21 +184,17 @@
 }
 
 .autosuggestion-menu {
-    padding: 0;
-    padding-left: 0;
-    background-color: #fff;
-    border-bottom: 1px solid #d8dde0;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-left: 1px solid #d8dde0;
-    border-right: 1px solid #d8dde0;
-    box-shadow: 0 0 3px 0 rgba(66, 84, 98, .5);
+    padding: 16px 16px 0px 16px;
+    background-color: $color_nhsuk-white;
+    border-bottom: 1px solid $color_nhsuk-grey-4;
+    border-radius: 0px 0px 4px 4px;
+    border-left: 1px solid $color_nhsuk-grey-4;
+    border-right: 1px solid $color_nhsuk-grey-4;
+    box-shadow: 0px 2px 3px 0px $color_nhsuk-grey-4;
     list-style: none;
-    margin-top: 2px;
     overflow-x: hidden;
     overflow-y: auto;
     position: absolute;
-    top: 100%;
     width: 100%;
     z-index: 1;
     margin-bottom: 0;
@@ -206,16 +202,38 @@
 
 .autosuggestion-option {
     margin-bottom: 0;
-    padding: 16px;
-    border-bottom: 1px solid #f0f4f5;
-    color: #005eb8;
+    border-bottom: 1px solid $color_nhsuk-grey-4;
+    color: $color_nhsuk-blue;
     cursor: pointer;
     font-size: 16px;
     padding-bottom: 12px;
     text-align: left;
+    text-decoration: none;
+}
+
+.autosuggestion-option .autosuggestion-icon {
+    fill: $color_nhsuk-grey-3 !important;
+    float: left;
+    height: 20px;
+    margin: 2px 8px 0 0;
+    width: 16px;
+}
+
+.autosuggestion-option .autosuggestion-subtext {
+    color: $color_nhsuk-grey-2 !important;
+    padding-left: 24px;
+    margin: 0px;
+}
+
+.autosuggestion-option .autosuggestion-link {
+    display: flex;
+    margin-bottom: 0px;
     text-decoration: underline;
 }
 
+li.autosuggestion-option:last-of-type {
+    border-bottom: none !important;
+}
 /* large desktop */
 @media (min-width: px2rem(990)) {
 
@@ -347,6 +365,10 @@
         box-shadow: 0 0 0 2px white;
         z-index: 10;
     }
+
+    .autosuggestion-menu {
+        top: 100%;
+    }
 }
 
 /* tablet */
@@ -364,6 +386,10 @@
 
     .nhsuk-header__menu .nhsuk-header__not-mobile {
         display: none;
+    }
+
+    .autosuggestion-menu {
+        top: 100%;
     }
 }
 
@@ -462,5 +488,9 @@
 
     .nhsuk-width-container.nhsuk-header__container.app-width-container {
         padding-bottom: 0;
+    }
+
+    .autosuggestion-menu {
+        top: 100%;
     }
 }

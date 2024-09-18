@@ -314,18 +314,20 @@
                 };
 
                 var subtitleTrack = null;
-                var captionsInfo = this.resourceItem.videoDetails.closedCaptionsFile;
+                if (this.resourceItem.resourceTypeEnum === ResourceType.VIDEO) {
+                    var captionsInfo = this.resourceItem.videoDetails.closedCaptionsFile;
 
-                if (captionsInfo) {
-                    var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
-                    subtitleTrack = {
-                        id: "subtitle",
-                        lang: "en",
-                        label: "english",
-                        url: this.requestURL + srcPath,
-                        kind: "subtitle"
-                    };
-                }
+                    if (captionsInfo) {
+                        var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
+                        subtitleTrack = {
+                            id: "subtitle",
+                            lang: "en",
+                            label: "english",
+                            url: this.requestURL + srcPath,
+                            kind: "subtitle"
+                        };
+                    }
+                }                
 
                 // Load source
                 const sourceConfig = {

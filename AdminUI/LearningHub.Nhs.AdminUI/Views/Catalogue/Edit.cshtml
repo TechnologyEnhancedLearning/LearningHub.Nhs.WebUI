@@ -162,6 +162,11 @@
             <span class="input-validation-error keyword-maxlength" style="display: none;">The maximum length is 50 characters.</span>
           </div>
         </div>
+        <div class="row">
+          <div class="col-12">
+            <span id="keyword-error-span" class="field-validation-error" style="display: none;"></span>
+          </div>
+        </div>
 
       </div>
       <div class="col-12">
@@ -341,6 +346,9 @@
         } else {
           $('#add-keyword').removeAttr('disabled');
         }
+
+        $('#keyword-error-span').hide();
+        $('#keyword-error-span').html('');
       });
 
       $('#add-keyword').on('click', function () {
@@ -355,6 +363,8 @@
           return item.trim();
         });
 
+        var duplicateKeywords = [];
+        $('#keyword-error-span').hide();
         values.forEach(function (value) {
           if (value && keywords.indexOf(value) === -1) {
             keywords.push(value);
@@ -367,6 +377,12 @@
             $('.keyword-value').each(function (i, x) {
               $(x).attr('name', "Keywords[" + i + "]");
             });
+          }
+          else
+          {
+            duplicateKeywords.push(value);
+            $('#keyword-error-span').show();
+            $('#keyword-error-span').html('The keyword(s) have already been added : ' + duplicateKeywords.join(', '))
           }
         });
 

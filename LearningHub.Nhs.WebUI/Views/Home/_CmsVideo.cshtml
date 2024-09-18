@@ -107,7 +107,7 @@
     url = url.substring(0, url.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
 
     var subtitleTrack = null;
-    if (model.videoAsset.closedCaptionsFile) {
+    if (model.videoAsset.azureMediaAsset && model.videoAsset.closedCaptionsFile) {
         const captionsInfo = model.videoAsset.closedCaptionsFile;
         var srcPath = "file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
         srcPath = '@requestURL' + srcPath;

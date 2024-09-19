@@ -635,6 +635,31 @@ namespace LearningHub.Nhs.WebUI.Services
         }
 
         /// <summary>
+        /// The GetAutoSuggestionList.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The auto suggestion list.</returns>
+        public async Task<AutoSuggestionModel> GetAutoSuggestionList(string term)
+        {
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var request = $"Search/GetAutoSuggestionResult/{term}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            var viewModel = new AutoSuggestionModel();
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewModel = JsonConvert.DeserializeObject<AutoSuggestionModel>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewModel;
+        }
+
+        /// <summary>
         /// The RemoveHtmlTags.
         /// </summary>
         /// <param name="html">The html<see cref="string"/>.</param>

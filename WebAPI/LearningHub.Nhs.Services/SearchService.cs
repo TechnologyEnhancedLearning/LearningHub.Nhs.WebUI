@@ -589,6 +589,51 @@ namespace LearningHub.Nhs.Services
         }
 
         /// <summary>
+        /// The Get Auto suggestion Results Async method.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term)
+        {
+            var viewmodel = new AutoSuggestionModel();
+
+            try
+            {
+                var client = await this.FindWiseHttpClient.GetClient(this.settings.Findwise.SearchUrl);
+                var request = string.Format(
+                    this.settings.Findwise.UrlSearchComponent + "?q={1}&token={2}",
+                    this.settings.Findwise.CollectionIds.AutoSuggestion,
+                    this.EncodeSearchText(term),
+                    this.settings.Findwise.Token);
+
+                var response = await client.GetAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    viewmodel = JsonConvert.DeserializeObject<AutoSuggestionModel>(result);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    this.Logger.LogError($"Get Auto Suggetion Result failed in FindWise, HTTP Status Code:{response.StatusCode}");
+                    throw new Exception("AccessDenied to FindWise Server");
+                }
+                else
+                {
+                    var error = response.Content.ReadAsStringAsync().Result.ToString();
+                    this.Logger.LogError($"Get Auto Suggetion Result failed in FindWise, HTTP Status Code:{response.StatusCode}, Error Message:{error}");
+                    throw new Exception("Error with FindWise Server");
+                }
+
+                return viewmodel;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Send search click payload.
         /// </summary>
         /// <param name="searchClickPayloadModel">search click payload model.</param>

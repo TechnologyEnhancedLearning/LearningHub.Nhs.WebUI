@@ -84,5 +84,12 @@
         /// <param name="catalogueSearchRequestModel">The catalogue Search Request Model.</param>
         /// <returns>The <see cref="Task{SearchAllCatalogueViewModel}"/>.</returns>
         Task<SearchAllCatalogueViewModel> GetAllCatalogueSearchResultAsync(AllCatalogueSearchRequestModel catalogueSearchRequestModel);
+
+        /// <summary>
+        /// The Get AutoSuggestion List.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<AutoSuggestionModel> GetAutoSuggestionList(string term);
     }
 }

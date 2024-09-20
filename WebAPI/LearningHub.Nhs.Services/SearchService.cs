@@ -11,7 +11,7 @@ namespace LearningHub.Nhs.Services
     using LearningHub.Nhs.Models.Entities.Analytics;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Search;
-    using LearningHub.Nhs.Models.Search.SearchFeedback;
+    using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.Services.Helpers;
     using LearningHub.Nhs.Services.Interface;
@@ -512,7 +512,7 @@ namespace LearningHub.Nhs.Services
         /// </returns>
         public async Task<bool> SendResourceSearchEventClickAsync(SearchActionResourceModel searchActionResourceModel)
         {
-            var searchClickPayloadModel = this.mapper.Map<SearchFeedbackPayloadModel>(searchActionResourceModel);
+            var searchClickPayloadModel = this.mapper.Map<SearchClickPayloadModel>(searchActionResourceModel);
             searchClickPayloadModel.TimeOfClick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             searchClickPayloadModel.SearchSignal.ProfileSignature.ApplicationId = ApplicationId;
             searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileType = ProfileType;
@@ -532,7 +532,7 @@ namespace LearningHub.Nhs.Services
         /// </returns>
         public async Task<bool> SendCatalogueSearchEventAsync(SearchActionCatalogueModel searchActionCatalogueModel)
         {
-            var searchClickPayloadModel = this.mapper.Map<SearchFeedbackPayloadModel>(searchActionCatalogueModel);
+            var searchClickPayloadModel = this.mapper.Map<SearchClickPayloadModel>(searchActionCatalogueModel);
             searchClickPayloadModel.TimeOfClick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             searchClickPayloadModel.SearchSignal.ProfileSignature.ApplicationId = ApplicationId;
             searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileType = ProfileType;
@@ -596,7 +596,7 @@ namespace LearningHub.Nhs.Services
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        private async Task<bool> SendSearchEventClickAsync(SearchFeedbackPayloadModel searchClickPayloadModel, bool isResource)
+        private async Task<bool> SendSearchEventClickAsync(SearchClickPayloadModel searchClickPayloadModel, bool isResource)
         {
             var eventType = isResource ? "resource" : "catalog";
 

@@ -9,6 +9,7 @@
 --					Note: IT1 assumes a Resource exists in a single Node location.
 -- 21-12-2021  RS   Fix to NodeResource update when republishing unpublished resource.
 -- 09-02-2022  KD	Explicitly exclude External Orgs from Resource Reference processing.
+-- 20-09-2024  SS	Multiple Node path scenario handled when external reference is present in catalogue
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[NodeResourcePublish]
 (
@@ -27,12 +28,15 @@ BEGIN
 	-- IT1 - NodePath can be obtained from the NodeId
 	-- IT2 - NodePath to be supplied as param
 	DECLARE @NodePathId int
-
-	SELECT	@NodePathId = Id
+	DECLARE @NodePathIds table (NodePathId int)
+	INSERT INTO @NodePathIds (NodePathId)
+	SELECT	Id
 	FROM	hierarchy.NodePath
 	WHERE	NodeId = @NodeId AND Deleted = 0 AND IsActive = 1
 
-	IF @NodePathId IS NULL
+	DECLARE ResourceReferenceCursor CURSOR FOR SELECT NodePathId FROM @NodePathIds
+	OPEN ResourceReferenceCursor
+	IF NOT EXISTS (SELECT 1 FROM @NodePathIds)
 	BEGIN
 		RAISERROR ('NodeResourcePublish: Error - An active NodePath is required', -- Message text.  
 					16, -- Severity.  
@@ -166,24 +170,43 @@ BEGIN
 
 	IF @OriginalResourceReferenceId IS NULL
 	BEGIN
-		INSERT INTO	resources.ResourceReference (ResourceId, NodePathId, OriginalResourceReferenceId, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
-		VALUES (@ResourceId, @NodePathId, NULL, 0, @AmendUserId, @AmendDate, @AmendUserId, @AmendDate)
+	FETCH NEXT FROM ResourceReferenceCursor INTO @NodePathId;
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+			INSERT INTO	resources.ResourceReference (ResourceId, NodePathId, OriginalResourceReferenceId, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
+			VALUES (@ResourceId, @NodePathId, NULL, 0, @AmendUserId, @AmendDate, @AmendUserId, @AmendDate)
 
-		UPDATE rr
-		SET OriginalResourceReferenceId = Id 
-		FROM resources.ResourceReference rr 
-		WHERE Id = SCOPE_IDENTITY() AND OriginalResourceReferenceId IS NULL
+			UPDATE rr
+			SET OriginalResourceReferenceId = Id 
+			FROM resources.ResourceReference rr 
+			WHERE Id = SCOPE_IDENTITY() AND OriginalResourceReferenceId IS NULL
+
+			FETCH NEXT FROM ResourceReferenceCursor INTO @NodePathId;
+
+		END
+		CLOSE ResourceReferenceCursor;
+		
 	END
 	ELSE
 	BEGIN
-		INSERT INTO	resources.ResourceReference (ResourceId, NodePathId, OriginalResourceReferenceId, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
-		VALUES (@ResourceId, @NodePathId, @OriginalResourceReferenceId, 0, @AmendUserId, @AmendDate, @AmendUserId, @AmendDate)
+		FETCH NEXT FROM ResourceReferenceCursor INTO @NodePathId;
+			WHILE @@FETCH_STATUS = 0
+			BEGIN
+			
+				INSERT INTO	resources.ResourceReference (ResourceId, NodePathId, OriginalResourceReferenceId, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
+				VALUES (@ResourceId, @NodePathId, @OriginalResourceReferenceId, 0, @AmendUserId, @AmendDate, @AmendUserId, @AmendDate)
 
-		UPDATE resources.ResourceReference
-		SET Deleted = 1 
-		WHERE Id = @ExistingResourceReferenceId
+				UPDATE resources.ResourceReference
+				SET Deleted = 1 
+				WHERE Id = @ExistingResourceReferenceId
+
+				FETCH NEXT FROM ResourceReferenceCursor INTO @NodePathId;
+
+			END
+		CLOSE ResourceReferenceCursor;
+		
 	END
-
+	DEALLOCATE ResourceReferenceCursor;
 	----------------------------------------------------------
 	-- NodeResourceLookup
 	----------------------------------------------------------

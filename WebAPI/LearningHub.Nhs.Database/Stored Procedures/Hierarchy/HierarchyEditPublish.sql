@@ -132,20 +132,24 @@ BEGIN
 
 		-- UPDATE  NodeLink 'deleted' for remove reference
 
-		UPDATE 
-			nl
-		SET
-			Deleted = 1,
-			AmendUserId = @AmendUserId,
-			AmendDate = @AmendDate
-		FROM
-			hierarchy.HierarchyEditDetail hed
-		INNER JOIN
-			hierarchy.NodeLink nl ON hed.NodeLinkId = nl.Id
-		WHERE 
-			HierarchyEditId = @HierarchyEditId
-            AND hed.HierarchyEditDetailTypeId = 4 -- Node Link
-			AND hed.Deleted = 1
+		UPDATE nl
+			SET nl.Deleted = 1
+			FROM hierarchy.NodeLink nl
+			INNER JOIN (
+				SELECT hed.NodeLinkId
+				FROM hierarchy.HierarchyEditDetail hed
+				WHERE hed.HierarchyEditId = @HierarchyEditId
+				AND hed.Deleted = 1
+				--Only include rows where no corresponding non-deleted row exists
+				AND NOT EXISTS (
+					SELECT 1
+					FROM hierarchy.HierarchyEditDetail hed2
+					WHERE hed2.HierarchyEditId = @HierarchyEditId
+					AND hed2.Deleted = 0
+					AND hed2.NodeLinkId = hed.NodeLinkId
+				)
+			) AS filtered
+			ON nl.Id = filtered.NodeLinkId
 
 		-- For moved nodes, delete the original NodeLinks, providing they have not been used (by a reference to the original position).
 		UPDATE 

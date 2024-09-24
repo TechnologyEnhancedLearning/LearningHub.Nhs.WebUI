@@ -253,7 +253,7 @@
             var param3 = new SqlParameter("@p2", SqlDbType.Int) { Value = userId };
             var param2 = new SqlParameter("@p3", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
 
-            string sql = "hierarchy.HierarchyEditReferenceNode @p0, @p1, @p2, @p3";
+            string sql = "hierarchy.HierarchyEditCreateNodeReference @p0, @p1, @p2, @p3";
             var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3 };
 
             await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
@@ -336,7 +336,7 @@
             var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = userId };
             var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
 
-            string sql = "hierarchy.HierarchyEditReferenceResource @p0, @p1, @p2, @p3";
+            string sql = "hierarchy.HierarchyEditCreateResourceReference @p0, @p1, @p2, @p3";
             var sqlParams = new List<SqlParameter>() { param0, param1, param2, param3 };
 
             await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);

@@ -53,16 +53,31 @@
                 {
                     using (var reader = new StreamReader(stream))
                     {
-                        const string qualityLevelRegex = @"(QualityLevels\(\d+\))";
+                        string qualityLevelRegex = @"(QualityLevels\(\d+\))";
+                        qualityLevelRegex = @"(|)([^""\s]+\.m3u8\(encryption=cbc\))";
                         const string fragmentsRegex = @"(Fragments\([\w\d=-]+,[\w\d=-]+\))";
-                        const string urlRegex = @"("")(https?:\/\/[\da-z\.-]+\.[a-z\.]{2,6}[\/\w \.-]*\/?[\?&][^&=]+=[^&=#]*)("")";
+                        string urlRegex = @"("")(https?:\/\/[\da-z\.-]+\.[a-z\.]{2,6}[\/\w \.-]*\/?[\?&][^&=]+=[^&=#]*)("")";
+                        urlRegex = @"(https?:\/\/[\da-z\.-]+\.[a-z\.]{2,6}[\/\w \.-]*)([\?&][^&=]+=[^&=#]*)?";
+                        urlRegex = @"(https?:\/\/[\da-z\.-]+\.[a-z\.]{2,6}[\/\w \.-]*\?[^,\s""]*)";
 
                         var baseUrl = playBackUrl.Substring(0, playBackUrl.IndexOf(".ism", System.StringComparison.OrdinalIgnoreCase)) + ".ism";
                         this.logger.LogDebug($"baseUrl={baseUrl}");
 
                         var content = reader.ReadToEnd();
 
-                        var newContent = Regex.Replace(content, urlRegex, string.Format(CultureInfo.InvariantCulture, "$1$2&token={0}$3", token));
+                        var newContent = Regex.Replace(content, urlRegex, match =>
+                        {
+                            string baseUrlWithQuery = match.Groups[1].Value;  // URL including the query string
+
+                            // Append the token correctly without modifying surrounding characters
+                            string newUrl = baseUrlWithQuery.Contains("?") ?
+                                            $"{baseUrlWithQuery}&token={token}" :
+                                            $"{baseUrlWithQuery}?token={token}";
+
+                            return newUrl;
+                        });
+
+                        // var newContent = Regex.Replace(content, urlRegex, string.Format(CultureInfo.InvariantCulture, "$1$2$3&token={0}", token));
                         this.logger.LogDebug($"newContent={newContent}");
 
                         var match = Regex.Match(playBackUrl, qualityLevelRegex);

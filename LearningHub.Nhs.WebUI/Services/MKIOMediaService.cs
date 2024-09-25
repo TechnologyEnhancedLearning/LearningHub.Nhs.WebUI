@@ -128,11 +128,10 @@
                     using (var reader = new StreamReader(stream))
                     {
                         string qualityLevelRegex = @"(QualityLevels\(\d+\)/Manifest\(.+\))";
-
-                        qualityLevelRegex = @"(|)([^""\s]+\.m3u8\(encryption=cbc\))";
+                        qualityLevelRegex = @"([^""\s]+\.m3u8\(encryption=cbc\))";
                         var toplevelmanifestcontent = reader.ReadToEnd();
 
-                        var topLevelManifestBaseUrl = topLeveLManifestUrl; // topLeveLManifestUrl.Substring(0, topLeveLManifestUrl.IndexOf(".ism", System.StringComparison.OrdinalIgnoreCase)) + ".ism";
+                        var topLevelManifestBaseUrl = topLeveLManifestUrl.Substring(0, topLeveLManifestUrl.IndexOf(".ism", System.StringComparison.OrdinalIgnoreCase)) + ".ism";
                         this.logger.LogDebug($"topLevelManifestBaseUrl={topLevelManifestBaseUrl}");
                         var urlEncodedTopLeveLManifestBaseUrl = HttpUtility.UrlEncode(topLevelManifestBaseUrl);
                         var urlEncodedToken = HttpUtility.UrlEncode(token);
@@ -142,7 +141,7 @@
                             qualityLevelRegex,
                             string.Format(
                                 CultureInfo.InvariantCulture,
-                                "{0}?playBackUrl={1}$1&token={2}",
+                                "{0}?playBackUrl={1}/$1&token={2}",
                                 manifestProxyUrl,
                                 urlEncodedTopLeveLManifestBaseUrl,
                                 urlEncodedToken));

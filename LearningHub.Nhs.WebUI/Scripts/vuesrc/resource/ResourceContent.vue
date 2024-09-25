@@ -145,7 +145,8 @@
                 playBackDashUrl: '',
                 sourceLoaded: true,
                 playerConfig: {
-                }
+                },
+                isIphone: false
             }
         },
         computed: {
@@ -231,7 +232,7 @@
             window.clearInterval(this.mediaPlayingTimer);
         },
         mounted() {
-
+            this.checkIfIphone();
         },
         methods: {
             onPlayerReady() {
@@ -340,8 +341,7 @@
                 //    }
                 //};
 
-
-                this.player.load(sourceConfig)
+                this.player.load(sourceConfig)                
                     .then(() => {
                         console.log("Source loaded successfully!");
                     })
@@ -375,14 +375,23 @@
                 this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
 
                 var token = this.resourceItem.videoDetails.resourceAzureMediaAsset.authenticationToken
-               // this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-aapl)";
+                // this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-aapl)";
 
-                this.playBackUrl = "/Media/MediaManifest?playBackUrl=" + this.playBackUrl + "&token=" + token;
+               // this.playBackUrl = "https://ep-default-mediakind02-dev-by-am-sl.uksouth.streaming.mediakind.com/84298fde-4029-4e2c-8f81-70ce08b2633e/fileexample2mbAVI.ism/manifest(format=m3u8-cmaf)";
+               // this.playBackUrl = "https://ep-default-mediakind02-dev-by-am-sl.uksouth.streaming.mediakind.com/335c3174-54e3-436a-a700-632d4fcafd26/Emergency Medicine Meeting Recor.ism/manifest(format=m3u8-cmaf,encryption=cbc)";
+                // this.playBackUrl = "https://ep-default-mediakind02-dev-by-am-sl.uksouth.streaming.mediakind.com/84298fde-4029-4e2c-8f81-70ce08b2633e/fileexample2mbAVI.ism/manifest(format=m3u8-cmaf)";
 
+                if (this.isIphone) {
+                    this.playBackUrl = "/Media/MediaManifest?playBackUrl=" + this.playBackUrl + "&token=" + token;
+                }     
             },
             getMediaAssetProxyUrl(playBackUrl: string): string {
                 playBackUrl = playBackUrl.substring(0, playBackUrl.lastIndexOf("manifest")) + "manifest(format=mpd-time-cmaf,encryption=cenc)";
                 return playBackUrl;
+            },
+            checkIfIphone() {
+                const userAgent = navigator.userAgent || navigator.vendor;
+                this.isIphone = /iPhone/i.test(userAgent);
             },
             initialise(): void {
                 // record activity on page created for resource article

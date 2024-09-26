@@ -61,7 +61,7 @@
     "@types/bootstrap": "4.6.1",
     "@types/ckeditor": "4.9.10",
     "@types/jest": "^26.0.24",
-    "@types/jquery": "^3.5.29",
+    "@types/jquery": "^3.5.31",
     "@types/jquery-match-height": "^0.7.8",
     "@types/js-cookie": "2.2.1",
     "@types/lodash": "4.14.202",

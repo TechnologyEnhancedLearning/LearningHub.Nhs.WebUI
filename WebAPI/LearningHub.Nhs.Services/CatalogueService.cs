@@ -198,6 +198,7 @@
             var bookmark = this.bookmarkRepository.GetAll().Where(b => b.NodeId == catalogue.NodeId && b.UserId == userId).FirstOrDefault();
             catalogueVM.BookmarkId = bookmark?.Id;
             catalogueVM.IsBookmarked = !bookmark?.Deleted ?? false;
+            catalogueVM.Providers = await this.providerService.GetByCatalogueVersionIdAsync(catalogueVM.Id);
             return catalogueVM;
         }
 

@@ -550,6 +550,7 @@
     <Build Include="Stored Procedures\Hierarchy\HierarchyNewResourceReferenceForReferedCatalogue.sql" />
     <Build Include="Stored Procedures\Hierarchy\HierarchyEditCreateNodeReference.sql" />
     <Build Include="Stored Procedures\Hierarchy\HierarchyEditCreateResourceReference.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\PPSXFileType.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

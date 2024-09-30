@@ -48,7 +48,7 @@
                                     <a class="dropdown-item" v-if="!isExternalCatalogue" @click="onInitiateReferenceNode">Create reference to this folder</a>
                                     <a class="dropdown-item" v-if="canEditFolderReference" @click="onEditFolderReference">{{item.nodePathDisplayVersionId == 0 ? "Create" : "Edit"}} reference details</a>
                                     <a class="dropdown-item" v-if="!isExternalCatalogue" @click="addReference">Add a reference here</a>
-                                    <a class="dropdown-item" v-if="item.isReference && !item.parent.isReference" @click="removeReference">Remove this reference</a>
+                                    <a class="dropdown-item" v-if="item.isReference && !item.parent.isReference && canRemove" @click="removeReference">Remove this reference</a>
                                 </div>
                             </div>
                         </div>
@@ -166,7 +166,7 @@
                                     <a class="dropdown-item" v-if="canMoveResource && !isExternalCatalogue" @click="onInitiateMoveResource">Move</a>
                                     <a class="dropdown-item" v-if="!isExternalCatalogue" @click="onInitiateReferenceResource">Create reference to this resource</a>
                                     <a class="dropdown-item" v-if="canEditResourceReference" @click="onEditResourceReference">{{item.resourceReferenceDisplayVersionId == 0 ? "Create" : "Edit"}} reference details</a>
-                                    <a class="dropdown-item" v-if="item.isReference && !item.parent.isReference" @click="removeReference">Remove this reference</a>
+                                    <a class="dropdown-item" v-if="item.isReference && !item.parent.isReference && canRemove" @click="removeReference">Remove this reference</a>
                                 </div>
                             </div>
                         </div>
@@ -220,6 +220,9 @@
                 if (this.item.nodeTypeId === NodeType.Catalogue) {
                     this.isOpen = true;
                     this.$forceUpdate();
+                } else if (!newVal.childrenLoaded && oldVal.childrenLoaded) { // If children are removed then close the node
+                    this.isOpen = false;
+                    this.$forceUpdate();
                 }
             },
             updatedNode: function (newVal, oldVal) {
@@ -250,6 +253,7 @@
                 canMoveResourceDown: false,
                 canMoveResourceUp: false,
                 canMoveResource: false,
+                canRemove: false,
             };
         },
         computed: {
@@ -394,6 +398,7 @@
                 this.canEditNode = true;
                 this.canMoveNode = this.item.parent != null;
                 this.canEditFolderReference = this.item.nodePathDisplayVersionId > 0 || (this.item.nodePaths && this.item.nodePaths.length > 1);
+                this.canRemove = this.item.primaryCatalogueNodeId != this.$store.state.contentStructureState.rootNode.nodeId;
             },
             recomputeResourceOptions: function () {
                 this.canMoveResourceUp = this.item.displayOrder > 1;

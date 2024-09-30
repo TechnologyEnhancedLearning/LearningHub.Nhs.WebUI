@@ -198,5 +198,19 @@
         /// <param name="hierarchyEditDetailId">The hierarchy Edit Detail Id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<ApiResponse> RemoveReferenceNodeAsync(int hierarchyEditDetailId);
+
+        /// <summary>
+        /// Deletes the node reference details.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy Edit Detail Id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ApiResponse> DeleteNodeReferenceDetailsAsync(int hierarchyEditDetailId);
+
+        /// <summary>
+        /// Deletes the resource reference details.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy Edit Detail Id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ApiResponse> DeleteResourceReferenceDetailsAsync(int hierarchyEditDetailId);
     }
 }

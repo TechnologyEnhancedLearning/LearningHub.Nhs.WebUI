@@ -8,6 +8,7 @@
 -- 29-04-2024  DB	Initial Revision.
 -- 13-05-2024  DB	Set the parent node path id for the new reference node.
 -- 08-07-2024  DB	Populate the PrimaryCatalogueNodeId.
+-- 24-09-2024  SA   Correct the display order of the referenced folder.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[HierarchyEditReferenceNode]
 (
@@ -49,24 +50,18 @@ BEGIN
 		WHERE	Id = @ReferenceToHierarchyEditDetailId
 
 		-- Increment display order of nodes in destination.
-		UPDATE  
-			hed_moveTo_children 
-		SET
-			HierarchyEditDetailOperationId = CASE WHEN hed_moveTo_children.HierarchyEditDetailOperationId IS NULL THEN 2 ELSE hed_moveTo_children.HierarchyEditDetailOperationId END,
-			DisplayOrder = hed_moveTo_children.DisplayOrder + 1,
+			UPDATE  
+			[hierarchy].[HierarchyEditDetail] 
+		  SET
+			HierarchyEditDetailOperationId = CASE WHEN HierarchyEditDetailOperationId IS NULL THEN 2 ELSE HierarchyEditDetailOperationId END,
+			DisplayOrder = DisplayOrder + 1,
 			AmendDate = @AmendDate
-		FROM
-			[hierarchy].[HierarchyEditDetail] hed_moveTo
-		INNER JOIN
-			[hierarchy].[HierarchyEditDetail] hed_moveTo_children ON hed_moveTo_children.HierarchyEditId = hed_moveTo.HierarchyEditId
-															AND hed_moveTo_children.ParentNodeId = hed_moveTo.NodeId
-															AND ISNULL(hed_moveTo_children.HierarchyEditDetailOperationId, 0) != 3 -- ignore deletes.
-		WHERE	
-			hed_moveTo.Id = @ReferenceToHierarchyEditDetailId
-			AND hed_moveTo.ResourceId IS NULL
-			AND hed_moveTo.Deleted = 0
-			AND hed_moveTo_children.Deleted = 0
-
+			where 
+			 HierarchyEditId = @HierarchyEditId AND
+			 ParentNodeId =  @NewParentNodeId
+			 and ParentNodePathId = @NewParentNodePathId
+			 AND ISNULL(HierarchyEditDetailOperationId, 0) != 3
+			AND Deleted = 0		
 
 		-- Create the new Hierarchy Edit Detail records for the reference nodes and resources.
 		DECLARE @OriginalNodePath NVARCHAR(256)
@@ -98,7 +93,7 @@ BEGIN
 				ResourceVersionId,
 				NULL AS ResourceReferenceId, -- Populated further down
 				NodeResourceId,
-				DisplayOrder,
+				1,
 				NULL AS InitialNodePath,
 				@DestinationParentNodePath + SUBSTRING(ISNULL(NewNodePath, InitialNodePath), LEN(@OriginalParentNodePath)+1, LEN(ISNULL(NewNodePath, InitialNodePath))) AS NewNodePath, -- Not using REPLACE incase number of digits in nodeIds are not consistant
 				0 AS Deleted,

@@ -116,6 +116,7 @@ async function refreshNodeContents(node: NodeContentAdminModel, refreshParentPat
                     existing.displayOrder = child.displayOrder;
                     existing.name = child.name;
                     existing.nodePathDisplayVersionId = child.nodePathDisplayVersionId;
+                    existing.resourceReferenceDisplayVersionId = child.resourceReferenceDisplayVersionId;
                     existing.nodePaths = child.nodePaths;
                     existing.isResource = child.nodeTypeId === NodeType.Resource;
                     if (child.nodePaths) {
@@ -164,20 +165,22 @@ async function refreshNodeContents(node: NodeContentAdminModel, refreshParentPat
         state.lastErrorMessage = `Error refreshing Node contents of ${node.name}`;
     });
 }
-
-async function refreshNodeIfMatchingNodeId(node: NodeContentAdminModel, nodeId: number, hierarchyEditDetailId: number) {
+async function refreshNodeIfMatchingNodeId(node: NodeContentAdminModel, nodeId: number, hierarchyEditDetailId: number, removeChildren?: boolean) {
     if (node.nodeId === nodeId && node.hierarchyEditDetailId != hierarchyEditDetailId) {
+        if (removeChildren && node.parent) {
+            node.parent.children = [];
+            node.parent.childrenLoaded = false;
+        }
         await refreshNodeContents(node.parent, false);
     }
     if (node.childrenLoaded) {
         if (node.children.filter(c => c.hierarchyEditDetailId === hierarchyEditDetailId).length == 0) {
             for (const child of node.children) {
-                await refreshNodeIfMatchingNodeId(child, nodeId, hierarchyEditDetailId);
+                await refreshNodeIfMatchingNodeId(child, nodeId, hierarchyEditDetailId, removeChildren);
             }
         }
     }
 }
-
 async function processChildNodeContents(child: NodeContentAdminModel, parent: NodeContentAdminModel) {
     child.parent = parent;
     child.inEdit = child.parent.inEdit;
@@ -413,13 +416,14 @@ const actions = <ActionTree<State, any>>{
             state.lastErrorMessage = "Error deleting folder.";
         });
     },
-    deleteFolderReference(context: ActionContext<State, State>) {
+    deleteFolderReferenceDetails(context: ActionContext<State, State>) {
         state.inError = false;
         state.updatedNode = null;
-        contentStructureData.deleteFolderReference(state.editingTreeNode.hierarchyEditDetailId).then(async response => {
+        contentStructureData.deleteFolderReferenceDetails(state.editingTreeNode.hierarchyEditDetailId).then(async response => {
             if (response.isValid) {
                 var parent = state.editingTreeNode.parent;
                 await refreshNodeContents(parent, false);
+                await refreshNodeIfMatchingNodeId(state.rootNode, state.editingTreeNode.nodeId, state.editingTreeNode.hierarchyEditDetailId, true);
                 state.updatedNode = parent;
                 context.commit("setEditMode", EditModeEnum.Structure);
             }
@@ -429,7 +433,27 @@ const actions = <ActionTree<State, any>>{
             }
         }).catch(e => {
             state.inError = true;
-            state.lastErrorMessage = "Error deleting folder reference.";
+            state.lastErrorMessage = "Error deleting folder reference details.";
+        });
+    },
+    deleteResourceReferenceDetails(context: ActionContext<State, State>) {
+        state.inError = false;
+        state.updatedNode = null;
+        contentStructureData.deleteResourceReferenceDetails(state.editingTreeNode.hierarchyEditDetailId).then(async response => {
+            if (response.isValid) {
+                var parent = state.editingTreeNode.parent;
+                await refreshNodeContents(parent, false);
+                await refreshNodeIfMatchingNodeId(state.rootNode, state.editingTreeNode.nodeId, state.editingTreeNode.hierarchyEditDetailId, true);
+                state.updatedNode = parent;
+                context.commit("setEditMode", EditModeEnum.Structure);
+            }
+            else {
+                state.inError = true;
+                state.lastErrorMessage = "Error: " + response.details.join(",");
+            }
+        }).catch(e => {
+            state.inError = true;
+            state.lastErrorMessage = "Error deleting resource reference details.";
         });
     },
     async moveNodeUp(context: ActionContext<State, State>, payload: { node: NodeContentAdminModel }) {
@@ -457,6 +481,7 @@ const actions = <ActionTree<State, any>>{
             await refreshNodeContents(payload.destinationNode, true).then(async x => {
                 await refreshNodeContents(state.editingTreeNode.parent, true).then(y => {
                 });
+                refreshHierarchyEdit(state);
                 state.rootNode.children.forEach(async (child) => {
                     if (child.nodeId != null) {
                         await refreshNodeContents(child, false);
@@ -514,6 +539,7 @@ const actions = <ActionTree<State, any>>{
         state.inError = false;
         contentStructureData.removeReferenceNode(payload.node.hierarchyEditDetailId).then(async response => {
             await refreshNodeContents(payload.node.parent, false);
+            await refreshNodeIfMatchingNodeId(state.rootNode, payload.node.nodeId, payload.node.hierarchyEditDetailId, true);
             if (payload.node.parent.parent != null) {
                 await refreshNodeContents(payload.node.parent.parent, false);
             }
@@ -527,7 +553,8 @@ const actions = <ActionTree<State, any>>{
             await refreshNodeContents(state.referencingResource.parent, true).then(async x => {
                 await refreshNodeContents(payload.destinationNode, true);
             });
-
+            state.editingTreeNode.parent.childrenLoaded = false;
+            await refreshNodeContents(state.editingTreeNode.parent, true);
             context.commit("setEditMode", EditModeEnum.Structure);
         }).catch(e => {
             state.inError = true;
@@ -562,6 +589,7 @@ const actions = <ActionTree<State, any>>{
         contentStructureData.updateNodePathDisplayVersion(state.editingFolderNodeReference).then(async response => {
             state.editingFolderNodeReference.nodePathDisplayVersionId = response.createdId;
             await refreshNodeContents(state.editingTreeNode.parent, false);
+            await refreshNodeIfMatchingNodeId(state.rootNode, state.editingTreeNode.nodeId, state.editingTreeNode.hierarchyEditDetailId, true);
         }).catch(e => {
             state.inError = true;
             state.lastErrorMessage = "Error creating folder reference.";
@@ -572,9 +600,10 @@ const actions = <ActionTree<State, any>>{
         contentStructureData.updateResourceReferenceDisplayVersion(state.editingResourceNodeReference).then(async response => {
             state.editingResourceNodeReference.resourceReferenceDisplayVersionId = response.createdId;
             await refreshNodeContents(state.editingTreeNode.parent, false);
+            await refreshNodeIfMatchingNodeId(state.rootNode, state.editingTreeNode.nodeId, state.editingTreeNode.hierarchyEditDetailId, true);
         }).catch(e => {
             state.inError = true;
-            state.lastErrorMessage = "Error creating folder reference.";
+            state.lastErrorMessage = "Error creating resource reference.";
         });
         context.commit("setEditMode", EditModeEnum.Structure);
     },

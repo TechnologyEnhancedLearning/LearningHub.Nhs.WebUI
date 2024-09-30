@@ -104,6 +104,18 @@
         }
 
         /// <summary>
+        /// Check Catalogue has external reference.
+        /// </summary>
+        /// <param name="nodeId">The node id.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpGet]
+        [Route("checkCatalogueHasExternalReference/{nodeId}")]
+        public async Task<IActionResult> CheckCatalogueHasExternalReference(int nodeId)
+        {
+            return this.Ok(await this.hierarchyService.CheckCatalogueHasExternalReference(nodeId));
+        }
+
+        /// <summary>
         /// Gets the contents of a node path (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// </summary>
@@ -668,6 +680,46 @@
             try
             {
                 var retVal = await this.hierarchyService.RemoveReferenceNode(hierarchyEditDetailId, this.CurrentUserId);
+                return this.Ok(new ApiResponse(true, retVal));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
+        }
+
+        /// <summary>
+        /// Deletes the node reference details.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The hierarchy edit detail identifier.</param>
+        /// <returns>The action result.</returns>
+        [HttpPut]
+        [Route("DeleteNodeReferenceDetails/{hierarchyEditDetailId}")]
+        public async Task<IActionResult> DeleteNodeReferenceDetails(int hierarchyEditDetailId)
+        {
+            try
+            {
+                var retVal = await this.hierarchyService.DeleteNodeReferenceDetails(hierarchyEditDetailId, this.CurrentUserId);
+                return this.Ok(new ApiResponse(true, retVal));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
+        }
+
+        /// <summary>
+        /// Deletes the resource reference details for a hierarchy edit.
+        /// </summary>
+        /// <param name="hierarchyEditDetailId">The ID of the hierarchy edit detail.</param>
+        /// <returns>An asynchronous task that represents the operation.</returns>
+        [HttpPut]
+        [Route("DeleteResourceReferenceDetails/{hierarchyEditDetailId}")]
+        public async Task<IActionResult> DeleteResourceReferenceDetails(int hierarchyEditDetailId)
+        {
+            try
+            {
+                var retVal = await this.hierarchyService.DeleteResourceReferenceDetails(hierarchyEditDetailId, this.CurrentUserId);
                 return this.Ok(new ApiResponse(true, retVal));
             }
             catch (Exception ex)

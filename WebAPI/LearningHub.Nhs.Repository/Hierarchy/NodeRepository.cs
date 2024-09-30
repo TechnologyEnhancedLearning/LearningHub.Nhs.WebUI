@@ -87,6 +87,23 @@
         }
 
         /// <summary>
+        /// Check catalogue has external reference.
+        /// </summary>
+        /// <param name="nodeId">The node path id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<bool> CheckCatalogueHasExternalReference(int nodeId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = nodeId };
+            var param1 = new SqlParameter("@p1", SqlDbType.Bit) { Direction = ParameterDirection.Output };
+            string sql = "hierarchy.CheckCatalogueHasExternalReference @p0, @p1 output";
+            var sqlParams = new List<SqlParameter>() { param0, param1 };
+
+            await this.DbContext.Database.ExecuteSqlRawAsync(sql, sqlParams);
+
+            return (bool)param1.Value;
+        }
+
+        /// <summary>
         /// Gets the contents of a node path (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// </summary>

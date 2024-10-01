@@ -367,7 +367,7 @@
         $('#keyword-error-span').hide();
         values.forEach(function (value) {
           if (value && keywords.indexOf(value) === -1) {
-              keywords.push(value);
+            keywords.push(value);
             $('#Keywords').val(keywords);
             var tag = $('<div class="keyword-tag"><p>' + value + '</p><i class="fa fa-times"></i><input class="keyword-value" type="hidden" value="' + value + '" /></div>');
             tag.find('.fa-times').on('click', removeKeyword);

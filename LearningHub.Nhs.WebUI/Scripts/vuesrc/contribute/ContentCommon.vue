@@ -331,7 +331,7 @@
                     !Boolean(this.$route.query.initialCreate);                                 // or if the user is editing an existing draft (initialCreate=false)
             },
             newKeywordTrimmed(): string {
-                return this.newKeyword?.trim().replace(/ +(?= )/g, '').toLowerCase();
+                return this.newKeyword?.trim().replace(/ +(?= )/g, '');
             },
             showProviders(): boolean {
                 if (!this.$store.state.userProviders) {
@@ -393,7 +393,7 @@
                 this.keywords = this.resourceDetail.resourceKeywords.map(obj => {
                     let kw = new KeywordModel();
                     kw.id = obj.id;
-                    kw.keyword = obj.keyword.toLowerCase();
+                    kw.keyword = obj.keyword;
                     return kw;
                 });
                 if (this.resourceDetail.resourceProviderId > 0) {
@@ -532,9 +532,9 @@
                 },
             async addKeyword() {
                     if (this.newKeyword && this.newKeywordTrimmed.length > 0) {
-                        let allTrimmedKeyword = this.newKeywordTrimmed.toLowerCase().split(',');
+                        let allTrimmedKeyword = this.newKeywordTrimmed.split(',');
                         allTrimmedKeyword = allTrimmedKeyword.filter(e => String(e).trim());
-                        if (!this.keywords.find(_keyword => allTrimmedKeyword.includes(_keyword.keyword.toLowerCase()))) {
+                        if (!this.keywords.find(_keyword => allTrimmedKeyword.includes(_keyword.keyword))) {
                             for (var i = 0; i < allTrimmedKeyword.length; i++) {
                                 let item = allTrimmedKeyword[i];
                                 if (item.length > 0 && item.length <= 50) {

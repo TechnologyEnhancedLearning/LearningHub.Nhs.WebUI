@@ -82,10 +82,11 @@
             },
             async addKeyword() {  
                 if (this.newKeyword && this.newKeywordTrimmed.length > 0) {
+                    this.keywordChange();
                     let allTrimmedKeyword = this.newKeywordTrimmed.toLowerCase().split(',');
                     allTrimmedKeyword = allTrimmedKeyword.filter(e => String(e).trim());
                         for (var i = 0; i < allTrimmedKeyword.length; i++) {
-                            let item = allTrimmedKeyword[i];
+                            let item = allTrimmedKeyword[i].trim();
                             if (item.length > 0 && item.length <= 50) {
                                 let newKeywordObj = new KeywordModel({
                                     keyword: item,
@@ -96,6 +97,7 @@
                                     this.resourceDetails.resourceKeywords.push(newKeywordObj);
                                     this.newKeyword = '';
                                 } else if (newKeywordObj.id == 0) {
+                                    this.newKeyword = '';
                                     this.keywordError = true;
                                     this.keywordErrorMessage.push(item);
                                 }

@@ -360,14 +360,14 @@
 
         // Split the input value by commas and trim each keyword
         var values = value.split(',').map(function (item) {
-          return item.trim();
+                    return item.trim().toLowerCase();
         });
 
         var duplicateKeywords = [];
         $('#keyword-error-span').hide();
         values.forEach(function (value) {
           if (value && keywords.indexOf(value) === -1) {
-            keywords.push(value);
+              keywords.push(value);
             $('#Keywords').val(keywords);
             var tag = $('<div class="keyword-tag"><p>' + value + '</p><i class="fa fa-times"></i><input class="keyword-value" type="hidden" value="' + value + '" /></div>');
             tag.find('.fa-times').on('click', removeKeyword);
@@ -386,7 +386,7 @@
           }
         });
 
-        $keywordInput.val("");      
+        $keywordInput.val("");
         if (keywords.length > 4) {
           $('#add-keyword').attr('disabled', 'disabled');
           $('#add-keyword-input').attr('disabled', 'disabled');

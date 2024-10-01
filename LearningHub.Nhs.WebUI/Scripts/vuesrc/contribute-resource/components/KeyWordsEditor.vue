@@ -67,7 +67,7 @@
                 return this.resourceDetails.resourceVersionId;
             },
             newKeywordTrimmed(): string {
-                return this.newKeyword?.trim().replace(/ +(?= )/g, '').toLowerCase();
+                return this.newKeyword?.trim().replace(/ +(?= )/g, '');
             },
         },
         methods: {
@@ -77,9 +77,9 @@
             },
             async addKeyword() {  
                 if (this.newKeyword && this.newKeywordTrimmed.length > 0) {
-                    let allTrimmedKeyword = this.newKeywordTrimmed.toLowerCase().split(',');
+                    let allTrimmedKeyword = this.newKeywordTrimmed.split(',');
                     allTrimmedKeyword = allTrimmedKeyword.filter(e => String(e).trim());
-                    if (!this.resourceDetails.resourceKeywords.find(_keyword => allTrimmedKeyword.includes(_keyword.keyword.toLowerCase()))) {
+                    if (!this.resourceDetails.resourceKeywords.find(_keyword => allTrimmedKeyword.includes(_keyword.keyword))) {
                         for (var i = 0; i < allTrimmedKeyword.length; i++) {
                             let item = allTrimmedKeyword[i];
                             if (item.length > 0 && item.length <= 50) {

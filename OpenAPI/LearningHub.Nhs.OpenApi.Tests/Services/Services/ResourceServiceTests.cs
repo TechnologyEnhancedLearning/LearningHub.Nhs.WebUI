@@ -2,10 +2,12 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using FizzWare.NBuilder;
     using FluentAssertions;
+    using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.OpenApi.Models.Exceptions;
@@ -22,13 +24,34 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         private readonly Mock<ILearningHubService> learningHubService;
         private readonly ResourceService resourceService;
         private readonly Mock<IResourceRepository> resourceRepository;
+        private readonly int currentUserId;
 
         public ResourceServiceTests()
         {
+            // This Id is the development accountId
+            this.currentUserId = 57541;
+
             this.learningHubService = new Mock<ILearningHubService>();
             this.resourceRepository = new Mock<IResourceRepository>();
             this.resourceService = new ResourceService(this.learningHubService.Object, this.resourceRepository.Object, new NullLogger<ResourceService>());
         }
+
+        private List<ResourceActivityDTO> ResourceActivityDTOList => new List<ResourceActivityDTO>()
+        {
+            new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 5, MajorVersion = 5 },
+            new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 7, MajorVersion = 4 },
+            new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 3, MajorVersion = 3 },
+            new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 7, MajorVersion = 2 },
+            new ResourceActivityDTO{ ResourceId = 1, ActivityStatusId = 3, MajorVersion = 1 },
+
+            new ResourceActivityDTO{ ResourceId = 2, ActivityStatusId = 5, MajorVersion = 5 }, // Passed
+            new ResourceActivityDTO{ ResourceId = 2, ActivityStatusId = 4, MajorVersion = 4 }, // Failed
+            new ResourceActivityDTO{ ResourceId = 2, ActivityStatusId = 3, MajorVersion = 3 }, // complete
+
+            new ResourceActivityDTO{ ResourceId = 3, ActivityStatusId = 4, MajorVersion = 2 }, // Failed
+            new ResourceActivityDTO{ ResourceId = 3, ActivityStatusId = 4, MajorVersion = 1 }, // Failed
+            new ResourceActivityDTO{ ResourceId = 3, ActivityStatusId = 7, MajorVersion = 4 }, // In complete
+        };
 
         private List<Resource> ResourceList => new List<Resource>()
         {
@@ -63,7 +86,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(0, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(1);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(1, null);
 
             // Then
             x.Rating.Should().Be(3);
@@ -80,7 +103,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(new List<ResourceReference>());
 
             // When / Then
-            var exception = await Assert.ThrowsAsync<HttpResponseException>(async () => await this.resourceService.GetResourceReferenceByOriginalId(999));
+            var exception = await Assert.ThrowsAsync<HttpResponseException>(async () => await this.resourceService.GetResourceReferenceByOriginalId(999, null));
             exception.StatusCode.Should().Be(HttpStatusCode.NotFound);
             exception.ResponseBody.Should().Be("No matching resource reference");
         }
@@ -93,7 +116,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(1, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(2);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(2, null);
 
             // Then
             x.Title.Should().Be("No current resource version");
@@ -108,7 +131,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(2, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(3);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(3, null);
 
             // Then
             x.Catalogue.Name.Should().Be("No catalogue for resource reference");
@@ -122,7 +145,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(3, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(4);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(4, null);
 
             // Then
             x.Catalogue.Name.Should().Be("No catalogue for resource reference");
@@ -136,7 +159,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(5, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(6);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(6, null);
 
             // Then
             x.Catalogue.Name.Should().Be("No catalogue for resource reference");
@@ -150,7 +173,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(7, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(8);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(8, null);
 
             // Then
             x.Catalogue.Name.Should().Be("catalogue3");
@@ -165,7 +188,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(8, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(9);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(9, null);
 
             // Then
             x.ResourceType.Should().Be(string.Empty);
@@ -179,7 +202,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(9, 2));
 
             // When / Then
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await this.resourceService.GetResourceReferenceByOriginalId(10));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await this.resourceService.GetResourceReferenceByOriginalId(10, null));
         }
 
         /*[Fact]
@@ -198,7 +221,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(0, 2));
 
             // When
-            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp);
+            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp, null);
 
             // Then
             x.ResourceReferences.Count.Should().Be(2);
@@ -220,7 +243,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(new List<ResourceReference>());
 
             // When
-            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp);
+            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp, null);
 
             // Then
             x.UnmatchedResourceReferenceIds.Count.Should().Be(2);
@@ -237,7 +260,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(0, 4));
 
             // When
-            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp);
+            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp, null);
 
             // Then
             x.ResourceReferences.Count.Should().Be(4);
@@ -257,7 +280,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(0, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp);
+            var x = await this.resourceService.GetResourceReferencesByOriginalIds(idsToLookUp, null);
 
             // Then
             x.ResourceReferences.Count.Should().Be(1);
@@ -277,7 +300,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(5, 2));
 
             // When
-            var x = await this.resourceService.GetResourceReferencesByOriginalIds(list);
+            var x = await this.resourceService.GetResourceReferencesByOriginalIds(list, null);
 
             // Then
             x.ResourceReferences[0].RefId.Should().Be(6);
@@ -292,12 +315,12 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.resourceRepository.Setup(rr => rr.GetResourceReferencesByOriginalResourceReferenceIds(list))
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(5, 1));
 
-             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(6);
+            // When
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(6, null);
 
-             // Then
+            // Then
             x.RefId.Should().Be(6);
-         }
+        }
 
         [Fact]
         public async Task ResourceServiceReturnsThatARestrictedCatalogueIsRestricted()
@@ -308,7 +331,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(8, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(9);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(9, null);
 
             // Then
             x.Catalogue.IsRestricted.Should().BeTrue();
@@ -323,10 +346,192 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(this.ResourceReferenceList.GetRange(7, 1));
 
             // When
-            var x = await this.resourceService.GetResourceReferenceByOriginalId(8);
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(8, null);
 
             // Then
             x.Catalogue.IsRestricted.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task SingleResourceEndpointReturnsActivitySummaryWhenCurrentUserIdProvided()
+        {
+            // Given
+            this.resourceRepository.Setup(rr => rr.GetResourceReferencesByOriginalResourceReferenceIds(new List<int>() { 1 }))
+                .ReturnsAsync(this.ResourceReferenceList.GetRange(0, 1));
+
+            this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(new List<int>() { 1 }, new List<int>() { currentUserId }))
+                .ReturnsAsync(this.ResourceActivityDTOList.ToList());
+
+            // When
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(1, currentUserId);
+
+            // Then
+            x.UserSummaryActivityStatuses.Should().NotBeNull();
+            x.UserSummaryActivityStatuses[0].MajorVersionId.Should().Be(5);
+            x.UserSummaryActivityStatuses[1].MajorVersionId.Should().Be(4);
+            x.UserSummaryActivityStatuses[2].MajorVersionId.Should().Be(3);
+            x.UserSummaryActivityStatuses[3].MajorVersionId.Should().Be(2);
+            x.UserSummaryActivityStatuses[4].MajorVersionId.Should().Be(1);
+
+            x.UserSummaryActivityStatuses[0].ActivityStatusDescription.Should().Be("Passed");
+            x.UserSummaryActivityStatuses[1].ActivityStatusDescription.Should().Be("In progress");
+            x.UserSummaryActivityStatuses[2].ActivityStatusDescription.Should().Be("Viewed");
+            x.UserSummaryActivityStatuses[3].ActivityStatusDescription.Should().Be("In progress");
+            x.UserSummaryActivityStatuses[4].ActivityStatusDescription.Should().Be("Viewed");
+        }
+
+        [Fact]
+        public async Task SingleResourceEndpointReturnsEmptyActivitySummaryWhenNoCurrentUserIdProvided()
+        {
+            // Given
+            this.resourceRepository.Setup(rr => rr.GetResourceReferencesByOriginalResourceReferenceIds(new List<int>() { 1 }))
+                .ReturnsAsync(this.ResourceReferenceList.GetRange(0, 1));
+
+            // This should not be hit
+            this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(new List<int>() { 1 }, new List<int>() { currentUserId }))
+                .ReturnsAsync(this.ResourceActivityDTOList.ToList());
+
+            // When
+            var x = await this.resourceService.GetResourceReferenceByOriginalId(1, null);
+
+            // Then
+            x.UserSummaryActivityStatuses.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GetResourceReferencesByCompleteReturnsCorrectInformation()
+        {
+            // Given
+            List<int> resourceIds = new List<int>() { 1, 2 };
+            List<Resource> resources = this.ResourceList.GetRange(0, 2);
+            resources[0].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 1, title: "title1", description: "description1", rating: 3m, resourceType: ResourceTypeEnum.Article);
+            resources[1].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 2, hasCurrentResourceVersion: false, hasNodePath: false, resourceType: ResourceTypeEnum.Assessment);
+
+            this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(It.IsAny<List<int>>(), It.IsAny<List<int>>()))
+                .ReturnsAsync(this.ResourceActivityDTOList);
+
+            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(resourceIds))
+                .ReturnsAsync(resources);
+
+            // When
+            var x = await this.resourceService.GetResourceReferenceByActivityStatus(new List<int>() { (int)ActivityStatusEnum.Completed }, currentUserId);
+
+            // Then
+
+            // Two groups resourceId 1 and 2 have completed for a major version. ResourceId 3 had resourceActivity data but not completed
+            x.Count().Should().Be(2);
+
+            // We are including all the major versions not just the matching ones if there exists one matching one
+            x[0].ResourceId.Should().Be(1);
+            x[0].UserSummaryActivityStatuses.Count().Should().Be(5);
+
+            // Return all the activitySummaries if one match
+            x[1].ResourceId.Should().Be(2);
+            x[1].UserSummaryActivityStatuses.Count().Should().Be(3);
+
+            // we are not excluding major version that are not completed. We return the resource and all its activitySummaries if one matches
+            x[0].UserSummaryActivityStatuses[1].ActivityStatusDescription.Should().Be("In progress");
+            x[0].UserSummaryActivityStatuses[2].ActivityStatusDescription.Should().Be("Viewed"); // Rename completed and still return it
+
+        }
+
+        [Fact]
+        public async Task GetResourceReferencesByInProgressReturnsCorrectInformation()
+        {
+            // Given
+            List<int> resourceIds = new List<int>() { 1, 3 };
+            List<Resource> resources = new List<Resource>() { this.ResourceList[0], this.ResourceList[2] };
+            resources[0].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 1, title: "title1", description: "description1", rating: 3m, resourceType: ResourceTypeEnum.Article);
+            resources[1].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 3, title: "title2", description: "description2");
+
+            this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(It.IsAny<List<int>>(), It.IsAny<List<int>>()))
+                .ReturnsAsync(this.ResourceActivityDTOList);
+
+            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(resourceIds))
+                .ReturnsAsync(resources);
+
+            // When
+            var x = await this.resourceService.GetResourceReferenceByActivityStatus(new List<int>() { (int)ActivityStatusEnum.Incomplete }, currentUserId); // In complete in the database is in progress im database
+
+            // Then
+
+            // Two groups resourceId 1 and 3 have completed for a major version. ResourceId 2 had resourceActivity data but not "in progress"
+            x.Count().Should().Be(2);
+
+            // We are including all the major versions not just the matching ones if there exists one matching one
+            x[0].ResourceId.Should().Be(1);
+            x[0].UserSummaryActivityStatuses.Count().Should().Be(5);
+
+            // Return all the activitySummaries if one match
+            x[1].ResourceId.Should().Be(3);
+            x[1].UserSummaryActivityStatuses.Count().Should().Be(3);
+
+            // we are not excluding major version that are not completed. We return the resource and all its activitySummaries if one matches
+            x[0].UserSummaryActivityStatuses[1].ActivityStatusDescription.Should().Be("In progress");
+            x[0].UserSummaryActivityStatuses[2].ActivityStatusDescription.Should().Be("Viewed"); // Rename completed and still return it
+
+        }
+
+        [Fact]
+        public async Task GetResourceReferencesByCertificatesReturnsCorrectInformation()
+        {
+
+            // Given
+            List<int> resourceIds = new List<int>() { 1, 3 }; // Ids returned from activity
+
+            List<Resource> resources = new List<Resource>() { this.ResourceList[0], this.ResourceList[2] };
+            resources[0].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 1, title: "title1", description: "description1", rating: 3m, resourceType: ResourceTypeEnum.Article);
+            resources[1].ResourceReference.ToList()[0].Resource = ResourceTestHelper.CreateResourceWithDetails(id: 3, title: "title2", description: "description2");
+
+
+            // Will be passed resourceIds and currentUserId
+            this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(It.IsAny<List<int>>(), It.IsAny<List<int>>()))
+                .ReturnsAsync(this.ResourceActivityDTOList);
+
+            this.resourceRepository.Setup(rr => rr.GetAchievedCertificatedResourceIds(currentUserId))
+                .ReturnsAsync(resourceIds);
+
+            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(resourceIds))
+                .ReturnsAsync(resources);
+
+            // When
+            var x = await this.resourceService.GetResourceReferencesForCertificates(currentUserId);
+
+            // Then
+
+            x.Count().Should().Be(2);
+
+            // We are including all the major versions not just the matching ones if there exists one matching one
+            x[0].ResourceId.Should().Be(1);
+            x[0].UserSummaryActivityStatuses.Count().Should().Be(5);
+
+            // Return all the activitySummaries if one match
+            x[1].ResourceId.Should().Be(3);
+            x[1].UserSummaryActivityStatuses.Count().Should().Be(3);
+
+            // we are not excluding major version that are not completed (assuming here that its completed and has certificated flag). We return the resource and all its activitySummaries if one matches
+            x[0].UserSummaryActivityStatuses[1].ActivityStatusDescription.Should().Be("In progress");
+            x[0].UserSummaryActivityStatuses[2].ActivityStatusDescription.Should().Be("Viewed"); // Rename completed and still return it
+        }
+
+        [Fact]
+        public async Task GetResourceReferencesByCompleteNoActivitySummaryFound()
+        {
+            // Given
+            List<int> resourceIds = new List<int>() { };
+            List<Resource> resources = this.ResourceList.GetRange(0, 0);
+
+            this.resourceRepository.Setup(rr => rr.GetResourceActivityPerResourceMajorVersion(It.IsAny<List<int>>(), It.IsAny<List<int>>()))
+                .ReturnsAsync(this.ResourceActivityDTOList.GetRange(8, 3));
+
+            this.resourceRepository.Setup(rr => rr.GetResourcesFromIds(resourceIds))
+                .ReturnsAsync(resources);
+
+            // When
+            var x = await this.resourceService.GetResourceReferenceByActivityStatus(new List<int>() { (int)ActivityStatusEnum.Completed }, currentUserId);
+
+            // Then
+            x.Count().Should().Be(0);
         }
     }
 }

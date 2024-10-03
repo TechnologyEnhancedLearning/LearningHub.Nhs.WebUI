@@ -1,24 +1,26 @@
 ﻿@using System.Web;
 @using LearningHub.Nhs.WebUI.Extensions
+@using LearningHub.Nhs.Models.Search.SearchClick;
 
 @model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
 
 @{
-  var catalogueResult = Model.CatalogueSearchResult;
-  var pagingModel = Model.CatalogueResultPaging;
-  var searchString = HttpUtility.UrlEncode(Model.SearchString);
-  var searchSignal = catalogueResult.Feedback?.FeedbackAction?.Payload?.SearchSignal;
+    var catalogueResult = Model.CatalogueSearchResult;
+    var pagingModel = Model.CatalogueResultPaging;
+    var searchString = HttpUtility.UrlEncode(Model.SearchString);
 
-  string GetCatalogueUrl(string catalogueUrl, int nodePathId, int itemIndex, int catalogueId)
-  {
-    string encodedCatalogueUrl = HttpUtility.UrlEncode("/Catalogue/" + catalogueUrl);
-    string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
-    string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
+    string GetCatalogueUrl(string catalogueUrl, int nodePathId, int itemIndex, int catalogueId, SearchClickPayloadModel payload)
+    {
+        var searchSignal = payload?.SearchSignal;
+        string encodedCatalogueUrl = HttpUtility.UrlEncode("/Catalogue/" + catalogueUrl);
+        string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
+        string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
 
-    var url = $@"/search/record-catalogue-click?url={encodedCatalogueUrl}&nodePathId={nodePathId}&itemIndex={itemIndex}
-&pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={catalogueResult.TotalHits}&searchText={searchString}&catalogueId={catalogueId}
-&GroupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal?.UserQuery)}&query={searchSignalQueryEncoded}";
-    return url;
+        var url = $@"/search/record-catalogue-click?url={encodedCatalogueUrl}&nodePathId={nodePathId}&itemIndex={payload?.HitNumber}
+&pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={payload?.SearchSignal?.Stats?.TotalHits}&searchText={searchString}&catalogueId={catalogueId}
+&GroupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal?.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal?.UserQuery)}
+&query={searchSignalQueryEncoded}&name={payload?.DocumentFields?.Name}";
+        return url;
   }
 }
 
@@ -71,7 +73,7 @@
           <div class="nhsuk-card__content catalogue-card-content">
 
             <h2 class="nhsuk-card__heading nhsuk-heading-m">
-              <a class="nhsuk-card__link" href="@GetCatalogueUrl(item.Url, item.NodePathId, index, Int32.Parse(item.Id))">@item.Name</a>
+              <a class="nhsuk-card__link" href="@GetCatalogueUrl(item.Url, item.NodePathId, index, Int32.Parse(item.Id), item.Click.Payload)">@item.Name</a>
             </h2>
 
             <div class="nhsuk-card__description catalogue-card-body">

@@ -68,10 +68,6 @@
             modelBuilder.Property(e => e.UserId)
                 .HasColumnName("UserId");
 
-            modelBuilder.HasOne(d => d.User)
-                .WithMany(p => p.Logs)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 }

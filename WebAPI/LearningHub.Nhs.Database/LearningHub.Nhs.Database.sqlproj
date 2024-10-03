@@ -525,6 +525,7 @@
     <Build Include="Stored Procedures\Hierarchy\GetCatalogues.sql" />
     <Build Include="Stored Procedures\Hierarchy\GetCataloguesCount.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\PPSXFileType.sql" />
+    <Build Include="Stored Procedures\Resources\GetMyLearningCertificatesDashboardResources.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

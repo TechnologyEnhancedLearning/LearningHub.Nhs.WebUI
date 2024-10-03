@@ -60,7 +60,6 @@
                 };
                 this.Response.Headers.Append("Access-Control-Allow-Origin", "*");
                 this.Response.Headers.Append("X-Content-Type-Options", "nosniff");
-                this.Response.Headers.Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
                 return response;
             }

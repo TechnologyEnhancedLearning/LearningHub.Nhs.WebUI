@@ -5,11 +5,8 @@
     using System.IO;
     using System.Net;
     using System.Net.Cache;
-    using System.Net.Http;
-    using System.Text;
     using System.Text.RegularExpressions;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
@@ -45,8 +42,6 @@
             var httpRequest = (HttpWebRequest)WebRequest.Create(new Uri(playBackUrl));
             httpRequest.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
             httpRequest.Timeout = 30000;
-            httpRequest.Headers.Add("Access-Control-Request-Headers", "authorization");
-            httpRequest.Headers.Add("Access-Control-Request-Method", "GET");
 
             var httpResponse = httpRequest.GetResponse();
 
@@ -58,8 +53,7 @@
                 {
                     using (var reader = new StreamReader(stream))
                     {
-                        string qualityLevelRegex = @"(QualityLevels\(\d+\))";
-                        qualityLevelRegex = @"(|)([^""\s]+\.m3u8\(encryption=cbc\))";
+                        string qualityLevelRegex = @"(|)([^""\s]+\.m3u8\(encryption=cbc\))";
                         const string fragmentsRegex = @"(Fragments\([\w\d=-]+,[\w\d=-]+\))";
                         string urlRegex = @"("")(https?:\/\/[\da-z\.-]+\.[a-z\.]{2,6}[\/\w \.-]*\/?[\?&][^&=]+=[^&=#]*)("")";
                         urlRegex = @"(https?:\/\/[\da-z\.-]+\.[a-z\.]{2,6}[\/\w \.-]*)([\?&][^&=]+=[^&=#]*)?";
@@ -71,21 +65,18 @@
                         var content = reader.ReadToEnd();
 
                         content = ReplaceUrisWithProxy(content, baseUrl);
-
-                        // content = ReplaceMediaUriWithProxy(content, baseUrl);
                         var newContent = Regex.Replace(content, urlRegex, match =>
-                        {
-                            string baseUrlWithQuery = match.Groups[1].Value;  // URL including the query string
+                                                {
+                                                    string baseUrlWithQuery = match.Groups[1].Value;  // URL including the query string
 
-                            // Append the token correctly without modifying surrounding characters
-                            string newUrl = baseUrlWithQuery.Contains("?") ?
-                                            $"{baseUrlWithQuery}&token={token}" :
-                                            $"{baseUrlWithQuery}?token={token}";
+                                                    // Append the token correctly without modifying surrounding characters
+                                                    string newUrl = baseUrlWithQuery.Contains("?") ?
+                                                                    $"{baseUrlWithQuery}&token={token}" :
+                                                                    $"{baseUrlWithQuery}?token={token}";
 
-                            return newUrl;
-                        });
+                                                    return newUrl;
+                                                });
 
-                        // var newContent = Regex.Replace(content, urlRegex, string.Format(CultureInfo.InvariantCulture, "$1$2$3&token={0}", token));
                         this.logger.LogDebug($"newContent={newContent}");
 
                         var match = Regex.Match(playBackUrl, qualityLevelRegex);
@@ -98,8 +89,6 @@
                         }
 
                         return newContent;
-
-                        // response.Content = new StringContent(newContent, Encoding.Default, "application/vnd.apple.mpegurl");
                     }
                 }
             }
@@ -140,92 +129,6 @@
             }
 
             // Join the modified lines back into a single string
-            return string.Join("\r\n", lines);
-        }
-
-        private static string ReplaceMediaUriWithProxy(string playlistContent, string proxyUrl)
-        {
-            // Split the playlist content into lines
-            var lines = playlistContent.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-
-            // Process each line to replace media URIs
-            for (int i = 0; i < lines.Length; i++)
-            {
-                // Check if the line starts with #EXTINF
-                if (lines[i].StartsWith("#EXTINF:", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Check if there is a next line (media URI)
-                    if (i + 1 < lines.Length)
-                    {
-                        // Get the media URI line
-                        var mediaUriLine = lines[i + 1];
-
-                        // Extract the existing URI (removing any quotes)
-                        var existingUri = mediaUriLine.Trim();
-
-                        // Create the new URI with the proxy URL
-                        var newUri = $"{proxyUrl}/{existingUri}";
-
-                        // Replace the media URI line with the new proxy URI
-                        lines[i + 1] = newUri;
-                    }
-                }
-            }
-
-            // Join the modified lines back into a single string
-            return string.Join("\r\n", lines);
-        }
-
-        private static string ReplaceMapUriWithProxy(string playlistContent, string proxyUrl)
-        {
-            // Split the content into lines
-            var lines = playlistContent.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-
-            // Process each line and replace the relevant URIs
-            for (int i = 0; i < lines.Length; i++)
-            {
-                if (lines[i].StartsWith("#EXT-X-MAP:URI=", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Extract the existing URI
-                    var existingUri = lines[i].Substring(lines[i].IndexOf('=') + 1).Trim('"');
-
-                    // Create the new URI with the proxy URL
-                    // Assuming the proxy URL should be the base URL for the video segments
-                    var newUri = $"{proxyUrl}/{existingUri}";
-
-                    // Replace the line with the new URI
-                    lines[i] = lines[i].Replace(existingUri, newUri);
-                }
-            }
-
-            // Join the modified lines back together
-            return string.Join("\r\n", lines);
-        }
-
-        private static string ReplaceMediaAndMapUrisWithProxy(string playlistContent, string proxyUrl)
-        {
-            // Split the content into lines
-            var lines = playlistContent.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-
-            // Process each line and replace relevant URIs
-            for (int i = 0; i < lines.Length; i++)
-            {
-                // Check for media URI line
-                if (lines[i].StartsWith("#EXTINF:", StringComparison.OrdinalIgnoreCase) && i + 1 < lines.Length)
-                {
-                    // Replace the media URI
-                    lines[i + 1] = $"{proxyUrl}/{lines[i + 1].Trim()}";
-                }
-
-                // Check for map URI line
-                if (lines[i].StartsWith("#EXT-X-MAP:URI=", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Replace the map URI
-                    lines[i] = lines[i].Replace(lines[i].Substring(lines[i].IndexOf('=') + 1).Trim('"'), $"{proxyUrl}/");
-                }
-            }
-
-            // Join the modified lines back together
             return string.Join("\r\n", lines);
         }
     }

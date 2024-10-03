@@ -71,6 +71,8 @@
     import { AzureMediaAssetModel } from '../models/content/videoAssetModel';
     import { MKPlayer } from '@mediakind/mkplayer';
     import { MKPlayerType, MKStreamType } from '../MKPlayerConfigEnum';
+    //import { getPlayerConfig, getSourceConfig, initializePlayer } from '../mkiomediaplayer';
+    import { buildControlbar } from '../mkioplayer-controlbar';
 
     export default Vue.extend({
         props: {
@@ -89,10 +91,11 @@
                 player: null,
                 videoContainer: null,
                 mkioKey: '',
-                isIphone: false
+                isIphone: false,
+                requestURL: ''
             };
         },
-         async created(): Promise<void> {
+        async created(): Promise<void> {
             await this.getMKIOPlayerKey();
             this.load();
             this.getDisplayAVFlag();
@@ -100,6 +103,7 @@
         },
         mounted() {
             this.checkIfIphone();
+            this.requestURL = window.location.origin;
         },
         computed: {
             getStyle() {
@@ -172,11 +176,37 @@
                     this.audioVideoUnavailableView = response;
                 });
             },
+            //onSubtitleAdded() {
+            //    this.player.subtitles.enable("subtitle" + this.section.id.toString());
+            //},
             onPlayerReady() {
-                const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
-                if (videoElement) {
-                    videoElement.controls = true;
-                }
+                var contanierId = this.section.id.toString();
+                var uniquePlayer = this.player;// (player_@Model.Id);
+                buildControlbar(contanierId, uniquePlayer);
+
+                // [BY] When we set UI to false we need to manually add the controls to the video element
+                //const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
+                //if (videoElement) {
+                //    videoElement.controls = true;
+                //}
+
+                //  var subtitleTrack;
+                //if (this.pageSectionDetail.videoAsset.azureMediaAsset && this.pageSectionDetail.videoAsset.closedCaptionsFile) {
+                //    const captionsInfo = this.pageSectionDetail.videoAsset.closedCaptionsFile;
+                //    var srcPath = "file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
+                //    //srcPath = '@requestURL' + srcPath;
+                //    srcPath = "https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt";
+
+                //    subtitleTrack = {
+                //        id: "subtitle" + this.section.id.toString(),
+                //        lang: "en",
+                //        label: "english",
+                //        url: srcPath,
+                //        kind: "subtitle"
+                //    };
+                //};
+
+                //this.player.addSubtitle(subtitleTrack);
             },
             async getMKIOPlayerKey(): Promise<void> {
                 this.mkioKey = await contentData.getMKPlayerKey();
@@ -193,14 +223,14 @@
                         // Grab the video container
                         this.videoContainer = document.getElementById(this.getPlayerUniqueId);
 
-                        if(!this.mkioKey) {
+                        if (!this.mkioKey) {
                             this.getMKIOPlayerKey();
                         }
 
                         // Prepare the player configuration
                         const playerConfig = {
                             key: this.mkioKey,
-                            ui: false,
+                            ui: true,
                             playback: {
                                 muted: false,
                                 autoplay: false,
@@ -209,15 +239,33 @@
                             theme: "dark",
                             events: {
                                 ready: this.onPlayerReady,
+                                //subtitleadded: this.onSubtitleAdded,
                             }
                         };
 
                         // Initialize the player with video container and player configuration
                         this.player = new MKPlayer(this.videoContainer, playerConfig);
 
+                        var subtitleTrack = null;
+                        var sectionId = this.section.id.toString();
+                        if (this.pageSectionDetail.videoAsset.azureMediaAsset && this.pageSectionDetail.videoAsset.closedCaptionsFile) {
+                            var captionsInfo = this.pageSectionDetail.videoAsset.closedCaptionsFile;;
+
+                            if (captionsInfo) {
+                                var srcPath = "/file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
+                                subtitleTrack = {
+                                    id: "subtitle" + sectionId,
+                                    lang: "en",
+                                    label: "english",
+                                    url: this.requestURL + srcPath,
+                                    kind: "subtitle"
+                                };
+                            }
+                        }
                         // Load source
                         const sourceConfig = {
                             hls: this.getMediaPlayUrl(this.pageSectionDetail.videoAsset.azureMediaAsset.locatorUri),
+                            subtitleTracks: [subtitleTrack],
                             drm: {
                                 clearkey: {
                                     LA_URL: "HLS_AES",
@@ -332,4 +380,8 @@
         video[id^="bitmovinplayer-video"] {
             width: 100%;
         }
+
+    .bmpui-ui-controlbar .control-right {
+        float: right;
+    }
 </style>

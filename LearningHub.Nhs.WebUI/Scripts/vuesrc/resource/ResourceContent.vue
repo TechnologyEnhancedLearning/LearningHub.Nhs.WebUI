@@ -101,6 +101,7 @@
     import { setResourceCetificateLink } from './helpers/resourceCertificateHelper';
     import { MKPlayer } from '@mediakind/mkplayer';
     import { MKPlayerType, MKStreamType } from '../MKPlayerConfigEnum';
+    import { MKPlayerControlbar } from '../mkioplayer-controlbar';
 
     Vue.use(Vuelidate as any);
 
@@ -146,7 +147,8 @@
                 sourceLoaded: true,
                 playerConfig: {
                 },
-                isIphone: false
+                isIphone: false,
+                requestURL: ''
             }
         },
         computed: {
@@ -230,31 +232,34 @@
         },
         beforeDestroy(): void {
             window.clearInterval(this.mediaPlayingTimer);
-        },
-        mounted() {
-            this.checkIfIphone();
+        },<<<<<<<
+        mounted() {            
+            this.requestURL =window.location.origin;
+             this.checkIfIphone();
         },
         methods: {
             onPlayerReady() {
 
-                const videoElement = document.getElementById("bitmovinplayer-video-resourceMediaPlayer") as HTMLVideoElement;
-                if (videoElement) {
-                    videoElement.controls = true;
+                //const videoElement = document.getElementById("bitmovinplayer-video-resourceMediaPlayer") as HTMLVideoElement;
+                //if (videoElement) {
+                //    videoElement.controls = true;
 
-                    // Add the track element
-                    var captionsInfo = this.resourceItem.videoDetails.closedCaptionsFile;
-                    if (captionsInfo) {
-                        const trackElement = document.createElement('track');
-                        var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
-                        trackElement.kind = 'captions'; // Or 'subtitles' or 'descriptions' depending on your track type
-                        trackElement.label = captionsInfo.language || 'english';
-                        trackElement.srclang = captionsInfo.language || 'en';
-                        trackElement.src = srcPath;
+                //    // Add the track element
+                //    var captionsInfo = this.resourceItem.videoDetails.closedCaptionsFile;
+                //    if (captionsInfo) {
+                //        const trackElement = document.createElement('track');
+                //        var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
+                //        trackElement.kind = 'captions'; // Or 'subtitles' or 'descriptions' depending on your track type
+                //        trackElement.label = captionsInfo.language || 'english';
+                //        trackElement.srclang = captionsInfo.language || 'en';
+                //        trackElement.src = srcPath;
 
-                        // Append the track to the video element
-                        videoElement.appendChild(trackElement);
-                    }
-                }
+                //        // Append the track to the video element
+                //        videoElement.appendChild(trackElement);
+                //    }
+                //}
+
+                MKPlayerControlbar(this.player.videoContainer.id, this.player);
 
                 this.checkForAutoplay(this.player);
             },
@@ -277,7 +282,7 @@
                 // Prepare the player configuration
                 const playerConfig = {
                     key: this.mkioKey,
-                    ui: false,
+                    ui: true,
                     theme: "dark",
                     playback: {
                         muted: false,
@@ -310,10 +315,27 @@
                     }
                 };
 
+                var subtitleTrack = null;
+                if (this.resourceItem.resourceTypeEnum === ResourceType.VIDEO) {
+                    var captionsInfo = this.resourceItem.videoDetails.closedCaptionsFile;
+
+                    if (captionsInfo) {
+                        var srcPath = this.getFileLink(captionsInfo.filePath, captionsInfo.fileName);
+                        subtitleTrack = {
+                            id: "subtitle",
+                            lang: "en",
+                            label: "english",
+                            url: this.requestURL + srcPath,
+                            kind: "subtitle"
+                        };
+                    }
+                }                
+
                 // Load source
                 const sourceConfig = {
                     hls: this.playBackUrl,
                     //dash: this.playBackDashUrl,
+                    subtitleTracks: [subtitleTrack],
                     drm: {
                         clearkey: clearKeyConfig
                     }
@@ -848,32 +870,14 @@
     // NOTE: Not `scoped` because we want this section to apply to children
     @use '../../../Styles/abstracts/all' as *;
 
+    .bmpui-ui-controlbar .control-right {
+        float: right;
+    }
     .accessible-link:focus {
         outline: none;
         text-decoration: none;
         color: $nhsuk-black;
         background-color: $govuk-focus-highlight-yellow;
         box-shadow: 0 -2px $govuk-focus-highlight-yellow,0 4px $nhsuk-black;
-    }
-
-    .video-container {
-        height: 0;
-        width: 100%;
-        overflow: hidden;
-        position: relative;
-        padding-top: 56.25%; /* 16:9 aspect ratio */
-        background-color: #000;
-    }
-
-    video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-
-    video[id^="bitmovinplayer-video"] {
-        width: 100%;
     }
 </style>

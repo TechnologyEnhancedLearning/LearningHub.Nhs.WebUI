@@ -5,33 +5,40 @@
 @{
     ViewData["Title"] = "All Catalogues Search";
 
-    var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString().ToLower());
+    var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString());
     var hasSearchTerm = queryParams.ContainsKey("term");
-    var searchTerm = hasSearchTerm ? queryParams["term"].ToString() : null;
+    var searchTerm = hasSearchTerm ? queryParams["term"].ToString().Trim() : null;
+    string cardStyle = "card-provider-details--blank";
+    var pageSize = this.ViewBag.PageSize;
 }
 
 @section styles {
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/catalogue.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/search.css" asp-append-version="true" />
 }
-
 <div class="nhsuk-width-container app-width-container" style="width:100%">
     @if (hasSearchTerm)
     {
         var parms = new Dictionary<string, string> { { "term", searchTerm } };
         <vc:back-link asp-controller="Catalogue" asp-action="GetAllCatalogue" link-text="Back to A-Z of catalogues" />
     }
-    else
+        <h1 class="nhsuk-u-margin-bottom-5">
+        Search results @(!string.IsNullOrEmpty(searchTerm) ? "for " + searchTerm : string.Empty)
+        </h1>
+
+    <div class="nhsuk-grid-row">
+        <div id="searchTab" class="search-page">
+            <div class="nhsuk-grid-column-two-thirds">
+            @await Html.PartialAsync("_AllCatalogueSearchBar", searchTerm)
+            </div>
+        </div>
+    </div>
+    @if (Model.TotalCount > 0)
     {
-        <vc:back-link asp-controller="Home" asp-action="Index" link-text="Back to: Learning Hub" />
+        <h2 class="nhsuk-u-margin-bottom-5">
+            @($"{Model.TotalCount} catalogue results")
+        </h2>
     }
-    <h1 class="nhsuk-u-margin-bottom-5">
-        @(hasSearchTerm ? $"Search results for {searchTerm}" : "All catalogues")
-    </h1>
-
-    <h2 class="nhsuk-u-margin-bottom-5">
-        @($"{Model.TotalCount} catalogue results")
-    </h2>
-
 
     <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred">
 
@@ -55,6 +62,16 @@
                             <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
                         }
                     </div>
+                    @if (item.Providers?.Count > 0)
+                    {
+                        <div class="card-provider-details">
+                            @ProviderHelper.GetProviderString(item.Providers.FirstOrDefault().Name)
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="card-provider-details @cardStyle"></div>
+                    }
 
                     <div class="nhsuk-card__content catalogue-card-content">
 
@@ -88,7 +105,13 @@
                                     </div>
                                 </div>
                                 <div>
-                                    @if (!string.IsNullOrEmpty(item.BadgeUrl))
+
+                                    @if (item.Providers?.Count > 0)
+                                    {
+                                        var provider = item.Providers.First();
+                                        <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
+                                    }
+                                    else if (!string.IsNullOrEmpty(item.BadgeUrl))
                                     {
                                         <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="Provider's catalogue badge" class="catalogue-card-badge" />
                                     }
@@ -101,14 +124,28 @@
             </li>
         }
     </ul>
-    @if (Model.TotalCount > 9)
+    @if (Model.TotalCount > pageSize)
     {
         var currentPage = this.ViewBag.PageIndex;
-        int totalPage = (Model.TotalCount / 9) + (Model.TotalCount % 9 == 0 ? 0 : 1);
+        int totalPage = (Model.TotalCount / pageSize) + (Model.TotalCount % pageSize == 0 ? 0 : 1);
         var searchQueryParam = hasSearchTerm ? $"&term={searchTerm}" : string.Empty;
         var prevUrl = $"/allcataloguesearch?pageindex={currentPage - 1}{searchQueryParam}";
         var nextUrl = $"/allcataloguesearch?pageindex={currentPage + 1}{searchQueryParam}";
 
         @await Html.PartialAsync("_Pagination", new PaginationViewModel(currentPage, totalPage, prevUrl, nextUrl))
+    }
+
+    @if (Model.TotalCount == 0)
+    {
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                    <h2 class="nhsuk-heading-l">No results found @(!string.IsNullOrEmpty(searchTerm) ? "for " + searchTerm : string.Empty)</h2>
+                <p>You could try:</p>
+                <ul class="nhsuk-list nhsuk-list--bullet">
+                    <li>checking your spelling</li>
+                    <li>searching again using other words</li>
+                </ul>
+            </div>
+        </div>
     }
 </div>

@@ -405,6 +405,17 @@
         }
 
         /// <summary>
+        /// The GetRolesForCatalogueSearch.
+        /// </summary>
+        /// <param name="catalogueNodeId">The catalogueNodeId.</param>
+        /// <param name="userId">The current user.</param>
+        /// <returns>The roleUserGroups.</returns>
+        public async Task<List<RoleUserGroup>> GetRoleUserGroupsForCatalogueSearch(int catalogueNodeId, int userId)
+        {
+            return await this.roleUserGroupRepository.GetAllforSearch(catalogueNodeId, userId);
+        }
+
+        /// <summary>
         /// The RequestAccessAsync.
         /// </summary>
         /// <param name="currentUserId">The currentUserId.</param>
@@ -999,6 +1010,10 @@
             }
 
             var catalogues = await this.catalogueNodeVersionRepository.GetAllCataloguesAsync(pageSize, filterCharMod, userId);
+            foreach (var catalogue in catalogues)
+            {
+                catalogue.Providers = await this.providerService.GetByCatalogueVersionIdAsync(catalogue.NodeVersionId);
+            }
 
             var response = new AllCatalogueResponseViewModel
             {

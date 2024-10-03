@@ -123,6 +123,7 @@
                     BookmarkId = t.BookmarkId,
                     NodeId = int.Parse(t.Id),
                     BadgeUrl = t.BadgeUrl,
+                    Providers = t.Providers,
                 }).ToList();
             }
             else
@@ -603,6 +604,7 @@
                     BookmarkId = t.BookmarkId,
                     NodeId = int.Parse(t.Id),
                     BadgeUrl = t.BadgeUrl,
+                    Providers = t.Providers,
                 }).ToList();
             }
             else
@@ -612,6 +614,7 @@
             }
 
             this.ViewBag.PageIndex = pageIndex;
+            this.ViewBag.PageSize = allCatalogueSearchPageSize;
             return this.View("AllCatalogueSearch", catalogues);
         }
     }

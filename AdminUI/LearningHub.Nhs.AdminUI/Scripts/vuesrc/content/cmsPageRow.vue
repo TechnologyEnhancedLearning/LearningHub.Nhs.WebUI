@@ -89,6 +89,7 @@
                 player: null,
                 videoContainer: null,
                 mkioKey: '',
+                isIphone: false
             };
         },
          async created(): Promise<void> {
@@ -96,6 +97,9 @@
             this.load();
             this.getDisplayAVFlag();
             this.getAudioVideoUnavailableView();
+        },
+        mounted() {
+            this.checkIfIphone();
         },
         computed: {
             getStyle() {
@@ -282,7 +286,17 @@
             },
             getMediaPlayUrl(url: string): string {
                 let sourceUrl = url.substring(0, url.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
+
+                if (this.isIphone) {
+                    var token = this.pageSectionDetail.videoAsset.azureMediaAsset.authenticationToken;
+                    sourceUrl = "/Media/MediaManifest?playBackUrl=" + sourceUrl + "&token=" + token;
+                }   
+
                 return sourceUrl;
+            },
+            checkIfIphone() {
+                const userAgent = navigator.userAgent || navigator.vendor;
+                this.isIphone = /iPhone/i.test(userAgent);
             },
         },
         watch: {

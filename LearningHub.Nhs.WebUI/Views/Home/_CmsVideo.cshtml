@@ -185,6 +185,11 @@
     var url = model.videoAsset.azureMediaAsset.locatorUri;
     url = url.substring(0, url.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
 
+    if (checkIfIphone()) {
+        var token = model.videoAsset.azureMediaAsset.authenticationToken;
+        url = "https://lh-web.dev.local/Media/MediaManifest?playBackUrl=" + url + "&token=" + token;
+    }
+
     var sourceConfig = {
         hls: url,
         // Custom subtitle track
@@ -216,6 +221,11 @@
 
     function onUnmute(data) {
         console.log("Audio unmuted!");
+    }
+
+    function checkIfIphone() {
+        const userAgent = navigator.userAgent || navigator.vendor;
+        return /iPhone/i.test(userAgent);
     }
 </script>
 

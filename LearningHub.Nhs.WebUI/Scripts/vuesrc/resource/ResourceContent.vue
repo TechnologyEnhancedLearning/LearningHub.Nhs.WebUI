@@ -232,10 +232,10 @@
         },
         beforeDestroy(): void {
             window.clearInterval(this.mediaPlayingTimer);
-        },<<<<<<<
+        },
         mounted() {            
             this.requestURL =window.location.origin;
-             this.checkIfIphone();
+            this.checkIfIphone();
         },
         methods: {
             onPlayerReady() {

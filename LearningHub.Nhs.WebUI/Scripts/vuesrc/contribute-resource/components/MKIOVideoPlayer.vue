@@ -50,12 +50,16 @@
                 mkioKey: '',
                 playBackUrl: '',
                 sourceLoaded: true,
+                isIphone: false
             };
         },
         async created() {
             await this.getMKIOPlayerKey();
             this.getMediaPlayUrl();
             this.load();
+        },
+        mounted() {
+            this.checkIfIphone();
         },
         methods: {
             onPlayerReady() {
@@ -94,6 +98,13 @@
             getMediaPlayUrl() {
                 this.playBackUrl = this.videoFile.locatorUri;
                 this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
+                if (this.isIphone) {
+                    this.playBackUrl = "/Media/MediaManifest?playBackUrl=" + this.playBackUrl + "&token=" + this.azureMediaServicesToken;
+                }     
+            },
+            checkIfIphone() {
+                const userAgent = navigator.userAgent || navigator.vendor;
+                this.isIphone = /iPhone/i.test(userAgent);
             },
             load() {
                 // Grab the video container

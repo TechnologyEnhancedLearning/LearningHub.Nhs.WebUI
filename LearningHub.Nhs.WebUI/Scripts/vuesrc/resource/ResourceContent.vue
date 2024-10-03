@@ -147,6 +147,7 @@
                 sourceLoaded: true,
                 playerConfig: {
                 },
+                isIphone: false,
                 requestURL: ''
             }
         },
@@ -231,9 +232,10 @@
         },
         beforeDestroy(): void {
             window.clearInterval(this.mediaPlayingTimer);
-        },
+        },<<<<<<<
         mounted() {            
             this.requestURL =window.location.origin;
+             this.checkIfIphone();
         },
         methods: {
             onPlayerReady() {
@@ -339,7 +341,7 @@
                     }
                 };
 
-                // Load source
+                //// Load source
                 //const sourceConfig = {
                 //    source: {
                 //        options: [
@@ -360,7 +362,6 @@
                 //        ]
                 //    }
                 //};
-
 
                 this.player.load(sourceConfig)
                     .then(() => {
@@ -386,18 +387,29 @@
                 return "Bearer=" + token;
             },
             getMediaPlayUrl() {
+                var token;
                 if (this.resourceItem.resourceTypeEnum === ResourceType.AUDIO) {
                     this.playBackUrl = this.resourceItem.audioDetails.resourceAzureMediaAsset.locatorUri;
                     this.playBackDashUrl = this.resourceItem.audioDetails.resourceAzureMediaAsset.locatorUri;
+                    token = this.resourceItem.audioDetails.resourceAzureMediaAsset.authenticationToken
                 } else {
                     this.playBackUrl = this.resourceItem.videoDetails.resourceAzureMediaAsset.locatorUri;
                     this.playBackDashUrl = this.resourceItem.videoDetails.resourceAzureMediaAsset.locatorUri;
+                    token = this.resourceItem.videoDetails.resourceAzureMediaAsset.authenticationToken
                 }
                 this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
+
+                if (this.isIphone) {
+                    this.playBackUrl = "/Media/MediaManifest?playBackUrl=" + this.playBackUrl + "&token=" + token;
+                }
             },
             getMediaAssetProxyUrl(playBackUrl: string): string {
                 playBackUrl = playBackUrl.substring(0, playBackUrl.lastIndexOf("manifest")) + "manifest(format=mpd-time-cmaf,encryption=cenc)";
                 return playBackUrl;
+            },
+            checkIfIphone() {
+                const userAgent = navigator.userAgent || navigator.vendor;
+                this.isIphone = /iPhone/i.test(userAgent);
             },
             initialise(): void {
                 // record activity on page created for resource article

@@ -22,7 +22,7 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "16.0.0",
     "@ckeditor/ckeditor5-vue": "1.0.1",
-    "@mediakind/mkplayer": "^1.10.1",
+    "@mediakind/mkplayer": "^1.15.0",
     "axios": "^0.19.1",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.6.1",

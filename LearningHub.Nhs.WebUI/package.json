@@ -10,7 +10,7 @@
     "watch": "concurrently npm:watch:*",
     "watch:sass": "npm run sass -- --watch",
     "watch:webpack": "cross-env NODE_ENV=development webpack --watch --progress --color --bail",
-    "build": "npm run build:task1 && npm run build:task2",
+    "build": "concurrently npm:build:*",
     "build:sass": "npm run sass -- --quiet",
     "build:webpack": "cross-env NODE_ENV=production webpack --progress",
     "test:unit": "jest",

@@ -14,7 +14,7 @@
     "build:sass": "npm run sass -- --quiet",
     "build:webpack": "cross-env NODE_ENV=production webpack --progress",
     "test:unit": "jest",
-    "sass": "sass Styles:wwwroot/css --quiet-deps --style=compressed"
+    "sass": "sass Styles:wwwroot/css --quiet-deps --style=compressed --no-source-map"
   },
   "browserslist": [
     "ie 11"

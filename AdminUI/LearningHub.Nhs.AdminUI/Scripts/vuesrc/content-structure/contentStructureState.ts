@@ -495,12 +495,14 @@ const actions = <ActionTree<State, any>>{
     },
     async referenceNode(context: ActionContext<State, State>, payload: { destinationNode: NodeContentAdminModel }) {
         state.inError = false;
+        debugger;
         contentStructureData.referenceNode(state.editingTreeNode.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(async response => {
             context.commit("setEditMode", EditModeEnum.Structure);
             await refreshNodeContents(payload.destinationNode, true).then(async x => {
                 state.editingTreeNode.parent.childrenLoaded = false; // force reload of current now to show references
                 await refreshNodeContents(state.editingTreeNode.parent, true).then(y => {
                 });
+                await refreshNodeIfMatchingNodeId(state.rootNode, state.editingTreeNode.nodeId, state.editingTreeNode.hierarchyEditDetailId, true);
             });
         }).catch(e => {
             state.inError = true;

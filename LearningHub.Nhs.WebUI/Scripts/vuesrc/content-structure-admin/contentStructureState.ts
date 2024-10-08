@@ -500,6 +500,7 @@ const actions = <ActionTree<State, any>>{
                 state.editingTreeNode.parent.childrenLoaded = false; // force reload of current now to show references
                 await refreshNodeContents(state.editingTreeNode.parent, true).then(y => {
                 });
+                await refreshNodeIfMatchingNodeId(state.rootNode, state.editingTreeNode.nodeId, state.editingTreeNode.hierarchyEditDetailId, true);
             });
         }).catch(e => {
             state.inError = true;

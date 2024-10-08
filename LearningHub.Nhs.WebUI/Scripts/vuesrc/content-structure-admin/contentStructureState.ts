@@ -500,6 +500,7 @@ const actions = <ActionTree<State, any>>{
                 state.editingTreeNode.parent.childrenLoaded = false; // force reload of current now to show references
                 await refreshNodeContents(state.editingTreeNode.parent, true).then(y => {
                 });
+                await refreshNodeIfMatchingNodeId(state.rootNode, state.editingTreeNode.nodeId, state.editingTreeNode.hierarchyEditDetailId, true);
             });
         }).catch(e => {
             state.inError = true;
@@ -552,7 +553,8 @@ const actions = <ActionTree<State, any>>{
             await refreshNodeContents(state.referencingResource.parent, true).then(async x => {
                 await refreshNodeContents(payload.destinationNode, true);
             });
-
+            state.editingTreeNode.parent.childrenLoaded = false;
+            await refreshNodeContents(state.editingTreeNode.parent, true);
             context.commit("setEditMode", EditModeEnum.Structure);
         }).catch(e => {
             state.inError = true;

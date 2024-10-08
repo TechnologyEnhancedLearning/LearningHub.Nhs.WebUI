@@ -495,7 +495,6 @@ const actions = <ActionTree<State, any>>{
     },
     async referenceNode(context: ActionContext<State, State>, payload: { destinationNode: NodeContentAdminModel }) {
         state.inError = false;
-        debugger;
         contentStructureData.referenceNode(state.editingTreeNode.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(async response => {
             context.commit("setEditMode", EditModeEnum.Structure);
             await refreshNodeContents(payload.destinationNode, true).then(async x => {

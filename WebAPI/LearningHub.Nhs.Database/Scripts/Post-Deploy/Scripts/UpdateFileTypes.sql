@@ -1,0 +1,1 @@
+update resources.FileType set NotAllowed =1 where Extension='webm'

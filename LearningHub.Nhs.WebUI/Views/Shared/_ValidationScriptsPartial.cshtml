@@ -26,9 +26,9 @@
     $(function () {
         $('form').each(function () {
             if ($(this).data("validator")) {
-                var valSettings = $(this).data("validator").settings
-                valSettings.highlight = wrap($.validator.defaults.highlight, highlightDecorator)
-                valSettings.unhighlight = wrap($.validator.defaults.unhighlight, unhighlightDecorator)
+                var valSettings = $(this).data("validator").settings;
+                valSettings.highlight = wrap($.validator.defaults.highlight, highlightDecorator);
+                valSettings.unhighlight = wrap($.validator.defaults.unhighlight, unhighlightDecorator);
             }
         });
     });
@@ -37,7 +37,6 @@
         return function () {
             var args = Array.prototype.slice.call(arguments);
             beforeFunction.apply(this, args);
-
             if (errorElements.length && submitAttempted) {
                 errorElements[0]['obj'].focus();
                 submitAttempted = false;

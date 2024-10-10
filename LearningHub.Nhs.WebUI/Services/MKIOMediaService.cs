@@ -127,7 +127,7 @@
                 {
                     using (var reader = new StreamReader(stream))
                     {
-                        string qualityLevelRegex = @"([^""\s]+\.m3u8\(encryption=cbc\))";
+                        const string qualityLevelRegex = @"([^""\s]+\.m3u8\(encryption=cbc\))";
                         var toplevelmanifestcontent = reader.ReadToEnd();
 
                         var topLevelManifestBaseUrl = topLeveLManifestUrl.Substring(0, topLeveLManifestUrl.IndexOf(".ism", System.StringComparison.OrdinalIgnoreCase)) + ".ism";

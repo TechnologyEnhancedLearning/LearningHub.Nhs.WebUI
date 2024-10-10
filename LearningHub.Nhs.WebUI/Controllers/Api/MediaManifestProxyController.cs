@@ -7,6 +7,7 @@
     using System.Net.Cache;
     using System.Text.RegularExpressions;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
@@ -53,11 +54,9 @@
                 {
                     using (var reader = new StreamReader(stream))
                     {
-                        string qualityLevelRegex = @"(|)([^""\s]+\.m3u8\(encryption=cbc\))";
+                        const string qualityLevelRegex = @"(|)([^""\s]+\.m3u8\(encryption=cbc\))";
                         const string fragmentsRegex = @"(Fragments\([\w\d=-]+,[\w\d=-]+\))";
-                        string urlRegex = @"("")(https?:\/\/[\da-z\.-]+\.[a-z\.]{2,6}[\/\w \.-]*\/?[\?&][^&=]+=[^&=#]*)("")";
-                        urlRegex = @"(https?:\/\/[\da-z\.-]+\.[a-z\.]{2,6}[\/\w \.-]*)([\?&][^&=]+=[^&=#]*)?";
-                        urlRegex = @"(https?:\/\/[\da-z\.-]+\.[a-z\.]{2,6}[\/\w \.-]*\?[^,\s""]*)";
+                        const string urlRegex = @"(https?:\/\/[\da-z\.-]+\.[a-z\.]{2,6}[\/\w \.-]*\?[^,\s""]*)";
 
                         var baseUrl = playBackUrl.Substring(0, playBackUrl.IndexOf(".ism", System.StringComparison.OrdinalIgnoreCase)) + ".ism";
                         this.logger.LogDebug($"baseUrl={baseUrl}");

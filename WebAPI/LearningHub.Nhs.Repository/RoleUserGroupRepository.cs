@@ -64,6 +64,20 @@
         }
 
         /// <summary>
+        /// The get all for Search.
+        /// </summary>
+        /// <param name="catalogueNodeId">The catalogueNodeId.</param>
+        /// <param name="userId">The userId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<List<RoleUserGroup>> GetAllforSearch(int catalogueNodeId, int userId)
+        {
+            return await this.DbContext.RoleUserGroup.Where(rug => rug.Scope.CatalogueNodeId == catalogueNodeId)
+                                        .Include(n => n.UserGroup).ThenInclude(u => u.UserUserGroup.Where(p => p.UserId == userId))
+                                        .Include(n => n.Scope).AsNoTracking()
+                                        .ToListAsync();
+        }
+
+        /// <summary>
         /// The get by role id and catalogue id.
         /// </summary>
         /// <param name="roleId">The role id.</param>

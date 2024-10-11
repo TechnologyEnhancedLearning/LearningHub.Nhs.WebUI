@@ -296,6 +296,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         public virtual DbSet<FileChunkDetail> FileChunkDetail { get; set; }
 
         /// <summary>
+        /// Gets or sets the ResourceActivityDto. These are not entities. They are returned from the [activity].[GetResourceActivityPerResourceMajorVersion] stored proc..
+        /// </summary>
+        public virtual DbSet<ResourceActivityDTO> ResourceActivityDTO { get; set; }
+
+        /// <summary>
         /// Gets or sets the RecentlyAddedResources. These are not entities. They are returned from the [resources].[GetRecentlyAddedResources] stored proc..
         /// </summary>
         public virtual DbSet<RecentlyAddedResourceViewModel> RecentlyAddedResources { get; set; }
@@ -312,14 +317,14 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         public virtual DbSet<DashboardResourceDto> DashboardResourceDto { get; set; }
 
         /// <summary>
-        /// Gets or sets the ScormContentDetailsViewModel.
+        /// Gets or sets the ExternalContentDetailsViewModel.
         /// </summary>
-        public virtual DbSet<ScormContentDetailsViewModel> ScormContentDetailsViewModel { get; set; }
+        public virtual DbSet<ExternalContentDetailsViewModel> ExternalContentDetailsViewModel { get; set; }
 
         /// <summary>
-        /// Gets or sets the ScormContentServerViewModel.
+        /// Gets or sets the ContentServerViewModel.
         /// </summary>
-        public virtual DbSet<ScormContentServerViewModel> ScormContentServerViewModel { get; set; }
+        public virtual DbSet<ContentServerViewModel> ContentServerViewModel { get; set; }
 
         /// <summary>
         /// Gets or sets the DashboardCatalogueDto
@@ -520,12 +525,12 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// <summary>
         /// Gets or sets the whole slide image annotation.
         /// </summary>
-        public virtual DbSet<WholeSlideImageAnnotation> WholeSlideImageAnnotation { get; set; }
+        public virtual DbSet<ImageAnnotation> ImageAnnotation { get; set; }
 
         /// <summary>
         /// Gets or sets the whole slide image annotation mark.
         /// </summary>
-        public virtual DbSet<WholeSlideImageAnnotationMark> WholeSlideImageAnnotationMark { get; set; }
+        public virtual DbSet<ImageAnnotationMark> ImageAnnotationMark { get; set; }
 
         /// <summary>
         /// Gets or sets the media block.

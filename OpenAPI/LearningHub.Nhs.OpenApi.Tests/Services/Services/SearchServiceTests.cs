@@ -6,6 +6,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
     using FizzWare.NBuilder;
     using FluentAssertions;
     using FluentAssertions.Execution;
+    using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Search;
@@ -73,7 +74,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(FindwiseResultModel.Failure(FindwiseRequestStatus.Timeout));
 
             // When
-            await this.searchService.Search(searchRequest);
+            await this.searchService.Search(searchRequest, null);
 
             // Then
             this.findwiseClient.Verify(fc => fc.Search(searchRequest));
@@ -90,7 +91,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.GivenFindwiseReturnsSuccessfulResponse(74, Enumerable.Range(1, 34));
 
             // When
-            var searchResult = await this.searchService.Search(searchRequest);
+            var searchResult = await this.searchService.Search(searchRequest, null);
 
             // Then
             searchResult.Resources.Count.Should().Be(34);
@@ -137,7 +138,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.GivenFindwiseReturnsSuccessfulResponse(2, new[] { 1, 2, 3 });
 
             // When
-            var searchResult = await this.searchService.Search(searchRequest);
+            var searchResult = await this.searchService.Search(searchRequest, null);
 
             // Then
             searchResult.Resources.Count.Should().Be(2);
@@ -180,7 +181,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 .ReturnsAsync(resources);
 
             // When
-            var searchResultModel = await this.searchService.Search(new ResourceSearchRequest("text", 0, 10));
+            var searchResultModel = await this.searchService.Search(new ResourceSearchRequest("text", 0, 10), null);
 
             // Then
             searchResultModel.Resources.Select(r => r.ResourceId).Should().ContainInOrder(new[] { 1, 3, 2 });
@@ -194,7 +195,6 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             {
                 Builder<Resource>.CreateNew()
                     .With(r => r.Id = 1)
-                    .With(r => r.CurrentResourceVersion = null)
                     .With(
                         r => r.ResourceReference = new[]
                         {
@@ -212,7 +212,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.GivenFindwiseReturnsSuccessfulResponse(1, new[] { 1 });
 
             // When
-            var searchResult = await this.searchService.Search(new ResourceSearchRequest("text", 0, 10));
+            var searchResult = await this.searchService.Search(new ResourceSearchRequest("text", 0, 10), null);
 
             // Then
             using var scope = new AssertionScope();
@@ -233,7 +233,9 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                     string.Empty,
                     expectedResourceReferences,
                     "Article",
-                    0));
+                    0,
+                    0,
+                    new List<MajorVersionIdActivityStatusDescription>(){ }));
         }
 
         private void GivenFindwiseReturnsSuccessfulResponse(int totalHits, IEnumerable<int> resourceIds)

@@ -15,6 +15,15 @@
 
             @if (Context.Request.Path.Value != "/Home/Error" && !SystemOffline())
             {
+              @if (Model.ShowBrowseCatalogues)
+              {
+                <li class="nhsuk-header__navigation-item @Html.IsSelected("Catalogue")">
+                <a class="nhsuk-header__navigation-link" href="/allcatalogue">
+                      Browse catalogues
+                     
+                    </a>
+                  </li>                  
+              }
               @if (Model.ShowMyLearning)
               {
         <li class="nhsuk-header__navigation-item @Html.IsSelected("MyLearning")">

@@ -10,11 +10,10 @@
 
 <div class="search-page">
     <div class="nhsuk-width-container app-width-container">
-
-        <h1 class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6">
-            Search results for @Model.SearchString
-        </h1>
-
+            <h1 class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6">
+            Search results @(!string.IsNullOrEmpty(Model.SearchString) ? "for " + Model.SearchString : string.Empty)
+            </h1>
+            
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-two-thirds">
                 @await Html.PartialAsync("_SearchBar", @Model.SearchString)
@@ -48,7 +47,7 @@
         {
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
-                    <h2 class="nhsuk-heading-l">No results found for @Model.SearchString</h2>
+                    <h2 class="nhsuk-heading-l">No results found @(!string.IsNullOrEmpty(Model.SearchString) ? "for " + Model.SearchString : string.Empty)</h2>
                     <p>You could try:</p>
                     <ul class="nhsuk-list nhsuk-list--bullet">
                         <li>checking your spelling</li>

@@ -38,9 +38,10 @@
         /// </summary>
         /// <param name="playBackUrl">The playBackUrl.</param>
         /// <param name="token">The token.</param>
+        /// <param name="origin">The orgin node.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [Route("Media/MediaManifest")]
-        public IActionResult MediaManifest(string playBackUrl, string token)
+        public IActionResult MediaManifest(string playBackUrl, string token, string origin = "*")
         {
             try
             {
@@ -58,7 +59,8 @@
                     Content = modifiedTopLeveLManifest,
                     ContentType = @"application/vnd.apple.mpegurl",
                 };
-                this.Response.Headers.Append("Access-Control-Allow-Origin", "*");
+
+                this.Response.Headers.Append("Access-Control-Allow-Origin", origin);
                 this.Response.Headers.Append("X-Content-Type-Options", "nosniff");
 
                 return response;

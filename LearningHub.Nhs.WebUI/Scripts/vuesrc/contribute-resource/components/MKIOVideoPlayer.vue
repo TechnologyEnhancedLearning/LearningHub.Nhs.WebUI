@@ -1,4 +1,4 @@
-<link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" />
+﻿<link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" />
 <template>
     <div>
         <div :id="getPlayerUniqueId" class="video-container"></div>
@@ -223,28 +223,50 @@
         width: 100%;
         margin: auto;
         position: relative;
-        --min-width: 0px; /* default value */
+        min-width: var(--min-width, 0px); /* Default fallback value */
     }
 
     /* Media queries to set different min-width values */
+    @media (min-width: 225px) { /* Non standard for graceful */
+        .video-container {
+            --min-width: 200px;
+        }
+    }
+    @media (min-width: 375px) { /* Non standard for graceful */
+        .video-container {
+            --min-width: 300px;
+        }
+    }
+    @media (min-width: 450px) { /* Non standard for graceful */
+        .video-container {
+            --min-width: 400px;
+        }
+    }
     @media (min-width: 576px) {
         .video-container {
-            --min-width: 576px;
+            --min-width: 500px;
         }
     }
-
+    @media (min-width: 650px) { /* Non standard for graceful */
+        .video-container {
+            --min-width: 600px;
+        }
+    }
     @media (min-width: 768px) {
         .video-container {
-            --min-width: 768px;
+            --min-width: 700px;
         }
     }
-
-    @media (min-width: 992px) {
+    @media (min-width: 850px) { /* Non standard for graceful */
         .video-container {
-            --min-width: 992px;
+            --min-width: 800px;
         }
     }
-
+    @media (min-width: 992px) { 
+        .video-container {
+            --min-width: 900px;
+        }
+    }   
     @media (min-width: 1024px) {
         .video-container {
             --min-width: 1024px;
@@ -252,9 +274,9 @@
     }
 
     /* Applying min-width to the video container using the CSS variable */
-    /*.video-container {
+    .video-container {
         min-width: var(--min-width) !important;
-    }*/
+    }
 
     /* Targeting specific div with dynamic ID pattern */
     [id^="videoContainer_"] {

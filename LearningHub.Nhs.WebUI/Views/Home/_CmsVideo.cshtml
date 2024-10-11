@@ -108,7 +108,7 @@
 
     if (checkIfIphone()) {
         var token = model.videoAsset.azureMediaAsset.authenticationToken;
-        url = '@requestURL'+  "Media/MediaManifest?playBackUrl=" + url + "&token=" + token;
+        url = '@requestURL' + "Media/MediaManifest?playBackUrl=" + url + "&token=" + token + "&origin=" + '@requestURL';
     }
     var subtitleTrack = null;
     if (model.videoAsset.azureMediaAsset && model.videoAsset.closedCaptionsFile) {

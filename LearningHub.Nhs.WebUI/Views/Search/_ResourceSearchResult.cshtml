@@ -7,28 +7,24 @@
 @using LearningHub.Nhs.Models.Search.SearchFeedback;
 @using LearningHub.Nhs.Models.Enums;
 @using LearningHub.Nhs.WebUI.Models.Search;
+@using LearningHub.Nhs.Models.Search.SearchClick;
 
 @{
   var resourceResult = Model.ResourceSearchResult;
   var pagingModel = Model.ResourceResultPaging;
   var index = pagingModel.CurrentPage * pagingModel.PageSize;
   var searchString = HttpUtility.UrlEncode(Model.SearchString);
-  var searchSignal = resourceResult.Feedback?.FeedbackAction?.Payload?.SearchSignal;
-  int qVectorIndex = searchSignal.Query?.IndexOf("q_vector") ?? -1;
-  var searchSignalQuery = searchSignal?.Query;
-  // Check if "q_vector" is found in the string. if Yes, Remove "q_vector" and everything after it
-  if (qVectorIndex != -1)
-  {
-    searchSignalQuery = searchSignal?.Query.Substring(0, qVectorIndex);
-  }
-  string GetUrl(int resourceReferenceId, int itemIndex, int nodePathId)
-  {
-    string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
-    string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignalQuery));
 
-    return $@"/search/record-resource-click?url=/Resource/{resourceReferenceId}&nodePathId={nodePathId}&itemIndex={itemIndex}
-&pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={resourceResult.TotalHits}&searchText={searchString}&resourceReferenceId={resourceReferenceId}
-&groupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal?.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal.UserQuery)}&query={searchSignalQueryEncoded}";
+  string GetUrl(int resourceReferenceId, int itemIndex, int nodePathId, SearchClickPayloadModel payload)
+  {
+    var searchSignal = payload?.SearchSignal;
+    string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
+    string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
+
+    return $@"/search/record-resource-click?url=/Resource/{resourceReferenceId}&nodePathId={nodePathId}&itemIndex={payload?.HitNumber}
+&pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={payload?.SearchSignal?.Stats?.TotalHits}&searchText={searchString}&resourceReferenceId={resourceReferenceId}
+&groupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal?.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal.UserQuery)}
+&query={searchSignalQueryEncoded}&title={payload?.DocumentFields?.Title}";
   }
 
   bool showCatalogueFieldsInResources = ViewBag.ShowCatalogueFieldsInResources == null || ViewBag.ShowCatalogueFieldsInResources == true;
@@ -41,7 +37,7 @@
 
   <div class="resource-item nhsuk-list-item--border nhsuk-u-padding-bottom-4 nhsuk-u-margin-bottom-4">
     <h2 class="nhsuk-heading-xs nhsuk-u-margin-bottom-2">
-      <a class="nhsuk-card__link" href="@GetUrl(item.ResourceReferenceId, index, item.NodePathId??0)">@item.Title</a>
+      <a class="nhsuk-card__link" href="@GetUrl(item.ResourceReferenceId, index, item.NodePathId??0, item.Click.Payload)">@item.Title</a>
     </h2>
 
     @if (provider != null)

@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>    
+    <ProjectReference Include="..\..\LearningHub.Nhs.Models.DLS\LearningHub.Nhs.Models.DLS.csproj" />    
     <ProjectReference Include="..\MigrationTool\LearningHub.Nhs.Migration.Models\LearningHub.Nhs.Migration.Models.csproj" />
   </ItemGroup>
 

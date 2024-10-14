@@ -1,36 +1,47 @@
 ﻿namespace LearningHub.Nhs.Api.Controllers
 {
-    using LearningHub.Nhs.Api.DLSEntities;
+    using LearningHub.Nhs.Models.DLS;
     using LearningHub.Nhs.Repository;
+    using LearningHub.Nhs.Services.Interface;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// The DLS Device Types Controller.
     /// </summary>
-    public class DLSDeviceTypeController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class DLSDeviceTypeController : ApiControllerBase
     {
-        private readonly DLSDbContext dlsDbContext;
+        /// <summary>
+        /// The MyDLSDeviceType service.
+        /// </summary>
+        private readonly IDLSDeviceTypeService dlsDeviceTypeService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DLSDeviceTypeController"/> class.
         /// </summary>
-        /// <param name="context">The DLS DB context.</param>
-        public DLSDeviceTypeController(DLSDbContext context)
+        /// <param name="userService">The user service.</param>
+        /// <param name="dlsDeviceTypeService">The DLS DeviceTypeService.</param>
+        /// <param name="logger">The logger.</param>
+        public DLSDeviceTypeController(IUserService userService, IDLSDeviceTypeService dlsDeviceTypeService, ILogger<DLSDeviceTypeController> logger)
+            : base(userService, logger)
         {
-            this.dlsDbContext = context;
+            this.dlsDeviceTypeService = dlsDeviceTypeService;
         }
 
         /// <summary>
-        /// GET Details.
+        /// Get Details.
         /// </summary>
         /// <param name="id">The Id.</param>
         /// <returns>The <see cref="ActionResult"/>.</returns>
+        [HttpGet]
         public ActionResult Details(int id)
         {
             try
             {
-                var deviceTypes = this.dlsDbContext.DeviceTypes.Find(id);
+                var deviceTypes = this.dlsDeviceTypeService.Details(id);
 
                 return this.Ok(deviceTypes);
             }
@@ -50,13 +61,7 @@
         {
             try
             {
-                var deviceTypes = new DeviceTypes
-                {
-                    DeviceType = deviceType,
-                };
-                this.dlsDbContext.DeviceTypes.Add(deviceTypes);
-
-                this.dlsDbContext.SaveChanges();
+                this.dlsDeviceTypeService.Create(deviceType);
 
                 return this.Ok();
             }
@@ -77,14 +82,7 @@
         {
             try
             {
-                var deviceTypes = new DeviceTypes
-                {
-                    DeviceTypeId = id,
-                    DeviceType = deviceType,
-                };
-                this.dlsDbContext.DeviceTypes.Update(deviceTypes);
-
-                this.dlsDbContext.SaveChanges();
+                this.dlsDeviceTypeService.Edit(id, deviceType);
 
                 return this.Ok();
             }
@@ -104,14 +102,7 @@
         {
             try
             {
-                var deviceTypes = new DeviceTypes
-                {
-                    DeviceTypeId = id,
-                };
-                this.dlsDbContext.DeviceTypes.Remove(deviceTypes);
-
-                this.dlsDbContext.SaveChanges();
-
+                this.dlsDeviceTypeService.Delete(id);
                 return this.Ok();
             }
             catch

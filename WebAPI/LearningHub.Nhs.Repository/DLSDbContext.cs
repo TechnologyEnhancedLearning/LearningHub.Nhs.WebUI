@@ -1,6 +1,6 @@
 ﻿namespace LearningHub.Nhs.Repository
 {
-    using LearningHub.Nhs.Api.DLSEntities;
+    using LearningHub.Nhs.Models.DLS;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -11,16 +11,24 @@
         /// <summary>
         /// The options..
         /// </summary>
-        private readonly DbContextOptions<DLSDbContext> options;
+        private readonly DLSDbContextOptions options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DLSDbContext"/> class.
         /// </summary>
         /// <param name="options">The options<see cref="DbContextOptions"/>.</param>
-        public DLSDbContext(DbContextOptions<DLSDbContext> options)
-            : base(options)
+        public DLSDbContext(DLSDbContextOptions options)
+            : base(options.Options)
         {
             this.options = options;
+        }
+
+        /// <summary>
+        /// Gets the Options.
+        /// </summary>
+        public DLSDbContextOptions Options
+        {
+            get { return this.options; }
         }
 
         /// <summary>

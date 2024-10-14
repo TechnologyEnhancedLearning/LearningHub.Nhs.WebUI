@@ -1,4 +1,4 @@
-﻿namespace LearningHub.Nhs.Api.DLSEntities
+﻿namespace LearningHub.Nhs.Models.DLS
 {
     using System.ComponentModel.DataAnnotations;
 
@@ -11,7 +11,7 @@
         /// Gets or sets the id for the DLSDeviceType.
         /// </summary>
         [Key]
-        public int DeviceTypeId { get; set; }
+        public int DeviceTypeID { get; set; }
 
         /// <summary>
         /// Gets or sets the deviceType for the DLSDeviceType.

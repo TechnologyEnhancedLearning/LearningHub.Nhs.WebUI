@@ -249,10 +249,17 @@ namespace LearningHub.Nhs.Api
             services.AddScoped<IInternalSystemService, InternalSystemService>();
             services.AddTransient<IUserLearningRecordService, UserLearningRecordService>();
 
-            services.AddDbContext<DLSDbContext>(options =>
-                options.UseSqlServer(
-                    configuration.GetConnectionString("DLSDbConnection"),
-                    providerOptions => { providerOptions.EnableRetryOnFailure(maxDatabaseRetryAttempts); }));
+            var dLSDbContextOptions = new DbContextOptionsBuilder<DLSDbContext>()
+               .UseSqlServer(configuration.GetConnectionString("DLSDbConnection"), providerOptions => { providerOptions.EnableRetryOnFailure(maxDatabaseRetryAttempts); })
+               .Options;
+
+            services.AddSingleton(dLSDbContextOptions);
+            services.AddSingleton<DLSDbContextOptions>();
+
+            services.AddDbContext<DLSDbContext>();
+
+            services.AddScoped<IDLSDeviceTypeRepository, DLSDeviceTypeRepository>();
+            services.AddScoped<IDLSDeviceTypeService, DLSDeviceTypeService>();
 
             // External
             services.AddScoped<IUserProfileService, UserProfileService>();

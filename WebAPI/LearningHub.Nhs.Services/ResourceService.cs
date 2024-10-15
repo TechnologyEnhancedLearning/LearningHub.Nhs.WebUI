@@ -1772,7 +1772,8 @@ namespace LearningHub.Nhs.Services
             bool doesKeywordAlreadyExist = await this.resourceVersionKeywordRepository.DoesResourceVersionKeywordAlreadyExistAsync(rvk.ResourceVersionId, rvk.Keyword);
             if (doesKeywordAlreadyExist)
             {
-                return new LearningHubValidationResult(false, "This keyword has already been added.");
+                retVal.CreatedId = 0;
+                return retVal;
             }
 
             retVal.CreatedId = await this.resourceVersionKeywordRepository.CreateAsync(userId, rvk);

@@ -214,8 +214,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="timeOfSearch">time of search.</param>
         /// <param name="userQuery">user query.</param>
         /// <param name="query">search query.</param>
+        /// <param name="title">the title.</param>
         [HttpGet("record-resource-click")]
-        public void RecordResourceClick(string url, int nodePathId, int itemIndex, int pageIndex, int totalNumberOfHits, string searchText, int resourceReferenceId, Guid groupId, string searchId, long timeOfSearch, string userQuery, string query)
+        public void RecordResourceClick(string url, int nodePathId, int itemIndex, int pageIndex, int totalNumberOfHits, string searchText, int resourceReferenceId, Guid groupId, string searchId, long timeOfSearch, string userQuery, string query, string title)
         {
             var searchActionResourceModel = new SearchActionResourceModel
             {
@@ -230,6 +231,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 TimeOfSearch = timeOfSearch,
                 UserQuery = userQuery,
                 Query = query,
+                Title = title,
             };
 
             this.searchService.CreateResourceSearchActionAsync(searchActionResourceModel);
@@ -251,9 +253,10 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="timeOfSearch">time of search.</param>
         /// <param name="userQuery">user query.</param>
         /// <param name="query">search query.</param>
+        /// <param name="name">the name.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [HttpGet("record-catalogue-click")]
-        public async Task<IActionResult> RecordCatalogueClick(string url, int nodePathId, int itemIndex, int pageIndex, int totalNumberOfHits, string searchText, int catalogueId, Guid groupId, string searchId, long timeOfSearch, string userQuery, string query)
+        public async Task<IActionResult> RecordCatalogueClick(string url, int nodePathId, int itemIndex, int pageIndex, int totalNumberOfHits, string searchText, int catalogueId, Guid groupId, string searchId, long timeOfSearch, string userQuery, string query, string name)
         {
             SearchActionCatalogueModel searchActionCatalogueModel = new SearchActionCatalogueModel
             {
@@ -268,6 +271,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 TimeOfSearch = timeOfSearch,
                 UserQuery = userQuery,
                 Query = query,
+                Name = name,
             };
 
             await this.searchService.CreateCatalogueSearchActionAsync(searchActionCatalogueModel);

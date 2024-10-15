@@ -68,6 +68,7 @@
         /// <param name="filePath">filePath.</param>
         /// <returns>bool.</returns>
         //// [ResponseCache(VaryByQueryKeys = new[] { "*" }, Duration = 0, NoStore = true)] // disable caching
+        //// Removed Request.Headers["Referer"] Referer URL checking based on issue reported in TD-4283
         [AllowAnonymous]
         [Route("ScormContent/{*filePath}")]
         public async Task<IActionResult> ScormContent(string filePath)
@@ -79,12 +80,6 @@
 
             try
             {
-                var referringUrl = this.Request.Headers["Referer"].ToString();
-                if (string.IsNullOrEmpty(referringUrl))
-                {
-                    throw new UnauthorizedAccessException("Referer URL is required.");
-                }
-
                 if (!this.User.Identity.IsAuthenticated)
                 {
                     throw new UnauthorizedAccessException("User is not authenticated.");

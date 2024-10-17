@@ -526,7 +526,6 @@
     <None Include="Scripts\Post-Deploy\Scripts\PPSXFileType.sql" />
     <Build Include="Stored Procedures\Resources\GetMyLearningCertificatesDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetMyInProgressDashboardResources.sql" />
-    <Build Include="Scripts\External\AddDigitalLearningSolutionsSso.sql" />
     <Build Include="Stored Procedures\Resources\GetContributions.sql" />
     <Build Include="Stored Procedures\Resources\GetMyRecentCompletedDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetRecentDashboardResources.sql" />

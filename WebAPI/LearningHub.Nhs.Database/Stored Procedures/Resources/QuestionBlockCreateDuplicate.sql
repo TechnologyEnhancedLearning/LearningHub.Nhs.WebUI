@@ -134,9 +134,11 @@ BEGIN
     
     EXECUTE resources.TextBlockCreateDuplicate @CurrentQuestionContentBlockIds, @CopiedQuestionBlocksTable, @UserId, @UserTimezoneOffset
 
+    EXECUTE resources.WholeSlideImageCreateDuplicate @CurrentQuestionContentBlockIds, @CopiedQuestionBlocksTable, @UserId, @UserTimezoneOffset
+
     EXECUTE resources.MediaBlockCreateDuplicate @CurrentQuestionContentBlockIds, @CopiedQuestionBlocksTable, @UserId, @UserTimezoneOffset
     
-    EXECUTE resources.WholeSlideImageCreateDuplicate @CurrentQuestionContentBlockIds, @CopiedQuestionBlocksTable, @UserId, @UserTimezoneOffset
+    
 
     -- PART 3
     -- Duplicate the Text and Media Blocks in the FeedbackBlockCollections

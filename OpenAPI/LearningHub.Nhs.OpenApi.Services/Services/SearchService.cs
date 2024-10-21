@@ -83,6 +83,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             FindwiseResultModel findwiseResultModel, int? currentUserId)
         {
             List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
+            List<ResourceMetadataViewModel> resourceMetadataViewModels = new List<ResourceMetadataViewModel>() { };
             var documentsFound = findwiseResultModel.SearchResults?.DocumentList.Documents?.ToList() ??
                                  new List<Document>();
             var findwiseResourceIds = documentsFound.Select(d => int.Parse(d.Id)).ToList();
@@ -102,7 +103,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
             }
 
-            List<ResourceMetadataViewModel> resourceMetadataViewModels = resourcesFound.Select(resource => this.MapToViewModel(resource, resourceActivities.Where(x => x.ResourceId == resource.Id).ToList()))
+            resourceMetadataViewModels = resourcesFound.Select(resource => this.MapToViewModel(resource, resourceActivities.Where(x => x.ResourceId == resource.Id).ToList()))
                 .OrderBySequence(findwiseResourceIds)
                 .ToList();
 

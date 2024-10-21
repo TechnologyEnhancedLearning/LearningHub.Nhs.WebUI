@@ -31,7 +31,7 @@ BEGIN
 	INSERT INTO @MyActivity					
 			SELECT TOP (@MaxRows) ra.ResourceId, MAX(ra.Id) ResourceActivityId
 				FROM 
-				(SELECT a.Id,a.ResourceId,a.ResourceVersionId,a.LaunchResourceActivityId,a.UserId,a.ActivityStatusId,a.ActivityStart FROM activity.ResourceActivity a LEFT JOIN (SELECT ResourceId, MAX(Id) as id FROM activity.ResourceActivity GROUP BY ResourceId) AS b ON a.ResourceId = b.ResourceId AND a.id = b.id  order by a.Id desc OFFSET 0 ROWS) ra	
+				(SELECT a.Id,a.ResourceId,a.ResourceVersionId,a.LaunchResourceActivityId,a.UserId,a.ActivityStatusId,a.ActivityStart FROM activity.ResourceActivity a INNER JOIN (SELECT ResourceId, MAX(Id) as id FROM activity.ResourceActivity GROUP BY ResourceId) AS b ON a.ResourceId = b.ResourceId AND a.id = b.id  order by a.Id desc OFFSET 0 ROWS) ra	
 				JOIN [resources].[Resource] r ON  ra.ResourceId = r.Id
 				JOIN [resources].[ResourceVersion] rv ON  rv.Id = ra.ResourceVersionId
 				LEFT JOIN [resources].[AssessmentResourceVersion] arv ON arv.ResourceVersionId = ra.ResourceVersionId

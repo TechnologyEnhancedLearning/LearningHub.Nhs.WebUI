@@ -13,6 +13,12 @@
             <h1 class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6">
             Search results @(!string.IsNullOrEmpty(Model.SearchString) ? "for " + Model.SearchString : string.Empty)
             </h1>
+        @if (Model.DidYouMeanEnabled)
+        {
+            <h6 class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6">
+                We couldn't find a match for <em>@(Model.SearchString)</em>, try adjusting your search terms or explore the suggestions below.
+            </h6>
+        }
             
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-two-thirds">

@@ -78,5 +78,10 @@
         /// Gets or sets the catalogue result paging.
         /// </summary>
         public PagingViewModel CatalogueResultPaging { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Did You Mean Enabled or not.
+        /// </summary>
+        public bool DidYouMeanEnabled { get; set; }
     }
 }

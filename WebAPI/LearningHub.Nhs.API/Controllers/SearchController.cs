@@ -319,6 +319,7 @@
 
             searchViewModel.Feedback = results.Feedback;
             searchViewModel.RelatedCatalogues = await this.catalogueService.GetCatalogues(catalogueIds);
+            searchViewModel.Spell = results.Spell;
 
             return searchViewModel;
         }
@@ -390,6 +391,7 @@
 
             searchViewModel.SearchId = catalogueSearchRequestModel.SearchId > 0 ? catalogueSearchRequestModel.SearchId : results.SearchId;
             searchViewModel.Feedback = results.Feedback;
+            searchViewModel.Spell = results.Spell;
 
             return searchViewModel;
         }

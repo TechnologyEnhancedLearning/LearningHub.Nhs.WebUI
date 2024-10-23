@@ -69,5 +69,10 @@
         /// Gets or sets a value indicating whether to show my account.
         /// </summary>
         public bool ShowMyAccount { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show Browse Catalogues.
+        /// </summary>
+        public bool ShowBrowseCatalogues { get; set; }
     }
 }

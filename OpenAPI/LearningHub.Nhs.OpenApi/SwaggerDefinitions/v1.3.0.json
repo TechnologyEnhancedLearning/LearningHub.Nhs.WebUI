@@ -1,9 +1,9 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.2",
     "info": {
         "title": "LearningHub.NHS.OpenAPI",
         "version": "1.3.0",
-        "description": "A set of API endpoints for retrieving learning resource information from the Learning Hub learning platform. The [Learning Hub](https://learninghub.nhs.uk/) is a platform for hosting and sharing learning resources for health and social care provided by Technology Enhanced Learning (TEL) at NHS England. An application API key must be used to authorise calls to the API from external applications. To contact TEL to discuss connecting your external system to the Learning Hub, email [england.tel@nhs.net](england.tel@nhs.net)"
+        "description": "A set of API endpoints for retrieving learning resource information from the Learning Hub learning platform. The [Learning Hub](https://learninghub.nhs.uk/) is a platform for hosting and sharing learning resources for health and social care provided by Technology Enhanced Learning (TEL) at NHS England. An application API key must be used to authorise calls to the API from external applications. To contact TEL to discuss connecting your external system to the Learning Hub, email england.tel@nhs.net."
     },
   "paths": {
     "/Bookmark/GetAllByParent": {
@@ -296,7 +296,7 @@
         }
       }
     },
-    "/Resource/ActivityStatus/{activityStatusId}": {
+    "/Resource/User/{activityStatusId}": {
       "get": {
         "tags": [ "Resource" ],
         "summary": "Get resource references by activity status",
@@ -335,6 +335,35 @@
           },
           "403": {
             "description": "Forbidden: The activityStatusId is not defined within ActivityStatusEnum or is in the list of activityStatusIdsNotInUseInDB."
+          },
+          "500": {
+            "description": "Internal server error: An unexpected error occurred while processing the request."
+          }
+        }
+      }
+    },
+    "/Resource/User/Certificates": {
+      "get": {
+        "tags": [ "Resource" ],
+        "summary": "Get resource references where a major version has a certificate",
+        "operationId": "GetResourceReferencesByCertificates",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResourceReferenceWithResourceDetailsViewModel"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: User Id required."
           },
           "500": {
             "description": "Internal server error: An unexpected error occurred while processing the request."

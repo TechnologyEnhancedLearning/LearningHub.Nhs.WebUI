@@ -121,5 +121,21 @@
         /// <param name="catalogueName">The catalogue name.</param>
         /// <returns>The catalogue's node id.</returns>
         Task<int> GetNodeIdByCatalogueName(string catalogueName);
+
+        /// <summary>
+        /// Gets the catalogues count in alphabet list.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <returns>The catalogues alphabet count list.</returns>
+        List<AllCatalogueAlphabetModel> GetAllCataloguesAlphaCount(int userId);
+
+        /// <summary>
+        /// Gets catalogues based on filter character.
+        /// </summary>
+        /// <param name="pageSize">The pageSize.</param>
+        /// <param name="filterChar">The filterChar.</param>
+        /// <param name="userId">The userId.</param>
+        /// <returns>The catalogues.</returns>
+        Task<List<AllCatalogueViewModel>> GetAllCataloguesAsync(int pageSize, string filterChar, int userId);
     }
 }

@@ -36,7 +36,7 @@
         <tr>
           <td>
             <span class="nhsuk-u-text-align-left table-content-spacing">
-              @if (userLearningRecord.ResourceReferenceId > 0 && userLearningRecord.VersionStatusId != (int?)VersionStatusEnum.Unpublished)
+              @if (userLearningRecord.IsCurrentResourceVersion && userLearningRecord.ResourceReferenceId > 0 && userLearningRecord.VersionStatusId != (int?)VersionStatusEnum.Unpublished)
               {
                 <span>
                   <a class="learning-td" href="@resourceUrl/@userLearningRecord.ResourceReferenceId" target="_blank">@userLearningRecord.Title</a><br />
@@ -46,7 +46,8 @@
               else
               {
                 <span class="learning-td">
-                  @userLearningRecord.Title
+                  @userLearningRecord.Title<br />
+                  <b>Last @LearningActivityHelper.GetResourceTypeVerb(userLearningRecord).ToLower() on : </b>  @userLearningRecord.ActivityDate.DateTime.ToString("dd MMM yyyy") at @userLearningRecord.ActivityDate.DateTime.ToShortTimeString()<br />
                 </span>
 
               }

@@ -17,6 +17,11 @@
 // Resource content section -----------------------------------------
 #mediacontainer .azuremediaplayer {
     border: 1px solid $nhsuk-grey-light;
+
+    button.vjs-big-play-button:before {
+        width: 60%;
+    }
+
 }
 
 .image-container {

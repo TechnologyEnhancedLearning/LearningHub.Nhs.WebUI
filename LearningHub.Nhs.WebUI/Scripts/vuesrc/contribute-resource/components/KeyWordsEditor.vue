@@ -4,7 +4,7 @@
         <div class="row">
             <div class="form-group" v-bind:class="{ 'input-validation-error': keywordError }">
                 <div class="col-12 mb-0 error-text" v-if="keywordError">
-                    <span class="text-danger">This keyword has already been added.</span>
+                    <span class="text-danger">The keyword(s) have already been added : {{formattedkeywordErrorMessage}}</span>
                 </div>
                 <div class="col-12 mb-0 error-text" v-if="keywordLengthExceeded">
                     <span class="text-danger">
@@ -60,6 +60,7 @@
                 newKeyword: '',
                 keywordError: false,
                 keywordLengthExceeded: false,
+                keywordErrorMessage: []
             }
         },
         computed: {
@@ -69,19 +70,23 @@
             newKeywordTrimmed(): string {
                 return this.newKeyword?.trim().replace(/ +(?= )/g, '').toLowerCase();
             },
+            formattedkeywordErrorMessage(): string {
+                return this.keywordErrorMessage.join(', ');
+            },
         },
         methods: {
             keywordChange() {
                 this.keywordError = false;
                 this.keywordLengthExceeded = false;
+                this.keywordErrorMessage = [];
             },
             async addKeyword() {  
                 if (this.newKeyword && this.newKeywordTrimmed.length > 0) {
+                    this.keywordChange();
                     let allTrimmedKeyword = this.newKeywordTrimmed.toLowerCase().split(',');
                     allTrimmedKeyword = allTrimmedKeyword.filter(e => String(e).trim());
-                    if (!this.resourceDetails.resourceKeywords.find(_keyword => allTrimmedKeyword.includes(_keyword.keyword.toLowerCase()))) {
                         for (var i = 0; i < allTrimmedKeyword.length; i++) {
-                            let item = allTrimmedKeyword[i];
+                            let item = allTrimmedKeyword[i].trim();
                             if (item.length > 0 && item.length <= 50) {
                                 let newKeywordObj = new KeywordModel({
                                     keyword: item,
@@ -90,8 +95,11 @@
                                 newKeywordObj = await resourceData.addKeyword(this.resourceVersionId, newKeywordObj);
                                 if (newKeywordObj.id > 0) {
                                     this.resourceDetails.resourceKeywords.push(newKeywordObj);
-                                    this.keywordError = false;
                                     this.newKeyword = '';
+                                } else if (newKeywordObj.id == 0) {
+                                    this.newKeyword = '';
+                                    this.keywordError = true;
+                                    this.keywordErrorMessage.push(item);
                                 }
                                 else {
                                     this.keywordError = true;
@@ -103,10 +111,6 @@
                                 this.keywordLengthExceeded = true;
                             }
                         }
-                    }                    
-                    else {
-                        this.keywordError = true;
-                    }
                 }
             },
             async deleteKeyword(keywordId: number) {

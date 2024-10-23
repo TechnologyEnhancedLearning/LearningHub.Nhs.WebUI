@@ -108,6 +108,9 @@
                   <a target="_blank" asp-controller="mylearning" asp-action="certificate" asp-route-resourceReferenceId="@activity.ResourceReferenceId" asp-route-majorVersion="@activity.MajorVersion" asp-route-minorVersion="@activity.MinorVersion">View certificate</a>
                 }
               }
+              else {
+                  <span class="nhsuk-u-visually-hidden">Certificate unavailable</span>
+              }
             </span>
           </td>
           <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">

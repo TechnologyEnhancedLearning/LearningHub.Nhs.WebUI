@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
@@ -16,7 +16,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.34" />
+      <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.39" />
     </ItemGroup>
 
     <ItemGroup>

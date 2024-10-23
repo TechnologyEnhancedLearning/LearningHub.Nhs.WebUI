@@ -15,7 +15,7 @@
     [Authorize]
     [Route("Bookmark")]
     [ApiController]
-    public class BookmarkController : Controller
+    public class BookmarkController : OpenApiControllerBase
     {
         private readonly IBookmarkService bookmarkService;
 
@@ -29,6 +29,7 @@
         }
 
         /// <summary>
+        /// <summary>
         /// Gets all bookmarks by parent.
         /// </summary>
         /// <returns>Bookmarks.</returns>
@@ -36,11 +37,7 @@
         [Route("GetAllByParent")]
         public async Task<IEnumerable<UserBookmarkViewModel>> GetAllByParent()
         {
-            var accessToken = await this.HttpContext
-                .GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
-
-            return await this.bookmarkService.GetAllByParent(
-                accessToken);
+            return await this.bookmarkService.GetAllByParent(this.TokenWithoutBearer);
         }
     }
 }

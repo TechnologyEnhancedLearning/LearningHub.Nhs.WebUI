@@ -84,7 +84,7 @@
         <div class="row">
             <div class="form-group" v-bind:class="{ 'input-validation-error': keywordError }">
                 <div class="col-12 mb-0 error-text" v-if="keywordError">
-                    <span class="text-danger">This keyword has already been added.</span>
+                    <span class="text-danger">The keyword(s) have already been added : {{formattedkeywordErrorMessage}}</span>
                 </div>
                 <div class="col-12 mb-0 error-text" v-if="keywordLengthExceeded">
                     <span class="text-danger">
@@ -292,6 +292,7 @@
                 ResourceType,
                 resourceProviderId: null,
                 keywordLengthExceeded: false,
+                keywordErrorMessage:[]
             };
         },
         computed: {
@@ -331,7 +332,7 @@
                     !Boolean(this.$route.query.initialCreate);                                 // or if the user is editing an existing draft (initialCreate=false)
             },
             newKeywordTrimmed(): string {
-                return this.newKeyword?.trim().replace(/ +(?= )/g, '').toLowerCase();
+                return this.newKeyword?.trim().replace(/ +(?= )/g, '');
             },
             showProviders(): boolean {
                 if (!this.$store.state.userProviders) {
@@ -339,6 +340,9 @@
                 } else {
                     return this.$store.state.userProviders.length > 0;
                 }
+            },
+            formattedkeywordErrorMessage(): string {
+                return this.keywordErrorMessage.join(', ');
             },
         },
         created() {
@@ -393,7 +397,7 @@
                 this.keywords = this.resourceDetail.resourceKeywords.map(obj => {
                     let kw = new KeywordModel();
                     kw.id = obj.id;
-                    kw.keyword = obj.keyword.toLowerCase();
+                    kw.keyword = obj.keyword;
                     return kw;
                 });
                 if (this.resourceDetail.resourceProviderId > 0) {
@@ -485,6 +489,7 @@
                 keywordChange() {
                     this.keywordError = false;
                     this.keywordLengthExceeded = false;
+                    this.keywordErrorMessage = [];
                 },
                 resetSelectedLicence() {
                     this.resourceLicenceId = 0;
@@ -532,11 +537,11 @@
                 },
             async addKeyword() {
                     if (this.newKeyword && this.newKeywordTrimmed.length > 0) {
+                        this.keywordChange();
                         let allTrimmedKeyword = this.newKeywordTrimmed.toLowerCase().split(',');
                         allTrimmedKeyword = allTrimmedKeyword.filter(e => String(e).trim());
-                        if (!this.keywords.find(_keyword => allTrimmedKeyword.includes(_keyword.keyword.toLowerCase()))) {
                             for (var i = 0; i < allTrimmedKeyword.length; i++) {
-                                let item = allTrimmedKeyword[i];
+                                let item = allTrimmedKeyword[i].trim();
                                 if (item.length > 0 && item.length <= 50) {
                                     let newkeywordObj = new KeywordModel();
                                     newkeywordObj.keyword = item;
@@ -548,22 +553,22 @@
                                         if (this.resourceDetail.resourceVersionId == 0) {
                                             this.$store.commit('setResourceVersionId', newkeywordObj.resourceVersionId)
                                         }
-                                        this.keywordError = false;
                                         this.newKeyword = '';
-                                    } else {
+                                    } else if (newkeywordObj.id == 0) {
+                                        this.newKeyword = '';
+                                        this.keywordError = true;
+                                        this.keywordErrorMessage.push(item);
+                                    }
+                                    else {
                                         this.keywordError = true;
                                         break;
-                                    }
+                                }
                                 }
                                 else {
                                     this.keywordLengthExceeded = true;
                                     break;
                                 }
                             }
-                        }
-                        else {
-                            this.keywordError = true;
-                        }
                     }
                     else {
                         this.newKeyword = '';

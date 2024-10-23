@@ -187,6 +187,18 @@ body {
     }
 }
 
+button[data-toggle="modal"] {
+    color: #005eb8;
+    padding: 0;
+    border: none;
+    background: none;
+
+    &:focus {
+        background: yellow;
+        border-bottom: 4px solid;
+    }
+}
+
 /* large desktop */
 @media (min-width: px2rem(990)) {
 

@@ -236,7 +236,7 @@
             var viewModels = new List<MyLearningDetailedItemViewModel>();
 
             var activityNodes = (from entity in resourceActivities
-                                 let data = entity.NodePath.NodeId
+                                 let data = entity.NodePath.CatalogueNodeId
                                  select data).Distinct().ToArray();
 
             var activityCatalogues = this.catalogueNodeVersionRepository.GetAll()
@@ -296,7 +296,7 @@
                 }
 
                 var catalogueNodeVersion = await activityCatalogues
-                .SingleOrDefaultAsync(x => x.NodeVersion.NodeId == resourceActivity.NodePath.NodeId);
+                .SingleOrDefaultAsync(x => x.NodeVersion.NodeId == resourceActivity.NodePath.CatalogueNodeId);
                 if (catalogueNodeVersion != null)
                 {
                     viewModel.CertificateUrl = catalogueNodeVersion.CertificateUrl;

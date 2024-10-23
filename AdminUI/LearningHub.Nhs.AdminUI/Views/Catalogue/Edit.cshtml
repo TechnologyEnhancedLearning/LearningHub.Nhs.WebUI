@@ -360,7 +360,7 @@
 
         // Split the input value by commas and trim each keyword
         var values = value.split(',').map(function (item) {
-          return item.trim();
+                    return item.trim().toLowerCase();
         });
 
         var duplicateKeywords = [];
@@ -386,7 +386,7 @@
           }
         });
 
-        $keywordInput.val("");      
+        $keywordInput.val("");
         if (keywords.length > 4) {
           $('#add-keyword').attr('disabled', 'disabled');
           $('#add-keyword-input').attr('disabled', 'disabled');

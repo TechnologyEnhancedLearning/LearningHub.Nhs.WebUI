@@ -11,7 +11,7 @@ namespace LearningHub.Nhs.Services
     using LearningHub.Nhs.Models.Entities.Analytics;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Search;
-    using LearningHub.Nhs.Models.Search.SearchFeedback;
+    using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.Services.Helpers;
     using LearningHub.Nhs.Services.Interface;
@@ -512,7 +512,7 @@ namespace LearningHub.Nhs.Services
         /// </returns>
         public async Task<bool> SendResourceSearchEventClickAsync(SearchActionResourceModel searchActionResourceModel)
         {
-            var searchClickPayloadModel = this.mapper.Map<SearchFeedbackPayloadModel>(searchActionResourceModel);
+            var searchClickPayloadModel = this.mapper.Map<SearchClickPayloadModel>(searchActionResourceModel);
             searchClickPayloadModel.TimeOfClick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             searchClickPayloadModel.SearchSignal.ProfileSignature.ApplicationId = ApplicationId;
             searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileType = ProfileType;
@@ -532,13 +532,60 @@ namespace LearningHub.Nhs.Services
         /// </returns>
         public async Task<bool> SendCatalogueSearchEventAsync(SearchActionCatalogueModel searchActionCatalogueModel)
         {
-            var searchClickPayloadModel = this.mapper.Map<SearchFeedbackPayloadModel>(searchActionCatalogueModel);
+            var searchClickPayloadModel = this.mapper.Map<SearchClickPayloadModel>(searchActionCatalogueModel);
             searchClickPayloadModel.TimeOfClick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             searchClickPayloadModel.SearchSignal.ProfileSignature.ApplicationId = ApplicationId;
             searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileType = ProfileType;
             searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileId = this.settings.Findwise.CollectionIds.Catalogue;
 
             return await this.SendSearchEventClickAsync(searchClickPayloadModel, false);
+        }
+
+        /// <summary>
+        /// Gets AllCatalogue search results from findwise api call.
+        /// </summary>
+        /// <param name="catalogSearchRequestModel">The allcatalog search request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<SearchAllCatalogueResultModel> GetAllCatalogueSearchResultsAsync(AllCatalogueSearchRequestModel catalogSearchRequestModel)
+        {
+            var viewmodel = new SearchAllCatalogueResultModel();
+            try
+            {
+                var offset = catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize;
+                var client = await this.FindWiseHttpClient.GetClient(this.settings.Findwise.SearchUrl);
+                var request = string.Format(
+                    this.settings.Findwise.UrlSearchComponent + "?offset={1}&hits={2}&q={3}&token={4}",
+                    this.settings.Findwise.CollectionIds.Catalogue,
+                    offset,
+                    catalogSearchRequestModel.PageSize,
+                    this.EncodeSearchText(catalogSearchRequestModel.SearchText),
+                    this.settings.Findwise.Token);
+
+                var response = await client.GetAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    viewmodel = JsonConvert.DeserializeObject<SearchAllCatalogueResultModel>(result);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    this.Logger.LogError($"Get AllCatalogue Search Result failed in FindWise, HTTP Status Code:{response.StatusCode}");
+                    throw new Exception("AccessDenied to FindWise Server");
+                }
+                else
+                {
+                    var error = response.Content.ReadAsStringAsync().Result.ToString();
+                    this.Logger.LogError($"Get AllCatalogue Search Result failed in FindWise, HTTP Status Code:{response.StatusCode}, Error Message:{error}");
+                    throw new Exception("Error with FindWise Server");
+                }
+
+                return viewmodel;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -549,7 +596,7 @@ namespace LearningHub.Nhs.Services
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        private async Task<bool> SendSearchEventClickAsync(SearchFeedbackPayloadModel searchClickPayloadModel, bool isResource)
+        private async Task<bool> SendSearchEventClickAsync(SearchClickPayloadModel searchClickPayloadModel, bool isResource)
         {
             var eventType = isResource ? "resource" : "catalog";
 

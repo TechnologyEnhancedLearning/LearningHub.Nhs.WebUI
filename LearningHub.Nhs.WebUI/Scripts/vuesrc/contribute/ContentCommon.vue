@@ -332,7 +332,7 @@
                     !Boolean(this.$route.query.initialCreate);                                 // or if the user is editing an existing draft (initialCreate=false)
             },
             newKeywordTrimmed(): string {
-                return this.newKeyword?.trim().replace(/ +(?= )/g, '').toLowerCase();
+                return this.newKeyword?.trim().replace(/ +(?= )/g, '');
             },
             showProviders(): boolean {
                 if (!this.$store.state.userProviders) {
@@ -397,7 +397,7 @@
                 this.keywords = this.resourceDetail.resourceKeywords.map(obj => {
                     let kw = new KeywordModel();
                     kw.id = obj.id;
-                    kw.keyword = obj.keyword.toLowerCase();
+                    kw.keyword = obj.keyword;
                     return kw;
                 });
                 if (this.resourceDetail.resourceProviderId > 0) {
@@ -537,10 +537,11 @@
                 },
             async addKeyword() {
                     if (this.newKeyword && this.newKeywordTrimmed.length > 0) {
+                        this.keywordChange();
                         let allTrimmedKeyword = this.newKeywordTrimmed.toLowerCase().split(',');
                         allTrimmedKeyword = allTrimmedKeyword.filter(e => String(e).trim());
                             for (var i = 0; i < allTrimmedKeyword.length; i++) {
-                                let item = allTrimmedKeyword[i];
+                                let item = allTrimmedKeyword[i].trim();
                                 if (item.length > 0 && item.length <= 50) {
                                     let newkeywordObj = new KeywordModel();
                                     newkeywordObj.keyword = item;
@@ -554,6 +555,7 @@
                                         }
                                         this.newKeyword = '';
                                     } else if (newkeywordObj.id == 0) {
+                                        this.newKeyword = '';
                                         this.keywordError = true;
                                         this.keywordErrorMessage.push(item);
                                     }

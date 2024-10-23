@@ -120,7 +120,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         /// <param name="resourceReferenceIds">ids.</param>
         /// <returns>ResourceReferenceViewModels for matching resources.</returns>
         [HttpGet("Bulk")]
-        public async Task<BulkResourceReferenceViewModel> GetResourceReferencesByOriginalIds([FromQuery]List<int> resourceReferenceIds)
+        public async Task<BulkResourceReferenceViewModel> GetResourceReferencesByOriginalIds([FromQuery] List<int> resourceReferenceIds)
         {
             if (resourceReferenceIds.Count > MaxNumberOfReferenceIds)
             {
@@ -136,7 +136,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         /// <param name="resourceReferences">ids.</param>
         /// <returns>ResourceReferenceViewModels for matching resources.</returns>
         [HttpGet("BulkJson")]
-        public async Task<BulkResourceReferenceViewModel> GetResourceReferencesByOriginalIdsFromJson([FromQuery]string resourceReferences)
+        public async Task<BulkResourceReferenceViewModel> GetResourceReferencesByOriginalIdsFromJson([FromQuery] string resourceReferences)
         {
             var bulkResourceReferences = JsonConvert.DeserializeObject<BulkResourceReferencesFromJsonRequestModel>(resourceReferences);
 
@@ -156,6 +156,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         /// <summary>
         /// Get resourceReferences that have an in progress activity summary
         /// </summary>
+        /// <param name="activityStatusId">activityStatusId.</param>
         /// <returns>ResourceReferenceViewModels for matching resources.</returns>
         [HttpGet("User/{activityStatusId}")]
         public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferencesByActivityStatus(int activityStatusId)
@@ -163,9 +164,20 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             // These activity statuses are set with other activity statuses and resource type within the ActivityStatusHelper.GetActivityStatusDescription
             // Note In progress is in complete in the db
             List<int> activityStatusIdsNotInUseInDB = new List<int>() { (int)ActivityStatusEnum.Launched, (int)ActivityStatusEnum.InProgress, (int)ActivityStatusEnum.Viewed, (int)ActivityStatusEnum.Downloaded };
-            if (this.CurrentUserId == null) throw new UnauthorizedAccessException("User Id required.");
-            if (!Enum.IsDefined(typeof(ActivityStatusEnum), activityStatusId)) throw new ArgumentOutOfRangeException($"activityStatusId : {activityStatusId} does not exist within ActivityStatusEnum");
-            if (activityStatusIdsNotInUseInDB.Contains(activityStatusId)) throw new ArgumentOutOfRangeException($"activityStatusId: {activityStatusId} does not exist within the database definitions");
+            if (this.CurrentUserId == null)
+            {
+                throw new UnauthorizedAccessException("User Id required.");
+            }
+
+            if (!Enum.IsDefined(typeof(ActivityStatusEnum), activityStatusId))
+            {
+                throw new ArgumentOutOfRangeException($"activityStatusId : {activityStatusId} does not exist within ActivityStatusEnum");
+            }
+
+            if (activityStatusIdsNotInUseInDB.Contains(activityStatusId))
+            {
+                throw new ArgumentOutOfRangeException($"activityStatusId: {activityStatusId} does not exist within the database definitions");
+            }
 
             return await this.resourceService.GetResourceReferenceByActivityStatus(new List<int>() { activityStatusId }, this.CurrentUserId.Value);
         }
@@ -177,7 +189,10 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         [HttpGet("User/Certificates")]
         public async Task<List<ResourceReferenceWithResourceDetailsViewModel>> GetResourceReferencesByCertificates()
         {
-            if (this.CurrentUserId == null) throw new UnauthorizedAccessException("User Id required.");
+            if (this.CurrentUserId == null)
+            {
+                throw new UnauthorizedAccessException("User Id required.");
+            }
 
             return await this.resourceService.GetResourceReferencesForCertificates(this.CurrentUserId.Value);
         }

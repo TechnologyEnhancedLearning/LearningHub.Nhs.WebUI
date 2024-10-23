@@ -690,7 +690,7 @@
             switch (dashboardType)
             {
                 case "my-certificates":
-                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyCertificatesDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyLearningCertificatesDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
                     break;
                 case "my-recent-completed":
                     dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyRecentCompletedDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();

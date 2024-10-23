@@ -245,5 +245,10 @@ namespace LearningHub.Nhs.WebUI.Configuration
         /// Gets or sets the MediaKindSettings.
         /// </summary>
         public MediaKindSettings MediaKindSettings { get; set; } = new MediaKindSettings();
+
+        /// <summary>
+        /// Gets or sets AllCataloguePageSize.
+        /// </summary>
+        public int AllCataloguePageSize { get; set; }
     }
 }

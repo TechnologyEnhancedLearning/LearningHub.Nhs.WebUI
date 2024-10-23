@@ -1772,7 +1772,8 @@ namespace LearningHub.Nhs.Services
             bool doesKeywordAlreadyExist = await this.resourceVersionKeywordRepository.DoesResourceVersionKeywordAlreadyExistAsync(rvk.ResourceVersionId, rvk.Keyword);
             if (doesKeywordAlreadyExist)
             {
-                return new LearningHubValidationResult(false, "This keyword has already been added.");
+                retVal.CreatedId = 0;
+                return retVal;
             }
 
             retVal.CreatedId = await this.resourceVersionKeywordRepository.CreateAsync(userId, rvk);
@@ -1981,6 +1982,11 @@ namespace LearningHub.Nhs.Services
                 }
 
                 var erv = await this.GetResourceVersionExtendedViewModelAsync(rv.Id, userId);
+
+                if (erv == null)
+                {
+                    return null;
+                }
 
                 var retVal = new ResourceItemViewModel(erv);
                 retVal.Id = resourceReferenceId;
@@ -4514,11 +4520,14 @@ namespace LearningHub.Nhs.Services
             {
                 return true;
             }
-            else
+
+            var resourceVersion = await this.GetResourceVersionByIdAsync(resourceVersionId);
+            if (resourceVersion == null)
             {
-                var resourceVersion = await this.GetResourceVersionByIdAsync(resourceVersionId);
-                return await this.catalogueService.CanUserEditCatalogueAsync(currentUserId, (int)resourceVersion.ResourceCatalogueId);
+                return false;
             }
+
+            return await this.catalogueService.CanUserEditCatalogueAsync(currentUserId, (int)resourceVersion.ResourceCatalogueId);
         }
 
         private async Task<bool> IsAudioVideoResource(int resourceVersionId, ResourceTypeEnum resourceType)

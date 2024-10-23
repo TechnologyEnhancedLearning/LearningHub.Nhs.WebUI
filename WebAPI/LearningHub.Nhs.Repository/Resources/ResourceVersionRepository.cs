@@ -682,14 +682,34 @@
         /// <returns>resources.</returns>
         public (int resourceCount, List<DashboardResourceDto> resources) GetResources(string dashboardType, int pageNumber, int userId)
         {
-            var param0 = new SqlParameter("@dashboardType", SqlDbType.NVarChar, 30) { Value = dashboardType };
-            var param1 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
-            var param2 = new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber };
-            var param3 = new SqlParameter("@totalRows", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+            var param1 = new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber };
+            var param2 = new SqlParameter("@totalRows", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
-            var dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetDashboardResources @dashboardType, @userId, @pageNumber, @totalRows output", param0, param1, param2, param3).ToList();
+            var dashboardResources = new List<DashboardResourceDto>();
+            switch (dashboardType)
+            {
+                case "my-certificates":
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyLearningCertificatesDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    break;
+                case "my-recent-completed":
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyRecentCompletedDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    break;
+                case "my-in-progress":
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyInProgressDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    break;
+                case "recent-resources":
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetRecentDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    break;
+                case "rated-resources":
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetRatedDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    break;
+                case "popular-resources":
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetPopularDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    break;
+            }
 
-            return (resourceCount: (int)param3.Value, resources: dashboardResources);
+            return (resourceCount: (int)param2.Value, resources: dashboardResources);
         }
 
         /// <summary>

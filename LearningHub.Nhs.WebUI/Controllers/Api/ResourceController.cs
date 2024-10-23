@@ -2,6 +2,7 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Resource;
@@ -105,7 +106,6 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
                     ActivityStatus = ActivityStatusEnum.Completed,
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
-
                 return this.File(file.Content, file.ContentType, fileName);
             }
             else
@@ -566,9 +566,9 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [HttpPost]
         [Route("ArchiveResourceFile")]
-        public ActionResult ArchiveResourceFile(List<string> filePaths)
+        public ActionResult ArchiveResourceFile(IEnumerable<string> filePaths)
         {
-            _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, filePaths); });
+            _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(null, filePaths.ToList()); });
             return this.Ok();
         }
 

@@ -110,6 +110,7 @@
                     });
 
                 catalogues.TotalCount = termCatalogues.TotalHits;
+                catalogues.GroupId = Guid.NewGuid();
                 catalogues.Catalogues = termCatalogues.DocumentModel.Select(t => new DashboardCatalogueViewModel
                 {
                     Url = t.Url,
@@ -123,6 +124,8 @@
                     BookmarkId = t.BookmarkId,
                     NodeId = int.Parse(t.Id),
                     BadgeUrl = t.BadgeUrl,
+                    Providers = t.Providers,
+                    ClickPayload = t.Click.Payload,
                 }).ToList();
             }
             else
@@ -190,8 +193,6 @@
             CatalogueAccessRequestViewModel catalogueAccessRequest = null;
             if (this.ViewBag.UserAuthenticated)
             {
-                var cacheKey = $"{this.CurrentUserId}:AllRolesWithPermissions";
-                await this.cacheService.RemoveAsync(cacheKey);
                 userGroups = await this.userGroupService.GetRoleUserGroupDetailAsync();
                 catalogueAccessRequest = await this.catalogueService.GetLatestCatalogueAccessRequestAsync(catalogue.NodeId);
             }
@@ -552,6 +553,71 @@
             {
                 return this.View("RequestPreviewAccess", viewModel);
             }
+        }
+
+        /// <summary>
+        /// Get all catelogues, filter and pagination based on alphabets.
+        /// </summary>
+        /// <param name="filterChar">filterChar.</param>
+        /// <returns>rk.</returns>
+        [Route("/allcatalogue")]
+        [Route("/allcatalogue/{filterChar}")]
+        public async Task<IActionResult> GetAllCatalogue(string filterChar = "a")
+        {
+            var pageSize = this.settings.AllCataloguePageSize;
+            var catalogues = await this.catalogueService.GetAllCatalogueAsync(filterChar, pageSize);
+            return this.View("allcatalogue", catalogues);
+        }
+
+        /// <summary>
+        /// AllCatalogues Search.
+        /// </summary>
+        /// <param name="pageIndex">pageIndex.</param>
+        /// <param name="term">Search term.</param>
+        /// <returns>IActionResult.</returns>
+        [Route("/allcataloguesearch")]
+        public async Task<IActionResult> GetAllCatalogueSearch(int pageIndex = 1, string term = null)
+        {
+            var catalogues = new AllCatalogueSearchResponseViewModel();
+            var searchString = term?.Trim() ?? string.Empty;
+            var allCatalogueSearchPageSize = this.settings.FindwiseSettings.AllCatalogueSearchPageSize;
+
+            if (!string.IsNullOrWhiteSpace(term))
+            {
+                var termCatalogues = await this.searchService.GetAllCatalogueSearchResultAsync(
+                    new AllCatalogueSearchRequestModel
+                    {
+                        SearchText = searchString,
+                        PageIndex = pageIndex - 1,
+                        PageSize = allCatalogueSearchPageSize,
+                    });
+
+                catalogues.TotalCount = termCatalogues.TotalHits;
+                catalogues.Catalogues = termCatalogues.DocumentModel.Select(t => new AllCatalogueViewModel
+                {
+                    Url = t.Url,
+                    Name = t.Name,
+                    CardImageUrl = t.CardImageUrl,
+                    BannerUrl = t.BannerUrl,
+                    Description = t.Description,
+                    RestrictedAccess = t.RestrictedAccess,
+                    HasAccess = t.HasAccess,
+                    IsBookmarked = t.IsBookmarked,
+                    BookmarkId = t.BookmarkId,
+                    NodeId = int.Parse(t.Id),
+                    BadgeUrl = t.BadgeUrl,
+                    Providers = t.Providers,
+                }).ToList();
+            }
+            else
+            {
+                catalogues.TotalCount = 0;
+                catalogues.Catalogues = new List<AllCatalogueViewModel>();
+            }
+
+            this.ViewBag.PageIndex = pageIndex;
+            this.ViewBag.PageSize = allCatalogueSearchPageSize;
+            return this.View("AllCatalogueSearch", catalogues);
         }
     }
 }

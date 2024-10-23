@@ -64,6 +64,20 @@
         }
 
         /// <summary>
+        /// The get all for Search.
+        /// </summary>
+        /// <param name="catalogueNodeId">The catalogueNodeId.</param>
+        /// <param name="userId">The userId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<List<RoleUserGroup>> GetAllforSearch(int catalogueNodeId, int userId)
+        {
+            return await this.DbContext.RoleUserGroup.Where(rug => rug.Scope.CatalogueNodeId == catalogueNodeId)
+                                        .Include(n => n.UserGroup).ThenInclude(u => u.UserUserGroup.Where(p => p.UserId == userId))
+                                        .Include(n => n.Scope).AsNoTracking()
+                                        .ToListAsync();
+        }
+
+        /// <summary>
         /// The get by role id and catalogue id.
         /// </summary>
         /// <param name="roleId">The role id.</param>
@@ -96,11 +110,11 @@
         /// </summary>
         /// <param name="userGroupId">The userGroupId.</param>
         /// <returns>A list of RoleUserGroupViewModel.</returns>
-        public List<RoleUserGroupViewModel> GetRoleUserGroupViewModelsByUserGroupId(int userGroupId)
+        public async Task<List<RoleUserGroupViewModel>> GetRoleUserGroupViewModelsByUserGroupId(int userGroupId)
         {
             var param0 = new SqlParameter("@userGroupId", SqlDbType.Int) { Value = userGroupId };
 
-            var vm = this.DbContext.RoleUserGroupViewModel.FromSqlRaw("hub.RoleUserGroupGetByUserGroupId @userGroupId", param0).ToList();
+            var vm = await this.DbContext.RoleUserGroupViewModel.FromSqlRaw("hub.RoleUserGroupGetByUserGroupId @userGroupId", param0).AsNoTracking().ToListAsync();
             return vm;
         }
 
@@ -109,11 +123,11 @@
         /// </summary>
         /// <param name="userId">The userGroupId.</param>
         /// <returns>A list of RoleUserGroupViewModel.</returns>
-        public List<RoleUserGroupViewModel> GetRoleUserGroupViewModelsByUserId(int userId)
+        public async Task<List<RoleUserGroupViewModel>> GetRoleUserGroupViewModelsByUserId(int userId)
         {
             var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
 
-            var vm = this.DbContext.RoleUserGroupViewModel.FromSqlRaw("hub.RoleUserGroupGetByUserId @userId", param0).ToList();
+            var vm = await this.DbContext.RoleUserGroupViewModel.FromSqlRaw("hub.RoleUserGroupGetByUserId @userId", param0).AsNoTracking().ToListAsync();
             return vm;
         }
     }

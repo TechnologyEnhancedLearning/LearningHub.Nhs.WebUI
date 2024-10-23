@@ -17,6 +17,7 @@
         {
             get
             {
+                // This check is to determine between the two ways of authorising, OAuth and APIKey.OAuth provides userId and APIKey does not. For OpenApi we provide the data without specific user info.
                 if ((this.User?.Identity?.AuthenticationType ?? null) == "AuthenticationTypes.Federation")
                 {
                     int userId;
@@ -35,6 +36,24 @@
                     // When authorizing by ApiKey we do not have a user for example
                     return null;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets the bearer token from OAuth and removes "Bearer " prepend.
+        /// </summary>
+        public string TokenWithoutBearer
+        {
+            get
+            {
+                string accessToken = this.HttpContext.Request.Headers["Authorization"].ToString();
+
+                if (string.IsNullOrEmpty(accessToken))
+                {
+                    throw new HttpResponseException($"No token provided please use OAuth", HttpStatusCode.Unauthorized);
+                }
+
+                return accessToken.StartsWith("Bearer ") ? accessToken.Substring("Bearer ".Length) : accessToken;
             }
         }
     }

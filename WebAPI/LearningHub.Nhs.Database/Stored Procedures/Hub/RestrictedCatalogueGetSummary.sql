@@ -7,6 +7,7 @@
 --
 -- 25-03-2021  Killian Davies	Initial Revision
 -- 12-02-2023  SA				Included preview access
+-- 06-08-2023  SS				Considering only active users
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hub].[RestrictedCatalogueGetSummary]
 (
@@ -63,6 +64,7 @@ BEGIN
 		WHERE
 			car.CatalogueNodeId = @catalogueNodeId
 			AND car.Deleted = 0
+			AND up.Deleted = 0
 			AND car.Status = 0
 			AND car.EmailAddress NOT IN (SELECT DISTINCT EmailAddress FROM [hierarchy].[CatalogueAccessRequest] WHERE CatalogueNodeId = @catalogueNodeId
 										AND Deleted = 0

@@ -822,7 +822,7 @@
                 this.fileUploadRef.value = null;
                 (this.$refs.fileUploader as any).uploadResourceFile(this.file);
             },
-            fileUploadComplete(uploadResult: FileUploadResult) {
+            async fileUploadComplete(uploadResult: FileUploadResult) {
                 if (!uploadResult.invalid) {
                     if (uploadResult.resourceType != ResourceType.SCORM) {
                         this.$store.commit("setResourceType", uploadResult.resourceType);
@@ -841,7 +841,7 @@
                     }
 
                     if (this.filePathBeforeFileChange.length > 0) {
-                        this.getResourceFilePath('completed');
+                        await this.getResourceFilePath('completed');
                         if (this.filePathBeforeFileChange.length > 0 && this.filePathAfterFileChange.length > 0) {
                             let filePaths = this.filePathBeforeFileChange.filter(item => !this.filePathAfterFileChange.includes(item));
                             if (filePaths.length > 0) {
@@ -1040,6 +1040,7 @@
                     await resourceData.getObsoleteResourceFile(resource.resourceVersionId).then(response => {
                         if (fileChangeStatus == 'initialised') {
                             this.filePathBeforeFileChange = response;
+                            this.filePathAfterFileChange.length = 0;
                         }
                         else if (fileChangeStatus == 'completed') {
                             this.filePathAfterFileChange = response;

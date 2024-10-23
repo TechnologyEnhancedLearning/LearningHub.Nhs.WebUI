@@ -14,5 +14,10 @@
         /// Gets or sets the CatalogueSearchPageSize.
         /// </summary>
         public int CatalogueSearchPageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the AllCatalogueSearchPageSize.
+        /// </summary>
+        public int AllCatalogueSearchPageSize { get; set; }
     }
 }

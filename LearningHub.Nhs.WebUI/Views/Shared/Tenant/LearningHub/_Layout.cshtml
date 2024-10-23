@@ -21,7 +21,7 @@
     <link rel="manifest" href="~/site.webmanifest.json">
     <link href="~/css/nhsuk/common.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/nhsuk/layout.css" rel="stylesheet" asp-append-version="true" />
-    <link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" />
+    @* <link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" /> *@
     <noscript>
         <link href="~/css/no-js/no-js.css" rel="stylesheet" asp-append-version="true" />
     </noscript>
@@ -71,8 +71,10 @@
         <partial name="_CookieConsentPartial" />
     </div>
 
-    <header class="nhsuk-header" role="banner">
+    <header class="nhsuk-header" role="banner" id="header">
+    <div id="content-header">
         <partial name="~/Views/Shared/_NavPartial.cshtml" />
+    </div>
     </header>
 
     <div class="nhsuk-width-container app-width-container beta-banner">
@@ -97,9 +99,8 @@
         @* Inject form here *@
     </div>
 
-    <footer role="contentinfo">
-        <partial name="~/Views/Shared/_FooterPartial.cshtml" />
-    </footer>
+    <!-- footer -->
+    <partial name="~/Views/Shared/_FooterPartial.cshtml" />
 
     <script>
         if (!window.process) { window.process = {}; }

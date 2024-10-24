@@ -110,6 +110,7 @@
                     });
 
                 catalogues.TotalCount = termCatalogues.TotalHits;
+                catalogues.GroupId = Guid.NewGuid();
                 catalogues.Catalogues = termCatalogues.DocumentModel.Select(t => new DashboardCatalogueViewModel
                 {
                     Url = t.Url,
@@ -124,6 +125,7 @@
                     NodeId = int.Parse(t.Id),
                     BadgeUrl = t.BadgeUrl,
                     Providers = t.Providers,
+                    ClickPayload = t.Click.Payload,
                 }).ToList();
             }
             else

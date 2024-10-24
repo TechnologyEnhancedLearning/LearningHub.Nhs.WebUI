@@ -200,9 +200,6 @@
     <None Include="Scripts\Pre-Deploy\Scripts\TD-807_AlterTable_HierarchyEditNodeResourceLookup.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\TD-887_PreLoginLandingPageChanges.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\TD-2902 Add resource types to Content Server.sql" />
-    <Build Include="Stored Procedures\Resources\GetRecentDashboardResources.sql" />
-    <Build Include="Stored Procedures\Resources\GetMyInProgressDashboardResources.sql" />
-    <Build Include="Stored Procedures\Resources\GetMyRecentCompletedDashboardResources.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="LearningHub.Nhs.Database.refactorlog" />
@@ -511,19 +508,31 @@
     <Build Include="Functions\Resources\UserCanEditResource.sql" />
     <Build Include="Stored Procedures\Hierarchy\UserGroupPreviewerEnsure.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\AttributeData.sql" />
-    <None Include="Triggers\external\AddDigitalLearningSolutionsExternalSystem.sql" />
     <Build Include="Stored Procedures\Activity\GetUserLatestActivityCheck.sql" />
     <Build Include="Stored Procedures\Activity\GetUserLearningActivities.sql" />
     <Build Include="Stored Procedures\Activity\GetUserLearningActivitiesCount.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-2929_ActivityStatusUpdates.sql" />
     <Build Include="Stored Procedures\Resources\BlockCollectionFileSearch.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-4031_AMStoMKIOMigration.sql" />
+    <Build Include="Stored Procedures\Activity\GetResourceActivityPerResourceMajorVersion.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-4270_Archive_LogDb.sql" />
     <Build Include="Stored Procedures\Resources\GetPopularDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetRatedDashboardResources.sql" />
     <Build Include="Stored Procedures\Resources\GetMyCertificatesDashboardResources.sql" />
+    <Build Include="Stored Procedures\Activity\GetResourceActivityPerResourceMajorVersion.sql" />
+    <Build Include="Stored Procedures\Resources\GetAchievedCertificatedResourcesWithOptionalPagination.sql" />
     <Build Include="Stored Procedures\Hierarchy\GetCatalogues.sql" />
     <Build Include="Stored Procedures\Hierarchy\GetCataloguesCount.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\PPSXFileType.sql" />
+    <Build Include="Stored Procedures\Resources\GetMyLearningCertificatesDashboardResources.sql" />
+    <Build Include="Stored Procedures\Resources\GetMyInProgressDashboardResources.sql" />
+    <Build Include="Stored Procedures\Resources\GetContributions.sql" />
+    <Build Include="Stored Procedures\Resources\GetMyRecentCompletedDashboardResources.sql" />
+    <Build Include="Stored Procedures\Resources\GetRecentDashboardResources.sql" />
+    <Build Include="Stored Procedures\Resources\GetScormContentDetails.sql" />
+    <Build Include="Stored Procedures\Resources\GetScormContentServerDetailsForLHExternalReference.sql" />
+    <Build Include="Tables\Resource\ScormResourceReferenceEvent.sql" />
+    <Build Include="Tables\Resource\ScormResourceReferenceEventType.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

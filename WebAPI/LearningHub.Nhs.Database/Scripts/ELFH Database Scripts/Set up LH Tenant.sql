@@ -1,4 +1,5 @@
-﻿/*
+﻿
+/*
 Script for adding the Learning Hub tenant
 */
 --Required Information - UPDATE BEFORE RUNNING

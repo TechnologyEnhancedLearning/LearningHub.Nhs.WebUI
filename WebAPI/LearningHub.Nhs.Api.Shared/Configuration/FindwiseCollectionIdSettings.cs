@@ -14,5 +14,10 @@
         /// Gets or sets the catalogue collection id.
         /// </summary>
         public string Catalogue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the AutoSuggestion collection id.
+        /// </summary>
+        public string AutoSuggestion { get; set; }
     }
 }

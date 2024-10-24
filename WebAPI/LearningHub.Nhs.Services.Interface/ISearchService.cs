@@ -175,5 +175,12 @@
         /// <param name="catalogSearchRequestModel">The allcatalog search request model.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<SearchAllCatalogueResultModel> GetAllCatalogueSearchResultsAsync(AllCatalogueSearchRequestModel catalogSearchRequestModel);
+
+        /// <summary>
+        /// The Auto suggetion result method.
+        /// </summary>
+        /// <param name="term">the term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term);
     }
 }

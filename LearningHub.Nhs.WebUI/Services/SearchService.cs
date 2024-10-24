@@ -6,6 +6,7 @@ namespace LearningHub.Nhs.WebUI.Services
     using System.Net.Http;
     using System.Security.Principal;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
     using HtmlAgilityPack;
@@ -61,6 +62,7 @@ namespace LearningHub.Nhs.WebUI.Services
             var searchSortItemList = SearchHelper.GetSearchSortList();
             var selectedSortItem = searchSortItemList.Where(x => x.SearchSortType == (SearchSortTypeEnum)searchSortType).FirstOrDefault();
             var groupId = Guid.Parse(searchRequest.GroupId);
+            bool didYouMeanEnabled = false;
 
             var resourceSearchPageSize = this.settings.FindwiseSettings.ResourceSearchPageSize;
             var catalogueSearchPageSize = this.settings.FindwiseSettings.CatalogueSearchPageSize;
@@ -112,6 +114,35 @@ namespace LearningHub.Nhs.WebUI.Services
 
                     resourceResult = resourceResultTask.Result;
                     catalogueResult = catalogueResultTask.Result;
+
+                    // Did you mean suggestion when no hits found
+                    if (resourceResult?.TotalHits == 0 && catalogueResult?.TotalHits == 0 && (resourceResult?.Spell?.Suggestions?.Count > 0 || catalogueResult?.Spell?.Suggestions?.Count > 0))
+                    {
+                        didYouMeanEnabled = true;
+
+                        // pass the spell suggestion as new search text - resources
+                        if (resourceResult?.Spell?.Suggestions?.Count > 0)
+                        {
+                            resourceSearchRequestModel.SearchText = Regex.Replace(resourceResult?.Spell?.Suggestions?.FirstOrDefault().ToString(), "<.*?>", string.Empty);
+
+                            // calling findwise endpoint with new search text - resources
+                            resourceResultTask = this.GetSearchResultAsync(resourceSearchRequestModel);
+                        }
+
+                        // pass the spell suggestion as new search text - catalogues
+                        if (catalogueResult?.Spell?.Suggestions?.Count > 0)
+                        {
+                            catalogueSearchRequestModel.SearchText = Regex.Replace(catalogueResult?.Spell?.Suggestions?.FirstOrDefault().ToString(), "<.*?>", string.Empty);
+
+                            // calling findwise endpoint with new search text - catalogues
+                            catalogueResultTask = this.GetCatalogueSearchResultAsync(catalogueSearchRequestModel);
+                        }
+
+                        await Task.WhenAll(resourceResultTask, catalogueResultTask);
+
+                        resourceResult = resourceResultTask.Result;
+                        catalogueResult = catalogueResultTask.Result;
+                    }
                 }
 
                 var searchfilters = new List<SearchFilterModel>();
@@ -198,6 +229,7 @@ namespace LearningHub.Nhs.WebUI.Services
                     PageSize = catalogueSearchPageSize,
                     TotalItems = catalogueResult?.TotalHits ?? 0,
                 },
+                DidYouMeanEnabled = didYouMeanEnabled,
             };
 
             return searchResultViewModel;

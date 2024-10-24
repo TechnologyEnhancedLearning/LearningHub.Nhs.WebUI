@@ -108,6 +108,10 @@ body {
 .nhsuk-header__search {
     .nhsuk-search__input {
         width: px2rem(260);
+
+        &::-moz-placeholder {
+            opacity: 1;
+        }
     }
 
     #search > label.nhsuk-u-visually-hidden {

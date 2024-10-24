@@ -533,6 +533,7 @@
     <Build Include="Stored Procedures\Resources\GetScormContentServerDetailsForLHExternalReference.sql" />
     <Build Include="Tables\Resource\ScormResourceReferenceEvent.sql" />
     <Build Include="Tables\Resource\ScormResourceReferenceEventType.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\UpdateFileTypes.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

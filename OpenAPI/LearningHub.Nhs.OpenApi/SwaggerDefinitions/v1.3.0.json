@@ -3,7 +3,7 @@
     "info": {
         "title": "LearningHub.NHS.OpenAPI",
         "version": "1.3.0",
-        "description": "A set of API endpoints for retrieving learning resource information from the Learning Hub learning platform. The [Learning Hub](https://learninghub.nhs.uk/) is a platform for hosting and sharing learning resources for health and social care provided by Technology Enhanced Learning (TEL) at NHS England. An application API key must be used to authorise calls to the API from external applications. To contact TEL to discuss connecting your external system to the Learning Hub, email [england.tel@nhs.net](england.tel@nhs.net)"
+        "description": "A set of API endpoints for retrieving learning resource information from the Learning Hub learning platform. The [Learning Hub](https://learninghub.nhs.uk/) is a platform for hosting and sharing learning resources for health and social care provided by Technology Enhanced Learning (TEL) at NHS England. An application API key must be used to authorise calls to the API from external applications. To contact TEL to discuss connecting your external system to the Learning Hub, email england.tel@nhs.net."
     },
   "paths": {
     "/Bookmark/GetAllByParent": {

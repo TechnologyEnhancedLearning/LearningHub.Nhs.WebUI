@@ -83,6 +83,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             FindwiseResultModel findwiseResultModel, int? currentUserId)
         {
             List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
+            List<ResourceMetadataViewModel> resourceMetadataViewModels = new List<ResourceMetadataViewModel>() { };
             var documentsFound = findwiseResultModel.SearchResults?.DocumentList.Documents?.ToList() ??
                                  new List<Document>();
             var findwiseResourceIds = documentsFound.Select(d => int.Parse(d.Id)).ToList();
@@ -94,7 +95,15 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
             var resourcesFound = await this.resourceRepository.GetResourcesFromIds(findwiseResourceIds);
 
-            List<ResourceMetadataViewModel> resourceMetadataViewModels = resourcesFound.Select(resource => MapToViewModel(resource, resourceActivities.Where(x => x.ResourceId == resource.Id).ToList()))
+            if (currentUserId.HasValue)
+            {
+                List<int> resourceIds = resourcesFound.Select(x => x.Id).ToList();
+                List<int> userIds = new List<int>() { currentUserId.Value };
+
+                resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
+            }
+
+            resourceMetadataViewModels = resourcesFound.Select(resource => this.MapToViewModel(resource, resourceActivities.Where(x => x.ResourceId == resource.Id).ToList()))
                 .OrderBySequence(findwiseResourceIds)
                 .ToList();
 
@@ -109,13 +118,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     unmatchedResourcesIdsString);
             }
 
-            if (currentUserId.HasValue)
-            {
-                List<int> resourceIds = resourcesFound.Select(x => x.Id).ToList();
-                List<int> userIds = new List<int>() { currentUserId.Value };
-
-                resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(resourceIds, userIds))?.ToList() ?? new List<ResourceActivityDTO>() { };
-            }
             return resourceMetadataViewModels;
         }
 

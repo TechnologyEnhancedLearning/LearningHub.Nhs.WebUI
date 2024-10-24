@@ -65,7 +65,7 @@
 
                         <div class="d-flex">
                             <div class="selection pr-50">
-                                <div>Provide guidance for the learner at the end of this assessment. <i class="warningTriangle fas fa-exclamation-triangle warm-yellow"></i></div>
+                                <div>Provide guidance for the learner at the end of this assessment. <i v-if="!IsVisible" class="warningTriangle fas fa-exclamation-triangle warm-yellow"></i></div>
                                 <EditSaveFieldWithCharacterCount v-model="assessmentDetails.endGuidance.blocks[0].title"
                                                                  addEditLabel="title"
                                                                  v-bind:characterLimit="60"
@@ -79,7 +79,7 @@
                                 <h3>Tip</h3>
                                 You can offer guidance to the learner at the end of the assessment such as next steps or recommendations on other learning resources to try.                            </div>
                         </div>
-                        <Button class="mt-5" color="green" v-on:click="isOpen = false" :disabled="!canSaveAll">Save settings</Button>
+                        <Button class="mt-5" color="green" v-on:click="isOpen = false" :disabled="!IsVisible">Save settings</Button>
                     </div>
                 </div>
             </v-card>
@@ -131,6 +131,7 @@
                 endGuidance: "",
                 initialGuidance: "",
                 guidanceValid: true,
+                IsVisible: false,
             }
         },
         watch: {
@@ -139,7 +140,7 @@
                 {
                     this.assessmentDetails.endGuidance.addBlock(BlockTypeEnum.Text);
                 }
-                this.assessmentDetails.endGuidance.blocks[0].textBlock.content = this.endGuidance;
+                this.assessmentDetails.endGuidance.blocks[0].textBlock.content = this.endGuidance;            
             },
             ["assessmentDetails.passMark"](value){ this.assessmentDetails.passMark = this.capNumberFieldBy(value, 100)},
             ["assessmentDetails.maximumAttempts"](value){ this.assessmentDetails.maximumAttempts = this.capNumberFieldBy(value, 10)},
@@ -156,6 +157,14 @@
                 } 
                 
                 this.assessmentDetails.assessmentSettingsAreValid = settingsAreValid;
+
+                if (this.endGuidance != "") {
+                    this.IsVisible = true;
+                }
+                else {
+                    this.IsVisible = false;
+                }
+
                 return settingsAreValid;
             },
         },
@@ -169,9 +178,23 @@
                 {
                     this.endGuidance = description;
                 }
+
+                if (this.endGuidance != "") {
+                    this.IsVisible = true;
+                }
+                else {
+                    this.IsVisible = false;
+                }
             },
             setGuidanceValidity(valid: boolean) {
-                this.guidanceValid = valid;
+                if (this.endGuidance == "") {
+                    this.guidanceValid = false;
+                    this.IsVisible = false;
+                }
+                else {
+                    this.guidanceValid = valid;
+                    this.IsVisible = true;
+                }
             }
         }
     });

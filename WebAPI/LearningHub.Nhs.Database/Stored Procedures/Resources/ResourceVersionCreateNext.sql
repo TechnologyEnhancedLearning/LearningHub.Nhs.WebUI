@@ -10,6 +10,7 @@
 -- 29 Sep 2020 Dave Brown	Addition of NodeResource records
 -- 11-01-2021  Dharmendra Verma	Card-6516, Set correct timezone information 
 -- 17-08-2023  Jignesh Jetghwani Card-1318, Addition of ResourceNodeVersion Provider
+-- 22-10-2023  SA           Added column Dev Id 
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [resources].[ResourceVersionCreateNext]
 (
@@ -51,8 +52,8 @@ BEGIN
 
 		BEGIN TRAN
 
-		INSERT INTO resources.ResourceVersion (ResourceId, VersionStatusId,ResourceAccessibilityId, PublicationId, MajorVersion, MinorVersion, Title, Description, AdditionalInformation, ReviewDate, HasCost, Cost, ResourceLicenceId, SensitiveContent, CertificateEnabled, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
-		SELECT	ResourceId, 1 /* Draft */,ResourceAccessibilityId, null, MajorVersion, MinorVersion, Title, Description, AdditionalInformation, ReviewDate, HasCost, Cost, ResourceLicenceId, SensitiveContent, CertificateEnabled, 0, @UserId, @AmendDate, @UserId, @AmendDate
+		INSERT INTO resources.ResourceVersion (ResourceId, VersionStatusId,ResourceAccessibilityId, PublicationId, MajorVersion, MinorVersion, Title, Description, AdditionalInformation, ReviewDate, HasCost, Cost, ResourceLicenceId, SensitiveContent, CertificateEnabled, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate,DevId)
+		SELECT	ResourceId, 1 /* Draft */,ResourceAccessibilityId, null, MajorVersion, MinorVersion, Title, Description, AdditionalInformation, ReviewDate, HasCost, Cost, ResourceLicenceId, SensitiveContent, CertificateEnabled, 0, @UserId, @AmendDate, @UserId, @AmendDate,DevId
 		FROM	resources.ResourceVersion
 		WHERE	id = @CurrentResourceVersionId
 		SELECT @ResourceVersionId = SCOPE_IDENTITY()

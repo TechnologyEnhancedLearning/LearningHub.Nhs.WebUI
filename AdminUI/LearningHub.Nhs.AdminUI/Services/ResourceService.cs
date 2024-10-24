@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
@@ -128,6 +129,89 @@
             }
 
             return viewmodel;
+        }
+
+        /// <summary>
+        /// The GetResourceVersionDevIdDetailsAsync.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="List{ResourceVersionDevIdViewModel}"/>.</returns>
+        public async Task<ResourceVersionDevIdViewModel> GetResourceVersionDevIdDetailsAsync(int resourceVersionId)
+        {
+            ResourceVersionDevIdViewModel viewmodel = null;
+
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+
+            var request = $"Resource/GetResourceVersionDevIdDetails/{resourceVersionId.ToString()}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewmodel = JsonConvert.DeserializeObject<ResourceVersionDevIdViewModel>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewmodel;
+        }
+
+        /// <summary>
+        /// The GetResourceVersionDevIdDetailsAsync.
+        /// </summary>
+        /// <param name="devId">The devId<see cref="string"/>.</param>
+        /// <returns>The <see cref="List{ResourceVersionDevIdViewModel}"/>.</returns>
+        public async Task<bool> DoesDevIdExistsAsync(string devId)
+        {
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+
+            var request = $"Resource/DoesDevIdExists/{devId}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+            var doesDevIdExist = false;
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                doesDevIdExist = JsonConvert.DeserializeObject<bool>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return doesDevIdExist;
+        }
+
+        /// <summary>
+        /// Update dev id details for a resource.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>The <see cref="List{ResourceVersionDevIdViewModel}"/>.</returns>
+        /// <exception cref="Exception">the exception.</exception>
+        public async Task UpdateDevIdDetailsAsync(ResourceVersionDevIdViewModel model)
+        {
+            var json = JsonConvert.SerializeObject(model);
+            var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+
+            var request = $"Resource/UpdateDevId";
+            var response = await client.PutAsync(request, stringContent).ConfigureAwait(false);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Update first name failed!");
+            }
         }
 
         /// <summary>

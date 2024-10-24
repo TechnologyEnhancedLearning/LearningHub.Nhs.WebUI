@@ -693,6 +693,28 @@ namespace LearningHub.Nhs.Services.Interface
         Task<ResourceVersionValidationResultViewModel> GetResourceVersionValidationResultAsync(int resourceVersionId);
 
         /// <summary>
+        /// The GetResourceVersionDevIdDetailsAync.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceVersionDevIdViewModel}"/>.</returns>
+        Task<ResourceVersionDevIdViewModel> GetResourceVersionDevIdDetailsAync(int resourceVersionId);
+
+        /// <summary>
+        /// The get resource version dev id async.
+        /// </summary>
+        /// <param name="devId">The devId<see cref="string"/>.</param>
+        /// <returns>The <see cref="bool"/>.</returns>
+        Task<bool> DoesDevIdExistsAync(string devId);
+
+        /// <summary>
+        /// Update Dev Id details.
+        /// </summary>
+        /// <param name="resourceVersionDevIdViewModel">The resourceVersionDevIdViewModel.</param>
+        /// <param name="currentUserId">The currentUserId.</param>
+        /// <returns>The <see cref="List{ResourceVersionDevIdViewModel}"/>.</returns>
+        Task UpdateDevIdDetailsAsync(ResourceVersionDevIdViewModel resourceVersionDevIdViewModel, int currentUserId);
+
+        /// <summary>
         /// The get resource version flags async.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>

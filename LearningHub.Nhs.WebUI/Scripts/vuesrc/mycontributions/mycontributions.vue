@@ -11,13 +11,13 @@
                         Role: Editor
                     </div>
                 </div>
-                <div class="d-block d-md-inline-block pl-md-4 pt-3 pt-md-0" v-if="userCatalogues && userCatalogues.length>1">
+                <div class="d-block d-md-inline-block pl-md-4 pt-3 pt-md-0" v-if="userCatalogues && userCatalogues.length > 1">
                     <div class="dropdown catalogue-dropdown">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownCatalogueSelect" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Change catalogue
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownCatalogueSelect">
-                            <a v-for="catalogue in userCatalogues" class="dropdown-item" @click="catalogueChange(catalogue.id, catalogue.nodeId)">{{getCatalogueName(catalogue)}}</a>
+                            <a v-for="(catalogue, index) in userCatalogues" class="dropdown-item" @click="catalogueChange(catalogue.id, catalogue.nodeId)" :tabindex="index">{{getCatalogueName(catalogue)}}</a>
                         </div>
                     </div>
                 </div>

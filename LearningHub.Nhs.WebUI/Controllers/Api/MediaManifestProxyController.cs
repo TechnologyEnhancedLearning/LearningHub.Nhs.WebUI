@@ -14,7 +14,6 @@
     /// <summary>
     /// Defines the <see cref="MediaManifestProxyController" />.
     /// </summary>
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MediaManifestProxyController : ControllerBase
@@ -37,6 +36,7 @@
         /// <param name="playBackUrl">The playBackUrl.</param>
         /// <param name="token">The token.</param>
         /// <returns>The MediaManifestProxy string.</returns>
+        [Authorize]
         public string Get(string playBackUrl, string token)
         {
             this.logger.LogDebug($"playBackUrl={playBackUrl} token={token}");
@@ -75,6 +75,80 @@
 
                                                     return newUrl;
                                                 });
+
+                        this.logger.LogDebug($"newContent={newContent}");
+
+                        var match = Regex.Match(playBackUrl, qualityLevelRegex);
+                        if (match.Success)
+                        {
+                            this.logger.LogDebug($"match.Success");
+                            var qualityLevel = match.Groups[0].Value;
+                            newContent = Regex.Replace(newContent, fragmentsRegex, m => string.Format(CultureInfo.InvariantCulture, baseUrl + "/" + qualityLevel + "/" + m.Value));
+                            this.logger.LogDebug($"Updated newContent={newContent}");
+                        }
+
+                        return newContent;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex.Message);
+            }
+            finally
+            {
+                httpResponse.Close();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// The LandingPageGet.
+        /// </summary>
+        /// <param name="playBackUrl">The playBackUrl.</param>
+        /// <param name="token">The token.</param>
+        /// <returns>The MediaManifestProxy string.</returns>
+        [HttpGet]
+        [Route("LandingPageGet")]
+        public string LandingPageGet(string playBackUrl, string token)
+        {
+            this.logger.LogDebug($"playBackUrl={playBackUrl} token={token}");
+            var httpRequest = (HttpWebRequest)WebRequest.Create(new Uri(playBackUrl));
+            httpRequest.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
+            httpRequest.Timeout = 30000;
+
+            var httpResponse = httpRequest.GetResponse();
+
+            try
+            {
+                this.logger.LogDebug($"Calling httpResponse.GetResponseStream(): playBackUrl={playBackUrl} ");
+                var stream = httpResponse.GetResponseStream();
+                if (stream != null)
+                {
+                    using (var reader = new StreamReader(stream))
+                    {
+                        const string qualityLevelRegex = @"(|)([^""\s]+\.m3u8\(encryption=cbc\))";
+                        const string fragmentsRegex = @"(Fragments\([\w\d=-]+,[\w\d=-]+\))";
+                        const string urlRegex = @"(https?:\/\/[\da-z\.-]+\.[a-z\.]{2,6}[\/\w \.-]*\?[^,\s""]*)";
+
+                        var baseUrl = playBackUrl.Substring(0, playBackUrl.IndexOf(".ism", System.StringComparison.OrdinalIgnoreCase)) + ".ism";
+                        this.logger.LogDebug($"baseUrl={baseUrl}");
+
+                        var content = reader.ReadToEnd();
+
+                        content = ReplaceUrisWithProxy(content, baseUrl);
+                        var newContent = Regex.Replace(content, urlRegex, match =>
+                        {
+                            string baseUrlWithQuery = match.Groups[1].Value;  // URL including the query string
+
+                            // Append the token correctly without modifying surrounding characters
+                            string newUrl = baseUrlWithQuery.Contains("?") ?
+                                            $"{baseUrlWithQuery}&token={token}" :
+                                            $"{baseUrlWithQuery}?token={token}";
+
+                            return newUrl;
+                        });
 
                         this.logger.LogDebug($"newContent={newContent}");
 

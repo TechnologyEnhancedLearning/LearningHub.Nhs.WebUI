@@ -527,6 +527,7 @@
     <None Include="Scripts\Post-Deploy\Scripts\PPSXFileType.sql" />
     <Build Include="Stored Procedures\Resources\GetMyLearningCertificatesDashboardResources.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-4343_RemoveDuplicateUserGroup.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\TD-2396-Add_DevId_ResourceVersion.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

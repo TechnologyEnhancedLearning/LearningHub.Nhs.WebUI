@@ -8,6 +8,7 @@
 -- 12-08-2021  Julian Ng	    Initial Revision
 -- 13-08-2021  Julian Ng	    Extract Case Resource duplication to stored proc
 -- 20-09-2021  Malina Slevoaca  Allow duplicating Assessment resource type
+-- 22-10-2024  SA               Added column Dev Id 
 -------------------------------------------------------------------------------
 CREATE TYPE [resources].[CurrentBlockIdsType] 
 AS TABLE (
@@ -114,8 +115,8 @@ BEGIN
             SELECT @NewResourceId = SCOPE_IDENTITY()
     
             -- Populate the ResourceVersions common details
-            INSERT INTO resources.ResourceVersion (ResourceId, VersionStatusId,ResourceAccessibilityId, PublicationId, MajorVersion, MinorVersion, Title, Description, AdditionalInformation, ReviewDate, HasCost, Cost, ResourceLicenceId, SensitiveContent, CertificateEnabled, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate)
-            SELECT	@NewResourceId, 1,ResourceAccessibilityId, null, null, null, 'Copy of ' + Title, Description, AdditionalInformation, null, 0, null, ResourceLicenceId, SensitiveContent, CertificateEnabled, 0, @UserId, @AmendDate, @UserId, @AmendDate
+            INSERT INTO resources.ResourceVersion (ResourceId, VersionStatusId,ResourceAccessibilityId, PublicationId, MajorVersion, MinorVersion, Title, Description, AdditionalInformation, ReviewDate, HasCost, Cost, ResourceLicenceId, SensitiveContent, CertificateEnabled, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate,DevId)
+            SELECT	@NewResourceId, 1,ResourceAccessibilityId, null, null, null, 'Copy of ' + Title, Description, AdditionalInformation, null, 0, null, ResourceLicenceId, SensitiveContent, CertificateEnabled, 0, @UserId, @AmendDate, @UserId, @AmendDate,DevId
             FROM	resources.ResourceVersion
             WHERE	id = @CurrentResourceVersionId
             SELECT  @ResourceVersionId = SCOPE_IDENTITY()

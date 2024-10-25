@@ -185,6 +185,26 @@
         }
 
         /// <summary>
+        /// The get resource version details by id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<ResourceVersion> GetByResourceVersionByIdAsync(int resourceVersionId)
+        {
+            return await this.DbContext.ResourceVersion.OrderByDescending(r => r.Id).FirstOrDefaultAsync(x => x.Id == resourceVersionId);
+        }
+
+        /// <summary>
+        /// The check dev id already exists in the table async.
+        /// </summary>
+        /// <param name="devId">The devId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<ResourceVersion> DoesDevIdExistsAync(string devId)
+        {
+            return await this.DbContext.ResourceVersion.OrderByDescending(r => r.Id).FirstOrDefaultAsync(x => x.DevId == devId);
+        }
+
+        /// <summary>
         /// The get current published for resource async.
         /// </summary>
         /// <param name="resourceId">The resource id.</param>
@@ -337,6 +357,27 @@
                 resourceVersionUpdate.ResourceLicenceId = resourceVersion.ResourceLicenceId == 0 ? null : resourceVersion.ResourceLicenceId;
                 resourceVersionUpdate.SensitiveContent = resourceVersion.SensitiveContent;
                 resourceVersionUpdate.CertificateEnabled = resourceVersion.CertificateEnabled;
+                this.SetAuditFieldsForUpdate(userId, resourceVersionUpdate);
+            }
+
+            await this.DbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// The update async.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="resourceVersionDevIdViewModel">The resourceVersionDevIdViewModel.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task UpdateDevIdAsync(int userId, ResourceVersionDevIdViewModel resourceVersionDevIdViewModel)
+        {
+            var resourceVersionUpdate = this.DbContext.ResourceVersion
+                .SingleOrDefault(r => r.Id == resourceVersionDevIdViewModel.ResourceVersionId);
+
+            if (resourceVersionUpdate != null)
+            {
+                // Update Resource Version
+                resourceVersionUpdate.DevId = resourceVersionDevIdViewModel.DevId;
                 this.SetAuditFieldsForUpdate(userId, resourceVersionUpdate);
             }
 

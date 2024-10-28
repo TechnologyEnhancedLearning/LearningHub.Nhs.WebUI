@@ -89,7 +89,7 @@
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
-        margin: .5em 0
+        margin: 1em 0
     }
 
     .bmpui-ui-controlbar .bmpui-controlbar-top .bmpui-ui-label {
@@ -563,7 +563,7 @@
 
 .bmpui-ui-seekbar, .bmpui-ui-volumeslider {
     cursor: pointer;
-    font-size: 1em;
+    font-size: 0.2em;
     height: 1em;
     position: relative;
     width: 100%
@@ -684,7 +684,7 @@
 
 .bmpui-ui-uicontainer .bmpui-ui-subtitle-overlay {
     bottom: 0;
-    font-size: 1.2em;
+    font-size: 1em;
     left: 0;
     pointer-events: none;
     position: absolute;

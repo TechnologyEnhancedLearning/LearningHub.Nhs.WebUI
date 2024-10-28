@@ -39,16 +39,25 @@
         /// <param name="playBackUrl">The playBackUrl.</param>
         /// <param name="token">The token.</param>
         /// <param name="origin">The orgin node.</param>
+        /// <param name="isLandingPage">The isLandingPage.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [Route("Media/MediaManifest")]
-        public IActionResult MediaManifest(string playBackUrl, string token, string origin = "*")
+        public IActionResult MediaManifest(string playBackUrl, string token, string origin = "*", bool isLandingPage = false)
         {
             try
             {
                 this.Logger.LogDebug($"playBackUrl={playBackUrl} token={token}");
                 var hostPortion = this.Request.Host;
+                var manifestProxyUrl = string.Empty;
+                if (isLandingPage)
+                {
+                    manifestProxyUrl = string.Format("https://{0}/api/MediaManifestProxy/LandingPageGet", hostPortion);
+                }
+                else
+                {
+                    manifestProxyUrl = string.Format("https://{0}/api/MediaManifestProxy", hostPortion);
+                }
 
-                var manifestProxyUrl = string.Format("https://{0}/api/MediaManifestProxy", hostPortion);
                 this.Logger.LogDebug($"manifestProxyUrl={manifestProxyUrl}");
 
                 var modifiedTopLeveLManifest = this.azureMediaService.GetTopLevelManifestForToken(manifestProxyUrl, playBackUrl, token);

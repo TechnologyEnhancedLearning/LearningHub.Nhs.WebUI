@@ -78,7 +78,7 @@
 
         <div class="row mt-5">
             <div class="form-group col-12">
-                <h2 id="keyword-label" class="nhsuk-heading-l">Keywords <i v-if="keywords.length==0" class="warningTriangle fa-solid fa-triangle-exclamation"></i></h2>
+                <h2 id="keyword-label" class="nhsuk-heading-l"><label for="newKeyword">Keywords</label> <i v-if="keywords.length==0" class="warningTriangle fa-solid fa-triangle-exclamation"></i></h2>
             </div>
         </div>
         <div class="row">
@@ -92,11 +92,11 @@
                     </span>
                 </div>
 
-                <div class="col-12">
+                <div class="col-12" id="keyworddesc">
                     To help learners find this resource, type one or more relevant keywords separated by commas and click 'Add'.
                 </div>
                 <div class="col-12 mt-4 input-with-button">
-                    <input id="newKeyword" aria-labelledby="keyword-label" type="text" class="form-control" maxlength="260" v-model="newKeyword" v-bind:class="{ 'input-validation-error': keywordError }" @input="keywordError=false" @change="keywordChange" />
+                    <input id="newKeyword" aria-labelledby="keyword-label" aria-describedby="keyworddesc" type="text" class="form-control" maxlength="260" v-model="newKeyword" v-bind:class="{ 'input-validation-error': keywordError }" @input="keywordError=false" @change="keywordChange" />
                     <button type="button" class="nhsuk-button nhsuk-button--secondary ml-3 nhsuk-u-margin-bottom-0" @click="addKeyword">&nbsp;Add</button>
                 </div>
                 <div class="col-12 footer-text">
@@ -165,24 +165,24 @@
                 <div class="resource-area-body" v-if="authors.length < maxAllowedAuthors">
                     <div class="form-group" v-bind:class="{ 'input-validation-error': authorError }">
                         <div class="col-12 mb-0 error-text" v-if="authorError">
-                            <span class="text-danger">Enter the author name or organisation.</span>
+                            <span class="text-danger" data-valmsg-for="authorName">Enter the author name or organisation.</span>
                         </div>
                         <div class="col-12">
                             <label class="mb-0" for="authorName">Author name</label>
                         </div>
                         <div class="col-12">
-                            <input type="text" id="authorName" class="form-control" v-bind:class="{ 'input-validation-error': authorError }" maxlength="100" v-model="authorName" v-bind:disabled="currentUserAuthor" @input="authorError=false" />
+                            <input type="text" id="authorName" name="authorName" class="form-control" aria-describedby="authorNamehint" v-bind:class="{ 'input-validation-error': authorError }" maxlength="100" v-model="authorName" v-bind:disabled="currentUserAuthor" @input="authorError=false" />
                         </div>
-                        <div class="col-12 footer-text">
+                        <div class="col-12 footer-text" id="authorNamehint">
                             You can enter a maximum of 100 characters
                         </div>
                         <div class="col-12">
                             <label class="mb-0" for="authorOganisation">Organisation</label>
                         </div>
                         <div class="col-12">
-                            <input type="text" id="authorOganisation" class="form-control" v-bind:class="{ 'input-validation-error': authorError }" maxlength="100" v-model="authorOganisation" @input="authorError=false" />
+                            <input type="text" id="authorOganisation" name="authorOganisation" aria-describedby="authorOganisationhint" class="form-control" v-bind:class="{ 'input-validation-error': authorError }" maxlength="100" v-model="authorOganisation" @input="authorError=false" />
                         </div>
-                        <div class="col-12 footer-text">
+                        <div class="col-12 footer-text" id="authorOganisationhint">
                             You can enter a maximum of 100 characters
                         </div>
                     </div>
@@ -190,9 +190,9 @@
                         <label class="mb-0" for="authorRole">Role <span class="optional">(optional)</span></label>
                     </div>
                     <div class="col-12">
-                        <input type="text" id="authorRole" class="form-control" maxlength="100" v-model="authorRole" />
+                        <input type="text" id="authorRole" name="authorRole" class="form-control" maxlength="100" v-model="authorRole" aria-describedby="authorRolehint" />
                     </div>
-                    <div class="col-12 footer-text">
+                    <div class="col-12 footer-text" id="authorRolehint">
                         You can enter a maximum of 100 characters
                     </div>
                     <div class="col-12 mt-4 input-with-button">

@@ -41,8 +41,8 @@
 
                         <div class="d-flex">
                             <div class="selection pr-50">
-                                <div class="mb-4">Add a pass mark for this assessment. This is the percentage that the learner must achieve in order to pass.</div>
-                                <input class="text-input" type="text" v-model="assessmentDetails.passMark"/>
+                                <div class="mb-4"><label for="passmark">Add a pass mark for this assessment. This is the percentage that the learner must achieve in order to pass.</label></div>
+                                <input class="text-input" id="passmark" name="passmark" type="text" v-model="assessmentDetails.passMark"/>
                             </div>
                             <div class="tip" v-if="assessmentDetails.assessmentType === AssessmentTypeEnum.Informal">
                                 <h3>Tip</h3>

@@ -83,3 +83,5 @@ UPDATE [resources].[ResourceVersion] SET CertificateEnabled = 0 WHERE VersionSta
 :r .\Scripts\InitialiseDataForEmailTemplates.sql
 :r .\Scripts\AttributeData.sql 
 :r .\Scripts\PPSXFileType.sql
+:r .\Scripts\UpdateFileTypes.sql
+

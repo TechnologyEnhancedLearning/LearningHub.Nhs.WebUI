@@ -12,7 +12,7 @@
     <PackageReference Include="FluentValidation" Version="10.3.4" />
     <PackageReference Include="HtmlSanitizer" Version="6.0.453" />
     <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.33" />
+    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.41" />
 	<PackageReference Update="StyleCop.Analyzers" Version="1.1.118">
 		<PrivateAssets>all</PrivateAssets>
 		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

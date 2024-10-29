@@ -771,6 +771,16 @@ namespace LearningHub.Nhs.Repository
         public virtual DbSet<MyLearningActivity> MyLearningActivity { get; set; }
 
         /// <summary>
+        /// Gets or sets the AllCatalogueAlphabet.
+        /// </summary>
+        public virtual DbSet<AllCatalogueAlphabetModel> AllCatalogueAlphabetModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the AllCatalogueAlphabet.
+        /// </summary>
+        public virtual DbSet<AllCatalogueViewModel> AllCatalogueViewModel { get; set; }
+
+        /// <summary>
         /// The on model creating.
         /// </summary>
         /// <param name="modelBuilder">The modelBuilder<see cref="ModelBuilder"/>.</param>

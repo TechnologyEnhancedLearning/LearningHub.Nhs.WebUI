@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
@@ -24,6 +24,7 @@
     <ItemGroup>
       <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.4" />
       <PackageReference Include="IdentityModel" Version="4.3.0" />
+      <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.41" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />

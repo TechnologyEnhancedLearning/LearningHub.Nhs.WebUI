@@ -193,6 +193,14 @@
         List<RoleUserGroup> GetRoleUserGroupsForCatalogue(int catalogueNodeId, bool includeUser = false);
 
         /// <summary>
+        /// The GetRolesForCatalogueSearch.
+        /// </summary>
+        /// <param name="catalogueNodeId">The catalogueNodeId.</param>
+        /// <param name="userId">The current user.</param>
+        /// <returns>The roleUserGroups.</returns>
+        Task<List<RoleUserGroup>> GetRoleUserGroupsForCatalogueSearch(int catalogueNodeId, int userId);
+
+        /// <summary>
         /// The GetLatestCatalogueAccessRequestAsync.
         /// </summary>
         /// <param name="catalogueNodeId">The catalogueNodeId.</param>
@@ -238,5 +246,14 @@
         /// <param name="catalogueAccessRequestId">The catalogueAccessRequestId.</param>
         /// <returns>The catalogue access request.</returns>
         Task<CatalogueAccessRequestViewModel> AccessRequestAsync(int userId, int catalogueAccessRequestId);
+
+        /// <summary>
+        /// GetAllCataloguesAsync.
+        /// </summary>
+        /// <param name="pageSize">The pageSize.</param>
+        /// <param name="filterChar">filterChar.</param>
+        /// <param name="userId">userId.</param>
+        /// <returns>The allcatalogue result based on letters.</returns>
+        Task<AllCatalogueResponseViewModel> GetAllCataloguesAsync(int pageSize, string filterChar, int userId);
     }
 }

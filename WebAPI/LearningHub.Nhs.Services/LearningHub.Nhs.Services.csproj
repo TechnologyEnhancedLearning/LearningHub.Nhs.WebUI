@@ -13,7 +13,7 @@
     <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.8" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.4" />
     <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.33" />
+    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.41" />
     <PackageReference Include="Microsoft.Azure.Management.DataFactory" Version="4.28.0" />
     <PackageReference Include="Microsoft.Azure.Management.Media" Version="5.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.9" />

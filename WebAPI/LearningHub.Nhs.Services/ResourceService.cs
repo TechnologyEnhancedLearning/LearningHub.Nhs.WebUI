@@ -2,14 +2,12 @@ namespace LearningHub.Nhs.Services
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing.Imaging;
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
     using AutoMapper;
     using Azure.Storage.Blobs;
-    using Azure.Storage.Blobs.Models;
     using Azure.Storage.Blobs.Specialized;
     using LearningHub.Nhs.Api.Shared.Configuration;
     using LearningHub.Nhs.Entities.Resource;
@@ -1332,7 +1330,7 @@ namespace LearningHub.Nhs.Services
             {
                 if (resourceVersion.ResourceType == ResourceTypeEnum.Assessment)
                 {
-                   if (deletedResource)
+                    if (deletedResource)
                     {
                         var assessmentFiles = await this.GetResourceBlockCollectionsFilePathAsync(resourceVersionId, ResourceTypeEnum.Assessment);
                         if (assessmentFiles.Any())
@@ -1350,8 +1348,8 @@ namespace LearningHub.Nhs.Services
                         List<string> deletableFiles = null;
                         if (assessmentDetails is { EndGuidance: { } } && assessmentDetails.EndGuidance.Blocks != null)
                         {
-                           var endGuidanceFiles = this.CheckBlockFile(assessmentDetails.EndGuidance, currentAssessmentVersion.EndGuidance);
-                           if (endGuidanceFiles.Any())
+                            var endGuidanceFiles = this.CheckBlockFile(assessmentDetails.EndGuidance, currentAssessmentVersion.EndGuidance);
+                            if (endGuidanceFiles.Any())
                             {
                                 deletableFiles = await this.GetResourceBlockCollectionsFilePathAsync(rv.Id, ResourceTypeEnum.Assessment);
                                 retVal.AddRange(from entry in endGuidanceFiles
@@ -1772,7 +1770,8 @@ namespace LearningHub.Nhs.Services
             bool doesKeywordAlreadyExist = await this.resourceVersionKeywordRepository.DoesResourceVersionKeywordAlreadyExistAsync(rvk.ResourceVersionId, rvk.Keyword);
             if (doesKeywordAlreadyExist)
             {
-                return new LearningHubValidationResult(false, "This keyword has already been added.");
+                retVal.CreatedId = 0;
+                return retVal;
             }
 
             retVal.CreatedId = await this.resourceVersionKeywordRepository.CreateAsync(userId, rvk);
@@ -1829,6 +1828,48 @@ namespace LearningHub.Nhs.Services
 
             var retVal = this.mapper.Map<ResourceVersionValidationResultViewModel>(res);
             return retVal;
+        }
+
+        /// <summary>
+        /// The get resource version dev id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="List{ResourceVersionDevIdViewModel}"/>.</returns>
+        public async Task<ResourceVersionDevIdViewModel> GetResourceVersionDevIdDetailsAync(int resourceVersionId)
+        {
+            ResourceVersionDevIdViewModel resourceVersionDevIdViewModel = new ResourceVersionDevIdViewModel();
+            var res = await this.resourceVersionRepository.GetByResourceVersionByIdAsync(resourceVersionId);
+            resourceVersionDevIdViewModel.ResourceVersionId = res.Id;
+            resourceVersionDevIdViewModel.DevId = res.DevId;
+            return resourceVersionDevIdViewModel;
+        }
+
+        /// <summary>
+        /// The get resource version dev id async.
+        /// </summary>
+        /// <param name="devId">The devId<see cref="string"/>.</param>
+        /// <returns>The <see cref="bool"/>.</returns>
+        public async Task<bool> DoesDevIdExistsAync(string devId)
+        {
+            var res = await this.resourceVersionRepository.DoesDevIdExistsAync(devId);
+
+            if (res != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Update Dev Id details.
+        /// </summary>
+        /// <param name="resourceVersionDevIdViewModel">The resourceVersionDevIdViewModel.</param>
+        /// <param name="currentUserId">The currentUserId.</param>
+        /// <returns>The <see cref="List{ResourceVersionDevIdViewModel}"/>.</returns>
+        public async Task UpdateDevIdDetailsAsync(ResourceVersionDevIdViewModel resourceVersionDevIdViewModel, int currentUserId)
+        {
+            await this.resourceVersionRepository.UpdateDevIdAsync(currentUserId, resourceVersionDevIdViewModel);
         }
 
         /// <summary>

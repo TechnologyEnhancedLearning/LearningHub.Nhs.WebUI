@@ -16,6 +16,7 @@
 	[SensitiveContent] [bit] NOT NULL DEFAULT 0,
 	[CertificateEnabled] [bit] NULL,
 	[ProviderId] [int] NULL,
+	[DevId] NVARCHAR(30) NULL,
 	[Deleted] [bit] NOT NULL,
 	[CreateUserId] [int] NOT NULL,
 	[CreateDate] [datetimeoffset](7) NOT NULL,

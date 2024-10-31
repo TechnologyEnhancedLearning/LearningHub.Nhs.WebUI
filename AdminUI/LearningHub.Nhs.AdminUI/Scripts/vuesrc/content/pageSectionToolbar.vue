@@ -2,7 +2,7 @@
     <div>
         <div class="toolBarBox">
             <div class="toolBar">
-                <div :style="getStatusStyle()" class="mr-4 p-2">
+                <div :style="getStatusStyle()" class="mr-1 p-2">
                     <i :class="contentLib.getPageSectionStatusIcon(this.pageSection.pageSectionDetail)"></i>
                     {{ contentLib.getPageSectionStatusText(this.pageSection.pageSectionDetail) }}
                 </div>
@@ -167,8 +167,8 @@
         methods: {
             getStatusStyle(): string {
                 return this.pageSection.pageSectionDetail.pageSectionStatus === PageSectionStatus.Live
-                    ? 'background: #007F3B; height: 45px; margin: -8px;border: 1px solid #FFFFFF;'
-                    : ((this.pageSection.pageSectionDetail.deletePending == null || !this.pageSection.pageSectionDetail.deletePending) ? 'background: #FFB81C; height: 50px; margin: -12px;border: 1px solid #FFFFFF;color: #425563;' : 'background: #DA291C; height: 45px; margin: -8px; border: 1px solid #FFFFFF;');
+                    ? 'background: #007F3B; height: 50px; margin: -12px;border: 1px solid #FFFFFF;'
+                    : ((this.pageSection.pageSectionDetail.deletePending == null || !this.pageSection.pageSectionDetail.deletePending) ? 'background: #FFB81C; height: 50px; margin: -12px;border: 1px solid #FFFFFF;color: #425563;' : 'background: #DA291C; height: 50px; margin: -12px; border: 1px solid #FFFFFF;');
             },
             getStatusIconStyle(): string {
                 return 'margin-top:20px;'
@@ -216,7 +216,7 @@
     .toolBarBox {
         position: absolute;
         right: 12px;
-        left:3px;
+        left:12px;
         top: 2px;
         z-index: 1;
     }

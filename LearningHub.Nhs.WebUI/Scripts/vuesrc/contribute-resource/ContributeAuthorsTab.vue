@@ -31,6 +31,7 @@
                                         v-bind:inputId="authorName"
                                         v-bind:characterLimit="100"
                                         v-bind:disabled="authorIsContributor"
+                                        :showTitle="false"
                                         class="mt-25">
                             <template v-slot:description>
                                 <label :for="'authorName'" class="mb-0">Author name</label>
@@ -39,6 +40,7 @@
                         <CharacterCount v-model="authorOrganisation"
                                         v-bind:inputId="authorOrganisation"
                                         v-bind:characterLimit="100"
+                                        :showTitle="false"
                                         class="mt-15">
                             <template v-slot:description>
                                 <label :for="'authorOrganisation'" class="mb-0">Organisation</label>
@@ -47,6 +49,7 @@
                         <CharacterCount v-model="authorRole"
                                         v-bind:inputId="authorRole"
                                         v-bind:characterLimit="100"
+                                        :showTitle="false"
                                         class="mt-15">
                             <template v-slot:description>
                                 <label :for="'authorRole'" class="mb-0">Role</label>

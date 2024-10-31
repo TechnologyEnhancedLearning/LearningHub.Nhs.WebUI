@@ -3,6 +3,7 @@
         <CharacterCount v-model="inputValue"
                         v-bind:characterLimit="characterLimit"
                         v-bind:size="size"
+                        :showTitle="false"
                         focusOnLoad></CharacterCount>
         <div class="d-inline-flex">
             <Button v-on:click="save"

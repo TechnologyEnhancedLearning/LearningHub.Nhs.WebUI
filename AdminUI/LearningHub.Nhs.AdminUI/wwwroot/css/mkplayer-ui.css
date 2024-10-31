@@ -17,7 +17,7 @@
 }
 
     .bmpui-ui-buffering-overlay, .bmpui-ui-cast-status-overlay, .bmpui-ui-container, .bmpui-ui-controlbar, .bmpui-ui-errormessage-overlay, .bmpui-ui-listbox, .bmpui-ui-playbacktoggle-overlay, .bmpui-ui-recommendation-overlay, .bmpui-ui-seekbar-label, .bmpui-ui-settings-panel, .bmpui-ui-subtitle-overlay.bmpui-fontsize-100 .bmpui-ui-subtitle-label, .bmpui-ui-titlebar, .bmpui-ui-uicontainer, .bmpui-ui-uicontainer .bmpui-ui-subtitle-overlay, .bmpui-ui-volumecontrolbutton {
-        font-size: 1em
+        font-size: 0.7em
     }
 
 .bmpui-ui-uicontainer {
@@ -89,7 +89,7 @@
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
-        margin: 1em 0
+        margin: .5em 0
     }
 
     .bmpui-ui-controlbar .bmpui-controlbar-top .bmpui-ui-label {
@@ -563,7 +563,7 @@
 
 .bmpui-ui-seekbar, .bmpui-ui-volumeslider {
     cursor: pointer;
-    font-size: 0.2em;
+    font-size: 1em;
     height: 1em;
     position: relative;
     width: 100%

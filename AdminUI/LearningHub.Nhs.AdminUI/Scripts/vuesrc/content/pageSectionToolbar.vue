@@ -2,7 +2,7 @@
     <div>
         <div class="toolBarBox">
             <div class="toolBar">
-                <div :style="getStatusStyle()" class="mr-4 p-3">
+                <div :style="getStatusStyle()" class="mr-4 p-2">
                     <i :class="contentLib.getPageSectionStatusIcon(this.pageSection.pageSectionDetail)"></i>
                     {{ contentLib.getPageSectionStatusText(this.pageSection.pageSectionDetail) }}
                 </div>
@@ -168,7 +168,7 @@
             getStatusStyle(): string {
                 return this.pageSection.pageSectionDetail.pageSectionStatus === PageSectionStatus.Live
                     ? 'background: #007F3B; height: 45px; margin: -8px;border: 1px solid #FFFFFF;'
-                    : ((this.pageSection.pageSectionDetail.deletePending == null || !this.pageSection.pageSectionDetail.deletePending) ? 'background: #FFB81C; height: 45px; margin: -8px;border: 1px solid #FFFFFF;color: #425563;' : 'background: #DA291C; height: 45px; margin: -8px; border: 1px solid #FFFFFF;');
+                    : ((this.pageSection.pageSectionDetail.deletePending == null || !this.pageSection.pageSectionDetail.deletePending) ? 'background: #FFB81C; height: 50px; margin: -12px;border: 1px solid #FFFFFF;color: #425563;' : 'background: #DA291C; height: 45px; margin: -8px; border: 1px solid #FFFFFF;');
             },
             getStatusIconStyle(): string {
                 return 'margin-top:20px;'
@@ -214,9 +214,10 @@
     @use "../../../Styles/Abstracts/all" as *;
 
     .toolBarBox {
-        position: absolute;
-        right: 20px;
-        top: 20px;
+        position: relative;
+        right: 12px;
+        left:3px;
+        top: 2px;
         z-index: 1;
     }
 
@@ -237,7 +238,7 @@
     .toolBar {
         display: flex;
         padding: 16px;
-        height: 64px;
+        height: 60px;
         float: right;
         background: $nhsuk-grey;
         border: 2px solid $nhsuk-white;

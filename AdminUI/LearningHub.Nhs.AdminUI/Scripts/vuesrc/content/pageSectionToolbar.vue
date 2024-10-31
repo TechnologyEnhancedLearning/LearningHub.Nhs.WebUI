@@ -214,7 +214,7 @@
     @use "../../../Styles/Abstracts/all" as *;
 
     .toolBarBox {
-        position: relative;
+        position: absolute;
         right: 12px;
         left:3px;
         top: 2px;

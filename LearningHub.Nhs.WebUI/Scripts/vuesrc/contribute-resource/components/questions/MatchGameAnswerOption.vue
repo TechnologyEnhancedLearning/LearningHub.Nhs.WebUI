@@ -15,8 +15,9 @@
             </div>
         </div>
         <div v-if="blockType === BlockTypeEnum.Text">
-            <input type="text" class="form-control text-input" maxlength="40" v-model="answerOption"/>
-            <div class="footer-text">
+            <label for="answerOption" class="nhsuk-u-visually-hidden"></label>
+            <input type="text" form="answerOption" id="answerOption" name="answerOption" aria-describedby="answerOptionError" class="form-control text-input" maxlength="40" v-model="answerOption"/>
+            <div class="footer-text" id="answerOptionError">
                 You have {{ charactersRemaining }} characters remaining.
             </div>
         </div>

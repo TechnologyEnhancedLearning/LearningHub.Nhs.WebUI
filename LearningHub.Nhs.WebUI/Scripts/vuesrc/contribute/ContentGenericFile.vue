@@ -30,39 +30,39 @@
         <div class="row authored-date">
             <div class="col-4 col-sm-3 col-md-2">
                 <label for="year" class="mb-0">Year</label><br />
-                <input type="text" id="year" maxlength="4" v-bind:class="{ 'input-validation-error': $v.authoredYear.$invalid && $v.authoredYear.$dirty }" class="form-control" :placeholder="currentYear" v-model="authoredYear" @blur="setProperty('authoredYear', $event.target.value)" />
+                <input type="text" id="year" name="year" aria-describedby="yearError" maxlength="4" v-bind:class="{ 'input-validation-error': $v.authoredYear.$invalid && $v.authoredYear.$dirty }" class="form-control" :placeholder="currentYear" v-model="authoredYear" @blur="setProperty('authoredYear', $event.target.value)" />
             </div>
             <div class="col-4 col-sm-3 col-md-2">
                 <label for="month" v-bind:class="{ disabled: $v.authoredYear.$invalid || !authoredYear }" class="mb-0">Month</label><br />
-                <input type="text" id="month" maxlength="2" v-bind:class="{ 'input-validation-error': $v.authoredMonth.$invalid && $v.authoredMonth.$dirty }" class="form-control" :placeholder="currentMonth" v-model="authoredMonth" v-bind:disabled="$v.authoredYear.$invalid || !authoredYear" @blur="setProperty('authoredMonth', $event.target.value)" />
+                <input type="text" id="month" name="month" aria-describedby="monthError" maxlength="2" v-bind:class="{ 'input-validation-error': $v.authoredMonth.$invalid && $v.authoredMonth.$dirty }" class="form-control" :placeholder="currentMonth" v-model="authoredMonth" v-bind:disabled="$v.authoredYear.$invalid || !authoredYear" @blur="setProperty('authoredMonth', $event.target.value)" />
             </div>
             <div class="col-4 col-sm-3 col-md-2">
                 <label for="day-of-month" v-bind:class="{ disabled: $v.authoredYear.$invalid || !authoredYear || $v.authoredMonth.$invalid || !authoredMonth }" class="mb-0">Day</label><br />
-                <input type="text" id="day-of-month" maxlength="2" v-bind:class="{ 'input-validation-error': $v.authoredDayOfMonth.$invalid && $v.authoredDayOfMonth.$dirty }" class="form-control" :placeholder="currentDayOfMonth" v-model="authoredDayOfMonth" v-bind:disabled="$v.authoredYear.$invalid || authoredYear == '' || $v.authoredMonth.$invalid || !authoredMonth" @blur="setProperty('authoredDayOfMonth', $event.target.value)" />
+                <input type="text" id="day-of-month" aria-describedby="day-of-monthError" name="day-of-month" maxlength="2" v-bind:class="{ 'input-validation-error': $v.authoredDayOfMonth.$invalid && $v.authoredDayOfMonth.$dirty }" class="form-control" :placeholder="currentDayOfMonth" v-model="authoredDayOfMonth" v-bind:disabled="$v.authoredYear.$invalid || authoredYear == '' || $v.authoredMonth.$invalid || !authoredMonth" @blur="setProperty('authoredDayOfMonth', $event.target.value)" />
             </div>
         </div>
         <div class="error-text pt-3" v-if="!$v.authoredYear.between && $v.authoredYear.$dirty">
-            <span class="text-danger">Use four numbers to enter the year.</span>
+            <span class="text-danger" id="yearError" aria-live="polite">Use four numbers to enter the year.</span>
         </div>
         <div class="error-text pt-3" v-if="$v.authoredYear.between && !$v.authoredYear.maxValue && $v.authoredYear.$dirty">
-            <span class="text-danger">The year this file was authored cannot be in the future.</span>
+            <span class="text-danger" id="yearError" aria-live="polite">The year this file was authored cannot be in the future.</span>
         </div>
         <div class="error-text pt-3" v-if="!$v.authoredYear.$invalid && (!$v.authoredMonth.between || !$v.authoredMonth.minLength) && $v.authoredMonth.$dirty">
-            <span class="text-danger">Use two numbers to enter a valid month.</span>
+            <span class="text-danger" id="monthError" aria-live="polite">Use two numbers to enter a valid month.</span>
         </div>
         <div class="error-text pt-3" v-if="!$v.authoredYear.$invalid && !$v.authoredMonth.month_in_past && $v.authoredMonth.$dirty">
-            <span class="text-danger">The month this file was authored cannot be in the future.</span>
+            <span class="text-danger" id="monthError" aria-live="polite">The month this file was authored cannot be in the future.</span>
         </div>
         <div class="error-text pt-3" v-if="!$v.authoredMonth.$invalid && (!$v.authoredDayOfMonth.between || !$v.authoredDayOfMonth.minLength) && $v.authoredDayOfMonth.$dirty">
-            <span class="text-danger">Use two numbers to enter a valid day.</span>
+            <span class="text-danger" id="day-of-monthError" aria-live="polite">Use two numbers to enter a valid day.</span>
         </div>
         <div class="error-text pt-3" v-if="!$v.authoredMonth.$invalid && !$v.authoredDayOfMonth.dayOfMonth_in_past && $v.authoredDayOfMonth.$dirty">
-            <span class="text-danger">The day this file was authored cannot be in the future.</span>
+            <span class="text-danger" id="day-of-monthError" aria-live="polite">The day this file was authored cannot be in the future.</span>
         </div>
 
         <div class="row mt-5">
             <div class="form-group col-12 my-2">
-                <h3 id="additionalinfo-label">Additional information <span class="optional">(optional)</span></h3>
+                <h3 id="additionalinfo-label"><label for="additionalinfo">Additional information <span class="optional">(optional)</span></label></h3>
             </div>
         </div>
         <div class="row">
@@ -71,7 +71,7 @@
                 for example, how it was developed or what is required for it to be used.
             </div>
             <div class="col-12 mt-3">
-                <textarea class="form-control" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
+                <textarea class="form-control" id="additionalinfo" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
             </div>
             <div class="col-12 footer-text">
                 You can enter a maximum of 250 characters

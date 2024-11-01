@@ -216,9 +216,10 @@
     .toolBarBox {
         position: absolute;
         right: 12px;
-        left:12px;
+        left:10px;
         top: 2px;
         z-index: 1;
+        width:fit-content;
     }
 
     .warningTriangle {

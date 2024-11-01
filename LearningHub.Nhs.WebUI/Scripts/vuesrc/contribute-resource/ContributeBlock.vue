@@ -28,7 +28,8 @@
                                                          v-model="block.title"
                                                          addEditLabel="title"
                                                          :characterLimit="60"
-                                                         :isH3="true"></EditSaveFieldWithCharacterCount>
+                                                         :isH3="true"
+                                                         :inputId="title"></EditSaveFieldWithCharacterCount>
                         <h3 class="my-0"
                             v-else>
                             {{ block.title }}
@@ -158,7 +159,8 @@
             enableDown: Boolean,
             resourceType: { type: Number } as PropOptions<ResourceType>,
             canBeDuplicated: Boolean,
-            selectedToDuplicate: Boolean
+            selectedToDuplicate: Boolean,
+            title: { type: String, default: 'title' },
         },
         data() {
             return {

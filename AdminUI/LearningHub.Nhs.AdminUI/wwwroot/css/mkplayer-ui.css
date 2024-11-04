@@ -17,7 +17,7 @@
 }
 
     .bmpui-ui-buffering-overlay, .bmpui-ui-cast-status-overlay, .bmpui-ui-container, .bmpui-ui-controlbar, .bmpui-ui-errormessage-overlay, .bmpui-ui-listbox, .bmpui-ui-playbacktoggle-overlay, .bmpui-ui-recommendation-overlay, .bmpui-ui-seekbar-label, .bmpui-ui-settings-panel, .bmpui-ui-subtitle-overlay.bmpui-fontsize-100 .bmpui-ui-subtitle-label, .bmpui-ui-titlebar, .bmpui-ui-uicontainer, .bmpui-ui-uicontainer .bmpui-ui-subtitle-overlay, .bmpui-ui-volumecontrolbutton {
-        font-size: 0.7em
+        font-size: 1em
     }
 
 .bmpui-ui-uicontainer {
@@ -684,7 +684,7 @@
 
 .bmpui-ui-uicontainer .bmpui-ui-subtitle-overlay {
     bottom: 0;
-    font-size: 1em;
+    font-size: 1.2em;
     left: 0;
     pointer-events: none;
     position: absolute;
@@ -1871,3 +1871,37 @@
     .bmpui-ui-uicontainer.bmpui-layout-max-width-400 .bmpui-ui-hugeplaybacktogglebutton, .bmpui-ui-uicontainer.bmpui-layout-max-width-400 .bmpui-ui-watermark, .bmpui-ui-uicontainer.bmpui-layout-max-width-600 .bmpui-ui-hugeplaybacktogglebutton, .bmpui-ui-uicontainer.bmpui-layout-max-width-600 .bmpui-ui-watermark {
         font-size: .7em
     }
+@media (max-width: 767px) {
+    .bmpui-ui-buffering-overlay,
+    .bmpui-ui-cast-status-overlay,
+    .bmpui-ui-container,
+    .bmpui-ui-controlbar,
+    .bmpui-ui-errormessage-overlay,
+    .bmpui-ui-listbox,
+    .bmpui-ui-playbacktoggle-overlay,
+    .bmpui-ui-recommendation-overlay,
+    .bmpui-ui-seekbar-label,
+    .bmpui-ui-settings-panel,
+    .bmpui-ui-subtitle-overlay.bmpui-fontsize-100 .bmpui-ui-subtitle-label,
+    .bmpui-ui-titlebar,
+    .bmpui-ui-uicontainer,
+    .bmpui-ui-uicontainer .bmpui-ui-subtitle-overlay,
+    .bmpui-ui-volumecontrolbutton {
+        font-size: 0.7em;
+    }
+}
+
+@media (max-width: 767px) {
+    .bmpui-ui-uicontainer .bmpui-ui-subtitle-overlay {
+        bottom: 0;
+        font-size: 1em;
+        left: 0;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        top: 0;
+        -webkit-transition: bottom .15s ease-out;
+        transition: bottom .15s ease-out
+    }
+}

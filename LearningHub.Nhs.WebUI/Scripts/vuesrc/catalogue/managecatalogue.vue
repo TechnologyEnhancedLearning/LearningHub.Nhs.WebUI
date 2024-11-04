@@ -76,6 +76,7 @@
                             <div class="row">
                                 <div class="col" style="min-width:400px; width:400px;">
                                     <div class="input-group pt-4" id="input-group-searchbar-md">
+                                        <label class="nhsuk-label nhsuk-u-visually-hidden" for="input-search-md">Find a user by their email address</label>
                                         <input class="form-control small pl-4" v-model="emailAddressFilter" type="search" placeholder="Find a user by their email address" aria-label="Search your learning activity" id="input-search-md" @change="loadUsers();" v-on:keyup="searchUsersKeyUp($event.keyCode)">
                                         <span class="input-group-append">
                                             <button class="btn btn-outline-secondary btn-search" type="button" name="button-search" aria-label="search" v-on:click="loadUsers()" style="margin-top: 0;">

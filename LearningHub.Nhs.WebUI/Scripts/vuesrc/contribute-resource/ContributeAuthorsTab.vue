@@ -28,7 +28,7 @@
                             </label>
                         </div>
                         <CharacterCount v-model="authorName"
-                                        v-bind:inputId="authorName"
+                                        v-bind:inputId="txtauthorName"
                                         v-bind:characterLimit="100"
                                         v-bind:disabled="authorIsContributor"
                                         :showTitle="false"
@@ -38,7 +38,7 @@
                             </template>
                         </CharacterCount>
                         <CharacterCount v-model="authorOrganisation"
-                                        v-bind:inputId="authorOrganisation"
+                                        v-bind:inputId="txtauthorOrganisation"
                                         v-bind:characterLimit="100"
                                         :showTitle="false"
                                         class="mt-15">
@@ -47,7 +47,7 @@
                             </template>
                         </CharacterCount>
                         <CharacterCount v-model="authorRole"
-                                        v-bind:inputId="authorRole"
+                                        v-bind:inputId="txtauthorRole"
                                         v-bind:characterLimit="100"
                                         :showTitle="false"
                                         class="mt-15">
@@ -86,12 +86,16 @@
         props: {
             resourceDetails: { type: Object } as PropOptions<ContributeResourceDetailModel>,
             configuration: { type: Object } as PropOptions<ContributeConfiguration>,
+            txtauthorName: { type: String, default: 'authorName' },
+            txtauthorOrganisation: { type: String, default: 'authorOrganisation' },
+            txtauthorRole: { type: String, default: 'authorRole' },
         },
         components: {
             AuthorsList,
             Button,
             CharacterCount,
             LinkTextAndIcon,
+
         },
         data() {
             return {

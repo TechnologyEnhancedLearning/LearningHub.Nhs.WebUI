@@ -53,8 +53,8 @@
 
                         <div class="d-flex" v-if="assessmentDetails.assessmentType === AssessmentTypeEnum.Formal">
                             <div class="selection pr-50">
-                                <div class="mb-4">Define how many attempts the learner can have.</div>
-                                <input class="text-input" type="text" v-model="assessmentDetails.maximumAttempts" />
+                                <div class="mb-4"><label for="maximumAttempts">Define how many attempts the learner can have.</label></div>
+                                <input class="text-input" type="text" id="maximumAttempts" name="maximumAttempts" v-model="assessmentDetails.maximumAttempts" />
                             </div>
                             <div class="tip">
                                 <h3>Tip</h3>
@@ -65,11 +65,12 @@
 
                         <div class="d-flex">
                             <div class="selection pr-50">
-                                <div>Provide guidance for the learner at the end of this assessment. <i v-if="!IsVisible" class="warningTriangle fas fa-exclamation-triangle warm-yellow"></i></div>
+                                <div>Provide guidance for the learner at the end of this assessment.<i v-if="!IsVisible" class="warningTriangle fas fa-exclamation-triangle warm-yellow"></i></div>
                                 <EditSaveFieldWithCharacterCount v-model="assessmentDetails.endGuidance.blocks[0].title"
                                                                  addEditLabel="title"
                                                                  v-bind:characterLimit="60"
-                                                                 v-bind:isH3="true" />
+                                                                 v-bind:isH3="true" 
+                                                                 v-bind:inputId="message"/>
                                 <ckeditorwithhint v-on:blur="setEndGuidance"
                                                   v-on:inputValidity="setGuidanceValidity"
                                                   :maxLength="1000"
@@ -107,6 +108,7 @@
         props: {
             blockCollection: { type: Object } as PropOptions<BlockCollectionModel>,
             firstTimeOpen: Boolean,
+            message: { type: String, default: 'message' },
         },
         components: {
             ExpansionPanel,

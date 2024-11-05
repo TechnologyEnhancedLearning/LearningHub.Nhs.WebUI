@@ -87,7 +87,7 @@
                     <span class="text-danger">The keyword(s) have already been added : {{formattedkeywordErrorMessage}}</span>
                 </div>
                 <div class="col-12 mb-0 error-text" v-if="keywordLengthExceeded">
-                    <span class="text-danger">
+                    <span class="text-danger" id="keyword-label"> 
                         Each keyword must be no longer than 50 characters.
                     </span>
                 </div>
@@ -99,7 +99,7 @@
                     <input id="newKeyword" aria-labelledby="keyword-label" aria-describedby="keyworddesc" type="text" class="form-control" maxlength="260" v-model="newKeyword" v-bind:class="{ 'input-validation-error': keywordError }" @input="keywordError=false" @change="keywordChange" />
                     <button type="button" class="nhsuk-button nhsuk-button--secondary ml-3 nhsuk-u-margin-bottom-0" @click="addKeyword">&nbsp;Add</button>
                 </div>
-                <div class="col-12 footer-text">
+                <div class="col-12 footer-text" id="keyword-label">
                     You can enter a maximum of 50 characters per keyword
                 </div>
             </div>

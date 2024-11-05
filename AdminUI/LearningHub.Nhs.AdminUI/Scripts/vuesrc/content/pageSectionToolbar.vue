@@ -219,6 +219,7 @@
         left:10px;
         top: 2px;
         z-index: 1;
+        width:fit-content;
     }
 
     .warningTriangle {
@@ -269,15 +270,5 @@
 
     .toolBarButton i .fa, .fas {
         font-weight: 100;
-    }
-    @media(max-width: 767px) {
-        .toolBarBox {
-            position: absolute;
-            right: 12px;
-            left: 10px;
-            top: 2px;
-            z-index: 1;
-            width: fit-content;
-        }
     }
 </style>

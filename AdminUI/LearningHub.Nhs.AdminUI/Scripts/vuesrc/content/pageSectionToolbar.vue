@@ -269,8 +269,8 @@
 
     .toolBarButton i .fa, .fas {
         font-weight: 100;
-    }   
-    @media (max-width: 767px) {
+    }
+    @media (max-width: 420px) {
         .toolBarBox {
             position: absolute;
             right: 12px;

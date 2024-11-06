@@ -11,9 +11,9 @@
         </div>
 
         <div class="mt-3">
-            <label class="checkContainer mb-0">
+            <label class="checkContainer mb-0" for="sensitivecontent">
                 Yes
-                <input type="checkbox" v-model="resourceDetails.sensitiveContent">
+                <input type="checkbox" id="sensitivecontent" v-model="resourceDetails.sensitiveContent">
                 <span class="checkmark"></span>
             </label>
         </div>

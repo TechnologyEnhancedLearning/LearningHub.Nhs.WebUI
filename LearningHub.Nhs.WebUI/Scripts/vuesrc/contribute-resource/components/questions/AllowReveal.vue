@@ -6,13 +6,13 @@
             </div>
             <form>
                
-                <label class="my-0">
-                    <input class="radio-button" type="radio" :value="false"  v-model="questionBlock.allowReveal"/>
+                <label class="my-0" for="no">
+                    <input class="radio-button" type="radio" :value="false"  v-model="questionBlock.allowReveal" id="no"/>
                     No
                 </label>
                 <br>
-                <label class="my-0">
-                    <input class="radio-button" type="radio" :value="true"  v-model="questionBlock.allowReveal"/>
+                <label class="my-0" for="yes">
+                    <input class="radio-button" type="radio" :value="true"  v-model="questionBlock.allowReveal" id="yes"/>
                     Yes
                 </label>
             </form>

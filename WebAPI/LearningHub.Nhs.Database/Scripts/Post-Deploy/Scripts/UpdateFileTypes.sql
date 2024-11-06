@@ -1,1 +1,1 @@
-update resources.FileType set NotAllowed =1 where Extension='webm'
+update resources.FileType set NotAllowed =0 where Extension='WMV'

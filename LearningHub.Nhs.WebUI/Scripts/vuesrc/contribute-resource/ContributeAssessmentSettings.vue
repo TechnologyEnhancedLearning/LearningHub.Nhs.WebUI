@@ -23,12 +23,12 @@
                         <div class="d-flex">
                             <div class="selection pr-50">
                                 <div class="mb-4">Allow the learner to work through the assessment pages in any order.</div>
-                                <label class="my-0 label-text">
-                                    <input class="radio-button" type="radio" :value="false"  v-model="assessmentDetails.answerInOrder"/>
+                                <label class="my-0 label-text" for="yes">
+                                    <input class="radio-button" type="radio" :value="false" id="yes"  v-model="assessmentDetails.answerInOrder"/>
                                     Yes
                                 </label>
-                                <label class="my-0 pl-5 label-text">
-                                    <input class="radio-button" type="radio" :value="true"  v-model="assessmentDetails.answerInOrder"/>
+                                <label class="my-0 pl-5 label-text" for="no">
+                                    <input class="radio-button" type="radio" :value="true" id="no"  v-model="assessmentDetails.answerInOrder"/>
                                     No
                                 </label>
                             </div>
@@ -74,7 +74,9 @@
                                 <ckeditorwithhint v-on:blur="setEndGuidance"
                                                   v-on:inputValidity="setGuidanceValidity"
                                                   :maxLength="1000"
-                                                  :initialValue="endGuidance" />
+                                                  :initialValue="endGuidance"
+                                                  :for="guidance"
+                                                  :id="guidance"/>
                             </div>
                             <div class="tip">
                                 <h3>Tip</h3>

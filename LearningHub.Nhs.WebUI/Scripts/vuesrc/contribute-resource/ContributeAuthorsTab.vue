@@ -14,16 +14,16 @@
                 
                 <div v-if="resourceAuthors.length < maxAllowedAuthors" class="mb-40">
                     <LinkTextAndIcon v-if="!isAdding"
-                                     v-on:click="isAdding = true"
+                                     v-on:click="isAdding = true"Please choose...
                                      class="contribute-authors-tab-add-button">
                         <i class="fa-solid fa-plus"></i> Add author
                     </LinkTextAndIcon>
 
                     <div v-if="isAdding">
                         <div class="mt-5" v-if="!isCurrentUserSavedAsAuthor">
-                            <label class="checkContainer">
+                            <label class="checkContainer" for="currentUserAuthor">
                                 I am the author or co-author
-                                <input type="checkbox" v-model="authorIsContributor" v-on:change="currentUserAuthorChange">
+                                <input type="checkbox" id="currentUserAuthor" v-model="authorIsContributor" v-on:change="currentUserAuthorChange">
                                 <span class="checkmark"></span>
                             </label>
                         </div>

@@ -66,9 +66,9 @@
                 <div class="bg-grey-white">
                     Do you want learners to be notified that this resource contains sensitive content, which they may find offensive or disturbing, before they access it?
                     <div class="mt-3">
-                        <label class="checkContainer mb-0">
+                        <label class="checkContainer mb-0" for="sensitivecontent">
                             Yes
-                            <input type="checkbox" v-model="sensitiveContent" @click="setSensitiveContent($event.target.checked)">
+                            <input type="checkbox" id="sensitivecontent" v-model="sensitiveContent" @click="setSensitiveContent($event.target.checked)">
                             <span class="checkmark"></span>
                         </label>
                     </div>
@@ -151,9 +151,9 @@
             </div>
             <div v-if="!userIsAuthor && authors.length < maxAllowedAuthors" class="col-12 mb-3">
                 <div>
-                    <label class="checkContainer">
+                    <label class="checkContainer" for="currentUserAuthor">
                         I am the author or co-author
-                        <input type="checkbox" v-model="currentUserAuthor" @change="currentUserAuthorChange">
+                        <input type="checkbox" id="currentUserAuthor" v-model="currentUserAuthor" @change="currentUserAuthorChange">
                         <span class="checkmark"></span>
                     </label>
                 </div>

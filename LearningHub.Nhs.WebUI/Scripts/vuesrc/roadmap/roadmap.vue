@@ -1,7 +1,7 @@
 <template>
     <div class="roadmap-container mb-40">
         <div v-for="(item, index) in this.roadMapResult.roadMapItems" :class="getRoadMapClass(item)">
-            <img :src="downloadImage(item.imageName)" v-if="item.imageName" alt="Road map" />
+            <img :src="downloadImage(item.imageName)" v-if="item.imageName" alt="" />
             <h2>{{ item.title }}</h2>
             <p v-if="item.roadmapDate">{{ item.roadmapDate | formatDate('DD MMM YYYY') }}</p>
             <p v-html="item.description"></p>

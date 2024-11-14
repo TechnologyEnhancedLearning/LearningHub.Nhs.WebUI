@@ -25,6 +25,9 @@
             xhr.open("GET", '@Url.Action("GetAutoSuggestion", "Search")' + '?term=' + encodeURIComponent(term), true);
             xhr.onload = function () {
                 if (xhr.status >= 200 && xhr.status < 400) {
+                    if (xhr.responseText.includes('<script>')) {
+                        return;
+                    }
                     if (xhr.responseText.trim().length > 5) {
                         suggestionsList.style.display = "block";
                         suggestionsList.innerHTML = xhr.responseText;

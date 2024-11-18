@@ -88,5 +88,10 @@
         /// Gets or sets Suggested Catalogue name.
         /// </summary>
         public string SuggestedCatalogue { get; set; }
+
+        /// <summary>
+        /// Gets or sets Suggested Resource name.
+        /// </summary>
+        public string SuggestedResource { get; set; }
     }
 }

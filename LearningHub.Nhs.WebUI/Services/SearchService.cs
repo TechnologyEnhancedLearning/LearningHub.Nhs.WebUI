@@ -64,6 +64,7 @@ namespace LearningHub.Nhs.WebUI.Services
             var groupId = Guid.Parse(searchRequest.GroupId);
             bool didYouMeanEnabled = false;
             var suggestedCatalogue = string.Empty;
+            var suggestedResource = string.Empty;
 
             var resourceSearchPageSize = this.settings.FindwiseSettings.ResourceSearchPageSize;
             var catalogueSearchPageSize = this.settings.FindwiseSettings.CatalogueSearchPageSize;
@@ -125,6 +126,7 @@ namespace LearningHub.Nhs.WebUI.Services
                         if (resourceResult?.Spell?.Suggestions?.Count > 0)
                         {
                             resourceSearchRequestModel.SearchText = Regex.Replace(resourceResult?.Spell?.Suggestions?.FirstOrDefault().ToString(), "<.*?>", string.Empty);
+                            suggestedResource = resourceSearchRequestModel.SearchText;
 
                             // calling findwise endpoint with new search text - resources
                             resourceResultTask = this.GetSearchResultAsync(resourceSearchRequestModel);
@@ -233,6 +235,7 @@ namespace LearningHub.Nhs.WebUI.Services
                 },
                 DidYouMeanEnabled = didYouMeanEnabled,
                 SuggestedCatalogue = suggestedCatalogue,
+                SuggestedResource = suggestedResource,
             };
 
             return searchResultViewModel;

@@ -634,6 +634,25 @@ namespace LearningHub.Nhs.Services
         }
 
         /// <summary>
+        /// The AutoSuggestion Event action async.
+        /// </summary>
+        /// <param name="clickPayloadModel">
+        /// The clic kPayload Model.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        public async Task<bool> SendAutoSuggestionEventAsync(AutoSuggestionClickPayloadModel clickPayloadModel)
+        {
+            clickPayloadModel.TimeOfClick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            clickPayloadModel.SearchSignal.ProfileSignature.ApplicationId = ApplicationId;
+            clickPayloadModel.SearchSignal.ProfileSignature.ProfileType = ProfileType;
+            clickPayloadModel.SearchSignal.ProfileSignature.ProfileId = this.settings.Findwise.CollectionIds.AutoSuggestion;
+
+            return await this.SendAutoSuggestionEventClickAsync(clickPayloadModel);
+        }
+
+        /// <summary>
         /// Send search click payload.
         /// </summary>
         /// <param name="searchClickPayloadModel">search click payload model.</param>
@@ -682,6 +701,55 @@ namespace LearningHub.Nhs.Services
             catch (Exception ex)
             {
                 throw new Exception($"Click event save to FindWise failed for {eventType}: {searchClickPayloadModel.ClickTargetUrl} :  {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Send auto suggestion click payload.
+        /// </summary>
+        /// <param name="clickPayloadModel">search click payload model.</param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        private async Task<bool> SendAutoSuggestionEventClickAsync(AutoSuggestionClickPayloadModel clickPayloadModel)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(this.settings.Findwise.UrlAutoSuggestionClickComponent))
+                {
+                    this.Logger.LogWarning($"The UrlClickComponent is not configured. Auto suggestion click event not send to FindWise.");
+                }
+                else
+                {
+                    var json = JsonConvert.SerializeObject(clickPayloadModel);
+                    var base64EncodedString = BinaryFormatterHelper.Base64EncodeObject(json);
+
+                    var request = $"{this.settings.Findwise.UrlAutoSuggestionClickComponent}?payload={base64EncodedString}";
+
+                    var client = await this.FindWiseHttpClient.GetClient(this.settings.Findwise.SearchUrl);
+                    var response = await client.PostAsync(request, null).ConfigureAwait(false);
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                    {
+                        this.Logger.LogError($"Click event save to FindWise failed for Auto suggestion: {clickPayloadModel.ClickTargetUrl} HTTP Status Code: {response.StatusCode}");
+                        throw new Exception("AccessDenied");
+                    }
+                    else if (!response.IsSuccessStatusCode)
+                    {
+                        this.Logger.LogError($"Click event save to FindWise failed for Auto suggestion: {clickPayloadModel.ClickTargetUrl} HTTP Status Code: {response.StatusCode}");
+                        throw new Exception($"Click event save to FindWise failed for Auto suggestion: {json}");
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Click event save to FindWise failed for Auto suggestion: {clickPayloadModel.ClickTargetUrl} :  {ex.Message}");
             }
         }
 

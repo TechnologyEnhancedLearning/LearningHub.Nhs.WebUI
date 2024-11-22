@@ -153,7 +153,7 @@
                 {
                     using (var reader = new StreamReader(stream))
                     {
-                        const string qualityLevelRegex = @"(QualityLevels\(\d+\)/Manifest\(.+\))";
+                        const string qualityLevelRegex = @"([^""\s]+\.m3u8\(encryption=cbc\))";
 
                         var toplevelmanifestcontent = reader.ReadToEnd();
 

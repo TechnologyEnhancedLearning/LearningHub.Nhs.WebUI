@@ -1,4 +1,4 @@
-<link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" />
+﻿<link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" />
 <template>
     <div>
         <div :id="getPlayerUniqueId" class="video-container"></div>
@@ -34,6 +34,7 @@
     import { MKPlayer } from '@mediakind/mkplayer';
     import { resourceData } from '../../data/resource';
     import { MKPlayerType, MKStreamType } from '../../MKPlayerConfigEnum';
+    import { MKPlayerControlbar } from '../../mkioplayer-controlbar';
     //import { MKPlayerType } from '@mediakind/mkplayer/types/enums/MKPlayerType.d';
     //import { MKStreamType } from '@mediakind/mkplayer/types/enums/MKStreamType.d';
     export default Vue.extend({
@@ -49,6 +50,7 @@
                 mkioKey: '',
                 playBackUrl: '',
                 sourceLoaded: true,
+                isIphone: false
             };
         },
         async created() {
@@ -56,26 +58,33 @@
             this.getMediaPlayUrl();
             this.load();
         },
+        mounted() {
+            this.checkIfIphone();
+        },
         methods: {
             onPlayerReady() {
-                const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
-                if (videoElement) {
-                    videoElement.controls = true;
+                MKPlayerControlbar(this.player.videoContainer.id, this.player);
 
-                    // Add the track element
-                    var captionsInfo = this.captionsTrackAvailable;
-                    if (captionsInfo) {
-                        const trackElement = document.createElement('track');
-                        var srcPath = this.captionsUrl;
-                        trackElement.kind = 'captions';
-                        trackElement.label = 'english';
-                        trackElement.srclang = 'en';
-                        trackElement.src = srcPath;
+                // [BY] When we set UI to false we need to manually add the controls to the video element
+                //const videoElement = document.getElementById("bitmovinplayer-video-" + this.getPlayerUniqueId) as HTMLVideoElement;
 
-                        // Append the track to the video element
-                        videoElement.appendChild(trackElement);
-                    }
-                }
+                //if (videoElement) {
+                //    videoElement.controls = true;
+
+                //    // Add the track element
+                //    var captionsInfo = this.captionsTrackAvailable;
+                //    if (captionsInfo) {
+                //        const trackElement = document.createElement('track');
+                //        var srcPath = this.captionsUrl;
+                //        trackElement.kind = 'captions';
+                //        trackElement.label = 'english';
+                //        trackElement.srclang = 'en';
+                //        trackElement.src = srcPath;
+
+                //        // Append the track to the video element
+                //        videoElement.appendChild(trackElement);
+                //    }
+                //}
             },
             onSubtitleAdded() {
 
@@ -89,11 +98,17 @@
             getMediaPlayUrl() {
                 this.playBackUrl = this.videoFile.locatorUri;
                 this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
+                if (this.isIphone) {
+                    this.playBackUrl = "/Media/MediaManifest?playBackUrl=" + this.playBackUrl + "&token=" + this.azureMediaServicesToken;
+                }     
+            },
+            checkIfIphone() {
+                const userAgent = navigator.userAgent || navigator.vendor;
+                this.isIphone = /iPhone/i.test(userAgent);
             },
             load() {
                 // Grab the video container
                 this.videoContainer = document.getElementById(this.getPlayerUniqueId);
-
 
                 if (!this.mkioKey) {
                     this.getMKIOPlayerKey();
@@ -102,7 +117,7 @@
                 // Prepare the player configuration
                 const playerConfig = {
                     key: this.mkioKey,
-                    ui: false,
+                    ui: true,
                     theme: "dark",
                     playback: {
                         muted: false,
@@ -195,5 +210,89 @@
 
     video[id^="bitmovinplayer-video"] {
         width: 100%;
+    }
+
+    .bmpui-ui-controlbar .control-right {
+        float: right;
+    }
+</style>
+
+<style scoped>
+    /* Base styles for video container */
+    .video-container {
+        width: 100%;
+        margin: auto;
+        position: relative;
+        min-width: var(--min-width, 0px); /* Default fallback value */
+    }
+
+    /* Media queries to set different min-width values */
+    @media (min-width: 225px) { /* Non standard for graceful */
+        .video-container {
+            --min-width: 200px;
+        }
+    }
+    @media (min-width: 375px) { /* Non standard for graceful */
+        .video-container {
+            --min-width: 300px;
+        }
+    }
+    @media (min-width: 450px) { /* Non standard for graceful */
+        .video-container {
+            --min-width: 400px;
+        }
+    }
+    @media (min-width: 576px) {
+        .video-container {
+            --min-width: 500px;
+        }
+    }
+    @media (min-width: 650px) { /* Non standard for graceful */
+        .video-container {
+            --min-width: 600px;
+        }
+    }
+    @media (min-width: 768px) {
+        .video-container {
+            --min-width: 700px;
+        }
+    }
+    @media (min-width: 850px) { /* Non standard for graceful */
+        .video-container {
+            --min-width: 800px;
+        }
+    }
+    @media (min-width: 992px) { 
+        .video-container {
+            --min-width: 900px;
+        }
+    }   
+    @media (min-width: 1024px) {
+        .video-container {
+            --min-width: 1024px;
+        }
+    }
+
+    /* Applying min-width to the video container using the CSS variable */
+    .video-container {
+        min-width: var(--min-width) !important;
+    }
+
+    /* Targeting specific div with dynamic ID pattern */
+    [id^="videoContainer_"] {
+        min-width: var(--min-width) !important; /* Inheriting min-width */
+    }
+
+    /* Example child element inheriting min-width from video container */
+    .video-container .child-element {
+        min-width: var(--min-width) !important;
+        padding: 10px;
+        text-align: center;
+    }
+
+    /* Style for the video element */
+    .video-container video {
+        width: 100%;
+        height: auto;
     }
 </style>

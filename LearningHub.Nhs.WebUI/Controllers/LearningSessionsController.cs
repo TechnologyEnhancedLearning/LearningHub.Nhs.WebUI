@@ -87,12 +87,18 @@
 
                 var directory = filePath.Substring(0, filePath.LastIndexOf("/"));
                 fileName = filePath.Substring(filePath.LastIndexOf("/") + 1, filePath.Length - filePath.LastIndexOf("/") - 1);
+                string extension = Path.GetExtension(fileName);
 
                 var file = await this.fileService.DownloadFileAsync(directory, fileName);
 
                 if (!new FileExtensionContentTypeProvider().TryGetContentType(fileName, out var contentType))
                 {
                     contentType = "application/octet-stream";
+                }
+
+                if (extension == ".mp4")
+                {
+                    contentType = "application/x-mpegURL";
                 }
 
                 result = this.File(file.Content, contentType);

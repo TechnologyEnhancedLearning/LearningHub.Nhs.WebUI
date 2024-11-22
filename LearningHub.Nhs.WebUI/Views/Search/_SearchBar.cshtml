@@ -1,9 +1,10 @@
 ﻿@model string
 
 <form id="search" asp-controller="search" asp-action="results" method="get" role="search">
-    <div class="nhsuk-u-margin-bottom-5 nhsuk-header__search-form--search-results">
+    <div class="nhsuk-u-margin-bottom-5 nhsuk-header__search-form--search-results" style="position:relative !important">
         <label class="nhsuk-label nhsuk-u-visually-hidden" for="sub-search-field">Search the learning hub</label>
         <input class="nhsuk-input nhsuk-search__input" type="search" name="term" autocomplete="off" id="sub-search-field" placeholder="Search the learning hub" value="@Model">
+        <ul id="sub-search-field_listbox" class="nhsuk-list autosuggestion-menu" style="display:none;top: 100%;"></ul>
         <button class="nhsuk-search__submit" type="submit">
             <span class="nhsuk-u-visually-hidden">Search</span>
             <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -12,3 +13,67 @@
         </button>
     </div>
 </form>
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        var searchInput = document.getElementById("sub-search-field");
+        var suggestionsList = document.getElementById("sub-search-field_listbox");
+        var minLengthAutoComplete = 3;
+
+        function fetchSuggestions(term) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", '@Url.Action("GetAutoSuggestion", "Search")' + '?term=' + encodeURIComponent(term), true);
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    if (xhr.responseText.includes('<script>')) {
+                        return;
+                    }
+                    if (xhr.responseText.trim().length > 5) {
+                        suggestionsList.style.display = "block";
+                        suggestionsList.innerHTML = xhr.responseText;
+                    }
+                    else {
+                        closeAllLists();
+                    }
+                } else {
+                    closeAllLists();
+                }
+            };
+            xhr.onerror = function () {
+                closeAllLists();
+            };
+            xhr.send();
+        }
+
+        function autocomplete(input, minLength) {
+            if (input != null) {
+                input.addEventListener("input", function () {
+                    var val = this.value;
+                    if (val.length < minLength) {
+                        closeAllLists();
+                        return false;
+                    }
+                    fetchSuggestions(val);
+                });
+
+                document.addEventListener("click", function (e) {
+                    if (!searchInput.contains(e.target)) {
+                        suggestionsList.style.display = "none";
+                    } else {
+                        var val = searchInput.value;
+                        if (val.length >= minLengthAutoComplete) {
+                            if (suggestionsList.children.length > 0) { suggestionsList.style.display = "block"; }
+                        }
+                    }
+                });
+            }
+        }
+
+        function closeAllLists() {
+            suggestionsList.innerHTML = '';
+            suggestionsList.style.display = "none";
+        }
+
+        autocomplete(searchInput, minLengthAutoComplete);
+    });
+</script>

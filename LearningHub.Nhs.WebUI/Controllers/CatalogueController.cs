@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Catalogue;
@@ -108,6 +109,28 @@
                         PageIndex = pageIndex - 1,
                         PageSize = itemsOnPage,
                     });
+
+                // Did you mean suggestion when no hits found
+                if (termCatalogues?.TotalHits == 0 && termCatalogues?.Spell?.Suggestions?.Count > 0)
+                {
+                    // pass the spell suggestion as new search text - catalogues
+                    if (termCatalogues?.Spell?.Suggestions?.Count > 0)
+                    {
+                        var suggestedCatalogue = Regex.Replace(termCatalogues?.Spell?.Suggestions?.FirstOrDefault().ToString(), "<.*?>", string.Empty);
+
+                        // calling findwise endpoint with new search text - catalogues
+                        termCatalogues = await this.searchService.GetCatalogueSearchResultAsync(
+                        new CatalogueSearchRequestModel
+                        {
+                            SearchText = suggestedCatalogue,
+                            PageIndex = pageIndex - 1,
+                            PageSize = itemsOnPage,
+                        });
+
+                        catalogues.DidYouMeanEnabled = true;
+                        catalogues.SuggestedCatalogue = suggestedCatalogue;
+                    }
+                }
 
                 catalogues.TotalCount = termCatalogues.TotalHits;
                 catalogues.GroupId = Guid.NewGuid();

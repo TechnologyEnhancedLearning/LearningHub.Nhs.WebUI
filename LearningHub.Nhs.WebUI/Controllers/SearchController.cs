@@ -296,5 +296,23 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 return this.Ok(this.Content("No file found"));
             }
         }
+
+        /// <summary>
+        /// GetAutoSuggestion returns the auto suggestion options.
+        /// </summary>
+        /// <param name="term">search term.</param>
+        /// <returns>ActionResult.</returns>
+        [HttpGet("GetAutoSuggestion")]
+        public async Task<IActionResult> GetAutoSuggestion(string term)
+        {
+            if (!this.User.Identity.IsAuthenticated)
+            {
+                return this.RedirectToAction("AccessDenied", "Home");
+            }
+
+            var autoSuggestions = await this.searchService.GetAutoSuggestionList(term);
+
+            return this.PartialView("_AutoComplete", autoSuggestions);
+        }
     }
 }

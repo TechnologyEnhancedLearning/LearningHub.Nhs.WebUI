@@ -6,6 +6,7 @@ namespace LearningHub.Nhs.WebUI.Services
     using System.Net.Http;
     using System.Security.Principal;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
     using HtmlAgilityPack;
@@ -61,6 +62,9 @@ namespace LearningHub.Nhs.WebUI.Services
             var searchSortItemList = SearchHelper.GetSearchSortList();
             var selectedSortItem = searchSortItemList.Where(x => x.SearchSortType == (SearchSortTypeEnum)searchSortType).FirstOrDefault();
             var groupId = Guid.Parse(searchRequest.GroupId);
+            bool didYouMeanEnabled = false;
+            var suggestedCatalogue = string.Empty;
+            var suggestedResource = string.Empty;
 
             var resourceSearchPageSize = this.settings.FindwiseSettings.ResourceSearchPageSize;
             var catalogueSearchPageSize = this.settings.FindwiseSettings.CatalogueSearchPageSize;
@@ -112,6 +116,37 @@ namespace LearningHub.Nhs.WebUI.Services
 
                     resourceResult = resourceResultTask.Result;
                     catalogueResult = catalogueResultTask.Result;
+
+                    // Did you mean suggestion when no hits found
+                    if (resourceResult?.TotalHits == 0 && catalogueResult?.TotalHits == 0 && (resourceResult?.Spell?.Suggestions?.Count > 0 || catalogueResult?.Spell?.Suggestions?.Count > 0))
+                    {
+                        didYouMeanEnabled = true;
+
+                        // pass the spell suggestion as new search text - resources
+                        if (resourceResult?.Spell?.Suggestions?.Count > 0)
+                        {
+                            resourceSearchRequestModel.SearchText = Regex.Replace(resourceResult?.Spell?.Suggestions?.FirstOrDefault().ToString(), "<.*?>", string.Empty);
+                            suggestedResource = resourceSearchRequestModel.SearchText;
+
+                            // calling findwise endpoint with new search text - resources
+                            resourceResultTask = this.GetSearchResultAsync(resourceSearchRequestModel);
+                        }
+
+                        // pass the spell suggestion as new search text - catalogues
+                        if (catalogueResult?.Spell?.Suggestions?.Count > 0)
+                        {
+                            catalogueSearchRequestModel.SearchText = Regex.Replace(catalogueResult?.Spell?.Suggestions?.FirstOrDefault().ToString(), "<.*?>", string.Empty);
+                            suggestedCatalogue = catalogueSearchRequestModel.SearchText;
+
+                            // calling findwise endpoint with new search text - catalogues
+                            catalogueResultTask = this.GetCatalogueSearchResultAsync(catalogueSearchRequestModel);
+                        }
+
+                        await Task.WhenAll(resourceResultTask, catalogueResultTask);
+
+                        resourceResult = resourceResultTask.Result;
+                        catalogueResult = catalogueResultTask.Result;
+                    }
                 }
 
                 var searchfilters = new List<SearchFilterModel>();
@@ -198,6 +233,9 @@ namespace LearningHub.Nhs.WebUI.Services
                     PageSize = catalogueSearchPageSize,
                     TotalItems = catalogueResult?.TotalHits ?? 0,
                 },
+                DidYouMeanEnabled = didYouMeanEnabled,
+                SuggestedCatalogue = suggestedCatalogue,
+                SuggestedResource = suggestedResource,
             };
 
             return searchResultViewModel;
@@ -632,6 +670,31 @@ namespace LearningHub.Nhs.WebUI.Services
                 this.Logger.LogError(string.Format("Error occurred in GetAllCatalogueSearchResultAsync: {0}", ex.Message));
                 return searchViewModel;
             }
+        }
+
+        /// <summary>
+        /// The GetAutoSuggestionList.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The auto suggestion list.</returns>
+        public async Task<AutoSuggestionModel> GetAutoSuggestionList(string term)
+        {
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var request = $"Search/GetAutoSuggestionResult/{term}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            var viewModel = new AutoSuggestionModel();
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewModel = JsonConvert.DeserializeObject<AutoSuggestionModel>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewModel;
         }
 
         /// <summary>

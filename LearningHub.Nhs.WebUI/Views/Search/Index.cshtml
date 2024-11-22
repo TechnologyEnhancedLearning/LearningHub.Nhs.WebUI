@@ -9,10 +9,19 @@
 }
 
 <div class="search-page">
-    <div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-width-container app-width-container">     
+        @if (Model.DidYouMeanEnabled)
+        {
+            <p class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6 nhsuk-body-l">
+                No results were found for <b>@(Model.SearchString)</b> please change your search term or explore the suggestions below    
+            </p>
+        }
+        else
+        {
             <h1 class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6">
-            Search results @(!string.IsNullOrEmpty(Model.SearchString) ? "for " + Model.SearchString : string.Empty)
+                Search results @(!string.IsNullOrEmpty(Model.SearchString) ? "for " + Model.SearchString : string.Empty)
             </h1>
+        }
             
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-two-thirds">
@@ -22,6 +31,12 @@
 
         @if (Model.CatalogueSearchResult?.TotalHits > 0)
         {
+            @if (Model.DidYouMeanEnabled)
+            {
+                <p class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6">
+                    Showing results for <b>@(Model.SuggestedCatalogue)</b>
+                </p>
+            }
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
                     @await Html.PartialAsync("_CatalogueSearchResult", Model)
@@ -31,6 +46,12 @@
 
         @if (Model.ResourceSearchResult?.TotalHits > 0)
         {
+            @if (Model.DidYouMeanEnabled)
+            {
+                <p class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6">
+                    Showing results for <b>@(Model.SuggestedResource)</b>
+                </p>
+            }
             @await Html.PartialAsync("_ResourceFilter", Model)
 
             <div class="nhsuk-grid-row">

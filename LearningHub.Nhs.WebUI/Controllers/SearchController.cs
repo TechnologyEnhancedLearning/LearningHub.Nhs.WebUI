@@ -306,7 +306,13 @@ namespace LearningHub.Nhs.WebUI.Controllers
         [HttpGet("GetAutoSuggestion")]
         public async Task<IActionResult> GetAutoSuggestion(string term)
         {
+            if (!this.User.Identity.IsAuthenticated)
+            {
+                return this.RedirectToAction("AccessDenied", "Home");
+            }
+
             var autoSuggestions = await this.searchService.GetAutoSuggestionList(term);
+
             return this.PartialView("_AutoComplete", autoSuggestions);
         }
 

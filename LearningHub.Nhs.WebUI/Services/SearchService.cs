@@ -64,6 +64,8 @@ namespace LearningHub.Nhs.WebUI.Services
             var selectedSortItem = searchSortItemList.Where(x => x.SearchSortType == (SearchSortTypeEnum)searchSortType).FirstOrDefault();
             var groupId = Guid.Parse(searchRequest.GroupId);
             bool didYouMeanEnabled = false;
+            var suggestedCatalogue = string.Empty;
+            var suggestedResource = string.Empty;
 
             var resourceSearchPageSize = this.settings.FindwiseSettings.ResourceSearchPageSize;
             var catalogueSearchPageSize = this.settings.FindwiseSettings.CatalogueSearchPageSize;
@@ -125,6 +127,7 @@ namespace LearningHub.Nhs.WebUI.Services
                         if (resourceResult?.Spell?.Suggestions?.Count > 0)
                         {
                             resourceSearchRequestModel.SearchText = Regex.Replace(resourceResult?.Spell?.Suggestions?.FirstOrDefault().ToString(), "<.*?>", string.Empty);
+                            suggestedResource = resourceSearchRequestModel.SearchText;
 
                             // calling findwise endpoint with new search text - resources
                             resourceResultTask = this.GetSearchResultAsync(resourceSearchRequestModel);
@@ -134,6 +137,7 @@ namespace LearningHub.Nhs.WebUI.Services
                         if (catalogueResult?.Spell?.Suggestions?.Count > 0)
                         {
                             catalogueSearchRequestModel.SearchText = Regex.Replace(catalogueResult?.Spell?.Suggestions?.FirstOrDefault().ToString(), "<.*?>", string.Empty);
+                            suggestedCatalogue = catalogueSearchRequestModel.SearchText;
 
                             // calling findwise endpoint with new search text - catalogues
                             catalogueResultTask = this.GetCatalogueSearchResultAsync(catalogueSearchRequestModel);
@@ -231,6 +235,8 @@ namespace LearningHub.Nhs.WebUI.Services
                     TotalItems = catalogueResult?.TotalHits ?? 0,
                 },
                 DidYouMeanEnabled = didYouMeanEnabled,
+                SuggestedCatalogue = suggestedCatalogue,
+                SuggestedResource = suggestedResource,
             };
 
             return searchResultViewModel;

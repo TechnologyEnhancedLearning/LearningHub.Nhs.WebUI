@@ -9,15 +9,18 @@
 }
 
 <div class="search-page">
-    <div class="nhsuk-width-container app-width-container">
-            <h1 class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6">
-            Search results @(!string.IsNullOrEmpty(Model.SearchString) ? "for " + Model.SearchString : string.Empty)
-            </h1>
+    <div class="nhsuk-width-container app-width-container">     
         @if (Model.DidYouMeanEnabled)
         {
-            <h6 class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6">
-                We couldn't find a match for <em>@(Model.SearchString)</em>, try adjusting your search terms or explore the suggestions below.
-            </h6>
+            <p class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6 nhsuk-body-l">
+                No results were found for <b>@(Model.SearchString)</b> please change your search term or explore the suggestions below    
+            </p>
+        }
+        else
+        {
+            <h1 class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6">
+                Search results @(!string.IsNullOrEmpty(Model.SearchString) ? "for " + Model.SearchString : string.Empty)
+            </h1>
         }
             
         <div class="nhsuk-grid-row">
@@ -28,6 +31,12 @@
 
         @if (Model.CatalogueSearchResult?.TotalHits > 0)
         {
+            @if (Model.DidYouMeanEnabled)
+            {
+                <p class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6">
+                    Showing results for <b>@(Model.SuggestedCatalogue)</b>
+                </p>
+            }
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
                     @await Html.PartialAsync("_CatalogueSearchResult", Model)
@@ -37,6 +46,12 @@
 
         @if (Model.ResourceSearchResult?.TotalHits > 0)
         {
+            @if (Model.DidYouMeanEnabled)
+            {
+                <p class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6">
+                    Showing results for <b>@(Model.SuggestedResource)</b>
+                </p>
+            }
             @await Html.PartialAsync("_ResourceFilter", Model)
 
             <div class="nhsuk-grid-row">

@@ -63,7 +63,7 @@
                 for example, how it was developed or what is required for it to be used.
             </div>
             <div class="col-12 mt-3">
-                <textarea class="form-control" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
+                <textarea class="form-control" id="additionalinfo" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
             </div>
             <div class="col-12 footer-text">
                 You can enter a maximum of 250 characters

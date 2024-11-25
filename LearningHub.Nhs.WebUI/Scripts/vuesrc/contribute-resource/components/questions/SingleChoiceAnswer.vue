@@ -27,10 +27,10 @@
             <hr class="cutoff-line">
         </div>
         <div>
-          <input type="text" class="form-control text-input" maxlength="120" v-model="message"/>
-          <div class="footer-text">
-            You have {{ charactersRemaining }} characters remaining.
-          </div>
+            <input type="text" id="txtmessage" aria-describedby="messageError" class="form-control text-input" maxlength="120" v-model="message" />
+            <div class="footer-text" id="messageError">
+                You have {{ charactersRemaining }} characters remaining.
+            </div>
         </div>
     </div>
 </template>

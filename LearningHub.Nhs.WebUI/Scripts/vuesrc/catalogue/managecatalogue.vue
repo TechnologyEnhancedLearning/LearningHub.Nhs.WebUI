@@ -14,10 +14,14 @@
                 <div class="lh-padding-fluid">
                     <div class="lh-container-xl">
                         <div class="nhsuk-back-link">
-                            <router-link :to="'/Catalogue/' + reference" class="nhsuk-back-link__link" id="goBackLink"><svg class="nhsuk-icon nhsuk-icon__chevron-left" 
-                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
-                                </svg> Go back</router-link>
+
+                            <a :href="'/catalogue/' + reference" class="nhsuk-back-link__link" id="goBackLink">
+                                <svg class="nhsuk-icon nhsuk-icon__chevron-left"
+                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
+                                </svg>
+                                Go back
+                            </a>
                         </div>
                         <h1>Catalogue Management</h1>
                         <div class="nhsuk-grid-row">
@@ -72,6 +76,7 @@
                             <div class="row">
                                 <div class="col" style="min-width:400px; width:400px;">
                                     <div class="input-group pt-4" id="input-group-searchbar-md">
+                                        <label class="nhsuk-label nhsuk-u-visually-hidden" for="input-search-md">Find a user by their email address</label>
                                         <input class="form-control small pl-4" v-model="emailAddressFilter" type="search" placeholder="Find a user by their email address" aria-label="Search your learning activity" id="input-search-md" @change="loadUsers();" v-on:keyup="searchUsersKeyUp($event.keyCode)">
                                         <span class="input-group-append">
                                             <button class="btn btn-outline-secondary btn-search" type="button" name="button-search" aria-label="search" v-on:click="loadUsers()" style="margin-top: 0;">

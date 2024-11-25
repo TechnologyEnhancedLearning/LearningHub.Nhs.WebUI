@@ -1,0 +1,22 @@
+﻿@model LearningHub.Nhs.Models.Resource.ResourceVersionDevIdViewModel
+
+@{
+  ViewData["Title"] = "Add development Id ";
+  var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+<div class="pt-4">
+  <form asp-controller="Resource" asp-action="UpdateDevIdDetails" method="post">
+    <div class="row m-0">
+      <div class="form-group col-4">
+        <label asp-for="DevId" class="control-label">Development Id</label>
+        <input asp-for="DevId" class="form-control" />
+        <input type="hidden" asp-for="ResourceVersionId" />
+      </div>
+    </div>
+    <div class="form-group col-lg-2 d-flex flex-row justify-content-between">
+      <div>
+        <button type="submit" class="btn btn-common btn-success">Save</button>
+      </div>  
+    </div>
+  </form>
+</div>

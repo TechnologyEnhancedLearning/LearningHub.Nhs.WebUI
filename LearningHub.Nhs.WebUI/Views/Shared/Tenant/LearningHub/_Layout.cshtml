@@ -72,8 +72,12 @@
     </div>
 
     <header class="nhsuk-header" role="banner">
+    <div id="content-header">
         <partial name="~/Views/Shared/_NavPartial.cshtml" />
+    </div>
     </header>
+    <div id="header">
+        </div>
 
     <div class="nhsuk-width-container app-width-container beta-banner">
         <span class="beta-banner__beta-box">BETA</span>
@@ -97,9 +101,8 @@
         @* Inject form here *@
     </div>
 
-    <footer role="contentinfo">
-        <partial name="~/Views/Shared/_FooterPartial.cshtml" />
-    </footer>
+    <!-- footer -->
+    <partial name="~/Views/Shared/_FooterPartial.cshtml" />
 
     <script>
         if (!window.process) { window.process = {}; }

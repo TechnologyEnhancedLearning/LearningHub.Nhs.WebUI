@@ -3,6 +3,7 @@
         <CharacterCount v-model="inputValue"
                         v-bind:characterLimit="characterLimit"
                         v-bind:size="size"
+                        v-bind:inputId="inputId"
                         focusOnLoad></CharacterCount>
         <div class="d-inline-flex">
             <Button v-on:click="save"
@@ -33,6 +34,7 @@
             value: String,
             characterLimit: Number,
             size: String,
+            inputId:String
         },
         data() {
             return {

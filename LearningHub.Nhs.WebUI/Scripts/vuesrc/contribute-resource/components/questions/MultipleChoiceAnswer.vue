@@ -3,12 +3,13 @@
         <div>
             <div class="flex align-items-center">
                 <div class="flex">
-                    <Tick v-bind:complete="this.answer.isReadyToPublish()" class="pr-3 align-with-cc"/>
-                    <EditSaveFieldWithCharacterCount
-                                    v-model="message"
-                                    addEditLabel="response text"
-                                    v-bind:characterLimit="120"
-                                    v-bind:isH3="true"></EditSaveFieldWithCharacterCount>
+                    <Tick v-bind:complete="this.answer.isReadyToPublish()" class="pr-3 align-with-cc" />
+                    <label class="nhsuk-u-visually-hidden" for="messagedetails"></label>
+                    <EditSaveFieldWithCharacterCount v-model="message"
+                                                     addEditLabel="response text"
+                                                     v-bind:characterLimit="120"
+                                                     v-bind:inputId="messagedetails"
+                                                     v-bind:isH3="true"></EditSaveFieldWithCharacterCount>
                 </div>
                 <span class="bin">
                     <IconButton v-on:click="$emit('deleteAnswer', answer)"
@@ -49,6 +50,7 @@
         props: {
             answer: { type: Object } as PropOptions<AnswerModel>,
             multipleAnswers: Boolean,
+            messagedetails: { type: String, default: 'messagedetails' },
         },
         
         data() {

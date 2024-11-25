@@ -23,12 +23,12 @@
                         <div class="d-flex">
                             <div class="selection pr-50">
                                 <div class="mb-4">Allow the learner to work through the assessment pages in any order.</div>
-                                <label class="my-0 label-text">
-                                    <input class="radio-button" type="radio" :value="false"  v-model="assessmentDetails.answerInOrder"/>
+                                <label class="my-0 label-text" for="yes">
+                                    <input class="radio-button" type="radio" :value="false" id="yes"  v-model="assessmentDetails.answerInOrder"/>
                                     Yes
                                 </label>
-                                <label class="my-0 pl-5 label-text">
-                                    <input class="radio-button" type="radio" :value="true"  v-model="assessmentDetails.answerInOrder"/>
+                                <label class="my-0 pl-5 label-text" for="no">
+                                    <input class="radio-button" type="radio" :value="true" id="no"  v-model="assessmentDetails.answerInOrder"/>
                                     No
                                 </label>
                             </div>
@@ -41,8 +41,8 @@
 
                         <div class="d-flex">
                             <div class="selection pr-50">
-                                <div class="mb-4">Add a pass mark for this assessment. This is the percentage that the learner must achieve in order to pass.</div>
-                                <input class="text-input" type="text" v-model="assessmentDetails.passMark"/>
+                                <div class="mb-4"><label for="passmark">Add a pass mark for this assessment. This is the percentage that the learner must achieve in order to pass.</label></div>
+                                <input class="text-input" id="passmark" name="passmark" type="text" v-model="assessmentDetails.passMark"/>
                             </div>
                             <div class="tip" v-if="assessmentDetails.assessmentType === AssessmentTypeEnum.Informal">
                                 <h3>Tip</h3>
@@ -53,8 +53,8 @@
 
                         <div class="d-flex" v-if="assessmentDetails.assessmentType === AssessmentTypeEnum.Formal">
                             <div class="selection pr-50">
-                                <div class="mb-4">Define how many attempts the learner can have.</div>
-                                <input class="text-input" type="text" v-model="assessmentDetails.maximumAttempts" />
+                                <div class="mb-4"><label for="maximumAttempts">Define how many attempts the learner can have.</label></div>
+                                <input class="text-input" type="text" id="maximumAttempts" name="maximumAttempts" v-model="assessmentDetails.maximumAttempts" />
                             </div>
                             <div class="tip">
                                 <h3>Tip</h3>
@@ -65,15 +65,18 @@
 
                         <div class="d-flex">
                             <div class="selection pr-50">
-                                <div>Provide guidance for the learner at the end of this assessment. <i v-if="!IsVisible" class="warningTriangle fas fa-exclamation-triangle warm-yellow"></i></div>
+                                <div>Provide guidance for the learner at the end of this assessment.<i v-if="!IsVisible" class="warningTriangle fas fa-exclamation-triangle warm-yellow"></i></div>
                                 <EditSaveFieldWithCharacterCount v-model="assessmentDetails.endGuidance.blocks[0].title"
                                                                  addEditLabel="title"
                                                                  v-bind:characterLimit="60"
-                                                                 v-bind:isH3="true" />
+                                                                 v-bind:isH3="true" 
+                                                                 v-bind:inputId="message"/>
                                 <ckeditorwithhint v-on:blur="setEndGuidance"
                                                   v-on:inputValidity="setGuidanceValidity"
                                                   :maxLength="1000"
-                                                  :initialValue="endGuidance" />
+                                                  :initialValue="endGuidance"
+                                                  :for="guidance"
+                                                  :id="guidance"/>
                             </div>
                             <div class="tip">
                                 <h3>Tip</h3>
@@ -107,6 +110,7 @@
         props: {
             blockCollection: { type: Object } as PropOptions<BlockCollectionModel>,
             firstTimeOpen: Boolean,
+            message: { type: String, default: 'message' },
         },
         components: {
             ExpansionPanel,

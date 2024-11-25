@@ -13,7 +13,7 @@
 
         <div class="row mt-5">
             <div class="form-group col-12">
-                <h3 id="alttag-label">Alt tag <i v-if="$v.localImageDetail.altTag.$invalid" class="warningTriangle fa-solid fa-triangle-exclamation"></i></h3>
+                <h3 id="alttag-label"><label for="alttag">Alt tag</label> <i v-if="$v.localImageDetail.altTag.$invalid" class="warningTriangle fa-solid fa-triangle-exclamation"></i></h3>
             </div>
         </div>
         <div class="row">
@@ -22,7 +22,7 @@
                 This will not be shown on screen but it will help those using screen readers.
             </div>
             <div class="col-12 mt-3">
-                <textarea class="form-control" aria-labelledby="alttag-label" rows="4" maxlength="125" v-model="localImageDetail.altTag" @change="setProperty('altTag', $event.target.value)" @input="altTextKeyup"></textarea>
+                <textarea class="form-control" id="alttag" name="alttag" aria-labelledby="alttag-label" rows="4" maxlength="125" v-model="localImageDetail.altTag" @change="setProperty('altTag', $event.target.value)" @input="altTextKeyup"></textarea>
             </div>
             <div class="col-12 footer-text">
                 You can enter a maximum of 125 characters
@@ -31,7 +31,7 @@
 
         <div class="row mt-5">
             <div class="form-group col-12">
-                <h3 id="additionalinfo-label">Additional information <span class="optional">(optional)</span></h3>
+                <h3 id="additionalinfo-label"><label for="additionalinfo">Additional information <span class="optional">(optional)</span></label></h3>
             </div>
         </div>
         <div class="row">
@@ -40,7 +40,7 @@
                 for example, how it was developed or what is required for it to be used.
             </div>
             <div class="col-12 mt-3">
-                <textarea class="form-control" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
+                <textarea class="form-control" id="additionalinfo" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
             </div>
             <div class="col-12 footer-text">
                 You can enter a maximum of 250 characters

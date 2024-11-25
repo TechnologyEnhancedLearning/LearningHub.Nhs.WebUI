@@ -51,6 +51,15 @@
 
             var cataloguesResponse = dashboardType.ToLower() == "my-catalogues" ? this.catalogueNodeVersionRepository.GetCatalogues(dashboardType, pageNumber, userId) : (TotalCount: 0, Catalogues: new List<DashboardCatalogueDto>());
 
+            var catalogueList = cataloguesResponse.Catalogues.Any() ? this.mapper.Map<List<DashboardCatalogueViewModel>>(cataloguesResponse.Catalogues) : new List<DashboardCatalogueViewModel>();
+            if (catalogueList.Any())
+            {
+                foreach (var catalogue in catalogueList)
+                {
+                    catalogue.Providers = await this.providerService.GetByCatalogueVersionIdAsync(catalogue.NodeVersionId);
+                }
+            }
+
             var resourceList = resources.Any() ? this.mapper.Map<List<DashboardResourceViewModel>>(resources) : new List<DashboardResourceViewModel>();
             if (resourceList.Any())
             {
@@ -64,7 +73,7 @@
             {
                 Type = dashboardType,
                 Resources = resourceList,
-                Catalogues = cataloguesResponse.Catalogues.Any() ? this.mapper.Map<List<DashboardCatalogueViewModel>>(cataloguesResponse.Catalogues) : new List<DashboardCatalogueViewModel>(),
+                Catalogues = catalogueList,
                 TotalCount = dashboardType.ToLower() == "my-catalogues" ? cataloguesResponse.TotalCount : resourceCount,
                 CurrentPage = pageNumber,
             };

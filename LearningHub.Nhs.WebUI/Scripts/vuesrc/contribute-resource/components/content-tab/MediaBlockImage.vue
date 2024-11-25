@@ -14,7 +14,8 @@
                 <div v-if="withLabel">
                     <EditSaveFieldWithCharacterCount v-model="image.description"
                                                      addEditLabel="label"
-                                                     v-bind:characterLimit="descriptionCharacterLimit"/>
+                                                     v-bind:characterLimit="descriptionCharacterLimit"
+                                                     v-bind:inputId="imageAltText"/>
                 </div>
             </div>
             <div v-else class="d-flex flex-column align-items-center justify-content-center">
@@ -36,6 +37,7 @@
                 <EditSaveFieldWithCharacterCount v-model="image.altText"
                                                  addEditLabel="alt text"
                                                  v-bind:characterLimit="125"
+                                                 v-bind:inputId="alttext"
                                                  block-view/>
             </div>
         </div>
@@ -71,7 +73,8 @@ export default Vue.extend({
             restrictAdvancedImageTypes: { type: Boolean, default: false },
             imageClass: String,
             withLabel: { type: Boolean, default: false },
-            descriptionCharacterLimit: { type: Number, default: 125 }
+            descriptionCharacterLimit: { type: Number, default: 125 },
+            alttext: { type: String, default: 'alttext' },
         },
         data() {
             return {

@@ -1,6 +1,10 @@
 ﻿@use "../abstracts/all" as *;
 @use "nhsuk" as *;
 
+body {
+    overflow-wrap: break-word;
+}
+
 .nhsuk-header {
     padding: 0 px2rem(32);
 }
@@ -104,6 +108,10 @@
 .nhsuk-header__search {
     .nhsuk-search__input {
         width: px2rem(260);
+
+        &::-moz-placeholder {
+            opacity: 1;
+        }
     }
 
     #search > label.nhsuk-u-visually-hidden {
@@ -180,6 +188,18 @@
 .nhsuk-header__navigation-item--current {
     a {
         font-weight: bold;
+    }
+}
+
+button[data-toggle="modal"] {
+    color: #005eb8;
+    padding: 0;
+    border: none;
+    background: none;
+
+    &:focus {
+        background: yellow;
+        border-bottom: 4px solid;
     }
 }
 

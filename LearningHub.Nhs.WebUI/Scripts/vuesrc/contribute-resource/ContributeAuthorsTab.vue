@@ -14,39 +14,42 @@
                 
                 <div v-if="resourceAuthors.length < maxAllowedAuthors" class="mb-40">
                     <LinkTextAndIcon v-if="!isAdding"
-                                     v-on:click="isAdding = true"
+                                     v-on:click="isAdding = true"Please choose...
                                      class="contribute-authors-tab-add-button">
                         <i class="fa-solid fa-plus"></i> Add author
                     </LinkTextAndIcon>
 
                     <div v-if="isAdding">
                         <div class="mt-5" v-if="!isCurrentUserSavedAsAuthor">
-                            <label class="checkContainer">
+                            <label class="checkContainer" for="currentUserAuthor">
                                 I am the author or co-author
-                                <input type="checkbox" v-model="authorIsContributor" v-on:change="currentUserAuthorChange">
+                                <input type="checkbox" id="currentUserAuthor" v-model="authorIsContributor" v-on:change="currentUserAuthorChange">
                                 <span class="checkmark"></span>
                             </label>
                         </div>
                         <CharacterCount v-model="authorName"
-                                        v-bind:inputId="authorName"
+                                        v-bind:inputId="txtauthorName"
                                         v-bind:characterLimit="100"
                                         v-bind:disabled="authorIsContributor"
+                                        :showTitle="false"
                                         class="mt-25">
                             <template v-slot:description>
                                 <label :for="'authorName'" class="mb-0">Author name</label>
                             </template>
                         </CharacterCount>
                         <CharacterCount v-model="authorOrganisation"
-                                        v-bind:inputId="authorOrganisation"
+                                        v-bind:inputId="txtauthorOrganisation"
                                         v-bind:characterLimit="100"
+                                        :showTitle="false"
                                         class="mt-15">
                             <template v-slot:description>
                                 <label :for="'authorOrganisation'" class="mb-0">Organisation</label>
                             </template>
                         </CharacterCount>
                         <CharacterCount v-model="authorRole"
-                                        v-bind:inputId="authorRole"
+                                        v-bind:inputId="txtauthorRole"
                                         v-bind:characterLimit="100"
+                                        :showTitle="false"
                                         class="mt-15">
                             <template v-slot:description>
                                 <label :for="'authorRole'" class="mb-0">Role</label>
@@ -83,12 +86,16 @@
         props: {
             resourceDetails: { type: Object } as PropOptions<ContributeResourceDetailModel>,
             configuration: { type: Object } as PropOptions<ContributeConfiguration>,
+            txtauthorName: { type: String, default: 'authorName' },
+            txtauthorOrganisation: { type: String, default: 'authorOrganisation' },
+            txtauthorRole: { type: String, default: 'authorRole' },
         },
         components: {
             AuthorsList,
             Button,
             CharacterCount,
             LinkTextAndIcon,
+
         },
         data() {
             return {

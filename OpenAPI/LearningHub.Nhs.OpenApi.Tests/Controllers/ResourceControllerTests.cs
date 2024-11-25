@@ -18,8 +18,12 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
     using Moq;
     using Newtonsoft.Json;
     using Xunit;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Security.Claims;
+    using LearningHub.Nhs.Models.Enums;
 
-    public sealed class ResourceControllerTests : IDisposable
+    public sealed class ResourceControllerTests
     {
         private readonly Mock<ISearchService> searchService;
         private readonly Mock<IResourceService> resourceService;
@@ -87,6 +91,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
         public async Task SearchEndpointUsesDefaultLimitGivenInConfig()
         {
             // Given
+            int? currentUserId = null; //E.g if hitting endpoint with ApiKey auth
             this.GivenSearchServiceSucceedsButFindsNoItems();
             this.GivenDefaultLimitForFindwiseSearchIs(12);
             this.resourceController = new ResourceController(
@@ -99,7 +104,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
 
             // Then
             this.searchService.Verify(
-                service => service.Search(It.Is<ResourceSearchRequest>(request => request.Limit == 12)));
+                service => service.Search(It.Is<ResourceSearchRequest>(request => request.Limit == 12), currentUserId));
         }
 
         [Fact]
@@ -177,6 +182,41 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
             exception.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
+        [Fact]
+        public void CurrentUserIdSetByAuth()
+        {
+            // Arrange
+            ResourceController resourceController = new ResourceController(
+                this.searchService.Object,
+                this.resourceService.Object,
+                this.findwiseConfigOptions.Object
+            );
+
+
+            // This Id is the development accountId
+            int currentUserId = 57541;
+
+            // Create claims identity with the specified user id
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, currentUserId.ToString()),
+            };
+            var identity = new ClaimsIdentity(claims, "AuthenticationTypes.Federation"); // Set the authentication type to "Federation"
+
+            // Create claims principal with the claims identity
+            var claimsPrincipal = new ClaimsPrincipal(identity);
+
+            // Create a mock HttpContext and set it to the ControllerContext
+            var httpContext = new DefaultHttpContext { User = claimsPrincipal };
+            var controllerContext = new ControllerContext { HttpContext = httpContext };
+            resourceController.ControllerContext = controllerContext;
+
+            // Act
+
+            // Assert that the CurrentUserId property of the resourceController matches the currentUserId
+            Assert.Equal(currentUserId, resourceController.CurrentUserId);
+        }
+
         [Theory]
         [InlineData(1)]
         [InlineData(20)]
@@ -184,6 +224,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
         public async Task SearchEndpointUsesPassedInLimitIfGiven(int limit)
         {
             // Given
+            int? currentUserId = null; //E.g if hitting endpoint with ApiKey auth
             this.GivenSearchServiceSucceedsButFindsNoItems();
             this.GivenDefaultLimitForFindwiseSearchIs(20);
             this.resourceController = new ResourceController(
@@ -196,12 +237,46 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
 
             // Then
             this.searchService.Verify(
-                service => service.Search(It.Is<ResourceSearchRequest>(request => request.Limit == limit)));
+                service => service.Search(It.Is<ResourceSearchRequest>(request => request.Limit == limit), currentUserId));
         }
 
-        public void Dispose()
+        [Fact]
+        public async Task GetResourceReferencesByCompleteThrowsErrorWhenNoUserId()
         {
-            this.resourceController?.Dispose();
+            // When
+            var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
+            {
+                await this.resourceController.GetResourceReferencesByActivityStatus((int)ActivityStatusEnum.Completed);
+            });
+
+            // Then
+            Assert.Equal("User Id required.", exception.Message);
+        }
+
+        [Fact]
+        public async Task GetResourceReferencesByInProgressThrowsErrorWhenNoUserId()
+        {
+            // When
+            var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
+            {
+                await this.resourceController.GetResourceReferencesByActivityStatus((int)ActivityStatusEnum.Incomplete);// in complete in db is in progress front endS
+            });
+
+            // Then
+            Assert.Equal("User Id required.", exception.Message);
+        }
+
+        [Fact]
+        public async Task GetResourceReferencesBycertificatesThrowsErrorWhenNoUserId()
+        {
+            // When
+            var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
+            {
+                await this.resourceController.GetResourceReferencesByCertificates();
+            });
+
+            // Then
+            Assert.Equal("User Id required.", exception.Message);
         }
 
         private void GivenDefaultLimitForFindwiseSearchIs(int limit)
@@ -212,14 +287,17 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
 
         private void GivenSearchServiceFailsWithStatus(FindwiseRequestStatus status)
         {
-            this.searchService.Setup(ss => ss.Search(It.IsAny<ResourceSearchRequest>())).ReturnsAsync(
+            int? currentUserId = null; //E.g if hitting endpoint with ApiKey auth
+            this.searchService.Setup(ss => ss.Search(It.IsAny<ResourceSearchRequest>(), currentUserId)).ReturnsAsync(
                 new ResourceSearchResultModel(new List<ResourceMetadataViewModel>(), status, 0));
         }
 
         private void GivenSearchServiceSucceedsButFindsNoItems()
         {
-            this.searchService.Setup(ss => ss.Search(It.IsAny<ResourceSearchRequest>())).ReturnsAsync(
+            int? currentUserId = null; //E.g if hitting endpoint with ApiKey auth
+            this.searchService.Setup(ss => ss.Search(It.IsAny<ResourceSearchRequest>(), currentUserId)).ReturnsAsync(
                 new ResourceSearchResultModel(new List<ResourceMetadataViewModel>(), FindwiseRequestStatus.Success, 0));
         }
+
     }
 }

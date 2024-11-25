@@ -418,18 +418,21 @@ namespace LearningHub.Nhs.WebUI.Services
 
                 resourceItem = JsonConvert.DeserializeObject<ResourceItemViewModel>(result);
 
-                resourceItem.LicenseUrl = this.settings.ResourceLicenseUrl;
-
-                // if resource type is video, add azure media content protection authentication token
-                if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Video && resourceItem.VideoDetails != null && resourceItem.VideoDetails.ResourceAzureMediaAsset != null && !string.IsNullOrEmpty(resourceItem.VideoDetails.ResourceAzureMediaAsset.FilePath))
+                if (resourceItem != null)
                 {
-                    resourceItem.VideoDetails.ResourceAzureMediaAsset.AuthenticationToken = await this.azureMediaService.GetContentAuthenticationTokenAsync(resourceItem.VideoDetails.ResourceAzureMediaAsset.FilePath);
-                }
+                    resourceItem.LicenseUrl = this.settings.ResourceLicenseUrl;
 
-                // if resource type is audio, add azure media content protection authentication token
-                if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Audio && resourceItem.AudioDetails != null && resourceItem.AudioDetails.ResourceAzureMediaAsset != null && !string.IsNullOrEmpty(resourceItem.AudioDetails.ResourceAzureMediaAsset.FilePath))
-                {
-                    resourceItem.AudioDetails.ResourceAzureMediaAsset.AuthenticationToken = await this.azureMediaService.GetContentAuthenticationTokenAsync(resourceItem.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                    // if resource type is video, add azure media content protection authentication token
+                    if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Video && resourceItem.VideoDetails != null && resourceItem.VideoDetails.ResourceAzureMediaAsset != null && !string.IsNullOrEmpty(resourceItem.VideoDetails.ResourceAzureMediaAsset.FilePath))
+                    {
+                        resourceItem.VideoDetails.ResourceAzureMediaAsset.AuthenticationToken = await this.azureMediaService.GetContentAuthenticationTokenAsync(resourceItem.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                    }
+
+                    // if resource type is audio, add azure media content protection authentication token
+                    if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Audio && resourceItem.AudioDetails != null && resourceItem.AudioDetails.ResourceAzureMediaAsset != null && !string.IsNullOrEmpty(resourceItem.AudioDetails.ResourceAzureMediaAsset.FilePath))
+                    {
+                        resourceItem.AudioDetails.ResourceAzureMediaAsset.AuthenticationToken = await this.azureMediaService.GetContentAuthenticationTokenAsync(resourceItem.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                    }
                 }
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -1273,6 +1276,36 @@ namespace LearningHub.Nhs.WebUI.Services
             }
 
             return apiResponse.ValidationResult;
+        }
+
+        /// <summary>
+        /// The GetObsoleteResourceFile.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <param name="deletedResource">.</param>
+        /// <returns>The <see cref="T:Task{List{FileTypeViewModel}}"/>.</returns>
+        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId, bool deletedResource = false)
+        {
+            List<string> filePaths = null;
+
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+
+            var request = $"Resource/GetObsoleteResourceFile/{resourceVersionId}/{deletedResource}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                filePaths = JsonConvert.DeserializeObject<List<string>>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return filePaths;
         }
     }
 }

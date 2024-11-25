@@ -96,6 +96,7 @@ namespace LearningHub.Nhs.Repository.Activity
             //
             // For assessment activities, only include the original activities that were created when starting the assessment. The created end record is only for consistency.
             // It's easier to get the real assessment resource activity from the original resource activity, so only fetch that one.
+            // TD-4047: As part of this defect bringing back the removed code which then used for the new stored procedure created as part of performance improvement.
             return this.DbContext.ResourceActivity
                .Include(r => r.Resource)
                .ThenInclude(r => r.ResourceReference)
@@ -110,11 +111,11 @@ namespace LearningHub.Nhs.Repository.Activity
                .ThenInclude(a => a.AssessmentResourceActivityInteractions)
                .Include(r => r.NodePath)
                .AsNoTracking()
-             .Where(r =>
+               .Where(r =>
                             r.UserId == userId && r.ScormActivity.First().CmiCoreLessonStatus != (int)ActivityStatusEnum.Completed &&
                            ((!r.InverseLaunchResourceActivity.Any()) ||
                               r.InverseLaunchResourceActivity.Any()))
-              .OrderByDescending(r => r.ActivityStart);
+               .OrderByDescending(r => r.ActivityStart);
         }
 
         /// <summary>
@@ -342,19 +343,28 @@ namespace LearningHub.Nhs.Repository.Activity
         {
             result.ToList().ForEach(i =>
             {
-                Block blocks = new Block();
-                blocks.BlockCollectionId = i.Block_BlockCollectionId ?? 0;
-                var blockType = i.Block_BlockType ?? 0;
-                blocks.BlockType = (BlockType)blockType;
-                blocks.Title = i.Block_Title;
-                blocks.Order = i.Block_Order ?? 0;
+                var a = result.Where(x => x.Id == i.Id).ToList().DistinctBy(l => l.Block_BlockId);
                 List<Block> blocksList = new List<Block>();
-                blocksList.Add(blocks);
+                foreach (var b in a)
+                {
+                    Block blocks = new Block();
+                    blocks.Id = b.Block_BlockId ?? 0;
+                    blocks.BlockCollectionId = b.Block_BlockCollectionId ?? 0;
+                    var blockType = b.Block_BlockType ?? 0;
+                    blocks.BlockType = (BlockType)blockType;
+                    blocks.Title = b.Block_Title;
+                    blocks.Order = b.Block_Order ?? 0;
+                    blocksList.Add(blocks);
+                }
+
                 i.ResourceVersion_AssessmentResourceVersion.AssessmentContent = new BlockCollection();
                 i.ResourceVersion_AssessmentResourceVersion.AssessmentContent.Blocks = blocksList;
                 i.ResourceVersion.AssessmentResourceVersion = new AssessmentResourceVersion();
                 i.ResourceVersion.AssessmentResourceVersion.AssessmentContent = new BlockCollection();
                 i.ResourceVersion.AssessmentResourceVersion.AssessmentContent.Blocks = blocksList;
+                int assessmentType = i.ResourceVersion_AssessmentResourceVersion_AssessmentType ?? 0;
+                i.ResourceVersion.AssessmentResourceVersion.AssessmentType = (AssessmentTypeEnum)assessmentType;
+                i.ResourceVersion.AssessmentResourceVersion.PassMark = i.ResourceVersion_PassMark;
             });
         }
 
@@ -362,14 +372,17 @@ namespace LearningHub.Nhs.Repository.Activity
         {
             result.ToList().ForEach(i =>
             {
-                MediaResourceActivity mediaResourceActivity = new MediaResourceActivity();
+                if (i.MediaResourceActivity_ResourceActivityId != null)
+                {
+                    MediaResourceActivity mediaResourceActivity = new MediaResourceActivity();
 
-                mediaResourceActivity.ResourceActivityId = i.MediaResourceActivity_ResourceActivityId ?? 0;
-                mediaResourceActivity.Id = i.MediaResourceActivity_ResourceActivityId ?? 0;
-                mediaResourceActivity.ActivityStart = i.MediaResourceActivity_ActivityStart ?? DateTimeOffset.MinValue;
-                mediaResourceActivity.SecondsPlayed = i.MediaResourceActivity_SecondsPlayed;
-                mediaResourceActivity.PercentComplete = i.MediaResourceActivity_PercentComplete;
-                i.MediaResourceActivity.Add(mediaResourceActivity);
+                    mediaResourceActivity.ResourceActivityId = i.MediaResourceActivity_ResourceActivityId ?? 0;
+                    mediaResourceActivity.Id = i.MediaResourceActivity_ResourceActivityId ?? 0;
+                    mediaResourceActivity.ActivityStart = i.MediaResourceActivity_ActivityStart ?? DateTimeOffset.MinValue;
+                    mediaResourceActivity.SecondsPlayed = i.MediaResourceActivity_SecondsPlayed;
+                    mediaResourceActivity.PercentComplete = i.MediaResourceActivity_PercentComplete;
+                    i.MediaResourceActivity.Add(mediaResourceActivity);
+                }
             });
         }
 
@@ -377,13 +390,30 @@ namespace LearningHub.Nhs.Repository.Activity
         {
             result.ToList().ForEach(i =>
             {
-                AssessmentResourceActivity assessmentResourceActivity = new AssessmentResourceActivity();
+                if (i.AssessmentResourceActivity_ResourceActivityId != null)
+                {
+                    AssessmentResourceActivity assessmentResourceActivity = new AssessmentResourceActivity();
+                    assessmentResourceActivity.ResourceActivityId = i.AssessmentResourceActivity_ResourceActivityId ?? 0;
+                    assessmentResourceActivity.Id = i.AssessmentResourceActivity_Id ?? 0;
+                    assessmentResourceActivity.Score = i.AssessmentResourceActivity_Score;
+                    assessmentResourceActivity.Reason = i.AssessmentResourceActivity_Reason;
+                    var c = result.Where(x => x.Id == i.Id).ToList().DistinctBy(l => l.AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId);
+                    List<AssessmentResourceActivityInteraction> assessmentResourceActivityInteractionList = new List<AssessmentResourceActivityInteraction>();
+                    foreach (var item in c)
+                    {
+                        if (i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id != null)
+                        {
+                            AssessmentResourceActivityInteraction assessmentResourceActivityInteraction = new AssessmentResourceActivityInteraction();
+                            assessmentResourceActivityInteraction.AssessmentResourceActivityId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_AssessmentResourceActivityId ?? 0;
+                            assessmentResourceActivityInteraction.Id = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id ?? 0;
+                            assessmentResourceActivityInteraction.QuestionBlockId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId ?? 0;
+                            assessmentResourceActivityInteractionList.Add(assessmentResourceActivityInteraction);
+                        }
+                    }
 
-                assessmentResourceActivity.ResourceActivityId = i.AssessmentResourceActivity_ResourceActivityId ?? 0;
-
-                assessmentResourceActivity.Score = i.AssessmentResourceActivity_Score;
-                assessmentResourceActivity.Reason = i.AssessmentResourceActivity_Reason;
-                i.AssessmentResourceActivity.Add(assessmentResourceActivity);
+                    assessmentResourceActivity.AssessmentResourceActivityInteractions = assessmentResourceActivityInteractionList;
+                    i.AssessmentResourceActivity.Add(assessmentResourceActivity);
+                }
             });
         }
 
@@ -472,12 +502,17 @@ namespace LearningHub.Nhs.Repository.Activity
                 i.Resource.Deleted = i.Resource_Deleted;
                 int resourceTypeId = i.Resource_ResourceTypeId;
                 i.Resource.ResourceTypeEnum = (ResourceTypeEnum)resourceTypeId;
-                ResourceReference resourceReference = new ResourceReference();
-                resourceReference.OriginalResourceReferenceId = i.ResourceReference_OriginalResourceReferenceId;
-                resourceReference.NodePathId = i.ResourceReference_NodePathId;
-                resourceReference.ResourceId = i.ResourceReference_ResourceId;
+                var resourceReferences = result.Where(x => x.Id == i.Id && x.ResourceVersionId == i.ResourceVersionId).ToList();
                 List<ResourceReference> resourceReferenceList = new List<ResourceReference>();
-                resourceReferenceList.Add(resourceReference);
+                foreach (var b in resourceReferences)
+                {
+                    ResourceReference resourceReference = new ResourceReference();
+                    resourceReference.OriginalResourceReferenceId = b.ResourceReference_OriginalResourceReferenceId;
+                    resourceReference.NodePathId = b.ResourceReference_NodePathId;
+                    resourceReference.ResourceId = b.ResourceReference_ResourceId;
+                    resourceReferenceList.Add(resourceReference);
+                }
+
                 i.Resource.ResourceReference = resourceReferenceList;
             });
         }

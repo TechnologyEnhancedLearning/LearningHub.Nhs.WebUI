@@ -24,10 +24,11 @@
     }
 }
 
-
+@if (showPaging == true)
+{
     <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
-    <ul class="nhsuk-list nhsuk-pagination__list">
-            
+        <ul class="nhsuk-list nhsuk-pagination__list">
+
             @if (pagingModel.CurrentPage <= 1)
             {
                 <li class="nhsuk-pagination-item--previous">
@@ -68,4 +69,5 @@
             }
         </ul>
     </nav>
+}
 

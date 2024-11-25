@@ -12,7 +12,8 @@
                         <EditSaveFieldWithCharacterCount v-model="block.title"
                                                          addEditLabel="title"
                                                          v-bind:characterLimit="60"
-                                                         v-bind:isH3="true"></EditSaveFieldWithCharacterCount>
+                                                         v-bind:isH3="true"
+                                                         v-bind:inputId="title"></EditSaveFieldWithCharacterCount>
                         <Tick v-bind:complete="block.isReadyToPublish()" class="p-10"></Tick>
                     </div>
                     <div class="d-flex justify-content-center icon-button">
@@ -107,6 +108,7 @@ export default Vue.extend({
         enableUp: Boolean,
         enableDown: Boolean,
         resourceType: {type: Number} as PropOptions<ResourceType>,
+        title: { type: String, default: 'title' },
     },
     data() {
         return {

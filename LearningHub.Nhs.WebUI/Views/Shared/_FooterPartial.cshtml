@@ -3,28 +3,27 @@
 @using LearningHub.Nhs.WebUI.Configuration;
 @inject IOptions<Settings> settings;
 
-  <footer role="contentinfo">
-    <div class="nhsuk-footer" id="nhsuk-footer">
-      <div class="nhsuk-width-container nhsuk-footer__container app-width-container">
+
+<div class="nhsuk-footer" id="nhsuk-footer">
+    <div class="nhsuk-width-container nhsuk-footer__container app-width-container">
         <h2 class="nhsuk-u-visually-hidden">Support links</h2>
         <ul class="nhsuk-footer__list">
-          <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@(settings.Value.SupportUrls.SupportSite)">Help</a></li>
-          @if (!SystemOffline())
-          {
-            <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@Url.Action("Contactus", "Home")">Contact us</a></li>
-            <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@Url.Action("Aboutus", "Home")">About us</a></li>
-            <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@Url.Action("Updates", "RoadMap")">Service updates and releases</a></li>
-            <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@Url.Action("NHSsites", "Home")">NHS sites</a></li>
-            <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="/Policies">Our policies</a></li>
-            <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="/Home/Accessibility">Accessibility statement</a></li>
-          }
+            <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@(settings.Value.SupportUrls.SupportSite)">Help</a></li>
+            @if (!SystemOffline())
+            {
+                <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@Url.Action("Contactus", "Home")">Contact us</a></li>
+                <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@Url.Action("Aboutus", "Home")">About us</a></li>
+                <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@Url.Action("Updates", "RoadMap")">Service updates and releases</a></li>
+                <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@Url.Action("NHSsites", "Home")">NHS sites</a></li>
+                <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="/Policies">Our policies</a></li>
+                <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="/Home/Accessibility">Accessibility statement</a></li>
+            }
         </ul>
         <p class="nhsuk-footer__copyright">&copy; NHS England @DateTime.Now.Year</p>
-      </div>
     </div>
-  </footer>
+</div>
 
-@functions{
+@functions {
     public bool SystemOffline()
     {
         return ViewContext.RouteData.Values["controller"].ToString() == "Offline";

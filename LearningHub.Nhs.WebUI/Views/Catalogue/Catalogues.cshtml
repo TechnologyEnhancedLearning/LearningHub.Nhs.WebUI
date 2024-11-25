@@ -1,13 +1,31 @@
-﻿@using LearningHub.Nhs.WebUI.Extensions
-@using Microsoft.AspNetCore.WebUtilities
+﻿@using System.Web;
+@using LearningHub.Nhs.WebUI.Extensions;
+@using Microsoft.AspNetCore.WebUtilities;
+@using LearningHub.Nhs.Models.Search.SearchClick;
+
 @model LearningHub.Nhs.Models.Dashboard.DashboardCatalogueResponseViewModel;
 
 @{
-  ViewData["Title"] = "Learning Hub - Catalogues";
+    ViewData["Title"] = "Learning Hub - Catalogues";
 
-  var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString().ToLower());
-  var hasSearchTerm = queryParams.ContainsKey("term");
-  var searhTerm = hasSearchTerm ? queryParams["term"].ToString() : null;
+    var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString().ToLower());
+    var hasSearchTerm = queryParams.ContainsKey("term");
+    var searhTerm = hasSearchTerm ? queryParams["term"].ToString() : null;
+    string cardStyle = "card-provider-details--blank";
+    var suggestedTerm = Model.DidYouMeanEnabled ? Model.SuggestedCatalogue : searhTerm;
+
+    string GetCatalogueUrl(string catalogueUrl, SearchClickPayloadModel list, int catalogueId)
+  {
+        string encodedCatalogueUrl = HttpUtility.UrlEncode("/Catalogue/" + catalogueUrl);
+        string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(list?.SearchSignal?.Query));
+        string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
+        var url = $@"/search/record-catalogue-click?url={encodedCatalogueUrl}&itemIndex={list?.HitNumber}
+&pageIndex={this.ViewBag.PageIndex}&totalNumberOfHits={list?.SearchSignal?.Stats.TotalHits}&searchText={suggestedTerm}&catalogueId={catalogueId}
+&GroupId={groupId}&searchId={list?.SearchSignal.SearchId}&timeOfSearch={list?.SearchSignal.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(list?.SearchSignal?.UserQuery)}
+&query={searchSignalQueryEncoded}&name={list?.DocumentFields?.Name}";
+        return url;
+  }
+
 }
 
 @section styles{
@@ -25,7 +43,7 @@
     <vc:back-link asp-controller="Home" asp-action="Index" link-text="Back to: Learning Hub" />
   }
   <h1 class="nhsuk-u-margin-bottom-5">
-    @(hasSearchTerm ? $"Search results for {searhTerm}" : "All catalogues")
+        @(hasSearchTerm ? $"Search results for {suggestedTerm}" : "All catalogues")
   </h1>
 
   <h2 class="nhsuk-u-margin-bottom-5">
@@ -55,11 +73,21 @@
               <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
             }
           </div>
+           @if (item.Providers?.Count > 0)
+            {
+               <div class="card-provider-details">
+               @ProviderHelper.GetProviderString(item.Providers.FirstOrDefault().Name)
+               </div>
+            }
+            else
+            {
+               <div class="card-provider-details @cardStyle"></div>
+            }
 
           <div class="nhsuk-card__content catalogue-card-content">
 
             <h3 class="nhsuk-card__heading nhsuk-heading-m">
-              <a class="nhsuk-card__link line-clamp-2" asp-controller="Catalogue" asp-action="Index" asp-route-reference="@item.Url">@item.Name</a>
+                 <a class="nhsuk-card__link line-clamp-2" href="@GetCatalogueUrl(item.Url, item.ClickPayload, item.NodeId)">@item.Name</a>
             </h3>
 
             <div class="nhsuk-card__description catalogue-card-body">
@@ -76,7 +104,7 @@
                     }
                   </div>
                   <div>
-                    <a class="nhsuk-u-font-size-16 nhsuk-u-margin-right-3" role="button" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
+                    <a class="nhsuk-u-font-size-16 nhsuk-u-margin-right-3" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
                      asp-route-bookmarked="@item.IsBookmarked"
                      asp-route-id="@item.BookmarkId"
                      asp-route-title="@item.Name.Truncate(60)"
@@ -88,9 +116,14 @@
                   </div>
                 </div>
                 <div>
-                  @if (!string.IsNullOrEmpty(item.BadgeUrl))
+                  @if (item.Providers?.Count > 0)
+                    {
+                      var provider = item.Providers.First();
+                      <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
+                    }
+                  else if (!string.IsNullOrEmpty(item.BadgeUrl))
                   {
-                    <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="@(item.Name)" class="catalogue-card-badge" />
+                    <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="Provider's catalogue badge" class="catalogue-card-badge" />
                   }
                 </div>
               </div>

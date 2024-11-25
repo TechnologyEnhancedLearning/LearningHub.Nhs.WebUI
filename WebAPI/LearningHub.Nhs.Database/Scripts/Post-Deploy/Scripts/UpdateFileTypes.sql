@@ -1,0 +1,1 @@
+update resources.FileType set NotAllowed =0 where Extension='WMV'

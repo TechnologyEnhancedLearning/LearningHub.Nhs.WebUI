@@ -1,27 +1,29 @@
 <template>
-    <div class="key-words-editor-component">
+    <div class="common-content">
 
-        <div class="my-2 input-with-button">
-            <CharacterCount v-model="newKeyword"
-                            inputId="newKeyword"
-                            v-bind:characterLimit="50"
-                            v-bind:hasOtherError="keywordError"
-                            @input="keywordError=false">
-                <template v-slot:title>
-                    Keywords
-                </template>
-                <template v-slot:otherErrorMessage>
-                    <span class="text-danger">This keyword has already been added.</span>
-                </template>
-                <template v-slot:description>
+        <div class="row">
+            <div class="form-group" v-bind:class="{ 'input-validation-error': keywordError }">
+                <div class="col-12 mb-0 error-text" v-if="keywordError">
+                    <span class="text-danger">The keyword(s) have already been added : {{formattedkeywordErrorMessage}}</span>
+                </div>
+                <div class="col-12 mb-0 error-text" v-if="keywordLengthExceeded">
+                    <span class="text-danger">
+                        Each keyword must be no longer than 50 characters.
+                    </span>
+                </div>
+
+                <div class="col-12">
                     To help learners find this resource, type one or more relevant keywords separated by commas and click 'Add'.
-                </template>
-                <template v-slot:afterInput>
-                    <Button class="ml-3" v-on:click="addKeyword">Add</Button>
-                </template>
-            </CharacterCount>
-        </div>
-
+                </div>
+                <div class="col-12 input-with-button">
+                    <input id="newKeyword" aria-labelledby="keyword-label" type="text" class="form-control" maxlength="260" v-model="newKeyword" v-bind:class="{ 'input-validation-error': keywordError }" @input="keywordError=false" @change="keywordChange" />
+                    <button type="button" class="nhsuk-button nhsuk-button--secondary ml-3 button_width nhsuk-u-margin-bottom-0" @click="addKeyword">&nbsp;Add</button>
+                </div>
+                <div class="col-12 footer-text" id="keyword-label">
+                    You can enter a maximum of 50 characters per keyword
+                </div>
+            </div>
+        </div>    
         <div class="keyword-container my-4 d-flex">
             <div class="keyword-tag" v-for="keyword in resourceDetails.resourceKeywords" :key="keyword.id">
                 <button class="btn btn-link" aria-label="Delete keyword" @click="deleteKeyword(keyword.id)">
@@ -57,6 +59,8 @@
             return {
                 newKeyword: '',
                 keywordError: false,
+                keywordLengthExceeded: false,
+                keywordErrorMessage: []
             }
         },
         computed: {
@@ -66,16 +70,24 @@
             newKeywordTrimmed(): string {
                 return this.newKeyword?.trim().replace(/ +(?= )/g, '').toLowerCase();
             },
+            formattedkeywordErrorMessage(): string {
+                return this.keywordErrorMessage.join(', ');
+            },
         },
         methods: {
+            keywordChange() {
+                this.keywordError = false;
+                this.keywordLengthExceeded = false;
+                this.keywordErrorMessage = [];
+            },
             async addKeyword() {  
                 if (this.newKeyword && this.newKeywordTrimmed.length > 0) {
+                    this.keywordChange();
                     let allTrimmedKeyword = this.newKeywordTrimmed.toLowerCase().split(',');
                     allTrimmedKeyword = allTrimmedKeyword.filter(e => String(e).trim());
-                    if (!this.resourceDetails.resourceKeywords.find(_keyword => allTrimmedKeyword.includes(_keyword.keyword.toLowerCase()))) {
                         for (var i = 0; i < allTrimmedKeyword.length; i++) {
-                            let item = allTrimmedKeyword[i];
-                            if (item.length > 0) {
+                            let item = allTrimmedKeyword[i].trim();
+                            if (item.length > 0 && item.length <= 50) {
                                 let newKeywordObj = new KeywordModel({
                                     keyword: item,
                                     resourceVersionId: this.resourceVersionId,
@@ -83,8 +95,11 @@
                                 newKeywordObj = await resourceData.addKeyword(this.resourceVersionId, newKeywordObj);
                                 if (newKeywordObj.id > 0) {
                                     this.resourceDetails.resourceKeywords.push(newKeywordObj);
-                                    this.keywordError = false;
                                     this.newKeyword = '';
+                                } else if (newKeywordObj.id == 0) {
+                                    this.newKeyword = '';
+                                    this.keywordError = true;
+                                    this.keywordErrorMessage.push(item);
                                 }
                                 else {
                                     this.keywordError = true;
@@ -93,16 +108,9 @@
 
                             }
                             else {
-                                this.keywordError = true;
+                                this.keywordLengthExceeded = true;
                             }
                         }
-
-                    }
-
-                    
-                    else {
-                        this.keywordError = true;
-                    }
                 }
             },
             async deleteKeyword(keywordId: number) {
@@ -121,6 +129,10 @@
     .input-with-button {
         display: flex;
         align-items: center;
+    }
+    .button_width
+    {
+        width:15%;
     }
 
     .input-with-button::v-deep #newKeyword {

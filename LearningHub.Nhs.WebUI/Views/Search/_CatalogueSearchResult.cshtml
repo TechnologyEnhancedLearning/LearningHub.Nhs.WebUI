@@ -1,24 +1,27 @@
 ﻿@using System.Web;
 @using LearningHub.Nhs.WebUI.Extensions
+@using LearningHub.Nhs.Models.Search.SearchClick;
 
 @model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
 
 @{
-  var catalogueResult = Model.CatalogueSearchResult;
-  var pagingModel = Model.CatalogueResultPaging;
-  var searchString = HttpUtility.UrlEncode(Model.SearchString);
-  var searchSignal = catalogueResult.Feedback?.FeedbackAction?.Payload?.SearchSignal;
+    var catalogueResult = Model.CatalogueSearchResult;
+    var pagingModel = Model.CatalogueResultPaging;
+    var searchString = HttpUtility.UrlEncode(Model.SearchString);
+    var suggestedSearchString = Model.DidYouMeanEnabled ? HttpUtility.UrlEncode(Model.SuggestedCatalogue) : HttpUtility.UrlEncode(Model.SearchString);
 
-  string GetCatalogueUrl(string catalogueUrl, int nodePathId, int itemIndex, int catalogueId)
-  {
-    string encodedCatalogueUrl = HttpUtility.UrlEncode("/Catalogue/" + catalogueUrl);
-    string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
-    string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
+    string GetCatalogueUrl(string catalogueUrl, int nodePathId, int itemIndex, int catalogueId, SearchClickPayloadModel payload)
+    {
+        var searchSignal = payload?.SearchSignal;
+        string encodedCatalogueUrl = HttpUtility.UrlEncode("/Catalogue/" + catalogueUrl);
+        string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
+        string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
 
-    var url = $@"/search/record-catalogue-click?url={encodedCatalogueUrl}&nodePathId={nodePathId}&itemIndex={itemIndex}
-&pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={catalogueResult.TotalHits}&searchText={searchString}&catalogueId={catalogueId}
-&GroupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal?.UserQuery)}&query={searchSignalQueryEncoded}";
-    return url;
+        var url = $@"/search/record-catalogue-click?url={encodedCatalogueUrl}&nodePathId={nodePathId}&itemIndex={payload?.HitNumber}
+&pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={payload?.SearchSignal?.Stats?.TotalHits}&searchText={suggestedSearchString}&catalogueId={catalogueId}
+&GroupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal?.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal?.UserQuery)}
+&query={searchSignalQueryEncoded}&name={payload?.DocumentFields?.Name}";
+        return url;
   }
 }
 
@@ -44,6 +47,20 @@
       <li class="nhsuk-grid-column-one-third nhsuk-card-group__item">
 
         <div class="nhsuk-card nhsuk-bg-light-blue catalogue-card">
+         <div class="nhsuk-card-banner-container">
+          @if (!string.IsNullOrWhiteSpace(item.CardImageUrl))
+           {
+                            <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.CardImageUrl" alt="@item.Name" />
+           }
+           else if (!string.IsNullOrWhiteSpace(item.BannerUrl))
+           {
+                            <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.BannerUrl" alt="@item.Name" />
+           }
+           else
+           {
+             <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
+           }
+         </div>
           @if (provider != null)
           {
             <div class="card-provider-details">
@@ -57,7 +74,7 @@
           <div class="nhsuk-card__content catalogue-card-content">
 
             <h2 class="nhsuk-card__heading nhsuk-heading-m">
-              <a class="nhsuk-card__link" href="@GetCatalogueUrl(item.Url, item.NodePathId, index, Int32.Parse(item.Id))">@item.Name</a>
+              <a class="nhsuk-card__link" href="@GetCatalogueUrl(item.Url, item.NodePathId, index, Int32.Parse(item.Id), item.Click.Payload)">@item.Name</a>
             </h2>
 
             <div class="nhsuk-card__description catalogue-card-body">
@@ -89,11 +106,11 @@
                 <div>
                   @if (provider != null)
                   {
-                    <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name" class="provider-badge" />
+                    <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
                   }
-                  else @if (hasBadge)
+                  else if (hasBadge)
                   {
-                    <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="@(item.Name)" class="catalogue-card-badge" />
+                    <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="Provider's catalogue badge" class="catalogue-card-badge" />
                   }
                 </div>
               </div>

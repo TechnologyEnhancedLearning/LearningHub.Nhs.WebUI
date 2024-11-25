@@ -47,13 +47,21 @@
         /// </summary>
         /// <param name="userGroupId">The userGroupId.</param>
         /// <returns>A list of RoleUserGroupViewModel.</returns>
-        List<RoleUserGroupViewModel> GetRoleUserGroupViewModelsByUserGroupId(int userGroupId);
+        Task<List<RoleUserGroupViewModel>> GetRoleUserGroupViewModelsByUserGroupId(int userGroupId);
 
         /// <summary>
         /// Get list of RoleUserGroupViewModel for a supplied User Group.
         /// </summary>
         /// <param name="userId">The userGroupId.</param>
         /// <returns>A list of RoleUserGroupViewModel.</returns>
-        List<RoleUserGroupViewModel> GetRoleUserGroupViewModelsByUserId(int userId);
+        Task<List<RoleUserGroupViewModel>> GetRoleUserGroupViewModelsByUserId(int userId);
+
+        /// <summary>
+        /// The get all for search.
+        /// </summary>
+        /// <param name="catalogueNodeId">The catalogueNodeId.</param>
+        /// <param name="userId">The userId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<List<RoleUserGroup>> GetAllforSearch(int catalogueNodeId, int userId);
     }
 }

@@ -98,7 +98,8 @@
                             </div>
                             <div class="row mt-5">
                                 <div class="col">
-                                    <textarea v-model="rejectionMessage" class="form-control rejection-message-input" rows="6"></textarea>
+                                    <label class="nhsuk-u-visually-hidden" for="rejectionMessage"></label>
+                                    <textarea v-model="rejectionMessage" id="rejectionMessage" class="form-control rejection-message-input" rows="6"></textarea>
                                 </div>
                             </div>
                         </div>

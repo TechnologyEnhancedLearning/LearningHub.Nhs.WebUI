@@ -11,7 +11,7 @@ namespace LearningHub.Nhs.Services
     using LearningHub.Nhs.Models.Entities.Analytics;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Search;
-    using LearningHub.Nhs.Models.Search.SearchFeedback;
+    using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.Services.Helpers;
     using LearningHub.Nhs.Services.Interface;
@@ -512,7 +512,7 @@ namespace LearningHub.Nhs.Services
         /// </returns>
         public async Task<bool> SendResourceSearchEventClickAsync(SearchActionResourceModel searchActionResourceModel)
         {
-            var searchClickPayloadModel = this.mapper.Map<SearchFeedbackPayloadModel>(searchActionResourceModel);
+            var searchClickPayloadModel = this.mapper.Map<SearchClickPayloadModel>(searchActionResourceModel);
             searchClickPayloadModel.TimeOfClick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             searchClickPayloadModel.SearchSignal.ProfileSignature.ApplicationId = ApplicationId;
             searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileType = ProfileType;
@@ -532,13 +532,124 @@ namespace LearningHub.Nhs.Services
         /// </returns>
         public async Task<bool> SendCatalogueSearchEventAsync(SearchActionCatalogueModel searchActionCatalogueModel)
         {
-            var searchClickPayloadModel = this.mapper.Map<SearchFeedbackPayloadModel>(searchActionCatalogueModel);
+            var searchClickPayloadModel = this.mapper.Map<SearchClickPayloadModel>(searchActionCatalogueModel);
             searchClickPayloadModel.TimeOfClick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             searchClickPayloadModel.SearchSignal.ProfileSignature.ApplicationId = ApplicationId;
             searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileType = ProfileType;
             searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileId = this.settings.Findwise.CollectionIds.Catalogue;
 
             return await this.SendSearchEventClickAsync(searchClickPayloadModel, false);
+        }
+
+        /// <summary>
+        /// Gets AllCatalogue search results from findwise api call.
+        /// </summary>
+        /// <param name="catalogSearchRequestModel">The allcatalog search request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<SearchAllCatalogueResultModel> GetAllCatalogueSearchResultsAsync(AllCatalogueSearchRequestModel catalogSearchRequestModel)
+        {
+            var viewmodel = new SearchAllCatalogueResultModel();
+            try
+            {
+                var offset = catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize;
+                var client = await this.FindWiseHttpClient.GetClient(this.settings.Findwise.SearchUrl);
+                var request = string.Format(
+                    this.settings.Findwise.UrlSearchComponent + "?offset={1}&hits={2}&q={3}&token={4}",
+                    this.settings.Findwise.CollectionIds.Catalogue,
+                    offset,
+                    catalogSearchRequestModel.PageSize,
+                    this.EncodeSearchText(catalogSearchRequestModel.SearchText),
+                    this.settings.Findwise.Token);
+
+                var response = await client.GetAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    viewmodel = JsonConvert.DeserializeObject<SearchAllCatalogueResultModel>(result);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    this.Logger.LogError($"Get AllCatalogue Search Result failed in FindWise, HTTP Status Code:{response.StatusCode}");
+                    throw new Exception("AccessDenied to FindWise Server");
+                }
+                else
+                {
+                    var error = response.Content.ReadAsStringAsync().Result.ToString();
+                    this.Logger.LogError($"Get AllCatalogue Search Result failed in FindWise, HTTP Status Code:{response.StatusCode}, Error Message:{error}");
+                    throw new Exception("Error with FindWise Server");
+                }
+
+                return viewmodel;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// The Get Auto suggestion Results Async method.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term)
+        {
+            var viewmodel = new AutoSuggestionModel();
+
+            try
+            {
+                var client = await this.FindWiseHttpClient.GetClient(this.settings.Findwise.SearchUrl);
+                var request = string.Format(
+                    this.settings.Findwise.UrlSearchComponent + "?q={1}&token={2}",
+                    this.settings.Findwise.CollectionIds.AutoSuggestion,
+                    this.EncodeSearchText(term),
+                    this.settings.Findwise.Token);
+
+                var response = await client.GetAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    viewmodel = JsonConvert.DeserializeObject<AutoSuggestionModel>(result);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    this.Logger.LogError($"Get Auto Suggetion Result failed in FindWise, HTTP Status Code:{response.StatusCode}");
+                    throw new Exception("AccessDenied to FindWise Server");
+                }
+                else
+                {
+                    var error = response.Content.ReadAsStringAsync().Result.ToString();
+                    this.Logger.LogError($"Get Auto Suggetion Result failed in FindWise, HTTP Status Code:{response.StatusCode}, Error Message:{error}");
+                    throw new Exception("Error with FindWise Server");
+                }
+
+                return viewmodel;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// The AutoSuggestion Event action async.
+        /// </summary>
+        /// <param name="clickPayloadModel">
+        /// The clic kPayload Model.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        public async Task<bool> SendAutoSuggestionEventAsync(AutoSuggestionClickPayloadModel clickPayloadModel)
+        {
+            clickPayloadModel.TimeOfClick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            clickPayloadModel.SearchSignal.ProfileSignature.ApplicationId = ApplicationId;
+            clickPayloadModel.SearchSignal.ProfileSignature.ProfileType = ProfileType;
+            clickPayloadModel.SearchSignal.ProfileSignature.ProfileId = this.settings.Findwise.CollectionIds.AutoSuggestion;
+
+            return await this.SendAutoSuggestionEventClickAsync(clickPayloadModel);
         }
 
         /// <summary>
@@ -549,7 +660,7 @@ namespace LearningHub.Nhs.Services
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        private async Task<bool> SendSearchEventClickAsync(SearchFeedbackPayloadModel searchClickPayloadModel, bool isResource)
+        private async Task<bool> SendSearchEventClickAsync(SearchClickPayloadModel searchClickPayloadModel, bool isResource)
         {
             var eventType = isResource ? "resource" : "catalog";
 
@@ -590,6 +701,55 @@ namespace LearningHub.Nhs.Services
             catch (Exception ex)
             {
                 throw new Exception($"Click event save to FindWise failed for {eventType}: {searchClickPayloadModel.ClickTargetUrl} :  {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Send auto suggestion click payload.
+        /// </summary>
+        /// <param name="clickPayloadModel">search click payload model.</param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        private async Task<bool> SendAutoSuggestionEventClickAsync(AutoSuggestionClickPayloadModel clickPayloadModel)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(this.settings.Findwise.UrlAutoSuggestionClickComponent))
+                {
+                    this.Logger.LogWarning($"The UrlClickComponent is not configured. Auto suggestion click event not send to FindWise.");
+                }
+                else
+                {
+                    var json = JsonConvert.SerializeObject(clickPayloadModel);
+                    var base64EncodedString = BinaryFormatterHelper.Base64EncodeObject(json);
+
+                    var request = $"{this.settings.Findwise.UrlAutoSuggestionClickComponent}?payload={base64EncodedString}";
+
+                    var client = await this.FindWiseHttpClient.GetClient(this.settings.Findwise.SearchUrl);
+                    var response = await client.PostAsync(request, null).ConfigureAwait(false);
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                    {
+                        this.Logger.LogError($"Click event save to FindWise failed for Auto suggestion: {clickPayloadModel.ClickTargetUrl} HTTP Status Code: {response.StatusCode}");
+                        throw new Exception("AccessDenied");
+                    }
+                    else if (!response.IsSuccessStatusCode)
+                    {
+                        this.Logger.LogError($"Click event save to FindWise failed for Auto suggestion: {clickPayloadModel.ClickTargetUrl} HTTP Status Code: {response.StatusCode}");
+                        throw new Exception($"Click event save to FindWise failed for Auto suggestion: {json}");
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Click event save to FindWise failed for Auto suggestion: {clickPayloadModel.ClickTargetUrl} :  {ex.Message}");
             }
         }
 

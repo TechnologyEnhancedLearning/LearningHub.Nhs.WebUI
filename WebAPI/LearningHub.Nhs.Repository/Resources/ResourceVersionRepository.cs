@@ -161,6 +161,50 @@
         }
 
         /// <summary>
+        /// The get current for resource async.
+        /// </summary>
+        /// <param name="resourceId">The resource id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<ResourceVersion> GetCurrentResourceDetailsAsync(int resourceId)
+        {
+            return await this.DbContext.ResourceVersion.AsNoTracking()
+                       .Include(r => r.Resource)
+                       .Include(r => r.Publication).AsNoTracking()
+                       .Include(r => r.ResourceVersionKeyword).AsNoTracking()
+                       .Include(r => r.ResourceVersionAuthor).AsNoTracking()
+                       .Include(r => r.ResourceVersionFlag).AsNoTracking()
+                       .Include(r => r.ResourceVersionEvent).AsNoTracking()
+                       .Include(r => r.ResourceLicence).AsNoTracking()
+                       .Include(r => r.CreateUser).AsNoTracking()
+                       .Include(r => r.ResourceVersionProvider).ThenInclude(r => r.Provider).AsNoTracking()
+                       .OrderByDescending(r => r.Id)
+                       .FirstOrDefaultAsync(r => r.ResourceId == resourceId
+                                                 && r.VersionStatusEnum != VersionStatusEnum.FailedToPublish
+                                                 && r.VersionStatusEnum != VersionStatusEnum.Draft
+                                                 && !r.Deleted);
+        }
+
+        /// <summary>
+        /// The get resource version details by id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<ResourceVersion> GetByResourceVersionByIdAsync(int resourceVersionId)
+        {
+            return await this.DbContext.ResourceVersion.OrderByDescending(r => r.Id).FirstOrDefaultAsync(x => x.Id == resourceVersionId);
+        }
+
+        /// <summary>
+        /// The check dev id already exists in the table async.
+        /// </summary>
+        /// <param name="devId">The devId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<ResourceVersion> DoesDevIdExistsAync(string devId)
+        {
+            return await this.DbContext.ResourceVersion.OrderByDescending(r => r.Id).FirstOrDefaultAsync(x => x.DevId == devId);
+        }
+
+        /// <summary>
         /// The get current published for resource async.
         /// </summary>
         /// <param name="resourceId">The resource id.</param>
@@ -234,6 +278,25 @@
         }
 
         /// <summary>
+        /// The get current for resource reference id async.
+        /// </summary>
+        /// <param name="resourceReferenceId">The resource reference id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<ResourceVersion> GetCurrentResourceForResourceReferenceIdAsync(int resourceReferenceId)
+        {
+            ResourceVersion retVal = null;
+
+            var or = this.DbContext.ResourceReference.OrderByDescending(r => r.Id).FirstOrDefault(x => x.OriginalResourceReferenceId == resourceReferenceId);
+
+            if (or != null)
+            {
+                retVal = await this.GetCurrentResourceDetailsAsync(or.ResourceId);
+            }
+
+            return retVal;
+        }
+
+        /// <summary>
         /// The get current published for resource reference id async.
         /// </summary>
         /// <param name="resourceReferenceId">The resource reference id.</param>
@@ -294,6 +357,27 @@
                 resourceVersionUpdate.ResourceLicenceId = resourceVersion.ResourceLicenceId == 0 ? null : resourceVersion.ResourceLicenceId;
                 resourceVersionUpdate.SensitiveContent = resourceVersion.SensitiveContent;
                 resourceVersionUpdate.CertificateEnabled = resourceVersion.CertificateEnabled;
+                this.SetAuditFieldsForUpdate(userId, resourceVersionUpdate);
+            }
+
+            await this.DbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// The update async.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="resourceVersionDevIdViewModel">The resourceVersionDevIdViewModel.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task UpdateDevIdAsync(int userId, ResourceVersionDevIdViewModel resourceVersionDevIdViewModel)
+        {
+            var resourceVersionUpdate = this.DbContext.ResourceVersion
+                .SingleOrDefault(r => r.Id == resourceVersionDevIdViewModel.ResourceVersionId);
+
+            if (resourceVersionUpdate != null)
+            {
+                // Update Resource Version
+                resourceVersionUpdate.DevId = resourceVersionDevIdViewModel.DevId;
                 this.SetAuditFieldsForUpdate(userId, resourceVersionUpdate);
             }
 
@@ -639,14 +723,34 @@
         /// <returns>resources.</returns>
         public (int resourceCount, List<DashboardResourceDto> resources) GetResources(string dashboardType, int pageNumber, int userId)
         {
-            var param0 = new SqlParameter("@dashboardType", SqlDbType.NVarChar, 30) { Value = dashboardType };
-            var param1 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
-            var param2 = new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber };
-            var param3 = new SqlParameter("@totalRows", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+            var param1 = new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber };
+            var param2 = new SqlParameter("@totalRows", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
-            var dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetDashboardResources @dashboardType, @userId, @pageNumber, @totalRows output", param0, param1, param2, param3).ToList();
+            var dashboardResources = new List<DashboardResourceDto>();
+            switch (dashboardType)
+            {
+                case "my-certificates":
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyLearningCertificatesDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    break;
+                case "my-recent-completed":
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyRecentCompletedDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    break;
+                case "my-in-progress":
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyInProgressDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    break;
+                case "recent-resources":
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetRecentDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    break;
+                case "rated-resources":
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetRatedDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    break;
+                case "popular-resources":
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetPopularDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    break;
+            }
 
-            return (resourceCount: (int)param3.Value, resources: dashboardResources);
+            return (resourceCount: (int)param2.Value, resources: dashboardResources);
         }
 
         /// <summary>
@@ -679,15 +783,15 @@
         /// <param name="resourceVersionId">resourceVersionId.</param>
         /// <param name="userId">userId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public ExternalContentDetailsViewModel GetExternalContentDetails(int resourceVersionId, int userId)
+        public async Task<ExternalContentDetailsViewModel> GetExternalContentDetails(int resourceVersionId, int userId)
         {
             try
             {
                 var param0 = new SqlParameter("@resourceVersionId", SqlDbType.Int) { Value = resourceVersionId };
                 var param1 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
 
-                var externalContentDetailsViewModel = this.DbContext.ExternalContentDetailsViewModel.FromSqlRaw("[resources].[GetExternalContentDetails] @resourceVersionId, @userId", param0, param1).AsEnumerable().FirstOrDefault();
-
+                var retVal = await this.DbContext.ExternalContentDetailsViewModel.FromSqlRaw("[resources].[GetExternalContentDetails] @resourceVersionId, @userId", param0, param1).AsNoTracking().ToListAsync();
+                ExternalContentDetailsViewModel externalContentDetailsViewModel = retVal.AsEnumerable().FirstOrDefault();
                 return externalContentDetailsViewModel;
             }
             catch (Exception ex)

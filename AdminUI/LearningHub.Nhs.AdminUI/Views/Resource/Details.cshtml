@@ -5,862 +5,913 @@
 @inject IOptions<WebSettings> webSettings
 
 @{
-    ViewData["Title"] = "Details";
+  ViewData["Title"] = "Details";
+  var activetab = this.ViewBag.ActiveTab;
 }
 
 @section Styles{
-    <link href="~/css/Pages/resource_details.css" type="text/css" rel="stylesheet" />
+  <link href="~/css/Pages/resource_details.css" type="text/css" rel="stylesheet" />
 }
 
 <div class="panel-body admin-body resource-admin">
 
-    <!-- Alert Text -->
-    <div class="d-flex ml-5 my-2">
-        <div id="alertInfo" class="alert"></div>
+  <!-- Alert Text -->
+  <div class="d-flex ml-5 my-2">
+    <div id="alertInfo" class="alert"></div>
+  </div>
+  <!-- /.Alert Text -->
+  @if (Model.ResourceVersionId == 0)
+  {
+    <div class="m-4">Resource Version not found</div>
+  }
+  else
+  {
+    <div class="admin-title d-flex flex-row justify-content-between col-12">
+      <div>@Model.Title (<span id="versionStatusDescription" class="@(Model.VersionStatusEnum == VersionStatusEnum.Publishing ? "info-highlight" : "")">@Model.VersionStatusDescription</span>)</div>
+      <div id="actions" class="right-side">
+        @if (Model.VersionStatusEnum == VersionStatusEnum.Published)
+        {
+          <button id="unpublishAction" type="button" class="btn btn-admin" data-toggle="modal" data-target="#unpublish">Unpublish</button>
+        }
+        @if (Model.VersionStatusEnum == VersionStatusEnum.Publishing || Model.VersionStatusEnum == VersionStatusEnum.FailedToPublish)
+        {
+          <button id="revertToDraftAction" type="button" class="btn btn-admin" data-toggle="modal" data-target="#revertToDraft">Revert to Draft</button>
+        }
+        <button id="transferResourceAction" type="button" class="btn btn-admin" data-toggle="modal" data-target="#transferResource">Transfer Resource</button>
+      </div>
     </div>
-    <!-- /.Alert Text -->
-    @if (Model.ResourceVersionId == 0)
-    {
-        <div class="m-4">Resource Version not found</div>
-    }
-    else
-    {
-        <div class="admin-title d-flex flex-row justify-content-between col-12">
-            <div>@Model.Title (<span id="versionStatusDescription" class="@(Model.VersionStatusEnum == VersionStatusEnum.Publishing ? "info-highlight" : "")">@Model.VersionStatusDescription</span>)</div>
-            <div id="actions" class="right-side">
-                @if (Model.VersionStatusEnum == VersionStatusEnum.Published)
+
+    <div id="unpublish" ref="unpublishResourceModal" class="modal unpublish-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+      <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h1 class="heading-lg w-100">Unpublish Resource</h1>
+          </div>
+
+          <div class="modal-body">
+            <form id="unpublishForm">
+              <div class="mt-3">If you unpublish this resource learners will not be able to find or access it.</div>
+              <div class="mt-3">Please provide a reason for unpublishing this resource (<span class="info-danger">everything you write here can be seen by the contributor of the resource</span>).</div>
+              <textarea name="flag" id="flag" class="mt-3 w-100 form-control"
+                        rows="5"
+                        data-val-required="A reason for unpublishing is required."
+                        data-val-maxlength-max="1024"
+                        data-val-maxlength="The reason for unpublishing has a maximum length of '1024' characters."
+                        data-val="true"></textarea>
+              <span class="field-validation-valid" data-valmsg-for="flag" data-valmsg-replace="true"></span>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-unpublish" onclick="unpublish()">Unpublish</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="revertToDraft" ref="revertToDraftModal" class="modal revert-to-draft-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+      <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h1 class="heading-lg w-100">Revert to Draft</h1>
+          </div>
+
+          <div class="modal-body">
+            <form id="revertToDraftForm">
+              <div class="mt-3">Please confirm that you wish to revert this Resource Version to a status of 'Draft'.</div>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-revert" onclick="revertToDraft()">Revert to Draft</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="transferResource" ref="transferResourceModal" class="modal transfer-resource-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
+      <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h1 class="heading-lg w-100">Transfer Resource</h1>
+          </div>
+
+          <div class="modal-body">
+            <form id="transferResourceForm">
+              <div class="mt-3">On transferring a resource it will appear under 'My contributions' of the new Owner.</div>
+              <div class="mt-3">If the Username exists in the e-LfH Hub but the User had not yet logged into the Learning Hub then their User details will be registered in the Learning Hub as part of the transfer.</div>
+              <div class="mt-3">Resource: '@Model.Title (@Model.ResourceTypeDescription)'</div>
+              <div class="mt-3">Current Owner Username: <span id="transferFromUser">@Model.CreateUser</span></div>
+              <div class="mt-3">Please provide the <b>Username</b> of the new Owner:</div>
+              <input type="text" id="newResourceOwner" name="newResourceOwner" class="mt-3 w-100 form-control"
+                     data-val-required="New Resource Owner is required."
+                     data-val-maxlength-max="50"
+                     data-val-maxlength="New Resource Owner has a maximum length of '50' characters."
+                     data-val="true">
+              <span class="field-validation-valid" data-valmsg-for="newResourceOwner" data-valmsg-replace="true"></span>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-transfer" onclick="transferResource()">Transfer Resource</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabsbar" id="tabsbar">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="tab-item large">
+          <a class="tab-link @(ViewBag.ActiveTab == "details" ? "active" : "")" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="true">Details</a>
+        </li>
+        <li class="tab-item">
+          <a class="tab-link" id="resource-tab" data-toggle="tab" href="#resource" role="tab" aria-controls="resource" aria-selected="false">Resource</a>
+        </li>
+        <li class="tab-item">
+          <a class="tab-link" id="events-tab" href="#events" role="tab" aria-controls="events" aria-selected="false">Event History</a>
+        </li>
+        <li class="tab-item">
+          <a class="tab-link" id="history-tab" href="#history" role="tab" aria-controls="events" aria-selected="false">Version History</a>
+        </li>
+        <li class="tab-item">
+          <a class="tab-link @(ViewBag.ActiveTab == "devId" ? "active" : "")" id="devId-tab" href="#devId" role="tab" aria-controls="DevIds" aria-selected="false">Dev ID</a>
+        </li>
+        @if (Model.HasValidationErrors)
+        {
+          <li class="tab-item">
+            <a class="tab-link" id="validation-tab" href="#validationResult" role="tab" aria-controls="events" aria-selected="false">Validation Errors</a>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <div class="tab-content" id="myTabContent">
+
+      <div class="tab-pane fade  @(ViewBag.ActiveTab == "details" ? "show active" : "")" id="details" role="tabpanel" aria-labelledby="details-tab">
+        <div class="admin-section">
+          <div class="col-12">
+            <div class="id-container">Resource Version ID: @Model.ResourceVersionId</div>
+            <dl>
+              @if (Model.Providers != null && Model.Providers.Count > 0)
+              {
+                <dt>Developed with</dt>
+                @foreach (var provider in Model.Providers)
                 {
-                    <button id="unpublishAction" type="button" class="btn btn-admin" data-toggle="modal" data-target="#unpublish">Unpublish</button>
+                  <dd>
+                    @Html.DisplayFor(model =>provider.Name)
+                  </dd>
                 }
-                @if (Model.VersionStatusEnum == VersionStatusEnum.Publishing || Model.VersionStatusEnum == VersionStatusEnum.FailedToPublish)
+              }
+              @if (Model.VersionStatusEnum == VersionStatusEnum.Published)
+              {
+                <dt>URL</dt>
+                <dd>
+                  <a href="@String.Format("{0}Resource/{1}", webSettings.Value.LearningHubUrl, Model.DefaultResourceReferenceId)" target="_blank">
+                    @String.Format("{0}Resource/{1}", webSettings.Value.LearningHubUrl, Model.DefaultResourceReferenceId)
+                  </a>
+                </dd>
+              }
+              <dt>Resource Type</dt>
+              <dd>
+                @Html.DisplayFor(model => model.ResourceTypeDescription)
+              </dd>
+              <dt>Audience Access Level</dt>
+              <dd>
+                @ResourceAccessiblityHelper.GetResourceAccessibilityLevelText(Model.ResourceAccessibilityEnum)
+              </dd>
+              <dt>Title</dt>
+              <dd>
+                @Html.DisplayFor(model => model.Title)
+              </dd>
+              <dt>Description</dt>
+              <dd>
+                @Html.Raw(Model.Description)
+              </dd>
+              <dt>Additional Information</dt>
+              <dd>
+                @Html.Raw(Model.AdditionalInformation)
+              </dd>
+              <dt>Authors</dt>
+              <dd>
+                @Html.Raw(Model.Authors.Any() ? string.Join(",", Model.Authors) : "None specified")
+              </dd>
+              <dt>Keywords</dt>
+              <dd>
+                @Html.Raw(Model.Keywords.Any() ? string.Join(",", Model.Keywords) : "None specified")
+              </dd>
+              @if (Model.VersionStatusEnum == VersionStatusEnum.Published
+             || Model.VersionStatusEnum == VersionStatusEnum.Unpublished)
+              {
+                <dt>Version</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.VersionDescription)
+                </dd>
+              }
+              <dt>Version Status</dt>
+              <dd>
+                @Html.DisplayFor(model => model.VersionStatusDescription)
+              </dd>
+              <dt>Create User</dt>
+              <dd id="createUserName">
+                @Html.DisplayFor(model => model.CreateUser)
+              </dd>
+              <dt>Create Date</dt>
+              <dd>
+                @Model.CreateDate.DateTime
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade show" id="resource" role="tabpanel" aria-labelledby="resource-tab">
+        <div class="admin-section">
+
+          @if (Model.ResourceTypeEnum == ResourceTypeEnum.Article)
+          {
+            <div class="col-12">
+              <div class="id-container">Resource Version ID: @Model.ResourceVersionId</div>
+              <dl>
+                <dt>Resource Version Id</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceVersionId)
+                </dd>
+                <dt>Resource Type</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceTypeDescription)
+                </dd>
+                <dt>Content</dt>
+                <dd>
+                  @Html.Raw(Model.ArticleDetails.Content)
+                </dd>
+                <dt>Attachments</dt>
+                <dd>
+                  @if (Model.ArticleDetails.Files.Any())
+                  {
+                    @(await Html.PartialAsync("_Files", Model.ArticleDetails.Files))
+                  }
+                  else
+                  {
+                    @Html.Raw("None")
+                  }
+                </dd>
+              </dl>
+            </div>
+          }
+
+          @if (Model.ResourceTypeEnum == ResourceTypeEnum.Audio)
+          {
+            <div class="col-12">
+              @if (Model.AudioDetails.File == null || Model.AudioDetails.TranscriptFile == null)
+              {
+                <div class="alert alert-danger">
+                  @if (Model.AudioDetails.File == null)
+                  {
+                    @Html.Raw("No Audio File is associated with this Resource Version")
+                  }
+                  @if (Model.AudioDetails.TranscriptFile == null)
+                  {
+                    @Html.Raw("No Transcript File is associated with this Resource Version")
+                  }
+                </div>
+              }
+              <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
+              <dl>
+                <dt>Resource Version Id</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceVersionId)
+                </dd>
+                <dt>Resource Type</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceTypeDescription)
+                </dd>
+                @if (@Model.AudioDetails.File != null)
                 {
-                    <button id="revertToDraftAction" type="button" class="btn btn-admin" data-toggle="modal" data-target="#revertToDraft">Revert to Draft</button>
+                  <dt>Audio File</dt>
+                  <dd>
+                    <a href="@String.Format("{0}Media/DownloadInputAsset/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @Model.AudioDetails.File.FilePath, Model.AudioDetails.File.FileName)" target="_blank" download>@Model.AudioDetails.File.FileName</a>
+                  </dd>
+                  <dt>Audio File Path</dt>
+                  <dd>
+                    @Model.AudioDetails.File.FilePath
+                  </dd>
                 }
-                <button id="transferResourceAction" type="button" class="btn btn-admin" data-toggle="modal" data-target="#transferResource">Transfer Resource</button>
-            </div>
-        </div>
-
-        <div id="unpublish" ref="unpublishResourceModal" class="modal unpublish-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
-            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-                <div class="modal-content">
-                    <div class="modal-header text-center">
-                        <h1 class="heading-lg w-100">Unpublish Resource</h1>
-                    </div>
-
-                    <div class="modal-body">
-                        <form id="unpublishForm">
-                            <div class="mt-3">If you unpublish this resource learners will not be able to find or access it.</div>
-                            <div class="mt-3">Please provide a reason for unpublishing this resource (<span class="info-danger">everything you write here can be seen by the contributor of the resource</span>).</div>
-                            <textarea name="flag" id="flag" class="mt-3 w-100 form-control"
-                                  rows="5"
-                                  data-val-required="A reason for unpublishing is required."
-                                  data-val-maxlength-max="1024"
-                                  data-val-maxlength="The reason for unpublishing has a maximum length of '1024' characters."
-                                  data-val="true"></textarea>
-                            <span class="field-validation-valid" data-valmsg-for="flag" data-valmsg-replace="true"></span>
-                        </form>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-unpublish" onclick="unpublish()">Unpublish</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="revertToDraft" ref="revertToDraftModal" class="modal revert-to-draft-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
-            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-                <div class="modal-content">
-                    <div class="modal-header text-center">
-                        <h1 class="heading-lg w-100">Revert to Draft</h1>
-                    </div>
-
-                    <div class="modal-body">
-                        <form id="revertToDraftForm">
-                            <div class="mt-3">Please confirm that you wish to revert this Resource Version to a status of 'Draft'.</div>
-                        </form>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-revert" onclick="revertToDraft()">Revert to Draft</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="transferResource" ref="transferResourceModal" class="modal transfer-resource-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboad="false">
-            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-                <div class="modal-content">
-                    <div class="modal-header text-center">
-                        <h1 class="heading-lg w-100">Transfer Resource</h1>
-                    </div>
-
-                    <div class="modal-body">
-                        <form id="transferResourceForm">
-                            <div class="mt-3">On transferring a resource it will appear under 'My contributions' of the new Owner.</div>
-                            <div class="mt-3">If the Username exists in the e-LfH Hub but the User had not yet logged into the Learning Hub then their User details will be registered in the Learning Hub as part of the transfer.</div>
-                            <div class="mt-3">Resource: '@Model.Title (@Model.ResourceTypeDescription)'</div>
-                            <div class="mt-3">Current Owner Username: <span id="transferFromUser">@Model.CreateUser</span></div>
-                            <div class="mt-3">Please provide the <b>Username</b> of the new Owner:</div>
-                            <input type="text" id="newResourceOwner" name="newResourceOwner" class="mt-3 w-100 form-control"
-                               data-val-required="New Resource Owner is required."
-                               data-val-maxlength-max="50"
-                               data-val-maxlength="New Resource Owner has a maximum length of '50' characters."
-                               data-val="true">
-                            <span class="field-validation-valid" data-valmsg-for="newResourceOwner" data-valmsg-replace="true"></span>
-                        </form>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-transfer" onclick="transferResource()">Transfer Resource</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="tabsbar" id="tabsbar">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="tab-item large">
-                    <a class="tab-link active" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="true">Details</a>
-                </li>
-                <li class="tab-item">
-                    <a class="tab-link" id="resource-tab" data-toggle="tab" href="#resource" role="tab" aria-controls="resource" aria-selected="false">Resource</a>
-                </li>
-                <li class="tab-item">
-                    <a class="tab-link" id="events-tab" href="#events" role="tab" aria-controls="events" aria-selected="false">Event History</a>
-                </li>
-                <li class="tab-item">
-                    <a class="tab-link" id="history-tab" href="#history" role="tab" aria-controls="events" aria-selected="false">Version History</a>
-                </li>
-                @if (Model.HasValidationErrors)
+                @if (@Model.AudioDetails.TranscriptFile != null)
                 {
-                    <li class="tab-item">
-                        <a class="tab-link" id="validation-tab" href="#validationResult" role="tab" aria-controls="events" aria-selected="false">Validation Errors</a>
-                    </li>
+                  <dt>Transcript File</dt>
+                  <dd>
+                    <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, Model.AudioDetails.TranscriptFile.FilePath, Model.AudioDetails.TranscriptFile.FileName)" target="_blank" download>@Model.AudioDetails.TranscriptFile.FileName</a>
+                  </dd>
+                  <dt>Transcript File Path</dt>
+                  <dd>
+                    @Model.AudioDetails.TranscriptFile.FilePath
+                  </dd>
                 }
-            </ul>
+              </dl>
+            </div>
+          }
+
+          @if (Model.ResourceTypeEnum == ResourceTypeEnum.Case)
+          {
+            <div class="col-12">
+              <div class="id-container">Resource Version ID: @Model.ResourceVersionId</div>
+              <dl>
+                <dt>Resource Version Id</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceVersionId)
+                </dd>
+                <dt>Resource Type</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceTypeDescription)
+                </dd>
+                @if (Model.CaseDetails is { BlockCollection: { } })
+                {
+                  if (Model.CaseDetails.BlockCollection.Blocks != null)
+                  {
+                    <dt>Number of Blocks</dt>
+                    <dd>
+                      @Html.DisplayFor(model => model.CaseDetails.BlockCollection.Blocks.Count)
+                    </dd>
+                  }
+                }
+              </dl>
+
+              @if (Model.CaseDetails is { BlockCollection: { } })
+              {
+                <partial name="~/Views/Resource/BlockCollectionDetails.cshtml" model="@Model.CaseDetails.BlockCollection" />
+              }
+            </div>
+          }
+
+          @if (Model.ResourceTypeEnum == ResourceTypeEnum.Embedded)
+          {
+            <div class="col-12">
+              <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
+              <dl>
+                <dt>Resource Version Id</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceVersionId)
+                </dd>
+                <dt>Resource Type</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceTypeDescription)
+                </dd>
+                <dt>Embed Code</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.EmbedCodeDetails.EmbedCode)
+                </dd>
+              </dl>
+            </div>
+          }
+
+          @if (Model.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
+          {
+            <div class="col-12">
+              @if (Model.GenericFileDetails == null || Model.GenericFileDetails.File == null)
+              {
+                <div class="alert alert-danger">
+                  @Html.Raw("No File is associated with this Resource Version")
+                </div>
+              }
+              <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
+              <dl>
+                <dt>Resource Version Id</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceVersionId)
+                </dd>
+                <dt>Resource Type</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceTypeDescription)
+                </dd>
+                @if (Model.GenericFileDetails != null && @Model.GenericFileDetails.File != null)
+                {
+                  <dt>File</dt>
+                  <dd>
+                    <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, Model.GenericFileDetails.File.FilePath, Model.GenericFileDetails.File.FileName)" target="_blank" download>@Model.GenericFileDetails.File.FileName</a>
+                    (@Model.GenericFileDetails.File.FileType.Name)
+                  </dd>
+                  <dt>File Path</dt>
+                  <dd>
+                    @Model.GenericFileDetails.File.FilePath
+                  </dd>
+                  <dt>
+                    <label for="chkScormAicc" class="control-label mb-0">Scorm / AICC Content</label>
+                  </dt>
+                  <dd>
+                    <input id="chkScormAicc" class="check-box" disabled="disabled" type="checkbox" checked="@Model.GenericFileDetails.ScormAiccContent" />
+                  </dd>
+                }
+              </dl>
+            </div>
+          }
+
+          @if (Model.ResourceTypeEnum == ResourceTypeEnum.Image)
+          {
+            <div class="col-12">
+              @if (Model.ImageDetails.File == null)
+              {
+                <div class="alert alert-danger">
+                  @if (Model.ImageDetails.File == null)
+                  {
+                    @Html.Raw("No Image File is associated with this Resource Version")
+                  }
+                </div>
+              }
+              <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
+              <dl>
+                <dt>Resource Version Id</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceVersionId)
+                </dd>
+                <dt>Resource Type</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceTypeDescription)
+                </dd>
+                @if (@Model.ImageDetails.File != null)
+                {
+                  <dt>Image File</dt>
+                  <dd>
+                    <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, Model.ImageDetails.File.FilePath, Model.ImageDetails.File.FileName)" target="_blank" download>@Model.ImageDetails.File.FileName</a>
+                    (@Model.ImageDetails.File.FileType.Name)
+                  </dd>
+                  <dt>Image File Path</dt>
+                  <dd>
+                    @Model.ImageDetails.File.FilePath
+                  </dd>
+                }
+                <dt>Alt Tag</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ImageDetails.AltTag)
+                </dd>
+              </dl>
+            </div>
+          }
+
+          @if (Model.ResourceTypeEnum == ResourceTypeEnum.Video)
+          {
+            <div class="col-12">
+              @if (Model.VideoDetails.File == null || Model.VideoDetails.TranscriptFile == null || Model.VideoDetails.ClosedCaptionsFile == null)
+              {
+                <div class="alert alert-danger">
+                  @if (Model.VideoDetails.File == null)
+                  {
+                    @Html.Raw("<li>No Video File is associated with this Resource Version</li>")
+                  }
+                  @if (Model.VideoDetails.TranscriptFile == null)
+                  {
+                    @Html.Raw("<li>No Transcript File is associated with this Resource Version</li>")
+                  }
+                  @if (Model.VideoDetails.ClosedCaptionsFile == null)
+                  {
+                    @Html.Raw("<li>No Closed Captions File is associated with this Resource Version</li>")
+                  }
+                </div>
+              }
+              <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
+              <dl>
+                <dt>Resource Version Id</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceVersionId)
+                </dd>
+                <dt>Resource Type</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceTypeDescription)
+                </dd>
+                @if (@Model.VideoDetails.File != null)
+                {
+                  <dt>Video File</dt>
+                  <dd>
+                    <a href="@String.Format("{0}Media/DownloadInputAsset/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @Model.VideoDetails.File.FilePath, Model.VideoDetails.File.FileName)" target="_blank" download>@Model.VideoDetails.File.FileName</a>
+                  </dd>
+                  <dt>Video File Path</dt>
+                  <dd>
+                    @Model.VideoDetails.File.FilePath
+                  </dd>
+                }
+                @if (@Model.VideoDetails.TranscriptFile != null)
+                {
+                  <dt>Transcript File</dt>
+                  <dd>
+                    <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, Model.VideoDetails.TranscriptFile.FilePath, Model.VideoDetails.TranscriptFile.FileName)" target="_blank" download>@Model.VideoDetails.TranscriptFile.FileName</a>
+                  </dd>
+                  <dt>Transcript File Path</dt>
+                  <dd>
+                    @Model.VideoDetails.TranscriptFile.FilePath
+                  </dd>
+                }
+                @if (@Model.VideoDetails.ClosedCaptionsFile != null)
+                {
+                  <dt>Closed Captions File</dt>
+                  <dd>
+                    <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, Model.VideoDetails.ClosedCaptionsFile.FilePath, Model.VideoDetails.ClosedCaptionsFile.FileName)" target="_blank" download>@Model.VideoDetails.ClosedCaptionsFile.FileName</a>
+                  </dd>
+                  <dt>Closed Captions File Path</dt>
+                  <dd>
+                    @Model.VideoDetails.ClosedCaptionsFile.FilePath
+                  </dd>
+                }
+              </dl>
+            </div>
+          }
+
+          @if (Model.ResourceTypeEnum == ResourceTypeEnum.WebLink)
+          {
+            <div class="col-12">
+              <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
+              <dl>
+                <dt>Resource Version Id</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceVersionId)
+                </dd>
+                <dt>Resource Type</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceTypeDescription)
+                </dd>
+                <dt>Url</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.WebLinkDetails.Url)
+                </dd>
+                <dt>Display Text</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.WebLinkDetails.DisplayText)
+                </dd>
+              </dl>
+            </div>
+          }
+
+          @if (Model.ResourceTypeEnum == ResourceTypeEnum.Scorm)
+          {
+            <div class="col-12">
+              <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
+              <dl>
+                <dt>Resource Version Id</dt>
+                <dd>@Html.DisplayFor(model => model.ResourceVersionId)</dd>
+                <dt>Resource Type</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceTypeDescription)
+                </dd>
+                <dt>ESR Link</dt>
+                <dd><a href="@Model.ScormDetails.HostedContentUrl" target="_blank">@Model.ScormDetails.HostedContentUrl</a></dd>
+                <dt>Zip File</dt>
+                <dd>
+                  <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, Model.ScormDetails.File.FilePath, Model.ScormDetails.File.FileName)" target="_blank" download>@Model.ScormDetails.File.FileName</a>
+                </dd>
+                <dt>Allowed Download</dt>
+                <dd>@(Model.ScormDetails.CanDownload ? "Yes" : "No")</dd>
+                <dt>Forced clearing of user suspend data</dt>
+                <dd>@(Model.ScormDetails.ClearSuspendData ? "Yes" : "No")</dd>
+                <dt>Content Folder</dt>
+                <dd>@Model.ScormDetails.ContentFilePath</dd>
+              </dl>
+            </div>
+          }
+
+          @if (Model.ResourceTypeEnum == ResourceTypeEnum.Assessment)
+          {
+            <div class="col-12">
+              <div class="id-container">Resource Version ID: @Model.ResourceVersionId</div>
+              <dl>
+                <dt>Resource Version Id</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceVersionId)
+                </dd>
+                <dt>Resource Type</dt>
+                <dd>
+                  @Html.DisplayFor(model => model.ResourceTypeDescription)
+                </dd>
+                @if (Model.AssessmentDetails is { AssessmentContent: { } })
+                {
+                  <dt>Assessment Type</dt>
+                  <dd>
+                    @Html.DisplayFor(model => model.AssessmentDetails.AssessmentType)
+                  </dd>
+                  if (Model.AssessmentDetails.PassMark != null)
+                  {
+                    <dt>Pass Mark</dt>
+                    <dd>
+                      @Html.DisplayFor(model => model.AssessmentDetails.PassMark)
+                    </dd>
+                  }
+                  if (Model.AssessmentDetails.MaximumAttempts != null)
+                  {
+                    <dt>Maximum Attempts</dt>
+                    <dd>
+                      @Html.DisplayFor(model => model.AssessmentDetails.MaximumAttempts)
+                    </dd>
+                  }
+                  <dt>Answer in order</dt>
+                  <dd>
+                    @(Model.AssessmentDetails.AnswerInOrder ? "Yes" : "No")
+                  </dd>
+                }
+              </dl>
+              @if (Model.AssessmentDetails is { EndGuidance: { } } && Model.AssessmentDetails.EndGuidance.Blocks != null)
+              {
+                <dl>
+                  <dt>End Guidance: Number of Blocks</dt>
+                  <dd>
+                    @Html.DisplayFor(model => model.AssessmentDetails.EndGuidance.Blocks.Count)
+                  </dd>
+                  <partial name="~/Views/Resource/BlockCollectionDetails.cshtml" model="@Model.AssessmentDetails.EndGuidance" />
+                </dl>
+              }
+
+              @if (Model.AssessmentDetails is { AssessmentContent: { } } && Model.AssessmentDetails.AssessmentContent.Blocks != null)
+              {
+                <dl>
+                  <dt>Content: Number of Blocks</dt>
+                  <dd>
+                    @Html.DisplayFor(model => model.AssessmentDetails.AssessmentContent.Blocks.Count)
+                  </dd>
+                  <partial name="~/Views/Resource/BlockCollectionDetails.cshtml" model="@Model.AssessmentDetails.AssessmentContent" />
+                </dl>
+              }
+            </div>
+          }
         </div>
+      </div>
 
-        <div class="tab-content" id="myTabContent">
-
-            <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
-                <div class="admin-section">
-                    <div class="col-12">
-                        <div class="id-container">Resource Version ID: @Model.ResourceVersionId</div>
-                        <dl>
-                            @if (Model.Providers != null && Model.Providers.Count > 0)
-                            {
-                                <dt>Provided by</dt>
-                                @foreach (var provider in Model.Providers)
-                                {
-                                <dd>
-                                    @Html.DisplayFor(model =>provider.Name)
-                                </dd>
-                                }
-                            }
-                            @if (Model.VersionStatusEnum == VersionStatusEnum.Published)
-                            {
-                                <dt>URL</dt>
-                                <dd>
-                                    <a href="@String.Format("{0}Resource/{1}", webSettings.Value.LearningHubUrl, Model.DefaultResourceReferenceId)" target="_blank">
-                                        @String.Format("{0}Resource/{1}", webSettings.Value.LearningHubUrl, Model.DefaultResourceReferenceId)
-                                    </a>
-                                </dd>
-                            }
-                            <dt>Resource Type</dt>
-                            <dd>
-                                @Html.DisplayFor(model => model.ResourceTypeDescription)
-                            </dd>
-                            <dt>Audience Access Level</dt>
-                            <dd>
-                                @ResourceAccessiblityHelper.GetResourceAccessibilityLevelText(Model.ResourceAccessibilityEnum)
-                            </dd>
-                            <dt>Title</dt>
-                            <dd>
-                                @Html.DisplayFor(model => model.Title)
-                            </dd>
-                            <dt>Description</dt>
-                            <dd>
-                                @Html.Raw(Model.Description)
-                            </dd>
-                            <dt>Additional Information</dt>
-                            <dd>
-                                @Html.Raw(Model.AdditionalInformation)
-                            </dd>
-                            <dt>Authors</dt>
-                            <dd>
-                                @Html.Raw(Model.Authors.Any() ? string.Join(",", Model.Authors) : "None specified")
-                            </dd>
-                            <dt>Keywords</dt>
-                            <dd>
-                                @Html.Raw(Model.Keywords.Any() ? string.Join(",", Model.Keywords) : "None specified")
-                            </dd>
-                            @if (Model.VersionStatusEnum == VersionStatusEnum.Published
-                           || Model.VersionStatusEnum == VersionStatusEnum.Unpublished)
-                            {
-                                <dt>Version</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.VersionDescription)
-                                </dd>
-                            }
-                            <dt>Version Status</dt>
-                            <dd>
-                                @Html.DisplayFor(model => model.VersionStatusDescription)
-                            </dd>
-                            <dt>Create User</dt>
-                            <dd id="createUserName">
-                                @Html.DisplayFor(model => model.CreateUser)
-                            </dd>
-                            <dt>Create Date</dt>
-                            <dd>
-                                @Model.CreateDate.DateTime
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade show" id="resource" role="tabpanel" aria-labelledby="resource-tab">
-                <div class="admin-section">
-
-                    @if (Model.ResourceTypeEnum == ResourceTypeEnum.Article)
-                    {
-                        <div class="col-12">
-                            <div class="id-container">Resource Version ID: @Model.ResourceVersionId</div>
-                            <dl>
-                                <dt>Resource Version Id</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceVersionId)
-                                </dd>
-                                <dt>Resource Type</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceTypeDescription)
-                                </dd>
-                                <dt>Content</dt>
-                                <dd>
-                                    @Html.Raw(Model.ArticleDetails.Content)
-                                </dd>
-                                <dt>Attachments</dt>
-                                <dd>
-                                    @if (Model.ArticleDetails.Files.Any())
-                                    {
-                                        @(await Html.PartialAsync("_Files", Model.ArticleDetails.Files))
-                                    }
-                                    else
-                                    {
-                                        @Html.Raw("None")
-                                    }
-                                </dd>
-                            </dl>
-                        </div>
-                    }
-
-                    @if (Model.ResourceTypeEnum == ResourceTypeEnum.Audio)
-                    {
-                        <div class="col-12">
-                            @if (Model.AudioDetails.File == null || Model.AudioDetails.TranscriptFile == null)
-                            {
-                                <div class="alert alert-danger">
-                                    @if (Model.AudioDetails.File == null)
-                                    {
-                                        @Html.Raw("No Audio File is associated with this Resource Version")
-                                    }
-                                    @if (Model.AudioDetails.TranscriptFile == null)
-                                    {
-                                        @Html.Raw("No Transcript File is associated with this Resource Version")
-                                    }
-                                </div>
-                            }
-                            <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
-                            <dl>
-                                <dt>Resource Version Id</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceVersionId)
-                                </dd>
-                                <dt>Resource Type</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceTypeDescription)
-                                </dd>
-                                @if (@Model.AudioDetails.File != null)
-                                {
-                                    <dt>Audio File</dt>
-                                    <dd>
-                                        <a href="@String.Format("{0}Media/DownloadInputAsset/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @Model.AudioDetails.File.FilePath, Model.AudioDetails.File.FileName)" target="_blank" download>@Model.AudioDetails.File.FileName</a>
-                                    </dd>
-                                    <dt>Audio File Path</dt>
-                                    <dd>
-                                        @Model.AudioDetails.File.FilePath
-                                    </dd>
-                                }
-                                @if (@Model.AudioDetails.TranscriptFile != null)
-                                {
-                                    <dt>Transcript File</dt>
-                                    <dd>
-                                        <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, Model.AudioDetails.TranscriptFile.FilePath, Model.AudioDetails.TranscriptFile.FileName)" target="_blank" download>@Model.AudioDetails.TranscriptFile.FileName</a>
-                                    </dd>
-                                    <dt>Transcript File Path</dt>
-                                    <dd>
-                                        @Model.AudioDetails.TranscriptFile.FilePath
-                                    </dd>
-                                }
-                            </dl>
-                        </div>
-                    }
-
-                    @if (Model.ResourceTypeEnum == ResourceTypeEnum.Case)
-                    {
-                        <div class="col-12">
-                            <div class="id-container">Resource Version ID: @Model.ResourceVersionId</div>
-                            <dl>
-                                <dt>Resource Version Id</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceVersionId)
-                                </dd>
-                                <dt>Resource Type</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceTypeDescription)
-                                </dd>
-                                @if (Model.CaseDetails is { BlockCollection: { } })
-                                {
-                                    if (Model.CaseDetails.BlockCollection.Blocks != null)
-                                    {
-                                        <dt>Number of Blocks</dt>
-                                        <dd>
-                                            @Html.DisplayFor(model => model.CaseDetails.BlockCollection.Blocks.Count)
-                                        </dd>
-                                    }
-                                }
-                            </dl>
-
-                            @if (Model.CaseDetails is { BlockCollection: { } })
-                            {
-                                <partial name="~/Views/Resource/BlockCollectionDetails.cshtml" model="@Model.CaseDetails.BlockCollection" />
-                            }
-                        </div>
-                    }
-
-                    @if (Model.ResourceTypeEnum == ResourceTypeEnum.Embedded)
-                    {
-                        <div class="col-12">
-                            <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
-                            <dl>
-                                <dt>Resource Version Id</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceVersionId)
-                                </dd>
-                                <dt>Resource Type</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceTypeDescription)
-                                </dd>
-                                <dt>Embed Code</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.EmbedCodeDetails.EmbedCode)
-                                </dd>
-                            </dl>
-                        </div>
-                    }
-
-                    @if (Model.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
-                    {
-                        <div class="col-12">
-                            @if (Model.GenericFileDetails == null || Model.GenericFileDetails.File == null)
-                            {
-                                <div class="alert alert-danger">
-                                    @Html.Raw("No File is associated with this Resource Version")
-                                </div>
-                            }
-                            <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
-                            <dl>
-                                <dt>Resource Version Id</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceVersionId)
-                                </dd>
-                                <dt>Resource Type</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceTypeDescription)
-                                </dd>
-                                @if (Model.GenericFileDetails != null && @Model.GenericFileDetails.File != null)
-                                {
-                                    <dt>File</dt>
-                                    <dd>
-                                        <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, Model.GenericFileDetails.File.FilePath, Model.GenericFileDetails.File.FileName)" target="_blank" download>@Model.GenericFileDetails.File.FileName</a>
-                                        (@Model.GenericFileDetails.File.FileType.Name)
-                                    </dd>
-                                    <dt>File Path</dt>
-                                    <dd>
-                                        @Model.GenericFileDetails.File.FilePath
-                                    </dd>
-                                    <dt>
-                                        <label for="chkScormAicc" class="control-label mb-0">Scorm / AICC Content</label>
-                                    </dt>
-                                    <dd>
-                                        <input id="chkScormAicc" class="check-box" disabled="disabled" type="checkbox" checked="@Model.GenericFileDetails.ScormAiccContent" />
-                                    </dd>
-                                }
-                            </dl>
-                        </div>
-                    }
-
-                    @if (Model.ResourceTypeEnum == ResourceTypeEnum.Image)
-                    {
-                        <div class="col-12">
-                            @if (Model.ImageDetails.File == null)
-                            {
-                                <div class="alert alert-danger">
-                                    @if (Model.ImageDetails.File == null)
-                                    {
-                                        @Html.Raw("No Image File is associated with this Resource Version")
-                                    }
-                                </div>
-                            }
-                            <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
-                            <dl>
-                                <dt>Resource Version Id</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceVersionId)
-                                </dd>
-                                <dt>Resource Type</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceTypeDescription)
-                                </dd>
-                                @if (@Model.ImageDetails.File != null)
-                                {
-                                    <dt>Image File</dt>
-                                    <dd>
-                                        <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, Model.ImageDetails.File.FilePath, Model.ImageDetails.File.FileName)" target="_blank" download>@Model.ImageDetails.File.FileName</a>
-                                        (@Model.ImageDetails.File.FileType.Name)
-                                    </dd>
-                                    <dt>Image File Path</dt>
-                                    <dd>
-                                        @Model.ImageDetails.File.FilePath
-                                    </dd>
-                                }
-                                <dt>Alt Tag</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ImageDetails.AltTag)
-                                </dd>
-                            </dl>
-                        </div>
-                    }
-
-                    @if (Model.ResourceTypeEnum == ResourceTypeEnum.Video)
-                    {
-                        <div class="col-12">
-                            @if (Model.VideoDetails.File == null || Model.VideoDetails.TranscriptFile == null || Model.VideoDetails.ClosedCaptionsFile == null)
-                            {
-                                <div class="alert alert-danger">
-                                    @if (Model.VideoDetails.File == null)
-                                    {
-                                        @Html.Raw("<li>No Video File is associated with this Resource Version</li>")
-                                    }
-                                    @if (Model.VideoDetails.TranscriptFile == null)
-                                    {
-                                        @Html.Raw("<li>No Transcript File is associated with this Resource Version</li>")
-                                    }
-                                    @if (Model.VideoDetails.ClosedCaptionsFile == null)
-                                    {
-                                        @Html.Raw("<li>No Closed Captions File is associated with this Resource Version</li>")
-                                    }
-                                </div>
-                            }
-                            <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
-                            <dl>
-                                <dt>Resource Version Id</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceVersionId)
-                                </dd>
-                                <dt>Resource Type</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceTypeDescription)
-                                </dd>
-                                @if (@Model.VideoDetails.File != null)
-                                {
-                                    <dt>Video File</dt>
-                                    <dd>
-                                        <a href="@String.Format("{0}Media/DownloadInputAsset/{1}/{2}", webSettings.Value.LearningHubAdminUrl, @Model.VideoDetails.File.FilePath, Model.VideoDetails.File.FileName)" target="_blank" download>@Model.VideoDetails.File.FileName</a>
-                                    </dd>
-                                    <dt>Video File Path</dt>
-                                    <dd>
-                                        @Model.VideoDetails.File.FilePath
-                                    </dd>
-                                }
-                                @if (@Model.VideoDetails.TranscriptFile != null)
-                                {
-                                    <dt>Transcript File</dt>
-                                    <dd>
-                                        <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, Model.VideoDetails.TranscriptFile.FilePath, Model.VideoDetails.TranscriptFile.FileName)" target="_blank" download>@Model.VideoDetails.TranscriptFile.FileName</a>
-                                    </dd>
-                                    <dt>Transcript File Path</dt>
-                                    <dd>
-                                        @Model.VideoDetails.TranscriptFile.FilePath
-                                    </dd>
-                                }
-                                @if (@Model.VideoDetails.ClosedCaptionsFile != null)
-                                {
-                                    <dt>Closed Captions File</dt>
-                                    <dd>
-                                        <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, Model.VideoDetails.ClosedCaptionsFile.FilePath, Model.VideoDetails.ClosedCaptionsFile.FileName)" target="_blank" download>@Model.VideoDetails.ClosedCaptionsFile.FileName</a>
-                                    </dd>
-                                    <dt>Closed Captions File Path</dt>
-                                    <dd>
-                                        @Model.VideoDetails.ClosedCaptionsFile.FilePath
-                                    </dd>
-                                }
-                            </dl>
-                        </div>
-                    }
-
-                    @if (Model.ResourceTypeEnum == ResourceTypeEnum.WebLink)
-                    {
-                        <div class="col-12">
-                            <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
-                            <dl>
-                                <dt>Resource Version Id</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceVersionId)
-                                </dd>
-                                <dt>Resource Type</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceTypeDescription)
-                                </dd>
-                                <dt>Url</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.WebLinkDetails.Url)
-                                </dd>
-                                <dt>Display Text</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.WebLinkDetails.DisplayText)
-                                </dd>
-                            </dl>
-                        </div>
-                    }
-
-                    @if (Model.ResourceTypeEnum == ResourceTypeEnum.Scorm)
-                    {
-                        <div class="col-12">
-                            <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
-                            <dl>
-                                <dt>Resource Version Id</dt>
-                                <dd>@Html.DisplayFor(model => model.ResourceVersionId)</dd>
-                                <dt>Resource Type</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceTypeDescription)
-                                </dd>
-                                <dt>ESR Link</dt>
-                                <dd><a href="@Model.ScormDetails.HostedContentUrl" target="_blank">@Model.ScormDetails.HostedContentUrl</a></dd>
-                                <dt>Zip File</dt>
-                                <dd>
-                                    <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, Model.ScormDetails.File.FilePath, Model.ScormDetails.File.FileName)" target="_blank" download>@Model.ScormDetails.File.FileName</a>
-                                </dd>
-                                <dt>Allowed Download</dt>
-                                <dd>@(Model.ScormDetails.CanDownload ? "Yes" : "No")</dd>
-                                <dt>Forced clearing of user suspend data</dt>
-                                <dd>@(Model.ScormDetails.ClearSuspendData ? "Yes" : "No")</dd>
-                                <dt>Content Folder</dt>
-                                <dd>@Model.ScormDetails.ContentFilePath</dd>
-                            </dl>
-                        </div>
-                    }
-
-                    @if (Model.ResourceTypeEnum == ResourceTypeEnum.Assessment)
-                    {
-                        <div class="col-12">
-                            <div class="id-container">Resource Version ID: @Model.ResourceVersionId</div>
-                            <dl>
-                                <dt>Resource Version Id</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceVersionId)
-                                </dd>
-                                <dt>Resource Type</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceTypeDescription)
-                                </dd>
-                                @if (Model.AssessmentDetails is { AssessmentContent: { } })
-                                {
-                                    <dt>Assessment Type</dt>
-                                    <dd>
-                                        @Html.DisplayFor(model => model.AssessmentDetails.AssessmentType)
-                                    </dd>
-                                    if (Model.AssessmentDetails.PassMark != null)
-                                    {
-                                        <dt>Pass Mark</dt>
-                                        <dd>
-                                            @Html.DisplayFor(model => model.AssessmentDetails.PassMark)
-                                        </dd>
-                                    }
-                                    if (Model.AssessmentDetails.MaximumAttempts != null)
-                                    {
-                                        <dt>Maximum Attempts</dt>
-                                        <dd>
-                                            @Html.DisplayFor(model => model.AssessmentDetails.MaximumAttempts)
-                                        </dd>
-                                    }
-                                    <dt>Answer in order</dt>
-                                    <dd>
-                                        @(Model.AssessmentDetails.AnswerInOrder ? "Yes" : "No")
-                                    </dd>
-                                }
-                            </dl>
-                            @if (Model.AssessmentDetails is { EndGuidance: { } } && Model.AssessmentDetails.EndGuidance.Blocks != null)
-                            {
-                                <dl>
-                                    <dt>End Guidance: Number of Blocks</dt>
-                                    <dd>
-                                        @Html.DisplayFor(model => model.AssessmentDetails.EndGuidance.Blocks.Count)
-                                    </dd>
-                                    <partial name="~/Views/Resource/BlockCollectionDetails.cshtml" model="@Model.AssessmentDetails.EndGuidance" />
-                                </dl>
-                            }
-
-                            @if (Model.AssessmentDetails is { AssessmentContent: { } } && Model.AssessmentDetails.AssessmentContent.Blocks != null)
-                            {
-                                <dl>
-                                    <dt>Content: Number of Blocks</dt>
-                                    <dd>
-                                        @Html.DisplayFor(model => model.AssessmentDetails.AssessmentContent.Blocks.Count)
-                                    </dd>
-                                    <partial name="~/Views/Resource/BlockCollectionDetails.cshtml" model="@Model.AssessmentDetails.AssessmentContent" />
-                                </dl>
-                            }
-                        </div>
-                    }
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="events" role="tabpanel" aria-labelledby="events-tab">
-                <div class="admin-section">
-                    <div id="eventsList" class="pl-2"></div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
-                <div class="admin-section">
-                    <div id="historyList" class="pl-2"></div>
-                </div>
-            </div>
-            @if (Model.HasValidationErrors)
-            {
-                <div class="tab-pane fade" id="validationResult" role="tabpanel" aria-labelledby="validation-tab">
-                    <div class="admin-section">
-                        <div id="validationResultList" class="pl-2"></div>
-                    </div>
-                </div>
-            }
+      <div class="tab-pane fade" id="events" role="tabpanel" aria-labelledby="events-tab">
+        <div class="admin-section">
+          <div id="eventsList" class="pl-2"></div>
         </div>
-    }
+      </div>
+
+      <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+        <div class="admin-section">
+          <div id="historyList" class="pl-2"></div>
+        </div>
+      </div>
+      <div class="tab-pane fade @(ViewBag.ActiveTab == "devId" ? "show active" : "")" id="devId" role="tabpanel" aria-labelledby="devId-tab">
+        <div class="admin-section">
+          @if (this.ViewBag.Status == "Success")
+          {
+            <!-- Alert Text -->
+            <div class="d-flex ml-5 my-2">
+              <div id="alertInfo" class="alert alert-success">Successfully updated the details</div>
+            </div>
+          }
+          @if (this.ViewBag.Status == "Duplicate")
+          {
+            <div class="d-flex ml-5 my-2">
+              <div id="alertInfo" class="alert alert-danger">Dev Id already exists.</div>
+            </div>
+          }
+          <div id="devIdDetails" class="pl-2">
+          </div>
+        </div>
+      </div>
+      @if (Model.HasValidationErrors)
+      {
+        <div class="tab-pane fade" id="validationResult" role="tabpanel" aria-labelledby="validation-tab">
+          <div class="admin-section">
+            <div id="validationResultList" class="pl-2"></div>
+          </div>
+        </div>
+      }
+    </div>
+  }
 </div>
 
 @section Scripts{
-    <script>
-        $(document).ready(function () {
+  <script>
+    $(document).ready(function () {
+      var activeTab = '@ViewBag.ActiveTab';
+      $('#myTab a[href="#events"]').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+        loadEventHistory();
+      });
 
-            $('#myTab a[href="#events"]').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-                loadEventHistory();
-            });
+      $('#myTab a[href="#history"]').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+        loadVersionHistory();
+      });
 
-            $('#myTab a[href="#history"]').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-                loadVersionHistory();
-            });
+      $('#myTab a[href="#devId"]').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+        loadDevIdDetails();
+      });
 
-            $('#myTab a[href="#validationResult"]').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-                loadValidationResults();
-            });
+      $('#myTab a[href="#validationResult"]').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+        loadValidationResults();
+      });
 
+      // Check if the active tab is devId and load details
+      if (activeTab === 'devId') {
+        loadDevIdDetails();
+      }
+    });
+
+    function loadEventHistory() {
+
+      var resourceVersionId = @Model.ResourceVersionId;
+
+      $.ajax({
+        cache: false,
+        type: "POST",
+        url: "/Resource/GetEvents",
+        data: { resourceVersionId: resourceVersionId },
+        success: function (data) {
+          $('#eventsList').html(data);
+        },
+        error: function () {
+          showErrorAlert('Error performing action: loadEventHistory');
+        }
+      });
+    }
+
+    function loadVersionHistory() {
+
+      var resourceId = @Model.ResourceId;
+
+      $.ajax({
+        cache: false,
+        type: "POST",
+        url: "/Resource/GetVersionHistory",
+        data: { resourceId: resourceId },
+        success: function (data) {
+          $('#historyList').html(data);
+        },
+        error: function () {
+          showErrorAlert('Error performing action: loadVersionHistory');
+        }
+      });
+    }
+
+    function loadDevIdDetails() {
+
+      var resourceVersionId = @Model.ResourceVersionId;
+
+      $.ajax({
+        cache: false,
+        type: "POST",
+        url: "/Resource/GetDevIdDetails",
+        data: { resourceVersionId: resourceVersionId },
+        success: function (data) {
+          $('#devIdDetails').html(data);
+        },
+        error: function () {
+          showErrorAlert('Error performing action: loadDevIdDetails');
+        }
+      });
+    }
+
+    function loadValidationResults() {
+
+      var resourceVersionId = @Model.ResourceVersionId;
+
+      $.ajax({
+        cache: false,
+        type: "POST",
+        url: "/Resource/GetValidationResults",
+        data: { resourceVersionId: resourceVersionId },
+        success: function (data) {
+          $('#validationResultList').html(data);
+        },
+        error: function () {
+          showErrorAlert('Error performing action: loadEventHistory');
+        }
+      });
+    }
+
+    function unpublish() {
+
+      var form = $('#unpublishForm')
+        .removeData("validator")
+        .removeData("unobtrusiveValidation");
+      $.validator.unobtrusive.parse(form);
+      form.validate();
+
+      var resourceVersionId = @Model.ResourceVersionId;
+      var flag = $.trim($('#flag').val());
+
+      if (form.valid()) {
+        $.ajax({
+          cache: false,
+          type: "POST",
+          url: "/Resource/Unpublish",
+          data: { resourceVersionId: resourceVersionId, details: flag },
+          success: function (data) {
+            if (data.success) {
+              hideAlerts();
+              showSuccessAlert(data.details);
+              $('#versionStatusDescription').text("Unpublished");
+              $('#unpublishAction').hide();
+            }
+            else {
+              hideAlerts();
+              showErrorAlert(data.details);
+            }
+            $('#unpublish').modal('hide');
+          },
+          error: function () {
+            showErrorAlert('Unexpected error performing action: Unpublish');
+          }
         });
+      }
+    }
 
-        function loadEventHistory() {
+    function revertToDraft() {
 
-            var resourceVersionId = @Model.ResourceVersionId;
+      var resourceVersionId = @Model.ResourceVersionId;
 
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "/Resource/GetEvents",
-                data: { resourceVersionId: resourceVersionId },
-                success: function (data) {
-                    $('#eventsList').html(data);
-                },
-                error: function () {
-                    showErrorAlert('Error performing action: loadEventHistory');
-                }
-            });
+      $.ajax({
+        cache: false,
+        type: "POST",
+        url: "/Resource/RevertToDraft",
+        data: { resourceVersionId: resourceVersionId },
+        success: function (data) {
+          if (data.success) {
+            hideAlerts();
+            showSuccessAlert(data.details);
+            $('#versionStatusDescription').text("Draft");
+            $('#revertToDraftAction').hide();
+          }
+          else {
+            hideAlerts();
+            showErrorAlert(data.details);
+          }
+          $('#revertToDraft').modal('hide');
+        },
+        error: function () {
+          showErrorAlert('Unexpected error performing action: Revert to Draft.');
         }
+      });
 
-        function loadVersionHistory() {
+    }
 
-            var resourceId = @Model.ResourceId;
+    function transferResource() {
 
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "/Resource/GetVersionHistory",
-                data: { resourceId: resourceId },
-                success: function (data) {
-                    $('#historyList').html(data);
-                },
-                error: function () {
-                    showErrorAlert('Error performing action: loadVersionHistory');
-                }
-            });
-        }
+      var form = $('#transferResourceForm')
+        .removeData("validator")
+        .removeData("unobtrusiveValidation");
+      $.validator.unobtrusive.parse(form);
+      form.validate();
 
-        function loadValidationResults() {
+      var resourceId = @Model.ResourceId;
+      var newResourceOwner = $.trim($('#newResourceOwner').val());
 
-            var resourceVersionId = @Model.ResourceVersionId;
-
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "/Resource/GetValidationResults",
-                data: { resourceVersionId: resourceVersionId },
-                success: function (data) {
-                    $('#validationResultList').html(data);
-                },
-                error: function () {
-                    showErrorAlert('Error performing action: loadEventHistory');
-                }
-            });
-        }
-
-        function unpublish() {
-
-            var form = $('#unpublishForm')
-                .removeData("validator")
-                .removeData("unobtrusiveValidation");
-            $.validator.unobtrusive.parse(form);
-            form.validate();
-
-            var resourceVersionId = @Model.ResourceVersionId;
-            var flag = $.trim($('#flag').val());
-
-            if (form.valid()) {
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "/Resource/Unpublish",
-                    data: { resourceVersionId: resourceVersionId, details: flag },
-                    success: function (data) {
-                        if (data.success) {
-                            hideAlerts();
-                            showSuccessAlert(data.details);
-                            $('#versionStatusDescription').text("Unpublished");
-                            $('#unpublishAction').hide();
-                        }
-                        else {
-                            hideAlerts();
-                            showErrorAlert(data.details);
-                        }
-                        $('#unpublish').modal('hide');
-                    },
-                    error: function () {
-                        showErrorAlert('Unexpected error performing action: Unpublish');
-                    }
-                });
+      if (form.valid()) {
+        $.ajax({
+          cache: false,
+          type: "POST",
+          url: "/Resource/TransferResourceOwnership",
+          data: { resourceId: resourceId, newResourceOwner: newResourceOwner },
+          success: function (data) {
+            if (data.success) {
+              hideAlerts();
+              showSuccessAlert(data.details);
+              $('#createUserName').text(newResourceOwner);
+              $('#transferFromUser').text(newResourceOwner);
             }
-        }
-
-        function revertToDraft() {
-
-            var resourceVersionId = @Model.ResourceVersionId;
-
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "/Resource/RevertToDraft",
-                data: { resourceVersionId: resourceVersionId },
-                success: function (data) {
-                    if (data.success) {
-                        hideAlerts();
-                        showSuccessAlert(data.details);
-                        $('#versionStatusDescription').text("Draft");
-                        $('#revertToDraftAction').hide();
-                    }
-                    else {
-                        hideAlerts();
-                        showErrorAlert(data.details);
-                    }
-                    $('#revertToDraft').modal('hide');
-                },
-                error: function () {
-                    showErrorAlert('Unexpected error performing action: Revert to Draft.');
-                }
-            });
-
-        }
-
-        function transferResource() {
-
-            var form = $('#transferResourceForm')
-                .removeData("validator")
-                .removeData("unobtrusiveValidation");
-            $.validator.unobtrusive.parse(form);
-            form.validate();
-
-            var resourceId = @Model.ResourceId;
-            var newResourceOwner = $.trim($('#newResourceOwner').val());
-
-            if (form.valid()) {
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "/Resource/TransferResourceOwnership",
-                    data: { resourceId: resourceId, newResourceOwner: newResourceOwner },
-                    success: function (data) {
-                        if (data.success) {
-                            hideAlerts();
-                            showSuccessAlert(data.details);
-                            $('#createUserName').text(newResourceOwner);
-                            $('#transferFromUser').text(newResourceOwner);
-                        }
-                        else {
-                            hideAlerts();
-                            showErrorAlert(data.details);
-                        }
-                        $('#newResourceOwner').val('');
-                        $('#transferResource').modal('hide');
-                    },
-                    error: function () {
-                        showErrorAlert('Unexpected error performing action: Transfer Resource');
-                    }
-                });
+            else {
+              hideAlerts();
+              showErrorAlert(data.details);
             }
-        }
-
-        $('#newResourceOwner').keydown(function (e) {
-            if (e.keyCode == 13) {
-                e.preventDefault();
-                transferResource();
-                return false;
-            }
+            $('#newResourceOwner').val('');
+            $('#transferResource').modal('hide');
+          },
+          error: function () {
+            showErrorAlert('Unexpected error performing action: Transfer Resource');
+          }
         });
+      }
+    }
 
-        function hideAlerts() {
-            $('#alertInfo').hide();
-        }
+    $('#newResourceOwner').keydown(function (e) {
+      if (e.keyCode == 13) {
+        e.preventDefault();
+        transferResource();
+        return false;
+      }
+    });
 
-        function showSuccessAlert(alertText) {
-            $('#alertInfo')
-                .removeClass("alert-danger")
-                .addClass("alert-success")
-                .html(alertText)
-                .show();
-        }
+    function hideAlerts() {
+      $('#alertInfo').hide();
+    }
 
-        function showErrorAlert(alertText) {
-            $('#alertInfo').removeClass("alert-success")
-                .addClass("alert-danger")
-                .html(alertText)
-                .show();
-        }
+    function showSuccessAlert(alertText) {
+      $('#alertInfo')
+        .removeClass("alert-danger")
+        .addClass("alert-success")
+        .html(alertText)
+        .show();
+    }
 
-    </script>
+    function showErrorAlert(alertText) {
+      $('#alertInfo').removeClass("alert-success")
+        .addClass("alert-danger")
+        .html(alertText)
+        .show();
+    }
+
+  </script>
 }

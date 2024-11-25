@@ -1,8 +1,10 @@
 ﻿namespace LearningHub.Nhs.WebUI.Interfaces
 {
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
     using Azure.Storage.Files.Shares.Models;
+    using LearningHub.Nhs.Models.Resource;
 
     /// <summary>
     /// Defines the <see cref="IFileService" />.
@@ -26,6 +28,14 @@
         Task<ShareFileDownloadInfo> DownloadFileAsync(string filePath, string fileName);
 
         /// <summary>
+        /// The StreamFileAsync.
+        /// </summary>
+        /// <param name="filePath">The filePath.</param>
+        /// <param name="fileName">The fileName.</param>
+        /// <returns>The <see cref="Task{Stream}"/>.</returns>
+        Task<Stream> StreamFileAsync(string filePath, string fileName);
+
+        /// <summary>
         /// The ProcessFile.
         /// </summary>
         /// <param name="fileBytes">The fileBytes<see cref="Stream"/>.</param>
@@ -33,5 +43,13 @@
         /// <param name="directoryRef">The directoryRef.</param>
         /// <returns>The .</returns>
         Task<string> ProcessFile(Stream fileBytes, string fileName, string directoryRef = "");
+
+        /// <summary>
+        /// The PurgeResourceFile.
+        /// </summary>
+        /// <param name="vm">The vm.<see cref="ResourceVersionExtendedViewModel"/>.</param>
+        /// <param name="filePaths">.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task PurgeResourceFile(ResourceVersionExtendedViewModel vm = null, List<string> filePaths = null);
     }
 }

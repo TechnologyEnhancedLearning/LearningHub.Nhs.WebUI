@@ -20,8 +20,8 @@
                         <div class="row">
                             <div class="form-group col-12 mt-5">
                                 <h2 id="title-label" class="nhsuk-heading-l">Title<i v-if="$v.resourceDetailTitle.$invalid" class="warningTriangle fa-solid fa-triangle-exclamation"></i></h2>
-                                <div class="mb-3">Give your resource a concise, useful title that will make sense to learners.</div>
-                                <input type="text" class="form-control" aria-labelledby="title-label" maxlength="255" id="resourceDetail_title" v-model="resourceDetailTitle" @change="setTitle($event.target.value)" autocomplete="off" v-bind:disabled="resourceLoading">
+                                <div class="mb-3"><label for="resourceDetail_title">Give your resource a concise, useful title that will make sense to learners.</label></div>
+                                <input type="text" class="form-control" aria-labelledby="title-label" maxlength="255" id="resourceDetail_title" name="resourceDetail_title" v-model="resourceDetailTitle" @change="setTitle($event.target.value)" autocomplete="off" v-bind:disabled="resourceLoading">
                             </div>
                         </div>
                         <div class="row mt-4">
@@ -71,7 +71,7 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-12">
-                                    <select class="form-control" aria-labelledby="type-label" v-model="selectUploadResourceType" @change="onUploadResourceTypeChange">
+                                    <select class="form-control" aria-labelledby="type-label" id="uploadResourceTypes" v-model="selectUploadResourceType" @change="onUploadResourceTypeChange">
                                         <option disabled v-bind:value="0">Please choose...</option>
                                         <option v-for="option in uploadResourceTypes" :value="option.id">
                                             {{ option.description }}
@@ -295,6 +295,23 @@
                             </transition>
                         </div>
 
+                        <div v-if="avUnavailableMessage">
+                            <transition name="modal">
+                                <div class="modal-mask">
+                                    <div class="modal-wrapper">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div v-html="audioVideoUnavailableView"></div>
+                                                <div class="modal-footer modal-footer--buttons">
+                                                    <button type="button" class="nhsuk-button nhsuk-button--secondary" @click="cancelAVUnavailModal">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </transition>
+                        </div>
+
                         <div v-if="invalidFileTypeError">
                             <transition name="modal">
                                 <div class="modal-mask">
@@ -340,9 +357,9 @@
                                                         </p>
                                                     </div>
                                                     <div>
-                                                        <div class="modal-section-header">Notes</div>
+                                                        <div class="modal-section-header"><label for="notes">Notes</label></div>
                                                         <p class="mt-1">Provide information to help learners understand why this new version has been created.</p>
-                                                        <textarea class="form-control" v-bind:class="{ 'input-validation-error': $v.publishNotes.$invalid && $v.publishNotes.$dirty }" rows="4" maxlength="4000" v-model="publishNotes"></textarea>
+                                                        <textarea class="form-control" id="notes" v-bind:class="{ 'input-validation-error': $v.publishNotes.$invalid && $v.publishNotes.$dirty }" rows="4" maxlength="4000" v-model="publishNotes"></textarea>
                                                         <div class="error-text pt-3" v-if="$v.publishNotes.$invalid && $v.publishNotes.$dirty">
                                                             <span class="text-danger">Enter notes.</span>
                                                         </div>
@@ -472,6 +489,7 @@
                 flags: [] as FlagModel[],
                 displayType: '' as string,
                 commonContentKey: 0,
+                avUnavailableMessage: false,
                 // Some of the Content components have local state
                 // which isn't in the vuex store.
                 // This means those fields are validated using an
@@ -483,6 +501,9 @@
                 localScormDetail: null as ScormResourceModel,
                 showError: false,
                 errorMessage: '',
+                contributeResourceAVFlag: true,
+                filePathBeforeFileChange: [] as string[],
+                filePathAfterFileChange: [] as string[]
             }
         },
         computed: {
@@ -589,7 +610,10 @@
             },
             hierarchyEditLoaded(): boolean {
                 return this.$store.state.hierarchyEditLoaded;
-            }
+            },
+            audioVideoUnavailableView(): string {
+                return this.$store.state.getAVUnavailableView;
+            },
         },
         async created() {
             if (this.$store.state.currentUserName == '') {
@@ -607,6 +631,7 @@
             if (!this.$store.state.fileTypes) {
                 this.$store.commit('populateFileTypes');
             }
+            this.getContributeResAVResourceFlag();
             this.uploadResourceTypes = await resourceData.getUploadResourceTypes();
             const allResourceTypes = this.uploadResourceTypes.slice();
             const allowedTypes = this.resourceTypesSupported.split(',');
@@ -623,6 +648,11 @@
             this.localScormDetail = _.cloneDeep(this.scormDetail);
         },
         methods: {
+            getContributeResAVResourceFlag() {
+                resourceData.getContributeAVResourceFlag().then(response => {
+                    this.contributeResourceAVFlag = response;
+                });
+            },
             setSpecificContentLocalValid(val: boolean) {
                 this.specificContentLocalValid = val;
             },
@@ -779,6 +809,9 @@
             cancelChangeFile() {
                 this.fileTypeChangeWarning = false;
             },
+            cancelAVUnavailModal() {
+                this.avUnavailableMessage = false;
+            },
             processChangeFile() {
                 this.fileTypeChangeWarning = false;
                 this.acceptUploadedFile();
@@ -789,7 +822,7 @@
                 this.fileUploadRef.value = null;
                 (this.$refs.fileUploader as any).uploadResourceFile(this.file);
             },
-            fileUploadComplete(uploadResult: FileUploadResult) {
+            async fileUploadComplete(uploadResult: FileUploadResult) {
                 if (!uploadResult.invalid) {
                     if (uploadResult.resourceType != ResourceType.SCORM) {
                         this.$store.commit("setResourceType", uploadResult.resourceType);
@@ -806,6 +839,19 @@
                     if (uploadResult.resourceType === ResourceType.SCORM) {
                         this.$store.commit('populateScormDetails', uploadResult.resourceVersionId);
                     }
+
+                    if (this.filePathBeforeFileChange.length > 0) {
+                        await this.getResourceFilePath('completed');
+                        if (this.filePathBeforeFileChange.length > 0 && this.filePathAfterFileChange.length > 0) {
+                            let filePaths = this.filePathBeforeFileChange.filter(item => !this.filePathAfterFileChange.includes(item));
+                            if (filePaths.length > 0) {
+                                resourceData.archiveResourceFile(filePaths);
+                                this.filePathBeforeFileChange.length = 0;
+                                this.filePathAfterFileChange.length = 0;
+                            }
+                        }
+                    }
+                   
                 } else {
                     this.fileUploadServerError = 'There was a problem uploading this file to the Learning Hub. Please try again and if it still does not upload, contact the support team.';
                     this.$store.commit('setSaveStatus', '');
@@ -863,6 +909,7 @@
             },
             fileChangedScorm() {
                 (this.$refs.fileUploadScorm as any).click();
+                this.getResourceFilePath('initialised');
             },
             childResourceFileChanged(newFile: File) {
                 this.uploadingFile = newFile;
@@ -890,6 +937,10 @@
                                     resourceType = fileType.defaultResourceTypeId;
                                 }
                             }
+                            if ((resourceType == 2 || resourceType == 7) && !this.contributeResourceAVFlag) {
+                                this.avUnavailableMessage = true;
+                                return;
+                            }
                             if (resourceType != this.selectedResourceType && this.isFileAlreadyUploaded) {
                                 if (this.previousVersionExists) {
                                     this.invalidFileTypeError = true;
@@ -908,6 +959,7 @@
             fileChanged() {
                 this.fileUploadRef.value = null;
                 this.fileUploadRef.click();
+                this.getResourceFilePath('initialised');
             },
             childFileUploadError(errorType: FileErrorTypeEnum, customError: string) {
                 this.fileErrorType = errorType;
@@ -980,6 +1032,22 @@
                         break;
                 }
                 return errorTitle;
+            },
+            async getResourceFilePath(fileChangeStatus: string) {
+                let resource = this.$store.state.resourceDetail;
+                if (resource != null && resource.resourceVersionId > 0 &&(resource.resourceType != this.resourceType.CASE || resource.resourceType != this.resourceType.ASSESSMENT))
+                {
+                    await resourceData.getObsoleteResourceFile(resource.resourceVersionId).then(response => {
+                        if (fileChangeStatus == 'initialised') {
+                            this.filePathBeforeFileChange = response;
+                            this.filePathAfterFileChange.length = 0;
+                        }
+                        else if (fileChangeStatus == 'completed') {
+                            this.filePathAfterFileChange = response;
+                        }
+                    });
+                }
+
             }
         },
         validations: {

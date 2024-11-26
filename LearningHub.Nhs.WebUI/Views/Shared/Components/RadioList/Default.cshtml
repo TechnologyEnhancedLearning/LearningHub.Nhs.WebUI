@@ -44,7 +44,7 @@
 
         @if (Model.Required && !Model.HasError)
         {
-            <div data-valmsg-for="@Model.AspFor" data-valmsg-replace="true" class="error-message--margin-bottom-1 nhsuk-error-message field-validation-valid nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-3">
+            <div data-valmsg-for="@Model.AspFor" data-valmsg-replace="true" class="error-message--margin-bottom-1 nhsuk-error-message field-validation-valid nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-3" aria-live="assertive" role="alert">
             </div>
         }
 
@@ -131,5 +131,19 @@
 
         </div>
     </fieldset>
+    <script>
+        window.onload = function() {
+            const id = "@Model.AspFor";
+            const radioForm = document.querySelector("main form[novalidate='novalidate']");
+            radioForm.addEventListener("submit", () => {
+                const errorMessageParent = document.querySelector("div[data-valmsg-for='" + id + "']");
+                const errorMessage = errorMessageParent.innerHTML;
+                errorMessageParent.innerHTML = "";
 
+                setTimeout(function () {
+                    errorMessageParent.innerHTML = errorMessage;
+                }, 0);
+            });
+        };
+    </script>
 </div>

@@ -54,12 +54,13 @@
                            id="@Model.DayId"
                            name="@Model.DayId"
                            value="@Model.DayValue"
-                           type="number"
+                           type="text"
                            pattern="[0-9]*"
                            min="1"
                            max="31"
                            step="1"
-                           inputmode="numeric" />
+                           inputmode="numeric"
+                           aria-describedby="date-error" aria-invalid="false" />
                 </div>
             </div>
             <div class="nhsuk-date-input__item">
@@ -69,12 +70,13 @@
                            id="@Model.MonthId"
                            name="@Model.MonthId"
                            value="@Model.MonthValue"
-                           type="number"
+                           type="text"
                            pattern="[0-9]*"
                            min="1"
                            max="12"
                            step="1"
-                           inputmode="numeric" />
+                           inputmode="numeric"
+                           aria-describedby="date-error" aria-invalid="false" />
                 </div>
             </div>
             <div class="nhsuk-date-input__item">
@@ -84,14 +86,50 @@
                            id="@Model.YearId"
                            name="@Model.YearId"
                            value="@Model.YearValue"
-                           type="number"
+                           type="text"
                            pattern="[0-9]*"
                            min="1900"
                            max="9999"
                            step="1"
-                           inputmode="numeric" />
+                           inputmode="numeric"
+                           aria-describedby="date-error" aria-invalid="false" />
                 </div>
             </div>
+            <span id="date-error" class="error-message--margin-bottom-1 nhsuk-error-message" aria-live="polite" style="visibility: hidden;">
+            </span>
         </div>
     </fieldset>
+    <script>
+        const fields = [@Model.DayId, @Model.MonthId, @Model.YearId];
+
+        const errorElement = document.getElementById('date-error');
+        for (let field of fields) {
+            const inputElement = document.getElementById(field.id);
+
+            inputElement.addEventListener('input', function (event) {
+
+                if (event.inputType === 'deleteContentBackward') {
+                    return;
+                }
+
+                const value = event.data;
+                const min = parseInt(inputElement.getAttribute('min'));
+                const max = parseInt(inputElement.getAttribute('max'));
+
+                inputElement.setAttribute('aria-invalid', 'false');
+                errorElement.textContent = '';
+                errorElement.style.visibility = 'hidden';
+
+                setTimeout(function () {
+                    if (value < 1 || value > max || !value.match(/^[0-9]*$/)) {
+                        inputElement.value = inputElement.value.slice(0, -1) + 1;
+                        inputElement.value = inputElement.value.slice(0, -1);
+                        inputElement.setAttribute('aria-invalid', 'true');
+                        errorElement.textContent = `Invalid input. Please enter a number between ${min} and ${max}.`;
+                        errorElement.style.visibility = 'visible';
+                    }
+                }, 0);
+            });
+        }
+    </script>
 </div>

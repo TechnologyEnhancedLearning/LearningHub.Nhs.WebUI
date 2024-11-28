@@ -25,13 +25,22 @@
 
                 <form asp-controller="Account" asp-action="CreateAccountWorkPlace" method="get">
                     <input type="hidden" name="formSubmission" value="true">
-
+                    <div class="@(errorHasOccurred ? "nhsuk-form-group input-validation-error" : "nhsuk-form-group")">
                     <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">
                         Enter the name, postcode or Organisation Date Service (ODS) code of your place of work.
 
                     </label>
+                    @if (errorHasOccurred)
+                    {
+                        <span class="nhsuk-error-message">
+                            <span class="nhsuk-u-visually-hidden">Error:</span> @CommonValidationErrorMessages.SearchTermRequired
+                        </span>
+                    }
                     <div class="nhsuk-form-group search-box-container nhsuk-u-padding-bottom-5" style="white-space:nowrap">
-                        <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText">
+                        <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText" @if (errorHasOccurred)
+                        {
+                            <text>aria-describedby="error-summary-title custom-validation-error"</text>
+                        }>
                         <button class="nhsuk-search__submit" type="submit">
                             <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                                 <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
@@ -40,7 +49,7 @@
                         </button>
 
                     </div>
-
+                    </div>
                 </form>
 
                 <details class="nhsuk-details nhsuk-expander">

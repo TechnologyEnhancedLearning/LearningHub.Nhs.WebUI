@@ -121,7 +121,7 @@
                 errorElement.style.visibility = 'hidden';
 
                 setTimeout(function () {
-                    if (value < 1 || value > max || !value.match(/^[0-9]*$/)) {
+                    if (value < 0 || value > max || !value.match(/^[0-9]*$/)) {
                         inputElement.value = inputElement.value.slice(0, -1) + 1;
                         inputElement.value = inputElement.value.slice(0, -1);
                         inputElement.setAttribute('aria-invalid', 'true');

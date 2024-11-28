@@ -6,7 +6,7 @@
         <span class="action-link-chevron @(Model.IsFirst? "empty" : "")">
             @if (Model.IsFirst == false)
             {
-                <button name="action" value="moveup" class="btn btn-link action-link" title="Move up">
+                <button name="action" value="moveup" class="btn btn-link action-link" title="Move up" aria-label="Move up">
                     <i class="fa-solid fa-chevron-up fa-sm"></i>
                 </button>
             }
@@ -15,7 +15,7 @@
         <span class="action-link-chevron @(Model.IsLast? "empty" : "")">
             @if (Model.IsLast == false)
             {
-                <button name="action" value="movedown" class="btn btn-link action-link" title="Move down">
+                <button name="action" value="movedown" class="btn btn-link action-link" title="Move down" aria-label="Move down">
                     <i class="fa-solid fa-chevron-down fa-sm"></i>
                 </button>
             }

@@ -8,7 +8,7 @@ export const file_size_validation = (value: any) => {
 export const file_extension_validation = (value: any) => {
     if (!value) { return true; }
     let fileExtension = value.name.split(".").pop();
-    let fileType = ['mp4', 'avi', 'm4v', 'mov', 'mkv', 'mpg', 'mpeg', 'wmv'].find(ext => ext == fileExtension);
+    let fileType = ['mp4', 'avi', 'm4v', 'mov', 'mkv', 'mpg', 'm2v', 'vob','wmv'].find(ext => ext == fileExtension);
     return fileType != undefined;
 };
 export const transcriptfile_extension_validation = (value: any) => {

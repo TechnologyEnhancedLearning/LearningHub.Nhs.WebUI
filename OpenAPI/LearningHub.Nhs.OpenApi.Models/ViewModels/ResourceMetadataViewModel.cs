@@ -1,6 +1,8 @@
 namespace LearningHub.Nhs.OpenApi.Models.ViewModels
 {
+    using LearningHub.Nhs.Models.Entities.Activity;
     using System.Collections.Generic;
+
 
     /// <summary>
     /// Class.
@@ -23,20 +25,25 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         /// <param name="references"><see cref="References"/>.</param>
         /// <param name="resourceType"><see cref="ResourceType"/>.</param>
         /// <param name="rating"><see cref="Rating"/>.</param>
+        /// <param name="userSummaryActivityStatuses"><see cref="UserSummaryActivityStatuses"/>.</param>
         public ResourceMetadataViewModel(
             int resourceId,
             string title,
             string description,
             List<ResourceReferenceViewModel> references,
             string resourceType,
-            decimal rating)
+            int? majorVersion,
+            decimal rating,
+            List<MajorVersionIdActivityStatusDescription> userSummaryActivityStatuses)
         {
             this.ResourceId = resourceId;
             this.Title = title;
             this.Description = description;
             this.References = references;
             this.ResourceType = resourceType;
+            this.MajorVersion = majorVersion;
             this.Rating = rating;
+            this.UserSummaryActivityStatuses = userSummaryActivityStatuses;
         }
 
         /// <summary>
@@ -65,8 +72,19 @@ namespace LearningHub.Nhs.OpenApi.Models.ViewModels
         public string ResourceType { get; set; }
 
         /// <summary>
+        /// Gets or sets <see cref="MajorVersion"/>.
+        /// </summary>
+        public int? MajorVersion { get; set; }
+
+
+        /// <summary>
         /// Gets or sets <see cref="Rating"/>.
         /// </summary>
         public decimal Rating { get; set; }
+
+        /// <summary>
+        /// Gets or sets <see cref="UserSummaryActivityStatuses"/>.
+        /// </summary>
+        public List<MajorVersionIdActivityStatusDescription> UserSummaryActivityStatuses { get; set; }
     }
 }

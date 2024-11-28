@@ -502,6 +502,71 @@ const getMyContributions = async function (resourceType: ResourceType, status: V
         });
 };
 
+const getContributeAVResourceFlag = async function (): Promise<boolean> {
+    return await AxiosWrapper.axios.get<boolean>('/Resource/GetContributeAVResourceFlag')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('GetContributeAVResourceFlag:' + e);
+            throw e;
+        });
+};
+
+const getDisplayAVResourceFlag = async function (): Promise<boolean> {
+    return await AxiosWrapper.axios.get<boolean>('/Resource/GetDisplayAVResourceFlag')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('GetDisplayAVResourceFlag:' + e);
+            throw e;
+        });
+};
+
+const getAVUnavailableView = async function (): Promise<string> {
+    return await AxiosWrapper.axios.get('/Resource/GetAVUnavailableView')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.error('Error fetching shared partial view:', e)
+            throw e;
+        });
+};
+const getMKPlayerKey = async function (): Promise<string> {
+    return await AxiosWrapper.axios.get('/Resource/GetMKPlayerKey')
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.error('Error fetching Media Kind MKPlayer Key', e)
+            throw e;
+        });
+};
+
+const getObsoleteResourceFile = async function (id: number): Promise<string[]> {
+    return await AxiosWrapper.axios.get<string[]>('/api/Resource/GetObsoleteResourceFile/' + id + '/' + true + `?timestamp=${new Date().getTime()}`)
+        .then(response => {
+            console.log(response.data);
+            return response.data;
+        })
+        .catch(e => {
+            console.log('getObsoleteResourceFiles:' + e);
+            throw e;
+        });
+};
+
+const archiveResourceFile = async function (filepaths: string[]): Promise<boolean> {
+
+    return await AxiosWrapper.axios.post('/api/Resource/ArchiveResourceFile', filepaths).then(() => {
+        return true
+    }).catch(e => {
+            console.log('archiveResourceFile:' + e);
+            throw e;
+        });
+};
+
 
 export const resourceData = {
     getContributeConfiguration,
@@ -541,4 +606,10 @@ export const resourceData = {
     getAssessmentDetail,
     duplicateBlocks,
     getMyContributions,
+    getContributeAVResourceFlag,
+    getDisplayAVResourceFlag,
+    getAVUnavailableView,
+    getObsoleteResourceFile,
+    archiveResourceFile,
+    getMKPlayerKey
 };

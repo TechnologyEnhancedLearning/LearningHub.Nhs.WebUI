@@ -50,9 +50,12 @@
         public async Task<IActionResult> Scorm(int id)
         {
             var rv = await this.resourceService.GetItemByIdAsync(id);
+            if (rv != null)
+            {
+                this.ViewBag.FilePath = $"/ScormContent/{rv.ScormDetails.ContentFilePath}/{rv.ScormDetails.ScormManifest.ManifestUrl}";
+            }
 
             this.ViewBag.ResourceReferenceId = id;
-            this.ViewBag.FilePath = $"/ScormContent/{rv.ScormDetails.ContentFilePath}/{rv.ScormDetails.ScormManifest.ManifestUrl}";
             this.ViewBag.KeepUserSessionAliveInterval = Convert.ToInt32(this.settings.Value.KeepUserSessionAliveIntervalMins) * 60000;
             this.ViewBag.UseTraceWindow = await this.userGroupService.UserHasPermissionAsync("Scorm_Trace_Window");
 
@@ -65,6 +68,7 @@
         /// <param name="filePath">filePath.</param>
         /// <returns>bool.</returns>
         //// [ResponseCache(VaryByQueryKeys = new[] { "*" }, Duration = 0, NoStore = true)] // disable caching
+        //// Removed Request.Headers["Referer"] Referer URL checking based on issue reported in TD-4283
         [AllowAnonymous]
         [Route("ScormContent/{*filePath}")]
         public async Task<IActionResult> ScormContent(string filePath)
@@ -76,12 +80,6 @@
 
             try
             {
-                var referringUrl = this.Request.Headers["Referer"].ToString();
-                if (string.IsNullOrEmpty(referringUrl))
-                {
-                    throw new UnauthorizedAccessException("Referer URL is required.");
-                }
-
                 if (!this.User.Identity.IsAuthenticated)
                 {
                     throw new UnauthorizedAccessException("User is not authenticated.");
@@ -89,12 +87,18 @@
 
                 var directory = filePath.Substring(0, filePath.LastIndexOf("/"));
                 fileName = filePath.Substring(filePath.LastIndexOf("/") + 1, filePath.Length - filePath.LastIndexOf("/") - 1);
+                string extension = Path.GetExtension(fileName);
 
                 var file = await this.fileService.DownloadFileAsync(directory, fileName);
 
                 if (!new FileExtensionContentTypeProvider().TryGetContentType(fileName, out var contentType))
                 {
                     contentType = "application/octet-stream";
+                }
+
+                if (extension == ".mp4")
+                {
+                    contentType = "application/x-mpegURL";
                 }
 
                 result = this.File(file.Content, contentType);

@@ -5,7 +5,10 @@
                 <h3>Uploaded file</h3>
             </div>
         </div>
-        <div class="row">
+        <div v-if="!contributeResourceAVFlag">
+            <div v-html="audioVideoUnavailableView"></div>
+        </div>
+        <div v-else class="row">
             <file-panel :file-id="localAudioDetail.file.fileId" :file-description="localAudioDetail.file.fileName" :file-size="localAudioDetail.file.fileSizeKb" @changefile="changeFile"></file-panel>
         </div>
 
@@ -31,7 +34,7 @@
 
         <div class="row mt-5">
             <div class="form-group col-12">
-                <h3 id="additionalinfo-label">Additional information <span class="optional">(optional)</span></h3>
+                <h3 id="additionalinfo-label"><label for="additionalinfo">Additional information <span class="optional">(optional)</span></label></h3>
             </div>
         </div>
         <div class="row">
@@ -40,7 +43,7 @@
                 for example, how it was developed or what is required for it to be used.
             </div>
             <div class="col-12 mt-3">
-                <textarea class="form-control" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
+                <textarea class="form-control" id="additionalinfo" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
             </div>
             <div class="col-12 footer-text">
                 You can enter a maximum of 250 characters
@@ -80,7 +83,8 @@
                 localAudioDetail: { resourceVersionId: 0 } as AudioResourceModel,
                 additionalInformation: '' as string,
                 uploadingFile: null as File,
-                uploadingTranscriptFile: null as File
+                uploadingTranscriptFile: null as File,
+                contributeResourceAVFlag: true
             };
         },
         computed: {
@@ -95,10 +99,14 @@
             },
             fileUpdated(): ResourceFileModel {
                 return this.$store.state.fileUpdated;
+            },
+            audioVideoUnavailableView(): string {
+                return this.$store.state.getAVUnavailableView;
             }
         },
         created() {
             this.setInitialValues();
+            this.getContributeResAVResourceFlag();
             EventBus.$on('deleteFile', (fileTypeToBeDeleted: number) => {
                 this.processDeleteFile(fileTypeToBeDeleted);
             });
@@ -111,6 +119,11 @@
         methods: {
             changeFile() {
                 this.$emit('filechanged');
+            },
+            getContributeResAVResourceFlag() {
+                resourceData.getContributeAVResourceFlag().then(response => {
+                    this.contributeResourceAVFlag = response;
+                });
             },
             changeTranscriptFile() {
                 $('#transcriptFileUpload').val(null);

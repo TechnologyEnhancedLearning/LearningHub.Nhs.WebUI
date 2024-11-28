@@ -1,14 +1,14 @@
 <template>
     <div class="roadmap-container mb-40">
         <div v-for="(item, index) in this.roadMapResult.roadMapItems" :class="getRoadMapClass(item)">
-            <img :src="downloadImage(item.imageName)" v-if="item.imageName" />
+            <img :src="downloadImage(item.imageName)" v-if="item.imageName" alt="" />
             <h2>{{ item.title }}</h2>
             <p v-if="item.roadmapDate">{{ item.roadmapDate | formatDate('DD MMM YYYY') }}</p>
             <p v-html="item.description"></p>
         </div>
         <div class="load-more" v-if="roadMapResult && roadMapResult.roadMapItems &&  roadMapResult.roadMapItems.length <  roadMapResult.totalRecords">
             <div class="mt-40">
-                <button class="btn btn-outline-custom" @click="loadUpdates()">{{ getLoadMoreText() }}</button>
+                <button class="nhsuk-button nhsuk-button--secondary" @click="loadUpdates()">{{ getLoadMoreText() }}</button>
             </div>
         </div>
     </div>

@@ -28,9 +28,12 @@
                                                          v-model="block.title"
                                                          addEditLabel="title"
                                                          :characterLimit="60"
-                                                         :isH3="true"></EditSaveFieldWithCharacterCount>
+                                                         :isH3="true"
+                                                         :inputId="title"></EditSaveFieldWithCharacterCount>
                         <h3 class="my-0"
-                            v-else>{{ block.title }}</h3>
+                            v-else>
+                            {{ block.title }}
+                        </h3>
                         <Tick :complete="block.isReadyToPublish()"
                               class="pl-10"></Tick>
                     </div>
@@ -50,7 +53,8 @@
                                     ariaLabel="Move section down"
                                     class="contribute-block-component-button"></IconButton>
                     </div>
-                    <IconButton v-if="!canBeDuplicated" 
+                    <IconButton v-if="!canBeDuplicated && !contributeResourceAVFlag && block.blockType === BlockTypeEnum.Media"></IconButton>
+                    <IconButton v-else
                                 @click="duplicateBlock"
                                 iconClasses="fa-regular fa-clone"
                                 ariaLabel="Duplicate section"
@@ -131,6 +135,7 @@
     import ContributeImageCarouselBlock from "./ContributeImageCarouselBlock.vue";
     import { QuestionBlockModel } from "../models/contribute-resource/blocks/questionBlockModel";
     import { EventBus } from './contributeResourceEvents';
+    import { resourceData } from '../data/resource';
 
     export default Vue.extend({
         components: {
@@ -154,7 +159,8 @@
             enableDown: Boolean,
             resourceType: { type: Number } as PropOptions<ResourceType>,
             canBeDuplicated: Boolean,
-            selectedToDuplicate: Boolean
+            selectedToDuplicate: Boolean,
+            title: { type: String, default: 'title' },
         },
         data() {
             return {
@@ -162,10 +168,12 @@
                 discardBlockModalOpen: false,
                 BlockTypeEnum: BlockTypeEnum,
                 isOpen: true,
+                contributeResourceAVFlag: true
             };
         },
         created() {
             this.isOpen = true;
+            this.getContributeResAVResourceFlag();
         },
         watch: {
             isOpen(newVal, oldVal) {
@@ -180,6 +188,11 @@
                 event.target.blur();
                 event.target.parentElement.blur();
                 this.$emit('duplicate');
+            },
+            getContributeResAVResourceFlag() {
+                resourceData.getContributeAVResourceFlag().then(response => {
+                    this.contributeResourceAVFlag = response;
+                });
             }
         }
     });

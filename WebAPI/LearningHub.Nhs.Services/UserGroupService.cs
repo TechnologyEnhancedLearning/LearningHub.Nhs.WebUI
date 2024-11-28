@@ -197,9 +197,9 @@
         /// </summary>
         /// <param name="userGroupId">The user group id.</param>
         /// <returns>The list of <see cref="RoleUserGroupViewModel"/>.</returns>
-        public List<RoleUserGroupViewModel> GetUserGroupRoleDetailByUserGroupId(int userGroupId)
+        public async Task<List<RoleUserGroupViewModel>> GetUserGroupRoleDetailByUserGroupId(int userGroupId)
         {
-            var vm = this.roleUserGroupRepository.GetRoleUserGroupViewModelsByUserGroupId(userGroupId);
+            var vm = await this.roleUserGroupRepository.GetRoleUserGroupViewModelsByUserGroupId(userGroupId);
 
             return vm;
         }
@@ -209,9 +209,9 @@
         /// </summary>
         /// <param name="userId">The user group id.</param>
         /// <returns>The list of <see cref="RoleUserGroupViewModel"/>.</returns>
-        public List<RoleUserGroupViewModel> GetRoleUserGroupDetailByUserId(int userId)
+        public async Task<List<RoleUserGroupViewModel>> GetRoleUserGroupDetailByUserId(int userId)
         {
-            var vm = this.roleUserGroupRepository.GetRoleUserGroupViewModelsByUserId(userId);
+            var vm = await this.roleUserGroupRepository.GetRoleUserGroupViewModelsByUserId(userId);
 
             return vm;
         }

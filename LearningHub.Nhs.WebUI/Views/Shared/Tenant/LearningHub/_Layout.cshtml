@@ -21,6 +21,7 @@
     <link rel="manifest" href="~/site.webmanifest.json">
     <link href="~/css/nhsuk/common.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/nhsuk/layout.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" />
     <noscript>
         <link href="~/css/no-js/no-js.css" rel="stylesheet" asp-append-version="true" />
     </noscript>
@@ -71,8 +72,12 @@
     </div>
 
     <header class="nhsuk-header" role="banner">
+    <div id="content-header">
         <partial name="~/Views/Shared/_NavPartial.cshtml" />
+    </div>
     </header>
+    <div id="header">
+        </div>
 
     <div class="nhsuk-width-container app-width-container beta-banner">
         <span class="beta-banner__beta-box">BETA</span>
@@ -96,9 +101,8 @@
         @* Inject form here *@
     </div>
 
-    <footer role="contentinfo">
-        <partial name="~/Views/Shared/_FooterPartial.cshtml" />
-    </footer>
+    <!-- footer -->
+    <partial name="~/Views/Shared/_FooterPartial.cshtml" />
 
     <script>
         if (!window.process) { window.process = {}; }
@@ -147,6 +151,7 @@
     <partial name="~/Views/Shared/_JavascriptDetectorPartial.cshtml" />
     <partial name="~/Views/Shared/_SupportUrlsScriptPartial.cshtml" />
     @RenderSection("Scripts", required: false)
+    <script type="text/javascript" src="~/js/mkplayer-ui-custom.js" asp-append-version="true"></script>
 
 </body>
 </html>

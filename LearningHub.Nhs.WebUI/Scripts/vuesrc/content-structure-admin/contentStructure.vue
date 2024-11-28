@@ -176,7 +176,10 @@
                 isReady: false,
                 EditModeEnum: EditModeEnum,
                 HierarchyEditStatusEnum: HierarchyEditStatusEnum,
-                editorConfig: { toolbar: CKEditorToolbar.default },
+                editorConfig: {
+                    toolbar: CKEditorToolbar.default,
+                    versionCheck: false
+                },
                 deleteFolderName: '',
                 editFolderStructureButtonText: '',
                 editFolderStructureButtonDisabled: true,

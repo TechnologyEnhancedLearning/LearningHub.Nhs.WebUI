@@ -6,6 +6,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using System.Net.Http;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models.Search;
@@ -214,8 +215,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="timeOfSearch">time of search.</param>
         /// <param name="userQuery">user query.</param>
         /// <param name="query">search query.</param>
+        /// <param name="title">the title.</param>
         [HttpGet("record-resource-click")]
-        public void RecordResourceClick(string url, int nodePathId, int itemIndex, int pageIndex, int totalNumberOfHits, string searchText, int resourceReferenceId, Guid groupId, string searchId, long timeOfSearch, string userQuery, string query)
+        public void RecordResourceClick(string url, int nodePathId, int itemIndex, int pageIndex, int totalNumberOfHits, string searchText, int resourceReferenceId, Guid groupId, string searchId, long timeOfSearch, string userQuery, string query, string title)
         {
             var searchActionResourceModel = new SearchActionResourceModel
             {
@@ -230,6 +232,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 TimeOfSearch = timeOfSearch,
                 UserQuery = userQuery,
                 Query = query,
+                Title = title,
             };
 
             this.searchService.CreateResourceSearchActionAsync(searchActionResourceModel);
@@ -251,9 +254,10 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="timeOfSearch">time of search.</param>
         /// <param name="userQuery">user query.</param>
         /// <param name="query">search query.</param>
+        /// <param name="name">the name.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [HttpGet("record-catalogue-click")]
-        public async Task<IActionResult> RecordCatalogueClick(string url, int nodePathId, int itemIndex, int pageIndex, int totalNumberOfHits, string searchText, int catalogueId, Guid groupId, string searchId, long timeOfSearch, string userQuery, string query)
+        public async Task<IActionResult> RecordCatalogueClick(string url, int nodePathId, int itemIndex, int pageIndex, int totalNumberOfHits, string searchText, int catalogueId, Guid groupId, string searchId, long timeOfSearch, string userQuery, string query, string name)
         {
             SearchActionCatalogueModel searchActionCatalogueModel = new SearchActionCatalogueModel
             {
@@ -268,6 +272,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 TimeOfSearch = timeOfSearch,
                 UserQuery = userQuery,
                 Query = query,
+                Name = name,
             };
 
             await this.searchService.CreateCatalogueSearchActionAsync(searchActionCatalogueModel);
@@ -291,6 +296,71 @@ namespace LearningHub.Nhs.WebUI.Controllers
             {
                 return this.Ok(this.Content("No file found"));
             }
+        }
+
+        /// <summary>
+        /// GetAutoSuggestion returns the auto suggestion options.
+        /// </summary>
+        /// <param name="term">search term.</param>
+        /// <returns>ActionResult.</returns>
+        [HttpGet("GetAutoSuggestion")]
+        public async Task<IActionResult> GetAutoSuggestion(string term)
+        {
+            if (!this.User.Identity.IsAuthenticated)
+            {
+                return this.RedirectToAction("AccessDenied", "Home");
+            }
+
+            var autoSuggestions = await this.searchService.GetAutoSuggestionList(term);
+
+            return this.PartialView("_AutoComplete", autoSuggestions);
+        }
+
+        /// <summary>
+        /// Records the AutoSuggestion Click logs.
+        /// </summary>
+        /// <param name="term">the term.</param>
+        /// <param name="url">the searchType.</param>
+        /// <param name="clickTargetUrl">click Payload Model.</param>
+        /// <param name="itemIndex">itemIndex.</param>
+        /// <param name="totalNumberOfHits">total Number Of Hits.</param>
+        /// <param name="containerId">containerId.</param>
+        /// <param name="name">name.</param>
+        /// <param name="query">query.</param>
+        /// <param name="userQuery">userQuery.</param>
+        /// <param name="searchId">searchId.</param>
+        /// <param name="timeOfSearch">timeOfSearch.</param>
+        /// <param name="title">title.</param>
+        /// <returns>Action result.</returns>
+        [HttpGet("record-autosuggestion-click")]
+        public IActionResult RecordAutoSuggestionClick(string term, string url, string clickTargetUrl, int itemIndex, int totalNumberOfHits, string containerId, string name, string query, string userQuery, string searchId, long timeOfSearch, string title)
+        {
+            AutoSuggestionClickPayloadModel clickPayloadModel = new AutoSuggestionClickPayloadModel
+            {
+                ClickTargetUrl = clickTargetUrl,
+                ContainerId = containerId,
+                HitNumber = itemIndex,
+                TimeOfClick = timeOfSearch,
+                DocumentFields = new SearchClickDocumentModel
+                {
+                    Name = name,
+                    Title = title,
+                },
+                SearchSignal = new SearchClickSignalModel
+                {
+                    Query = query,
+                    SearchId = searchId,
+                    TimeOfSearch = timeOfSearch,
+                    UserQuery = userQuery,
+                    Stats = new SearchClickStatsModel
+                    {
+                        TotalHits = totalNumberOfHits,
+                    },
+                },
+            };
+
+            this.searchService.SendAutoSuggestionClickActionAsync(clickPayloadModel);
+            return this.Redirect(url);
         }
     }
 }

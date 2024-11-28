@@ -1,6 +1,16 @@
 ﻿@using LearningHub.Nhs.Models.Content
 @model PageSectionDetailViewModel
-@if (Model != null)
+@{
+    string mkPlayerLicence = (string)ViewData["mkPlayerLicenceKey"];
+    var scheme = Context?.Request?.Scheme ?? "undefined";
+    var host = Context?.Request?.Host;
+    var path = Context?.Request?.Path ?? "undefined";
+    var requestURL = $"{scheme}://{host}{path}";
+}
+
+<script type="text/javascript" src="~/js/mkplayer.js" asp-append-version="true"></script>
+
+@* @if (Model != null)
 {
     @if (Model.VideoAsset != null)
     {
@@ -40,4 +50,135 @@
 
     </script>
 
-}
+} *@
+<div class="video-container" id="@($"{"videoContainer"}{Model.Id}")"></div>
+
+<script type="text/javascript">
+
+    var model = @Json.Serialize(Model);
+    let model_@Model.Id = model; // Create a new unique model
+
+    // 1. Grab the video container
+    var videoContainer = document.getElementById("@($"{"videoContainer"}{Model.Id}")");
+
+    // 2. Prepare the player configuration
+    var playerConfig = {
+        key: "@mkPlayerLicence",
+        ui: true,
+        theme: "dark",
+        playback: {
+            muted: false,
+            autoplay: false,
+            preferredTech: [{ player: 'html5', streaming: 'hls' }]
+        }
+    };
+
+    // 3. Initialize the player with video container and player configuration
+    var player = new mkplayer.MKPlayer(videoContainer, playerConfig);
+    let player_@Model.Id = player;  // Create a new unique player
+
+    // [BY] Commenting and leaving this code here for future reference : When we set UI:false, we need to manually add controls
+    // -----------------------------------------------------------------------------------------------------------------------
+    // player.on(mkplayer.MKPlayerEvent.Ready, (event) => {
+    //     const videoElement = document.getElementById("@($"{"bitmovinplayer-video-videoContainer"}{Model.Id}")");
+    //     if (videoElement) {
+    //         videoElement.controls = true;
+
+    //         // Check if captions available
+    //         if (model.videoAsset.closedCaptionsFile) {
+    //             const captionsInfo = model.videoAsset.closedCaptionsFile;
+    //             if (captionsInfo.filePath) {
+    //                 const trackElement = document.createElement('track');
+    //                 const srcPath = "/file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
+    //                 trackElement.kind = 'captions'; // Or 'subtitles' or 'descriptions' depending on your track type
+    //                 trackElement.label = captionsInfo.language || 'english';
+    //                 trackElement.srclang = captionsInfo.language || 'en';
+    //                 trackElement.src = srcPath;
+
+    //                 // Append the track to the video element
+    //                 videoElement.appendChild(trackElement);
+    //             }
+    //         }
+    //     }
+    // });
+    // -----------------------------------------------------------------------------------------------------------------------
+
+    var url = model.videoAsset.azureMediaAsset.locatorUri;
+    url = url.substring(0, url.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
+
+    if (checkIfIphone()) {
+        var token = model.videoAsset.azureMediaAsset.authenticationToken;
+        url = '@requestURL' + "Media/MediaManifest?playBackUrl=" + url + "&token=" + token + "&origin=" + '@requestURL' + "&isLandingPage=" + true;
+    }
+    var subtitleTrack = null;
+    if (model.videoAsset.azureMediaAsset && model.videoAsset.closedCaptionsFile) {
+        const captionsInfo = model.videoAsset.closedCaptionsFile;
+        var srcPath = "file/download/" + captionsInfo.filePath + "/" + captionsInfo.fileName;
+        srcPath = '@requestURL' + srcPath;
+
+        subtitleTrack = {
+            id: "@($"{"subtitle"}{Model.Id}")",
+            lang: "en",
+            label: "english",
+            url: srcPath,
+            kind: "subtitle"
+        };
+    }
+
+    var sourceConfig = {
+        hls: url,
+        subtitleTracks: [subtitleTrack],
+        drm: {
+            clearkey: {
+                LA_URL: "HLS_AES",
+                headers: {
+                    "Authorization": "Bearer=" + model.videoAsset.azureMediaAsset.authenticationToken
+                }
+            }
+        }
+    };
+
+    player.load(sourceConfig)
+        .then(() => {
+            console.log("Source loaded successfull!");
+        })
+        .catch((error) => {
+            console.error("An error occurred while loading the source!");
+        });
+
+    function checkIfIphone() {
+        const userAgent = navigator.userAgent || navigator.vendor;
+        return /iPhone/i.test(userAgent);
+    }
+
+    player.on(mkplayer.MKPlayerEvent.Ready, (event) => {
+        var contanierId = (model_@Model.Id).id;
+        var uniquePlayer = (player_@Model.Id);
+        buildControlbar(contanierId, uniquePlayer); 
+        })
+  
+</script>
+
+<style>
+
+    .video-container {
+        height: 0;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        padding-top: 56.25%; /* 16:9 aspect ratio */
+        background-color: #000;
+    }
+
+    video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .bmpui-ui-controlbar .control-right {
+        float: right;
+    }
+</style>

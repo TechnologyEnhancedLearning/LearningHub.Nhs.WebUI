@@ -19,7 +19,7 @@ BEGIN
 			srv.EsrLinkTypeId EsrLinkType,
 			er.Active IsActive,
 			srv.ContentFilePath AS InternalResourceIdentifier, 
-			svm.ManifestURL AS ManifestUrl				
+			svm.ManifestURL AS DefaultUrl				
 		FROM 
 			[resources].[UrlRewriting] u  
 			join resources.ExternalReference er on u.ExternalReferenceId = er.Id 

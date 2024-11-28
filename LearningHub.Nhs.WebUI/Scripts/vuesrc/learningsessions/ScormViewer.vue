@@ -17,7 +17,7 @@
         </div>
         <div class="text-popup" v-show="textLogVisible">
             <button @click="textLogVisible=false">close</button>
-            <textarea v-model="textLog"></textarea>
+            <textarea v-model="textLog" id="log"></textarea>
         </div>
     </div>
 </template>

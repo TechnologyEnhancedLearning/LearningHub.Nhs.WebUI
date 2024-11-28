@@ -7,6 +7,7 @@
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.Repository.Interface;
     using LearningHub.Nhs.Services.Interface;
@@ -212,6 +213,57 @@
         }
 
         /// <summary>
+        /// Get AllCatalogue search result.
+        /// </summary>
+        /// <param name="catalogueSearchRequestModel">The catalogue search request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpPost]
+        [Route("GetAllCatalogueSearchResult")]
+        public async Task<IActionResult> GetAllCatalogueSearchResult(AllCatalogueSearchRequestModel catalogueSearchRequestModel)
+        {
+            var vm = await this.GetAllCatalogueResults(catalogueSearchRequestModel);
+            return this.Ok(vm);
+        }
+
+        /// <summary>
+        /// Get AutoSuggestionResults.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpGet]
+        [Route("GetAutoSuggestionResult/{term}")]
+        public async Task<IActionResult> GetAutoSuggestionResults(string term)
+        {
+            var autosuggestionViewModel = await this.GetAutoSuggestions(term);
+            return this.Ok(autosuggestionViewModel);
+        }
+
+        /// <summary>
+        /// Send AutoSuggestion Click action.
+        /// </summary>
+        /// <param name="clickPayloadModel">
+        /// The click Payload model.
+        /// </param>
+        /// <returns>
+        /// Nothing.
+        /// </returns>
+        [HttpPost]
+        [Route("SendAutoSuggestionClickAction")]
+        public async Task<IActionResult> SendAutoSuggestionClickAction(AutoSuggestionClickPayloadModel clickPayloadModel)
+        {
+            var eventCreated = await this.searchService.SendAutoSuggestionEventAsync(clickPayloadModel);
+
+            if (eventCreated)
+            {
+                return this.Ok(new ApiResponse(true));
+            }
+            else
+            {
+                return this.BadRequest(new ApiResponse(false));
+            }
+        }
+
+        /// <summary>
         /// Get search result.
         /// </summary>
         /// <param name="searchRequestModel">The search request model.</param>
@@ -244,14 +296,13 @@
                     continue;
                 }
 
-                var roleUserGroups = this.catalogueService.GetRoleUserGroupsForCatalogue(catalogue.NodeId, true);
-
                 document.CatalogueUrl = catalogue.Url;
                 document.CatalogueBadgeUrl = catalogue.BadgeUrl;
                 document.CatalogueName = catalogue.Name;
 
                 if (catalogue.RestrictedAccess)
                 {
+                    var roleUserGroups = await this.catalogueService.GetRoleUserGroupsForCatalogueSearch(catalogue.NodeId, this.CurrentUserId);
                     document.CatalogueRestrictedAccess = catalogue.RestrictedAccess;
                     document.CatalogueHasAccess = roleUserGroups.Any(x => x.UserGroup.UserUserGroup.Any(y => y.UserId == this.CurrentUserId)
                         && (x.RoleId == (int)RoleEnum.Editor || x.RoleId == (int)RoleEnum.LocalAdmin || x.RoleId == (int)RoleEnum.Reader));
@@ -307,6 +358,7 @@
 
             searchViewModel.Feedback = results.Feedback;
             searchViewModel.RelatedCatalogues = await this.catalogueService.GetCatalogues(catalogueIds);
+            searchViewModel.Spell = results.Spell;
 
             return searchViewModel;
         }
@@ -334,8 +386,6 @@
                     continue;
                 }
 
-                var roleUserGroups = this.catalogueService.GetRoleUserGroupsForCatalogue(catalogue.NodeId, true);
-
                 // catalogue.No
                 document.Url = catalogue.Url;
                 document.BannerUrl = catalogue.BannerUrl;
@@ -344,6 +394,7 @@
                 document.NodePathId = catalogue.NodePathId;
                 if (catalogue.RestrictedAccess)
                 {
+                    var roleUserGroups = await this.catalogueService.GetRoleUserGroupsForCatalogueSearch(catalogue.NodeId, this.CurrentUserId);
                     document.RestrictedAccess = catalogue.RestrictedAccess;
                     document.HasAccess = roleUserGroups.Any(x => x.UserGroup.UserUserGroup.Any(y => y.UserId == this.CurrentUserId)
                         && (x.RoleId == (int)RoleEnum.Editor || x.RoleId == (int)RoleEnum.LocalAdmin || x.RoleId == (int)RoleEnum.Reader));
@@ -379,8 +430,111 @@
 
             searchViewModel.SearchId = catalogueSearchRequestModel.SearchId > 0 ? catalogueSearchRequestModel.SearchId : results.SearchId;
             searchViewModel.Feedback = results.Feedback;
+            searchViewModel.Spell = results.Spell;
 
             return searchViewModel;
+        }
+
+        /// <summary>
+        /// Get All catalogue search results.
+        /// </summary>
+        /// <param name="catalogueSearchRequestModel">The catalog search request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        private async Task<SearchAllCatalogueViewModel> GetAllCatalogueResults(AllCatalogueSearchRequestModel catalogueSearchRequestModel)
+        {
+            var results = await this.searchService.GetAllCatalogueSearchResultsAsync(catalogueSearchRequestModel);
+
+            var documents = results.DocumentList.Documents.ToList();
+            var documentIds = documents.Select(x => int.Parse(x.Id)).ToList();
+            var catalogues = this.catalogueService.GetCataloguesByNodeId(documentIds);
+            var bookmarks = this.bookmarkRepository.GetAll().Where(b => documentIds.Contains(b.NodeId ?? -1) && b.UserId == this.CurrentUserId);
+            var allProviders = await this.providerService.GetAllAsync();
+
+            foreach (var document in documents)
+            {
+                var catalogue = catalogues.SingleOrDefault(x => x.NodeId == int.Parse(document.Id));
+                if (catalogue == null)
+                {
+                    continue;
+                }
+
+                // catalogue.No
+                document.Url = catalogue.Url;
+                document.BannerUrl = catalogue.BannerUrl;
+                document.BadgeUrl = catalogue.BadgeUrl;
+                document.CardImageUrl = catalogue.CardImageUrl;
+                document.NodePathId = catalogue.NodePathId;
+
+                if (catalogue.RestrictedAccess)
+                {
+                    var roleUserGroups = await this.catalogueService.GetRoleUserGroupsForCatalogueSearch(catalogue.NodeId, this.CurrentUserId);
+                    document.RestrictedAccess = catalogue.RestrictedAccess;
+                    document.HasAccess = roleUserGroups.Any(x => x.UserGroup.UserUserGroup.Any(y => y.UserId == this.CurrentUserId)
+                       && (x.RoleId == (int)RoleEnum.Editor || x.RoleId == (int)RoleEnum.LocalAdmin || x.RoleId == (int)RoleEnum.Reader));
+                }
+
+                var bookmark = bookmarks.FirstOrDefault(x => x.NodeId == int.Parse(document.Id));
+                if (bookmark != null)
+                {
+                    document.BookmarkId = bookmark?.Id;
+                    document.IsBookmarked = !bookmark?.Deleted ?? false;
+                }
+
+                if (document.ProviderIds?.Count > 0)
+                {
+                    document.Providers = allProviders.Where(n => document.ProviderIds.Contains(n.Id)).ToList();
+                }
+            }
+
+            var searchViewModel = new SearchAllCatalogueViewModel
+            {
+                DocumentModel = documents,
+                SearchString = catalogueSearchRequestModel.SearchText,
+                Hits = results.DocumentList.Documents.Count(),
+                DescriptionMaximumLength = this.settings.Findwise.MaximumDescriptionLength,
+                ErrorOnAPI = results.ErrorsOnAPICall,
+                Facets = results.Facets,
+            };
+
+            if (results.Stats != null)
+            {
+                searchViewModel.TotalHits = results.Stats.TotalHits;
+            }
+
+            searchViewModel.SearchId = catalogueSearchRequestModel.SearchId > 0 ? catalogueSearchRequestModel.SearchId : results.SearchId;
+
+            return searchViewModel;
+        }
+
+        /// <summary>
+        /// Get AutoSuggestion Results.
+        /// </summary>
+        /// <param name="term">term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        private async Task<AutoSuggestionModel> GetAutoSuggestions(string term)
+        {
+            var autosuggestionModel = await this.searchService.GetAutoSuggestionResultsAsync(term);
+            if (autosuggestionModel != null)
+            {
+                var documents = autosuggestionModel.CatalogueDocument.CatalogueDocumentList;
+                var documentIds = documents.Select(x => int.Parse(x.Id)).ToList();
+                var catalogues = this.catalogueService.GetCataloguesByNodeId(documentIds);
+
+                foreach (var document in documents)
+                {
+                    var catalogue = catalogues.SingleOrDefault(x => x.NodeId == int.Parse(document.Id));
+                    if (catalogue == null)
+                    {
+                        continue;
+                    }
+
+                    document.Url = catalogue.Url;
+                }
+
+                autosuggestionModel.CatalogueDocument.CatalogueDocumentList = documents;
+            }
+
+            return autosuggestionModel;
         }
     }
 }

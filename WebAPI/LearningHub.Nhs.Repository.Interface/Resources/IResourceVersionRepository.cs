@@ -60,6 +60,27 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         Task<ResourceVersion> GetCurrentForResourceAsync(int resourceId);
 
         /// <summary>
+        /// The get current resource for resourceid async.
+        /// </summary>
+        /// <param name="resourceId">The resource Id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ResourceVersion> GetCurrentResourceDetailsAsync(int resourceId);
+
+        /// <summary>
+        /// The get resource version details by id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ResourceVersion> GetByResourceVersionByIdAsync(int resourceVersionId);
+
+        /// <summary>
+        /// The check dev id already exists in the table async.
+        /// </summary>
+        /// <param name="devId">The devId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ResourceVersion> DoesDevIdExistsAync(string devId);
+
+        /// <summary>
         /// The get current published for resource async.
         /// </summary>
         /// <param name="resourceId">The resource id.</param>
@@ -72,6 +93,13 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         /// <param name="resourceReferenceId">The resource reference id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<ResourceVersion> GetCurrentForResourceReferenceIdAsync(int resourceReferenceId);
+
+        /// <summary>
+        /// The get current resource for resource reference id async.
+        /// </summary>
+        /// <param name="resourceReferenceId">The resource reference id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ResourceVersion> GetCurrentResourceForResourceReferenceIdAsync(int resourceReferenceId);
 
         /// <summary>
         /// The get current published for resource reference id async.
@@ -197,7 +225,7 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         /// </summary>
         /// <param name="resourceVersionId">The resource version id.</param>
         /// <param name="userId">The user id.</param>
-        void Publishing(int resourceVersionId,  int userId);
+        void Publishing(int resourceVersionId, int userId);
 
         /// <summary>
         /// "Failed to publish".
@@ -262,6 +290,14 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         /// <param name="resourceVersionId">resourceVersionId.</param>
         /// <param name="userId">userId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        ExternalContentDetailsViewModel GetExternalContentDetails(int resourceVersionId, int userId);
+        Task<ExternalContentDetailsViewModel> GetExternalContentDetails(int resourceVersionId, int userId);
+
+        /// <summary>
+        /// To update dev id details.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="resourceVersionDevIdViewModel">The resourceVersionDevIdViewModel.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task UpdateDevIdAsync(int userId, ResourceVersionDevIdViewModel resourceVersionDevIdViewModel);
     }
 }

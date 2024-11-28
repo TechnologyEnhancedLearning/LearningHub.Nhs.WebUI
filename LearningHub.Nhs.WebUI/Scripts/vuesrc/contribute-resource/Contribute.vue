@@ -49,11 +49,13 @@
 
                     <div class="contribute-title-wrapper lh-padding-fluid">
                         <div class="lh-container-xl pt-20 pb-2">
+                   
                             <EditSaveFieldWithCharacterCount v-model="resourceDetails.title"
                                                              addEditLabel="title"
                                                              :characterLimit="255"
                                                              :isH1="true"
-                                                             size="large"></EditSaveFieldWithCharacterCount>
+                                                             size="large"
+                                                             :inputId="title"></EditSaveFieldWithCharacterCount>
                         </div>
                         <h3 v-if="resourceDetails.resourceType === ResourceType.ASSESSMENT"
                             class="pb-15 lh-container-xl">
@@ -95,7 +97,7 @@
                             </template>
                             <template v-slot:tab_2>
                                 <Tick :complete="providedbyPermissionTabComplete"></Tick>
-                                Content provided by
+                                Content developed with
                             </template>
                             <template v-slot:page_2>
                                 <ContributeProvideByTab :resourceDetails="resourceDetails" :userProviders="userProviders" />
@@ -290,6 +292,7 @@
     export default Vue.extend({
         props: {
             resourceVersionId: String,
+            title: { type: String, default: 'title' },
         },
         components: {
             ContributeActionsBar,

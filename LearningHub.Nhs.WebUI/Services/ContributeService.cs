@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Net.Http;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Enums;
@@ -24,6 +25,7 @@
     public class ContributeService : BaseService<ContributeService>, IContributeService
     {
         private readonly IAzureMediaService azureMediaService;
+        private readonly IAzureMediaService mediaService;
         private readonly IFileService fileService;
         private readonly IResourceService resourceService;
 
@@ -33,14 +35,16 @@
         /// <param name="fileService">File service.</param>
         /// <param name="resourceService">Resource service.</param>
         /// <param name="azureMediaService">Azure media service.</param>
+        /// <param name="mediaService">MKIO media service.</param>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
         /// <param name="logger">Logger.</param>
-        public ContributeService(IFileService fileService, IResourceService resourceService, IAzureMediaService azureMediaService, ILearningHubHttpClient learningHubHttpClient, ILogger<ContributeService> logger)
+        public ContributeService(IFileService fileService, IResourceService resourceService, IAzureMediaService azureMediaService,  ILearningHubHttpClient learningHubHttpClient, ILogger<ContributeService> logger, IAzureMediaService mediaService)
         : base(learningHubHttpClient, logger)
         {
             this.fileService = fileService;
             this.resourceService = resourceService;
             this.azureMediaService = azureMediaService;
+            this.mediaService = mediaService;
         }
 
         /// <summary>
@@ -508,7 +512,7 @@
             // if file is media (video or audio) then upload at Azure Media Storage
             if (fileType != null && (fileType.DefaultResourceTypeId == (int)ResourceTypeEnum.Video || fileType.DefaultResourceTypeId == (int)ResourceTypeEnum.Audio))
             {
-                filelocation = await this.azureMediaService.CreateMediaInputAsset(file);
+                filelocation = await this.mediaService.CreateMediaInputAsset(file);
             }
 
             // upload at Azure File Storage
@@ -1240,6 +1244,9 @@
             {
                 if (fileChunkDetailId == 0)
                 {
+                    // removing special characters in file name
+                    string fileNameUpdated = Regex.Replace(fileName, "[^a-zA-Z0-9.]", string.Empty);
+
                     // Store the chunk
                     var filelocation = string.Empty;
                     var directoryRef = "chunks_" + Guid.NewGuid().ToString();
@@ -1256,7 +1263,7 @@
                         FilePath = filelocation,
                         ChunkCount = chunkCount,
                         ResourceVersionId = (resourceVersionId == 0) ? (int?)null : resourceVersionId,
-                        FileName = fileName,
+                        FileName = fileNameUpdated,
                         FileSizeKb = (int)(fileSize / 1000),
                     });
                 }

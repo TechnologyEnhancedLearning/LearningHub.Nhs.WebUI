@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.AdminUI.Configuration;
     using LearningHub.Nhs.AdminUI.Extensions;
+    using LearningHub.Nhs.AdminUI.Helpers;
     using LearningHub.Nhs.AdminUI.Interfaces;
     using LearningHub.Nhs.AdminUI.Models;
     using LearningHub.Nhs.Models.Common;
@@ -16,6 +17,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Microsoft.FeatureManagement;
 
     /// <summary>
     /// Defines the <see cref="ResourceController" />.
@@ -33,6 +35,11 @@
         private readonly IOptions<WebSettings> websettings;
 
         /// <summary>
+        /// Defines the featureManager.
+        /// </summary>
+        private readonly IFeatureManager featureManager;
+
+        /// <summary>
         /// Defines the _logger.
         /// </summary>
         private ILogger<HomeController> logger;
@@ -48,36 +55,51 @@
         private IResourceService resourceService;
 
         /// <summary>
+        /// Defines the _fileService.
+        /// </summary>
+        private IFileService fileService;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ResourceController"/> class.
         /// </summary>
         /// <param name="hostingEnvironment">The hostingEnvironment<see cref="IWebHostEnvironment"/>.</param>
         /// <param name="config">The config<see cref="IOptions{WebSettings}"/>.</param>
         /// <param name="logger">The logger<see cref="ILogger{HomeController}"/>.</param>
         /// <param name="resourceService">The resourceService<see cref="IResourceService"/>.</param>
+        /// <param name="fileService">The fileService<see cref="IResourceService"/>.</param>
         /// /// <param name="websettings">The websettings<see cref="IOptions{WebSettings}"/>.</param>
+        /// <param name="featureManager">The featureManager<see cref="IFeatureManager"/>.</param>
         public ResourceController(
             IWebHostEnvironment hostingEnvironment,
             IOptions<WebSettings> config,
             ILogger<HomeController> logger,
             IResourceService resourceService,
-            IOptions<WebSettings> websettings)
+            IFileService fileService,
+            IOptions<WebSettings> websettings,
+            IFeatureManager featureManager)
         : base(hostingEnvironment)
         {
             this.logger = logger;
             this.websettings = websettings;
             this.config = config.Value;
             this.resourceService = resourceService;
+            this.fileService = fileService;
+            this.featureManager = featureManager;
         }
 
         /// <summary>
         /// The Details.
         /// </summary>
         /// <param name="id">The id<see cref="int"/>.</param>
+        /// <param name="activeTab">The activeTab<see cref="string"/>.</param>
+        /// <param name="status">The status<see cref="string"/>.</param>
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id, string activeTab = "details", string status = "")
         {
             var resource = await this.resourceService.GetResourceVersionExtendedViewModelAsync(id);
+            this.ViewBag.ActiveTab = activeTab;
+            this.ViewBag.Status = status;
             return this.View(resource);
         }
 
@@ -118,6 +140,41 @@
             var vm = await this.resourceService.GetResourceVersionValidationResultAsync(resourceVersionId);
 
             return this.PartialView("_ValidationResults", vm);
+        }
+
+        /// <summary>
+        /// The GetDevIdDetails.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        public async Task<IActionResult> GetDevIdDetails(int resourceVersionId)
+        {
+            var vm = await this.resourceService.GetResourceVersionDevIdDetailsAsync(resourceVersionId);
+
+            return this.PartialView("_DevIdDetails", vm);
+        }
+
+        /// <summary>
+        /// The update the dev Id details.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        public async Task<IActionResult> UpdateDevIdDetails(ResourceVersionDevIdViewModel model)
+        {
+            var message = string.Empty;
+            if (await this.resourceService.DoesDevIdExistsAsync(model.DevId))
+            {
+                message = "Duplicate";
+            }
+            else
+            {
+                await this.resourceService.UpdateDevIdDetailsAsync(model);
+                message = "Success";
+            }
+
+            return this.RedirectToAction("Details", new { id = model.ResourceVersionId, activeTab = "devId", status = message });
         }
 
         /// <summary>
@@ -288,11 +345,17 @@
         [HttpPost]
         public async Task<IActionResult> Unpublish(int resourceVersionId, string details)
         {
+            var associatedFile = await this.resourceService.GetResourceVersionExtendedViewModelAsync(resourceVersionId);
             var vr = await this.resourceService.UnpublishResourceVersionAsync(resourceVersionId, details);
             await this.resourceService.CreateResourceVersionEvent(resourceVersionId, Nhs.Models.Enums.ResourceVersionEventTypeEnum.UnpublishedByAdmin, "Unpublish using Admin UI", 0);
 
             if (vr.IsValid)
             {
+                if (associatedFile.ScormDetails != null || associatedFile.HtmlDetails != null)
+                {
+                    _ = Task.Run(async () => { await this.fileService.PurgeResourceFile(associatedFile, null); });
+                }
+
                 return this.Json(new
                 {
                     success = true,
@@ -308,6 +371,41 @@
                 });
             }
         }
+
+        /// <summary>
+        /// The GetAVUnavailableView.
+        /// </summary>
+        /// <returns> partial view.  </returns>
+        [Route("Resource/GetAVUnavailableView")]
+        [HttpGet("GetAVUnavailableView")]
+        public IActionResult GetAVUnavailableView()
+        {
+            return this.PartialView("_AudioVideoUnavailable");
+        }
+
+        /// <summary>
+        /// The GetAddAVFlag.
+        /// </summary>
+        /// <returns> Return AV Flag.</returns>
+        [Route("Resource/GetAddAVFlag")]
+        [HttpGet("GetAddAVFlag")]
+        public bool GetAddAVFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.AddAudioVideo).Result;
+
+        /// <summary>
+        /// The GetDisplayAVFlag.
+        /// </summary>
+        /// <returns> Return display AV flag.</returns>
+        [Route("Resource/GetDisplayAVFlag")]
+        [HttpGet("GetDisplayAVFlag")]
+        public bool GetDisplayAVFlag() => this.featureManager.IsEnabledAsync(FeatureFlags.DisplayAudioVideo).Result;
+
+        /// <summary>
+        /// The GetMKPlayerKey.
+        /// </summary>
+        /// <returns>Mediakind MK Player Key.</returns>
+        [Route("Resource/GetMKPlayerKey")]
+        [HttpGet("GetMKPlayerKey")]
+        public string GetMKPlayerKey() => this.websettings.Value.MediaKindSettings.MKPlayerLicence;
 
         private static List<PagingOptionPair> FilterOptions()
         {

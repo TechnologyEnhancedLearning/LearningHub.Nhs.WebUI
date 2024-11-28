@@ -55,7 +55,11 @@ export class State {
     counterInterval: any = undefined;
     hierarchyEdit: HierarchyEditModel = null;
     hierarchyEditLoaded: boolean = false;
-    userProviders : ProviderModel[] = null;
+    userProviders: ProviderModel[] = null;
+    contributeAVResourceFlag: boolean;
+    learnAVResourceFlag: boolean;
+    getAVUnavailableView: string = '';
+    getMKPlayerLicenceKey: string = '';
 
     get previousVersionExists(): boolean {
         if (this.resourceDetail.currentResourceVersionId) {
@@ -241,6 +245,18 @@ const autosaverPlugin = function (store: Store<State>) {
 const mutations = {
     async populateContributeSettings(state: State) {
         state.contributeSettings = await resourceData.getContributeSettings();
+    },
+    async populateContributeAVResourceFlag(state: State) {
+        state.contributeAVResourceFlag = await resourceData.getContributeAVResourceFlag();
+    },
+    async populateDisplayAVResourceFlag(state: State) {
+        state.learnAVResourceFlag = await resourceData.getDisplayAVResourceFlag();
+    },
+    async populateAVUnavailableView(state: State) {
+        state.getAVUnavailableView = await resourceData.getAVUnavailableView();
+    },
+    async populateMKPlayerLicenceKey(state: State) {
+        state.getMKPlayerLicenceKey = await resourceData.getMKPlayerKey();
     },
     async populateScormDetails(state: State, payload: number) {
         const scormDetail = await resourceData.getScormDetail(payload);

@@ -26,6 +26,11 @@
         public string UrlClickComponent { get; set; }
 
         /// <summary>
+        /// Gets or sets the url AutoSuggestion click component.
+        /// </summary>
+        public string UrlAutoSuggestionClickComponent { get; set; }
+
+        /// <summary>
         /// Gets or sets the token.
         /// </summary>
         public string Token { get; set; }
@@ -44,5 +49,10 @@
         /// Gets or sets the collection ids.
         /// </summary>
         public FindwiseCollectionIdSettings CollectionIds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Description length limit.
+        /// </summary>
+        public int DescriptionLengthLimit { get; set; }
     }
 }

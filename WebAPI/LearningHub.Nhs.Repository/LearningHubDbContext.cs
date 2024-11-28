@@ -41,6 +41,14 @@ namespace LearningHub.Nhs.Repository
         }
 
         /// <summary>
+        /// Gets the Options.
+        /// </summary>
+        public LearningHubDbContextOptions Options
+        {
+            get { return this.options; }
+        }
+
+        /// <summary>
         /// Gets or sets the Address.
         /// </summary>
         public virtual DbSet<Address> Address { get; set; }
@@ -761,6 +769,16 @@ namespace LearningHub.Nhs.Repository
         /// Gets or sets the resource activity.
         /// </summary>
         public virtual DbSet<MyLearningActivity> MyLearningActivity { get; set; }
+
+        /// <summary>
+        /// Gets or sets the AllCatalogueAlphabet.
+        /// </summary>
+        public virtual DbSet<AllCatalogueAlphabetModel> AllCatalogueAlphabetModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the AllCatalogueAlphabet.
+        /// </summary>
+        public virtual DbSet<AllCatalogueViewModel> AllCatalogueViewModel { get; set; }
 
         /// <summary>
         /// The on model creating.

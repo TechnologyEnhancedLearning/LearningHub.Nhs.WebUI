@@ -66,7 +66,12 @@
             </div>
         </div>
 
-        <div>
+        <div v-if="!addAVFlag">
+            <label class="control-label">Feature Video</label>
+            <div v-html="audioVideoUnavailableView"></div>
+        </div>
+
+        <div v-else>
             <label class="control-label">Feature Video</label>
             <div>
                 <span class="text-secondary mb-5">
@@ -258,6 +263,7 @@ Vue.use(Vuelidate as any);
                 SectionLayoutType: SectionLayoutType,
                 editorConfig: {
                     toolbar: CKEditorToolbar.landingPages,
+                    versionCheck: false,
                     stylesSet: 'landing-pages-video-text'
                 },
 
@@ -284,7 +290,8 @@ Vue.use(Vuelidate as any);
                 deleteWarning: false,
                 fileDeleteWarning: false,
                 fileOrTypeToBeDeleted: 0,
-                videoErrorMessage: ''
+                videoErrorMessage: '',
+                addAVFlag: false
             }
         },
         validations: {
@@ -294,7 +301,9 @@ Vue.use(Vuelidate as any);
             }
         },
         async created() {
-            this.$store.commit('populateUploadSettings');
+            this.$store.commit('populateUploadSettings');            
+            this.$store.commit('populateAVUnavailableView'); 
+            this.getAddAudioVideoFlag();
 
             const pageSectionId = this.$route.params.sectionId;
 
@@ -348,7 +357,10 @@ Vue.use(Vuelidate as any);
             },
             videoAsset(): VideoAssetModel {
                 return this.$store.state.pageSectionDetail.videoAsset;
-            }
+            },            
+            audioVideoUnavailableView(): string {
+                return this.$store.state.getAVUnavailableView;
+            },
         },
         methods: {
             setSectionLayoutType(sectionLayoutType: SectionLayoutType) {
@@ -492,7 +504,12 @@ Vue.use(Vuelidate as any);
                 this.fileErrorType = FileErrorTypeEnum.NoError
                 this.fileUploadServerError = '';
                 $('#fileUpload').val(null);
-            },          
+            }, 
+            getAddAudioVideoFlag() {
+                contentData.getAddAVFlag().then(response => {
+                    this.addAVFlag = response;
+               });
+            },
         },
     });
 </script>

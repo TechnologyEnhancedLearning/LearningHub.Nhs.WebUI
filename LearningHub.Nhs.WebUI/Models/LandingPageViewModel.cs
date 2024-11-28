@@ -46,5 +46,15 @@
         /// Gets or sets get or sets the pageSectionDetailViewModels.
         /// </summary>
         public List<PageSectionDetailViewModel> PageSectionDetailViewModels { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether gets or sets the DisplayAVFromAMS.
+        /// </summary>
+        public bool DisplayAudioVideo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the media kind media kind MKPlayer licence key.
+        /// </summary>
+        public string MKPlayerLicence { get; set; }
     }
 }

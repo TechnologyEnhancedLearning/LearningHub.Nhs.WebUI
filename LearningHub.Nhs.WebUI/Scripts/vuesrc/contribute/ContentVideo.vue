@@ -5,7 +5,10 @@
                 <h3>Uploaded file</h3>
             </div>
         </div>
-        <div class="row">
+        <div v-if="!contributeResourceAVFlag">
+            <div v-html="audioVideoUnavailableView"></div>
+        </div>
+        <div v-else class="row">
             <file-panel :file-id="localVideoDetail.file.fileId" :file-description="localVideoDetail.file.fileName" :file-size="localVideoDetail.file.fileSizeKb" @changefile="changeFile"></file-panel>
         </div>
 
@@ -60,7 +63,7 @@
                 for example, how it was developed or what is required for it to be used.
             </div>
             <div class="col-12 mt-3">
-                <textarea class="form-control" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
+                <textarea class="form-control" id="additionalinfo" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
             </div>
             <div class="col-12 footer-text">
                 You can enter a maximum of 250 characters
@@ -102,6 +105,7 @@
                 uploadingFile: null as File,
                 uploadingTranscriptFile: null as File,
                 uploadingCaptionsFile: null as File,
+                contributeResourceAVFlag: true
             };
         },
         computed: {
@@ -116,10 +120,14 @@
             },
             fileUpdated(): ResourceFileModel {
                 return this.$store.state.fileUpdated;
-            }
+            },
+            audioVideoUnavailableView(): string {
+                return this.$store.state.getAVUnavailableView;
+            },
         },
         created() {
             this.setInitialValues();
+            this.getContributeResAVResourceFlag();
             EventBus.$on('deleteFile', (fileTypeToBeDeleted: number) => {
                 this.processDeleteFile(fileTypeToBeDeleted);
             });
@@ -132,6 +140,11 @@
         methods: {
             changeFile() {
                 this.$emit('filechanged');
+            },
+            getContributeResAVResourceFlag() {
+                resourceData.getContributeAVResourceFlag().then(response => {
+                    this.contributeResourceAVFlag = response;
+                });
             },
             changeTranscriptFile() {
                 $('#transcriptFileUpload').val(null);

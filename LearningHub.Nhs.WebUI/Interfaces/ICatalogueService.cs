@@ -138,5 +138,13 @@
         /// <param name="userUserGroupId">The user - user group id.</param>
         /// <returns>The validation result.</returns>
         Task<LearningHubValidationResult> RemoveUserFromRestrictedAccessUserGroup(int userUserGroupId);
+
+        /// <summary>
+        /// The GetAllCatalogueAsync.
+        /// </summary>
+        /// <param name="filterChar">The letter.</param>
+        /// <param name="pageSize">The pageSize.</param>
+        /// <returns>The allcatalogue result based on letters.</returns>
+        Task<AllCatalogueResponseViewModel> GetAllCatalogueAsync(string filterChar, int pageSize);
     }
 }

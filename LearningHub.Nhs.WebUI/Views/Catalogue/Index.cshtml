@@ -34,15 +34,6 @@
     return string.Empty;
   }
 
-  string GetBadgeUrl()
-  {
-    if (!string.IsNullOrEmpty(Model.Catalogue.BadgeUrl))
-    {
-      return GetFileLink(Model.Catalogue.BadgeUrl);
-    }
-    return string.Empty;
-  }
-
   string GetFileLink(string fileName)
   {
     return "/api/catalogue/download-image/" + Uri.EscapeDataString(fileName);
@@ -79,8 +70,12 @@
         CatalogueNodeVersionId = Model.Catalogue.Id,
         RestrictedAccess = Model.Catalogue.RestrictedAccess,
         HasCatalogueAccess = Unlocked(),
-        CatalogueAccessRequest = Model.CatalogueAccessRequest
+        CatalogueAccessRequest = Model.CatalogueAccessRequest,
+        UserGroups = Model.UserGroups
       };
+
+   var provider = Model.Catalogue.Providers?.FirstOrDefault();
+   var hasBadge = !string.IsNullOrWhiteSpace(Model.Catalogue.BadgeUrl);
 }
 
 @section styles{
@@ -123,9 +118,13 @@
       }
 
       <div class="catalogue-title nhsuk-u-margin-bottom-7">
-        @if (!string.IsNullOrEmpty(Model.Catalogue.BadgeUrl))
+        @if (provider != null)
         {
-          <img alt="catalogue badge" src="@GetBadgeUrl()" class="catalogue-badge" />
+           <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
+        }
+        else if (hasBadge)
+        {
+           <img src="@("/api/catalogue/download-image/" + Uri.EscapeDataString(Model.Catalogue.BadgeUrl))" alt="Provider's catalogue badgeTest" class="catalogue-card-badge" />
         }
 
         <h1 class="heading-lg title nhsuk-u-margin-bottom-0">@(ViewBag.ActiveTab == "browse" && Model.NodeDetails != null ? Model.NodeDetails.Name : Model.Catalogue.Name)</h1>
@@ -139,13 +138,14 @@
       @if (ViewBag.UserAuthenticated)
       {
         <div class="nhsuk-u-margin-bottom-4">
-          <a class="nhsuk-u-font-size-16" role="button" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
+          <a class="nhsuk-u-font-size-16" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
            asp-route-bookmarked="@Model.Catalogue.IsBookmarked"
            asp-route-id="@Model.Catalogue.BookmarkId"
            asp-route-title="@Model.Catalogue.Name.Truncate(60)"
            asp-route-nodeId="@Model.Catalogue.NodeId"
            asp-route-path="@Model.Catalogue.Url"
-           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks</a>
+           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)"
+           aria-label="@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks">@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks</a>
         </div>
       }
 

@@ -20,6 +20,7 @@
     using Microsoft.AspNetCore.Mvc.Infrastructure;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.FeatureManagement;
     using Microsoft.IdentityModel.Logging;
 
     /// <summary>
@@ -129,6 +130,8 @@
             });
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            services.AddFeatureManagement();
         }
     }
 }

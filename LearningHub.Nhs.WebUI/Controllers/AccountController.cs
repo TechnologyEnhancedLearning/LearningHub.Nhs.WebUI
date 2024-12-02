@@ -656,6 +656,7 @@
         /// </summary>
         /// <returns>The <see cref="IActionResult"/>.</returns>
         /// <param name="accountCreationViewModel">accountCreationViewModel.</param>
+        [HttpPost]
         [Route("Registration/CreateAccountGradeSelection")]
         [ResponseCache(CacheProfileName = "Never")]
         [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
@@ -672,7 +673,7 @@
 
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.RegistrationNumber) && accountCreation.MedicalCouncilId.HasValue && (int)accountCreation.MedicalCouncilId > 0)
             {
-                this.ModelState.AddModelError("RegistrationNumber", $"You must provide a {accountCreation.MedicalCouncilCode} Number");
+                this.ModelState.AddModelError("RegistrationNumber", $"{accountCreation.MedicalCouncilName} Number is required");
                 this.ViewBag.Job = await this.jobRoleService.GetByIdAsync(roleId);
                 accountCreationViewModel.CurrentRole = roleId.ToString();
                 return this.View("CreateAccountProfessionalRegNumber", accountCreationViewModel);

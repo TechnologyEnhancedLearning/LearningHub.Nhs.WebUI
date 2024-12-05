@@ -23,7 +23,7 @@
     let submitAttempted = false;
     const form = document.querySelector('form');
     if (form) {
-        form.onsubmit = () => { submitAttempted = true; }
+      form.onsubmit = () => { submitAttempted = true; errorElements = []; }
     }
 
     $(function () {

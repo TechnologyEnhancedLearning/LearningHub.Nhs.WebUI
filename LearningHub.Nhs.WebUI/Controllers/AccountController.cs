@@ -656,7 +656,6 @@
         /// </summary>
         /// <returns>The <see cref="IActionResult"/>.</returns>
         /// <param name="accountCreationViewModel">accountCreationViewModel.</param>
-        [HttpPost]
         [Route("Registration/CreateAccountGradeSelection")]
         [ResponseCache(CacheProfileName = "Never")]
         [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]

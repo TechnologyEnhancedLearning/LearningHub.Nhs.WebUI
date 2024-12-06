@@ -4,7 +4,7 @@
 @model AccountCreationConfirmation
 @inject IOptions<Settings> settings
 @{
-    ViewData["Title"] = "Confirmation";
+    ViewData["Title"] = "Check your details";
     var errorHasOccurred = !ViewData.ModelState.IsValid;
     AccountCreationTypeEnum accountCreationType = ViewBag.AccountCreationType;
 }
@@ -19,7 +19,7 @@
                 {
                     <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
                 }
-                <h1 class="nhsuk-heading-xl">Check your details</h1>
+                <h1 class="nhsuk-heading-xl">@ViewData["Title"]</h1>
                 <dl class="nhsuk-summary-list">
 
                     <div class="nhsuk-summary-list__row">

@@ -164,7 +164,11 @@
         public async Task<IActionResult> UpdateDevIdDetails(ResourceVersionDevIdViewModel model)
         {
             var message = string.Empty;
-            if (await this.resourceService.DoesDevIdExistsAsync(model.DevId))
+            if (string.IsNullOrEmpty(model.DevId))
+            {
+                message = "Enter a Dev id for the resource";
+            }
+            else if (await this.resourceService.DoesDevIdExistsAsync(model.DevId))
             {
                 message = "Duplicate";
             }

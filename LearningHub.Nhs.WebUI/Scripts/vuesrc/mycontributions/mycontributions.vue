@@ -392,6 +392,7 @@
     @media (max-width: 768px) {
         .dropdown-toggle {
             display: block !important;
+            white-space: wrap !important;
         }
     }
 

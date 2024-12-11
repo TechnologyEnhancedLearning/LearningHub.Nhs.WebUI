@@ -654,7 +654,7 @@
             {
                 this.ModelState.AddModelError("CurrentRole", CommonValidationErrorMessages.RoleRequired);
                 var jobroles = await this.jobRoleService.GetPagedFilteredAsync(accountCreationViewModel.FilterText, 1, UserRegistrationContentPageSize);
-                return this.View("CreateAccountCurrentRole", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText,  CountryId = accountCreation.CountryId,  RoleList = jobroles.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = jobroles.Item1, PageSize = UserRegistrationContentPageSize, HasItems = jobroles.Item1 > 0, CurrentPage = 1 }, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+                return this.View("CreateAccountCurrentRole", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, CountryId = accountCreation.CountryId, RoleList = jobroles.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = jobroles.Item1, PageSize = UserRegistrationContentPageSize, HasItems = jobroles.Item1 > 0, CurrentPage = 1 }, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
             }
 
             var jobrole = await this.jobRoleService.GetByIdAsync(roleId);

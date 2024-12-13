@@ -22,7 +22,7 @@
             <div class="nhsuk-grid-column-two-thirds @(returnToConfirmation ? "nhsuk-u-padding-top-7":string.Empty) nhsuk-u-padding-bottom-9">
                 @if (!returnToConfirmation)
                 {
-                    if (Model.CountryId == "1" || errorHasOccurred)
+          if (Model.CountryId == "1") //|| errorHasOccurred
                     {
                         <vc:back-link asp-controller="Account" asp-action="CreateAccountRegionSelection" asp-all-route-data="@routeData" link-text="Back to: Select your region" />
 

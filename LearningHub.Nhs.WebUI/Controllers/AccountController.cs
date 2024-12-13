@@ -648,15 +648,16 @@
         public async Task<IActionResult> CreateAccountProfessionalRegNumber(AccountCreationViewModel accountCreationViewModel)
         {
             var roleCheck = int.TryParse(accountCreationViewModel.CurrentRole, out int roleId);
+            var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.CurrentRole) || !roleCheck)
             {
                 this.ModelState.AddModelError("CurrentRole", CommonValidationErrorMessages.RoleRequired);
                 var jobroles = await this.jobRoleService.GetPagedFilteredAsync(accountCreationViewModel.FilterText, 1, UserRegistrationContentPageSize);
-                return this.View("CreateAccountCurrentRole", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, RoleList = jobroles.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = jobroles.Item1, PageSize = UserRegistrationContentPageSize, HasItems = jobroles.Item1 > 0, CurrentPage = 1 }, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+                return this.View("CreateAccountCurrentRole", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, CountryId = accountCreation.CountryId, RoleList = jobroles.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = jobroles.Item1, PageSize = UserRegistrationContentPageSize, HasItems = jobroles.Item1 > 0, CurrentPage = 1 }, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
             }
 
             var jobrole = await this.jobRoleService.GetByIdAsync(roleId);
-            var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
             accountCreation.CurrentRole = jobrole.Id.ToString();
             accountCreation.CurrentRoleName = jobrole.Name;
             accountCreation.MedicalCouncilId = jobrole.MedicalCouncilId;

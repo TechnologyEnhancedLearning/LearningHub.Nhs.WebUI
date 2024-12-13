@@ -168,12 +168,13 @@
             {
                 message = "Enter a Dev id for the resource";
             }
-            else if (await this.resourceService.DoesDevIdExistsAsync(model.DevId))
+            else if (await this.resourceService.DoesDevIdExistsAsync(model.DevId.Trim()))
             {
                 message = "Duplicate";
             }
             else
             {
+                model.DevId = model.DevId.Trim();
                 await this.resourceService.UpdateDevIdDetailsAsync(model);
                 message = "Success";
             }

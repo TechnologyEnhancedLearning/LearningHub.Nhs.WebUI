@@ -45,8 +45,7 @@
                             </td>
                             <td class="px-sm-3 py-sm-3">
                                 <div class="d-flex justify-content-between" v-if="notification.userDismissable">
-                                    <a href="#deleteModal" data-toggle="modal" @click="selectNotification(notification)">Delete</a>
-                                    &nbsp;<i class="fa-solid fa-trash-can-alt pt-1"></i>
+                                    <button data-target="#deleteModal" data-toggle="modal" @click="selectNotification(notification)">Delete <i class="fa-solid fa-trash-can-alt pt-1"></i></button>
                                 </div>
                             </td>
                         </tr>
@@ -63,7 +62,8 @@
                  :style="[isHighPriority ? {background:'#FCEC60'}:{background:'#435563', color:'#fff'}]"
                  @click="toggleContent" role=button>
                 <h2 class="m-0">{{priorityTypeText}}</h2>
-                <i :class="showContentIcon"></i>
+                <i :class="showContentIcon"
+                   :style="[isHighPriority ? {color:'#4c6272'}:{color:'#fff'}] "></i>
             </div>
 
             <template v-if="showContent">
@@ -76,7 +76,7 @@
                     </div>
 
                     <a href="#deleteModalButton" data-toggle="modal" @click="deleteNotification()" aria-label="Delete" v-if="notification.userDismissable">
-                        <i class="fas fa-ellipsis-h fa-lg" style="color: #AEB7BD;"></i>
+                        <i class="fas fa-ellipsis-h fa-lg" style="color: #435563;"></i>
                     </a>
                 </div>
 

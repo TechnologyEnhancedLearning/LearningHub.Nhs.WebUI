@@ -19,7 +19,7 @@
                     <input id="newKeyword" aria-labelledby="keyword-label" type="text" class="form-control" maxlength="260" v-model="newKeyword" v-bind:class="{ 'input-validation-error': keywordError }" @input="keywordError=false" @change="keywordChange" />
                     <button type="button" class="nhsuk-button nhsuk-button--secondary ml-3 button_width nhsuk-u-margin-bottom-0" @click="addKeyword">&nbsp;Add</button>
                 </div>
-                <div class="col-12 footer-text">
+                <div class="col-12 footer-text" id="keyword-label">
                     You can enter a maximum of 50 characters per keyword
                 </div>
             </div>

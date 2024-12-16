@@ -13,6 +13,7 @@ namespace LearningHub.Nhs.WebUI.Services
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -63,6 +64,8 @@ namespace LearningHub.Nhs.WebUI.Services
             var selectedSortItem = searchSortItemList.Where(x => x.SearchSortType == (SearchSortTypeEnum)searchSortType).FirstOrDefault();
             var groupId = Guid.Parse(searchRequest.GroupId);
             bool didYouMeanEnabled = false;
+            var suggestedCatalogue = string.Empty;
+            var suggestedResource = string.Empty;
 
             var resourceSearchPageSize = this.settings.FindwiseSettings.ResourceSearchPageSize;
             var catalogueSearchPageSize = this.settings.FindwiseSettings.CatalogueSearchPageSize;
@@ -124,6 +127,7 @@ namespace LearningHub.Nhs.WebUI.Services
                         if (resourceResult?.Spell?.Suggestions?.Count > 0)
                         {
                             resourceSearchRequestModel.SearchText = Regex.Replace(resourceResult?.Spell?.Suggestions?.FirstOrDefault().ToString(), "<.*?>", string.Empty);
+                            suggestedResource = resourceSearchRequestModel.SearchText;
 
                             // calling findwise endpoint with new search text - resources
                             resourceResultTask = this.GetSearchResultAsync(resourceSearchRequestModel);
@@ -133,6 +137,7 @@ namespace LearningHub.Nhs.WebUI.Services
                         if (catalogueResult?.Spell?.Suggestions?.Count > 0)
                         {
                             catalogueSearchRequestModel.SearchText = Regex.Replace(catalogueResult?.Spell?.Suggestions?.FirstOrDefault().ToString(), "<.*?>", string.Empty);
+                            suggestedCatalogue = catalogueSearchRequestModel.SearchText;
 
                             // calling findwise endpoint with new search text - catalogues
                             catalogueResultTask = this.GetCatalogueSearchResultAsync(catalogueSearchRequestModel);
@@ -230,6 +235,8 @@ namespace LearningHub.Nhs.WebUI.Services
                     TotalItems = catalogueResult?.TotalHits ?? 0,
                 },
                 DidYouMeanEnabled = didYouMeanEnabled,
+                SuggestedCatalogue = suggestedCatalogue,
+                SuggestedResource = suggestedResource,
             };
 
             return searchResultViewModel;
@@ -689,6 +696,44 @@ namespace LearningHub.Nhs.WebUI.Services
             }
 
             return viewModel;
+        }
+
+        /// <summary>
+        /// The Send AutoSuggestion Click Action.
+        /// </summary>
+        /// <param name="clickPayloadModel">The search action catalogue model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task SendAutoSuggestionClickActionAsync(AutoSuggestionClickPayloadModel clickPayloadModel)
+        {
+            try
+            {
+                var client = await this.LearningHubHttpClient.GetClientAsync();
+
+                var json = JsonConvert.SerializeObject(clickPayloadModel);
+                var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+
+                var request = $"Search/SendAutoSuggestionClickAction";
+                var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result) as ApiResponse;
+
+                    if (!apiResponse.Success)
+                    {
+                        throw new Exception("Error sending AutoSuggestion click Action!");
+                    }
+                }
+                else
+                {
+                    throw new Exception(string.Format("Error sending AutoSuggestion click Action!"));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Error sending AutoSuggestion click Action: {0}", ex.Message));
+            }
         }
 
         /// <summary>

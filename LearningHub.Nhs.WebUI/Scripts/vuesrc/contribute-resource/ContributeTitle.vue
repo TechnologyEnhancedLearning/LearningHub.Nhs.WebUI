@@ -5,7 +5,8 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center mx-n12 my-n2">
                 <h1 class="nhsuk-heading-xl">
                     <span v-if="!editing" class="contribute-title-component-title">{{ title || 'Untitled' }}</span>
-                    <input type="text" v-if="editing" v-model="title" placeholder="Untitled" ref="contributeTitleInput" />
+                    <label class="nhsuk-u-visually-hidden" for="contributeTitleInput"></label>
+                    <input type="text" id="contributeTitleInput" name="contributeTitleInput" v-if="editing" v-model="title" placeholder="Untitled" ref="contributeTitleInput" />
                 </h1>
                 <LinkTextAndIcon v-if="!editing"
                                  v-on:click="editing = true"

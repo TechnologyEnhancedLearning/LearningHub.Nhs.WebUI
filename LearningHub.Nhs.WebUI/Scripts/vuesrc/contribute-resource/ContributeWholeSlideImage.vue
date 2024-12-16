@@ -4,11 +4,12 @@
             <div class="d-flex flex-grow-1">
                 <Tick :complete="wholeSlideImageItem.isReadyToPublish()"
                       class="pt-20 pl-15 pr-10"></Tick>
-                <div class="flex-grow-1 mr-10">
+                <div class="flex-grow-1 mr-10">                 
                     <EditSaveFieldWithCharacterCount v-model="wholeSlideImage.title"
                                                      addEditLabel="title"
                                                      :characterLimit="60"
-                                                     :isH4="true"></EditSaveFieldWithCharacterCount>
+                                                     :isH4="true"
+                                                     :inputId="title"></EditSaveFieldWithCharacterCount>
                 </div>
             </div>
             <div class="contribute-whole-slide-image-buttons d-flex align-items-start justify-content-end">
@@ -53,13 +54,14 @@
 
                 <div v-if="!wholeSlideImage.getFileModel() && !imageZone">
                     <h3 class="flex pl-2 pt-10"
-                        v-if="showPlaceholderText">Placeholder text:</h3>
+                        v-if="showPlaceholderText"><label for="placeholder">Placeholder text:</label></h3>
                     <div class="d-flex align-items-center">
                         <EditSaveFieldWithCharacterCount
                             class="flex"
                             addEditLabel="placeholder text"
                             v-model="wholeSlideImageItem.placeholderText"
                             :characterLimit="500"
+                            :inputId="placeholder"
                             @updateIsEditing="value => isEditingPlaceholder(value)"/>
                     </div>
                     <div>
@@ -225,7 +227,9 @@
             enableUp: Boolean,
             enableDown: Boolean,
             resourceType: { type: Number } as PropOptions<ResourceType>,
-            imageZone: { type: Boolean, default: false }
+            imageZone: { type: Boolean, default: false },
+            title: { type: String, default: 'title' },
+            placeholder: { type: String, default: 'placeholder' },
         },
         data() {
             return {

@@ -20,13 +20,14 @@
                     </picture>
                 </div>
                 <div class="carousel-text-editor">
-                    <b>Description text</b> (Optional)
+                    <label for="description"> <b>Description text</b> (Optional)</label>
                     <p>
                         Provide a short description of the image, which will be displayed to the user under the image in the carousel.
                     </p>
                     <EditSaveFieldWithCharacterCount v-model="image.description"
                                                      addEditLabel="Description"
                                                      v-bind:characterLimit="150"
+                                                     v-bind:inputId="description"
                                                      block-view/>
                 </div>
                 <div class="carousel-text-editor">
@@ -39,7 +40,7 @@
                     <EditSaveFieldWithCharacterCount v-model="image.altText"
                                                      addEditLabel="alt text"
                                                      v-bind:characterLimit="125"
-                                                     block-view/>
+                                                     block-view />
                 </div>
             </div>
         </div>
@@ -71,6 +72,7 @@
         },
         props: {
             image: { type: Object } as PropOptions<ImageModel>,
+             description: { type: String, default: 'description' },
         },
         data() {
             return {

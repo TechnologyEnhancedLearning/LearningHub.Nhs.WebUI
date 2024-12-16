@@ -36,7 +36,7 @@
 
         <div class="row">
             <div class="form-group col-12">
-                <select class="form-control" aria-labelledby="type-label" v-model="selectedCatalogue" @change="catalogueChange">
+                <select class="form-control" aria-labelledby="type-label" id="catalogue" v-model="selectedCatalogue" @change="catalogueChange">
                     <option disabled v-bind:value="{ nodeId: 0 }">Please choose...</option>
                     <option v-for="catalogue in userCatalogues" :value="catalogue">
                         {{getCatalogueName(catalogue)}}

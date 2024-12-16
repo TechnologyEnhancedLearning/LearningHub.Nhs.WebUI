@@ -8,9 +8,9 @@
                     <a v-bind:href="moreInfoLink" class="mb-10 accessible-link" target="_blank">More information on licences</a>
                 </div>
 
-                <select class="form-control" aria-labelledby="licence-heading" v-model="resourceDetails.resourceLicenceId">
-                    <option disabled v-bind:value="null">Please choose...</option>
-                    <option v-for="licence in licences" :value="licence.id">
+                <select class="form-control" aria-labelledby="licence-heading" id="licence" v-model="resourceDetails.resourceLicenceId">
+                    <option disabled v-bind:value="null" id="select">Please choose...</option>
+                    <option v-for="licence in licences" :value="licence.id" :id="licence.id">
                         {{licence.title}}
                     </option>
                 </select>

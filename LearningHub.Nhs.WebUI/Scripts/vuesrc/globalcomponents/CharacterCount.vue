@@ -41,7 +41,7 @@
                         'character-count-component--error': (hasOtherError),
                         'character-count-component--large': (size === 'large'),
                        }">
-        <h2 class="nhsuk-heading-l">
+        <h2 class="nhsuk-heading-l" v-if="showTitle">
             <slot name="title"></slot>
         </h2>
         <div class="mb-2">
@@ -98,6 +98,10 @@
             disabled: Boolean,
             focusOnLoad: Boolean,
             size: String,
+            showTitle: {
+                default: true,
+                type: Boolean  
+            }
         },
         data() {
             return {

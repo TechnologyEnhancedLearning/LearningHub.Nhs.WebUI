@@ -534,6 +534,7 @@
     <Build Include="Tables\Resource\ScormResourceReferenceEvent.sql" />
     <Build Include="Tables\Resource\ScormResourceReferenceEventType.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\UpdateFileTypes.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\AddDigitalLearningSolutionsExternalSystem.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

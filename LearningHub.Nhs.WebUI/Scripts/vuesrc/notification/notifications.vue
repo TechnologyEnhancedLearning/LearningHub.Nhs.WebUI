@@ -2,7 +2,7 @@
     <div class="lh-padding-fluid bg-white">
         <div class="notifications-panel lh-container-xl">
             <div :class="[showMessage ? 'd-none' : 'd-block', 'nhsuk-u-margin-top-7 nhsuk-u-margin-bottom-7']">
-                <h1>Notifications</h1>
+                <h1>System notifications</h1>
                 <notification ref="priorityNotification"
                               :priorityType="this.NotificationPriority.Priority"
                               :showContent="this.showPriorityContent"

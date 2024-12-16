@@ -469,41 +469,53 @@
         {
             var countryCheck = int.TryParse(accountCreationViewModel.CountryId, out int countryId);
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-            if (string.IsNullOrWhiteSpace(accountCreationViewModel.CountryId) || !countryCheck)
+            if (accountCreationViewModel.CountryId != null)
+            {
+                accountCreation.CountryId = accountCreationViewModel.CountryId;
+            }
+
+            if (accountCreation.CountryId == "1")
+            {
+                var regionData = await this.regionService.GetAllPagedAsync(accountCreationViewModel.CurrentPageIndex, UserRegistrationContentPageSize);
+                return this.View(new AccountCreationListViewModel { Region = regionData.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = regionData.Item1, PageSize = UserRegistrationContentPageSize, HasItems = regionData.Item1 > 0, CurrentPage = accountCreationViewModel.CurrentPageIndex }, RegionId = accountCreation.RegionId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+            }
+            else if (string.IsNullOrWhiteSpace(accountCreationViewModel.CountryId) || !countryCheck)
             {
                 this.ModelState.AddModelError("CountryId", CommonValidationErrorMessages.CountryRequired);
                 var countries = await this.countryService.GetFilteredAsync(accountCreationViewModel.FilterText);
                 return this.View("CreateAccountCountrySelection", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, CountryList = countries.ToList(), ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
             }
-
-            accountCreation.CountryId = accountCreationViewModel.CountryId;
-            await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-            if (countryId != 1)
+            else
             {
-                accountCreationViewModel.RegionId = string.Empty;
-                accountCreation.RegionId = string.Empty;
+                accountCreation.CountryId = accountCreationViewModel.CountryId;
                 await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-
-                if (accountCreation.IsLoginWizard)
+                if (countryId != 1)
                 {
-                    return this.CheckConfirmationUpdate() ? this.RedirectToAction("AccountConfirmation", "LoginWizard") : this.RedirectToAction("NextStage", "LoginWizard");
+                    accountCreationViewModel.RegionId = string.Empty;
+                    accountCreation.RegionId = string.Empty;
+                    await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+
+                    if (accountCreation.IsLoginWizard)
+                    {
+                        return this.CheckConfirmationUpdate() ? this.RedirectToAction("AccountConfirmation", "LoginWizard") : this.RedirectToAction("NextStage", "LoginWizard");
+                    }
+
+                    return this.CheckConfirmationUpdate() ? this.RedirectToAction("CreateAccountConfirmation", new AccountCreationViewModel { LocationId = accountCreation.LocationId }) : this.RedirectToAction("CreateAccountSearchRole", accountCreationViewModel);
                 }
 
-                return this.CheckConfirmationUpdate() ? this.RedirectToAction("CreateAccountConfirmation", new AccountCreationViewModel { LocationId = accountCreation.LocationId }) : this.RedirectToAction("CreateAccountSearchRole", accountCreationViewModel);
-            }
+                switch (accountCreationViewModel.AccountCreationPagingEnum)
+                {
+                    case AccountCreationPagingEnum.NextPageChange:
+                        accountCreationViewModel.CurrentPageIndex += 1;
+                        break;
 
-            switch (accountCreationViewModel.AccountCreationPagingEnum)
-            {
-                case AccountCreationPagingEnum.NextPageChange:
-                    accountCreationViewModel.CurrentPageIndex += 1;
-                    break;
-
-                case AccountCreationPagingEnum.PreviousPageChange:
-                    accountCreationViewModel.CurrentPageIndex -= 1;
-                    break;
-                case AccountCreationPagingEnum.Default:
-                    accountCreationViewModel.CurrentPageIndex = 1;
-                    break;
+                    case AccountCreationPagingEnum.PreviousPageChange:
+                        accountCreationViewModel.CurrentPageIndex -= 1;
+                        break;
+                    case AccountCreationPagingEnum.Default:
+                        accountCreationViewModel.CurrentPageIndex = 1;
+                        break;
+                }
             }
 
             var region = await this.regionService.GetAllPagedAsync(accountCreationViewModel.CurrentPageIndex, UserRegistrationContentPageSize);
@@ -533,6 +545,11 @@
                 }
             }
 
+            if (accountCreationViewModel.CountryId != null)
+            {
+                accountCreation.CountryId = accountCreationViewModel.CountryId;
+            }
+
             accountCreation.RegionId = accountCreationViewModel.RegionId;
             await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
 
@@ -546,7 +563,7 @@
                 return this.CheckConfirmationUpdate() ? this.RedirectToAction("AccountConfirmation", "LoginWizard") : this.RedirectToAction("NextStage", "LoginWizard");
             }
 
-            return this.CheckConfirmationUpdate() ? this.RedirectToAction("CreateAccountConfirmation", new AccountCreationViewModel { LocationId = accountCreation.LocationId }) : this.RedirectToAction("CreateAccountSearchRole", new AccountCreationViewModel() { CountryId = accountCreation.CountryId });
+            return this.CheckConfirmationUpdate() ? this.RedirectToAction("CreateAccountConfirmation", new AccountCreationViewModel { LocationId = accountCreation.LocationId }) : this.RedirectToAction("CreateAccountSearchRole", new AccountCreationViewModel() { CountryId = accountCreation.CountryId, RegionId = accountCreation.RegionId });
         }
 
         /// <summary>
@@ -581,7 +598,7 @@
                 if (string.IsNullOrWhiteSpace(filterText))
                 {
                     this.ModelState.AddModelError("FilterText", CommonValidationErrorMessages.SearchTermRequired);
-                    return this.View("CreateAccountSearchRole", new AccountCreationViewModel { RegionId = accountCreation.RegionId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+                    return this.View("CreateAccountSearchRole", new AccountCreationViewModel { CountryId = accountCreation.CountryId, RegionId = accountCreation.RegionId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
                 }
             }
 
@@ -598,7 +615,7 @@
                 else
                 {
                     this.ModelState.AddModelError("FilterText", CommonValidationErrorMessages.SearchTermRequired);
-                    return this.View("CreateAccountSearchRole", new AccountCreationViewModel { RegionId = accountCreation.RegionId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+                    return this.View("CreateAccountSearchRole", new AccountCreationViewModel { CountryId = accountCreation.CountryId, RegionId = accountCreation.RegionId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
                 }
             }
 
@@ -631,15 +648,16 @@
         public async Task<IActionResult> CreateAccountProfessionalRegNumber(AccountCreationViewModel accountCreationViewModel)
         {
             var roleCheck = int.TryParse(accountCreationViewModel.CurrentRole, out int roleId);
+            var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.CurrentRole) || !roleCheck)
             {
                 this.ModelState.AddModelError("CurrentRole", CommonValidationErrorMessages.RoleRequired);
                 var jobroles = await this.jobRoleService.GetPagedFilteredAsync(accountCreationViewModel.FilterText, 1, UserRegistrationContentPageSize);
-                return this.View("CreateAccountCurrentRole", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, RoleList = jobroles.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = jobroles.Item1, PageSize = UserRegistrationContentPageSize, HasItems = jobroles.Item1 > 0, CurrentPage = 1 }, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+                return this.View("CreateAccountCurrentRole", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, CountryId = accountCreation.CountryId, RoleList = jobroles.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = jobroles.Item1, PageSize = UserRegistrationContentPageSize, HasItems = jobroles.Item1 > 0, CurrentPage = 1 }, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
             }
 
             var jobrole = await this.jobRoleService.GetByIdAsync(roleId);
-            var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
             accountCreation.CurrentRole = jobrole.Id.ToString();
             accountCreation.CurrentRoleName = jobrole.Name;
             accountCreation.MedicalCouncilId = jobrole.MedicalCouncilId;
@@ -672,7 +690,7 @@
 
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.RegistrationNumber) && accountCreation.MedicalCouncilId.HasValue && (int)accountCreation.MedicalCouncilId > 0)
             {
-                this.ModelState.AddModelError("RegistrationNumber", $"You must provide a {accountCreation.MedicalCouncilCode} Number");
+                this.ModelState.AddModelError("RegistrationNumber", $"{accountCreation.MedicalCouncilName} Number is required");
                 this.ViewBag.Job = await this.jobRoleService.GetByIdAsync(roleId);
                 accountCreationViewModel.CurrentRole = roleId.ToString();
                 return this.View("CreateAccountProfessionalRegNumber", accountCreationViewModel);

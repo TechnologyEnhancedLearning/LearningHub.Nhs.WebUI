@@ -24,7 +24,8 @@
                             <div class="modal-body-container p-3 mt-2 mb-2">
                                 <form>
                                     <div class="d-flex">
-                                        <input class="form-control input titleInput" type="text" v-model="title" v-bind:maxlength="maxAllowedTitleLength" />
+                                        <label class="nhsuk-u-visually-hidden" for="titleInput"></label>
+                                        <input class="form-control input titleInput" id="titleInput" type="text" v-model="title" v-bind:maxlength="maxAllowedTitleLength" />
                                     </div>
                                 </form>
                             </div>

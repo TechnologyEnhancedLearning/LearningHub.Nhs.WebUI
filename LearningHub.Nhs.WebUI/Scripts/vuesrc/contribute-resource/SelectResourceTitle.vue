@@ -4,9 +4,10 @@
             <div class="lh-container-xl">
                 <CharacterCount v-model="resourceDetails.title"
                                 v-bind:characterLimit="255"
-                                v-bind:hasOtherError="isTitleRequiredAndMissing">
+                                v-bind:hasOtherError="isTitleRequiredAndMissing"
+                                v-bind:inputId ="resourceTitle">
                     <template v-slot:title class="nhsuk-heading-l">Add a title</template>
-                    <template v-slot:description>Give your resource a concise, useful title that will make sense to learners.</template>
+                    <template v-slot:description><label :for="resourceTitle">Give your resource a concise, useful title that will make sense to learners.</label></template>
                     <template v-slot:otherErrorMessage v-if="isTitleRequiredAndMissing">You must enter a title</template>
                 </CharacterCount>
             </div>
@@ -22,7 +23,8 @@
     export default Vue.extend({
         props: {
             resourceDetails: { type: Object } as PropOptions<ContributeResourceDetailModel>,
-            isTypeSelected: Boolean
+            isTypeSelected: Boolean,
+            resourceTitle: { type: String, default: 'resourceTitle' } 
         },
         components: {
             CharacterCount
@@ -30,7 +32,7 @@
         computed: {
             isTitleRequiredAndMissing(): boolean {
                 return this.isTypeSelected && this.resourceDetails.title.trim().length === 0;
-            },
+            },          
         }
     });
 </script>

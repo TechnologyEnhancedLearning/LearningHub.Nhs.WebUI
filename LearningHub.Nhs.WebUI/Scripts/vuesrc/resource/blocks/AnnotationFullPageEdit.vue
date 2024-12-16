@@ -14,10 +14,12 @@
         </div>
         <div class="annotation-edit-fs-functions">
             <div class="annotation-edit-fs-functions-change-title">
+                <label class="nhsuk-u-visually-hidden" for="title"></label>
                 <EditSaveFieldWithCharacterCount v-model="wholeSlideImage.title"
                                                  addEditLabel="title"
                                                  :characterLimit="60"
-                                                 :isH4="true"/>
+                                                 :isH4="true"
+                                                 :inputId="title" />
             </div>
             <div class="annotation-edit-fs-functions-other">
                 <div class="edit-hide-controls">
@@ -75,6 +77,7 @@
             resourceType: { type: Number } as PropOptions<ResourceType>,
             imageZone: Boolean,
             questionBlock: { type: Object } as PropOptions<QuestionBlockModel>,
+            title: { type: String, default: 'title' },
         },
         data() {
             return {

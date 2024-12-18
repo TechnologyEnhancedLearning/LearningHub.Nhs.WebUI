@@ -476,6 +476,7 @@
 
             if (accountCreation.CountryId == "1")
             {
+                await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
                 var regionData = await this.regionService.GetAllPagedAsync(accountCreationViewModel.CurrentPageIndex, UserRegistrationContentPageSize);
                 return this.View(new AccountCreationListViewModel { Region = regionData.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = regionData.Item1, PageSize = UserRegistrationContentPageSize, HasItems = regionData.Item1 > 0, CurrentPage = accountCreationViewModel.CurrentPageIndex }, RegionId = accountCreation.RegionId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
             }
@@ -537,7 +538,7 @@
 
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.RegionId))
             {
-                if (accountCreation.CountryId == "1")
+                if (accountCreation.CountryId == "1" || accountCreation.CountryId == null)
                 {
                     this.ModelState.AddModelError("RegionId", CommonValidationErrorMessages.RegionRequired);
                     var region = await this.regionService.GetAllPagedAsync(1, UserRegistrationContentPageSize);
@@ -748,7 +749,7 @@
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.GradeId) || !gradeCheck)
             {
                 int gradePageSize = UserRegistrationContentPageSize + 5;
-                this.ModelState.AddModelError(string.Empty, CommonValidationErrorMessages.GradeRequired);
+                this.ModelState.AddModelError("GradeId", CommonValidationErrorMessages.GradeRequired);
                 var gradeLevel = await this.gradeService.GetPagedGradesForJobRoleAsync(int.Parse(accountCreation.CurrentRole), 1, gradePageSize);
                 return this.View("CreateAccountGradeSelection", new AccountCreationListViewModel { GradeList = gradeLevel.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = gradeLevel.Item1, PageSize = gradePageSize, HasItems = gradeLevel.Item1 > 0, CurrentPage = 1 }, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
             }

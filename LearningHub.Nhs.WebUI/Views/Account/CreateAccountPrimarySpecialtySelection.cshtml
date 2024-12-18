@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Primary Specialty";
+    ViewData["DisableValidation"] = true;
     var errorHasOccurred = !ViewData.ModelState.IsValid;
     string grade = !string.IsNullOrWhiteSpace(Context.Request.Query["gradeId"]) ? Context.Request.Query["gradeId"] : Model.GradeId;
     string regNo = !string.IsNullOrWhiteSpace(Context.Request.Query["registrationNumber"]) ? Context.Request.Query["registrationNumber"] : Model.RegistrationNumber;

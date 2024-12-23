@@ -1,15 +1,20 @@
 ﻿namespace LearningHub.Nhs.WebUI.Services
 {
     using System;
+    using System.Buffers;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
+    using System.Threading.Tasks.Dataflow;
+    using Azure;
     using Azure.Storage.Files.Shares;
     using Azure.Storage.Files.Shares.Models;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Models;
     using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.Extensions.Options;
 
@@ -125,32 +130,79 @@
         /// </summary>
         /// <param name="filePath">The filePath.</param>
         /// <param name="fileName">The fileName.</param>
-        /// <returns>The <see cref="Task{CloudFile}"/>.</returns>
-        public async Task<ShareFileDownloadInfo> DownloadFileAsync(string filePath, string fileName)
+        /// <returns>The <see cref="Task{FileDownloadResponse}"/>.</returns>
+        public async Task<FileDownloadResponse> DownloadFileAsync(string filePath, string fileName)
         {
-            var directory = this.ShareClient.GetDirectoryClient(filePath);
-            var sourceDirectory = this.InputArchiveShareClient.GetDirectoryClient(filePath);
+            const int ChunkSizeInMB = 100;
+            const int MaxParallelDownloads = 8;
+            int chunkSize = ChunkSizeInMB * 1024 * 1024;
 
-            if (await directory.ExistsAsync())
+            var file = await this.FindFileAsync(filePath, fileName);
+            if (file == null)
             {
-                var file = directory.GetFileClient(fileName);
-
-                if (await file.ExistsAsync())
-                {
-                    return await file.DownloadAsync();
-                }
-            }
-            else if (await sourceDirectory.ExistsAsync())
-            {
-                var file = sourceDirectory.GetFileClient(fileName);
-
-                if (await file.ExistsAsync())
-                {
-                    return await file.DownloadAsync();
-                }
+                return null;
             }
 
-            return null;
+            var properties = await file.GetPropertiesAsync();
+            long fileSize = properties.Value.ContentLength;
+
+            // If the file size is less than 500 MB, download it directly
+            if (fileSize <= 500 * 1024 * 1024)
+            {
+                var response = await file.DownloadAsync();
+                return new FileDownloadResponse
+                {
+                    Content = response.Value.Content,
+                    ContentType = properties.Value.ContentType,
+                    ContentLength = fileSize,
+                };
+            }
+
+            var pipe = new System.IO.Pipelines.Pipe();
+            var semaphore = new SemaphoreSlim(1, 1);
+
+            var downloadBlock = new ActionBlock<long>(
+                async offset =>
+                {
+                    long rangeSize = Math.Min(chunkSize, fileSize - offset);
+                    try
+                    {
+                        var response = await file.DownloadAsync(new HttpRange(offset, rangeSize));
+                        var buffer = new byte[rangeSize];
+                        await response.Value.Content.ReadAsync(buffer, 0, (int)rangeSize);
+
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            pipe.Writer.Write(buffer);
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Error downloading chunk at offset {offset}: {ex.Message}");
+                    }
+                },
+                new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = MaxParallelDownloads, EnsureOrdered = false });
+
+            for (long offset = 0; offset < fileSize; offset += chunkSize)
+            {
+                downloadBlock.Post(offset);
+            }
+
+            downloadBlock.Complete();
+            await downloadBlock.Completion;
+            await pipe.Writer.CompleteAsync();
+
+            return new FileDownloadResponse
+            {
+                Content = pipe.Reader.AsStream(),
+                ContentType = properties.Value.ContentType,
+                ContentLength = fileSize,
+            };
         }
 
         /// <summary>
@@ -417,6 +469,29 @@
                     }
                 }
             }
+        }
+
+        private async Task<ShareFileClient> FindFileAsync(string filePath, string fileName)
+        {
+            var directories = new[]
+            {
+                this.ShareClient.GetDirectoryClient(filePath),
+                this.InputArchiveShareClient.GetDirectoryClient(filePath),
+            };
+
+            foreach (var directory in directories)
+            {
+                if (await directory.ExistsAsync())
+                {
+                    var file = directory.GetFileClient(fileName);
+                    if (await file.ExistsAsync())
+                    {
+                        return file;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -37,9 +37,10 @@
             var settings = new Settings();
             configuration.Bind("Settings", settings);
 
+            var buildNumber = $"Build Number: {configuration["Swagger:BuildNumber"]}";
             var swaggerTitle = configuration["Swagger:Title"];
             var swaggerVersion = configuration["Swagger:Version"];
-            var swaggerDescription = "This is the API documentation for version ";
+            var swaggerDescription = "This is the API documentation for " + buildNumber + " and version ";
 
             services.AddSwaggerGen(c =>
             {

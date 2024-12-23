@@ -62,9 +62,10 @@
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
+            var buildNumber = $"Build Number: {configuration["Swagger:BuildNumber"]}";
             var swaggerTitle = configuration["Swagger:Title"];
             var swaggerVersion = configuration["Swagger:Version"];
-            var swaggerDescription = "This is the API documentation for version ";
+            var swaggerDescription = "This is the API documentation for " + buildNumber + " and version ";
             services.AddSwaggerGen(c =>
             {
                 var version = typeof(Program).Assembly.GetName().Version;

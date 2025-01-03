@@ -474,17 +474,17 @@
                 accountCreation.CountryId = accountCreationViewModel.CountryId;
             }
 
-            if (accountCreation.CountryId == "1")
-            {
-                await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-                var regionData = await this.regionService.GetAllPagedAsync(accountCreationViewModel.CurrentPageIndex, UserRegistrationContentPageSize);
-                return this.View(new AccountCreationListViewModel { Region = regionData.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = regionData.Item1, PageSize = UserRegistrationContentPageSize, HasItems = regionData.Item1 > 0, CurrentPage = accountCreationViewModel.CurrentPageIndex }, RegionId = accountCreation.RegionId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
-            }
-            else if (string.IsNullOrWhiteSpace(accountCreationViewModel.CountryId) || !countryCheck)
+            if (string.IsNullOrWhiteSpace(accountCreationViewModel.CountryId) || !countryCheck)
             {
                 this.ModelState.AddModelError("CountryId", CommonValidationErrorMessages.CountryRequired);
                 var countries = await this.countryService.GetFilteredAsync(accountCreationViewModel.FilterText);
                 return this.View("CreateAccountCountrySelection", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, CountryList = countries.ToList(), ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+            }
+            else if (accountCreation.CountryId == "1")
+            {
+                await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+                var regionData = await this.regionService.GetAllPagedAsync(accountCreationViewModel.CurrentPageIndex, UserRegistrationContentPageSize);
+                return this.View(new AccountCreationListViewModel { Region = regionData.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = regionData.Item1, PageSize = UserRegistrationContentPageSize, HasItems = regionData.Item1 > 0, CurrentPage = accountCreationViewModel.CurrentPageIndex }, RegionId = accountCreation.RegionId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
             }
             else
             {

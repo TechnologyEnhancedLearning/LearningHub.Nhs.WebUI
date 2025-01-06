@@ -5,7 +5,8 @@
 @{
     ViewData["Title"] = "Role";
     var errorHasOccurred = !ViewData.ModelState.IsValid;
-    var routeData = new Dictionary<string, string> { { "CountryId", Context.Request.Query["CountryId"] } };
+    string currentCountry = !string.IsNullOrWhiteSpace(Context.Request.Query["CountryId"]) ? Context.Request.Query["CountryId"] : Model.CountryId;
+    var routeData = new Dictionary<string, string> { { "CountryId", currentCountry } };
 }
 
 @section styles{

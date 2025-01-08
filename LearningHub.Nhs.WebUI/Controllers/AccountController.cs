@@ -859,6 +859,7 @@
         {
             int specialtyId;
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             if (accountCreationViewModel.PrimarySpecialtyId?.ToLower() == "not applicable")
             {
                 var specialties = await this.specialtyService.GetSpecialtiesAsync();
@@ -906,6 +907,7 @@
         [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
         public async Task<IActionResult> CreateAccountStartDate(AccountCreationDateViewModel accountCreationDateViewModel)
         {
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             if (!this.ModelState.IsValid)
             {
                 return this.View("CreateAccountWorkStartDate", accountCreationDateViewModel);

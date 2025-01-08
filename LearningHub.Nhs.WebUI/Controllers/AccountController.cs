@@ -879,7 +879,7 @@
                         this.ModelState.AddModelError("PrimarySpecialtyId", CommonValidationErrorMessages.SpecialtyNotApplicable);
                     }
 
-                    return this.View("CreateAccountPrimarySpecialtySelection", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation, SpecialtyList = shortlist.Item2, OptionalSpecialtyItem = optionalSpecialty.FirstOrDefault(x => x.Name.ToLower() == "not applicable"), AccountCreationPaging = new AccountCreationPagingModel { TotalItems = shortlist.Item1, PageSize = UserRegistrationContentPageSize, HasItems = shortlist.Item1 > 0, CurrentPage = 1 } });
+                    return this.View("CreateAccountPrimarySpecialtySelection", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, GradeId = accountCreation.GradeId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation, SpecialtyList = shortlist.Item2, OptionalSpecialtyItem = optionalSpecialty.FirstOrDefault(x => x.Name.ToLower() == "not applicable"), AccountCreationPaging = new AccountCreationPagingModel { TotalItems = shortlist.Item1, PageSize = UserRegistrationContentPageSize, HasItems = shortlist.Item1 > 0, CurrentPage = 1 } });
                 }
 
                 accountCreation.PrimarySpecialtyId = accountCreationViewModel.PrimarySpecialtyId;

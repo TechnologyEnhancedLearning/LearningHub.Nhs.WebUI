@@ -225,7 +225,7 @@ namespace LearningHub.Nhs.Api.Controllers
         /// Publish ResourceVersion
         ///   TODO - requires validation.
         /// </summary>
-        /// <param name="publishViewModel">The publishViewModel<see cref="PublishViewModel"/>.</param>
+        /// <param name="publishViewModel">The publishViewMol<see cref="PublishViewModel"/>.</param>
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         [HttpPost]
         [Route("PublishResourceVersion")]

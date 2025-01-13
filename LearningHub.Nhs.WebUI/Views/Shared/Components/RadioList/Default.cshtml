@@ -52,7 +52,7 @@
             @foreach (var (radio, index) in Model.Radios.Select((r, i) => (r, i)))
             {
                 counter = index;
-                var radioId = $"{radio.Value}-{index}";
+                var radioId = $"{Model.AspFor}-{index}";
                 if (!string.IsNullOrWhiteSpace(Model.Class))
                 {
                     <div class="@Model.Class">
@@ -106,7 +106,7 @@
             @if (Model.OptionalRadio != null)
             {
                 <div class="nhsuk-radios__divider nhsuk-u-padding-left-2">or</div>
-                var radioId = $"{Model.OptionalRadio.Value}-{++counter}";
+                var radioId = $"{Model.AspFor}-{++counter}";
                 <div class="nhsuk-radios__item">
                     <input class="nhsuk-radios__input"
                            id="@radioId"

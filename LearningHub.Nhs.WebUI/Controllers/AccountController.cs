@@ -429,6 +429,7 @@
         public async Task<IActionResult> CreateAccountCountrySelection(AccountCreationViewModel accountCreationViewModel)
         {
             var accountDetails = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             if (!string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
             {
                 string filterText = Regex.Replace(accountCreationViewModel.FilterText, "[:!@#$%^&*()}{|\":?><\\[\\]\\;'/.,~\\\"\"\\'\\\\/]", " ");
@@ -469,6 +470,7 @@
         {
             var countryCheck = int.TryParse(accountCreationViewModel.CountryId, out int countryId);
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             if (accountCreationViewModel.CountryId != null)
             {
                 accountCreation.CountryId = accountCreationViewModel.CountryId;
@@ -535,7 +537,7 @@
         public async Task<IActionResult> CreateAccountSubmitRegionSelection(AccountCreationViewModel accountCreationViewModel)
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.RegionId))
             {
                 if (accountCreation.CountryId == "1" || accountCreation.CountryId == null)
@@ -593,6 +595,7 @@
         public async Task<IActionResult> CreateAccountCurrentRole(AccountCreationViewModel accountCreationViewModel)
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             if (!string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
             {
                 string filterText = Regex.Replace(accountCreationViewModel.FilterText, "[:!@#$%^&*()}{|\":?><\\[\\]\\;'/.,~\\\"\"\\'\\\\/]", " ");
@@ -649,6 +652,7 @@
         public async Task<IActionResult> CreateAccountProfessionalRegNumber(AccountCreationViewModel accountCreationViewModel)
         {
             var roleCheck = int.TryParse(accountCreationViewModel.CurrentRole, out int roleId);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
 
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.CurrentRole) || !roleCheck)
@@ -681,6 +685,7 @@
         public async Task<IActionResult> CreateAccountGradeSelection(AccountCreationViewModel accountCreationViewModel)
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             int gradePageSize = UserRegistrationContentPageSize + 5;
             var roleCheck = int.TryParse(accountCreation.CurrentRole, out int roleId);
             if (!roleCheck || roleId == 0)
@@ -745,6 +750,7 @@
         public async Task<IActionResult> CreateAccountPrimarySpecialty(AccountCreationViewModel accountCreationViewModel)
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             var gradeCheck = int.TryParse(accountCreationViewModel.GradeId, out int gradeId);
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.GradeId) || !gradeCheck)
             {
@@ -777,6 +783,7 @@
         public async Task<IActionResult> CreateAccountPrimarySpecialtySelection(AccountCreationViewModel accountCreationViewModel)
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             if (accountCreationViewModel.PrimarySpecialtyId?.ToLower() == "not applicable")
             {
                 var specialties = await this.specialtyService.GetSpecialtiesAsync();
@@ -852,6 +859,7 @@
         {
             int specialtyId;
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             if (accountCreationViewModel.PrimarySpecialtyId?.ToLower() == "not applicable")
             {
                 var specialties = await this.specialtyService.GetSpecialtiesAsync();
@@ -871,7 +879,7 @@
                         this.ModelState.AddModelError("PrimarySpecialtyId", CommonValidationErrorMessages.SpecialtyNotApplicable);
                     }
 
-                    return this.View("CreateAccountPrimarySpecialtySelection", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation, SpecialtyList = shortlist.Item2, OptionalSpecialtyItem = optionalSpecialty.FirstOrDefault(x => x.Name.ToLower() == "not applicable"), AccountCreationPaging = new AccountCreationPagingModel { TotalItems = shortlist.Item1, PageSize = UserRegistrationContentPageSize, HasItems = shortlist.Item1 > 0, CurrentPage = 1 } });
+                    return this.View("CreateAccountPrimarySpecialtySelection", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, GradeId = accountCreation.GradeId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation, SpecialtyList = shortlist.Item2, OptionalSpecialtyItem = optionalSpecialty.FirstOrDefault(x => x.Name.ToLower() == "not applicable"), AccountCreationPaging = new AccountCreationPagingModel { TotalItems = shortlist.Item1, PageSize = UserRegistrationContentPageSize, HasItems = shortlist.Item1 > 0, CurrentPage = 1 } });
                 }
 
                 accountCreation.PrimarySpecialtyId = accountCreationViewModel.PrimarySpecialtyId;
@@ -899,6 +907,7 @@
         [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
         public async Task<IActionResult> CreateAccountStartDate(AccountCreationDateViewModel accountCreationDateViewModel)
         {
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             if (!this.ModelState.IsValid)
             {
                 return this.View("CreateAccountWorkStartDate", accountCreationDateViewModel);
@@ -953,6 +962,7 @@
         public async Task<IActionResult> CreateAccountWorkPlaceSearch()
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             if (!string.IsNullOrWhiteSpace(accountCreation.LocationId) && !this.CheckConfirmationUpdate())
             {
                 return this.RedirectToAction("CreateAccountWorkPlace", new AccountCreationViewModel { LocationId = accountCreation.LocationId });
@@ -972,6 +982,7 @@
         public async Task<IActionResult> CreateAccountWorkPlace(AccountCreationViewModel accountCreationViewModel)
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             if (string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
             {
                 if (!string.IsNullOrWhiteSpace(accountCreation.LocationId))
@@ -1014,7 +1025,7 @@
         public async Task<IActionResult> CreateAccountConfirmation(AccountCreationViewModel accountCreationViewModel)
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             if (accountCreation.AccountCreationType == AccountCreationTypeEnum.FullAccess)
             {
                 var placeOfWorkCheck = int.TryParse(accountCreationViewModel.LocationId, out int locationId);
@@ -1051,7 +1062,7 @@
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
             this.ViewBag.AccountCreationType = accountCreation.AccountCreationType;
-
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
             if (accountCreation.CountryId == "1" && (string.IsNullOrWhiteSpace(accountCreation.RegionId) || accountCreation.RegionId == "0"))
             {
                 this.ModelState.AddModelError(string.Empty, CommonValidationErrorMessages.RegionRequiredSummary);

@@ -129,6 +129,7 @@
                 opt.DefaultExpiryInMinutes = 60;
             });
 
+            services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             services.AddFeatureManagement();

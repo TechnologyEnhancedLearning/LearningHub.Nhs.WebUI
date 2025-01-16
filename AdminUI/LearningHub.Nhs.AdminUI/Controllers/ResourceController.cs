@@ -91,11 +91,15 @@
         /// The Details.
         /// </summary>
         /// <param name="id">The id<see cref="int"/>.</param>
+        /// <param name="activeTab">The activeTab<see cref="string"/>.</param>
+        /// <param name="status">The status<see cref="string"/>.</param>
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id, string activeTab = "details", string status = "")
         {
             var resource = await this.resourceService.GetResourceVersionExtendedViewModelAsync(id);
+            this.ViewBag.ActiveTab = activeTab;
+            this.ViewBag.Status = status;
             return this.View(resource);
         }
 
@@ -136,6 +140,46 @@
             var vm = await this.resourceService.GetResourceVersionValidationResultAsync(resourceVersionId);
 
             return this.PartialView("_ValidationResults", vm);
+        }
+
+        /// <summary>
+        /// The GetDevIdDetails.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        public async Task<IActionResult> GetDevIdDetails(int resourceVersionId)
+        {
+            var vm = await this.resourceService.GetResourceVersionDevIdDetailsAsync(resourceVersionId);
+
+            return this.PartialView("_DevIdDetails", vm);
+        }
+
+        /// <summary>
+        /// The update the dev Id details.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        public async Task<IActionResult> UpdateDevIdDetails(ResourceVersionDevIdViewModel model)
+        {
+            var message = string.Empty;
+            if (string.IsNullOrEmpty(model.DevId))
+            {
+                message = "Enter a Dev id for the resource";
+            }
+            else if (await this.resourceService.DoesDevIdExistsAsync(model.DevId.Trim()))
+            {
+                message = "Duplicate";
+            }
+            else
+            {
+                model.DevId = model.DevId.Trim();
+                await this.resourceService.UpdateDevIdDetailsAsync(model);
+                message = "Success";
+            }
+
+            return this.RedirectToAction("Details", new { id = model.ResourceVersionId, activeTab = "devId", status = message });
         }
 
         /// <summary>

@@ -15,9 +15,11 @@ namespace LearningHub.Nhs.Repository
     using LearningHub.Nhs.Models.Entities.Resource.Blocks;
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Models.Messaging;
+    using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.User;
+    using LearningHub.Nhs.Repository.Activity;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -779,6 +781,11 @@ namespace LearningHub.Nhs.Repository
         /// Gets or sets the AllCatalogueAlphabet.
         /// </summary>
         public virtual DbSet<AllCatalogueViewModel> AllCatalogueViewModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the AssessmentResourceActivityQuestionViewModel.
+        /// </summary>
+        public virtual DbSet<AssessmentActivityCompletionViewModel> AssessmentActivityCompletionViewModel { get; set; }
 
         /// <summary>
         /// The on model creating.

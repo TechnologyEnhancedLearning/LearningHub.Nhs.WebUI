@@ -34,15 +34,6 @@
     return string.Empty;
   }
 
-  string GetBadgeUrl()
-  {
-    if (!string.IsNullOrEmpty(Model.Catalogue.BadgeUrl))
-    {
-      return GetFileLink(Model.Catalogue.BadgeUrl);
-    }
-    return string.Empty;
-  }
-
   string GetFileLink(string fileName)
   {
     return "/api/catalogue/download-image/" + Uri.EscapeDataString(fileName);
@@ -82,6 +73,9 @@
         CatalogueAccessRequest = Model.CatalogueAccessRequest,
         UserGroups = Model.UserGroups
       };
+
+   var provider = Model.Catalogue.Providers?.FirstOrDefault();
+   var hasBadge = !string.IsNullOrWhiteSpace(Model.Catalogue.BadgeUrl);
 }
 
 @section styles{
@@ -124,9 +118,13 @@
       }
 
       <div class="catalogue-title nhsuk-u-margin-bottom-7">
-        @if (!string.IsNullOrEmpty(Model.Catalogue.BadgeUrl))
+        @if (provider != null)
         {
-          <img alt="Provider's catalogue badge" src="@GetBadgeUrl()" class="catalogue-badge" />
+           <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
+        }
+        else if (hasBadge)
+        {
+           <img src="@("/api/catalogue/download-image/" + Uri.EscapeDataString(Model.Catalogue.BadgeUrl))" alt="Provider's catalogue badgeTest" class="catalogue-card-badge" />
         }
 
         <h1 class="heading-lg title nhsuk-u-margin-bottom-0">@(ViewBag.ActiveTab == "browse" && Model.NodeDetails != null ? Model.NodeDetails.Name : Model.Catalogue.Name)</h1>

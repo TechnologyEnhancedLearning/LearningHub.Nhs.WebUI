@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.Models.Search.SearchFeedback;
     using LearningHub.Nhs.Models.Validation;
 
@@ -175,5 +176,19 @@
         /// <param name="catalogSearchRequestModel">The allcatalog search request model.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<SearchAllCatalogueResultModel> GetAllCatalogueSearchResultsAsync(AllCatalogueSearchRequestModel catalogSearchRequestModel);
+
+        /// <summary>
+        /// The Auto suggetion result method.
+        /// </summary>
+        /// <param name="term">the term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term);
+
+        /// <summary>
+        ///  The Send AutoSuggestion Event Async.
+        /// </summary>
+        /// <param name="clickPayloadModel"> The click Payload Model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<bool> SendAutoSuggestionEventAsync(AutoSuggestionClickPayloadModel clickPayloadModel);
     }
 }

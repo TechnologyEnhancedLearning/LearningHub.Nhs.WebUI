@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Azure.Storage.Files.Shares.Models;
     using LearningHub.Nhs.Models.Resource;
+    using LearningHub.Nhs.WebUI.Models;
 
     /// <summary>
     /// Defines the <see cref="IFileService" />.
@@ -25,7 +26,8 @@
         /// <param name="filePath">File path.</param>
         /// <param name="fileName">File name.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        Task<ShareFileDownloadInfo> DownloadFileAsync(string filePath, string fileName);
+        // Task<ShareFileDownloadInfo> DownloadFileAsync(string filePath, string fileName);
+        Task<FileDownloadResponse> DownloadFileAsync(string filePath, string fileName);
 
         /// <summary>
         /// The StreamFileAsync.

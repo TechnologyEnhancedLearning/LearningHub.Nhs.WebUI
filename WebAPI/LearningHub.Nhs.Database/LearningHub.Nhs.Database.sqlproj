@@ -533,6 +533,9 @@
     <Build Include="Stored Procedures\Resources\GetScormContentServerDetailsForLHExternalReference.sql" />
     <Build Include="Tables\Resource\ScormResourceReferenceEvent.sql" />
     <Build Include="Tables\Resource\ScormResourceReferenceEventType.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\UpdateFileTypes.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\AddDigitalLearningSolutionsExternalSystem.sql" />
+    <Build Include="Stored Procedures\Activity\GetAssessmentActivityCompletionPercentage.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

@@ -362,7 +362,6 @@
                 //        ]
                 //    }
                 //};
-
                 this.player.load(sourceConfig)
                     .then(() => {
                         console.log("Source loaded successfully!");
@@ -723,7 +722,6 @@
             async launchScorm() {
                 var targetWin;
                 var targetWinName = "lhContent" + this.resourceItem.resourceId;
-
                 var activeContent = await userData.getActiveContent();
 
                 if (activeContent.filter(ac => ac.resourceId === this.resourceItem.resourceId).length > 0) {

@@ -7,6 +7,7 @@
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.Repository.Interface;
     using LearningHub.Nhs.Services.Interface;
@@ -225,6 +226,44 @@
         }
 
         /// <summary>
+        /// Get AutoSuggestionResults.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpGet]
+        [Route("GetAutoSuggestionResult/{term}")]
+        public async Task<IActionResult> GetAutoSuggestionResults(string term)
+        {
+            var autosuggestionViewModel = await this.GetAutoSuggestions(term);
+            return this.Ok(autosuggestionViewModel);
+        }
+
+        /// <summary>
+        /// Send AutoSuggestion Click action.
+        /// </summary>
+        /// <param name="clickPayloadModel">
+        /// The click Payload model.
+        /// </param>
+        /// <returns>
+        /// Nothing.
+        /// </returns>
+        [HttpPost]
+        [Route("SendAutoSuggestionClickAction")]
+        public async Task<IActionResult> SendAutoSuggestionClickAction(AutoSuggestionClickPayloadModel clickPayloadModel)
+        {
+            var eventCreated = await this.searchService.SendAutoSuggestionEventAsync(clickPayloadModel);
+
+            if (eventCreated)
+            {
+                return this.Ok(new ApiResponse(true));
+            }
+            else
+            {
+                return this.BadRequest(new ApiResponse(false));
+            }
+        }
+
+        /// <summary>
         /// Get search result.
         /// </summary>
         /// <param name="searchRequestModel">The search request model.</param>
@@ -319,6 +358,7 @@
 
             searchViewModel.Feedback = results.Feedback;
             searchViewModel.RelatedCatalogues = await this.catalogueService.GetCatalogues(catalogueIds);
+            searchViewModel.Spell = results.Spell;
 
             return searchViewModel;
         }
@@ -390,6 +430,7 @@
 
             searchViewModel.SearchId = catalogueSearchRequestModel.SearchId > 0 ? catalogueSearchRequestModel.SearchId : results.SearchId;
             searchViewModel.Feedback = results.Feedback;
+            searchViewModel.Spell = results.Spell;
 
             return searchViewModel;
         }
@@ -463,6 +504,37 @@
             searchViewModel.SearchId = catalogueSearchRequestModel.SearchId > 0 ? catalogueSearchRequestModel.SearchId : results.SearchId;
 
             return searchViewModel;
+        }
+
+        /// <summary>
+        /// Get AutoSuggestion Results.
+        /// </summary>
+        /// <param name="term">term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        private async Task<AutoSuggestionModel> GetAutoSuggestions(string term)
+        {
+            var autosuggestionModel = await this.searchService.GetAutoSuggestionResultsAsync(term);
+            if (autosuggestionModel != null)
+            {
+                var documents = autosuggestionModel.CatalogueDocument.CatalogueDocumentList;
+                var documentIds = documents.Select(x => int.Parse(x.Id)).ToList();
+                var catalogues = this.catalogueService.GetCataloguesByNodeId(documentIds);
+
+                foreach (var document in documents)
+                {
+                    var catalogue = catalogues.SingleOrDefault(x => x.NodeId == int.Parse(document.Id));
+                    if (catalogue == null)
+                    {
+                        continue;
+                    }
+
+                    document.Url = catalogue.Url;
+                }
+
+                autosuggestionModel.CatalogueDocument.CatalogueDocumentList = documents;
+            }
+
+            return autosuggestionModel;
         }
     }
 }

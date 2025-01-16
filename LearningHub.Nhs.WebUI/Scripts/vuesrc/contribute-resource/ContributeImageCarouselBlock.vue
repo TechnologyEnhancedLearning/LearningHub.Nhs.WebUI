@@ -2,7 +2,7 @@
     <div class="contribute-image-carousel-block">
         <div class="contribute-image-carousel-block-description">
             <div>
-                <b>Description text</b>
+                <label for="description"> <b>Description text</b></label>
                 <Tick v-bind:complete="!!imageCarouselBlock.description"></Tick>
                 <p>
                     Provide a short description for the Carousel. This will be displayed to the user in the header bar beneath the title.
@@ -13,7 +13,8 @@
                     <EditSaveFieldWithCharacterCount v-model="imageCarouselBlock.description"
                                                      addEditLabel="Description"
                                                      v-bind:characterLimit="250"
-                                                     v-bind:isH3="true"></EditSaveFieldWithCharacterCount>
+                                                     v-bind:isH3="true"
+                                                     v-bind:inputId="description"></EditSaveFieldWithCharacterCount>
                 </div>
             </div>
         </div>
@@ -97,6 +98,7 @@
         props: {
             imageCarouselBlock: { type: Object } as PropOptions<ImageCarouselBlockModel>,
             resourceType: { type: Number } as PropOptions<ResourceType>,
+            description: { type: String, default: 'description' },
         },
         data() {
             return {

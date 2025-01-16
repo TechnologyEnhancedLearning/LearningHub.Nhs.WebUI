@@ -3,6 +3,7 @@
     using System.Security.Principal;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.WebUI.Models.Search;
 
     /// <summary>
@@ -84,5 +85,19 @@
         /// <param name="catalogueSearchRequestModel">The catalogue Search Request Model.</param>
         /// <returns>The <see cref="Task{SearchAllCatalogueViewModel}"/>.</returns>
         Task<SearchAllCatalogueViewModel> GetAllCatalogueSearchResultAsync(AllCatalogueSearchRequestModel catalogueSearchRequestModel);
+
+        /// <summary>
+        /// The Get AutoSuggestion List.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<AutoSuggestionModel> GetAutoSuggestionList(string term);
+
+        /// <summary>
+        /// The Send AutoSuggestion Click Action Async.
+        /// </summary>
+        /// <param name="clickPayloadModel">The click Payload Model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task SendAutoSuggestionClickActionAsync(AutoSuggestionClickPayloadModel clickPayloadModel);
     }
 }

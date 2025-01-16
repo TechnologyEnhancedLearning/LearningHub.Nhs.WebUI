@@ -10,6 +10,7 @@
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.EventSource;
     using LearningHub.Nhs.WebUI.Handlers;
+    using LearningHub.Nhs.WebUI.Services;
     using LearningHub.Nhs.WebUI.Startup;
     using Microsoft.ApplicationInsights.Extensibility.EventCounterCollector;
     using Microsoft.AspNetCore.Builder;
@@ -88,6 +89,7 @@
                 .Get<LearningHubAuthServiceConfig>();
             services.AddTransient<CookieEventHandler>();
             services.AddSingleton<LogoutUserManager>();
+            services.AddSingleton<VersionService>();
 
             services.ConfigureAuthentication(learningHubAuthSvcConf);
 

@@ -859,6 +859,43 @@ namespace LearningHub.Nhs.Api.Controllers
         }
 
         /// <summary>
+        /// The get resource version Dev Id details.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetResourceVersionDevIdDetails/{resourceVersionId}")]
+        public async Task<ActionResult> GetResourceVersionDevIdDetails(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetResourceVersionDevIdDetailsAync(resourceVersionId));
+        }
+
+        /// <summary>
+        /// To check devId already exists against a resource.
+        /// </summary>
+        /// <param name="devId">The devId<see cref="string"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("DoesDevIdExists/{devId}")]
+        public async Task<ActionResult> DoesDevIdExists(string devId)
+        {
+            return this.Ok(await this.resourceService.DoesDevIdExistsAync(devId));
+        }
+
+        /// <summary>
+        /// Update dev Id details.
+        /// </summary>
+        /// <param name="resourceVersionDevIdViewModel">The ResourceVersionDevIdViewModel<see cref="ResourceVersionDevIdViewModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPut]
+        [Route("UpdateDevId")]
+        public async Task<IActionResult> UpdateDevId([FromBody] ResourceVersionDevIdViewModel resourceVersionDevIdViewModel)
+        {
+            await this.resourceService.UpdateDevIdDetailsAsync(resourceVersionDevIdViewModel, this.CurrentUserId);
+            return this.Ok();
+        }
+
+        /// <summary>
         /// The get resource version flags.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>

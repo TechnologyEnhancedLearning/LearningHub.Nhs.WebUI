@@ -1,15 +1,21 @@
 ﻿namespace LearningHub.Nhs.WebUI.Services
 {
     using System;
+    using System.Buffers;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
+    using System.Threading.Tasks.Dataflow;
+    using Azure;
+    using Azure.Storage;
     using Azure.Storage.Files.Shares;
     using Azure.Storage.Files.Shares.Models;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Models;
     using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.Extensions.Options;
 
@@ -125,32 +131,45 @@
         /// </summary>
         /// <param name="filePath">The filePath.</param>
         /// <param name="fileName">The fileName.</param>
-        /// <returns>The <see cref="Task{CloudFile}"/>.</returns>
-        public async Task<ShareFileDownloadInfo> DownloadFileAsync(string filePath, string fileName)
+        /// <returns>The <see cref="Task{FileDownloadResponse}"/>.</returns>
+        public async Task<FileDownloadResponse> DownloadFileAsync(string filePath, string fileName)
         {
-            var directory = this.ShareClient.GetDirectoryClient(filePath);
-            var sourceDirectory = this.InputArchiveShareClient.GetDirectoryClient(filePath);
-
-            if (await directory.ExistsAsync())
+            var file = await this.FindFileAsync(filePath, fileName);
+            if (file == null)
             {
-                var file = directory.GetFileClient(fileName);
-
-                if (await file.ExistsAsync())
-                {
-                    return await file.DownloadAsync();
-                }
-            }
-            else if (await sourceDirectory.ExistsAsync())
-            {
-                var file = sourceDirectory.GetFileClient(fileName);
-
-                if (await file.ExistsAsync())
-                {
-                    return await file.DownloadAsync();
-                }
+                return null;
             }
 
-            return null;
+            var properties = await file.GetPropertiesAsync();
+            long fileSize = properties.Value.ContentLength;
+
+            try
+            {
+                if (fileSize <= 900 * 1024 * 1024)
+                {
+                    // Directly download the entire file as a stream
+                    var response = await file.DownloadAsync();
+                    return new FileDownloadResponse
+                    {
+                        Content = response.Value.Content,
+                        ContentType = properties.Value.ContentType,
+                        ContentLength = fileSize,
+                    };
+                }
+                else
+                {
+                    return new FileDownloadResponse
+                    {
+                        Content = await file.OpenReadAsync(),
+                        ContentType = properties.Value.ContentType,
+                        ContentLength = fileSize,
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error downloading file: {ex.Message}");
+            }
         }
 
         /// <summary>
@@ -417,6 +436,29 @@
                     }
                 }
             }
+        }
+
+        private async Task<ShareFileClient> FindFileAsync(string filePath, string fileName)
+        {
+            var directories = new[]
+            {
+                this.ShareClient.GetDirectoryClient(filePath),
+                this.InputArchiveShareClient.GetDirectoryClient(filePath),
+            };
+
+            foreach (var directory in directories)
+            {
+                if (await directory.ExistsAsync())
+                {
+                    var file = directory.GetFileClient(fileName);
+                    if (await file.ExistsAsync())
+                    {
+                        return file;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

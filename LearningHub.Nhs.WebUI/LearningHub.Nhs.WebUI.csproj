@@ -3,10 +3,13 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>  
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
+		<Version>1.0.0</Version>
 		<UserSecretsId>a2ecb5d2-cf13-4551-9cb6-3d86dfbcf8ef</UserSecretsId>
 		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Platforms>x64</Platforms>
+		<Platforms>x64</Platforms>
 		<GenerateRuntimeConfigDevFile>true</GenerateRuntimeConfigDevFile>
 	</PropertyGroup>
 
@@ -104,11 +107,11 @@
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
 		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.8" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-        <PackageReference Include="GDS.MultiPageFormData" Version="1.0.5" />
+    <PackageReference Include="GDS.MultiPageFormData" Version="1.0.5" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.11.38" />
 		<PackageReference Include="IdentityModel" Version="4.3.0" />
 		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.41" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.45" />
 		<PackageReference Include="linqtotwitter" Version="6.9.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.EventCounterCollector" Version="2.21.0" />
@@ -125,7 +128,7 @@
 		<PackageReference Include="Microsoft.Rest.ClientRuntime.Azure.Authentication" Version="2.4.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
 		<PackageReference Include="MK.IO" Version="1.5.0" />
-		<PackageReference Include="NHSUKViewComponents.Web" Version="1.0.24" />
+		<PackageReference Include="NHSUKViewComponents.Web" Version="1.0.28" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -175,72 +178,76 @@
 		<TypeScriptCompile Include="Scripts\vuesrc\resource\helpers\resourceHelper.ts" />
 	</ItemGroup>
 
-<ItemGroup>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\activeContentModel.ts">
-	<SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\articleModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\audioModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\content-structure\editModeEnum.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\content-structure\nodeContentAdminModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\content-structure\nodeContentBrowseModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\content-structure\nodeContentEditorModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\fileModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\genericFileModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\imageModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\interactionQueueModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\mylearning\activityDetailedItemModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\mylearning\activityDetailedModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\mylearning\myLearningRequestModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\mylearning\playedSegmentModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\ratingModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\ratingSummaryBasicModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\ratingSummaryModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\userBasicModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\videoModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-  <TypeScriptCompile Update="Scripts\vuesrc\models\webLinkModel.ts">
-    <SubType>Code</SubType>
-  </TypeScriptCompile>
-</ItemGroup>
+	<ItemGroup>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\activeContentModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\articleModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\audioModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\content-structure\editModeEnum.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\content-structure\nodeContentAdminModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\content-structure\nodeContentBrowseModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\content-structure\nodeContentEditorModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\fileModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\genericFileModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\imageModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\interactionQueueModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\mylearning\activityDetailedItemModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\mylearning\activityDetailedModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\mylearning\myLearningRequestModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\mylearning\playedSegmentModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\ratingModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\ratingSummaryBasicModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\ratingSummaryModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\userBasicModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\videoModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+		<TypeScriptCompile Update="Scripts\vuesrc\models\webLinkModel.ts">
+			<SubType>Code</SubType>
+		</TypeScriptCompile>
+	</ItemGroup>
 
-<ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+	<ProjectExtensions>
+		<VisualStudio>
+			<UserProperties appsettings_1json__JsonSchema="" />
+		</VisualStudio>
+	</ProjectExtensions>
 
 </Project>

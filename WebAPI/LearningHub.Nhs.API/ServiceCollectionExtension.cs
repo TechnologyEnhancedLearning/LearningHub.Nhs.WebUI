@@ -61,11 +61,7 @@
                 mc.AddProfile(new MappingProfile());
                 mc.AddProfile(new ElfhMappingProfile());
             });
-            ////var mappingConfig = new MapperConfiguration(mc =>
-            ////{
-            ////    mc.AddProfile(new MappingProfile());
-            ////    mc.AddProfile(new ElfhMappingProfile());
-            ////});
+
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 

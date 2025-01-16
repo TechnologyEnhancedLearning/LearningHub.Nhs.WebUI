@@ -70,6 +70,11 @@ jobs:
                     continue
                   fi
                   
+                # If any check is still queued, set ALL_COMPLETED to false
+                if [[ "$status" == "QUEUED" ]]; then
+                  ALL_COMPLETED=false
+                fi
+                
                 # If any check is still in progress, set ALL_COMPLETED to false
                 if [[ "$status" == "IN_PROGRESS" ]]; then
                   ALL_COMPLETED=false

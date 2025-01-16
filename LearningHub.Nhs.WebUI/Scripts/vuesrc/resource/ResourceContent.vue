@@ -722,14 +722,6 @@
             async launchScorm() {
                 var targetWin;
                 var targetWinName = "lhContent" + this.resourceItem.resourceId;
-                // Use a placeholder window to avoid popup blockers
-                targetWin = window.open("about:blank", targetWinName, "location=0,menubar=0,resizable=0,width=" + this.resourceItem.scormDetails.popupWidth + ",height=" + this.resourceItem.scormDetails.popupHeight);
-
-                // If the pop-up was blocked
-                if (!targetWin) {
-                    alert("Please allow pop-ups to view this content.");
-                    return;
-                }
                 var activeContent = await userData.getActiveContent();
 
                 if (activeContent.filter(ac => ac.resourceId === this.resourceItem.resourceId).length > 0) {

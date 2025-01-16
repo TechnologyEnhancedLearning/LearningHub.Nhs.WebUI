@@ -362,13 +362,12 @@
                     {
                         viewModel.AssessmentResourceActivityId = activity.Id;
                         viewModel.Complete = activity.Score != null;
-                        var totalQuestions = resourceActivity.ResourceVersion.AssessmentResourceVersion.AssessmentContent.Blocks.Where(b => b.BlockType == BlockType.Question).Count();
-                        var completedQuestions = activity.AssessmentResourceActivityInteractions.Count();
-                        viewModel.CompletionPercentage = totalQuestions == 0 ? 0 : Convert.ToInt32(100 * completedQuestions / Convert.ToDecimal(totalQuestions));
                         viewModel.ScorePercentage = activity.Score.HasValue ? (int)Math.Round(activity.Score.Value, MidpointRounding.AwayFromZero) : 0;
 
                         var currentAttempt = allAttempts.FindIndex(a => a.Id == resourceActivity.Id) + 1;
 
+                        var assessmemntActivityQuestion = await this.resourceActivityRepository.GetAssessmentActivityCompletionPercentage(resourceActivity.CreateUserId, resourceActivity.ResourceVersionId, resourceActivity.Id);
+                        viewModel.CompletionPercentage = (int)assessmemntActivityQuestion.CompletionPercentage;
                         if (viewModel.CompletionPercentage == 100)
                         {
                             if (resourceActivity.ResourceVersion.AssessmentResourceVersion.AssessmentType == AssessmentTypeEnum.Informal)

@@ -67,6 +67,20 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         Task<ResourceVersion> GetCurrentResourceDetailsAsync(int resourceId);
 
         /// <summary>
+        /// The get resource version details by id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ResourceVersion> GetByResourceVersionByIdAsync(int resourceVersionId);
+
+        /// <summary>
+        /// The check dev id already exists in the table async.
+        /// </summary>
+        /// <param name="devId">The devId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<ResourceVersion> DoesDevIdExistsAync(string devId);
+
+        /// <summary>
         /// The get current published for resource async.
         /// </summary>
         /// <param name="resourceId">The resource id.</param>
@@ -211,7 +225,7 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         /// </summary>
         /// <param name="resourceVersionId">The resource version id.</param>
         /// <param name="userId">The user id.</param>
-        void Publishing(int resourceVersionId,  int userId);
+        void Publishing(int resourceVersionId, int userId);
 
         /// <summary>
         /// "Failed to publish".
@@ -277,5 +291,13 @@ namespace LearningHub.Nhs.Repository.Interface.Resources
         /// <param name="userId">userId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         Task<ExternalContentDetailsViewModel> GetExternalContentDetails(int resourceVersionId, int userId);
+
+        /// <summary>
+        /// To update dev id details.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="resourceVersionDevIdViewModel">The resourceVersionDevIdViewModel.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task UpdateDevIdAsync(int userId, ResourceVersionDevIdViewModel resourceVersionDevIdViewModel);
     }
 }

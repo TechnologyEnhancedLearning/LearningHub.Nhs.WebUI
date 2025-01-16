@@ -48,6 +48,16 @@
         width: 52px;
         padding-top: 0;
 
+        &:focus {
+            background-color: #ffeb3b;
+            border: 0;
+            box-shadow: 0 4px 0 0 #212b32;
+            color: #212b32;
+            outline: 4px solid rgba(0,0,0,0);
+            outline-offset: 4px;
+            box-shadow: 0 -2px #ffeb3b,0 4px #212b32
+        }
+
         span.nhsuk-u-visually-hidden {
             color: $nhsuk-white;
         }
@@ -71,5 +81,10 @@
 
     .no-bottom-border {
         border-bottom: 0px;
+    }
+
+    .custom-validation-error {
+        color: #d5281b;
+        font-size: 19px;
     }
 }

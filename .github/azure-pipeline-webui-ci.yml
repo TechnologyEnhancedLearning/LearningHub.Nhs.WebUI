@@ -51,6 +51,57 @@ jobs:
     inputs:
       command: restore
       projects: $(BuildParameters.RestoreBuildProjects)
+      # Step 1: Get the version tag from the repository
+- script: |
+    echo "Extracting version from Git tag: $(versionTag)"
+    VERSION=$(echo $(versionTag) | sed 's/^v//')
+    echo "VERSION=$VERSION" >> $(Build.ArtifactStagingDirectory)/version.txt
+  displayName: 'Extract version tag'
+
+# Step 2: Update AssemblyVersion in Web UI .csproj
+- powershell: |
+    $versionFile = "$(Build.ArtifactStagingDirectory)/version.txt"
+    $version = Get-Content $versionFile
+    $version = $version.Trim()
+
+    # Path to your .csproj file (adjust if necessary)
+    $csprojFile = "$(Build.SourcesDirectory)\LearningHub.Nhs.WebUI\LearningHub.Nhs.WebUI.csproj"
+
+    Write-Host "Updating AssemblyVersion and FileVersion and Version  in $csprojFile to $version"
+
+    # Load the .csproj XML file
+    [xml]$csprojXml = Get-Content -Path $csprojFile
+
+    # Update the AssemblyVersion and FileVersion
+    $csprojXml.Project.PropertyGroup.AssemblyVersion = $version
+    $csprojXml.Project.PropertyGroup.FileVersion = $version
+    $csprojXml.Project.PropertyGroup.Version = $version
+
+    # Save the updated .csproj file
+    $csprojXml.Save($csprojFile)
+  displayName: 'Update AssemblyVersion in WebUI .csproj'
+  # Step 2: Update AssemblyVersion in Admin UI .csproj
+- powershell: |
+    $versionFile = "$(Build.ArtifactStagingDirectory)/version.txt"
+    $version = Get-Content $versionFile
+    $version = $version.Trim()
+
+    # Path to your .csproj file (adjust if necessary)
+    $csprojFile = "$(Build.SourcesDirectory)\AdminUI\LearningHub.Nhs.AdminUI\LearningHub.Nhs.AdminUI.csproj"
+
+    Write-Host "Updating AssemblyVersion and FileVersion and Version  in $csprojFile to $version"
+
+    # Load the .csproj XML file
+    [xml]$csprojXml = Get-Content -Path $csprojFile
+
+    # Update the AssemblyVersion and FileVersion
+    $csprojXml.Project.PropertyGroup.AssemblyVersion = $version
+    $csprojXml.Project.PropertyGroup.FileVersion = $version
+    $csprojXml.Project.PropertyGroup.Version = $version
+
+    # Save the updated .csproj file
+    $csprojXml.Save($csprojFile)
+  displayName: 'Update AssemblyVersion in AdminUI .csproj'
   - task: DotNetCoreCLI@2
     displayName: Build
     inputs:

@@ -26,6 +26,11 @@
         public string UrlClickComponent { get; set; }
 
         /// <summary>
+        /// Gets or sets the url AutoSuggestion click component.
+        /// </summary>
+        public string UrlAutoSuggestionClickComponent { get; set; }
+
+        /// <summary>
         /// Gets or sets the token.
         /// </summary>
         public string Token { get; set; }

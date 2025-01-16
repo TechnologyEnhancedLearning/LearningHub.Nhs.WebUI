@@ -41,7 +41,7 @@
     "tus-js-client": "^2.2.0",
     "vue": "^2.7.14",
     "vue-carousel": "^0.18.0",
-    "vue-clamp": "0.3.1",
+    "vue-clamp": "0.4.1",
     "vue-click-outside": "1.0.7",
     "vue-ctk-date-time-picker": "^2.5.0",
     "vue-router": "^3.6.5",

@@ -68,7 +68,7 @@
     "@types/lodash": "4.14.149",
     "@types/openseadragon": "^2.4.5",
     "@types/sanitize-html": "^2.13.0",
-    "@types/vuelidate": "^0.7.10",
+    "@types/vuelidate": "^0.7.22",
     "@vue/babel-preset-app": "4.5.19",
     "@vue/test-utils": "^1.2.2",
     "babel-core": "^6.26.0",

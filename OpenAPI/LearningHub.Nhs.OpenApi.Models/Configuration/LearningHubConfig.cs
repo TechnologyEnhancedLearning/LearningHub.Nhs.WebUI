@@ -14,5 +14,10 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// Gets or sets <see cref="LaunchResourceEndpoint"/>.
         /// </summary>
         public string LaunchResourceEndpoint { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="ContentServerUrl"/>.
+        /// </summary>
+        public string ContentServerUrl { get; set; } = null!;
     }
 }

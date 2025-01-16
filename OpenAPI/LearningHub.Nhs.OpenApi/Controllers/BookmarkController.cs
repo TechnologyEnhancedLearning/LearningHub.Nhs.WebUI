@@ -39,5 +39,19 @@
         {
             return await this.bookmarkService.GetAllByParent(this.TokenWithoutBearer);
         }
+
+
+        /// <summary>
+        /// The Create.
+        /// </summary>
+        /// <param name="bookmarkViewModel">The bookmarkViewModel<see cref="UserBookmarkViewModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        [Route("Create")]
+        public async Task<IActionResult> Create([FromBody] UserBookmarkViewModel bookmarkViewModel)
+        {
+            var bookmarkId = await this.bookmarkService.Create(this.CurrentUserId.GetValueOrDefault(), bookmarkViewModel);
+            return this.Ok(bookmarkId);
+        }
     }
 }

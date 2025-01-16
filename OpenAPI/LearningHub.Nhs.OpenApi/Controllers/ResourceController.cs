@@ -29,6 +29,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         private readonly ISearchService searchService;
         private readonly FindwiseConfig findwiseConfig;
         private readonly IResourceService resourceService;
+        private readonly IFileTypeService fileTypeService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceController"/> class.
@@ -36,11 +37,12 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         /// <param name="searchService">The search service.</param>
         /// <param name="findwiseConfig">The findwise config.</param>
         /// <param name="resourceService">The resource service.</param>
-        public ResourceController(ISearchService searchService, IResourceService resourceService, IOptions<FindwiseConfig> findwiseConfig)
+        public ResourceController(ISearchService searchService, IResourceService resourceService, IOptions<FindwiseConfig> findwiseConfig, IFileTypeService fileTypeService)
         {
             this.searchService = searchService;
             this.findwiseConfig = findwiseConfig.Value;
             this.resourceService = resourceService;
+            this.fileTypeService = fileTypeService;
         }
 
         /// <summary>
@@ -195,6 +197,110 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             }
 
             return await this.resourceService.GetResourceReferencesForCertificates(this.CurrentUserId.Value);
+        }
+
+        /// <summary>
+        /// Get specific Resource by Id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetAsync(int id)
+        {
+            return this.Ok(await this.resourceService.GetResourceByIdAsync(id));
+        }
+
+        /// <summary>
+        /// Get specific GenericFileDetails by ResourceVersionId.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet("GetGenericFileDetails/{resourceVersionId}")]
+        public async Task<ActionResult> GetGenericFileDetailsAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetGenericFileDetailsByIdAsync(resourceVersionId));
+        }
+
+        /// <summary>
+        /// Get specific Html resource details by ResourceVersionId.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet("GetHtmlDetails/{resourceVersionId}")]
+        public async Task<ActionResult> GetHtmlDetailsAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetHtmlDetailsByIdAsync(resourceVersionId));
+        }
+
+        /// <summary>
+        /// Get specific GetScormFileDetails by ResourceVersionId.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet("GetScormDetails/{resourceVersionId}")]
+        public async Task<ActionResult> GetScormDetailsAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetScormDetailsByIdAsync(resourceVersionId));
+        }
+
+        /// <summary>
+        /// The get web link resource version async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetWeblinkDetails/{resourceVersionId}")]
+        public async Task<ActionResult> GetWebLinkResourceVersionAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetWebLinkDetailsByIdAsync(resourceVersionId));
+        }
+
+
+        /// <summary>
+        /// The get case resource version async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resource version id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpGet]
+        [Route("GetCaseDetails/{resourceVersionId}")]
+        public async Task<ActionResult> GetCaseResourceVersionAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetCaseDetailsByIdAsync(resourceVersionId));
+        }
+        /// <summary>
+        /// The GetFileStatusDetailsAsync.
+        /// </summary>
+        /// <param name="fileIds">The File Ids.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpGet]
+        [Route("GetFileStatusDetails")]
+        public async Task<ActionResult> GetFileStatusDetailsAsync([FromQuery] int[] fileIds)
+        {
+            return this.Ok(await this.resourceService.GetFileStatusDetailsAsync(fileIds));
+        }
+
+        /// <summary>
+        /// Get all file types.
+        /// </summary>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetFileTypes")]
+        public async Task<ActionResult> GetFileTypes()
+        {
+            return this.Ok(await this.fileTypeService.GetAllAsync());
+        }
+
+        /// <summary>
+        /// The get file async.
+        /// </summary>
+        /// <param name="fileId">The fileId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetFile/{fileId}")]
+        public async Task<IActionResult> GetFileAsync(int fileId)
+        {
+            var file = await this.resourceService.GetFileAsync(fileId);
+            return this.Ok(file);
         }
     }
 }

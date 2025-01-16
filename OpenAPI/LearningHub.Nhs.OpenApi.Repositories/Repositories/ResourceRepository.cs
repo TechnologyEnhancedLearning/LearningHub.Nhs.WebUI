@@ -90,11 +90,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
             return achievedCertificatedResourceIds;
         }
 
-        /// </summary>
-        /// <param name="resourceReferenceIds"></param>
-        /// <param name="userIds"></param>
-        /// <param name="originalResourceReferenceIds">.</param>
-        /// <returns>A <see cref="Task{ResourceReference}"/> representing the result of the asynchronous operation.</returns>
+        // </summary>
+        // <param name="resourceReferenceIds"></param>
+        // <param name="userIds"></param>
+        // <param name="originalResourceReferenceIds">.</param>
+        // <returns>A <see cref="Task{ResourceReference}"/> representing the result of the asynchronous operation.</returns>
         public async Task<IEnumerable<ResourceActivityDTO>> GetResourceActivityPerResourceMajorVersion(
           IEnumerable<int>? resourceIds, IEnumerable<int>? userIds)
         {
@@ -119,5 +119,16 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 
             return resourceActivityDTOs;
         }
+
+        /// <summary>
+        /// The get by id async.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<Resource> GetByIdAsync(int id)
+        {
+            return await this.dbContext.Resource.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id && !r.Deleted);
+        }
+
     }
 }

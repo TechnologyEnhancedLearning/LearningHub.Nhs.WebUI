@@ -1,6 +1,7 @@
 namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
 {
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
 

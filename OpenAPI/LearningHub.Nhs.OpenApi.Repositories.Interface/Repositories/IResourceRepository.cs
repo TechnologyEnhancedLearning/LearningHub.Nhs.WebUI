@@ -15,14 +15,14 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         /// </summary>
         /// <param name="resourceIds"><see cref="resourceIds"/>.</param>
         /// <returns>Resources with details.</returns>
-        public Task<IEnumerable<Resource>> GetResourcesFromIds(IEnumerable<int> resourceIds);
+        Task<IEnumerable<Resource>> GetResourcesFromIds(IEnumerable<int> resourceIds);
 
         /// <summary>
         /// Gets resource references by their original resource reference Ids.
         /// </summary>
         /// <param name="originalResourceReferenceIds"><see cref="originalResourceReferenceIds"/>.</param>
         /// <returns>Resource references.</returns>
-        public Task<IEnumerable<ResourceReference>> GetResourceReferencesByOriginalResourceReferenceIds(
+        Task<IEnumerable<ResourceReference>> GetResourceReferencesByOriginalResourceReferenceIds(
             IEnumerable<int> originalResourceReferenceIds);
 
         /// <summary>
@@ -37,6 +37,13 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         /// GetAchievedCertificatedResourceIds
         /// </summary>
         /// <param name="currentUserId"><see cref="currentUserId"/>.</param>
-        public Task<List<int>> GetAchievedCertificatedResourceIds(int currentUserId);
+        Task<List<int>> GetAchievedCertificatedResourceIds(int currentUserId);
+
+        /// <summary>
+        /// The get by id async.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<Resource> GetByIdAsync(int id);
     }
 }

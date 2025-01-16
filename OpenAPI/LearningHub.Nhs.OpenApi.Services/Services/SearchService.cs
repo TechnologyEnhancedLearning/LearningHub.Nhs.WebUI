@@ -1,5 +1,6 @@
 namespace LearningHub.Nhs.OpenApi.Services.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.ViewModels.Helpers;
+    using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Findwise;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
@@ -16,6 +18,10 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using LearningHub.Nhs.OpenApi.Services.Interface.HttpClients;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
+    using Newtonsoft.Json;
+    using static System.Net.Mime.MediaTypeNames;
+    using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
     /// <summary>
     /// The search service.
@@ -27,6 +33,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         private readonly IFindwiseClient findwiseClient;
         private readonly ILogger logger;
         private readonly IResourceService resourceService;
+        private readonly FindwiseConfig findwiseConfig;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchService"/> class.
@@ -48,6 +55,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         public SearchService(
             ILearningHubService learningHubService,
             IFindwiseClient findwiseClient,
+            IOptions<FindwiseConfig> findwiseConfig,
             IResourceRepository resourceRepository,
             IResourceService resourceService,
             ILogger<SearchService> logger)
@@ -57,6 +65,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             this.resourceRepository = resourceRepository;
             this.resourceService = resourceService;
             this.logger = logger;
+            this.findwiseConfig = findwiseConfig.Value;
         }
 
         /// <inheritdoc />
@@ -173,5 +182,5 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resourceReference.GetCatalogue(),
                 this.learningHubService.GetResourceLaunchUrl(resourceReference.OriginalResourceReferenceId));
         }
-    }
+}
 }

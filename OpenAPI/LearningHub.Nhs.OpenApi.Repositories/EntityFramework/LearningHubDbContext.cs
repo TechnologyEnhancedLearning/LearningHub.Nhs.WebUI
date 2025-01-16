@@ -602,6 +602,32 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// </summary>
         public virtual DbSet<VideoAsset> VideoAsset { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets UserBookmark.
+        /// </summary>
+        public virtual DbSet<UserBookmark> UserBookmark { get; set; }
+
+        /// <summary>
+        /// Gets or sets the AllCatalogueAlphabet.
+        /// </summary>
+        public virtual DbSet<AllCatalogueAlphabetModel> AllCatalogueAlphabetModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the AllCatalogueAlphabet.
+        /// </summary>
+        public virtual DbSet<AllCatalogueViewModel> AllCatalogueViewModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets Provider.
+        /// </summary>
+        public virtual DbSet<Provider> Provider { get; set; }
+
+        /// <summary>
+        /// Gets or sets the html resource version.
+        /// </summary>
+        public virtual DbSet<HtmlResourceVersion> HtmlResourceVersion { get; set; }
+
         /// <summary>
         /// The on model creating.
         /// </summary>

@@ -7,6 +7,7 @@
 --
 -- 24 Jun 2024	OA	Initial Revision
 -- 27 Jun 2024	SA My Learning Dashboard Tray showing Wrong Counts
+-- 17 Jan 2025  TD-5255: SA The My learning page does show the activity but it's not showing up under accessed learning
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [resources].[GetMyInProgressDashboardResources]

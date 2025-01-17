@@ -56,9 +56,12 @@
             // Auto Mapper Configurations
             var mappingConfig = new MapperConfiguration(mc =>
             {
+                mc.AllowNullCollections = true;
+                mc.ShouldMapMethod = m => false;
                 mc.AddProfile(new MappingProfile());
                 mc.AddProfile(new ElfhMappingProfile());
             });
+
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 

@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
+		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>  
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
 		<Version>1.0.0</Version>
-		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<UserSecretsId>a2ecb5d2-cf13-4551-9cb6-3d86dfbcf8ef</UserSecretsId>
 		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -104,10 +104,10 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
 		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.8" />
-		<PackageReference Include="FluentValidation.AspNetCore" Version="10.3.4" />
-		<PackageReference Include="GDS.MultiPageFormData" Version="1.0.5" />
+		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="GDS.MultiPageFormData" Version="1.0.5" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.11.38" />
 		<PackageReference Include="IdentityModel" Version="4.3.0" />
 		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
@@ -133,7 +133,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="7.0.0" />
+		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.0" />
 		<PackageReference Include="tusdotnet" Version="2.5.0" />
 		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.5.2">
 			<PrivateAssets>all</PrivateAssets>

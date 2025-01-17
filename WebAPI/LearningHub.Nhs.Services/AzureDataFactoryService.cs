@@ -158,7 +158,7 @@
         }
 
         /// <summary>
-        /// Get AzureMedia Credentials.
+        /// Get AzureMedia Credentials.wwedzx
         /// </summary>
         /// <returns>The <see cref="Task"/>.</returns>
         private async Task<ServiceClientCredentials> GetCredentialsAsync()

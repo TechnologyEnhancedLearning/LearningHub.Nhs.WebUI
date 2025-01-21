@@ -106,7 +106,7 @@
 	<ItemGroup>
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
 		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.8" />
-		<PackageReference Include="FluentValidation.AspNetCore" Version="10.3.4" />
+		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
 		<PackageReference Include="GDS.MultiPageFormData" Version="1.0.5" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.11.38" />
 		<PackageReference Include="IdentityModel" Version="4.3.0" />

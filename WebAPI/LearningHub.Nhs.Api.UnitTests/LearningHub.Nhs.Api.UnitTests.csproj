@@ -12,7 +12,7 @@
     <PackageReference Include="FluentAssertions" Version="8.0.1" />
     <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
     <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.45" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
 	<PackageReference Update="StyleCop.Analyzers" Version="1.1.118">

@@ -118,7 +118,7 @@
 		<PackageReference Include="Microsoft.ApplicationInsights.EventCounterCollector" Version="2.21.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.36" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.36" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.36" />
 
 		<PackageReference Include="Microsoft.Azure.Management.Media" Version="5.0.0" />
 		<PackageReference Include="Azure.Storage.Files.Shares" Version="12.8.0" />

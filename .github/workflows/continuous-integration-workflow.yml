@@ -60,6 +60,9 @@ jobs:
               Write-Host "Building $($sqlproj_file.FullName)"
               try {
                 msbuild "$($sqlproj_file.FullName)" /p:Configuration=Release
+                if (!$?) {
+                  $errors = "Failed to build $($csproj_file.FullName)"
+                }
               } catch {
                 # Capture detailed error information
                 $errorMessage = "Error building $($sqlproj_file.FullName): $($_.Exception.Message)"
@@ -94,6 +97,9 @@ jobs:
               Write-Host "Building $($csproj_file.FullName)"
               try {
                 dotnet build "$($csproj_file.FullName)" --configuration Release
+                if (!$?) {
+                  $errors = "Failed to build $($csproj_file.FullName)"
+                }
               } catch {
                 # Capture detailed error information
                 $errorMessage = "Error building $($csproj_file.FullName): $($_.Exception.Message)"

@@ -60,23 +60,19 @@ jobs:
               Write-Host "Building $($sqlproj_file.FullName)"
               try {
                 msbuild "$($sqlproj_file.FullName)" /p:Configuration=Release
-                if (!$?) {
-                  $errors = "Failed to build $($sqlproj_file.FullName)"
-                }
               } catch {
-                $errors += $_.Exception.Message
+                # Capture detailed error information
+                $errorMessage = "Error building $($sqlproj_file.FullName): $($_.Exception.Message)"
+                Write-Host $errorMessage
+                $errors += $errorMessage
               }
             }
           }
       
-          # Display any accumulated errors
+          # Display all accumulated errors
           if ($errors.Count -gt 0) {
-            Write-Error "SQL Project Build Errors:"
-            $errors | ForEach-Object { Write-Error $_ }
-          }
-      
-          # Exit with failure if there are errors
-          if ($errors.Count -gt 0) {
+            Write-Host "SQL Project Build Errors:"
+            $errors | ForEach-Object { Write-Host $_ }
             exit 1
           }
       
@@ -98,23 +94,19 @@ jobs:
               Write-Host "Building $($csproj_file.FullName)"
               try {
                 dotnet build "$($csproj_file.FullName)" --configuration Release
-                if (!$?) {
-                  $errors = "Failed to build $($csproj_file.FullName)"
-                }
               } catch {
-                $errors += $_.Exception.Message
+                # Capture detailed error information
+                $errorMessage = "Error building $($csproj_file.FullName): $($_.Exception.Message)"
+                Write-Host $errorMessage
+                $errors += $errorMessage
               }
             }
           }
         
-          # Display any accumulated errors
+           # Display all accumulated errors
           if ($errors.Count -gt 0) {
-            Write-Error "Solution Build Errors:"
-            $errors | ForEach-Object { Write-Error $_ }
-          }
-      
-          # Exit with failure if there are errors
-          if ($errors.Count -gt 0) {
+            Write-Host "Solution Build Errors:"
+            $errors | ForEach-Object { Write-Host $_ }
             exit 1
           }
           

@@ -43,25 +43,82 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.0.3
         
-      - name: Build SQL Server Database project
-        run: |
-          # List all .sqlproj files except for .sqlproj
-          $sqlproj_files = Get-ChildItem -Path . -Filter *.sqlproj -Recurse
-          
-          # Build each .csproj file
-          foreach ($sqlproj_file in $sqlproj_files) {
-            Write-Host "Building $($sqlproj_file.FullName)"
-            msbuild "$($sqlproj_file.FullName)" /p:Configuration=Release
-          } 
-      - name: Build solution excluding SQL project
-        run: |
-          # List all .csproj files except for .sqlproj
-          $csproj_files = Get-ChildItem -Path . -Filter *.csproj -Recurse | Where-Object { $_.FullName -notmatch '\\.sqlproj$' }
-          # Build each .csproj file
+      - name: Build SQL Server Database Project
+  run: |
+    # Enable strict error handling
+    $ErrorActionPreference = 'Stop'
+
+    # Initialize an error collection
+    $errors = @()
+
+    # List all .sqlproj files
+    $sqlproj_files = Get-ChildItem -Path . -Filter *.sqlproj -Recurse
+
+    if ($sqlproj_files.Count -eq 0) {
+      $errors += "No .sqlproj files found."
+    } else {
+      foreach ($sqlproj_file in $sqlproj_files) {
+        Write-Host "Building $($sqlproj_file.FullName)"
+        try {
+          msbuild "$($sqlproj_file.FullName)" /p:Configuration=Release
+          if (!$?) {
+            $errors = "Failed to build $($sqlproj_file.FullName)"
+          }
+        } catch {
+          $errors += $_.Exception.Message
+        }
+      }
+    }
+
+    # Display any accumulated errors
+    if ($errors.Count -gt 0) {
+      Write-Error "SQL Project Build Errors:"
+      $errors | ForEach-Object { Write-Error $_ }
+    }
+
+    # Exit with failure if there are errors
+    if ($errors.Count -gt 0) {
+      exit 1
+    }
+
+    - name: Build Solution Excluding SQL Project
+      run: |
+        # Enable strict error handling
+        $ErrorActionPreference = 'Stop'
+    
+        # Initialize an error collection
+        $errors = @()
+    
+        # List all .csproj files except .sqlproj
+        $csproj_files = Get-ChildItem -Path . -Filter *.csproj -Recurse | Where-Object { $_.FullName -notmatch '\\.sqlproj$' }
+    
+        if ($csproj_files.Count -eq 0) {
+          $errors += "No .csproj files found."
+        } else {
           foreach ($csproj_file in $csproj_files) {
             Write-Host "Building $($csproj_file.FullName)"
-            dotnet build "$($csproj_file.FullName)"
-          }       
+            try {
+              dotnet build "$($csproj_file.FullName)" --configuration Release
+              if (!$?) {
+                $errors = "Failed to build $($csproj_file.FullName)"
+              }
+            } catch {
+              $errors += $_.Exception.Message
+            }
+          }
+        }
+    
+        # Display any accumulated errors
+        if ($errors.Count -gt 0) {
+          Write-Error "Solution Build Errors:"
+          $errors | ForEach-Object { Write-Error $_ }
+        }
+    
+        # Exit with failure if there are errors
+        if ($errors.Count -gt 0) {
+          exit 1
+        }
+
         
       # - name: Test
         # run: dotnet test ${{ env.BuildParameters.TestProjects }}       

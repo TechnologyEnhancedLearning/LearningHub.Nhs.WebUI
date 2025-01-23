@@ -59,9 +59,9 @@ jobs:
             foreach ($sqlproj_file in $sqlproj_files) {
               Write-Host "Building $($sqlproj_file.FullName)"
               try {
-                msbuild "$($sqlproj_file.FullName)" /p:Configuration=Release
+                $output = &msbuild "$($sqlproj_file.FullName)" /p:Configuration=Release /nologo 2>&1
                 if (!$?) {
-                  $errors += "Failed to build $($csproj_file.FullName)"
+                  $errors += "Failed to build $($csproj_file.FullName): $output"
                 }
               } catch {
                 # Capture detailed error information
@@ -96,9 +96,9 @@ jobs:
             foreach ($csproj_file in $csproj_files) {
               Write-Host "Building $($csproj_file.FullName)"
               try {
-                dotnet build "$($csproj_file.FullName)" --configuration Release
+                $output = &dotnet build "$($csproj_file.FullName)" --configuration Release 2>&1
                 if (!$?) {
-                  $errors += "Failed to build $($csproj_file.FullName)"
+                  $errors += "Failed to build $($csproj_file.FullName): $output"
                 }
               } catch {
                 # Capture detailed error information

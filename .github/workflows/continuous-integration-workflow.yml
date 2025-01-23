@@ -61,7 +61,7 @@ jobs:
               try {
                 msbuild "$($sqlproj_file.FullName)" /p:Configuration=Release
                 if (!$?) {
-                  $errors = "Failed to build $($csproj_file.FullName)"
+                  $errors += "Failed to build $($csproj_file.FullName)"
                 }
               } catch {
                 # Capture detailed error information
@@ -98,7 +98,7 @@ jobs:
               try {
                 dotnet build "$($csproj_file.FullName)" --configuration Release
                 if (!$?) {
-                  $errors = "Failed to build $($csproj_file.FullName)"
+                  $errors += "Failed to build $($csproj_file.FullName)"
                 }
               } catch {
                 # Capture detailed error information

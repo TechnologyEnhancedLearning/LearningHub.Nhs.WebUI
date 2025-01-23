@@ -134,7 +134,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="7.0.0" />
-		<PackageReference Include="tusdotnet" Version="2.5.0" />
+		<PackageReference Include="tusdotnet" Version="2.8.0" />
 		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.5.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

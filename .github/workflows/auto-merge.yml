@@ -69,7 +69,7 @@ jobs:
                     echo "Skipping 'auto-merge' workflow check to prevent self-referencing."
                     continue
                   fi
-
+                  
                 # If any check is still queued, set ALL_COMPLETED to false
                 if [[ "$status" == "QUEUED" ]]; then
                   ALL_COMPLETED=false

@@ -25,7 +25,7 @@ jobs:
           cache: 'npm'
 
       - name: Upgrade npm to the latest version
-        run: npm install -g npm@latest
+        run: npm install -g npm@7
           
       - name: Typescript install WebUI
         run: yarn install --network-timeout 600000 --frozen-lockfile

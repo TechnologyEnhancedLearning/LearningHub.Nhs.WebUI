@@ -23,7 +23,7 @@
                     </template>
                 </div>
                 <div class="load-more text-center pb-5" v-if="!this.hideLoadMore">
-                    <button class="btn btn-outline-custom" @click="loadNextRecordBatch()">{{ getLoadMoreButtonText() }}</button>
+                    <button class="nhsuk-button nhsuk-button--secondary" @click="loadNextRecordBatch()">{{ getLoadMoreButtonText() }}</button>
                 </div>
 
             </div>

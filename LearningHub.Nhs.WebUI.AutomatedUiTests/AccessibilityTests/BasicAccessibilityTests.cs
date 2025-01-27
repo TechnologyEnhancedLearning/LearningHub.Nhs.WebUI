@@ -19,7 +19,9 @@
         }
 
         [Theory]
-        [InlineData("/Home/Index", "A platform for learning and sharing resources")]
+        [InlineData("/Home/Index", "Learning Hub - Home")]
+        [InlineData("/forgotten-password", "Forgotten your username or password")]
+        [InlineData("/Login", "Access your Learning Hub account")]
 
         public void PageHasNoAccessibilityErrors(string url, string pageTitle)
         {

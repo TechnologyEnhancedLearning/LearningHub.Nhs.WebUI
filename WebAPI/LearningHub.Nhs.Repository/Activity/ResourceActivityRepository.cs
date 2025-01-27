@@ -10,10 +10,8 @@ namespace LearningHub.Nhs.Repository.Activity
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
-    using LearningHub.Nhs.Models.Entities.Resource.Blocks;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.MyLearning;
-    using LearningHub.Nhs.Models.Resource.Blocks;
     using LearningHub.Nhs.Repository.Helpers;
     using LearningHub.Nhs.Repository.Interface;
     using LearningHub.Nhs.Repository.Interface.Activity;
@@ -183,54 +181,54 @@ namespace LearningHub.Nhs.Repository.Activity
         /// <returns>ResourceActivity.</returns>
         public async Task<IQueryable<ResourceActivity>> GetByUserIdFromSP(int userId, Models.MyLearning.MyLearningRequestModel requestModel, DateTimeOffset detailedMediaActivityRecordingStartDate)
         {
-            (DateTimeOffset? startDate, DateTimeOffset? endDate) = this.ApplyDatesFilter(requestModel);
-            (string strResourceTypes, bool resourceTypeFlag) = this.ApplyResourceTypesfilters(requestModel);
-            (string strActivityStatus, bool activityStatusEnumFlag) = this.ApplyActivityStatusFilter(requestModel);
-            var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
-            var param1 = new SqlParameter("@searchText", SqlDbType.NVarChar) { Value = requestModel.SearchText == null ? DBNull.Value : requestModel.SearchText };
-            var param2 = new SqlParameter("@activityStatuses", SqlDbType.NVarChar) { Value = activityStatusEnumFlag == false ? DBNull.Value : strActivityStatus };
-            var param3 = new SqlParameter("@resourceTypes", SqlDbType.NVarChar) { Value = resourceTypeFlag == false ? DBNull.Value : strResourceTypes };
-            var param4 = new SqlParameter("@activityStartDate", SqlDbType.DateTimeOffset) { Value = startDate == null ? DBNull.Value : startDate };
-            var param5 = new SqlParameter("@activityEndDate", SqlDbType.DateTimeOffset) { Value = endDate == null ? DBNull.Value : endDate };
-            var param6 = new SqlParameter("@mediaActivityRecordingStartDate", SqlDbType.DateTimeOffset) { Value = detailedMediaActivityRecordingStartDate };
-            var param7 = new SqlParameter("@certificateEnabled", SqlDbType.Bit) { Value = requestModel.CertificateEnabled == false ? DBNull.Value : requestModel.CertificateEnabled };
-            var param8 = new SqlParameter("@offSet", SqlDbType.Int) { Value = requestModel.Skip };
-            var param9 = new SqlParameter("@fetchRows", SqlDbType.Int) { Value = requestModel.Take };
-            var result = await this.DbContext.MyLearningActivity.FromSqlRaw("[activity].[GetUserLearningActivities] @userId, @searchText, @activityStatuses, @resourceTypes,@activityStartDate,@activityEndDate,@mediaActivityRecordingStartDate,@certificateEnabled,@offSet,@fetchRows ", param0, param1, param2, param3, param4, param5, param6, param7, param8, param9)
-                .AsNoTracking().ToListAsync();
+                (DateTimeOffset? startDate, DateTimeOffset? endDate) = this.ApplyDatesFilter(requestModel);
+                (string strResourceTypes, bool resourceTypeFlag) = this.ApplyResourceTypesfilters(requestModel);
+                (string strActivityStatus, bool activityStatusEnumFlag) = this.ApplyActivityStatusFilter(requestModel);
+                var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@searchText", SqlDbType.NVarChar) { Value = requestModel.SearchText == null ? DBNull.Value : requestModel.SearchText };
+                var param2 = new SqlParameter("@activityStatuses", SqlDbType.NVarChar) { Value = activityStatusEnumFlag == false ? DBNull.Value : strActivityStatus };
+                var param3 = new SqlParameter("@resourceTypes", SqlDbType.NVarChar) { Value = resourceTypeFlag == false ? DBNull.Value : strResourceTypes };
+                var param4 = new SqlParameter("@activityStartDate", SqlDbType.DateTimeOffset) { Value = startDate == null ? DBNull.Value : startDate };
+                var param5 = new SqlParameter("@activityEndDate", SqlDbType.DateTimeOffset) { Value = endDate == null ? DBNull.Value : endDate };
+                var param6 = new SqlParameter("@mediaActivityRecordingStartDate", SqlDbType.DateTimeOffset) { Value = detailedMediaActivityRecordingStartDate };
+                var param7 = new SqlParameter("@certificateEnabled", SqlDbType.Bit) { Value = requestModel.CertificateEnabled == false ? DBNull.Value : requestModel.CertificateEnabled };
+                var param8 = new SqlParameter("@offSet", SqlDbType.Int) { Value = requestModel.Skip };
+                var param9 = new SqlParameter("@fetchRows", SqlDbType.Int) { Value = requestModel.Take };
+                var result = await this.DbContext.MyLearningActivity.FromSqlRaw("[activity].[GetUserLearningActivities] @userId, @searchText, @activityStatuses, @resourceTypes,@activityStartDate,@activityEndDate,@mediaActivityRecordingStartDate,@certificateEnabled,@offSet,@fetchRows ", param0, param1, param2, param3, param4, param5, param6, param7, param8, param9)
+                    .AsNoTracking().ToListAsync();
 
-            // Bind result to ResourceActivity model
-            this.BindNestedData(result);
-            List<ResourceActivity> listOfresourceActivities = result.Select(i => new ResourceActivity()
-            {
-                ActivityEnd = i.ActivityEnd,
-                ActivityStart = i.ActivityStart,
-                ActivityStatusId = i.ActivityStatusId,
-                AmendDate = i.AmendDate,
-                AmendUserId = i.AmendUserId,
-                AssessmentResourceActivity = i.AssessmentResourceActivity,
-                CreateDate = i.CreateDate,
-                CreateUserId = i.CreateUserId,
-                Deleted = i.Deleted,
-                DurationSeconds = i.DurationSeconds ?? 0,
-                Id = i.Id,
-                InverseLaunchResourceActivity = i.Resource_InverseLaunchResourceActivity,
-                LaunchResourceActivityId = i.LaunchResourceActivityId,
-                MajorVersion = i.MajorVersion,
-                MediaResourceActivity = i.MediaResourceActivity,
-                MinorVersion = i.MinorVersion,
-                NodePath = i.NodePath,
-                NodePathId = i.NodePathId,
-                Resource = i.Resource,
-                ResourceId = i.ResourceId,
-                ResourceVersion = i.ResourceVersion,
-                ResourceVersionId = i.ResourceVersionId,
-                Score = i.Score,
-                ScormActivity = i.ScormActivity,
-                UserId = i.UserId,
-            }).ToList();
+                // Bind result to ResourceActivity model
+                this.BindNestedData(result);
+                List<ResourceActivity> listOfresourceActivities = result.Select(i => new ResourceActivity()
+                {
+                    ActivityEnd = i.ActivityEnd,
+                    ActivityStart = i.ActivityStart,
+                    ActivityStatusId = i.ActivityStatusId,
+                    AmendDate = i.AmendDate,
+                    AmendUserId = i.AmendUserId,
+                    AssessmentResourceActivity = i.AssessmentResourceActivity,
+                    CreateDate = i.CreateDate,
+                    CreateUserId = i.CreateUserId,
+                    Deleted = i.Deleted,
+                    DurationSeconds = i.DurationSeconds ?? 0,
+                    Id = i.Id,
+                    InverseLaunchResourceActivity = i.Resource_InverseLaunchResourceActivity,
+                    LaunchResourceActivityId = i.LaunchResourceActivityId,
+                    MajorVersion = i.MajorVersion,
+                    MediaResourceActivity = i.MediaResourceActivity,
+                    MinorVersion = i.MinorVersion,
+                    NodePath = i.NodePath,
+                    NodePathId = i.NodePathId,
+                    Resource = i.Resource,
+                    ResourceId = i.ResourceId,
+                    ResourceVersion = i.ResourceVersion,
+                    ResourceVersionId = i.ResourceVersionId,
+                    Score = i.Score,
+                    ScormActivity = i.ScormActivity,
+                    UserId = i.UserId,
+                }).ToList();
 
-            return listOfresourceActivities.OrderByDescending(r => r.ActivityStart).AsQueryable();
+                return listOfresourceActivities.OrderByDescending(r => r.ActivityStart).AsQueryable();
         }
 
         /// <summary>
@@ -272,6 +270,28 @@ namespace LearningHub.Nhs.Repository.Activity
         }
 
         /// <summary>
+        /// Gets a list of all the user's activities for a given resource version.
+        /// </summary>
+        /// <param name="userId">The user id.</param>>
+        /// <param name="resourceVersionId">The resource version id.</param>
+        /// <param name="activityId">The resource activity id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<AssessmentActivityCompletionViewModel> GetAssessmentActivityCompletionPercentage(int userId, int resourceVersionId, int activityId)
+        {
+                var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = resourceVersionId };
+                var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = activityId };
+
+                var retVal = await this.DbContext.AssessmentActivityCompletionViewModel
+                    .FromSqlRaw("EXEC activity.GetAssessmentActivityCompletionPercentage @p0, @p1, @p2", param0, param1, param2)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                AssessmentActivityCompletionViewModel assessmentResourceActivityQuestion = retVal.FirstOrDefault();
+                return assessmentResourceActivityQuestion;
+        }
+
+        /// <summary>
         /// Get Resource Activity by user id.
         /// </summary>
         /// <param name="userId">The user id.</param>
@@ -279,42 +299,42 @@ namespace LearningHub.Nhs.Repository.Activity
         /// <returns>ResourceActivity.</returns>
         public async Task<IQueryable<ResourceActivity>> GetByUserIdWithResourceVersionId(int userId, int resourceVersionId)
         {
-            var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
-            var param1 = new SqlParameter("@resourceVersionId", SqlDbType.Int) { Value = resourceVersionId };
-            var result = await this.DbContext.MyLearningActivity.FromSqlRaw("[activity].[GetUserLatestActivityCheck] @userId, @resourceVersionId ", param0, param1)
-                .AsNoTracking().ToListAsync();
+                var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@resourceVersionId", SqlDbType.Int) { Value = resourceVersionId };
+                var result = await this.DbContext.MyLearningActivity.FromSqlRaw("[activity].[GetUserLatestActivityCheck] @userId, @resourceVersionId ", param0, param1)
+                    .AsNoTracking().ToListAsync();
 
-            // Bind result to ResourceActivity model
-            this.BindNestedData(result);
-            List<ResourceActivity> listOfresourceActivities = result.Select(i => new ResourceActivity()
-            {
-                ActivityEnd = i.ActivityEnd,
-                ActivityStart = i.ActivityStart,
-                ActivityStatusId = i.ActivityStatusId,
-                AmendDate = i.AmendDate,
-                AmendUserId = i.AmendUserId,
-                AssessmentResourceActivity = i.AssessmentResourceActivity,
-                CreateDate = i.CreateDate,
-                CreateUserId = i.CreateUserId,
-                Deleted = i.Deleted,
-                DurationSeconds = i.DurationSeconds ?? 0,
-                Id = i.Id,
-                InverseLaunchResourceActivity = i.Resource_InverseLaunchResourceActivity,
-                LaunchResourceActivityId = i.LaunchResourceActivityId,
-                MajorVersion = i.MajorVersion,
-                MediaResourceActivity = i.Resource_MediaResourceActivity,
-                MinorVersion = i.MinorVersion,
-                NodePath = i.NodePath,
-                NodePathId = i.NodePathId,
-                Resource = i.Resource,
-                ResourceId = i.ResourceId,
-                ResourceVersion = i.ResourceVersion,
-                ResourceVersionId = i.ResourceVersionId,
-                Score = i.Score,
-                ScormActivity = i.ScormActivity,
-                UserId = i.UserId,
-            }).ToList();
-            return listOfresourceActivities.OrderByDescending(r => r.ActivityStart).AsQueryable();
+                // Bind result to ResourceActivity model
+                this.BindNestedData(result);
+                List<ResourceActivity> listOfresourceActivities = result.Select(i => new ResourceActivity()
+                {
+                    ActivityEnd = i.ActivityEnd,
+                    ActivityStart = i.ActivityStart,
+                    ActivityStatusId = i.ActivityStatusId,
+                    AmendDate = i.AmendDate,
+                    AmendUserId = i.AmendUserId,
+                    AssessmentResourceActivity = i.AssessmentResourceActivity,
+                    CreateDate = i.CreateDate,
+                    CreateUserId = i.CreateUserId,
+                    Deleted = i.Deleted,
+                    DurationSeconds = i.DurationSeconds ?? 0,
+                    Id = i.Id,
+                    InverseLaunchResourceActivity = i.Resource_InverseLaunchResourceActivity,
+                    LaunchResourceActivityId = i.LaunchResourceActivityId,
+                    MajorVersion = i.MajorVersion,
+                    MediaResourceActivity = i.Resource_MediaResourceActivity,
+                    MinorVersion = i.MinorVersion,
+                    NodePath = i.NodePath,
+                    NodePathId = i.NodePathId,
+                    Resource = i.Resource,
+                    ResourceId = i.ResourceId,
+                    ResourceVersion = i.ResourceVersion,
+                    ResourceVersionId = i.ResourceVersionId,
+                    Score = i.Score,
+                    ScormActivity = i.ScormActivity,
+                    UserId = i.UserId,
+                }).ToList();
+                return listOfresourceActivities.OrderByDescending(r => r.ActivityStart).AsQueryable();
         }
 
         private void BindNestedData(List<MyLearningActivity> result)
@@ -343,25 +363,7 @@ namespace LearningHub.Nhs.Repository.Activity
         {
             result.ToList().ForEach(i =>
             {
-                var a = result.Where(x => x.Id == i.Id).ToList().DistinctBy(l => l.Block_BlockId);
-                List<Block> blocksList = new List<Block>();
-                foreach (var b in a)
-                {
-                    Block blocks = new Block();
-                    blocks.Id = b.Block_BlockId ?? 0;
-                    blocks.BlockCollectionId = b.Block_BlockCollectionId ?? 0;
-                    var blockType = b.Block_BlockType ?? 0;
-                    blocks.BlockType = (BlockType)blockType;
-                    blocks.Title = b.Block_Title;
-                    blocks.Order = b.Block_Order ?? 0;
-                    blocksList.Add(blocks);
-                }
-
-                i.ResourceVersion_AssessmentResourceVersion.AssessmentContent = new BlockCollection();
-                i.ResourceVersion_AssessmentResourceVersion.AssessmentContent.Blocks = blocksList;
                 i.ResourceVersion.AssessmentResourceVersion = new AssessmentResourceVersion();
-                i.ResourceVersion.AssessmentResourceVersion.AssessmentContent = new BlockCollection();
-                i.ResourceVersion.AssessmentResourceVersion.AssessmentContent.Blocks = blocksList;
                 int assessmentType = i.ResourceVersion_AssessmentResourceVersion_AssessmentType ?? 0;
                 i.ResourceVersion.AssessmentResourceVersion.AssessmentType = (AssessmentTypeEnum)assessmentType;
                 i.ResourceVersion.AssessmentResourceVersion.PassMark = i.ResourceVersion_PassMark;
@@ -397,21 +399,6 @@ namespace LearningHub.Nhs.Repository.Activity
                     assessmentResourceActivity.Id = i.AssessmentResourceActivity_Id ?? 0;
                     assessmentResourceActivity.Score = i.AssessmentResourceActivity_Score;
                     assessmentResourceActivity.Reason = i.AssessmentResourceActivity_Reason;
-                    var c = result.Where(x => x.Id == i.Id).ToList().DistinctBy(l => l.AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId);
-                    List<AssessmentResourceActivityInteraction> assessmentResourceActivityInteractionList = new List<AssessmentResourceActivityInteraction>();
-                    foreach (var item in c)
-                    {
-                        if (i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id != null)
-                        {
-                            AssessmentResourceActivityInteraction assessmentResourceActivityInteraction = new AssessmentResourceActivityInteraction();
-                            assessmentResourceActivityInteraction.AssessmentResourceActivityId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_AssessmentResourceActivityId ?? 0;
-                            assessmentResourceActivityInteraction.Id = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id ?? 0;
-                            assessmentResourceActivityInteraction.QuestionBlockId = i.AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId ?? 0;
-                            assessmentResourceActivityInteractionList.Add(assessmentResourceActivityInteraction);
-                        }
-                    }
-
-                    assessmentResourceActivity.AssessmentResourceActivityInteractions = assessmentResourceActivityInteractionList;
                     i.AssessmentResourceActivity.Add(assessmentResourceActivity);
                 }
             });

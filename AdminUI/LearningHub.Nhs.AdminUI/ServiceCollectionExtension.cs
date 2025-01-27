@@ -141,6 +141,7 @@
 
             services.AddTransient<CookieEventHandler>();
             services.AddSingleton<LogoutUserManager>();
+            services.AddSingleton<VersionService>();
 
             services.AddAuthentication(options =>
             {

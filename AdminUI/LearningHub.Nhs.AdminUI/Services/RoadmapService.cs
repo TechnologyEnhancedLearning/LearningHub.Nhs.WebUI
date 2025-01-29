@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.AdminUI.Interfaces;
     using LearningHub.Nhs.Models.Entities;
+    using LearningHub.Nhs.Models.RoadMap;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -123,6 +124,34 @@
             {
                 var result = response.Content.ReadAsStringAsync().Result;
                 viewmodel = JsonConvert.DeserializeObject<List<Roadmap>>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewmodel;
+        }
+
+        /// <summary>
+        /// The GetIdAsync.
+        /// </summary>
+        /// <param name="id">The id<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{Roadmap}"/>.</returns>
+        public async Task<RoadMapViewModel> GetIdAsync(int id)
+        {
+            RoadMapViewModel viewmodel = null;
+
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var request = $"Roadmap/GetRoadMapsById/{id}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewmodel = JsonConvert.DeserializeObject<RoadMapViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
                         ||

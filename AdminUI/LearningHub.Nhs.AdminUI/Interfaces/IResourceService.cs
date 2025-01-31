@@ -32,8 +32,29 @@
         /// The GetResourceVersionValidationResultAsync.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
-        /// <returns>The <see cref="Task{ResourceVersionEventViewModel}}"/>.</returns>
+        /// <returns>The <see cref="Task{ResourceVersionValidationResultViewModel}}"/>.</returns>
         Task<ResourceVersionValidationResultViewModel> GetResourceVersionValidationResultAsync(int resourceVersionId);
+
+        /// <summary>
+        /// The GetResourceVersionDevIdDetailsAsync.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceVersionDevIdViewModel}}"/>.</returns>
+        Task<ResourceVersionDevIdViewModel> GetResourceVersionDevIdDetailsAsync(int resourceVersionId);
+
+        /// <summary>
+        /// Check dev id already exist against a resource.
+        /// </summary>
+        /// <param name="devId">string devId.</param>
+        /// <returns>The <see cref="Task{bool}"/>.</returns>
+        Task<bool> DoesDevIdExistsAsync(string devId);
+
+        /// <summary>
+        /// To update dev id details for a resource.
+        /// </summary>
+        /// <param name="model">the ResourceVersionDevIdViewModel.</param>
+        /// <returns>The <see cref="Task{ResourceVersionDevIdViewModel}}"/>.</returns>
+        Task UpdateDevIdDetailsAsync(ResourceVersionDevIdViewModel model);
 
         /// <summary>
         /// The GetResourceVersionExtendedViewModelAsync.

@@ -11,13 +11,13 @@
                         Role: Editor
                     </div>
                 </div>
-                <div class="d-block d-md-inline-block pl-md-4 pt-3 pt-md-0" v-if="userCatalogues && userCatalogues.length>1">
+                <div class="d-block d-md-inline-block pl-md-4 pt-3 pt-md-0" v-if="userCatalogues && userCatalogues.length > 1">
                     <div class="dropdown catalogue-dropdown">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownCatalogueSelect" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Change catalogue
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownCatalogueSelect">
-                            <a v-for="catalogue in userCatalogues" class="dropdown-item" @click="catalogueChange(catalogue.id, catalogue.nodeId)">{{getCatalogueName(catalogue)}}</a>
+                        <div id="catalogueMenuItem" role="menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownCatalogueSelect">
+                            <a v-for="(catalogue, index) in userCatalogues" role="menuitem" class="dropdown-item" v-on:keyup.enter="keyboardCatalogueSelection(catalogue.id, catalogue.nodeId)" @click="catalogueChange(catalogue.id, catalogue.nodeId)"  :tabindex="index">{{getCatalogueName(catalogue)}}</a>
                         </div>
                     </div>
                 </div>
@@ -255,6 +255,13 @@
             setRestrictToCurrentUser() {
                 this.$store.commit("myContributionsState/setRestrictToCurrentUser", this.restrictToCurrentUser);
             },
+            keyboardCatalogueSelection(catalogueNodeVersionId: number, nodeId: number) {
+                this.catalogueChange(catalogueNodeVersionId, nodeId);
+                const dropdownMenu = document.getElementById('catalogueMenuItem');
+                if (dropdownMenu) {
+                    dropdownMenu.classList.remove('show'); 
+                }
+            },
             keyboardSelection(tabIndex: number) {
                 switch (tabIndex) {
                     case MyContributeTabEnum.ActionRequired:
@@ -382,6 +389,13 @@
         margin-right: auto;
     }
 
+    a.dropdown-item:hover,
+    a.dropdown-item:focus {
+        background-color: $nhsuk-blue !important;
+        color: $nhsuk-white !important;
+        box-shadow: none !important;
+    }
+
     @media (min-width: 769px) {
         .border-y-grey {
             border-top: 1px solid $nhsuk-grey-light;
@@ -392,6 +406,7 @@
     @media (max-width: 768px) {
         .dropdown-toggle {
             display: block !important;
+            white-space: wrap !important;
         }
     }
 

@@ -10,6 +10,7 @@
 -- Sarathlal	08-03-2024
 -- Sarathlal	23-04-2024	TD-2954: Audio/Video/Assessment issue resolved and duplicate issue also resolved
 -- Arunima	26-07-2024  TD-4411: "Completed" filter along with "Assessment" doesn't display the correct results
+-- Swapna   18-12-2024  TD-5078: Removed block collection joins from the SP to improve the performance of the page
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserLearningActivitiesCount] (
 	 @userId INT	
@@ -403,11 +404,6 @@ LEFT JOIN (
     FROM [resources].[ScormResourceVersionManifest] AS [ScormResourceVersionManifest3]
     WHERE [ScormResourceVersionManifest3].[Deleted] = 0
 ) AS [t4] ON [t3].[Id] = [t4].[ScormResourceVersionId]
-LEFT JOIN (
-    SELECT [BlockCollection].[Id], [BlockCollection].[AmendDate], [BlockCollection].[AmendUserId], [BlockCollection].[CreateDate], [BlockCollection].[CreateUserId], [BlockCollection].[Deleted]
-    FROM [resources].[BlockCollection] AS [BlockCollection]
-    WHERE [BlockCollection].[Deleted] = 0
-) AS [t5] ON [t2].[AssessmentContentId] = [t5].[Id]
 INNER JOIN (
     SELECT [NodePath].[Id], [NodePath].[AmendDate], [NodePath].[AmendUserId], [NodePath].[CatalogueNodeId], [NodePath].[CreateDate], [NodePath].[CreateUserId], [NodePath].[Deleted], [NodePath].[IsActive], [NodePath].[NodeId], [NodePath].[NodePath]
     FROM [hierarchy].[NodePath] AS [NodePath]
@@ -429,18 +425,8 @@ LEFT JOIN (
     WHERE [ScormActivity4].[Deleted] = 0
 ) AS [t9] ON [t2].[Id] = [t9].[ResourceActivityId]
 LEFT JOIN (
-    SELECT [Block0].[Id], [Block0].[AmendDate], [Block0].[AmendUserId], [Block0].[BlockCollectionId], [Block0].[BlockType], [Block0].[CreateDate], [Block0].[CreateUserId], [Block0].[Deleted], [Block0].[Order], [Block0].[Title]
-    FROM [resources].[Block] AS [Block0]
-    WHERE [Block0].[Deleted] = 0
-) AS [t10] ON [t5].[Id] = [t10].[BlockCollectionId]
-LEFT JOIN (
-    SELECT [AssessmentResourceActivity5].[Id], [AssessmentResourceActivity5].[AmendDate], [AssessmentResourceActivity5].[AmendUserID], [AssessmentResourceActivity5].[CreateDate], [AssessmentResourceActivity5].[CreateUserID], [AssessmentResourceActivity5].[Deleted], [AssessmentResourceActivity5].[Reason], [AssessmentResourceActivity5].[ResourceActivityId], [AssessmentResourceActivity5].[Score], [t12].[Id] AS [Id0], [t12].[AmendDate] AS [AmendDate0], [t12].[AmendUserID] AS [AmendUserID0], [t12].[AssessmentResourceActivityId], [t12].[CreateDate] AS [CreateDate0], [t12].[CreateUserID] AS [CreateUserID0], [t12].[Deleted] AS [Deleted0], [t12].[QuestionBlockId]
+    SELECT [AssessmentResourceActivity5].[Id], [AssessmentResourceActivity5].[AmendDate], [AssessmentResourceActivity5].[AmendUserID], [AssessmentResourceActivity5].[CreateDate], [AssessmentResourceActivity5].[CreateUserID], [AssessmentResourceActivity5].[Deleted], [AssessmentResourceActivity5].[Reason], [AssessmentResourceActivity5].[ResourceActivityId], [AssessmentResourceActivity5].[Score]
     FROM [activity].[AssessmentResourceActivity] AS [AssessmentResourceActivity5]
-    LEFT JOIN (
-        SELECT [AssessmentResourceActivityInteraction6].[Id], [AssessmentResourceActivityInteraction6].[AmendDate], [AssessmentResourceActivityInteraction6].[AmendUserID], [AssessmentResourceActivityInteraction6].[AssessmentResourceActivityId], [AssessmentResourceActivityInteraction6].[CreateDate], [AssessmentResourceActivityInteraction6].[CreateUserID], [AssessmentResourceActivityInteraction6].[Deleted], [AssessmentResourceActivityInteraction6].[QuestionBlockId]
-        FROM [activity].[AssessmentResourceActivityInteraction] AS [AssessmentResourceActivityInteraction6]
-        WHERE [AssessmentResourceActivityInteraction6].[Deleted] = 0
-    ) AS [t12] ON [AssessmentResourceActivity5].[Id] = [t12].[AssessmentResourceActivityId]
     WHERE [AssessmentResourceActivity5].[Deleted] = 0
 ) AS [t11] ON [t2].[Id] = [t11].[ResourceActivityId]
 GROUP BY [t2].[Id]	

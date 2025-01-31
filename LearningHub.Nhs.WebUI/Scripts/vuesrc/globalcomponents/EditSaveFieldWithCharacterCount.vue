@@ -5,6 +5,7 @@
                                              v-model="inputValue"
                                              v-bind:characterLimit="characterLimit"
                                              v-bind:size="size"
+                                             v-bind:inputId="inputId"
                                              v-on:input="$emit('input', $event)"
                                              v-on:close="isEditing = false"></CharacterCountWithSaveCancelButtons>
         <div v-else>
@@ -66,6 +67,7 @@
             addEditLabel: String,
             blockView: Boolean,
             size: String,
+            inputId: String,
         },
         data() {
             return {

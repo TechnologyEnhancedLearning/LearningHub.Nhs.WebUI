@@ -12,7 +12,8 @@
         <template v-slot:form>
             <h2 class="font-weight-bold mb-5">Reason for retaking assessment</h2>
             <div class="text-box p-0">
-                <textarea class="form-control" placeholder="Add your reason..." rows="4" :maxlength="maxLength" v-model="reason"></textarea>
+                <label class="nhsuk-u-visually-hidden" for="reason"></label>
+                <textarea class="form-control" id="reason" placeholder="Add your reason..." rows="4" :maxlength="maxLength" v-model="reason"></textarea>
                 <div class="characters-count">
                     You have {{ charactersRemaining }} characters remaining
                 </div>

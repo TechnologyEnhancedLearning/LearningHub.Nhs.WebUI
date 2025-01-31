@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <LangVersion>7.3</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<Platforms>x64</Platforms>
@@ -21,10 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.8" />
+    <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
     <PackageReference Include="IdentityModel" Version="5.2.0" />
     <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.43" />
+    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.46" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
 	<PackageReference Update="StyleCop.Analyzers" Version="1.1.118">
 		<PrivateAssets>all</PrivateAssets>

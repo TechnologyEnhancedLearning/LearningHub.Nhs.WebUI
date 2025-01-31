@@ -4,7 +4,7 @@
 @model AccountCreationConfirmation
 @inject IOptions<Settings> settings
 @{
-    ViewData["Title"] = "Confirmation";
+    ViewData["Title"] = "Check your details";
     var errorHasOccurred = !ViewData.ModelState.IsValid;
     AccountCreationTypeEnum accountCreationType = ViewBag.AccountCreationType;
 }
@@ -19,8 +19,7 @@
                 {
                     <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
                 }
-                <h1 class="nhsuk-heading-xl">Summary list</h1>
-                <h2 class="nhsuk-heading-l">Check your details</h2>
+                <h1 class="nhsuk-heading-xl">@ViewData["Title"]</h1>
                 <dl class="nhsuk-summary-list">
 
                     <div class="nhsuk-summary-list__row">
@@ -33,7 +32,7 @@
 
                         <dd class="nhsuk-summary-list__actions">
                             <a asp-action="CreateAccountPersonalDetails" asp-route-returnToConfirmation="true">
-                                Change<span class="nhsuk-u-visually-hidden"> name</span>
+                                Change<span class="nhsuk-u-visually-hidden">&nbsp;name</span>
                             </a>
 
                         </dd>
@@ -51,7 +50,7 @@
                         <dd class="nhsuk-summary-list__actions">
 
                             <a asp-action="CreateAccountEmailVerification" asp-route-returnToConfirmation="true">
-                                Change<span class="nhsuk-u-visually-hidden"> email</span>
+                                Change<span class="nhsuk-u-visually-hidden">&nbsp;primary email</span>
                             </a>
 
                         </dd>
@@ -69,7 +68,7 @@
                         <dd class="nhsuk-summary-list__actions">
 
                             <a asp-action="CreateAccountPersonalDetails" asp-route-returnToConfirmation="true">
-                                Change<span class="nhsuk-u-visually-hidden"> email</span>
+                                Change<span class="nhsuk-u-visually-hidden">&nbsp;secondary email</span>
                             </a>
 
                         </dd>
@@ -87,7 +86,7 @@
                         <dd class="nhsuk-summary-list__actions @(Model.AccountCreationViewModel.CountryId == "1"? "no-bottom-border":string.Empty)">
 
                             <a asp-action="CreateAccountCountrySelection" asp-route-filterText="@Model.Country" asp-route-returnToConfirmation="true">
-                                Change<span class="nhsuk-u-visually-hidden"> country</span>
+                                Change<span class="nhsuk-u-visually-hidden">&nbsp;country</span>
                             </a>
 
                         </dd>
@@ -123,7 +122,7 @@
                         <dd class="nhsuk-summary-list__actions no-bottom-border">
 
                             <a asp-action="CreateAccountCurrentRole" asp-route-CurrentRole="@Model.AccountCreationViewModel.CurrentRole" asp-route-returnToConfirmation="true">
-                                Change<span class="nhsuk-u-visually-hidden"> role</span>
+                                Change<span class="nhsuk-u-visually-hidden">&nbsp;current role</span>
                             </a>
 
                         </dd>
@@ -173,7 +172,7 @@
                             <dd class="nhsuk-summary-list__actions">
 
                                 <a asp-action="CreateAccountPrimarySpecialtySelection" asp-route-filterText="@Model.Specialty" asp-route-returnToConfirmation="true">
-                                    Change<span class="nhsuk-u-visually-hidden"> primary specialty</span>
+                                    Change<span class="nhsuk-u-visually-hidden">&nbsp;primary specialty</span>
                                 </a>
 
                             </dd>
@@ -190,7 +189,7 @@
                             <dd class="nhsuk-summary-list__actions">
 
                                 <a asp-action="CreateAccountWorkStartDate" asp-route-PrimarySpecialtyId="@Model.AccountCreationViewModel.PrimarySpecialtyId" asp-route-returnToConfirmation="true">
-                                    Change<span class="nhsuk-u-visually-hidden"> start date</span>
+                                    Change<span class="nhsuk-u-visually-hidden">&nbsp;start date</span>
                                 </a>
 
                             </dd>
@@ -207,7 +206,7 @@
                             <dd class="nhsuk-summary-list__actions">
 
                                 <a asp-action="CreateAccountWorkPlace" asp-route-returnToConfirmation="true">
-                                    Change<span class="nhsuk-u-visually-hidden"> place of work</span>
+                                    Change<span class="nhsuk-u-visually-hidden">&nbsp;place of work</span>
                                 </a>
 
                             </dd>

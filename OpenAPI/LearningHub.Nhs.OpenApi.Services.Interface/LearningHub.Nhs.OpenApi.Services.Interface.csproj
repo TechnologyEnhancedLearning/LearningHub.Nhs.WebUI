@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Platforms>x64</Platforms>
@@ -16,7 +16,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.42" />
+      <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.46" />
     </ItemGroup>
 
     <ItemGroup>

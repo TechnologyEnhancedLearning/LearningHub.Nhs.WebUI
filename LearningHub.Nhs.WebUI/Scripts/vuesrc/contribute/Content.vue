@@ -20,8 +20,8 @@
                         <div class="row">
                             <div class="form-group col-12 mt-5">
                                 <h2 id="title-label" class="nhsuk-heading-l">Title<i v-if="$v.resourceDetailTitle.$invalid" class="warningTriangle fa-solid fa-triangle-exclamation"></i></h2>
-                                <div class="mb-3">Give your resource a concise, useful title that will make sense to learners.</div>
-                                <input type="text" class="form-control" aria-labelledby="title-label" maxlength="255" id="resourceDetail_title" v-model="resourceDetailTitle" @change="setTitle($event.target.value)" autocomplete="off" v-bind:disabled="resourceLoading">
+                                <div class="mb-3"><label for="resourceDetail_title">Give your resource a concise, useful title that will make sense to learners.</label></div>
+                                <input type="text" class="form-control" aria-labelledby="title-label" maxlength="255" id="resourceDetail_title" name="resourceDetail_title" v-model="resourceDetailTitle" @change="setTitle($event.target.value)" autocomplete="off" v-bind:disabled="resourceLoading">
                             </div>
                         </div>
                         <div class="row mt-4">
@@ -71,7 +71,7 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-12">
-                                    <select class="form-control" aria-labelledby="type-label" v-model="selectUploadResourceType" @change="onUploadResourceTypeChange">
+                                    <select class="form-control" aria-labelledby="type-label" id="uploadResourceTypes" v-model="selectUploadResourceType" @change="onUploadResourceTypeChange">
                                         <option disabled v-bind:value="0">Please choose...</option>
                                         <option v-for="option in uploadResourceTypes" :value="option.id">
                                             {{ option.description }}
@@ -357,9 +357,9 @@
                                                         </p>
                                                     </div>
                                                     <div>
-                                                        <div class="modal-section-header">Notes</div>
+                                                        <div class="modal-section-header"><label for="notes">Notes</label></div>
                                                         <p class="mt-1">Provide information to help learners understand why this new version has been created.</p>
-                                                        <textarea class="form-control" v-bind:class="{ 'input-validation-error': $v.publishNotes.$invalid && $v.publishNotes.$dirty }" rows="4" maxlength="4000" v-model="publishNotes"></textarea>
+                                                        <textarea class="form-control" id="notes" v-bind:class="{ 'input-validation-error': $v.publishNotes.$invalid && $v.publishNotes.$dirty }" rows="4" maxlength="4000" v-model="publishNotes"></textarea>
                                                         <div class="error-text pt-3" v-if="$v.publishNotes.$invalid && $v.publishNotes.$dirty">
                                                             <span class="text-danger">Enter notes.</span>
                                                         </div>

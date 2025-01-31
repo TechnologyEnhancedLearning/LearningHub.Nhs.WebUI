@@ -189,6 +189,9 @@
                     ActivityStart = DateTime.UtcNow, // TODO: What about user's timezone offset when Javascript is disabled? Needs JavaScript.
                     ActivityStatus = ActivityStatusEnum.Completed,
                 };
+
+                // setting time delay to avoid  multiple records in same time-TD-4299
+                await Task.Delay(10000);
                 await this.activityService.CreateResourceActivityAsync(activity);
             }
 

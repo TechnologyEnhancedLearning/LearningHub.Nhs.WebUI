@@ -87,7 +87,7 @@ namespace LearningHub.Nhs.Api.Controllers
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         [HttpPost]
         [Route("CreateResource")]
-        public async Task<IActionResult> CreateResourceAsync(ResourceDetailViewModel viewModel)
+        public async Task<IActionResult> CreateResourceAsync([FromBody] ResourceDetailViewModel viewModel)
         {
             var vr = await this.resourceService.CreateResourceAsync(viewModel, this.CurrentUserId);
             if (vr.IsValid)
@@ -367,7 +367,7 @@ namespace LearningHub.Nhs.Api.Controllers
         [HttpPost]
         [Authorize(Policy = "ReadWrite")]
         [Route("UpdateResourceVersion")]
-        public async Task<IActionResult> UpdateResourceVersionAsync(ResourceDetailViewModel resourceDetailViewModel)
+        public async Task<IActionResult> UpdateResourceVersionAsync([FromBody] ResourceDetailViewModel resourceDetailViewModel)
         {
             var vr = await this.resourceService.UpdateResourceVersionAsync(resourceDetailViewModel, this.CurrentUserId);
 
@@ -732,7 +732,7 @@ namespace LearningHub.Nhs.Api.Controllers
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         [HttpPost]
         [Route("UpdateArticleDetail")]
-        public async Task<IActionResult> UpdateArticleDetailAsync(ArticleUpdateRequestViewModel articleViewModel)
+        public async Task<IActionResult> UpdateArticleDetailAsync([FromBody] ArticleUpdateRequestViewModel articleViewModel)
         {
             var vr = await this.resourceService.UpdateArticleDetailAsync(articleViewModel, this.CurrentUserId);
 
@@ -856,6 +856,43 @@ namespace LearningHub.Nhs.Api.Controllers
         public async Task<ActionResult> GetResourceVersionValidationResultAsync(int resourceVersionId)
         {
             return this.Ok(await this.resourceService.GetResourceVersionValidationResultAsync(resourceVersionId));
+        }
+
+        /// <summary>
+        /// The get resource version Dev Id details.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetResourceVersionDevIdDetails/{resourceVersionId}")]
+        public async Task<ActionResult> GetResourceVersionDevIdDetails(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetResourceVersionDevIdDetailsAync(resourceVersionId));
+        }
+
+        /// <summary>
+        /// To check devId already exists against a resource.
+        /// </summary>
+        /// <param name="devId">The devId<see cref="string"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("DoesDevIdExists/{devId}")]
+        public async Task<ActionResult> DoesDevIdExists(string devId)
+        {
+            return this.Ok(await this.resourceService.DoesDevIdExistsAync(devId));
+        }
+
+        /// <summary>
+        /// Update dev Id details.
+        /// </summary>
+        /// <param name="resourceVersionDevIdViewModel">The ResourceVersionDevIdViewModel<see cref="ResourceVersionDevIdViewModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPut]
+        [Route("UpdateDevId")]
+        public async Task<IActionResult> UpdateDevId([FromBody] ResourceVersionDevIdViewModel resourceVersionDevIdViewModel)
+        {
+            await this.resourceService.UpdateDevIdDetailsAsync(resourceVersionDevIdViewModel, this.CurrentUserId);
+            return this.Ok();
         }
 
         /// <summary>

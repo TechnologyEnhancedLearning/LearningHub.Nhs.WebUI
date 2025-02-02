@@ -132,10 +132,9 @@
         /// <summary>
         /// Gets catalogues based on filter character.
         /// </summary>
-        /// <param name="pageSize">The pageSize.</param>
         /// <param name="filterChar">The filterChar.</param>
         /// <param name="userId">The userId.</param>
         /// <returns>The catalogues.</returns>
-        Task<List<AllCatalogueViewModel>> GetAllCataloguesAsync(int pageSize, string filterChar, int userId);
+        Task<List<AllCatalogueViewModel>> GetAllCataloguesAsync(string filterChar, int userId);
     }
 }

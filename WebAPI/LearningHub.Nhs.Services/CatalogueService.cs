@@ -968,11 +968,10 @@
         /// <summary>
         /// GetAllCataloguesAsync.
         /// </summary>
-        /// <param name="pageSize">The pageSize.</param>
         /// <param name="filterChar">The filterChar.</param>
         /// <param name="userId">The userId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<AllCatalogueResponseViewModel> GetAllCataloguesAsync(int pageSize, string filterChar, int userId)
+        public async Task<AllCatalogueResponseViewModel> GetAllCataloguesAsync(string filterChar, int userId)
         {
             var catalogueAlphaCount = this.catalogueNodeVersionRepository.GetAllCataloguesAlphaCount(userId);
             var filterCharMod = filterChar.Trim() == "0-9" ? "[0-9]" : filterChar;
@@ -1010,7 +1009,7 @@
                 }
             }
 
-            var catalogues = await this.catalogueNodeVersionRepository.GetAllCataloguesAsync(pageSize, filterCharMod, userId);
+            var catalogues = await this.catalogueNodeVersionRepository.GetAllCataloguesAsync(filterCharMod, userId);
             foreach (var catalogue in catalogues)
             {
                 catalogue.Providers = await this.providerService.GetByCatalogueVersionIdAsync(catalogue.NodeVersionId);

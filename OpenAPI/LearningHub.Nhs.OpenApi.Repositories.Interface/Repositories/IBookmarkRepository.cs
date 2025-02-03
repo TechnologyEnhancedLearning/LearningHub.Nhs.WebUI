@@ -1,8 +1,7 @@
-﻿namespace LearningHub.Nhs.Repository.Interface
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities;
-    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
 
     /// <summary>
     /// The IRoadmapRepository.

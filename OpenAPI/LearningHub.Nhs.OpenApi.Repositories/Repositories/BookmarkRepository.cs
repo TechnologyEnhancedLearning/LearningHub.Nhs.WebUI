@@ -6,7 +6,6 @@
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories;
-    using LearningHub.Nhs.Repository.Interface;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>

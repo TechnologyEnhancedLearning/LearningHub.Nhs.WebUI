@@ -16,5 +16,19 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="query"><see cref="LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource.ResourceSearchRequest"/>.</param>
         /// <returns><see cref="ResourceSearchResultViewModel"/>.</returns>
         Task<ResourceSearchResultModel> Search(ResourceSearchRequest query, int? currentUserId);
+
+        /// <summary>
+        /// Gets AllCatalogue search results async.
+        /// </summary>
+        /// <param name="catalogSearchRequestModel">The allcatalog search request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<SearchAllCatalogueResultModel> GetAllCatalogueSearchResultsAsync(AllCatalogueSearchRequestModel catalogSearchRequestModel);
+
+        /// <summary>
+        /// The remove resource from search method.
+        /// </summary>
+        /// <param name="resourceId">The resource id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task RemoveResourceFromSearchAsync(int resourceId);
     }
 }

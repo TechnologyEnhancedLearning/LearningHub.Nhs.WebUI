@@ -71,6 +71,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         public virtual DbSet<RoleUserGroup> RoleUserGroup { get; set; }
 
         /// <summary>
+        /// Gets or sets the email change validation token.
+        /// </summary>
+        public virtual DbSet<EmailChangeValidationToken> EmailChangeValidationToken { get; set; }
+
+        /// <summary>
         /// Gets or sets the User.
         /// </summary>
         public virtual DbSet<User> User { get; set; }
@@ -164,6 +169,12 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets the resource version flag..
         /// </summary>
         public virtual DbSet<ResourceVersionFlag> ResourceVersionFlag { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the resource version validation result.
+        /// </summary>
+        public virtual DbSet<ResourceVersionValidationResult> ResourceVersionValidationResult { get; set; }
 
         /// <summary>
         /// Gets or sets the resource version event..
@@ -301,6 +312,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         public virtual DbSet<ResourceActivityDTO> ResourceActivityDTO { get; set; }
 
         /// <summary>
+        /// Gets or sets the scorm activity.
+        /// </summary>
+        public virtual DbSet<ScormActivity> ScormActivity { get; set; }
+
+        /// <summary>
         /// Gets or sets the RecentlyAddedResources. These are not entities. They are returned from the [resources].[GetRecentlyAddedResources] stored proc..
         /// </summary>
         public virtual DbSet<RecentlyAddedResourceViewModel> RecentlyAddedResources { get; set; }
@@ -353,9 +369,61 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         public virtual DbSet<NodePathNode> NodePathNode { get; set; }
 
         /// <summary>
+        /// Gets or sets the NodeViewModel.
+        /// </summary>
+        public virtual DbSet<NodeViewModel> NodeViewModel { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the NodePathNodeViewModel.
+        /// </summary>
+        public virtual DbSet<NodePathNodeViewModel> NodePathNodeViewModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the NodeContentBrowseViewModel.
+        /// </summary>
+        public virtual DbSet<NodeContentBrowseViewModel> NodeContentBrowseViewModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the NodeContentEditorViewModel.
+        /// </summary>
+        public virtual DbSet<NodeContentEditorViewModel> NodeContentEditorViewModel { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the NodeContentAdminViewModel.
+        /// </summary>
+        public virtual DbSet<NodeContentAdminViewModel> NodeContentAdminViewModel { get; set; }
+
+        /// <summary>
         /// Gets or sets the node resource..
         /// </summary>
         public virtual DbSet<NodeResource> NodeResource { get; set; }
+
+        /// <summary>
+        /// Gets or sets the node resource lookup.
+        /// </summary>
+        public virtual DbSet<NodeResourceLookup> NodeResourceLookup { get; set; }
+
+        /// <summary>
+        /// Gets or sets the hierarchy edit.
+        /// </summary>
+        public virtual DbSet<HierarchyEdit> HierarchyEdit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the hierarchy edit detail.
+        /// </summary>
+        public virtual DbSet<HierarchyEditDetail> HierarchyEditDetail { get; set; }
+
+        /// <summary>
+        /// Gets or sets the hierarchy edit detail.
+        /// </summary>
+        public virtual DbSet<MoveResourceResultViewModel> MoveResourceResultViewModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CacheOperationViewModel.
+        /// </summary>
+        public virtual DbSet<CacheOperationViewModel> CacheOperationViewModel { get; set; }
 
         /// <summary>
         /// Gets or sets the Publication.
@@ -436,6 +504,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets the assessment resource activity interaction answer..
         /// </summary>
         public virtual DbSet<AssessmentResourceActivityInteractionAnswer> AssessmentResourceActivityInteractionAnswer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the assessment resource activity match question.
+        /// </summary>
+        public virtual DbSet<AssessmentResourceActivityMatchQuestion> AssessmentResourceActivityMatchQuestion { get; set; }
 
         /// <summary>
         /// Gets or sets the media resource activity..
@@ -622,6 +695,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets Provider.
         /// </summary>
         public virtual DbSet<Provider> Provider { get; set; }
+
+        /// <summary>
+        /// Gets or sets Resource Version Provider.
+        /// </summary>
+        public virtual DbSet<ResourceVersionProvider> ResourceVersionProvider { get; set; }
 
         /// <summary>
         /// Gets or sets the html resource version.

@@ -27,6 +27,16 @@
             this.providerService = providerService;
         }
 
+        /// <summary>
+        /// Get Providers.
+        /// </summary>
+        /// <returns>List of Provider.</returns>
+        [HttpGet("all")]
+        public async Task<ActionResult> GetAllProviders()
+        {
+            return this.Ok(await this.providerService.GetAllAsync());
+        }
+
 
         /// <summary>
         /// Get specific Provider by Id.

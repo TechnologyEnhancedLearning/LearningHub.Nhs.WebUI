@@ -101,6 +101,20 @@ namespace LearningHub.Nhs.OpenApi.Services.HttpClients
             this.httpClient.Dispose();
         }
 
+        /// <summary>
+        /// The Get Client method.
+        /// </summary>
+        /// <param name="httpClientUrl">The url of the client.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<HttpClient> GetClient(string httpClientUrl)
+        {
+            this.httpClient.BaseAddress = new Uri(httpClientUrl);
+            this.httpClient.DefaultRequestHeaders.Accept.Clear();
+            this.httpClient.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
+            return this.httpClient;
+        }
+
         private Dictionary<string, StringValues> GetQueryParams(ResourceSearchRequest searchRequest)
         {
             var parameters = new Dictionary<string, StringValues>

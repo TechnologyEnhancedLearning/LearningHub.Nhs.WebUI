@@ -1,13 +1,11 @@
 ﻿namespace LearningHub.NHS.OpenAPI.Controllers
 {
     using System.Threading.Tasks;
-    using System.Web;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities;
-    using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.User;
-    using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using LearningHub.NHS.OpenAPI.Helpers;
+    using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 

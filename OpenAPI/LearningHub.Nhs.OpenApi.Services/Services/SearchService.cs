@@ -46,6 +46,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <param name="findwiseClient">
         /// The <see cref="IFindwiseClient"/>.
         /// </param>
+        /// <param name="findwiseConfig">
+        /// The <see cref="findwiseConfig"/>.
+        /// </param>
         /// <param name="resourceRepository">
         /// The <see cref="IResourceRepository"/>.
         /// </param>
@@ -139,7 +142,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 var offset = catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize;
                 var client = await this.findwiseClient.GetClient(this.findwiseConfig.SearchBaseUrl);
                 var request = string.Format(
-                    this.findwiseConfig.UrlSearchComponent + "?offset={1}&hits={2}&q={3}&token={4}",
+                    this.findwiseConfig.SearchEndpointPath + "?offset={1}&hits={2}&q={3}&token={4}",
                     this.findwiseConfig.CollectionIds.Catalogue,
                     offset,
                     catalogSearchRequestModel.PageSize,

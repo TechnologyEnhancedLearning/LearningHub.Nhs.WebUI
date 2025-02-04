@@ -1,4 +1,4 @@
-﻿namespace LearningHub.Nhs.Services
+﻿namespace LearningHub.Nhs.OpenApi.Services.Services
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -6,7 +6,6 @@
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Services.Interface.HttpClients;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
-    using LearningHub.Nhs.OpenApi.Services.Services;
     using Microsoft.Extensions.Logging;
 
     /// <summary>
@@ -42,10 +41,10 @@
         /// <returns>The notification with message and title set.</returns>
         public Notification GetCatalogueAccessRequestAccepted(string catalogueName, string catalogueUrl)
         {
-            var template = this.notificationTemplateRepository.GetById(Models.Enums.NotificationTemplates.CatalogueAccessRequestSuccess);
+            var template = notificationTemplateRepository.GetById(Nhs.Models.Enums.NotificationTemplates.CatalogueAccessRequestSuccess);
             return new Notification
             {
-                Message = this.Replace(template.Body, new Dictionary<string, string>
+                Message = Replace(template.Body, new Dictionary<string, string>
                 {
                     ["CatalogueName"] = catalogueName,
                     ["CatalogueUrl"] = catalogueUrl,
@@ -63,10 +62,10 @@
         /// <returns>The notification with message and title set.</returns>
         public Notification GetCatalogueAccessRequestFailure(string catalogueName, string catalogueUrl, string rejectionReason)
         {
-            var template = this.notificationTemplateRepository.GetById(Models.Enums.NotificationTemplates.CatalogueAccessRequestFailure);
+            var template = notificationTemplateRepository.GetById(Nhs.Models.Enums.NotificationTemplates.CatalogueAccessRequestFailure);
             return new Notification
             {
-                Message = this.Replace(template.Body, new Dictionary<string, string>
+                Message = Replace(template.Body, new Dictionary<string, string>
                 {
                     ["CatalogueName"] = catalogueName,
                     ["CatalogueUrl"] = catalogueUrl,
@@ -85,10 +84,10 @@
         /// <returns>The notification with message and title set.</returns>
         public Notification GetCatalogueEditorAdded(string supportUrl, string catalogueName, string catalogueUrl)
         {
-            var template = this.notificationTemplateRepository.GetById(Models.Enums.NotificationTemplates.CatalogueEditorAdded);
+            var template = notificationTemplateRepository.GetById(Nhs.Models.Enums.NotificationTemplates.CatalogueEditorAdded);
             return new Notification
             {
-                Message = this.Replace(template.Body, new Dictionary<string, string>
+                Message = Replace(template.Body, new Dictionary<string, string>
                 {
                     ["CatalogueName"] = catalogueName,
                     ["CatalogueUrl"] = catalogueUrl,
@@ -107,10 +106,10 @@
         /// <returns>The notification with message and title set.</returns>
         public Notification GetCatalogueEditorRemoved(string supportUrl, string catalogueName, string catalogueUrl)
         {
-            var template = this.notificationTemplateRepository.GetById(Models.Enums.NotificationTemplates.CatalogueEditorRemoved);
+            var template = notificationTemplateRepository.GetById(Nhs.Models.Enums.NotificationTemplates.CatalogueEditorRemoved);
             return new Notification
             {
-                Message = this.Replace(template.Body, new Dictionary<string, string>
+                Message = Replace(template.Body, new Dictionary<string, string>
                 {
                     ["CatalogueName"] = catalogueName,
                     ["CatalogueUrl"] = catalogueUrl,

@@ -54,10 +54,5 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         ///  Gets or sets the index method.
         /// </summary>
         public string IndexMethod { get; set; } = null!;
-
-        /// <summary>
-        ///  Gets or sets the search component.
-        /// </summary>
-        public string UrlSearchComponent { get; set; } = null!;
     }
 }

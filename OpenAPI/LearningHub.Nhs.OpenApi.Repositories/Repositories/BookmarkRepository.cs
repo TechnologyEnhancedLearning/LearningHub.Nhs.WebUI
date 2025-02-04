@@ -1,11 +1,10 @@
-﻿namespace LearningHub.Nhs.Repository
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 {
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
-    using LearningHub.Nhs.OpenApi.Repositories.Repositories;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -30,7 +29,7 @@
         /// <returns>The <see cref="Task{UserBookmark}"/>.</returns>
         public async Task<UserBookmark> GetById(int bookmarkId)
         {
-            return await this.DbContext.UserBookmark.SingleAsync(ub => ub.Id == bookmarkId);
+            return await DbContext.UserBookmark.SingleAsync(ub => ub.Id == bookmarkId);
         }
 
         /// <summary>
@@ -41,16 +40,16 @@
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         public async Task DeleteFolder(int bookmarkId, int userId)
         {
-            var bookmarks = this.DbContext.UserBookmark.Where(ub => ub.Id == bookmarkId || ub.ParentId == bookmarkId);
+            var bookmarks = DbContext.UserBookmark.Where(ub => ub.Id == bookmarkId || ub.ParentId == bookmarkId);
 
             foreach (var bookmark in bookmarks)
             {
                 bookmark.ParentId = null;
                 bookmark.Deleted = true;
-                this.SetAuditFieldsForUpdate(userId, bookmark);
+                SetAuditFieldsForUpdate(userId, bookmark);
             }
 
-            await this.DbContext.SaveChangesAsync();
+            await DbContext.SaveChangesAsync();
         }
     }
 }

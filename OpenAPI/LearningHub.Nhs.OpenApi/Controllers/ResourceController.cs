@@ -43,14 +43,18 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         /// </summary>
         /// <param name="searchService">The search service.</param>
         /// <param name="findwiseConfig">The findwise config.</param>
+        /// <param name="activityService">The activity service.</param>
+        /// <param name="fileTypeService">The fileType service.</param>
         /// <param name="resourceService">The resource service.</param>
-        public ResourceController(ISearchService searchService, IResourceService resourceService, IOptions<FindwiseConfig> findwiseConfig, IActivityService activityService, IFileTypeService fileTypeService)
+        /// <param name="hierarchyService">The hierachy service.</param>
+        public ResourceController(ISearchService searchService, IResourceService resourceService, IHierarchyService hierarchyService, IOptions<FindwiseConfig> findwiseConfig, IActivityService activityService, IFileTypeService fileTypeService)
         {
             this.searchService = searchService;
             this.findwiseConfig = findwiseConfig.Value;
             this.resourceService = resourceService;
             this.fileTypeService = fileTypeService;
             this.activityService = activityService;
+            this.hierarchyService = hierarchyService;  
         }
 
         /// <summary>

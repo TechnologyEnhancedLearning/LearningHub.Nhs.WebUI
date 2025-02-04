@@ -10,6 +10,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Findwise;
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
@@ -19,7 +20,9 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using LearningHub.Nhs.OpenApi.Services.Services;
     using LearningHub.Nhs.OpenApi.Tests.TestHelpers;
+    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
+    using Microsoft.Extensions.Options;
     using Moq;
     using Xunit;
 
@@ -30,6 +33,9 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         private readonly Mock<IResourceRepository> resourceRepository;
         private readonly Mock<IResourceService> resourceService;
         private readonly SearchService searchService;
+        private readonly Mock<IOptions<FindwiseConfig>> findwiseConfig;
+        private Mock<ILogger<SearchService>> mockLogger;
+
 
         public SearchServiceTests()
         {
@@ -37,12 +43,15 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.learningHubService = new Mock<ILearningHubService>();
             this.resourceRepository = new Mock<IResourceRepository>();
             this.resourceService = new Mock<IResourceService>();
+            this.findwiseConfig = new Mock<IOptions<FindwiseConfig>>();
+            this.mockLogger = new Mock<ILogger<SearchService>>();
             this.searchService = new SearchService(
                 this.learningHubService.Object,
                 this.findwiseClient.Object,
+                this.findwiseConfig.Object,
                 this.resourceRepository.Object,
                 this.resourceService.Object,
-                new NullLogger<SearchService>());
+                this.mockLogger.Object);
         }
 
         public static IEnumerable<object[]> TestFindwiseResultModel => new[]

@@ -14,6 +14,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.Models.Entities.Resource.Blocks;
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Models.Messaging;
+    using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.User;
@@ -456,6 +457,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         public virtual DbSet<CatalogueAccessRequest> CatalogueAccessRequest { get; set; }
 
         /// <summary>
+        /// Gets or sets the folder node version.
+        /// </summary>
+        public virtual DbSet<FolderNodeVersion> FolderNodeVersion { get; set; }
+
+        /// <summary>
         /// Gets or sets the catalogue node version.
         /// </summary>
         public virtual DbSet<CatalogueNodeVersion> CatalogueNodeVersion { get; set; }
@@ -702,9 +708,19 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         public virtual DbSet<ResourceVersionProvider> ResourceVersionProvider { get; set; }
 
         /// <summary>
+        /// Gets or sets the resource activity.
+        /// </summary>
+        public virtual DbSet<MyLearningActivity> MyLearningActivity { get; set; }
+
+        /// <summary>
         /// Gets or sets the html resource version.
         /// </summary>
         public virtual DbSet<HtmlResourceVersion> HtmlResourceVersion { get; set; }
+
+        /// <summary>
+        /// Gets or sets the AssessmentResourceActivityQuestionViewModel.
+        /// </summary>
+        public virtual DbSet<AssessmentActivityCompletionViewModel> AssessmentActivityCompletionViewModel { get; set; }
 
         /// <summary>
         /// The on model creating.

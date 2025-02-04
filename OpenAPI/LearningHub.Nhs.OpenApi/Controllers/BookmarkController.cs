@@ -4,15 +4,11 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Bookmark;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
-    using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
     /// <summary>
     /// Learning Hub Bookmark controller.
     /// </summary>
-    [Authorize]
     [Route("Bookmark")]
     [ApiController]
     public class BookmarkController : OpenApiControllerBase

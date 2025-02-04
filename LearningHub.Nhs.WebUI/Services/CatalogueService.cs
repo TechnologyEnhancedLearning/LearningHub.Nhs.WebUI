@@ -607,14 +607,13 @@
         /// GetAllCatalogueAsync.
         /// </summary>
         /// <param name="filterChar">The filterChar.</param>
-        /// <param name="pageSize">the pageSize.</param>
-        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<AllCatalogueResponseViewModel> GetAllCatalogueAsync(string filterChar, int pageSize)
+        /// /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<AllCatalogueResponseViewModel> GetAllCatalogueAsync(string filterChar)
         {
             AllCatalogueResponseViewModel viewmodel = new AllCatalogueResponseViewModel { };
             var client = await this.LearningHubHttpClient.GetClientAsync();
 
-            var request = $"catalogue/allcatalogues/{pageSize}/{filterChar}";
+            var request = $"catalogue/allcatalogues/{filterChar}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)

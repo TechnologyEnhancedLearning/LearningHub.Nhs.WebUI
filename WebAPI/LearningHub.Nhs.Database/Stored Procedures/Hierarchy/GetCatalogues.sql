@@ -1,9 +1,16 @@
-﻿CREATE PROCEDURE [hierarchy].[GetCatalogues] (
+﻿-------------------------------------------------------------------------------
+-- Author       Arunima George
+-- Created      15-08-2024
+-- Purpose      Get Cataloges for View all cataoge page
+--
+-- Modification History
+
+-- Anju   03-02-2025  TD-4794: Removed page size to disaplay all records
+-------------------------------------------------------------------------------
+
+CREATE PROCEDURE [hierarchy].[GetCatalogues] (
 	 @userId INT	
-	,@filterChar nvarchar(10)
-	,@OffsetRows int
-	,@fetchRows int
-	)
+	,@filterChar nvarchar(10))
 AS
 BEGIN
 
@@ -30,10 +37,7 @@ BEGIN
 			WHERE n.Id <> 1	AND n.Hidden = 0	AND n.Deleted = 0	AND cnv.Deleted = 0 AND nv.VersionStatusId = 2 
 			and cnv.Name like @filterChar+'%'
 			ORDER BY cnv.Name
-			OFFSET @OffsetRows ROWS
-			FETCH NEXT @FetchRows ROWS ONLY
-	
 
-	
+		
 		
 END

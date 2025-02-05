@@ -25,6 +25,11 @@ namespace LearningHub.NHS.OpenAPI
     using Microsoft.Extensions.Hosting;
     using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
+    using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Models.Enums;
+    using System.Configuration;
+    using System;
+    using LearningHub.Nhs.Models.Extensions;
 
     /// <summary>
     /// The Startup class.
@@ -84,6 +89,7 @@ namespace LearningHub.NHS.OpenAPI
                 {
                     // For docs see https://github.com/domaindrivendev/Swashbuckle.AspNetCore
                     c.SwaggerDoc("dev", new OpenApiInfo { Title = "LearningHub.NHS.OpenAPI", Version = "dev" });
+                    c.CustomSchemaIds(type => type.FullName);
                     c.AddSecurityDefinition(
                         "ApiKey",
                         new OpenApiSecurityScheme
@@ -135,6 +141,21 @@ namespace LearningHub.NHS.OpenAPI
                         },
                     });
                 });
+
+            var environment = this.Configuration.GetValue<EnvironmentEnum>("Environment");
+            var envPrefix = environment.GetAbbreviation();
+            if (environment == EnvironmentEnum.Local)
+            {
+                envPrefix += $"_{Environment.MachineName}";
+            }
+
+            services.AddDistributedCache(option =>
+            {
+                option.RedisConnectionString = this.Configuration.GetConnectionString("LearningHubRedis");
+                option.KeyPrefix = envPrefix;
+                option.DefaultExpiryInMinutes = 60;
+            });
+
         }
 
         /// <summary>

@@ -50,7 +50,6 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 this.findwiseClient.Object,
                 this.findwiseConfig.Object,
                 this.resourceRepository.Object,
-                this.resourceService.Object,
                 this.mockLogger.Object);
         }
 

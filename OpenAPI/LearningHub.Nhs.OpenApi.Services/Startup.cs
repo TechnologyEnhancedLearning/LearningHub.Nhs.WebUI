@@ -33,17 +33,14 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IFileTypeService, FileTypeService>();
             services.AddScoped<IHierarchyService, HierarchyService>();
             services.AddScoped<ISecurityService, SecurityService>();
-            services.AddScoped<IResourceService, ResourceService>();
             services.AddScoped<IUserService, UserService>();
             services.AddTransient<IQueueCommunicatorService, QueueCommunicatorService>();
-            services.AddTransient<ICatalogueService, CatalogueService>();
             services.AddScoped<IFindwiseApiFacade, FindwiseApiFacade>();
             services.AddScoped<IEmailSenderService, EmailSenderService>();
             services.AddScoped<IEmailTemplateService, EmailTemplateService>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<INotificationTemplateService, NotificationTemplateService>();
             services.AddScoped<INotificationSenderService, NotificationSenderService>();
-            services.AddScoped<IBookmarkService, BookmarkService>();
             services.AddScoped<IInternalSystemService, InternalSystemService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<ICachingService, CachingService>();

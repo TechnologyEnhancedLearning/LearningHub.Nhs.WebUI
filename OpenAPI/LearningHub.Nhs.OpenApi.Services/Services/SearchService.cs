@@ -21,8 +21,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
-    using static System.Net.Mime.MediaTypeNames;
-    using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
     /// <summary>
     /// The search service.
@@ -33,7 +31,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         private readonly IResourceRepository resourceRepository;
         private readonly IFindwiseClient findwiseClient;
         private readonly ILogger logger;
-        private readonly IResourceService resourceService;
         private readonly FindwiseConfig findwiseConfig;
 
         /// <summary>
@@ -52,22 +49,17 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <param name="resourceRepository">
         /// The <see cref="IResourceRepository"/>.
         /// </param>
-        /// <param name="resourceService">
-        /// The <see cref="IResourceService"/>.
-        /// </param>
         /// <param name="logger">Logger.</param>
         public SearchService(
             ILearningHubService learningHubService,
             IFindwiseClient findwiseClient,
             IOptions<FindwiseConfig> findwiseConfig,
             IResourceRepository resourceRepository,
-            IResourceService resourceService,
             ILogger<SearchService> logger)
         {
             this.learningHubService = learningHubService;
             this.findwiseClient = findwiseClient;
             this.resourceRepository = resourceRepository;
-            this.resourceService = resourceService;
             this.logger = logger;
             this.findwiseConfig = findwiseConfig.Value;
         }

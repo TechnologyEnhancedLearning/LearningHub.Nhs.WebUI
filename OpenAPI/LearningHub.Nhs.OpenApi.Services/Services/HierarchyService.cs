@@ -69,8 +69,8 @@
         private readonly IHierarchyEditRepository hierarchyEditRepository;
         public readonly INodeResourceLookupRepository resourceLookupRepository;
         public readonly IPublicationRepository publicationRepository;
-        public readonly InternalSystemService internalSystemService;
-        public readonly QueueCommunicatorService queueCommunicatorService;
+        public readonly IInternalSystemService internalSystemService;
+        public readonly IQueueCommunicatorService queueCommunicatorService;
         public readonly LearningHubConfig learningHubConfig;
         public readonly INodeResourceLookupRepository nodeResourceLookupRepository;
 
@@ -117,6 +117,7 @@
         /// <param name="logger">
         /// The logger.
         /// </param>
+        /// <param name="learningHubConfig"></param>
         /// <param name="ratingService">
         /// The rating service.
         /// </param>
@@ -143,8 +144,8 @@
             ICachingService cachingService,
             ILogger<HierarchyService> logger,
             IOptions<LearningHubConfig> learningHubConfig,
-            InternalSystemService internalSystemService,
-            QueueCommunicatorService queueCommunicatorService,
+            IInternalSystemService internalSystemService,
+            IQueueCommunicatorService queueCommunicatorService,
             IMapper mapper,
             IResourceReferenceRepository resourceReferenceRepository)
         {

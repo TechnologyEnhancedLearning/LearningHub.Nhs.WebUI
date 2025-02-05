@@ -21,7 +21,6 @@
         private readonly ISearchService searchService;
         private readonly ICatalogueService catalogueService;
         private readonly IBookmarkRepository bookmarkRepository;
-        private readonly IResourceService resourceService;
         private readonly IProviderService providerService;
         private readonly FindwiseConfig findwiseConfig;
 
@@ -32,7 +31,6 @@
         /// <param name="searchService">The search service.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="catalogueService">The catalogue service.</param>
-        /// <param name="resourceService">The resource service.</param>
         /// <param name="providerService">The provider service.</param>
         /// <param name="findwiseConfig">The findwise config.</param>
         /// <param name="bookmarkRepository">The bookmarkRepository.</param>
@@ -41,14 +39,12 @@
                 ISearchService searchService,
                 ILogger<SearchController> logger,
                 ICatalogueService catalogueService,
-                IResourceService resourceService,
                 IProviderService providerService,
                 IOptions<FindwiseConfig> findwiseConfig,
                 IBookmarkRepository bookmarkRepository)
         {
             this.searchService = searchService;
             this.catalogueService = catalogueService;
-            this.resourceService = resourceService;
             this.providerService = providerService;
             this.bookmarkRepository = bookmarkRepository;
             this.findwiseConfig = findwiseConfig.Value;

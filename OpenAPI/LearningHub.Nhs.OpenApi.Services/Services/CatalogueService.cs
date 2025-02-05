@@ -17,7 +17,7 @@
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
-    using LearningHub.Nhs.OpenApi.Models.ViewModels;
+    // using LearningHub.Nhs.OpenApi.Models.ViewModels;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Activity;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Hierarchy;
@@ -27,7 +27,6 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
-    using CatalogueViewModel = LearningHub.Nhs.Models.Catalogue.CatalogueViewModel;
 
     /// <summary>
     /// The resource service.
@@ -104,11 +103,11 @@
         /// Get all catalogues async.
         /// </summary>
         /// <returns>BulkCatalogueViewModel.</returns>
-        public async Task<BulkCatalogueViewModel> GetAllCatalogues()
+        public async Task<Models.ViewModels.BulkCatalogueViewModel> GetAllCatalogues()
         {
             var catalogueNodeVersions = await this.catalogueRepository.GetAllCatalogues();
             var catalogueViewModels = catalogueNodeVersions.Select(c => new Models.ViewModels.CatalogueViewModel(c)).ToList();
-            return new BulkCatalogueViewModel(catalogueViewModels);
+            return new Models.ViewModels.BulkCatalogueViewModel(catalogueViewModels);
         }
 
 

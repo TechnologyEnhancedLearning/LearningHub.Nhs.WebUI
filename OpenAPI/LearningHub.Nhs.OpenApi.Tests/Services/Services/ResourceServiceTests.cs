@@ -80,7 +80,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
      private readonly Mock<ICatalogueService> catalogueService;
      private readonly Mock<IUserService> userService;
      private readonly Mock<IProviderService> providerService;
-     private readonly Mock<InternalSystemService> internalSystemService;
+     private readonly Mock<IInternalSystemService> internalSystemService;
      private readonly Mock<IQueueCommunicatorService> queueCommunicatorService;
      private readonly Mock<IResourceVersionProviderRepository> resourceVersionProviderRepository;
      private readonly Mock<IResourceVersionAuthorRepository> resourceVersionAuthorRepository;
@@ -138,7 +138,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.catalogueService = new Mock<ICatalogueService>();
             this.userService = new Mock<IUserService>();
             this.providerService = new Mock<IProviderService>();
-            this.internalSystemService = new Mock<InternalSystemService>();
+            this.internalSystemService = new Mock<IInternalSystemService>();
             this.queueCommunicatorService = new Mock<IQueueCommunicatorService>();
             this.resourceVersionProviderRepository = new Mock<IResourceVersionProviderRepository>();
             this.resourceVersionAuthorRepository = new Mock<IResourceVersionAuthorRepository>();

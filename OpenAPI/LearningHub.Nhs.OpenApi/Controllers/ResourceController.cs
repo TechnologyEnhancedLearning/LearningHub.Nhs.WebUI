@@ -54,7 +54,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             this.resourceService = resourceService;
             this.fileTypeService = fileTypeService;
             this.activityService = activityService;
-            this.hierarchyService = hierarchyService;  
+            this.hierarchyService = hierarchyService;
         }
 
         /// <summary>
@@ -545,6 +545,12 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             return this.Ok(await this.resourceService.GetInitialAssessmentContent(resourceVersionId));
         }
 
+        /// <summary>
+        /// Retrieves the assessment progress.
+        /// </summary>
+        /// <param name="assessmentResourceActivityId">The assessment resource activity id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpGet]
         [Route("GetAssessmentProgress/activity/{assessmentResourceActivityId}")]
         public async Task<ActionResult> GetAssessmentProgressByAssessmentResourceActivityId(int assessmentResourceActivityId)
         {

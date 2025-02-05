@@ -6,7 +6,7 @@
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
-    using CatalogueViewModel = LearningHub.Nhs.Models.Catalogue.CatalogueViewModel;
+    using CatalogueViewModel = Nhs.Models.Catalogue.CatalogueViewModel;
 
     /// <summary>
     /// The CatalogueService interface.
@@ -24,7 +24,7 @@
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The catalogue view model.</returns>
-        Task<Nhs.Models.Catalogue.CatalogueViewModel> GetCatalogueAsync(int id);
+        Task<CatalogueViewModel> GetCatalogueAsync(int id);
 
         /// <summary>
         /// The GetResources.

@@ -5,11 +5,9 @@
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Validation;
-    using LearningHub.Nhs.OpenApi.Models.ViewModels;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using CatalogueViewModel = Nhs.Models.Catalogue.CatalogueViewModel;
 
     /// <summary>
     /// Catalogue controller.
@@ -34,7 +32,7 @@
         /// </summary>
         /// <returns>BulkCatalogueViewModel.</returns>
         [HttpGet]
-        public async Task<BulkCatalogueViewModel> GetAllCatalogues()
+        public async Task<Nhs.OpenApi.Models.ViewModels.BulkCatalogueViewModel> GetAllCatalogues()
         {
             return await this.catalogueService.GetAllCatalogues();
         }

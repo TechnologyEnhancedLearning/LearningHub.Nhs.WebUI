@@ -22,7 +22,7 @@
         /// Initializes a new instance of the <see cref="CachingService"/> class.
         /// </summary>
         /// <param name="cacheService">The cache.</param>
-        /// <param name="settings">The settings.</param>
+        /// <param name="learningHubConfig">The settings.</param>
         /// <param name="logger">The logger.</param>
         public CachingService(ICacheService cacheService, IOptions<LearningHubConfig> learningHubConfig, ILogger<CacheService> logger)
         {
@@ -49,7 +49,7 @@
 
             try
             {
-                var value = await cacheService.GetAsync<T>(key);
+                var value = await this.cacheService.GetAsync<T>(key);
                 if (value == null)
                 {
                     return new CacheReadResponse<T>()

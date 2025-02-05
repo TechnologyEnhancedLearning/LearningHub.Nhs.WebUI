@@ -4,12 +4,16 @@ namespace LearningHub.Nhs.OpenApi.Repositories
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Activity;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Hierarchy;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Maintenance;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Messaging;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Migrations;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Resources;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Hierarchy;
+    using LearningHub.Nhs.OpenApi.Repositories.Repositories.Maintenance;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Messaging;
+    using LearningHub.Nhs.OpenApi.Repositories.Repositories.Migrations;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Resources;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -106,6 +110,8 @@ namespace LearningHub.Nhs.OpenApi.Repositories
 
             // External
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+            services.AddScoped<IInternalSystemRepository, InternalSystemRepository>();
+            services.AddScoped<IMigrationSourceRepository, MigrationSourceRepository>();
 
         }
     }

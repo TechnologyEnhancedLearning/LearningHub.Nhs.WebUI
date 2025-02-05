@@ -7,7 +7,7 @@
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
-
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
@@ -17,6 +17,7 @@
     /// </summary>
     [Route("Hierarchy")]
     [ApiController]
+    [Authorize]
     public class HierarchyController : OpenApiControllerBase
     {
         private readonly IHierarchyService hierarchyService;

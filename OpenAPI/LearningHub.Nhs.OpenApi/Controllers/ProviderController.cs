@@ -2,11 +2,13 @@
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
     /// Provider operations.
     /// </summary>
+    [Authorize]
     [Route("Provider")]
     [ApiController]
     public class ProviderController : OpenApiControllerBase

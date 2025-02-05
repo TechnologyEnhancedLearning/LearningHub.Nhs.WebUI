@@ -6,6 +6,7 @@
     using LearningHub.Nhs.Models.User;
     using LearningHub.NHS.OpenAPI.Helpers;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
@@ -14,6 +15,7 @@
     /// </summary>
     [Route("User")]
     [ApiController]
+    [Authorize]
     public class UserController : OpenApiControllerBase
     {
         private readonly ISecurityService securityService;

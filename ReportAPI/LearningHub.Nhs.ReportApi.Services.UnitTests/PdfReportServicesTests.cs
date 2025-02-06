@@ -388,6 +388,8 @@ namespace LearningHub.Nhs.ReportApi.Services.UnitTests
         {
             var mappingConfig = new MapperConfiguration(mc =>
             {
+                mc.AllowNullCollections = true;
+                mc.ShouldMapMethod = m => false;
                 mc.AddProfile(new MappingProfile());
             });
             IMapper mapper = mappingConfig.CreateMapper();

@@ -6,18 +6,18 @@
 		<Platforms>x64</Platforms>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="AngleSharp" Version="0.16.1" />
-		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
-		<PackageReference Include="FluentValidation" Version="11.11.0" />
-		<PackageReference Include="HtmlSanitizer" Version="6.0.453" />
-		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.46" />
-		<PackageReference Update="StyleCop.Analyzers" Version="1.1.118">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AngleSharp" Version="0.16.1" />
+    <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
+    <PackageReference Include="HtmlSanitizer" Version="6.0.453" />
+    <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
+    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.46" />
+	<PackageReference Update="StyleCop.Analyzers" Version="1.1.118">
+		<PrivateAssets>all</PrivateAssets>
+		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+  </ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\LearningHub.Nhs.Api.Shared\LearningHub.Nhs.Api.Shared.csproj" />

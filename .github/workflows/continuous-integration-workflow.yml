@@ -18,7 +18,7 @@ jobs:
       - name: Add Azure artifact
         run: dotnet nuget add source 'https://pkgs.dev.azure.com/e-LfH/_packaging/LearningHubFeed/nuget/v3/index.json' --name 'LearningHubFeed'  --username 'kevin.whittaker' --password ${{ secrets.AZURE_DEVOPS_PAT }} --store-password-in-clear-text      
       
-      - name: Use Node 12.19 with Yarn
+      - name: Use Node 20 with Yarn
         uses: actions/setup-node@v4
         with:
           node-version: '20'

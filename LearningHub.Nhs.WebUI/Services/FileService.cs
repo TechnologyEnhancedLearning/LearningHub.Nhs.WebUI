@@ -135,36 +135,19 @@
             {
                 var file = directory.GetFileClient(fileName);
 
-            var properties = await file.GetPropertiesAsync();
-            long fileSize = properties.Value.ContentLength;
-
-            try
-            {
-                if (fileSize <= 900 * 1024 * 1024)
+                if (await file.ExistsAsync())
                 {
-                    // For smaller files, download the entire file as a stream.
-                    var response = await file.DownloadAsync();
-                    return new FileDownloadResponse
-                    {
-                        Content = response.Value.Content,
-                        ContentType = properties.Value.ContentType,
-                        ContentLength = fileSize,
-                    };
-                }
-                else
-                {
-                    // For large files, open a read stream
-                    return new FileDownloadResponse
-                    {
-                        Content = await file.OpenReadAsync(),
-                        ContentType = properties.Value.ContentType,
-                        ContentLength = fileSize,
-                    };
+                    return await file.DownloadAsync();
                 }
             }
-            catch (Exception ex)
+            else if (await sourceDirectory.ExistsAsync())
             {
-                throw new Exception($"Error downloading file: {ex.Message}");
+                var file = sourceDirectory.GetFileClient(fileName);
+
+                if (await file.ExistsAsync())
+                {
+                    return await file.DownloadAsync();
+                }
             }
 
             return null;

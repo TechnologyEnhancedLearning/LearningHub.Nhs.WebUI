@@ -14,6 +14,8 @@
                 return "Certificates";
             case "my-catalogues":
                 return "Catalogues";
+            case "my-enrolled-courses":
+                return "Enrolled Courses";
             default:
                 return "In Progress";
         }
@@ -37,7 +39,7 @@
         <input class="subnav-hidden-checkbox" id="mylearning-subnav-hidden-checkbox" role="button" type="checkbox" aria-controls="collapsingMyLearningSubNavbar" aria-labelledby="mylearning-subnav-hidden-checkbox-label">
         <div class="bar">
             <div class="navbar-toggler navbar-toggler-left nhsuk-u-font-size-19">@GetActiveTabName()</div>
-            <label class="navbar-toggler navbar-toggler-right" id="mylearning-subnav-hidden-checkbox-label"  for="mylearning-subnav-hidden-checkbox">
+            <label class="navbar-toggler navbar-toggler-right" id="mylearning-subnav-hidden-checkbox-label" for="mylearning-subnav-hidden-checkbox">
                 <i class="fa-solid fa-chevron-down"><span class="nhsuk-u-visually-hidden">Show Resource Options</span></i>
                 <i class="fa-solid fa-chevron-up display--hide"><span class="nhsuk-u-visually-hidden">Hide Resource Options</span></i>
             </label>
@@ -59,6 +61,10 @@
                 <li class="subnavwhite-item nhsuk-bg-grey @(Model.MyLearnings.Type == "my-catalogues" ? "active" : string.Empty)">
                     <a tabindex="0" class="subnavwhite-link text-nowrap"
                        asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="my-catalogues" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">Catalogues</a>
+                </li>
+                <li class="subnavwhite-item nhsuk-bg-grey @(Model.EnrolledCourses?.Count() > 0 ? "active" : string.Empty)">
+                    <a tabindex="0" class="subnavwhite-link text-nowrap"
+                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="my-enrolled-courses" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">Enrolled Courses</a>
                 </li>
             </ul>
         </div>
@@ -90,7 +96,19 @@
                             </li>
                         }
                     }
-                </ul>                
+                </ul>
+            }
+            else if (Model.EnrolledCourses?.Count() > 0)
+            {
+                <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred">
+
+                    @foreach (var enrolledCourses in Model.EnrolledCourses)
+                    {
+                        <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+                            <partial name="_CourseEnrolled" model="enrolledCourses" />
+                        </li>
+                    }
+                </ul>
             }
             else
             {

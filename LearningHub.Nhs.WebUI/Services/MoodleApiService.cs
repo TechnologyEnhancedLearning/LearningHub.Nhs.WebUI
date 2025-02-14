@@ -1,0 +1,62 @@
+﻿namespace LearningHub.Nhs.WebUI.Services
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using LearningHub.Nhs.Services.Interface;
+    using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Models;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
+
+    /// <summary>
+    /// MoodleApiService.
+    /// </summary>
+    public class MoodleApiService : IMoodleApiService
+    {
+        private readonly IMoodleHttpClient moodleHttpClient;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MoodleApiService"/> class.
+        /// </summary>
+        /// <param name="moodleHttpClient">moodleHttpClient.</param>
+        public MoodleApiService(IMoodleHttpClient moodleHttpClient)
+        {
+            this.moodleHttpClient = moodleHttpClient;
+        }
+
+        /// <summary>
+        /// GetEnrolledCoursesAsync.
+        /// </summary>
+        /// <param name="userId">Moodle user id.</param>
+        /// <param name="pageNumber">The page Number.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<List<MoodleCourseResponseViewModel>> GetEnrolledCoursesAsync(int userId, int pageNumber)
+        {
+            List<MoodleCourseResponseViewModel> viewmodel = new List<MoodleCourseResponseViewModel> { };
+            MoodleApiService moodleApiService = new MoodleApiService(this.moodleHttpClient);
+
+            var client = await this.moodleHttpClient.GetClient();
+            string additionalParameters = $"userid={userId}";
+            string defaultParameters = this.moodleHttpClient.GetDefaultParameters();
+            string url = $"&wsfunction=core_enrol_get_users_courses&{additionalParameters}";
+
+            HttpResponseMessage response = await client.GetAsync("?" + defaultParameters + url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewmodel = JsonConvert.DeserializeObject<List<MoodleCourseResponseViewModel>>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
+                       response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewmodel;
+        }
+    }
+}

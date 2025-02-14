@@ -1,0 +1,76 @@
+﻿@using LearningHub.Nhs.Models.Dashboard
+@using LearningHub.Nhs.WebUI.Extensions
+@using LearningHub.Nhs.WebUI.Helpers
+@model MoodleCourseResponseViewModel
+@{
+    bool providerExists = false;
+    string cardStyle = "card-provider-details--blank";
+}
+<div class="nhsuk-card dashboard-card">
+    <div class="nhsuk-card-banner-container">
+        @if (!string.IsNullOrWhiteSpace(Model.CourseImage))
+        {
+            <img class="nhsuk-card__img nhsuk-card-banner" src=@Model.CourseImage alt="@Model.CourseImage" />
+        }
+        else
+        {
+            <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
+        }
+    </div>
+    @if (providerExists)
+    {
+        <div class="card-provider-details">
+        </div>
+    }
+    else
+    {
+        <div class="card-provider-details @cardStyle"></div>
+    }
+
+    <div class="nhsuk-card__content dashboard-card-content">
+        <h3 class="nhsuk-card__heading nhsuk-heading-m">
+            <a class="nhsuk-card__link" href="http://localhost/course/view.php?id=@Model.Id">@Model.DisplayName</a>
+        </h3>
+        <div class="nhsuk-card__description dashboard-card-body">
+
+            <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
+                @UtilityHelper.StripHtmlFromString(Model.Summary)
+            </div>
+
+            <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
+                Completed: @Model.Completed
+            </div>
+
+            <div class="catalogue-meta">
+                <div>
+                    <div class="nhsuk-u-margin-bottom-2">
+                        @*  @if (Model.RestrictedAccess)
+                        {
+                        <div class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">@((Model.HasAccess || this.User.IsInRole("Administrator")) ? "Access granted" : "Access restricted")</div>
+                        } *@
+                    </div>
+                    <div>
+                        @*  <a class="nhsuk-u-font-size-16 nhsuk-u-margin-right-3" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
+                        asp-route-bookmarked="@Model.IsBookmarked"
+                        asp-route-id="@Model.BookmarkId"
+                        asp-route-title="@Model.Name.Truncate(60)"
+                        asp-route-nodeId="@Model.NodeId"
+                        asp-route-path="@Model.Url"
+                        asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">@(Model.IsBookmarked ? "Remove from" : "Add to")  my bookmarks</a> *@
+                    </div>
+                </div>
+                <div>
+                    @*  @if (providerExists)
+                    {
+                    var provider = @Model.Providers.First();
+                    <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
+                    }
+                    else if (!string.IsNullOrEmpty(Model.BadgeUrl))
+                    {
+                    <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(Model.BadgeUrl))" alt="Provider's catalogue badge" class="catalogue-badge" />
+                    } *@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

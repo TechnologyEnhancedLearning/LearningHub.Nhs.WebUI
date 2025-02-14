@@ -5,6 +5,15 @@
 @{
     bool providerExists = false;
     string cardStyle = "card-provider-details--blank";
+
+    string GetUrl(int courseId)
+    {
+        string host = $"http://localhost";
+        string path = $"course/view.php";
+        string returnUrl = $@"{host}/{path}?id={courseId}";
+
+        return returnUrl;
+    }
 }
 <div class="nhsuk-card dashboard-card">
     <div class="nhsuk-card-banner-container">
@@ -29,7 +38,7 @@
 
     <div class="nhsuk-card__content dashboard-card-content">
         <h3 class="nhsuk-card__heading nhsuk-heading-m">
-            <a class="nhsuk-card__link" href="http://localhost/course/view.php?id=@Model.Id">@Model.DisplayName</a>
+            <a class="nhsuk-card__link" href="@GetUrl(Model.Id.Value)">@Model.DisplayName</a>
         </h3>
         <div class="nhsuk-card__description dashboard-card-body">
 
@@ -38,7 +47,7 @@
             </div>
 
             <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
-                Completed: @Model.Completed
+                Completed: @Model.CourseCompletionViewModel?.CompletionStatus?.Completed
             </div>
 
             <div class="catalogue-meta">

@@ -151,5 +151,10 @@
         /// Gets or sets the last modified timestamp (Unix timestamp).
         /// </summary>
         public long? TimeModified { get; set; }
+
+        /// <summary>
+        /// Gets or sets the moodle course completion view model.
+        /// </summary>
+        public MoodleCourseCompletionViewModel CourseCompletionViewModel { get; set; }
     }
 }

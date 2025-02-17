@@ -69,9 +69,10 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
             }
 
             var file = await this.fileService.DownloadFileAsync(filePath, fileName);
+
             if (file != null)
             {
-                return this.File(file.Content, file.ContentType, fileName);
+                return !string.IsNullOrEmpty(file.DownloadUrl) ? this.Redirect(file.DownloadUrl) : this.File(file.Content, file.ContentType, fileName);
             }
             else
             {
@@ -106,7 +107,8 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
                     ActivityStatus = ActivityStatusEnum.Completed,
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
-                return this.File(file.Content, file.ContentType, fileName);
+
+                return !string.IsNullOrEmpty(file.DownloadUrl) ? this.Redirect(file.DownloadUrl) : this.File(file.Content, file.ContentType, fileName);
             }
             else
             {

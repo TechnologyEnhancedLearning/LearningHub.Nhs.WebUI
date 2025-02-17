@@ -65,7 +65,6 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         /// <param name="fileName">File name.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [HttpGet("DownloadResource")]
-        [AllowAnonymous]
         public async Task<IActionResult> DownloadResource(string filePath, string fileName)
         {
             if (string.IsNullOrEmpty(fileName))

@@ -29,8 +29,6 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
             this.factory = new SeleniumServerFactory();
             this.BaseUrl = this.factory.RootUri;
             this.Driver = DriverHelper.CreateHeadlessChromeDriver();
-            ////this.Driver.Manage().Timeouts().PageLoad = TimeSpan.FromMinutes(2); // Adjust as needed
-            ////this.Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30); // Optional
             AssertionOptions.FormattingOptions.MaxLines = 500;
             AssertionOptions.FormattingOptions.MaxDepth = 10;
         }

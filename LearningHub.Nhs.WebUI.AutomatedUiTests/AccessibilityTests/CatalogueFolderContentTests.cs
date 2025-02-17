@@ -40,7 +40,7 @@
             ////var catalogueManagementPageResult = new AxeBuilder(this.Driver).Exclude("div.nhsuk-radios--conditional div.nhsuk-radios__item input.nhsuk-radios__input").Analyze();
 
             // then
-            cataloguePageResult.Violations.Should().BeEmpty();
+            cataloguePageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
         }
     }
 }

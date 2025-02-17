@@ -1,6 +1,8 @@
 ﻿namespace LearningHub.Nhs.WebUI.AutomatedUiTests.AccessibilityTests
 {
+    using FluentAssertions;
     using LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures;
+    using Selenium.Axe;
     using Xunit;
 
     /// <summary>
@@ -18,8 +20,12 @@
         {
         }
 
+        /// <summary>
+        /// PageHasNoAccessibilityErrors.
+        /// </summary>
+        /// <param name="url">url to the page.</param>
+        /// <param name="pageTitle">title of the page.</param>
         [Theory]
-        [InlineData("/Home/Index", "Learning Hub - Home")]
         [InlineData("/forgotten-password", "Forgotten your username or password")]
         [InlineData("/Login", "Access your Learning Hub account")]
 

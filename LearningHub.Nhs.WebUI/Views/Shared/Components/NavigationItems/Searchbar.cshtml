@@ -9,7 +9,7 @@
 <div class="nhsuk-header__break"></div>
 @if (Model.ShowSearch)
 {
-    <input type="checkbox" id="header-mobile-search-control" aria-labelledby="close-search toggle-search">
+    <input type="checkbox" id="header-mobile-search-control" tabindex="-1" aria-labelledby="close-search toggle-search">
 }
 <div class="nhsuk-header__search">
     @if (Model.ShowSearch)

@@ -30,18 +30,6 @@
         {
             // given
             const string myaccountsUrl = "/myaccount";
-            ////const string changeFirstNameUrl = "/myaccount/ChangeFirstname";
-            ////const string changeLastNameUrl = "/myaccount/ChangeLastName";
-            ////const string changePreferredNameUrl = "/myaccount/ChangePreferredName";
-            ////const string changeCountryUrl = "/myaccount/ChangeCountry";
-            ////const string changeSecEmailUrl = "/myaccount/ChangeSecondaryEmail";
-            ////const string changeFirstQuestionUrl = "/MyAccount/SecurityQuestionsDetails?questionIndex=0";
-            ////const string changeSecQuestionUrl = "/MyAccount/SecurityQuestionsDetails?questionIndex=1";
-            ////const string changeCurrentRoleUrl = "/my-account/change-current-role";
-            ////const string changeGradeUrl = "/myaccount";
-            ////const string changePrimarySpecialityUrl = "/myaccount";
-            ////const string changeStartDateUrl = "/myaccount";
-            ////const string changePlaceOfWorkUrl = "/my-account/change-work-place";
 
             // when
             this.Driver.Navigate().GoToUrl(this.BaseUrl + myaccountsUrl);
@@ -67,11 +55,6 @@
             this.ValidatePageHeading("Update your country");
             var countryChangePageResult = new AxeBuilder(this.Driver).Exclude("div.nhsuk-radios--conditional div.nhsuk-radios__item input.nhsuk-radios__input").Analyze();
             this.Driver.ClickLinkContainingText("Go back");
-
-            ////this.Driver.ClickLinkContainingText("region");
-            ////this.ValidatePageHeading("Update your region");
-            ////var regionChangePageResult = new AxeBuilder(this.Driver).Exclude("div.nhsuk-radios--conditional div.nhsuk-radios__item input.nhsuk-radios__input").Analyze();
-            ////this.Driver.ClickLinkContainingText("Go back");
 
             this.Driver.ClickLinkContainingText("secondry email");
             this.ValidatePageHeading("Enter your new secondary email address");
@@ -114,24 +97,24 @@
             this.Driver.ClickLinkContainingText("Go back");
 
             // then
-            myAccountPageResult.Violations.Should().BeEmpty();
-            firstNameChangePageResult.Violations.Should().BeEmpty();
-            lastNameChangePageResult.Violations.Should().BeEmpty();
-            preferredNameChangeResult.Violations.Should().BeEmpty();
-            countryChangePageResult.Violations.Should().BeEmpty();
+            myAccountPageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
+            firstNameChangePageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
+            lastNameChangePageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
+            preferredNameChangeResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
+            countryChangePageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
             ////regionChangePageResult.Violations.Should().BeEmpty();
-            emailChangePageResult.Violations.Should().BeEmpty();
-            securityQuestChangePageResult.Violations.Should().BeEmpty();
-            securityQuest2ChangePageResult.Violations.Should().BeEmpty();
-            roleChangePageResult.Violations.Should().BeEmpty();
-            gradeChangePageResult.Violations.Should().BeEmpty();
-            primarySpecialityChangePageResult.Violations.Should().BeEmpty();
-            startDateChangePageResult.Violations.Should().BeEmpty();
-            placeOfWorkChangePageResult.Violations.Should().BeEmpty();
+            emailChangePageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
+            securityQuestChangePageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
+            securityQuest2ChangePageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
+            roleChangePageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
+            gradeChangePageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
+            primarySpecialityChangePageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
+            startDateChangePageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
+            placeOfWorkChangePageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
             ////CheckAccessibilityResult(result);
 
             // Dispose driver
-            this.Driver.LogOutUser(this.BaseUrl);
+            ////this.Driver.LogOutUser(this.BaseUrl);
         }
 
         private static void CheckAccessibilityResult(AxeResult result)

@@ -2,36 +2,35 @@
 {
     using FluentAssertions;
     using LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures;
-    using LearningHub.Nhs.WebUI.AutomatedUiTests.TestHelpers;
     using Selenium.Axe;
     using Xunit;
 
     /// <summary>
-    /// Post login dashboard tests.
+    /// Contributions Tests.
     /// </summary>
-    public class DashboardTests : AccessibilityTestsBase,
+    public class MyContributionsTests : AccessibilityTestsBase,
         IClassFixture<AuthenticatedAccessibilityTestsFixture>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DashboardTests"/> class.
+        /// Initializes a new instance of the <see cref="MyContributionsTests"/> class.
         /// </summary>
         /// <param name="fixture">fixture.</param>
-        public DashboardTests(AuthenticatedAccessibilityTestsFixture fixture)
+        public MyContributionsTests(AuthenticatedAccessibilityTestsFixture fixture)
             : base(fixture)
         {
         }
 
         /// <summary>
-        /// DashboardPageHasNoAccessibilityErrors.
+        /// MyContributionsPageHasNoAccessibilityErrors.
         /// </summary>
         [Fact]
-        public void DashboardPageHasNoAccessibilityErrors()
+        public void MyContributionsPageHasNoAccessibilityErrors()
         {
             // given
-            const string dashboardUrl = "/?myLearningDashboard=my-in-progress&resourceDashboard=popular-resources&catalogueDashboard=popular-catalogues";
+            const string myContributionUrl = "/my-contributions";
 
             // when
-            this.Driver.Navigate().GoToUrl(this.BaseUrl + dashboardUrl);
+            this.Driver.Navigate().GoToUrl(this.BaseUrl + myContributionUrl);
             var axeResult = new AxeBuilder(this.Driver).Exclude("div.nhsuk-radios--conditional div.nhsuk-radios__item input.nhsuk-radios__input").Analyze();
 
             // then

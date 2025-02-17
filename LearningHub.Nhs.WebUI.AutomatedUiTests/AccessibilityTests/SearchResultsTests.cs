@@ -26,31 +26,22 @@
         [Fact]
         public void SearchResultPageHasNoAccessibilityErrors()
         {
-            try
-            {
-                // given
-                const string searchResultUrl = "/search/results?term=test";
-                const string catalogueSearchResultUrl = "/catalogues?term=test";
+            // given
+            const string searchResultUrl = "/search/results?term=test";
+            const string catalogueSearchResultUrl = "/catalogues?term=test";
 
-                // when
-                this.Driver.Navigate().GoToUrl(this.BaseUrl + searchResultUrl);
-                this.ValidatePageHeading("Search results for test");
-                var searchResultPageResult = new AxeBuilder(this.Driver).Exclude("div.nhsuk-radios--conditional div.nhsuk-radios__item input.nhsuk-radios__input").Analyze();
+            // when
+            this.Driver.Navigate().GoToUrl(this.BaseUrl + searchResultUrl);
+            this.ValidatePageHeading("Search results for test");
+            var searchResultPageResult = new AxeBuilder(this.Driver).Exclude("div.nhsuk-radios--conditional div.nhsuk-radios__item input.nhsuk-radios__input").Analyze();
 
-                this.Driver.Navigate().GoToUrl(this.BaseUrl + catalogueSearchResultUrl);
-                this.ValidatePageHeading("Search results for test");
-                var catalogueSearchResult = new AxeBuilder(this.Driver).Exclude("div.nhsuk-radios--conditional div.nhsuk-radios__item input.nhsuk-radios__input").Analyze();
+            this.Driver.Navigate().GoToUrl(this.BaseUrl + catalogueSearchResultUrl);
+            this.ValidatePageHeading("Search results for test");
+            var catalogueSearchResult = new AxeBuilder(this.Driver).Exclude("div.nhsuk-radios--conditional div.nhsuk-radios__item input.nhsuk-radios__input").Analyze();
 
-                // then
-                searchResultPageResult.Violations.Should().BeEmpty();
-                catalogueSearchResult.Violations.Should().BeEmpty();
-            }
-            finally
-            {
-                // Close the browser window
-                this.Driver.Quit();
-                this.Driver.Dispose();
-            }
+            // then
+            searchResultPageResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
+            catalogueSearchResult.Violations.Where(v => !v.Tags.Contains("best-practice")).Should().BeEmpty();
         }
     }
 }

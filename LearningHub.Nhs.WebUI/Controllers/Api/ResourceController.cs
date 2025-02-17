@@ -74,17 +74,10 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
             }
 
             var file = await this.fileService.DownloadFileAsync(filePath, fileName);
+
             if (file != null)
             {
-                // Set response headers.
-                this.Response.ContentType = file.ContentType;
-                this.Response.ContentLength = file.ContentLength;
-                var contentDisposition = new ContentDispositionHeaderValue("attachment") { FileNameStar = fileName };
-                this.Response.Headers["Content-Disposition"] = contentDisposition.ToString();
-
-                // Stream the file in chunks with periodic flushes to keep the connection active.
-                await this.StreamFileWithKeepAliveAsync(file.Content, this.Response.Body, this.HttpContext.RequestAborted);
-                return this.Ok();
+                return !string.IsNullOrEmpty(file.DownloadUrl) ? this.Redirect(file.DownloadUrl) : this.File(file.Content, file.ContentType, fileName);
             }
             else
             {
@@ -120,15 +113,7 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
 
-                // Set response headers.
-                this.Response.ContentType = file.ContentType;
-                this.Response.ContentLength = file.ContentLength;
-                var contentDisposition = new ContentDispositionHeaderValue("attachment") { FileNameStar = fileName };
-                this.Response.Headers["Content-Disposition"] = contentDisposition.ToString();
-
-                // Stream the file in chunks with periodic flushes to keep the connection active.
-                await this.StreamFileWithKeepAliveAsync(file.Content, this.Response.Body, this.HttpContext.RequestAborted);
-                return this.Ok();
+                return !string.IsNullOrEmpty(file.DownloadUrl) ? this.Redirect(file.DownloadUrl) : this.File(file.Content, file.ContentType, fileName);
             }
             else
             {
@@ -606,21 +591,6 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         {
             var result = await this.resourceService.GetObsoleteResourceFile(resourceVersionId, deletedResource);
             return result;
-        }
-
-        /// <summary>
-        /// Reads from the source stream in chunks and writes to the destination stream,
-        /// flushing after each chunk to help keep the connection active.
-        /// </summary>
-        private async Task StreamFileWithKeepAliveAsync(Stream source, Stream destination, CancellationToken cancellationToken)
-        {
-            byte[] buffer = new byte[8192];
-            int bytesRead;
-            while ((bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
-            {
-                await destination.WriteAsync(buffer, 0, bytesRead, cancellationToken);
-                await destination.FlushAsync(cancellationToken);
-            }
         }
     }
 }

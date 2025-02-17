@@ -2,6 +2,7 @@
 @using LearningHub.Nhs.WebUI.Models.Account
 @model UserLocationViewModel
 @{
+  ViewData["DisableValidation"] = true;
   ViewData["Title"] = "My Account - Change region";
   var errorHasOccurred = !ViewData.ModelState.IsValid;
 }

@@ -130,7 +130,7 @@
         /// <returns>The <see cref="Task{FileDownloadResponse}"/>.</returns>
         public async Task<FileDownloadResponse> DownloadFileAsync(string filePath, string fileName)
         {
-            var file = await this.FindFileAsync(filePath, fileName);
+           var file = await this.FindFileAsync(filePath, fileName);
             if (file == null)
             {
                 return null;

@@ -18,18 +18,18 @@
     <CodeAnalysisRuleSet />
   </PropertyGroup>
 
-  <ItemGroup>
-   
-    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.46" />
-   
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
-   
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.10" />
-   
-    <PackageReference Include="NLog.Web.AspNetCore" Version="5.1.4" />
-   
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-  </ItemGroup>
+	<ItemGroup>
+
+		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.46" />
+
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.36" />
+
+		<PackageReference Include="NLog.Web.AspNetCore" Version="5.3.15" />
+
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LearningHub.Nhs.ReportApi.Services.Interface\LearningHub.Nhs.ReportApi.Services.Interface.csproj" />

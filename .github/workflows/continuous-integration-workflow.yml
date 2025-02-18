@@ -22,8 +22,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          npm: '6.14.8'
+          cache: 'npm'
 
+      - name: Upgrade npm to the latest version
+        run: npm install -g npm@6.14.8
+          
       - name: Typescript install WebUI
         run: yarn install --network-timeout 600000 --frozen-lockfile
         working-directory: ./LearningHub.Nhs.WebUI
@@ -43,26 +46,80 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.0.3
         
-      - name: Build SQL Server Database project
+      - name: Build SQL Server Database Project
         run: |
-          # List all .sqlproj files except for .sqlproj
+          # Enable strict error handling
+          $ErrorActionPreference = 'Stop'
+      
+          # Initialize an error collection
+          $errors = @()
+      
+          # List all .sqlproj files
           $sqlproj_files = Get-ChildItem -Path . -Filter *.sqlproj -Recurse
-          
-          # Build each .csproj file
-          foreach ($sqlproj_file in $sqlproj_files) {
-            Write-Host "Building $($sqlproj_file.FullName)"
-            msbuild "$($sqlproj_file.FullName)" /p:Configuration=Release
-          } 
-      - name: Build solution excluding SQL project
+      
+          if ($sqlproj_files.Count -eq 0) {
+            $errors += "No .sqlproj files found."
+          } else {
+            foreach ($sqlproj_file in $sqlproj_files) {
+              Write-Host "Building $($sqlproj_file.FullName)"
+              try {
+                $output = &msbuild "$($sqlproj_file.FullName)" /p:Configuration=Release /nologo 2>&1
+                if (!$?) {
+                  $errors += "Failed to build $($csproj_file.FullName): $output"
+                }
+              } catch {
+                # Capture detailed error information
+                $errorMessage = "Error building $($sqlproj_file.FullName): $($_.Exception.Message)"
+                Write-Host $errorMessage
+                $errors += $errorMessage
+              }
+            }
+          }
+      
+          # Display all accumulated errors
+          if ($errors.Count -gt 0) {
+            Write-Host "SQL Project Build Errors:"
+            $errors | ForEach-Object { Write-Host $_ }
+            exit 1
+          }
+      
+      - name: Build Solution Excluding SQL Project
         run: |
-          # List all .csproj files except for .sqlproj
+          # Enable strict error handling
+          $ErrorActionPreference = 'Stop'
+      
+          # Initialize an error collection
+          $errors = @()
+      
+          # List all .csproj files except .sqlproj
           $csproj_files = Get-ChildItem -Path . -Filter *.csproj -Recurse | Where-Object { $_.FullName -notmatch '\\.sqlproj$' }
-          # Build each .csproj file
-          foreach ($csproj_file in $csproj_files) {
-            Write-Host "Building $($csproj_file.FullName)"
-            dotnet build "$($csproj_file.FullName)"
-          }       
+      
+          if ($csproj_files.Count -eq 0) {
+            $errors += "No .csproj files found."
+          } else {
+            foreach ($csproj_file in $csproj_files) {
+              Write-Host "Building $($csproj_file.FullName)"
+              try {
+                $output = &dotnet build "$($csproj_file.FullName)" --configuration Release 2>&1
+                if (!$?) {
+                  $errors += "Failed to build $($csproj_file.FullName): $output"
+                }
+              } catch {
+                # Capture detailed error information
+                $errorMessage = "Error building $($csproj_file.FullName): $($_.Exception.Message)"
+                Write-Host $errorMessage
+                $errors += $errorMessage
+              }
+            }
+          }
         
+           # Display all accumulated errors
+          if ($errors.Count -gt 0) {
+            Write-Host "Solution Build Errors:"
+            $errors | ForEach-Object { Write-Host $_ }
+            exit 1
+          }
+          
       # - name: Test
         # run: dotnet test ${{ env.BuildParameters.TestProjects }}       
      

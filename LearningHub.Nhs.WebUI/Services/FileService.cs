@@ -130,7 +130,7 @@
         /// <returns>The <see cref="Task{FileDownloadResponse}"/>.</returns>
         public async Task<FileDownloadResponse> DownloadFileAsync(string filePath, string fileName)
         {
-           var file = await this.FindFileAsync(filePath, fileName);
+            var file = await this.FindFileAsync(filePath, fileName);
             if (file == null)
             {
                 return null;
@@ -293,12 +293,12 @@
                             }
                             else
                             {
-                            var destinationFileClient = archiveDirectory.GetFileClient(fileItem.Name);
-                            var uri = sourceFileClient.GenerateSasUri(Azure.Storage.Sas.ShareFileSasPermissions.Read, DateTime.UtcNow.AddHours(24));
+                                var destinationFileClient = archiveDirectory.GetFileClient(fileItem.Name);
+                                var uri = sourceFileClient.GenerateSasUri(Azure.Storage.Sas.ShareFileSasPermissions.Read, DateTime.UtcNow.AddHours(24));
 
-                            await destinationFileClient.StartCopyAsync(uri);
+                                await destinationFileClient.StartCopyAsync(uri);
 
-                            await WaitForCopyAsync(destinationFileClient);
+                                await WaitForCopyAsync(destinationFileClient);
                             }
                         }
 

@@ -23,6 +23,8 @@
             </tr>
         </thead>
         <tbody>
+      @if (Model.Results != null)
+      {
             @foreach (var item in Model.Results.Items)
             {
             <tr>
@@ -46,6 +48,7 @@
                 </td>
             </tr>
             }
+      }
         </tbody>
     </table>
 </div>

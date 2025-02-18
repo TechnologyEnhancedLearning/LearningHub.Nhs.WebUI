@@ -45,7 +45,7 @@
                             </td>
                             <td class="px-sm-3 py-sm-3">
                                 <div class="d-flex justify-content-between" v-if="notification.userDismissable">
-                                    <button data-target="#deleteModal" data-toggle="modal" @click="selectNotification(notification)">Delete <i class="fa-solid fa-trash-can-alt pt-1"></i></button>
+                                    <button data-target="#deleteModal" class="nhsuk-button nhsuk-u-margin-bottom-0" data-toggle="modal" @click="selectNotification(notification)">Delete</button>
                                 </div>
                             </td>
                         </tr>

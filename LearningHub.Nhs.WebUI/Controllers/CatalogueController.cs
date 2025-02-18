@@ -587,8 +587,7 @@
         [Route("/allcatalogue/{filterChar}")]
         public async Task<IActionResult> GetAllCatalogue(string filterChar = "a")
         {
-            var pageSize = this.settings.AllCataloguePageSize;
-            var catalogues = await this.catalogueService.GetAllCatalogueAsync(filterChar, pageSize);
+            var catalogues = await this.catalogueService.GetAllCatalogueAsync(filterChar);
             return this.View("allcatalogue", catalogues);
         }
 

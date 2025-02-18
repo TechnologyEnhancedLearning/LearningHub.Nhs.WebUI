@@ -1,17 +1,13 @@
 ﻿namespace LearningHub.Nhs.WebUI.Services
 {
     using System;
-    using System.Buffers;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
-    using System.Threading.Tasks.Dataflow;
-    using Azure;
-    using Azure.Storage;
     using Azure.Storage.Files.Shares;
     using Azure.Storage.Files.Shares.Models;
+    using Azure.Storage.Sas;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -134,7 +130,7 @@
         /// <returns>The <see cref="Task{FileDownloadResponse}"/>.</returns>
         public async Task<FileDownloadResponse> DownloadFileAsync(string filePath, string fileName)
         {
-            var file = await this.FindFileAsync(filePath, fileName);
+           var file = await this.FindFileAsync(filePath, fileName);
             if (file == null)
             {
                 return null;
@@ -145,27 +141,19 @@
 
             try
             {
-                if (fileSize <= 900 * 1024 * 1024)
+                var response = new FileDownloadResponse
                 {
-                    // For smaller files, download the entire file as a stream.
-                    var response = await file.DownloadAsync();
-                    return new FileDownloadResponse
-                    {
-                        Content = response.Value.Content,
-                        ContentType = properties.Value.ContentType,
-                        ContentLength = fileSize,
-                    };
-                }
-                else
+                    ContentType = properties.Value.ContentType,
+                    ContentLength = fileSize,
+                    Content = await file.OpenReadAsync(),
+                };
+
+                if (fileSize >= 999 * 1024 * 1024)
                 {
-                    // For large files, open a read stream
-                    return new FileDownloadResponse
-                    {
-                        Content = await file.OpenReadAsync(),
-                        ContentType = properties.Value.ContentType,
-                        ContentLength = fileSize,
-                    };
+                    response.DownloadUrl = this.GenerateSasUriForFile(file);
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
@@ -460,6 +448,24 @@
             }
 
             return null;
+        }
+
+        private string GenerateSasUriForFile(ShareFileClient fileClient)
+        {
+            if (fileClient.CanGenerateSasUri)
+            {
+                ShareSasBuilder sasBuilder = new ShareSasBuilder(ShareFileSasPermissions.Read, DateTimeOffset.UtcNow.AddMinutes(20))
+                {
+                    Protocol = SasProtocol.Https,
+                };
+
+                Uri sasUri = fileClient.GenerateSasUri(sasBuilder);
+                return sasUri.ToString();
+            }
+            else
+            {
+                throw new InvalidOperationException("Unable to generate SAS URI for the file.");
+            }
         }
     }
 }

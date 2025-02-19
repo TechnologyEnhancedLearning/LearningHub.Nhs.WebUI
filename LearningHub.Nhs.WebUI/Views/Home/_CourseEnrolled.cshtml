@@ -19,7 +19,16 @@
     <div class="nhsuk-card-banner-container">
         @if (!string.IsNullOrWhiteSpace(Model.CourseImage))
         {
-            <img class="nhsuk-card__img nhsuk-card-banner" src=@Model.CourseImage alt="@Model.CourseImage" />
+            if (Model.CourseImage.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+            {
+                <object class="nhsuk-card__img nhsuk-card-banner" type="image/svg+xml" data="@Model.CourseImage">
+                    <img src="/images/default-course.jpg" alt="Fallback image" />
+                </object>
+            }
+            else
+            {
+                <img class="nhsuk-card__img nhsuk-card-banner" src="@Model.CourseImage" alt="Course image" />
+            }
         }
         else
         {
@@ -48,6 +57,17 @@
 
             <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
                 Completed: @Model.CourseCompletionViewModel?.CompletionStatus?.Completed
+
+                @if (Model?.CourseCompletionViewModel?.CompletionStatus?.Completions != null)
+                {
+                    @foreach (var item in Model.CourseCompletionViewModel.CompletionStatus.Completions)
+                    {
+                        if (item.Type == 2)
+                        {
+                            <div>Target Completion Date: @item.Status</div>
+                        }
+                    }
+                }
             </div>
 
             <div class="catalogue-meta">

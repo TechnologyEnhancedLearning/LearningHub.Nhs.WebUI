@@ -123,7 +123,7 @@
         /// <returns>The updated catalogue.</returns>
         [HttpPut]
         [Route("Catalogues")]
-        public async Task<IActionResult> UpdateCatalogue(CatalogueViewModel viewModel)
+        public async Task<IActionResult> UpdateCatalogue([FromBody] CatalogueViewModel viewModel)
         {
             try
             {

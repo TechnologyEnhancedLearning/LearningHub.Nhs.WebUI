@@ -1,0 +1,98 @@
+﻿@model LearningHub.Nhs.Models.RoadMap.RoadMapViewModel;
+@using LearningHub.Nhs.AdminUI.Services
+
+@{
+  ViewData["Title"] = "Details";
+}
+@section SideMenu {
+  @{
+    await Html.RenderPartialAsync("_NavSection");
+  }
+}
+
+<div class="panel-body admin-body">
+  <div class="d-flex flex-row justify-content-between col-12">
+    <a href="@Url.Action("Updates", "Roadmap")" class="pl-3"><i class="fa-solid fa-chevron-left">&nbsp;</i> Go back</a>
+    <div class="admin-title right-side">
+      <button type="button" class="btn btn-admin" onclick="location.href='@Url.Action("EditUpdate", "Roadmap", new { id = Model.Id })'"><i class="fa-solid fa-pencil"></i> Edit</button>
+    </div>
+  </div>
+  @{
+    string noneVal = "";
+  }
+  <div class="admin-section">
+    <div class="col-12">
+      <div class="id-container">ID @Model.Id</div>
+      @ViewBag.UpdateSaveError
+      <dl>
+        <dt>
+          Title
+        </dt>
+        <dd>
+          @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+          Date
+        </dt>
+        <dd>
+          @Html.DisplayFor(model => model.RoadmapDate)
+        </dd>
+        <dt>
+          Feature Image
+        </dt>
+        <dd>
+          <img src="/file/download/RoadmapImage/@Model.ImageName" style="width: 100px; height: 60px" class="mt-1" />
+        </dd>
+        <dt>
+          Description
+        </dt>
+        <dd>
+          @Html.Raw(Model.Description)
+        </dd>
+        <dt>
+          Status
+        </dt>
+
+
+        @if (Model.Published)
+        {
+          <dd>
+            Published
+          </dd>
+        }
+        else
+        {
+          <dd>
+            Not Published
+          </dd>
+        }
+        <dt>
+          Create User
+        </dt>
+        <dd>
+          @Html.DisplayFor(model => model.CreateUserName)
+        </dd>
+        <dt>
+          Create Date
+        </dt>
+        <dd>
+          @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+        <dt>
+          Amend User
+        </dt>
+        <dd>
+          @Html.DisplayFor(model => model.AmendUserName)
+        </dd>
+        <dt>
+          Amend Date
+        </dt>
+        <dd>
+          @Html.DisplayFor(model => model.AmendDate)
+        </dd>
+      </dl>
+    </div>
+  </div>
+
+</div>
+

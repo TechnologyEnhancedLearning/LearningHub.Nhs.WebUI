@@ -58,7 +58,7 @@
         /// <summary>
         /// Grade Required.
         /// </summary>
-        public const string GradeRequired = "Select a grade";
+        public const string GradeRequired = "Select a pay band. You can find this information from your paper payslip or online via ESR";
 
         /// <summary>
         /// Primary specialty Not Applicable.

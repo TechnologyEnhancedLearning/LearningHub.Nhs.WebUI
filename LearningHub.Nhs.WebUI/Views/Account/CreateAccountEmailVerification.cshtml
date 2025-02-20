@@ -37,13 +37,13 @@
             <h1 class="nhsuk-heading-xl">Create an account</h1>
             <div class="nhsuk-inset-text nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-7">
                 <span class="nhsuk-u-visually-hidden">Information: </span>
-                <p>Ideally you should provide a work email address so that your registration results in the most appropriate access.</p>
+                <p>Providing a work email address will ensure your registration receives the appropriate access.</p>
             </div>
            <form class="nhsuk-u-margin-bottom-2" asp-controller="Registration" asp-action="CreateAccountEmailVerification" method="post">
                 <input type="hidden" name="formSubmission" value="true">
                
                         <vc:text-input asp-for="Email"
-                                       label="Enter your work email address"
+                                       label="Enter your email address"
                                        populate-with-current-value="true"
                                        type="text"
                                        spell-check="false"
@@ -55,7 +55,7 @@
 
 
                         <vc:text-input asp-for="ComfirmEmail"
-                                       label="Confirm your work email address"
+                                       label="Confirm your email address"
                                        populate-with-current-value="true"
                                        type="text"
                                        spell-check="false"

@@ -581,7 +581,18 @@
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
 
-            return this.View("CreateAccountSearchRole", new AccountCreationViewModel { CountryId = accountCreationViewModel.CountryId });
+            var currentJobRole = int.TryParse(accountCreation.CurrentRole, out int currentRole);
+            if (currentJobRole && currentRole > 0)
+            {
+                var filterText = await this.jobRoleService.GetByIdAsync(currentRole);
+                accountCreationViewModel.FilterText = filterText.Name;
+                var jobrole = await this.jobRoleService.GetByIdAsync(currentRole);
+                return this.View("CreateAccountCurrentRole", new AccountCreationListViewModel { RoleList = new List<JobRoleBasicViewModel> { jobrole }, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = 1, PageSize = UserRegistrationContentPageSize, HasItems = jobrole != null, CurrentPage = 1 }, CurrentRole = accountCreation.CurrentRole, CountryId = accountCreation.CountryId, RegionId = accountCreation.RegionId, FilterText = accountCreationViewModel.FilterText, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+            }
+            else
+            {
+                return this.View("CreateAccountSearchRole", new AccountCreationViewModel { CountryId = accountCreationViewModel.CountryId });
+            }
         }
 
         /// <summary>

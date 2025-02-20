@@ -4,24 +4,12 @@
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
 version: 2
-registries:
-  tel-azure-package-source:
-    type: nuget-feed
-    url: "https://pkgs.dev.azure.com/e-LfH/_packaging/LearningHubFeed/nuget/v3/index.json"
-    username: "kevin.whittaker" 
-    password: ${{ secrets.AZURE_DEVOPS_PAT }}   
-  nuget-package-source:
-    type: nuget-feed
-    url: "https://api.nuget.org/v3/index.json"
 updates:
   - package-ecosystem: "nuget" 
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
     open-pull-requests-limit: 10
-    registries:
-      - tel-azure-package-source
-      - nuget-package-source
     target-branch: "Automatic_version_update_dependabot"
     ignore:
       # Ignore updates to packages that start with 'Wildcards'

@@ -55,13 +55,12 @@ namespace LearningHub.Nhs.Repository.Resources
         /// </summary>
         /// <param name="externalReference">The external reference (guid).</param>
         /// <returns>A ContentServerViewModel.</returns>
-        public async Task<ContentServerViewModel> GetContentServerDetailsByLHExternalReference(string externalReference)
+        public ContentServerViewModel GetContentServerDetailsByLHExternalReference(string externalReference)
         {
             var param0 = new SqlParameter("@externalReference", SqlDbType.NVarChar) { Value = externalReference };
 
-            var scormContentData = await this.DbContext.ContentServerViewModel.FromSqlRaw("[resources].[GetContentServerDetailsForLHExternalReference] @externalReference", param0).AsNoTracking().ToListAsync();
+            var scormContentServerViewModel = this.DbContext.ContentServerViewModel.FromSqlRaw("[resources].[GetContentServerDetailsForLHExternalReference] @externalReference", param0).AsEnumerable().FirstOrDefault();
 
-            ContentServerViewModel scormContentServerViewModel = scormContentData.AsEnumerable().FirstOrDefault();
             return scormContentServerViewModel;
         }
 
@@ -71,12 +70,12 @@ namespace LearningHub.Nhs.Repository.Resources
         /// </summary>
         /// <param name="externalUrl">The external Url.</param>
         /// <returns>A ContentServerViewModel.</returns>
-        public async Task<ContentServerViewModel> GetScormContentServerDetailsByHistoricExternalUrl(string externalUrl)
+        public ContentServerViewModel GetScormContentServerDetailsByHistoricExternalUrl(string externalUrl)
         {
             var param0 = new SqlParameter("@externalUrl", SqlDbType.NVarChar) { Value = externalUrl };
 
-            var scormContentData = await this.DbContext.ContentServerViewModel.FromSqlRaw("[resources].[GetScormContentServerDetailsForHistoricExternalUrl] @externalUrl", param0).AsNoTracking().ToListAsync();
-            ContentServerViewModel scormContentServerViewModel = scormContentData.FirstOrDefault<ContentServerViewModel>();
+            var scormContentServerViewModel = this.DbContext.ContentServerViewModel.FromSqlRaw("[resources].[GetScormContentServerDetailsForHistoricExternalUrl] @externalUrl", param0).ToList().FirstOrDefault<ContentServerViewModel>();
+
             return scormContentServerViewModel;
         }
 

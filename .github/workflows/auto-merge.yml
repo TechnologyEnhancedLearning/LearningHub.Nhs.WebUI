@@ -36,7 +36,7 @@ jobs:
             echo "Checking CI status for PR #$PR_NUMBER"
             
             # Define the maximum wait time (in seconds) and the polling interval (in seconds)
-            MAX_WAIT_TIME=600  # 10 minutes
+            MAX_WAIT_TIME=1800  # 30 minutes
             POLL_INTERVAL=10   # Check every 10 seconds
             
             # Initialize a timer
@@ -70,6 +70,11 @@ jobs:
                     continue
                   fi
                   
+                # If any check is still queued, set ALL_COMPLETED to false
+                if [[ "$status" == "QUEUED" ]]; then
+                  ALL_COMPLETED=false
+                fi
+                
                 # If any check is still in progress, set ALL_COMPLETED to false
                 if [[ "$status" == "IN_PROGRESS" ]]; then
                   ALL_COMPLETED=false

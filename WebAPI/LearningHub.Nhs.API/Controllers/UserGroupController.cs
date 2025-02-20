@@ -102,7 +102,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         [HttpPost]
         [Route("CreateUserGroup")]
-        public async Task<IActionResult> CreateUserGroupAsync(UserGroupAdminDetailViewModel userGroup)
+        public async Task<IActionResult> CreateUserGroupAsync([FromBody]UserGroupAdminDetailViewModel userGroup)
         {
             var vr = await this.userGroupService.CreateUserGroupAsync(userGroup, this.CurrentUserId);
             if (vr.IsValid)

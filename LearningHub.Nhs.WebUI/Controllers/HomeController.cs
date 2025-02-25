@@ -133,11 +133,12 @@ namespace LearningHub.Nhs.WebUI.Controllers
         public IActionResult Error(int? httpStatusCode)
         {
             string originalPathUrlMessage = null;
-
+            string originalPath = null;
             if (httpStatusCode.HasValue && httpStatusCode.Value == 404)
             {
                 var exceptionHandlerPathFeature = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-                originalPathUrlMessage = $"Page Not Found url: {exceptionHandlerPathFeature?.OriginalPath}. ";
+                originalPath = exceptionHandlerPathFeature?.OriginalPath;
+                originalPathUrlMessage = $"Page Not Found url: {originalPath}. ";
             }
 
             if (this.User.Identity.IsAuthenticated)
@@ -165,16 +166,23 @@ namespace LearningHub.Nhs.WebUI.Controllers
             }
             else
             {
-                this.ViewBag.ErrorHeader = httpStatusCode.Value switch
+                if (originalPath == "/TooManyRequests")
                 {
-                    401 => "You do not have permission to access this page",
-                    404 => "We cannot find the page you are looking for",
-                    _ => "We cannot find the page you are looking for",
-                };
+                    return this.View("TooManyRequests");
+                }
+                else
+                {
+                    this.ViewBag.ErrorHeader = httpStatusCode.Value switch
+                    {
+                        401 => "You do not have permission to access this page",
+                        404 => "We cannot find the page you are looking for",
+                        _ => "We cannot find the page you are looking for",
+                    };
 
-                this.ViewBag.HttpStatusCode = httpStatusCode.Value;
-                this.ViewBag.HomePageUrl = "/home";
-                return this.View("CustomError");
+                    this.ViewBag.HttpStatusCode = httpStatusCode.Value;
+                    this.ViewBag.HomePageUrl = "/home";
+                    return this.View("CustomError");
+                }
             }
         }
 

@@ -100,5 +100,15 @@
         {
             return this.View();
         }
+
+        /// <summary>
+        /// AI-generated images statement.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [Route("/policies/ai-generated-images-statement")]
+        public IActionResult AIGeneratedImagesStatement()
+        {
+            return this.View();
+        }
     }
 }

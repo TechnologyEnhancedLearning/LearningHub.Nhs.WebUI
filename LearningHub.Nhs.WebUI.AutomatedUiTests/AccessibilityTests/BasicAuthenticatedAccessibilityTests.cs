@@ -31,7 +31,7 @@
         [InlineData("/myaccount", "My account details")]
         [InlineData("/MyLearning", "My learning")]
         [InlineData("/allcatalogue", "A-Z of catalogues")]
-        [InlineData("/allcataloguesearch?term=test#searchTab", "Search results for test")]
+        [InlineData("/allcataloguesearch?term=primary#searchTab", "Search results for test")]
         public void AuthenticatedPageHasNoAccessibilityErrors(string url, string pageTitle)
         {
             // when

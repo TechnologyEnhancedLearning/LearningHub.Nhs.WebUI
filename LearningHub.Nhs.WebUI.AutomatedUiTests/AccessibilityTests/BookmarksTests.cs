@@ -3,6 +3,7 @@
     using FluentAssertions;
     using LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures;
     using LearningHub.Nhs.WebUI.AutomatedUiTests.TestHelpers;
+    using Microsoft.AspNetCore.Components.Web;
     using OpenQA.Selenium;
     using Selenium.Axe;
     using Xunit;
@@ -29,17 +30,25 @@
         public void BookmarksPageHasNoAccessibilityErrors()
         {
             // given
-            const string resourceUrl = "/Resource/91/Item";
+            const string resourceUrl = "/Resource/17844/Item";
+            const string resourceProdUrl = "/Resource/48180/Item";
             const string addBookmarkPageUrl = "/bookmark/resource?bookmarked=False&title=Understanding%20and%20managing%20conflict%20in%20children%27s%20healthcare&rri=16593&returnUrl=%2FResource%2F16593%2FItem";
             const string myBookmarksPage = "/bookmark";
-            const string bookmarkname = "Removal and disposal of Personal Protective Equipment (PPE)";
+            const string bookmarkname = "Primary care clinicians";
             IWebElement renameBookmarkElement = null;
             IWebElement addBookmarkElement = null;
             IWebElement moveBookmarkElement = null;
             AxeResult addBookmarkPageResult = null;
 
             // when
-            this.Driver.Navigate().GoToUrl(this.BaseUrl + resourceUrl);
+            this.Driver.Navigate().GoToUrl(this.BaseUrl + resourceProdUrl);
+
+            var h1Element = this.Driver.FindElement(By.TagName("h1"));
+            if (h1Element.Text == "Unknown error" || h1Element.Text != bookmarkname)
+            {
+                this.Driver.Navigate().GoToUrl(this.BaseUrl + resourceUrl);
+            }
+
             try
             {
                 addBookmarkElement = this.Driver.FindElement(By.XPath("//a[contains(text(),'Add to  my bookmarks')]"));

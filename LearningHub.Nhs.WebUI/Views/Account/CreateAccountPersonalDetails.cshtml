@@ -6,6 +6,7 @@
 
 @{
     ViewData["Title"] = "Personal details";
+    ViewData["DisableValidation"] = true;
     string email = ViewBag.ValidatedEmail;
     var errorHasOccurred = !ViewData.ModelState.IsValid;
     AccountCreationTypeEnum accountCreationType = ViewBag.AccountCreationType;
@@ -49,7 +50,7 @@
                     <input type="hidden" name="formSubmission" value="true">
                     @if (errorHasOccurred)
                     {
-                        <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                        <vc:error-summary order-of-property-names="@(new[] { nameof(Model.FirstName),nameof(Model.LastName) })" />
                     }
 
                     <vc:text-input asp-for="FirstName"

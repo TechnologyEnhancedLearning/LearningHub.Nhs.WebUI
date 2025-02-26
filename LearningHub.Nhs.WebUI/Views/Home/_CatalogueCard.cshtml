@@ -33,9 +33,9 @@
   }
 
   <div class="nhsuk-card__content dashboard-card-content">
-    <h2 class="nhsuk-card__heading nhsuk-heading-m">
+    <h3 class="nhsuk-card__heading nhsuk-heading-m">
       <a class="nhsuk-card__link" asp-controller="Catalogue" asp-action="Index" asp-route-reference="@Model.Url">@Model.Name</a>
-    </h2>
+    </h3>
     <div class="nhsuk-card__description dashboard-card-body">
       <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
         @UtilityHelper.StripHtmlFromString(Model.Description)

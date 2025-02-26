@@ -73,6 +73,7 @@
             {
                 // Close the browser window
                 driver.Quit();
+                driver.Dispose();
             }
         }
     }

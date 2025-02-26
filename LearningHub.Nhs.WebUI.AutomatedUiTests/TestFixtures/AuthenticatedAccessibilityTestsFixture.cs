@@ -26,6 +26,7 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
         public new void Dispose()
         {
             this.Driver.LogOutUser(this.BaseUrl);
+            this.Driver.Quit();
             base.Dispose();
         }
     }

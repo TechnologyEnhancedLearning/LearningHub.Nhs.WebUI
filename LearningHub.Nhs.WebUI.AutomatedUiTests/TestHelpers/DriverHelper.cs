@@ -17,7 +17,9 @@
         {
             var chromeOptions = new ChromeOptions();
 
-            chromeOptions.AddArgument("--headless");
+            chromeOptions.AddArguments(
+                "--headless",
+                "no-sandbox");
             return new ChromeDriver(chromeOptions);
         }
 

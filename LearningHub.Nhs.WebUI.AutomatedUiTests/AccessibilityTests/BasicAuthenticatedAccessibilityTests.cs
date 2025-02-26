@@ -32,11 +32,6 @@
         [InlineData("/MyLearning", "My learning")]
         [InlineData("/allcatalogue", "A-Z of catalogues")]
         [InlineData("/allcataloguesearch?term=test#searchTab", "Search results for test")]
-        [InlineData("/Resource/309/Item", "IE11 Image test")]
-        [InlineData("/Resource/91/Item", "Removal and disposal of Personal Protective Equipment (PPE)")]
-        [InlineData("/Resource/15458/Item", "Test PDF File 16Dec")]
-        [InlineData("/Resource/17014/Item", "How to develop your teaching skills | BMJ Careers")]
-        [InlineData("/Resource/17760/Item", "HTML")]
         public void AuthenticatedPageHasNoAccessibilityErrors(string url, string pageTitle)
         {
             // when

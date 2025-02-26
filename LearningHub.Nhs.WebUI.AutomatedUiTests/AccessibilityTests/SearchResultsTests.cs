@@ -27,16 +27,16 @@
         public void SearchResultPageHasNoAccessibilityErrors()
         {
             // given
-            const string searchResultUrl = "/search/results?term=test";
-            const string catalogueSearchResultUrl = "/catalogues?term=test";
+            const string searchResultUrl = "/search/results?term=primary";
+            const string catalogueSearchResultUrl = "/catalogues?term=primary";
 
             // when
             this.Driver.Navigate().GoToUrl(this.BaseUrl + searchResultUrl);
-            this.ValidatePageHeading("Search results for test");
+            this.ValidatePageHeading("Search results for primary");
             var searchResultPageResult = new AxeBuilder(this.Driver).Exclude("div.nhsuk-radios--conditional div.nhsuk-radios__item input.nhsuk-radios__input").Analyze();
 
             this.Driver.Navigate().GoToUrl(this.BaseUrl + catalogueSearchResultUrl);
-            this.ValidatePageHeading("Search results for test");
+            this.ValidatePageHeading("Search results for primary");
             var catalogueSearchResult = new AxeBuilder(this.Driver).Exclude("div.nhsuk-radios--conditional div.nhsuk-radios__item input.nhsuk-radios__input").Analyze();
 
             // then

@@ -1,14 +1,14 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserProfileSummaryViewModel
 
 @{    
-  ViewData["Title"] = "My Account";
+   ViewData["Title"] = "My account details";
   var isgeneralUser = User.IsInRole("BasicUser");
 }
 <div class="bg-white nhsuk-u-padding-bottom-9">
     <div class="nhsuk-width-container app-width-container">
         <div class="nhsuk-u-reading-width">
             <div class="app-width-container">
-                <h1 class="nhsuk-heading-xl nhsuk-u-padding-top-7">My account details</h1>
+                <h1 class="nhsuk-heading-xl nhsuk-u-padding-top-7">@ViewData["Title"]</h1>
                 @if (isgeneralUser)
                 {
                   <div class="nhsuk-inset-text">

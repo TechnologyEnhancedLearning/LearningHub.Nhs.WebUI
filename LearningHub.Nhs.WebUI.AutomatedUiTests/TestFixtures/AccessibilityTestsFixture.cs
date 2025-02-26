@@ -1,5 +1,6 @@
 namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
 {
+    using FluentAssertions;
     using LearningHub.Nhs.WebUI.AutomatedUiTests.TestHelpers;
     using OpenQA.Selenium;
 
@@ -28,6 +29,8 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
             this.factory = new SeleniumServerFactory();
             this.BaseUrl = this.factory.RootUri;
             this.Driver = DriverHelper.CreateHeadlessChromeDriver();
+            AssertionOptions.FormattingOptions.MaxLines = 500;
+            AssertionOptions.FormattingOptions.MaxDepth = 10;
         }
 
         /// <summary>
@@ -37,6 +40,7 @@ namespace LearningHub.Nhs.WebUI.AutomatedUiTests.TestFixtures
         {
             this.Driver.Quit();
             this.Driver.Dispose();
+            ////Thread.Sleep(3000);
         }
     }
 }

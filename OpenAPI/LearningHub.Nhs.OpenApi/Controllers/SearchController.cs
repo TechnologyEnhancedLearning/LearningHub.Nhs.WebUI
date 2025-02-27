@@ -64,6 +64,50 @@
         }
 
         /// <summary>
+        /// Get AutoSuggestionResults.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpGet]
+        [Route("GetAutoSuggestionResult/{term}")]
+        public async Task<IActionResult> GetAutoSuggestionResults(string term)
+        {
+            var autosuggestionViewModel = await this.GetAutoSuggestions(term);
+            return this.Ok(autosuggestionViewModel);
+        }
+
+        /// <summary>
+        /// Get AutoSuggestion Results.
+        /// </summary>
+        /// <param name="term">term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        private async Task<AutoSuggestionModel> GetAutoSuggestions(string term)
+        {
+            var autosuggestionModel = await this.searchService.GetAutoSuggestionResultsAsync(term);
+            if (autosuggestionModel != null)
+            {
+                var documents = autosuggestionModel.CatalogueDocument.CatalogueDocumentList;
+                var documentIds = documents.Select(x => int.Parse(x.Id)).ToList();
+                var catalogues = this.catalogueService.GetCataloguesByNodeId(documentIds);
+
+                foreach (var document in documents)
+                {
+                    var catalogue = catalogues.SingleOrDefault(x => x.NodeId == int.Parse(document.Id));
+                    if (catalogue == null)
+                    {
+                        continue;
+                    }
+
+                    document.Url = catalogue.Url;
+                }
+
+                autosuggestionModel.CatalogueDocument.CatalogueDocumentList = documents;
+            }
+
+            return autosuggestionModel;
+        }
+
+        /// <summary>
         /// Get All catalogue search results.
         /// </summary>
         /// <param name="catalogueSearchRequestModel">The catalog search request model.</param>

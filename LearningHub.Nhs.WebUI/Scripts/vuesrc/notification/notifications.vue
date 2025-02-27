@@ -69,7 +69,7 @@
                                 <hr class="py-2 mt-4" />
                             </div>
                             <i class="fa-solid fa-trash-can-alt pr-2"></i>
-                            <a href="#deleteModal" data-toggle="modal">Delete</a>
+                            <button data-target="#deleteModal" class="nhsuk-button">Delete</button>
                         </template>
                     </div>
                 </div>

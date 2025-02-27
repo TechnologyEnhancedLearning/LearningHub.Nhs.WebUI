@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Select Country";
+    ViewData["DisableValidation"] = true;
     var errorHasOccurred = !ViewData.ModelState.IsValid;
     bool returnToConfirmation = false;
     if (!string.IsNullOrWhiteSpace(Context.Request.Query["returnToConfirmation"]))
@@ -25,7 +26,7 @@
                 
                 @if (errorHasOccurred)
                 {
-                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model.FilterText) })" />
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model.FilterText), nameof(Model.CountryId) })" />
                 }
                 <h1 class="nhsuk-heading-xl">Search results for @Model.FilterText</h1>
                 <form asp-controller="Account" asp-action="CreateAccountCountrySelection" method="get">

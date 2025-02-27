@@ -52,7 +52,7 @@
                             }
 
                             <div class="nhsuk-radios">
-
+                                <div class="nhsuk-radios--conditional">
                                 <div class="nhsuk-radios__item">
                                     <input type="radio" asp-for="SelectedFolderId" value="0" id="SelectedFolderId" class="nhsuk-radios__input" data-val="false"
                                            aria-controls="conditional-newfolder" aria-expanded="false" />
@@ -71,6 +71,7 @@
                                                        css-class=""
                                                        required="@(Model.SelectedFolderId == 0)" />
                                     </div>
+                                </div>
                                 </div>
 
                                 @if (Model.Bookmark.ParentId.HasValue || (Model.Folders != null && Model.Folders.Any()))

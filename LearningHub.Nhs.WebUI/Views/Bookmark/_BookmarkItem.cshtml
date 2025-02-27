@@ -24,11 +24,11 @@
             <span aria-label="@Model.Bookmark.Title">@Model.Bookmark.Title</span>
         </a>
     </td>
-    <td role="row" class="nhsuk-table__row col-type">
+    <td role="cell" class="nhsuk-table__row col-type">
         <span class="nhsuk-table-responsive__heading">Type</span>
         @GetResourceTypeName(Model.Bookmark.BookmarkTypeId, Model.Bookmark.ResourceTypeId)
     </td>
-    <td role="row" class="nhsuk-table__row col-organise">
+    <td role="cell" class="nhsuk-table__row col-organise">
         <span class="nhsuk-table-responsive__heading">Organise</span>
         <partial name="_BookmarkAction" model="Model.Action" />
     </td>

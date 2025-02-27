@@ -103,7 +103,7 @@
         /// <returns>The actionResult.</returns>
         [HttpPost]
         [Route("Catalogues")]
-        public async Task<IActionResult> CreateCatalogue(CatalogueViewModel viewModel)
+        public async Task<IActionResult> CreateCatalogue([FromBody] CatalogueViewModel viewModel)
         {
             try
             {

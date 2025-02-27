@@ -30,7 +30,7 @@
         /// </summary>
         /// <param name="externalReference">The external reference (guid).</param>
         /// <returns>A ContentServerViewModel.</returns>
-        Task<ContentServerViewModel> GetContentServerDetailsByLHExternalReference(string externalReference);
+        ContentServerViewModel GetContentServerDetailsByLHExternalReference(string externalReference);
 
         /// <summary>
         /// Gets the SCORM content details for a particular historic external URL. These historic URLs have to be supported to
@@ -38,7 +38,7 @@
         /// </summary>
         /// <param name="externalUrl">The external Url.</param>
         /// <returns>A ContentServerViewModel.</returns>
-        Task<ContentServerViewModel> GetScormContentServerDetailsByHistoricExternalUrl(string externalUrl);
+        ContentServerViewModel GetScormContentServerDetailsByHistoricExternalUrl(string externalUrl);
 
         /// <summary>
         /// GetExternalReferenceByResourceId.

@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Work Place";
+    ViewData["DisableValidation"] = true;
     var errorHasOccurred = !ViewData.ModelState.IsValid;
     TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
     bool returnToConfirmation = false;

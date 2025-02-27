@@ -7,6 +7,7 @@
 
 @{
     ViewData["Title"] = "Email Verification";
+    ViewData["DisableValidation"] = true;
     var errorHasOccurred = !ViewData.ModelState.IsValid;
     bool returnToConfirmation = false;
     if (!string.IsNullOrWhiteSpace(Context.Request.Query["returnToConfirmation"]))

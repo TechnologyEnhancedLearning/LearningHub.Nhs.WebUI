@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Select Grade";
+    ViewData["DisableValidation"] = true;
     string currentRole = !string.IsNullOrWhiteSpace(Context.Request.Query["CurrentRole"]) ? Context.Request.Query["CurrentRole"] : Model.CurrentRole;
     var routeData = new Dictionary<string, string> { { "CurrentRole", currentRole }, { "ReturnToConfirmation", Context.Request.Query["returnToConfirmation"] } };
     var errorHasOccurred = !ViewData.ModelState.IsValid;

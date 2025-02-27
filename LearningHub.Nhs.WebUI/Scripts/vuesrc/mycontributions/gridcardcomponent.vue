@@ -1,7 +1,7 @@
 <template>
     <div class="panel-card-container">
 
-        <div tabindex="0" class="my-contributions-panel-card h-100">
+        <div class="my-contributions-panel-card h-100">
 
             <div class="h-100 d-flex flex-column">
                 <div class="d-flex flex-row justify-content-start my-4">

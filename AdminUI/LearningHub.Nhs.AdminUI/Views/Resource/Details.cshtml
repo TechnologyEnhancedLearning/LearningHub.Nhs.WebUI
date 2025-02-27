@@ -651,13 +651,19 @@
           {
             <!-- Alert Text -->
             <div class="d-flex ml-5 my-2">
-              <div id="alertInfo" class="alert alert-success">Successfully updated the details</div>
+              <div id="alertInfo" class="alert alert-success">Successfully added the Dev ID.</div>
             </div>
           }
           @if (this.ViewBag.Status == "Duplicate")
           {
             <div class="d-flex ml-5 my-2">
-              <div id="alertInfo" class="alert alert-danger">Dev Id already exists.</div>
+              <div id="alertInfo" class="alert alert-danger">Dev ID already exists.</div>
+            </div>
+          }
+          else if (this.ViewBag.Status  == "Enter a Dev id for the resource")
+          {
+            <div class="d-flex ml-5 my-2">
+              <div id="alertInfo" class="alert alert-danger">You must enter a Dev ID.</div>
             </div>
           }
           <div id="devIdDetails" class="pl-2">

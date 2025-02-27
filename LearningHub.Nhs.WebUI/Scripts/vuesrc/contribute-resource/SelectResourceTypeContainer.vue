@@ -1,5 +1,5 @@
 ﻿<template>
-    <div class="lh-padding-fluid">
+    <div class="lh-padding-fluid select-resource-type">
         <div class="lh-container-xl">
             <h2 id="title-label" class="nhsuk-heading-l">Select a resource type</h2>
             <div v-if="!contributeResourceAVFlag" class="align-self-center">
@@ -53,3 +53,10 @@
         }
     });
 </script>
+<style lang="scss" scoped>
+    @use '../../../Styles/abstracts/all' as *;
+
+    .select-resource-type {
+       padding-left: 0.1rem !important;
+    }
+</style>

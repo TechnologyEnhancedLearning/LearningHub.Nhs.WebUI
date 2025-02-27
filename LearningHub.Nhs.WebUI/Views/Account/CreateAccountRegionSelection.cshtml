@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Region";
+    ViewData["DisableValidation"] = true;
     var errorHasOccurred = !ViewData.ModelState.IsValid;
     var routeData = new Dictionary<string, string> { { "ReturnToConfirmation", Context.Request.Query["returnToConfirmation"] } };
 }
@@ -16,7 +17,7 @@
                 <vc:back-link asp-controller="Account" asp-action="CreateAccountCountrySelection" asp-all-route-data="@routeData" link-text="Back to: Search for your country" />
                 @if (errorHasOccurred)
                 {
-                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model.RegionId) })" />
                 }
                 <form asp-controller="Account" asp-action="CreateAccountSubmitRegionSelection" method="post">
                     <input type="hidden" name="formSubmission" value="true">

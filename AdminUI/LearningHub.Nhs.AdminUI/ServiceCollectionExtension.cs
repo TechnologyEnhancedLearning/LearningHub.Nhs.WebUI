@@ -141,6 +141,7 @@
 
             services.AddTransient<CookieEventHandler>();
             services.AddSingleton<LogoutUserManager>();
+            services.AddSingleton<VersionService>();
 
             services.AddAuthentication(options =>
             {
@@ -195,6 +196,8 @@
             // Auto Mapper Configurations
             var mappingConfig = new MapperConfiguration(mc =>
             {
+                mc.AllowNullCollections = true;
+                mc.ShouldMapMethod = m => false;
                 mc.AddProfile(new MappingProfile());
             });
             IMapper mapper = mappingConfig.CreateMapper();

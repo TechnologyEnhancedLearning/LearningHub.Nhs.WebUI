@@ -78,6 +78,8 @@ namespace LearningHub.Nhs.ReportingApi
         {
             services.AddSingleton(new MapperConfiguration(mc =>
             {
+                mc.AllowNullCollections = true;
+                mc.ShouldMapMethod = m => false;
                 mc.AddProfile(new MappingProfile());
             }).CreateMapper());
         }

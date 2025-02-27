@@ -1,7 +1,7 @@
 <template>
     <div class="panel-card-container">
 
-        <div tabindex="0" style="background-size: cover;" class="h-100 my-contribute-card contribute-resource-panel-card">
+        <div style="background-size: cover;" class="h-100 my-contribute-card contribute-resource-panel-card">
             
             <a class="h-100 d-flex flex-column text-decoration-none" v-bind:href="contributeResourceUrl">
                 <div class="mt-5 mb-3"><h2 class="nhsuk-heading-xs mx-4 header text-center">Contribute a resource</h2></div>

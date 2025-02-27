@@ -21,7 +21,7 @@
                 <h1 class="nhsuk-heading-xl">Enter your @jobDetails.MedicalCouncilCode number</h1>
 
 
-                <form asp-controller="Account" asp-action="CreateAccountGradeSelection" method="get">
+                <form asp-controller="Account" asp-action="CreateAccountGradeSelection" method="post">
                     <input type="hidden" name="formSubmission" value="true">
                     @if (errorHasOccurred)
                     {
@@ -52,9 +52,7 @@
                                    hint-text=""
                                    autocomplete=""
                                    css-class="nhsuk-u-width-one-half"
-                                   required="true"
-                                   required-client-side-error-message="@jobDetails.MedicalCouncilName Number is required" />
-
+                                   required="false"/>
 
                     <div class="nhsuk-form-group">
                         <button type="submit" class="nhsuk-button">Continue</button>

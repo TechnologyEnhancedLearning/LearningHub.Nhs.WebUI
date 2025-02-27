@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Start Date";
+    ViewData["DisableValidation"] = true;
     var errorHasOccurred = !ViewData.ModelState.IsValid;
     var exampleDate = DateTime.Today;
     var hintTextLines = new List<string> { $"Enter the date you started your current role, for example, 24 08 2021" };

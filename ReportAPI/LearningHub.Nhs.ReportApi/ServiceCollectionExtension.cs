@@ -37,13 +37,16 @@
             var settings = new Settings();
             configuration.Bind("Settings", settings);
 
+            var buildNumber = $"Build Number: {configuration["Swagger:BuildNumber"]}";
             var swaggerTitle = configuration["Swagger:Title"];
             var swaggerVersion = configuration["Swagger:Version"];
-            var swaggerDescription = $"Build Number: {configuration["Swagger:BuildNumber"]}";
+            var swaggerDescription = "This is the API documentation for " + buildNumber + " and version ";
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc(swaggerTitle, new OpenApiInfo { Title = swaggerTitle, Version = swaggerVersion, Description = swaggerDescription });
+                var version = typeof(Program).Assembly.GetName().Version;
+                var versionString = $"{version?.Major}.{version?.Minor}.{version?.Build}";
+                c.SwaggerDoc(swaggerTitle, new OpenApiInfo { Title = swaggerTitle, Version = swaggerVersion, Description = $"{swaggerDescription}{versionString}" });
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.XML"));
                 c.CustomSchemaIds(type => type.ToString());
             });

@@ -19,6 +19,13 @@ textarea {
     margin-right: 16px;
     height: 60px;
     min-width: 60px;
+
+}
+
+.catalogue-card-badge {
+    margin-right: 16px;
+    height: 60px;
+    min-width: 60px;
 }
 
 .folder-title {
@@ -77,6 +84,12 @@ textarea {
     }
 
     .catalogue-badge {
+        height: 40px;
+        min-width: 40px;
+        margin-right: 10px;
+    }
+
+    .catalogue-card-badge {
         height: 40px;
         min-width: 40px;
         margin-right: 10px;

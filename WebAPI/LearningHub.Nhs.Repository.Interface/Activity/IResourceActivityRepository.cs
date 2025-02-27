@@ -95,5 +95,14 @@
         /// <param name="resourceId">The resource id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<List<ResourceActivity>> GetAllTheActivitiesFromSP(int userId, int resourceId);
+
+        /// <summary>
+        /// Get the assessment activity completion details.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <param name="activityId">The activityId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<AssessmentActivityCompletionViewModel> GetAssessmentActivityCompletionPercentage(int userId, int resourceVersionId, int activityId);
     }
 }

@@ -28,7 +28,7 @@
     previousRouteData["MyLearningFormActionType"] = MyLearningFormActionTypeEnum.PreviousPageChange.ToString();
 }
 
-@if (showPaging == true)
+@if (pagingModel.TotalPages > 1)
 {
     <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
         <ul class="nhsuk-list nhsuk-pagination__list">

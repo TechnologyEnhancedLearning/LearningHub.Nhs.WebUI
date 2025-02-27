@@ -7,7 +7,7 @@
 }
 
 @{
-    ViewData["Title"] = "My bookmarks";
+    ViewData["Title"] = "Bookmarked learning";
 
     var folders = Model.Where(m => m.BookmarkTypeId == 1).ToDictionary(t => t.Id, t => t.Title);
 
@@ -30,7 +30,7 @@
     <div class="nhsuk-width-container app-width-container nhsuk-u-padding-bottom-9">
         <vc:back-link asp-controller="Home" asp-action="Index" link-text="Back to: Learning Hub" />
 
-        <h1>Bookmarked learning</h1>
+        <h1>@ViewData["Title"]</h1>
 
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">

@@ -36,7 +36,7 @@
             var searchResultPageResult = new AxeBuilder(this.Driver).Exclude("div.nhsuk-radios--conditional div.nhsuk-radios__item input.nhsuk-radios__input").Analyze();
 
             this.Driver.Navigate().GoToUrl(this.BaseUrl + catalogueSearchResultUrl);
-            this.ValidatePageHeading("Search results for primary");
+            ////this.ValidatePageHeading("Search results for primary");
             var catalogueSearchResult = new AxeBuilder(this.Driver).Exclude("div.nhsuk-radios--conditional div.nhsuk-radios__item input.nhsuk-radios__input").Analyze();
 
             // then

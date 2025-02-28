@@ -28,7 +28,7 @@ Note that this link has a time limit of [TimeLimit]. If you select the link afte
 To log in at any other time go to <a href="[TenantUrl]">[TenantUrl]</a>, enter your username and password and select the Sign in button.<br/><br/>  
 When you first log in you will be guided through a series of steps to complete your registration. Providing correct information means that we can offer you a better learning experience.<br/><br/>  
 Please <b>do not reply</b> to this email.<br/><br/>  
-<ol>  <li>For more information on how to log in, access learning resources and contribute resources, visit the Learning Hub <a href="[SupportFormUrl]">Support pages</a>.</li>  <li>If you have any problems or further questions, contact us using the following <a href="[SupportFormUrl]">Support Form</a>.</li>  <li>You can also use our <b>Live Chat</b> service which will connect you to the Support team. Look for the Live Chat icon in the bottom right of your browser when you visit the Learning Hub.</li>  </ol>  Thanks again for creating an account and we hope you enjoy your learning experience.<br/><br/>  
+For support: <ul>  <li>Visit the <a href="https://support.learningub.nhs.uk/">Support pages</a> for login guidance, learning resources, and contribution options. </li>  <li>If you have any issues or questions, contact us via the <a href="[SupportFormUrl]">Support Form</a>.</li>  <li>Use Live Chat (look for the icon in the bottom right of your browser) to connect directly with the Support Team.</li>  </ul>  Thank you for registering, we hope you enjoy your learning experience.<br/><br/>  
 The Learning Hub Support Team<br/>  
 NHS England<br/><br/>  
 <small>This e-mail and any files transmitted with it are confidential. If you are not the intended recipient, any reading, printing, storage, disclosure, copying or any other action taken in respect of this e-mail is prohibited and may be unlawful. If you are not the intended recipient, please notify the sender immediately by using the reply function and then permanently delete what you have received.<br/></small><br/>
@@ -47,9 +47,7 @@ In the unlikely event that selecting the above link does not work, please copy a
 Note that this link has a time limit of [TimeLimit]. If you select the link after this time you will receive instructions on how to generate a new one.<br/><br/>  
 Once you have reset your password you will be given a link to log in with your new password.<br/><br/>  
 Please <b>do not reply</b> to this email.<br/><br/>    
-<ol>  <li>For more information on how to log in, access learning resources and contribute resources, visit the Learning Hub <a href="https://support.learningub.nhs.uk/">Support pages</a>.</li>  
-<li>If you have any problems or further questions, contact us using the following <a href="[SupportFormUrl]">Support Form</a>.</li>  
-<li>You can also use our <b>Live Chat</b> service which will connect you to the Support team. Look for the Live Chat icon in the bottom right of your browser when you visit the Learning Hub.</li>  </ol> 
+For support: <ul>  <li>Visit the <a href="https://support.learningub.nhs.uk/">Support pages</a> for login guidance, learning resources, and contribution options. </li>  <li>If you have any issues or questions, contact us via the <a href="[SupportFormUrl]">Support Form</a>.</li>  <li>Use Live Chat (look for the icon in the bottom right of your browser) to connect directly with the Support Team.</li>  </ul> 
 We hope you enjoy your learning experience.<br/><br/>  The Learning Hub Support Team<br/>  
 NHS England<br/><br/>  
 <small>This e-mail and any files transmitted with it are confidential. If you are not the intended recipient, any reading, printing, storage, disclosure, copying or any other action taken in respect of this e-mail is prohibited and may be unlawful. If you are not the intended recipient, please notify the sender immediately by using the reply function and then permanently delete what you have received.<br/></small><br/>
@@ -66,10 +64,8 @@ We received a request to retrieve your username for the Learning Hub.<br/><br/>
 If this was not you, contact us using the following <a href="[SupportFormUrl]">Support Form</a>.<br/><br/>  
 The username registered to this email address is: [UserName]<br/><br/>  
 If you know your password, you can log in straight away or do you need a <b><a href="[TenantUrl]/forgotten-password">password reminder</a></b> password reminder?<br/><br/>  
-Please <b>do not reply</b> to this email.<br/><br/>   <ol>  
-<li>For more information on how to log in, access learning resources and contribute resources, visit the Learning Hub <a href="https://support.learninghub.nhs.uk/">Support pages</a>.</li>  
-<li>If you have any problems or further questions, contact us using the following <a href="[SupportFormUrl]">Support Form</a>.</li>  
-<li>You can also use our <b>Live Chat</b> service which will connect you to the Support team. Look for the Live Chat icon in the bottom right of your browser when you visit the Learning Hub.</li>  </ol>  
+Please <b>do not reply</b> to this email.<br/><br/>   
+For support: <ul>  <li>Visit the <a href="https://support.learningub.nhs.uk/">Support pages</a> for login guidance, learning resources, and contribution options. </li>  <li>If you have any issues or questions, contact us via the <a href="[SupportFormUrl]">Support Form</a>.</li>  <li>Use Live Chat (look for the icon in the bottom right of your browser) to connect directly with the Support Team.</li>  </ul>  
 We hope you enjoy your learning experience.<br/><br/>  
 The Learning Hub Support Team<br/> 
 NHS England<br/><br/>  

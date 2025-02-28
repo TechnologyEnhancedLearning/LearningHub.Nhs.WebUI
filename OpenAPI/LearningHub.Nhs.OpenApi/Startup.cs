@@ -190,6 +190,17 @@ namespace LearningHub.NHS.OpenAPI
                 c.OAuthUsePkce();
             });
 
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("content-security-policy", "default-src 'self'; " + $"script-src 'self' 'nonce-random772362' https://script.hotjar.com https://www.google-analytics.com https://static.hotjar.com https://www.googletagmanager.com https://cdnjs.cloudflare.com 'unsafe-hashes' 'sha256-oywvD6W6okwID679n4cvPJtWLowSS70Pz87v1ryS0DU=' 'sha256-kbHtQyYDQKz4SWMQ8OHVol3EC0t3tHEJFPCSwNG9NxQ' 'sha256-YoDy5WvNzQHMq2kYTFhDYiGnEgPrvAY5Il6eUu/P4xY=' 'sha256-/n13APBYdqlQW71ZpWflMB/QoXNSUKDxZk1rgZc+Jz8='   'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU=' 'sha256-VQKp2qxuvQmMpqE/U/ASQ0ZQ0pIDvC3dgQPPCqDlvBo=';" + "style-src 'self' 'unsafe-inline' https://use.fontawesome.com; " + "font-src https://script.hotjar.com https://assets.nhs.uk/; " + "connect-src 'self' http: ws:; " + "img-src 'self' data: https:; " + "frame-src 'self' https:");
+                context.Response.Headers.Add("Referrer-Policy", "no-referrer");
+                context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                context.Response.Headers.Add("X-Frame-Options", "deny");
+                context.Response.Headers.Add("X-XSS-protection", "0");
+                await next();
+            });
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

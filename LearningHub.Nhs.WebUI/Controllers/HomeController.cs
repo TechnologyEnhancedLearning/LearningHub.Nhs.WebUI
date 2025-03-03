@@ -15,13 +15,13 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
-    using Microsoft.ApplicationInsights.AspNetCore;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.FeatureManagement;
@@ -39,6 +39,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         private readonly IDashboardService dashboardService;
         private readonly IContentService contentService;
         private readonly IFeatureManager featureManager;
+        private readonly Microsoft.Extensions.Configuration.IConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController"/> class.
@@ -53,6 +54,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="dashboardService">Dashboard service.</param>
         /// <param name="contentService">Content service.</param>
         /// <param name="featureManager"> featureManager.</param>
+        /// <param name="configuration"> config.</param>
         public HomeController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
@@ -63,7 +65,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
             LearningHubAuthServiceConfig authConfig,
             IDashboardService dashboardService,
             IContentService contentService,
-            IFeatureManager featureManager)
+            IFeatureManager featureManager,
+            Microsoft.Extensions.Configuration.IConfiguration configuration)
         : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.authConfig = authConfig;
@@ -72,6 +75,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             this.dashboardService = dashboardService;
             this.contentService = contentService;
             this.featureManager = featureManager;
+            this.configuration = configuration;
         }
 
         /// <summary>
@@ -168,6 +172,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
             {
                 if (originalPath == "/TooManyRequests")
                 {
+                    this.ViewBag.Period = this.configuration["IpRateLimiting:GeneralRules:0:Period"];
+                    this.ViewBag.Limit = this.configuration["IpRateLimiting:GeneralRules:0:Limit"];
+
                     return this.View("TooManyRequests");
                 }
                 else

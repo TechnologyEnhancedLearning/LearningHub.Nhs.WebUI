@@ -167,6 +167,52 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             }
         }
 
+        /// <summary>
+        /// The Get Auto suggestion Results Async method.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term)
+        {
+            var viewmodel = new AutoSuggestionModel();
+
+            try
+            {
+                var client = await this.findwiseClient.GetClient(this.findwiseConfig.SearchBaseUrl);
+                var request = string.Format(
+                   this.findwiseConfig.SearchEndpointPath + "?q={1}&token={2}",
+                   this.findwiseConfig.CollectionIds.AutoSuggestion,
+                   this.EncodeSearchText(term),
+                   this.findwiseConfig.Token);
+
+
+                var response = await client.GetAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    viewmodel = JsonConvert.DeserializeObject<AutoSuggestionModel>(result);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    this.logger.LogError($"Get Auto Suggetion Result failed in FindWise, HTTP Status Code:{response.StatusCode}");
+                    throw new Exception("AccessDenied to FindWise Server");
+                }
+                else
+                {
+                    var error = response.Content.ReadAsStringAsync().Result.ToString();
+                    this.logger.LogError($"Get Auto Suggetion Result failed in FindWise, HTTP Status Code:{response.StatusCode}, Error Message:{error}");
+                    throw new Exception("Error with FindWise Server");
+                }
+
+                return viewmodel;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         private string EncodeSearchText(string searchText)
         {
             string specialSearchCharacters = this.findwiseConfig.SpecialSearchCharacters;

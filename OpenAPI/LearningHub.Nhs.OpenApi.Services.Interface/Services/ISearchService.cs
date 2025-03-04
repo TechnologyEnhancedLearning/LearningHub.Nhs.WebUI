@@ -25,6 +25,13 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         Task<SearchAllCatalogueResultModel> GetAllCatalogueSearchResultsAsync(AllCatalogueSearchRequestModel catalogSearchRequestModel);
 
         /// <summary>
+        /// The Get Auto suggestion Results Async method.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term);
+
+        /// <summary>
         /// The remove resource from search method.
         /// </summary>
         /// <param name="resourceId">The resource id.</param>

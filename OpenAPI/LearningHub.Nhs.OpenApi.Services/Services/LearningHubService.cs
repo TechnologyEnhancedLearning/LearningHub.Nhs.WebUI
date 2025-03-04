@@ -23,5 +23,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         {
             return this.config.BaseUrl + this.config.LaunchResourceEndpoint + resourceReferenceId;
         }
+
+        /// <inheritdoc />
+        public string GetExternalResourceLaunchUrl(string externalReference)
+        {
+            return this.config.ContentServerUrl + externalReference;
+        }
     }
 }

@@ -6,6 +6,11 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
     public class FindwiseConfig
     {
         /// <summary>
+        /// Gets or sets the base url for the Findwise Index endpoint.
+        /// </summary>
+        public string IndexUrl { get; set; } = null!;
+
+        /// <summary>
         /// Gets or sets the base url for the Findwise search service.
         /// </summary>
         public string SearchBaseUrl { get; set; } = null!;
@@ -26,6 +31,16 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         public int DefaultItemLimitForSearch { get; set; }
 
         /// <summary>
+        /// Gets or sets the description limit.
+        /// </summary>
+        public int DescriptionLengthLimit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the description length.
+        /// </summary>
+        public int MaximumDescriptionLength { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection ids.
         /// </summary>
         public FindwiseCollectionIdSettings CollectionIds { get; set; } = null!;
@@ -34,5 +49,10 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         ///  Gets or sets the special search characters.
         /// </summary>
         public string SpecialSearchCharacters { get; set; } = null!;
+
+        /// <summary>
+        ///  Gets or sets the index method.
+        /// </summary>
+        public string IndexMethod { get; set; } = null!;
     }
 }

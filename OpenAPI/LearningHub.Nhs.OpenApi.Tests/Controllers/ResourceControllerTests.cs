@@ -4,9 +4,10 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
-    using System.Threading.Tasks;
+    using System.Security.Claims;
     using FizzWare.NBuilder;
     using FluentAssertions;
+    using LearningHub.Nhs.Models.Enums;
     using LearningHub.NHS.OpenAPI.Controllers;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Models.Exceptions;
@@ -14,19 +15,21 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
     using LearningHub.Nhs.OpenApi.Models.ServiceModels.Resource;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
     using Moq;
     using Newtonsoft.Json;
     using Xunit;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using System.Security.Claims;
-    using LearningHub.Nhs.Models.Enums;
+    using System.Threading.Tasks;
 
     public sealed class ResourceControllerTests
     {
         private readonly Mock<ISearchService> searchService;
         private readonly Mock<IResourceService> resourceService;
+        private readonly Mock<IActivityService> activityService;
+        private readonly Mock<IFileTypeService> fileTypeService;
+        private readonly Mock<IHierarchyService> hierarchyService;
         private readonly Mock<IOptions<FindwiseConfig>> findwiseConfigOptions;
         private ResourceController? resourceController;
 
@@ -35,7 +38,10 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
             this.searchService = new Mock<ISearchService>();
             this.findwiseConfigOptions = new Mock<IOptions<FindwiseConfig>>();
             this.resourceService = new Mock<IResourceService>();
-            this.resourceController = new ResourceController(this.searchService.Object, this.resourceService.Object, this.findwiseConfigOptions.Object);
+            this.activityService = new Mock<IActivityService>();
+            this.fileTypeService = new Mock<IFileTypeService>();
+            this.hierarchyService = new Mock<IHierarchyService>();
+            this.resourceController = new ResourceController(this.searchService.Object, this.resourceService.Object, this.hierarchyService.Object, this.findwiseConfigOptions.Object, this.activityService.Object, this.fileTypeService.Object);
         }
 
         [Fact]
@@ -44,10 +50,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
             // Given
             this.GivenSearchServiceFailsWithStatus(FindwiseRequestStatus.Timeout);
             this.GivenDefaultLimitForFindwiseSearchIs(12);
-            this.resourceController = new ResourceController(
-                this.searchService.Object,
-                this.resourceService.Object,
-                this.findwiseConfigOptions.Object);
+            this.resourceController = new ResourceController(this.searchService.Object, this.resourceService.Object, this.hierarchyService.Object, this.findwiseConfigOptions.Object, this.activityService.Object, this.fileTypeService.Object);
 
             // When / Then
             var exception =
@@ -59,10 +62,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
         public async Task SearchEndpointReturnsBadRequestIfGivenNegativeOffset()
         {
             // Given
-            this.resourceController = new ResourceController(
-                this.searchService.Object,
-                this.resourceService.Object,
-                this.findwiseConfigOptions.Object);
+            this.resourceController = new ResourceController(this.searchService.Object, this.resourceService.Object, this.hierarchyService.Object, this.findwiseConfigOptions.Object, this.activityService.Object, this.fileTypeService.Object);
 
             // When / Then
             var exception =
@@ -75,10 +75,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
         public async Task SearchEndpointReturnsBadRequestIfGivenNegativeLimit()
         {
             // Given
-            this.resourceController = new ResourceController(
-                this.searchService.Object,
-                this.resourceService.Object,
-                this.findwiseConfigOptions.Object);
+            this.resourceController = new ResourceController(this.searchService.Object, this.resourceService.Object, this.hierarchyService.Object, this.findwiseConfigOptions.Object, this.activityService.Object, this.fileTypeService.Object);
 
             // When / Then
             var exception =
@@ -94,10 +91,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
             int? currentUserId = null; //E.g if hitting endpoint with ApiKey auth
             this.GivenSearchServiceSucceedsButFindsNoItems();
             this.GivenDefaultLimitForFindwiseSearchIs(12);
-            this.resourceController = new ResourceController(
-                this.searchService.Object,
-                this.resourceService.Object,
-                this.findwiseConfigOptions.Object);
+            this.resourceController = new ResourceController(this.searchService.Object, this.resourceService.Object, this.hierarchyService.Object, this.findwiseConfigOptions.Object, this.activityService.Object, this.fileTypeService.Object);
 
             // When
             await this.resourceController.Search("Bob Mortimer");
@@ -111,10 +105,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
         public async Task BulkGetEndpointReturns400IfGivenAListWithMoreThan1000Elements()
         {
             // Given
-            this.resourceController = new ResourceController(
-                this.searchService.Object,
-                this.resourceService.Object,
-                this.findwiseConfigOptions.Object);
+            this.resourceController = new ResourceController(this.searchService.Object, this.resourceService.Object, this.hierarchyService.Object, this.findwiseConfigOptions.Object, this.activityService.Object, this.fileTypeService.Object);
             var bigList = Builder<int>.CreateListOfSize(1001).Build().ToList();
 
             // When
@@ -130,10 +121,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
         public async Task BulkJsonGetEndpointReturns400IfGivenAListWithMoreThan1000Elements()
         {
             // Given
-            this.resourceController = new ResourceController(
-                this.searchService.Object,
-                this.resourceService.Object,
-                this.findwiseConfigOptions.Object);
+            this.resourceController = new ResourceController(this.searchService.Object, this.resourceService.Object, this.hierarchyService.Object, this.findwiseConfigOptions.Object, this.activityService.Object, this.fileTypeService.Object);
             var bigList = Builder<int>.CreateListOfSize(1001).Build().ToList();
             var resourceIdsObject = new { referenceIds = bigList };
             var jsonWithTooManyResourceIds = JsonConvert.SerializeObject(resourceIdsObject);
@@ -151,10 +139,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
         public async Task BulkJsonGetEndpointThrowsExceptionIfGivenANonJsonString()
         {
             // Given
-            this.resourceController = new ResourceController(
-                this.searchService.Object,
-                this.resourceService.Object,
-                this.findwiseConfigOptions.Object);
+            this.resourceController = new ResourceController(this.searchService.Object, this.resourceService.Object, this.hierarchyService.Object, this.findwiseConfigOptions.Object, this.activityService.Object, this.fileTypeService.Object);
             const string? notAJsonString = "randomString";
 
             // When
@@ -166,10 +151,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
         public async Task BulkJsonGetEndpointReturns400IfGivenAJsonWithIncorrectKey()
         {
             // Given
-            this.resourceController = new ResourceController(
-                this.searchService.Object,
-                this.resourceService.Object,
-                this.findwiseConfigOptions.Object);
+            this.resourceController = new ResourceController(this.searchService.Object, this.resourceService.Object, this.hierarchyService.Object, this.findwiseConfigOptions.Object, this.activityService.Object, this.fileTypeService.Object);
             var randomObject = new { notTheRightKey = new List<int> { 1, 2, 3 } };
             var jsonWithWrongKey = JsonConvert.SerializeObject(randomObject);
 
@@ -186,11 +168,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
         public void CurrentUserIdSetByAuth()
         {
             // Arrange
-            ResourceController resourceController = new ResourceController(
-                this.searchService.Object,
-                this.resourceService.Object,
-                this.findwiseConfigOptions.Object
-            );
+            ResourceController resourceController = new ResourceController(this.searchService.Object, this.resourceService.Object, this.hierarchyService.Object, this.findwiseConfigOptions.Object, this.activityService.Object, this.fileTypeService.Object);
 
 
             // This Id is the development accountId
@@ -227,10 +205,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Controllers
             int? currentUserId = null; //E.g if hitting endpoint with ApiKey auth
             this.GivenSearchServiceSucceedsButFindsNoItems();
             this.GivenDefaultLimitForFindwiseSearchIs(20);
-            this.resourceController = new ResourceController(
-                this.searchService.Object,
-                this.resourceService.Object,
-                this.findwiseConfigOptions.Object);
+            this.resourceController = new ResourceController(this.searchService.Object, this.resourceService.Object, this.hierarchyService.Object, this.findwiseConfigOptions.Object, this.activityService.Object, this.fileTypeService.Object);
 
             // When
             await this.resourceController.Search("Bob Mortimer", limit: limit);

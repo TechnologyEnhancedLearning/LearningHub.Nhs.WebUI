@@ -1,5 +1,6 @@
 ﻿namespace LearningHub.NHS.OpenAPI.Controllers
 {
+    using System;
     using System.Net;
     using System.Security.Claims;
     using LearningHub.Nhs.OpenApi.Models.Exceptions;
@@ -8,7 +9,7 @@
     /// <summary>
     /// The base class for API controllers.
     /// </summary>
-    public abstract class OpenApiControllerBase : ControllerBase
+    public abstract class OpenApiControllerBase : ControllerBase, IDisposable
     {
         /// <summary>
         /// Gets the current user's ID.
@@ -55,6 +56,12 @@
 
                 return accessToken.StartsWith("Bearer ") ? accessToken.Substring("Bearer ".Length) : accessToken;
             }
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
 }

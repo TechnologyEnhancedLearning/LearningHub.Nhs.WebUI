@@ -1,6 +1,7 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserMedicalCouncilNoUpdateViewModel
 
 @{
+    ViewData["DisableValidation"] = true;
     ViewData["Title"] = "Update Medical Council Number";
     var errorHasOccurred = !ViewData.ModelState.IsValid;
 }

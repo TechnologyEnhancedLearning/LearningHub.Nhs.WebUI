@@ -99,7 +99,7 @@
                 RoadmapTypeId = update.RoadmapTypeId,
             };
             var roadmapId = await this.roadmapService.AddRoadmap(roadmap);
-            return this.RedirectToAction("EditUpdate", new { id = roadmapId });
+            return this.RedirectToAction("Details", new { id = roadmapId });
         }
 
         /// <summary>
@@ -160,7 +160,7 @@
                 Id = update.Id,
             };
             await this.roadmapService.UpdateRoadmap(roadmap);
-            return this.RedirectToAction("EditUpdate", new { roadmap.Id });
+            return this.RedirectToAction("Details", new { roadmap.Id });
         }
 
         /// <summary>
@@ -200,6 +200,18 @@
                 CreateRequired = false,
             };
             return this.View(model);
+        }
+
+        /// <summary>
+        /// The Details.
+        /// </summary>
+        /// <param name="id">The id<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var roadmap = await this.roadmapService.GetIdAsync(id);
+            return this.View(roadmap);
         }
 
         /// <summary>

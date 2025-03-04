@@ -1,6 +1,7 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserGradeUpdateViewModel
 
 @{
+    ViewData["DisableValidation"] = true;
     ViewData["Title"] = "Update Job Grade";
     var errorHasOccurred = !ViewData.ModelState.IsValid;
 }
@@ -57,7 +58,7 @@
                                    populate-with-current-values="true"
                                    radios="@Model.GradeRadio().ToList()"
                                    hint-text="You can find this on your payslip."
-                                   required-client-side-error-message="Select a grade"
+                                   required-client-side-error-message="Select a pay band. You can find this information from your paper payslip or online via ESR"
                                    required="true" />
 
                     <div class="nhsuk-form-group">

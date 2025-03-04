@@ -1,6 +1,7 @@
 ﻿@using LearningHub.Nhs.WebUI.Models.UserProfile
 @model Tuple<UserProfileSummaryViewModel, UserLocationViewModel>
 @{
+  ViewData["DisableValidation"] = true;
   ViewData["Title"] = "My Account - Change country";
   var errorHasOccurred = !ViewData.ModelState.IsValid;
 }

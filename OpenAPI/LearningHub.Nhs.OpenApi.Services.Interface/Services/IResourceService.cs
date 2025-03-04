@@ -2,7 +2,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using LearningHub.Nhs.Models.Content;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.Contribute;

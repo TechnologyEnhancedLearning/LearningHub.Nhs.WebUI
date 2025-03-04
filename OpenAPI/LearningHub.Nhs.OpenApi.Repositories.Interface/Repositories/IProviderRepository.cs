@@ -1,10 +1,8 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
 {
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities;
-    using LearningHub.Nhs.Models.Entities.Resource;
 
     /// <summary>
     /// The ProviderRepository interface.

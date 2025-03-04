@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using LearningHub.Nhs.Models.Common;
-    using LearningHub.Nhs.Models.Common.Interfaces;
     using LearningHub.Nhs.Models.Constants;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Enums;

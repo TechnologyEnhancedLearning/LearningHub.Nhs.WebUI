@@ -2,12 +2,9 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
-    using LearningHub.Nhs.Models.Dashboard;
-    using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;

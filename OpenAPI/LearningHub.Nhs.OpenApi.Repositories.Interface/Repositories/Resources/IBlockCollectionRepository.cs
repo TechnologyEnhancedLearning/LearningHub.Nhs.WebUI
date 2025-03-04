@@ -1,6 +1,5 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Resources
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Resource.Blocks;

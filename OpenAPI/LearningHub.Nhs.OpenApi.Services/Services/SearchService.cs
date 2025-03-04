@@ -7,7 +7,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using System.Web;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
-    using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.ViewModels.Helpers;
     using LearningHub.Nhs.OpenApi.Models.Configuration;

@@ -17,7 +17,6 @@
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
-    // using LearningHub.Nhs.OpenApi.Models.ViewModels;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Activity;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Hierarchy;

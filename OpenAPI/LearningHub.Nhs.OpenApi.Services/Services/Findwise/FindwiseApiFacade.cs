@@ -8,7 +8,6 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
-    using LearningHub.Nhs.OpenApi.Services.HttpClients;
     using LearningHub.Nhs.OpenApi.Services.Interface.HttpClients;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.Extensions.Logging;

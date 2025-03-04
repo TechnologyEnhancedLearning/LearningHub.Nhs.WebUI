@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Resource;
-    using LearningHub.Nhs.Models.Resource;
 
     /// <summary>
     /// The GenericFileResourceVersionRepository interface.

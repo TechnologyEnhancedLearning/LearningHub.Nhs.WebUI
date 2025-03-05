@@ -21,10 +21,12 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Routing;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using NHSUKViewComponents.Web.ViewModels;
     using ChangePasswordViewModel = LearningHub.Nhs.WebUI.Models.UserProfile.ChangePasswordViewModel;
+    using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
     /// <summary>
     /// The UserController.
@@ -43,6 +45,7 @@
         private readonly ISpecialtyService specialtyService;
         private readonly ILocationService locationService;
         private readonly ICacheService cacheService;
+        private readonly IConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MyAccountController"/> class.
@@ -61,6 +64,7 @@
         /// <param name="locationService">The locationService.</param>
         /// <param name="multiPageFormService">The multiPageFormService<see cref="IMultiPageFormService"/>.</param>
         /// <param name="cacheService">The cacheService<see cref="ICacheService"/>.</param>
+        /// <param name="configuration">The cacheService<see cref="IConfiguration"/>.</param>
         public MyAccountController(
                 IWebHostEnvironment hostingEnvironment,
                 ILogger<ResourceController> logger,
@@ -75,7 +79,8 @@
                 ISpecialtyService specialtyService,
                 ILocationService locationService,
                 IMultiPageFormService multiPageFormService,
-                ICacheService cacheService)
+                ICacheService cacheService,
+                IConfiguration configuration)
                 : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.userService = userService;
@@ -88,6 +93,7 @@
             this.locationService = locationService;
             this.multiPageFormService = multiPageFormService;
             this.cacheService = cacheService;
+            this.configuration = configuration;
         }
 
         private string LoginWizardCacheKey => $"{this.CurrentUserId}:LoginWizard";
@@ -452,9 +458,8 @@
             if (this.ModelState.IsValid)
             {
                 await this.userService.UpdatePassword(model.NewPassword);
-
-                this.ViewBag.SuccessMessage = CommonValidationErrorMessages.PasswordSuccessMessage;
-                return this.View("SuccessMessage");
+                var redirectUri = $"{this.configuration["LearningHubAuthServiceConfig:Authority"]}/Home/SetIsPasswordUpdate?isLogout=false";
+                return this.Redirect(redirectUri);
             }
             else
             {

@@ -335,6 +335,29 @@ namespace LearningHub.Nhs.WebUI.Controllers
         }
 
         /// <summary>
+        /// The ChangePasswordAcknowledgement.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        public IActionResult ChangePasswordAcknowledgement()
+        {
+            return this.View();
+        }
+
+        /// <summary>
+        /// StatusUpdate.
+        /// </summary>
+        /// <returns>Actionresult.</returns>
+        public IActionResult UserLogout()
+        {
+            if (!(this.User?.Identity.IsAuthenticated ?? false))
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            return new SignOutResult(new[] { CookieAuthenticationDefaults.AuthenticationScheme, "oidc" });
+        }
+
+        /// <summary>
         /// The Logout.
         /// This is directly referenced in the LoginWizardFilter to allow
         /// logouts to bypass LoginWizard redirects.
@@ -344,12 +367,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
         [AllowAnonymous]
         public IActionResult Logout()
         {
-            if (!(this.User?.Identity.IsAuthenticated ?? false))
-            {
-                return this.RedirectToAction("Index");
-            }
-
-            return new SignOutResult(new[] { CookieAuthenticationDefaults.AuthenticationScheme, "oidc" });
+            var redirectUri = $"{this.configuration["LearningHubAuthServiceConfig:Authority"]}/Home/SetIsPasswordUpdate?isLogout=true";
+            return this.Redirect(redirectUri);
         }
 
         /// <summary>

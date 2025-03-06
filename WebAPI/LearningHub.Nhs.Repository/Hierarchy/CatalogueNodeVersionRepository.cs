@@ -373,18 +373,15 @@
         /// <summary>
         /// Gets catalogues based on filter character.
         /// </summary>
-        /// <param name="pageSize">The pageSize.</param>
         /// <param name="filterChar">The filterChar.</param>
         /// <param name="userId">The userId.</param>
         /// <returns>resources.</returns>
-        public async Task<List<AllCatalogueViewModel>> GetAllCataloguesAsync(int pageSize, string filterChar, int userId)
+        public async Task<List<AllCatalogueViewModel>> GetAllCataloguesAsync(string filterChar, int userId)
         {
             var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
             var param1 = new SqlParameter("@filterChar", SqlDbType.NVarChar, 10) { Value = filterChar.Trim() };
-            var param2 = new SqlParameter("@OffsetRows", SqlDbType.Int) { Value = 0 };
-            var param3 = new SqlParameter("@fetchRows", SqlDbType.Int) { Value = pageSize };
 
-            var result = await this.DbContext.AllCatalogueViewModel.FromSqlRaw("[hierarchy].[GetCatalogues] @userId, @filterChar, @OffsetRows, @fetchRows", param0, param1, param2, param3)
+            var result = await this.DbContext.AllCatalogueViewModel.FromSqlRaw("[hierarchy].[GetCatalogues] @userId, @filterChar", param0, param1)
               .AsNoTracking().ToListAsync();
             return result;
         }

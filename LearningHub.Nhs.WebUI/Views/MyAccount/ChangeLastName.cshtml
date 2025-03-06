@@ -1,6 +1,7 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserPersonalDetailsViewModel
 
 @{
+  ViewData["DisableValidation"] = true;
   ViewData["Title"] = "My Account - Change last name";
   var errorHasOccurred = !ViewData.ModelState.IsValid;
 }

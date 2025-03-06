@@ -15,7 +15,7 @@
 <div class="go-back-header">
     <a href="@Url.Action("Updates", "Roadmap")">&lt; Go back</a>
 </div>
-<form style="margin-left: 24px; margin-right: 24px; max-width: 800px;" action="/Roadmap/@formAction" method="POST" enctype="multipart/form-data">
+<form style="margin-left: 24px; margin-right: 24px; max-width: 800px;" action="/Roadmap/@formAction" method="POST" onsubmit="btnSave.disabled = true; return true;" enctype="multipart/form-data">
     <input type="hidden" name="RoadmapTypeId" value="@Model.RoadmapTypeId"/>
     <input type="hidden" name="Id" value="@Model.Id"/>
     <div class="row mt-5">
@@ -99,7 +99,7 @@
     </div>
     <div class="row mt-5">
         <div class="col-12 d-flex justify-content-between">
-            <button class="btn btn-custom-green">Save</button>
+            <button class="btn btn-custom-green" id="btnSave">Save</button>
             @if (isNew)
             {
                 <a class="btn-link-red btn btn-link" asp-action="Updates" asp-controller="Roadmap">Cancel</a>

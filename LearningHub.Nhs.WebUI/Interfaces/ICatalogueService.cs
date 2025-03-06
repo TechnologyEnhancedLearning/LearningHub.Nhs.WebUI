@@ -143,8 +143,7 @@
         /// The GetAllCatalogueAsync.
         /// </summary>
         /// <param name="filterChar">The letter.</param>
-        /// <param name="pageSize">The pageSize.</param>
         /// <returns>The allcatalogue result based on letters.</returns>
-        Task<AllCatalogueResponseViewModel> GetAllCatalogueAsync(string filterChar, int pageSize);
+        Task<AllCatalogueResponseViewModel> GetAllCatalogueAsync(string filterChar);
     }
 }

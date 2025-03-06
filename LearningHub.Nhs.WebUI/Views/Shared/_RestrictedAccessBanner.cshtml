@@ -4,26 +4,26 @@
 
 @if (ViewBag.UserAuthenticated && Model.RestrictedAccess && !Model.HasCatalogueAccess)
 {
-    <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-3 nhsuk-u-margin-bottom-3">
-        <div class="nhsuk-width-container app-width-container">
-            @if (Model.CatalogueAccessRequest == null || Model.UserGroups.Count == 0)
-            {
-                <h2>@Model.TitleText</h2>
-                <p class="nhsuk-u-reading-width">@Model.BodyText</p>
-                <a class="nhsuk-button" asp-controller="Catalogue" asp-action="RequestAccess" asp-route-catalogueNodeVersionId="@Model.CatalogueNodeVersionId">Request access</a>
-            }
-            else if (Model.CatalogueAccessRequest != null && Model.CatalogueAccessRequest.Status == CatalogueAccessRequestStatus.Pending)
-            {
-                <h2 class="nhsuk-card__heading">@Model.TitleText</h2>
-                <p>Your access request which was sent on @Model.CatalogueAccessRequest.DateRequested.ToString("dd MMM yyyy") is pending a decision.</p>
-                <p>If you need further information <a target="_blank" href="@ViewBag.SupportUrl">contact support</a></p>
-            }
-            else if (Model.CatalogueAccessRequest != null && Model.CatalogueAccessRequest.Status == CatalogueAccessRequestStatus.Rejected)
-            {
-                <h2>@Model.TitleText</h2>
-                <p class="nhsuk-u-reading-width">The catalogue administrator did not approve your request to access this catalogue on @Model.CatalogueAccessRequest.DateRejected.Value.ToString("dd MMM yyyy"). If anything has changed in relation to your original request, you can request access again.</p>
-                <a class="nhsuk-button" asp-controller="Catalogue" asp-action="RequestAccess" asp-route-catalogueNodeVersionId="@Model.CatalogueNodeVersionId">Request access</a>
-            }
-        </div>
+  <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-3 nhsuk-u-margin-bottom-3">
+    <div class="nhsuk-width-container app-width-container">
+      @if (Model.CatalogueAccessRequest != null && Model.CatalogueAccessRequest.Status == CatalogueAccessRequestStatus.Pending)
+      {
+      <h2 class="nhsuk-card__heading">@Model.TitleText</h2>
+      <p>Your access request which was sent on @Model.CatalogueAccessRequest.DateRequested.ToString("dd MMM yyyy") is pending a decision.</p>
+      <p>If you need further information <a target="_blank" href="@ViewBag.SupportUrl">contact support</a></p>
+      }
+      else if (Model.CatalogueAccessRequest != null && Model.CatalogueAccessRequest.Status == CatalogueAccessRequestStatus.Rejected)
+      {
+      <h2>@Model.TitleText</h2>
+      <p class="nhsuk-u-reading-width">The catalogue administrator did not approve your request to access this catalogue on @Model.CatalogueAccessRequest.DateRejected.Value.ToString("dd MMM yyyy"). If anything has changed in relation to your original request, you can request access again.</p>
+      <a class="nhsuk-button" asp-controller="Catalogue" asp-action="RequestAccess" asp-route-catalogueNodeVersionId="@Model.CatalogueNodeVersionId">Request access</a>
+      }
+      else if (Model.CatalogueAccessRequest == null || Model.UserGroups.Count == 0)
+      {
+      <h2>@Model.TitleText</h2>
+      <p class="nhsuk-u-reading-width">@Model.BodyText</p>
+      <a class="nhsuk-button" asp-controller="Catalogue" asp-action="RequestAccess" asp-route-catalogueNodeVersionId="@Model.CatalogueNodeVersionId">Request access</a>
+      }
     </div>
+  </div>
 }

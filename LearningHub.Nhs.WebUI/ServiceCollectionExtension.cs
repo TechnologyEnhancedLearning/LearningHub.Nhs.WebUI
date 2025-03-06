@@ -132,7 +132,7 @@
             });
 
             services.AddControllersWithViews().AddNewtonsoftJson();
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddControllersWithViews();
 
             services.AddFeatureManagement();
         }

@@ -1,12 +1,14 @@
 ﻿namespace LearningHub.Nhs.WebUI.Startup
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Linq;
     using System.Threading.Tasks;
     using IdentityModel;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Handlers;
+    using LearningHub.Nhs.WebUI.Helpers;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -41,6 +43,7 @@
                 options.SlidingExpiration = true;
                 options.EventsType = typeof(CookieEventHandler);
                 options.AccessDeniedPath = "/Home/AccessDenied";
+                options.SessionStore = new InMemoryTicketStore(new ConcurrentDictionary<string, AuthenticationTicket>());
             })
             .AddOpenIdConnect(AuthenticationScheme, options =>
             {

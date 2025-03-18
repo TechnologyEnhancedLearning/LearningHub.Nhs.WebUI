@@ -49,7 +49,7 @@ const MAX_FILE_SIZE = 10 * 1000 * 1000 * 1000; // 10GB
 
 // This list should correspond to the disallowed extensions contained in the FileType table
 const BLOCKED_FILE_EXTENSIONS = ['.app', '.asp', '.aspx', '.dll', '.dmg', '.exe', '.flv', '.f4v', '.js', '.jsp',
-    '.php', '.shtm', '.shtml', '.swf', '.webm', '.bat', '.cmd', '.vbs', '.msi', '.pif', '.sh', '.tar', '.gz', '.7z', '.rar', '.sys', '.bak', '.iso','.torrent'];
+    '.php', '.shtm', '.shtml', '.swf','.webm'];
 
 const IMAGE_FILE_EXTENSIONS = ['.apng', '.avif', '.bmp', '.cur', '.gif', '.ico', '.jfif', '.jpeg', '.jpg', '.pjp',
     '.pjpeg', '.png', '.psd', '.svg', '.tif', '.tiff', '.webp'];

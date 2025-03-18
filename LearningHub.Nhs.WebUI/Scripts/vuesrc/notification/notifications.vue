@@ -87,7 +87,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header pr-0 pt-0">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" @click="closeConfirmation" aria-label="Close">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
@@ -98,7 +98,7 @@
                             </p>
                         </div>
                         <div class="modal-footer justify-content-center">
-                            <button type="button" class="nhsuk-button nhsuk-button--secondary mr-4" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="nhsuk-button nhsuk-button--secondary mr-4" @click="closeConfirmation">Cancel</button>
                             <button type="button" class="nhsuk-button" @click="deleteNotification">Delete</button>
                         </div>
                     </div>
@@ -143,6 +143,13 @@
                 $('#deleteModalButton').modal('hide');
                 $('#deleteModal').modal();
             },
+            closeConfirmation() {
+                if (document.activeElement instanceof HTMLElement) {
+                    document.activeElement.blur();
+                }
+                document.body.focus();
+                setTimeout(() => { $('#deleteModal').modal('hide'); }, 10);
+            },
             showNotification(notification: NotificationModel) {
                 this.selectedNotification = notification;
                 this.showMessage = true;
@@ -155,7 +162,7 @@
             },
             async deleteNotification() {
                 await this.getSelectedComponent().deleteNotification();
-                $('#deleteModal').modal('hide');
+                this.closeConfirmation();
                 this.showMessage = false;
             },
             notificationTypeContent() {

@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Current Role";
+    ViewData["DisableValidation"] = true;
     var errorHasOccurred = !ViewData.ModelState.IsValid;
     bool returnToConfirmation = false;
     if (!string.IsNullOrWhiteSpace(Context.Request.Query["returnToConfirmation"]))
@@ -22,7 +23,7 @@
             <div class="nhsuk-grid-column-two-thirds @(returnToConfirmation ? "nhsuk-u-padding-top-7":string.Empty) nhsuk-u-padding-bottom-9">
                 @if (!returnToConfirmation)
                 {
-                    if (Model.CountryId == "1")
+          if (Model.CountryId == "1") //|| errorHasOccurred
                     {
                         <vc:back-link asp-controller="Account" asp-action="CreateAccountRegionSelection" asp-all-route-data="@routeData" link-text="Back to: Select your region" />
 

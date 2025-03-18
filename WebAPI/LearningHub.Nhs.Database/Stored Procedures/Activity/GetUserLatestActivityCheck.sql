@@ -8,7 +8,7 @@
 -- Sarathlal	20-02-2024
 -- Sarathlal	23-04-2024 TD-2954: Audio/Video/Assessment issue resolved and duplicate issue also resolved
 -- Sarathlal	25-04-2024 TD-4067: Resource with muliple version issue resolved
--- Arunima		11-10-2024	TD-4261: Duplicate entries for the assessment results(elearning) in the My Learning page
+-- Swapna   18-12-2024  TD-5078: Removed block collection joins from the SP to improve the performance of the page
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [activity].[GetUserLatestActivityCheck] (
@@ -39,9 +39,6 @@ BEGIN
 	,[t2].[MaximumAttempts] AS ResourceVersion_MaximumAttempts, [t2].[PassMark] AS ResourceVersion_PassMark,[t2].[AssessmentType] as ResourceVersion_AssessmentResourceVersion_AssessmentType
 	--Resource version  columns ends here
 
-	--Block columns starts here
-	  ,[t10].Id as Block_BlockId,[t10].[BlockCollectionId] as Block_BlockCollectionId, [t10].[BlockType] as Block_BlockType,[t10].[Title] as Block_Title, [t10].[Order] as Block_Order
-	--Block columns ends here
 	--Video resource version starts here
 	,[VideoResourceVersion].[AmendDate] as VideoResourcVersion_AmendDate, [VideoResourceVersion].[AmendUserId] AS VideoResourcVersion_AmendUserId , [VideoResourceVersion].[ClosedCaptionsFileId] AS VideoResourcVersion_ClosedCaptionsFileId, [VideoResourceVersion].[CreateDate] AS VideoResourcVersion_CreateDate, [VideoResourceVersion].[CreateUserId] AS VideoResourcVersion_CreateUserId,
 	[VideoResourceVersion].[Deleted] AS VideoResourcVersion_Deleted, [VideoResourceVersion].[DurationInMilliseconds] AS VideoResourcVersion_DurationInMilliseconds, [VideoResourceVersion].[ResourceAzureMediaAssetId] AS VideoResourcVersion_ResourceAzureMediaAssetId, [VideoResourceVersion].[ResourceVersionId]  AS VideoResourcVersion_ResourceVersionId,
@@ -75,9 +72,7 @@ BEGIN
 	 --Assessment Resource activity startes here
 	,[t11].[Reason] as AssessmentResourceActivity_Reason, [t11].[ResourceActivityId] as AssessmentResourceActivity_ResourceActivityId
 	,[t11].[Score] as AssessmentResourceActivity_Score
-	,[t11].[Id0] as AssessmentResourceActivity_AssessmentResourceActivityInteraction_Id,[t11].[QuestionBlockId] as AssessmentResourceActivity_AssessmentResourceActivityInteraction_QuestionBlockId,
-	 [t11].[AssessmentResourceActivityId] as AssessmentResourceActivity_AssessmentResourceActivityInteraction_AssessmentResourceActivityId
-	,[t11].[AssessmentResourceActivityId] as AssessmentResourceActivity_AssessmentResourceActivityId
+	,[t11].[Id] as AssessmentResourceActivity_AssessmentResourceActivityId
 	,[t11].[Id] as  AssessmentResourceActivity_Id
 
 	--Assessment resource activity ends here
@@ -176,22 +171,45 @@ FROM (
 ) AS [t2]
 LEFT JOIN [resources].[VideoResourceVersion] AS [VideoResourceVersion] ON [t2].[Id1] = [VideoResourceVersion].[ResourceVersionId]
 LEFT JOIN [resources].[AudioResourceVersion] AS [AudeoResourceVersion] ON [t2].[Id1] = [AudeoResourceVersion].[ResourceVersionId]
-LEFT JOIN [resources].[ScormResourceVersion] AS [t3] ON [t2].[Id1] = [t3].[ResourceVersionId] and t3.Deleted=0
-LEFT JOIN [resources].[ScormResourceVersionManifest] AS [t4] ON [t3].[Id] = [t4].[ScormResourceVersionId] and [t4].[Deleted] = 0
-LEFT JOIN [resources].[BlockCollection]  AS [t5] ON [t2].[AssessmentContentId] = [t5].[Id] AND [t5].[Deleted] = 0
-INNER JOIN [hierarchy].[NodePath] AS [t6] ON [t2].[NodePathId] = [t6].[Id] AND [t6].[Deleted] = 0
-LEFT JOIN [resources].[ResourceReference] AS [t7] ON [t2].[Id0] = [t7].[ResourceId] AND [t7].[Deleted] = 0
-LEFT JOIN [activity].[MediaResourceActivity] AS [t8] ON [t2].[Id] = [t8].[ResourceActivityId] AND [t8].[Deleted] = 0
-LEFT JOIN [activity].[ScormActivity] AS [t9] ON [t2].[Id] = [t9].[ResourceActivityId] AND [t9].[Deleted] = 0
-LEFT JOIN [resources].[Block] AS [t10] ON [t5].[Id] = [t10].[BlockCollectionId] AND [t10].[Deleted] = 0
 LEFT JOIN (
-    SELECT [AssessmentResourceActivity5].[Id], [AssessmentResourceActivity5].[AmendDate], [AssessmentResourceActivity5].[AmendUserID], [AssessmentResourceActivity5].[CreateDate], [AssessmentResourceActivity5].[CreateUserID], [AssessmentResourceActivity5].[Deleted], [AssessmentResourceActivity5].[Reason], [AssessmentResourceActivity5].[ResourceActivityId], [AssessmentResourceActivity5].[Score], [t12].[Id] AS [Id0], [t12].[AmendDate] AS [AmendDate0], [t12].[AmendUserID] AS [AmendUserID0], [t12].[AssessmentResourceActivityId], [t12].[CreateDate] AS [CreateDate0], [t12].[CreateUserID] AS [CreateUserID0], [t12].[Deleted] AS [Deleted0], [t12].[QuestionBlockId]
+    SELECT [ScormResourceVersion2].[Id], [ScormResourceVersion2].[AmendDate], [ScormResourceVersion2].[AmendUserId], [ScormResourceVersion2].[CanDownload], [ScormResourceVersion2].[ClearSuspendData], [ScormResourceVersion2].[ContentFilePath], [ScormResourceVersion2].[CreateDate], [ScormResourceVersion2].[CreateUserId], [ScormResourceVersion2].[Deleted], [ScormResourceVersion2].[DevelopmentId], [ScormResourceVersion2].[EsrLinkTypeId], [ScormResourceVersion2].[FileId], [ScormResourceVersion2].[PopupHeight], [ScormResourceVersion2].[PopupWidth], [ScormResourceVersion2].[ResourceVersionId]
+    FROM [resources].[ScormResourceVersion] AS [ScormResourceVersion2]
+    WHERE [ScormResourceVersion2].[Deleted] = 0
+) AS [t3] ON [t2].[Id1] = [t3].[ResourceVersionId]
+LEFT JOIN (
+    SELECT [ScormResourceVersionManifest3].[Id], [ScormResourceVersionManifest3].[AmendDate], [ScormResourceVersionManifest3].[AmendUserId], [ScormResourceVersionManifest3].[Author], [ScormResourceVersionManifest3].[CatalogEntry], [ScormResourceVersionManifest3].[Copyright], [ScormResourceVersionManifest3].[CreateDate], [ScormResourceVersionManifest3].[CreateUserId], [ScormResourceVersionManifest3].[Deleted], [ScormResourceVersionManifest3].[Description], [ScormResourceVersionManifest3].[Duration], [ScormResourceVersionManifest3].[ItemIdentifier], [ScormResourceVersionManifest3].[Keywords], [ScormResourceVersionManifest3].[LaunchData], [ScormResourceVersionManifest3].[ManifestURL], [ScormResourceVersionManifest3].[MasteryScore], [ScormResourceVersionManifest3].[MaxTimeAllowed], [ScormResourceVersionManifest3].[QuicklinkId], [ScormResourceVersionManifest3].[ResourceIdentifier], [ScormResourceVersionManifest3].[ScormResourceVersionId], [ScormResourceVersionManifest3].[TemplateVersion], [ScormResourceVersionManifest3].[TimeLimitAction], [ScormResourceVersionManifest3].[Title]
+    FROM [resources].[ScormResourceVersionManifest] AS [ScormResourceVersionManifest3]
+    WHERE [ScormResourceVersionManifest3].[Deleted] = 0
+) AS [t4] ON [t3].[Id] = [t4].[ScormResourceVersionId]
+INNER JOIN (
+    SELECT [NodePath].[Id], [NodePath].[AmendDate], [NodePath].[AmendUserId], [NodePath].[CatalogueNodeId], [NodePath].[CreateDate], [NodePath].[CreateUserId], [NodePath].[Deleted], [NodePath].[IsActive], [NodePath].[NodeId], [NodePath].[NodePath]
+    FROM [hierarchy].[NodePath] AS [NodePath]
+    WHERE [NodePath].[Deleted] = 0
+) AS [t6] ON [t2].[NodePathId] = [t6].[Id]
+LEFT JOIN (
+    SELECT [ResourceReference5].[Id], [ResourceReference5].[AmendDate], [ResourceReference5].[AmendUserId], [ResourceReference5].[CreateDate], [ResourceReference5].[CreateUserId], [ResourceReference5].[Deleted], [ResourceReference5].[NodePathId], [ResourceReference5].[OriginalResourceReferenceId], [ResourceReference5].[ResourceId]
+    FROM [resources].[ResourceReference] AS [ResourceReference5]
+    WHERE [ResourceReference5].[Deleted] = 0
+) AS [t7] ON [t2].[Id0] = [t7].[ResourceId]
+LEFT JOIN (
+    SELECT [MediaResourceActivity3].[Id], [MediaResourceActivity3].[ActivityStart], [MediaResourceActivity3].[AmendDate], [MediaResourceActivity3].[AmendUserID], [MediaResourceActivity3].[CreateDate], [MediaResourceActivity3].[CreateUserID], [MediaResourceActivity3].[Deleted], [MediaResourceActivity3].[PercentComplete], [MediaResourceActivity3].[ResourceActivityId], [MediaResourceActivity3].[SecondsPlayed]
+    FROM [activity].[MediaResourceActivity] AS [MediaResourceActivity3]
+    WHERE [MediaResourceActivity3].[Deleted] = 0
+) AS [t8] ON [t2].[Id] = [t8].[ResourceActivityId]
+LEFT JOIN (
+    SELECT [ScormActivity4].[Id], [ScormActivity4].[AmendDate], [ScormActivity4].[AmendUserID], [ScormActivity4].[CmiCoreExit], [ScormActivity4].[CmiCoreLesson_location], [ScormActivity4].[CmiCoreLesson_status], [ScormActivity4].[CmiCoreScoreMax], [ScormActivity4].[CmiCoreScoreMin], [ScormActivity4].[CmiCoreScoreRaw], [ScormActivity4].[CmiCoreSession_time], [ScormActivity4].[CmiSuspend_data], [ScormActivity4].[CreateDate], [ScormActivity4].[CreateUserID], [ScormActivity4].[Deleted], [ScormActivity4].[DurationSeconds], [ScormActivity4].[ResourceActivityId]
+    FROM [activity].[ScormActivity] AS [ScormActivity4]
+    WHERE [ScormActivity4].[Deleted] = 0
+) AS [t9] ON [t2].[Id] = [t9].[ResourceActivityId]
+LEFT JOIN (
+    SELECT [AssessmentResourceActivity5].[Id], [AssessmentResourceActivity5].[AmendDate], [AssessmentResourceActivity5].[AmendUserID], [AssessmentResourceActivity5].[CreateDate], [AssessmentResourceActivity5].[CreateUserID], [AssessmentResourceActivity5].[Deleted], [AssessmentResourceActivity5].[Reason], [AssessmentResourceActivity5].[ResourceActivityId], [AssessmentResourceActivity5].[Score]
     FROM [activity].[AssessmentResourceActivity] AS [AssessmentResourceActivity5]
-	LEFT JOIN [activity].[AssessmentResourceActivityInteraction] AS [t12] ON [AssessmentResourceActivity5].[Id] = [t12].[AssessmentResourceActivityId] AND [t12].[Deleted] = 0
     WHERE [AssessmentResourceActivity5].[Deleted] = 0
 ) AS [t11] ON [t2].[Id] = [t11].[ResourceActivityId]
 WHERE t2.ResourceVersionId=@ResourceVersionId
-ORDER BY [t2].[ActivityStart] DESC, [t2].[Id], [t2].[Id0], [t2].[Id1], [t2].[Id2], [VideoResourceVersion].[Id], [AudeoResourceVersion].[Id], [t3].[Id], [t4].[Id], [t5].[Id], [t6].[Id], [t7].[Id], [t8].[Id], [t9].[Id], [t10].[Id], [t11].[Id]
+ORDER BY [t2].[ActivityStart] DESC, [t2].[Id], [t2].[Id0], [t2].[Id1], [t2].[Id2], [VideoResourceVersion].[Id], [AudeoResourceVersion].[Id], [t3].[Id], [t4].[Id], 
+[t6].[Id], [t7].[Id], [t8].[Id], [t9].[Id], 
+[t11].[Id]
 	
 	
 END

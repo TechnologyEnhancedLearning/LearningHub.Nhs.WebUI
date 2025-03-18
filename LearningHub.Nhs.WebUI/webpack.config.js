@@ -70,7 +70,7 @@ module.exports = {
                             || path.indexOf("vue-clamp") > -1
                             || path.indexOf("nanoid") > -1
                             || path.indexOf("postcss") > -1
-                            || path.indexOf("nhsuk-frontend") > -1
+                            || path.indexOf("nhse-tel-frontend") > -1
                             || path.indexOf("sanitize-html") > -1) {
                             return false;
                         }
@@ -84,7 +84,7 @@ module.exports = {
                     path.resolve('node_modules/vue-clamp'),
                     path.resolve('node_modules/postcss'),
                     path.resolve('node_modules/nanoid'),
-                    path.resolve('node_modules/nhsuk-frontend'),
+                    path.resolve('node_modules/nhse-tel-frontend'),
                     path.resolve('node_modules/sanitize-html'),
                 ],
                 options: {

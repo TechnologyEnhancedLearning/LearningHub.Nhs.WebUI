@@ -1,0 +1,48 @@
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Resources
+{
+    using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Resources;
+    using Microsoft.EntityFrameworkCore;
+
+    /// <summary>
+    /// The image resource version repository.
+    /// </summary>
+    public class ImageResourceVersionRepository : GenericRepository<ImageResourceVersion>, IImageResourceVersionRepository
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageResourceVersionRepository"/> class.
+        /// </summary>
+        /// <param name="dbContext">The db context.</param>
+        /// <param name="tzOffsetManager">The Timezone offset manager.</param>
+        public ImageResourceVersionRepository(LearningHubDbContext dbContext, ITimezoneOffsetManager tzOffsetManager)
+            : base(dbContext, tzOffsetManager)
+        {
+        }
+
+        /// <summary>
+        /// The get by id async.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<ImageResourceVersion> GetByIdAsync(int id)
+        {
+            return await DbContext.ImageResourceVersion.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id && !r.Deleted);
+        }
+
+        /// <summary>
+        /// The get by resource version id async.
+        /// </summary>
+        /// <param name="resourceVersionid">The resource versionid.</param>
+        /// <param name="includeDeleted">Allows deleted items to be returned.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<ImageResourceVersion> GetByResourceVersionIdAsync(int resourceVersionid, bool includeDeleted = false)
+        {
+            return await DbContext.ImageResourceVersion
+                .Include(irv => irv.File).ThenInclude(f => f.FileType)
+                .AsNoTracking().FirstOrDefaultAsync(r => r.ResourceVersionId == resourceVersionid && (includeDeleted || !r.Deleted));
+        }
+    }
+}

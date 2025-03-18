@@ -36,6 +36,11 @@ namespace LearningHub.NHS.OpenAPI.Configuration
         public const string LearningHubApiSectionName = "LearningHubAPIConfig";
 
         /// <summary>
+        /// The AzureSectionName.
+        /// </summary>
+        public const string AzureSectionName = "Azure";
+
+        /// <summary>
         /// Adds config.
         /// </summary>
         /// <param name="services">The service collection.</param>
@@ -51,6 +56,8 @@ namespace LearningHub.NHS.OpenAPI.Configuration
             services.AddOptions<LearningHubConfig>().Bind(config.GetSection(LearningHubSectionName));
 
             services.AddOptions<LearningHubApiConfig>().Bind(config.GetSection(LearningHubApiSectionName));
+
+            services.AddOptions<AzureConfig>().Bind(config.GetSection(AzureSectionName));
         }
 
         private static OptionsBuilder<T> RegisterPostConfigure<T>(this OptionsBuilder<T> builder)

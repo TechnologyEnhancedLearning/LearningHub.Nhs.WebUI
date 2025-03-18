@@ -18,16 +18,22 @@
 
     <ItemGroup>
       <ProjectReference Include="..\LearningHub.Nhs.OpenApi.Repositories.Interface\LearningHub.Nhs.OpenApi.Repositories.Interface.csproj" />
+      <ProjectReference Include="..\LearningHub.Nhs.OpenApi.Repositories\LearningHub.Nhs.OpenApi.Repositories.csproj" />
       <ProjectReference Include="..\LearningHub.Nhs.OpenApi.Services.Interface\LearningHub.Nhs.OpenApi.Services.Interface.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+      <PackageReference Include="Azure.Storage.Queues" Version="12.11.0" />
       <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
       <PackageReference Include="IdentityModel" Version="4.6.0" />
+	  <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
+	  <PackageReference Include="Azure.Storage.Files.Shares" Version="12.8.0" />
+	  <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
+	  <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
       <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.47" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.1" />
+	  <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="NLog.Web.AspNetCore" Version="4.15.0" />
     </ItemGroup>

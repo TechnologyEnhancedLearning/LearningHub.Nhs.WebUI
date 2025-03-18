@@ -112,6 +112,23 @@ td.col-type {
 tr.bookmark-item:hover td {
     background-color: $nhsuk-white;
 }
+.my-bookmark-btn:focus {
+    outline: none;
+    text-decoration: none !important;
+    color: $nhsuk-black !important;
+    background-color: $nhsuk-yellow !important;
+    box-shadow: 0 -2px $govuk-focus-highlight-yellow, 0 4px $nhsuk-black;
+}
+
+.my-bookmark-btn:hover {
+    outline: none;
+    text-decoration: none !important;
+}
+
+.my-bookmark-btn {
+    transition: none !important;
+    border-radius: 0 !important;
+}
 
 @media (min-width: 768px) {
 

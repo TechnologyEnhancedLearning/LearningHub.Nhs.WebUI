@@ -24,7 +24,7 @@
     "@ckeditor/ckeditor5-vue": "1.0.3",
     "@mediakind/mkplayer": "1.19.0",
     "@types/uuid": "^8.3.4",
-    "axios": "^0.29.0",
+    "axios": "^1.8.3",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.6.2",
     "ckeditor4-vue": "^0.2.0",

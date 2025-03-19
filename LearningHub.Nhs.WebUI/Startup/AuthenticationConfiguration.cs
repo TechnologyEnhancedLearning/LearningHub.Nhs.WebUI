@@ -43,7 +43,7 @@
                 options.SlidingExpiration = true;
                 options.EventsType = typeof(CookieEventHandler);
                 options.AccessDeniedPath = "/Home/AccessDenied";
-               //// options.SessionStore = new InMemoryTicketStore(new ConcurrentDictionary<string, AuthenticationTicket>());
+                options.SessionStore = new InMemoryTicketStore(new ConcurrentDictionary<string, AuthenticationTicket>());
             })
             .AddOpenIdConnect(AuthenticationScheme, options =>
             {

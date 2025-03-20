@@ -897,7 +897,7 @@
             }
 
             await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-            var dateVM = accountCreation.StartDate.HasValue ? new AccountCreationDateViewModel() { Day = accountCreation.StartDate.Value.Day, Month = accountCreation.StartDate.GetValueOrDefault().Month, Year = accountCreation.StartDate.Value.Year, FilterText = accountCreationViewModel.FilterText, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation } : new AccountCreationDateViewModel() { FilterText = accountCreationViewModel.FilterText, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation };
+            var dateVM = accountCreation.StartDate.HasValue ? new AccountCreationDateViewModel() { Day = accountCreation.StartDate.HasValue ? accountCreation.StartDate.Value.Day.ToString() : string.Empty, Month = accountCreation.StartDate.HasValue ? accountCreation.StartDate.GetValueOrDefault().Month.ToString() : string.Empty, Year = accountCreation.StartDate.HasValue ? accountCreation.StartDate.Value.Year.ToString() : string.Empty, FilterText = accountCreationViewModel.FilterText, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation } : new AccountCreationDateViewModel() { FilterText = accountCreationViewModel.FilterText, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation };
             if (!string.IsNullOrWhiteSpace(accountCreationViewModel.PrimarySpecialtyId) && string.IsNullOrWhiteSpace(accountCreationViewModel.FilterText))
             {
                 var specialty = this.specialtyService.GetSpecialtiesAsync().Result.FirstOrDefault(x => x.Id == specialtyId);
@@ -959,7 +959,7 @@
                 }
             }
 
-            var dateVM = accountCreation.StartDate.HasValue ? new AccountCreationDateViewModel() { Day = accountCreation.StartDate.Value.Day, Month = accountCreation.StartDate.GetValueOrDefault().Month, Year = accountCreation.StartDate.Value.Year, ReturnToConfirmation = returnToConfirmation } : new AccountCreationDateViewModel() { ReturnToConfirmation = returnToConfirmation };
+            var dateVM = accountCreation.StartDate.HasValue ? new AccountCreationDateViewModel() { Day = accountCreation.StartDate.HasValue ? accountCreation.StartDate.Value.Day.ToString() : string.Empty, Month = accountCreation.StartDate.HasValue ? accountCreation.StartDate.GetValueOrDefault().Month.ToString() : string.Empty, Year = accountCreation.StartDate.HasValue ? accountCreation.StartDate.Value.Year.ToString() : string.Empty, ReturnToConfirmation = returnToConfirmation } : new AccountCreationDateViewModel() { ReturnToConfirmation = returnToConfirmation };
             return this.View("CreateAccountWorkStartDate", dateVM);
         }
 

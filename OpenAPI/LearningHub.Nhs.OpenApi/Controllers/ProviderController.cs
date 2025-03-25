@@ -52,7 +52,7 @@
         }
 
         /// <summary>
-        /// Get providers by user Id.
+        /// Get providers details by user Id.
         /// </summary>
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="Task"/>.</returns>

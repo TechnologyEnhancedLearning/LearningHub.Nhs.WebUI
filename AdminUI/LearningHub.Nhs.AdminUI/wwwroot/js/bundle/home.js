@@ -2,10 +2,73 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/home/home.vue?vue&type=script&lang=ts&":
-/*!*****************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/home/home.vue?vue&type=script&lang=ts& ***!
-  \*****************************************************************************************************************************************************************************/
+/***/ "./Scripts/vuesrc/home/home.vue":
+/*!**************************************!*\
+  !*** ./Scripts/vuesrc/home/home.vue ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _home_vue_vue_type_template_id_9504419a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./home.vue?vue&type=template&id=9504419a */ "./Scripts/vuesrc/home/home.vue?vue&type=template&id=9504419a");
+/* harmony import */ var _home_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./home.vue?vue&type=script&lang=ts */ "./Scripts/vuesrc/home/home.vue?vue&type=script&lang=ts");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _home_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _home_vue_vue_type_template_id_9504419a__WEBPACK_IMPORTED_MODULE_0__.render,
+  _home_vue_vue_type_template_id_9504419a__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "Scripts/vuesrc/home/home.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/home/home.vue?vue&type=script&lang=ts":
+/*!**************************************************************!*\
+  !*** ./Scripts/vuesrc/home/home.vue?vue&type=script&lang=ts ***!
+  \**************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_home_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/ts-loader/index.js??clonedRuleSet-1!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./home.vue?vue&type=script&lang=ts */ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/home/home.vue?vue&type=script&lang=ts");
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_home_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/home/home.vue?vue&type=template&id=9504419a":
+/*!********************************************************************!*\
+  !*** ./Scripts/vuesrc/home/home.vue?vue&type=template&id=9504419a ***!
+  \********************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_home_vue_vue_type_template_id_9504419a__WEBPACK_IMPORTED_MODULE_0__.render; },
+/* harmony export */   staticRenderFns: function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_home_vue_vue_type_template_id_9504419a__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns; }
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_home_vue_vue_type_template_id_9504419a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./home.vue?vue&type=template&id=9504419a */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/home/home.vue?vue&type=template&id=9504419a");
+
+
+/***/ }),
+
+/***/ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/home/home.vue?vue&type=script&lang=ts":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/home/home.vue?vue&type=script&lang=ts ***!
+  \****************************************************************************************************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -24,79 +87,16 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./Scripts/vuesrc/home/home.vue":
-/*!**************************************!*\
-  !*** ./Scripts/vuesrc/home/home.vue ***!
-  \**************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _home_vue_vue_type_template_id_9504419a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./home.vue?vue&type=template&id=9504419a& */ "./Scripts/vuesrc/home/home.vue?vue&type=template&id=9504419a&");
-/* harmony import */ var _home_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./home.vue?vue&type=script&lang=ts& */ "./Scripts/vuesrc/home/home.vue?vue&type=script&lang=ts&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _home_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _home_vue_vue_type_template_id_9504419a___WEBPACK_IMPORTED_MODULE_0__.render,
-  _home_vue_vue_type_template_id_9504419a___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "Scripts/vuesrc/home/home.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/home/home.vue?vue&type=script&lang=ts&":
-/*!***************************************************************!*\
-  !*** ./Scripts/vuesrc/home/home.vue?vue&type=script&lang=ts& ***!
-  \***************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_home_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/ts-loader/index.js??clonedRuleSet-1!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./home.vue?vue&type=script&lang=ts& */ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/home/home.vue?vue&type=script&lang=ts&");
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_home_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/home/home.vue?vue&type=template&id=9504419a&":
-/*!*********************************************************************!*\
-  !*** ./Scripts/vuesrc/home/home.vue?vue&type=template&id=9504419a& ***!
-  \*********************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/home/home.vue?vue&type=template&id=9504419a":
+/*!************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/home/home.vue?vue&type=template&id=9504419a ***!
+  \************************************************************************************************************************************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_home_vue_vue_type_template_id_9504419a___WEBPACK_IMPORTED_MODULE_0__.render; },
-/* harmony export */   "staticRenderFns": function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_home_vue_vue_type_template_id_9504419a___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns; }
-/* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_home_vue_vue_type_template_id_9504419a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./home.vue?vue&type=template&id=9504419a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/home/home.vue?vue&type=template&id=9504419a&");
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/home/home.vue?vue&type=template&id=9504419a&":
-/*!*************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/home/home.vue?vue&type=template&id=9504419a& ***!
-  \*************************************************************************************************************************************************************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": function() { return /* binding */ render; },
-/* harmony export */   "staticRenderFns": function() { return /* binding */ staticRenderFns; }
+/* harmony export */   render: function() { return /* binding */ render; },
+/* harmony export */   staticRenderFns: function() { return /* binding */ staticRenderFns; }
 /* harmony export */ });
 var render = function render() {
   var _vm = this,
@@ -248,67 +248,67 @@ function normalizeComponent(
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "EffectScope": function() { return /* binding */ EffectScope; },
-/* harmony export */   "computed": function() { return /* binding */ computed; },
-/* harmony export */   "customRef": function() { return /* binding */ customRef; },
+/* harmony export */   EffectScope: function() { return /* binding */ EffectScope; },
+/* harmony export */   computed: function() { return /* binding */ computed; },
+/* harmony export */   customRef: function() { return /* binding */ customRef; },
 /* harmony export */   "default": function() { return /* binding */ Vue; },
-/* harmony export */   "defineAsyncComponent": function() { return /* binding */ defineAsyncComponent; },
-/* harmony export */   "defineComponent": function() { return /* binding */ defineComponent; },
-/* harmony export */   "del": function() { return /* binding */ del; },
-/* harmony export */   "effectScope": function() { return /* binding */ effectScope; },
-/* harmony export */   "getCurrentInstance": function() { return /* binding */ getCurrentInstance; },
-/* harmony export */   "getCurrentScope": function() { return /* binding */ getCurrentScope; },
-/* harmony export */   "h": function() { return /* binding */ h; },
-/* harmony export */   "inject": function() { return /* binding */ inject; },
-/* harmony export */   "isProxy": function() { return /* binding */ isProxy; },
-/* harmony export */   "isReactive": function() { return /* binding */ isReactive; },
-/* harmony export */   "isReadonly": function() { return /* binding */ isReadonly; },
-/* harmony export */   "isRef": function() { return /* binding */ isRef; },
-/* harmony export */   "isShallow": function() { return /* binding */ isShallow; },
-/* harmony export */   "markRaw": function() { return /* binding */ markRaw; },
-/* harmony export */   "mergeDefaults": function() { return /* binding */ mergeDefaults; },
-/* harmony export */   "nextTick": function() { return /* binding */ nextTick; },
-/* harmony export */   "onActivated": function() { return /* binding */ onActivated; },
-/* harmony export */   "onBeforeMount": function() { return /* binding */ onBeforeMount; },
-/* harmony export */   "onBeforeUnmount": function() { return /* binding */ onBeforeUnmount; },
-/* harmony export */   "onBeforeUpdate": function() { return /* binding */ onBeforeUpdate; },
-/* harmony export */   "onDeactivated": function() { return /* binding */ onDeactivated; },
-/* harmony export */   "onErrorCaptured": function() { return /* binding */ onErrorCaptured; },
-/* harmony export */   "onMounted": function() { return /* binding */ onMounted; },
-/* harmony export */   "onRenderTracked": function() { return /* binding */ onRenderTracked; },
-/* harmony export */   "onRenderTriggered": function() { return /* binding */ onRenderTriggered; },
-/* harmony export */   "onScopeDispose": function() { return /* binding */ onScopeDispose; },
-/* harmony export */   "onServerPrefetch": function() { return /* binding */ onServerPrefetch; },
-/* harmony export */   "onUnmounted": function() { return /* binding */ onUnmounted; },
-/* harmony export */   "onUpdated": function() { return /* binding */ onUpdated; },
-/* harmony export */   "provide": function() { return /* binding */ provide; },
-/* harmony export */   "proxyRefs": function() { return /* binding */ proxyRefs; },
-/* harmony export */   "reactive": function() { return /* binding */ reactive; },
-/* harmony export */   "readonly": function() { return /* binding */ readonly; },
-/* harmony export */   "ref": function() { return /* binding */ ref$1; },
-/* harmony export */   "set": function() { return /* binding */ set; },
-/* harmony export */   "shallowReactive": function() { return /* binding */ shallowReactive; },
-/* harmony export */   "shallowReadonly": function() { return /* binding */ shallowReadonly; },
-/* harmony export */   "shallowRef": function() { return /* binding */ shallowRef; },
-/* harmony export */   "toRaw": function() { return /* binding */ toRaw; },
-/* harmony export */   "toRef": function() { return /* binding */ toRef; },
-/* harmony export */   "toRefs": function() { return /* binding */ toRefs; },
-/* harmony export */   "triggerRef": function() { return /* binding */ triggerRef; },
-/* harmony export */   "unref": function() { return /* binding */ unref; },
-/* harmony export */   "useAttrs": function() { return /* binding */ useAttrs; },
-/* harmony export */   "useCssModule": function() { return /* binding */ useCssModule; },
-/* harmony export */   "useCssVars": function() { return /* binding */ useCssVars; },
-/* harmony export */   "useListeners": function() { return /* binding */ useListeners; },
-/* harmony export */   "useSlots": function() { return /* binding */ useSlots; },
-/* harmony export */   "version": function() { return /* binding */ version; },
-/* harmony export */   "watch": function() { return /* binding */ watch; },
-/* harmony export */   "watchEffect": function() { return /* binding */ watchEffect; },
-/* harmony export */   "watchPostEffect": function() { return /* binding */ watchPostEffect; },
-/* harmony export */   "watchSyncEffect": function() { return /* binding */ watchSyncEffect; }
+/* harmony export */   defineAsyncComponent: function() { return /* binding */ defineAsyncComponent; },
+/* harmony export */   defineComponent: function() { return /* binding */ defineComponent; },
+/* harmony export */   del: function() { return /* binding */ del; },
+/* harmony export */   effectScope: function() { return /* binding */ effectScope; },
+/* harmony export */   getCurrentInstance: function() { return /* binding */ getCurrentInstance; },
+/* harmony export */   getCurrentScope: function() { return /* binding */ getCurrentScope; },
+/* harmony export */   h: function() { return /* binding */ h; },
+/* harmony export */   inject: function() { return /* binding */ inject; },
+/* harmony export */   isProxy: function() { return /* binding */ isProxy; },
+/* harmony export */   isReactive: function() { return /* binding */ isReactive; },
+/* harmony export */   isReadonly: function() { return /* binding */ isReadonly; },
+/* harmony export */   isRef: function() { return /* binding */ isRef; },
+/* harmony export */   isShallow: function() { return /* binding */ isShallow; },
+/* harmony export */   markRaw: function() { return /* binding */ markRaw; },
+/* harmony export */   mergeDefaults: function() { return /* binding */ mergeDefaults; },
+/* harmony export */   nextTick: function() { return /* binding */ nextTick; },
+/* harmony export */   onActivated: function() { return /* binding */ onActivated; },
+/* harmony export */   onBeforeMount: function() { return /* binding */ onBeforeMount; },
+/* harmony export */   onBeforeUnmount: function() { return /* binding */ onBeforeUnmount; },
+/* harmony export */   onBeforeUpdate: function() { return /* binding */ onBeforeUpdate; },
+/* harmony export */   onDeactivated: function() { return /* binding */ onDeactivated; },
+/* harmony export */   onErrorCaptured: function() { return /* binding */ onErrorCaptured; },
+/* harmony export */   onMounted: function() { return /* binding */ onMounted; },
+/* harmony export */   onRenderTracked: function() { return /* binding */ onRenderTracked; },
+/* harmony export */   onRenderTriggered: function() { return /* binding */ onRenderTriggered; },
+/* harmony export */   onScopeDispose: function() { return /* binding */ onScopeDispose; },
+/* harmony export */   onServerPrefetch: function() { return /* binding */ onServerPrefetch; },
+/* harmony export */   onUnmounted: function() { return /* binding */ onUnmounted; },
+/* harmony export */   onUpdated: function() { return /* binding */ onUpdated; },
+/* harmony export */   provide: function() { return /* binding */ provide; },
+/* harmony export */   proxyRefs: function() { return /* binding */ proxyRefs; },
+/* harmony export */   reactive: function() { return /* binding */ reactive; },
+/* harmony export */   readonly: function() { return /* binding */ readonly; },
+/* harmony export */   ref: function() { return /* binding */ ref$1; },
+/* harmony export */   set: function() { return /* binding */ set; },
+/* harmony export */   shallowReactive: function() { return /* binding */ shallowReactive; },
+/* harmony export */   shallowReadonly: function() { return /* binding */ shallowReadonly; },
+/* harmony export */   shallowRef: function() { return /* binding */ shallowRef; },
+/* harmony export */   toRaw: function() { return /* binding */ toRaw; },
+/* harmony export */   toRef: function() { return /* binding */ toRef; },
+/* harmony export */   toRefs: function() { return /* binding */ toRefs; },
+/* harmony export */   triggerRef: function() { return /* binding */ triggerRef; },
+/* harmony export */   unref: function() { return /* binding */ unref; },
+/* harmony export */   useAttrs: function() { return /* binding */ useAttrs; },
+/* harmony export */   useCssModule: function() { return /* binding */ useCssModule; },
+/* harmony export */   useCssVars: function() { return /* binding */ useCssVars; },
+/* harmony export */   useListeners: function() { return /* binding */ useListeners; },
+/* harmony export */   useSlots: function() { return /* binding */ useSlots; },
+/* harmony export */   version: function() { return /* binding */ version; },
+/* harmony export */   watch: function() { return /* binding */ watch; },
+/* harmony export */   watchEffect: function() { return /* binding */ watchEffect; },
+/* harmony export */   watchPostEffect: function() { return /* binding */ watchPostEffect; },
+/* harmony export */   watchSyncEffect: function() { return /* binding */ watchSyncEffect; }
 /* harmony export */ });
 /*!
- * Vue.js v2.7.14
- * (c) 2014-2022 Evan You
+ * Vue.js v2.7.16
+ * (c) 2014-2023 Evan You
  * Released under the MIT License.
  */
 var emptyObject = Object.freeze({});
@@ -384,8 +384,15 @@ function toString(val) {
     return val == null
         ? ''
         : Array.isArray(val) || (isPlainObject(val) && val.toString === _toString)
-            ? JSON.stringify(val, null, 2)
+            ? JSON.stringify(val, replacer, 2)
             : String(val);
+}
+function replacer(_key, val) {
+    // avoid circular deps from v3
+    if (val && val.__v_isRef) {
+        return val.value;
+    }
+    return val;
 }
 /**
  * Convert an input value to a number for persistence.
@@ -548,9 +555,7 @@ var identity = function (_) { return _; };
  */
 function genStaticKeys$1(modules) {
     return modules
-        .reduce(function (keys, m) {
-        return keys.concat(m.staticKeys || []);
-    }, [])
+        .reduce(function (keys, m) { return keys.concat(m.staticKeys || []); }, [])
         .join(',');
 }
 /**
@@ -1053,6 +1058,11 @@ var __assign = function() {
     return __assign.apply(this, arguments);
 };
 
+typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
+    var e = new Error(message);
+    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+};
+
 var uid$2 = 0;
 var pendingCleanupDeps = [];
 var cleanupDeps = function () {
@@ -1185,7 +1195,7 @@ methodsToPatch.forEach(function (method) {
 });
 
 var arrayKeys = Object.getOwnPropertyNames(arrayMethods);
-var NO_INIITIAL_VALUE = {};
+var NO_INITIAL_VALUE = {};
 /**
  * In some cases we may want to disable observation inside a component's
  * update computation.
@@ -1244,7 +1254,7 @@ var Observer = /** @class */ (function () {
             var keys = Object.keys(value);
             for (var i = 0; i < keys.length; i++) {
                 var key = keys[i];
-                defineReactive(value, key, NO_INIITIAL_VALUE, undefined, shallow, mock);
+                defineReactive(value, key, NO_INITIAL_VALUE, undefined, shallow, mock);
             }
         }
     }
@@ -1281,7 +1291,8 @@ function observe(value, shallow, ssrMockReactivity) {
 /**
  * Define a reactive property on an Object.
  */
-function defineReactive(obj, key, val, customSetter, shallow, mock) {
+function defineReactive(obj, key, val, customSetter, shallow, mock, observeEvenIfShallow) {
+    if (observeEvenIfShallow === void 0) { observeEvenIfShallow = false; }
     var dep = new Dep();
     var property = Object.getOwnPropertyDescriptor(obj, key);
     if (property && property.configurable === false) {
@@ -1291,10 +1302,10 @@ function defineReactive(obj, key, val, customSetter, shallow, mock) {
     var getter = property && property.get;
     var setter = property && property.set;
     if ((!getter || setter) &&
-        (val === NO_INIITIAL_VALUE || arguments.length === 2)) {
+        (val === NO_INITIAL_VALUE || arguments.length === 2)) {
         val = obj[key];
     }
-    var childOb = !shallow && observe(val, false, mock);
+    var childOb = shallow ? val && val.__ob__ : observe(val, false, mock);
     Object.defineProperty(obj, key, {
         enumerable: true,
         configurable: true,
@@ -1340,7 +1351,7 @@ function defineReactive(obj, key, val, customSetter, shallow, mock) {
             else {
                 val = newVal;
             }
-            childOb = !shallow && observe(newVal, false, mock);
+            childOb = shallow ? newVal && newVal.__ob__ : observe(newVal, false, mock);
             if (true) {
                 dep.notify({
                     type: "set" /* TriggerOpTypes.SET */,
@@ -2819,11 +2830,10 @@ function renderMixin(Vue) {
         // to the data on the placeholder node.
         vm.$vnode = _parentVnode;
         // render self
+        var prevInst = currentInstance;
+        var prevRenderInst = currentRenderingInstance;
         var vnode;
         try {
-            // There's no need to maintain a stack because all render fns are called
-            // separately from one another. Nested component's render fns are called
-            // when parent component is patched.
             setCurrentInstance(vm);
             currentRenderingInstance = vm;
             vnode = render.call(vm._renderProxy, vm.$createElement);
@@ -2847,8 +2857,8 @@ function renderMixin(Vue) {
             }
         }
         finally {
-            currentRenderingInstance = null;
-            setCurrentInstance();
+            currentRenderingInstance = prevRenderInst;
+            setCurrentInstance(prevInst);
         }
         // if the returned array contains only a single node, allow it
         if (isArray(vnode) && vnode.length === 1) {
@@ -3112,6 +3122,112 @@ function eventsMixin(Vue) {
         }
         return vm;
     };
+}
+
+var activeEffectScope;
+var EffectScope = /** @class */ (function () {
+    function EffectScope(detached) {
+        if (detached === void 0) { detached = false; }
+        this.detached = detached;
+        /**
+         * @internal
+         */
+        this.active = true;
+        /**
+         * @internal
+         */
+        this.effects = [];
+        /**
+         * @internal
+         */
+        this.cleanups = [];
+        this.parent = activeEffectScope;
+        if (!detached && activeEffectScope) {
+            this.index =
+                (activeEffectScope.scopes || (activeEffectScope.scopes = [])).push(this) - 1;
+        }
+    }
+    EffectScope.prototype.run = function (fn) {
+        if (this.active) {
+            var currentEffectScope = activeEffectScope;
+            try {
+                activeEffectScope = this;
+                return fn();
+            }
+            finally {
+                activeEffectScope = currentEffectScope;
+            }
+        }
+        else if (true) {
+            warn$2("cannot run an inactive effect scope.");
+        }
+    };
+    /**
+     * This should only be called on non-detached scopes
+     * @internal
+     */
+    EffectScope.prototype.on = function () {
+        activeEffectScope = this;
+    };
+    /**
+     * This should only be called on non-detached scopes
+     * @internal
+     */
+    EffectScope.prototype.off = function () {
+        activeEffectScope = this.parent;
+    };
+    EffectScope.prototype.stop = function (fromParent) {
+        if (this.active) {
+            var i = void 0, l = void 0;
+            for (i = 0, l = this.effects.length; i < l; i++) {
+                this.effects[i].teardown();
+            }
+            for (i = 0, l = this.cleanups.length; i < l; i++) {
+                this.cleanups[i]();
+            }
+            if (this.scopes) {
+                for (i = 0, l = this.scopes.length; i < l; i++) {
+                    this.scopes[i].stop(true);
+                }
+            }
+            // nested scope, dereference from parent to avoid memory leaks
+            if (!this.detached && this.parent && !fromParent) {
+                // optimized O(1) removal
+                var last = this.parent.scopes.pop();
+                if (last && last !== this) {
+                    this.parent.scopes[this.index] = last;
+                    last.index = this.index;
+                }
+            }
+            this.parent = undefined;
+            this.active = false;
+        }
+    };
+    return EffectScope;
+}());
+function effectScope(detached) {
+    return new EffectScope(detached);
+}
+/**
+ * @internal
+ */
+function recordEffectScope(effect, scope) {
+    if (scope === void 0) { scope = activeEffectScope; }
+    if (scope && scope.active) {
+        scope.effects.push(effect);
+    }
+}
+function getCurrentScope() {
+    return activeEffectScope;
+}
+function onScopeDispose(fn) {
+    if (activeEffectScope) {
+        activeEffectScope.cleanups.push(fn);
+    }
+    else if (true) {
+        warn$2("onScopeDispose() is called when there is no active effect scope" +
+            " to be associated with.");
+    }
 }
 
 var activeInstance = null;
@@ -3416,7 +3532,8 @@ function callHook$1(vm, hook, args, setContext) {
     if (setContext === void 0) { setContext = true; }
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
-    var prev = currentInstance;
+    var prevInst = currentInstance;
+    var prevScope = getCurrentScope();
     setContext && setCurrentInstance(vm);
     var handlers = vm.$options[hook];
     var info = "".concat(hook, " hook");
@@ -3428,7 +3545,10 @@ function callHook$1(vm, hook, args, setContext) {
     if (vm._hasHookEvent) {
         vm.$emit('hook:' + hook);
     }
-    setContext && setCurrentInstance(prev);
+    if (setContext) {
+        setCurrentInstance(prevInst);
+        prevScope && prevScope.on();
+    }
     popTarget();
 }
 
@@ -3648,7 +3768,10 @@ function doWatch(source, cb, _a) {
     var instance = currentInstance;
     var call = function (fn, type, args) {
         if (args === void 0) { args = null; }
-        return invokeWithErrorHandling(fn, null, args, instance, type);
+        var res = invokeWithErrorHandling(fn, null, args, instance, type);
+        if (deep && res && res.__ob__)
+            res.__ob__.dep.depend();
+        return res;
     };
     var getter;
     var forceTrigger = false;
@@ -3673,6 +3796,7 @@ function doWatch(source, cb, _a) {
                     return s.value;
                 }
                 else if (isReactive(s)) {
+                    s.__ob__.dep.depend();
                     return traverse(s);
                 }
                 else if (isFunction(s)) {
@@ -3814,112 +3938,6 @@ function doWatch(source, cb, _a) {
     return function () {
         watcher.teardown();
     };
-}
-
-var activeEffectScope;
-var EffectScope = /** @class */ (function () {
-    function EffectScope(detached) {
-        if (detached === void 0) { detached = false; }
-        this.detached = detached;
-        /**
-         * @internal
-         */
-        this.active = true;
-        /**
-         * @internal
-         */
-        this.effects = [];
-        /**
-         * @internal
-         */
-        this.cleanups = [];
-        this.parent = activeEffectScope;
-        if (!detached && activeEffectScope) {
-            this.index =
-                (activeEffectScope.scopes || (activeEffectScope.scopes = [])).push(this) - 1;
-        }
-    }
-    EffectScope.prototype.run = function (fn) {
-        if (this.active) {
-            var currentEffectScope = activeEffectScope;
-            try {
-                activeEffectScope = this;
-                return fn();
-            }
-            finally {
-                activeEffectScope = currentEffectScope;
-            }
-        }
-        else if (true) {
-            warn$2("cannot run an inactive effect scope.");
-        }
-    };
-    /**
-     * This should only be called on non-detached scopes
-     * @internal
-     */
-    EffectScope.prototype.on = function () {
-        activeEffectScope = this;
-    };
-    /**
-     * This should only be called on non-detached scopes
-     * @internal
-     */
-    EffectScope.prototype.off = function () {
-        activeEffectScope = this.parent;
-    };
-    EffectScope.prototype.stop = function (fromParent) {
-        if (this.active) {
-            var i = void 0, l = void 0;
-            for (i = 0, l = this.effects.length; i < l; i++) {
-                this.effects[i].teardown();
-            }
-            for (i = 0, l = this.cleanups.length; i < l; i++) {
-                this.cleanups[i]();
-            }
-            if (this.scopes) {
-                for (i = 0, l = this.scopes.length; i < l; i++) {
-                    this.scopes[i].stop(true);
-                }
-            }
-            // nested scope, dereference from parent to avoid memory leaks
-            if (!this.detached && this.parent && !fromParent) {
-                // optimized O(1) removal
-                var last = this.parent.scopes.pop();
-                if (last && last !== this) {
-                    this.parent.scopes[this.index] = last;
-                    last.index = this.index;
-                }
-            }
-            this.parent = undefined;
-            this.active = false;
-        }
-    };
-    return EffectScope;
-}());
-function effectScope(detached) {
-    return new EffectScope(detached);
-}
-/**
- * @internal
- */
-function recordEffectScope(effect, scope) {
-    if (scope === void 0) { scope = activeEffectScope; }
-    if (scope && scope.active) {
-        scope.effects.push(effect);
-    }
-}
-function getCurrentScope() {
-    return activeEffectScope;
-}
-function onScopeDispose(fn) {
-    if (activeEffectScope) {
-        activeEffectScope.cleanups.push(fn);
-    }
-    else if (true) {
-        warn$2("onScopeDispose() is called when there is no active effect scope" +
-            " to be associated with.");
-    }
 }
 
 function provide(key, value) {
@@ -4226,7 +4244,7 @@ function defineAsyncComponent(source) {
     suspensible = _b === void 0 ? false : _b, // in Vue 3 default is true
     userOnError = source.onError;
     if ( true && suspensible) {
-        warn$2("The suspensiblbe option for async components is not supported in Vue2. It is ignored.");
+        warn$2("The suspensible option for async components is not supported in Vue2. It is ignored.");
     }
     var pendingRequest = null;
     var retries = 0;
@@ -4330,7 +4348,7 @@ function onErrorCaptured(hook, target) {
 /**
  * Note: also update dist/vue.runtime.mjs when adding new exports to this file.
  */
-var version = '2.7.14';
+var version = '2.7.16';
 /**
  * @internal type is manually declared in <root>/types/v3-define-component.d.ts
  */
@@ -4648,7 +4666,7 @@ function initProps$1(vm, propsOptions) {
                         "Instead, use a data or computed property based on the prop's " +
                         "value. Prop being mutated: \"".concat(key, "\""), vm);
                 }
-            });
+            }, true /* shallow */);
         }
         else {}
         // static props are already proxied on the component's prototype
@@ -4968,6 +4986,9 @@ function initMixin$1(Vue) {
         vm.__v_skip = true;
         // effect scope
         vm._scope = new EffectScope(true /* detached */);
+        // #13134 edge case where a child component is manually created during the
+        // render of a parent component
+        vm._scope.parent = undefined;
         vm._scope._vm = true;
         // merge options
         if (options && options._isComponent) {
@@ -6216,7 +6237,7 @@ function matches(pattern, name) {
     return false;
 }
 function pruneCache(keepAliveInstance, filter) {
-    var cache = keepAliveInstance.cache, keys = keepAliveInstance.keys, _vnode = keepAliveInstance._vnode;
+    var cache = keepAliveInstance.cache, keys = keepAliveInstance.keys, _vnode = keepAliveInstance._vnode, $vnode = keepAliveInstance.$vnode;
     for (var key in cache) {
         var entry = cache[key];
         if (entry) {
@@ -6226,6 +6247,7 @@ function pruneCache(keepAliveInstance, filter) {
             }
         }
     }
+    $vnode.componentOptions.children = undefined;
 }
 function pruneCacheEntry(cache, key, keys, current) {
     var entry = cache[key];
@@ -6547,7 +6569,7 @@ function isUnknownElement(tag) {
     }
     var el = document.createElement(tag);
     if (tag.indexOf('-') > -1) {
-        // http://stackoverflow.com/a/28210364/1070244
+        // https://stackoverflow.com/a/28210364/1070244
         return (unknownElementCache[tag] =
             el.constructor === window.HTMLUnknownElement ||
                 el.constructor === window.HTMLElement);
@@ -7424,8 +7446,11 @@ function createPatchFunction(backend) {
                             var insert_1 = ancestor.data.hook.insert;
                             if (insert_1.merged) {
                                 // start at index 1 to avoid re-invoking component mounted hook
-                                for (var i_10 = 1; i_10 < insert_1.fns.length; i_10++) {
-                                    insert_1.fns[i_10]();
+                                // clone insert hooks to avoid being mutated during iteration.
+                                // e.g. for customed directives under transition group.
+                                var cloned = insert_1.fns.slice(1);
+                                for (var i_10 = 0; i_10 < cloned.length; i_10++) {
+                                    cloned[i_10]();
                                 }
                             }
                         }
@@ -8564,10 +8589,8 @@ function updateStyle(oldVnode, vnode) {
     }
     for (name in newStyle) {
         cur = newStyle[name];
-        if (cur !== oldStyle[name]) {
-            // ie9 setting to null has no effect, must use empty string
-            setProp(el, name, cur == null ? '' : cur);
-        }
+        // ie9 setting to null has no effect, must use empty string
+        setProp(el, name, cur == null ? '' : cur);
     }
 }
 var style$1 = {
@@ -9816,7 +9839,7 @@ function parseHTML(html, options) {
                         return "continue";
                     }
                 }
-                // http://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
+                // https://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
                 if (conditionalComment.test(html)) {
                     var conditionalEnd = html.indexOf(']>');
                     if (conditionalEnd >= 0) {
@@ -12248,7 +12271,7 @@ Vue.compile = compileToFunctions;
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 !function() {
 /*!*************************************!*\
   !*** ./Scripts/vuesrc/home/home.ts ***!

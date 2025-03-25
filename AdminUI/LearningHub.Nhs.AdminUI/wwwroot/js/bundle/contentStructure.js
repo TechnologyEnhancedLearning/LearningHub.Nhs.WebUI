@@ -1,6 +1,1798 @@
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./Scripts/vuesrc/ckeditorwithhint.vue":
+/*!*********************************************!*\
+  !*** ./Scripts/vuesrc/ckeditorwithhint.vue ***!
+  \*********************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ckeditorwithhint_vue_vue_type_template_id_4b147b2e__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ckeditorwithhint.vue?vue&type=template&id=4b147b2e */ "./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=template&id=4b147b2e");
+/* harmony import */ var _ckeditorwithhint_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ckeditorwithhint.vue?vue&type=script&lang=ts */ "./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=script&lang=ts");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ckeditorwithhint_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ckeditorwithhint_vue_vue_type_template_id_4b147b2e__WEBPACK_IMPORTED_MODULE_0__.render,
+  _ckeditorwithhint_vue_vue_type_template_id_4b147b2e__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "Scripts/vuesrc/ckeditorwithhint.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=script&lang=ts":
+/*!*********************************************************************!*\
+  !*** ./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=script&lang=ts ***!
+  \*********************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_ckeditorwithhint_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/ts-loader/index.js??clonedRuleSet-1!../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ckeditorwithhint.vue?vue&type=script&lang=ts */ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=script&lang=ts");
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_ckeditorwithhint_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=template&id=4b147b2e":
+/*!***************************************************************************!*\
+  !*** ./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=template&id=4b147b2e ***!
+  \***************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ckeditorwithhint_vue_vue_type_template_id_4b147b2e__WEBPACK_IMPORTED_MODULE_0__.render; },
+/* harmony export */   staticRenderFns: function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ckeditorwithhint_vue_vue_type_template_id_4b147b2e__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns; }
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ckeditorwithhint_vue_vue_type_template_id_4b147b2e__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ckeditorwithhint.vue?vue&type=template&id=4b147b2e */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=template&id=4b147b2e");
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/common.ts":
+/*!**********************************!*\
+  !*** ./Scripts/vuesrc/common.ts ***!
+  \**********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   commonlib: function() { return /* binding */ commonlib; }
+/* harmony export */ });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constants */ "./Scripts/vuesrc/constants.ts");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+var monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+];
+var scrollTo = function ScrollTo(id) {
+    var top = jquery__WEBPACK_IMPORTED_MODULE_0___default()(id).first().offset().top;
+    window.scroll({ top: top, left: 0, behavior: 'smooth' });
+};
+var getIcon = function getIcon(extension) {
+    var iconUrl;
+    switch (extension) {
+        case "pdf":
+            iconUrl = "pdf.svg";
+        case "Image":
+            iconUrl = "jpeg.svg";
+        case "Word":
+            iconUrl = "ms-word-doc.svg";
+        default:
+            iconUrl = "pdf.svg";
+    }
+    return iconUrl;
+};
+var getResourceTypeIconClass = function getResourceTypeIconClass(resourceType) {
+    var resourceTypeEnum = _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[resourceType];
+    switch (resourceTypeEnum) {
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.ARTICLE]:
+            return ["fa-regular", "fa-file-alt"];
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.AUDIO]:
+            return ["fa-solid", "fa-volume-up"];
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.EQUIPMENT]:
+            return ["fa-solid", "fa-map-marker-alt"];
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.GENERICFILE]:
+            return ["fa-regular", "fa-file"];
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.IMAGE]:
+            return ["fa-regular", "fa-image"];
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.SCORM]:
+            return ["fa-solid", "fa-cube"];
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.VIDEO]:
+            return ["fa-solid", "fa-video"];
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.WEBLINK]:
+            return ["fa-solid", "fa-globe"];
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.CASE]:
+            return ["fa-solid", "fa-microscope"];
+        default:
+            return ["fa-regular", "fa-file"];
+    }
+};
+var getDurationText = function (durationInMilliseconds) {
+    if (durationInMilliseconds) {
+        // Azure media player rounds duration to nearest second. e.g. 8:59.88 becomes 9:00. LH needs to match.
+        // Moment.js can't round to the nearest second, so do that first with the raw millisecond value.
+        var nearestSecond = Math.round(durationInMilliseconds / 1000) * 1000;
+        var duration = "";
+        // If duration greater than an hour, don't return the seconds part.
+        if (nearestSecond >= 60 * 60 * 1000) {
+            duration = moment__WEBPACK_IMPORTED_MODULE_2___default().utc(nearestSecond).format("h[ hr ]m[ min ]");
+            //Exclude "0 min" from the return value.
+            if (duration.endsWith(" 0 min ")) {
+                duration = duration.replace("0 min ", "");
+            }
+        }
+        else {
+            duration = moment__WEBPACK_IMPORTED_MODULE_2___default().utc(nearestSecond).format("m[ min ]s[ sec ]");
+            //Exclude "0 min" and "0 sec" from the return value.
+            if (duration.startsWith("0 min ")) {
+                duration = duration.replace("0 min ", "");
+            }
+            if (duration.endsWith(" 0 sec ")) {
+                duration = duration.replace("0 sec ", "");
+            }
+        }
+        if (duration == " ") {
+            return "";
+        }
+        return duration;
+    }
+    else {
+        return "";
+    }
+};
+var getPrettifiedResourceTypeName = function getPrettifiedResourceTypeName(resourceType, durationInMilliSeconds) {
+    var resourceTypeEnum = _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[resourceType];
+    switch (resourceTypeEnum) {
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.ARTICLE]:
+            return "Article";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.AUDIO]:
+            return getDurationText(durationInMilliSeconds) + " audio";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.EQUIPMENT]:
+            return "Equipment";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.IMAGE]:
+            return "Image";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.SCORM]:
+            return "e-learning package";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.VIDEO]:
+            return getDurationText(durationInMilliSeconds) + " video";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.WEBLINK]:
+            return "Web link";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.GENERICFILE]:
+            return "File";
+        default:
+            return "File";
+    }
+};
+var getAuthoredDate = function getAuthoredDate(day, month, year) {
+    var monthName;
+    if (month)
+        monthName = monthNames[month - 1];
+    var authdate = [day, monthName, year].filter(Boolean).join(' ');
+    return authdate;
+};
+var getDurationHhmmss = function (seconds) {
+    var minutes = Math.floor(seconds / 60);
+    seconds = seconds % 60;
+    var hours = Math.floor(minutes / 60);
+    minutes = minutes % 60;
+    var duration = "";
+    if (hours > 0) {
+        duration = pad(hours) + ":";
+    }
+    duration += pad(minutes) + ":" + pad(seconds);
+    return duration;
+};
+var pad = function (num) {
+    return ("0" + num).slice(-2);
+};
+var capitalize = function (title) {
+    if (typeof title !== 'string')
+        return '';
+    return title.charAt(0).toUpperCase() + title.slice(1);
+};
+var getGenericFileButtonTitle = function getGenericFileButtonText(extension) {
+    var title = "View this file";
+    if (extension.toLowerCase() == "zip") {
+        title = "Download this file";
+    }
+    return title;
+};
+var getResourceTypeText = function (resourceType) {
+    switch (resourceType) {
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.ARTICLE:
+            return "Article";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.AUDIO:
+            return "Audio";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.EMBEDDED:
+            return "Embedded";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.EQUIPMENT:
+            return "Equipment";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.GENERICFILE:
+            return "File";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.IMAGE:
+            return "Image";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.SCORM:
+            return "e-learning package";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.VIDEO:
+            return "Video";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.WEBLINK:
+            return "Web link";
+        default:
+            return "";
+    }
+};
+var getResourceTypeVerb = function (resourceType) {
+    switch (resourceType) {
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.ARTICLE:
+            return "Read";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.AUDIO:
+            return "Played";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.EMBEDDED:
+            return "";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.EQUIPMENT:
+            return "Used equipment/visited facility";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.GENERICFILE:
+            return "Downloaded";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.IMAGE:
+            return "Viewed";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.SCORM:
+            return "Downloaded";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.VIDEO:
+            return "Played";
+        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.WEBLINK:
+            return "Visited";
+        default:
+            return "";
+    }
+};
+var stripHTMLFromString = function stripHTMLFromString(originalString) {
+    if (!originalString)
+        return '';
+    var txtField = document.createElement('textarea');
+    txtField.innerHTML = originalString.replace(/(<([^>]+)>)/gi, "");
+    return txtField.textContent;
+};
+var commonlib = {
+    scrollTo: scrollTo,
+    getIcon: getIcon,
+    getAuthoredDate: getAuthoredDate,
+    getDurationText: getDurationText,
+    getDurationHhmmss: getDurationHhmmss,
+    getGenericFileButtonTitle: getGenericFileButtonTitle,
+    getResourceTypeText: getResourceTypeText,
+    getResourceTypeVerb: getResourceTypeVerb,
+    getResourceTypeIconClass: getResourceTypeIconClass,
+    getPrettifiedResourceTypeName: getPrettifiedResourceTypeName,
+    stripHTMLFromString: stripHTMLFromString
+};
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/constants.ts":
+/*!*************************************!*\
+  !*** ./Scripts/vuesrc/constants.ts ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   NodeType: function() { return /* binding */ NodeType; },
+/* harmony export */   ResourceType: function() { return /* binding */ ResourceType; },
+/* harmony export */   VersionStatus: function() { return /* binding */ VersionStatus; }
+/* harmony export */ });
+var ResourceType;
+(function (ResourceType) {
+    ResourceType[ResourceType["UNDEFINED"] = 0] = "UNDEFINED";
+    ResourceType[ResourceType["ARTICLE"] = 1] = "ARTICLE";
+    ResourceType[ResourceType["AUDIO"] = 2] = "AUDIO";
+    ResourceType[ResourceType["EMBEDDED"] = 3] = "EMBEDDED";
+    ResourceType[ResourceType["EQUIPMENT"] = 4] = "EQUIPMENT";
+    ResourceType[ResourceType["IMAGE"] = 5] = "IMAGE";
+    ResourceType[ResourceType["SCORM"] = 6] = "SCORM";
+    ResourceType[ResourceType["VIDEO"] = 7] = "VIDEO";
+    ResourceType[ResourceType["WEBLINK"] = 8] = "WEBLINK";
+    ResourceType[ResourceType["GENERICFILE"] = 9] = "GENERICFILE";
+    ResourceType[ResourceType["CASE"] = 10] = "CASE";
+    ResourceType[ResourceType["ASSESSMENT"] = 11] = "ASSESSMENT";
+})(ResourceType || (ResourceType = {}));
+var NodeType;
+(function (NodeType) {
+    NodeType[NodeType["Catalogue"] = 1] = "Catalogue";
+    NodeType[NodeType["Course"] = 2] = "Course";
+    NodeType[NodeType["Folder"] = 3] = "Folder";
+    NodeType[NodeType["ExternalOrganisation"] = 4] = "ExternalOrganisation";
+})(NodeType || (NodeType = {}));
+var VersionStatus;
+(function (VersionStatus) {
+    VersionStatus[VersionStatus["DRAFT"] = 1] = "DRAFT";
+    VersionStatus[VersionStatus["PUBLISHED"] = 2] = "PUBLISHED";
+    VersionStatus[VersionStatus["UNPUBLISHED"] = 3] = "UNPUBLISHED";
+    VersionStatus[VersionStatus["PUBLISHING"] = 4] = "PUBLISHING";
+    VersionStatus[VersionStatus["SUBMITTED"] = 5] = "SUBMITTED";
+    VersionStatus[VersionStatus["FAILED"] = 6] = "FAILED";
+})(VersionStatus || (VersionStatus = {}));
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/content-structure/contentStructure.vue":
+/*!***************************************************************!*\
+  !*** ./Scripts/vuesrc/content-structure/contentStructure.vue ***!
+  \***************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _contentStructure_vue_vue_type_template_id_1d7c4214_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true */ "./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true");
+/* harmony import */ var _contentStructure_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./contentStructure.vue?vue&type=script&lang=ts */ "./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=script&lang=ts");
+/* harmony import */ var _contentStructure_vue_vue_type_style_index_0_id_1d7c4214_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true */ "./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+;
+
+
+/* normalize component */
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _contentStructure_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _contentStructure_vue_vue_type_template_id_1d7c4214_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render,
+  _contentStructure_vue_vue_type_template_id_1d7c4214_scoped_true__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "1d7c4214",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "Scripts/vuesrc/content-structure/contentStructure.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=script&lang=ts":
+/*!***************************************************************************************!*\
+  !*** ./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=script&lang=ts ***!
+  \***************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/ts-loader/index.js??clonedRuleSet-1!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./contentStructure.vue?vue&type=script&lang=ts */ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=script&lang=ts");
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true":
+/*!************************************************************************************************************************!*\
+  !*** ./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true ***!
+  \************************************************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_style_index_0_id_1d7c4214_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true");
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true":
+/*!*********************************************************************************************************!*\
+  !*** ./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true ***!
+  \*********************************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_template_id_1d7c4214_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render; },
+/* harmony export */   staticRenderFns: function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_template_id_1d7c4214_scoped_true__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns; }
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_template_id_1d7c4214_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true");
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/content-structure/contentStructureRouter.ts":
+/*!********************************************************************!*\
+  !*** ./Scripts/vuesrc/content-structure/contentStructureRouter.ts ***!
+  \********************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
+/* harmony import */ var _contentStructure_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./contentStructure.vue */ "./Scripts/vuesrc/content-structure/contentStructure.vue");
+
+
+
+vue__WEBPACK_IMPORTED_MODULE_1__["default"].use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
+var router = new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({
+    mode: 'history',
+    base: '/Catalogue/ContentStructure',
+    routes: [
+        {
+            path: '/:id',
+            name: 'ContentStructure',
+            component: _contentStructure_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+            meta: {
+                title: 'Content structure'
+            },
+            props: {
+                showFoldersOnly: true,
+                readOnly: false
+            }
+        },
+    ]
+});
+// This callback runs before every route change, including on page load.
+router.beforeEach(function (to, from, next) {
+    // This goes through the matched routes from last to first, finding the closest route with a title.
+    // eg. if we have /some/deep/nested/route and /some, /deep, and /nested have titles, nested's will be chosen.
+    var nearestWithTitle = to.matched.slice().reverse().find(function (r) { return r.meta && r.meta.title; });
+    // If a route with a title was found, set the document (page) title to that value.
+    if (nearestWithTitle)
+        document.title = nearestWithTitle.meta.title;
+    next();
+});
+/* harmony default export */ __webpack_exports__["default"] = (router);
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/content-structure/contentStructureState.ts":
+/*!*******************************************************************!*\
+  !*** ./Scripts/vuesrc/content-structure/contentStructureState.ts ***!
+  \*******************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   State: function() { return /* binding */ State; },
+/* harmony export */   contentStructureState: function() { return /* binding */ contentStructureState; }
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../data/contentStructure */ "./Scripts/vuesrc/data/contentStructure.ts");
+/* harmony import */ var _models_content_structure_NodeContentAdminModel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/content-structure/NodeContentAdminModel */ "./Scripts/vuesrc/models/content-structure/NodeContentAdminModel.ts");
+/* harmony import */ var _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../models/content-structure/editModeEnum */ "./Scripts/vuesrc/models/content-structure/editModeEnum.ts");
+/* harmony import */ var _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../models/content-structure/hierarchyEditModel */ "./Scripts/vuesrc/models/content-structure/hierarchyEditModel.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../constants */ "./Scripts/vuesrc/constants.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+
+
+
+
+
+
+
+vue__WEBPACK_IMPORTED_MODULE_5__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_6__["default"]);
+var State = /** @class */ (function () {
+    function State() {
+        this.isLoading = true;
+        this.canCreateEdit = false;
+        this.publishInProgress = false;
+        this.catalogue = null;
+        this.hierarchyEdit = new _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditModel();
+        this.hierarchyEditLastPublished = new _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditModel();
+        this.rootNode = new _models_content_structure_NodeContentAdminModel__WEBPACK_IMPORTED_MODULE_1__.NodeContentAdminModel();
+        this.moveToRootNode = new _models_content_structure_NodeContentAdminModel__WEBPACK_IMPORTED_MODULE_1__.NodeContentAdminModel();
+        this.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.None;
+        this.editingFolderNode = null;
+        this.editingTreeNode = null;
+        this.movingResource = null;
+        this.updatedNode = null;
+        this.inError = false;
+        this.lastErrorMessage = "";
+        this.readOnly = true;
+    }
+    return State;
+}());
+
+var state = new State();
+function refreshHierarchyEdit(state) {
+    var _this = this;
+    state.isLoading = true;
+    state.inError = false;
+    _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.getHierarchyEdit(state.catalogue.nodeId).then(function (response) {
+        state.hierarchyEdit = response[0];
+        state.hierarchyEditLastPublished = response[1];
+    }).then(function (x) {
+        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.getCurrentUserId()
+            .then(function (x) {
+            var hierarchyEditExists = !(state.hierarchyEdit === null);
+            state.canCreateEdit = (!hierarchyEditExists
+                || state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.Published)
+                || (state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.Discarded)
+                || (state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.FailedToPublish);
+            state.publishInProgress = hierarchyEditExists
+                && ((state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.SubmittedToPublishingQueue)
+                    || (state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.Publishing));
+            state.editMode = (hierarchyEditExists && state.hierarchyEdit.userId === x && state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.Draft) ? _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure : _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.None;
+            state.readOnly = !(hierarchyEditExists && state.hierarchyEdit.userId === x && state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.Draft);
+        }).then(function (x) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                state.rootNode = new _models_content_structure_NodeContentAdminModel__WEBPACK_IMPORTED_MODULE_1__.NodeContentAdminModel();
+                state.rootNode.nodeTypeId = _constants__WEBPACK_IMPORTED_MODULE_4__.NodeType.Catalogue;
+                state.rootNode.nodeId = state.catalogue.nodeId;
+                if (!(state.hierarchyEdit === null))
+                    state.rootNode.hierarchyEditDetailId = state.hierarchyEdit.rootHierarchyEditDetailId;
+                state.rootNode.depth = 0;
+                state.rootNode.parent = null;
+                state.rootNode.path = state.catalogue.name;
+                state.rootNode.name = state.catalogue.name;
+                state.rootNode.childrenLoaded = false;
+                state.rootNode.inEdit = state.editMode == _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure;
+                state.rootNode.showInTreeView = false;
+                return [2 /*return*/];
+            });
+        }); }).then(function (y) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.getNodeContentsAdmin(state.catalogue.nodeId, state.readOnly).then(function (response) {
+                            state.rootNode.children = response;
+                            state.rootNode.children.forEach(function (child) {
+                                processChildNodeContents(child, state.rootNode);
+                            });
+                            state.rootNode.childrenLoaded = true;
+                            state.isLoading = false;
+                        }).catch(function (e) {
+                            state.inError = true;
+                            state.isLoading = false;
+                            state.lastErrorMessage = "Error loading content structure.";
+                        })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    });
+}
+function refreshNodeContents(node, refreshParentPath) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _this = this;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    state.updatedNode = null;
+                    return [4 /*yield*/, _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.getNodeContentsAdmin(node.nodeId, state.readOnly).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
+                            var i, existing;
+                            return __generator(this, function (_a) {
+                                if (!node.childrenLoaded) {
+                                    node.children = response;
+                                }
+                                else {
+                                    // If node content item is not in the existing collection then add it.
+                                    // Ensure display order and name are up to date (IT1)
+                                    response.forEach(function (child) {
+                                        var existing = node.children.filter(function (r) { return (r.nodeId != null && r.nodeId == child.nodeId) || (r.resourceId != null && r.resourceId == child.resourceId); })[0];
+                                        if (existing === undefined) {
+                                            node.children.splice(0, 0, child);
+                                        }
+                                        else {
+                                            existing.displayOrder = child.displayOrder;
+                                            existing.name = child.name;
+                                        }
+                                    });
+                                    // If existing child is not in new node content list then remove it it.
+                                    for (i = 0; i < node.children.length; i++) {
+                                        existing = response.filter(function (r) { return (r.nodeId != null && r.nodeId == node.children[i].nodeId) || (r.resourceId != null && r.resourceId == node.children[i].resourceId); })[0];
+                                        if (existing === undefined) {
+                                            node.children.splice(i, 1);
+                                        }
+                                    }
+                                }
+                                node.children.forEach(function (child) {
+                                    processChildNodeContents(child, node);
+                                });
+                                node.childrenLoaded = true;
+                                node.hasResourcesInd = node.children.filter(function (c) { return c.nodeTypeId === 0; }).length > 0;
+                                node.hasResourcesInBranchInd = node.hasResourcesInd || node.children.filter(function (c) { return c.hasResourcesInBranchInd; }).length > 0;
+                                state.updatedNode = node;
+                                return [2 /*return*/];
+                            });
+                        }); }).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
+                            var parent, hadResources, hasResources;
+                            return __generator(this, function (_a) {
+                                if (refreshParentPath && node.depth > 0) {
+                                    parent = node.parent;
+                                    while (parent.depth > 0) {
+                                        hadResources = parent.hasResourcesInBranchInd;
+                                        hasResources = parent.hasResourcesInd || parent.children.filter(function (c) { return c.hasResourcesInBranchInd; }).length > 0;
+                                        if (hadResources != hasResources) {
+                                            parent.hasResourcesInBranchInd = hasResources;
+                                            state.updatedNode = parent;
+                                        }
+                                        parent = parent.parent;
+                                    }
+                                }
+                                return [2 /*return*/];
+                            });
+                        }); }).catch(function (e) {
+                            state.inError = true;
+                            state.lastErrorMessage = "Error refreshing Node contents of ".concat(node.name);
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function processChildNodeContents(child, parent) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            child.parent = parent;
+            child.inEdit = child.parent.inEdit;
+            child.showInTreeView = true;
+            child.depth = parent.depth + 1;
+            child.path = child.depth === 0 ? child.name : "".concat(child.parent.path, " > ").concat(child.name);
+            return [2 /*return*/];
+        });
+    });
+}
+var mutations = {
+    initialise: function (state, payload) {
+        state.readOnly = payload.readOnly;
+        state.rootNode.nodeTypeId = 1;
+    },
+    setEditMode: function (state, payload) {
+        state.editMode = payload;
+    },
+    setCreatingFolder: function (state, payload) {
+        state.inError = false;
+        var editingFolderNode = {
+            hierarchyEditId: state.hierarchyEdit.id,
+            hierarchyEditDetailId: 0,
+            nodeId: 0,
+            nodeVersionId: 0,
+            name: "",
+            description: "",
+            parentNodeId: payload.parentNode.nodeId,
+            path: payload.parentNode.path,
+            parentNode: null
+        };
+        state.editingFolderNode = editingFolderNode;
+        state.editingTreeNode = payload.parentNode;
+        state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Folder;
+        state.updatedNode = null;
+    },
+    setEditingFolder: function (state, payload) {
+        state.inError = false;
+        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.getFolder(payload.folderNode.nodeVersionId).then(function (response) {
+            var editingFolderNode = response;
+            editingFolderNode.hierarchyEditId = state.hierarchyEdit.id;
+            editingFolderNode.hierarchyEditDetailId = payload.folderNode.hierarchyEditDetailId;
+            editingFolderNode.path = payload.folderNode.path;
+            state.editingFolderNode = editingFolderNode;
+            state.editingTreeNode = payload.folderNode;
+            state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Folder;
+        });
+    },
+    setDeletingFolder: function (state, payload) {
+        state.editingTreeNode = payload.folderNode;
+    },
+    setMovingNode: function (state, payload) {
+        state.editingTreeNode = payload.node;
+        state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.MoveNode;
+    },
+    cancelMoveNode: function (state, payload) {
+        state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure;
+    },
+    cancelEdit: function (state) {
+        state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure;
+    },
+    setMovingResource: function (state, payload) {
+        state.editingTreeNode = payload.node.parent;
+        state.movingResource = payload.node;
+        state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.MoveResource;
+    },
+    cancelMoveResource: function (state, payload) {
+        state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure;
+        state.movingResource = null;
+    },
+    setError: function (state, payload) {
+        state.inError = true;
+        state.lastErrorMessage = payload.errorMessage;
+    },
+    removeError: function (state) {
+        state.inError = false;
+        state.lastErrorMessage = null;
+    }
+};
+var getters = {};
+var actions = {
+    populateCatalogue: function (context, payload) {
+        state.isLoading = true;
+        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.getCatalogue(payload).then(function (response) {
+            state.catalogue = response;
+        }).then(function (x) {
+            refreshHierarchyEdit(state);
+        });
+        state.isLoading = false;
+    },
+    createHierarchyEdit: function (context, payload) {
+        state.inError = false;
+        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.createHierarchyEdit(payload).then(function (response) {
+            if (response.isValid) {
+                refreshHierarchyEdit(state);
+            }
+            else {
+                state.inError = true;
+                state.lastErrorMessage = "Error: " + response.details.join(",");
+            }
+        }).catch(function (e) {
+            state.inError = true;
+            state.lastErrorMessage = "Error creating Hierarchy Edit.";
+        });
+    },
+    discardHierarchyEdit: function (context, payload) {
+        state.inError = false;
+        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.discardHierarchyEdit(payload).then(function (response) {
+            if (response.isValid) {
+                refreshHierarchyEdit(state);
+            }
+            else {
+                state.inError = true;
+                state.lastErrorMessage = "Error: " + response.details.join(",");
+            }
+        }).catch(function (e) {
+            state.inError = true;
+            state.lastErrorMessage = "Error discarding Hierarchy Edit.";
+        });
+    },
+    submitHierarchyEditForPublish: function (context, payload) {
+        state.inError = false;
+        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.submitHierarchyEditForPublish(payload, '').then(function (response) {
+            if (response.isValid) {
+                refreshHierarchyEdit(state);
+            }
+            else {
+                state.inError = true;
+                state.lastErrorMessage = "Error: " + response.details.join(",");
+            }
+        }).catch(function (e) {
+            state.inError = true;
+            state.lastErrorMessage = "Error publishing Hierarchy Edit.";
+        });
+    },
+    deleteFolder: function (context) {
+        var _this = this;
+        state.inError = false;
+        state.updatedNode = null;
+        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.deleteFolder(state.editingTreeNode.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
+            var parent;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!response.isValid) return [3 /*break*/, 2];
+                        parent = state.editingTreeNode.parent;
+                        return [4 /*yield*/, refreshNodeContents(parent, false)];
+                    case 1:
+                        _a.sent();
+                        state.updatedNode = parent;
+                        context.commit("setEditMode", _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        state.inError = true;
+                        state.lastErrorMessage = "Error: " + response.details.join(",");
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); }).catch(function (e) {
+            state.inError = true;
+            state.lastErrorMessage = "Error deleting folder.";
+        });
+    },
+    moveNodeUp: function (context, payload) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                state.inError = false;
+                _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.moveNodeUp(payload.node.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, refreshNodeContents(payload.node.parent, false)];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }).catch(function (e) {
+                    state.inError = true;
+                    state.lastErrorMessage = "Error moving node up.";
+                });
+                return [2 /*return*/];
+            });
+        });
+    },
+    moveNodeDown: function (context, payload) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                state.inError = false;
+                _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.moveNodeDown(payload.node.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, refreshNodeContents(payload.node.parent, false)];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }).catch(function (e) {
+                    state.inError = true;
+                    state.lastErrorMessage = "Error moving node down.";
+                });
+                return [2 /*return*/];
+            });
+        });
+    },
+    moveNode: function (context, payload) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                state.inError = false;
+                _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.moveNode(state.editingTreeNode.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
+                    var _this = this;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                context.commit("setEditMode", _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure);
+                                return [4 /*yield*/, refreshNodeContents(payload.destinationNode, true).then(function (x) { return __awaiter(_this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            switch (_a.label) {
+                                                case 0: return [4 /*yield*/, refreshNodeContents(state.editingTreeNode.parent, true).then(function (y) {
+                                                    })];
+                                                case 1:
+                                                    _a.sent();
+                                                    return [2 /*return*/];
+                                            }
+                                        });
+                                    }); })];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }).catch(function (e) {
+                    state.inError = true;
+                    state.lastErrorMessage = "Error moving Node ".concat(state.editingTreeNode.name);
+                });
+                return [2 /*return*/];
+            });
+        });
+    },
+    moveResourceUp: function (context, payload) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.hierarchyEditMoveResourceUp(payload.node.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, refreshNodeContents(payload.node.parent, false)];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }).catch(function (e) {
+                    state.inError = true;
+                    state.lastErrorMessage = "Error moving resource up.";
+                });
+                return [2 /*return*/];
+            });
+        });
+    },
+    moveResourceDown: function (context, payload) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.hierarchyEditMoveResourceDown(payload.node.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, refreshNodeContents(payload.node.parent, false)];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }).catch(function (e) {
+                    state.inError = true;
+                    state.lastErrorMessage = "Error moving resource down.";
+                });
+                return [2 /*return*/];
+            });
+        });
+    },
+    moveResource: function (context, payload) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.hierarchyEditMoveResource(state.movingResource.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
+                    var _this = this;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, refreshNodeContents(state.movingResource.parent, true).then(function (x) { return __awaiter(_this, void 0, void 0, function () {
+                                    return __generator(this, function (_a) {
+                                        switch (_a.label) {
+                                            case 0: return [4 /*yield*/, refreshNodeContents(payload.destinationNode, true)];
+                                            case 1:
+                                                _a.sent();
+                                                return [2 /*return*/];
+                                        }
+                                    });
+                                }); })];
+                            case 1:
+                                _a.sent();
+                                context.commit("setEditMode", _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure);
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }).catch(function (e) {
+                    state.inError = true;
+                    state.lastErrorMessage = "Error moving resource.";
+                });
+                return [2 /*return*/];
+            });
+        });
+    },
+    saveFolder: function (context) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                if (state.editingFolderNode.nodeVersionId == 0) {
+                    _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.createFolder(state.editingFolderNode).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, refreshNodeContents(state.editingTreeNode, false)];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }).catch(function (e) {
+                        state.inError = true;
+                        state.lastErrorMessage = "Error creating folder.";
+                    });
+                    context.commit("setEditMode", _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure);
+                }
+                else {
+                    _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.updateFolder(state.editingFolderNode).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            state.editingTreeNode.name = state.editingFolderNode.name;
+                            state.updatedNode = state.editingTreeNode;
+                            context.commit("setEditMode", _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure);
+                            return [2 /*return*/];
+                        });
+                    }); }).catch(function (e) {
+                        state.inError = true;
+                        state.lastErrorMessage = "Error updating folder.";
+                    });
+                }
+                return [2 /*return*/];
+            });
+        });
+    }
+};
+var contentStructureState = {
+    namespaced: true,
+    state: state,
+    mutations: mutations,
+    actions: actions,
+    getters: getters
+};
+/* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_6__["default"].Store({
+    modules: {
+        contentStructureState: contentStructureState
+    }
+}));
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/content-structure/treeItem.vue":
+/*!*******************************************************!*\
+  !*** ./Scripts/vuesrc/content-structure/treeItem.vue ***!
+  \*******************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _treeItem_vue_vue_type_template_id_40bedb66_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./treeItem.vue?vue&type=template&id=40bedb66&scoped=true */ "./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=template&id=40bedb66&scoped=true");
+/* harmony import */ var _treeItem_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./treeItem.vue?vue&type=script&lang=ts */ "./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=script&lang=ts");
+/* harmony import */ var _treeItem_vue_vue_type_style_index_0_id_40bedb66_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true */ "./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+;
+
+
+/* normalize component */
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _treeItem_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _treeItem_vue_vue_type_template_id_40bedb66_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render,
+  _treeItem_vue_vue_type_template_id_40bedb66_scoped_true__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "40bedb66",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "Scripts/vuesrc/content-structure/treeItem.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=script&lang=ts":
+/*!*******************************************************************************!*\
+  !*** ./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=script&lang=ts ***!
+  \*******************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/ts-loader/index.js??clonedRuleSet-1!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./treeItem.vue?vue&type=script&lang=ts */ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=script&lang=ts");
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_script_lang_ts__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true":
+/*!****************************************************************************************************************!*\
+  !*** ./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true ***!
+  \****************************************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_style_index_0_id_40bedb66_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true");
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=template&id=40bedb66&scoped=true":
+/*!*************************************************************************************************!*\
+  !*** ./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=template&id=40bedb66&scoped=true ***!
+  \*************************************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_template_id_40bedb66_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render; },
+/* harmony export */   staticRenderFns: function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_template_id_40bedb66_scoped_true__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns; }
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_template_id_40bedb66_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./treeItem.vue?vue&type=template&id=40bedb66&scoped=true */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=template&id=40bedb66&scoped=true");
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/data/contentStructure.ts":
+/*!*************************************************!*\
+  !*** ./Scripts/vuesrc/data/contentStructure.ts ***!
+  \*************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   contentStructureData: function() { return /* binding */ contentStructureData; }
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+
+var getCatalogue = function (id) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/hierarchy/GetCatalogue/' + id)
+                        .then(function (response) {
+                        return response.data;
+                    })
+                        .catch(function (e) {
+                        console.error('getCatalogue:' + e);
+                        throw e;
+                    })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var getNodeContentsAdmin = function (nodeId, readOnly) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/hierarchy/GetNodeContentsAdmin/' + nodeId + '/' + readOnly + "?timestamp=".concat(new Date().getTime()))
+                        .then(function (response) {
+                        return response.data;
+                    })
+                        .catch(function (e) {
+                        console.log('getNodeContentsAdmin:' + e);
+                        throw e;
+                    })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var getActiveNodePathToNode = function (nodeId) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/hierarchy/GetActiveNodePathToNode/' + nodeId + "?timestamp=".concat(new Date().getTime()))
+                        .then(function (response) {
+                        return response.data;
+                    })
+                        .catch(function (e) {
+                        console.log('getActiveNodePathToNode:' + e);
+                        throw e;
+                    })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var getHierarchyEdit = function (rootNodeId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/GetHierarchyEdit/".concat(rootNodeId);
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().get(url)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('GetHierarchyEdit:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var createHierarchyEdit = function (rootNodeId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/CreateHierarchyEdit/".concat(rootNodeId);
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('createHierarchyEdit:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var discardHierarchyEdit = function (hierarchyEditId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/DiscardHierarchyEdit/".concat(hierarchyEditId);
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('discardHierarchyEdit:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var submitHierarchyEditForPublish = function (hierarchyEditId, notes) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url, params;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/SubmitHierarchyEditForPublish";
+                    params = {
+                        hierarchyEditId: hierarchyEditId,
+                        notes: notes
+                    };
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, params)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('publishHierarchyEdit:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var getFolder = function (nodeVersionId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/GetFolder/".concat(nodeVersionId);
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().get(url)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('getFolder:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var createFolder = function (requestModel) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/CreateFolder";
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, requestModel)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('createFolder:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var updateFolder = function (requestModel) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/UpdateFolder";
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, requestModel)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('updateFolder:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var deleteFolder = function (hierarchyEditDetailId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/DeleteFolder/".concat(hierarchyEditDetailId);
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('deleteFolder:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var moveNodeUp = function (hierarchyEditDetailId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/MoveNodeUp/".concat(hierarchyEditDetailId);
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('moveNodeUp:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var moveNodeDown = function (hierarchyEditDetailId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/MoveNodeDown/".concat(hierarchyEditDetailId);
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('moveNodeDown:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var moveNode = function (hierarchyEditDetailId, moveToHierarchyEditDetailId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/MoveNode";
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, { hierarchyEditDetailId: hierarchyEditDetailId, moveToHierarchyEditDetailId: moveToHierarchyEditDetailId })
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('moveNode:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var hierarchyEditMoveResourceUp = function (hierarchyEditDetailId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/HierarchyEditMoveResourceUp/".concat(hierarchyEditDetailId);
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('hierarchyEditMoveResourceUp:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var hierarchyEditMoveResourceDown = function (hierarchyEditDetailId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/HierarchyEditMoveResourceDown/".concat(hierarchyEditDetailId);
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('hierarchyEditMoveResourceDown:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var hierarchyEditMoveResource = function (hierarchyEditDetailId, moveToHierarchyEditDetailId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/HierarchyEditMoveResource";
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, { hierarchyEditDetailId: hierarchyEditDetailId, moveToHierarchyEditDetailId: moveToHierarchyEditDetailId })
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('hierarchyEditMoveResource:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var moveResourceUp = function (nodeId, resourceId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/MoveResourceUp/".concat(nodeId, "/").concat(resourceId);
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('moveResourceUp:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var moveResourceDown = function (nodeId, resourceId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/MoveResourceDown/".concat(nodeId, "/").concat(resourceId);
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('moveResourceDown:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var moveResource = function (sourceNodeId, destinationNodeId, resourceId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/MoveResource/".concat(sourceNodeId, "/").concat(destinationNodeId, "/").concat(resourceId);
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('moveResource:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var getCurrentUserId = function () {
+    return __awaiter(this, void 0, void 0, function () {
+        var url;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = "/api/hierarchy/GetCurrentUserId";
+                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().get(url)
+                            .then(function (response) {
+                            return response.data;
+                        })
+                            .catch(function (e) {
+                            console.log('getCurrentUserId:' + e);
+                            throw e;
+                        })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+};
+var contentStructureData = {
+    getCatalogue: getCatalogue,
+    getNodeContentsAdmin: getNodeContentsAdmin,
+    getActiveNodePathToNode: getActiveNodePathToNode,
+    getHierarchyEdit: getHierarchyEdit,
+    createHierarchyEdit: createHierarchyEdit,
+    discardHierarchyEdit: discardHierarchyEdit,
+    submitHierarchyEditForPublish: submitHierarchyEditForPublish,
+    createFolder: createFolder,
+    updateFolder: updateFolder,
+    deleteFolder: deleteFolder,
+    getFolder: getFolder,
+    moveNodeUp: moveNodeUp,
+    moveNodeDown: moveNodeDown,
+    moveNode: moveNode,
+    hierarchyEditMoveResourceUp: hierarchyEditMoveResourceUp,
+    hierarchyEditMoveResourceDown: hierarchyEditMoveResourceDown,
+    hierarchyEditMoveResource: hierarchyEditMoveResource,
+    moveResourceUp: moveResourceUp,
+    moveResourceDown: moveResourceDown,
+    moveResource: moveResource,
+    getCurrentUserId: getCurrentUserId
+};
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/filters.ts":
+/*!***********************************!*\
+  !*** ./Scripts/vuesrc/filters.ts ***!
+  \***********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+
+
+vue__WEBPACK_IMPORTED_MODULE_1__["default"].filter('formatDate', function (value, format) {
+    if (value) {
+        return moment__WEBPACK_IMPORTED_MODULE_0___default()(String(value)).format(format);
+    }
+    return value;
+});
+vue__WEBPACK_IMPORTED_MODULE_1__["default"].filter('currency', function (value) {
+    return '£' + parseFloat(value).toFixed(2);
+});
+vue__WEBPACK_IMPORTED_MODULE_1__["default"].filter('truncate', function (text, length, suffix) {
+    if (text.length <= length) {
+        return text;
+    }
+    var subString = text.substring(0, length - 1);
+    return subString.substring(0, subString.lastIndexOf(' ')) + suffix;
+});
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/helpers/ckeditorValidationHelper.ts":
+/*!************************************************************!*\
+  !*** ./Scripts/vuesrc/helpers/ckeditorValidationHelper.ts ***!
+  \************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getNumberOfCharacters: function() { return /* binding */ getNumberOfCharacters; },
+/* harmony export */   getNumberOfCharactersFromHtml: function() { return /* binding */ getNumberOfCharactersFromHtml; },
+/* harmony export */   getRemainingCharacters: function() { return /* binding */ getRemainingCharacters; },
+/* harmony export */   getRemainingCharactersFromHtml: function() { return /* binding */ getRemainingCharactersFromHtml; }
+/* harmony export */ });
+var getNumberOfCharacters = function (text) { return text.replace(/\s\n\n/g, ' ').replace(/\n\n/g, ' ').replace(/\s\n/g, '').replace(/\n/g, '').length; };
+var getRemainingCharacters = function (maxLength, text) { return maxLength - getNumberOfCharacters(text); };
+var getNumberOfCharactersFromHtml = function (data) {
+    var text = $("<p></p>").html(data).text();
+    return getNumberOfCharacters(text);
+};
+var getRemainingCharactersFromHtml = function (maxLength, data) { return maxLength - getNumberOfCharactersFromHtml(data); };
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/models/ckeditorToolbar.ts":
+/*!**************************************************!*\
+  !*** ./Scripts/vuesrc/models/ckeditorToolbar.ts ***!
+  \**************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+    default: [
+        {
+            name: 'default', items: ['Undo', 'Redo', '-', 'Bold', 'Italic', '-', 'BulletedList', 'NumberedList', '-', 'Link']
+        }
+    ],
+    landingPages: [
+        {
+            name: 'default', items: ['Undo', 'Redo', '-', 'Bold', 'Italic', '-', 'Styles', '-', 'BulletedList', 'NumberedList', '-', 'Link', '-', 'Source']
+        }
+    ],
+});
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/models/content-structure/NodeContentAdminModel.ts":
+/*!**************************************************************************!*\
+  !*** ./Scripts/vuesrc/models/content-structure/NodeContentAdminModel.ts ***!
+  \**************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   NodeContentAdminModel: function() { return /* binding */ NodeContentAdminModel; }
+/* harmony export */ });
+var NodeContentAdminModel = /** @class */ (function () {
+    function NodeContentAdminModel(init) {
+        Object.assign(this, init);
+        this.children = new Array();
+    }
+    return NodeContentAdminModel;
+}());
+
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/models/content-structure/editModeEnum.ts":
+/*!*****************************************************************!*\
+  !*** ./Scripts/vuesrc/models/content-structure/editModeEnum.ts ***!
+  \*****************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   EditModeEnum: function() { return /* binding */ EditModeEnum; }
+/* harmony export */ });
+var EditModeEnum;
+(function (EditModeEnum) {
+    EditModeEnum[EditModeEnum["None"] = 0] = "None";
+    EditModeEnum[EditModeEnum["Structure"] = 1] = "Structure";
+    EditModeEnum[EditModeEnum["Folder"] = 2] = "Folder";
+    EditModeEnum[EditModeEnum["MoveNode"] = 3] = "MoveNode";
+    EditModeEnum[EditModeEnum["MoveResource"] = 4] = "MoveResource";
+})(EditModeEnum || (EditModeEnum = {}));
+
+
+/***/ }),
+
+/***/ "./Scripts/vuesrc/models/content-structure/hierarchyEditModel.ts":
+/*!***********************************************************************!*\
+  !*** ./Scripts/vuesrc/models/content-structure/hierarchyEditModel.ts ***!
+  \***********************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   HierarchyEditModel: function() { return /* binding */ HierarchyEditModel; },
+/* harmony export */   HierarchyEditStatusEnum: function() { return /* binding */ HierarchyEditStatusEnum; }
+/* harmony export */ });
+var HierarchyEditModel = /** @class */ (function () {
+    function HierarchyEditModel(init) {
+        Object.assign(this, init);
+    }
+    return HierarchyEditModel;
+}());
+
+var HierarchyEditStatusEnum;
+(function (HierarchyEditStatusEnum) {
+    HierarchyEditStatusEnum[HierarchyEditStatusEnum["Draft"] = 1] = "Draft";
+    HierarchyEditStatusEnum[HierarchyEditStatusEnum["Published"] = 2] = "Published";
+    HierarchyEditStatusEnum[HierarchyEditStatusEnum["Discarded"] = 3] = "Discarded";
+    HierarchyEditStatusEnum[HierarchyEditStatusEnum["Publishing"] = 4] = "Publishing";
+    HierarchyEditStatusEnum[HierarchyEditStatusEnum["SubmittedToPublishingQueue"] = 5] = "SubmittedToPublishingQueue";
+    HierarchyEditStatusEnum[HierarchyEditStatusEnum["FailedToPublish"] = 6] = "FailedToPublish";
+})(HierarchyEditStatusEnum || (HierarchyEditStatusEnum = {}));
+
+
+/***/ }),
+
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
@@ -1802,10 +3594,10 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true&":
-/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true& ***!
-  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1819,17 +3611,17 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_cssWithMappingToString_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: FrutigerLight;\n  src: url(../wwwroot/fonts/FrutigerLT45Light.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLT55Roman;\n  src: url(../wwwroot/fonts/FrutigerLT55Roman.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLTW01-65Bold;\n  src: url(/fonts/FrutigerLTW01-65Bold.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-regular-400.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-solid-900.woff2) format(\"woff\");\n}\nhtml[data-v-1d7c4214] {\n  font-size: 62.5%;\n  position: relative;\n  min-height: 100%;\n  color: #212B32;\n}\nbody[data-v-1d7c4214] {\n  font-family: FrutigerLTW01-55Roman, Arial, sans-serif;\n  font-size: 1.9rem !important;\n  margin-bottom: 180px !important;\n}\nlabel[data-v-1d7c4214] {\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif !important;\n}\n.py-20[data-v-1d7c4214] {\n  padding: 2rem 0;\n}\n.my-20[data-v-1d7c4214] {\n  margin: 2rem 0;\n}\na[data-v-1d7c4214] {\n  color: #005EB8;\n}\n.hyperlink[data-v-1d7c4214] {\n  text-decoration: underline;\n  color: #005EB8;\n  cursor: pointer;\n}\nh1[data-v-1d7c4214] {\n  font-size: 4.8rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh2[data-v-1d7c4214] {\n  font-size: 3.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh3[data-v-1d7c4214] {\n  font-size: 2.4rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh4[data-v-1d7c4214] {\n  font-size: 2.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh5[data-v-1d7c4214] {\n  font-size: 1.9rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n.small[data-v-1d7c4214] {\n  font-size: 1.6rem;\n}\n.form-control[data-v-1d7c4214] {\n  font-size: 1.6rem;\n}\n.warning[data-v-1d7c4214] {\n  color: #DA291C;\n}\n.text-danger[data-v-1d7c4214] {\n  color: #D5281B !important;\n}\n.text-warning[data-v-1d7c4214] {\n  color: #FFBB1C !important;\n}\n.no-wrap[data-v-1d7c4214] {\n  white-space: nowrap;\n}\nh1[data-v-1d7c4214], h2[data-v-1d7c4214], h3[data-v-1d7c4214], h4[data-v-1d7c4214], h5[data-v-1d7c4214], h6[data-v-1d7c4214] {\n  font-weight: bold;\n}\n@media (max-width: 768px) {\nh1[data-v-1d7c4214] {\n    font-size: 3.2rem !important;\n}\nh2[data-v-1d7c4214] {\n    font-size: 2.4rem !important;\n}\nh3[data-v-1d7c4214] {\n    font-size: 2rem !important;\n}\nh4[data-v-1d7c4214] {\n    font-size: 1.8rem !important;\n}\nh5[data-v-1d7c4214] {\n    font-size: 1.6rem !important;\n}\nbody[data-v-1d7c4214] {\n    margin-bottom: 474px !important;\n    font-size: 1.6rem !important;\n}\n.small[data-v-1d7c4214] {\n    font-size: 1.4rem;\n}\n}\n.hint[data-v-1d7c4214] {\n  color: #768692;\n  font-size: 1.6rem;\n}\n.node-contents-treeview[data-v-1d7c4214] {\n  border-bottom: 1px solid #D7D7D7;\n}\n.error-header[data-v-1d7c4214] {\n  border: 2px solid #D5281B;\n  border-radius: 0;\n  margin-bottom: 20px !important;\n  background-color: #F0F4F5;\n  font-size: 1.6rem;\n}\n.cancel-hierarchy-edit-warning-triangle[data-v-1d7c4214] {\n  color: #D5281B;\n}\n#deleteFolderName[data-v-1d7c4214] {\n  font-weight: bold;\n}\n.delete-folder-warning-triangle[data-v-1d7c4214] {\n  color: #D5281B;\n}\n.delete-folder[data-v-1d7c4214] {\n  cursor: pointer;\n  color: #D5281B;\n}\n.delete-folder-link[data-v-1d7c4214] {\n  color: #D5281B;\n  text-decoration: none;\n}\n#publishHierarchyEdit[data-v-1d7c4214] {\n  min-width: 180px;\n  padding-left: 0px !important;\n  padding-right: 0px !important;\n}\n#cancelHierarchyEdit[data-v-1d7c4214] {\n  min-width: 180px;\n  padding-left: 0px !important;\n  padding-right: 0px !important;\n}\n.btn-action-red[data-v-1d7c4214] {\n  background-color: #D5281B !important;\n  color: #fff !important;\n  font-size: 1.9rem !important;\n  text-align: center !important;\n  border: 5px solid #D5281B !important;\n  height: 40px;\n  border-radius: 6px;\n  min-width: 94px;\n  padding: 0px 25px 0px 25px;\n}\n.btn-action-red i[data-v-1d7c4214] {\n  font-size: 1.6rem !important;\n  margin-right: 5px;\n}\n.btn-action-red[data-v-1d7c4214]:hover {\n  background-color: #C61D11 !important;\n  border-color: #C61D11 !important;\n}\n.btn-action-cancel[data-v-1d7c4214] {\n  background-color: #fff !important;\n  color: #005EB8 !important;\n  border: 1px solid #005EB8 !important;\n  font-size: 1.9rem !important;\n  text-align: center !important;\n  height: 40px;\n  min-width: 108px;\n  padding: 0px 25px 0px 25px;\n  vertical-align: middle;\n}\n.btn-action-cancel i[data-v-1d7c4214] {\n  font-size: 14px;\n}\n.content-structure ul[data-v-1d7c4214] {\n  list-style-type: none;\n}", "",{"version":3,"sources":["webpack://./Styles/Abstracts/_typography.scss","webpack://./contentStructure.vue","webpack://./Styles/Abstracts/_variables.scss","webpack://./Scripts/vuesrc/content-structure/contentStructure.vue"],"names":[],"mappings":"AAGA;EACE,0BAAA;EACA,gEAAA;ACFF;ADKA;EACE,8BAAA;EACA,gEAAA;ACHF;ADMA;EACE,iCAAA;EACA,0DAAA;ACJF;ADOA;EACI,kCEciB;EFbjB,sFAAA;ACLJ;ADQA;EACI,kCESiB;EFRjB,oFAAA;ACNJ;ADSA;EACE,gBAAA;EACA,kBAAA;EACA,gBAAA;EACA,cEnBY;ADYd;ADUA;EACE,qDEPW;EFQX,4BAAA;EACA,+BAAA;ACPF;ADUA;EACE,+DAAA;ACPF;ADUA;EACE,eAAA;ACPF;ADUA;EACE,cAAA;ACPF;ADUA;EACE,cEtDY;AD+Cd;ADUA;EACE,0BAAA;EACA,cE3DY;EF4DZ,eAAA;ACPF;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDEnCgB;AD4BlB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDEzCgB;ADkClB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDE/CgB;ADwClB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDErDgB;AD8ClB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDE3DgB;ADoDlB;ADUA;EACE,iBAAA;ACPF;ADUA;EACE,iBAAA;ACPF;ADUA;EACE,cAAA;ACPF;ADUA;EACE,yBAAA;ACPF;ADUA;EACE,yBAAA;ACPF;ADUA;EACE,mBAAA;ACPF;ADUA;EACE,iBAAA;ACPF;ADUA;AACE;IACE,4BAAA;ACPF;ADUA;IACE,4BAAA;ACPF;ADUA;IACE,0BAAA;ACPF;ADUA;IACE,4BAAA;ACPF;ADUA;IACE,4BAAA;ACPF;ADSA;IACE,+BAAA;IACA,4BAAA;ACNF;ADSA;IACE,iBAAA;ACNF;AACF;ADSA;EACE,cEtIuB;EFuIvB,iBAAA;ACPF;AE/IA;EACI,gCAAA;AFkJJ;AE/IA;EACI,yBAAA;EACA,gBAAA;EACA,8BAAA;EACA,yBDUe;ECTf,iBAAA;AFkJJ;AE/IA;EACI,cDTQ;AD2JZ;AE/IA;EACI,iBAAA;AFkJJ;AE/IA;EACI,cDjBQ;ADmKZ;AE/IA;EACI,eAAA;EACA,cDtBQ;ADwKZ;AE/IA;EACI,cD1BQ;EC2BR,qBAAA;AFkJJ;AE/IA;EACI,gBAAA;EACA,4BAAA;EACA,6BAAA;AFkJJ;AE/IA;EACI,gBAAA;EACA,4BAAA;EACA,6BAAA;AFkJJ;AE/IA;EACI,oCAAA;EACA,sBAAA;EACA,4BAAA;EACA,6BAAA;EACA,oCAAA;EACA,YAAA;EACA,kBAAA;EACA,eAAA;EACA,0BAAA;AFkJJ;AEjJI;EAGI,4BAAA;EACA,iBAAA;AFiJR;AE9II;EACI,oCAAA;EACA,gCAAA;AFgJR;AE3IA;EACI,iCAAA;EACA,yBAAA;EACA,oCAAA;EACA,4BAAA;EACA,6BAAA;EACA,YAAA;EACA,gBAAA;EACA,0BAAA;EACA,sBAAA;AF8IJ;AE7II;EAGI,eAAA;AF6IR;AExII;EACI,qBAAA;AF2IR","sourcesContent":["﻿@use \"variables\" as *;\r\n@use \"mixins\" as *;\r\n\r\n@font-face {\r\n  font-family: FrutigerLight;\r\n  src: url(../wwwroot/fonts/FrutigerLT45Light.woff) format('woff');\r\n}\r\n\r\n@font-face {\r\n  font-family: FrutigerLT55Roman;\r\n  src: url(../wwwroot/fonts/FrutigerLT55Roman.woff) format('woff');\r\n}\r\n\r\n@font-face {\r\n  font-family: FrutigerLTW01-65Bold;\r\n  src: url(/fonts/FrutigerLTW01-65Bold.woff2) format('woff');\r\n}\r\n\r\n@font-face {\r\n    font-family: $font-awesome-solid;\r\n    src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-regular-400.woff2) format('woff');\r\n}\r\n\r\n@font-face {\r\n    font-family: $font-awesome-solid;\r\n    src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-solid-900.woff2) format('woff');\r\n}\r\n\r\nhtml {\r\n  font-size: ($base-font-size);\r\n  position: relative;\r\n  min-height: 100%;\r\n  color: $nhsuk-black;\r\n}\r\n\r\nbody {\r\n  font-family: $font-stack;\r\n  font-size: 1.9rem !important;\r\n  margin-bottom: 180px !important;\r\n}\r\n\r\nlabel {\r\n  font-family: $font-stack-bold !important;\r\n}\r\n\r\n.py-20 {\r\n  padding: 2rem 0;\r\n}\r\n\r\n.my-20 {\r\n  margin: 2rem 0;\r\n}\r\n\r\na {\r\n  color: $nhsuk-blue;\r\n}\r\n\r\n.hyperlink {\r\n  text-decoration: underline;\r\n  color: $nhsuk-blue;\r\n  cursor: pointer;\r\n}\r\n\r\nh1 {\r\n  font-size: 4.8rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh2 {\r\n  font-size: 3.2rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh3 {\r\n  font-size: 2.4rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh4 {\r\n  font-size: 2.2rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh5 {\r\n  font-size: 1.9rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\n.small {\r\n  font-size: 1.6rem;\r\n}\r\n\r\n.form-control {\r\n  font-size: 1.6rem;\r\n}\r\n\r\n.warning {\r\n  color: #DA291C;\r\n}\r\n\r\n.text-danger {\r\n  color: $nhsuk-red !important;\r\n}\r\n\r\n.text-warning {\r\n  color: $nhsuk-warm-yellow !important;\r\n}\r\n\r\n.no-wrap {\r\n  white-space: nowrap;\r\n}\r\n\r\n#{headings(1, 6)} {\r\n  font-weight: bold;\r\n}\r\n\r\n@media (max-width: 768px) {\r\n  h1 {\r\n    font-size: 3.2rem !important;\r\n  }\r\n\r\n  h2 {\r\n    font-size: 2.4rem !important;\r\n  }\r\n\r\n  h3 {\r\n    font-size: 2rem !important;\r\n  }\r\n\r\n  h4 {\r\n    font-size: 1.8rem !important;\r\n  }\r\n\r\n  h5 {\r\n    font-size: 1.6rem !important;\r\n  }\r\n  body {\r\n    margin-bottom: 474px !important;\r\n    font-size: 1.6rem !important;\r\n  }\r\n\r\n  .small {\r\n    font-size: 1.4rem;\r\n  }\r\n}\r\n\r\n.hint {\r\n  color: $nhsuk-grey-placeholder;\r\n  font-size: 1.6rem;\r\n}\r\n","@font-face {\n  font-family: FrutigerLight;\n  src: url(../wwwroot/fonts/FrutigerLT45Light.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLT55Roman;\n  src: url(../wwwroot/fonts/FrutigerLT55Roman.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLTW01-65Bold;\n  src: url(/fonts/FrutigerLTW01-65Bold.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-regular-400.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-solid-900.woff2) format(\"woff\");\n}\nhtml {\n  font-size: 62.5%;\n  position: relative;\n  min-height: 100%;\n  color: #212B32;\n}\n\nbody {\n  font-family: FrutigerLTW01-55Roman, Arial, sans-serif;\n  font-size: 1.9rem !important;\n  margin-bottom: 180px !important;\n}\n\nlabel {\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif !important;\n}\n\n.py-20 {\n  padding: 2rem 0;\n}\n\n.my-20 {\n  margin: 2rem 0;\n}\n\na {\n  color: #005EB8;\n}\n\n.hyperlink {\n  text-decoration: underline;\n  color: #005EB8;\n  cursor: pointer;\n}\n\nh1 {\n  font-size: 4.8rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh2 {\n  font-size: 3.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh3 {\n  font-size: 2.4rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh4 {\n  font-size: 2.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh5 {\n  font-size: 1.9rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\n.small {\n  font-size: 1.6rem;\n}\n\n.form-control {\n  font-size: 1.6rem;\n}\n\n.warning {\n  color: #DA291C;\n}\n\n.text-danger {\n  color: #D5281B !important;\n}\n\n.text-warning {\n  color: #FFBB1C !important;\n}\n\n.no-wrap {\n  white-space: nowrap;\n}\n\nh1, h2, h3, h4, h5, h6 {\n  font-weight: bold;\n}\n\n@media (max-width: 768px) {\n  h1 {\n    font-size: 3.2rem !important;\n  }\n\n  h2 {\n    font-size: 2.4rem !important;\n  }\n\n  h3 {\n    font-size: 2rem !important;\n  }\n\n  h4 {\n    font-size: 1.8rem !important;\n  }\n\n  h5 {\n    font-size: 1.6rem !important;\n  }\n\n  body {\n    margin-bottom: 474px !important;\n    font-size: 1.6rem !important;\n  }\n\n  .small {\n    font-size: 1.4rem;\n  }\n}\n.hint {\n  color: #768692;\n  font-size: 1.6rem;\n}\n\n.node-contents-treeview {\n  border-bottom: 1px solid #D7D7D7;\n}\n\n.error-header {\n  border: 2px solid #D5281B;\n  border-radius: 0;\n  margin-bottom: 20px !important;\n  background-color: #F0F4F5;\n  font-size: 1.6rem;\n}\n\n.cancel-hierarchy-edit-warning-triangle {\n  color: #D5281B;\n}\n\n#deleteFolderName {\n  font-weight: bold;\n}\n\n.delete-folder-warning-triangle {\n  color: #D5281B;\n}\n\n.delete-folder {\n  cursor: pointer;\n  color: #D5281B;\n}\n\n.delete-folder-link {\n  color: #D5281B;\n  text-decoration: none;\n}\n\n#publishHierarchyEdit {\n  min-width: 180px;\n  padding-left: 0px !important;\n  padding-right: 0px !important;\n}\n\n#cancelHierarchyEdit {\n  min-width: 180px;\n  padding-left: 0px !important;\n  padding-right: 0px !important;\n}\n\n.btn-action-red {\n  background-color: #D5281B !important;\n  color: #fff !important;\n  font-size: 1.9rem !important;\n  text-align: center !important;\n  border: 5px solid #D5281B !important;\n  height: 40px;\n  border-radius: 6px;\n  min-width: 94px;\n  padding: 0px 25px 0px 25px;\n}\n.btn-action-red i {\n  font-size: 1.6rem !important;\n  margin-right: 5px;\n}\n.btn-action-red:hover {\n  background-color: #C61D11 !important;\n  border-color: #C61D11 !important;\n}\n\n.btn-action-cancel {\n  background-color: #fff !important;\n  color: #005EB8 !important;\n  border: 1px solid #005EB8 !important;\n  font-size: 1.9rem !important;\n  text-align: center !important;\n  height: 40px;\n  min-width: 108px;\n  padding: 0px 25px 0px 25px;\n  vertical-align: middle;\n}\n.btn-action-cancel i {\n  font-size: 14px;\n}\n\n.content-structure ul {\n  list-style-type: none;\n}","﻿$nhsuk-blue: #005EB8;\r\n$nhsuk-beta-blue: #C8E4FF;\r\n$nhsuk-navbar-blue: #37A9DD;\r\n$nhsuk-navbar-hover-blue: #003D78;\r\n$nhsuk-green: #007F3B;\r\n$nhsuk-green-hover: #2a6435;\r\n$nhsuk-purple: #330072;\r\n$nhsuk-red: #D5281B;\r\n$nhsuk-red-danger: #B5190D;\r\n$nhsuk-red-hover: #C61D11;\r\n$nhsuk-yellow: #FFED00;\r\n$nhsuk-warm-yellow: #FFBB1C;\r\n$nhsuk-white: #fff;\r\n$nhsuk-black: #212B32;\r\n$nhsuk-black-hover: #36444e;\r\n$nhsuk-navlink-hover-black: #35444E;\r\n$nhsuk-grey: #425563;\r\n$nhsuk-grey-hover: #384853;\r\n$nhsuk-grey-placeholder: #768692;\r\n$nhsuk-grey-light: #AEB7BD;\r\n$nhsuk-grey-lighter: #D8DDE0;\r\n$nhsuk-grey-white: #F0F4F5;\r\n$nhsuk-grey-divider: #D7D7D7;\r\n$nhsuk-blue-divider: #4081C1;\r\n$nhsuk-btn-blue-hover: #053E76;\r\n$nhsuk-btn-outline-hover: #E4F2FF;\r\n$table-background: #F9FBFC;\r\n$table-border: #425462;\r\n$twitter-blue: #29A3EF;\r\n$font-stack: FrutigerLTW01-55Roman, Arial, sans-serif;\r\n$font-stack-light: FrutigerLight, Arial, sans-serif;\r\n$font-stack-bold: FrutigerLTW01-65Bold, Arial, sans-serif;\r\n$base-font-size: 62.5%;\r\n$font-awesome-solid: \"Font Awesome 6 Free\";\r\n","\n@use \"../../../Styles/Abstracts/all\" as *;\n\n.node-contents-treeview {\n    border-bottom: 1px solid $nhsuk-grey-divider;\n}\n\n.error-header {\n    border: 2px solid $nhsuk-red;\n    border-radius: 0;\n    margin-bottom: 20px !important;\n    background-color: $nhsuk-grey-white;\n    font-size: 1.6rem;\n}\n\n.cancel-hierarchy-edit-warning-triangle {\n    color: $nhsuk-red;\n}\n\n#deleteFolderName {\n    font-weight: bold;\n}\n\n.delete-folder-warning-triangle {\n    color: $nhsuk-red;\n}\n\n.delete-folder {\n    cursor: pointer;\n    color: $nhsuk-red;\n}\n\n.delete-folder-link {\n    color: $nhsuk-red;\n    text-decoration: none;\n}\n\n#publishHierarchyEdit {\n    min-width: 180px;\n    padding-left: 0px !important;\n    padding-right: 0px !important;\n}\n\n#cancelHierarchyEdit {\n    min-width: 180px;\n    padding-left: 0px !important;\n    padding-right: 0px !important;\n}\n\n.btn-action-red {\n    background-color: $nhsuk-red !important;\n    color: $nhsuk-white !important;\n    font-size: 1.9rem !important;\n    text-align: center !important;\n    border: 5px solid $nhsuk-red !important;\n    height: 40px;\n    border-radius: 6px;\n    min-width: 94px;\n    padding: 0px 25px 0px 25px;\n    i\n\n    {\n        font-size: 1.6rem !important;\n        margin-right: 5px;\n    }\n\n    &:hover {\n        background-color: $nhsuk-red-hover !important;\n        border-color: $nhsuk-red-hover !important;\n    }\n\n}\n\n.btn-action-cancel {\n    background-color: #fff !important;\n    color: #005EB8 !important;\n    border: 1px solid $nhsuk-blue !important;\n    font-size: 1.9rem !important;\n    text-align: center !important;\n    height: 40px;\n    min-width: 108px;\n    padding: 0px 25px 0px 25px;\n    vertical-align: middle;\n    i\n\n    {\n        font-size: 14px;\n    }\n}\n\n.content-structure {\n    ul {\n        list-style-type: none;\n    }\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: FrutigerLight;\n  src: url(../wwwroot/fonts/FrutigerLT45Light.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLT55Roman;\n  src: url(../wwwroot/fonts/FrutigerLT55Roman.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLTW01-65Bold;\n  src: url(/fonts/FrutigerLTW01-65Bold.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-regular-400.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-solid-900.woff2) format(\"woff\");\n}\nhtml[data-v-1d7c4214] {\n  font-size: 62.5%;\n  position: relative;\n  min-height: 100%;\n  color: #212B32;\n}\nbody[data-v-1d7c4214] {\n  font-family: FrutigerLTW01-55Roman, Arial, sans-serif;\n  font-size: 1.9rem !important;\n  margin-bottom: 180px !important;\n}\nlabel[data-v-1d7c4214] {\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif !important;\n}\n.py-20[data-v-1d7c4214] {\n  padding: 2rem 0;\n}\n.my-20[data-v-1d7c4214] {\n  margin: 2rem 0;\n}\na[data-v-1d7c4214] {\n  color: #005EB8;\n}\n.hyperlink[data-v-1d7c4214] {\n  text-decoration: underline;\n  color: #005EB8;\n  cursor: pointer;\n}\nh1[data-v-1d7c4214] {\n  font-size: 4.8rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh2[data-v-1d7c4214] {\n  font-size: 3.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh3[data-v-1d7c4214] {\n  font-size: 2.4rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh4[data-v-1d7c4214] {\n  font-size: 2.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh5[data-v-1d7c4214] {\n  font-size: 1.9rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n.small[data-v-1d7c4214] {\n  font-size: 1.6rem;\n}\n.form-control[data-v-1d7c4214] {\n  font-size: 1.6rem;\n}\n.warning[data-v-1d7c4214] {\n  color: #DA291C;\n}\n.text-danger[data-v-1d7c4214] {\n  color: #D5281B !important;\n}\n.text-warning[data-v-1d7c4214] {\n  color: #FFBB1C !important;\n}\n.no-wrap[data-v-1d7c4214] {\n  white-space: nowrap;\n}\nh1[data-v-1d7c4214], h2[data-v-1d7c4214], h3[data-v-1d7c4214], h4[data-v-1d7c4214], h5[data-v-1d7c4214], h6[data-v-1d7c4214] {\n  font-weight: bold;\n}\n@media (max-width: 768px) {\nh1[data-v-1d7c4214] {\n    font-size: 3.2rem !important;\n}\nh2[data-v-1d7c4214] {\n    font-size: 2.4rem !important;\n}\nh3[data-v-1d7c4214] {\n    font-size: 2rem !important;\n}\nh4[data-v-1d7c4214] {\n    font-size: 1.8rem !important;\n}\nh5[data-v-1d7c4214] {\n    font-size: 1.6rem !important;\n}\nbody[data-v-1d7c4214] {\n    margin-bottom: 474px !important;\n    font-size: 1.6rem !important;\n}\n.small[data-v-1d7c4214] {\n    font-size: 1.4rem;\n}\n}\n.hint[data-v-1d7c4214] {\n  color: #768692;\n  font-size: 1.6rem;\n}\n.node-contents-treeview[data-v-1d7c4214] {\n  border-bottom: 1px solid #D7D7D7;\n}\n.error-header[data-v-1d7c4214] {\n  border: 2px solid #D5281B;\n  border-radius: 0;\n  margin-bottom: 20px !important;\n  background-color: #F0F4F5;\n  font-size: 1.6rem;\n}\n.cancel-hierarchy-edit-warning-triangle[data-v-1d7c4214] {\n  color: #D5281B;\n}\n#deleteFolderName[data-v-1d7c4214] {\n  font-weight: bold;\n}\n.delete-folder-warning-triangle[data-v-1d7c4214] {\n  color: #D5281B;\n}\n.delete-folder[data-v-1d7c4214] {\n  cursor: pointer;\n  color: #D5281B;\n}\n.delete-folder-link[data-v-1d7c4214] {\n  color: #D5281B;\n  text-decoration: none;\n}\n#publishHierarchyEdit[data-v-1d7c4214] {\n  min-width: 180px;\n  padding-left: 0px !important;\n  padding-right: 0px !important;\n}\n#cancelHierarchyEdit[data-v-1d7c4214] {\n  min-width: 180px;\n  padding-left: 0px !important;\n  padding-right: 0px !important;\n}\n.btn-action-red[data-v-1d7c4214] {\n  background-color: #D5281B !important;\n  color: #fff !important;\n  font-size: 1.9rem !important;\n  text-align: center !important;\n  border: 5px solid #D5281B !important;\n  height: 40px;\n  border-radius: 6px;\n  min-width: 94px;\n  padding: 0px 25px 0px 25px;\n}\n.btn-action-red i[data-v-1d7c4214] {\n  font-size: 1.6rem !important;\n  margin-right: 5px;\n}\n.btn-action-red[data-v-1d7c4214]:hover {\n  background-color: #C61D11 !important;\n  border-color: #C61D11 !important;\n}\n.btn-action-cancel[data-v-1d7c4214] {\n  background-color: #fff !important;\n  color: #005EB8 !important;\n  border: 1px solid #005EB8 !important;\n  font-size: 1.9rem !important;\n  text-align: center !important;\n  height: 40px;\n  min-width: 108px;\n  padding: 0px 25px 0px 25px;\n  vertical-align: middle;\n}\n.btn-action-cancel i[data-v-1d7c4214] {\n  font-size: 14px;\n}\n.content-structure ul[data-v-1d7c4214] {\n  list-style-type: none;\n}", "",{"version":3,"sources":["webpack://./Styles/Abstracts/_typography.scss","webpack://./contentStructure.vue","webpack://./Styles/Abstracts/_variables.scss","webpack://./Scripts/vuesrc/content-structure/contentStructure.vue"],"names":[],"mappings":"AAGA;EACE,0BAAA;EACA,gEAAA;ACFF;ADKA;EACE,8BAAA;EACA,gEAAA;ACHF;ADMA;EACE,iCAAA;EACA,0DAAA;ACJF;ADOA;EACI,kCEciB;EFbjB,sFAAA;ACLJ;ADQA;EACI,kCESiB;EFRjB,oFAAA;ACNJ;ADSA;EACE,gBAAA;EACA,kBAAA;EACA,gBAAA;EACA,cEnBY;ADYd;ADUA;EACE,qDEPW;EFQX,4BAAA;EACA,+BAAA;ACPF;ADUA;EACE,+DAAA;ACPF;ADUA;EACE,eAAA;ACPF;ADUA;EACE,cAAA;ACPF;ADUA;EACE,cEtDY;AD+Cd;ADUA;EACE,0BAAA;EACA,cE3DY;EF4DZ,eAAA;ACPF;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDEnCgB;AD4BlB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDEzCgB;ADkClB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDE/CgB;ADwClB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDErDgB;AD8ClB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDE3DgB;ADoDlB;ADUA;EACE,iBAAA;ACPF;ADUA;EACE,iBAAA;ACPF;ADUA;EACE,cAAA;ACPF;ADUA;EACE,yBAAA;ACPF;ADUA;EACE,yBAAA;ACPF;ADUA;EACE,mBAAA;ACPF;ADUA;EACE,iBAAA;ACPF;ADUA;AACE;IACE,4BAAA;ACPF;ADUA;IACE,4BAAA;ACRF;ADWA;IACE,0BAAA;ACTF;ADYA;IACE,4BAAA;ACVF;ADaA;IACE,4BAAA;ACXF;ADaA;IACE,+BAAA;IACA,4BAAA;ACXF;ADcA;IACE,iBAAA;ACZF;AACF;ADeA;EACE,cEtIuB;EFuIvB,iBAAA;ACbF;AEzIA;EACI,gCAAA;AF4IJ;AEzIA;EACI,yBAAA;EACA,gBAAA;EACA,8BAAA;EACA,yBDUe;ECTf,iBAAA;AF4IJ;AEzIA;EACI,cDTQ;ADqJZ;AEzIA;EACI,iBAAA;AF4IJ;AEzIA;EACI,cDjBQ;AD6JZ;AEzIA;EACI,eAAA;EACA,cDtBQ;ADkKZ;AEzIA;EACI,cD1BQ;EC2BR,qBAAA;AF4IJ;AEzIA;EACI,gBAAA;EACA,4BAAA;EACA,6BAAA;AF4IJ;AEzIA;EACI,gBAAA;EACA,4BAAA;EACA,6BAAA;AF4IJ;AEzIA;EACI,oCAAA;EACA,sBAAA;EACA,4BAAA;EACA,6BAAA;EACA,oCAAA;EACA,YAAA;EACA,kBAAA;EACA,eAAA;EACA,0BAAA;AF4IJ;AE3II;EAGI,4BAAA;EACA,iBAAA;AF2IR;AExII;EACI,oCAAA;EACA,gCAAA;AF0IR;AErIA;EACI,iCAAA;EACA,yBAAA;EACA,oCAAA;EACA,4BAAA;EACA,6BAAA;EACA,YAAA;EACA,gBAAA;EACA,0BAAA;EACA,sBAAA;AFwIJ;AEvII;EAGI,eAAA;AFuIR;AElII;EACI,qBAAA;AFqIR","sourcesContent":["﻿@use \"variables\" as *;\r\n@use \"mixins\" as *;\r\n\r\n@font-face {\r\n  font-family: FrutigerLight;\r\n  src: url(../wwwroot/fonts/FrutigerLT45Light.woff) format('woff');\r\n}\r\n\r\n@font-face {\r\n  font-family: FrutigerLT55Roman;\r\n  src: url(../wwwroot/fonts/FrutigerLT55Roman.woff) format('woff');\r\n}\r\n\r\n@font-face {\r\n  font-family: FrutigerLTW01-65Bold;\r\n  src: url(/fonts/FrutigerLTW01-65Bold.woff2) format('woff');\r\n}\r\n\r\n@font-face {\r\n    font-family: $font-awesome-solid;\r\n    src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-regular-400.woff2) format('woff');\r\n}\r\n\r\n@font-face {\r\n    font-family: $font-awesome-solid;\r\n    src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-solid-900.woff2) format('woff');\r\n}\r\n\r\nhtml {\r\n  font-size: ($base-font-size);\r\n  position: relative;\r\n  min-height: 100%;\r\n  color: $nhsuk-black;\r\n}\r\n\r\nbody {\r\n  font-family: $font-stack;\r\n  font-size: 1.9rem !important;\r\n  margin-bottom: 180px !important;\r\n}\r\n\r\nlabel {\r\n  font-family: $font-stack-bold !important;\r\n}\r\n\r\n.py-20 {\r\n  padding: 2rem 0;\r\n}\r\n\r\n.my-20 {\r\n  margin: 2rem 0;\r\n}\r\n\r\na {\r\n  color: $nhsuk-blue;\r\n}\r\n\r\n.hyperlink {\r\n  text-decoration: underline;\r\n  color: $nhsuk-blue;\r\n  cursor: pointer;\r\n}\r\n\r\nh1 {\r\n  font-size: 4.8rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh2 {\r\n  font-size: 3.2rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh3 {\r\n  font-size: 2.4rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh4 {\r\n  font-size: 2.2rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh5 {\r\n  font-size: 1.9rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\n.small {\r\n  font-size: 1.6rem;\r\n}\r\n\r\n.form-control {\r\n  font-size: 1.6rem;\r\n}\r\n\r\n.warning {\r\n  color: #DA291C;\r\n}\r\n\r\n.text-danger {\r\n  color: $nhsuk-red !important;\r\n}\r\n\r\n.text-warning {\r\n  color: $nhsuk-warm-yellow !important;\r\n}\r\n\r\n.no-wrap {\r\n  white-space: nowrap;\r\n}\r\n\r\n#{headings(1, 6)} {\r\n  font-weight: bold;\r\n}\r\n\r\n@media (max-width: 768px) {\r\n  h1 {\r\n    font-size: 3.2rem !important;\r\n  }\r\n\r\n  h2 {\r\n    font-size: 2.4rem !important;\r\n  }\r\n\r\n  h3 {\r\n    font-size: 2rem !important;\r\n  }\r\n\r\n  h4 {\r\n    font-size: 1.8rem !important;\r\n  }\r\n\r\n  h5 {\r\n    font-size: 1.6rem !important;\r\n  }\r\n  body {\r\n    margin-bottom: 474px !important;\r\n    font-size: 1.6rem !important;\r\n  }\r\n\r\n  .small {\r\n    font-size: 1.4rem;\r\n  }\r\n}\r\n\r\n.hint {\r\n  color: $nhsuk-grey-placeholder;\r\n  font-size: 1.6rem;\r\n}\r\n","@font-face {\n  font-family: FrutigerLight;\n  src: url(../wwwroot/fonts/FrutigerLT45Light.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLT55Roman;\n  src: url(../wwwroot/fonts/FrutigerLT55Roman.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLTW01-65Bold;\n  src: url(/fonts/FrutigerLTW01-65Bold.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-regular-400.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-solid-900.woff2) format(\"woff\");\n}\nhtml {\n  font-size: 62.5%;\n  position: relative;\n  min-height: 100%;\n  color: #212B32;\n}\n\nbody {\n  font-family: FrutigerLTW01-55Roman, Arial, sans-serif;\n  font-size: 1.9rem !important;\n  margin-bottom: 180px !important;\n}\n\nlabel {\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif !important;\n}\n\n.py-20 {\n  padding: 2rem 0;\n}\n\n.my-20 {\n  margin: 2rem 0;\n}\n\na {\n  color: #005EB8;\n}\n\n.hyperlink {\n  text-decoration: underline;\n  color: #005EB8;\n  cursor: pointer;\n}\n\nh1 {\n  font-size: 4.8rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh2 {\n  font-size: 3.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh3 {\n  font-size: 2.4rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh4 {\n  font-size: 2.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh5 {\n  font-size: 1.9rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\n.small {\n  font-size: 1.6rem;\n}\n\n.form-control {\n  font-size: 1.6rem;\n}\n\n.warning {\n  color: #DA291C;\n}\n\n.text-danger {\n  color: #D5281B !important;\n}\n\n.text-warning {\n  color: #FFBB1C !important;\n}\n\n.no-wrap {\n  white-space: nowrap;\n}\n\nh1, h2, h3, h4, h5, h6 {\n  font-weight: bold;\n}\n\n@media (max-width: 768px) {\n  h1 {\n    font-size: 3.2rem !important;\n  }\n  h2 {\n    font-size: 2.4rem !important;\n  }\n  h3 {\n    font-size: 2rem !important;\n  }\n  h4 {\n    font-size: 1.8rem !important;\n  }\n  h5 {\n    font-size: 1.6rem !important;\n  }\n  body {\n    margin-bottom: 474px !important;\n    font-size: 1.6rem !important;\n  }\n  .small {\n    font-size: 1.4rem;\n  }\n}\n.hint {\n  color: #768692;\n  font-size: 1.6rem;\n}\n\n.node-contents-treeview {\n  border-bottom: 1px solid #D7D7D7;\n}\n\n.error-header {\n  border: 2px solid #D5281B;\n  border-radius: 0;\n  margin-bottom: 20px !important;\n  background-color: #F0F4F5;\n  font-size: 1.6rem;\n}\n\n.cancel-hierarchy-edit-warning-triangle {\n  color: #D5281B;\n}\n\n#deleteFolderName {\n  font-weight: bold;\n}\n\n.delete-folder-warning-triangle {\n  color: #D5281B;\n}\n\n.delete-folder {\n  cursor: pointer;\n  color: #D5281B;\n}\n\n.delete-folder-link {\n  color: #D5281B;\n  text-decoration: none;\n}\n\n#publishHierarchyEdit {\n  min-width: 180px;\n  padding-left: 0px !important;\n  padding-right: 0px !important;\n}\n\n#cancelHierarchyEdit {\n  min-width: 180px;\n  padding-left: 0px !important;\n  padding-right: 0px !important;\n}\n\n.btn-action-red {\n  background-color: #D5281B !important;\n  color: #fff !important;\n  font-size: 1.9rem !important;\n  text-align: center !important;\n  border: 5px solid #D5281B !important;\n  height: 40px;\n  border-radius: 6px;\n  min-width: 94px;\n  padding: 0px 25px 0px 25px;\n}\n.btn-action-red i {\n  font-size: 1.6rem !important;\n  margin-right: 5px;\n}\n.btn-action-red:hover {\n  background-color: #C61D11 !important;\n  border-color: #C61D11 !important;\n}\n\n.btn-action-cancel {\n  background-color: #fff !important;\n  color: #005EB8 !important;\n  border: 1px solid #005EB8 !important;\n  font-size: 1.9rem !important;\n  text-align: center !important;\n  height: 40px;\n  min-width: 108px;\n  padding: 0px 25px 0px 25px;\n  vertical-align: middle;\n}\n.btn-action-cancel i {\n  font-size: 14px;\n}\n\n.content-structure ul {\n  list-style-type: none;\n}","﻿$nhsuk-blue: #005EB8;\r\n$nhsuk-beta-blue: #C8E4FF;\r\n$nhsuk-navbar-blue: #37A9DD;\r\n$nhsuk-navbar-hover-blue: #003D78;\r\n$nhsuk-green: #007F3B;\r\n$nhsuk-green-hover: #2a6435;\r\n$nhsuk-purple: #330072;\r\n$nhsuk-red: #D5281B;\r\n$nhsuk-red-danger: #B5190D;\r\n$nhsuk-red-hover: #C61D11;\r\n$nhsuk-yellow: #FFED00;\r\n$nhsuk-warm-yellow: #FFBB1C;\r\n$nhsuk-white: #fff;\r\n$nhsuk-black: #212B32;\r\n$nhsuk-black-hover: #36444e;\r\n$nhsuk-navlink-hover-black: #35444E;\r\n$nhsuk-grey: #425563;\r\n$nhsuk-grey-hover: #384853;\r\n$nhsuk-grey-placeholder: #768692;\r\n$nhsuk-grey-light: #AEB7BD;\r\n$nhsuk-grey-lighter: #D8DDE0;\r\n$nhsuk-grey-white: #F0F4F5;\r\n$nhsuk-grey-divider: #D7D7D7;\r\n$nhsuk-blue-divider: #4081C1;\r\n$nhsuk-btn-blue-hover: #053E76;\r\n$nhsuk-btn-outline-hover: #E4F2FF;\r\n$table-background: #F9FBFC;\r\n$table-border: #425462;\r\n$twitter-blue: #29A3EF;\r\n$font-stack: FrutigerLTW01-55Roman, Arial, sans-serif;\r\n$font-stack-light: FrutigerLight, Arial, sans-serif;\r\n$font-stack-bold: FrutigerLTW01-65Bold, Arial, sans-serif;\r\n$base-font-size: 62.5%;\r\n$font-awesome-solid: \"Font Awesome 6 Free\";\r\n","\n@use \"../../../Styles/Abstracts/all\" as *;\n\n.node-contents-treeview {\n    border-bottom: 1px solid $nhsuk-grey-divider;\n}\n\n.error-header {\n    border: 2px solid $nhsuk-red;\n    border-radius: 0;\n    margin-bottom: 20px !important;\n    background-color: $nhsuk-grey-white;\n    font-size: 1.6rem;\n}\n\n.cancel-hierarchy-edit-warning-triangle {\n    color: $nhsuk-red;\n}\n\n#deleteFolderName {\n    font-weight: bold;\n}\n\n.delete-folder-warning-triangle {\n    color: $nhsuk-red;\n}\n\n.delete-folder {\n    cursor: pointer;\n    color: $nhsuk-red;\n}\n\n.delete-folder-link {\n    color: $nhsuk-red;\n    text-decoration: none;\n}\n\n#publishHierarchyEdit {\n    min-width: 180px;\n    padding-left: 0px !important;\n    padding-right: 0px !important;\n}\n\n#cancelHierarchyEdit {\n    min-width: 180px;\n    padding-left: 0px !important;\n    padding-right: 0px !important;\n}\n\n.btn-action-red {\n    background-color: $nhsuk-red !important;\n    color: $nhsuk-white !important;\n    font-size: 1.9rem !important;\n    text-align: center !important;\n    border: 5px solid $nhsuk-red !important;\n    height: 40px;\n    border-radius: 6px;\n    min-width: 94px;\n    padding: 0px 25px 0px 25px;\n    i\n\n    {\n        font-size: 1.6rem !important;\n        margin-right: 5px;\n    }\n\n    &:hover {\n        background-color: $nhsuk-red-hover !important;\n        border-color: $nhsuk-red-hover !important;\n    }\n\n}\n\n.btn-action-cancel {\n    background-color: #fff !important;\n    color: #005EB8 !important;\n    border: 1px solid $nhsuk-blue !important;\n    font-size: 1.9rem !important;\n    text-align: center !important;\n    height: 40px;\n    min-width: 108px;\n    padding: 0px 25px 0px 25px;\n    vertical-align: middle;\n    i\n\n    {\n        font-size: 14px;\n    }\n}\n\n.content-structure {\n    ul {\n        list-style-type: none;\n    }\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true&":
-/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true& ***!
-  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1843,7 +3635,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_cssWithMappingToString_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: FrutigerLight;\n  src: url(../wwwroot/fonts/FrutigerLT45Light.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLT55Roman;\n  src: url(../wwwroot/fonts/FrutigerLT55Roman.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLTW01-65Bold;\n  src: url(/fonts/FrutigerLTW01-65Bold.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-regular-400.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-solid-900.woff2) format(\"woff\");\n}\nhtml[data-v-40bedb66] {\n  font-size: 62.5%;\n  position: relative;\n  min-height: 100%;\n  color: #212B32;\n}\nbody[data-v-40bedb66] {\n  font-family: FrutigerLTW01-55Roman, Arial, sans-serif;\n  font-size: 1.9rem !important;\n  margin-bottom: 180px !important;\n}\nlabel[data-v-40bedb66] {\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif !important;\n}\n.py-20[data-v-40bedb66] {\n  padding: 2rem 0;\n}\n.my-20[data-v-40bedb66] {\n  margin: 2rem 0;\n}\na[data-v-40bedb66] {\n  color: #005EB8;\n}\n.hyperlink[data-v-40bedb66] {\n  text-decoration: underline;\n  color: #005EB8;\n  cursor: pointer;\n}\nh1[data-v-40bedb66] {\n  font-size: 4.8rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh2[data-v-40bedb66] {\n  font-size: 3.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh3[data-v-40bedb66] {\n  font-size: 2.4rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh4[data-v-40bedb66] {\n  font-size: 2.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh5[data-v-40bedb66] {\n  font-size: 1.9rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n.small[data-v-40bedb66] {\n  font-size: 1.6rem;\n}\n.form-control[data-v-40bedb66] {\n  font-size: 1.6rem;\n}\n.warning[data-v-40bedb66] {\n  color: #DA291C;\n}\n.text-danger[data-v-40bedb66] {\n  color: #D5281B !important;\n}\n.text-warning[data-v-40bedb66] {\n  color: #FFBB1C !important;\n}\n.no-wrap[data-v-40bedb66] {\n  white-space: nowrap;\n}\nh1[data-v-40bedb66], h2[data-v-40bedb66], h3[data-v-40bedb66], h4[data-v-40bedb66], h5[data-v-40bedb66], h6[data-v-40bedb66] {\n  font-weight: bold;\n}\n@media (max-width: 768px) {\nh1[data-v-40bedb66] {\n    font-size: 3.2rem !important;\n}\nh2[data-v-40bedb66] {\n    font-size: 2.4rem !important;\n}\nh3[data-v-40bedb66] {\n    font-size: 2rem !important;\n}\nh4[data-v-40bedb66] {\n    font-size: 1.8rem !important;\n}\nh5[data-v-40bedb66] {\n    font-size: 1.6rem !important;\n}\nbody[data-v-40bedb66] {\n    margin-bottom: 474px !important;\n    font-size: 1.6rem !important;\n}\n.small[data-v-40bedb66] {\n    font-size: 1.4rem;\n}\n}\n.hint[data-v-40bedb66] {\n  color: #768692;\n  font-size: 1.6rem;\n}\n\n/* The 'root-tree-item-container' element is defined in the content-structure.vue file, not here. */\n.root-tree-item-container[data-v-40bedb66] {\n  margin-left: -29px;\n  min-width: fit-content;\n}\n.root-tree-item-container > .tree-item-container[data-v-40bedb66] {\n  margin-left: 0px;\n}\n.tree-item-container[data-v-40bedb66] {\n  /* \"fit-content\" is needed on mobile when there's lots levels of folder nesting */\n  min-width: fit-content;\n  margin-left: 29px;\n  border-left: 2px solid #AEB7BD;\n}\n.treeview-node[data-v-40bedb66] {\n  font-size: 1.6rem !important;\n  box-sizing: unset;\n  border-top: 1px solid #D7D7D7;\n}\n.treeview-node-inner[data-v-40bedb66]:before {\n  width: 0.9em;\n  height: 1.3em;\n  margin-right: 0.1em;\n  vertical-align: top;\n  border-bottom: 2px solid #AEB7BD;\n  content: \"\";\n  display: inline-block;\n}\n.treeview-node-inner-padding[data-v-40bedb66] {\n  padding-bottom: 1rem !important;\n  padding-top: 1rem !important;\n  padding-left: 0.3rem !important;\n}\n.tree-item-container[data-v-40bedb66]:last-child {\n  border-left: none;\n}\n.tree-item-container:last-child > .treeview-node > .treeview-node-inner[data-v-40bedb66]:before {\n  border-left: 2px solid #AEB7BD;\n}\n.resource-detail[data-v-40bedb66] {\n  font-size: 1.4rem !important;\n  margin-top: 5px;\n}\n.node-name-text[data-v-40bedb66] {\n  margin-left: 6px;\n}\n.yellow[data-v-40bedb66] {\n  color: #FFBB1C;\n}\n.red[data-v-40bedb66] {\n  color: #D5281B;\n}\n.moving-highlight[data-v-40bedb66] {\n  border-color: #ffc107;\n  border-style: solid;\n  border-width: 2px;\n  background-color: rgba(255, 184, 28, 0.05);\n}\n.create-folder-circle[data-v-40bedb66] {\n  color: #007F3B;\n  font-size: 2rem;\n}\n.has-resources-indicator[data-v-40bedb66] {\n  background: #007F3B;\n  border: 2px solid #768692;\n  box-sizing: border-box;\n  border-radius: 4px;\n  width: 30px;\n  height: 15px;\n  margin-right: 26px;\n  margin-top: 8px;\n}\n.no-resources-indicator[data-v-40bedb66] {\n  border: 2px solid #768692;\n  box-sizing: border-box;\n  border-radius: 4px;\n  width: 30px;\n  height: 15px;\n  margin-right: 26px;\n  margin-top: 8px;\n}\ndiv.options-dropdown[data-v-40bedb66] {\n  color: #212B32;\n}\ndiv.options-dropdown .dropdown-menu[data-v-40bedb66] {\n  border: 2px solid #425563;\n  box-sizing: border-box;\n  border-radius: 5px;\n  margin: 0;\n  padding: 0;\n  margin-top: 10px;\n}\ndiv.options-dropdown .dropdown-toggle[data-v-40bedb66]::after {\n  vertical-align: middle;\n  border-top: 0.5em solid;\n  border-right: 0.5em solid transparent;\n  border-bottom: 0;\n  border-left: 0.5em solid transparent;\n}\ndiv.options-dropdown a.dropdown-item[data-v-40bedb66] {\n  height: 35px !important;\n  font-size: 1.6rem;\n  text-decoration: none;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  border-top: 1px solid #D8DDE0;\n}\ndiv.options-dropdown a.dropdown-item[data-v-40bedb66]:hover {\n  cursor: pointer;\n  background-color: #005EB8;\n  color: #fff;\n}\ndiv.options-dropdown a.dropdown-item[data-v-40bedb66]:first-child {\n  border: none;\n}\ndiv.options-dropdown a .dropdown-item[data-v-40bedb66] {\n  width: 182px !important;\n}\n#cancelMoveNode[data-v-40bedb66] {\n  color: #D5281B;\n}\n@media (max-width: 768px) {\n.treeview-node-inner[data-v-40bedb66] {\n    width: calc(100vw - 30px);\n}\n}\n.content-structure-folder[data-v-40bedb66] {\n  font-size: 2rem;\n}\ni[data-v-40bedb66] {\n  color: #4C6272;\n}", "",{"version":3,"sources":["webpack://./Styles/Abstracts/_typography.scss","webpack://./treeItem.vue","webpack://./Styles/Abstracts/_variables.scss","webpack://./Scripts/vuesrc/content-structure/treeItem.vue"],"names":[],"mappings":"AAGA;EACE,0BAAA;EACA,gEAAA;ACFF;ADKA;EACE,8BAAA;EACA,gEAAA;ACHF;ADMA;EACE,iCAAA;EACA,0DAAA;ACJF;ADOA;EACI,kCEciB;EFbjB,sFAAA;ACLJ;ADQA;EACI,kCESiB;EFRjB,oFAAA;ACNJ;ADSA;EACE,gBAAA;EACA,kBAAA;EACA,gBAAA;EACA,cEnBY;ADYd;ADUA;EACE,qDEPW;EFQX,4BAAA;EACA,+BAAA;ACPF;ADUA;EACE,+DAAA;ACPF;ADUA;EACE,eAAA;ACPF;ADUA;EACE,cAAA;ACPF;ADUA;EACE,cEtDY;AD+Cd;ADUA;EACE,0BAAA;EACA,cE3DY;EF4DZ,eAAA;ACPF;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDEnCgB;AD4BlB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDEzCgB;ADkClB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDE/CgB;ADwClB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDErDgB;AD8ClB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDE3DgB;ADoDlB;ADUA;EACE,iBAAA;ACPF;ADUA;EACE,iBAAA;ACPF;ADUA;EACE,cAAA;ACPF;ADUA;EACE,yBAAA;ACPF;ADUA;EACE,yBAAA;ACPF;ADUA;EACE,mBAAA;ACPF;ADUA;EACE,iBAAA;ACPF;ADUA;AACE;IACE,4BAAA;ACPF;ADUA;IACE,4BAAA;ACPF;ADUA;IACE,0BAAA;ACPF;ADUA;IACE,4BAAA;ACPF;ADUA;IACE,4BAAA;ACPF;ADSA;IACE,+BAAA;IACA,4BAAA;ACNF;ADSA;IACE,iBAAA;ACNF;AACF;ADSA;EACE,cEtIuB;EFuIvB,iBAAA;ACPF;;AE/IA,mGAAA;AACA;EACI,kBAAA;EACA,sBAAA;AFkJJ;AE/IA;EACI,gBAAA;AFkJJ;AE/IA;EACI,iFAAA;EACA,sBAAA;EACA,iBAAA;EACA,8BAAA;AFkJJ;AE/IA;EACI,4BAAA;EACA,iBAAA;EACA,6BAAA;AFkJJ;AE/IA;EACI,YAAA;EACA,aAAA;EACA,mBAAA;EACA,mBAAA;EACA,gCAAA;EACA,WAAA;EACA,qBAAA;AFkJJ;AE/IA;EACI,+BAAA;EACA,4BAAA;EACA,+BAAA;AFkJJ;AE/IA;EACI,iBAAA;AFkJJ;AE/II;EACI,8BAAA;AFkJR;AE/IA;EACI,4BAAA;EACA,eAAA;AFkJJ;AE/IA;EACI,gBAAA;AFkJJ;AE/IA;EACI,cDjDgB;ADmMpB;AE/IA;EACI,cDzDQ;AD2MZ;AE/IA;EACI,qBAAA;EACA,mBAAA;EACA,iBAAA;EACA,0CAAA;AFkJJ;AE/IA;EACI,cDvEU;ECwEV,eAAA;AFkJJ;AE/IA;EACI,mBD5EU;EC6EV,yBAAA;EACA,sBAAA;EACA,kBAAA;EACA,WAAA;EACA,YAAA;EACA,kBAAA;EACA,eAAA;AFkJJ;AE/IA;EACI,yBAAA;EACA,sBAAA;EACA,kBAAA;EACA,WAAA;EACA,YAAA;EACA,kBAAA;EACA,eAAA;AFkJJ;AE/IA;EACI,cDxFU;AD0Od;AEjJI;EAGA,yBAAA;EACA,sBAAA;EACA,kBAAA;EACA,SAAA;EACA,UAAA;EACA,gBAAA;AFiJJ;AE9IA;EACI,sBAAA;EACA,uBAAA;EACA,qCAAA;EACA,gBAAA;EACA,oCAAA;AFgJJ;AE7IA;EACI,uBAAA;EACA,iBAAA;EACA,qBAAA;EACA,aAAA;EACA,sBAAA;EACA,uBAAA;EACA,6BAAA;AF+IJ;AE9II;EAGA,eAAA;EACA,yBDrIU;ECsIV,WD1HU;ADwQd;AEzIA;EACI,YAAA;AF2IJ;AErII;EAGA,uBAAA;AFsIJ;AEjIA;EACI,cDpJQ;ADwRZ;AEjIA;AAEI;IACI,yBAAA;AFmIN;AACF;AEhIA;EACI,eAAA;AFkIJ;AEhIA;EACI,cAAA;AFmIJ","sourcesContent":["﻿@use \"variables\" as *;\r\n@use \"mixins\" as *;\r\n\r\n@font-face {\r\n  font-family: FrutigerLight;\r\n  src: url(../wwwroot/fonts/FrutigerLT45Light.woff) format('woff');\r\n}\r\n\r\n@font-face {\r\n  font-family: FrutigerLT55Roman;\r\n  src: url(../wwwroot/fonts/FrutigerLT55Roman.woff) format('woff');\r\n}\r\n\r\n@font-face {\r\n  font-family: FrutigerLTW01-65Bold;\r\n  src: url(/fonts/FrutigerLTW01-65Bold.woff2) format('woff');\r\n}\r\n\r\n@font-face {\r\n    font-family: $font-awesome-solid;\r\n    src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-regular-400.woff2) format('woff');\r\n}\r\n\r\n@font-face {\r\n    font-family: $font-awesome-solid;\r\n    src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-solid-900.woff2) format('woff');\r\n}\r\n\r\nhtml {\r\n  font-size: ($base-font-size);\r\n  position: relative;\r\n  min-height: 100%;\r\n  color: $nhsuk-black;\r\n}\r\n\r\nbody {\r\n  font-family: $font-stack;\r\n  font-size: 1.9rem !important;\r\n  margin-bottom: 180px !important;\r\n}\r\n\r\nlabel {\r\n  font-family: $font-stack-bold !important;\r\n}\r\n\r\n.py-20 {\r\n  padding: 2rem 0;\r\n}\r\n\r\n.my-20 {\r\n  margin: 2rem 0;\r\n}\r\n\r\na {\r\n  color: $nhsuk-blue;\r\n}\r\n\r\n.hyperlink {\r\n  text-decoration: underline;\r\n  color: $nhsuk-blue;\r\n  cursor: pointer;\r\n}\r\n\r\nh1 {\r\n  font-size: 4.8rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh2 {\r\n  font-size: 3.2rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh3 {\r\n  font-size: 2.4rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh4 {\r\n  font-size: 2.2rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh5 {\r\n  font-size: 1.9rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\n.small {\r\n  font-size: 1.6rem;\r\n}\r\n\r\n.form-control {\r\n  font-size: 1.6rem;\r\n}\r\n\r\n.warning {\r\n  color: #DA291C;\r\n}\r\n\r\n.text-danger {\r\n  color: $nhsuk-red !important;\r\n}\r\n\r\n.text-warning {\r\n  color: $nhsuk-warm-yellow !important;\r\n}\r\n\r\n.no-wrap {\r\n  white-space: nowrap;\r\n}\r\n\r\n#{headings(1, 6)} {\r\n  font-weight: bold;\r\n}\r\n\r\n@media (max-width: 768px) {\r\n  h1 {\r\n    font-size: 3.2rem !important;\r\n  }\r\n\r\n  h2 {\r\n    font-size: 2.4rem !important;\r\n  }\r\n\r\n  h3 {\r\n    font-size: 2rem !important;\r\n  }\r\n\r\n  h4 {\r\n    font-size: 1.8rem !important;\r\n  }\r\n\r\n  h5 {\r\n    font-size: 1.6rem !important;\r\n  }\r\n  body {\r\n    margin-bottom: 474px !important;\r\n    font-size: 1.6rem !important;\r\n  }\r\n\r\n  .small {\r\n    font-size: 1.4rem;\r\n  }\r\n}\r\n\r\n.hint {\r\n  color: $nhsuk-grey-placeholder;\r\n  font-size: 1.6rem;\r\n}\r\n","@font-face {\n  font-family: FrutigerLight;\n  src: url(../wwwroot/fonts/FrutigerLT45Light.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLT55Roman;\n  src: url(../wwwroot/fonts/FrutigerLT55Roman.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLTW01-65Bold;\n  src: url(/fonts/FrutigerLTW01-65Bold.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-regular-400.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-solid-900.woff2) format(\"woff\");\n}\nhtml {\n  font-size: 62.5%;\n  position: relative;\n  min-height: 100%;\n  color: #212B32;\n}\n\nbody {\n  font-family: FrutigerLTW01-55Roman, Arial, sans-serif;\n  font-size: 1.9rem !important;\n  margin-bottom: 180px !important;\n}\n\nlabel {\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif !important;\n}\n\n.py-20 {\n  padding: 2rem 0;\n}\n\n.my-20 {\n  margin: 2rem 0;\n}\n\na {\n  color: #005EB8;\n}\n\n.hyperlink {\n  text-decoration: underline;\n  color: #005EB8;\n  cursor: pointer;\n}\n\nh1 {\n  font-size: 4.8rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh2 {\n  font-size: 3.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh3 {\n  font-size: 2.4rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh4 {\n  font-size: 2.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh5 {\n  font-size: 1.9rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\n.small {\n  font-size: 1.6rem;\n}\n\n.form-control {\n  font-size: 1.6rem;\n}\n\n.warning {\n  color: #DA291C;\n}\n\n.text-danger {\n  color: #D5281B !important;\n}\n\n.text-warning {\n  color: #FFBB1C !important;\n}\n\n.no-wrap {\n  white-space: nowrap;\n}\n\nh1, h2, h3, h4, h5, h6 {\n  font-weight: bold;\n}\n\n@media (max-width: 768px) {\n  h1 {\n    font-size: 3.2rem !important;\n  }\n\n  h2 {\n    font-size: 2.4rem !important;\n  }\n\n  h3 {\n    font-size: 2rem !important;\n  }\n\n  h4 {\n    font-size: 1.8rem !important;\n  }\n\n  h5 {\n    font-size: 1.6rem !important;\n  }\n\n  body {\n    margin-bottom: 474px !important;\n    font-size: 1.6rem !important;\n  }\n\n  .small {\n    font-size: 1.4rem;\n  }\n}\n.hint {\n  color: #768692;\n  font-size: 1.6rem;\n}\n\n/* The 'root-tree-item-container' element is defined in the content-structure.vue file, not here. */\n.root-tree-item-container {\n  margin-left: -29px;\n  min-width: fit-content;\n}\n\n.root-tree-item-container > .tree-item-container {\n  margin-left: 0px;\n}\n\n.tree-item-container {\n  /* \"fit-content\" is needed on mobile when there's lots levels of folder nesting */\n  min-width: fit-content;\n  margin-left: 29px;\n  border-left: 2px solid #AEB7BD;\n}\n\n.treeview-node {\n  font-size: 1.6rem !important;\n  box-sizing: unset;\n  border-top: 1px solid #D7D7D7;\n}\n\n.treeview-node-inner:before {\n  width: 0.9em;\n  height: 1.3em;\n  margin-right: 0.1em;\n  vertical-align: top;\n  border-bottom: 2px solid #AEB7BD;\n  content: \"\";\n  display: inline-block;\n}\n\n.treeview-node-inner-padding {\n  padding-bottom: 1rem !important;\n  padding-top: 1rem !important;\n  padding-left: 0.3rem !important;\n}\n\n.tree-item-container:last-child {\n  border-left: none;\n}\n\n.tree-item-container:last-child > .treeview-node > .treeview-node-inner:before {\n  border-left: 2px solid #AEB7BD;\n}\n\n.resource-detail {\n  font-size: 1.4rem !important;\n  margin-top: 5px;\n}\n\n.node-name-text {\n  margin-left: 6px;\n}\n\n.yellow {\n  color: #FFBB1C;\n}\n\n.red {\n  color: #D5281B;\n}\n\n.moving-highlight {\n  border-color: #ffc107;\n  border-style: solid;\n  border-width: 2px;\n  background-color: rgba(255, 184, 28, 0.05);\n}\n\n.create-folder-circle {\n  color: #007F3B;\n  font-size: 2rem;\n}\n\n.has-resources-indicator {\n  background: #007F3B;\n  border: 2px solid #768692;\n  box-sizing: border-box;\n  border-radius: 4px;\n  width: 30px;\n  height: 15px;\n  margin-right: 26px;\n  margin-top: 8px;\n}\n\n.no-resources-indicator {\n  border: 2px solid #768692;\n  box-sizing: border-box;\n  border-radius: 4px;\n  width: 30px;\n  height: 15px;\n  margin-right: 26px;\n  margin-top: 8px;\n}\n\ndiv.options-dropdown {\n  color: #212B32;\n}\ndiv.options-dropdown .dropdown-menu {\n  border: 2px solid #425563;\n  box-sizing: border-box;\n  border-radius: 5px;\n  margin: 0;\n  padding: 0;\n  margin-top: 10px;\n}\ndiv.options-dropdown .dropdown-toggle::after {\n  vertical-align: middle;\n  border-top: 0.5em solid;\n  border-right: 0.5em solid transparent;\n  border-bottom: 0;\n  border-left: 0.5em solid transparent;\n}\ndiv.options-dropdown a.dropdown-item {\n  height: 35px !important;\n  font-size: 1.6rem;\n  text-decoration: none;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  border-top: 1px solid #D8DDE0;\n}\ndiv.options-dropdown a.dropdown-item:hover {\n  cursor: pointer;\n  background-color: #005EB8;\n  color: #fff;\n}\ndiv.options-dropdown a.dropdown-item:first-child {\n  border: none;\n}\n\ndiv.options-dropdown a .dropdown-item {\n  width: 182px !important;\n}\n\n#cancelMoveNode {\n  color: #D5281B;\n}\n\n@media (max-width: 768px) {\n  .treeview-node-inner {\n    width: calc(100vw - 30px);\n  }\n}\n.content-structure-folder {\n  font-size: 2rem;\n}\n\ni {\n  color: #4C6272;\n}","﻿$nhsuk-blue: #005EB8;\r\n$nhsuk-beta-blue: #C8E4FF;\r\n$nhsuk-navbar-blue: #37A9DD;\r\n$nhsuk-navbar-hover-blue: #003D78;\r\n$nhsuk-green: #007F3B;\r\n$nhsuk-green-hover: #2a6435;\r\n$nhsuk-purple: #330072;\r\n$nhsuk-red: #D5281B;\r\n$nhsuk-red-danger: #B5190D;\r\n$nhsuk-red-hover: #C61D11;\r\n$nhsuk-yellow: #FFED00;\r\n$nhsuk-warm-yellow: #FFBB1C;\r\n$nhsuk-white: #fff;\r\n$nhsuk-black: #212B32;\r\n$nhsuk-black-hover: #36444e;\r\n$nhsuk-navlink-hover-black: #35444E;\r\n$nhsuk-grey: #425563;\r\n$nhsuk-grey-hover: #384853;\r\n$nhsuk-grey-placeholder: #768692;\r\n$nhsuk-grey-light: #AEB7BD;\r\n$nhsuk-grey-lighter: #D8DDE0;\r\n$nhsuk-grey-white: #F0F4F5;\r\n$nhsuk-grey-divider: #D7D7D7;\r\n$nhsuk-blue-divider: #4081C1;\r\n$nhsuk-btn-blue-hover: #053E76;\r\n$nhsuk-btn-outline-hover: #E4F2FF;\r\n$table-background: #F9FBFC;\r\n$table-border: #425462;\r\n$twitter-blue: #29A3EF;\r\n$font-stack: FrutigerLTW01-55Roman, Arial, sans-serif;\r\n$font-stack-light: FrutigerLight, Arial, sans-serif;\r\n$font-stack-bold: FrutigerLTW01-65Bold, Arial, sans-serif;\r\n$base-font-size: 62.5%;\r\n$font-awesome-solid: \"Font Awesome 6 Free\";\r\n","\n@use \"../../../Styles/Abstracts/all\" as *;\n\n/* The 'root-tree-item-container' element is defined in the content-structure.vue file, not here. */\n.root-tree-item-container {\n    margin-left: -29px;\n    min-width: fit-content;\n}\n\n.root-tree-item-container > .tree-item-container {\n    margin-left: 0px;\n}\n\n.tree-item-container {\n    /* \"fit-content\" is needed on mobile when there's lots levels of folder nesting */\n    min-width: fit-content;\n    margin-left: 29px;\n    border-left: 2px solid $nhsuk-grey-light;\n}\n\n.treeview-node {\n    font-size: 1.6rem !important;\n    box-sizing: unset;\n    border-top: 1px solid $nhsuk-grey-divider;\n}\n\n.treeview-node-inner:before {\n    width: 0.9em;\n    height: 1.3em;\n    margin-right: 0.1em;\n    vertical-align: top;\n    border-bottom: 2px solid $nhsuk-grey-light;\n    content: \"\";\n    display: inline-block;\n}\n\n.treeview-node-inner-padding {\n    padding-bottom: 1rem !important;\n    padding-top: 1rem !important;\n    padding-left: 0.3rem !important;\n}\n\n.tree-item-container:last-child {\n    border-left: none;\n}\n\n    .tree-item-container:last-child > .treeview-node > .treeview-node-inner:before {\n        border-left: 2px solid $nhsuk-grey-light;\n    }\n\n.resource-detail {\n    font-size: 1.4rem !important;\n    margin-top: 5px;\n}\n\n.node-name-text {\n    margin-left: 6px;\n}\n\n.yellow {\n    color: $nhsuk-warm-yellow;\n}\n\n.red {\n    color: $nhsuk-red;\n}\n\n.moving-highlight {\n    border-color: #ffc107;\n    border-style: solid;\n    border-width: 2px;\n    background-color: rgba(255, 184, 28, 0.05);\n}\n\n.create-folder-circle {\n    color: $nhsuk-green;\n    font-size: 2rem;\n}\n\n.has-resources-indicator {\n    background: $nhsuk-green;\n    border: 2px solid $nhsuk-grey-placeholder;\n    box-sizing: border-box;\n    border-radius: 4px;\n    width: 30px;\n    height: 15px;\n    margin-right: 26px;\n    margin-top: 8px;\n}\n\n.no-resources-indicator {\n    border: 2px solid $nhsuk-grey-placeholder;\n    box-sizing: border-box;\n    border-radius: 4px;\n    width: 30px;\n    height: 15px;\n    margin-right: 26px;\n    margin-top: 8px;\n}\n\ndiv.options-dropdown {\n    color: $nhsuk-black;\n    .dropdown-menu\n\n{\n    border: 2px solid $nhsuk-grey;\n    box-sizing: border-box;\n    border-radius: 5px;\n    margin: 0;\n    padding: 0;\n    margin-top: 10px;\n}\n\n.dropdown-toggle::after {\n    vertical-align: middle;\n    border-top: 0.5em solid;\n    border-right: 0.5em solid transparent;\n    border-bottom: 0;\n    border-left: 0.5em solid transparent;\n}\n\na.dropdown-item {\n    height: 35px !important;\n    font-size: 1.6rem;\n    text-decoration: none;\n    display: flex;\n    flex-direction: column;\n    justify-content: center;\n    border-top: 1px solid $nhsuk-grey-lighter;\n    &:hover\n\n{\n    cursor: pointer;\n    background-color: $nhsuk-blue;\n    color: $nhsuk-white;\n}\n\n}\n\na.dropdown-item:first-child {\n    border: none;\n}\n\n}\n\ndiv.options-dropdown {\n    a .dropdown-item\n\n{\n    width: 182px !important;\n}\n\n}\n\n#cancelMoveNode {\n    color: $nhsuk-red;\n}\n\n@media (max-width: 768px) {\n\n    .treeview-node-inner {\n        width: calc(100vw - 30px);\n    }\n}\n\n.content-structure-folder {\n    font-size: 2rem;\n}\ni {\n    color: #4C6272;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: FrutigerLight;\n  src: url(../wwwroot/fonts/FrutigerLT45Light.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLT55Roman;\n  src: url(../wwwroot/fonts/FrutigerLT55Roman.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLTW01-65Bold;\n  src: url(/fonts/FrutigerLTW01-65Bold.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-regular-400.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-solid-900.woff2) format(\"woff\");\n}\nhtml[data-v-40bedb66] {\n  font-size: 62.5%;\n  position: relative;\n  min-height: 100%;\n  color: #212B32;\n}\nbody[data-v-40bedb66] {\n  font-family: FrutigerLTW01-55Roman, Arial, sans-serif;\n  font-size: 1.9rem !important;\n  margin-bottom: 180px !important;\n}\nlabel[data-v-40bedb66] {\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif !important;\n}\n.py-20[data-v-40bedb66] {\n  padding: 2rem 0;\n}\n.my-20[data-v-40bedb66] {\n  margin: 2rem 0;\n}\na[data-v-40bedb66] {\n  color: #005EB8;\n}\n.hyperlink[data-v-40bedb66] {\n  text-decoration: underline;\n  color: #005EB8;\n  cursor: pointer;\n}\nh1[data-v-40bedb66] {\n  font-size: 4.8rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh2[data-v-40bedb66] {\n  font-size: 3.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh3[data-v-40bedb66] {\n  font-size: 2.4rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh4[data-v-40bedb66] {\n  font-size: 2.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\nh5[data-v-40bedb66] {\n  font-size: 1.9rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n.small[data-v-40bedb66] {\n  font-size: 1.6rem;\n}\n.form-control[data-v-40bedb66] {\n  font-size: 1.6rem;\n}\n.warning[data-v-40bedb66] {\n  color: #DA291C;\n}\n.text-danger[data-v-40bedb66] {\n  color: #D5281B !important;\n}\n.text-warning[data-v-40bedb66] {\n  color: #FFBB1C !important;\n}\n.no-wrap[data-v-40bedb66] {\n  white-space: nowrap;\n}\nh1[data-v-40bedb66], h2[data-v-40bedb66], h3[data-v-40bedb66], h4[data-v-40bedb66], h5[data-v-40bedb66], h6[data-v-40bedb66] {\n  font-weight: bold;\n}\n@media (max-width: 768px) {\nh1[data-v-40bedb66] {\n    font-size: 3.2rem !important;\n}\nh2[data-v-40bedb66] {\n    font-size: 2.4rem !important;\n}\nh3[data-v-40bedb66] {\n    font-size: 2rem !important;\n}\nh4[data-v-40bedb66] {\n    font-size: 1.8rem !important;\n}\nh5[data-v-40bedb66] {\n    font-size: 1.6rem !important;\n}\nbody[data-v-40bedb66] {\n    margin-bottom: 474px !important;\n    font-size: 1.6rem !important;\n}\n.small[data-v-40bedb66] {\n    font-size: 1.4rem;\n}\n}\n.hint[data-v-40bedb66] {\n  color: #768692;\n  font-size: 1.6rem;\n}\n\n/* The 'root-tree-item-container' element is defined in the content-structure.vue file, not here. */\n.root-tree-item-container[data-v-40bedb66] {\n  margin-left: -29px;\n  min-width: fit-content;\n}\n.root-tree-item-container > .tree-item-container[data-v-40bedb66] {\n  margin-left: 0px;\n}\n.tree-item-container[data-v-40bedb66] {\n  /* \"fit-content\" is needed on mobile when there's lots levels of folder nesting */\n  min-width: fit-content;\n  margin-left: 29px;\n  border-left: 2px solid #AEB7BD;\n}\n.treeview-node[data-v-40bedb66] {\n  font-size: 1.6rem !important;\n  box-sizing: unset;\n  border-top: 1px solid #D7D7D7;\n}\n.treeview-node-inner[data-v-40bedb66]:before {\n  width: 0.9em;\n  height: 1.3em;\n  margin-right: 0.1em;\n  vertical-align: top;\n  border-bottom: 2px solid #AEB7BD;\n  content: \"\";\n  display: inline-block;\n}\n.treeview-node-inner-padding[data-v-40bedb66] {\n  padding-bottom: 1rem !important;\n  padding-top: 1rem !important;\n  padding-left: 0.3rem !important;\n}\n.tree-item-container[data-v-40bedb66]:last-child {\n  border-left: none;\n}\n.tree-item-container:last-child > .treeview-node > .treeview-node-inner[data-v-40bedb66]:before {\n  border-left: 2px solid #AEB7BD;\n}\n.resource-detail[data-v-40bedb66] {\n  font-size: 1.4rem !important;\n  margin-top: 5px;\n}\n.node-name-text[data-v-40bedb66] {\n  margin-left: 6px;\n}\n.yellow[data-v-40bedb66] {\n  color: #FFBB1C;\n}\n.red[data-v-40bedb66] {\n  color: #D5281B;\n}\n.moving-highlight[data-v-40bedb66] {\n  border-color: #ffc107;\n  border-style: solid;\n  border-width: 2px;\n  background-color: rgba(255, 184, 28, 0.05);\n}\n.create-folder-circle[data-v-40bedb66] {\n  color: #007F3B;\n  font-size: 2rem;\n}\n.has-resources-indicator[data-v-40bedb66] {\n  background: #007F3B;\n  border: 2px solid #768692;\n  box-sizing: border-box;\n  border-radius: 4px;\n  width: 30px;\n  height: 15px;\n  margin-right: 26px;\n  margin-top: 8px;\n}\n.no-resources-indicator[data-v-40bedb66] {\n  border: 2px solid #768692;\n  box-sizing: border-box;\n  border-radius: 4px;\n  width: 30px;\n  height: 15px;\n  margin-right: 26px;\n  margin-top: 8px;\n}\ndiv.options-dropdown[data-v-40bedb66] {\n  color: #212B32;\n}\ndiv.options-dropdown .dropdown-menu[data-v-40bedb66] {\n  border: 2px solid #425563;\n  box-sizing: border-box;\n  border-radius: 5px;\n  margin: 0;\n  padding: 0;\n  margin-top: 10px;\n}\ndiv.options-dropdown .dropdown-toggle[data-v-40bedb66]::after {\n  vertical-align: middle;\n  border-top: 0.5em solid;\n  border-right: 0.5em solid transparent;\n  border-bottom: 0;\n  border-left: 0.5em solid transparent;\n}\ndiv.options-dropdown a.dropdown-item[data-v-40bedb66] {\n  height: 35px !important;\n  font-size: 1.6rem;\n  text-decoration: none;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  border-top: 1px solid #D8DDE0;\n}\ndiv.options-dropdown a.dropdown-item[data-v-40bedb66]:hover {\n  cursor: pointer;\n  background-color: #005EB8;\n  color: #fff;\n}\ndiv.options-dropdown a.dropdown-item[data-v-40bedb66]:first-child {\n  border: none;\n}\ndiv.options-dropdown a .dropdown-item[data-v-40bedb66] {\n  width: 182px !important;\n}\n#cancelMoveNode[data-v-40bedb66] {\n  color: #D5281B;\n}\n@media (max-width: 768px) {\n.treeview-node-inner[data-v-40bedb66] {\n    width: calc(100vw - 30px);\n}\n}\n.content-structure-folder[data-v-40bedb66] {\n  font-size: 2rem;\n}\ni[data-v-40bedb66] {\n  color: #4C6272;\n}", "",{"version":3,"sources":["webpack://./Styles/Abstracts/_typography.scss","webpack://./treeItem.vue","webpack://./Styles/Abstracts/_variables.scss","webpack://./Scripts/vuesrc/content-structure/treeItem.vue"],"names":[],"mappings":"AAGA;EACE,0BAAA;EACA,gEAAA;ACFF;ADKA;EACE,8BAAA;EACA,gEAAA;ACHF;ADMA;EACE,iCAAA;EACA,0DAAA;ACJF;ADOA;EACI,kCEciB;EFbjB,sFAAA;ACLJ;ADQA;EACI,kCESiB;EFRjB,oFAAA;ACNJ;ADSA;EACE,gBAAA;EACA,kBAAA;EACA,gBAAA;EACA,cEnBY;ADYd;ADUA;EACE,qDEPW;EFQX,4BAAA;EACA,+BAAA;ACPF;ADUA;EACE,+DAAA;ACPF;ADUA;EACE,eAAA;ACPF;ADUA;EACE,cAAA;ACPF;ADUA;EACE,cEtDY;AD+Cd;ADUA;EACE,0BAAA;EACA,cE3DY;EF4DZ,eAAA;ACPF;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDEnCgB;AD4BlB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDEzCgB;ADkClB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDE/CgB;ADwClB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDErDgB;AD8ClB;ADUA;EACE,iBAAA;EACA,mBAAA;EACA,oDE3DgB;ADoDlB;ADUA;EACE,iBAAA;ACPF;ADUA;EACE,iBAAA;ACPF;ADUA;EACE,cAAA;ACPF;ADUA;EACE,yBAAA;ACPF;ADUA;EACE,yBAAA;ACPF;ADUA;EACE,mBAAA;ACPF;ADUA;EACE,iBAAA;ACPF;ADUA;AACE;IACE,4BAAA;ACPF;ADUA;IACE,4BAAA;ACRF;ADWA;IACE,0BAAA;ACTF;ADYA;IACE,4BAAA;ACVF;ADaA;IACE,4BAAA;ACXF;ADaA;IACE,+BAAA;IACA,4BAAA;ACXF;ADcA;IACE,iBAAA;ACZF;AACF;ADeA;EACE,cEtIuB;EFuIvB,iBAAA;ACbF;;AEzIA,mGAAA;AACA;EACI,kBAAA;EACA,sBAAA;AF4IJ;AEzIA;EACI,gBAAA;AF4IJ;AEzIA;EACI,iFAAA;EACA,sBAAA;EACA,iBAAA;EACA,8BAAA;AF4IJ;AEzIA;EACI,4BAAA;EACA,iBAAA;EACA,6BAAA;AF4IJ;AEzIA;EACI,YAAA;EACA,aAAA;EACA,mBAAA;EACA,mBAAA;EACA,gCAAA;EACA,WAAA;EACA,qBAAA;AF4IJ;AEzIA;EACI,+BAAA;EACA,4BAAA;EACA,+BAAA;AF4IJ;AEzIA;EACI,iBAAA;AF4IJ;AEzII;EACI,8BAAA;AF4IR;AEzIA;EACI,4BAAA;EACA,eAAA;AF4IJ;AEzIA;EACI,gBAAA;AF4IJ;AEzIA;EACI,cDjDgB;AD6LpB;AEzIA;EACI,cDzDQ;ADqMZ;AEzIA;EACI,qBAAA;EACA,mBAAA;EACA,iBAAA;EACA,0CAAA;AF4IJ;AEzIA;EACI,cDvEU;ECwEV,eAAA;AF4IJ;AEzIA;EACI,mBD5EU;EC6EV,yBAAA;EACA,sBAAA;EACA,kBAAA;EACA,WAAA;EACA,YAAA;EACA,kBAAA;EACA,eAAA;AF4IJ;AEzIA;EACI,yBAAA;EACA,sBAAA;EACA,kBAAA;EACA,WAAA;EACA,YAAA;EACA,kBAAA;EACA,eAAA;AF4IJ;AEzIA;EACI,cDxFU;ADoOd;AE3II;EAGA,yBAAA;EACA,sBAAA;EACA,kBAAA;EACA,SAAA;EACA,UAAA;EACA,gBAAA;AF2IJ;AExIA;EACI,sBAAA;EACA,uBAAA;EACA,qCAAA;EACA,gBAAA;EACA,oCAAA;AF0IJ;AEvIA;EACI,uBAAA;EACA,iBAAA;EACA,qBAAA;EACA,aAAA;EACA,sBAAA;EACA,uBAAA;EACA,6BAAA;AFyIJ;AExII;EAGA,eAAA;EACA,yBDrIU;ECsIV,WD1HU;ADkQd;AEnIA;EACI,YAAA;AFqIJ;AE/HI;EAGA,uBAAA;AFgIJ;AE3HA;EACI,cDpJQ;ADkRZ;AE3HA;AAEI;IACI,yBAAA;AF6HN;AACF;AE1HA;EACI,eAAA;AF4HJ;AE1HA;EACI,cAAA;AF6HJ","sourcesContent":["﻿@use \"variables\" as *;\r\n@use \"mixins\" as *;\r\n\r\n@font-face {\r\n  font-family: FrutigerLight;\r\n  src: url(../wwwroot/fonts/FrutigerLT45Light.woff) format('woff');\r\n}\r\n\r\n@font-face {\r\n  font-family: FrutigerLT55Roman;\r\n  src: url(../wwwroot/fonts/FrutigerLT55Roman.woff) format('woff');\r\n}\r\n\r\n@font-face {\r\n  font-family: FrutigerLTW01-65Bold;\r\n  src: url(/fonts/FrutigerLTW01-65Bold.woff2) format('woff');\r\n}\r\n\r\n@font-face {\r\n    font-family: $font-awesome-solid;\r\n    src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-regular-400.woff2) format('woff');\r\n}\r\n\r\n@font-face {\r\n    font-family: $font-awesome-solid;\r\n    src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-solid-900.woff2) format('woff');\r\n}\r\n\r\nhtml {\r\n  font-size: ($base-font-size);\r\n  position: relative;\r\n  min-height: 100%;\r\n  color: $nhsuk-black;\r\n}\r\n\r\nbody {\r\n  font-family: $font-stack;\r\n  font-size: 1.9rem !important;\r\n  margin-bottom: 180px !important;\r\n}\r\n\r\nlabel {\r\n  font-family: $font-stack-bold !important;\r\n}\r\n\r\n.py-20 {\r\n  padding: 2rem 0;\r\n}\r\n\r\n.my-20 {\r\n  margin: 2rem 0;\r\n}\r\n\r\na {\r\n  color: $nhsuk-blue;\r\n}\r\n\r\n.hyperlink {\r\n  text-decoration: underline;\r\n  color: $nhsuk-blue;\r\n  cursor: pointer;\r\n}\r\n\r\nh1 {\r\n  font-size: 4.8rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh2 {\r\n  font-size: 3.2rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh3 {\r\n  font-size: 2.4rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh4 {\r\n  font-size: 2.2rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\nh5 {\r\n  font-size: 1.9rem;\r\n  font-weight: normal;\r\n  font-family: $font-stack-bold;\r\n}\r\n\r\n.small {\r\n  font-size: 1.6rem;\r\n}\r\n\r\n.form-control {\r\n  font-size: 1.6rem;\r\n}\r\n\r\n.warning {\r\n  color: #DA291C;\r\n}\r\n\r\n.text-danger {\r\n  color: $nhsuk-red !important;\r\n}\r\n\r\n.text-warning {\r\n  color: $nhsuk-warm-yellow !important;\r\n}\r\n\r\n.no-wrap {\r\n  white-space: nowrap;\r\n}\r\n\r\n#{headings(1, 6)} {\r\n  font-weight: bold;\r\n}\r\n\r\n@media (max-width: 768px) {\r\n  h1 {\r\n    font-size: 3.2rem !important;\r\n  }\r\n\r\n  h2 {\r\n    font-size: 2.4rem !important;\r\n  }\r\n\r\n  h3 {\r\n    font-size: 2rem !important;\r\n  }\r\n\r\n  h4 {\r\n    font-size: 1.8rem !important;\r\n  }\r\n\r\n  h5 {\r\n    font-size: 1.6rem !important;\r\n  }\r\n  body {\r\n    margin-bottom: 474px !important;\r\n    font-size: 1.6rem !important;\r\n  }\r\n\r\n  .small {\r\n    font-size: 1.4rem;\r\n  }\r\n}\r\n\r\n.hint {\r\n  color: $nhsuk-grey-placeholder;\r\n  font-size: 1.6rem;\r\n}\r\n","@font-face {\n  font-family: FrutigerLight;\n  src: url(../wwwroot/fonts/FrutigerLT45Light.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLT55Roman;\n  src: url(../wwwroot/fonts/FrutigerLT55Roman.woff) format(\"woff\");\n}\n@font-face {\n  font-family: FrutigerLTW01-65Bold;\n  src: url(/fonts/FrutigerLTW01-65Bold.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-regular-400.woff2) format(\"woff\");\n}\n@font-face {\n  font-family: \"Font Awesome 6 Free\";\n  src: url(/lib/fontawesome-free-6.4.2-web/webfonts/fa-solid-900.woff2) format(\"woff\");\n}\nhtml {\n  font-size: 62.5%;\n  position: relative;\n  min-height: 100%;\n  color: #212B32;\n}\n\nbody {\n  font-family: FrutigerLTW01-55Roman, Arial, sans-serif;\n  font-size: 1.9rem !important;\n  margin-bottom: 180px !important;\n}\n\nlabel {\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif !important;\n}\n\n.py-20 {\n  padding: 2rem 0;\n}\n\n.my-20 {\n  margin: 2rem 0;\n}\n\na {\n  color: #005EB8;\n}\n\n.hyperlink {\n  text-decoration: underline;\n  color: #005EB8;\n  cursor: pointer;\n}\n\nh1 {\n  font-size: 4.8rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh2 {\n  font-size: 3.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh3 {\n  font-size: 2.4rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh4 {\n  font-size: 2.2rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\nh5 {\n  font-size: 1.9rem;\n  font-weight: normal;\n  font-family: FrutigerLTW01-65Bold, Arial, sans-serif;\n}\n\n.small {\n  font-size: 1.6rem;\n}\n\n.form-control {\n  font-size: 1.6rem;\n}\n\n.warning {\n  color: #DA291C;\n}\n\n.text-danger {\n  color: #D5281B !important;\n}\n\n.text-warning {\n  color: #FFBB1C !important;\n}\n\n.no-wrap {\n  white-space: nowrap;\n}\n\nh1, h2, h3, h4, h5, h6 {\n  font-weight: bold;\n}\n\n@media (max-width: 768px) {\n  h1 {\n    font-size: 3.2rem !important;\n  }\n  h2 {\n    font-size: 2.4rem !important;\n  }\n  h3 {\n    font-size: 2rem !important;\n  }\n  h4 {\n    font-size: 1.8rem !important;\n  }\n  h5 {\n    font-size: 1.6rem !important;\n  }\n  body {\n    margin-bottom: 474px !important;\n    font-size: 1.6rem !important;\n  }\n  .small {\n    font-size: 1.4rem;\n  }\n}\n.hint {\n  color: #768692;\n  font-size: 1.6rem;\n}\n\n/* The 'root-tree-item-container' element is defined in the content-structure.vue file, not here. */\n.root-tree-item-container {\n  margin-left: -29px;\n  min-width: fit-content;\n}\n\n.root-tree-item-container > .tree-item-container {\n  margin-left: 0px;\n}\n\n.tree-item-container {\n  /* \"fit-content\" is needed on mobile when there's lots levels of folder nesting */\n  min-width: fit-content;\n  margin-left: 29px;\n  border-left: 2px solid #AEB7BD;\n}\n\n.treeview-node {\n  font-size: 1.6rem !important;\n  box-sizing: unset;\n  border-top: 1px solid #D7D7D7;\n}\n\n.treeview-node-inner:before {\n  width: 0.9em;\n  height: 1.3em;\n  margin-right: 0.1em;\n  vertical-align: top;\n  border-bottom: 2px solid #AEB7BD;\n  content: \"\";\n  display: inline-block;\n}\n\n.treeview-node-inner-padding {\n  padding-bottom: 1rem !important;\n  padding-top: 1rem !important;\n  padding-left: 0.3rem !important;\n}\n\n.tree-item-container:last-child {\n  border-left: none;\n}\n\n.tree-item-container:last-child > .treeview-node > .treeview-node-inner:before {\n  border-left: 2px solid #AEB7BD;\n}\n\n.resource-detail {\n  font-size: 1.4rem !important;\n  margin-top: 5px;\n}\n\n.node-name-text {\n  margin-left: 6px;\n}\n\n.yellow {\n  color: #FFBB1C;\n}\n\n.red {\n  color: #D5281B;\n}\n\n.moving-highlight {\n  border-color: #ffc107;\n  border-style: solid;\n  border-width: 2px;\n  background-color: rgba(255, 184, 28, 0.05);\n}\n\n.create-folder-circle {\n  color: #007F3B;\n  font-size: 2rem;\n}\n\n.has-resources-indicator {\n  background: #007F3B;\n  border: 2px solid #768692;\n  box-sizing: border-box;\n  border-radius: 4px;\n  width: 30px;\n  height: 15px;\n  margin-right: 26px;\n  margin-top: 8px;\n}\n\n.no-resources-indicator {\n  border: 2px solid #768692;\n  box-sizing: border-box;\n  border-radius: 4px;\n  width: 30px;\n  height: 15px;\n  margin-right: 26px;\n  margin-top: 8px;\n}\n\ndiv.options-dropdown {\n  color: #212B32;\n}\ndiv.options-dropdown .dropdown-menu {\n  border: 2px solid #425563;\n  box-sizing: border-box;\n  border-radius: 5px;\n  margin: 0;\n  padding: 0;\n  margin-top: 10px;\n}\ndiv.options-dropdown .dropdown-toggle::after {\n  vertical-align: middle;\n  border-top: 0.5em solid;\n  border-right: 0.5em solid transparent;\n  border-bottom: 0;\n  border-left: 0.5em solid transparent;\n}\ndiv.options-dropdown a.dropdown-item {\n  height: 35px !important;\n  font-size: 1.6rem;\n  text-decoration: none;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  border-top: 1px solid #D8DDE0;\n}\ndiv.options-dropdown a.dropdown-item:hover {\n  cursor: pointer;\n  background-color: #005EB8;\n  color: #fff;\n}\ndiv.options-dropdown a.dropdown-item:first-child {\n  border: none;\n}\n\ndiv.options-dropdown a .dropdown-item {\n  width: 182px !important;\n}\n\n#cancelMoveNode {\n  color: #D5281B;\n}\n\n@media (max-width: 768px) {\n  .treeview-node-inner {\n    width: calc(100vw - 30px);\n  }\n}\n.content-structure-folder {\n  font-size: 2rem;\n}\n\ni {\n  color: #4C6272;\n}","﻿$nhsuk-blue: #005EB8;\r\n$nhsuk-beta-blue: #C8E4FF;\r\n$nhsuk-navbar-blue: #37A9DD;\r\n$nhsuk-navbar-hover-blue: #003D78;\r\n$nhsuk-green: #007F3B;\r\n$nhsuk-green-hover: #2a6435;\r\n$nhsuk-purple: #330072;\r\n$nhsuk-red: #D5281B;\r\n$nhsuk-red-danger: #B5190D;\r\n$nhsuk-red-hover: #C61D11;\r\n$nhsuk-yellow: #FFED00;\r\n$nhsuk-warm-yellow: #FFBB1C;\r\n$nhsuk-white: #fff;\r\n$nhsuk-black: #212B32;\r\n$nhsuk-black-hover: #36444e;\r\n$nhsuk-navlink-hover-black: #35444E;\r\n$nhsuk-grey: #425563;\r\n$nhsuk-grey-hover: #384853;\r\n$nhsuk-grey-placeholder: #768692;\r\n$nhsuk-grey-light: #AEB7BD;\r\n$nhsuk-grey-lighter: #D8DDE0;\r\n$nhsuk-grey-white: #F0F4F5;\r\n$nhsuk-grey-divider: #D7D7D7;\r\n$nhsuk-blue-divider: #4081C1;\r\n$nhsuk-btn-blue-hover: #053E76;\r\n$nhsuk-btn-outline-hover: #E4F2FF;\r\n$table-background: #F9FBFC;\r\n$table-border: #425462;\r\n$twitter-blue: #29A3EF;\r\n$font-stack: FrutigerLTW01-55Roman, Arial, sans-serif;\r\n$font-stack-light: FrutigerLight, Arial, sans-serif;\r\n$font-stack-bold: FrutigerLTW01-65Bold, Arial, sans-serif;\r\n$base-font-size: 62.5%;\r\n$font-awesome-solid: \"Font Awesome 6 Free\";\r\n","\n@use \"../../../Styles/Abstracts/all\" as *;\n\n/* The 'root-tree-item-container' element is defined in the content-structure.vue file, not here. */\n.root-tree-item-container {\n    margin-left: -29px;\n    min-width: fit-content;\n}\n\n.root-tree-item-container > .tree-item-container {\n    margin-left: 0px;\n}\n\n.tree-item-container {\n    /* \"fit-content\" is needed on mobile when there's lots levels of folder nesting */\n    min-width: fit-content;\n    margin-left: 29px;\n    border-left: 2px solid $nhsuk-grey-light;\n}\n\n.treeview-node {\n    font-size: 1.6rem !important;\n    box-sizing: unset;\n    border-top: 1px solid $nhsuk-grey-divider;\n}\n\n.treeview-node-inner:before {\n    width: 0.9em;\n    height: 1.3em;\n    margin-right: 0.1em;\n    vertical-align: top;\n    border-bottom: 2px solid $nhsuk-grey-light;\n    content: \"\";\n    display: inline-block;\n}\n\n.treeview-node-inner-padding {\n    padding-bottom: 1rem !important;\n    padding-top: 1rem !important;\n    padding-left: 0.3rem !important;\n}\n\n.tree-item-container:last-child {\n    border-left: none;\n}\n\n    .tree-item-container:last-child > .treeview-node > .treeview-node-inner:before {\n        border-left: 2px solid $nhsuk-grey-light;\n    }\n\n.resource-detail {\n    font-size: 1.4rem !important;\n    margin-top: 5px;\n}\n\n.node-name-text {\n    margin-left: 6px;\n}\n\n.yellow {\n    color: $nhsuk-warm-yellow;\n}\n\n.red {\n    color: $nhsuk-red;\n}\n\n.moving-highlight {\n    border-color: #ffc107;\n    border-style: solid;\n    border-width: 2px;\n    background-color: rgba(255, 184, 28, 0.05);\n}\n\n.create-folder-circle {\n    color: $nhsuk-green;\n    font-size: 2rem;\n}\n\n.has-resources-indicator {\n    background: $nhsuk-green;\n    border: 2px solid $nhsuk-grey-placeholder;\n    box-sizing: border-box;\n    border-radius: 4px;\n    width: 30px;\n    height: 15px;\n    margin-right: 26px;\n    margin-top: 8px;\n}\n\n.no-resources-indicator {\n    border: 2px solid $nhsuk-grey-placeholder;\n    box-sizing: border-box;\n    border-radius: 4px;\n    width: 30px;\n    height: 15px;\n    margin-right: 26px;\n    margin-top: 8px;\n}\n\ndiv.options-dropdown {\n    color: $nhsuk-black;\n    .dropdown-menu\n\n{\n    border: 2px solid $nhsuk-grey;\n    box-sizing: border-box;\n    border-radius: 5px;\n    margin: 0;\n    padding: 0;\n    margin-top: 10px;\n}\n\n.dropdown-toggle::after {\n    vertical-align: middle;\n    border-top: 0.5em solid;\n    border-right: 0.5em solid transparent;\n    border-bottom: 0;\n    border-left: 0.5em solid transparent;\n}\n\na.dropdown-item {\n    height: 35px !important;\n    font-size: 1.6rem;\n    text-decoration: none;\n    display: flex;\n    flex-direction: column;\n    justify-content: center;\n    border-top: 1px solid $nhsuk-grey-lighter;\n    &:hover\n\n{\n    cursor: pointer;\n    background-color: $nhsuk-blue;\n    color: $nhsuk-white;\n}\n\n}\n\na.dropdown-item:first-child {\n    border: none;\n}\n\n}\n\ndiv.options-dropdown {\n    a .dropdown-item\n\n{\n    width: 182px !important;\n}\n\n}\n\n#cancelMoveNode {\n    color: $nhsuk-red;\n}\n\n@media (max-width: 768px) {\n\n    .treeview-node-inner {\n        width: calc(100vw - 30px);\n    }\n}\n\n.content-structure-folder {\n    font-size: 2rem;\n}\ni {\n    color: #4C6272;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -1993,14 +3785,15 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.15';
+  var VERSION = '4.17.21';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
 
   /** Error message constants. */
   var CORE_ERROR_TEXT = 'Unsupported core-js use. Try https://npms.io/search?q=ponyfill.',
-      FUNC_ERROR_TEXT = 'Expected a function';
+      FUNC_ERROR_TEXT = 'Expected a function',
+      INVALID_TEMPL_VAR_ERROR_TEXT = 'Invalid `variable` option passed into `_.template`';
 
   /** Used to stand-in for `undefined` hash values. */
   var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -2133,10 +3926,11 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
   var reRegExpChar = /[\\^$.*+?()[\]{}|]/g,
       reHasRegExpChar = RegExp(reRegExpChar.source);
 
-  /** Used to match leading and trailing whitespace. */
-  var reTrim = /^\s+|\s+$/g,
-      reTrimStart = /^\s+/,
-      reTrimEnd = /\s+$/;
+  /** Used to match leading whitespace. */
+  var reTrimStart = /^\s+/;
+
+  /** Used to match a single whitespace character. */
+  var reWhitespace = /\s/;
 
   /** Used to match wrap detail comments. */
   var reWrapComment = /\{(?:\n\/\* \[wrapped with .+\] \*\/)?\n?/,
@@ -2145,6 +3939,18 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
   /** Used to match words composed of alphanumeric characters. */
   var reAsciiWord = /[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g;
+
+  /**
+   * Used to validate the `validate` option in `_.template` variable.
+   *
+   * Forbids characters which could potentially change the meaning of the function argument definition:
+   * - "()," (modification of function parameters)
+   * - "=" (default value)
+   * - "[]{}" (destructuring of function parameters)
+   * - "/" (beginning of a comment)
+   * - whitespace
+   */
+  var reForbiddenIdentifierChars = /[()=,{}\[\]\/\s]/;
 
   /** Used to match backslashes in property paths. */
   var reEscapeChar = /\\(\\)?/g;
@@ -2975,6 +4781,19 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
   }
 
   /**
+   * The base implementation of `_.trim`.
+   *
+   * @private
+   * @param {string} string The string to trim.
+   * @returns {string} Returns the trimmed string.
+   */
+  function baseTrim(string) {
+    return string
+      ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, '')
+      : string;
+  }
+
+  /**
    * The base implementation of `_.unary` without support for storing metadata.
    *
    * @private
@@ -3305,6 +5124,21 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
     return hasUnicode(string)
       ? unicodeToArray(string)
       : asciiToArray(string);
+  }
+
+  /**
+   * Used by `_.trim` and `_.trimEnd` to get the index of the last non-whitespace
+   * character of `string`.
+   *
+   * @private
+   * @param {string} string The string to inspect.
+   * @returns {number} Returns the index of the last non-whitespace character.
+   */
+  function trimmedEndIndex(string) {
+    var index = string.length;
+
+    while (index-- && reWhitespace.test(string.charAt(index))) {}
+    return index;
   }
 
   /**
@@ -5700,8 +7534,21 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      * @returns {Array} Returns the new sorted array.
      */
     function baseOrderBy(collection, iteratees, orders) {
+      if (iteratees.length) {
+        iteratees = arrayMap(iteratees, function(iteratee) {
+          if (isArray(iteratee)) {
+            return function(value) {
+              return baseGet(value, iteratee.length === 1 ? iteratee[0] : iteratee);
+            }
+          }
+          return iteratee;
+        });
+      } else {
+        iteratees = [identity];
+      }
+
       var index = -1;
-      iteratees = arrayMap(iteratees.length ? iteratees : [identity], baseUnary(getIteratee()));
+      iteratees = arrayMap(iteratees, baseUnary(getIteratee()));
 
       var result = baseMap(collection, function(value, key, collection) {
         var criteria = arrayMap(iteratees, function(iteratee) {
@@ -5958,6 +7805,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         var key = toKey(path[index]),
             newValue = value;
 
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+          return object;
+        }
+
         if (index != lastIndex) {
           var objValue = nested[key];
           newValue = customizer ? customizer(objValue, key, nested) : undefined;
@@ -6110,11 +7961,14 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      *  into `array`.
      */
     function baseSortedIndexBy(array, value, iteratee, retHighest) {
-      value = iteratee(value);
-
       var low = 0,
-          high = array == null ? 0 : array.length,
-          valIsNaN = value !== value,
+          high = array == null ? 0 : array.length;
+      if (high === 0) {
+        return 0;
+      }
+
+      value = iteratee(value);
+      var valIsNaN = value !== value,
           valIsNull = value === null,
           valIsSymbol = isSymbol(value),
           valIsUndefined = value === undefined;
@@ -7599,10 +9453,11 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
       if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
         return false;
       }
-      // Assume cyclic values are equal.
-      var stacked = stack.get(array);
-      if (stacked && stack.get(other)) {
-        return stacked == other;
+      // Check that cyclic values are equal.
+      var arrStacked = stack.get(array);
+      var othStacked = stack.get(other);
+      if (arrStacked && othStacked) {
+        return arrStacked == other && othStacked == array;
       }
       var index = -1,
           result = true,
@@ -7764,10 +9619,11 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
           return false;
         }
       }
-      // Assume cyclic values are equal.
-      var stacked = stack.get(object);
-      if (stacked && stack.get(other)) {
-        return stacked == other;
+      // Check that cyclic values are equal.
+      var objStacked = stack.get(object);
+      var othStacked = stack.get(other);
+      if (objStacked && othStacked) {
+        return objStacked == other && othStacked == object;
       }
       var result = true;
       stack.set(object, other);
@@ -11148,6 +13004,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      * // The `_.property` iteratee shorthand.
      * _.filter(users, 'active');
      * // => objects for ['barney']
+     *
+     * // Combining several predicates using `_.overEvery` or `_.overSome`.
+     * _.filter(users, _.overSome([{ 'age': 36 }, ['age', 40]]));
+     * // => objects for ['fred', 'barney']
      */
     function filter(collection, predicate) {
       var func = isArray(collection) ? arrayFilter : baseFilter;
@@ -11897,15 +13757,15 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      * var users = [
      *   { 'user': 'fred',   'age': 48 },
      *   { 'user': 'barney', 'age': 36 },
-     *   { 'user': 'fred',   'age': 40 },
+     *   { 'user': 'fred',   'age': 30 },
      *   { 'user': 'barney', 'age': 34 }
      * ];
      *
      * _.sortBy(users, [function(o) { return o.user; }]);
-     * // => objects for [['barney', 36], ['barney', 34], ['fred', 48], ['fred', 40]]
+     * // => objects for [['barney', 36], ['barney', 34], ['fred', 48], ['fred', 30]]
      *
      * _.sortBy(users, ['user', 'age']);
-     * // => objects for [['barney', 34], ['barney', 36], ['fred', 40], ['fred', 48]]
+     * // => objects for [['barney', 34], ['barney', 36], ['fred', 30], ['fred', 48]]
      */
     var sortBy = baseRest(function(collection, iteratees) {
       if (collection == null) {
@@ -14449,7 +16309,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
       if (typeof value != 'string') {
         return value === 0 ? value : +value;
       }
-      value = value.replace(reTrim, '');
+      value = baseTrim(value);
       var isBinary = reIsBinary.test(value);
       return (isBinary || reIsOctal.test(value))
         ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
@@ -16780,11 +18640,11 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
       // Use a sourceURL for easier debugging.
       // The sourceURL gets injected into the source that's eval-ed, so be careful
-      // with lookup (in case of e.g. prototype pollution), and strip newlines if any.
-      // A newline wouldn't be a valid sourceURL anyway, and it'd enable code injection.
+      // to normalize all kinds of whitespace, so e.g. newlines (and unicode versions of it) can't sneak in
+      // and escape the comment, thus injecting code that gets evaled.
       var sourceURL = '//# sourceURL=' +
         (hasOwnProperty.call(options, 'sourceURL')
-          ? (options.sourceURL + '').replace(/[\r\n]/g, ' ')
+          ? (options.sourceURL + '').replace(/\s/g, ' ')
           : ('lodash.templateSources[' + (++templateCounter) + ']')
         ) + '\n';
 
@@ -16817,12 +18677,16 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
       // If `variable` is not specified wrap a with-statement around the generated
       // code to add the data object to the top of the scope chain.
-      // Like with sourceURL, we take care to not check the option's prototype,
-      // as this configuration is a code injection vector.
       var variable = hasOwnProperty.call(options, 'variable') && options.variable;
       if (!variable) {
         source = 'with (obj) {\n' + source + '\n}\n';
       }
+      // Throw an error if a forbidden character was found in `variable`, to prevent
+      // potential command injection attacks.
+      else if (reForbiddenIdentifierChars.test(variable)) {
+        throw new Error(INVALID_TEMPL_VAR_ERROR_TEXT);
+      }
+
       // Cleanup code by stripping empty strings.
       source = (isEvaluating ? source.replace(reEmptyStringLeading, '') : source)
         .replace(reEmptyStringMiddle, '$1')
@@ -16936,7 +18800,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
     function trim(string, chars, guard) {
       string = toString(string);
       if (string && (guard || chars === undefined)) {
-        return string.replace(reTrim, '');
+        return baseTrim(string);
       }
       if (!string || !(chars = baseToString(chars))) {
         return string;
@@ -16971,7 +18835,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
     function trimEnd(string, chars, guard) {
       string = toString(string);
       if (string && (guard || chars === undefined)) {
-        return string.replace(reTrimEnd, '');
+        return string.slice(0, trimmedEndIndex(string) + 1);
       }
       if (!string || !(chars = baseToString(chars))) {
         return string;
@@ -17525,6 +19389,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      * values against any array or object value, respectively. See `_.isEqual`
      * for a list of supported value comparisons.
      *
+     * **Note:** Multiple values can be checked by combining several matchers
+     * using `_.overSome`
+     *
      * @static
      * @memberOf _
      * @since 3.0.0
@@ -17540,6 +19407,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      *
      * _.filter(objects, _.matches({ 'a': 4, 'c': 6 }));
      * // => [{ 'a': 4, 'b': 5, 'c': 6 }]
+     *
+     * // Checking for several possible values
+     * _.filter(objects, _.overSome([_.matches({ 'a': 1 }), _.matches({ 'a': 4 })]));
+     * // => [{ 'a': 1, 'b': 2, 'c': 3 }, { 'a': 4, 'b': 5, 'c': 6 }]
      */
     function matches(source) {
       return baseMatches(baseClone(source, CLONE_DEEP_FLAG));
@@ -17553,6 +19424,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      * **Note:** Partial comparisons will match empty array and empty object
      * `srcValue` values against any array or object value, respectively. See
      * `_.isEqual` for a list of supported value comparisons.
+     *
+     * **Note:** Multiple values can be checked by combining several matchers
+     * using `_.overSome`
      *
      * @static
      * @memberOf _
@@ -17570,6 +19444,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      *
      * _.find(objects, _.matchesProperty('a', 4));
      * // => { 'a': 4, 'b': 5, 'c': 6 }
+     *
+     * // Checking for several possible values
+     * _.filter(objects, _.overSome([_.matchesProperty('a', 1), _.matchesProperty('a', 4)]));
+     * // => [{ 'a': 1, 'b': 2, 'c': 3 }, { 'a': 4, 'b': 5, 'c': 6 }]
      */
     function matchesProperty(path, srcValue) {
       return baseMatchesProperty(path, baseClone(srcValue, CLONE_DEEP_FLAG));
@@ -17793,6 +19671,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      * Creates a function that checks if **all** of the `predicates` return
      * truthy when invoked with the arguments it receives.
      *
+     * Following shorthands are possible for providing predicates.
+     * Pass an `Object` and it will be used as an parameter for `_.matches` to create the predicate.
+     * Pass an `Array` of parameters for `_.matchesProperty` and the predicate will be created using them.
+     *
      * @static
      * @memberOf _
      * @since 4.0.0
@@ -17819,6 +19701,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      * Creates a function that checks if **any** of the `predicates` return
      * truthy when invoked with the arguments it receives.
      *
+     * Following shorthands are possible for providing predicates.
+     * Pass an `Object` and it will be used as an parameter for `_.matches` to create the predicate.
+     * Pass an `Array` of parameters for `_.matchesProperty` and the predicate will be created using them.
+     *
      * @static
      * @memberOf _
      * @since 4.0.0
@@ -17838,6 +19724,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      *
      * func(NaN);
      * // => false
+     *
+     * var matchesFunc = _.overSome([{ 'a': 1 }, { 'a': 2 }])
+     * var matchesPropertyFunc = _.overSome([['a', 1], ['a', 2]])
      */
     var overSome = createOver(arraySome);
 
@@ -19087,6 +20976,311 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 /***/ }),
 
+/***/ "./node_modules/moment/locale sync recursive ^\\.\\/.*$":
+/*!***************************************************!*\
+  !*** ./node_modules/moment/locale/ sync ^\.\/.*$ ***!
+  \***************************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+var map = {
+	"./af": "./node_modules/moment/locale/af.js",
+	"./af.js": "./node_modules/moment/locale/af.js",
+	"./ar": "./node_modules/moment/locale/ar.js",
+	"./ar-dz": "./node_modules/moment/locale/ar-dz.js",
+	"./ar-dz.js": "./node_modules/moment/locale/ar-dz.js",
+	"./ar-kw": "./node_modules/moment/locale/ar-kw.js",
+	"./ar-kw.js": "./node_modules/moment/locale/ar-kw.js",
+	"./ar-ly": "./node_modules/moment/locale/ar-ly.js",
+	"./ar-ly.js": "./node_modules/moment/locale/ar-ly.js",
+	"./ar-ma": "./node_modules/moment/locale/ar-ma.js",
+	"./ar-ma.js": "./node_modules/moment/locale/ar-ma.js",
+	"./ar-ps": "./node_modules/moment/locale/ar-ps.js",
+	"./ar-ps.js": "./node_modules/moment/locale/ar-ps.js",
+	"./ar-sa": "./node_modules/moment/locale/ar-sa.js",
+	"./ar-sa.js": "./node_modules/moment/locale/ar-sa.js",
+	"./ar-tn": "./node_modules/moment/locale/ar-tn.js",
+	"./ar-tn.js": "./node_modules/moment/locale/ar-tn.js",
+	"./ar.js": "./node_modules/moment/locale/ar.js",
+	"./az": "./node_modules/moment/locale/az.js",
+	"./az.js": "./node_modules/moment/locale/az.js",
+	"./be": "./node_modules/moment/locale/be.js",
+	"./be.js": "./node_modules/moment/locale/be.js",
+	"./bg": "./node_modules/moment/locale/bg.js",
+	"./bg.js": "./node_modules/moment/locale/bg.js",
+	"./bm": "./node_modules/moment/locale/bm.js",
+	"./bm.js": "./node_modules/moment/locale/bm.js",
+	"./bn": "./node_modules/moment/locale/bn.js",
+	"./bn-bd": "./node_modules/moment/locale/bn-bd.js",
+	"./bn-bd.js": "./node_modules/moment/locale/bn-bd.js",
+	"./bn.js": "./node_modules/moment/locale/bn.js",
+	"./bo": "./node_modules/moment/locale/bo.js",
+	"./bo.js": "./node_modules/moment/locale/bo.js",
+	"./br": "./node_modules/moment/locale/br.js",
+	"./br.js": "./node_modules/moment/locale/br.js",
+	"./bs": "./node_modules/moment/locale/bs.js",
+	"./bs.js": "./node_modules/moment/locale/bs.js",
+	"./ca": "./node_modules/moment/locale/ca.js",
+	"./ca.js": "./node_modules/moment/locale/ca.js",
+	"./cs": "./node_modules/moment/locale/cs.js",
+	"./cs.js": "./node_modules/moment/locale/cs.js",
+	"./cv": "./node_modules/moment/locale/cv.js",
+	"./cv.js": "./node_modules/moment/locale/cv.js",
+	"./cy": "./node_modules/moment/locale/cy.js",
+	"./cy.js": "./node_modules/moment/locale/cy.js",
+	"./da": "./node_modules/moment/locale/da.js",
+	"./da.js": "./node_modules/moment/locale/da.js",
+	"./de": "./node_modules/moment/locale/de.js",
+	"./de-at": "./node_modules/moment/locale/de-at.js",
+	"./de-at.js": "./node_modules/moment/locale/de-at.js",
+	"./de-ch": "./node_modules/moment/locale/de-ch.js",
+	"./de-ch.js": "./node_modules/moment/locale/de-ch.js",
+	"./de.js": "./node_modules/moment/locale/de.js",
+	"./dv": "./node_modules/moment/locale/dv.js",
+	"./dv.js": "./node_modules/moment/locale/dv.js",
+	"./el": "./node_modules/moment/locale/el.js",
+	"./el.js": "./node_modules/moment/locale/el.js",
+	"./en-au": "./node_modules/moment/locale/en-au.js",
+	"./en-au.js": "./node_modules/moment/locale/en-au.js",
+	"./en-ca": "./node_modules/moment/locale/en-ca.js",
+	"./en-ca.js": "./node_modules/moment/locale/en-ca.js",
+	"./en-gb": "./node_modules/moment/locale/en-gb.js",
+	"./en-gb.js": "./node_modules/moment/locale/en-gb.js",
+	"./en-ie": "./node_modules/moment/locale/en-ie.js",
+	"./en-ie.js": "./node_modules/moment/locale/en-ie.js",
+	"./en-il": "./node_modules/moment/locale/en-il.js",
+	"./en-il.js": "./node_modules/moment/locale/en-il.js",
+	"./en-in": "./node_modules/moment/locale/en-in.js",
+	"./en-in.js": "./node_modules/moment/locale/en-in.js",
+	"./en-nz": "./node_modules/moment/locale/en-nz.js",
+	"./en-nz.js": "./node_modules/moment/locale/en-nz.js",
+	"./en-sg": "./node_modules/moment/locale/en-sg.js",
+	"./en-sg.js": "./node_modules/moment/locale/en-sg.js",
+	"./eo": "./node_modules/moment/locale/eo.js",
+	"./eo.js": "./node_modules/moment/locale/eo.js",
+	"./es": "./node_modules/moment/locale/es.js",
+	"./es-do": "./node_modules/moment/locale/es-do.js",
+	"./es-do.js": "./node_modules/moment/locale/es-do.js",
+	"./es-mx": "./node_modules/moment/locale/es-mx.js",
+	"./es-mx.js": "./node_modules/moment/locale/es-mx.js",
+	"./es-us": "./node_modules/moment/locale/es-us.js",
+	"./es-us.js": "./node_modules/moment/locale/es-us.js",
+	"./es.js": "./node_modules/moment/locale/es.js",
+	"./et": "./node_modules/moment/locale/et.js",
+	"./et.js": "./node_modules/moment/locale/et.js",
+	"./eu": "./node_modules/moment/locale/eu.js",
+	"./eu.js": "./node_modules/moment/locale/eu.js",
+	"./fa": "./node_modules/moment/locale/fa.js",
+	"./fa.js": "./node_modules/moment/locale/fa.js",
+	"./fi": "./node_modules/moment/locale/fi.js",
+	"./fi.js": "./node_modules/moment/locale/fi.js",
+	"./fil": "./node_modules/moment/locale/fil.js",
+	"./fil.js": "./node_modules/moment/locale/fil.js",
+	"./fo": "./node_modules/moment/locale/fo.js",
+	"./fo.js": "./node_modules/moment/locale/fo.js",
+	"./fr": "./node_modules/moment/locale/fr.js",
+	"./fr-ca": "./node_modules/moment/locale/fr-ca.js",
+	"./fr-ca.js": "./node_modules/moment/locale/fr-ca.js",
+	"./fr-ch": "./node_modules/moment/locale/fr-ch.js",
+	"./fr-ch.js": "./node_modules/moment/locale/fr-ch.js",
+	"./fr.js": "./node_modules/moment/locale/fr.js",
+	"./fy": "./node_modules/moment/locale/fy.js",
+	"./fy.js": "./node_modules/moment/locale/fy.js",
+	"./ga": "./node_modules/moment/locale/ga.js",
+	"./ga.js": "./node_modules/moment/locale/ga.js",
+	"./gd": "./node_modules/moment/locale/gd.js",
+	"./gd.js": "./node_modules/moment/locale/gd.js",
+	"./gl": "./node_modules/moment/locale/gl.js",
+	"./gl.js": "./node_modules/moment/locale/gl.js",
+	"./gom-deva": "./node_modules/moment/locale/gom-deva.js",
+	"./gom-deva.js": "./node_modules/moment/locale/gom-deva.js",
+	"./gom-latn": "./node_modules/moment/locale/gom-latn.js",
+	"./gom-latn.js": "./node_modules/moment/locale/gom-latn.js",
+	"./gu": "./node_modules/moment/locale/gu.js",
+	"./gu.js": "./node_modules/moment/locale/gu.js",
+	"./he": "./node_modules/moment/locale/he.js",
+	"./he.js": "./node_modules/moment/locale/he.js",
+	"./hi": "./node_modules/moment/locale/hi.js",
+	"./hi.js": "./node_modules/moment/locale/hi.js",
+	"./hr": "./node_modules/moment/locale/hr.js",
+	"./hr.js": "./node_modules/moment/locale/hr.js",
+	"./hu": "./node_modules/moment/locale/hu.js",
+	"./hu.js": "./node_modules/moment/locale/hu.js",
+	"./hy-am": "./node_modules/moment/locale/hy-am.js",
+	"./hy-am.js": "./node_modules/moment/locale/hy-am.js",
+	"./id": "./node_modules/moment/locale/id.js",
+	"./id.js": "./node_modules/moment/locale/id.js",
+	"./is": "./node_modules/moment/locale/is.js",
+	"./is.js": "./node_modules/moment/locale/is.js",
+	"./it": "./node_modules/moment/locale/it.js",
+	"./it-ch": "./node_modules/moment/locale/it-ch.js",
+	"./it-ch.js": "./node_modules/moment/locale/it-ch.js",
+	"./it.js": "./node_modules/moment/locale/it.js",
+	"./ja": "./node_modules/moment/locale/ja.js",
+	"./ja.js": "./node_modules/moment/locale/ja.js",
+	"./jv": "./node_modules/moment/locale/jv.js",
+	"./jv.js": "./node_modules/moment/locale/jv.js",
+	"./ka": "./node_modules/moment/locale/ka.js",
+	"./ka.js": "./node_modules/moment/locale/ka.js",
+	"./kk": "./node_modules/moment/locale/kk.js",
+	"./kk.js": "./node_modules/moment/locale/kk.js",
+	"./km": "./node_modules/moment/locale/km.js",
+	"./km.js": "./node_modules/moment/locale/km.js",
+	"./kn": "./node_modules/moment/locale/kn.js",
+	"./kn.js": "./node_modules/moment/locale/kn.js",
+	"./ko": "./node_modules/moment/locale/ko.js",
+	"./ko.js": "./node_modules/moment/locale/ko.js",
+	"./ku": "./node_modules/moment/locale/ku.js",
+	"./ku-kmr": "./node_modules/moment/locale/ku-kmr.js",
+	"./ku-kmr.js": "./node_modules/moment/locale/ku-kmr.js",
+	"./ku.js": "./node_modules/moment/locale/ku.js",
+	"./ky": "./node_modules/moment/locale/ky.js",
+	"./ky.js": "./node_modules/moment/locale/ky.js",
+	"./lb": "./node_modules/moment/locale/lb.js",
+	"./lb.js": "./node_modules/moment/locale/lb.js",
+	"./lo": "./node_modules/moment/locale/lo.js",
+	"./lo.js": "./node_modules/moment/locale/lo.js",
+	"./lt": "./node_modules/moment/locale/lt.js",
+	"./lt.js": "./node_modules/moment/locale/lt.js",
+	"./lv": "./node_modules/moment/locale/lv.js",
+	"./lv.js": "./node_modules/moment/locale/lv.js",
+	"./me": "./node_modules/moment/locale/me.js",
+	"./me.js": "./node_modules/moment/locale/me.js",
+	"./mi": "./node_modules/moment/locale/mi.js",
+	"./mi.js": "./node_modules/moment/locale/mi.js",
+	"./mk": "./node_modules/moment/locale/mk.js",
+	"./mk.js": "./node_modules/moment/locale/mk.js",
+	"./ml": "./node_modules/moment/locale/ml.js",
+	"./ml.js": "./node_modules/moment/locale/ml.js",
+	"./mn": "./node_modules/moment/locale/mn.js",
+	"./mn.js": "./node_modules/moment/locale/mn.js",
+	"./mr": "./node_modules/moment/locale/mr.js",
+	"./mr.js": "./node_modules/moment/locale/mr.js",
+	"./ms": "./node_modules/moment/locale/ms.js",
+	"./ms-my": "./node_modules/moment/locale/ms-my.js",
+	"./ms-my.js": "./node_modules/moment/locale/ms-my.js",
+	"./ms.js": "./node_modules/moment/locale/ms.js",
+	"./mt": "./node_modules/moment/locale/mt.js",
+	"./mt.js": "./node_modules/moment/locale/mt.js",
+	"./my": "./node_modules/moment/locale/my.js",
+	"./my.js": "./node_modules/moment/locale/my.js",
+	"./nb": "./node_modules/moment/locale/nb.js",
+	"./nb.js": "./node_modules/moment/locale/nb.js",
+	"./ne": "./node_modules/moment/locale/ne.js",
+	"./ne.js": "./node_modules/moment/locale/ne.js",
+	"./nl": "./node_modules/moment/locale/nl.js",
+	"./nl-be": "./node_modules/moment/locale/nl-be.js",
+	"./nl-be.js": "./node_modules/moment/locale/nl-be.js",
+	"./nl.js": "./node_modules/moment/locale/nl.js",
+	"./nn": "./node_modules/moment/locale/nn.js",
+	"./nn.js": "./node_modules/moment/locale/nn.js",
+	"./oc-lnc": "./node_modules/moment/locale/oc-lnc.js",
+	"./oc-lnc.js": "./node_modules/moment/locale/oc-lnc.js",
+	"./pa-in": "./node_modules/moment/locale/pa-in.js",
+	"./pa-in.js": "./node_modules/moment/locale/pa-in.js",
+	"./pl": "./node_modules/moment/locale/pl.js",
+	"./pl.js": "./node_modules/moment/locale/pl.js",
+	"./pt": "./node_modules/moment/locale/pt.js",
+	"./pt-br": "./node_modules/moment/locale/pt-br.js",
+	"./pt-br.js": "./node_modules/moment/locale/pt-br.js",
+	"./pt.js": "./node_modules/moment/locale/pt.js",
+	"./ro": "./node_modules/moment/locale/ro.js",
+	"./ro.js": "./node_modules/moment/locale/ro.js",
+	"./ru": "./node_modules/moment/locale/ru.js",
+	"./ru.js": "./node_modules/moment/locale/ru.js",
+	"./sd": "./node_modules/moment/locale/sd.js",
+	"./sd.js": "./node_modules/moment/locale/sd.js",
+	"./se": "./node_modules/moment/locale/se.js",
+	"./se.js": "./node_modules/moment/locale/se.js",
+	"./si": "./node_modules/moment/locale/si.js",
+	"./si.js": "./node_modules/moment/locale/si.js",
+	"./sk": "./node_modules/moment/locale/sk.js",
+	"./sk.js": "./node_modules/moment/locale/sk.js",
+	"./sl": "./node_modules/moment/locale/sl.js",
+	"./sl.js": "./node_modules/moment/locale/sl.js",
+	"./sq": "./node_modules/moment/locale/sq.js",
+	"./sq.js": "./node_modules/moment/locale/sq.js",
+	"./sr": "./node_modules/moment/locale/sr.js",
+	"./sr-cyrl": "./node_modules/moment/locale/sr-cyrl.js",
+	"./sr-cyrl.js": "./node_modules/moment/locale/sr-cyrl.js",
+	"./sr.js": "./node_modules/moment/locale/sr.js",
+	"./ss": "./node_modules/moment/locale/ss.js",
+	"./ss.js": "./node_modules/moment/locale/ss.js",
+	"./sv": "./node_modules/moment/locale/sv.js",
+	"./sv.js": "./node_modules/moment/locale/sv.js",
+	"./sw": "./node_modules/moment/locale/sw.js",
+	"./sw.js": "./node_modules/moment/locale/sw.js",
+	"./ta": "./node_modules/moment/locale/ta.js",
+	"./ta.js": "./node_modules/moment/locale/ta.js",
+	"./te": "./node_modules/moment/locale/te.js",
+	"./te.js": "./node_modules/moment/locale/te.js",
+	"./tet": "./node_modules/moment/locale/tet.js",
+	"./tet.js": "./node_modules/moment/locale/tet.js",
+	"./tg": "./node_modules/moment/locale/tg.js",
+	"./tg.js": "./node_modules/moment/locale/tg.js",
+	"./th": "./node_modules/moment/locale/th.js",
+	"./th.js": "./node_modules/moment/locale/th.js",
+	"./tk": "./node_modules/moment/locale/tk.js",
+	"./tk.js": "./node_modules/moment/locale/tk.js",
+	"./tl-ph": "./node_modules/moment/locale/tl-ph.js",
+	"./tl-ph.js": "./node_modules/moment/locale/tl-ph.js",
+	"./tlh": "./node_modules/moment/locale/tlh.js",
+	"./tlh.js": "./node_modules/moment/locale/tlh.js",
+	"./tr": "./node_modules/moment/locale/tr.js",
+	"./tr.js": "./node_modules/moment/locale/tr.js",
+	"./tzl": "./node_modules/moment/locale/tzl.js",
+	"./tzl.js": "./node_modules/moment/locale/tzl.js",
+	"./tzm": "./node_modules/moment/locale/tzm.js",
+	"./tzm-latn": "./node_modules/moment/locale/tzm-latn.js",
+	"./tzm-latn.js": "./node_modules/moment/locale/tzm-latn.js",
+	"./tzm.js": "./node_modules/moment/locale/tzm.js",
+	"./ug-cn": "./node_modules/moment/locale/ug-cn.js",
+	"./ug-cn.js": "./node_modules/moment/locale/ug-cn.js",
+	"./uk": "./node_modules/moment/locale/uk.js",
+	"./uk.js": "./node_modules/moment/locale/uk.js",
+	"./ur": "./node_modules/moment/locale/ur.js",
+	"./ur.js": "./node_modules/moment/locale/ur.js",
+	"./uz": "./node_modules/moment/locale/uz.js",
+	"./uz-latn": "./node_modules/moment/locale/uz-latn.js",
+	"./uz-latn.js": "./node_modules/moment/locale/uz-latn.js",
+	"./uz.js": "./node_modules/moment/locale/uz.js",
+	"./vi": "./node_modules/moment/locale/vi.js",
+	"./vi.js": "./node_modules/moment/locale/vi.js",
+	"./x-pseudo": "./node_modules/moment/locale/x-pseudo.js",
+	"./x-pseudo.js": "./node_modules/moment/locale/x-pseudo.js",
+	"./yo": "./node_modules/moment/locale/yo.js",
+	"./yo.js": "./node_modules/moment/locale/yo.js",
+	"./zh-cn": "./node_modules/moment/locale/zh-cn.js",
+	"./zh-cn.js": "./node_modules/moment/locale/zh-cn.js",
+	"./zh-hk": "./node_modules/moment/locale/zh-hk.js",
+	"./zh-hk.js": "./node_modules/moment/locale/zh-hk.js",
+	"./zh-mo": "./node_modules/moment/locale/zh-mo.js",
+	"./zh-mo.js": "./node_modules/moment/locale/zh-mo.js",
+	"./zh-tw": "./node_modules/moment/locale/zh-tw.js",
+	"./zh-tw.js": "./node_modules/moment/locale/zh-tw.js"
+};
+
+
+function webpackContext(req) {
+	var id = webpackContextResolve(req);
+	return __webpack_require__(id);
+}
+function webpackContextResolve(req) {
+	if(!__webpack_require__.o(map, req)) {
+		var e = new Error("Cannot find module '" + req + "'");
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
+	return map[req];
+}
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
+
+/***/ }),
+
 /***/ "./node_modules/moment/locale/af.js":
 /*!******************************************!*\
   !*** ./node_modules/moment/locale/af.js ***!
@@ -19202,14 +21396,14 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             return n === 0
                 ? 0
                 : n === 1
-                ? 1
-                : n === 2
-                ? 2
-                : n % 100 >= 3 && n % 100 <= 10
-                ? 3
-                : n % 100 >= 11
-                ? 4
-                : 5;
+                  ? 1
+                  : n === 2
+                    ? 2
+                    : n % 100 >= 3 && n % 100 <= 10
+                      ? 3
+                      : n % 100 >= 11
+                        ? 4
+                        : 5;
         },
         plurals = {
             s: [
@@ -19373,9 +21567,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر'.split(
             '_'
         ),
-        monthsShort: 'يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر'.split(
-            '_'
-        ),
+        monthsShort:
+            'يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر'.split(
+                '_'
+            ),
         weekdays: 'الأحد_الإتنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت'.split('_'),
         weekdaysShort: 'احد_اتنين_ثلاثاء_اربعاء_خميس_جمعة_سبت'.split('_'),
         weekdaysMin: 'ح_ن_ث_ر_خ_ج_س'.split('_'),
@@ -19432,7 +21627,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 /***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
 
 //! moment.js locale configuration
-//! locale : Arabic (Lybia) [ar-ly]
+//! locale : Arabic (Libya) [ar-ly]
 //! author : Ali Hmer: https://github.com/kikoanis
 
 ;(function (global, factory) {
@@ -19458,14 +21653,14 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             return n === 0
                 ? 0
                 : n === 1
-                ? 1
-                : n === 2
-                ? 2
-                : n % 100 >= 3 && n % 100 <= 10
-                ? 3
-                : n % 100 >= 11
-                ? 4
-                : 5;
+                  ? 1
+                  : n === 2
+                    ? 2
+                    : n % 100 >= 3 && n % 100 <= 10
+                      ? 3
+                      : n % 100 >= 11
+                        ? 4
+                        : 5;
         },
         plurals = {
             s: [
@@ -19637,9 +21832,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر'.split(
             '_'
         ),
-        monthsShort: 'يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر'.split(
-            '_'
-        ),
+        monthsShort:
+            'يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر'.split(
+                '_'
+            ),
         weekdays: 'الأحد_الإثنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت'.split('_'),
         weekdaysShort: 'احد_اثنين_ثلاثاء_اربعاء_خميس_جمعة_سبت'.split('_'),
         weekdaysMin: 'ح_ن_ث_ر_خ_ج_س'.split('_'),
@@ -19683,6 +21879,137 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
     });
 
     return arMa;
+
+})));
+
+
+/***/ }),
+
+/***/ "./node_modules/moment/locale/ar-ps.js":
+/*!*********************************************!*\
+  !*** ./node_modules/moment/locale/ar-ps.js ***!
+  \*********************************************/
+/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
+
+//! moment.js locale configuration
+//! locale : Arabic (Palestine) [ar-ps]
+//! author : Majd Al-Shihabi : https://github.com/majdal
+
+;(function (global, factory) {
+    true ? factory(__webpack_require__(/*! ../moment */ "./node_modules/moment/moment.js")) :
+   0
+}(this, (function (moment) { 'use strict';
+
+    //! moment.js locale configuration
+
+    var symbolMap = {
+            1: '١',
+            2: '٢',
+            3: '٣',
+            4: '٤',
+            5: '٥',
+            6: '٦',
+            7: '٧',
+            8: '٨',
+            9: '٩',
+            0: '٠',
+        },
+        numberMap = {
+            '١': '1',
+            '٢': '2',
+            '٣': '3',
+            '٤': '4',
+            '٥': '5',
+            '٦': '6',
+            '٧': '7',
+            '٨': '8',
+            '٩': '9',
+            '٠': '0',
+        };
+
+    var arPs = moment.defineLocale('ar-ps', {
+        months: 'كانون الثاني_شباط_آذار_نيسان_أيّار_حزيران_تمّوز_آب_أيلول_تشري الأوّل_تشرين الثاني_كانون الأوّل'.split(
+            '_'
+        ),
+        monthsShort:
+            'ك٢_شباط_آذار_نيسان_أيّار_حزيران_تمّوز_آب_أيلول_ت١_ت٢_ك١'.split('_'),
+        weekdays: 'الأحد_الإثنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت'.split('_'),
+        weekdaysShort: 'أحد_إثنين_ثلاثاء_أربعاء_خميس_جمعة_سبت'.split('_'),
+        weekdaysMin: 'ح_ن_ث_ر_خ_ج_س'.split('_'),
+        weekdaysParseExact: true,
+        longDateFormat: {
+            LT: 'HH:mm',
+            LTS: 'HH:mm:ss',
+            L: 'DD/MM/YYYY',
+            LL: 'D MMMM YYYY',
+            LLL: 'D MMMM YYYY HH:mm',
+            LLLL: 'dddd D MMMM YYYY HH:mm',
+        },
+        meridiemParse: /ص|م/,
+        isPM: function (input) {
+            return 'م' === input;
+        },
+        meridiem: function (hour, minute, isLower) {
+            if (hour < 12) {
+                return 'ص';
+            } else {
+                return 'م';
+            }
+        },
+        calendar: {
+            sameDay: '[اليوم على الساعة] LT',
+            nextDay: '[غدا على الساعة] LT',
+            nextWeek: 'dddd [على الساعة] LT',
+            lastDay: '[أمس على الساعة] LT',
+            lastWeek: 'dddd [على الساعة] LT',
+            sameElse: 'L',
+        },
+        relativeTime: {
+            future: 'في %s',
+            past: 'منذ %s',
+            s: 'ثوان',
+            ss: '%d ثانية',
+            m: 'دقيقة',
+            mm: '%d دقائق',
+            h: 'ساعة',
+            hh: '%d ساعات',
+            d: 'يوم',
+            dd: '%d أيام',
+            M: 'شهر',
+            MM: '%d أشهر',
+            y: 'سنة',
+            yy: '%d سنوات',
+        },
+        preparse: function (string) {
+            return string
+                .replace(/[٣٤٥٦٧٨٩٠]/g, function (match) {
+                    return numberMap[match];
+                })
+                .split('') // reversed since negative lookbehind not supported everywhere
+                .reverse()
+                .join('')
+                .replace(/[١٢](?![\u062a\u0643])/g, function (match) {
+                    return numberMap[match];
+                })
+                .split('')
+                .reverse()
+                .join('')
+                .replace(/،/g, ',');
+        },
+        postformat: function (string) {
+            return string
+                .replace(/\d/g, function (match) {
+                    return symbolMap[match];
+                })
+                .replace(/,/g, '،');
+        },
+        week: {
+            dow: 0, // Sunday is the first day of the week.
+            doy: 6, // The week that contains Jan 6th is the first week of the year.
+        },
+    });
+
+    return arPs;
 
 })));
 
@@ -19735,9 +22062,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'يناير_فبراير_مارس_أبريل_مايو_يونيو_يوليو_أغسطس_سبتمبر_أكتوبر_نوفمبر_ديسمبر'.split(
             '_'
         ),
-        monthsShort: 'يناير_فبراير_مارس_أبريل_مايو_يونيو_يوليو_أغسطس_سبتمبر_أكتوبر_نوفمبر_ديسمبر'.split(
-            '_'
-        ),
+        monthsShort:
+            'يناير_فبراير_مارس_أبريل_مايو_يونيو_يوليو_أغسطس_سبتمبر_أكتوبر_نوفمبر_ديسمبر'.split(
+                '_'
+            ),
         weekdays: 'الأحد_الإثنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت'.split('_'),
         weekdaysShort: 'أحد_إثنين_ثلاثاء_أربعاء_خميس_جمعة_سبت'.split('_'),
         weekdaysMin: 'ح_ن_ث_ر_خ_ج_س'.split('_'),
@@ -19833,9 +22161,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'جانفي_فيفري_مارس_أفريل_ماي_جوان_جويلية_أوت_سبتمبر_أكتوبر_نوفمبر_ديسمبر'.split(
             '_'
         ),
-        monthsShort: 'جانفي_فيفري_مارس_أفريل_ماي_جوان_جويلية_أوت_سبتمبر_أكتوبر_نوفمبر_ديسمبر'.split(
-            '_'
-        ),
+        monthsShort:
+            'جانفي_فيفري_مارس_أفريل_ماي_جوان_جويلية_أوت_سبتمبر_أكتوبر_نوفمبر_ديسمبر'.split(
+                '_'
+            ),
         weekdays: 'الأحد_الإثنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت'.split('_'),
         weekdaysShort: 'أحد_إثنين_ثلاثاء_أربعاء_خميس_جمعة_سبت'.split('_'),
         weekdaysMin: 'ح_ن_ث_ر_خ_ج_س'.split('_'),
@@ -19932,14 +22261,14 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             return n === 0
                 ? 0
                 : n === 1
-                ? 1
-                : n === 2
-                ? 2
-                : n % 100 >= 3 && n % 100 <= 10
-                ? 3
-                : n % 100 >= 11
-                ? 4
-                : 5;
+                  ? 1
+                  : n === 2
+                    ? 2
+                    : n % 100 >= 3 && n % 100 <= 10
+                      ? 3
+                      : n % 100 >= 11
+                        ? 4
+                        : 5;
         },
         plurals = {
             s: [
@@ -20136,9 +22465,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             '_'
         ),
         monthsShort: 'yan_fev_mar_apr_may_iyn_iyl_avq_sen_okt_noy_dek'.split('_'),
-        weekdays: 'Bazar_Bazar ertəsi_Çərşənbə axşamı_Çərşənbə_Cümə axşamı_Cümə_Şənbə'.split(
-            '_'
-        ),
+        weekdays:
+            'Bazar_Bazar ertəsi_Çərşənbə axşamı_Çərşənbə_Cümə axşamı_Cümə_Şənbə'.split(
+                '_'
+            ),
         weekdaysShort: 'Baz_BzE_ÇAx_Çər_CAx_Cüm_Şən'.split('_'),
         weekdaysMin: 'Bz_BE_ÇA_Çə_CA_Cü_Şə'.split('_'),
         weekdaysParseExact: true,
@@ -20237,8 +22567,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         return num % 10 === 1 && num % 100 !== 11
             ? forms[0]
             : num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 10 || num % 100 >= 20)
-            ? forms[1]
-            : forms[2];
+              ? forms[1]
+              : forms[2];
     }
     function relativeTimeWithPlural(number, withoutSuffix, key) {
         var format = {
@@ -20263,20 +22593,21 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             format: 'студзеня_лютага_сакавіка_красавіка_траўня_чэрвеня_ліпеня_жніўня_верасня_кастрычніка_лістапада_снежня'.split(
                 '_'
             ),
-            standalone: 'студзень_люты_сакавік_красавік_травень_чэрвень_ліпень_жнівень_верасень_кастрычнік_лістапад_снежань'.split(
-                '_'
-            ),
+            standalone:
+                'студзень_люты_сакавік_красавік_травень_чэрвень_ліпень_жнівень_верасень_кастрычнік_лістапад_снежань'.split(
+                    '_'
+                ),
         },
-        monthsShort: 'студ_лют_сак_крас_трав_чэрв_ліп_жнів_вер_каст_ліст_снеж'.split(
-            '_'
-        ),
+        monthsShort:
+            'студ_лют_сак_крас_трав_чэрв_ліп_жнів_вер_каст_ліст_снеж'.split('_'),
         weekdays: {
             format: 'нядзелю_панядзелак_аўторак_сераду_чацвер_пятніцу_суботу'.split(
                 '_'
             ),
-            standalone: 'нядзеля_панядзелак_аўторак_серада_чацвер_пятніца_субота'.split(
-                '_'
-            ),
+            standalone:
+                'нядзеля_панядзелак_аўторак_серада_чацвер_пятніца_субота'.split(
+                    '_'
+                ),
             isFormat: /\[ ?[Ууў] ?(?:мінулую|наступную)? ?\] ?dddd/,
         },
         weekdaysShort: 'нд_пн_ат_ср_чц_пт_сб'.split('_'),
@@ -20595,9 +22926,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'জানুয়ারি_ফেব্রুয়ারি_মার্চ_এপ্রিল_মে_জুন_জুলাই_আগস্ট_সেপ্টেম্বর_অক্টোবর_নভেম্বর_ডিসেম্বর'.split(
             '_'
         ),
-        monthsShort: 'জানু_ফেব্রু_মার্চ_এপ্রিল_মে_জুন_জুলাই_আগস্ট_সেপ্ট_অক্টো_নভে_ডিসে'.split(
-            '_'
-        ),
+        monthsShort:
+            'জানু_ফেব্রু_মার্চ_এপ্রিল_মে_জুন_জুলাই_আগস্ট_সেপ্ট_অক্টো_নভে_ডিসে'.split(
+                '_'
+            ),
         weekdays: 'রবিবার_সোমবার_মঙ্গলবার_বুধবার_বৃহস্পতিবার_শুক্রবার_শনিবার'.split(
             '_'
         ),
@@ -20742,9 +23074,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'জানুয়ারি_ফেব্রুয়ারি_মার্চ_এপ্রিল_মে_জুন_জুলাই_আগস্ট_সেপ্টেম্বর_অক্টোবর_নভেম্বর_ডিসেম্বর'.split(
             '_'
         ),
-        monthsShort: 'জানু_ফেব্রু_মার্চ_এপ্রিল_মে_জুন_জুলাই_আগস্ট_সেপ্ট_অক্টো_নভে_ডিসে'.split(
-            '_'
-        ),
+        monthsShort:
+            'জানু_ফেব্রু_মার্চ_এপ্রিল_মে_জুন_জুলাই_আগস্ট_সেপ্ট_অক্টো_নভে_ডিসে'.split(
+                '_'
+            ),
         weekdays: 'রবিবার_সোমবার_মঙ্গলবার_বুধবার_বৃহস্পতিবার_শুক্রবার_শনিবার'.split(
             '_'
         ),
@@ -20879,14 +23212,16 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'ཟླ་བ་དང་པོ_ཟླ་བ་གཉིས་པ_ཟླ་བ་གསུམ་པ_ཟླ་བ་བཞི་པ_ཟླ་བ་ལྔ་པ_ཟླ་བ་དྲུག་པ_ཟླ་བ་བདུན་པ_ཟླ་བ་བརྒྱད་པ_ཟླ་བ་དགུ་པ_ཟླ་བ་བཅུ་པ_ཟླ་བ་བཅུ་གཅིག་པ_ཟླ་བ་བཅུ་གཉིས་པ'.split(
             '_'
         ),
-        monthsShort: 'ཟླ་1_ཟླ་2_ཟླ་3_ཟླ་4_ཟླ་5_ཟླ་6_ཟླ་7_ཟླ་8_ཟླ་9_ཟླ་10_ཟླ་11_ཟླ་12'.split(
-            '_'
-        ),
+        monthsShort:
+            'ཟླ་1_ཟླ་2_ཟླ་3_ཟླ་4_ཟླ་5_ཟླ་6_ཟླ་7_ཟླ་8_ཟླ་9_ཟླ་10_ཟླ་11_ཟླ་12'.split(
+                '_'
+            ),
         monthsShortRegex: /^(ཟླ་\d{1,2})/,
         monthsParseExact: true,
-        weekdays: 'གཟའ་ཉི་མ་_གཟའ་ཟླ་བ་_གཟའ་མིག་དམར་_གཟའ་ལྷག་པ་_གཟའ་ཕུར་བུ_གཟའ་པ་སངས་_གཟའ་སྤེན་པ་'.split(
-            '_'
-        ),
+        weekdays:
+            'གཟའ་ཉི་མ་_གཟའ་ཟླ་བ་_གཟའ་མིག་དམར་_གཟའ་ལྷག་པ་_གཟའ་ཕུར་བུ_གཟའ་པ་སངས་_གཟའ་སྤེན་པ་'.split(
+                '_'
+            ),
         weekdaysShort: 'ཉི་མ་_ཟླ་བ་_མིག་དམར་_ལྷག་པ་_ཕུར་བུ_པ་སངས་_སྤེན་པ་'.split(
             '_'
         ),
@@ -21049,9 +23384,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             /^du/i,
             /^ker/i,
         ],
-        monthsRegex = /^(genver|c[ʼ\']hwevrer|meurzh|ebrel|mae|mezheven|gouere|eost|gwengolo|here|du|kerzu|gen|c[ʼ\']hwe|meu|ebr|mae|eve|gou|eos|gwe|her|du|ker)/i,
-        monthsStrictRegex = /^(genver|c[ʼ\']hwevrer|meurzh|ebrel|mae|mezheven|gouere|eost|gwengolo|here|du|kerzu)/i,
-        monthsShortStrictRegex = /^(gen|c[ʼ\']hwe|meu|ebr|mae|eve|gou|eos|gwe|her|du|ker)/i,
+        monthsRegex =
+            /^(genver|c[ʼ\']hwevrer|meurzh|ebrel|mae|mezheven|gouere|eost|gwengolo|here|du|kerzu|gen|c[ʼ\']hwe|meu|ebr|mae|eve|gou|eos|gwe|her|du|ker)/i,
+        monthsStrictRegex =
+            /^(genver|c[ʼ\']hwevrer|meurzh|ebrel|mae|mezheven|gouere|eost|gwengolo|here|du|kerzu)/i,
+        monthsShortStrictRegex =
+            /^(gen|c[ʼ\']hwe|meu|ebr|mae|eve|gou|eos|gwe|her|du|ker)/i,
         fullWeekdaysParse = [
             /^sul/i,
             /^lun/i,
@@ -21167,6 +23505,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 //! moment.js locale configuration
 //! locale : Bosnian [bs]
 //! author : Nedim Cholich : https://github.com/frontyard
+//! author : Rasid Redzic : https://github.com/rasidre
 //! based on (hr) translation by Bojan Marković
 
 ;(function (global, factory) {
@@ -21175,6 +23514,17 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 }(this, (function (moment) { 'use strict';
 
     //! moment.js locale configuration
+
+    function processRelativeTime(number, withoutSuffix, key, isFuture) {
+        switch (key) {
+            case 'm':
+                return withoutSuffix
+                    ? 'jedna minuta'
+                    : isFuture
+                      ? 'jednu minutu'
+                      : 'jedne minute';
+        }
+    }
 
     function translate(number, withoutSuffix, key) {
         var result = number + ' ';
@@ -21188,8 +23538,6 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                     result += 'sekundi';
                 }
                 return result;
-            case 'm':
-                return withoutSuffix ? 'jedna minuta' : 'jedne minute';
             case 'mm':
                 if (number === 1) {
                     result += 'minuta';
@@ -21200,7 +23548,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                 }
                 return result;
             case 'h':
-                return withoutSuffix ? 'jedan sat' : 'jednog sata';
+                return withoutSuffix ? 'jedan sat' : 'jedan sat';
             case 'hh':
                 if (number === 1) {
                     result += 'sat';
@@ -21242,9 +23590,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'januar_februar_mart_april_maj_juni_juli_august_septembar_oktobar_novembar_decembar'.split(
             '_'
         ),
-        monthsShort: 'jan._feb._mar._apr._maj._jun._jul._aug._sep._okt._nov._dec.'.split(
-            '_'
-        ),
+        monthsShort:
+            'jan._feb._mar._apr._maj._jun._jul._aug._sep._okt._nov._dec.'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'nedjelja_ponedjeljak_utorak_srijeda_četvrtak_petak_subota'.split(
             '_'
@@ -21300,7 +23649,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             past: 'prije %s',
             s: 'par sekundi',
             ss: translate,
-            m: translate,
+            m: processRelativeTime,
             mm: translate,
             h: translate,
             hh: translate,
@@ -21345,21 +23694,24 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     var ca = moment.defineLocale('ca', {
         months: {
-            standalone: 'gener_febrer_març_abril_maig_juny_juliol_agost_setembre_octubre_novembre_desembre'.split(
-                '_'
-            ),
+            standalone:
+                'gener_febrer_març_abril_maig_juny_juliol_agost_setembre_octubre_novembre_desembre'.split(
+                    '_'
+                ),
             format: "de gener_de febrer_de març_d'abril_de maig_de juny_de juliol_d'agost_de setembre_d'octubre_de novembre_de desembre".split(
                 '_'
             ),
             isFormat: /D[oD]?(\s)+MMMM/,
         },
-        monthsShort: 'gen._febr._març_abr._maig_juny_jul._ag._set._oct._nov._des.'.split(
-            '_'
-        ),
+        monthsShort:
+            'gen._febr._març_abr._maig_juny_jul._ag._set._oct._nov._des.'.split(
+                '_'
+            ),
         monthsParseExact: true,
-        weekdays: 'diumenge_dilluns_dimarts_dimecres_dijous_divendres_dissabte'.split(
-            '_'
-        ),
+        weekdays:
+            'diumenge_dilluns_dimarts_dimecres_dijous_divendres_dissabte'.split(
+                '_'
+            ),
         weekdaysShort: 'dg._dl._dt._dc._dj._dv._ds.'.split('_'),
         weekdaysMin: 'dg_dl_dt_dc_dj_dv_ds'.split('_'),
         weekdaysParseExact: true,
@@ -21418,12 +23770,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                 number === 1
                     ? 'r'
                     : number === 2
-                    ? 'n'
-                    : number === 3
-                    ? 'r'
-                    : number === 4
-                    ? 't'
-                    : 'è';
+                      ? 'n'
+                      : number === 3
+                        ? 'r'
+                        : number === 4
+                          ? 't'
+                          : 'è';
             if (period === 'w' || period === 'W') {
                 output = 'a';
             }
@@ -21459,9 +23811,16 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     //! moment.js locale configuration
 
-    var months = 'leden_únor_březen_duben_květen_červen_červenec_srpen_září_říjen_listopad_prosinec'.split(
-            '_'
-        ),
+    var months = {
+            standalone:
+                'leden_únor_březen_duben_květen_červen_červenec_srpen_září_říjen_listopad_prosinec'.split(
+                    '_'
+                ),
+            format: 'ledna_února_března_dubna_května_června_července_srpna_září_října_listopadu_prosince'.split(
+                '_'
+            ),
+            isFormat: /DD?[o.]?(\[[^\[\]]*\]|\s)+MMMM/,
+        },
         monthsShort = 'led_úno_bře_dub_kvě_čvn_čvc_srp_zář_říj_lis_pro'.split('_'),
         monthsParse = [
             /^led/i,
@@ -21479,7 +23838,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         ],
         // NOTE: 'červen' is substring of 'červenec'; therefore 'červenec' must precede 'červen' in the regex to be fully matched.
         // Otherwise parser matches '1. červenec' as '1. červen' + 'ec'.
-        monthsRegex = /^(leden|únor|březen|duben|květen|červenec|července|červen|června|srpen|září|říjen|listopad|prosinec|led|úno|bře|dub|kvě|čvn|čvc|srp|zář|říj|lis|pro)/i;
+        monthsRegex =
+            /^(leden|únor|březen|duben|květen|červenec|července|červen|června|srpen|září|říjen|listopad|prosinec|led|úno|bře|dub|kvě|čvn|čvc|srp|zář|říj|lis|pro)/i;
 
     function plural(n) {
         return n > 1 && n < 5 && ~~(n / 10) !== 1;
@@ -21545,8 +23905,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         monthsShortRegex: monthsRegex,
         // NOTE: 'červen' is substring of 'červenec'; therefore 'červenec' must precede 'červen' in the regex to be fully matched.
         // Otherwise parser matches '1. červenec' as '1. červen' + 'ec'.
-        monthsStrictRegex: /^(leden|ledna|února|únor|březen|března|duben|dubna|květen|května|červenec|července|červen|června|srpen|srpna|září|říjen|října|listopadu|listopad|prosinec|prosince)/i,
-        monthsShortStrictRegex: /^(led|úno|bře|dub|kvě|čvn|čvc|srp|zář|říj|lis|pro)/i,
+        monthsStrictRegex:
+            /^(leden|ledna|února|únor|březen|března|duben|dubna|květen|května|červenec|července|červen|června|srpen|srpna|září|říjen|října|listopadu|listopad|prosinec|prosince)/i,
+        monthsShortStrictRegex:
+            /^(led|úno|bře|dub|kvě|čvn|čvc|srp|zář|říj|lis|pro)/i,
         monthsParse: monthsParse,
         longMonthsParse: monthsParse,
         shortMonthsParse: monthsParse,
@@ -21654,9 +24016,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             '_'
         ),
         monthsShort: 'кӑр_нар_пуш_ака_май_ҫӗр_утӑ_ҫур_авн_юпа_чӳк_раш'.split('_'),
-        weekdays: 'вырсарникун_тунтикун_ытларикун_юнкун_кӗҫнерникун_эрнекун_шӑматкун'.split(
-            '_'
-        ),
+        weekdays:
+            'вырсарникун_тунтикун_ытларикун_юнкун_кӗҫнерникун_эрнекун_шӑматкун'.split(
+                '_'
+            ),
         weekdaysShort: 'выр_тун_ытл_юн_кӗҫ_эрн_шӑм'.split('_'),
         weekdaysMin: 'вр_тн_ыт_юн_кҫ_эр_шм'.split('_'),
         longDateFormat: {
@@ -21680,8 +24043,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                 var affix = /сехет$/i.exec(output)
                     ? 'рен'
                     : /ҫул$/i.exec(output)
-                    ? 'тан'
-                    : 'ран';
+                      ? 'тан'
+                      : 'ран';
                 return output + affix;
             },
             past: '%s каялла',
@@ -21738,9 +24101,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         monthsShort: 'Ion_Chwe_Maw_Ebr_Mai_Meh_Gor_Aws_Med_Hyd_Tach_Rhag'.split(
             '_'
         ),
-        weekdays: 'Dydd Sul_Dydd Llun_Dydd Mawrth_Dydd Mercher_Dydd Iau_Dydd Gwener_Dydd Sadwrn'.split(
-            '_'
-        ),
+        weekdays:
+            'Dydd Sul_Dydd Llun_Dydd Mawrth_Dydd Mercher_Dydd Iau_Dydd Gwener_Dydd Sadwrn'.split(
+                '_'
+            ),
         weekdaysShort: 'Sul_Llun_Maw_Mer_Iau_Gwe_Sad'.split('_'),
         weekdaysMin: 'Su_Ll_Ma_Me_Ia_Gw_Sa'.split('_'),
         weekdaysParseExact: true,
@@ -21940,13 +24304,13 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'Jänner_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split(
             '_'
         ),
-        monthsShort: 'Jän._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.'.split(
-            '_'
-        ),
+        monthsShort:
+            'Jän._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.'.split('_'),
         monthsParseExact: true,
-        weekdays: 'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split(
-            '_'
-        ),
+        weekdays:
+            'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split(
+                '_'
+            ),
         weekdaysShort: 'So._Mo._Di._Mi._Do._Fr._Sa.'.split('_'),
         weekdaysMin: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
         weekdaysParseExact: true,
@@ -22035,13 +24399,13 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split(
             '_'
         ),
-        monthsShort: 'Jan._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.'.split(
-            '_'
-        ),
+        monthsShort:
+            'Jan._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.'.split('_'),
         monthsParseExact: true,
-        weekdays: 'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split(
-            '_'
-        ),
+        weekdays:
+            'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split(
+                '_'
+            ),
         weekdaysShort: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
         weekdaysMin: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
         weekdaysParseExact: true,
@@ -22132,13 +24496,13 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split(
             '_'
         ),
-        monthsShort: 'Jan._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.'.split(
-            '_'
-        ),
+        monthsShort:
+            'Jan._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.'.split('_'),
         monthsParseExact: true,
-        weekdays: 'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split(
-            '_'
-        ),
+        weekdays:
+            'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split(
+                '_'
+            ),
         weekdaysShort: 'So._Mo._Di._Mi._Do._Fr._Sa.'.split('_'),
         weekdaysMin: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
         weekdaysParseExact: true,
@@ -22325,12 +24689,14 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
     }
 
     var el = moment.defineLocale('el', {
-        monthsNominativeEl: 'Ιανουάριος_Φεβρουάριος_Μάρτιος_Απρίλιος_Μάιος_Ιούνιος_Ιούλιος_Αύγουστος_Σεπτέμβριος_Οκτώβριος_Νοέμβριος_Δεκέμβριος'.split(
-            '_'
-        ),
-        monthsGenitiveEl: 'Ιανουαρίου_Φεβρουαρίου_Μαρτίου_Απριλίου_Μαΐου_Ιουνίου_Ιουλίου_Αυγούστου_Σεπτεμβρίου_Οκτωβρίου_Νοεμβρίου_Δεκεμβρίου'.split(
-            '_'
-        ),
+        monthsNominativeEl:
+            'Ιανουάριος_Φεβρουάριος_Μάρτιος_Απρίλιος_Μάιος_Ιούνιος_Ιούλιος_Αύγουστος_Σεπτέμβριος_Οκτώβριος_Νοέμβριος_Δεκέμβριος'.split(
+                '_'
+            ),
+        monthsGenitiveEl:
+            'Ιανουαρίου_Φεβρουαρίου_Μαρτίου_Απριλίου_Μαΐου_Ιουνίου_Ιουλίου_Αυγούστου_Σεπτεμβρίου_Οκτωβρίου_Νοεμβρίου_Δεκεμβρίου'.split(
+                '_'
+            ),
         months: function (momentToFormat, format) {
             if (!momentToFormat) {
                 return this._monthsNominativeEl;
@@ -22489,12 +24855,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                     ~~((number % 100) / 10) === 1
                         ? 'th'
                         : b === 1
-                        ? 'st'
-                        : b === 2
-                        ? 'nd'
-                        : b === 3
-                        ? 'rd'
-                        : 'th';
+                          ? 'st'
+                          : b === 2
+                            ? 'nd'
+                            : b === 3
+                              ? 'rd'
+                              : 'th';
             return number + output;
         },
         week: {
@@ -22576,12 +24942,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                     ~~((number % 100) / 10) === 1
                         ? 'th'
                         : b === 1
-                        ? 'st'
-                        : b === 2
-                        ? 'nd'
-                        : b === 3
-                        ? 'rd'
-                        : 'th';
+                          ? 'st'
+                          : b === 2
+                            ? 'nd'
+                            : b === 3
+                              ? 'rd'
+                              : 'th';
             return number + output;
         },
     });
@@ -22659,12 +25025,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                     ~~((number % 100) / 10) === 1
                         ? 'th'
                         : b === 1
-                        ? 'st'
-                        : b === 2
-                        ? 'nd'
-                        : b === 3
-                        ? 'rd'
-                        : 'th';
+                          ? 'st'
+                          : b === 2
+                            ? 'nd'
+                            : b === 3
+                              ? 'rd'
+                              : 'th';
             return number + output;
         },
         week: {
@@ -22746,12 +25112,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                     ~~((number % 100) / 10) === 1
                         ? 'th'
                         : b === 1
-                        ? 'st'
-                        : b === 2
-                        ? 'nd'
-                        : b === 3
-                        ? 'rd'
-                        : 'th';
+                          ? 'st'
+                          : b === 2
+                            ? 'nd'
+                            : b === 3
+                              ? 'rd'
+                              : 'th';
             return number + output;
         },
         week: {
@@ -22833,12 +25199,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                     ~~((number % 100) / 10) === 1
                         ? 'th'
                         : b === 1
-                        ? 'st'
-                        : b === 2
-                        ? 'nd'
-                        : b === 3
-                        ? 'rd'
-                        : 'th';
+                          ? 'st'
+                          : b === 2
+                            ? 'nd'
+                            : b === 3
+                              ? 'rd'
+                              : 'th';
             return number + output;
         },
     });
@@ -22916,12 +25282,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                     ~~((number % 100) / 10) === 1
                         ? 'th'
                         : b === 1
-                        ? 'st'
-                        : b === 2
-                        ? 'nd'
-                        : b === 3
-                        ? 'rd'
-                        : 'th';
+                          ? 'st'
+                          : b === 2
+                            ? 'nd'
+                            : b === 3
+                              ? 'rd'
+                              : 'th';
             return number + output;
         },
         week: {
@@ -23003,12 +25369,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                     ~~((number % 100) / 10) === 1
                         ? 'th'
                         : b === 1
-                        ? 'st'
-                        : b === 2
-                        ? 'nd'
-                        : b === 3
-                        ? 'rd'
-                        : 'th';
+                          ? 'st'
+                          : b === 2
+                            ? 'nd'
+                            : b === 3
+                              ? 'rd'
+                              : 'th';
             return number + output;
         },
         week: {
@@ -23090,12 +25456,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                     ~~((number % 100) / 10) === 1
                         ? 'th'
                         : b === 1
-                        ? 'st'
-                        : b === 2
-                        ? 'nd'
-                        : b === 3
-                        ? 'rd'
-                        : 'th';
+                          ? 'st'
+                          : b === 2
+                            ? 'nd'
+                            : b === 3
+                              ? 'rd'
+                              : 'th';
             return number + output;
         },
         week: {
@@ -23214,9 +25580,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     //! moment.js locale configuration
 
-    var monthsShortDot = 'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split(
-            '_'
-        ),
+    var monthsShortDot =
+            'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split(
+                '_'
+            ),
         monthsShort = 'ene_feb_mar_abr_may_jun_jul_ago_sep_oct_nov_dic'.split('_'),
         monthsParse = [
             /^ene/i,
@@ -23232,7 +25599,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             /^nov/i,
             /^dic/i,
         ],
-        monthsRegex = /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
+        monthsRegex =
+            /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
 
     var esDo = moment.defineLocale('es-do', {
         months: 'enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre'.split(
@@ -23249,8 +25617,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         },
         monthsRegex: monthsRegex,
         monthsShortRegex: monthsRegex,
-        monthsStrictRegex: /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
-        monthsShortStrictRegex: /^(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i,
+        monthsStrictRegex:
+            /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
+        monthsShortStrictRegex:
+            /^(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i,
         monthsParse: monthsParse,
         longMonthsParse: monthsParse,
         shortMonthsParse: monthsParse,
@@ -23338,9 +25708,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     //! moment.js locale configuration
 
-    var monthsShortDot = 'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split(
-            '_'
-        ),
+    var monthsShortDot =
+            'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split(
+                '_'
+            ),
         monthsShort = 'ene_feb_mar_abr_may_jun_jul_ago_sep_oct_nov_dic'.split('_'),
         monthsParse = [
             /^ene/i,
@@ -23356,7 +25727,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             /^nov/i,
             /^dic/i,
         ],
-        monthsRegex = /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
+        monthsRegex =
+            /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
 
     var esMx = moment.defineLocale('es-mx', {
         months: 'enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre'.split(
@@ -23373,8 +25745,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         },
         monthsRegex: monthsRegex,
         monthsShortRegex: monthsRegex,
-        monthsStrictRegex: /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
-        monthsShortStrictRegex: /^(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i,
+        monthsStrictRegex:
+            /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
+        monthsShortStrictRegex:
+            /^(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i,
         monthsParse: monthsParse,
         longMonthsParse: monthsParse,
         shortMonthsParse: monthsParse,
@@ -23464,9 +25838,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     //! moment.js locale configuration
 
-    var monthsShortDot = 'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split(
-            '_'
-        ),
+    var monthsShortDot =
+            'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split(
+                '_'
+            ),
         monthsShort = 'ene_feb_mar_abr_may_jun_jul_ago_sep_oct_nov_dic'.split('_'),
         monthsParse = [
             /^ene/i,
@@ -23482,7 +25857,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             /^nov/i,
             /^dic/i,
         ],
-        monthsRegex = /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
+        monthsRegex =
+            /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
 
     var esUs = moment.defineLocale('es-us', {
         months: 'enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre'.split(
@@ -23499,8 +25875,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         },
         monthsRegex: monthsRegex,
         monthsShortRegex: monthsRegex,
-        monthsStrictRegex: /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
-        monthsShortStrictRegex: /^(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i,
+        monthsStrictRegex:
+            /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
+        monthsShortStrictRegex:
+            /^(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i,
         monthsParse: monthsParse,
         longMonthsParse: monthsParse,
         shortMonthsParse: monthsParse,
@@ -23588,9 +25966,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     //! moment.js locale configuration
 
-    var monthsShortDot = 'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split(
-            '_'
-        ),
+    var monthsShortDot =
+            'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split(
+                '_'
+            ),
         monthsShort = 'ene_feb_mar_abr_may_jun_jul_ago_sep_oct_nov_dic'.split('_'),
         monthsParse = [
             /^ene/i,
@@ -23606,7 +25985,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             /^nov/i,
             /^dic/i,
         ],
-        monthsRegex = /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
+        monthsRegex =
+            /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
 
     var es = moment.defineLocale('es', {
         months: 'enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre'.split(
@@ -23623,8 +26003,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         },
         monthsRegex: monthsRegex,
         monthsShortRegex: monthsRegex,
-        monthsStrictRegex: /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
-        monthsShortStrictRegex: /^(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i,
+        monthsStrictRegex:
+            /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
+        monthsShortStrictRegex:
+            /^(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i,
         monthsParse: monthsParse,
         longMonthsParse: monthsParse,
         shortMonthsParse: monthsParse,
@@ -23738,12 +26120,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'jaanuar_veebruar_märts_aprill_mai_juuni_juuli_august_september_oktoober_november_detsember'.split(
             '_'
         ),
-        monthsShort: 'jaan_veebr_märts_apr_mai_juuni_juuli_aug_sept_okt_nov_dets'.split(
-            '_'
-        ),
-        weekdays: 'pühapäev_esmaspäev_teisipäev_kolmapäev_neljapäev_reede_laupäev'.split(
-            '_'
-        ),
+        monthsShort:
+            'jaan_veebr_märts_apr_mai_juuni_juuli_aug_sept_okt_nov_dets'.split('_'),
+        weekdays:
+            'pühapäev_esmaspäev_teisipäev_kolmapäev_neljapäev_reede_laupäev'.split(
+                '_'
+            ),
         weekdaysShort: 'P_E_T_K_N_R_L'.split('_'),
         weekdaysMin: 'P_E_T_K_N_R_L'.split('_'),
         longDateFormat: {
@@ -23814,13 +26196,15 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'urtarrila_otsaila_martxoa_apirila_maiatza_ekaina_uztaila_abuztua_iraila_urria_azaroa_abendua'.split(
             '_'
         ),
-        monthsShort: 'urt._ots._mar._api._mai._eka._uzt._abu._ira._urr._aza._abe.'.split(
-            '_'
-        ),
+        monthsShort:
+            'urt._ots._mar._api._mai._eka._uzt._abu._ira._urr._aza._abe.'.split(
+                '_'
+            ),
         monthsParseExact: true,
-        weekdays: 'igandea_astelehena_asteartea_asteazkena_osteguna_ostirala_larunbata'.split(
-            '_'
-        ),
+        weekdays:
+            'igandea_astelehena_asteartea_asteazkena_osteguna_ostirala_larunbata'.split(
+                '_'
+            ),
         weekdaysShort: 'ig._al._ar._az._og._ol._lr.'.split('_'),
         weekdaysMin: 'ig_al_ar_az_og_ol_lr'.split('_'),
         weekdaysParseExact: true,
@@ -23921,15 +26305,18 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'ژانویه_فوریه_مارس_آوریل_مه_ژوئن_ژوئیه_اوت_سپتامبر_اکتبر_نوامبر_دسامبر'.split(
             '_'
         ),
-        monthsShort: 'ژانویه_فوریه_مارس_آوریل_مه_ژوئن_ژوئیه_اوت_سپتامبر_اکتبر_نوامبر_دسامبر'.split(
-            '_'
-        ),
-        weekdays: 'یک\u200cشنبه_دوشنبه_سه\u200cشنبه_چهارشنبه_پنج\u200cشنبه_جمعه_شنبه'.split(
-            '_'
-        ),
-        weekdaysShort: 'یک\u200cشنبه_دوشنبه_سه\u200cشنبه_چهارشنبه_پنج\u200cشنبه_جمعه_شنبه'.split(
-            '_'
-        ),
+        monthsShort:
+            'ژانویه_فوریه_مارس_آوریل_مه_ژوئن_ژوئیه_اوت_سپتامبر_اکتبر_نوامبر_دسامبر'.split(
+                '_'
+            ),
+        weekdays:
+            'یک\u200cشنبه_دوشنبه_سه\u200cشنبه_چهارشنبه_پنج\u200cشنبه_جمعه_شنبه'.split(
+                '_'
+            ),
+        weekdaysShort:
+            'یک\u200cشنبه_دوشنبه_سه\u200cشنبه_چهارشنبه_پنج\u200cشنبه_جمعه_شنبه'.split(
+                '_'
+            ),
         weekdaysMin: 'ی_د_س_چ_پ_ج_ش'.split('_'),
         weekdaysParseExact: true,
         longDateFormat: {
@@ -24021,9 +26408,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     //! moment.js locale configuration
 
-    var numbersPast = 'nolla yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän'.split(
-            ' '
-        ),
+    var numbersPast =
+            'nolla yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän'.split(
+                ' '
+            ),
         numbersFuture = [
             'nolla',
             'yhden',
@@ -24085,12 +26473,14 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'tammikuu_helmikuu_maaliskuu_huhtikuu_toukokuu_kesäkuu_heinäkuu_elokuu_syyskuu_lokakuu_marraskuu_joulukuu'.split(
             '_'
         ),
-        monthsShort: 'tammi_helmi_maalis_huhti_touko_kesä_heinä_elo_syys_loka_marras_joulu'.split(
-            '_'
-        ),
-        weekdays: 'sunnuntai_maanantai_tiistai_keskiviikko_torstai_perjantai_lauantai'.split(
-            '_'
-        ),
+        monthsShort:
+            'tammi_helmi_maalis_huhti_touko_kesä_heinä_elo_syys_loka_marras_joulu'.split(
+                '_'
+            ),
+        weekdays:
+            'sunnuntai_maanantai_tiistai_keskiviikko_torstai_perjantai_lauantai'.split(
+                '_'
+            ),
         weekdaysShort: 'su_ma_ti_ke_to_pe_la'.split('_'),
         weekdaysMin: 'su_ma_ti_ke_to_pe_la'.split('_'),
         longDateFormat: {
@@ -24244,9 +26634,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             '_'
         ),
         monthsShort: 'jan_feb_mar_apr_mai_jun_jul_aug_sep_okt_nov_des'.split('_'),
-        weekdays: 'sunnudagur_mánadagur_týsdagur_mikudagur_hósdagur_fríggjadagur_leygardagur'.split(
-            '_'
-        ),
+        weekdays:
+            'sunnudagur_mánadagur_týsdagur_mikudagur_hósdagur_fríggjadagur_leygardagur'.split(
+                '_'
+            ),
         weekdaysShort: 'sun_mán_týs_mik_hós_frí_ley'.split('_'),
         weekdaysMin: 'su_má_tý_mi_hó_fr_le'.split('_'),
         longDateFormat: {
@@ -24317,9 +26708,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split(
             '_'
         ),
-        monthsShort: 'janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.'.split(
-            '_'
-        ),
+        monthsShort:
+            'janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi'.split('_'),
         weekdaysShort: 'dim._lun._mar._mer._jeu._ven._sam.'.split('_'),
@@ -24405,9 +26797,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split(
             '_'
         ),
-        monthsShort: 'janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.'.split(
-            '_'
-        ),
+        monthsShort:
+            'janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi'.split('_'),
         weekdaysShort: 'dim._lun._mar._mer._jeu._ven._sam.'.split('_'),
@@ -24493,9 +26886,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     //! moment.js locale configuration
 
-    var monthsStrictRegex = /^(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/i,
-        monthsShortStrictRegex = /(janv\.?|févr\.?|mars|avr\.?|mai|juin|juil\.?|août|sept\.?|oct\.?|nov\.?|déc\.?)/i,
-        monthsRegex = /(janv\.?|févr\.?|mars|avr\.?|mai|juin|juil\.?|août|sept\.?|oct\.?|nov\.?|déc\.?|janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/i,
+    var monthsStrictRegex =
+            /^(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/i,
+        monthsShortStrictRegex =
+            /(janv\.?|févr\.?|mars|avr\.?|mai|juin|juil\.?|août|sept\.?|oct\.?|nov\.?|déc\.?)/i,
+        monthsRegex =
+            /(janv\.?|févr\.?|mars|avr\.?|mai|juin|juil\.?|août|sept\.?|oct\.?|nov\.?|déc\.?|janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/i,
         monthsParse = [
             /^janv/i,
             /^févr/i,
@@ -24515,9 +26911,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split(
             '_'
         ),
-        monthsShort: 'janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.'.split(
-            '_'
-        ),
+        monthsShort:
+            'janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.'.split(
+                '_'
+            ),
         monthsRegex: monthsRegex,
         monthsShortRegex: monthsRegex,
         monthsStrictRegex: monthsStrictRegex,
@@ -24616,12 +27013,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     //! moment.js locale configuration
 
-    var monthsShortWithDots = 'jan._feb._mrt._apr._mai_jun._jul._aug._sep._okt._nov._des.'.split(
-            '_'
-        ),
-        monthsShortWithoutDots = 'jan_feb_mrt_apr_mai_jun_jul_aug_sep_okt_nov_des'.split(
-            '_'
-        );
+    var monthsShortWithDots =
+            'jan._feb._mrt._apr._mai_jun._jul._aug._sep._okt._nov._des.'.split('_'),
+        monthsShortWithoutDots =
+            'jan_feb_mrt_apr_mai_jun_jul_aug_sep_okt_nov_des'.split('_');
 
     var fy = moment.defineLocale('fy', {
         months: 'jannewaris_febrewaris_maart_april_maaie_juny_july_augustus_septimber_oktober_novimber_desimber'.split(
@@ -24944,9 +27339,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'xaneiro_febreiro_marzo_abril_maio_xuño_xullo_agosto_setembro_outubro_novembro_decembro'.split(
             '_'
         ),
-        monthsShort: 'xan._feb._mar._abr._mai._xuñ._xul._ago._set._out._nov._dec.'.split(
-            '_'
-        ),
+        monthsShort:
+            'xan._feb._mar._abr._mai._xuñ._xul._ago._set._out._nov._dec.'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'domingo_luns_martes_mércores_xoves_venres_sábado'.split('_'),
         weekdaysShort: 'dom._lun._mar._mér._xov._ven._sáb.'.split('_'),
@@ -25053,17 +27449,19 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     var gomDeva = moment.defineLocale('gom-deva', {
         months: {
-            standalone: 'जानेवारी_फेब्रुवारी_मार्च_एप्रील_मे_जून_जुलय_ऑगस्ट_सप्टेंबर_ऑक्टोबर_नोव्हेंबर_डिसेंबर'.split(
-                '_'
-            ),
+            standalone:
+                'जानेवारी_फेब्रुवारी_मार्च_एप्रील_मे_जून_जुलय_ऑगस्ट_सप्टेंबर_ऑक्टोबर_नोव्हेंबर_डिसेंबर'.split(
+                    '_'
+                ),
             format: 'जानेवारीच्या_फेब्रुवारीच्या_मार्चाच्या_एप्रीलाच्या_मेयाच्या_जूनाच्या_जुलयाच्या_ऑगस्टाच्या_सप्टेंबराच्या_ऑक्टोबराच्या_नोव्हेंबराच्या_डिसेंबराच्या'.split(
                 '_'
             ),
             isFormat: /MMMM(\s)+D[oD]?/,
         },
-        monthsShort: 'जाने._फेब्रु._मार्च_एप्री._मे_जून_जुल._ऑग._सप्टें._ऑक्टो._नोव्हें._डिसें.'.split(
-            '_'
-        ),
+        monthsShort:
+            'जाने._फेब्रु._मार्च_एप्री._मे_जून_जुल._ऑग._सप्टें._ऑक्टो._नोव्हें._डिसें.'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'आयतार_सोमार_मंगळार_बुधवार_बिरेस्तार_सुक्रार_शेनवार'.split('_'),
         weekdaysShort: 'आयत._सोम._मंगळ._बुध._ब्रेस्त._सुक्र._शेन.'.split('_'),
@@ -25196,17 +27594,17 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     var gomLatn = moment.defineLocale('gom-latn', {
         months: {
-            standalone: 'Janer_Febrer_Mars_Abril_Mai_Jun_Julai_Agost_Setembr_Otubr_Novembr_Dezembr'.split(
-                '_'
-            ),
+            standalone:
+                'Janer_Febrer_Mars_Abril_Mai_Jun_Julai_Agost_Setembr_Otubr_Novembr_Dezembr'.split(
+                    '_'
+                ),
             format: 'Janerachea_Febrerachea_Marsachea_Abrilachea_Maiachea_Junachea_Julaiachea_Agostachea_Setembrachea_Otubrachea_Novembrachea_Dezembrachea'.split(
                 '_'
             ),
             isFormat: /MMMM(\s)+D[oD]?/,
         },
-        monthsShort: 'Jan._Feb._Mars_Abr._Mai_Jun_Jul._Ago._Set._Otu._Nov._Dez.'.split(
-            '_'
-        ),
+        monthsShort:
+            'Jan._Feb._Mars_Abr._Mai_Jun_Jul._Ago._Set._Otu._Nov._Dez.'.split('_'),
         monthsParseExact: true,
         weekdays: "Aitar_Somar_Mongllar_Budhvar_Birestar_Sukrar_Son'var".split('_'),
         weekdaysShort: 'Ait._Som._Mon._Bud._Bre._Suk._Son.'.split('_'),
@@ -25348,9 +27746,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'જાન્યુઆરી_ફેબ્રુઆરી_માર્ચ_એપ્રિલ_મે_જૂન_જુલાઈ_ઑગસ્ટ_સપ્ટેમ્બર_ઑક્ટ્બર_નવેમ્બર_ડિસેમ્બર'.split(
             '_'
         ),
-        monthsShort: 'જાન્યુ._ફેબ્રુ._માર્ચ_એપ્રિ._મે_જૂન_જુલા._ઑગ._સપ્ટે._ઑક્ટ્._નવે._ડિસે.'.split(
-            '_'
-        ),
+        monthsShort:
+            'જાન્યુ._ફેબ્રુ._માર્ચ_એપ્રિ._મે_જૂન_જુલા._ઑગ._સપ્ટે._ઑક્ટ્._નવે._ડિસે.'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'રવિવાર_સોમવાર_મંગળવાર_બુધ્વાર_ગુરુવાર_શુક્રવાર_શનિવાર'.split(
             '_'
@@ -25465,9 +27864,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'ינואר_פברואר_מרץ_אפריל_מאי_יוני_יולי_אוגוסט_ספטמבר_אוקטובר_נובמבר_דצמבר'.split(
             '_'
         ),
-        monthsShort: 'ינו׳_פבר׳_מרץ_אפר׳_מאי_יוני_יולי_אוג׳_ספט׳_אוק׳_נוב׳_דצמ׳'.split(
-            '_'
-        ),
+        monthsShort:
+            'ינו׳_פבר׳_מרץ_אפר׳_מאי_יוני_יולי_אוג׳_ספט׳_אוק׳_נוב׳_דצמ׳'.split('_'),
         weekdays: 'ראשון_שני_שלישי_רביעי_חמישי_שישי_שבת'.split('_'),
         weekdaysShort: 'א׳_ב׳_ג׳_ד׳_ה׳_ו׳_ש׳'.split('_'),
         weekdaysMin: 'א_ב_ג_ד_ה_ו_ש'.split('_'),
@@ -25529,7 +27927,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                 return number + ' שנים';
             },
         },
-        meridiemParse: /אחה"צ|לפנה"צ|אחרי הצהריים|לפני הצהריים|לפנות בוקר|בבוקר|בערב/i,
+        meridiemParse:
+            /אחה"צ|לפנה"צ|אחרי הצהריים|לפני הצהריים|לפנות בוקר|בבוקר|בערב/i,
         isPM: function (input) {
             return /^(אחה"צ|אחרי הצהריים|בערב)$/.test(input);
         },
@@ -25630,13 +28029,13 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             format: 'जनवरी_फ़रवरी_मार्च_अप्रैल_मई_जून_जुलाई_अगस्त_सितम्बर_अक्टूबर_नवम्बर_दिसम्बर'.split(
                 '_'
             ),
-            standalone: 'जनवरी_फरवरी_मार्च_अप्रैल_मई_जून_जुलाई_अगस्त_सितंबर_अक्टूबर_नवंबर_दिसंबर'.split(
-                '_'
-            ),
+            standalone:
+                'जनवरी_फरवरी_मार्च_अप्रैल_मई_जून_जुलाई_अगस्त_सितंबर_अक्टूबर_नवंबर_दिसंबर'.split(
+                    '_'
+                ),
         },
-        monthsShort: 'जन._फ़र._मार्च_अप्रै._मई_जून_जुल._अग._सित._अक्टू._नव._दिस.'.split(
-            '_'
-        ),
+        monthsShort:
+            'जन._फ़र._मार्च_अप्रै._मई_जून_जुल._अग._सित._अक्टू._नव._दिस.'.split('_'),
         weekdays: 'रविवार_सोमवार_मंगलवार_बुधवार_गुरूवार_शुक्रवार_शनिवार'.split('_'),
         weekdaysShort: 'रवि_सोम_मंगल_बुध_गुरू_शुक्र_शनि'.split('_'),
         weekdaysMin: 'र_सो_मं_बु_गु_शु_श'.split('_'),
@@ -25653,13 +28052,17 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         longMonthsParse: monthsParse,
         shortMonthsParse: shortMonthsParse,
 
-        monthsRegex: /^(जनवरी|जन\.?|फ़रवरी|फरवरी|फ़र\.?|मार्च?|अप्रैल|अप्रै\.?|मई?|जून?|जुलाई|जुल\.?|अगस्त|अग\.?|सितम्बर|सितंबर|सित\.?|अक्टूबर|अक्टू\.?|नवम्बर|नवंबर|नव\.?|दिसम्बर|दिसंबर|दिस\.?)/i,
+        monthsRegex:
+            /^(जनवरी|जन\.?|फ़रवरी|फरवरी|फ़र\.?|मार्च?|अप्रैल|अप्रै\.?|मई?|जून?|जुलाई|जुल\.?|अगस्त|अग\.?|सितम्बर|सितंबर|सित\.?|अक्टूबर|अक्टू\.?|नवम्बर|नवंबर|नव\.?|दिसम्बर|दिसंबर|दिस\.?)/i,
 
-        monthsShortRegex: /^(जनवरी|जन\.?|फ़रवरी|फरवरी|फ़र\.?|मार्च?|अप्रैल|अप्रै\.?|मई?|जून?|जुलाई|जुल\.?|अगस्त|अग\.?|सितम्बर|सितंबर|सित\.?|अक्टूबर|अक्टू\.?|नवम्बर|नवंबर|नव\.?|दिसम्बर|दिसंबर|दिस\.?)/i,
+        monthsShortRegex:
+            /^(जनवरी|जन\.?|फ़रवरी|फरवरी|फ़र\.?|मार्च?|अप्रैल|अप्रै\.?|मई?|जून?|जुलाई|जुल\.?|अगस्त|अग\.?|सितम्बर|सितंबर|सित\.?|अक्टूबर|अक्टू\.?|नवम्बर|नवंबर|नव\.?|दिसम्बर|दिसंबर|दिस\.?)/i,
 
-        monthsStrictRegex: /^(जनवरी?|फ़रवरी|फरवरी?|मार्च?|अप्रैल?|मई?|जून?|जुलाई?|अगस्त?|सितम्बर|सितंबर|सित?\.?|अक्टूबर|अक्टू\.?|नवम्बर|नवंबर?|दिसम्बर|दिसंबर?)/i,
+        monthsStrictRegex:
+            /^(जनवरी?|फ़रवरी|फरवरी?|मार्च?|अप्रैल?|मई?|जून?|जुलाई?|अगस्त?|सितम्बर|सितंबर|सित?\.?|अक्टूबर|अक्टू\.?|नवम्बर|नवंबर?|दिसम्बर|दिसंबर?)/i,
 
-        monthsShortStrictRegex: /^(जन\.?|फ़र\.?|मार्च?|अप्रै\.?|मई?|जून?|जुल\.?|अग\.?|सित\.?|अक्टू\.?|नव\.?|दिस\.?)/i,
+        monthsShortStrictRegex:
+            /^(जन\.?|फ़र\.?|मार्च?|अप्रै\.?|मई?|जून?|जुल\.?|अग\.?|सित\.?|अक्टू\.?|नव\.?|दिस\.?)/i,
 
         calendar: {
             sameDay: '[आज] LT',
@@ -25822,13 +28225,15 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             format: 'siječnja_veljače_ožujka_travnja_svibnja_lipnja_srpnja_kolovoza_rujna_listopada_studenoga_prosinca'.split(
                 '_'
             ),
-            standalone: 'siječanj_veljača_ožujak_travanj_svibanj_lipanj_srpanj_kolovoz_rujan_listopad_studeni_prosinac'.split(
+            standalone:
+                'siječanj_veljača_ožujak_travanj_svibanj_lipanj_srpanj_kolovoz_rujan_listopad_studeni_prosinac'.split(
+                    '_'
+                ),
+        },
+        monthsShort:
+            'sij._velj._ožu._tra._svi._lip._srp._kol._ruj._lis._stu._pro.'.split(
                 '_'
             ),
-        },
-        monthsShort: 'sij._velj._ožu._tra._svi._lip._srp._kol._ruj._lis._stu._pro.'.split(
-            '_'
-        ),
         monthsParseExact: true,
         weekdays: 'nedjelja_ponedjeljak_utorak_srijeda_četvrtak_petak_subota'.split(
             '_'
@@ -25929,9 +28334,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     //! moment.js locale configuration
 
-    var weekEndings = 'vasárnap hétfőn kedden szerdán csütörtökön pénteken szombaton'.split(
-        ' '
-    );
+    var weekEndings =
+        'vasárnap hétfőn kedden szerdán csütörtökön pénteken szombaton'.split(' ');
     function translate(number, withoutSuffix, key, isFuture) {
         var num = number;
         switch (key) {
@@ -25979,9 +28383,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'január_február_március_április_május_június_július_augusztus_szeptember_október_november_december'.split(
             '_'
         ),
-        monthsShort: 'jan._feb._márc._ápr._máj._jún._júl._aug._szept._okt._nov._dec.'.split(
-            '_'
-        ),
+        monthsShort:
+            'jan._feb._márc._ápr._máj._jún._júl._aug._szept._okt._nov._dec.'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'vasárnap_hétfő_kedd_szerda_csütörtök_péntek_szombat'.split('_'),
         weekdaysShort: 'vas_hét_kedd_sze_csüt_pén_szo'.split('_'),
@@ -26070,14 +28475,16 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             format: 'հունվարի_փետրվարի_մարտի_ապրիլի_մայիսի_հունիսի_հուլիսի_օգոստոսի_սեպտեմբերի_հոկտեմբերի_նոյեմբերի_դեկտեմբերի'.split(
                 '_'
             ),
-            standalone: 'հունվար_փետրվար_մարտ_ապրիլ_մայիս_հունիս_հուլիս_օգոստոս_սեպտեմբեր_հոկտեմբեր_նոյեմբեր_դեկտեմբեր'.split(
-                '_'
-            ),
+            standalone:
+                'հունվար_փետրվար_մարտ_ապրիլ_մայիս_հունիս_հուլիս_օգոստոս_սեպտեմբեր_հոկտեմբեր_նոյեմբեր_դեկտեմբեր'.split(
+                    '_'
+                ),
         },
         monthsShort: 'հնվ_փտր_մրտ_ապր_մյս_հնս_հլս_օգս_սպտ_հկտ_նմբ_դկտ'.split('_'),
-        weekdays: 'կիրակի_երկուշաբթի_երեքշաբթի_չորեքշաբթի_հինգշաբթի_ուրբաթ_շաբաթ'.split(
-            '_'
-        ),
+        weekdays:
+            'կիրակի_երկուշաբթի_երեքշաբթի_չորեքշաբթի_հինգշաբթի_ուրբաթ_շաբաթ'.split(
+                '_'
+            ),
         weekdaysShort: 'կրկ_երկ_երք_չրք_հնգ_ուրբ_շբթ'.split('_'),
         weekdaysMin: 'կրկ_երկ_երք_չրք_հնգ_ուրբ_շբթ'.split('_'),
         longDateFormat: {
@@ -26360,9 +28767,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             '_'
         ),
         monthsShort: 'jan_feb_mar_apr_maí_jún_júl_ágú_sep_okt_nóv_des'.split('_'),
-        weekdays: 'sunnudagur_mánudagur_þriðjudagur_miðvikudagur_fimmtudagur_föstudagur_laugardagur'.split(
-            '_'
-        ),
+        weekdays:
+            'sunnudagur_mánudagur_þriðjudagur_miðvikudagur_fimmtudagur_föstudagur_laugardagur'.split(
+                '_'
+            ),
         weekdaysShort: 'sun_mán_þri_mið_fim_fös_lau'.split('_'),
         weekdaysMin: 'Su_Má_Þr_Mi_Fi_Fö_La'.split('_'),
         longDateFormat: {
@@ -26569,8 +28977,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                             (this.hours() > 1
                                 ? 'lle '
                                 : this.hours() === 0
-                                ? ' '
-                                : "ll'") +
+                                  ? ' '
+                                  : "ll'") +
                             ']LT'
                         );
                     default:
@@ -26579,8 +28987,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                             (this.hours() > 1
                                 ? 'lle '
                                 : this.hours() === 0
-                                ? ' '
-                                : "ll'") +
+                                  ? ' '
+                                  : "ll'") +
                             ']LT'
                         );
                 }
@@ -26905,9 +29313,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         ),
         monthsShort: 'იან_თებ_მარ_აპრ_მაი_ივნ_ივლ_აგვ_სექ_ოქტ_ნოე_დეკ'.split('_'),
         weekdays: {
-            standalone: 'კვირა_ორშაბათი_სამშაბათი_ოთხშაბათი_ხუთშაბათი_პარასკევი_შაბათი'.split(
-                '_'
-            ),
+            standalone:
+                'კვირა_ორშაბათი_სამშაბათი_ოთხშაბათი_ხუთშაბათი_პარასკევი_შაბათი'.split(
+                    '_'
+                ),
             format: 'კვირას_ორშაბათს_სამშაბათს_ოთხშაბათს_ხუთშაბათს_პარასკევს_შაბათს'.split(
                 '_'
             ),
@@ -26933,13 +29342,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         },
         relativeTime: {
             future: function (s) {
-                return s.replace(/(წამ|წუთ|საათ|წელ|დღ|თვ)(ი|ე)/, function (
-                    $0,
-                    $1,
-                    $2
-                ) {
-                    return $2 === 'ი' ? $1 + 'ში' : $1 + $2 + 'ში';
-                });
+                return s.replace(
+                    /(წამ|წუთ|საათ|წელ|დღ|თვ)(ი|ე)/,
+                    function ($0, $1, $2) {
+                        return $2 === 'ი' ? $1 + 'ში' : $1 + $2 + 'ში';
+                    }
+                );
             },
             past: function (s) {
                 if (/(წამი|წუთი|საათი|დღე|თვე)/.test(s)) {
@@ -27140,9 +29548,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'មករា_កុម្ភៈ_មីនា_មេសា_ឧសភា_មិថុនា_កក្កដា_សីហា_កញ្ញា_តុលា_វិច្ឆិកា_ធ្នូ'.split(
             '_'
         ),
-        monthsShort: 'មករា_កុម្ភៈ_មីនា_មេសា_ឧសភា_មិថុនា_កក្កដា_សីហា_កញ្ញា_តុលា_វិច្ឆិកា_ធ្នូ'.split(
-            '_'
-        ),
+        monthsShort:
+            'មករា_កុម្ភៈ_មីនា_មេសា_ឧសភា_មិថុនា_កក្កដា_សីហា_កញ្ញា_តុលា_វិច្ឆិកា_ធ្នូ'.split(
+                '_'
+            ),
         weekdays: 'អាទិត្យ_ច័ន្ទ_អង្គារ_ពុធ_ព្រហស្បតិ៍_សុក្រ_សៅរ៍'.split('_'),
         weekdaysShort: 'អា_ច_អ_ព_ព្រ_សុ_ស'.split('_'),
         weekdaysMin: 'អា_ច_អ_ព_ព្រ_សុ_ស'.split('_'),
@@ -27261,9 +29670,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'ಜನವರಿ_ಫೆಬ್ರವರಿ_ಮಾರ್ಚ್_ಏಪ್ರಿಲ್_ಮೇ_ಜೂನ್_ಜುಲೈ_ಆಗಸ್ಟ್_ಸೆಪ್ಟೆಂಬರ್_ಅಕ್ಟೋಬರ್_ನವೆಂಬರ್_ಡಿಸೆಂಬರ್'.split(
             '_'
         ),
-        monthsShort: 'ಜನ_ಫೆಬ್ರ_ಮಾರ್ಚ್_ಏಪ್ರಿಲ್_ಮೇ_ಜೂನ್_ಜುಲೈ_ಆಗಸ್ಟ್_ಸೆಪ್ಟೆಂ_ಅಕ್ಟೋ_ನವೆಂ_ಡಿಸೆಂ'.split(
-            '_'
-        ),
+        monthsShort:
+            'ಜನ_ಫೆಬ್ರ_ಮಾರ್ಚ್_ಏಪ್ರಿಲ್_ಮೇ_ಜೂನ್_ಜುಲೈ_ಆಗಸ್ಟ್_ಸೆಪ್ಟೆಂ_ಅಕ್ಟೋ_ನವೆಂ_ಡಿಸೆಂ'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'ಭಾನುವಾರ_ಸೋಮವಾರ_ಮಂಗಳವಾರ_ಬುಧವಾರ_ಗುರುವಾರ_ಶುಕ್ರವಾರ_ಶನಿವಾರ'.split(
             '_'
@@ -27451,6 +29861,139 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 /***/ }),
 
+/***/ "./node_modules/moment/locale/ku-kmr.js":
+/*!**********************************************!*\
+  !*** ./node_modules/moment/locale/ku-kmr.js ***!
+  \**********************************************/
+/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
+
+//! moment.js locale configuration
+//! locale : Northern Kurdish [ku-kmr]
+//! authors : Mazlum Özdogan : https://github.com/mergehez
+
+;(function (global, factory) {
+    true ? factory(__webpack_require__(/*! ../moment */ "./node_modules/moment/moment.js")) :
+   0
+}(this, (function (moment) { 'use strict';
+
+    //! moment.js locale configuration
+
+    function processRelativeTime(num, withoutSuffix, key, isFuture) {
+        var format = {
+            s: ['çend sanîye', 'çend sanîyeyan'],
+            ss: [num + ' sanîye', num + ' sanîyeyan'],
+            m: ['deqîqeyek', 'deqîqeyekê'],
+            mm: [num + ' deqîqe', num + ' deqîqeyan'],
+            h: ['saetek', 'saetekê'],
+            hh: [num + ' saet', num + ' saetan'],
+            d: ['rojek', 'rojekê'],
+            dd: [num + ' roj', num + ' rojan'],
+            w: ['hefteyek', 'hefteyekê'],
+            ww: [num + ' hefte', num + ' hefteyan'],
+            M: ['mehek', 'mehekê'],
+            MM: [num + ' meh', num + ' mehan'],
+            y: ['salek', 'salekê'],
+            yy: [num + ' sal', num + ' salan'],
+        };
+        return withoutSuffix ? format[key][0] : format[key][1];
+    }
+    // function obliqueNumSuffix(num) {
+    //     if(num.includes(':'))
+    //         num = parseInt(num.split(':')[0]);
+    //     else
+    //         num = parseInt(num);
+    //     return num == 0 || num % 10 == 1 ? 'ê'
+    //                         : (num > 10 && num % 10 == 0 ? 'î' : 'an');
+    // }
+    function ezafeNumSuffix(num) {
+        num = '' + num;
+        var l = num.substring(num.length - 1),
+            ll = num.length > 1 ? num.substring(num.length - 2) : '';
+        if (
+            !(ll == 12 || ll == 13) &&
+            (l == '2' || l == '3' || ll == '50' || l == '70' || l == '80')
+        )
+            return 'yê';
+        return 'ê';
+    }
+
+    var kuKmr = moment.defineLocale('ku-kmr', {
+        // According to the spelling rules defined by the work group of Weqfa Mezopotamyayê (Mesopotamia Foundation)
+        // this should be: 'Kanûna Paşîn_Sibat_Adar_Nîsan_Gulan_Hezîran_Tîrmeh_Tebax_Îlon_Çirîya Pêşîn_Çirîya Paşîn_Kanûna Pêşîn'
+        // But the names below are more well known and handy
+        months: 'Rêbendan_Sibat_Adar_Nîsan_Gulan_Hezîran_Tîrmeh_Tebax_Îlon_Cotmeh_Mijdar_Berfanbar'.split(
+            '_'
+        ),
+        monthsShort: 'Rêb_Sib_Ada_Nîs_Gul_Hez_Tîr_Teb_Îlo_Cot_Mij_Ber'.split('_'),
+        monthsParseExact: true,
+        weekdays: 'Yekşem_Duşem_Sêşem_Çarşem_Pêncşem_În_Şemî'.split('_'),
+        weekdaysShort: 'Yek_Du_Sê_Çar_Pên_În_Şem'.split('_'),
+        weekdaysMin: 'Ye_Du_Sê_Ça_Pê_În_Şe'.split('_'),
+        meridiem: function (hours, minutes, isLower) {
+            if (hours < 12) {
+                return isLower ? 'bn' : 'BN';
+            } else {
+                return isLower ? 'pn' : 'PN';
+            }
+        },
+        meridiemParse: /bn|BN|pn|PN/,
+        longDateFormat: {
+            LT: 'HH:mm',
+            LTS: 'HH:mm:ss',
+            L: 'DD.MM.YYYY',
+            LL: 'Do MMMM[a] YYYY[an]',
+            LLL: 'Do MMMM[a] YYYY[an] HH:mm',
+            LLLL: 'dddd, Do MMMM[a] YYYY[an] HH:mm',
+            ll: 'Do MMM[.] YYYY[an]',
+            lll: 'Do MMM[.] YYYY[an] HH:mm',
+            llll: 'ddd[.], Do MMM[.] YYYY[an] HH:mm',
+        },
+        calendar: {
+            sameDay: '[Îro di saet] LT [de]',
+            nextDay: '[Sibê di saet] LT [de]',
+            nextWeek: 'dddd [di saet] LT [de]',
+            lastDay: '[Duh di saet] LT [de]',
+            lastWeek: 'dddd[a borî di saet] LT [de]',
+            sameElse: 'L',
+        },
+        relativeTime: {
+            future: 'di %s de',
+            past: 'berî %s',
+            s: processRelativeTime,
+            ss: processRelativeTime,
+            m: processRelativeTime,
+            mm: processRelativeTime,
+            h: processRelativeTime,
+            hh: processRelativeTime,
+            d: processRelativeTime,
+            dd: processRelativeTime,
+            w: processRelativeTime,
+            ww: processRelativeTime,
+            M: processRelativeTime,
+            MM: processRelativeTime,
+            y: processRelativeTime,
+            yy: processRelativeTime,
+        },
+        dayOfMonthOrdinalParse: /\d{1,2}(?:yê|ê|\.)/,
+        ordinal: function (num, period) {
+            var p = period.toLowerCase();
+            if (p.includes('w') || p.includes('m')) return num + '.';
+
+            return num + ezafeNumSuffix(num);
+        },
+        week: {
+            dow: 1, // Monday is the first day of the week.
+            doy: 4, // The week that contains Jan 4th is the first week of the year.
+        },
+    });
+
+    return kuKmr;
+
+})));
+
+
+/***/ }),
+
 /***/ "./node_modules/moment/locale/ku.js":
 /*!******************************************!*\
   !*** ./node_modules/moment/locale/ku.js ***!
@@ -27510,12 +30053,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
     var ku = moment.defineLocale('ku', {
         months: months,
         monthsShort: months,
-        weekdays: 'یه‌كشه‌ممه‌_دووشه‌ممه‌_سێشه‌ممه‌_چوارشه‌ممه‌_پێنجشه‌ممه‌_هه‌ینی_شه‌ممه‌'.split(
-            '_'
-        ),
-        weekdaysShort: 'یه‌كشه‌م_دووشه‌م_سێشه‌م_چوارشه‌م_پێنجشه‌م_هه‌ینی_شه‌ممه‌'.split(
-            '_'
-        ),
+        weekdays:
+            'یه‌كشه‌ممه‌_دووشه‌ممه‌_سێشه‌ممه‌_چوارشه‌ممه‌_پێنجشه‌ممه‌_هه‌ینی_شه‌ممه‌'.split(
+                '_'
+            ),
+        weekdaysShort:
+            'یه‌كشه‌م_دووشه‌م_سێشه‌م_چوارشه‌م_پێنجشه‌م_هه‌ینی_شه‌ممه‌'.split('_'),
         weekdaysMin: 'ی_د_س_چ_پ_ه_ش'.split('_'),
         weekdaysParseExact: true,
         longDateFormat: {
@@ -27779,13 +30322,15 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'Januar_Februar_Mäerz_Abrëll_Mee_Juni_Juli_August_September_Oktober_November_Dezember'.split(
             '_'
         ),
-        monthsShort: 'Jan._Febr._Mrz._Abr._Mee_Jun._Jul._Aug._Sept._Okt._Nov._Dez.'.split(
-            '_'
-        ),
+        monthsShort:
+            'Jan._Febr._Mrz._Abr._Mee_Jun._Jul._Aug._Sept._Okt._Nov._Dez.'.split(
+                '_'
+            ),
         monthsParseExact: true,
-        weekdays: 'Sonndeg_Méindeg_Dënschdeg_Mëttwoch_Donneschdeg_Freideg_Samschdeg'.split(
-            '_'
-        ),
+        weekdays:
+            'Sonndeg_Méindeg_Dënschdeg_Mëttwoch_Donneschdeg_Freideg_Samschdeg'.split(
+                '_'
+            ),
         weekdaysShort: 'So._Mé._Dë._Më._Do._Fr._Sa.'.split('_'),
         weekdaysMin: 'So_Mé_Dë_Më_Do_Fr_Sa'.split('_'),
         weekdaysParseExact: true,
@@ -27866,9 +30411,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'ມັງກອນ_ກຸມພາ_ມີນາ_ເມສາ_ພຶດສະພາ_ມິຖຸນາ_ກໍລະກົດ_ສິງຫາ_ກັນຍາ_ຕຸລາ_ພະຈິກ_ທັນວາ'.split(
             '_'
         ),
-        monthsShort: 'ມັງກອນ_ກຸມພາ_ມີນາ_ເມສາ_ພຶດສະພາ_ມິຖຸນາ_ກໍລະກົດ_ສິງຫາ_ກັນຍາ_ຕຸລາ_ພະຈິກ_ທັນວາ'.split(
-            '_'
-        ),
+        monthsShort:
+            'ມັງກອນ_ກຸມພາ_ມີນາ_ເມສາ_ພຶດສະພາ_ມິຖຸນາ_ກໍລະກົດ_ສິງຫາ_ກັນຍາ_ຕຸລາ_ພະຈິກ_ທັນວາ'.split(
+                '_'
+            ),
         weekdays: 'ອາທິດ_ຈັນ_ອັງຄານ_ພຸດ_ພະຫັດ_ສຸກ_ເສົາ'.split('_'),
         weekdaysShort: 'ທິດ_ຈັນ_ອັງຄານ_ພຸດ_ພະຫັດ_ສຸກ_ເສົາ'.split('_'),
         weekdaysMin: 'ທ_ຈ_ອຄ_ພ_ພຫ_ສກ_ສ'.split('_'),
@@ -27970,8 +30516,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         return withoutSuffix
             ? forms(key)[0]
             : isFuture
-            ? forms(key)[1]
-            : forms(key)[2];
+              ? forms(key)[1]
+              : forms(key)[2];
     }
     function special(number) {
         return number % 10 === 0 || (number > 10 && number < 20);
@@ -28000,9 +30546,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             format: 'sausio_vasario_kovo_balandžio_gegužės_birželio_liepos_rugpjūčio_rugsėjo_spalio_lapkričio_gruodžio'.split(
                 '_'
             ),
-            standalone: 'sausis_vasaris_kovas_balandis_gegužė_birželis_liepa_rugpjūtis_rugsėjis_spalis_lapkritis_gruodis'.split(
-                '_'
-            ),
+            standalone:
+                'sausis_vasaris_kovas_balandis_gegužė_birželis_liepa_rugpjūtis_rugsėjis_spalis_lapkritis_gruodis'.split(
+                    '_'
+                ),
             isFormat: /D[oD]?(\[[^\[\]]*\]|\s)+MMMM?|MMMM?(\[[^\[\]]*\]|\s)+D[oD]?/,
         },
         monthsShort: 'sau_vas_kov_bal_geg_bir_lie_rgp_rgs_spa_lap_grd'.split('_'),
@@ -28010,9 +30557,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             format: 'sekmadienį_pirmadienį_antradienį_trečiadienį_ketvirtadienį_penktadienį_šeštadienį'.split(
                 '_'
             ),
-            standalone: 'sekmadienis_pirmadienis_antradienis_trečiadienis_ketvirtadienis_penktadienis_šeštadienis'.split(
-                '_'
-            ),
+            standalone:
+                'sekmadienis_pirmadienis_antradienis_trečiadienis_ketvirtadienis_penktadienis_šeštadienis'.split(
+                    '_'
+                ),
             isFormat: /dddd HH:mm/,
         },
         weekdaysShort: 'Sek_Pir_Ant_Tre_Ket_Pen_Šeš'.split('_'),
@@ -28130,9 +30678,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             '_'
         ),
         monthsShort: 'jan_feb_mar_apr_mai_jūn_jūl_aug_sep_okt_nov_dec'.split('_'),
-        weekdays: 'svētdiena_pirmdiena_otrdiena_trešdiena_ceturtdiena_piektdiena_sestdiena'.split(
-            '_'
-        ),
+        weekdays:
+            'svētdiena_pirmdiena_otrdiena_trešdiena_ceturtdiena_piektdiena_sestdiena'.split(
+                '_'
+            ),
         weekdaysShort: 'Sv_P_O_T_C_Pk_S'.split('_'),
         weekdaysMin: 'Sv_P_O_T_C_Pk_S'.split('_'),
         weekdaysParseExact: true,
@@ -28216,8 +30765,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             return number === 1
                 ? wordKey[0]
                 : number >= 2 && number <= 4
-                ? wordKey[1]
-                : wordKey[2];
+                  ? wordKey[1]
+                  : wordKey[2];
         },
         translate: function (number, withoutSuffix, key) {
             var wordKey = translator.words[key];
@@ -28237,9 +30786,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'januar_februar_mart_april_maj_jun_jul_avgust_septembar_oktobar_novembar_decembar'.split(
             '_'
         ),
-        monthsShort: 'jan._feb._mar._apr._maj_jun_jul_avg._sep._okt._nov._dec.'.split(
-            '_'
-        ),
+        monthsShort:
+            'jan._feb._mar._apr._maj_jun_jul_avg._sep._okt._nov._dec.'.split('_'),
         monthsParseExact: true,
         weekdays: 'nedjelja_ponedjeljak_utorak_srijeda_četvrtak_petak_subota'.split(
             '_'
@@ -28341,9 +30889,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'Kohi-tāte_Hui-tanguru_Poutū-te-rangi_Paenga-whāwhā_Haratua_Pipiri_Hōngoingoi_Here-turi-kōkā_Mahuru_Whiringa-ā-nuku_Whiringa-ā-rangi_Hakihea'.split(
             '_'
         ),
-        monthsShort: 'Kohi_Hui_Pou_Pae_Hara_Pipi_Hōngoi_Here_Mahu_Whi-nu_Whi-ra_Haki'.split(
-            '_'
-        ),
+        monthsShort:
+            'Kohi_Hui_Pou_Pae_Hara_Pipi_Hōngoi_Here_Mahu_Whi-nu_Whi-ra_Haki'.split(
+                '_'
+            ),
         monthsRegex: /(?:['a-z\u0101\u014D\u016B]+\-?){1,3}/i,
         monthsStrictRegex: /(?:['a-z\u0101\u014D\u016B]+\-?){1,3}/i,
         monthsShortRegex: /(?:['a-z\u0101\u014D\u016B]+\-?){1,3}/i,
@@ -28524,13 +31073,15 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'ജനുവരി_ഫെബ്രുവരി_മാർച്ച്_ഏപ്രിൽ_മേയ്_ജൂൺ_ജൂലൈ_ഓഗസ്റ്റ്_സെപ്റ്റംബർ_ഒക്ടോബർ_നവംബർ_ഡിസംബർ'.split(
             '_'
         ),
-        monthsShort: 'ജനു._ഫെബ്രു._മാർ._ഏപ്രി._മേയ്_ജൂൺ_ജൂലൈ._ഓഗ._സെപ്റ്റ._ഒക്ടോ._നവം._ഡിസം.'.split(
-            '_'
-        ),
+        monthsShort:
+            'ജനു._ഫെബ്രു._മാർ._ഏപ്രി._മേയ്_ജൂൺ_ജൂലൈ._ഓഗ._സെപ്റ്റ._ഒക്ടോ._നവം._ഡിസം.'.split(
+                '_'
+            ),
         monthsParseExact: true,
-        weekdays: 'ഞായറാഴ്ച_തിങ്കളാഴ്ച_ചൊവ്വാഴ്ച_ബുധനാഴ്ച_വ്യാഴാഴ്ച_വെള്ളിയാഴ്ച_ശനിയാഴ്ച'.split(
-            '_'
-        ),
+        weekdays:
+            'ഞായറാഴ്ച_തിങ്കളാഴ്ച_ചൊവ്വാഴ്ച_ബുധനാഴ്ച_വ്യാഴാഴ്ച_വെള്ളിയാഴ്ച_ശനിയാഴ്ച'.split(
+                '_'
+            ),
         weekdaysShort: 'ഞായർ_തിങ്കൾ_ചൊവ്വ_ബുധൻ_വ്യാഴം_വെള്ളി_ശനി'.split('_'),
         weekdaysMin: 'ഞാ_തി_ചൊ_ബു_വ്യാ_വെ_ശ'.split('_'),
         longDateFormat: {
@@ -28649,9 +31200,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'Нэгдүгээр сар_Хоёрдугаар сар_Гуравдугаар сар_Дөрөвдүгээр сар_Тавдугаар сар_Зургадугаар сар_Долдугаар сар_Наймдугаар сар_Есдүгээр сар_Аравдугаар сар_Арван нэгдүгээр сар_Арван хоёрдугаар сар'.split(
             '_'
         ),
-        monthsShort: '1 сар_2 сар_3 сар_4 сар_5 сар_6 сар_7 сар_8 сар_9 сар_10 сар_11 сар_12 сар'.split(
-            '_'
-        ),
+        monthsShort:
+            '1 сар_2 сар_3 сар_4 сар_5 сар_6 сар_7 сар_8 сар_9 сар_10 сар_11 сар_12 сар'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'Ням_Даваа_Мягмар_Лхагва_Пүрэв_Баасан_Бямба'.split('_'),
         weekdaysShort: 'Ням_Дав_Мяг_Лха_Пүр_Баа_Бям'.split('_'),
@@ -28851,9 +31403,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'जानेवारी_फेब्रुवारी_मार्च_एप्रिल_मे_जून_जुलै_ऑगस्ट_सप्टेंबर_ऑक्टोबर_नोव्हेंबर_डिसेंबर'.split(
             '_'
         ),
-        monthsShort: 'जाने._फेब्रु._मार्च._एप्रि._मे._जून._जुलै._ऑग._सप्टें._ऑक्टो._नोव्हें._डिसें.'.split(
-            '_'
-        ),
+        monthsShort:
+            'जाने._फेब्रु._मार्च._एप्रि._मे._जून._जुलै._ऑग._सप्टें._ऑक्टो._नोव्हें._डिसें.'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'रविवार_सोमवार_मंगळवार_बुधवार_गुरूवार_शुक्रवार_शनिवार'.split('_'),
         weekdaysShort: 'रवि_सोम_मंगळ_बुध_गुरू_शुक्र_शनि'.split('_'),
@@ -29152,9 +31705,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             '_'
         ),
         monthsShort: 'Jan_Fra_Mar_Apr_Mej_Ġun_Lul_Aww_Set_Ott_Nov_Diċ'.split('_'),
-        weekdays: 'Il-Ħadd_It-Tnejn_It-Tlieta_L-Erbgħa_Il-Ħamis_Il-Ġimgħa_Is-Sibt'.split(
-            '_'
-        ),
+        weekdays:
+            'Il-Ħadd_It-Tnejn_It-Tlieta_L-Erbgħa_Il-Ħamis_Il-Ġimgħa_Is-Sibt'.split(
+                '_'
+            ),
         weekdaysShort: 'Ħad_Tne_Tli_Erb_Ħam_Ġim_Sib'.split('_'),
         weekdaysMin: 'Ħa_Tn_Tl_Er_Ħa_Ġi_Si'.split('_'),
         longDateFormat: {
@@ -29337,9 +31891,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'januar_februar_mars_april_mai_juni_juli_august_september_oktober_november_desember'.split(
             '_'
         ),
-        monthsShort: 'jan._feb._mars_apr._mai_juni_juli_aug._sep._okt._nov._des.'.split(
-            '_'
-        ),
+        monthsShort:
+            'jan._feb._mars_apr._mai_juni_juli_aug._sep._okt._nov._des.'.split('_'),
         monthsParseExact: true,
         weekdays: 'søndag_mandag_tirsdag_onsdag_torsdag_fredag_lørdag'.split('_'),
         weekdaysShort: 'sø._ma._ti._on._to._fr._lø.'.split('_'),
@@ -29368,13 +31921,13 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             ss: '%d sekunder',
             m: 'ett minutt',
             mm: '%d minutter',
-            h: 'en time',
+            h: 'én time',
             hh: '%d timer',
-            d: 'en dag',
+            d: 'én dag',
             dd: '%d dager',
-            w: 'en uke',
+            w: 'én uke',
             ww: '%d uker',
-            M: 'en måned',
+            M: 'én måned',
             MM: '%d måneder',
             y: 'ett år',
             yy: '%d år',
@@ -29440,9 +31993,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'जनवरी_फेब्रुवरी_मार्च_अप्रिल_मई_जुन_जुलाई_अगष्ट_सेप्टेम्बर_अक्टोबर_नोभेम्बर_डिसेम्बर'.split(
             '_'
         ),
-        monthsShort: 'जन._फेब्रु._मार्च_अप्रि._मई_जुन_जुलाई._अग._सेप्ट._अक्टो._नोभे._डिसे.'.split(
-            '_'
-        ),
+        monthsShort:
+            'जन._फेब्रु._मार्च_अप्रि._मई_जुन_जुलाई._अग._सेप्ट._अक्टो._नोभे._डिसे.'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'आइतबार_सोमबार_मङ्गलबार_बुधबार_बिहिबार_शुक्रबार_शनिबार'.split(
             '_'
@@ -29551,16 +32105,14 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     //! moment.js locale configuration
 
-    var monthsShortWithDots = 'jan._feb._mrt._apr._mei_jun._jul._aug._sep._okt._nov._dec.'.split(
-            '_'
-        ),
-        monthsShortWithoutDots = 'jan_feb_mrt_apr_mei_jun_jul_aug_sep_okt_nov_dec'.split(
-            '_'
-        ),
+    var monthsShortWithDots =
+            'jan._feb._mrt._apr._mei_jun._jul._aug._sep._okt._nov._dec.'.split('_'),
+        monthsShortWithoutDots =
+            'jan_feb_mrt_apr_mei_jun_jul_aug_sep_okt_nov_dec'.split('_'),
         monthsParse = [
             /^jan/i,
             /^feb/i,
-            /^maart|mrt.?$/i,
+            /^(maart|mrt\.?)$/i,
             /^apr/i,
             /^mei$/i,
             /^jun[i.]?$/i,
@@ -29571,7 +32123,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             /^nov/i,
             /^dec/i,
         ],
-        monthsRegex = /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
+        monthsRegex =
+            /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
 
     var nlBe = moment.defineLocale('nl-be', {
         months: 'januari_februari_maart_april_mei_juni_juli_augustus_september_oktober_november_december'.split(
@@ -29589,16 +32142,17 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
         monthsRegex: monthsRegex,
         monthsShortRegex: monthsRegex,
-        monthsStrictRegex: /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december)/i,
-        monthsShortStrictRegex: /^(jan\.?|feb\.?|mrt\.?|apr\.?|mei|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i,
+        monthsStrictRegex:
+            /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december)/i,
+        monthsShortStrictRegex:
+            /^(jan\.?|feb\.?|mrt\.?|apr\.?|mei|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i,
 
         monthsParse: monthsParse,
         longMonthsParse: monthsParse,
         shortMonthsParse: monthsParse,
 
-        weekdays: 'zondag_maandag_dinsdag_woensdag_donderdag_vrijdag_zaterdag'.split(
-            '_'
-        ),
+        weekdays:
+            'zondag_maandag_dinsdag_woensdag_donderdag_vrijdag_zaterdag'.split('_'),
         weekdaysShort: 'zo._ma._di._wo._do._vr._za.'.split('_'),
         weekdaysMin: 'zo_ma_di_wo_do_vr_za'.split('_'),
         weekdaysParseExact: true,
@@ -29672,16 +32226,14 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     //! moment.js locale configuration
 
-    var monthsShortWithDots = 'jan._feb._mrt._apr._mei_jun._jul._aug._sep._okt._nov._dec.'.split(
-            '_'
-        ),
-        monthsShortWithoutDots = 'jan_feb_mrt_apr_mei_jun_jul_aug_sep_okt_nov_dec'.split(
-            '_'
-        ),
+    var monthsShortWithDots =
+            'jan._feb._mrt._apr._mei_jun._jul._aug._sep._okt._nov._dec.'.split('_'),
+        monthsShortWithoutDots =
+            'jan_feb_mrt_apr_mei_jun_jul_aug_sep_okt_nov_dec'.split('_'),
         monthsParse = [
             /^jan/i,
             /^feb/i,
-            /^maart|mrt.?$/i,
+            /^(maart|mrt\.?)$/i,
             /^apr/i,
             /^mei$/i,
             /^jun[i.]?$/i,
@@ -29692,7 +32244,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             /^nov/i,
             /^dec/i,
         ],
-        monthsRegex = /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
+        monthsRegex =
+            /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
 
     var nl = moment.defineLocale('nl', {
         months: 'januari_februari_maart_april_mei_juni_juli_augustus_september_oktober_november_december'.split(
@@ -29710,16 +32263,17 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
         monthsRegex: monthsRegex,
         monthsShortRegex: monthsRegex,
-        monthsStrictRegex: /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december)/i,
-        monthsShortStrictRegex: /^(jan\.?|feb\.?|mrt\.?|apr\.?|mei|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i,
+        monthsStrictRegex:
+            /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december)/i,
+        monthsShortStrictRegex:
+            /^(jan\.?|feb\.?|mrt\.?|apr\.?|mei|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i,
 
         monthsParse: monthsParse,
         longMonthsParse: monthsParse,
         shortMonthsParse: monthsParse,
 
-        weekdays: 'zondag_maandag_dinsdag_woensdag_donderdag_vrijdag_zaterdag'.split(
-            '_'
-        ),
+        weekdays:
+            'zondag_maandag_dinsdag_woensdag_donderdag_vrijdag_zaterdag'.split('_'),
         weekdaysShort: 'zo._ma._di._wo._do._vr._za.'.split('_'),
         weekdaysMin: 'zo_ma_di_wo_do_vr_za'.split('_'),
         weekdaysParseExact: true,
@@ -29799,9 +32353,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'januar_februar_mars_april_mai_juni_juli_august_september_oktober_november_desember'.split(
             '_'
         ),
-        monthsShort: 'jan._feb._mars_apr._mai_juni_juli_aug._sep._okt._nov._des.'.split(
-            '_'
-        ),
+        monthsShort:
+            'jan._feb._mars_apr._mai_juni_juli_aug._sep._okt._nov._des.'.split('_'),
         monthsParseExact: true,
         weekdays: 'sundag_måndag_tysdag_onsdag_torsdag_fredag_laurdag'.split('_'),
         weekdaysShort: 'su._må._ty._on._to._fr._lau.'.split('_'),
@@ -29875,17 +32428,19 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     var ocLnc = moment.defineLocale('oc-lnc', {
         months: {
-            standalone: 'genièr_febrièr_març_abril_mai_junh_julhet_agost_setembre_octòbre_novembre_decembre'.split(
-                '_'
-            ),
+            standalone:
+                'genièr_febrièr_març_abril_mai_junh_julhet_agost_setembre_octòbre_novembre_decembre'.split(
+                    '_'
+                ),
             format: "de genièr_de febrièr_de març_d'abril_de mai_de junh_de julhet_d'agost_de setembre_d'octòbre_de novembre_de decembre".split(
                 '_'
             ),
             isFormat: /D[oD]?(\s)+MMMM/,
         },
-        monthsShort: 'gen._febr._març_abr._mai_junh_julh._ago._set._oct._nov._dec.'.split(
-            '_'
-        ),
+        monthsShort:
+            'gen._febr._març_abr._mai_junh_julh._ago._set._oct._nov._dec.'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'dimenge_diluns_dimars_dimècres_dijòus_divendres_dissabte'.split(
             '_'
@@ -29934,12 +32489,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                 number === 1
                     ? 'r'
                     : number === 2
-                    ? 'n'
-                    : number === 3
-                    ? 'r'
-                    : number === 4
-                    ? 't'
-                    : 'è';
+                      ? 'n'
+                      : number === 3
+                        ? 'r'
+                        : number === 4
+                          ? 't'
+                          : 'è';
             if (period === 'w' || period === 'W') {
                 output = 'a';
             }
@@ -30005,9 +32560,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'ਜਨਵਰੀ_ਫ਼ਰਵਰੀ_ਮਾਰਚ_ਅਪ੍ਰੈਲ_ਮਈ_ਜੂਨ_ਜੁਲਾਈ_ਅਗਸਤ_ਸਤੰਬਰ_ਅਕਤੂਬਰ_ਨਵੰਬਰ_ਦਸੰਬਰ'.split(
             '_'
         ),
-        monthsShort: 'ਜਨਵਰੀ_ਫ਼ਰਵਰੀ_ਮਾਰਚ_ਅਪ੍ਰੈਲ_ਮਈ_ਜੂਨ_ਜੁਲਾਈ_ਅਗਸਤ_ਸਤੰਬਰ_ਅਕਤੂਬਰ_ਨਵੰਬਰ_ਦਸੰਬਰ'.split(
-            '_'
-        ),
+        monthsShort:
+            'ਜਨਵਰੀ_ਫ਼ਰਵਰੀ_ਮਾਰਚ_ਅਪ੍ਰੈਲ_ਮਈ_ਜੂਨ_ਜੁਲਾਈ_ਅਗਸਤ_ਸਤੰਬਰ_ਅਕਤੂਬਰ_ਨਵੰਬਰ_ਦਸੰਬਰ'.split(
+                '_'
+            ),
         weekdays: 'ਐਤਵਾਰ_ਸੋਮਵਾਰ_ਮੰਗਲਵਾਰ_ਬੁਧਵਾਰ_ਵੀਰਵਾਰ_ਸ਼ੁੱਕਰਵਾਰ_ਸ਼ਨੀਚਰਵਾਰ'.split(
             '_'
         ),
@@ -30115,12 +32671,14 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     //! moment.js locale configuration
 
-    var monthsNominative = 'styczeń_luty_marzec_kwiecień_maj_czerwiec_lipiec_sierpień_wrzesień_październik_listopad_grudzień'.split(
-            '_'
-        ),
-        monthsSubjective = 'stycznia_lutego_marca_kwietnia_maja_czerwca_lipca_sierpnia_września_października_listopada_grudnia'.split(
-            '_'
-        ),
+    var monthsNominative =
+            'styczeń_luty_marzec_kwiecień_maj_czerwiec_lipiec_sierpień_wrzesień_październik_listopad_grudzień'.split(
+                '_'
+            ),
+        monthsSubjective =
+            'stycznia_lutego_marca_kwietnia_maja_czerwca_lipca_sierpnia_września_października_listopada_grudnia'.split(
+                '_'
+            ),
         monthsParse = [
             /^sty/i,
             /^lut/i,
@@ -30174,9 +32732,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         monthsParse: monthsParse,
         longMonthsParse: monthsParse,
         shortMonthsParse: monthsParse,
-        weekdays: 'niedziela_poniedziałek_wtorek_środa_czwartek_piątek_sobota'.split(
-            '_'
-        ),
+        weekdays:
+            'niedziela_poniedziałek_wtorek_środa_czwartek_piątek_sobota'.split('_'),
         weekdaysShort: 'ndz_pon_wt_śr_czw_pt_sob'.split('_'),
         weekdaysMin: 'Nd_Pn_Wt_Śr_Cz_Pt_So'.split('_'),
         longDateFormat: {
@@ -30278,9 +32835,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             '_'
         ),
         monthsShort: 'jan_fev_mar_abr_mai_jun_jul_ago_set_out_nov_dez'.split('_'),
-        weekdays: 'domingo_segunda-feira_terça-feira_quarta-feira_quinta-feira_sexta-feira_sábado'.split(
-            '_'
-        ),
+        weekdays:
+            'domingo_segunda-feira_terça-feira_quarta-feira_quinta-feira_sexta-feira_sábado'.split(
+                '_'
+            ),
         weekdaysShort: 'dom_seg_ter_qua_qui_sex_sáb'.split('_'),
         weekdaysMin: 'do_2ª_3ª_4ª_5ª_6ª_sá'.split('_'),
         weekdaysParseExact: true,
@@ -30354,9 +32912,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             '_'
         ),
         monthsShort: 'jan_fev_mar_abr_mai_jun_jul_ago_set_out_nov_dez'.split('_'),
-        weekdays: 'Domingo_Segunda-feira_Terça-feira_Quarta-feira_Quinta-feira_Sexta-feira_Sábado'.split(
-            '_'
-        ),
+        weekdays:
+            'Domingo_Segunda-feira_Terça-feira_Quarta-feira_Quinta-feira_Sexta-feira_Sábado'.split(
+                '_'
+            ),
         weekdaysShort: 'Dom_Seg_Ter_Qua_Qui_Sex_Sáb'.split('_'),
         weekdaysMin: 'Do_2ª_3ª_4ª_5ª_6ª_Sá'.split('_'),
         weekdaysParseExact: true,
@@ -30453,9 +33012,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'ianuarie_februarie_martie_aprilie_mai_iunie_iulie_august_septembrie_octombrie_noiembrie_decembrie'.split(
             '_'
         ),
-        monthsShort: 'ian._feb._mart._apr._mai_iun._iul._aug._sept._oct._nov._dec.'.split(
-            '_'
-        ),
+        monthsShort:
+            'ian._feb._mart._apr._mai_iun._iul._aug._sept._oct._nov._dec.'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'duminică_luni_marți_miercuri_joi_vineri_sâmbătă'.split('_'),
         weekdaysShort: 'Dum_Lun_Mar_Mie_Joi_Vin_Sâm'.split('_'),
@@ -30531,8 +33091,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         return num % 10 === 1 && num % 100 !== 11
             ? forms[0]
             : num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 10 || num % 100 >= 20)
-            ? forms[1]
-            : forms[2];
+              ? forms[1]
+              : forms[2];
     }
     function relativeTimeWithPlural(number, withoutSuffix, key) {
         var format = {
@@ -30573,23 +33133,26 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             format: 'января_февраля_марта_апреля_мая_июня_июля_августа_сентября_октября_ноября_декабря'.split(
                 '_'
             ),
-            standalone: 'январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь'.split(
-                '_'
-            ),
+            standalone:
+                'январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь'.split(
+                    '_'
+                ),
         },
         monthsShort: {
             // по CLDR именно "июл." и "июн.", но какой смысл менять букву на точку?
             format: 'янв._февр._мар._апр._мая_июня_июля_авг._сент._окт._нояб._дек.'.split(
                 '_'
             ),
-            standalone: 'янв._февр._март_апр._май_июнь_июль_авг._сент._окт._нояб._дек.'.split(
-                '_'
-            ),
+            standalone:
+                'янв._февр._март_апр._май_июнь_июль_авг._сент._окт._нояб._дек.'.split(
+                    '_'
+                ),
         },
         weekdays: {
-            standalone: 'воскресенье_понедельник_вторник_среда_четверг_пятница_суббота'.split(
-                '_'
-            ),
+            standalone:
+                'воскресенье_понедельник_вторник_среда_четверг_пятница_суббота'.split(
+                    '_'
+                ),
             format: 'воскресенье_понедельник_вторник_среду_четверг_пятницу_субботу'.split(
                 '_'
             ),
@@ -30602,16 +33165,20 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         shortMonthsParse: monthsParse,
 
         // полные названия с падежами, по три буквы, для некоторых, по 4 буквы, сокращения с точкой и без точки
-        monthsRegex: /^(январ[ья]|янв\.?|феврал[ья]|февр?\.?|марта?|мар\.?|апрел[ья]|апр\.?|ма[йя]|июн[ья]|июн\.?|июл[ья]|июл\.?|августа?|авг\.?|сентябр[ья]|сент?\.?|октябр[ья]|окт\.?|ноябр[ья]|нояб?\.?|декабр[ья]|дек\.?)/i,
+        monthsRegex:
+            /^(январ[ья]|янв\.?|феврал[ья]|февр?\.?|марта?|мар\.?|апрел[ья]|апр\.?|ма[йя]|июн[ья]|июн\.?|июл[ья]|июл\.?|августа?|авг\.?|сентябр[ья]|сент?\.?|октябр[ья]|окт\.?|ноябр[ья]|нояб?\.?|декабр[ья]|дек\.?)/i,
 
         // копия предыдущего
-        monthsShortRegex: /^(январ[ья]|янв\.?|феврал[ья]|февр?\.?|марта?|мар\.?|апрел[ья]|апр\.?|ма[йя]|июн[ья]|июн\.?|июл[ья]|июл\.?|августа?|авг\.?|сентябр[ья]|сент?\.?|октябр[ья]|окт\.?|ноябр[ья]|нояб?\.?|декабр[ья]|дек\.?)/i,
+        monthsShortRegex:
+            /^(январ[ья]|янв\.?|феврал[ья]|февр?\.?|марта?|мар\.?|апрел[ья]|апр\.?|ма[йя]|июн[ья]|июн\.?|июл[ья]|июл\.?|августа?|авг\.?|сентябр[ья]|сент?\.?|октябр[ья]|окт\.?|ноябр[ья]|нояб?\.?|декабр[ья]|дек\.?)/i,
 
         // полные названия с падежами
-        monthsStrictRegex: /^(январ[яь]|феврал[яь]|марта?|апрел[яь]|ма[яй]|июн[яь]|июл[яь]|августа?|сентябр[яь]|октябр[яь]|ноябр[яь]|декабр[яь])/i,
+        monthsStrictRegex:
+            /^(январ[яь]|феврал[яь]|марта?|апрел[яь]|ма[яй]|июн[яь]|июл[яь]|августа?|сентябр[яь]|октябр[яь]|ноябр[яь]|декабр[яь])/i,
 
         // Выражение, которое соответствует только сокращённым формам
-        monthsShortStrictRegex: /^(янв\.|февр?\.|мар[т.]|апр\.|ма[яй]|июн[ья.]|июл[ья.]|авг\.|сент?\.|окт\.|нояб?\.|дек\.)/i,
+        monthsShortStrictRegex:
+            /^(янв\.|февр?\.|мар[т.]|апр\.|ма[яй]|июн[ья.]|июл[ья.]|авг\.|сент?\.|окт\.|нояб?\.|дек\.)/i,
         longDateFormat: {
             LT: 'H:mm',
             LTS: 'H:mm:ss',
@@ -30853,12 +33420,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'ođđajagemánnu_guovvamánnu_njukčamánnu_cuoŋománnu_miessemánnu_geassemánnu_suoidnemánnu_borgemánnu_čakčamánnu_golggotmánnu_skábmamánnu_juovlamánnu'.split(
             '_'
         ),
-        monthsShort: 'ođđj_guov_njuk_cuo_mies_geas_suoi_borg_čakč_golg_skáb_juov'.split(
-            '_'
-        ),
-        weekdays: 'sotnabeaivi_vuossárga_maŋŋebárga_gaskavahkku_duorastat_bearjadat_lávvardat'.split(
-            '_'
-        ),
+        monthsShort:
+            'ođđj_guov_njuk_cuo_mies_geas_suoi_borg_čakč_golg_skáb_juov'.split('_'),
+        weekdays:
+            'sotnabeaivi_vuossárga_maŋŋebárga_gaskavahkku_duorastat_bearjadat_lávvardat'.split(
+                '_'
+            ),
         weekdaysShort: 'sotn_vuos_maŋ_gask_duor_bear_láv'.split('_'),
         weekdaysMin: 's_v_m_g_d_b_L'.split('_'),
         longDateFormat: {
@@ -30933,9 +33500,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         monthsShort: 'ජන_පෙබ_මාර්_අප්_මැයි_ජූනි_ජූලි_අගෝ_සැප්_ඔක්_නොවැ_දෙසැ'.split(
             '_'
         ),
-        weekdays: 'ඉරිදා_සඳුදා_අඟහරුවාදා_බදාදා_බ්‍රහස්පතින්දා_සිකුරාදා_සෙනසුරාදා'.split(
-            '_'
-        ),
+        weekdays:
+            'ඉරිදා_සඳුදා_අඟහරුවාදා_බදාදා_බ්‍රහස්පතින්දා_සිකුරාදා_සෙනසුරාදා'.split(
+                '_'
+            ),
         weekdaysShort: 'ඉරි_සඳු_අඟ_බදා_බ්‍රහ_සිකු_සෙන'.split('_'),
         weekdaysMin: 'ඉ_ස_අ_බ_බ්‍ර_සි_සෙ'.split('_'),
         weekdaysParseExact: true,
@@ -31013,9 +33581,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     //! moment.js locale configuration
 
-    var months = 'január_február_marec_apríl_máj_jún_júl_august_september_október_november_december'.split(
-            '_'
-        ),
+    var months =
+            'január_február_marec_apríl_máj_jún_júl_august_september_október_november_december'.split(
+                '_'
+            ),
         monthsShort = 'jan_feb_mar_apr_máj_jún_júl_aug_sep_okt_nov_dec'.split('_');
     function plural(n) {
         return n > 1 && n < 5;
@@ -31263,9 +33832,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'januar_februar_marec_april_maj_junij_julij_avgust_september_oktober_november_december'.split(
             '_'
         ),
-        monthsShort: 'jan._feb._mar._apr._maj._jun._jul._avg._sep._okt._nov._dec.'.split(
-            '_'
-        ),
+        monthsShort:
+            'jan._feb._mar._apr._maj._jun._jul._avg._sep._okt._nov._dec.'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'nedelja_ponedeljek_torek_sreda_četrtek_petek_sobota'.split('_'),
         weekdaysShort: 'ned._pon._tor._sre._čet._pet._sob.'.split('_'),
@@ -31453,32 +34023,44 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         words: {
             //Different grammatical cases
             ss: ['секунда', 'секунде', 'секунди'],
-            m: ['један минут', 'једне минуте'],
-            mm: ['минут', 'минуте', 'минута'],
+            m: ['један минут', 'једног минута'],
+            mm: ['минут', 'минута', 'минута'],
             h: ['један сат', 'једног сата'],
             hh: ['сат', 'сата', 'сати'],
+            d: ['један дан', 'једног дана'],
             dd: ['дан', 'дана', 'дана'],
+            M: ['један месец', 'једног месеца'],
             MM: ['месец', 'месеца', 'месеци'],
-            yy: ['година', 'године', 'година'],
+            y: ['једну годину', 'једне године'],
+            yy: ['годину', 'године', 'година'],
         },
         correctGrammaticalCase: function (number, wordKey) {
-            return number === 1
-                ? wordKey[0]
-                : number >= 2 && number <= 4
-                ? wordKey[1]
-                : wordKey[2];
-        },
-        translate: function (number, withoutSuffix, key) {
-            var wordKey = translator.words[key];
-            if (key.length === 1) {
-                return withoutSuffix ? wordKey[0] : wordKey[1];
-            } else {
-                return (
-                    number +
-                    ' ' +
-                    translator.correctGrammaticalCase(number, wordKey)
-                );
+            if (
+                number % 10 >= 1 &&
+                number % 10 <= 4 &&
+                (number % 100 < 10 || number % 100 >= 20)
+            ) {
+                return number % 10 === 1 ? wordKey[0] : wordKey[1];
             }
+            return wordKey[2];
+        },
+        translate: function (number, withoutSuffix, key, isFuture) {
+            var wordKey = translator.words[key],
+                word;
+
+            if (key.length === 1) {
+                // Nominativ
+                if (key === 'y' && withoutSuffix) return 'једна година';
+                return isFuture || withoutSuffix ? wordKey[0] : wordKey[1];
+            }
+
+            word = translator.correctGrammaticalCase(number, wordKey);
+            // Nominativ
+            if (key === 'yy' && withoutSuffix && word === 'годину') {
+                return number + ' година';
+            }
+
+            return number + ' ' + word;
         },
     };
 
@@ -31486,9 +34068,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'јануар_фебруар_март_април_мај_јун_јул_август_септембар_октобар_новембар_децембар'.split(
             '_'
         ),
-        monthsShort: 'јан._феб._мар._апр._мај_јун_јул_авг._сеп._окт._нов._дец.'.split(
-            '_'
-        ),
+        monthsShort:
+            'јан._феб._мар._апр._мај_јун_јул_авг._сеп._окт._нов._дец.'.split('_'),
         monthsParseExact: true,
         weekdays: 'недеља_понедељак_уторак_среда_четвртак_петак_субота'.split('_'),
         weekdaysShort: 'нед._пон._уто._сре._чет._пет._суб.'.split('_'),
@@ -31544,11 +34125,11 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             mm: translator.translate,
             h: translator.translate,
             hh: translator.translate,
-            d: 'дан',
+            d: translator.translate,
             dd: translator.translate,
-            M: 'месец',
+            M: translator.translate,
             MM: translator.translate,
-            y: 'годину',
+            y: translator.translate,
             yy: translator.translate,
         },
         dayOfMonthOrdinalParse: /\d{1,2}\./,
@@ -31588,32 +34169,44 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         words: {
             //Different grammatical cases
             ss: ['sekunda', 'sekunde', 'sekundi'],
-            m: ['jedan minut', 'jedne minute'],
-            mm: ['minut', 'minute', 'minuta'],
+            m: ['jedan minut', 'jednog minuta'],
+            mm: ['minut', 'minuta', 'minuta'],
             h: ['jedan sat', 'jednog sata'],
             hh: ['sat', 'sata', 'sati'],
+            d: ['jedan dan', 'jednog dana'],
             dd: ['dan', 'dana', 'dana'],
+            M: ['jedan mesec', 'jednog meseca'],
             MM: ['mesec', 'meseca', 'meseci'],
-            yy: ['godina', 'godine', 'godina'],
+            y: ['jednu godinu', 'jedne godine'],
+            yy: ['godinu', 'godine', 'godina'],
         },
         correctGrammaticalCase: function (number, wordKey) {
-            return number === 1
-                ? wordKey[0]
-                : number >= 2 && number <= 4
-                ? wordKey[1]
-                : wordKey[2];
-        },
-        translate: function (number, withoutSuffix, key) {
-            var wordKey = translator.words[key];
-            if (key.length === 1) {
-                return withoutSuffix ? wordKey[0] : wordKey[1];
-            } else {
-                return (
-                    number +
-                    ' ' +
-                    translator.correctGrammaticalCase(number, wordKey)
-                );
+            if (
+                number % 10 >= 1 &&
+                number % 10 <= 4 &&
+                (number % 100 < 10 || number % 100 >= 20)
+            ) {
+                return number % 10 === 1 ? wordKey[0] : wordKey[1];
             }
+            return wordKey[2];
+        },
+        translate: function (number, withoutSuffix, key, isFuture) {
+            var wordKey = translator.words[key],
+                word;
+
+            if (key.length === 1) {
+                // Nominativ
+                if (key === 'y' && withoutSuffix) return 'jedna godina';
+                return isFuture || withoutSuffix ? wordKey[0] : wordKey[1];
+            }
+
+            word = translator.correctGrammaticalCase(number, wordKey);
+            // Nominativ
+            if (key === 'yy' && withoutSuffix && word === 'godinu') {
+                return number + ' godina';
+            }
+
+            return number + ' ' + word;
         },
     };
 
@@ -31621,9 +34214,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'januar_februar_mart_april_maj_jun_jul_avgust_septembar_oktobar_novembar_decembar'.split(
             '_'
         ),
-        monthsShort: 'jan._feb._mar._apr._maj_jun_jul_avg._sep._okt._nov._dec.'.split(
-            '_'
-        ),
+        monthsShort:
+            'jan._feb._mar._apr._maj_jun_jul_avg._sep._okt._nov._dec.'.split('_'),
         monthsParseExact: true,
         weekdays: 'nedelja_ponedeljak_utorak_sreda_četvrtak_petak_subota'.split(
             '_'
@@ -31681,11 +34273,11 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             mm: translator.translate,
             h: translator.translate,
             hh: translator.translate,
-            d: 'dan',
+            d: translator.translate,
             dd: translator.translate,
-            M: 'mesec',
+            M: translator.translate,
             MM: translator.translate,
-            y: 'godinu',
+            y: translator.translate,
             yy: translator.translate,
         },
         dayOfMonthOrdinalParse: /\d{1,2}\./,
@@ -31725,9 +34317,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             '_'
         ),
         monthsShort: 'Bhi_Ina_Inu_Mab_Ink_Inh_Kho_Igc_Iny_Imp_Lwe_Igo'.split('_'),
-        weekdays: 'Lisontfo_Umsombuluko_Lesibili_Lesitsatfu_Lesine_Lesihlanu_Umgcibelo'.split(
-            '_'
-        ),
+        weekdays:
+            'Lisontfo_Umsombuluko_Lesibili_Lesitsatfu_Lesine_Lesihlanu_Umgcibelo'.split(
+                '_'
+            ),
         weekdaysShort: 'Lis_Umb_Lsb_Les_Lsi_Lsh_Umg'.split('_'),
         weekdaysMin: 'Li_Us_Lb_Lt_Ls_Lh_Ug'.split('_'),
         weekdaysParseExact: true,
@@ -31871,12 +34464,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                     ~~((number % 100) / 10) === 1
                         ? ':e'
                         : b === 1
-                        ? ':a'
-                        : b === 2
-                        ? ':a'
-                        : b === 3
-                        ? ':e'
-                        : ':e';
+                          ? ':a'
+                          : b === 2
+                            ? ':a'
+                            : b === 3
+                              ? ':e'
+                              : ':e';
             return number + output;
         },
         week: {
@@ -31914,9 +34507,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             '_'
         ),
         monthsShort: 'Jan_Feb_Mac_Apr_Mei_Jun_Jul_Ago_Sep_Okt_Nov_Des'.split('_'),
-        weekdays: 'Jumapili_Jumatatu_Jumanne_Jumatano_Alhamisi_Ijumaa_Jumamosi'.split(
-            '_'
-        ),
+        weekdays:
+            'Jumapili_Jumatatu_Jumanne_Jumatano_Alhamisi_Ijumaa_Jumamosi'.split(
+                '_'
+            ),
         weekdaysShort: 'Jpl_Jtat_Jnne_Jtan_Alh_Ijm_Jmos'.split('_'),
         weekdaysMin: 'J2_J3_J4_J5_Al_Ij_J1'.split('_'),
         weekdaysParseExact: true,
@@ -32011,12 +34605,14 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'ஜனவரி_பிப்ரவரி_மார்ச்_ஏப்ரல்_மே_ஜூன்_ஜூலை_ஆகஸ்ட்_செப்டெம்பர்_அக்டோபர்_நவம்பர்_டிசம்பர்'.split(
             '_'
         ),
-        monthsShort: 'ஜனவரி_பிப்ரவரி_மார்ச்_ஏப்ரல்_மே_ஜூன்_ஜூலை_ஆகஸ்ட்_செப்டெம்பர்_அக்டோபர்_நவம்பர்_டிசம்பர்'.split(
-            '_'
-        ),
-        weekdays: 'ஞாயிற்றுக்கிழமை_திங்கட்கிழமை_செவ்வாய்கிழமை_புதன்கிழமை_வியாழக்கிழமை_வெள்ளிக்கிழமை_சனிக்கிழமை'.split(
-            '_'
-        ),
+        monthsShort:
+            'ஜனவரி_பிப்ரவரி_மார்ச்_ஏப்ரல்_மே_ஜூன்_ஜூலை_ஆகஸ்ட்_செப்டெம்பர்_அக்டோபர்_நவம்பர்_டிசம்பர்'.split(
+                '_'
+            ),
+        weekdays:
+            'ஞாயிற்றுக்கிழமை_திங்கட்கிழமை_செவ்வாய்கிழமை_புதன்கிழமை_வியாழக்கிழமை_வெள்ளிக்கிழமை_சனிக்கிழமை'.split(
+                '_'
+            ),
         weekdaysShort: 'ஞாயிறு_திங்கள்_செவ்வாய்_புதன்_வியாழன்_வெள்ளி_சனி'.split(
             '_'
         ),
@@ -32134,13 +34730,15 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'జనవరి_ఫిబ్రవరి_మార్చి_ఏప్రిల్_మే_జూన్_జులై_ఆగస్టు_సెప్టెంబర్_అక్టోబర్_నవంబర్_డిసెంబర్'.split(
             '_'
         ),
-        monthsShort: 'జన._ఫిబ్ర._మార్చి_ఏప్రి._మే_జూన్_జులై_ఆగ._సెప్._అక్టో._నవ._డిసె.'.split(
-            '_'
-        ),
+        monthsShort:
+            'జన._ఫిబ్ర._మార్చి_ఏప్రి._మే_జూన్_జులై_ఆగ._సెప్._అక్టో._నవ._డిసె.'.split(
+                '_'
+            ),
         monthsParseExact: true,
-        weekdays: 'ఆదివారం_సోమవారం_మంగళవారం_బుధవారం_గురువారం_శుక్రవారం_శనివారం'.split(
-            '_'
-        ),
+        weekdays:
+            'ఆదివారం_సోమవారం_మంగళవారం_బుధవారం_గురువారం_శుక్రవారం_శనివారం'.split(
+                '_'
+            ),
         weekdaysShort: 'ఆది_సోమ_మంగళ_బుధ_గురు_శుక్ర_శని'.split('_'),
         weekdaysMin: 'ఆ_సో_మం_బు_గు_శు_శ'.split('_'),
         longDateFormat: {
@@ -32284,12 +34882,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                     ~~((number % 100) / 10) === 1
                         ? 'th'
                         : b === 1
-                        ? 'st'
-                        : b === 2
-                        ? 'nd'
-                        : b === 3
-                        ? 'rd'
-                        : 'th';
+                          ? 'st'
+                          : b === 2
+                            ? 'nd'
+                            : b === 3
+                              ? 'rd'
+                              : 'th';
             return number + output;
         },
         week: {
@@ -32352,9 +34950,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             format: 'январи_феврали_марти_апрели_майи_июни_июли_августи_сентябри_октябри_ноябри_декабри'.split(
                 '_'
             ),
-            standalone: 'январ_феврал_март_апрел_май_июн_июл_август_сентябр_октябр_ноябр_декабр'.split(
-                '_'
-            ),
+            standalone:
+                'январ_феврал_март_апрел_май_июн_июл_август_сентябр_октябр_ноябр_декабр'.split(
+                    '_'
+                ),
         },
         monthsShort: 'янв_фев_мар_апр_май_июн_июл_авг_сен_окт_ноя_дек'.split('_'),
         weekdays: 'якшанбе_душанбе_сешанбе_чоршанбе_панҷшанбе_ҷумъа_шанбе'.split(
@@ -32461,9 +35060,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'มกราคม_กุมภาพันธ์_มีนาคม_เมษายน_พฤษภาคม_มิถุนายน_กรกฎาคม_สิงหาคม_กันยายน_ตุลาคม_พฤศจิกายน_ธันวาคม'.split(
             '_'
         ),
-        monthsShort: 'ม.ค._ก.พ._มี.ค._เม.ย._พ.ค._มิ.ย._ก.ค._ส.ค._ก.ย._ต.ค._พ.ย._ธ.ค.'.split(
-            '_'
-        ),
+        monthsShort:
+            'ม.ค._ก.พ._มี.ค._เม.ย._พ.ค._มิ.ย._ก.ค._ส.ค._ก.ย._ต.ค._พ.ย._ธ.ค.'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'อาทิตย์_จันทร์_อังคาร_พุธ_พฤหัสบดี_ศุกร์_เสาร์'.split('_'),
         weekdaysShort: 'อาทิตย์_จันทร์_อังคาร_พุธ_พฤหัส_ศุกร์_เสาร์'.split('_'), // yes, three characters difference
@@ -32734,10 +35334,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             output.indexOf('jaj') !== -1
                 ? time.slice(0, -3) + 'leS'
                 : output.indexOf('jar') !== -1
-                ? time.slice(0, -3) + 'waQ'
-                : output.indexOf('DIS') !== -1
-                ? time.slice(0, -3) + 'nem'
-                : time + ' pIq';
+                  ? time.slice(0, -3) + 'waQ'
+                  : output.indexOf('DIS') !== -1
+                    ? time.slice(0, -3) + 'nem'
+                    : time + ' pIq';
         return time;
     }
 
@@ -32747,10 +35347,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             output.indexOf('jaj') !== -1
                 ? time.slice(0, -3) + 'Hu’'
                 : output.indexOf('jar') !== -1
-                ? time.slice(0, -3) + 'wen'
-                : output.indexOf('DIS') !== -1
-                ? time.slice(0, -3) + 'ben'
-                : time + ' ret';
+                  ? time.slice(0, -3) + 'wen'
+                  : output.indexOf('DIS') !== -1
+                    ? time.slice(0, -3) + 'ben'
+                    : time + ' ret';
         return time;
     }
 
@@ -32793,19 +35393,18 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'tera’ jar wa’_tera’ jar cha’_tera’ jar wej_tera’ jar loS_tera’ jar vagh_tera’ jar jav_tera’ jar Soch_tera’ jar chorgh_tera’ jar Hut_tera’ jar wa’maH_tera’ jar wa’maH wa’_tera’ jar wa’maH cha’'.split(
             '_'
         ),
-        monthsShort: 'jar wa’_jar cha’_jar wej_jar loS_jar vagh_jar jav_jar Soch_jar chorgh_jar Hut_jar wa’maH_jar wa’maH wa’_jar wa’maH cha’'.split(
-            '_'
-        ),
+        monthsShort:
+            'jar wa’_jar cha’_jar wej_jar loS_jar vagh_jar jav_jar Soch_jar chorgh_jar Hut_jar wa’maH_jar wa’maH wa’_jar wa’maH cha’'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'lojmItjaj_DaSjaj_povjaj_ghItlhjaj_loghjaj_buqjaj_ghInjaj'.split(
             '_'
         ),
-        weekdaysShort: 'lojmItjaj_DaSjaj_povjaj_ghItlhjaj_loghjaj_buqjaj_ghInjaj'.split(
-            '_'
-        ),
-        weekdaysMin: 'lojmItjaj_DaSjaj_povjaj_ghItlhjaj_loghjaj_buqjaj_ghInjaj'.split(
-            '_'
-        ),
+        weekdaysShort:
+            'lojmItjaj_DaSjaj_povjaj_ghItlhjaj_loghjaj_buqjaj_ghInjaj'.split('_'),
+        weekdaysMin:
+            'lojmItjaj_DaSjaj_povjaj_ghItlhjaj_loghjaj_buqjaj_ghInjaj'.split('_'),
         longDateFormat: {
             LT: 'HH:mm',
             LTS: 'HH:mm:ss',
@@ -32900,7 +35499,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         weekdays: 'Pazar_Pazartesi_Salı_Çarşamba_Perşembe_Cuma_Cumartesi'.split(
             '_'
         ),
-        weekdaysShort: 'Paz_Pts_Sal_Çar_Per_Cum_Cts'.split('_'),
+        weekdaysShort: 'Paz_Pzt_Sal_Çar_Per_Cum_Cmt'.split('_'),
         weekdaysMin: 'Pz_Pt_Sa_Ça_Pe_Cu_Ct'.split('_'),
         meridiem: function (hours, minutes, isLower) {
             if (hours < 12) {
@@ -33075,8 +35674,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         return isFuture
             ? format[key][0]
             : withoutSuffix
-            ? format[key][0]
-            : format[key][1];
+              ? format[key][0]
+              : format[key][1];
     }
 
     return tzl;
@@ -33107,9 +35706,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'innayr_brˤayrˤ_marˤsˤ_ibrir_mayyw_ywnyw_ywlywz_ɣwšt_šwtanbir_ktˤwbrˤ_nwwanbir_dwjnbir'.split(
             '_'
         ),
-        monthsShort: 'innayr_brˤayrˤ_marˤsˤ_ibrir_mayyw_ywnyw_ywlywz_ɣwšt_šwtanbir_ktˤwbrˤ_nwwanbir_dwjnbir'.split(
-            '_'
-        ),
+        monthsShort:
+            'innayr_brˤayrˤ_marˤsˤ_ibrir_mayyw_ywnyw_ywlywz_ɣwšt_šwtanbir_ktˤwbrˤ_nwwanbir_dwjnbir'.split(
+                '_'
+            ),
         weekdays: 'asamas_aynas_asinas_akras_akwas_asimwas_asiḍyas'.split('_'),
         weekdaysShort: 'asamas_aynas_asinas_akras_akwas_asimwas_asiḍyas'.split('_'),
         weekdaysMin: 'asamas_aynas_asinas_akras_akwas_asimwas_asiḍyas'.split('_'),
@@ -33179,9 +35779,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'ⵉⵏⵏⴰⵢⵔ_ⴱⵕⴰⵢⵕ_ⵎⴰⵕⵚ_ⵉⴱⵔⵉⵔ_ⵎⴰⵢⵢⵓ_ⵢⵓⵏⵢⵓ_ⵢⵓⵍⵢⵓⵣ_ⵖⵓⵛⵜ_ⵛⵓⵜⴰⵏⴱⵉⵔ_ⴽⵟⵓⴱⵕ_ⵏⵓⵡⴰⵏⴱⵉⵔ_ⴷⵓⵊⵏⴱⵉⵔ'.split(
             '_'
         ),
-        monthsShort: 'ⵉⵏⵏⴰⵢⵔ_ⴱⵕⴰⵢⵕ_ⵎⴰⵕⵚ_ⵉⴱⵔⵉⵔ_ⵎⴰⵢⵢⵓ_ⵢⵓⵏⵢⵓ_ⵢⵓⵍⵢⵓⵣ_ⵖⵓⵛⵜ_ⵛⵓⵜⴰⵏⴱⵉⵔ_ⴽⵟⵓⴱⵕ_ⵏⵓⵡⴰⵏⴱⵉⵔ_ⴷⵓⵊⵏⴱⵉⵔ'.split(
-            '_'
-        ),
+        monthsShort:
+            'ⵉⵏⵏⴰⵢⵔ_ⴱⵕⴰⵢⵕ_ⵎⴰⵕⵚ_ⵉⴱⵔⵉⵔ_ⵎⴰⵢⵢⵓ_ⵢⵓⵏⵢⵓ_ⵢⵓⵍⵢⵓⵣ_ⵖⵓⵛⵜ_ⵛⵓⵜⴰⵏⴱⵉⵔ_ⴽⵟⵓⴱⵕ_ⵏⵓⵡⴰⵏⴱⵉⵔ_ⴷⵓⵊⵏⴱⵉⵔ'.split(
+                '_'
+            ),
         weekdays: 'ⴰⵙⴰⵎⴰⵙ_ⴰⵢⵏⴰⵙ_ⴰⵙⵉⵏⴰⵙ_ⴰⴽⵔⴰⵙ_ⴰⴽⵡⴰⵙ_ⴰⵙⵉⵎⵡⴰⵙ_ⴰⵙⵉⴹⵢⴰⵙ'.split('_'),
         weekdaysShort: 'ⴰⵙⴰⵎⴰⵙ_ⴰⵢⵏⴰⵙ_ⴰⵙⵉⵏⴰⵙ_ⴰⴽⵔⴰⵙ_ⴰⴽⵡⴰⵙ_ⴰⵙⵉⵎⵡⴰⵙ_ⴰⵙⵉⴹⵢⴰⵙ'.split('_'),
         weekdaysMin: 'ⴰⵙⴰⵎⴰⵙ_ⴰⵢⵏⴰⵙ_ⴰⵙⵉⵏⴰⵙ_ⴰⴽⵔⴰⵙ_ⴰⴽⵡⴰⵙ_ⴰⵙⵉⵎⵡⴰⵙ_ⴰⵙⵉⴹⵢⴰⵙ'.split('_'),
@@ -33251,9 +35852,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'يانۋار_فېۋرال_مارت_ئاپرېل_ماي_ئىيۇن_ئىيۇل_ئاۋغۇست_سېنتەبىر_ئۆكتەبىر_نويابىر_دېكابىر'.split(
             '_'
         ),
-        monthsShort: 'يانۋار_فېۋرال_مارت_ئاپرېل_ماي_ئىيۇن_ئىيۇل_ئاۋغۇست_سېنتەبىر_ئۆكتەبىر_نويابىر_دېكابىر'.split(
-            '_'
-        ),
+        monthsShort:
+            'يانۋار_فېۋرال_مارت_ئاپرېل_ماي_ئىيۇن_ئىيۇل_ئاۋغۇست_سېنتەبىر_ئۆكتەبىر_نويابىر_دېكابىر'.split(
+                '_'
+            ),
         weekdays: 'يەكشەنبە_دۈشەنبە_سەيشەنبە_چارشەنبە_پەيشەنبە_جۈمە_شەنبە'.split(
             '_'
         ),
@@ -33382,8 +35984,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         return num % 10 === 1 && num % 100 !== 11
             ? forms[0]
             : num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 10 || num % 100 >= 20)
-            ? forms[1]
-            : forms[2];
+              ? forms[1]
+              : forms[2];
     }
     function relativeTimeWithPlural(number, withoutSuffix, key) {
         var format = {
@@ -33404,15 +36006,18 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
     }
     function weekdaysCaseReplace(m, format) {
         var weekdays = {
-                nominative: 'неділя_понеділок_вівторок_середа_четвер_п’ятниця_субота'.split(
-                    '_'
-                ),
-                accusative: 'неділю_понеділок_вівторок_середу_четвер_п’ятницю_суботу'.split(
-                    '_'
-                ),
-                genitive: 'неділі_понеділка_вівторка_середи_четверга_п’ятниці_суботи'.split(
-                    '_'
-                ),
+                nominative:
+                    'неділя_понеділок_вівторок_середа_четвер_п’ятниця_субота'.split(
+                        '_'
+                    ),
+                accusative:
+                    'неділю_понеділок_вівторок_середу_четвер_п’ятницю_суботу'.split(
+                        '_'
+                    ),
+                genitive:
+                    'неділі_понеділка_вівторка_середи_четверга_п’ятниці_суботи'.split(
+                        '_'
+                    ),
             },
             nounCase;
 
@@ -33428,8 +36033,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         nounCase = /(\[[ВвУу]\]) ?dddd/.test(format)
             ? 'accusative'
             : /\[?(?:минулої|наступної)? ?\] ?dddd/.test(format)
-            ? 'genitive'
-            : 'nominative';
+              ? 'genitive'
+              : 'nominative';
         return weekdays[nounCase][m.day()];
     }
     function processHoursFunction(str) {
@@ -33443,9 +36048,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             format: 'січня_лютого_березня_квітня_травня_червня_липня_серпня_вересня_жовтня_листопада_грудня'.split(
                 '_'
             ),
-            standalone: 'січень_лютий_березень_квітень_травень_червень_липень_серпень_вересень_жовтень_листопад_грудень'.split(
-                '_'
-            ),
+            standalone:
+                'січень_лютий_березень_квітень_травень_червень_липень_серпень_вересень_жовтень_листопад_грудень'.split(
+                    '_'
+                ),
         },
         monthsShort: 'січ_лют_бер_квіт_трав_черв_лип_серп_вер_жовт_лист_груд'.split(
             '_'
@@ -33664,9 +36270,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             '_'
         ),
         monthsShort: 'Yan_Fev_Mar_Apr_May_Iyun_Iyul_Avg_Sen_Okt_Noy_Dek'.split('_'),
-        weekdays: 'Yakshanba_Dushanba_Seshanba_Chorshanba_Payshanba_Juma_Shanba'.split(
-            '_'
-        ),
+        weekdays:
+            'Yakshanba_Dushanba_Seshanba_Chorshanba_Payshanba_Juma_Shanba'.split(
+                '_'
+            ),
         weekdaysShort: 'Yak_Dush_Sesh_Chor_Pay_Jum_Shan'.split('_'),
         weekdaysMin: 'Ya_Du_Se_Cho_Pa_Ju_Sha'.split('_'),
         longDateFormat: {
@@ -33806,9 +36413,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'tháng 1_tháng 2_tháng 3_tháng 4_tháng 5_tháng 6_tháng 7_tháng 8_tháng 9_tháng 10_tháng 11_tháng 12'.split(
             '_'
         ),
-        monthsShort: 'Thg 01_Thg 02_Thg 03_Thg 04_Thg 05_Thg 06_Thg 07_Thg 08_Thg 09_Thg 10_Thg 11_Thg 12'.split(
-            '_'
-        ),
+        monthsShort:
+            'Thg 01_Thg 02_Thg 03_Thg 04_Thg 05_Thg 06_Thg 07_Thg 08_Thg 09_Thg 10_Thg 11_Thg 12'.split(
+                '_'
+            ),
         monthsParseExact: true,
         weekdays: 'chủ nhật_thứ hai_thứ ba_thứ tư_thứ năm_thứ sáu_thứ bảy'.split(
             '_'
@@ -33903,13 +36511,15 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         months: 'J~áñúá~rý_F~ébrú~árý_~Márc~h_Áp~ríl_~Máý_~Júñé~_Júl~ý_Áú~gúst~_Sép~témb~ér_Ó~ctób~ér_Ñ~óvém~bér_~Décé~mbér'.split(
             '_'
         ),
-        monthsShort: 'J~áñ_~Féb_~Már_~Ápr_~Máý_~Júñ_~Júl_~Áúg_~Sép_~Óct_~Ñóv_~Déc'.split(
-            '_'
-        ),
+        monthsShort:
+            'J~áñ_~Féb_~Már_~Ápr_~Máý_~Júñ_~Júl_~Áúg_~Sép_~Óct_~Ñóv_~Déc'.split(
+                '_'
+            ),
         monthsParseExact: true,
-        weekdays: 'S~úñdá~ý_Mó~ñdáý~_Túé~sdáý~_Wéd~ñésd~áý_T~húrs~dáý_~Fríd~áý_S~átúr~dáý'.split(
-            '_'
-        ),
+        weekdays:
+            'S~úñdá~ý_Mó~ñdáý~_Túé~sdáý~_Wéd~ñésd~áý_T~húrs~dáý_~Fríd~áý_S~átúr~dáý'.split(
+                '_'
+            ),
         weekdaysShort: 'S~úñ_~Móñ_~Túé_~Wéd_~Thú_~Frí_~Sát'.split('_'),
         weekdaysMin: 'S~ú_Mó~_Tú_~Wé_T~h_Fr~_Sá'.split('_'),
         weekdaysParseExact: true,
@@ -33951,12 +36561,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                     ~~((number % 100) / 10) === 1
                         ? 'th'
                         : b === 1
-                        ? 'st'
-                        : b === 2
-                        ? 'nd'
-                        : b === 3
-                        ? 'rd'
-                        : 'th';
+                          ? 'st'
+                          : b === 2
+                            ? 'nd'
+                            : b === 3
+                              ? 'rd'
+                              : 'th';
             return number + output;
         },
         week: {
@@ -34540,307 +37150,6 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 /***/ }),
 
-/***/ "./node_modules/moment/locale sync recursive ^\\.\\/.*$":
-/*!***************************************************!*\
-  !*** ./node_modules/moment/locale/ sync ^\.\/.*$ ***!
-  \***************************************************/
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-var map = {
-	"./af": "./node_modules/moment/locale/af.js",
-	"./af.js": "./node_modules/moment/locale/af.js",
-	"./ar": "./node_modules/moment/locale/ar.js",
-	"./ar-dz": "./node_modules/moment/locale/ar-dz.js",
-	"./ar-dz.js": "./node_modules/moment/locale/ar-dz.js",
-	"./ar-kw": "./node_modules/moment/locale/ar-kw.js",
-	"./ar-kw.js": "./node_modules/moment/locale/ar-kw.js",
-	"./ar-ly": "./node_modules/moment/locale/ar-ly.js",
-	"./ar-ly.js": "./node_modules/moment/locale/ar-ly.js",
-	"./ar-ma": "./node_modules/moment/locale/ar-ma.js",
-	"./ar-ma.js": "./node_modules/moment/locale/ar-ma.js",
-	"./ar-sa": "./node_modules/moment/locale/ar-sa.js",
-	"./ar-sa.js": "./node_modules/moment/locale/ar-sa.js",
-	"./ar-tn": "./node_modules/moment/locale/ar-tn.js",
-	"./ar-tn.js": "./node_modules/moment/locale/ar-tn.js",
-	"./ar.js": "./node_modules/moment/locale/ar.js",
-	"./az": "./node_modules/moment/locale/az.js",
-	"./az.js": "./node_modules/moment/locale/az.js",
-	"./be": "./node_modules/moment/locale/be.js",
-	"./be.js": "./node_modules/moment/locale/be.js",
-	"./bg": "./node_modules/moment/locale/bg.js",
-	"./bg.js": "./node_modules/moment/locale/bg.js",
-	"./bm": "./node_modules/moment/locale/bm.js",
-	"./bm.js": "./node_modules/moment/locale/bm.js",
-	"./bn": "./node_modules/moment/locale/bn.js",
-	"./bn-bd": "./node_modules/moment/locale/bn-bd.js",
-	"./bn-bd.js": "./node_modules/moment/locale/bn-bd.js",
-	"./bn.js": "./node_modules/moment/locale/bn.js",
-	"./bo": "./node_modules/moment/locale/bo.js",
-	"./bo.js": "./node_modules/moment/locale/bo.js",
-	"./br": "./node_modules/moment/locale/br.js",
-	"./br.js": "./node_modules/moment/locale/br.js",
-	"./bs": "./node_modules/moment/locale/bs.js",
-	"./bs.js": "./node_modules/moment/locale/bs.js",
-	"./ca": "./node_modules/moment/locale/ca.js",
-	"./ca.js": "./node_modules/moment/locale/ca.js",
-	"./cs": "./node_modules/moment/locale/cs.js",
-	"./cs.js": "./node_modules/moment/locale/cs.js",
-	"./cv": "./node_modules/moment/locale/cv.js",
-	"./cv.js": "./node_modules/moment/locale/cv.js",
-	"./cy": "./node_modules/moment/locale/cy.js",
-	"./cy.js": "./node_modules/moment/locale/cy.js",
-	"./da": "./node_modules/moment/locale/da.js",
-	"./da.js": "./node_modules/moment/locale/da.js",
-	"./de": "./node_modules/moment/locale/de.js",
-	"./de-at": "./node_modules/moment/locale/de-at.js",
-	"./de-at.js": "./node_modules/moment/locale/de-at.js",
-	"./de-ch": "./node_modules/moment/locale/de-ch.js",
-	"./de-ch.js": "./node_modules/moment/locale/de-ch.js",
-	"./de.js": "./node_modules/moment/locale/de.js",
-	"./dv": "./node_modules/moment/locale/dv.js",
-	"./dv.js": "./node_modules/moment/locale/dv.js",
-	"./el": "./node_modules/moment/locale/el.js",
-	"./el.js": "./node_modules/moment/locale/el.js",
-	"./en-au": "./node_modules/moment/locale/en-au.js",
-	"./en-au.js": "./node_modules/moment/locale/en-au.js",
-	"./en-ca": "./node_modules/moment/locale/en-ca.js",
-	"./en-ca.js": "./node_modules/moment/locale/en-ca.js",
-	"./en-gb": "./node_modules/moment/locale/en-gb.js",
-	"./en-gb.js": "./node_modules/moment/locale/en-gb.js",
-	"./en-ie": "./node_modules/moment/locale/en-ie.js",
-	"./en-ie.js": "./node_modules/moment/locale/en-ie.js",
-	"./en-il": "./node_modules/moment/locale/en-il.js",
-	"./en-il.js": "./node_modules/moment/locale/en-il.js",
-	"./en-in": "./node_modules/moment/locale/en-in.js",
-	"./en-in.js": "./node_modules/moment/locale/en-in.js",
-	"./en-nz": "./node_modules/moment/locale/en-nz.js",
-	"./en-nz.js": "./node_modules/moment/locale/en-nz.js",
-	"./en-sg": "./node_modules/moment/locale/en-sg.js",
-	"./en-sg.js": "./node_modules/moment/locale/en-sg.js",
-	"./eo": "./node_modules/moment/locale/eo.js",
-	"./eo.js": "./node_modules/moment/locale/eo.js",
-	"./es": "./node_modules/moment/locale/es.js",
-	"./es-do": "./node_modules/moment/locale/es-do.js",
-	"./es-do.js": "./node_modules/moment/locale/es-do.js",
-	"./es-mx": "./node_modules/moment/locale/es-mx.js",
-	"./es-mx.js": "./node_modules/moment/locale/es-mx.js",
-	"./es-us": "./node_modules/moment/locale/es-us.js",
-	"./es-us.js": "./node_modules/moment/locale/es-us.js",
-	"./es.js": "./node_modules/moment/locale/es.js",
-	"./et": "./node_modules/moment/locale/et.js",
-	"./et.js": "./node_modules/moment/locale/et.js",
-	"./eu": "./node_modules/moment/locale/eu.js",
-	"./eu.js": "./node_modules/moment/locale/eu.js",
-	"./fa": "./node_modules/moment/locale/fa.js",
-	"./fa.js": "./node_modules/moment/locale/fa.js",
-	"./fi": "./node_modules/moment/locale/fi.js",
-	"./fi.js": "./node_modules/moment/locale/fi.js",
-	"./fil": "./node_modules/moment/locale/fil.js",
-	"./fil.js": "./node_modules/moment/locale/fil.js",
-	"./fo": "./node_modules/moment/locale/fo.js",
-	"./fo.js": "./node_modules/moment/locale/fo.js",
-	"./fr": "./node_modules/moment/locale/fr.js",
-	"./fr-ca": "./node_modules/moment/locale/fr-ca.js",
-	"./fr-ca.js": "./node_modules/moment/locale/fr-ca.js",
-	"./fr-ch": "./node_modules/moment/locale/fr-ch.js",
-	"./fr-ch.js": "./node_modules/moment/locale/fr-ch.js",
-	"./fr.js": "./node_modules/moment/locale/fr.js",
-	"./fy": "./node_modules/moment/locale/fy.js",
-	"./fy.js": "./node_modules/moment/locale/fy.js",
-	"./ga": "./node_modules/moment/locale/ga.js",
-	"./ga.js": "./node_modules/moment/locale/ga.js",
-	"./gd": "./node_modules/moment/locale/gd.js",
-	"./gd.js": "./node_modules/moment/locale/gd.js",
-	"./gl": "./node_modules/moment/locale/gl.js",
-	"./gl.js": "./node_modules/moment/locale/gl.js",
-	"./gom-deva": "./node_modules/moment/locale/gom-deva.js",
-	"./gom-deva.js": "./node_modules/moment/locale/gom-deva.js",
-	"./gom-latn": "./node_modules/moment/locale/gom-latn.js",
-	"./gom-latn.js": "./node_modules/moment/locale/gom-latn.js",
-	"./gu": "./node_modules/moment/locale/gu.js",
-	"./gu.js": "./node_modules/moment/locale/gu.js",
-	"./he": "./node_modules/moment/locale/he.js",
-	"./he.js": "./node_modules/moment/locale/he.js",
-	"./hi": "./node_modules/moment/locale/hi.js",
-	"./hi.js": "./node_modules/moment/locale/hi.js",
-	"./hr": "./node_modules/moment/locale/hr.js",
-	"./hr.js": "./node_modules/moment/locale/hr.js",
-	"./hu": "./node_modules/moment/locale/hu.js",
-	"./hu.js": "./node_modules/moment/locale/hu.js",
-	"./hy-am": "./node_modules/moment/locale/hy-am.js",
-	"./hy-am.js": "./node_modules/moment/locale/hy-am.js",
-	"./id": "./node_modules/moment/locale/id.js",
-	"./id.js": "./node_modules/moment/locale/id.js",
-	"./is": "./node_modules/moment/locale/is.js",
-	"./is.js": "./node_modules/moment/locale/is.js",
-	"./it": "./node_modules/moment/locale/it.js",
-	"./it-ch": "./node_modules/moment/locale/it-ch.js",
-	"./it-ch.js": "./node_modules/moment/locale/it-ch.js",
-	"./it.js": "./node_modules/moment/locale/it.js",
-	"./ja": "./node_modules/moment/locale/ja.js",
-	"./ja.js": "./node_modules/moment/locale/ja.js",
-	"./jv": "./node_modules/moment/locale/jv.js",
-	"./jv.js": "./node_modules/moment/locale/jv.js",
-	"./ka": "./node_modules/moment/locale/ka.js",
-	"./ka.js": "./node_modules/moment/locale/ka.js",
-	"./kk": "./node_modules/moment/locale/kk.js",
-	"./kk.js": "./node_modules/moment/locale/kk.js",
-	"./km": "./node_modules/moment/locale/km.js",
-	"./km.js": "./node_modules/moment/locale/km.js",
-	"./kn": "./node_modules/moment/locale/kn.js",
-	"./kn.js": "./node_modules/moment/locale/kn.js",
-	"./ko": "./node_modules/moment/locale/ko.js",
-	"./ko.js": "./node_modules/moment/locale/ko.js",
-	"./ku": "./node_modules/moment/locale/ku.js",
-	"./ku.js": "./node_modules/moment/locale/ku.js",
-	"./ky": "./node_modules/moment/locale/ky.js",
-	"./ky.js": "./node_modules/moment/locale/ky.js",
-	"./lb": "./node_modules/moment/locale/lb.js",
-	"./lb.js": "./node_modules/moment/locale/lb.js",
-	"./lo": "./node_modules/moment/locale/lo.js",
-	"./lo.js": "./node_modules/moment/locale/lo.js",
-	"./lt": "./node_modules/moment/locale/lt.js",
-	"./lt.js": "./node_modules/moment/locale/lt.js",
-	"./lv": "./node_modules/moment/locale/lv.js",
-	"./lv.js": "./node_modules/moment/locale/lv.js",
-	"./me": "./node_modules/moment/locale/me.js",
-	"./me.js": "./node_modules/moment/locale/me.js",
-	"./mi": "./node_modules/moment/locale/mi.js",
-	"./mi.js": "./node_modules/moment/locale/mi.js",
-	"./mk": "./node_modules/moment/locale/mk.js",
-	"./mk.js": "./node_modules/moment/locale/mk.js",
-	"./ml": "./node_modules/moment/locale/ml.js",
-	"./ml.js": "./node_modules/moment/locale/ml.js",
-	"./mn": "./node_modules/moment/locale/mn.js",
-	"./mn.js": "./node_modules/moment/locale/mn.js",
-	"./mr": "./node_modules/moment/locale/mr.js",
-	"./mr.js": "./node_modules/moment/locale/mr.js",
-	"./ms": "./node_modules/moment/locale/ms.js",
-	"./ms-my": "./node_modules/moment/locale/ms-my.js",
-	"./ms-my.js": "./node_modules/moment/locale/ms-my.js",
-	"./ms.js": "./node_modules/moment/locale/ms.js",
-	"./mt": "./node_modules/moment/locale/mt.js",
-	"./mt.js": "./node_modules/moment/locale/mt.js",
-	"./my": "./node_modules/moment/locale/my.js",
-	"./my.js": "./node_modules/moment/locale/my.js",
-	"./nb": "./node_modules/moment/locale/nb.js",
-	"./nb.js": "./node_modules/moment/locale/nb.js",
-	"./ne": "./node_modules/moment/locale/ne.js",
-	"./ne.js": "./node_modules/moment/locale/ne.js",
-	"./nl": "./node_modules/moment/locale/nl.js",
-	"./nl-be": "./node_modules/moment/locale/nl-be.js",
-	"./nl-be.js": "./node_modules/moment/locale/nl-be.js",
-	"./nl.js": "./node_modules/moment/locale/nl.js",
-	"./nn": "./node_modules/moment/locale/nn.js",
-	"./nn.js": "./node_modules/moment/locale/nn.js",
-	"./oc-lnc": "./node_modules/moment/locale/oc-lnc.js",
-	"./oc-lnc.js": "./node_modules/moment/locale/oc-lnc.js",
-	"./pa-in": "./node_modules/moment/locale/pa-in.js",
-	"./pa-in.js": "./node_modules/moment/locale/pa-in.js",
-	"./pl": "./node_modules/moment/locale/pl.js",
-	"./pl.js": "./node_modules/moment/locale/pl.js",
-	"./pt": "./node_modules/moment/locale/pt.js",
-	"./pt-br": "./node_modules/moment/locale/pt-br.js",
-	"./pt-br.js": "./node_modules/moment/locale/pt-br.js",
-	"./pt.js": "./node_modules/moment/locale/pt.js",
-	"./ro": "./node_modules/moment/locale/ro.js",
-	"./ro.js": "./node_modules/moment/locale/ro.js",
-	"./ru": "./node_modules/moment/locale/ru.js",
-	"./ru.js": "./node_modules/moment/locale/ru.js",
-	"./sd": "./node_modules/moment/locale/sd.js",
-	"./sd.js": "./node_modules/moment/locale/sd.js",
-	"./se": "./node_modules/moment/locale/se.js",
-	"./se.js": "./node_modules/moment/locale/se.js",
-	"./si": "./node_modules/moment/locale/si.js",
-	"./si.js": "./node_modules/moment/locale/si.js",
-	"./sk": "./node_modules/moment/locale/sk.js",
-	"./sk.js": "./node_modules/moment/locale/sk.js",
-	"./sl": "./node_modules/moment/locale/sl.js",
-	"./sl.js": "./node_modules/moment/locale/sl.js",
-	"./sq": "./node_modules/moment/locale/sq.js",
-	"./sq.js": "./node_modules/moment/locale/sq.js",
-	"./sr": "./node_modules/moment/locale/sr.js",
-	"./sr-cyrl": "./node_modules/moment/locale/sr-cyrl.js",
-	"./sr-cyrl.js": "./node_modules/moment/locale/sr-cyrl.js",
-	"./sr.js": "./node_modules/moment/locale/sr.js",
-	"./ss": "./node_modules/moment/locale/ss.js",
-	"./ss.js": "./node_modules/moment/locale/ss.js",
-	"./sv": "./node_modules/moment/locale/sv.js",
-	"./sv.js": "./node_modules/moment/locale/sv.js",
-	"./sw": "./node_modules/moment/locale/sw.js",
-	"./sw.js": "./node_modules/moment/locale/sw.js",
-	"./ta": "./node_modules/moment/locale/ta.js",
-	"./ta.js": "./node_modules/moment/locale/ta.js",
-	"./te": "./node_modules/moment/locale/te.js",
-	"./te.js": "./node_modules/moment/locale/te.js",
-	"./tet": "./node_modules/moment/locale/tet.js",
-	"./tet.js": "./node_modules/moment/locale/tet.js",
-	"./tg": "./node_modules/moment/locale/tg.js",
-	"./tg.js": "./node_modules/moment/locale/tg.js",
-	"./th": "./node_modules/moment/locale/th.js",
-	"./th.js": "./node_modules/moment/locale/th.js",
-	"./tk": "./node_modules/moment/locale/tk.js",
-	"./tk.js": "./node_modules/moment/locale/tk.js",
-	"./tl-ph": "./node_modules/moment/locale/tl-ph.js",
-	"./tl-ph.js": "./node_modules/moment/locale/tl-ph.js",
-	"./tlh": "./node_modules/moment/locale/tlh.js",
-	"./tlh.js": "./node_modules/moment/locale/tlh.js",
-	"./tr": "./node_modules/moment/locale/tr.js",
-	"./tr.js": "./node_modules/moment/locale/tr.js",
-	"./tzl": "./node_modules/moment/locale/tzl.js",
-	"./tzl.js": "./node_modules/moment/locale/tzl.js",
-	"./tzm": "./node_modules/moment/locale/tzm.js",
-	"./tzm-latn": "./node_modules/moment/locale/tzm-latn.js",
-	"./tzm-latn.js": "./node_modules/moment/locale/tzm-latn.js",
-	"./tzm.js": "./node_modules/moment/locale/tzm.js",
-	"./ug-cn": "./node_modules/moment/locale/ug-cn.js",
-	"./ug-cn.js": "./node_modules/moment/locale/ug-cn.js",
-	"./uk": "./node_modules/moment/locale/uk.js",
-	"./uk.js": "./node_modules/moment/locale/uk.js",
-	"./ur": "./node_modules/moment/locale/ur.js",
-	"./ur.js": "./node_modules/moment/locale/ur.js",
-	"./uz": "./node_modules/moment/locale/uz.js",
-	"./uz-latn": "./node_modules/moment/locale/uz-latn.js",
-	"./uz-latn.js": "./node_modules/moment/locale/uz-latn.js",
-	"./uz.js": "./node_modules/moment/locale/uz.js",
-	"./vi": "./node_modules/moment/locale/vi.js",
-	"./vi.js": "./node_modules/moment/locale/vi.js",
-	"./x-pseudo": "./node_modules/moment/locale/x-pseudo.js",
-	"./x-pseudo.js": "./node_modules/moment/locale/x-pseudo.js",
-	"./yo": "./node_modules/moment/locale/yo.js",
-	"./yo.js": "./node_modules/moment/locale/yo.js",
-	"./zh-cn": "./node_modules/moment/locale/zh-cn.js",
-	"./zh-cn.js": "./node_modules/moment/locale/zh-cn.js",
-	"./zh-hk": "./node_modules/moment/locale/zh-hk.js",
-	"./zh-hk.js": "./node_modules/moment/locale/zh-hk.js",
-	"./zh-mo": "./node_modules/moment/locale/zh-mo.js",
-	"./zh-mo.js": "./node_modules/moment/locale/zh-mo.js",
-	"./zh-tw": "./node_modules/moment/locale/zh-tw.js",
-	"./zh-tw.js": "./node_modules/moment/locale/zh-tw.js"
-};
-
-
-function webpackContext(req) {
-	var id = webpackContextResolve(req);
-	return __webpack_require__(id);
-}
-function webpackContextResolve(req) {
-	if(!__webpack_require__.o(map, req)) {
-		var e = new Error("Cannot find module '" + req + "'");
-		e.code = 'MODULE_NOT_FOUND';
-		throw e;
-	}
-	return map[req];
-}
-webpackContext.keys = function webpackContextKeys() {
-	return Object.keys(map);
-};
-webpackContext.resolve = webpackContextResolve;
-module.exports = webpackContext;
-webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
-
-/***/ }),
-
 /***/ "./node_modules/moment/moment.js":
 /*!***************************************!*\
   !*** ./node_modules/moment/moment.js ***!
@@ -34849,7 +37158,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /* module decorator */ module = __webpack_require__.nmd(module);
 //! moment.js
-//! version : 2.29.1
+//! version : 2.30.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -34925,8 +37234,9 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
     function map(arr, fn) {
         var res = [],
-            i;
-        for (i = 0; i < arr.length; ++i) {
+            i,
+            arrLen = arr.length;
+        for (i = 0; i < arrLen; ++i) {
             res.push(fn(arr[i], i));
         }
         return res;
@@ -35003,24 +37313,25 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     }
 
     function isValid(m) {
-        if (m._isValid == null) {
-            var flags = getParsingFlags(m),
-                parsedParts = some.call(flags.parsedDateParts, function (i) {
-                    return i != null;
-                }),
-                isNowValid =
-                    !isNaN(m._d.getTime()) &&
-                    flags.overflow < 0 &&
-                    !flags.empty &&
-                    !flags.invalidEra &&
-                    !flags.invalidMonth &&
-                    !flags.invalidWeekday &&
-                    !flags.weekdayMismatch &&
-                    !flags.nullInput &&
-                    !flags.invalidFormat &&
-                    !flags.userInvalidated &&
-                    (!flags.meridiem || (flags.meridiem && parsedParts));
-
+        var flags = null,
+            parsedParts = false,
+            isNowValid = m._d && !isNaN(m._d.getTime());
+        if (isNowValid) {
+            flags = getParsingFlags(m);
+            parsedParts = some.call(flags.parsedDateParts, function (i) {
+                return i != null;
+            });
+            isNowValid =
+                flags.overflow < 0 &&
+                !flags.empty &&
+                !flags.invalidEra &&
+                !flags.invalidMonth &&
+                !flags.invalidWeekday &&
+                !flags.weekdayMismatch &&
+                !flags.nullInput &&
+                !flags.invalidFormat &&
+                !flags.userInvalidated &&
+                (!flags.meridiem || (flags.meridiem && parsedParts));
             if (m._strict) {
                 isNowValid =
                     isNowValid &&
@@ -35028,12 +37339,11 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
                     flags.unusedTokens.length === 0 &&
                     flags.bigHour === undefined;
             }
-
-            if (Object.isFrozen == null || !Object.isFrozen(m)) {
-                m._isValid = isNowValid;
-            } else {
-                return isNowValid;
-            }
+        }
+        if (Object.isFrozen == null || !Object.isFrozen(m)) {
+            m._isValid = isNowValid;
+        } else {
+            return isNowValid;
         }
         return m._isValid;
     }
@@ -35055,7 +37365,10 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         updateInProgress = false;
 
     function copyConfig(to, from) {
-        var i, prop, val;
+        var i,
+            prop,
+            val,
+            momentPropertiesLen = momentProperties.length;
 
         if (!isUndefined(from._isAMomentObject)) {
             to._isAMomentObject = from._isAMomentObject;
@@ -35088,8 +37401,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             to._locale = from._locale;
         }
 
-        if (momentProperties.length > 0) {
-            for (i = 0; i < momentProperties.length; i++) {
+        if (momentPropertiesLen > 0) {
+            for (i = 0; i < momentPropertiesLen; i++) {
                 prop = momentProperties[i];
                 val = from[prop];
                 if (!isUndefined(val)) {
@@ -35144,8 +37457,9 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
                 var args = [],
                     arg,
                     i,
-                    key;
-                for (i = 0; i < arguments.length; i++) {
+                    key,
+                    argLen = arguments.length;
+                for (i = 0; i < argLen; i++) {
                     arg = '';
                     if (typeof arguments[i] === 'object') {
                         arg += '\n[' + i + '] ';
@@ -35295,7 +37609,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         );
     }
 
-    var formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|N{1,5}|YYYYYY|YYYYY|YYYY|YY|y{2,4}|yo?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g,
+    var formattingTokens =
+            /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|N{1,5}|YYYYYY|YYYYY|YYYY|YY|y{2,4}|yo?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g,
         localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g,
         formatFunctions = {},
         formatTokenFunctions = {};
@@ -35473,12 +37788,56 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         return isFunction(format) ? format(output) : format.replace(/%s/i, output);
     }
 
-    var aliases = {};
-
-    function addUnitAlias(unit, shorthand) {
-        var lowerCase = unit.toLowerCase();
-        aliases[lowerCase] = aliases[lowerCase + 's'] = aliases[shorthand] = unit;
-    }
+    var aliases = {
+        D: 'date',
+        dates: 'date',
+        date: 'date',
+        d: 'day',
+        days: 'day',
+        day: 'day',
+        e: 'weekday',
+        weekdays: 'weekday',
+        weekday: 'weekday',
+        E: 'isoWeekday',
+        isoweekdays: 'isoWeekday',
+        isoweekday: 'isoWeekday',
+        DDD: 'dayOfYear',
+        dayofyears: 'dayOfYear',
+        dayofyear: 'dayOfYear',
+        h: 'hour',
+        hours: 'hour',
+        hour: 'hour',
+        ms: 'millisecond',
+        milliseconds: 'millisecond',
+        millisecond: 'millisecond',
+        m: 'minute',
+        minutes: 'minute',
+        minute: 'minute',
+        M: 'month',
+        months: 'month',
+        month: 'month',
+        Q: 'quarter',
+        quarters: 'quarter',
+        quarter: 'quarter',
+        s: 'second',
+        seconds: 'second',
+        second: 'second',
+        gg: 'weekYear',
+        weekyears: 'weekYear',
+        weekyear: 'weekYear',
+        GG: 'isoWeekYear',
+        isoweekyears: 'isoWeekYear',
+        isoweekyear: 'isoWeekYear',
+        w: 'week',
+        weeks: 'week',
+        week: 'week',
+        W: 'isoWeek',
+        isoweeks: 'isoWeek',
+        isoweek: 'isoWeek',
+        y: 'year',
+        years: 'year',
+        year: 'year',
+    };
 
     function normalizeUnits(units) {
         return typeof units === 'string'
@@ -35503,11 +37862,24 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         return normalizedInput;
     }
 
-    var priorities = {};
-
-    function addUnitPriority(unit, priority) {
-        priorities[unit] = priority;
-    }
+    var priorities = {
+        date: 9,
+        day: 11,
+        weekday: 11,
+        isoWeekday: 11,
+        dayOfYear: 4,
+        hour: 13,
+        millisecond: 16,
+        minute: 14,
+        month: 8,
+        quarter: 7,
+        second: 15,
+        weekYear: 1,
+        isoWeekYear: 1,
+        week: 5,
+        isoWeek: 5,
+        year: 1,
+    };
 
     function getPrioritizedUnits(unitsObj) {
         var units = [],
@@ -35521,95 +37893,6 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             return a.priority - b.priority;
         });
         return units;
-    }
-
-    function isLeapYear(year) {
-        return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-    }
-
-    function absFloor(number) {
-        if (number < 0) {
-            // -0 -> 0
-            return Math.ceil(number) || 0;
-        } else {
-            return Math.floor(number);
-        }
-    }
-
-    function toInt(argumentForCoercion) {
-        var coercedNumber = +argumentForCoercion,
-            value = 0;
-
-        if (coercedNumber !== 0 && isFinite(coercedNumber)) {
-            value = absFloor(coercedNumber);
-        }
-
-        return value;
-    }
-
-    function makeGetSet(unit, keepTime) {
-        return function (value) {
-            if (value != null) {
-                set$1(this, unit, value);
-                hooks.updateOffset(this, keepTime);
-                return this;
-            } else {
-                return get(this, unit);
-            }
-        };
-    }
-
-    function get(mom, unit) {
-        return mom.isValid()
-            ? mom._d['get' + (mom._isUTC ? 'UTC' : '') + unit]()
-            : NaN;
-    }
-
-    function set$1(mom, unit, value) {
-        if (mom.isValid() && !isNaN(value)) {
-            if (
-                unit === 'FullYear' &&
-                isLeapYear(mom.year()) &&
-                mom.month() === 1 &&
-                mom.date() === 29
-            ) {
-                value = toInt(value);
-                mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](
-                    value,
-                    mom.month(),
-                    daysInMonth(value, mom.month())
-                );
-            } else {
-                mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value);
-            }
-        }
-    }
-
-    // MOMENTS
-
-    function stringGet(units) {
-        units = normalizeUnits(units);
-        if (isFunction(this[units])) {
-            return this[units]();
-        }
-        return this;
-    }
-
-    function stringSet(units, value) {
-        if (typeof units === 'object') {
-            units = normalizeObjectUnits(units);
-            var prioritized = getPrioritizedUnits(units),
-                i;
-            for (i = 0; i < prioritized.length; i++) {
-                this[prioritized[i].unit](units[prioritized[i].unit]);
-            }
-        } else {
-            units = normalizeUnits(units);
-            if (isFunction(this[units])) {
-                return this[units](value);
-            }
-        }
-        return this;
     }
 
     var match1 = /\d/, //       0 - 9
@@ -35630,7 +37913,10 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         matchTimestamp = /[+-]?\d+(\.\d{1,3})?/, // 123456789 123456789.123
         // any word (or two) characters or numbers including two/three word month in arabic.
         // includes scottish gaelic two word and hyphenated months
-        matchWord = /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i,
+        matchWord =
+            /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i,
+        match1to2NoLeadingZero = /^[1-9]\d?/, //         1-99
+        match1to2HasZero = /^([1-9]\d|\d)/, //           0-99
         regexes;
 
     regexes = {};
@@ -35656,15 +37942,12 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         return regexEscape(
             s
                 .replace('\\', '')
-                .replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g, function (
-                    matched,
-                    p1,
-                    p2,
-                    p3,
-                    p4
-                ) {
-                    return p1 || p2 || p3 || p4;
-                })
+                .replace(
+                    /\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g,
+                    function (matched, p1, p2, p3, p4) {
+                        return p1 || p2 || p3 || p4;
+                    }
+                )
         );
     }
 
@@ -35672,11 +37955,32 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     }
 
+    function absFloor(number) {
+        if (number < 0) {
+            // -0 -> 0
+            return Math.ceil(number) || 0;
+        } else {
+            return Math.floor(number);
+        }
+    }
+
+    function toInt(argumentForCoercion) {
+        var coercedNumber = +argumentForCoercion,
+            value = 0;
+
+        if (coercedNumber !== 0 && isFinite(coercedNumber)) {
+            value = absFloor(coercedNumber);
+        }
+
+        return value;
+    }
+
     var tokens = {};
 
     function addParseToken(token, callback) {
         var i,
-            func = callback;
+            func = callback,
+            tokenLen;
         if (typeof token === 'string') {
             token = [token];
         }
@@ -35685,7 +37989,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
                 array[callback] = toInt(input);
             };
         }
-        for (i = 0; i < token.length; i++) {
+        tokenLen = token.length;
+        for (i = 0; i < tokenLen; i++) {
             tokens[token[i]] = func;
         }
     }
@@ -35703,6 +38008,10 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         }
     }
 
+    function isLeapYear(year) {
+        return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+    }
+
     var YEAR = 0,
         MONTH = 1,
         DATE = 2,
@@ -35712,6 +38021,173 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         MILLISECOND = 6,
         WEEK = 7,
         WEEKDAY = 8;
+
+    // FORMATTING
+
+    addFormatToken('Y', 0, 0, function () {
+        var y = this.year();
+        return y <= 9999 ? zeroFill(y, 4) : '+' + y;
+    });
+
+    addFormatToken(0, ['YY', 2], 0, function () {
+        return this.year() % 100;
+    });
+
+    addFormatToken(0, ['YYYY', 4], 0, 'year');
+    addFormatToken(0, ['YYYYY', 5], 0, 'year');
+    addFormatToken(0, ['YYYYYY', 6, true], 0, 'year');
+
+    // PARSING
+
+    addRegexToken('Y', matchSigned);
+    addRegexToken('YY', match1to2, match2);
+    addRegexToken('YYYY', match1to4, match4);
+    addRegexToken('YYYYY', match1to6, match6);
+    addRegexToken('YYYYYY', match1to6, match6);
+
+    addParseToken(['YYYYY', 'YYYYYY'], YEAR);
+    addParseToken('YYYY', function (input, array) {
+        array[YEAR] =
+            input.length === 2 ? hooks.parseTwoDigitYear(input) : toInt(input);
+    });
+    addParseToken('YY', function (input, array) {
+        array[YEAR] = hooks.parseTwoDigitYear(input);
+    });
+    addParseToken('Y', function (input, array) {
+        array[YEAR] = parseInt(input, 10);
+    });
+
+    // HELPERS
+
+    function daysInYear(year) {
+        return isLeapYear(year) ? 366 : 365;
+    }
+
+    // HOOKS
+
+    hooks.parseTwoDigitYear = function (input) {
+        return toInt(input) + (toInt(input) > 68 ? 1900 : 2000);
+    };
+
+    // MOMENTS
+
+    var getSetYear = makeGetSet('FullYear', true);
+
+    function getIsLeapYear() {
+        return isLeapYear(this.year());
+    }
+
+    function makeGetSet(unit, keepTime) {
+        return function (value) {
+            if (value != null) {
+                set$1(this, unit, value);
+                hooks.updateOffset(this, keepTime);
+                return this;
+            } else {
+                return get(this, unit);
+            }
+        };
+    }
+
+    function get(mom, unit) {
+        if (!mom.isValid()) {
+            return NaN;
+        }
+
+        var d = mom._d,
+            isUTC = mom._isUTC;
+
+        switch (unit) {
+            case 'Milliseconds':
+                return isUTC ? d.getUTCMilliseconds() : d.getMilliseconds();
+            case 'Seconds':
+                return isUTC ? d.getUTCSeconds() : d.getSeconds();
+            case 'Minutes':
+                return isUTC ? d.getUTCMinutes() : d.getMinutes();
+            case 'Hours':
+                return isUTC ? d.getUTCHours() : d.getHours();
+            case 'Date':
+                return isUTC ? d.getUTCDate() : d.getDate();
+            case 'Day':
+                return isUTC ? d.getUTCDay() : d.getDay();
+            case 'Month':
+                return isUTC ? d.getUTCMonth() : d.getMonth();
+            case 'FullYear':
+                return isUTC ? d.getUTCFullYear() : d.getFullYear();
+            default:
+                return NaN; // Just in case
+        }
+    }
+
+    function set$1(mom, unit, value) {
+        var d, isUTC, year, month, date;
+
+        if (!mom.isValid() || isNaN(value)) {
+            return;
+        }
+
+        d = mom._d;
+        isUTC = mom._isUTC;
+
+        switch (unit) {
+            case 'Milliseconds':
+                return void (isUTC
+                    ? d.setUTCMilliseconds(value)
+                    : d.setMilliseconds(value));
+            case 'Seconds':
+                return void (isUTC ? d.setUTCSeconds(value) : d.setSeconds(value));
+            case 'Minutes':
+                return void (isUTC ? d.setUTCMinutes(value) : d.setMinutes(value));
+            case 'Hours':
+                return void (isUTC ? d.setUTCHours(value) : d.setHours(value));
+            case 'Date':
+                return void (isUTC ? d.setUTCDate(value) : d.setDate(value));
+            // case 'Day': // Not real
+            //    return void (isUTC ? d.setUTCDay(value) : d.setDay(value));
+            // case 'Month': // Not used because we need to pass two variables
+            //     return void (isUTC ? d.setUTCMonth(value) : d.setMonth(value));
+            case 'FullYear':
+                break; // See below ...
+            default:
+                return; // Just in case
+        }
+
+        year = value;
+        month = mom.month();
+        date = mom.date();
+        date = date === 29 && month === 1 && !isLeapYear(year) ? 28 : date;
+        void (isUTC
+            ? d.setUTCFullYear(year, month, date)
+            : d.setFullYear(year, month, date));
+    }
+
+    // MOMENTS
+
+    function stringGet(units) {
+        units = normalizeUnits(units);
+        if (isFunction(this[units])) {
+            return this[units]();
+        }
+        return this;
+    }
+
+    function stringSet(units, value) {
+        if (typeof units === 'object') {
+            units = normalizeObjectUnits(units);
+            var prioritized = getPrioritizedUnits(units),
+                i,
+                prioritizedLen = prioritized.length;
+            for (i = 0; i < prioritizedLen; i++) {
+                this[prioritized[i].unit](units[prioritized[i].unit]);
+            }
+        } else {
+            units = normalizeUnits(units);
+            if (isFunction(this[units])) {
+                return this[units](value);
+            }
+        }
+        return this;
+    }
 
     function mod(n, x) {
         return ((n % x) + x) % x;
@@ -35761,17 +38237,9 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         return this.localeData().months(this, format);
     });
 
-    // ALIASES
-
-    addUnitAlias('month', 'M');
-
-    // PRIORITY
-
-    addUnitPriority('month', 8);
-
     // PARSING
 
-    addRegexToken('M', match1to2);
+    addRegexToken('M', match1to2, match1to2NoLeadingZero);
     addRegexToken('MM', match1to2, match2);
     addRegexToken('MMM', function (isStrict, locale) {
         return locale.monthsShortRegex(isStrict);
@@ -35796,12 +38264,12 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
     // LOCALES
 
-    var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split(
-            '_'
-        ),
-        defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split(
-            '_'
-        ),
+    var defaultLocaleMonths =
+            'January_February_March_April_May_June_July_August_September_October_November_December'.split(
+                '_'
+            ),
+        defaultLocaleMonthsShort =
+            'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),
         MONTHS_IN_FORMAT = /D[oD]?(\[[^\[\]]*\]|\s)+MMMM?/,
         defaultMonthsShortRegex = matchWord,
         defaultMonthsRegex = matchWord;
@@ -35937,8 +38405,6 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     // MOMENTS
 
     function setMonth(mom, value) {
-        var dayOfMonth;
-
         if (!mom.isValid()) {
             // No op
             return mom;
@@ -35956,8 +38422,13 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             }
         }
 
-        dayOfMonth = Math.min(mom.date(), daysInMonth(mom.year(), value));
-        mom._d['set' + (mom._isUTC ? 'UTC' : '') + 'Month'](value, dayOfMonth);
+        var month = value,
+            date = mom.date();
+
+        date = date < 29 ? date : Math.min(date, daysInMonth(mom.year(), month));
+        void (mom._isUTC
+            ? mom._d.setUTCMonth(month, date)
+            : mom._d.setMonth(month, date));
         return mom;
     }
 
@@ -36024,27 +38495,24 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             longPieces = [],
             mixedPieces = [],
             i,
-            mom;
+            mom,
+            shortP,
+            longP;
         for (i = 0; i < 12; i++) {
             // make the regex if we don't have it already
             mom = createUTC([2000, i]);
-            shortPieces.push(this.monthsShort(mom, ''));
-            longPieces.push(this.months(mom, ''));
-            mixedPieces.push(this.months(mom, ''));
-            mixedPieces.push(this.monthsShort(mom, ''));
+            shortP = regexEscape(this.monthsShort(mom, ''));
+            longP = regexEscape(this.months(mom, ''));
+            shortPieces.push(shortP);
+            longPieces.push(longP);
+            mixedPieces.push(longP);
+            mixedPieces.push(shortP);
         }
         // Sorting makes sure if one month (or abbr) is a prefix of another it
         // will match the longer piece.
         shortPieces.sort(cmpLenRev);
         longPieces.sort(cmpLenRev);
         mixedPieces.sort(cmpLenRev);
-        for (i = 0; i < 12; i++) {
-            shortPieces[i] = regexEscape(shortPieces[i]);
-            longPieces[i] = regexEscape(longPieces[i]);
-        }
-        for (i = 0; i < 24; i++) {
-            mixedPieces[i] = regexEscape(mixedPieces[i]);
-        }
 
         this._monthsRegex = new RegExp('^(' + mixedPieces.join('|') + ')', 'i');
         this._monthsShortRegex = this._monthsRegex;
@@ -36056,69 +38524,6 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             '^(' + shortPieces.join('|') + ')',
             'i'
         );
-    }
-
-    // FORMATTING
-
-    addFormatToken('Y', 0, 0, function () {
-        var y = this.year();
-        return y <= 9999 ? zeroFill(y, 4) : '+' + y;
-    });
-
-    addFormatToken(0, ['YY', 2], 0, function () {
-        return this.year() % 100;
-    });
-
-    addFormatToken(0, ['YYYY', 4], 0, 'year');
-    addFormatToken(0, ['YYYYY', 5], 0, 'year');
-    addFormatToken(0, ['YYYYYY', 6, true], 0, 'year');
-
-    // ALIASES
-
-    addUnitAlias('year', 'y');
-
-    // PRIORITIES
-
-    addUnitPriority('year', 1);
-
-    // PARSING
-
-    addRegexToken('Y', matchSigned);
-    addRegexToken('YY', match1to2, match2);
-    addRegexToken('YYYY', match1to4, match4);
-    addRegexToken('YYYYY', match1to6, match6);
-    addRegexToken('YYYYYY', match1to6, match6);
-
-    addParseToken(['YYYYY', 'YYYYYY'], YEAR);
-    addParseToken('YYYY', function (input, array) {
-        array[YEAR] =
-            input.length === 2 ? hooks.parseTwoDigitYear(input) : toInt(input);
-    });
-    addParseToken('YY', function (input, array) {
-        array[YEAR] = hooks.parseTwoDigitYear(input);
-    });
-    addParseToken('Y', function (input, array) {
-        array[YEAR] = parseInt(input, 10);
-    });
-
-    // HELPERS
-
-    function daysInYear(year) {
-        return isLeapYear(year) ? 366 : 365;
-    }
-
-    // HOOKS
-
-    hooks.parseTwoDigitYear = function (input) {
-        return toInt(input) + (toInt(input) > 68 ? 1900 : 2000);
-    };
-
-    // MOMENTS
-
-    var getSetYear = makeGetSet('FullYear', true);
-
-    function getIsLeapYear() {
-        return isLeapYear(this.year());
     }
 
     function createDate(y, m, d, h, M, s, ms) {
@@ -36226,31 +38631,19 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     addFormatToken('w', ['ww', 2], 'wo', 'week');
     addFormatToken('W', ['WW', 2], 'Wo', 'isoWeek');
 
-    // ALIASES
-
-    addUnitAlias('week', 'w');
-    addUnitAlias('isoWeek', 'W');
-
-    // PRIORITIES
-
-    addUnitPriority('week', 5);
-    addUnitPriority('isoWeek', 5);
-
     // PARSING
 
-    addRegexToken('w', match1to2);
+    addRegexToken('w', match1to2, match1to2NoLeadingZero);
     addRegexToken('ww', match1to2, match2);
-    addRegexToken('W', match1to2);
+    addRegexToken('W', match1to2, match1to2NoLeadingZero);
     addRegexToken('WW', match1to2, match2);
 
-    addWeekParseToken(['w', 'ww', 'W', 'WW'], function (
-        input,
-        week,
-        config,
-        token
-    ) {
-        week[token.substr(0, 1)] = toInt(input);
-    });
+    addWeekParseToken(
+        ['w', 'ww', 'W', 'WW'],
+        function (input, week, config, token) {
+            week[token.substr(0, 1)] = toInt(input);
+        }
+    );
 
     // HELPERS
 
@@ -36303,17 +38696,6 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
     addFormatToken('e', 0, 0, 'weekday');
     addFormatToken('E', 0, 0, 'isoWeekday');
-
-    // ALIASES
-
-    addUnitAlias('day', 'd');
-    addUnitAlias('weekday', 'e');
-    addUnitAlias('isoWeekday', 'E');
-
-    // PRIORITY
-    addUnitPriority('day', 11);
-    addUnitPriority('weekday', 11);
-    addUnitPriority('isoWeekday', 11);
 
     // PARSING
 
@@ -36375,9 +38757,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         return ws.slice(n, 7).concat(ws.slice(0, n));
     }
 
-    var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split(
-            '_'
-        ),
+    var defaultLocaleWeekdays =
+            'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_'),
         defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_'),
         defaultLocaleWeekdaysMin = 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_'),
         defaultWeekdaysRegex = matchWord,
@@ -36395,24 +38776,24 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         return m === true
             ? shiftWeekdays(weekdays, this._week.dow)
             : m
-            ? weekdays[m.day()]
-            : weekdays;
+              ? weekdays[m.day()]
+              : weekdays;
     }
 
     function localeWeekdaysShort(m) {
         return m === true
             ? shiftWeekdays(this._weekdaysShort, this._week.dow)
             : m
-            ? this._weekdaysShort[m.day()]
-            : this._weekdaysShort;
+              ? this._weekdaysShort[m.day()]
+              : this._weekdaysShort;
     }
 
     function localeWeekdaysMin(m) {
         return m === true
             ? shiftWeekdays(this._weekdaysMin, this._week.dow)
             : m
-            ? this._weekdaysMin[m.day()]
-            : this._weekdaysMin;
+              ? this._weekdaysMin[m.day()]
+              : this._weekdaysMin;
     }
 
     function handleStrictParse$1(weekdayName, format, strict) {
@@ -36561,7 +38942,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         if (!this.isValid()) {
             return input != null ? this : NaN;
         }
-        var day = this._isUTC ? this._d.getUTCDay() : this._d.getDay();
+
+        var day = get(this, 'Day');
         if (input != null) {
             input = parseWeekday(input, this.localeData());
             return this.add(input - day, 'd');
@@ -36760,13 +39142,6 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     meridiem('a', true);
     meridiem('A', false);
 
-    // ALIASES
-
-    addUnitAlias('hour', 'h');
-
-    // PRIORITY
-    addUnitPriority('hour', 13);
-
     // PARSING
 
     function matchMeridiem(isStrict, locale) {
@@ -36775,9 +39150,9 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
     addRegexToken('a', matchMeridiem);
     addRegexToken('A', matchMeridiem);
-    addRegexToken('H', match1to2);
-    addRegexToken('h', match1to2);
-    addRegexToken('k', match1to2);
+    addRegexToken('H', match1to2, match1to2HasZero);
+    addRegexToken('h', match1to2, match1to2NoLeadingZero);
+    addRegexToken('k', match1to2, match1to2NoLeadingZero);
     addRegexToken('HH', match1to2, match2);
     addRegexToken('hh', match1to2, match2);
     addRegexToken('kk', match1to2, match2);
@@ -36925,6 +39300,12 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         return globalLocale;
     }
 
+    function isLocaleNameSane(name) {
+        // Prevent names that look like filesystem paths, i.e contain '/' or '\'
+        // Ensure name is available and function returns boolean
+        return !!(name && name.match('^[^/\\\\]*$'));
+    }
+
     function loadLocale(name) {
         var oldLocale = null,
             aliasedRequire;
@@ -36933,7 +39314,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             locales[name] === undefined &&
             "object" !== 'undefined' &&
             module &&
-            module.exports
+            module.exports &&
+            isLocaleNameSane(name)
         ) {
             try {
                 oldLocale = globalLocale._abbr;
@@ -37113,21 +39495,21 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
                 a[MONTH] < 0 || a[MONTH] > 11
                     ? MONTH
                     : a[DATE] < 1 || a[DATE] > daysInMonth(a[YEAR], a[MONTH])
-                    ? DATE
-                    : a[HOUR] < 0 ||
-                      a[HOUR] > 24 ||
-                      (a[HOUR] === 24 &&
-                          (a[MINUTE] !== 0 ||
-                              a[SECOND] !== 0 ||
-                              a[MILLISECOND] !== 0))
-                    ? HOUR
-                    : a[MINUTE] < 0 || a[MINUTE] > 59
-                    ? MINUTE
-                    : a[SECOND] < 0 || a[SECOND] > 59
-                    ? SECOND
-                    : a[MILLISECOND] < 0 || a[MILLISECOND] > 999
-                    ? MILLISECOND
-                    : -1;
+                      ? DATE
+                      : a[HOUR] < 0 ||
+                          a[HOUR] > 24 ||
+                          (a[HOUR] === 24 &&
+                              (a[MINUTE] !== 0 ||
+                                  a[SECOND] !== 0 ||
+                                  a[MILLISECOND] !== 0))
+                        ? HOUR
+                        : a[MINUTE] < 0 || a[MINUTE] > 59
+                          ? MINUTE
+                          : a[SECOND] < 0 || a[SECOND] > 59
+                            ? SECOND
+                            : a[MILLISECOND] < 0 || a[MILLISECOND] > 999
+                              ? MILLISECOND
+                              : -1;
 
             if (
                 getParsingFlags(m)._overflowDayOfYear &&
@@ -37150,8 +39532,10 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
     // iso 8601 regex
     // 0000-00-00 0000-W00 or 0000-W00-0 + T + 00 or 00:00 or 00:00:00 or 00:00:00.000 + +00:00 or +0000 or +00)
-    var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
-        basicIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d|))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
+    var extendedIsoRegex =
+            /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
+        basicIsoRegex =
+            /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d|))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
         tzRegex = /Z|[+-]\d\d(?::?\d\d)?/,
         isoDates = [
             ['YYYYYY-MM-DD', /[+-]\d{6}-\d\d-\d\d/],
@@ -37182,7 +39566,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         ],
         aspNetJsonRegex = /^\/?Date\((-?\d+)/i,
         // RFC 2822 regex: For details see https://tools.ietf.org/html/rfc2822#section-3.3
-        rfc2822 = /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/,
+        rfc2822 =
+            /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/,
         obsOffsets = {
             UT: 0,
             GMT: 0,
@@ -37205,12 +39590,13 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             allowTime,
             dateFormat,
             timeFormat,
-            tzFormat;
+            tzFormat,
+            isoDatesLen = isoDates.length,
+            isoTimesLen = isoTimes.length;
 
         if (match) {
             getParsingFlags(config).iso = true;
-
-            for (i = 0, l = isoDates.length; i < l; i++) {
+            for (i = 0, l = isoDatesLen; i < l; i++) {
                 if (isoDates[i][1].exec(match[1])) {
                     dateFormat = isoDates[i][0];
                     allowTime = isoDates[i][2] !== false;
@@ -37222,7 +39608,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
                 return;
             }
             if (match[3]) {
-                for (i = 0, l = isoTimes.length; i < l; i++) {
+                for (i = 0, l = isoTimesLen; i < l; i++) {
                     if (isoTimes[i][1].exec(match[3])) {
                         // match[2] should be 'T' or space
                         timeFormat = (match[2] || ' ') + isoTimes[i][0];
@@ -37289,7 +39675,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     function preprocessRFC2822(s) {
         // Remove comments and folding whitespace and replace multiple-spaces with a single space
         return s
-            .replace(/\([^)]*\)|[\n\t]/g, ' ')
+            .replace(/\([^()]*\)|[\n\t]/g, ' ')
             .replace(/(\s\s+)/g, ' ')
             .replace(/^\s\s*/, '')
             .replace(/\s\s*$/, '');
@@ -37602,12 +39988,13 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             skipped,
             stringLength = string.length,
             totalParsedInputLength = 0,
-            era;
+            era,
+            tokenLen;
 
         tokens =
             expandFormat(config._f, config._locale).match(formattingTokens) || [];
-
-        for (i = 0; i < tokens.length; i++) {
+        tokenLen = tokens.length;
+        for (i = 0; i < tokenLen; i++) {
             token = tokens[i];
             parsedInput = (string.match(getParseRegexForToken(token, config)) ||
                 [])[0];
@@ -37702,15 +40089,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             i,
             currentScore,
             validFormatFound,
-            bestFormatIsValid = false;
+            bestFormatIsValid = false,
+            configfLen = config._f.length;
 
-        if (config._f.length === 0) {
+        if (configfLen === 0) {
             getParsingFlags(config).invalidFormat = true;
             config._d = new Date(NaN);
             return;
         }
 
-        for (i = 0; i < config._f.length; i++) {
+        for (i = 0; i < configfLen; i++) {
             currentScore = 0;
             validFormatFound = false;
             tempConfig = copyConfig({}, config);
@@ -37951,7 +40339,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     function isDurationValid(m) {
         var key,
             unitHasDecimal = false,
-            i;
+            i,
+            orderLen = ordering.length;
         for (key in m) {
             if (
                 hasOwnProp(m, key) &&
@@ -37964,7 +40353,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             }
         }
 
-        for (i = 0; i < ordering.length; ++i) {
+        for (i = 0; i < orderLen; ++i) {
             if (m[ordering[i]]) {
                 if (unitHasDecimal) {
                     return false; // only allow non-integers for smallest unit
@@ -38289,7 +40678,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
         // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
         // and further modified to allow for strings containing both week and day
-        isoRegex = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
+        isoRegex =
+            /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
 
     function createDuration(input, key) {
         var duration = input,
@@ -38510,9 +40900,10 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
                 'ms',
             ],
             i,
-            property;
+            property,
+            propertyLen = properties.length;
 
-        for (i = 0; i < properties.length; i += 1) {
+        for (i = 0; i < propertyLen; i += 1) {
             property = properties[i];
             propertyTest = propertyTest || hasOwnProp(input, property);
         }
@@ -38559,16 +40950,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         return diff < -6
             ? 'sameElse'
             : diff < -1
-            ? 'lastWeek'
-            : diff < 0
-            ? 'lastDay'
-            : diff < 1
-            ? 'sameDay'
-            : diff < 2
-            ? 'nextDay'
-            : diff < 7
-            ? 'nextWeek'
-            : 'sameElse';
+              ? 'lastWeek'
+              : diff < 0
+                ? 'lastDay'
+                : diff < 1
+                  ? 'sameDay'
+                  : diff < 2
+                    ? 'nextDay'
+                    : diff < 7
+                      ? 'nextWeek'
+                      : 'sameElse';
     }
 
     function calendar$1(time, formats) {
@@ -39135,19 +41526,17 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     addRegexToken('NNNN', matchEraName);
     addRegexToken('NNNNN', matchEraNarrow);
 
-    addParseToken(['N', 'NN', 'NNN', 'NNNN', 'NNNNN'], function (
-        input,
-        array,
-        config,
-        token
-    ) {
-        var era = config._locale.erasParse(input, token, config._strict);
-        if (era) {
-            getParsingFlags(config).era = era;
-        } else {
-            getParsingFlags(config).invalidEra = input;
+    addParseToken(
+        ['N', 'NN', 'NNN', 'NNNN', 'NNNNN'],
+        function (input, array, config, token) {
+            var era = config._locale.erasParse(input, token, config._strict);
+            if (era) {
+                getParsingFlags(config).era = era;
+            } else {
+                getParsingFlags(config).invalidEra = input;
+            }
         }
-    });
+    );
 
     addRegexToken('y', matchUnsigned);
     addRegexToken('yy', matchUnsigned);
@@ -39378,16 +41767,22 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             mixedPieces = [],
             i,
             l,
+            erasName,
+            erasAbbr,
+            erasNarrow,
             eras = this.eras();
 
         for (i = 0, l = eras.length; i < l; ++i) {
-            namePieces.push(regexEscape(eras[i].name));
-            abbrPieces.push(regexEscape(eras[i].abbr));
-            narrowPieces.push(regexEscape(eras[i].narrow));
+            erasName = regexEscape(eras[i].name);
+            erasAbbr = regexEscape(eras[i].abbr);
+            erasNarrow = regexEscape(eras[i].narrow);
 
-            mixedPieces.push(regexEscape(eras[i].name));
-            mixedPieces.push(regexEscape(eras[i].abbr));
-            mixedPieces.push(regexEscape(eras[i].narrow));
+            namePieces.push(erasName);
+            abbrPieces.push(erasAbbr);
+            narrowPieces.push(erasNarrow);
+            mixedPieces.push(erasName);
+            mixedPieces.push(erasAbbr);
+            mixedPieces.push(erasNarrow);
         }
 
         this._erasRegex = new RegExp('^(' + mixedPieces.join('|') + ')', 'i');
@@ -39420,14 +41815,6 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
     // ALIASES
 
-    addUnitAlias('weekYear', 'gg');
-    addUnitAlias('isoWeekYear', 'GG');
-
-    // PRIORITY
-
-    addUnitPriority('weekYear', 1);
-    addUnitPriority('isoWeekYear', 1);
-
     // PARSING
 
     addRegexToken('G', matchSigned);
@@ -39439,14 +41826,12 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     addRegexToken('GGGGG', match1to6, match6);
     addRegexToken('ggggg', match1to6, match6);
 
-    addWeekParseToken(['gggg', 'ggggg', 'GGGG', 'GGGGG'], function (
-        input,
-        week,
-        config,
-        token
-    ) {
-        week[token.substr(0, 2)] = toInt(input);
-    });
+    addWeekParseToken(
+        ['gggg', 'ggggg', 'GGGG', 'GGGGG'],
+        function (input, week, config, token) {
+            week[token.substr(0, 2)] = toInt(input);
+        }
+    );
 
     addWeekParseToken(['gg', 'GG'], function (input, week, config, token) {
         week[token] = hooks.parseTwoDigitYear(input);
@@ -39459,7 +41844,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             this,
             input,
             this.week(),
-            this.weekday(),
+            this.weekday() + this.localeData()._week.dow,
             this.localeData()._week.dow,
             this.localeData()._week.doy
         );
@@ -39521,14 +41906,6 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
     addFormatToken('Q', 0, 'Qo', 'quarter');
 
-    // ALIASES
-
-    addUnitAlias('quarter', 'Q');
-
-    // PRIORITY
-
-    addUnitPriority('quarter', 7);
-
     // PARSING
 
     addRegexToken('Q', match1);
@@ -39548,16 +41925,9 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
     addFormatToken('D', ['DD', 2], 'Do', 'date');
 
-    // ALIASES
-
-    addUnitAlias('date', 'D');
-
-    // PRIORITY
-    addUnitPriority('date', 9);
-
     // PARSING
 
-    addRegexToken('D', match1to2);
+    addRegexToken('D', match1to2, match1to2NoLeadingZero);
     addRegexToken('DD', match1to2, match2);
     addRegexToken('Do', function (isStrict, locale) {
         // TODO: Remove "ordinalParse" fallback in next major release.
@@ -39578,13 +41948,6 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     // FORMATTING
 
     addFormatToken('DDD', ['DDDD', 3], 'DDDo', 'dayOfYear');
-
-    // ALIASES
-
-    addUnitAlias('dayOfYear', 'DDD');
-
-    // PRIORITY
-    addUnitPriority('dayOfYear', 4);
 
     // PARSING
 
@@ -39610,17 +41973,9 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
     addFormatToken('m', ['mm', 2], 0, 'minute');
 
-    // ALIASES
-
-    addUnitAlias('minute', 'm');
-
-    // PRIORITY
-
-    addUnitPriority('minute', 14);
-
     // PARSING
 
-    addRegexToken('m', match1to2);
+    addRegexToken('m', match1to2, match1to2HasZero);
     addRegexToken('mm', match1to2, match2);
     addParseToken(['m', 'mm'], MINUTE);
 
@@ -39632,17 +41987,9 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
     addFormatToken('s', ['ss', 2], 0, 'second');
 
-    // ALIASES
-
-    addUnitAlias('second', 's');
-
-    // PRIORITY
-
-    addUnitPriority('second', 15);
-
     // PARSING
 
-    addRegexToken('s', match1to2);
+    addRegexToken('s', match1to2, match1to2HasZero);
     addRegexToken('ss', match1to2, match2);
     addParseToken(['s', 'ss'], SECOND);
 
@@ -39679,14 +42026,6 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     addFormatToken(0, ['SSSSSSSSS', 9], 0, function () {
         return this.millisecond() * 1000000;
     });
-
-    // ALIASES
-
-    addUnitAlias('millisecond', 'ms');
-
-    // PRIORITY
-
-    addUnitPriority('millisecond', 16);
 
     // PARSING
 
@@ -39995,12 +42334,12 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
                     toInt((number % 100) / 10) === 1
                         ? 'th'
                         : b === 1
-                        ? 'st'
-                        : b === 2
-                        ? 'nd'
-                        : b === 3
-                        ? 'rd'
-                        : 'th';
+                          ? 'st'
+                          : b === 2
+                            ? 'nd'
+                            : b === 3
+                              ? 'rd'
+                              : 'th';
             return number + output;
         },
     });
@@ -40173,19 +42512,6 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         }
     }
 
-    // TODO: Use this.as('ms')?
-    function valueOf$1() {
-        if (!this.isValid()) {
-            return NaN;
-        }
-        return (
-            this._milliseconds +
-            this._days * 864e5 +
-            (this._months % 12) * 2592e6 +
-            toInt(this._months / 12) * 31536e6
-        );
-    }
-
     function makeAs(alias) {
         return function () {
             return this.as(alias);
@@ -40200,7 +42526,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         asWeeks = makeAs('w'),
         asMonths = makeAs('M'),
         asQuarters = makeAs('Q'),
-        asYears = makeAs('y');
+        asYears = makeAs('y'),
+        valueOf$1 = asMilliseconds;
 
     function clone$1() {
         return createDuration(this);
@@ -40469,7 +42796,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
     //! moment.js
 
-    hooks.version = '2.29.1';
+    hooks.version = '2.30.1';
 
     setHookCallback(createLocal);
 
@@ -40521,17 +42848,17 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true&":
-/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true& ***!
-  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_style_index_0_id_1d7c4214_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_style_index_0_id_1d7c4214_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true");
 
             
 
@@ -40540,25 +42867,25 @@ var options = {};
 options.insert = "head";
 options.singleton = false;
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_style_index_0_id_1d7c4214_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_style_index_0_id_1d7c4214_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__["default"], options);
 
 
 
-/* harmony default export */ __webpack_exports__["default"] = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_style_index_0_id_1d7c4214_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+/* harmony default export */ __webpack_exports__["default"] = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_style_index_0_id_1d7c4214_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true&":
-/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true& ***!
-  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_style_index_0_id_40bedb66_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_style_index_0_id_40bedb66_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true");
 
             
 
@@ -40567,11 +42894,11 @@ var options = {};
 options.insert = "head";
 options.singleton = false;
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_style_index_0_id_40bedb66_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_style_index_0_id_40bedb66_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__["default"], options);
 
 
 
-/* harmony default export */ __webpack_exports__["default"] = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_style_index_0_id_40bedb66_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+/* harmony default export */ __webpack_exports__["default"] = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_style_index_0_id_40bedb66_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
@@ -40854,1574 +43181,10 @@ module.exports = function (list, options) {
 
 /***/ }),
 
-/***/ "./Scripts/vuesrc/common.ts":
-/*!**********************************!*\
-  !*** ./Scripts/vuesrc/common.ts ***!
-  \**********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "commonlib": function() { return /* binding */ commonlib; }
-/* harmony export */ });
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constants */ "./Scripts/vuesrc/constants.ts");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-
-
-
-var monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-];
-var scrollTo = function ScrollTo(id) {
-    var top = jquery__WEBPACK_IMPORTED_MODULE_0___default()(id).first().offset().top;
-    window.scroll({ top: top, left: 0, behavior: 'smooth' });
-};
-var getIcon = function getIcon(extension) {
-    var iconUrl;
-    switch (extension) {
-        case "pdf":
-            iconUrl = "pdf.svg";
-        case "Image":
-            iconUrl = "jpeg.svg";
-        case "Word":
-            iconUrl = "ms-word-doc.svg";
-        default:
-            iconUrl = "pdf.svg";
-    }
-    return iconUrl;
-};
-var getResourceTypeIconClass = function getResourceTypeIconClass(resourceType) {
-    var resourceTypeEnum = _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[resourceType];
-    switch (resourceTypeEnum) {
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.ARTICLE]:
-            return ["fa-regular", "fa-file-alt"];
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.AUDIO]:
-            return ["fa-solid", "fa-volume-up"];
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.EQUIPMENT]:
-            return ["fa-solid", "fa-map-marker-alt"];
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.GENERICFILE]:
-            return ["fa-regular", "fa-file"];
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.IMAGE]:
-            return ["fa-regular", "fa-image"];
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.SCORM]:
-            return ["fa-solid", "fa-cube"];
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.VIDEO]:
-            return ["fa-solid", "fa-video"];
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.WEBLINK]:
-            return ["fa-solid", "fa-globe"];
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.CASE]:
-            return ["fa-solid", "fa-microscope"];
-        default:
-            return ["fa-regular", "fa-file"];
-    }
-};
-var getDurationText = function (durationInMilliseconds) {
-    if (durationInMilliseconds) {
-        // Azure media player rounds duration to nearest second. e.g. 8:59.88 becomes 9:00. LH needs to match.
-        // Moment.js can't round to the nearest second, so do that first with the raw millisecond value.
-        var nearestSecond = Math.round(durationInMilliseconds / 1000) * 1000;
-        var duration = "";
-        // If duration greater than an hour, don't return the seconds part.
-        if (nearestSecond >= 60 * 60 * 1000) {
-            duration = moment__WEBPACK_IMPORTED_MODULE_2___default().utc(nearestSecond).format("h[ hr ]m[ min ]");
-            //Exclude "0 min" from the return value.
-            if (duration.endsWith(" 0 min ")) {
-                duration = duration.replace("0 min ", "");
-            }
-        }
-        else {
-            duration = moment__WEBPACK_IMPORTED_MODULE_2___default().utc(nearestSecond).format("m[ min ]s[ sec ]");
-            //Exclude "0 min" and "0 sec" from the return value.
-            if (duration.startsWith("0 min ")) {
-                duration = duration.replace("0 min ", "");
-            }
-            if (duration.endsWith(" 0 sec ")) {
-                duration = duration.replace("0 sec ", "");
-            }
-        }
-        if (duration == " ") {
-            return "";
-        }
-        return duration;
-    }
-    else {
-        return "";
-    }
-};
-var getPrettifiedResourceTypeName = function getPrettifiedResourceTypeName(resourceType, durationInMilliSeconds) {
-    var resourceTypeEnum = _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[resourceType];
-    switch (resourceTypeEnum) {
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.ARTICLE]:
-            return "Article";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.AUDIO]:
-            return getDurationText(durationInMilliSeconds) + " audio";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.EQUIPMENT]:
-            return "Equipment";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.IMAGE]:
-            return "Image";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.SCORM]:
-            return "e-learning package";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.VIDEO]:
-            return getDurationText(durationInMilliSeconds) + " video";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.WEBLINK]:
-            return "Web link";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType[_constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.GENERICFILE]:
-            return "File";
-        default:
-            return "File";
-    }
-};
-var getAuthoredDate = function getAuthoredDate(day, month, year) {
-    var monthName;
-    if (month)
-        monthName = monthNames[month - 1];
-    var authdate = [day, monthName, year].filter(Boolean).join(' ');
-    return authdate;
-};
-var getDurationHhmmss = function (seconds) {
-    var minutes = Math.floor(seconds / 60);
-    seconds = seconds % 60;
-    var hours = Math.floor(minutes / 60);
-    minutes = minutes % 60;
-    var duration = "";
-    if (hours > 0) {
-        duration = pad(hours) + ":";
-    }
-    duration += pad(minutes) + ":" + pad(seconds);
-    return duration;
-};
-var pad = function (num) {
-    return ("0" + num).slice(-2);
-};
-var capitalize = function (title) {
-    if (typeof title !== 'string')
-        return '';
-    return title.charAt(0).toUpperCase() + title.slice(1);
-};
-var getGenericFileButtonTitle = function getGenericFileButtonText(extension) {
-    var title = "View this file";
-    if (extension.toLowerCase() == "zip") {
-        title = "Download this file";
-    }
-    return title;
-};
-var getResourceTypeText = function (resourceType) {
-    switch (resourceType) {
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.ARTICLE:
-            return "Article";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.AUDIO:
-            return "Audio";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.EMBEDDED:
-            return "Embedded";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.EQUIPMENT:
-            return "Equipment";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.GENERICFILE:
-            return "File";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.IMAGE:
-            return "Image";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.SCORM:
-            return "e-learning package";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.VIDEO:
-            return "Video";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.WEBLINK:
-            return "Web link";
-        default:
-            return "";
-    }
-};
-var getResourceTypeVerb = function (resourceType) {
-    switch (resourceType) {
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.ARTICLE:
-            return "Read";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.AUDIO:
-            return "Played";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.EMBEDDED:
-            return "";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.EQUIPMENT:
-            return "Used equipment/visited facility";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.GENERICFILE:
-            return "Downloaded";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.IMAGE:
-            return "Viewed";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.SCORM:
-            return "Downloaded";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.VIDEO:
-            return "Played";
-        case _constants__WEBPACK_IMPORTED_MODULE_1__.ResourceType.WEBLINK:
-            return "Visited";
-        default:
-            return "";
-    }
-};
-var stripHTMLFromString = function stripHTMLFromString(originalString) {
-    if (!originalString)
-        return '';
-    var txtField = document.createElement('textarea');
-    txtField.innerHTML = originalString.replace(/(<([^>]+)>)/gi, "");
-    return txtField.textContent;
-};
-var commonlib = {
-    scrollTo: scrollTo,
-    getIcon: getIcon,
-    getAuthoredDate: getAuthoredDate,
-    getDurationText: getDurationText,
-    getDurationHhmmss: getDurationHhmmss,
-    getGenericFileButtonTitle: getGenericFileButtonTitle,
-    getResourceTypeText: getResourceTypeText,
-    getResourceTypeVerb: getResourceTypeVerb,
-    getResourceTypeIconClass: getResourceTypeIconClass,
-    getPrettifiedResourceTypeName: getPrettifiedResourceTypeName,
-    stripHTMLFromString: stripHTMLFromString
-};
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/constants.ts":
-/*!*************************************!*\
-  !*** ./Scripts/vuesrc/constants.ts ***!
-  \*************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "NodeType": function() { return /* binding */ NodeType; },
-/* harmony export */   "ResourceType": function() { return /* binding */ ResourceType; },
-/* harmony export */   "VersionStatus": function() { return /* binding */ VersionStatus; }
-/* harmony export */ });
-var ResourceType;
-(function (ResourceType) {
-    ResourceType[ResourceType["UNDEFINED"] = 0] = "UNDEFINED";
-    ResourceType[ResourceType["ARTICLE"] = 1] = "ARTICLE";
-    ResourceType[ResourceType["AUDIO"] = 2] = "AUDIO";
-    ResourceType[ResourceType["EMBEDDED"] = 3] = "EMBEDDED";
-    ResourceType[ResourceType["EQUIPMENT"] = 4] = "EQUIPMENT";
-    ResourceType[ResourceType["IMAGE"] = 5] = "IMAGE";
-    ResourceType[ResourceType["SCORM"] = 6] = "SCORM";
-    ResourceType[ResourceType["VIDEO"] = 7] = "VIDEO";
-    ResourceType[ResourceType["WEBLINK"] = 8] = "WEBLINK";
-    ResourceType[ResourceType["GENERICFILE"] = 9] = "GENERICFILE";
-    ResourceType[ResourceType["CASE"] = 10] = "CASE";
-    ResourceType[ResourceType["ASSESSMENT"] = 11] = "ASSESSMENT";
-})(ResourceType || (ResourceType = {}));
-var NodeType;
-(function (NodeType) {
-    NodeType[NodeType["Catalogue"] = 1] = "Catalogue";
-    NodeType[NodeType["Course"] = 2] = "Course";
-    NodeType[NodeType["Folder"] = 3] = "Folder";
-    NodeType[NodeType["ExternalOrganisation"] = 4] = "ExternalOrganisation";
-})(NodeType || (NodeType = {}));
-var VersionStatus;
-(function (VersionStatus) {
-    VersionStatus[VersionStatus["DRAFT"] = 1] = "DRAFT";
-    VersionStatus[VersionStatus["PUBLISHED"] = 2] = "PUBLISHED";
-    VersionStatus[VersionStatus["UNPUBLISHED"] = 3] = "UNPUBLISHED";
-    VersionStatus[VersionStatus["PUBLISHING"] = 4] = "PUBLISHING";
-    VersionStatus[VersionStatus["SUBMITTED"] = 5] = "SUBMITTED";
-    VersionStatus[VersionStatus["FAILED"] = 6] = "FAILED";
-})(VersionStatus || (VersionStatus = {}));
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/content-structure/contentStructureRouter.ts":
-/*!********************************************************************!*\
-  !*** ./Scripts/vuesrc/content-structure/contentStructureRouter.ts ***!
-  \********************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
-/* harmony import */ var _contentStructure_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./contentStructure.vue */ "./Scripts/vuesrc/content-structure/contentStructure.vue");
-
-
-
-vue__WEBPACK_IMPORTED_MODULE_1__["default"].use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
-var router = new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({
-    mode: 'history',
-    base: '/Catalogue/ContentStructure',
-    routes: [
-        {
-            path: '/:id',
-            name: 'ContentStructure',
-            component: _contentStructure_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-            meta: {
-                title: 'Content structure'
-            },
-            props: {
-                showFoldersOnly: true,
-                readOnly: false
-            }
-        },
-    ]
-});
-// This callback runs before every route change, including on page load.
-router.beforeEach(function (to, from, next) {
-    // This goes through the matched routes from last to first, finding the closest route with a title.
-    // eg. if we have /some/deep/nested/route and /some, /deep, and /nested have titles, nested's will be chosen.
-    var nearestWithTitle = to.matched.slice().reverse().find(function (r) { return r.meta && r.meta.title; });
-    // If a route with a title was found, set the document (page) title to that value.
-    if (nearestWithTitle)
-        document.title = nearestWithTitle.meta.title;
-    next();
-});
-/* harmony default export */ __webpack_exports__["default"] = (router);
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/content-structure/contentStructureState.ts":
-/*!*******************************************************************!*\
-  !*** ./Scripts/vuesrc/content-structure/contentStructureState.ts ***!
-  \*******************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "State": function() { return /* binding */ State; },
-/* harmony export */   "contentStructureState": function() { return /* binding */ contentStructureState; }
-/* harmony export */ });
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../data/contentStructure */ "./Scripts/vuesrc/data/contentStructure.ts");
-/* harmony import */ var _models_content_structure_NodeContentAdminModel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/content-structure/NodeContentAdminModel */ "./Scripts/vuesrc/models/content-structure/NodeContentAdminModel.ts");
-/* harmony import */ var _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../models/content-structure/editModeEnum */ "./Scripts/vuesrc/models/content-structure/editModeEnum.ts");
-/* harmony import */ var _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../models/content-structure/hierarchyEditModel */ "./Scripts/vuesrc/models/content-structure/hierarchyEditModel.ts");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../constants */ "./Scripts/vuesrc/constants.ts");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-
-
-
-
-
-
-
-vue__WEBPACK_IMPORTED_MODULE_5__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_6__["default"]);
-var State = /** @class */ (function () {
-    function State() {
-        this.isLoading = true;
-        this.canCreateEdit = false;
-        this.publishInProgress = false;
-        this.catalogue = null;
-        this.hierarchyEdit = new _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditModel();
-        this.hierarchyEditLastPublished = new _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditModel();
-        this.rootNode = new _models_content_structure_NodeContentAdminModel__WEBPACK_IMPORTED_MODULE_1__.NodeContentAdminModel();
-        this.moveToRootNode = new _models_content_structure_NodeContentAdminModel__WEBPACK_IMPORTED_MODULE_1__.NodeContentAdminModel();
-        this.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.None;
-        this.editingFolderNode = null;
-        this.editingTreeNode = null;
-        this.movingResource = null;
-        this.updatedNode = null;
-        this.inError = false;
-        this.lastErrorMessage = "";
-        this.readOnly = true;
-    }
-    return State;
-}());
-
-var state = new State();
-function refreshHierarchyEdit(state) {
-    var _this = this;
-    state.isLoading = true;
-    state.inError = false;
-    _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.getHierarchyEdit(state.catalogue.nodeId).then(function (response) {
-        state.hierarchyEdit = response[0];
-        state.hierarchyEditLastPublished = response[1];
-    }).then(function (x) {
-        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.getCurrentUserId()
-            .then(function (x) {
-            var hierarchyEditExists = !(state.hierarchyEdit === null);
-            state.canCreateEdit = (!hierarchyEditExists
-                || state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.Published)
-                || (state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.Discarded)
-                || (state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.FailedToPublish);
-            state.publishInProgress = hierarchyEditExists
-                && ((state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.SubmittedToPublishingQueue)
-                    || (state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.Publishing));
-            state.editMode = (hierarchyEditExists && state.hierarchyEdit.userId === x && state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.Draft) ? _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure : _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.None;
-            state.readOnly = !(hierarchyEditExists && state.hierarchyEdit.userId === x && state.hierarchyEdit.hierarchyEditStatus === _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_3__.HierarchyEditStatusEnum.Draft);
-        }).then(function (x) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                state.rootNode = new _models_content_structure_NodeContentAdminModel__WEBPACK_IMPORTED_MODULE_1__.NodeContentAdminModel();
-                state.rootNode.nodeTypeId = _constants__WEBPACK_IMPORTED_MODULE_4__.NodeType.Catalogue;
-                state.rootNode.nodeId = state.catalogue.nodeId;
-                if (!(state.hierarchyEdit === null))
-                    state.rootNode.hierarchyEditDetailId = state.hierarchyEdit.rootHierarchyEditDetailId;
-                state.rootNode.depth = 0;
-                state.rootNode.parent = null;
-                state.rootNode.path = state.catalogue.name;
-                state.rootNode.name = state.catalogue.name;
-                state.rootNode.childrenLoaded = false;
-                state.rootNode.inEdit = state.editMode == _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure;
-                state.rootNode.showInTreeView = false;
-                return [2 /*return*/];
-            });
-        }); }).then(function (y) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.getNodeContentsAdmin(state.catalogue.nodeId, state.readOnly).then(function (response) {
-                            state.rootNode.children = response;
-                            state.rootNode.children.forEach(function (child) {
-                                processChildNodeContents(child, state.rootNode);
-                            });
-                            state.rootNode.childrenLoaded = true;
-                            state.isLoading = false;
-                        }).catch(function (e) {
-                            state.inError = true;
-                            state.isLoading = false;
-                            state.lastErrorMessage = "Error loading content structure.";
-                        })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        }); });
-    });
-}
-function refreshNodeContents(node, refreshParentPath) {
-    return __awaiter(this, void 0, void 0, function () {
-        var _this = this;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    state.updatedNode = null;
-                    return [4 /*yield*/, _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.getNodeContentsAdmin(node.nodeId, state.readOnly).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
-                            var i, existing;
-                            return __generator(this, function (_a) {
-                                if (!node.childrenLoaded) {
-                                    node.children = response;
-                                }
-                                else {
-                                    // If node content item is not in the existing collection then add it.
-                                    // Ensure display order and name are up to date (IT1)
-                                    response.forEach(function (child) {
-                                        var existing = node.children.filter(function (r) { return (r.nodeId != null && r.nodeId == child.nodeId) || (r.resourceId != null && r.resourceId == child.resourceId); })[0];
-                                        if (existing === undefined) {
-                                            node.children.splice(0, 0, child);
-                                        }
-                                        else {
-                                            existing.displayOrder = child.displayOrder;
-                                            existing.name = child.name;
-                                        }
-                                    });
-                                    // If existing child is not in new node content list then remove it it.
-                                    for (i = 0; i < node.children.length; i++) {
-                                        existing = response.filter(function (r) { return (r.nodeId != null && r.nodeId == node.children[i].nodeId) || (r.resourceId != null && r.resourceId == node.children[i].resourceId); })[0];
-                                        if (existing === undefined) {
-                                            node.children.splice(i, 1);
-                                        }
-                                    }
-                                }
-                                node.children.forEach(function (child) {
-                                    processChildNodeContents(child, node);
-                                });
-                                node.childrenLoaded = true;
-                                node.hasResourcesInd = node.children.filter(function (c) { return c.nodeTypeId === 0; }).length > 0;
-                                node.hasResourcesInBranchInd = node.hasResourcesInd || node.children.filter(function (c) { return c.hasResourcesInBranchInd; }).length > 0;
-                                state.updatedNode = node;
-                                return [2 /*return*/];
-                            });
-                        }); }).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
-                            var parent, hadResources, hasResources;
-                            return __generator(this, function (_a) {
-                                if (refreshParentPath && node.depth > 0) {
-                                    parent = node.parent;
-                                    while (parent.depth > 0) {
-                                        hadResources = parent.hasResourcesInBranchInd;
-                                        hasResources = parent.hasResourcesInd || parent.children.filter(function (c) { return c.hasResourcesInBranchInd; }).length > 0;
-                                        if (hadResources != hasResources) {
-                                            parent.hasResourcesInBranchInd = hasResources;
-                                            state.updatedNode = parent;
-                                        }
-                                        parent = parent.parent;
-                                    }
-                                }
-                                return [2 /*return*/];
-                            });
-                        }); }).catch(function (e) {
-                            state.inError = true;
-                            state.lastErrorMessage = "Error refreshing Node contents of " + node.name;
-                        })];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-function processChildNodeContents(child, parent) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            child.parent = parent;
-            child.inEdit = child.parent.inEdit;
-            child.showInTreeView = true;
-            child.depth = parent.depth + 1;
-            child.path = child.depth === 0 ? child.name : child.parent.path + " > " + child.name;
-            return [2 /*return*/];
-        });
-    });
-}
-var mutations = {
-    initialise: function (state, payload) {
-        state.readOnly = payload.readOnly;
-        state.rootNode.nodeTypeId = 1;
-    },
-    setEditMode: function (state, payload) {
-        state.editMode = payload;
-    },
-    setCreatingFolder: function (state, payload) {
-        state.inError = false;
-        var editingFolderNode = {
-            hierarchyEditId: state.hierarchyEdit.id,
-            hierarchyEditDetailId: 0,
-            nodeId: 0,
-            nodeVersionId: 0,
-            name: "",
-            description: "",
-            parentNodeId: payload.parentNode.nodeId,
-            path: payload.parentNode.path,
-            parentNode: null
-        };
-        state.editingFolderNode = editingFolderNode;
-        state.editingTreeNode = payload.parentNode;
-        state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Folder;
-        state.updatedNode = null;
-    },
-    setEditingFolder: function (state, payload) {
-        state.inError = false;
-        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.getFolder(payload.folderNode.nodeVersionId).then(function (response) {
-            var editingFolderNode = response;
-            editingFolderNode.hierarchyEditId = state.hierarchyEdit.id;
-            editingFolderNode.hierarchyEditDetailId = payload.folderNode.hierarchyEditDetailId;
-            editingFolderNode.path = payload.folderNode.path;
-            state.editingFolderNode = editingFolderNode;
-            state.editingTreeNode = payload.folderNode;
-            state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Folder;
-        });
-    },
-    setDeletingFolder: function (state, payload) {
-        state.editingTreeNode = payload.folderNode;
-    },
-    setMovingNode: function (state, payload) {
-        state.editingTreeNode = payload.node;
-        state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.MoveNode;
-    },
-    cancelMoveNode: function (state, payload) {
-        state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure;
-    },
-    cancelEdit: function (state) {
-        state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure;
-    },
-    setMovingResource: function (state, payload) {
-        state.editingTreeNode = payload.node.parent;
-        state.movingResource = payload.node;
-        state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.MoveResource;
-    },
-    cancelMoveResource: function (state, payload) {
-        state.editMode = _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure;
-        state.movingResource = null;
-    },
-    setError: function (state, payload) {
-        state.inError = true;
-        state.lastErrorMessage = payload.errorMessage;
-    },
-    removeError: function (state) {
-        state.inError = false;
-        state.lastErrorMessage = null;
-    }
-};
-var getters = {};
-var actions = {
-    populateCatalogue: function (context, payload) {
-        state.isLoading = true;
-        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.getCatalogue(payload).then(function (response) {
-            state.catalogue = response;
-        }).then(function (x) {
-            refreshHierarchyEdit(state);
-        });
-        state.isLoading = false;
-    },
-    createHierarchyEdit: function (context, payload) {
-        state.inError = false;
-        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.createHierarchyEdit(payload).then(function (response) {
-            if (response.isValid) {
-                refreshHierarchyEdit(state);
-            }
-            else {
-                state.inError = true;
-                state.lastErrorMessage = "Error: " + response.details.join(",");
-            }
-        }).catch(function (e) {
-            state.inError = true;
-            state.lastErrorMessage = "Error creating Hierarchy Edit.";
-        });
-    },
-    discardHierarchyEdit: function (context, payload) {
-        state.inError = false;
-        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.discardHierarchyEdit(payload).then(function (response) {
-            if (response.isValid) {
-                refreshHierarchyEdit(state);
-            }
-            else {
-                state.inError = true;
-                state.lastErrorMessage = "Error: " + response.details.join(",");
-            }
-        }).catch(function (e) {
-            state.inError = true;
-            state.lastErrorMessage = "Error discarding Hierarchy Edit.";
-        });
-    },
-    submitHierarchyEditForPublish: function (context, payload) {
-        state.inError = false;
-        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.submitHierarchyEditForPublish(payload, '').then(function (response) {
-            if (response.isValid) {
-                refreshHierarchyEdit(state);
-            }
-            else {
-                state.inError = true;
-                state.lastErrorMessage = "Error: " + response.details.join(",");
-            }
-        }).catch(function (e) {
-            state.inError = true;
-            state.lastErrorMessage = "Error publishing Hierarchy Edit.";
-        });
-    },
-    deleteFolder: function (context) {
-        var _this = this;
-        state.inError = false;
-        state.updatedNode = null;
-        _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.deleteFolder(state.editingTreeNode.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
-            var parent;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!response.isValid) return [3 /*break*/, 2];
-                        parent = state.editingTreeNode.parent;
-                        return [4 /*yield*/, refreshNodeContents(parent, false)];
-                    case 1:
-                        _a.sent();
-                        state.updatedNode = parent;
-                        context.commit("setEditMode", _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure);
-                        return [3 /*break*/, 3];
-                    case 2:
-                        state.inError = true;
-                        state.lastErrorMessage = "Error: " + response.details.join(",");
-                        _a.label = 3;
-                    case 3: return [2 /*return*/];
-                }
-            });
-        }); }).catch(function (e) {
-            state.inError = true;
-            state.lastErrorMessage = "Error deleting folder.";
-        });
-    },
-    moveNodeUp: function (context, payload) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                state.inError = false;
-                _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.moveNodeUp(payload.node.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, refreshNodeContents(payload.node.parent, false)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); }).catch(function (e) {
-                    state.inError = true;
-                    state.lastErrorMessage = "Error moving node up.";
-                });
-                return [2 /*return*/];
-            });
-        });
-    },
-    moveNodeDown: function (context, payload) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                state.inError = false;
-                _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.moveNodeDown(payload.node.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, refreshNodeContents(payload.node.parent, false)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); }).catch(function (e) {
-                    state.inError = true;
-                    state.lastErrorMessage = "Error moving node down.";
-                });
-                return [2 /*return*/];
-            });
-        });
-    },
-    moveNode: function (context, payload) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                state.inError = false;
-                _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.moveNode(state.editingTreeNode.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
-                    var _this = this;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                context.commit("setEditMode", _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure);
-                                return [4 /*yield*/, refreshNodeContents(payload.destinationNode, true).then(function (x) { return __awaiter(_this, void 0, void 0, function () {
-                                        return __generator(this, function (_a) {
-                                            switch (_a.label) {
-                                                case 0: return [4 /*yield*/, refreshNodeContents(state.editingTreeNode.parent, true).then(function (y) {
-                                                    })];
-                                                case 1:
-                                                    _a.sent();
-                                                    return [2 /*return*/];
-                                            }
-                                        });
-                                    }); })];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); }).catch(function (e) {
-                    state.inError = true;
-                    state.lastErrorMessage = "Error moving Node " + state.editingTreeNode.name;
-                });
-                return [2 /*return*/];
-            });
-        });
-    },
-    moveResourceUp: function (context, payload) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.hierarchyEditMoveResourceUp(payload.node.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, refreshNodeContents(payload.node.parent, false)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); }).catch(function (e) {
-                    state.inError = true;
-                    state.lastErrorMessage = "Error moving resource up.";
-                });
-                return [2 /*return*/];
-            });
-        });
-    },
-    moveResourceDown: function (context, payload) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.hierarchyEditMoveResourceDown(payload.node.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, refreshNodeContents(payload.node.parent, false)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); }).catch(function (e) {
-                    state.inError = true;
-                    state.lastErrorMessage = "Error moving resource down.";
-                });
-                return [2 /*return*/];
-            });
-        });
-    },
-    moveResource: function (context, payload) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.hierarchyEditMoveResource(state.movingResource.hierarchyEditDetailId, payload.destinationNode.hierarchyEditDetailId).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
-                    var _this = this;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, refreshNodeContents(state.movingResource.parent, true).then(function (x) { return __awaiter(_this, void 0, void 0, function () {
-                                    return __generator(this, function (_a) {
-                                        switch (_a.label) {
-                                            case 0: return [4 /*yield*/, refreshNodeContents(payload.destinationNode, true)];
-                                            case 1:
-                                                _a.sent();
-                                                return [2 /*return*/];
-                                        }
-                                    });
-                                }); })];
-                            case 1:
-                                _a.sent();
-                                context.commit("setEditMode", _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure);
-                                return [2 /*return*/];
-                        }
-                    });
-                }); }).catch(function (e) {
-                    state.inError = true;
-                    state.lastErrorMessage = "Error moving resource.";
-                });
-                return [2 /*return*/];
-            });
-        });
-    },
-    saveFolder: function (context) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                if (state.editingFolderNode.nodeVersionId == 0) {
-                    _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.createFolder(state.editingFolderNode).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, refreshNodeContents(state.editingTreeNode, false)];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); }).catch(function (e) {
-                        state.inError = true;
-                        state.lastErrorMessage = "Error creating folder.";
-                    });
-                    context.commit("setEditMode", _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure);
-                }
-                else {
-                    _data_contentStructure__WEBPACK_IMPORTED_MODULE_0__.contentStructureData.updateFolder(state.editingFolderNode).then(function (response) { return __awaiter(_this, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            state.editingTreeNode.name = state.editingFolderNode.name;
-                            state.updatedNode = state.editingTreeNode;
-                            context.commit("setEditMode", _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_2__.EditModeEnum.Structure);
-                            return [2 /*return*/];
-                        });
-                    }); }).catch(function (e) {
-                        state.inError = true;
-                        state.lastErrorMessage = "Error updating folder.";
-                    });
-                }
-                return [2 /*return*/];
-            });
-        });
-    }
-};
-var contentStructureState = {
-    namespaced: true,
-    state: state,
-    mutations: mutations,
-    actions: actions,
-    getters: getters
-};
-/* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_6__["default"].Store({
-    modules: {
-        contentStructureState: contentStructureState
-    }
-}));
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/data/contentStructure.ts":
-/*!*************************************************!*\
-  !*** ./Scripts/vuesrc/data/contentStructure.ts ***!
-  \*************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "contentStructureData": function() { return /* binding */ contentStructureData; }
-/* harmony export */ });
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-
-var getCatalogue = function (id) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/hierarchy/GetCatalogue/' + id)
-                        .then(function (response) {
-                        return response.data;
-                    })
-                        .catch(function (e) {
-                        console.error('getCatalogue:' + e);
-                        throw e;
-                    })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var getNodeContentsAdmin = function (nodeId, readOnly) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/hierarchy/GetNodeContentsAdmin/' + nodeId + '/' + readOnly + ("?timestamp=" + new Date().getTime()))
-                        .then(function (response) {
-                        return response.data;
-                    })
-                        .catch(function (e) {
-                        console.log('getNodeContentsAdmin:' + e);
-                        throw e;
-                    })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var getActiveNodePathToNode = function (nodeId) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/hierarchy/GetActiveNodePathToNode/' + nodeId + ("?timestamp=" + new Date().getTime()))
-                        .then(function (response) {
-                        return response.data;
-                    })
-                        .catch(function (e) {
-                        console.log('getActiveNodePathToNode:' + e);
-                        throw e;
-                    })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var getHierarchyEdit = function (rootNodeId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/GetHierarchyEdit/" + rootNodeId;
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().get(url)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('GetHierarchyEdit:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var createHierarchyEdit = function (rootNodeId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/CreateHierarchyEdit/" + rootNodeId;
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('createHierarchyEdit:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var discardHierarchyEdit = function (hierarchyEditId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/DiscardHierarchyEdit/" + hierarchyEditId;
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('discardHierarchyEdit:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var submitHierarchyEditForPublish = function (hierarchyEditId, notes) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url, params;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/SubmitHierarchyEditForPublish";
-                    params = {
-                        hierarchyEditId: hierarchyEditId,
-                        notes: notes
-                    };
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, params)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('publishHierarchyEdit:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var getFolder = function (nodeVersionId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/GetFolder/" + nodeVersionId;
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().get(url)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('getFolder:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var createFolder = function (requestModel) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/CreateFolder";
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, requestModel)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('createFolder:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var updateFolder = function (requestModel) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/UpdateFolder";
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, requestModel)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('updateFolder:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var deleteFolder = function (hierarchyEditDetailId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/DeleteFolder/" + hierarchyEditDetailId;
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('deleteFolder:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var moveNodeUp = function (hierarchyEditDetailId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/MoveNodeUp/" + hierarchyEditDetailId;
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('moveNodeUp:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var moveNodeDown = function (hierarchyEditDetailId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/MoveNodeDown/" + hierarchyEditDetailId;
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('moveNodeDown:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var moveNode = function (hierarchyEditDetailId, moveToHierarchyEditDetailId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/MoveNode";
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, { hierarchyEditDetailId: hierarchyEditDetailId, moveToHierarchyEditDetailId: moveToHierarchyEditDetailId })
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('moveNode:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var hierarchyEditMoveResourceUp = function (hierarchyEditDetailId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/HierarchyEditMoveResourceUp/" + hierarchyEditDetailId;
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('hierarchyEditMoveResourceUp:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var hierarchyEditMoveResourceDown = function (hierarchyEditDetailId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/HierarchyEditMoveResourceDown/" + hierarchyEditDetailId;
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('hierarchyEditMoveResourceDown:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var hierarchyEditMoveResource = function (hierarchyEditDetailId, moveToHierarchyEditDetailId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/HierarchyEditMoveResource";
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, { hierarchyEditDetailId: hierarchyEditDetailId, moveToHierarchyEditDetailId: moveToHierarchyEditDetailId })
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('hierarchyEditMoveResource:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var moveResourceUp = function (nodeId, resourceId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/MoveResourceUp/" + nodeId + "/" + resourceId;
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('moveResourceUp:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var moveResourceDown = function (nodeId, resourceId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/MoveResourceDown/" + nodeId + "/" + resourceId;
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('moveResourceDown:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var moveResource = function (sourceNodeId, destinationNodeId, resourceId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/MoveResource/" + sourceNodeId + "/" + destinationNodeId + "/" + resourceId;
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().put(url)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('moveResource:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var getCurrentUserId = function () {
-    return __awaiter(this, void 0, void 0, function () {
-        var url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    url = "/api/hierarchy/GetCurrentUserId";
-                    return [4 /*yield*/, axios__WEBPACK_IMPORTED_MODULE_0___default().get(url)
-                            .then(function (response) {
-                            return response.data;
-                        })
-                            .catch(function (e) {
-                            console.log('getCurrentUserId:' + e);
-                            throw e;
-                        })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-};
-var contentStructureData = {
-    getCatalogue: getCatalogue,
-    getNodeContentsAdmin: getNodeContentsAdmin,
-    getActiveNodePathToNode: getActiveNodePathToNode,
-    getHierarchyEdit: getHierarchyEdit,
-    createHierarchyEdit: createHierarchyEdit,
-    discardHierarchyEdit: discardHierarchyEdit,
-    submitHierarchyEditForPublish: submitHierarchyEditForPublish,
-    createFolder: createFolder,
-    updateFolder: updateFolder,
-    deleteFolder: deleteFolder,
-    getFolder: getFolder,
-    moveNodeUp: moveNodeUp,
-    moveNodeDown: moveNodeDown,
-    moveNode: moveNode,
-    hierarchyEditMoveResourceUp: hierarchyEditMoveResourceUp,
-    hierarchyEditMoveResourceDown: hierarchyEditMoveResourceDown,
-    hierarchyEditMoveResource: hierarchyEditMoveResource,
-    moveResourceUp: moveResourceUp,
-    moveResourceDown: moveResourceDown,
-    moveResource: moveResource,
-    getCurrentUserId: getCurrentUserId
-};
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/filters.ts":
-/*!***********************************!*\
-  !*** ./Scripts/vuesrc/filters.ts ***!
-  \***********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
-
-
-vue__WEBPACK_IMPORTED_MODULE_1__["default"].filter('formatDate', function (value, format) {
-    if (value) {
-        return moment__WEBPACK_IMPORTED_MODULE_0___default()(String(value)).format(format);
-    }
-    return value;
-});
-vue__WEBPACK_IMPORTED_MODULE_1__["default"].filter('currency', function (value) {
-    return '£' + parseFloat(value).toFixed(2);
-});
-vue__WEBPACK_IMPORTED_MODULE_1__["default"].filter('truncate', function (text, length, suffix) {
-    if (text.length <= length) {
-        return text;
-    }
-    var subString = text.substring(0, length - 1);
-    return subString.substring(0, subString.lastIndexOf(' ')) + suffix;
-});
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/helpers/ckeditorValidationHelper.ts":
-/*!************************************************************!*\
-  !*** ./Scripts/vuesrc/helpers/ckeditorValidationHelper.ts ***!
-  \************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getNumberOfCharacters": function() { return /* binding */ getNumberOfCharacters; },
-/* harmony export */   "getNumberOfCharactersFromHtml": function() { return /* binding */ getNumberOfCharactersFromHtml; },
-/* harmony export */   "getRemainingCharacters": function() { return /* binding */ getRemainingCharacters; },
-/* harmony export */   "getRemainingCharactersFromHtml": function() { return /* binding */ getRemainingCharactersFromHtml; }
-/* harmony export */ });
-var getNumberOfCharacters = function (text) { return text.replace(/\s\n\n/g, ' ').replace(/\n\n/g, ' ').replace(/\s\n/g, '').replace(/\n/g, '').length; };
-var getRemainingCharacters = function (maxLength, text) { return maxLength - getNumberOfCharacters(text); };
-var getNumberOfCharactersFromHtml = function (data) {
-    var text = $("<p></p>").html(data).text();
-    return getNumberOfCharacters(text);
-};
-var getRemainingCharactersFromHtml = function (maxLength, data) { return maxLength - getNumberOfCharactersFromHtml(data); };
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/models/ckeditorToolbar.ts":
-/*!**************************************************!*\
-  !*** ./Scripts/vuesrc/models/ckeditorToolbar.ts ***!
-  \**************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ({
-    default: [
-        {
-            name: 'default', items: ['Undo', 'Redo', '-', 'Bold', 'Italic', '-', 'BulletedList', 'NumberedList', '-', 'Link']
-        }
-    ],
-    landingPages: [
-        {
-            name: 'default', items: ['Undo', 'Redo', '-', 'Bold', 'Italic', '-', 'Styles', '-', 'BulletedList', 'NumberedList', '-', 'Link', '-', 'Source']
-        }
-    ],
-});
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/models/content-structure/NodeContentAdminModel.ts":
-/*!**************************************************************************!*\
-  !*** ./Scripts/vuesrc/models/content-structure/NodeContentAdminModel.ts ***!
-  \**************************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "NodeContentAdminModel": function() { return /* binding */ NodeContentAdminModel; }
-/* harmony export */ });
-var NodeContentAdminModel = /** @class */ (function () {
-    function NodeContentAdminModel(init) {
-        Object.assign(this, init);
-        this.children = new Array();
-    }
-    return NodeContentAdminModel;
-}());
-
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/models/content-structure/editModeEnum.ts":
-/*!*****************************************************************!*\
-  !*** ./Scripts/vuesrc/models/content-structure/editModeEnum.ts ***!
-  \*****************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "EditModeEnum": function() { return /* binding */ EditModeEnum; }
-/* harmony export */ });
-var EditModeEnum;
-(function (EditModeEnum) {
-    EditModeEnum[EditModeEnum["None"] = 0] = "None";
-    EditModeEnum[EditModeEnum["Structure"] = 1] = "Structure";
-    EditModeEnum[EditModeEnum["Folder"] = 2] = "Folder";
-    EditModeEnum[EditModeEnum["MoveNode"] = 3] = "MoveNode";
-    EditModeEnum[EditModeEnum["MoveResource"] = 4] = "MoveResource";
-})(EditModeEnum || (EditModeEnum = {}));
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/models/content-structure/hierarchyEditModel.ts":
-/*!***********************************************************************!*\
-  !*** ./Scripts/vuesrc/models/content-structure/hierarchyEditModel.ts ***!
-  \***********************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "HierarchyEditModel": function() { return /* binding */ HierarchyEditModel; },
-/* harmony export */   "HierarchyEditStatusEnum": function() { return /* binding */ HierarchyEditStatusEnum; }
-/* harmony export */ });
-var HierarchyEditModel = /** @class */ (function () {
-    function HierarchyEditModel(init) {
-        Object.assign(this, init);
-    }
-    return HierarchyEditModel;
-}());
-
-var HierarchyEditStatusEnum;
-(function (HierarchyEditStatusEnum) {
-    HierarchyEditStatusEnum[HierarchyEditStatusEnum["Draft"] = 1] = "Draft";
-    HierarchyEditStatusEnum[HierarchyEditStatusEnum["Published"] = 2] = "Published";
-    HierarchyEditStatusEnum[HierarchyEditStatusEnum["Discarded"] = 3] = "Discarded";
-    HierarchyEditStatusEnum[HierarchyEditStatusEnum["Publishing"] = 4] = "Publishing";
-    HierarchyEditStatusEnum[HierarchyEditStatusEnum["SubmittedToPublishingQueue"] = 5] = "SubmittedToPublishingQueue";
-    HierarchyEditStatusEnum[HierarchyEditStatusEnum["FailedToPublish"] = 6] = "FailedToPublish";
-})(HierarchyEditStatusEnum || (HierarchyEditStatusEnum = {}));
-
-
-/***/ }),
-
-/***/ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=script&lang=ts&":
-/*!************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=script&lang=ts& ***!
-  \************************************************************************************************************************************************************************************/
+/***/ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=script&lang=ts":
+/*!***********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=script&lang=ts ***!
+  \***********************************************************************************************************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42435,7 +43198,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var getCharactersText = function (n) { return n === 1 ? n + " character" : n + " characters"; };
+var getCharactersText = function (n) { return n === 1 ? "".concat(n, " character") : "".concat(n, " characters"); };
 /* harmony default export */ __webpack_exports__["default"] = (vue__WEBPACK_IMPORTED_MODULE_3__["default"].extend({
     components: {
         ckeditor: (ckeditor4_vue_dist_legacy_js__WEBPACK_IMPORTED_MODULE_1___default().component)
@@ -42446,9 +43209,12 @@ var getCharactersText = function (n) { return n === 1 ? n + " character" : n + "
     },
     data: function () {
         return {
-            editorConfig: { toolbar: _models_ckeditorToolbar__WEBPACK_IMPORTED_MODULE_0__["default"]["default"] },
+            editorConfig: {
+                toolbar: _models_ckeditorToolbar__WEBPACK_IMPORTED_MODULE_0__["default"]["default"],
+                versionCheck: false
+            },
             description: this.initialValue,
-            hint: "You have " + this.maxLength + " characters remaining",
+            hint: "You have ".concat(this.maxLength, " characters remaining"),
             valid: (0,_helpers_ckeditorValidationHelper__WEBPACK_IMPORTED_MODULE_2__.getRemainingCharactersFromHtml)(this.maxLength, this.initialValue) >= 0,
         };
     },
@@ -42471,7 +43237,7 @@ var getCharactersText = function (n) { return n === 1 ? n + " character" : n + "
         calculateCharactersRemaining: function (current, editor) {
             var remaining = (0,_helpers_ckeditorValidationHelper__WEBPACK_IMPORTED_MODULE_2__.getRemainingCharactersFromHtml)(current.maxLength, editor.getData());
             current.valid = remaining >= 0;
-            current.hint = current.valid ? "You have " + getCharactersText(remaining) + " remaining" : "You have " + getCharactersText(-1 * remaining) + " too many";
+            current.hint = current.valid ? "You have ".concat(getCharactersText(remaining), " remaining") : "You have ".concat(getCharactersText(-1 * remaining), " too many");
         },
         emitValidity: function () {
             this.$emit('inputValidity', this.valid);
@@ -42482,10 +43248,10 @@ var getCharactersText = function (n) { return n === 1 ? n + " character" : n + "
 
 /***/ }),
 
-/***/ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=script&lang=ts&":
-/*!******************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=script&lang=ts& ***!
-  \******************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=script&lang=ts":
+/*!*****************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=script&lang=ts ***!
+  \*****************************************************************************************************************************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42532,7 +43298,10 @@ __webpack_require__.r(__webpack_exports__);
             isReady: false,
             EditModeEnum: _models_content_structure_editModeEnum__WEBPACK_IMPORTED_MODULE_3__.EditModeEnum,
             HierarchyEditStatusEnum: _models_content_structure_hierarchyEditModel__WEBPACK_IMPORTED_MODULE_2__.HierarchyEditStatusEnum,
-            editorConfig: { toolbar: _models_ckeditorToolbar__WEBPACK_IMPORTED_MODULE_4__["default"]["default"] },
+            editorConfig: {
+                toolbar: _models_ckeditorToolbar__WEBPACK_IMPORTED_MODULE_4__["default"]["default"],
+                versionCheck: false
+            },
             deleteFolderName: '',
             editFolderStructureButtonText: '',
             editFolderStructureButtonDisabled: true,
@@ -42643,10 +43412,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=script&lang=ts&":
-/*!**********************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=script&lang=ts& ***!
-  \**********************************************************************************************************************************************************************************************/
+/***/ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=script&lang=ts":
+/*!*********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=script&lang=ts ***!
+  \*********************************************************************************************************************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42674,7 +43443,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -42928,7 +43697,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
                                         child.inEdit = _this.item.inEdit;
                                         child.showInTreeView = true;
                                         child.depth = child.parent.depth + 1;
-                                        child.path = child.depth === 0 ? child.name : child.parent.path + " > " + child.name;
+                                        child.path = child.depth === 0 ? child.name : "".concat(child.parent.path, " > ").concat(child.name);
                                     });
                                 }).catch(function (e) {
                                     console.log(e);
@@ -42943,7 +43712,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
         },
         getResourceUrl: function (resourceVersionId) {
             if (resourceVersionId) {
-                return "/Resource/Details/" + resourceVersionId.toString();
+                return "/Resource/Details/".concat(resourceVersionId.toString());
             }
             else {
                 return "";
@@ -42997,245 +43766,17 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 
 /***/ }),
 
-/***/ "./Scripts/vuesrc/ckeditorwithhint.vue":
-/*!*********************************************!*\
-  !*** ./Scripts/vuesrc/ckeditorwithhint.vue ***!
-  \*********************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ckeditorwithhint_vue_vue_type_template_id_4b147b2e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ckeditorwithhint.vue?vue&type=template&id=4b147b2e& */ "./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=template&id=4b147b2e&");
-/* harmony import */ var _ckeditorwithhint_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ckeditorwithhint.vue?vue&type=script&lang=ts& */ "./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=script&lang=ts&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _ckeditorwithhint_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _ckeditorwithhint_vue_vue_type_template_id_4b147b2e___WEBPACK_IMPORTED_MODULE_0__.render,
-  _ckeditorwithhint_vue_vue_type_template_id_4b147b2e___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "Scripts/vuesrc/ckeditorwithhint.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/content-structure/contentStructure.vue":
-/*!***************************************************************!*\
-  !*** ./Scripts/vuesrc/content-structure/contentStructure.vue ***!
-  \***************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _contentStructure_vue_vue_type_template_id_1d7c4214_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true& */ "./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true&");
-/* harmony import */ var _contentStructure_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./contentStructure.vue?vue&type=script&lang=ts& */ "./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=script&lang=ts&");
-/* harmony import */ var _contentStructure_vue_vue_type_style_index_0_id_1d7c4214_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true& */ "./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-;
-
-
-/* normalize component */
-
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _contentStructure_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _contentStructure_vue_vue_type_template_id_1d7c4214_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
-  _contentStructure_vue_vue_type_template_id_1d7c4214_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
-  false,
-  null,
-  "1d7c4214",
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "Scripts/vuesrc/content-structure/contentStructure.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/content-structure/treeItem.vue":
-/*!*******************************************************!*\
-  !*** ./Scripts/vuesrc/content-structure/treeItem.vue ***!
-  \*******************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _treeItem_vue_vue_type_template_id_40bedb66_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./treeItem.vue?vue&type=template&id=40bedb66&scoped=true& */ "./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=template&id=40bedb66&scoped=true&");
-/* harmony import */ var _treeItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./treeItem.vue?vue&type=script&lang=ts& */ "./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=script&lang=ts&");
-/* harmony import */ var _treeItem_vue_vue_type_style_index_0_id_40bedb66_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true& */ "./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-;
-
-
-/* normalize component */
-
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _treeItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _treeItem_vue_vue_type_template_id_40bedb66_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
-  _treeItem_vue_vue_type_template_id_40bedb66_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
-  false,
-  null,
-  "40bedb66",
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "Scripts/vuesrc/content-structure/treeItem.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true&":
-/*!*************************************************************************************************************************!*\
-  !*** ./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true& ***!
-  \*************************************************************************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_style_index_0_id_1d7c4214_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=style&index=0&id=1d7c4214&lang=scss&scoped=true&");
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true&":
-/*!*****************************************************************************************************************!*\
-  !*** ./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true& ***!
-  \*****************************************************************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_3_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_3_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_style_index_0_id_40bedb66_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=style&index=0&id=40bedb66&lang=scss&scoped=true&");
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=script&lang=ts&":
-/*!**********************************************************************!*\
-  !*** ./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=script&lang=ts& ***!
-  \**********************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_ckeditorwithhint_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/ts-loader/index.js??clonedRuleSet-1!../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ckeditorwithhint.vue?vue&type=script&lang=ts& */ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=script&lang=ts&");
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_ckeditorwithhint_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=script&lang=ts&":
-/*!****************************************************************************************!*\
-  !*** ./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=script&lang=ts& ***!
-  \****************************************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/ts-loader/index.js??clonedRuleSet-1!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./contentStructure.vue?vue&type=script&lang=ts& */ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=script&lang=ts&");
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=script&lang=ts&":
-/*!********************************************************************************!*\
-  !*** ./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=script&lang=ts& ***!
-  \********************************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/ts-loader/index.js??clonedRuleSet-1!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./treeItem.vue?vue&type=script&lang=ts& */ "./node_modules/ts-loader/index.js??clonedRuleSet-1!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=script&lang=ts&");
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_clonedRuleSet_1_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=template&id=4b147b2e&":
-/*!****************************************************************************!*\
-  !*** ./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=template&id=4b147b2e& ***!
-  \****************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=template&id=4b147b2e":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=template&id=4b147b2e ***!
+  \*******************************************************************************************************************************************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ckeditorwithhint_vue_vue_type_template_id_4b147b2e___WEBPACK_IMPORTED_MODULE_0__.render; },
-/* harmony export */   "staticRenderFns": function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ckeditorwithhint_vue_vue_type_template_id_4b147b2e___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns; }
-/* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ckeditorwithhint_vue_vue_type_template_id_4b147b2e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ckeditorwithhint.vue?vue&type=template&id=4b147b2e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=template&id=4b147b2e&");
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true&":
-/*!**********************************************************************************************************!*\
-  !*** ./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true& ***!
-  \**********************************************************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_template_id_1d7c4214_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render; },
-/* harmony export */   "staticRenderFns": function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_template_id_1d7c4214_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns; }
-/* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_contentStructure_vue_vue_type_template_id_1d7c4214_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true&");
-
-
-/***/ }),
-
-/***/ "./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=template&id=40bedb66&scoped=true&":
-/*!**************************************************************************************************!*\
-  !*** ./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=template&id=40bedb66&scoped=true& ***!
-  \**************************************************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_template_id_40bedb66_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render; },
-/* harmony export */   "staticRenderFns": function() { return /* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_template_id_40bedb66_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns; }
-/* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_lib_index_js_vue_loader_options_treeItem_vue_vue_type_template_id_40bedb66_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./treeItem.vue?vue&type=template&id=40bedb66&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=template&id=40bedb66&scoped=true&");
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=template&id=4b147b2e&":
-/*!********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/ckeditorwithhint.vue?vue&type=template&id=4b147b2e& ***!
-  \********************************************************************************************************************************************************************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": function() { return /* binding */ render; },
-/* harmony export */   "staticRenderFns": function() { return /* binding */ staticRenderFns; }
+/* harmony export */   render: function() { return /* binding */ render; },
+/* harmony export */   staticRenderFns: function() { return /* binding */ staticRenderFns; }
 /* harmony export */ });
 var render = function render() {
   var _vm = this,
@@ -43272,17 +43813,17 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true&":
-/*!**************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true& ***!
-  \**************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true":
+/*!*************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/contentStructure.vue?vue&type=template&id=1d7c4214&scoped=true ***!
+  \*************************************************************************************************************************************************************************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": function() { return /* binding */ render; },
-/* harmony export */   "staticRenderFns": function() { return /* binding */ staticRenderFns; }
+/* harmony export */   render: function() { return /* binding */ render; },
+/* harmony export */   staticRenderFns: function() { return /* binding */ staticRenderFns; }
 /* harmony export */ });
 var render = function render() {
   var _vm = this,
@@ -43897,17 +44438,17 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=template&id=40bedb66&scoped=true&":
-/*!******************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=template&id=40bedb66&scoped=true& ***!
-  \******************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=template&id=40bedb66&scoped=true":
+/*!*****************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./Scripts/vuesrc/content-structure/treeItem.vue?vue&type=template&id=40bedb66&scoped=true ***!
+  \*****************************************************************************************************************************************************************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": function() { return /* binding */ render; },
-/* harmony export */   "staticRenderFns": function() { return /* binding */ staticRenderFns; }
+/* harmony export */   render: function() { return /* binding */ render; },
+/* harmony export */   staticRenderFns: function() { return /* binding */ staticRenderFns; }
 /* harmony export */ });
 var render = function render() {
   var _vm = this,
@@ -44680,13 +45221,13 @@ function normalizeComponent(
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "NavigationFailureType": function() { return /* binding */ NavigationFailureType; },
-/* harmony export */   "RouterLink": function() { return /* binding */ Link; },
-/* harmony export */   "RouterView": function() { return /* binding */ View; },
-/* harmony export */   "START_LOCATION": function() { return /* binding */ START; },
+/* harmony export */   NavigationFailureType: function() { return /* binding */ NavigationFailureType; },
+/* harmony export */   RouterLink: function() { return /* binding */ Link; },
+/* harmony export */   RouterView: function() { return /* binding */ View; },
+/* harmony export */   START_LOCATION: function() { return /* binding */ START; },
 /* harmony export */   "default": function() { return /* binding */ VueRouter$1; },
-/* harmony export */   "isNavigationFailure": function() { return /* binding */ isNavigationFailure; },
-/* harmony export */   "version": function() { return /* binding */ version; }
+/* harmony export */   isNavigationFailure: function() { return /* binding */ isNavigationFailure; },
+/* harmony export */   version: function() { return /* binding */ version; }
 /* harmony export */ });
 /*!
   * vue-router v3.6.5
@@ -47860,67 +48401,67 @@ var version = '3.6.5';
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "EffectScope": function() { return /* binding */ EffectScope; },
-/* harmony export */   "computed": function() { return /* binding */ computed; },
-/* harmony export */   "customRef": function() { return /* binding */ customRef; },
+/* harmony export */   EffectScope: function() { return /* binding */ EffectScope; },
+/* harmony export */   computed: function() { return /* binding */ computed; },
+/* harmony export */   customRef: function() { return /* binding */ customRef; },
 /* harmony export */   "default": function() { return /* binding */ Vue; },
-/* harmony export */   "defineAsyncComponent": function() { return /* binding */ defineAsyncComponent; },
-/* harmony export */   "defineComponent": function() { return /* binding */ defineComponent; },
-/* harmony export */   "del": function() { return /* binding */ del; },
-/* harmony export */   "effectScope": function() { return /* binding */ effectScope; },
-/* harmony export */   "getCurrentInstance": function() { return /* binding */ getCurrentInstance; },
-/* harmony export */   "getCurrentScope": function() { return /* binding */ getCurrentScope; },
-/* harmony export */   "h": function() { return /* binding */ h; },
-/* harmony export */   "inject": function() { return /* binding */ inject; },
-/* harmony export */   "isProxy": function() { return /* binding */ isProxy; },
-/* harmony export */   "isReactive": function() { return /* binding */ isReactive; },
-/* harmony export */   "isReadonly": function() { return /* binding */ isReadonly; },
-/* harmony export */   "isRef": function() { return /* binding */ isRef; },
-/* harmony export */   "isShallow": function() { return /* binding */ isShallow; },
-/* harmony export */   "markRaw": function() { return /* binding */ markRaw; },
-/* harmony export */   "mergeDefaults": function() { return /* binding */ mergeDefaults; },
-/* harmony export */   "nextTick": function() { return /* binding */ nextTick; },
-/* harmony export */   "onActivated": function() { return /* binding */ onActivated; },
-/* harmony export */   "onBeforeMount": function() { return /* binding */ onBeforeMount; },
-/* harmony export */   "onBeforeUnmount": function() { return /* binding */ onBeforeUnmount; },
-/* harmony export */   "onBeforeUpdate": function() { return /* binding */ onBeforeUpdate; },
-/* harmony export */   "onDeactivated": function() { return /* binding */ onDeactivated; },
-/* harmony export */   "onErrorCaptured": function() { return /* binding */ onErrorCaptured; },
-/* harmony export */   "onMounted": function() { return /* binding */ onMounted; },
-/* harmony export */   "onRenderTracked": function() { return /* binding */ onRenderTracked; },
-/* harmony export */   "onRenderTriggered": function() { return /* binding */ onRenderTriggered; },
-/* harmony export */   "onScopeDispose": function() { return /* binding */ onScopeDispose; },
-/* harmony export */   "onServerPrefetch": function() { return /* binding */ onServerPrefetch; },
-/* harmony export */   "onUnmounted": function() { return /* binding */ onUnmounted; },
-/* harmony export */   "onUpdated": function() { return /* binding */ onUpdated; },
-/* harmony export */   "provide": function() { return /* binding */ provide; },
-/* harmony export */   "proxyRefs": function() { return /* binding */ proxyRefs; },
-/* harmony export */   "reactive": function() { return /* binding */ reactive; },
-/* harmony export */   "readonly": function() { return /* binding */ readonly; },
-/* harmony export */   "ref": function() { return /* binding */ ref$1; },
-/* harmony export */   "set": function() { return /* binding */ set; },
-/* harmony export */   "shallowReactive": function() { return /* binding */ shallowReactive; },
-/* harmony export */   "shallowReadonly": function() { return /* binding */ shallowReadonly; },
-/* harmony export */   "shallowRef": function() { return /* binding */ shallowRef; },
-/* harmony export */   "toRaw": function() { return /* binding */ toRaw; },
-/* harmony export */   "toRef": function() { return /* binding */ toRef; },
-/* harmony export */   "toRefs": function() { return /* binding */ toRefs; },
-/* harmony export */   "triggerRef": function() { return /* binding */ triggerRef; },
-/* harmony export */   "unref": function() { return /* binding */ unref; },
-/* harmony export */   "useAttrs": function() { return /* binding */ useAttrs; },
-/* harmony export */   "useCssModule": function() { return /* binding */ useCssModule; },
-/* harmony export */   "useCssVars": function() { return /* binding */ useCssVars; },
-/* harmony export */   "useListeners": function() { return /* binding */ useListeners; },
-/* harmony export */   "useSlots": function() { return /* binding */ useSlots; },
-/* harmony export */   "version": function() { return /* binding */ version; },
-/* harmony export */   "watch": function() { return /* binding */ watch; },
-/* harmony export */   "watchEffect": function() { return /* binding */ watchEffect; },
-/* harmony export */   "watchPostEffect": function() { return /* binding */ watchPostEffect; },
-/* harmony export */   "watchSyncEffect": function() { return /* binding */ watchSyncEffect; }
+/* harmony export */   defineAsyncComponent: function() { return /* binding */ defineAsyncComponent; },
+/* harmony export */   defineComponent: function() { return /* binding */ defineComponent; },
+/* harmony export */   del: function() { return /* binding */ del; },
+/* harmony export */   effectScope: function() { return /* binding */ effectScope; },
+/* harmony export */   getCurrentInstance: function() { return /* binding */ getCurrentInstance; },
+/* harmony export */   getCurrentScope: function() { return /* binding */ getCurrentScope; },
+/* harmony export */   h: function() { return /* binding */ h; },
+/* harmony export */   inject: function() { return /* binding */ inject; },
+/* harmony export */   isProxy: function() { return /* binding */ isProxy; },
+/* harmony export */   isReactive: function() { return /* binding */ isReactive; },
+/* harmony export */   isReadonly: function() { return /* binding */ isReadonly; },
+/* harmony export */   isRef: function() { return /* binding */ isRef; },
+/* harmony export */   isShallow: function() { return /* binding */ isShallow; },
+/* harmony export */   markRaw: function() { return /* binding */ markRaw; },
+/* harmony export */   mergeDefaults: function() { return /* binding */ mergeDefaults; },
+/* harmony export */   nextTick: function() { return /* binding */ nextTick; },
+/* harmony export */   onActivated: function() { return /* binding */ onActivated; },
+/* harmony export */   onBeforeMount: function() { return /* binding */ onBeforeMount; },
+/* harmony export */   onBeforeUnmount: function() { return /* binding */ onBeforeUnmount; },
+/* harmony export */   onBeforeUpdate: function() { return /* binding */ onBeforeUpdate; },
+/* harmony export */   onDeactivated: function() { return /* binding */ onDeactivated; },
+/* harmony export */   onErrorCaptured: function() { return /* binding */ onErrorCaptured; },
+/* harmony export */   onMounted: function() { return /* binding */ onMounted; },
+/* harmony export */   onRenderTracked: function() { return /* binding */ onRenderTracked; },
+/* harmony export */   onRenderTriggered: function() { return /* binding */ onRenderTriggered; },
+/* harmony export */   onScopeDispose: function() { return /* binding */ onScopeDispose; },
+/* harmony export */   onServerPrefetch: function() { return /* binding */ onServerPrefetch; },
+/* harmony export */   onUnmounted: function() { return /* binding */ onUnmounted; },
+/* harmony export */   onUpdated: function() { return /* binding */ onUpdated; },
+/* harmony export */   provide: function() { return /* binding */ provide; },
+/* harmony export */   proxyRefs: function() { return /* binding */ proxyRefs; },
+/* harmony export */   reactive: function() { return /* binding */ reactive; },
+/* harmony export */   readonly: function() { return /* binding */ readonly; },
+/* harmony export */   ref: function() { return /* binding */ ref$1; },
+/* harmony export */   set: function() { return /* binding */ set; },
+/* harmony export */   shallowReactive: function() { return /* binding */ shallowReactive; },
+/* harmony export */   shallowReadonly: function() { return /* binding */ shallowReadonly; },
+/* harmony export */   shallowRef: function() { return /* binding */ shallowRef; },
+/* harmony export */   toRaw: function() { return /* binding */ toRaw; },
+/* harmony export */   toRef: function() { return /* binding */ toRef; },
+/* harmony export */   toRefs: function() { return /* binding */ toRefs; },
+/* harmony export */   triggerRef: function() { return /* binding */ triggerRef; },
+/* harmony export */   unref: function() { return /* binding */ unref; },
+/* harmony export */   useAttrs: function() { return /* binding */ useAttrs; },
+/* harmony export */   useCssModule: function() { return /* binding */ useCssModule; },
+/* harmony export */   useCssVars: function() { return /* binding */ useCssVars; },
+/* harmony export */   useListeners: function() { return /* binding */ useListeners; },
+/* harmony export */   useSlots: function() { return /* binding */ useSlots; },
+/* harmony export */   version: function() { return /* binding */ version; },
+/* harmony export */   watch: function() { return /* binding */ watch; },
+/* harmony export */   watchEffect: function() { return /* binding */ watchEffect; },
+/* harmony export */   watchPostEffect: function() { return /* binding */ watchPostEffect; },
+/* harmony export */   watchSyncEffect: function() { return /* binding */ watchSyncEffect; }
 /* harmony export */ });
 /*!
- * Vue.js v2.7.14
- * (c) 2014-2022 Evan You
+ * Vue.js v2.7.16
+ * (c) 2014-2023 Evan You
  * Released under the MIT License.
  */
 var emptyObject = Object.freeze({});
@@ -47996,8 +48537,15 @@ function toString(val) {
     return val == null
         ? ''
         : Array.isArray(val) || (isPlainObject(val) && val.toString === _toString)
-            ? JSON.stringify(val, null, 2)
+            ? JSON.stringify(val, replacer, 2)
             : String(val);
+}
+function replacer(_key, val) {
+    // avoid circular deps from v3
+    if (val && val.__v_isRef) {
+        return val.value;
+    }
+    return val;
 }
 /**
  * Convert an input value to a number for persistence.
@@ -48160,9 +48708,7 @@ var identity = function (_) { return _; };
  */
 function genStaticKeys$1(modules) {
     return modules
-        .reduce(function (keys, m) {
-        return keys.concat(m.staticKeys || []);
-    }, [])
+        .reduce(function (keys, m) { return keys.concat(m.staticKeys || []); }, [])
         .join(',');
 }
 /**
@@ -48665,6 +49211,11 @@ var __assign = function() {
     return __assign.apply(this, arguments);
 };
 
+typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
+    var e = new Error(message);
+    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+};
+
 var uid$2 = 0;
 var pendingCleanupDeps = [];
 var cleanupDeps = function () {
@@ -48797,7 +49348,7 @@ methodsToPatch.forEach(function (method) {
 });
 
 var arrayKeys = Object.getOwnPropertyNames(arrayMethods);
-var NO_INIITIAL_VALUE = {};
+var NO_INITIAL_VALUE = {};
 /**
  * In some cases we may want to disable observation inside a component's
  * update computation.
@@ -48856,7 +49407,7 @@ var Observer = /** @class */ (function () {
             var keys = Object.keys(value);
             for (var i = 0; i < keys.length; i++) {
                 var key = keys[i];
-                defineReactive(value, key, NO_INIITIAL_VALUE, undefined, shallow, mock);
+                defineReactive(value, key, NO_INITIAL_VALUE, undefined, shallow, mock);
             }
         }
     }
@@ -48893,7 +49444,8 @@ function observe(value, shallow, ssrMockReactivity) {
 /**
  * Define a reactive property on an Object.
  */
-function defineReactive(obj, key, val, customSetter, shallow, mock) {
+function defineReactive(obj, key, val, customSetter, shallow, mock, observeEvenIfShallow) {
+    if (observeEvenIfShallow === void 0) { observeEvenIfShallow = false; }
     var dep = new Dep();
     var property = Object.getOwnPropertyDescriptor(obj, key);
     if (property && property.configurable === false) {
@@ -48903,10 +49455,10 @@ function defineReactive(obj, key, val, customSetter, shallow, mock) {
     var getter = property && property.get;
     var setter = property && property.set;
     if ((!getter || setter) &&
-        (val === NO_INIITIAL_VALUE || arguments.length === 2)) {
+        (val === NO_INITIAL_VALUE || arguments.length === 2)) {
         val = obj[key];
     }
-    var childOb = !shallow && observe(val, false, mock);
+    var childOb = shallow ? val && val.__ob__ : observe(val, false, mock);
     Object.defineProperty(obj, key, {
         enumerable: true,
         configurable: true,
@@ -48952,7 +49504,7 @@ function defineReactive(obj, key, val, customSetter, shallow, mock) {
             else {
                 val = newVal;
             }
-            childOb = !shallow && observe(newVal, false, mock);
+            childOb = shallow ? newVal && newVal.__ob__ : observe(newVal, false, mock);
             if (true) {
                 dep.notify({
                     type: "set" /* TriggerOpTypes.SET */,
@@ -50431,11 +50983,10 @@ function renderMixin(Vue) {
         // to the data on the placeholder node.
         vm.$vnode = _parentVnode;
         // render self
+        var prevInst = currentInstance;
+        var prevRenderInst = currentRenderingInstance;
         var vnode;
         try {
-            // There's no need to maintain a stack because all render fns are called
-            // separately from one another. Nested component's render fns are called
-            // when parent component is patched.
             setCurrentInstance(vm);
             currentRenderingInstance = vm;
             vnode = render.call(vm._renderProxy, vm.$createElement);
@@ -50459,8 +51010,8 @@ function renderMixin(Vue) {
             }
         }
         finally {
-            currentRenderingInstance = null;
-            setCurrentInstance();
+            currentRenderingInstance = prevRenderInst;
+            setCurrentInstance(prevInst);
         }
         // if the returned array contains only a single node, allow it
         if (isArray(vnode) && vnode.length === 1) {
@@ -50724,6 +51275,112 @@ function eventsMixin(Vue) {
         }
         return vm;
     };
+}
+
+var activeEffectScope;
+var EffectScope = /** @class */ (function () {
+    function EffectScope(detached) {
+        if (detached === void 0) { detached = false; }
+        this.detached = detached;
+        /**
+         * @internal
+         */
+        this.active = true;
+        /**
+         * @internal
+         */
+        this.effects = [];
+        /**
+         * @internal
+         */
+        this.cleanups = [];
+        this.parent = activeEffectScope;
+        if (!detached && activeEffectScope) {
+            this.index =
+                (activeEffectScope.scopes || (activeEffectScope.scopes = [])).push(this) - 1;
+        }
+    }
+    EffectScope.prototype.run = function (fn) {
+        if (this.active) {
+            var currentEffectScope = activeEffectScope;
+            try {
+                activeEffectScope = this;
+                return fn();
+            }
+            finally {
+                activeEffectScope = currentEffectScope;
+            }
+        }
+        else if (true) {
+            warn$2("cannot run an inactive effect scope.");
+        }
+    };
+    /**
+     * This should only be called on non-detached scopes
+     * @internal
+     */
+    EffectScope.prototype.on = function () {
+        activeEffectScope = this;
+    };
+    /**
+     * This should only be called on non-detached scopes
+     * @internal
+     */
+    EffectScope.prototype.off = function () {
+        activeEffectScope = this.parent;
+    };
+    EffectScope.prototype.stop = function (fromParent) {
+        if (this.active) {
+            var i = void 0, l = void 0;
+            for (i = 0, l = this.effects.length; i < l; i++) {
+                this.effects[i].teardown();
+            }
+            for (i = 0, l = this.cleanups.length; i < l; i++) {
+                this.cleanups[i]();
+            }
+            if (this.scopes) {
+                for (i = 0, l = this.scopes.length; i < l; i++) {
+                    this.scopes[i].stop(true);
+                }
+            }
+            // nested scope, dereference from parent to avoid memory leaks
+            if (!this.detached && this.parent && !fromParent) {
+                // optimized O(1) removal
+                var last = this.parent.scopes.pop();
+                if (last && last !== this) {
+                    this.parent.scopes[this.index] = last;
+                    last.index = this.index;
+                }
+            }
+            this.parent = undefined;
+            this.active = false;
+        }
+    };
+    return EffectScope;
+}());
+function effectScope(detached) {
+    return new EffectScope(detached);
+}
+/**
+ * @internal
+ */
+function recordEffectScope(effect, scope) {
+    if (scope === void 0) { scope = activeEffectScope; }
+    if (scope && scope.active) {
+        scope.effects.push(effect);
+    }
+}
+function getCurrentScope() {
+    return activeEffectScope;
+}
+function onScopeDispose(fn) {
+    if (activeEffectScope) {
+        activeEffectScope.cleanups.push(fn);
+    }
+    else if (true) {
+        warn$2("onScopeDispose() is called when there is no active effect scope" +
+            " to be associated with.");
+    }
 }
 
 var activeInstance = null;
@@ -51028,7 +51685,8 @@ function callHook$1(vm, hook, args, setContext) {
     if (setContext === void 0) { setContext = true; }
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
-    var prev = currentInstance;
+    var prevInst = currentInstance;
+    var prevScope = getCurrentScope();
     setContext && setCurrentInstance(vm);
     var handlers = vm.$options[hook];
     var info = "".concat(hook, " hook");
@@ -51040,7 +51698,10 @@ function callHook$1(vm, hook, args, setContext) {
     if (vm._hasHookEvent) {
         vm.$emit('hook:' + hook);
     }
-    setContext && setCurrentInstance(prev);
+    if (setContext) {
+        setCurrentInstance(prevInst);
+        prevScope && prevScope.on();
+    }
     popTarget();
 }
 
@@ -51260,7 +51921,10 @@ function doWatch(source, cb, _a) {
     var instance = currentInstance;
     var call = function (fn, type, args) {
         if (args === void 0) { args = null; }
-        return invokeWithErrorHandling(fn, null, args, instance, type);
+        var res = invokeWithErrorHandling(fn, null, args, instance, type);
+        if (deep && res && res.__ob__)
+            res.__ob__.dep.depend();
+        return res;
     };
     var getter;
     var forceTrigger = false;
@@ -51285,6 +51949,7 @@ function doWatch(source, cb, _a) {
                     return s.value;
                 }
                 else if (isReactive(s)) {
+                    s.__ob__.dep.depend();
                     return traverse(s);
                 }
                 else if (isFunction(s)) {
@@ -51426,112 +52091,6 @@ function doWatch(source, cb, _a) {
     return function () {
         watcher.teardown();
     };
-}
-
-var activeEffectScope;
-var EffectScope = /** @class */ (function () {
-    function EffectScope(detached) {
-        if (detached === void 0) { detached = false; }
-        this.detached = detached;
-        /**
-         * @internal
-         */
-        this.active = true;
-        /**
-         * @internal
-         */
-        this.effects = [];
-        /**
-         * @internal
-         */
-        this.cleanups = [];
-        this.parent = activeEffectScope;
-        if (!detached && activeEffectScope) {
-            this.index =
-                (activeEffectScope.scopes || (activeEffectScope.scopes = [])).push(this) - 1;
-        }
-    }
-    EffectScope.prototype.run = function (fn) {
-        if (this.active) {
-            var currentEffectScope = activeEffectScope;
-            try {
-                activeEffectScope = this;
-                return fn();
-            }
-            finally {
-                activeEffectScope = currentEffectScope;
-            }
-        }
-        else if (true) {
-            warn$2("cannot run an inactive effect scope.");
-        }
-    };
-    /**
-     * This should only be called on non-detached scopes
-     * @internal
-     */
-    EffectScope.prototype.on = function () {
-        activeEffectScope = this;
-    };
-    /**
-     * This should only be called on non-detached scopes
-     * @internal
-     */
-    EffectScope.prototype.off = function () {
-        activeEffectScope = this.parent;
-    };
-    EffectScope.prototype.stop = function (fromParent) {
-        if (this.active) {
-            var i = void 0, l = void 0;
-            for (i = 0, l = this.effects.length; i < l; i++) {
-                this.effects[i].teardown();
-            }
-            for (i = 0, l = this.cleanups.length; i < l; i++) {
-                this.cleanups[i]();
-            }
-            if (this.scopes) {
-                for (i = 0, l = this.scopes.length; i < l; i++) {
-                    this.scopes[i].stop(true);
-                }
-            }
-            // nested scope, dereference from parent to avoid memory leaks
-            if (!this.detached && this.parent && !fromParent) {
-                // optimized O(1) removal
-                var last = this.parent.scopes.pop();
-                if (last && last !== this) {
-                    this.parent.scopes[this.index] = last;
-                    last.index = this.index;
-                }
-            }
-            this.parent = undefined;
-            this.active = false;
-        }
-    };
-    return EffectScope;
-}());
-function effectScope(detached) {
-    return new EffectScope(detached);
-}
-/**
- * @internal
- */
-function recordEffectScope(effect, scope) {
-    if (scope === void 0) { scope = activeEffectScope; }
-    if (scope && scope.active) {
-        scope.effects.push(effect);
-    }
-}
-function getCurrentScope() {
-    return activeEffectScope;
-}
-function onScopeDispose(fn) {
-    if (activeEffectScope) {
-        activeEffectScope.cleanups.push(fn);
-    }
-    else if (true) {
-        warn$2("onScopeDispose() is called when there is no active effect scope" +
-            " to be associated with.");
-    }
 }
 
 function provide(key, value) {
@@ -51838,7 +52397,7 @@ function defineAsyncComponent(source) {
     suspensible = _b === void 0 ? false : _b, // in Vue 3 default is true
     userOnError = source.onError;
     if ( true && suspensible) {
-        warn$2("The suspensiblbe option for async components is not supported in Vue2. It is ignored.");
+        warn$2("The suspensible option for async components is not supported in Vue2. It is ignored.");
     }
     var pendingRequest = null;
     var retries = 0;
@@ -51942,7 +52501,7 @@ function onErrorCaptured(hook, target) {
 /**
  * Note: also update dist/vue.runtime.mjs when adding new exports to this file.
  */
-var version = '2.7.14';
+var version = '2.7.16';
 /**
  * @internal type is manually declared in <root>/types/v3-define-component.d.ts
  */
@@ -52260,7 +52819,7 @@ function initProps$1(vm, propsOptions) {
                         "Instead, use a data or computed property based on the prop's " +
                         "value. Prop being mutated: \"".concat(key, "\""), vm);
                 }
-            });
+            }, true /* shallow */);
         }
         else {}
         // static props are already proxied on the component's prototype
@@ -52580,6 +53139,9 @@ function initMixin$1(Vue) {
         vm.__v_skip = true;
         // effect scope
         vm._scope = new EffectScope(true /* detached */);
+        // #13134 edge case where a child component is manually created during the
+        // render of a parent component
+        vm._scope.parent = undefined;
         vm._scope._vm = true;
         // merge options
         if (options && options._isComponent) {
@@ -53828,7 +54390,7 @@ function matches(pattern, name) {
     return false;
 }
 function pruneCache(keepAliveInstance, filter) {
-    var cache = keepAliveInstance.cache, keys = keepAliveInstance.keys, _vnode = keepAliveInstance._vnode;
+    var cache = keepAliveInstance.cache, keys = keepAliveInstance.keys, _vnode = keepAliveInstance._vnode, $vnode = keepAliveInstance.$vnode;
     for (var key in cache) {
         var entry = cache[key];
         if (entry) {
@@ -53838,6 +54400,7 @@ function pruneCache(keepAliveInstance, filter) {
             }
         }
     }
+    $vnode.componentOptions.children = undefined;
 }
 function pruneCacheEntry(cache, key, keys, current) {
     var entry = cache[key];
@@ -54159,7 +54722,7 @@ function isUnknownElement(tag) {
     }
     var el = document.createElement(tag);
     if (tag.indexOf('-') > -1) {
-        // http://stackoverflow.com/a/28210364/1070244
+        // https://stackoverflow.com/a/28210364/1070244
         return (unknownElementCache[tag] =
             el.constructor === window.HTMLUnknownElement ||
                 el.constructor === window.HTMLElement);
@@ -55036,8 +55599,11 @@ function createPatchFunction(backend) {
                             var insert_1 = ancestor.data.hook.insert;
                             if (insert_1.merged) {
                                 // start at index 1 to avoid re-invoking component mounted hook
-                                for (var i_10 = 1; i_10 < insert_1.fns.length; i_10++) {
-                                    insert_1.fns[i_10]();
+                                // clone insert hooks to avoid being mutated during iteration.
+                                // e.g. for customed directives under transition group.
+                                var cloned = insert_1.fns.slice(1);
+                                for (var i_10 = 0; i_10 < cloned.length; i_10++) {
+                                    cloned[i_10]();
                                 }
                             }
                         }
@@ -56176,10 +56742,8 @@ function updateStyle(oldVnode, vnode) {
     }
     for (name in newStyle) {
         cur = newStyle[name];
-        if (cur !== oldStyle[name]) {
-            // ie9 setting to null has no effect, must use empty string
-            setProp(el, name, cur == null ? '' : cur);
-        }
+        // ie9 setting to null has no effect, must use empty string
+        setProp(el, name, cur == null ? '' : cur);
     }
 }
 var style$1 = {
@@ -57428,7 +57992,7 @@ function parseHTML(html, options) {
                         return "continue";
                     }
                 }
-                // http://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
+                // https://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
                 if (conditionalComment.test(html)) {
                     var conditionalEnd = html.indexOf(']>');
                     if (conditionalEnd >= 0) {
@@ -59800,14 +60364,14 @@ Vue.compile = compileToFunctions;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Store": function() { return /* binding */ Store; },
-/* harmony export */   "createLogger": function() { return /* binding */ createLogger; },
-/* harmony export */   "createNamespacedHelpers": function() { return /* binding */ createNamespacedHelpers; },
-/* harmony export */   "install": function() { return /* binding */ install; },
-/* harmony export */   "mapActions": function() { return /* binding */ mapActions; },
-/* harmony export */   "mapGetters": function() { return /* binding */ mapGetters; },
-/* harmony export */   "mapMutations": function() { return /* binding */ mapMutations; },
-/* harmony export */   "mapState": function() { return /* binding */ mapState; }
+/* harmony export */   Store: function() { return /* binding */ Store; },
+/* harmony export */   createLogger: function() { return /* binding */ createLogger; },
+/* harmony export */   createNamespacedHelpers: function() { return /* binding */ createNamespacedHelpers; },
+/* harmony export */   install: function() { return /* binding */ install; },
+/* harmony export */   mapActions: function() { return /* binding */ mapActions; },
+/* harmony export */   mapGetters: function() { return /* binding */ mapGetters; },
+/* harmony export */   mapMutations: function() { return /* binding */ mapMutations; },
+/* harmony export */   mapState: function() { return /* binding */ mapState; }
 /* harmony export */ });
 /*!
  * vuex v3.6.2
@@ -61165,7 +61729,7 @@ module.exports = jQuery;
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 !function() {
 "use strict";
 /*!***********************************************************************!*\

@@ -29,6 +29,11 @@
         private readonly IUserProfileService userProfileService;
 
         /// <summary>
+        /// The user password reset requets service.
+        /// </summary>
+        private readonly IUserPasswordResetRequestsService userPasswordResetRequestsService;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UserController"/> class.
         /// </summary>
         /// <param name="userService">
@@ -41,18 +46,21 @@
         /// The user notification service.
         /// </param>
         /// <param name="securityService">The security service.</param>
+        /// <param name="userPasswordResetRequestsService">The userPasswordResetRequests service.</param>
         /// <param name="logger">The logger.</param>
         public UserController(
             IUserService userService,
             IUserProfileService userProfileService,
             IUserNotificationService userNotificationService,
             ISecurityService securityService,
+            IUserPasswordResetRequestsService userPasswordResetRequestsService,
             ILogger<UserController> logger)
             : base(userService, logger)
         {
             this.userProfileService = userProfileService;
             this.userNotificationService = userNotificationService;
             this.securityService = securityService;
+            this.userPasswordResetRequestsService = userPasswordResetRequestsService;
         }
 
         /// <summary>
@@ -268,6 +276,29 @@
         {
             var result = await this.securityService.ReGenerateEmailChangeValidationToken(this.CurrentUserId, newPrimaryEmail, isUserRoleUpgrade);
             return this.Ok(result);
+        }
+
+        /// <summary>
+        /// Check user can request password reset.
+        /// </summary>
+        /// <param name="emailAddress">emailAddress.</param>
+        /// <param name="passwordRequestLimitingPeriod">The passwordRequestLimitingPeriod.</param>
+        /// <param name="passwordRequestLimit">ThepasswordRequestLimit.</param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("CanRequestPasswordReset/{emailAddress}/{passwordRequestLimitingPeriod}/{passwordRequestLimit}")]
+        public async Task<bool> CanRequestPasswordReset(string emailAddress, int passwordRequestLimitingPeriod, int passwordRequestLimit)
+        {
+            var result = await this.userPasswordResetRequestsService.CanRequestPasswordReset(emailAddress, passwordRequestLimitingPeriod, passwordRequestLimit);
+            if (result)
+            {
+                await this.userPasswordResetRequestsService.CreateUserPasswordRequest(emailAddress);
+            }
+
+            return result;
         }
 
         /// <summary>

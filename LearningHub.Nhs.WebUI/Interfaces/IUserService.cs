@@ -419,6 +419,15 @@
         Task<EmailChangeValidationTokenViewModel> RegenerateEmailChangeValidationTokenAsync(string newPrimaryEmail, bool isUserRoleUpgrade);
 
         /// <summary>
+        /// User Can request for password reset.
+        /// </summary>
+        /// <param name="emailAddress">The email Address.</param>
+        /// <param name="passwordRequestLimitingPeriod">The passwordRequestLimitingPeriod.</param>
+        /// <param name="passwordRequestLimit">ThepasswordRequestLimit.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<bool> CanRequestPasswordResetAsync(string emailAddress, int passwordRequestLimitingPeriod, int passwordRequestLimit);
+
+        /// <summary>
         /// GenerateEmailChangeValidationTokenAndSendEmail.
         /// </summary>
         /// <param name="emailAddress">The email Address.</param>

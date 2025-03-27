@@ -187,6 +187,16 @@ namespace LearningHub.Nhs.WebUI.Configuration
         public string GoogleAnalyticsId { get; set; }
 
         /// <summary>
+        /// Gets or sets the PasswordRequestLimitingPeriod.
+        /// </summary>
+        public int PasswordRequestLimitingPeriod { get; set; }
+
+        /// <summary>
+        /// Gets or sets the PasswordRequestLimit.
+        /// </summary>
+        public int PasswordRequestLimit { get; set; }
+
+        /// <summary>
         /// Gets or sets the SupportUrls.
         /// </summary>
         public SupportUrls SupportUrls { get; set; } = new SupportUrls();

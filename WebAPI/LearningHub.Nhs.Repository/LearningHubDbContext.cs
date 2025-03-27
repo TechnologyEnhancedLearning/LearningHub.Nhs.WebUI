@@ -116,6 +116,11 @@ namespace LearningHub.Nhs.Repository
         public virtual DbSet<EmailChangeValidationToken> EmailChangeValidationToken { get; set; }
 
         /// <summary>
+        /// Gets or sets the password requests.
+        /// </summary>
+        public virtual DbSet<PasswordResetRequests> PasswordResetRequests { get; set; }
+
+        /// <summary>
         /// Gets or sets the Notification.
         /// </summary>
         public virtual DbSet<Notification> Notification { get; set; }

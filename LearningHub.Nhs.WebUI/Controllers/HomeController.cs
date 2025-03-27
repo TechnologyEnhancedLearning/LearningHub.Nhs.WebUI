@@ -6,7 +6,6 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using elfhHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Content;
     using LearningHub.Nhs.Models.Enums.Content;
     using LearningHub.Nhs.Models.Extensions;
@@ -21,7 +20,6 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.FeatureManagement;
@@ -54,7 +52,6 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="dashboardService">Dashboard service.</param>
         /// <param name="contentService">Content service.</param>
         /// <param name="featureManager"> featureManager.</param>
-        /// <param name="configuration"> config.</param>
         public HomeController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
@@ -65,8 +62,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             LearningHubAuthServiceConfig authConfig,
             IDashboardService dashboardService,
             IContentService contentService,
-            IFeatureManager featureManager,
-            Microsoft.Extensions.Configuration.IConfiguration configuration)
+            IFeatureManager featureManager)
         : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.authConfig = authConfig;
@@ -75,7 +71,6 @@ namespace LearningHub.Nhs.WebUI.Controllers
             this.dashboardService = dashboardService;
             this.contentService = contentService;
             this.featureManager = featureManager;
-            this.configuration = configuration;
         }
 
         /// <summary>
@@ -170,26 +165,16 @@ namespace LearningHub.Nhs.WebUI.Controllers
             }
             else
             {
-                if (originalPath == "/TooManyRequests")
+                this.ViewBag.ErrorHeader = httpStatusCode.Value switch
                 {
-                    this.ViewBag.Period = this.configuration["IpRateLimiting:GeneralRules:0:Period"];
-                    this.ViewBag.Limit = this.configuration["IpRateLimiting:GeneralRules:0:Limit"];
+                    401 => "You do not have permission to access this page",
+                    404 => "We cannot find the page you are looking for",
+                    _ => "We cannot find the page you are looking for",
+                };
 
-                    return this.View("TooManyRequests");
-                }
-                else
-                {
-                    this.ViewBag.ErrorHeader = httpStatusCode.Value switch
-                    {
-                        401 => "You do not have permission to access this page",
-                        404 => "We cannot find the page you are looking for",
-                        _ => "We cannot find the page you are looking for",
-                    };
-
-                    this.ViewBag.HttpStatusCode = httpStatusCode.Value;
-                    this.ViewBag.HomePageUrl = "/home";
-                    return this.View("CustomError");
-                }
+                this.ViewBag.HttpStatusCode = httpStatusCode.Value;
+                this.ViewBag.HomePageUrl = "/home";
+                return this.View("CustomError");
             }
         }
 

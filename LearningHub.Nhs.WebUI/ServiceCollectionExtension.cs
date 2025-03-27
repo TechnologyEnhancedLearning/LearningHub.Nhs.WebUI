@@ -111,8 +111,6 @@
                 }
             });
 
-            ConfigureIpRateLimiting(services, configuration);
-
             // this method setup so httpcontext is available from controllers
             services.AddHttpContextAccessor();
             services.AddSingleton(learningHubAuthSvcConf);
@@ -138,18 +136,6 @@
             services.AddControllersWithViews();
 
             services.AddFeatureManagement();
-        }
-
-        /// <summary>
-        /// ConfigureIpRateLimiting.
-        /// </summary>
-        /// <param name="services">The services.</param>
-        /// <param name="configuration">The configuration.</param>
-        private static void ConfigureIpRateLimiting(IServiceCollection services, IConfiguration configuration)
-        {
-            services.Configure<IpRateLimitOptions>(configuration.GetSection("IpRateLimiting"));
-            services.AddInMemoryRateLimiting();
-            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
         }
     }
 }

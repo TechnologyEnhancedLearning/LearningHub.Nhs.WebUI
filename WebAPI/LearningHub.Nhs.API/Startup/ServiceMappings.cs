@@ -147,6 +147,7 @@ namespace LearningHub.Nhs.Api
             services.AddSingleton<IEntityTypeMap, EmailTemplateMap>();
             services.AddSingleton<IEntityTypeMap, EmailTemplateLayoutMap>();
             services.AddSingleton<IEntityTypeMap, EmailChangeValidationTokenMap>();
+            services.AddSingleton<IEntityTypeMap, PasswordResetRequestsMap>();
             services.AddSingleton<IEntityTypeMap, MessageMap>();
             services.AddSingleton<IEntityTypeMap, MessageSendMap>();
             services.AddSingleton<IEntityTypeMap, MessageSendRecipientMap>();
@@ -228,6 +229,7 @@ namespace LearningHub.Nhs.Api
             services.AddScoped<IUserGroupService, UserGroupService>();
             services.AddScoped<IUserNotificationService, UserNotificationService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserPasswordResetRequestsService, UserPasswordResetRequestsService>();
             services.AddTransient<IQueueCommunicatorService, QueueCommunicatorService>();
             services.AddTransient<IRoadmapService, RoadmapService>();
             services.AddTransient<IEventService, EventService>();
@@ -284,6 +286,7 @@ namespace LearningHub.Nhs.Api
             services.AddScoped<IQuestionBlockRepository, QuestionBlockRepository>();
             services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
             services.AddScoped<IEmailChangeValidationTokenRepository, EmailChangeValidationTokenRepository>();
+            services.AddScoped<IUserPasswordResetRequestsRepository, UserPasswordResetRequestsRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddTransient<IResourceSyncRepository, ResourceSyncRepository>();

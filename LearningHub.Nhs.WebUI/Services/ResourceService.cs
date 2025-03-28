@@ -1196,6 +1196,38 @@ namespace LearningHub.Nhs.WebUI.Services
         }
 
         /// <summary>
+        /// Creates resource version validation results corresponding to the value in the corresponding input view model.
+        /// </summary>
+        /// <param name="validationResultViewModel">Details of the validation results.</param>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        public async Task CreateResourceVersionValidationResultAsync(ResourceVersionValidationResultViewModel validationResultViewModel)
+        {
+            ApiResponse apiResponse = null;
+            var json = JsonConvert.SerializeObject(validationResultViewModel);
+            var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+
+            var request = $"Resource/CreateResourceVersionValidationResult";
+            var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
+
+                if (!apiResponse.Success)
+                {
+                    throw new Exception("save failed!");
+                }
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+        }
+
+        /// <summary>
         /// The delete resource version provider.
         /// </summary>
         /// <param name="model">The model<see cref="ResourceVersionProviderViewModel"/>.</param>

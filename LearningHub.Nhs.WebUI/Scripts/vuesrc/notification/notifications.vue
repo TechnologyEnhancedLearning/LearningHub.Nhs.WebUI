@@ -152,7 +152,7 @@
             showNotification(notification: NotificationModel) {
                 this.selectedNotification = notification;
                 this.showMessage = true;
-                setTimeout(() => { $('html,body').scrollTop($("#backToList").offset().top); }, 100);
+                setTimeout(() => { $('html,body').scrollTop($(".nhsuk-back-link").offset().top); }, 100);
 
             },
             showNotificationList(event: any) {

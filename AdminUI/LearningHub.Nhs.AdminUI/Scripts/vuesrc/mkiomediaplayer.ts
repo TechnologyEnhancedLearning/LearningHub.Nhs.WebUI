@@ -22,6 +22,7 @@ interface PlayerConfig {
 }
 
 interface SourceConfig {
+    enableLowLatency: boolean; 
     hls: string;
     drm: {
         clearkey: ClearKeyConfig;
@@ -57,6 +58,7 @@ function getSourceConfig(
     authenticationToken: string
 ): SourceConfig {
     return {
+        enableLowLatency: true,
         hls: locatorUri,
         drm: {
             clearkey: {
@@ -81,10 +83,11 @@ function initializePlayer(videoContainer: HTMLElement, playerConfig: MKPlayerCon
     };
 
     const sourceConfig: SourceConfig = {
+        enableLowLatency: true,
         hls: playBackUrl,
         drm: {
             clearkey: clearKeyConfig
-        }
+        },
     };
 
     player.load(sourceConfig)

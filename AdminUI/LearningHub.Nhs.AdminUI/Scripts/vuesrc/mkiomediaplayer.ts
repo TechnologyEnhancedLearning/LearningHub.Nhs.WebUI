@@ -87,7 +87,7 @@ function initializePlayer(videoContainer: HTMLElement, playerConfig: MKPlayerCon
         hls: playBackUrl,
         drm: {
             clearkey: clearKeyConfig
-        },
+        }
     };
 
     player.load(sourceConfig)

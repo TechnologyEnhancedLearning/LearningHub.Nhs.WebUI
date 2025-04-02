@@ -24,6 +24,7 @@ interface PlayerConfig {
 }
 
 interface SourceConfig {
+    enableLowLatency: boolean;
     hls: string;
     drm: {
         clearkey: ClearKeyConfig;
@@ -64,6 +65,7 @@ function getPlayerConfig(mkioKey: string, onPlayerReady: () => void, onSubtitleA
 function initializePlayer(videoContainer: HTMLElement, playerConfig: MKPlayerConfig, playBackUrl: string): any {
     const player = new MKPlayer(videoContainer, playerConfig);
     const sourceConfig: SourceConfig = {
+        enableLowLatency: true,
         hls: playBackUrl,
         drm: {
             clearkey: getClearKeyConfig()

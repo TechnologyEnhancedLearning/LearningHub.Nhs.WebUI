@@ -133,7 +133,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 var offset = catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize;
                 var client = await this.findwiseClient.GetClient(this.findwiseConfig.SearchBaseUrl);
                 var request = string.Format(
-                    this.findwiseConfig.SearchEndpointPath + "?offset={1}&hits={2}&q={3}&token={4}",
+                    this.findwiseConfig.SearchEndpointPath + "{0}?offset={1}&hits={2}&q={3}&token={4}",
                     this.findwiseConfig.CollectionIds.Catalogue,
                     offset,
                     catalogSearchRequestModel.PageSize,
@@ -180,7 +180,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             {
                 var client = await this.findwiseClient.GetClient(this.findwiseConfig.SearchBaseUrl);
                 var request = string.Format(
-                   this.findwiseConfig.SearchEndpointPath + "?q={1}&token={2}",
+                   this.findwiseConfig.SearchEndpointPath + "{0}?q={1}&token={2}",
                    this.findwiseConfig.CollectionIds.AutoSuggestion,
                    this.EncodeSearchText(term),
                    this.findwiseConfig.Token);

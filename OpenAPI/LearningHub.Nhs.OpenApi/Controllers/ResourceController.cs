@@ -121,7 +121,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         /// </summary>
         /// <param name="originalResourceReferenceId">id.</param>
         /// <returns>Resource data.</returns>
-        [HttpGet("{originalResourceReferenceId}")]
+        [HttpGet("GetResourceReferenceByOriginalId/{originalResourceReferenceId}")]
         public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId)
         {
             return await this.resourceService.GetResourceReferenceByOriginalId(originalResourceReferenceId, this.CurrentUserId.GetValueOrDefault());

@@ -1,0 +1,152 @@
+@using Microsoft.Extensions.Options;
+@using LearningHub.Nhs.WebUI.Configuration;
+@using LearningHub.Nhs.WebUI.Helpers;
+@using LearningHub.Nhs.WebUI.Extensions;
+@inject IOptions<Settings> settings
+
+@model NavigationModel
+
+@{
+  var restricted = settings.Value.Restricted;
+
+  var createAccountDisplay = restricted ? "none" : "flex";
+}
+
+<!-- start default navigation -->
+
+@if (Context.Request.Path.Value != "/Home/Error" && !SystemOffline())
+
+{
+  @if (Model.ShowBrowseCatalogues)
+
+  {
+                        <li class="nhsuk-header__navigation-item @Html.IsSelected("Catalogue")">
+                        <a class="nhsuk-header__navigation-link" href="/allcatalogue">
+                              Browse catalogues
+
+                </a>
+                          </li>
+                  </li>
+                          </li>
+  }
+  @if (Model.ShowMyLearning)
+
+  {
+                <li class="nhsuk-header__navigation-item @Html.IsSelected("MyLearning")">
+                            <a class="nhsuk-header__navigation-link" href="/MyLearning">
+                              My learning
+
+                     </a>
+                          </li>
+                  </li>
+                          </li>
+  }
+  @if (Model.ShowMyContributions)
+
+  {
+                <li class="nhsuk-header__navigation-item @Html.IsSelected("Contribute,ContributeResource")">
+                            <a class="nhsuk-header__navigation-link" href="/my-contributions">
+                              My contributions
+
+             </a>
+                          </li>
+                  </li>
+                          </li>
+  }
+
+  @if (Model.ShowMyBookmarks)
+
+  {
+                <li class="nhsuk-header__navigation-item @Html.IsSelected("Bookmark")">
+                            <a class="nhsuk-header__navigation-link" href="/bookmark">
+                              My bookmarks
+
+                </a>
+                          </li>
+                  </li>
+                          </li>
+  }
+
+  @if (Context.Request.Path.Value != "/Home/Error" && !SystemOffline())
+
+  {
+    @if (Model.ShowHelp)
+
+    {
+                        <li class="nhsuk-header__navigation-item">
+                                    <a class="nhsuk-header__navigation-link" href="@(settings.Value.SupportUrls.SupportSite)" target="_blank">
+                                Help
+
+                </a>
+                                  </li>
+    }
+    @if (Model.ShowNotifications)
+
+    {
+                        <li class="nhsuk-header__navigation-item notification-list-item  @Html.IsSelected("Notification")">
+                                    <a class="nhsuk-header__navigation-link" asp-area="" asp-controller="Notification" asp-action="Index">
+                                      Notifications
+          @if (Model.NotificationCount == 0
+)
+          {
+                                            <div class="nhsuk-header__notification-dot">@NotificationDisplay()</div>
+
+          }
+                          }
+          }
+                                 </a>
+                                  </li>
+                      </li>
+                                  </li>
+      @* - below contains notification number code to be implemented & styled as appropriate. See Helpers\UtilityHelper.cs FormatUnreadNotificationCount()
+                      *@
+    }
+   if (Model.ShowAdmin)
+                  {
+            <li class="nhsuk-header__navigation-item">
+                        <a class="nhsuk-header__navigation-link" href="@(settings.Value.LearningHubAdminUrl)Home/Login" target="_blank">
+                          Admin
+
+                        </a>
+                      </li>
+                  }
+              }
+  @if (Model.ShowRegister)
+                {
+                  @* can likely remove this condition as Register functionality removed from menu and only shown in main content window. see \Services\NavigationPermissionService.cs *@
+        <li class="nhsuk-header__navigation-item @Html.IsSelected("Account")">
+                      <a class="nhsuk-header__navigation-link" href="/create-an-account">
+                        Create an account
+                      </a>
+                    </li>
+                }
+
+}
+
+
+<!-- end default navigation -->
+
+
+functions{
+
+
+public bool SystemOffline()
+  {
+        return ViewContext.RouteData.Values["controller"].ToString() == "Offline"; ;
+    }
+
+    public string NotificationDisplay() {
+      if (Model.NotificationCount < 1) {
+        return "";
+      }
+
+      var returnString = Model.NotificationCount.ToString();
+
+      if (Model.NotificationCount > 9) {
+        returnString = "9+";
+      }
+
+      return returnString;
+
+    }
+}

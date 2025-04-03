@@ -7,118 +7,141 @@
 @model NavigationModel
 
 @{
-    var restricted = settings.Value.Restricted;
-    var createAccountDisplay = restricted ? "none" : "flex";
+  var restricted = settings.Value.Restricted;
+  var createAccountDisplay = restricted ? "none" : "flex";
 }
 
 <!-- start default navigation -->
 
-            @if (Context.Request.Path.Value != "/Home/Error" && !SystemOffline())
-            {
-              @if (Model.ShowBrowseCatalogues)
-              {
-                <li class="nhsuk-header__navigation-item @Html.IsSelected("Catalogue")">
-                <a class="nhsuk-header__navigation-link" href="/allcatalogue">
-                      Browse catalogues
-                     
-                    </a>
-                  </li>                  
-              }
-              @if (Model.ShowMyLearning)
-              {
+@if (Context.Request.Path.Value != "/Home/Error" && !SystemOffline())
+{
+    @if (Model.ShowBrowseCatalogues)
+    {
+        <li class="nhsuk-header__navigation-item @Html.IsSelected("Catalogue")">
+            <a class="nhsuk-header__navigation-link" href="/allcatalogue">
+                Browse catalogues
+
+            </a>
+        </li>
+    }
+    @if (Model.ShowMyLearning)
+    {
         <li class="nhsuk-header__navigation-item @Html.IsSelected("MyLearning")">
-                    <a class="nhsuk-header__navigation-link" href="/MyLearning">
-                      My learning
-                     
-                    </a>
-                  </li>                  
-              }
-              @if (Model.ShowMyContributions)
-              {
+            <a class="nhsuk-header__navigation-link" href="/MyLearning">
+                My learning
+
+            </a>
+        </li>
+    }
+    @if (Model.ShowMyContributions)
+    {
         <li class="nhsuk-header__navigation-item @Html.IsSelected("Contribute,ContributeResource")">
-                    <a class="nhsuk-header__navigation-link" href="/my-contributions">
-                      My contributions
-                      
-                    </a>
-                  </li>                  
-              }
+            <a class="nhsuk-header__navigation-link" href="/my-contributions">
+                My contributions
 
-              @if (Model.ShowMyBookmarks)
-              {
+            </a>
+        </li>
+    }
+
+    @if (Model.ShowMyBookmarks)
+    {
         <li class="nhsuk-header__navigation-item @Html.IsSelected("Bookmark")">
-                    <a class="nhsuk-header__navigation-link" href="/bookmark">
-                      My bookmarks
-                      
-                    </a>
-                  </li>                  
-              }
+            <a class="nhsuk-header__navigation-link" href="/bookmark">
+                My bookmarks
 
-              @if (Context.Request.Path.Value != "/Home/Error" && !SystemOffline())
-              {
-                  @if (Model.ShowHelp)
-                  {
+            </a>
+        </li>
+    }
+
+  @if (Context.Request.Path.Value != "/Home/Error" && !SystemOffline())
+  {
+        @if (Model.ShowHelp)
+        {
             <li class="nhsuk-header__navigation-item">
-                        <a class="nhsuk-header__navigation-link" href="@(settings.Value.SupportUrls.SupportSite)" target="_blank">
-                          Help
-                          
-                        </a>
-                      </li>
-                  }
-                  @if (Model.ShowNotifications)
-                  {
-            <li class="nhsuk-header__navigation-item @Html.IsSelected("Notification")">
-                        <a class="nhsuk-header__navigation-link" asp-area="" asp-controller="Notification" asp-action="Index">
-                          Notifications
-                          @if (Model.NotificationCount > 0) {
-                            <div class="nhsuk-header__notification-dot">@NotificationDisplay()</div>
+                <a class="nhsuk-header__navigation-link" href="@(settings.Value.SupportUrls.SupportSite)" target="_blank">
+                    Help
 
-                          }   
-                        </a>
-                      </li>   
-                      @* - below contains notification number code to be implemented & styled as appropriate. See Helpers\UtilityHelper.cs FormatUnreadNotificationCount()
+                </a>
+            </li>
+        }
+        @if (Model.ShowNotifications)
+        {
+            <li class="nhsuk-header__navigation-item notification-list-item  @Html.IsSelected("Notification")">
+                <a class="nhsuk-header__navigation-link" asp-area="" asp-controller="Notification" asp-action="Index">
+                    Notifications
+                    @if (Model.NotificationCount == 0)
+                    {
+                        <div class="nhsuk-header__notification-dot">@NotificationDisplay()</div>
+
+                    }
+                </a>
+            </li>
+            @* - below contains notification number code to be implemented & styled as appropriate. See Helpers\UtilityHelper.cs FormatUnreadNotificationCount()
                       *@
-                  }
-                  @if (Model.ShowAdmin)
-                  {
+        }
+        if (Model.ShowAdmin)
+        {
             <li class="nhsuk-header__navigation-item">
-                        <a class="nhsuk-header__navigation-link" href="@(settings.Value.LearningHubAdminUrl)Home/Login" target="_blank">
-                          Admin
-                          
-                        </a>
-                      </li>                    
-                  }
-              }
-                @if (Model.ShowRegister)
+                <a class="nhsuk-header__navigation-link" href="@(settings.Value.LearningHubAdminUrl)Home/Login" target="_blank">
+                    Admin
+
+                </a>
+            </li>
+        }
+
+        <li class="nhsuk-mobile-menu-container">
+            <button class="nhsuk-header__menu-toggle nhsuk-header__navigation-link" id="toggle-menu" aria-expanded="false">
+                <span class="nhsuk-u-visually-hidden">Browse</span>
+                More
+                <svg class="nhsuk-icon nhsuk-icon__chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                aria-hidden="true" focusable="false">
+                    <path
+                    d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z">
+                    </path>
+                </svg>
+                @if (Model.ShowNotifications)
                 {
-                  @* can likely remove this condition as Register functionality removed from menu and only shown in main content window. see \Services\NavigationPermissionService.cs *@
-        <li class="nhsuk-header__navigation-item @Html.IsSelected("Account")">
-                      <a class="nhsuk-header__navigation-link" href="/create-an-account">
-                        Create an account
-                      </a>
-                    </li>
+                    @if (Model.NotificationCount == 0)
+                    {
+                        <div class="nhsuk-header__notification-dot">@NotificationDisplay()</div>
+                    }
                 }
-            }
+            </button>
+        </li>
+    }
+    @if (Model.ShowRegister)
+    {
+        @* can likely remove this condition as Register functionality removed from menu and only shown in main content window. see \Services\NavigationPermissionService.cs *@
+        <li class="nhsuk-header__navigation-item @Html.IsSelected("Account")">
+            <a class="nhsuk-header__navigation-link" href="/create-an-account">
+                Create an account
+            </a>
+        </li>
+    }
+}
 
 <!-- end default navigation -->
-
-@functions{
+@functions {
     public bool SystemOffline()
     {
         return ViewContext.RouteData.Values["controller"].ToString() == "Offline"; ;
     }
 
-    public string NotificationDisplay() {
-      if (Model.NotificationCount < 1) {
-        return "";
-      }
-      
-      var returnString = Model.NotificationCount.ToString();
+    public string NotificationDisplay()
+    {
+        if (Model.NotificationCount < 1)
+        {
+            return "";
+        }
 
-      if (Model.NotificationCount > 9) {
-        returnString = "9+";
-      }
-      
-      return returnString;
-       
+        var returnString = Model.NotificationCount.ToString();
+
+        if (Model.NotificationCount > 9)
+        {
+            returnString = "9+";
+        }
+
+        return returnString;
+
     }
 }

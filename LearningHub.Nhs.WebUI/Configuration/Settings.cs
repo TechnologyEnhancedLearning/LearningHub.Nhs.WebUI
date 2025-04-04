@@ -197,6 +197,11 @@ namespace LearningHub.Nhs.WebUI.Configuration
         public int PasswordRequestLimit { get; set; }
 
         /// <summary>
+        /// Gets or sets the ConcurrentId.
+        /// </summary>
+        public int ConcurrentId { get; set; }
+
+        /// <summary>
         /// Gets or sets the SupportUrls.
         /// </summary>
         public SupportUrls SupportUrls { get; set; } = new SupportUrls();

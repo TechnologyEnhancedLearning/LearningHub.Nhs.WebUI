@@ -6,6 +6,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using elfhHub.Nhs.Models.Common;
+    using elfhHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Content;
     using LearningHub.Nhs.Models.Enums.Content;
     using LearningHub.Nhs.Models.Extensions;
@@ -20,6 +22,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.FeatureManagement;
@@ -52,6 +55,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="dashboardService">Dashboard service.</param>
         /// <param name="contentService">Content service.</param>
         /// <param name="featureManager"> featureManager.</param>
+        /// <param name="configuration"> config.</param>
         public HomeController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
@@ -62,7 +66,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
             LearningHubAuthServiceConfig authConfig,
             IDashboardService dashboardService,
             IContentService contentService,
-            IFeatureManager featureManager)
+            IFeatureManager featureManager,
+            Microsoft.Extensions.Configuration.IConfiguration configuration)
         : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.authConfig = authConfig;
@@ -71,6 +76,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             this.dashboardService = dashboardService;
             this.contentService = contentService;
             this.featureManager = featureManager;
+            this.configuration = configuration;
         }
 
         /// <summary>
@@ -200,6 +206,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         {
             if (this.User?.Identity.IsAuthenticated == true)
             {
+                this.Settings.ConcurrentId = this.CurrentUserId;
                 this.Logger.LogInformation("User is authenticated: User is {fullname} and userId is: {lhuserid}", this.User.Identity.GetCurrentName(), this.User.Identity.GetCurrentUserId());
                 if (this.User.IsInRole("Administrator") || this.User.IsInRole("BlueUser") || this.User.IsInRole("ReadOnly") || this.User.IsInRole("BasicUser"))
                 {
@@ -369,9 +376,39 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 return this.Redirect(returnUrl);
             }
 
+            // Add successful logout to the UserHistory
+            UserHistoryViewModel userHistory = new UserHistoryViewModel()
+            {
+                UserId = this.Settings.ConcurrentId,
+                UserHistoryTypeId = (int)UserHistoryType.Logout,
+                Detail = @"User session time out",
+            };
+
+            this.userService.StoreUserHistory(userHistory);
+
             this.ViewBag.AuthTimeout = this.authConfig.AuthTimeout;
             this.ViewBag.ReturnUrl = returnUrl;
+
             return this.View();
+        }
+
+        /// <summary>
+        /// The SessionTimeout.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost("browser-close")]
+        public IActionResult BrowserClose()
+        {
+            // Add browser close to the UserHistory
+            UserHistoryViewModel userHistory = new UserHistoryViewModel()
+            {
+                UserId = this.CurrentUserId,
+                UserHistoryTypeId = (int)UserHistoryType.Logout,
+                Detail = @"User browser closed",
+            };
+
+            this.userService.StoreUserHistory(userHistory);
+            return this.Ok(true);
         }
 
         /// <summary>

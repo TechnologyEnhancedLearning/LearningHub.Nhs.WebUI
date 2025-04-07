@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
+    using System.Text.Json;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Reporting;
     using LearningHub.Nhs.Services.Interface;
@@ -49,11 +50,23 @@
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
-                viewmodel = JsonConvert.DeserializeObject<List<MoodleCourseResponseViewModel>>(result);
 
-                foreach (var course in viewmodel)
+                using var document = JsonDocument.Parse(result);
+                var root = document.RootElement;
+
+                // Check if it's a JSON object and contains "exception"
+                if (!(root.ValueKind == JsonValueKind.Object && root.TryGetProperty("exception", out _)))
                 {
-                    course.CourseCompletionViewModel = await moodleApiService.GetCourseCompletionAsync(userId, course.Id.Value, pageNumber);
+                    viewmodel = JsonConvert.DeserializeObject<List<MoodleCourseResponseViewModel>>(result);
+
+                    foreach (var course in viewmodel)
+                    {
+                        course.CourseCompletionViewModel = await moodleApiService.GetCourseCompletionAsync(userId, course.Id.Value, pageNumber);
+                    }
+                }
+                else
+                {
+                    // Contains error, handle it as needed.
                 }
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||

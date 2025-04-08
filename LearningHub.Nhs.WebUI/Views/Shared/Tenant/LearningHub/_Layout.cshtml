@@ -161,22 +161,9 @@
     @RenderSection("Scripts", required: false)
 
     <script type="text/javascript" src="~/js/mkplayer-ui-custom.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/pageunload.js" asp-append-version="true"></script>
 
     <script type="text/javascript">
-        // This function will be called when the browser window is closed or unloaded
-        function tellServerBrowserClosed() {
-            // Send an asynchronous request to the server when the browser is closed
-            fetch('/api/user/browser-close', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ message: 'Browser closed' })
-            })
-                .then(response => response.json())
-                .catch(error => console.error('Error sending data to server:', error));
-        }
-
         // Bind the function to the unload event
         window.onunload = tellServerBrowserClosed;
 

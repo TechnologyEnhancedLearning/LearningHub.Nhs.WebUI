@@ -13,13 +13,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/UserBookmarkViewModel"
+                    "$ref": "#/components/schemas/LearningHub.Nhs.Models.Bookmark.UserBookmarkViewModel"
                   }
                 }
               },
@@ -27,7 +27,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/UserBookmarkViewModel"
+                    "$ref": "#/components/schemas/LearningHub.Nhs.Models.Bookmark.UserBookmarkViewModel"
                   }
                 }
               },
@@ -35,7 +35,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/UserBookmarkViewModel"
+                    "$ref": "#/components/schemas/LearningHub.Nhs.Models.Bookmark.UserBookmarkViewModel"
                   }
                 }
               }
@@ -173,24 +173,24 @@
         "tags": [
           "Catalogue"
         ],
-        "summary": "Gets all available Catalogues.",
+        "summary": "Get all catalogues.",
         "responses": {
           "200": {
-            "description": "Success. If no results are found, an empty result set will be returned.",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/BulkCatalogueViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.BulkCatalogueViewModel"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BulkCatalogueViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.BulkCatalogueViewModel"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BulkCatalogueViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.BulkCatalogueViewModel"
                 }
               }
             }
@@ -3133,77 +3133,73 @@
         "tags": [
           "Resource"
         ],
-        "summary": "Gets a set of Learning Hub resources that match the search string provided. Includes paging, catalogue filtering and resource type filtering options.",
+        "summary": "GET Search.",
         "parameters": [
           {
             "name": "text",
             "in": "query",
+            "description": "text.",
             "schema": {
               "type": "string"
-            },
-            "required": true,
-            "description": "Search string."
+            }
           },
           {
             "name": "offset",
             "in": "query",
+            "description": "offset.",
             "schema": {
               "type": "integer",
               "format": "int32",
-              "default": 0,
-              "maximum": 9999
-            },
-            "description": "The number of items to skip before starting to collect the result set. Use in combination with \"limit\" to implement pagination. The limit plus offset must not exceed 10,000."
+              "default": 0
+            }
           },
           {
             "name": "limit",
             "in": "query",
+            "description": "limit.",
             "schema": {
               "type": "integer",
-              "format": "int32",
-              "default": 10,
-              "maximum": 10000
-            },
-            "description": "Maximum number of matching resources to include in the result set. Use in combination with \"offset\" to implement pagination. The limit plus offset must not exceed 10,000."
+              "format": "int32"
+            }
           },
           {
             "name": "catalogueId",
             "in": "query",
+            "description": "catalogueId.",
             "schema": {
               "type": "integer",
               "format": "int32"
-            },
-            "description": "Filters the result set to only include resources that have a reference in the matching catalogue. Resources may contain other references not in the matching catalogue. This should match catalogue IDs returned by the Learning Hub Open API."
+            }
           },
           {
             "name": "resourceTypes",
             "in": "query",
+            "description": "resourceTypeIds.",
             "schema": {
               "type": "array",
               "items": {
                 "type": "string"
               }
-            },
-            "description": "A list of resource types to include in the results set. Must be a valid JSON array of strings. Filters the result set to only include resources matching the array of specified types. These should match resource types returned by the Learning Hub Open API. Any invalid resource types included in the array will be ignored."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success. If no matching results are found, an empty result set will be returned.",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResourceSearchResultViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.ResourceSearchResultViewModel"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResourceSearchResultViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.ResourceSearchResultViewModel"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResourceSearchResultViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.ResourceSearchResultViewModel"
                 }
               }
             }
@@ -3216,36 +3212,36 @@
         "tags": [
           "Resource"
         ],
-        "description": "Gets the Learning Hub resource that matches the Resource Reference ID supplied.",
+        "summary": "GET by Id.",
         "parameters": [
           {
-            "name": "resourceReferenceId",
+            "name": "originalResourceReferenceId",
             "in": "path",
+            "description": "id.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
-            },
-            "description": "The resource reference id of the Learning Hub resource (in catalogue) to return. 404 will be returned if no matching resource reference is found."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResourceReferenceWithResourceDetailsViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.ResourceReferenceWithResourceDetailsViewModel"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResourceReferenceWithResourceDetailsViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.ResourceReferenceWithResourceDetailsViewModel"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResourceReferenceWithResourceDetailsViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.ResourceReferenceWithResourceDetailsViewModel"
                 }
               }
             }
@@ -3258,39 +3254,38 @@
         "tags": [
           "Resource"
         ],
-        "description": "Gets a set of Learning Hub resources that match the list of Resource Reference IDs supplied. This endpoint is deprecated and exists only for backward compatibility: \"/Resource/BulkJson\" should be used instead.",
-        "deprecated": true,
+        "summary": "Bulk get by Ids.",
         "parameters": [
           {
             "name": "resourceReferenceIds",
             "in": "query",
+            "description": "ids.",
             "schema": {
               "type": "array",
               "items": {
                 "type": "integer",
                 "format": "int32"
               }
-            },
-            "description": "Resource references should be passed in the form \"resourceReferenceIds=123&resourceReferenceIds=234&…\". Each integer should be the Resource Reference ID of a Learning Hub resource to be included in the result set. Any unmatched results will be listed in the unmatchedResourceReferenceIds return property."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/BulkResourceReferenceViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.BulkResourceReferenceViewModel"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BulkResourceReferenceViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.BulkResourceReferenceViewModel"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BulkResourceReferenceViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.BulkResourceReferenceViewModel"
                 }
               }
             }
@@ -3303,46 +3298,34 @@
         "tags": [
           "Resource"
         ],
-        "description": "Gets a set of Learning Hub resources that match the list of Resource Reference IDs supplied.",
+        "summary": "Bulk get by Ids.",
         "parameters": [
           {
             "name": "resourceReferences",
             "in": "query",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "referenceIds": {
-                      "type": "array",
-                      "items": {
-                        "type": "integer"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "description": "Resource references should be passed in the form \"{referenceIds:[123,234,…]}\". Each integer should be the Resource Reference ID of a Learning Hub resource to be included in the result set. Any unmatched results will be listed in the unmatchedResourceReferenceIds return property."
+            "description": "ids.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/BulkResourceReferenceViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.BulkResourceReferenceViewModel"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BulkResourceReferenceViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.BulkResourceReferenceViewModel"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BulkResourceReferenceViewModel"
+                  "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.BulkResourceReferenceViewModel"
                 }
               }
             }
@@ -3352,75 +3335,90 @@
     },
     "/Resource/User/{activityStatusId}": {
       "get": {
-        "tags": [ "Resource" ],
-        "summary": "Get resource references by activity status",
-        "operationId": "GetResourceReferencesByActivityStatus",
+        "tags": [
+          "Resource"
+        ],
+        "summary": "Get resourceReferences that have an in progress activity summary",
         "parameters": [
           {
             "name": "activityStatusId",
             "in": "path",
+            "description": "activityStatusId.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
-            },
-            "description": "The activity status Id to filter resource references. Valid values are Completed 3 (returned as Completed/Downloaded/Launched/Viewed), Incomplete 7 (returned as In progress), Passed 5, Failed 4."
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.ResourceReferenceWithResourceDetailsViewModel"
+                  }
+                }
+              },
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ResourceReferenceWithResourceDetailsViewModel"
+                    "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.ResourceReferenceWithResourceDetailsViewModel"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.ResourceReferenceWithResourceDetailsViewModel"
                   }
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad request: The activityStatusId provided is not valid."
-          },
-          "401": {
-            "description": "Unauthorized: User Id required."
-          },
-          "403": {
-            "description": "Forbidden: The activityStatusId is not defined within ActivityStatusEnum or is in the list of activityStatusIdsNotInUseInDB."
-          },
-          "500": {
-            "description": "Internal server error: An unexpected error occurred while processing the request."
           }
         }
       }
     },
     "/Resource/User/Certificates": {
       "get": {
-        "tags": [ "Resource" ],
-        "summary": "Get resource references where a major version has a certificate",
-        "operationId": "GetResourceReferencesByCertificates",
-        "parameters": [],
+        "tags": [
+          "Resource"
+        ],
+        "summary": "Get resourceReferences that have certificates",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.ResourceReferenceWithResourceDetailsViewModel"
+                  }
+                }
+              },
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ResourceReferenceWithResourceDetailsViewModel"
+                    "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.ResourceReferenceWithResourceDetailsViewModel"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LearningHub.Nhs.OpenApi.Models.ViewModels.ResourceReferenceWithResourceDetailsViewModel"
                   }
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized: User Id required."
-          },
-          "500": {
-            "description": "Internal server error: An unexpected error occurred while processing the request."
           }
         }
       }

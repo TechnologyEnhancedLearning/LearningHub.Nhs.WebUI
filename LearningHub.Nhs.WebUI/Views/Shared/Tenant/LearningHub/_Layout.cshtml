@@ -133,19 +133,19 @@
         @if (!ViewData["DisableValidation"]?.Equals(true) ?? true)
         {
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"
-            asp-fallback-src="~/lib/jquery-validation/dist/jquery.validate.min.js"
-            asp-fallback-test="window.jQuery && window.jQuery.validator"
-            asp-suppress-fallback-integrity="true"
-            crossorigin="anonymous"
-            integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA==">
+                    asp-fallback-src="~/lib/jquery-validation/dist/jquery.validate.min.js"
+                    asp-fallback-test="window.jQuery && window.jQuery.validator"
+                    asp-suppress-fallback-integrity="true"
+                    crossorigin="anonymous"
+                    integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA==">
             </script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"
-            asp-fallback-src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive"
-                asp-suppress-fallback-integrity="true"
-                crossorigin="anonymous"
-                integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==">
-        </script>
+                    asp-fallback-src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
+                    asp-fallback-test="window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive"
+                    asp-suppress-fallback-integrity="true"
+                    crossorigin="anonymous"
+                    integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==">
+            </script>
         }
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
         <script type="text/javascript" src="~/js/jquery.matchHeight.min.js" asp-append-version="true"></script>
@@ -161,6 +161,13 @@
     @RenderSection("Scripts", required: false)
 
     <script type="text/javascript" src="~/js/mkplayer-ui-custom.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/pageunload.js" asp-append-version="true"></script>
+
+    <script type="text/javascript">
+        // Bind the function to the unload event
+        window.onunload = tellServerBrowserClosed;
+
+    </script>
 
 </body>
 </html>

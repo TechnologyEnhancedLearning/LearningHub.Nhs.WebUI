@@ -383,12 +383,12 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header text-center">
-                                                    <h4 class="modal-title"><i class="warningTriangle fa-solid fa-triangle-exclamation"></i> Confirm the password</h4>
+                                                    <h4 class="modal-title"><i class="warningTriangle fa-solid fa-triangle-exclamation"></i> Confirm your password</h4>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="model-body-container">
                                                         <p>
-                                                            To continue with the upload, please verify your identity by entering your password.
+                                                            To continue with the upload please verify your identity by entering your password.
                                                         </p>
                                                     </div>
                                                     <div>
@@ -970,10 +970,8 @@
                                 return;
                             }
                             this.confirmPassword();
-                            //this.acceptUploadedFile();
                         } else {
                             this.confirmPassword();
-                            //this.acceptUploadedFile();
                         }
                     }
                 }
@@ -1020,11 +1018,9 @@
                                 }
                             } else {
                                 this.confirmPassword();
-                                //this.acceptUploadedFile();
                             }
                         } else {
-                            this.confirmPassword();
-                            //this.acceptUploadedFile();
+                            this.confirmPassword();  
                         }
                     }
                 }

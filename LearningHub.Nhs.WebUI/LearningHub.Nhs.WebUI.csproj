@@ -104,6 +104,7 @@
 
 
 	<ItemGroup>
+		<PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
 		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
@@ -112,7 +113,7 @@
 		<PackageReference Include="HtmlAgilityPack" Version="1.11.72" />
 		<PackageReference Include="IdentityModel" Version="4.6.0" />
 		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.47" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />
 		<PackageReference Include="linqtotwitter" Version="6.9.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.EventCounterCollector" Version="2.21.0" />

@@ -84,7 +84,6 @@ try
     app.UseAuthorization();
 
     app.UseMiddleware<NLogMiddleware>();
-
     app.UseStaticFiles();
 
     app.Map(TimezoneInfoMiddleware.TimezoneInfoUrl, b => b.UseMiddleware<TimezoneInfoMiddleware>());

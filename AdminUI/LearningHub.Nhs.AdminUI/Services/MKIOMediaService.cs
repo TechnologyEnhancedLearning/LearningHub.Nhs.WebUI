@@ -91,19 +91,21 @@
         /// <returns>.</returns>
         public async Task<BlobDownloadResult> DownloadMediaInputAsset(string inputAssetName, string fileName)
         {
-            IAzureMediaServicesClient client = await this.CreateMediaServicesClientAsync();
+            var client = this.GetMKIOServicesClientAsync();
+            var assets = client.Assets.Get(inputAssetName);
 
-            AssetContainerSas assetContainerSas = await client.Assets.ListContainerSasAsync(
-                this.settings.AzureMediaResourceGroup,
-                this.settings.AzureMediaAccountName,
-                inputAssetName,
-                permissions: AssetContainerPermission.Read,
-                expiryTime: DateTime.UtcNow.AddHours(1).ToUniversalTime());
+            BlobServiceClient blobServiceClient = new BlobServiceClient(this.settings.MediaKindSettings.MediaKindStorageConnectionString);
 
-            string sasUri = assetContainerSas.AssetContainerSasUrls.First();
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(assets.Properties.Container);
+            if (!await containerClient.ExistsAsync().ConfigureAwait(false))
+            {
+                await containerClient.CreateIfNotExistsAsync().ConfigureAwait(false);
+            }
 
-            var blobServiceClient = new BlobContainerClient(new Uri(sasUri));
-            var blobClient = blobServiceClient.GetBlockBlobClient(fileName);
+            var filename1 = Regex.Replace(fileName, "[^a-zA-Z0-9.]", string.Empty);
+            filename1 = string.IsNullOrEmpty(filename1) ? "file.txt" : filename1;
+
+            BlobClient blobClient = containerClient.GetBlobClient(filename1);
             var fileContent = await blobClient.DownloadContentAsync();
 
             return fileContent;

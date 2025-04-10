@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Reset limit reached";
+    // Get the value from ViewBag
+    var period = ViewBag.Period.ToString();
+}
+<div class="bg-white">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full nhsuk-u-padding-top-9 nhsuk-u-padding-bottom-7">
+                <h1 class="nhsuk-heading-xl"> @ViewData["Title"]</h1>
+                <p>You've requested the maximum number of password resets (@ViewBag.Limit). Please wait @period minutes before trying again or contact the <a href="@ViewBag.SupportFormUrl" target="_blank">support team</a>.</p>
+                <p>@DateTimeOffset.Now.ToString("d MMMM yyyy HH:mm:ss")</p>
+            </div>
+        </div>
+    </div>
+</div>

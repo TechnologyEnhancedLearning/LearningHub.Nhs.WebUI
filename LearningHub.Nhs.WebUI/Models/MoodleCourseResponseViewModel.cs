@@ -133,9 +133,9 @@
         public bool? Hidden { get; set; }
 
         /// <summary>
-        /// Gets or sets the overview files.
+        /// Gets or sets the list of overview files.
         /// </summary>
-        public List<object> OverviewFiles { get; set; }
+        public List<MoodleOverviewFileViewModel> OverviewFiles { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether activity dates are shown.

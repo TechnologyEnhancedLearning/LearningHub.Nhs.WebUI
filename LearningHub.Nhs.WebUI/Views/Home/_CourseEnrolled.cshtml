@@ -56,6 +56,13 @@
             </div>
 
             <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
+                @if (@Model?.Progress != null)
+                {
+                    <div>Progress: @Model.Progress%</div>
+                }
+            </div>
+
+            <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
                 Completed: @Model.CourseCompletionViewModel?.CompletionStatus?.Completed
 
                 @if (Model?.CourseCompletionViewModel?.CompletionStatus?.Completions != null)

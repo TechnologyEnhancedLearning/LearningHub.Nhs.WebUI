@@ -376,6 +376,50 @@
                             </transition>
                         </div>
 
+                        <div v-if="passwordVerification">
+                            <transition name="modal">
+                                <div class="modal-mask">
+                                    <div class="modal-wrapper">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header text-center">
+                                                    <h4 class="modal-title"><i class="warningTriangle fa-solid fa-triangle-exclamation"></i> Confirm the password</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="model-body-container">
+                                                        <p>
+                                                            To continue with the upload, please verify your identity by entering your password.
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <div class="form-group password-div-width" v-bind:class="{ 'input-validation-error': $v.currentPassword.$error}">
+                                                            <label for="confirmPassword" class="pt-10">Current password</label>
+                                                            <div class="error-text" v-if="$v.currentPassword.$invalid && $v.currentPassword.$dirty">
+                                                                <span class="text-danger">Enter a valid password.</span>
+                                                            </div>
+                                                            <input type="password" class="form-control" id="currentPassword" aria-describedby="currentPassword" autocomplete="off" maxlength="1000"
+                                                                   v-model.trim="currentPassword"
+                                                                   placeholder="Current password"
+                                                                   @blur="$v.currentPassword.$touch()"
+                                                                   v-bind:class="{ 'input-validation-error': $v.currentPassword.$error}">
+                                                        </div>
+
+                                                        <div class="row" v-if="showError">
+                                                            <div class="form-group col-12 text-danger" v-html="errorMessage" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer modal-footer--buttons">
+                                                    <button type="button" class="nhsuk-button nhsuk-button--secondary" @click="passwordVerification=false">Cancel</button>
+                                                    <button type="button" class="nhsuk-button" @click="submitPassword">Continue</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </transition>
+                        </div>
+
                     </div>
 
                     <div v-if="!resourceLoading" class="limit-width px-xl-0 mx-xl-0 pb-5">
@@ -427,6 +471,7 @@
     import GenericFileUploader from './GenericFileUploader.vue';
     import { UploadResourceType, ResourceType, VersionStatus } from '../constants';
     import { resourceData } from '../data/resource';
+    import { userData } from '../data/user';
     import { FileTypeModel } from "../models/contribute/fileTypeModel";
     import { FileUploadResult } from "../models/contribute/FileUploadResult";
     import { FlagModel } from '../models/flagModel';
@@ -490,6 +535,8 @@
                 displayType: '' as string,
                 commonContentKey: 0,
                 avUnavailableMessage: false,
+                passwordVerification: false,
+                currentPassword: '',
                 // Some of the Content components have local state
                 // which isn't in the vuex store.
                 // This means those fields are validated using an
@@ -573,7 +620,7 @@
             closeAfterSave(): boolean {
                 return this.$store.state.closeAfterSave;
             },
-            isFileAlreadyUploaded(): boolean {
+            isFileAlreadyUploaded(): boolean {         
                 switch (this.selectedResourceType) {
                     case this.resourceType.GENERICFILE:
                         return this.$store.state.genericFileDetail.file.fileName !== '';
@@ -739,6 +786,12 @@
                     this.processPublish();
                 }
             },
+            submitPassword() {
+                this.$v.currentPassword.$touch();
+                if (!this.$v.currentPassword.$invalid) {
+                    this.validatePassword();
+                }              
+            },
             async processPublish() {
                 this.showError = false;
                 let publishSuccess = await resourceData.publishResource(this.resourceVersionId, this.publishNotes);
@@ -756,6 +809,18 @@
                 else {
                     this.showError = true;
                     this.errorMessage = "An error occurred whilst trying to publish the resource.";
+                }
+            },
+            async validatePassword() {
+                this.showError = false;
+                let isValidUser = await userData.IsValidUser(this.currentPassword);
+                if (isValidUser) {
+                    this.acceptUploadedFile();
+                    this.passwordVerification = false;
+                }
+                else {
+                    this.showError = true;
+                    this.errorMessage = "Enter a valid password.";
                 }
             },
             deleteResource() {
@@ -821,6 +886,10 @@
                 this.uploadingFile = null;
                 this.fileUploadRef.value = null;
                 (this.$refs.fileUploader as any).uploadResourceFile(this.file);
+            },
+            confirmPassword() {
+                this.currentPassword = '';
+                this.passwordVerification = true;
             },
             async fileUploadComplete(uploadResult: FileUploadResult) {
                 if (!uploadResult.invalid) {
@@ -900,9 +969,11 @@
                                 this.fileErrorType = FileErrorTypeEnum.InvalidScormType;
                                 return;
                             }
-                            this.acceptUploadedFile();
+                            this.confirmPassword();
+                            //this.acceptUploadedFile();
                         } else {
-                            this.acceptUploadedFile();
+                            this.confirmPassword();
+                            //this.acceptUploadedFile();
                         }
                     }
                 }
@@ -948,10 +1019,12 @@
                                     this.fileTypeChangeWarning = true;
                                 }
                             } else {
-                                this.acceptUploadedFile();
+                                this.confirmPassword();
+                                //this.acceptUploadedFile();
                             }
                         } else {
-                            this.acceptUploadedFile();
+                            this.confirmPassword();
+                            //this.acceptUploadedFile();
                         }
                     }
                 }
@@ -1062,6 +1135,9 @@
             },
             publishNotes: {
                 required
+            },
+            currentPassword: {
+                required
             }
         },
         watch: {
@@ -1105,4 +1181,7 @@
         max-height: 90vh;
         overflow-y: auto;
     }
+    .password-div-width{
+        max-width:70% !important;
+        }
 </style>

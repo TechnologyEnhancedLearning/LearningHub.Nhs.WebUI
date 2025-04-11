@@ -3,86 +3,86 @@
 @using LearningHub.Nhs.Models.Resource.ResourceDisplay;
 @using LearningHub.Nhs.Models.Enums;
 @{
-    ViewData["Title"] = "Learning Hub - Home";
+	ViewData["Title"] = "Learning Hub - Home";
 
-    var isReadOnly = User.IsInRole("ReadOnly") || User.IsInRole("BasicUser");
+	var isReadOnly = User.IsInRole("ReadOnly") || User.IsInRole("BasicUser");
 }
 
-@section styles{
-    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/dashboard.css" asp-append-version="true" />
+@section styles {
+	<link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/dashboard.css" asp-append-version="true" />
 }
 
 <div>
-    <div class="nhsuk-bg-grey">
-        <div class="text-center">
-            <picture>
-                <source media="(min-width: 1441px)" srcset="images\dashboard\hero\LH-dashboard-banner_2400x320.jpg" />
-                <source media="(min-width: 991px)" srcset="images\dashboard\hero\LH-dashboard-banner_1500x320.jpg" />
-                <source media="(min-width: 769px)" srcset="images\dashboard\hero\LH-dashboard-banner_990x320.jpg" />
-                <source media="(min-width: 641px)" srcset="images\dashboard\hero\LH-dashboard-banner_770x320.jpg" />
-                <img src="images\dashboard\hero\LH-dashboard-banner_640x320.jpg" class="hero-image" alt="" />
-            </picture>
-        </div>
+	<div class="nhsuk-bg-grey">
+		<div class="text-center">
+			<picture>
+				<source media="(min-width: 1441px)" srcset="images\dashboard\hero\LH-dashboard-banner_2400x320.jpg" />
+				<source media="(min-width: 991px)" srcset="images\dashboard\hero\LH-dashboard-banner_1500x320.jpg" />
+				<source media="(min-width: 769px)" srcset="images\dashboard\hero\LH-dashboard-banner_990x320.jpg" />
+				<source media="(min-width: 641px)" srcset="images\dashboard\hero\LH-dashboard-banner_770x320.jpg" />
+				<img src="images\dashboard\hero\LH-dashboard-banner_640x320.jpg" class="hero-image" alt="" />
+			</picture>
+		</div>
 
-        <div class="nhsuk-width-container app-width-container">
-            <div id="my-learning">
-                <partial name="_MyAccessedLearningTray" model="Model" />
-            </div>
-        </div>
-    </div>
+		<div class="nhsuk-width-container app-width-container">
+			<div id="my-learning">
+				<partial name="_MyAccessedLearningTray" model="Model" />
+			</div>
+		</div>
+	</div>
 
-    <div class="nhsuk-bg-white">
-        <div class="nhsuk-width-container app-width-container">
-            <div id="resources">
-                <partial name="_ResourceTray" model="Model" />
-            </div>
-        </div>
-    </div>
+	<div class="nhsuk-bg-white">
+		<div class="nhsuk-width-container app-width-container">
+			<div id="resources">
+				<partial name="_ResourceTray" model="Model" />
+			</div>
+		</div>
+	</div>
 
-    @if (!isReadOnly)
-    {
-        <div class="nhsuk-bg-light-blue">
-            <div class="nhsuk-width-container app-width-container dashboard-contribute">
-                <div class="dashboard-contribute-text">
-                    <h2>Contribute a resource</h2>
-                    <p class="nhsuk-u-reading-width">Share your knowledge, insights and expertise by contributing elearning, video, audio, images, web links, documents and articles on a range of subjects.</p>
-                    <vc:action-link asp-controller="ContributeResource" asp-action="SelectResource" link-text="Contribute a resource" />
-                </div>
-                <div class="tray-image"></div>
-            </div>
-        </div>
-    }
+	@if (!isReadOnly)
+	{
+		<div class="nhsuk-bg-light-blue">
+			<div class="nhsuk-width-container app-width-container dashboard-contribute">
+				<div class="dashboard-contribute-text">
+					<h2>Contribute a resource</h2>
+					<p class="nhsuk-u-reading-width">Share your knowledge, insights and expertise by contributing elearning, video, audio, images, web links, documents and articles on a range of subjects.</p>
+					<vc:action-link asp-controller="ContributeResource" asp-action="SelectResource" link-text="Contribute a resource" />
+				</div>
+				<div class="tray-image"></div>
+			</div>
+		</div>
+	}
 
-    <div class="nhsuk-bg-white">
-        <div class="nhsuk-width-container app-width-container">
-            <div id="catalogues">
-                <partial name="_CatalogueTray" model="Model" />
-            </div>
+	<div class="nhsuk-bg-white">
+		<div class="nhsuk-width-container app-width-container">
+			<div id="catalogues">
+				<partial name="_CatalogueTray" model="Model" />
+			</div>
 
-            <div id="static">
-                <partial name="_StaticTray" />
-            </div>
-        </div>
-    </div>
+			<div id="static">
+				<partial name="_StaticTray" />
+			</div>
+		</div>
+	</div>
 </div>
 
 @section Scripts {
-    <script>
-        function loadPage(dashBoardTrayType, pagiationUrl, queryParams) {
-            switch (dashBoardTrayType) {
-                case "my-learning":
-                    $("#my-learning").load(pagiationUrl);
-                    break;
-                case "resources":
-                    $("#resources").load(pagiationUrl);
-                    break;
-                case "catalogues":
-                    $("#catalogues").load(pagiationUrl);
-                    break;
-            }
-            window.history.pushState("", "Learning Hub - Home", queryParams);
+	<script>
+		function loadPage(dashBoardTrayType, pagiationUrl, queryParams) {
+			switch (dashBoardTrayType) {
+				case "my-learning":
+					$("#my-learning").load(pagiationUrl);
+					break;
+				case "resources":
+					$("#resources").load(pagiationUrl);
+					break;
+				case "catalogues":
+					$("#catalogues").load(pagiationUrl);
+					break;
+			}
+			window.history.pushState("", "Learning Hub - Home", queryParams);
 
-            return false;
-        }
-    </script>
+			return false;
+		}
+	</script>
 }

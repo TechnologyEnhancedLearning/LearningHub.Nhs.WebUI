@@ -70,6 +70,7 @@
 
                 options.ClaimActions.MapUniqueJsonKey("role", "role");
                 options.ClaimActions.MapUniqueJsonKey("name", "elfh_userName");
+                options.ClaimActions.MapUniqueJsonKey("moodle_username", "preferred_username");
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     NameClaimType = JwtClaimTypes.Name,

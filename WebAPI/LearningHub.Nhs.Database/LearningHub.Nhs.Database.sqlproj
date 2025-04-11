@@ -537,6 +537,7 @@
     <None Include="Scripts\Post-Deploy\Scripts\UpdateFileTypes.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\AddDigitalLearningSolutionsExternalSystem.sql" />
     <Build Include="Stored Procedures\Activity\GetAssessmentActivityCompletionPercentage.sql" />
+    <None Include="Scripts\LH Database Scripts\CreateResourceTypeValidationRule.sql" />
     <Build Include="Tables\Hub\PasswordResetRequests.sql" />
     <Build Include="Stored Procedures\External\ExternalSystemUserCreate.sql" />
     <None Include="Scripts\ELFH Database Scripts\ConCurrentUserSessionsTablesandSP.sql" />

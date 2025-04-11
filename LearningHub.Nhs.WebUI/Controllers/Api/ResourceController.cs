@@ -259,6 +259,33 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         }
 
         /// <summary>
+        /// The RecordExternalReferenceUserAgreementAsync.
+        /// </summary>
+        /// <param name="model">model.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpPost]
+        [Route(" CreateResourceVersionValidationResult")]
+        public async Task<ActionResult> CreateResourceVersionValidationResultAsync([FromBody] ResourceVersionValidationResultViewModel model)
+        {
+            await this.resourceService.CreateResourceVersionValidationResultAsync(model);
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// The RecordExternalReferenceUserAgreementAsync.
+        /// </summary>
+        /// <param name="filename">model.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpPost]
+        [Route(" CreateResourceVersionValidationResults")]
+        public async Task<ActionResult> CreateResourceVersionValidationResultAsync([FromBody] string filename)
+        {
+            ResourceVersionValidationResultViewModel model = new ResourceVersionValidationResultViewModel();
+            await this.resourceService.CreateResourceVersionValidationResultAsync(model);
+            return this.Ok();
+        }
+
+        /// <summary>
         /// The GetHeaderById.
         /// </summary>
         /// <param name="id">Id.</param>

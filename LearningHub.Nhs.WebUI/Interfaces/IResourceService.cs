@@ -270,6 +270,13 @@ namespace LearningHub.Nhs.WebUI.Interfaces
         Task<LearningHubValidationResult> CreateResourceVersionProviderAsync(ResourceVersionProviderViewModel model);
 
         /// <summary>
+        /// Creates resource version validation results corresponding to the value in the corresponding input view model.
+        /// </summary>
+        /// <param name="validationResultViewModel">Details of the validation results.</param>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task CreateResourceVersionValidationResultAsync(ResourceVersionValidationResultViewModel validationResultViewModel);
+
+        /// <summary>
         /// Delete resource version provider.
         /// </summary>
         /// <param name="model">The model<see cref="ResourceVersionProviderViewModel"/>.</param>

@@ -17,6 +17,8 @@
     using LearningHub.Nhs.WebUI.Models.Contribute;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
+    using Microsoft.VisualBasic;
+    using MK.IO.Models;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -38,7 +40,7 @@
         /// <param name="mediaService">MKIO media service.</param>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
         /// <param name="logger">Logger.</param>
-        public ContributeService(IFileService fileService, IResourceService resourceService, IAzureMediaService azureMediaService,  ILearningHubHttpClient learningHubHttpClient, ILogger<ContributeService> logger, IAzureMediaService mediaService)
+        public ContributeService(IFileService fileService, IResourceService resourceService, IAzureMediaService azureMediaService, ILearningHubHttpClient learningHubHttpClient, ILogger<ContributeService> logger, IAzureMediaService mediaService)
         : base(learningHubHttpClient, logger)
         {
             this.fileService = fileService;
@@ -502,6 +504,31 @@
 
             if ((fileType == null) || (fileType != null && fileType.NotAllowed) || file.Length <= 0)
             {
+                // Define dangerous file extensions
+                string[] dangerousExtensions = { ".exe", ".dll", ".bat", ".js", ".vbs", ".sh", ".ps1" };
+                if (dangerousExtensions.Any(ext => file.FileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
+                {
+                    var error = $"A potentially harmful file has been detected and blocked: {file.FileName}.";
+                    var validationDetail = new ResourceVersionValidationResultViewModel
+                    {
+                        ResourceVersionId = resourceVersionId,
+                        Success = false,
+                        Details = string.Empty,
+                        AmendUserId = currentUserId,
+                        ResourceVersionValidationRuleResultViewModels = new[]
+                       {
+                        new ResourceVersionValidationRuleResultViewModel
+                        {
+                            ResourceTypeValidationRuleEnum = ResourceTypeValidationRuleEnum.HtmlResource_RootIndexPresent,
+                            Success = false,
+                            Details = error,
+                        },
+                       }.ToList(),
+                    };
+
+                    await this.resourceService.CreateResourceVersionValidationResultAsync(validationDetail);
+                }
+
                 return new FileUploadResult()
                 {
                     FileName = file.FileName,

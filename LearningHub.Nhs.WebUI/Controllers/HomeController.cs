@@ -7,6 +7,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using System.Net.Http;
     using System.Threading.Tasks;
     using elfhHub.Nhs.Models.Common;
+    using elfhHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Content;
     using LearningHub.Nhs.Models.Enums.Content;
     using LearningHub.Nhs.Models.Extensions;
@@ -170,26 +171,16 @@ namespace LearningHub.Nhs.WebUI.Controllers
             }
             else
             {
-                if (originalPath == "/TooManyRequests")
+                this.ViewBag.ErrorHeader = httpStatusCode.Value switch
                 {
-                    this.ViewBag.Period = this.configuration["IpRateLimiting:GeneralRules:0:Period"];
-                    this.ViewBag.Limit = this.configuration["IpRateLimiting:GeneralRules:0:Limit"];
+                    401 => "You do not have permission to access this page",
+                    404 => "We cannot find the page you are looking for",
+                    _ => "We cannot find the page you are looking for",
+                };
 
-                    return this.View("TooManyRequests");
-                }
-                else
-                {
-                    this.ViewBag.ErrorHeader = httpStatusCode.Value switch
-                    {
-                        401 => "You do not have permission to access this page",
-                        404 => "We cannot find the page you are looking for",
-                        _ => "We cannot find the page you are looking for",
-                    };
-
-                    this.ViewBag.HttpStatusCode = httpStatusCode.Value;
-                    this.ViewBag.HomePageUrl = "/home";
-                    return this.View("CustomError");
-                }
+                this.ViewBag.HttpStatusCode = httpStatusCode.Value;
+                this.ViewBag.HomePageUrl = "/home";
+                return this.View("CustomError");
             }
         }
 
@@ -215,6 +206,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         {
             if (this.User?.Identity.IsAuthenticated == true)
             {
+                this.Settings.ConcurrentId = this.CurrentUserId;
                 this.Logger.LogInformation("User is authenticated: User is {fullname} and userId is: {lhuserid}", this.User.Identity.GetCurrentName(), this.User.Identity.GetCurrentUserId());
                 if (this.User.IsInRole("Administrator") || this.User.IsInRole("BlueUser") || this.User.IsInRole("ReadOnly") || this.User.IsInRole("BasicUser"))
                 {
@@ -384,9 +376,39 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 return this.Redirect(returnUrl);
             }
 
+            // Add successful logout to the UserHistory
+            UserHistoryViewModel userHistory = new UserHistoryViewModel()
+            {
+                UserId = this.Settings.ConcurrentId,
+                UserHistoryTypeId = (int)UserHistoryType.Logout,
+                Detail = @"User session time out",
+            };
+
+            this.userService.StoreUserHistory(userHistory);
+
             this.ViewBag.AuthTimeout = this.authConfig.AuthTimeout;
             this.ViewBag.ReturnUrl = returnUrl;
+
             return this.View();
+        }
+
+        /// <summary>
+        /// The SessionTimeout.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost("browser-close")]
+        public IActionResult BrowserClose()
+        {
+            // Add browser close to the UserHistory
+            UserHistoryViewModel userHistory = new UserHistoryViewModel()
+            {
+                UserId = this.CurrentUserId,
+                UserHistoryTypeId = (int)UserHistoryType.Logout,
+                Detail = @"User browser closed",
+            };
+
+            this.userService.StoreUserHistory(userHistory);
+            return this.Ok(true);
         }
 
         /// <summary>

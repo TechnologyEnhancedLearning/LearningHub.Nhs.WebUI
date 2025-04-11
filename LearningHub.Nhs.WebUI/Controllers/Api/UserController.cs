@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using elfhHub.Nhs.Models.Common;
+    using elfhHub.Nhs.Models.Enums;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
     using Microsoft.AspNetCore.Authorization;
@@ -60,6 +61,26 @@
         public async Task<IActionResult> CurrentProfile()
         {
             return this.Ok(await this.userService.GetCurrentUserProfileAsync());
+        }
+
+        /// <summary>
+        /// The SessionTimeout.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost("browser-close")]
+        public IActionResult BrowserClose()
+        {
+            // Add browser close to the UserHistory
+            UserHistoryViewModel userHistory = new UserHistoryViewModel()
+            {
+                UserId = this.CurrentUserId,
+                UserHistoryTypeId = (int)UserHistoryType.Logout,
+                Detail = @"User browser closed",
+            };
+
+            this.userService.StoreUserHistory(userHistory);
+
+            return this.Ok(true);
         }
 
         /// <summary>

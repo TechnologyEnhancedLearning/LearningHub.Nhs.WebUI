@@ -78,7 +78,14 @@
     </environment>
     @*<script type="text/javascript" src="~/js/bundle/header.js"></script>*@
     <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
+  
     @RenderSection("Scripts", required: false)
+    <script type="text/javascript" src="~/js/pageunload.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        // Bind the function to the unload event
+        window.onunload = tellServerBrowserClosed;
+
+    </script>
 </body>
 </html>
 <!-- Build number: @settings.Value.BuildNumber -->

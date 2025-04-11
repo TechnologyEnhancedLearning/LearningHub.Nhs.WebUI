@@ -1198,8 +1198,20 @@
                 return this.Ok(new { duplicate = true });
             }
 
-            await this.userService.ForgotPasswordAsync(model.EmailAddress);
-            return this.View("ForgotPasswordAcknowledgement");
+            var passwordRequestLimitingPeriod = this.Settings.PasswordRequestLimitingPeriod;
+            var passwordRequestLimit = this.Settings.PasswordRequestLimit;
+            var status = await this.userService.CanRequestPasswordResetAsync(model.EmailAddress, passwordRequestLimitingPeriod, passwordRequestLimit);
+            if (status)
+            {
+                await this.userService.ForgotPasswordAsync(model.EmailAddress);
+                return this.View("ForgotPasswordAcknowledgement");
+            }
+            else
+            {
+                this.ViewBag.Period = passwordRequestLimitingPeriod;
+                this.ViewBag.Limit = passwordRequestLimit;
+                return this.View("TooManyRequests");
+            }
         }
 
         /// <summary>

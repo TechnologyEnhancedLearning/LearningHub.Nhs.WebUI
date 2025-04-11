@@ -16,7 +16,7 @@
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetLanguage>CS</TargetLanguage>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <SqlServerVerification>False</SqlServerVerification>
@@ -100,6 +100,7 @@
     <Folder Include="Functions\Resources" />
     <Folder Include="Triggers" />
     <Folder Include="Triggers\external" />
+    <Folder Include="Stored Procedures\External" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\learningHub_Data.sql" />
@@ -536,6 +537,9 @@
     <None Include="Scripts\Post-Deploy\Scripts\UpdateFileTypes.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\AddDigitalLearningSolutionsExternalSystem.sql" />
     <Build Include="Stored Procedures\Activity\GetAssessmentActivityCompletionPercentage.sql" />
+    <Build Include="Tables\Hub\PasswordResetRequests.sql" />
+    <Build Include="Stored Procedures\External\ExternalSystemUserCreate.sql" />
+    <None Include="Scripts\ELFH Database Scripts\ConCurrentUserSessionsTablesandSP.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

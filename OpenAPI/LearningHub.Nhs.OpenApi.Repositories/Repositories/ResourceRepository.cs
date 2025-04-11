@@ -16,7 +16,6 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
     /// <inheritdoc />
     public class ResourceRepository : GenericRepository<Resource>, IResourceRepository
     {
-        private LearningHubDbContext dbContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceRepository"/> class.
@@ -31,7 +30,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
         /// <inheritdoc />
         public async Task<IEnumerable<Resource>> GetResourcesFromIds(IEnumerable<int> resourceIds)
         {
-            var resources = await this.dbContext.Resource
+            var resources = await this.DbContext.Resource
                 .Where(r => resourceIds.Contains(r.Id))
                 .Where(r => !r.Deleted)
                 .Include(r => r.ResourceReference)
@@ -62,7 +61,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
         public async Task<IEnumerable<ResourceReference>> GetResourceReferencesByOriginalResourceReferenceIds(
             IEnumerable<int> originalResourceReferenceIds)
         {
-            return await this.dbContext.ResourceReference
+            return await this.DbContext.ResourceReference
                 .Where(rr => originalResourceReferenceIds.Contains(rr.OriginalResourceReferenceId))
                 .Where(rr => !rr.Deleted)
                 .Where(rr => (int)rr.NodePath.Node.NodeTypeEnum != 4)
@@ -83,7 +82,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
             var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = currentUserId };
             var param4 = new SqlParameter("@TotalRecords", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
-            var result = this.dbContext.DashboardResourceDto.FromSqlRaw("resources.GetAchievedCertificatedResourcesWithOptionalPagination @userId = @userId, @TotalRecords = @TotalRecords output", param0, param4).ToList();
+            var result = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetAchievedCertificatedResourcesWithOptionalPagination @userId = @userId, @TotalRecords = @TotalRecords output", param0, param4).ToList();
             List<int> achievedCertificatedResourceIds = result.Select(drd => drd.ResourceId).Distinct().ToList<int>();
 
             return achievedCertificatedResourceIds;
@@ -108,7 +107,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
             var resourceIdsParameter = new SqlParameter("@p0", resourceIdsParam ?? (object)DBNull.Value);
             var userIdsParameter = new SqlParameter("@p1", userIdsParam ?? (object)DBNull.Value);
 
-            List<ResourceActivityDTO> resourceActivityDTOs = await dbContext.ResourceActivityDTO
+            List<ResourceActivityDTO> resourceActivityDTOs = await this.DbContext.ResourceActivityDTO
                 .FromSqlRaw(
                     "[activity].[GetResourceActivityPerResourceMajorVersion] @p0, @p1",
                     resourceIdsParameter,
@@ -126,7 +125,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<Resource> GetByIdAsync(int id)
         {
-            return await this.dbContext.Resource.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id && !r.Deleted);
+            return await this.DbContext.Resource.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id && !r.Deleted);
         }
 
         /// <summary>
@@ -136,7 +135,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
         /// <returns>If the user has any resources published.</returns>
         public async Task<bool> UserHasPublishedResourcesAsync(int userId)
         {
-            return await this.dbContext.Resource.AsNoTracking()
+            return await this.DbContext.Resource.AsNoTracking()
                 .Where(r => r.CreateUserId == userId && !r.Deleted)
                 .AnyAsync();
         }
@@ -161,7 +160,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                 var param4 = new SqlParameter("@p4", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
                 var param5 = new SqlParameter("@p5", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
-                await this.dbContext.Database.ExecuteSqlRawAsync("resources.ResourceCreate @p0, @p1, @p2, @p3, @p4, @p5 output", param0, param1, param2, param3, param4, param5);
+                await this.DbContext.Database.ExecuteSqlRawAsync("resources.ResourceCreate @p0, @p1, @p2, @p3, @p4, @p5 output", param0, param1, param2, param3, param4, param5);
 
                 int resourceVersionId = (int)param5.Value;
 

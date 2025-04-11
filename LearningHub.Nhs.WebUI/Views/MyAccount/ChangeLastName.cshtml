@@ -1,6 +1,7 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserPersonalDetailsViewModel
 
 @{
+  ViewData["DisableValidation"] = true;
   ViewData["Title"] = "My Account - Change last name";
   var errorHasOccurred = !ViewData.ModelState.IsValid;
 }
@@ -17,7 +18,7 @@
           <div class="nhsuk-caption-l" id="contact-hint">
             Change last name
           </div>
-          <h2 class="nhsuk-heading-xl">Update your last name</h2>
+          <h1 class="nhsuk-heading-xl">Update your last name</h1>
           <div>
             <vc:text-input asp-for="LastName"
                            label="Last Name"

@@ -33,7 +33,7 @@
             };
             await this.userService.StoreUserHistory(userHistoryViewModel);
 
-            await this.userService.SyncLHUserAsync(userId);
+           // await this.userService.SyncLHUserAsync(userId);
             await this.activityService.ResolveScormActivity(userId);
         }
     }

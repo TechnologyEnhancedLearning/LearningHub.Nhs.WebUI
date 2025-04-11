@@ -25,6 +25,11 @@ namespace LearningHub.NHS.OpenAPI
     using Microsoft.Extensions.Hosting;
     using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
+    using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Models.Enums;
+    using System.Configuration;
+    using System;
+    using LearningHub.Nhs.Models.Extensions;
 
     /// <summary>
     /// The Startup class.
@@ -84,6 +89,7 @@ namespace LearningHub.NHS.OpenAPI
                 {
                     // For docs see https://github.com/domaindrivendev/Swashbuckle.AspNetCore
                     c.SwaggerDoc("dev", new OpenApiInfo { Title = "LearningHub.NHS.OpenAPI", Version = "dev" });
+                    c.CustomSchemaIds(type => type.FullName);
                     c.AddSecurityDefinition(
                         "ApiKey",
                         new OpenApiSecurityScheme
@@ -135,6 +141,21 @@ namespace LearningHub.NHS.OpenAPI
                         },
                     });
                 });
+
+            var environment = this.Configuration.GetValue<EnvironmentEnum>("Environment");
+            var envPrefix = environment.GetAbbreviation();
+            if (environment == EnvironmentEnum.Local)
+            {
+                envPrefix += $"_{Environment.MachineName}";
+            }
+
+            services.AddDistributedCache(option =>
+            {
+                option.RedisConnectionString = this.Configuration.GetConnectionString("LearningHubRedis");
+                option.KeyPrefix = envPrefix;
+                option.DefaultExpiryInMinutes = 60;
+            });
+
         }
 
         /// <summary>
@@ -189,6 +210,17 @@ namespace LearningHub.NHS.OpenAPI
                 c.OAuthScopes(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:Scopes"));
                 c.OAuthUsePkce();
             });
+
+            ////app.Use(async (context, next) =>
+            ////{
+            ////    context.Response.Headers.Add("content-security-policy", "object-src 'none'; frame-ancestors 'none'; sandbox allow-forms allow-same-origin allow-scripts allow-popups; base-uri 'self';");
+            ////    context.Response.Headers.Add("Referrer-Policy", "no-referrer");
+            ////    context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+            ////    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+            ////    context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+            ////    context.Response.Headers.Add("X-XSS-protection", "0");
+            ////    await next();
+            ////});
 
             app.UseHttpsRedirection();
 

@@ -4,25 +4,26 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.Enums;
 
     /// <summary>
     /// Resource repository interface.
     /// </summary>
-    public interface IResourceRepository
+    public interface IResourceRepository : IGenericRepository<Resource>
     {
         /// <summary>
         /// Gets resources from ids.
         /// </summary>
         /// <param name="resourceIds"><see cref="resourceIds"/>.</param>
         /// <returns>Resources with details.</returns>
-        public Task<IEnumerable<Resource>> GetResourcesFromIds(IEnumerable<int> resourceIds);
+        Task<IEnumerable<Resource>> GetResourcesFromIds(IEnumerable<int> resourceIds);
 
         /// <summary>
         /// Gets resource references by their original resource reference Ids.
         /// </summary>
         /// <param name="originalResourceReferenceIds"><see cref="originalResourceReferenceIds"/>.</param>
         /// <returns>Resource references.</returns>
-        public Task<IEnumerable<ResourceReference>> GetResourceReferencesByOriginalResourceReferenceIds(
+        Task<IEnumerable<ResourceReference>> GetResourceReferencesByOriginalResourceReferenceIds(
             IEnumerable<int> originalResourceReferenceIds);
 
         /// <summary>
@@ -37,6 +38,39 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         /// GetAchievedCertificatedResourceIds
         /// </summary>
         /// <param name="currentUserId"><see cref="currentUserId"/>.</param>
-        public Task<List<int>> GetAchievedCertificatedResourceIds(int currentUserId);
+        Task<List<int>> GetAchievedCertificatedResourceIds(int currentUserId);
+
+        /// <summary>
+        /// The get by id async.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<Resource> GetByIdAsync(int id);
+
+
+        /// <summary>
+        /// Returns true if the user has any resources published.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <returns>If the user has any resources published.</returns>
+        Task<bool> UserHasPublishedResourcesAsync(int userId);
+
+        /// <summary>
+        /// The create resource async.
+        /// </summary>
+        /// <param name="resourceType">The resource type.</param>
+        /// <param name="title">The title.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<int> CreateResourceAsync(ResourceTypeEnum resourceType, string title, string description, int userId);
+
+        /// <summary>
+        /// The get by resourve version id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resource version id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<Resource> GetByResourceVersionIdAsync(int resourceVersionId);
+
     }
 }

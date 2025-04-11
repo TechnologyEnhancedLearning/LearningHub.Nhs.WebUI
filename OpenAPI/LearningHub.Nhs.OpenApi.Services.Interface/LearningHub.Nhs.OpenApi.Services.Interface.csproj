@@ -16,7 +16,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.46" />
+		  <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
+      <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.47" />
     </ItemGroup>
 
     <ItemGroup>

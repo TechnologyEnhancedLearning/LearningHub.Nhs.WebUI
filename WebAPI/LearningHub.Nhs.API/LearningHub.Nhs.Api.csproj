@@ -29,20 +29,20 @@
 		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
 		<PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
 		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.46" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.47" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
 		<PackageReference Include="Microsoft.AspNetCore" Version="2.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.36" />
 		<PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.3.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.18" />
-		<PackageReference Include="NLog.Web.AspNetCore" Version="5.3.15" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="4.15.0" />
 		<PackageReference Update="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.1" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.36.0" />
 		<PackageReference Update="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
 	</ItemGroup>
 

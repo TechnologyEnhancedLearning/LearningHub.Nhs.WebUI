@@ -14,5 +14,10 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// Gets or sets the catalogue collection id.
         /// </summary>
         public string Catalogue { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the AutoSuggestion collection id.
+        /// </summary>
+        public string AutoSuggestion { get; set; } = null!;
     }
 }

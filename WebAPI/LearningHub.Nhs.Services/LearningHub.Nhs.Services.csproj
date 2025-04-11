@@ -13,7 +13,7 @@
     <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.46" />
+    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.47" />
     <PackageReference Include="Microsoft.Azure.Management.DataFactory" Version="9.3.0" />
     <PackageReference Include="Microsoft.Azure.Management.Media" Version="6.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.3.0" />
@@ -23,7 +23,7 @@
 		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.36.0" />
   </ItemGroup>
 
   <ItemGroup>

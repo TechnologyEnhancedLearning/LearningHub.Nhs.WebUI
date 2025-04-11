@@ -48,10 +48,11 @@ function buildControlbar(id, player) {
         let buttons = titlebar.querySelectorAll('button');
 
         // Reverse the button list and append each button to the controlbar
-        Array.from(buttons).reverse().forEach(button => {
-            if (button.textContent != "Mute") {
-                button.classList.add('control-right'); // Add a class to align buttons to the right
+        Array.from(buttons).forEach(button => {
+            if (button.textContent == "Settings") {
+                button.classList.add('controlmargin');
             }
+
             controlbar.appendChild(button); // Append the button to the controlbar
         });
 

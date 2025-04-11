@@ -56,6 +56,13 @@
         Task<Roadmap> GetRoadmap(int id);
 
         /// <summary>
+        /// The get roadmap with Userdetails.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The roadmap.</returns>
+        Task<Roadmap> GetRoadmapUser(int id);
+
+        /// <summary>
         /// The delete roadmap.
         /// </summary>
         /// <param name="userId">The user id.</param>

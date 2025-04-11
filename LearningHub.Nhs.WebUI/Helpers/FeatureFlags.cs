@@ -14,5 +14,10 @@
         /// The DisplayAudioVideoResource.
         /// </summary>
         public const string DisplayAudioVideoResource = "DisplayAudioVideoResource";
+
+        /// <summary>
+        /// The EnableMoodle.
+        /// </summary>
+        public const string EnableMoodle = "EnableMoodle";
     }
 }

@@ -67,7 +67,6 @@ const IsSystemAdmin = async function (): Promise<boolean[]> {
 };
 
 const IsValidUser = async function (currentPassword: string): Promise<boolean[]> {
-    debugger;
     var IsValidUser = `/api/User/ConfirmPassword/${currentPassword}`;
     return await AxiosWrapper.axios.get<boolean[]>(IsValidUser)
         .then(response => {

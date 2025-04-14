@@ -2,6 +2,7 @@
 {
     using System;
     using System.Security.Claims;
+    using System.Security.Principal;
 
     /// <summary>
     /// Defines the <see cref="ClaimsPrincipalExtensions" />.
@@ -22,6 +23,22 @@
             }
 
             return $"usr_{userId}_tz";
+        }
+
+        /// <summary>
+        /// Get MoodleUserId.
+        /// </summary>
+        /// <param name="identity">The identity.</param>
+        /// <returns>The System.Int32.</returns>
+        public static int GetMoodleUserId(this IIdentity identity)
+        {
+            Claim claim = (identity as ClaimsIdentity)?.FindFirst("moodle_username");
+            if (claim != null)
+            {
+                return int.Parse(claim.Value);
+            }
+
+            return 0;
         }
     }
 }

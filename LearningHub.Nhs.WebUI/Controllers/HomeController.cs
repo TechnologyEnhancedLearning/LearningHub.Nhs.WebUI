@@ -214,6 +214,15 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     var resourcesTask = this.dashboardService.GetResourcesAsync(resourceDashboard, 1);
                     var cataloguesTask = this.dashboardService.GetCataloguesAsync(catalogueDashboard, 1);
 
+                    var enrolledCoursesTask = Task.FromResult(new List<MoodleCourseResponseViewModel>());
+                    var enableMoodle = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.EnableMoodle)).Result;
+                    this.ViewBag.EnableMoodle = enableMoodle;
+                    this.ViewBag.ValidMoodleUser = this.CurrentMoodleUserId > 0;
+                    if (enableMoodle && myLearningDashboard == "my-enrolled-courses")
+                    {
+                       enrolledCoursesTask = this.dashboardService.GetEnrolledCoursesFromMoodleAsync(this.CurrentMoodleUserId, 1);
+                    }
+
                     await Task.WhenAll(learningTask, resourcesTask, cataloguesTask);
 
                     var model = new DashboardViewModel()
@@ -221,6 +230,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                         MyLearnings = await learningTask,
                         Resources = await resourcesTask,
                         Catalogues = await cataloguesTask,
+                        EnrolledCourses = await enrolledCoursesTask,
                     };
 
                     if (!string.IsNullOrEmpty(this.Request.Query["preview"]) && Convert.ToBoolean(this.Request.Query["preview"]))

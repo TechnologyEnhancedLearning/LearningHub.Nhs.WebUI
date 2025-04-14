@@ -217,6 +217,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     var enrolledCoursesTask = Task.FromResult(new List<MoodleCourseResponseViewModel>());
                     var enableMoodle = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.EnableMoodle)).Result;
                     this.ViewBag.EnableMoodle = enableMoodle;
+                    this.ViewBag.ValidMoodleUser = this.CurrentMoodleUserId > 0;
                     if (enableMoodle && myLearningDashboard == "my-enrolled-courses")
                     {
                        enrolledCoursesTask = this.dashboardService.GetEnrolledCoursesFromMoodleAsync(this.CurrentMoodleUserId, 1);

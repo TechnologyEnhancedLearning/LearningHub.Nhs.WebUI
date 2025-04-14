@@ -32,7 +32,8 @@
 				TotalCount = Model.MyLearnings.TotalCount
 			};
 
-	var EnableMoodle = this.ViewBag.EnableMoodle;
+	var enableMoodle = this.ViewBag.EnableMoodle;
+	var validMoodleUser = this.ViewBag.ValidMoodleUser;
 }
 <div class="dashboardTray">
 	<h2>My accessed learning</h2>
@@ -64,7 +65,7 @@
 					<a tabindex="0" class="subnavwhite-link text-nowrap"
 					   asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="my-catalogues" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">Catalogues</a>
 				</li>
-				@if (EnableMoodle)
+				@if (enableMoodle && validMoodleUser)
 				{
 					<li class="subnavwhite-item nhsuk-bg-grey @(Model.EnrolledCourses?.Count() > 0 ? "active" : string.Empty)">
 						<a tabindex="0" class="subnavwhite-link text-nowrap"
@@ -103,7 +104,7 @@
 					}
 				</ul>
 			}
-			else if (EnableMoodle && Model.EnrolledCourses?.Count() > 0)
+			else if (enableMoodle && validMoodleUser && Model.EnrolledCourses?.Count() > 0)
 			{
 				<ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred">
 

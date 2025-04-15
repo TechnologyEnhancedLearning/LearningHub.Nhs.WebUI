@@ -66,6 +66,18 @@ const IsSystemAdmin = async function (): Promise<boolean[]> {
         });
 };
 
+const IsValidUser = async function (currentPassword: string): Promise<boolean[]> {
+    var IsValidUser = `/api/User/ConfirmPassword/${currentPassword}`;
+    return await AxiosWrapper.axios.get<boolean[]>(IsValidUser)
+        .then(response => {
+            return response.data;
+        })
+        .catch(e => {
+            console.log('IsValidUser:' + e);
+            throw e;
+        });
+};
+
 const getCurrentUserBasicDetails = async function (): Promise<UserBasicModel> {
     return await AxiosWrapper.axios.get<UserBasicModel>('/api/User/GetCurrentUserBasicDetails')
         .then(response => {
@@ -173,5 +185,6 @@ export const userData = {
     keepUserSessionAlive,
     getkeepUserSessionAliveInterval,
     isGeneralUser,
-    IsSystemAdmin
+    IsSystemAdmin,
+    IsValidUser
 }

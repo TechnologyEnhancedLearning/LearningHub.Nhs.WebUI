@@ -138,6 +138,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <param name="learningHubService">
         /// The <see cref="ILearningHubService"/>.
         /// </param>
+        /// <param name="fileTypeService"></param>
+        /// <param name="blockCollectionRepository"></param>
         /// <param name="internalSystemService"></param>
         /// <param name="resourceVersionAuthorRepository"></param>
         /// <param name="fileChunkDetailRepository"></param>
@@ -160,7 +162,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <param name="assessmentResourceActivityMatchQuestionRepository"></param>
         /// <param name="resourceVersionKeywordRepository"></param>
         /// <param name="resourceVersionValidationResultRepository"></param>
-        public ResourceService(ILearningHubService learningHubService, IInternalSystemService internalSystemService, IResourceVersionAuthorRepository resourceVersionAuthorRepository, IFileChunkDetailRepository fileChunkDetailRepository, IQueueCommunicatorService queueCommunicatorService, IResourceRepository resourceRepository, IResourceVersionProviderRepository resourceVersionProviderRepository, IProviderService providerService, IArticleResourceVersionFileRepository articleResourceVersionFileRepository, IPublicationRepository publicationRepository, IMigrationSourceRepository migrationSourceRepository, IQuestionBlockRepository questionBlockRepository, IVideoRepository videoRepository, IWholeSlideImageRepository wholeSlideImageRepository, IEmbeddedResourceVersionRepository embeddedResourceVersionRepository, IEquipmentResourceVersionRepository equipmentResourceVersionRepository, IImageResourceVersionRepository imageResourceVersionRepository, IBookmarkRepository bookmarkRepository, IAssessmentResourceActivityMatchQuestionRepository assessmentResourceActivityMatchQuestionRepository, IResourceVersionKeywordRepository resourceVersionKeywordRepository, IResourceVersionValidationResultRepository resourceVersionValidationResultRepository, ILogger<ResourceService> logger, IWebLinkResourceVersionRepository webLinkResourceVersionRepository, ICaseResourceVersionRepository caseResourceVersionRepository, IScormResourceVersionRepository scormResourceVersionRepository, IGenericFileResourceVersionRepository genericFileResourceVersionRepository, IResourceVersionRepository resourceVersionRepository, IHtmlResourceVersionRepository htmlResourceVersionRepository, IMapper mapper, IFileRepository fileRepository, IOptions<AzureConfig> azureConfig, IOptions<LearningHubConfig> learningHubConfig, IUserProfileService userProfileService, IResourceVersionFlagRepository resourceVersionFlagRepository, IArticleResourceVersionRepository articleResourceVersionRepository, IAudioResourceVersionRepository audioResourceVersionRepository, IVideoResourceVersionRepository videoResourceVersionRepository, IAssessmentResourceVersionRepository assessmentResourceVersionRepository, IResourceLicenceRepository resourceLicenceRepository, IResourceReferenceRepository resourceReferenceRepository, IResourceVersionUserAcceptanceRepository resourceVersionUserAcceptanceRepository, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, ICachingService cachingService, ISearchService searchService, ICatalogueService catalogueService, INodeResourceRepository nodeResourceRepository, INodePathRepository nodePathRepository, IUserService userService, INodeRepository nodeRepository, LearningHubDbContext dbContext)
+        public ResourceService(ILearningHubService learningHubService, IFileTypeService fileTypeService, IBlockCollectionRepository blockCollectionRepository, IInternalSystemService internalSystemService, IResourceVersionAuthorRepository resourceVersionAuthorRepository, IFileChunkDetailRepository fileChunkDetailRepository, IQueueCommunicatorService queueCommunicatorService, IResourceRepository resourceRepository, IResourceVersionProviderRepository resourceVersionProviderRepository, IProviderService providerService, IArticleResourceVersionFileRepository articleResourceVersionFileRepository, IPublicationRepository publicationRepository, IMigrationSourceRepository migrationSourceRepository, IQuestionBlockRepository questionBlockRepository, IVideoRepository videoRepository, IWholeSlideImageRepository wholeSlideImageRepository, IEmbeddedResourceVersionRepository embeddedResourceVersionRepository, IEquipmentResourceVersionRepository equipmentResourceVersionRepository, IImageResourceVersionRepository imageResourceVersionRepository, IBookmarkRepository bookmarkRepository, IAssessmentResourceActivityMatchQuestionRepository assessmentResourceActivityMatchQuestionRepository, IResourceVersionKeywordRepository resourceVersionKeywordRepository, IResourceVersionValidationResultRepository resourceVersionValidationResultRepository, ILogger<ResourceService> logger, IWebLinkResourceVersionRepository webLinkResourceVersionRepository, ICaseResourceVersionRepository caseResourceVersionRepository, IScormResourceVersionRepository scormResourceVersionRepository, IGenericFileResourceVersionRepository genericFileResourceVersionRepository, IResourceVersionRepository resourceVersionRepository, IHtmlResourceVersionRepository htmlResourceVersionRepository, IMapper mapper, IFileRepository fileRepository, IOptions<AzureConfig> azureConfig, IOptions<LearningHubConfig> learningHubConfig, IUserProfileService userProfileService, IResourceVersionFlagRepository resourceVersionFlagRepository, IArticleResourceVersionRepository articleResourceVersionRepository, IAudioResourceVersionRepository audioResourceVersionRepository, IVideoResourceVersionRepository videoResourceVersionRepository, IAssessmentResourceVersionRepository assessmentResourceVersionRepository, IResourceLicenceRepository resourceLicenceRepository, IResourceReferenceRepository resourceReferenceRepository, IResourceVersionUserAcceptanceRepository resourceVersionUserAcceptanceRepository, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, ICachingService cachingService, ISearchService searchService, ICatalogueService catalogueService, INodeResourceRepository nodeResourceRepository, INodePathRepository nodePathRepository, IUserService userService, INodeRepository nodeRepository, LearningHubDbContext dbContext)
         {
             this.learningHubService = learningHubService;
             this.resourceRepository = resourceRepository;
@@ -199,6 +201,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             this.providerService = providerService;
             this.nodePathRepository = nodePathRepository;
             this.nodeResourceRepository = nodeResourceRepository;
+            this.blockCollectionRepository = blockCollectionRepository;
             this.nodeRepository = nodeRepository;
             this.searchService = searchService;
             this.cachingService = cachingService;
@@ -208,6 +211,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             this.migrationSourceRepository = migrationSourceRepository;
             this.queueCommunicatorService = queueCommunicatorService;
             this.internalSystemService = internalSystemService;
+            this.catalogueNodeVersionRepository = catalogueNodeVersionRepository;
+            this.assessmentResourceVersionRepository = assessmentResourceVersionRepository;
+            this.wholeSlideImageRepository = wholeSlideImageRepository;
+            this.videoRepository = videoRepository;
+            this.fileTypeService = fileTypeService;
         }
 
         /// <summary>
@@ -483,6 +491,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         public async Task<CaseViewModel> GetCaseDetailsByIdAsync(int resourceVersionId)
         {
             CaseResourceVersion caseResourceVersion = await this.caseResourceVersionRepository.GetByResourceVersionIdAsync(resourceVersionId);
+            var number = caseResourceVersion?.BlockCollectionId;
             BlockCollection blockCollection = await this.blockCollectionRepository.GetBlockCollection(caseResourceVersion?.BlockCollectionId);
 
             BlockCollectionViewModel blockCollectionViewModel = null;

@@ -466,6 +466,8 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// </summary>
         public virtual DbSet<CatalogueNodeVersion> CatalogueNodeVersion { get; set; }
 
+        public virtual DbSet<CatalogueNodeVersionProvider> CatalogueNodeVersionProvider { get; set; }
+
         /// <summary>
         /// Gets or sets the catalogue node version keyword..
         /// </summary>

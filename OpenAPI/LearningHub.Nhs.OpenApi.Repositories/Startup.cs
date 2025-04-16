@@ -69,7 +69,6 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<IImageResourceVersionRepository, ImageResourceVersionRepository>();
             services.AddScoped<IResourceLicenceRepository, ResourceLicenceRepository>();
             services.AddScoped<IResourceReferenceRepository, ResourceReferenceRepository>();
-            services.AddScoped<IResourceRepository, ResourceRepository>();
             services.AddScoped<IResourceVersionAuthorRepository, ResourceVersionAuthorRepository>();
             services.AddScoped<IResourceVersionKeywordRepository, ResourceVersionKeywordRepository>();
             services.AddScoped<IResourceVersionFlagRepository, ResourceVersionFlagRepository>();
@@ -83,7 +82,9 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<IAssessmentResourceVersionRepository, AssessmentResourceVersionRepository>();
             services.AddScoped<IResourceVersionProviderRepository, ResourceVersionProviderRepository>();
 
+            // Activity
             services.AddScoped<IResourceActivityRepository, ResourceActivityRepository>();
+            services.AddScoped<IScormActivityRepository, ScormActivityRepository>();
             services.AddScoped<IAssessmentResourceActivityRepository, AssessmentResourceActivityRepository>();
             services.AddScoped<IAssessmentResourceActivityMatchQuestionRepository, AssessmentResourceActivityMatchQuestionRepository>();
             services.AddScoped<IAssessmentResourceActivityInteractionRepository, AssessmentResourceActivityInteractionRepository>();
@@ -91,10 +92,6 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<IMediaResourceActivityRepository, MediaResourceActivityRepository>();
             services.AddScoped<IMediaResourceActivityInteractionRepository, MediaResourceActivityInteractionRepository>();
             services.AddScoped<INodeActivityRepository, NodeActivityRepository>();
-
-            // Activity
-            services.AddScoped<IResourceActivityRepository, ResourceActivityRepository>();
-            services.AddScoped<IScormActivityRepository, ScormActivityRepository>();
 
             // Hierarchy
             services.AddScoped<INodeRepository, NodeRepository>();
@@ -112,7 +109,6 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddScoped<IInternalSystemRepository, InternalSystemRepository>();
             services.AddScoped<IMigrationSourceRepository, MigrationSourceRepository>();
-
         }
     }
 }

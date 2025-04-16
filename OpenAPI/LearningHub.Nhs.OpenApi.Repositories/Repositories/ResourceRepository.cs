@@ -16,7 +16,6 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
     /// <inheritdoc />
     public class ResourceRepository : GenericRepository<Resource>, IResourceRepository
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceRepository"/> class.
         /// </summary>

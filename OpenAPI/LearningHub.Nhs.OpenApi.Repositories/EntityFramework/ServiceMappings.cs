@@ -63,6 +63,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, FileChunkDetailMap>();
             services.AddSingleton<IEntityTypeMap, GenericFileResourceVersionMap>();
             services.AddSingleton<IEntityTypeMap, ImageResourceVersionMap>();
+            services.AddSingleton<IEntityTypeMap, HtmlResourceVersionMap>();
             services.AddSingleton<IEntityTypeMap, VideoResourceVersionMap>();
             services.AddSingleton<IEntityTypeMap, AudioResourceVersionMap>();
             services.AddSingleton<IEntityTypeMap, ScormResourceVersionMap>();
@@ -82,6 +83,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, PartialFileMap>();
             services.AddSingleton<IEntityTypeMap, PermissionMap>();
             services.AddSingleton<IEntityTypeMap, PermissionRoleMap>();
+            services.AddSingleton<IEntityTypeMap, ProviderMap>();
             services.AddSingleton<IEntityTypeMap, PublicationMap>();
             services.AddSingleton<IEntityTypeMap, QuestionBlockMap>();
             services.AddSingleton<IEntityTypeMap, QuestionAnswerMap>();
@@ -135,6 +137,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, NodeActivityMap>();
             services.AddSingleton<IEntityTypeMap, CatalogueNodeVersionMap>();
             services.AddSingleton<IEntityTypeMap, CatalogueNodeVersionKeywordMap>();
+            services.AddSingleton<IEntityTypeMap, CatalogueNodeVersionProviderMap>();
             services.AddSingleton<IEntityTypeMap, NodeMap>();
             services.AddSingleton<IEntityTypeMap, NodeLinkMap>();
             services.AddSingleton<IEntityTypeMap, NodeVersionMap>();

@@ -2,15 +2,17 @@
 @using LearningHub.Nhs.WebUI.Extensions
 @using LearningHub.Nhs.WebUI.Helpers
 @model MoodleCourseResponseViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+
 @{
     bool providerExists = false;
     string cardStyle = "card-provider-details--blank";
 
-    string GetUrl(int courseId)
+    string GetMoodleCourseUrl(int courseId)
     {
-        string host = $"http://localhost";
+        var apiBaseUrl = Configuration["MoodleAPIConfig:BaseUrl"];        
         string path = $"course/view.php";
-        string returnUrl = $@"{host}/{path}?id={courseId}";
+        string returnUrl = $@"{apiBaseUrl}/{path}?id={courseId}";
 
         return returnUrl;
     }
@@ -47,7 +49,7 @@
 
     <div class="nhsuk-card__content dashboard-card-content">
         <h3 class="nhsuk-card__heading nhsuk-heading-m">
-            <a class="nhsuk-card__link" href="@GetUrl(Model.Id.Value)">@Model.DisplayName</a>
+            <a class="nhsuk-card__link" href="@GetMoodleCourseUrl(Model.Id.Value)">@Model.DisplayName</a>
         </h3>
         <div class="nhsuk-card__description dashboard-card-body">
 

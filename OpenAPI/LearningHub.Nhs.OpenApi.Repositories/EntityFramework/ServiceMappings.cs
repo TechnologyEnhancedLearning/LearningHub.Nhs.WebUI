@@ -97,6 +97,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, ResourceVersionFlagMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionKeywordMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionMap>();
+            services.AddSingleton<IEntityTypeMap, ResourceVersionProviderMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionUserAcceptanceMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionValidationResultMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionValidationRuleResultMap>();

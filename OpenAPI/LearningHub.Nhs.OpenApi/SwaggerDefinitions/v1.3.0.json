@@ -6033,6 +6033,85 @@
           }
         }
       }
+    },
+    "/GovNotifyMessage/sendsms": {
+      "post": {
+        "tags": [
+          "SendSms"
+        ],
+        "summary": "Send an SMS.",
+        "required": [ "mobileNumber", "templateId" ],
+        "requestBody": {
+          "description": "The Sends an SMS using the UK Gov.Notify service.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSmsRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSmsRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSmsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SMS successfully sent."
+          },
+          "400": {
+            "description": "Bad request, invalid input."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/GovNotifyMessage/sendemail": {
+      "post": {
+        "tags": [
+          "SendEmail"
+        ],
+        "summary": "Send an Email.",
+        "requestBody": {
+          "description": "Sends an email using the UK Gov.Notify service.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendEmailRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendEmailRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendEmailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email successfully sent."
+          },
+          "400": {
+            "description": "Bad request, invalid input."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
     }
   },
   "components": {
@@ -14138,6 +14217,51 @@
           }
         },
         "additionalProperties": false
+      },
+      "SendSmsRequest": {
+        "type": "object",
+        "required": [ "mobileNumber", "templateId" ],
+        "properties": {
+          "mobileNumber": {
+            "type": "string",
+            "nullable": false,
+            "description": "The recipient's mobile number."
+          },
+          "templateId": {
+            "type": "string",
+            "nullable": false,
+            "description": "The ID of the template to be used for the email."
+          },
+          "personalisation": {
+            "type": "object",
+            "additionalProperties:": {
+              "type": "string"
+            },
+            "description": "Key-value pairs for personalising the sms template."
+          }
+        }
+      },
+      "SendEmailRequest": {
+        "type": "object",
+        "properties": {
+          "emailAddress": {
+            "type": "string",
+            "nullable": false,
+            "description": "The recipient's email address."
+          },
+          "templateId": {
+            "type": "string",
+            "nullable": false,
+            "description": "The ID of the template to be used for the email."
+          },
+          "personalisation": {
+            "type": "object",
+            "additionalProperties:": {
+              "type": "string"
+            },
+            "description": "Key-value pairs for personalising the email template."
+          }
+        }
       }
     },
     "securitySchemes": {

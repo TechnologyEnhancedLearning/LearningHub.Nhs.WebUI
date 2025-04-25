@@ -30,6 +30,7 @@ namespace LearningHub.NHS.OpenAPI
     using System.Configuration;
     using System;
     using LearningHub.Nhs.Models.Extensions;
+    using LearningHub.Nhs.MessagingService;
 
     /// <summary>
     /// The Startup class.
@@ -84,6 +85,7 @@ namespace LearningHub.NHS.OpenAPI
             services.AddApplicationInsightsTelemetry();
             services.AddControllers(options => options.Filters.Add(new HttpResponseExceptionFilter()));
             services.AddControllers(opt => { opt.Filters.Add(new AuthorizeFilter()); });
+            services.AddMessagingServices(this.Configuration);
             services.AddSwaggerGen(
                 c =>
                 {

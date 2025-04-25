@@ -25,7 +25,7 @@
             <div class="form-group col-12">
                 <div class="p-4 uploadInnerBox">
                     <div class="upload-btn-wrapper nhsuk-u-font-size-16">
-                        <label for="transcriptFileUpload" class="nhsuk-button nhsuk-button--secondary">Choose file</label> No file chosen
+                        <label for="transcriptFileUpload" class="nhsuk-button nhsuk-button--secondary" tabindex="0">Choose file</label> No file chosen
                         <input type="file" id="transcriptFileUpload" aria-label="Choose transcript file" ref="transcriptFileUpload" @change="onTranscriptFileChange" hidden />
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                 for example, how it was developed or what is required for it to be used.
             </div>
             <div class="col-12 mt-3">
-                <textarea class="form-control" id="additionalinfo" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
+                <textarea class="form-control nhsuk-textarea" id="additionalinfo" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
             </div>
             <div class="col-12 footer-text">
                 You can enter a maximum of 250 characters

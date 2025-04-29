@@ -466,6 +466,13 @@
         Task<List<ProviderViewModel>> GetProvidersByUserIdAsync(int userId);
 
         /// <summary>
+        /// To Check User Has An ActiveSession.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<PagedResultSet<UserHistoryViewModel>> CheckUserHasAnActiveSessionAsync(int userId);
+
+        /// <summary>
         /// To get the Base64MD5HashDigest value.
         /// </summary>
         /// <param name="szString">the string.</param>

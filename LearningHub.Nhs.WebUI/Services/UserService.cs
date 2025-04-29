@@ -1864,6 +1864,30 @@
             return viewmodel;
         }
 
+        /// <inheritdoc/>
+        public async Task<PagedResultSet<UserHistoryViewModel>> CheckUserHasAnActiveSessionAsync(int userId)
+        {
+            PagedResultSet<UserHistoryViewModel> userHistoryViewModel = new PagedResultSet<UserHistoryViewModel>();
+
+            var client = await this.userApiHttpClient.GetClientAsync();
+            var request = $"UserHistory/CheckUserHasActiveSession/{userId}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                userHistoryViewModel = JsonConvert.DeserializeObject<PagedResultSet<UserHistoryViewModel>>(result);
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return userHistoryViewModel;
+        }
+
+
+
         /// <summary>
         /// The base 64 m d 5 hash digest.
         /// </summary>

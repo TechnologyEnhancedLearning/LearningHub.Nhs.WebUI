@@ -401,7 +401,8 @@
                                                                    v-model.trim="currentPassword"
                                                                    placeholder="Current password"
                                                                    @blur="$v.currentPassword.$touch()"
-                                                                   v-bind:class="{ 'input-validation-error': $v.currentPassword.$error}">
+                                                                   v-bind:class="{ 'input-validation-error': $v.currentPassword.$error}"
+                                                                   @keydown.enter="submitPassword">
                                                         </div>
 
                                                         <div class="row" v-if="showError">

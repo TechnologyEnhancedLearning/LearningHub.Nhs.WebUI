@@ -253,7 +253,7 @@
                             }
                         }
                         else {
-                            this.$emit('childfileuploaderror', FileErrorTypeEnum.Custom, 'There was a problem uploading this file to the Learning Hub. The .zip file you tried to upload was empty.');
+                            this.$emit('childfileuploaderror', FileErrorTypeEnum.InvalidType, 'We do not support this file type on the Learning Hub.');
                         }
                     }
                     this.uploading = false;
@@ -263,7 +263,7 @@
                             this.$emit('childfileuploaderror', FileErrorTypeEnum.Custom, 'There was a problem uploading this file to the Learning Hub. Please try again and if it still does not upload, contact the support team.');
                         }
                         else {
-                            this.$emit('childfileuploaderror', FileErrorTypeEnum.Custom, 'There was a problem uploading this file to the Learning Hub. The .zip file you tried to upload was empty.');
+                            this.$emit('childfileuploaderror', FileErrorTypeEnum.InvalidType, 'We do not support this file type on the Learning Hub.');
                         }                        
                         self.processing = false;
                         self.uploading = false;

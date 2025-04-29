@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Already active session";
+}
+<div class="bg-white">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full nhsuk-u-padding-top-9 nhsuk-u-padding-bottom-7">
+                <h1 class="nhsuk-heading-xl"> @ViewData["Title"]</h1>
+                <p>You are already logged in from another browser. Please continue using the same browser or close the existing session and try again with a new one.</p>
+                <p>If you have any questions, please contact the <a href="@ViewBag.SupportFormUrl" target="_blank">support team</a>.</p>
+                <p>@DateTimeOffset.Now.ToString("d MMMM yyyy HH:mm:ss")</p>
+            </div>
+        </div>
+    </div>
+</div>

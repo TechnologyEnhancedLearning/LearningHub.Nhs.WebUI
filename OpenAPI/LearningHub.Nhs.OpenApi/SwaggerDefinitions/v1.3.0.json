@@ -2393,6 +2393,37 @@
         }
       }
     },
+    "/Hierarchy/GetNodeContentsForCatalogueBrowse/{nodeId}/{includeEmptyFolder}": {
+      "get": {
+        "tags": [
+          "Hierarchy"
+        ],
+        "parameters": [
+          {
+            "name": "nodeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "includeEmptyFolder",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Hierarchy/GetNodeContentsAdmin/{nodeId}/{readOnly}": {
       "get": {
         "tags": [

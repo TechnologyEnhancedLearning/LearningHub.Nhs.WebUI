@@ -62,6 +62,20 @@
         }
 
         /// <summary>
+        /// Gets the contents of a node for the catalogue landing page - i.e. published folders and published resources only.
+        /// Only returns the items found directly in the specified node, does not recurse down through subfolders.
+        /// </summary>
+        /// <param name="nodeId">The node id.</param>
+        /// <param name="includeEmptyFolder">Include Empty Folder or not.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpGet]
+        [Route("GetNodeContentsForCatalogueBrowse/{nodeId}/{includeEmptyFolder}")]
+        public async Task<IActionResult> GetNodeContentsForCatalogueBrowse(int nodeId, bool includeEmptyFolder)
+        {
+            return this.Ok(await this.hierarchyService.GetNodeContentsForCatalogueBrowse(nodeId, includeEmptyFolder));
+        }
+
+        /// <summary>
         /// Gets the contents of a node (catalogue/folder/course) - i.e. returns a list of subfolders and resources. Only returns the
         /// items from the first level down. Doesn't recurse through subfolders.
         /// </summary>

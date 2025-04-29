@@ -186,5 +186,16 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
         }
 
 
+        /// <summary>
+        /// Returns a bool to indicate if the resourceVersionId corresponds to a current version of a resource.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<bool> IsCurrentVersionAsync(int resourceVersionId)
+        {
+            return await this.DbContext.Resource.AnyAsync(r => r.CurrentResourceVersionId == resourceVersionId && !r.Deleted);
+        }
+
+
     }
 }

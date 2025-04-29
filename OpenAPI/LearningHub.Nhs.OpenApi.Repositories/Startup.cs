@@ -69,10 +69,13 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<IImageResourceVersionRepository, ImageResourceVersionRepository>();
             services.AddScoped<IResourceLicenceRepository, ResourceLicenceRepository>();
             services.AddScoped<IResourceReferenceRepository, ResourceReferenceRepository>();
+            services.AddScoped<IResourceSyncRepository, ResourceSyncRepository>();
             services.AddScoped<IResourceVersionAuthorRepository, ResourceVersionAuthorRepository>();
             services.AddScoped<IResourceVersionKeywordRepository, ResourceVersionKeywordRepository>();
             services.AddScoped<IResourceVersionFlagRepository, ResourceVersionFlagRepository>();
             services.AddScoped<IResourceVersionRepository, ResourceVersionRepository>();
+            services.AddScoped<IResourceVersionRatingRepository, ResourceVersionRatingRepository>();
+            services.AddScoped<IResourceVersionRatingSummaryRepository, ResourceVersionRatingSummaryRepository>();
             services.AddScoped<IVideoResourceVersionRepository, VideoResourceVersionRepository>();
             services.AddScoped<IAudioResourceVersionRepository, AudioResourceVersionRepository>();
             services.AddScoped<IScormResourceVersionRepository, ScormResourceVersionRepository>();

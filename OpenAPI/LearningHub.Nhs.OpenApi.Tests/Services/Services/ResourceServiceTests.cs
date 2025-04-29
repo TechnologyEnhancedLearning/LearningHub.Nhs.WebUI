@@ -33,6 +33,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
     {
         private readonly Mock<ILearningHubService> learningHubService;
         private readonly ResourceService resourceService;
+        private readonly Mock<IResourceSyncService> resourceSyncService;
         private readonly Mock<IResourceRepository> resourceRepository;
         private readonly Mock<ILogger<ResourceService>> logger;
         private readonly Mock<IMapper> mapper;
@@ -70,7 +71,6 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         private readonly Mock<IQuestionBlockRepository> questionBlockRepository;
         private readonly Mock<IMigrationSourceRepository> migrationSourceRepository;
         private readonly Mock<DbContext> dbContext;
-        // private readonly Mock<LearningHubDbContext> dbContext;
         private readonly Mock<INodeRepository> nodeRepository;
         private readonly Mock<IFileRepository> fileRepository;
         private readonly Mock<IOptions<AzureConfig>> azureConfig;
@@ -93,6 +93,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.currentUserId = 57541;
 
             this.learningHubService = new Mock<ILearningHubService>();
+            this.resourceSyncService = new Mock<IResourceSyncService>();
             this.resourceRepository = new Mock<IResourceRepository>();
             this.fileRepository = new Mock<IFileRepository>();
             this.articleResourceVersionFileRepository = new Mock<IArticleResourceVersionFileRepository>();
@@ -144,7 +145,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.resourceVersionAuthorRepository = new Mock<IResourceVersionAuthorRepository>();
             this.fileChunkDetailRepository = new Mock<IFileChunkDetailRepository>();
             this.logger = new Mock<ILogger<ResourceService>>();
-            this.resourceService = new ResourceService(this.learningHubService.Object, this.fileTypeService.Object, this.blockCollectionRepository.Object, this.internalSystemService.Object, this.resourceVersionAuthorRepository.Object, this.fileChunkDetailRepository.Object, this.queueCommunicatorService.Object, this.resourceRepository.Object, this.resourceVersionProviderRepository.Object, this.providerService.Object, this.articleResourceVersionFileRepository.Object, this.publicationRepository.Object, this.migrationSourceRepository.Object, this.questionBlockRepository.Object, this.videoRepository.Object, this.wholeSlideImageRepository.Object, this.embeddedResourceVersionRepository.Object, this.equipmentResourceVersionRepository.Object, this.imageResourceVersionRepository.Object, this.bookmarkRepository.Object, this.assessmentResourceActivityMatchQuestionRepository.Object, this.resourceVersionKeywordRepository.Object, this.resourceVersionValidationResultRepository.Object, this.logger.Object, this.webLinkResourceVersionRepository.Object, this.caseResourceVersionRepository.Object, this.scormResourceVersionRepository.Object, this.genericFileResourceVersionRepository.Object, this.resourceVersionRepository.Object, this.htmlResourceVersionRepository.Object, this.mapper.Object, this.fileRepository.Object, this.azureConfig.Object, this.learningHubConfig.Object, this.userProfileService.Object, this.resourceVersionFlagRepository.Object, this.articleResourceVersionRepository.Object, this.audioResourceVersionRepository.Object, this.videoResourceVersionRepository.Object, this.assessmentResourceVersionRepository.Object, this.resourceLicenceRepository.Object, this.resourceReferenceRepository.Object, this.resourceVersionUserAcceptanceRepository.Object, this.catalogueNodeVersionRepository.Object, this.cachingService.Object, this.searchService.Object, this.catalogueService.Object, this.nodeResourceRepository.Object, this.nodePathRepository.Object, this.userService.Object, this.nodeRepository.Object, this.dbContext.Object.As<LearningHubDbContext>());
+            this.resourceService = new ResourceService(this.learningHubService.Object, this.fileTypeService.Object, this.blockCollectionRepository.Object, this.internalSystemService.Object, this.resourceVersionAuthorRepository.Object, this.fileChunkDetailRepository.Object, this.queueCommunicatorService.Object, this.resourceRepository.Object, this.resourceVersionProviderRepository.Object, this.providerService.Object, this.articleResourceVersionFileRepository.Object, this.publicationRepository.Object, this.migrationSourceRepository.Object, this.questionBlockRepository.Object, this.videoRepository.Object, this.wholeSlideImageRepository.Object, this.embeddedResourceVersionRepository.Object, this.equipmentResourceVersionRepository.Object, this.imageResourceVersionRepository.Object, this.bookmarkRepository.Object, this.assessmentResourceActivityMatchQuestionRepository.Object, this.resourceVersionKeywordRepository.Object, this.resourceVersionValidationResultRepository.Object, this.logger.Object, this.webLinkResourceVersionRepository.Object, this.caseResourceVersionRepository.Object, this.scormResourceVersionRepository.Object, this.genericFileResourceVersionRepository.Object, this.resourceVersionRepository.Object, this.htmlResourceVersionRepository.Object, this.mapper.Object, this.fileRepository.Object, this.azureConfig.Object, this.learningHubConfig.Object, this.userProfileService.Object, this.resourceVersionFlagRepository.Object, this.articleResourceVersionRepository.Object, this.audioResourceVersionRepository.Object, this.videoResourceVersionRepository.Object, this.assessmentResourceVersionRepository.Object, this.resourceLicenceRepository.Object, this.resourceReferenceRepository.Object, this.resourceVersionUserAcceptanceRepository.Object, this.catalogueNodeVersionRepository.Object, this.cachingService.Object, this.searchService.Object, this.catalogueService.Object, this.nodeResourceRepository.Object, this.nodePathRepository.Object, this.userService.Object, this.nodeRepository.Object,this.resourceSyncService.Object, this.dbContext.Object.As<LearningHubDbContext>());
         }
 
         private List<ResourceActivityDTO> ResourceActivityDTOList => new List<ResourceActivityDTO>()

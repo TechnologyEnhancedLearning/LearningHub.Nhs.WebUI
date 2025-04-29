@@ -32,6 +32,8 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IFileTypeService, FileTypeService>();
             services.AddScoped<IHierarchyService, HierarchyService>();
+            services.AddScoped<IRatingService, RatingService>();
+            services.AddScoped<IResourceSyncService, ResourceSyncService>();
             services.AddScoped<ISecurityService, SecurityService>();
             services.AddScoped<IUserService, UserService>();
             services.AddTransient<IQueueCommunicatorService, QueueCommunicatorService>();

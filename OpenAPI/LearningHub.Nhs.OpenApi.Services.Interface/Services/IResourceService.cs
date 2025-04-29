@@ -350,6 +350,14 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
         Task<LearningHubValidationResult> SubmitResourceVersionForPublish(PublishViewModel publishViewModel);
 
+        /// <summary>
+        /// Submits a published resource version to the Findwise search.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<(bool success, int resourceReferenceId)> SubmitResourceVersionToSearchAsync(int resourceVersionId, int userId);
+
 
         /// <summary>
         /// The update resource version async.

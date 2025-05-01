@@ -57,7 +57,7 @@
   },
   "devDependencies": {
      "@babel/core": "^7.26.10",
-     "@babel/preset-env": "^7.26.9",
+     "@babel/preset-env": "^7.27.1",
     "@types/axios": "^0.14.0",
     "@types/bootstrap": "4.6.1",
     "@types/ckeditor": "4.9.10",

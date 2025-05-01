@@ -16,7 +16,7 @@
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetLanguage>CS</TargetLanguage>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <SqlServerVerification>False</SqlServerVerification>
@@ -539,8 +539,6 @@
     <Build Include="Stored Procedures\Activity\GetAssessmentActivityCompletionPercentage.sql" />
     <Build Include="Tables\Hub\PasswordResetRequests.sql" />
     <Build Include="Stored Procedures\External\ExternalSystemUserCreate.sql" />
-    <None Include="Scripts\ELFH Database Scripts\ConCurrentUserSessionsTablesandSP.sql" />
-    <None Include="Scripts\Post-Deploy\Scripts\CreateResourceTypeValidationRule.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

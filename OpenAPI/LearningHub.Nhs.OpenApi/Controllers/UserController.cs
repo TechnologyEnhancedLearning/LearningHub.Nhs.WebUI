@@ -98,7 +98,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         [HttpGet]
         [Route("GetByUserId/{id}")]
-        public async Task<ActionResult<User>> GetByUserIdAsync(int id)
+        public async Task<ActionResult<UserLHBasicViewModel>> GetByUserIdAsync(int id)
         {
             return this.Ok(await this.userService.GetByIdAsync(id));
         }

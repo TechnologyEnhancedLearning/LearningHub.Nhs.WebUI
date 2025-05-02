@@ -106,6 +106,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, RoleMap>();
             services.AddSingleton<IEntityTypeMap, RoleUserGroupMap>();
             services.AddSingleton<IEntityTypeMap, ScopeMap>();
+            services.AddSingleton<IEntityTypeMap, UserBookmarkMap>();
             services.AddSingleton<IEntityTypeMap, RoleUserGroupMap>();
             services.AddSingleton<IEntityTypeMap, TextBlockMap>();
             services.AddSingleton<IEntityTypeMap, UserMap>();

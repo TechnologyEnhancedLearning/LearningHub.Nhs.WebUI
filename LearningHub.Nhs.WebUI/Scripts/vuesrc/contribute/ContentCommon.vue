@@ -25,11 +25,16 @@
                     <div class="pt-0 pb-4">
                         <div class="heading" id="headingProvidedBy">
                             <div class="mb-0">
-                                <a href="#" class="collapsed" data-toggle="collapse" data-target="#collapseProvidedByInfo" aria-expanded="false" aria-controls="collapseProvidedByInfo">
-                                    <div class="accordion-arrow">Why should I flag a resource as 'Developed with'</div>
+                                <a href="#" class="collapsed text-decoration-skip" style="color:#005EB8;" data-toggle="collapse" data-target="#collapseProvidedByInfo" aria-expanded="false" aria-controls="collapseProvidedByInfo">
+                                    <div class="accordion-arrow"></div>
+                                    <span class="pl-3">
+                                        Why should I flag a resource as 'Developed with'
+                                    </span>
                                 </a>
                             </div>
                         </div>
+
+
                         <div id="collapseProvidedByInfo" class="collapse" aria-labelledby="headingProvidedBy" data-parent="#provided-by-info-accordion">
                             <div class="content col-12">
                                 <p>
@@ -68,7 +73,7 @@
                     <div class="mt-3">
                         <label class="checkContainer mb-0" for="sensitivecontent">
                             Yes
-                            <input type="checkbox" id="sensitivecontent" v-model="sensitiveContent" @click="setSensitiveContent($event.target.checked)">
+                            <input type="checkbox" id="sensitivecontent" class="nhsuk-checkboxes__input" v-model="sensitiveContent" @click="setSensitiveContent($event.target.checked)">
                             <span class="checkmark"></span>
                         </label>
                     </div>
@@ -153,7 +158,7 @@
                 <div>
                     <label class="checkContainer" for="currentUserAuthor">
                         I am the author or co-author
-                        <input type="checkbox" id="currentUserAuthor" v-model="currentUserAuthor" @change="currentUserAuthorChange">
+                        <input type="checkbox" class="nhsuk-checkboxes__input" id="currentUserAuthor" v-model="currentUserAuthor" @change="currentUserAuthorChange">
                         <span class="checkmark"></span>
                     </label>
                 </div>
@@ -223,12 +228,12 @@
                 <div class="mb-10">
                     <label class="checkContainer mr-0">
                         <span>Yes</span>
-                        <input type="radio" name="resourceCertificateRadio" value="true" v-model="certificateEnabled" @click="certificateEnabledChange($event.target.value)" />
+                        <input type="radio" name="resourceCertificateRadio" class="nhsuk-radios__input" value="true" v-model="certificateEnabled" @click="certificateEnabledChange($event.target.value)" />
                         <span class="radioButton"></span>
                     </label>
                     <label class="checkContainer mr-0">
                         <span>No</span>
-                        <input type="radio" name="resourceCertificateRadio" value="false" v-model="certificateEnabled" @click="certificateEnabledChange($event.target.value)" />
+                        <input type="radio" name="resourceCertificateRadio"  class="nhsuk-radios__input" value="false" v-model="certificateEnabled" @click="certificateEnabledChange($event.target.value)" />
                         <span class="radioButton"></span>
                     </label>
                 </div>
@@ -597,3 +602,50 @@
         })
 
 </script>
+
+<style lang="scss" scoped>
+    @use "../../../Styles/abstracts/all" as *;
+
+    /*Add a background color to the radio button when focused */
+    .radio-button:focus {
+        box-shadow: 0 0 0 4px $nhsuk-yellow !important;
+        outline: 0;
+        //box-shadow: 0 0 0 4px rgba(255, 255, 0, 0.5);
+    }
+    .radio-button {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 24px;
+        height: 24px;
+        border: 2px solid black;
+        border-radius: 50%;
+        position: relative;
+        cursor: pointer;
+        transition: box-shadow 0.3s;
+        outline: none;
+    }
+
+    /* Yellow glow on focus */
+    .radio-button:focus {
+        box-shadow: 0 0 0 4px $nhsuk-yellow; /* yellow circle */
+    }
+
+    /* Inner black dot when selected */
+    .radio-button:checked::before {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 12px;
+        height: 12px;
+        background-color: black;
+        border-radius: 50%;
+    }
+    label {
+           display: inline-flex;
+           align-items: center;
+           gap: 5px; /* space between radio and text */
+           margin: 7px;
+    }
+                              
+</style>

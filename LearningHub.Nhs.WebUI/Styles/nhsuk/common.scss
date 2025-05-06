@@ -228,3 +228,67 @@ form label.nhsuk-u-visually-hidden {
     margin-top: auto !important;
     margin-bottom: auto !important;
 }
+.btn:focus, .btn.focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem $nhsuk-yellow !important;
+    background-color: $govuk-focus-highlight-yellow;
+}
+/*Add a background color to the radio button when focused */
+.nhsuk-radios__input:focus + .radioButton {
+    box-shadow: 0 0 0 3px $nhsuk-yellow;
+}
+/*Add a background color to the radio button when focused */
+.nhsuk-checkboxes__input:focus + .checkmark {
+    box-shadow: 0 0 0 4px $nhsuk-yellow;
+}
+
+.accessible-link:focus {
+    outline: none;
+    text-decoration: none;
+    color: $nhsuk-black;
+    box-shadow: 0 0 0 4px $nhsuk-yellow;
+}
+
+/*Add a background color to the radio button when focused */
+.radio-button:focus {
+    box-shadow: 0 0 0 4px $nhsuk-yellow !important;
+    outline: 0;
+    //box-shadow: 0 0 0 4px rgba(255, 255, 0, 0.5);
+}
+
+.radio-button {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 2px solid black;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+    outline: none;
+}
+
+/* Yellow glow on focus */
+.radio-button:focus {
+    box-shadow: 0 0 0 4px $nhsuk-yellow; /* yellow circle */
+}
+
+/* Inner black dot when selected */
+.radio-button:checked::before {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 12px;
+    height: 12px;
+    background-color: black;
+    border-radius: 50%;
+}
+
+label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px; /* space between radio and text */
+    margin: 7px;
+}

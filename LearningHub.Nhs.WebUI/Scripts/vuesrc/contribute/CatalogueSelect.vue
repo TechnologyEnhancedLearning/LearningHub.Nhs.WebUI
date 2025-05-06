@@ -9,14 +9,18 @@
         <div class="row my-2">
             <div class="accordion col-12" id="cat-accordion">
                 <div class="pt-0 pb-4">
-                    <div class="heading" id="headingCat">
+
+                    <div class="heading" id="accessibilityTypeInfo">
                         <div class="mb-0">
-                            <a href="#" class="collapsed" data-toggle="collapse" data-target="#collapseCat" aria-expanded="false" aria-controls="collapseCat">
-                                <div class="accordion-arrow">More information on catalogues</div>
+                            <a href="#" class="collapsed text-decoration-skip" style="color:#005EB8;" data-toggle="collapse" data-target="#collapseAccessibilityTypeInfo" aria-expanded="false" aria-controls="collapseAccessibilityTypeInfo">
+                                <div class="accordion-arrow"></div>
+                                <span class="pl-3">
+                                    More information on catalogues
+                                </span>
                             </a>
                         </div>
                     </div>
-                    <div id="collapseCat" class="collapse" aria-labelledby="headingCat" data-parent="#cat-accordion">
+                    <div id="collapseAccessibilityTypeInfo" class="collapse" aria-labelledby="accessibilityTypeInfo" data-parent="#cat-accordion">
                         <div class="content col-12">
                             <p>
                                 A catalogue is a curated set of resources that has its own web page.
@@ -33,7 +37,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="form-group col-12">
                 <select class="form-control nhsuk-input" aria-labelledby="type-label" id="catalogue" v-model="selectedCatalogue" @change="catalogueChange">

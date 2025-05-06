@@ -111,13 +111,6 @@
         font-family: $font-stack !important;
         font-size: 19px !important;
     }
-    /*Add a background color to the radio button when focused */
-    .radio-button:focus {
-        box-shadow: 0 0 0 4px $nhsuk-yellow !important;
-        outline: 0;
-        //box-shadow: 0 0 0 4px rgba(255, 255, 0, 0.5);
-    }
-
     .radio-button {
         appearance: none;
         -webkit-appearance: none;
@@ -132,27 +125,5 @@
         filter: grayscale(0) !important;
     }
 
-    /* Yellow glow on focus */
-    .radio-button:focus {
-        box-shadow: 0 0 0 4px $nhsuk-yellow; /* yellow circle */
-    }
-
-    /* Inner black dot when selected */
-    .radio-button:checked::before {
-        content: "";
-        position: absolute;
-        top: 4px;
-        left: 4px;
-        width: 12px;
-        height: 12px;
-        background-color: black;
-        border-radius: 50%;
-    }
-
-    label {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px; /* space between radio and text */
-        margin: 7px;
-    }
+ 
 </style>

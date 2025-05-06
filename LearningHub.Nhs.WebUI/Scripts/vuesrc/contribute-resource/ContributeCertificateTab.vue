@@ -7,12 +7,12 @@
                 <div class="mb-10">
                     <label class="checkContainer mr-0">
                         <span>Yes</span>
-                        <input type="radio" name="resourceCertificateRadio" value="true" v-model="resourceDetails.certificateEnabled" @click="certificateEnabledChange($event.target.value)" />
+                        <input type="radio" name="resourceCertificateRadio" class="nhsuk-radios__input" value="true" v-model="resourceDetails.certificateEnabled" @click="certificateEnabledChange($event.target.value)" />
                         <span class="radioButton"></span>
                     </label>
                     <label class="checkContainer mr-0">
                         <span>No</span>
-                        <input type="radio" name="resourceCertificateRadio" value="false" v-model="resourceDetails.certificateEnabled" @click="certificateEnabledChange($event.target.value)" checked/>
+                        <input type="radio" name="resourceCertificateRadio" class="nhsuk-radios__input" value="false" v-model="resourceDetails.certificateEnabled" @click="certificateEnabledChange($event.target.value)" checked/>
                         <span class="radioButton"></span>
                     </label>
                 </div>

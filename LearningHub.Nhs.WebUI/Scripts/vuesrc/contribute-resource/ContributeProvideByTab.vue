@@ -9,7 +9,7 @@
                     <span class="span-provider nhsuk-u-font-weight-normal">Not applicable</span>
                     <div v-for="provider in userProviders">
                         <label class="my-0 span-provider nhsuk-u-font-weight-normal">
-                            <input class="radio-button" name="resourceProviderId" type="radio" :value="provider.id" v-model="resourceProviderId" @click="setResourceProvider($event.target.value)" />
+                            <input class="radio-button" name="resourceProviderId"  type="radio" :value="provider.id" v-model="resourceProviderId" @click="setResourceProvider($event.target.value)" />
                             {{provider.name}}
                         </label>
                         <br />
@@ -19,10 +19,14 @@
                 <div class="row my-2">
                     <div class="accordion col-12" id="provided-by-info-accordion">
                         <div class="pt-0 pb-4">
+
                             <div class="heading" id="headingProvidedBy">
                                 <div class="mb-0">
-                                    <a href="#" class="collapsed" data-toggle="collapse" data-target="#collapseProvidedByInfo" aria-expanded="false" aria-controls="collapseProvidedByInfo">
-                                        <div class="accordion-arrow">Why should I flag a resource as 'Developed with'</div>
+                                    <a href="#" class="collapsed text-decoration-skip" style="color:#005EB8;" data-toggle="collapse" data-target="#collapseProvidedByInfo" aria-expanded="false" aria-controls="collapseProvidedByInfo">
+                                        <div class="accordion-arrow"></div>
+                                        <span class="pl-3">
+                                            Why should I flag a resource as 'Developed with''
+                                        </span>
                                     </a>
                                 </div>
                             </div>
@@ -107,4 +111,19 @@
         font-family: $font-stack !important;
         font-size: 19px !important;
     }
+    .radio-button {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 24px;
+        height: 24px;
+        border: 2px solid black;
+        border-radius: 50%;
+        position: relative;
+        cursor: pointer;
+        transition: box-shadow 0.3s;
+        outline: none;
+        filter: grayscale(0) !important;
+    }
+
+ 
 </style>

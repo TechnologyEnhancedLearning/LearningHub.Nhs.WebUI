@@ -1168,7 +1168,6 @@
     })
 
 </script>
-
 <style lang="scss" scoped>
     .resource-area-body-file-upload {
         min-height: auto !important;
@@ -1181,4 +1180,5 @@
     .password-div-width{
         max-width:70% !important;
         }
+
 </style>

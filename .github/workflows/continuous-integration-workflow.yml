@@ -10,6 +10,66 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Modify web.config files in all apps
+        shell: pwsh
+        run: |
+          $webConfigPaths = @(
+            "${{ github.workspace }}\AdminUI\LearningHub.Nhs.AdminUI\web.config",
+            "${{ github.workspace }}\WebAPI\LearningHub.Nhs.Api\web.config",
+            "${{ github.workspace }}\LearningHub.Nhs.WebUI\web.config"
+          )
+
+          foreach ($path in $webConfigPaths) {
+            if (Test-Path $path) {
+              Write-Host "Modifying $path"
+              [xml]$config = Get-Content $path
+  
+              if (-not $config.configuration.'system.webServer') {
+                  $systemWebServer = $config.CreateElement("system.webServer")
+                  $config.configuration.AppendChild($systemWebServer) | Out-Null
+              } else {
+                  $systemWebServer = $config.configuration.'system.webServer'
+              }
+  
+              if (-not $systemWebServer.httpProtocol) {
+                  $httpProtocol = $config.CreateElement("httpProtocol")
+                  $systemWebServer.AppendChild($httpProtocol) | Out-Null
+              } else {
+                  $httpProtocol = $systemWebServer.httpProtocol
+              }
+  
+              if (-not $httpProtocol.customHeaders) {
+                  $customHeaders = $config.CreateElement("customHeaders")
+                  $httpProtocol.AppendChild($customHeaders) | Out-Null
+              } else {
+                  $customHeaders = $httpProtocol.customHeaders
+              }
+  
+              foreach ($name in @("X-Powered-By", "Server")) {
+                  $removeNode = $config.CreateElement("remove")
+                  $removeNode.SetAttribute("name", $name)
+                  $customHeaders.AppendChild($removeNode) | Out-Null
+              }
+  
+              if (-not $systemWebServer.security) {
+                  $security = $config.CreateElement("security")
+                  $systemWebServer.AppendChild($security) | Out-Null
+              } else {
+                  $security = $systemWebServer.security
+              }
+  
+              if (-not $security.requestFiltering) {
+                  $requestFiltering = $config.CreateElement("requestFiltering")
+                  $requestFiltering.SetAttribute("removeServerHeader", "true")
+                  $security.AppendChild($requestFiltering) | Out-Null
+              }
+  
+              $config.Save($path)
+            } else {
+              Write-Host "File not found: $path"
+            }
+          }
+
       - name: Setup .NET Core SDK 8.0
         uses: actions/setup-dotnet@v3
         with:

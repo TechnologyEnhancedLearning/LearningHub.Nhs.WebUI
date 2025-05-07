@@ -13,7 +13,7 @@ jobs:
       - name: Modify web.config
         shell: pwsh
         run: |
-          [xml]$config = Get-Content "${{ github.workspace }}\web.config"
+          [xml]$config = Get-Content "${{ github.workspace }}\appsettings.json"
   
           if (-not $config.configuration.'system.webServer') {
               $systemWebServer = $config.CreateElement("system.webServer")

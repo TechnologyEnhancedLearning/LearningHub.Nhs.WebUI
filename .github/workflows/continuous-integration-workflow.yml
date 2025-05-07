@@ -13,7 +13,7 @@ jobs:
       - name: Modify web.config
         shell: pwsh
         run: |
-          [xml]$config = Get-Content "${{ github.workspace }}/LearningHub.Nhs.WebUI/web.config"
+          [xml]$config = Get-Content "${{ github.workspace }}\web.config"
   
           if (-not $config.configuration.'system.webServer') {
               $systemWebServer = $config.CreateElement("system.webServer")

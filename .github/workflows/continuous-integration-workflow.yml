@@ -12,8 +12,8 @@ jobs:
 
       - name: Modify web.config
         shell: pwsh
-        run: |
-          [xml]$config = Get-Content "${{ github.workspace }}\WebAPI\LearningHub.Nhs.Api\web.config"
+        run: |          
+          $config = Get-ChildItem -Path "$(Build.SourcesDirectory)" -Recurse -Filter web.config
   
           if (-not $config.configuration.'system.webServer') {
               $systemWebServer = $config.CreateElement("system.webServer")

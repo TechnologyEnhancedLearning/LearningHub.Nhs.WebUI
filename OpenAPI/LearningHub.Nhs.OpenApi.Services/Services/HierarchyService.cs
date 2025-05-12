@@ -159,6 +159,7 @@
             this.hierarchyEditRepository = hierarchyEditRepository;
             this.publicationRepository = publicationRepository;
             this.nodeResourceLookupRepository = nodeResourceLookupRepository;
+            this.resourceReferenceRepository = resourceReferenceRepository;
             this.ratingService = ratingService;
             this.cachingService = cachingService;
             this.logger = logger;

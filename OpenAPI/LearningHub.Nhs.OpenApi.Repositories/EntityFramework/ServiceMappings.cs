@@ -140,6 +140,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, CatalogueNodeVersionMap>();
             services.AddSingleton<IEntityTypeMap, CatalogueNodeVersionKeywordMap>();
             services.AddSingleton<IEntityTypeMap, CatalogueNodeVersionProviderMap>();
+            services.AddSingleton<IEntityTypeMap, FolderNodeVersionMap>();
             services.AddSingleton<IEntityTypeMap, NodeMap>();
             services.AddSingleton<IEntityTypeMap, NodeLinkMap>();
             services.AddSingleton<IEntityTypeMap, NodeVersionMap>();

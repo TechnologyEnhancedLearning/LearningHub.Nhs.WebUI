@@ -1886,8 +1886,6 @@
             return userHistoryViewModel;
         }
 
-
-
         /// <summary>
         /// The base 64 m d 5 hash digest.
         /// </summary>

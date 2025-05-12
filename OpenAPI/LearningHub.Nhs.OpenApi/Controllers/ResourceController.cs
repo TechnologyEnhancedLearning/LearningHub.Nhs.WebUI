@@ -924,6 +924,8 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             }
         }
 
+
+
         /// <summary>
         /// Update HTML Detail.
         /// </summary>
@@ -943,6 +945,17 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             {
                 return this.BadRequest(new ApiResponse(false, vr));
             }
+        }
+
+        /// <summary>
+        /// Get specific ImageDetails by ResourceVersionId.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet("GetImageDetails/{resourceVersionId}")]
+        public async Task<ActionResult> GetImageDetailsAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetImageDetailsByIdAsync(resourceVersionId));
         }
 
         /// <summary>

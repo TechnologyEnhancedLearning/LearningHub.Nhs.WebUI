@@ -279,6 +279,13 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         Task<File> GetFileAsync(int fileId);
 
         /// <summary>
+        /// The get image details by id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ImageViewModel}"/>.</returns>
+        Task<ImageViewModel> GetImageDetailsByIdAsync(int resourceVersionId);
+
+        /// <summary>
         /// The create file details for an article async.
         /// </summary>
         /// <param name="fileCreateRequestViewModel">The fileCreateRequestViewModel<see cref="FileCreateRequestViewModel"/>.</param>

@@ -62,7 +62,7 @@
                 Write a description that explains the resource and its benefits to learners.
             </div>
             <div class="col-12 my-3">
-                <ckeditorwithhint :initialValue="this.resourceDescription" :maxLength="1800" @blur="saveDescription" @change="changeDescription" />
+                <ckeditorwithhint :initialValue="this.resourceDescription" :maxLength="1800" @blur="saveDescription" @change="changeDescription"/>
             </div>
         </div>
 

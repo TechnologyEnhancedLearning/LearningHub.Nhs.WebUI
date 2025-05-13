@@ -83,7 +83,12 @@ namespace LearningHub.NHS.OpenAPI
                     options.UseSqlServer(this.Configuration.GetConnectionString("LearningHub")));
             services.AddApplicationInsightsTelemetry();
             services.AddControllers(options => options.Filters.Add(new HttpResponseExceptionFilter()));
-            services.AddControllers(opt => { opt.Filters.Add(new AuthorizeFilter()); });
+            services.AddControllers(opt => { opt.Filters.Add(new AuthorizeFilter()); })
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+            });
+
             services.AddSwaggerGen(
                 c =>
                 {

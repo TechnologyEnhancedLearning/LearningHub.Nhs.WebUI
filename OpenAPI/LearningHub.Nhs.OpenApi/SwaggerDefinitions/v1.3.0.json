@@ -6051,21 +6051,18 @@
         "tags": [
           "User"
         ],
-        "summary": "Validate email change token.",
         "parameters": [
           {
             "name": "token",
             "in": "path",
-            "description": "The token.",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "loctoken",
+            "name": "locToken",
             "in": "path",
-            "description": "The loc Token.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6074,7 +6071,6 @@
           {
             "name": "isUserRoleUpgrade",
             "in": "path",
-            "description": "isUserRoleUpgrade.",
             "required": true,
             "schema": {
               "type": "boolean"
@@ -6084,6 +6080,47 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/User/GetLHUserNavigation": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  }
+                }
+              }
+            }
           }
         }
       }

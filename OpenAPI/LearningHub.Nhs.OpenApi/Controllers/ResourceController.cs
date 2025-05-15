@@ -121,7 +121,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         /// </summary>
         /// <param name="originalResourceReferenceId">id.</param>
         /// <returns>Resource data.</returns>
-        [HttpGet("GetResourceReferenceByOriginalId/{originalResourceReferenceId}")]
+        [HttpGet("{originalResourceReferenceId}")]
         public async Task<ResourceReferenceWithResourceDetailsViewModel> GetResourceReferenceByOriginalId(int originalResourceReferenceId)
         {
             return await this.resourceService.GetResourceReferenceByOriginalId(originalResourceReferenceId, this.CurrentUserId.GetValueOrDefault());
@@ -215,7 +215,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        [HttpGet("{id}")]
+        [HttpGet("GetResource/{id}")]
         public async Task<ActionResult> GetAsync(int id)
         {
             return this.Ok(await this.resourceService.GetResourceByIdAsync(id));
@@ -278,6 +278,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         {
             return this.Ok(await this.resourceService.GetCaseDetailsByIdAsync(resourceVersionId));
         }
+
         /// <summary>
         /// The GetFileStatusDetailsAsync.
         /// </summary>

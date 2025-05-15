@@ -51,6 +51,8 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddTransient<INotificationTemplateRepository, NotificationTemplateRepository>();
             services.AddTransient<IBookmarkRepository, BookmarkRepository>();
             services.AddTransient<IProviderRepository, ProviderRepository>();
+            services.AddTransient<INotificationRepository, NotificationRepository>();
+            services.AddTransient<IUserNotificationRepository, UserNotificationRepository>();
 
             // Resources
             services.AddScoped<IArticleResourceVersionRepository, ArticleResourceVersionRepository>();

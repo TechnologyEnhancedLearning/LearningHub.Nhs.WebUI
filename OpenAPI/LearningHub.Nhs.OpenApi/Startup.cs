@@ -84,9 +84,11 @@ namespace LearningHub.NHS.OpenAPI
             services.AddApplicationInsightsTelemetry();
             services.AddControllers(options => options.Filters.Add(new HttpResponseExceptionFilter()));
             services.AddControllers(opt => { opt.Filters.Add(new AuthorizeFilter()); })
+
+            // .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             .AddJsonOptions(options =>
             {
-                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
             });
 
             services.AddSwaggerGen(

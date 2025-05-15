@@ -6092,7 +6092,8 @@
         "parameters": [
           {
             "name": "userId",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string",
               "default": ""

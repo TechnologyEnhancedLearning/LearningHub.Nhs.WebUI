@@ -3238,7 +3238,7 @@
         }
       }
     },
-    "/Resource/GetResourceReferenceByOriginalId/{originalResourceReferenceId}": {
+    "/Resource/{resourceReferenceId}": {
       "get": {
         "tags": [
           "Resource"
@@ -3246,7 +3246,7 @@
         "summary": "GET by Id.",
         "parameters": [
           {
-            "name": "originalResourceReferenceId",
+            "name": "resourceReferenceId",
             "in": "path",
             "description": "id.",
             "required": true,
@@ -3454,7 +3454,7 @@
         }
       }
     },
-    "/Resource/{id}": {
+    "/Resource/GetResource/{id}": {
       "get": {
         "tags": [
           "Resource"

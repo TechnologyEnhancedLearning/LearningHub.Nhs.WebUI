@@ -14,6 +14,8 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
+    using System.Security.Claims;
+    using System.Security.Principal;
 
     /// <summary>
     /// The log controller.
@@ -261,25 +263,63 @@
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [HttpGet]
         [AllowAnonymous]
-        [Route("GetLHUserNavigation")]
-        public async Task<List<Dictionary<string, object>>> GetLHUserNavigation()
+        [Route("GetLHUserNavigation/{userId}")]
+        public async Task<List<Dictionary<string, object>>> GetLHUserNavigation(string userId = "")
         {
             NavigationModel model;
 
-            if (!this.User.Identity.IsAuthenticated)
+            if (!int.TryParse(userId, out int validUserId) || validUserId <= 0)
             {
                 model = this.permissionService.NotAuthenticated();
+                return this.MenuItems(model);
+            }
+
+            IPrincipal userPrincipal;
+
+            // Use current user if already authenticated
+            if (this.User?.Identity?.IsAuthenticated == true)
+            {
+                userPrincipal = this.User;
+                validUserId = this.User.Identity.GetCurrentUserId();
             }
             else
             {
-                var userId = this.User.Identity.GetCurrentUserId();
+                var basicDetails = await this.userService.GetByIdAsync(validUserId);
+                if (basicDetails == null || string.IsNullOrWhiteSpace(basicDetails.UserName))
+                {
+                    model = this.permissionService.NotAuthenticated();
+                    return this.MenuItems(model);
+                }
 
-                var (cacheExists, _) = await this.cacheService.TryGetAsync<string>($"{userId}:LoginWizard");
+                var user = await this.userService.GetByUsernameAsync(basicDetails.UserName);
+                if (user == null || user.AssignedRoles == null)
+                {
+                    model = this.permissionService.NotAuthenticated();
+                    return this.MenuItems(model);
+                }
 
-                model = await this.permissionService.GetNavigationModelAsync(this.User, !cacheExists, string.Empty);
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, validUserId.ToString()),
+                    new Claim(ClaimTypes.Name, user.UserName),
+                };
 
-                model.NotificationCount = await this.userNotificationService.GetUserUnreadNotificationCountAsync(userId);
+                foreach (var role in user.AssignedRoles)
+                {
+                    if (!string.IsNullOrWhiteSpace(role?.Name))
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role.Name));
+                    }
+                }
+
+                var identity = new ClaimsIdentity(claims, "Impersonated");
+                userPrincipal = new ClaimsPrincipal(identity);
             }
+
+            var (cacheExists, _) = await this.cacheService.TryGetAsync<string>($"{validUserId}:LoginWizard");
+
+            model = await this.permissionService.GetNavigationModelAsync(userPrincipal, !cacheExists, string.Empty);
+            model.NotificationCount = await this.userNotificationService.GetUserUnreadNotificationCountAsync(validUserId);
 
             return this.MenuItems(model);
         }
@@ -329,9 +369,9 @@
                 },
                 new Dictionary<string, object>
                 {
-                    { "title", "Admin" },
-                    { "url", this.learningHubConfig.AdminUrl },
-                    { "visible", model.ShowAdmin },
+                    { "title", "Sign Out" },
+                    { "url", this.learningHubConfig.SignOutUrl },
+                    { "visible", model.ShowSignOut },
                 },
             };
             return menu;

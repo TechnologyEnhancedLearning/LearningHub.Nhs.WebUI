@@ -6084,10 +6084,20 @@
         }
       }
     },
-    "/User/GetLHUserNavigation": {
+    "/User/GetLHUserNavigation/{userId}": {
       "get": {
         "tags": [
           "User"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
         ],
         "responses": {
           "200": {

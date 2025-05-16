@@ -4,9 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LearningHub.NHS.OpenAPI
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using AspNetCore.Authentication.ApiKey;
+    using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Extensions;
     using LearningHub.NHS.OpenAPI.Auth;
     using LearningHub.NHS.OpenAPI.Configuration;
     using LearningHub.NHS.OpenAPI.Middleware;
@@ -25,11 +29,6 @@ namespace LearningHub.NHS.OpenAPI
     using Microsoft.Extensions.Hosting;
     using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
-    using LearningHub.Nhs.Caching;
-    using LearningHub.Nhs.Models.Enums;
-    using System.Configuration;
-    using System;
-    using LearningHub.Nhs.Models.Extensions;
 
     /// <summary>
     /// The Startup class.
@@ -67,7 +66,7 @@ namespace LearningHub.NHS.OpenAPI
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     NameClaimType = "given_name",
-                    RoleClaimType = "role",
+                    RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
                     ValidateAudience = true,
                     ValidAudiences = new List<string> { "learninghubopenapi", "learninghubapi" },
                 };
@@ -84,8 +83,6 @@ namespace LearningHub.NHS.OpenAPI
             services.AddApplicationInsightsTelemetry();
             services.AddControllers(options => options.Filters.Add(new HttpResponseExceptionFilter()));
             services.AddControllers(opt => { opt.Filters.Add(new AuthorizeFilter()); })
-
-            // .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
@@ -133,6 +130,7 @@ namespace LearningHub.NHS.OpenAPI
                                     Scopes = new Dictionary<string, string>
                                     {
                                         { "learninghubapi", string.Empty },
+
                                     },
                                 },
                             },

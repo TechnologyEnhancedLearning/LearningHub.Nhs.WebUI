@@ -6084,21 +6084,10 @@
         }
       }
     },
-    "/User/GetLHUserNavigation/{userId}": {
+    "/User/GetLHUserNavigation": {
       "get": {
         "tags": [
           "User"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": ""
-            }
-          }
         ],
         "responses": {
           "200": {

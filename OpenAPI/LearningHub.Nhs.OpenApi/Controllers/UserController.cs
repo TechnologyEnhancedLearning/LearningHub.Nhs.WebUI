@@ -263,66 +263,29 @@
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [HttpGet]
         [AllowAnonymous]
-        [Route("GetLHUserNavigation/{userId}")]
-        public async Task<List<Dictionary<string, object>>> GetLHUserNavigation(string userId = "")
+        [Route("GetLHUserNavigation")]
+        public async Task<List<Dictionary<string, object>>> GetLHUserNavigation()
         {
             NavigationModel model;
 
-            if (!int.TryParse(userId, out int validUserId) || validUserId <= 0)
+            if (!this.User.Identity.IsAuthenticated)
             {
                 model = this.permissionService.NotAuthenticated();
-                return this.MenuItems(model);
-            }
-
-            IPrincipal userPrincipal;
-
-            // Use current user if already authenticated
-            if (this.User?.Identity?.IsAuthenticated == true)
-            {
-                userPrincipal = this.User;
-                validUserId = this.User.Identity.GetCurrentUserId();
             }
             else
             {
-                var basicDetails = await this.userService.GetByIdAsync(validUserId);
-                if (basicDetails == null || string.IsNullOrWhiteSpace(basicDetails.UserName))
-                {
-                    model = this.permissionService.NotAuthenticated();
-                    return this.MenuItems(model);
-                }
+                var userId = this.User.Identity.GetCurrentUserId();
 
-                var user = await this.userService.GetByUsernameAsync(basicDetails.UserName);
-                if (user == null || user.AssignedRoles == null)
-                {
-                    model = this.permissionService.NotAuthenticated();
-                    return this.MenuItems(model);
-                }
+                var (cacheExists, _) = await this.cacheService.TryGetAsync<string>($"{userId}:LoginWizard");
 
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, validUserId.ToString()),
-                    new Claim(ClaimTypes.Name, user.UserName),
-                };
+                model = await this.permissionService.GetNavigationModelAsync(this.User, !cacheExists, string.Empty);
 
-                foreach (var role in user.AssignedRoles)
-                {
-                    if (!string.IsNullOrWhiteSpace(role?.Name))
-                    {
-                        claims.Add(new Claim(ClaimTypes.Role, role.Name));
-                    }
-                }
-
-                var identity = new ClaimsIdentity(claims, "Impersonated");
-                userPrincipal = new ClaimsPrincipal(identity);
+                model.NotificationCount = await this.userNotificationService.GetUserUnreadNotificationCountAsync(userId);
             }
-
-            var (cacheExists, _) = await this.cacheService.TryGetAsync<string>($"{validUserId}:LoginWizard");
-
-            model = await this.permissionService.GetNavigationModelAsync(userPrincipal, !cacheExists, string.Empty);
-            model.NotificationCount = await this.userNotificationService.GetUserUnreadNotificationCountAsync(validUserId);
 
             return this.MenuItems(model);
         }
+
 
         private List<Dictionary<string, object>> MenuItems(NavigationModel model)
         {

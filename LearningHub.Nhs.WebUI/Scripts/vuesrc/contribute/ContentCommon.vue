@@ -602,3 +602,13 @@
         })
 
 </script>
+<style lang="scss" scoped>
+    @use "../../../Styles/abstracts/all" as *;
+    label {
+           display: inline-flex;
+           align-items: center;
+           gap: 5px; /* space between radio and text */
+           margin: 7px;
+    }
+                              
+</style>

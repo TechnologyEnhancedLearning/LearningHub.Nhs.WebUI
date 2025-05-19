@@ -610,5 +610,41 @@
            gap: 5px; /* space between radio and text */
            margin: 7px;
     }
-                              
+    /*Add a background color to the radio button when focused */
+    .radio-button:focus {
+        box-shadow: 0 0 0 4px $nhsuk-yellow !important;
+        outline: 0;
+        //box-shadow: 0 0 0 4px rgba(255, 255, 0, 0.5);
+    }
+
+    .radio-button {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 24px;
+        height: 24px;
+        border: 2px solid black;
+        border-radius: 50%;
+        position: relative;
+        cursor: pointer;
+        transition: box-shadow 0.3s;
+        outline: none;
+    }
+
+    /* Yellow glow on focus */
+    .radio-button:focus {
+        box-shadow: 0 0 0 4px $nhsuk-yellow; /* yellow circle */
+    }
+
+    /* Inner black dot when selected */
+    .radio-button:checked::before {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 12px;
+        height: 12px;
+        background-color: black;
+        border-radius: 50%;
+    }
+                         
 </style>

@@ -29,6 +29,8 @@ namespace LearningHub.NHS.OpenAPI
     using Microsoft.Extensions.Hosting;
     using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
+    using Microsoft.AspNetCore.Authorization;
+    using LearningHub.NHS.OpenAPI.Authentication;
 
     /// <summary>
     /// The Startup class.
@@ -73,6 +75,7 @@ namespace LearningHub.NHS.OpenAPI
             });
 
             services.AddCustomMiddleware();
+            services.AddSingleton<IAuthorizationHandler, ReadWriteHandler>();
 
             services.AddRepositories(this.Configuration);
             services.AddServices();
@@ -81,8 +84,11 @@ namespace LearningHub.NHS.OpenAPI
                 options =>
                     options.UseSqlServer(this.Configuration.GetConnectionString("LearningHub")));
             services.AddApplicationInsightsTelemetry();
-            services.AddControllers(options => options.Filters.Add(new HttpResponseExceptionFilter()));
-            services.AddControllers(opt => { opt.Filters.Add(new AuthorizeFilter()); })
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new HttpResponseExceptionFilter());
+                options.Filters.Add(new AuthorizeFilter());
+            })
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
@@ -146,6 +152,13 @@ namespace LearningHub.NHS.OpenAPI
                         },
                     });
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(
+                    "ReadWrite",
+                    policy => policy.Requirements.Add(new ReadWriteRequirement()));
+            });
 
             var environment = this.Configuration.GetValue<EnvironmentEnum>("Environment");
             var envPrefix = environment.GetAbbreviation();

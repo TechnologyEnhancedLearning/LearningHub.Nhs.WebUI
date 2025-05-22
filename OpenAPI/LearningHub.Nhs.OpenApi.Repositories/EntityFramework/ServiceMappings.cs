@@ -109,6 +109,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, UserBookmarkMap>();
             services.AddSingleton<IEntityTypeMap, RoleUserGroupMap>();
             services.AddSingleton<IEntityTypeMap, TextBlockMap>();
+            services.AddSingleton<IEntityTypeMap, ScormActivityInteractionMap>();
+            services.AddSingleton<IEntityTypeMap, ScormActivityInteractionCorrectResponseMap>();
+            services.AddSingleton<IEntityTypeMap, ScormActivityInteractionObjectiveMap>();
+            services.AddSingleton<IEntityTypeMap, ScormActivityMap>();
+            services.AddSingleton<IEntityTypeMap, ScormActivityObjectiveMap>();
             services.AddSingleton<IEntityTypeMap, UserMap>();
             services.AddSingleton<IEntityTypeMap, UserGroupMap>();
             services.AddSingleton<IEntityTypeMap, UserGroupAttributeMap>();
@@ -150,6 +155,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, PublicationMap>();
             services.AddSingleton<IEntityTypeMap, ResourceAzureMediaAssetMap>();
             services.AddSingleton<IEntityTypeMap, AssessmentResourceActivityMap>();
+            services.AddSingleton<IEntityTypeMap, AssessmentResourceActivityMatchQuestionMap>();
             services.AddSingleton<IEntityTypeMap, AssessmentResourceActivityInteractionMap>();
             services.AddSingleton<IEntityTypeMap, AssessmentResourceActivityInteractionAnswerMap>();
             services.AddSingleton<IEntityTypeMap, MediaResourceActivityMap>();

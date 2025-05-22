@@ -154,6 +154,7 @@
             this.queueCommunicatorService = queueCommunicatorService;
             this.nodeRepository = nodeRepository;
             this.nodePathRepository = nodePathRepository;
+            this.nodeResourceRepository = nodeResourceRepository;
             this.folderNodeVersionRepository = folderNodeVersionRepository;
             this.hierarchyEditDetailRepository = hierarchyEditDetailRepository;
             this.hierarchyEditRepository = hierarchyEditRepository;

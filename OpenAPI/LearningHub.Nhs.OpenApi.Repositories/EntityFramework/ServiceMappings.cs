@@ -132,6 +132,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, ResourceSyncMap>();
             services.AddSingleton<IEntityTypeMap, EmailTemplateMap>();
             services.AddSingleton<IEntityTypeMap, EmailTemplateLayoutMap>();
+            services.AddSingleton<IEntityTypeMap, EmailChangeValidationTokenMap>();
             services.AddSingleton<IEntityTypeMap, MessageMap>();
             services.AddSingleton<IEntityTypeMap, MessageSendMap>();
             services.AddSingleton<IEntityTypeMap, MessageSendRecipientMap>();

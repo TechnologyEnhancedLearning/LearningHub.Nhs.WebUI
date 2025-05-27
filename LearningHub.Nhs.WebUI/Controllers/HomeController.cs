@@ -6,7 +6,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using AspNetCoreRateLimit;
     using elfhHub.Nhs.Models.Common;
+    using elfhHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Content;
     using LearningHub.Nhs.Models.Enums.Content;
     using LearningHub.Nhs.Models.Extensions;
@@ -25,6 +27,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.FeatureManagement;
+    using UAParser;
     using Settings = LearningHub.Nhs.WebUI.Configuration.Settings;
 
     /// <summary>
@@ -205,32 +208,54 @@ namespace LearningHub.Nhs.WebUI.Controllers
         {
             if (this.User?.Identity.IsAuthenticated == true)
             {
-                this.Logger.LogInformation("User is authenticated: User is {fullname} and userId is: {lhuserid}", this.User.Identity.GetCurrentName(), this.User.Identity.GetCurrentUserId());
-                if (this.User.IsInRole("Administrator") || this.User.IsInRole("BlueUser") || this.User.IsInRole("ReadOnly") || this.User.IsInRole("BasicUser"))
+                var userHistoryDetail = await this.userService.CheckUserHasAnActiveSessionAsync(this.CurrentUserId);
+                var uaParser = Parser.GetDefault();
+                var clientInfo = uaParser.Parse(this.Request.Headers["User-Agent"]);
+
+                if (userHistoryDetail.Items.Count == 0 || userHistoryDetail.Items[0].BrowserName == clientInfo.UA.Family)
                 {
-                    var learningTask = this.dashboardService.GetMyAccessLearningsAsync(myLearningDashboard, 1);
-                    var resourcesTask = this.dashboardService.GetResourcesAsync(resourceDashboard, 1);
-                    var cataloguesTask = this.dashboardService.GetCataloguesAsync(catalogueDashboard, 1);
-
-                    await Task.WhenAll(learningTask, resourcesTask, cataloguesTask);
-
-                    var model = new DashboardViewModel()
+                    this.Settings.ConcurrentId = this.CurrentUserId;
+                    this.Logger.LogInformation("User is authenticated: User is {fullname} and userId is: {lhuserid}", this.User.Identity.GetCurrentName(), this.User.Identity.GetCurrentUserId());
+                    if (this.User.IsInRole("Administrator") || this.User.IsInRole("BlueUser") || this.User.IsInRole("ReadOnly") || this.User.IsInRole("BasicUser"))
                     {
-                        MyLearnings = await learningTask,
-                        Resources = await resourcesTask,
-                        Catalogues = await cataloguesTask,
-                    };
+                        var learningTask = this.dashboardService.GetMyAccessLearningsAsync(myLearningDashboard, 1);
+                        var resourcesTask = this.dashboardService.GetResourcesAsync(resourceDashboard, 1);
+                        var cataloguesTask = this.dashboardService.GetCataloguesAsync(catalogueDashboard, 1);
 
-                    if (!string.IsNullOrEmpty(this.Request.Query["preview"]) && Convert.ToBoolean(this.Request.Query["preview"]))
-                    {
-                        return this.View("LandingPage", await this.GetLandingPageContent(Convert.ToBoolean(this.Request.Query["preview"])));
+                        var enrolledCoursesTask = Task.FromResult(new List<MoodleCourseResponseViewModel>());
+                        var enableMoodle = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.EnableMoodle)).Result;
+                        this.ViewBag.EnableMoodle = enableMoodle;
+                        this.ViewBag.ValidMoodleUser = this.CurrentMoodleUserId > 0;
+                        if (enableMoodle && myLearningDashboard == "my-enrolled-courses")
+                        {
+                            enrolledCoursesTask = this.dashboardService.GetEnrolledCoursesFromMoodleAsync(this.CurrentMoodleUserId, 1);
+                        }
+
+                        await Task.WhenAll(learningTask, resourcesTask, cataloguesTask);
+
+                        var model = new DashboardViewModel()
+                        {
+                            MyLearnings = await learningTask,
+                            Resources = await resourcesTask,
+                            Catalogues = await cataloguesTask,
+                            EnrolledCourses = await enrolledCoursesTask,
+                        };
+
+                        if (!string.IsNullOrEmpty(this.Request.Query["preview"]) && Convert.ToBoolean(this.Request.Query["preview"]))
+                        {
+                            return this.View("LandingPage", await this.GetLandingPageContent(Convert.ToBoolean(this.Request.Query["preview"])));
+                        }
+
+                        return this.View("Dashboard", model);
                     }
-
-                    return this.View("Dashboard", model);
+                    else
+                    {
+                        return this.RedirectToAction("InvalidUserAccount", "Account");
+                    }
                 }
                 else
                 {
-                    return this.RedirectToAction("InvalidUserAccount", "Account");
+                    return this.RedirectToAction("AlreadyAnActiveSession", "Account");
                 }
             }
             else
@@ -374,9 +399,39 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 return this.Redirect(returnUrl);
             }
 
+            // Add successful logout to the UserHistory
+            UserHistoryViewModel userHistory = new UserHistoryViewModel()
+            {
+                UserId = this.Settings.ConcurrentId,
+                UserHistoryTypeId = (int)UserHistoryType.Logout,
+                Detail = @"User session time out",
+            };
+
+            this.userService.StoreUserHistory(userHistory);
+
             this.ViewBag.AuthTimeout = this.authConfig.AuthTimeout;
             this.ViewBag.ReturnUrl = returnUrl;
+
             return this.View();
+        }
+
+        /// <summary>
+        /// The SessionTimeout.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost("browser-close")]
+        public IActionResult BrowserClose()
+        {
+            // Add browser close to the UserHistory
+            UserHistoryViewModel userHistory = new UserHistoryViewModel()
+            {
+                UserId = this.CurrentUserId,
+                UserHistoryTypeId = (int)UserHistoryType.Logout,
+                Detail = @"User browser closed",
+            };
+
+            this.userService.StoreUserHistory(userHistory);
+            return this.Ok(true);
         }
 
         /// <summary>

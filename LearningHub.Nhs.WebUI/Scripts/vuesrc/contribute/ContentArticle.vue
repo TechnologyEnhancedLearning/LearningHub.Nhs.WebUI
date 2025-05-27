@@ -29,7 +29,7 @@
             <div class="form-group col-12">
                 <div class="p-4 uploadInnerBox">
                     <div class="upload-btn-wrapper nhsuk-u-font-size-16">
-                        <label for="articleFileUpload" class="nhsuk-button nhsuk-button--secondary">Choose file</label> No file chosen
+                        <label for="articleFileUpload" class="nhsuk-button nhsuk-button--secondary" tabindex="0">Choose file</label> No file chosen
                         <input type="file" id="articleFileUpload" aria-label="Choose file" ref="articleFileUpload" @change="onArticleFileChange" hidden />
                     </div>
                 </div>

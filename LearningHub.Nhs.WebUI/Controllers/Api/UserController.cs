@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using elfhHub.Nhs.Models.Common;
+    using elfhHub.Nhs.Models.Enums;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
     using Microsoft.AspNetCore.Authorization;
@@ -63,6 +64,26 @@
         }
 
         /// <summary>
+        /// The SessionTimeout.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost("browser-close")]
+        public IActionResult BrowserClose()
+        {
+            // Add browser close to the UserHistory
+            UserHistoryViewModel userHistory = new UserHistoryViewModel()
+            {
+                UserId = this.CurrentUserId,
+                UserHistoryTypeId = (int)UserHistoryType.Logout,
+                Detail = @"User browser closed",
+            };
+
+            this.userService.StoreUserHistory(userHistory);
+
+            return this.Ok(true);
+        }
+
+        /// <summary>
         /// Get current user's basic details.
         /// </summary>
         /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
@@ -96,6 +117,27 @@
         {
             var isSystemAdmin = this.User.IsInRole("Administrator");
             return this.Ok(isSystemAdmin);
+        }
+
+        /// <summary>
+        /// to check user password is correct.
+        /// </summary>
+        /// <param name="currentPassword">The currentPassword.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("ConfirmPassword/{currentPassword}")]
+        public async Task<ActionResult> ConfirmPassword(string currentPassword)
+        {
+            string passwordHash = this.userService.Base64MD5HashDigest(currentPassword);
+            var userPersonalDetails = await this.userService.GetCurrentUserPersonalDetailsAsync();
+            if (userPersonalDetails != null && userPersonalDetails.PasswordHash == passwordHash)
+            {
+                return this.Ok(true);
+            }
+            else
+            {
+                return this.Ok(false);
+            }
         }
 
         /// <summary>

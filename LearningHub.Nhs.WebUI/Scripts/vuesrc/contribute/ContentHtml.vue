@@ -12,7 +12,7 @@
             <div class="mb-4 uploadBox">
                 <div class="p-4 uploadInnerBox mt-4">
                     <div class="upload-btn-wrapper nhsuk-u-font-size-16">
-                        <label for="fileUpload" class="nhsuk-button nhsuk-button--secondary">Choose file</label> No file chosen
+                        <label for="fileUpload" class="nhsuk-button nhsuk-button--secondary" tabindex="0">Choose file</label> No file chosen
                         <input hidden type="file" id="fileUpload" accept=".zip,.rar,.7zip" aria-label="Choose file" ref="fileUpload" v-on:change="onResourceFileChange" />
                     </div>
                 </div>
@@ -54,14 +54,14 @@
                 <div class="row">
                     <label class="checkContainer mr-0" style="margin-left:10px;">
                         <span>Default (1024 x 768)</span>
-                        <input type="radio" name="htmlWindowType" v-model="localHtmlDetail.useDefaultPopupWindowSize" v-bind:value="true" @click="selectPopupWindowSize($event.target.value)" data-toggle="collapse" data-target="#advancedHtmlWindowSizePanel" checked />
+                        <input type="radio" name="htmlWindowType" class="nhsuk-radios__input" v-model="localHtmlDetail.useDefaultPopupWindowSize" v-bind:value="true" @click="selectPopupWindowSize($event.target.value)" data-toggle="collapse" data-target="#advancedHtmlWindowSizePanel" checked />
                         <span class="radioButton"></span>
                     </label>
                 </div>
                 <div class="row">
                     <label class="checkContainer mr-0" style="margin-left:10px;">
                         <span>Advanced</span>
-                        <input type="radio" name="htmlWindowType" v-model="localHtmlDetail.useDefaultPopupWindowSize" v-bind:value="false" @click="selectPopupWindowSize($event.target.value)" data-toggle="collapse" data-target="#advancedHtmlWindowSizePanel" />
+                        <input type="radio" name="htmlWindowType"  class="nhsuk-radios__input" v-model="localHtmlDetail.useDefaultPopupWindowSize" v-bind:value="false" @click="selectPopupWindowSize($event.target.value)" data-toggle="collapse" data-target="#advancedHtmlWindowSizePanel" />
                         <span class="radioButton"></span>
                     </label>
                 </div>
@@ -119,22 +119,22 @@
                 <div class="row">
                     <label class="checkContainer mr-0" style="margin-left:10px;">
                         <span>Don't display</span>
-                        <input type="radio" name="esrLinkType" v-model="localHtmlDetail.esrLinkType" value="1" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)" checked>
+                        <input type="radio" name="esrLinkType" class="nhsuk-radios__input" v-model="localHtmlDetail.esrLinkType" value="1" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)" checked>
                         <span class="radioButton"></span>
                     </label>
                     <label class="checkContainer ml-3" v-if="resourceCatalogueCount<=1">
                         <span>Display only to me</span>
-                        <input type="radio" name="esrLinkType" v-model="localHtmlDetail.esrLinkType" value="2" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
+                        <input type="radio" name="esrLinkType" class="nhsuk-radios__input" v-model="localHtmlDetail.esrLinkType" value="2" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
                         <span class="radioButton"></span>
                     </label>
                     <label class="checkContainer ml-3" v-if="resourceCatalogueCount>1">
                         <span>Display only to me and other catalogue editors</span>
-                        <input type="radio" name="esrLinkType" v-model="localHtmlDetail.esrLinkType" value="3" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
+                        <input type="radio" name="esrLinkType" class="nhsuk-radios__input" v-model="localHtmlDetail.esrLinkType" value="3" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
                         <span class="radioButton"></span>
                     </label>
                     <label class="checkContainer ml-3">
                         <span>Display to everyone</span>
-                        <input type="radio" name="esrLinkType" v-model="localHtmlDetail.esrLinkType" value="4" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
+                        <input type="radio" name="esrLinkType" class="nhsuk-radios__input" v-model="localHtmlDetail.esrLinkType" value="4" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
                         <span class="radioButton"></span>
                     </label>
                 </div>

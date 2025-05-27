@@ -18,7 +18,7 @@
         /// <param name="configuration">The IConfiguration.</param>
         public static void AddMessagingServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<MessagingServiceModel>(configuration.GetSection("GovNotify"));
+            services.Configure<MessagingServiceOptions>(configuration.GetSection("GovNotify"));
             services.AddScoped<IGovNotifyService, GovNotifyService>();
         }
     }

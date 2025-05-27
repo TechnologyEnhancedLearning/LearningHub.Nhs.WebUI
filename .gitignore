@@ -53,3 +53,5 @@ obj
 /AdminUI/LearningHub.Nhs.AdminUI/LearningHub.Nhs.AdminUI.csproj.user
 /WebAPI/LearningHub.Nhs.API/LearningHub.Nhs.Api.csproj.user
 /ReportAPI/LearningHub.Nhs.ReportApi/web.config
+/MessageQueueing/LearningHub.Nhs.MessageQueueing.Database/LearningHub.Nhs.MessageQueueing.Database.dbmdl
+/MessageQueueing/LearningHub.Nhs.MessageQueueing.Database/LearningHub.Nhs.MessageQueueing.Database.jfm

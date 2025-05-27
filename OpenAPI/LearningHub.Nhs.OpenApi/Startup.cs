@@ -31,6 +31,8 @@ namespace LearningHub.NHS.OpenAPI
     using System;
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.MessagingService;
+    using LearningHub.Nhs.MessageQueueing;
+    using Microsoft.AspNetCore.Authentication.Cookies;
 
     /// <summary>
     /// The Startup class.
@@ -60,6 +62,7 @@ namespace LearningHub.NHS.OpenAPI
             services.AddConfig(this.Configuration);
 
             services.AddApiKeyAuth();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
             services.AddAuthentication()
             .AddJwtBearer(options =>
@@ -86,6 +89,7 @@ namespace LearningHub.NHS.OpenAPI
             services.AddControllers(options => options.Filters.Add(new HttpResponseExceptionFilter()));
             services.AddControllers(opt => { opt.Filters.Add(new AuthorizeFilter()); });
             services.AddMessagingServices(this.Configuration);
+            services.AddQueueingRepositories(this.Configuration);
             services.AddSwaggerGen(
                 c =>
                 {

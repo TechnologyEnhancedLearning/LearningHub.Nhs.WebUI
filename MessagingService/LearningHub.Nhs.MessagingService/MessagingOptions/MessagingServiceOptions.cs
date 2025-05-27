@@ -3,12 +3,12 @@
     /// <summary>
     /// MessagingServiceModel.
     /// </summary>
-    public class MessagingServiceModel
+    public class MessagingServiceOptions
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessagingServiceModel"/> class.
+        /// Initializes a new instance of the <see cref="MessagingServiceOptions"/> class.
         /// </summary>
-        public MessagingServiceModel()
+        public MessagingServiceOptions()
         {
             // Current = this;
         }

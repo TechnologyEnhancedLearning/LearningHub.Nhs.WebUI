@@ -6,8 +6,10 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.MessagingService.Interfaces;
     using LearningHub.Nhs.MessagingService.Model;
+    using LearningHub.Nhs.Models.GovNotifyMessaging;
     using Microsoft.Extensions.Options;
     using Notify.Client;
+    using Notify.Exceptions;
 
     /// <summary>
     /// GovNotify Service class.
@@ -18,10 +20,9 @@
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GovNotifyService"/> class.
-        /// GovNotifyService.
         /// </summary>
-        /// <param name="options">The Messaging Service Model.</param>
-        public GovNotifyService(IOptions<MessagingServiceModel> options)
+        /// <param name="options">The Messaging Service Options.</param>
+        public GovNotifyService(IOptions<MessagingServiceOptions> options)
         {
             this.client = new NotificationClient(options.Value.GovNotifyApiKey);
         }
@@ -35,26 +36,52 @@
         /// A dictionary containing key-value pairs for personalising the email template.
         /// Keys should match the placeholders in the Gov.Notify template.
         /// </param>
-        /// <returns>
-        /// A unique message ID representing the queued email.
-        /// </returns>
-        public async Task<string> SendEmailAsync(string email, string templateId, Dictionary<string, dynamic> personalisation)
+        /// <returns>The <see cref="Task{GovNotifyResponse}"/>.</returns>
+        public async Task<GovNotifyResponse> SendEmailAsync(string email, string templateId, Dictionary<string, dynamic> personalisation)
         {
-            var normalisedPersonlisation = new Dictionary<string, dynamic>();
-            foreach (var item in personalisation)
+            try
             {
-                if (item.Value is JsonElement element)
-                {
-                    normalisedPersonlisation[item.Key] = element.ToString();
-                }
-                else
-                {
-                    normalisedPersonlisation[item.Key] = item.Value;
-                }
-            }
+                var normalisedPersonlisation = new Dictionary<string, dynamic>();
+                if (personalisation != null)
+                    {
+                        foreach (var item in personalisation)
+                        {
+                            if (item.Value is JsonElement element)
+                            {
+                                normalisedPersonlisation[item.Key] = element.ToString();
+                            }
+                            else
+                            {
+                                normalisedPersonlisation[item.Key] = item.Value;
+                            }
+                        }
+                    }
 
-            var response = await this.client.SendEmailAsync(email, templateId, normalisedPersonlisation);
-            return response.id;
+                var response = await this.client.SendEmailAsync(email, templateId, normalisedPersonlisation);
+                return new GovNotifyResponse
+                {
+                    IsSuccess = true,
+                    NotificationId = response.id,
+                };
+            }
+            catch (NotifyClientException ex)
+            {
+                return new GovNotifyResponse
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message,
+                    ////Retry = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GovNotifyResponse
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message,
+                    ////Retry = true,
+                };
+            }
         }
 
         /// <summary>
@@ -66,26 +93,49 @@
         /// A dictionary containing key-value pairs for personalising the SMS template.
         /// Keys should match the placeholders in the Gov.Notify template.
         /// </param>
-        /// <returns>
-        /// A unique message ID representing the queued SMS.
-        /// </returns>
-        public async Task<string> SendSmsAsync(string phoneNumber, string templateId, Dictionary<string, dynamic> personalisation)
+        /// <returns>The <see cref="Task{GovNotifyResponse}"/>.</returns>
+        public async Task<GovNotifyResponse> SendSmsAsync(string phoneNumber, string templateId, Dictionary<string, dynamic> personalisation)
         {
-            var normalisedPersonlisation = new Dictionary<string, dynamic>();
-            foreach (var item in personalisation)
+            try
             {
-                if (item.Value is JsonElement element)
+                var normalisedPersonlisation = new Dictionary<string, dynamic>();
+                foreach (var item in personalisation)
                 {
-                    normalisedPersonlisation[item.Key] = element.ToString();
+                    if (item.Value is JsonElement element)
+                    {
+                        normalisedPersonlisation[item.Key] = element.ToString();
+                    }
+                    else
+                    {
+                        normalisedPersonlisation[item.Key] = item.Value;
+                    }
                 }
-                else
-                {
-                    normalisedPersonlisation[item.Key] = item.Value;
-                }
-            }
 
-            var response = await this.client.SendSmsAsync(phoneNumber, templateId, normalisedPersonlisation);
-            return response.id;
+                var response = await this.client.SendSmsAsync(phoneNumber, templateId, normalisedPersonlisation);
+                return new GovNotifyResponse
+                {
+                    IsSuccess = true,
+                    NotificationId = response.id,
+                };
+            }
+            catch (NotifyClientException ex)
+            {
+                return new GovNotifyResponse
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message,
+                    ////Retry = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GovNotifyResponse
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message,
+                    ////Retry = true,
+                };
+            }
         }
     }
 }

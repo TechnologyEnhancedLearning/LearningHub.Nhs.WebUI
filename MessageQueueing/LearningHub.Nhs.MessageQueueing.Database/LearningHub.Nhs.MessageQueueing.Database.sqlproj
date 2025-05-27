@@ -57,5 +57,25 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Tables" />
+    <Folder Include="Stored Procedures" />
+    <Folder Include="Scripts" />
+    <Folder Include="Scripts\Post-Deploy" />
+    <Folder Include="Scripts\Post-Deploy\Scripts" />
+    <Folder Include="User-Defined Table Types" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Tables\RequestType.sql" />
+    <Build Include="Tables\RequestStatus.sql" />
+    <Build Include="Tables\QueueRequests.sql" />
+    <Build Include="Stored Procedures\CreateQueueRequests.sql" />
+    <Build Include="Stored Procedures\GetQueueRequests.sql" />
+    <Build Include="Stored Procedures\MessageDeliveryFailed.sql" />
+    <Build Include="Stored Procedures\MessageDeliverySuccess.sql" />
+    <Build Include="Stored Procedures\SaveFailedSingleEmail.sql" />
+    <Build Include="User-Defined Table Types\QueueRequestTableType.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\RequestStatusData.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\RequestTypeData.sql" />
   </ItemGroup>
 </Project>

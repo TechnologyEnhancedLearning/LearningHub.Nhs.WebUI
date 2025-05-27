@@ -1,6 +1,6 @@
 ﻿namespace LearningHub.Nhs.MessageQueueing.EntityFramework
 {
-    using LearningHub.Nhs.MessageQueueing.Entities;
+    using LearningHub.Nhs.Models.GovNotifyMessaging;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -9,17 +9,33 @@
     public class MessageQueueDbContext : DbContext
     {
         /// <summary>
+        /// The options.
+        /// </summary>
+        private readonly MessageQueueDbContextOptions options;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MessageQueueDbContext"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
-        public MessageQueueDbContext(DbContextOptions<MessageQueueDbContext> options)
-            : base(options)
+        public MessageQueueDbContext(MessageQueueDbContextOptions options)
+            : base(options.Options)
         {
+            this.options = options;
         }
 
         /// <summary>
-        /// Gets or sets the EmailQueues.
+        /// Gets the Options.
         /// </summary>
-        public virtual DbSet<EmailQueue> EmailQueues { get; set; }
+        public MessageQueueDbContextOptions Options
+        {
+            get { return this.options; }
+        }
+
+        ////public virtual DbSet<QueueRequests> QueueRequests { get; set; }
+
+        /// <summary>
+        /// Gets or sets the PendingMessageRequests.
+        /// </summary>
+        public virtual DbSet<PendingMessageRequests> PendingMessageRequests { get; set; }
     }
 }

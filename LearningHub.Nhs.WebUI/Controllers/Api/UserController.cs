@@ -64,26 +64,6 @@
         }
 
         /// <summary>
-        /// The SessionTimeout.
-        /// </summary>
-        /// <returns>The <see cref="IActionResult"/>.</returns>
-        [HttpPost("browser-close")]
-        public IActionResult BrowserClose()
-        {
-            // Add browser close to the UserHistory
-            UserHistoryViewModel userHistory = new UserHistoryViewModel()
-            {
-                UserId = this.CurrentUserId,
-                UserHistoryTypeId = (int)UserHistoryType.Logout,
-                Detail = @"User browser closed",
-            };
-
-            this.userService.StoreUserHistory(userHistory);
-
-            return this.Ok(true);
-        }
-
-        /// <summary>
         /// Get current user's basic details.
         /// </summary>
         /// <returns>The <see cref="Task{ActionResult}"/>.</returns>

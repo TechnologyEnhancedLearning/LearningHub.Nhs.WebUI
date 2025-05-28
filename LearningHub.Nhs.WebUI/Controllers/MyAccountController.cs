@@ -678,35 +678,27 @@
                 return this.View("ChangeCurrentRole", viewModel);
             }
 
+            if (formSubmission && viewModel.SelectedJobRoleId.HasValue)
+            {
+                var newRoleId = viewModel.SelectedJobRoleId.Value;
+                var jobRole = await this.jobRoleService.GetByIdAsync(newRoleId);
+
+                if (jobRole.MedicalCouncilId > 0 && jobRole.MedicalCouncilId < 4)
+                {
+                    return this.RedirectToAction(nameof(this.ChangeMedicalCouncilNo), new UserMedicalCouncilNoUpdateViewModel { SelectedJobRoleId = newRoleId });
+                }
+                else
+                {
+                    return this.RedirectToAction(nameof(this.ChangeGrade), new UserGradeUpdateViewModel { SelectedJobRoleId = newRoleId });
+                }
+            }
+
             if (!string.IsNullOrWhiteSpace(viewModel.FilterText))
             {
                 var jobRoles = await this.jobRoleService.GetPagedFilteredAsync(viewModel.FilterText, viewModel.CurrentPage, viewModel.PageSize);
                 viewModel.RoleList = jobRoles.Item2;
                 viewModel.TotalItems = jobRoles.Item1;
                 viewModel.HasItems = jobRoles.Item1 > 0;
-            }
-
-            if (formSubmission)
-            {
-                if (viewModel.SelectedJobRoleId.HasValue)
-                {
-                    var newRoleId = viewModel.SelectedJobRoleId.Value;
-                    var jobRole = await this.jobRoleService.GetByIdAsync(newRoleId);
-
-                    if (jobRole.MedicalCouncilId > 0 && jobRole.MedicalCouncilId < 4)
-                    {
-                        return this.RedirectToAction(nameof(this.ChangeMedicalCouncilNo), new UserMedicalCouncilNoUpdateViewModel { SelectedJobRoleId = newRoleId });
-                    }
-                    else
-                    {
-                        return this.RedirectToAction(nameof(this.ChangeGrade), new UserGradeUpdateViewModel { SelectedJobRoleId = newRoleId });
-                    }
-                }
-                else
-                {
-                    this.ModelState.AddModelError(nameof(viewModel.SelectedJobRoleId), CommonValidationErrorMessages.RoleRequired);
-                    return this.View("ChangeCurrentRole", viewModel);
-                }
             }
 
             return this.View("ChangeCurrentRole", viewModel);
@@ -808,33 +800,26 @@
             viewModel.Grade = profile.Grade;
             viewModel.SelectedJobRole = jobRole.NameWithStaffGroup;
             viewModel.SelectedMedicalCouncilId = jobRole.MedicalCouncilId;
-            if (formSubmission)
-            {
-                if (this.User.IsInRole("BasicUser") || viewModel.SelectedGradeId.HasValue)
-                {
-                    var medicalCouncilNoRequired = jobRole.MedicalCouncilId > 0 && jobRole.MedicalCouncilId < 4;
-                    await this.userService.UpdateUserEmployment(
-                        new elfhHub.Nhs.Models.Entities.UserEmployment
-                        {
-                            Id = profile.EmploymentId,
-                            UserId = profile.Id,
-                            JobRoleId = viewModel.SelectedJobRoleId,
-                            MedicalCouncilId = medicalCouncilNoRequired ? jobRole.MedicalCouncilId : null,
-                            MedicalCouncilNo = medicalCouncilNoRequired ? (viewModel.SelectedMedicalCouncilNo ?? profile.MedicalCouncilNo) : null,
-                            GradeId = viewModel.SelectedGradeId,
-                            SpecialtyId = profile.SpecialtyId,
-                            StartDate = profile.JobStartDate,
-                            LocationId = profile.LocationId,
-                        });
 
-                    this.ViewBag.SuccessMessage = "Your job details have been changed";
-                    return this.View("SuccessMessage");
-                }
-                else
-                {
-                    this.ModelState.AddModelError(nameof(viewModel.SelectedGradeId), CommonValidationErrorMessages.GradeRequired);
-                    return this.View("ChangeGrade", viewModel);
-                }
+            if (this.User.IsInRole("BasicUser") || (formSubmission && viewModel.SelectedGradeId.HasValue))
+            {
+                var medicalCouncilNoRequired = jobRole.MedicalCouncilId > 0 && jobRole.MedicalCouncilId < 4;
+                await this.userService.UpdateUserEmployment(
+                    new elfhHub.Nhs.Models.Entities.UserEmployment
+                    {
+                        Id = profile.EmploymentId,
+                        UserId = profile.Id,
+                        JobRoleId = viewModel.SelectedJobRoleId,
+                        MedicalCouncilId = medicalCouncilNoRequired ? jobRole.MedicalCouncilId : null,
+                        MedicalCouncilNo = medicalCouncilNoRequired ? (viewModel.SelectedMedicalCouncilNo ?? profile.MedicalCouncilNo) : null,
+                        GradeId = viewModel.SelectedGradeId,
+                        SpecialtyId = profile.SpecialtyId,
+                        StartDate = profile.JobStartDate,
+                        LocationId = profile.LocationId,
+                    });
+
+                this.ViewBag.SuccessMessage = "Your job details have been changed";
+                return this.View("SuccessMessage");
             }
 
             return this.View("ChangeGrade", viewModel);

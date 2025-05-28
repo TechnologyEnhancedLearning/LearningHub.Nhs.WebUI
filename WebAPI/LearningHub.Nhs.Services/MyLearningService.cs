@@ -252,7 +252,7 @@
                     MinorVersion = resourceActivity.MinorVersion,
                     Version = resourceActivity.MajorVersion + "." + resourceActivity.MinorVersion,
                     ResourceType = resourceActivity.Resource.ResourceTypeEnum,
-                    ActivityDate = resourceActivity.ActivityStart ?? resourceActivity.CreateDate,
+                    ActivityDate = resourceActivity.ActivityStart.GetValueOrDefault(),
                     ActivityStatus = (ActivityStatusEnum)resourceActivity.ActivityStatusId,
                     IsCurrentResourceVersion = resourceActivity.ResourceVersionId == resourceActivity.Resource.CurrentResourceVersionId,
                     VersionStatusId = (int?)resourceActivity.ResourceVersion.VersionStatusEnum,

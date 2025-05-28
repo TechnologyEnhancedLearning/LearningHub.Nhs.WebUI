@@ -571,32 +571,6 @@
                             </dl>
                         </div>
                     }
-                    @if (Model.ResourceTypeEnum == ResourceTypeEnum.Html)
-                    {
-                        <div class="col-12">
-                            <div class="id-container">Resource Reference ID: @Model.DefaultResourceReferenceId</div>
-                            <dl>
-                                <dt>Resource Version Id</dt>
-                                <dd>@Html.DisplayFor(model => model.ResourceVersionId)</dd>
-                                <dt>Resource Type</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ResourceTypeDescription)
-                                </dd>
-                                <dt>ESR Link</dt>
-                                <dd><a href="@Model.HtmlDetails.HostedContentUrl" target="_blank">@Model.HtmlDetails.HostedContentUrl</a></dd>
-                                @if (Model.HtmlDetails.File != null)
-                                {
-                                    <dt>Zip File</dt>
-                                    <dd>
-                                        <a href="@String.Format("{0}file/download/{1}/{2}", webSettings.Value.LearningHubAdminUrl, Model.HtmlDetails.File.FilePath, Model.HtmlDetails.File.FileName)" target="_blank" download>@Model.HtmlDetails.File.FileName</a>
-                                    </dd>
-                                }
-
-                                <dt>Content Folder</dt>
-                                <dd>@Model.HtmlDetails.ContentFilePath</dd>
-                            </dl>
-                        </div>
-                    }
 
                     @if (Model.ResourceTypeEnum == ResourceTypeEnum.Assessment)
                     {

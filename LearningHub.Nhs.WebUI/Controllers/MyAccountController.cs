@@ -810,7 +810,7 @@
             viewModel.SelectedMedicalCouncilId = jobRole.MedicalCouncilId;
             if (formSubmission)
             {
-                if (this.User.IsInRole("BasicUser") || viewModel.SelectedGradeId.HasValue)
+                if (this.User.IsInRole("BasicUser") || viewModel.SelectedGradeId != null)
                 {
                     var medicalCouncilNoRequired = jobRole.MedicalCouncilId > 0 && jobRole.MedicalCouncilId < 4;
                     await this.userService.UpdateUserEmployment(
@@ -821,7 +821,7 @@
                             JobRoleId = viewModel.SelectedJobRoleId,
                             MedicalCouncilId = medicalCouncilNoRequired ? jobRole.MedicalCouncilId : null,
                             MedicalCouncilNo = medicalCouncilNoRequired ? (viewModel.SelectedMedicalCouncilNo ?? profile.MedicalCouncilNo) : null,
-                            GradeId = viewModel.SelectedGradeId,
+                            GradeId = Convert.ToInt32(viewModel.SelectedGradeId),
                             SpecialtyId = profile.SpecialtyId,
                             StartDate = profile.JobStartDate,
                             LocationId = profile.LocationId,
@@ -835,6 +835,10 @@
                     this.ModelState.AddModelError(nameof(viewModel.SelectedGradeId), CommonValidationErrorMessages.GradeRequired);
                     return this.View("ChangeGrade", viewModel);
                 }
+            }
+            else
+            {
+                viewModel.SelectedGradeId = profile.GradeId.ToString();
             }
 
             return this.View("ChangeGrade", viewModel);

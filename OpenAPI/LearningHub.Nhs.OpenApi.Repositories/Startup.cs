@@ -132,7 +132,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             // Content
             services.AddScoped<IPageRepository, PageRepository>();
             services.AddScoped<IPageSectionDetailRepository, PageSectionDetailRepository>();
-            services.AddScoped<IPageSectionRepository, IPageSectionRepository>();
+            services.AddScoped<IPageSectionRepository, PageSectionRepository>();
             services.AddScoped<IVideoAssetRepository, VideoAssetRepository>();
         }
     }

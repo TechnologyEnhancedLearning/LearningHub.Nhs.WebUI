@@ -10,7 +10,7 @@
     /// The DashboardController.
     /// </summary>
     [Authorize(Policy = "AuthorizeOrCallFromLH")]
-    [Route("api/dashboard")]
+    [Route("Dashboard")]
     [ApiController]
     public class DashboardController : OpenApiControllerBase
     {

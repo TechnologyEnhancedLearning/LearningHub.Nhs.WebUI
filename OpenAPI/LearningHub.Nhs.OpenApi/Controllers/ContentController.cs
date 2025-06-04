@@ -13,7 +13,7 @@
     /// The ContentController.
     /// </summary>
     [Authorize(Policy = "AuthorizeOrCallFromLH")]
-    [Route("api/content")]
+    [Route("Content")]
     [ApiController]
     public class ContentController : OpenApiControllerBase
     {

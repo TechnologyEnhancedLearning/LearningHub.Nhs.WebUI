@@ -22,9 +22,10 @@
         /// </summary>
         /// <param name="cacheService">The cache service.</param>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">Logger.</param>
-        public ProviderService(ICacheService cacheService, ILearningHubHttpClient learningHubHttpClient, ILogger<ProviderService> logger)
-        : base(learningHubHttpClient, logger)
+        public ProviderService(ICacheService cacheService, ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<ProviderService> logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.cacheService = cacheService;
         }

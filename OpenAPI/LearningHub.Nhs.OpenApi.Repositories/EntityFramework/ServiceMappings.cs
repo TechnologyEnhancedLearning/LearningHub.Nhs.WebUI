@@ -4,6 +4,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.Models.Automapper;
     using LearningHub.Nhs.OpenApi.Repositories.Map;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Activity;
+    using LearningHub.Nhs.OpenApi.Repositories.Map.Analytics;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Content;
     using LearningHub.Nhs.OpenApi.Repositories.Map.External;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Hierarchy;
@@ -84,6 +85,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, PermissionMap>();
             services.AddSingleton<IEntityTypeMap, PermissionRoleMap>();
             services.AddSingleton<IEntityTypeMap, ProviderMap>();
+            services.AddSingleton<IEntityTypeMap, UserProviderMap>();
             services.AddSingleton<IEntityTypeMap, PublicationMap>();
             services.AddSingleton<IEntityTypeMap, QuestionBlockMap>();
             services.AddSingleton<IEntityTypeMap, QuestionAnswerMap>();

@@ -14,6 +14,13 @@
     public interface ICatalogueService
     {
         /// <summary>
+        /// The Get Basic Catalogue.
+        /// </summary>
+        /// <param name="catalogueNodeId">The catalogueNode.</param>
+        /// <returns>The catalogues.</returns>
+        CatalogueBasicViewModel GetBasicCatalogue(int catalogueNodeId);
+
+        /// <summary>
         /// get all catalogues async.
         /// </summary>
         /// <returns>BulkCatalogueViewModel.</returns>
@@ -88,6 +95,14 @@
         /// <param name="catalogueId">The catalogue id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<bool> CanUserEditCatalogueAsync(int userId, int catalogueId);
+
+
+        /// <summary>
+        /// The GetCatalogues.
+        /// </summary>
+        /// <param name="catalogueIds">The catalogueIds.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<List<CatalogueViewModel>> GetCatalogues(List<int> catalogueIds);
 
         /// <summary>
         /// Returns basic catalogues for user.

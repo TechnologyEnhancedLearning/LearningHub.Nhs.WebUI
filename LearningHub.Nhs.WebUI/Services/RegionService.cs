@@ -19,10 +19,11 @@
         /// Initializes a new instance of the <see cref="RegionService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">Logger.</param>
         /// <param name="userApiHttpClient">User Api http client.</param>
-        public RegionService(ILearningHubHttpClient learningHubHttpClient, ILogger<RegionService> logger, IUserApiHttpClient userApiHttpClient)
-        : base(learningHubHttpClient, logger)
+        public RegionService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<RegionService> logger, IUserApiHttpClient userApiHttpClient)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.userApiHttpClient = userApiHttpClient;
         }

@@ -3,6 +3,8 @@ namespace LearningHub.Nhs.OpenApi.Repositories
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Activity;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Analytics;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Content;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Hierarchy;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Maintenance;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Messaging;
@@ -10,6 +12,8 @@ namespace LearningHub.Nhs.OpenApi.Repositories
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Resources;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity;
+    using LearningHub.Nhs.OpenApi.Repositories.Repositories.Analytics;
+    using LearningHub.Nhs.OpenApi.Repositories.Repositories.Content;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Hierarchy;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Maintenance;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Messaging;
@@ -41,6 +45,8 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<ICatalogueRepository, CatalogueRepository>();
             services.AddScoped<ITimezoneOffsetManager, TimezoneOffsetManager>();
             services.AddScoped<IRoleUserGroupRepository, RoleUserGroupRepository>();
+            services.AddScoped<IUserGroupRepository, UserGroupRepository>();
+            services.AddScoped<IUserGroupAttributeRepository, UserGroupAttributeRepository>();
             services.AddScoped<IUserUserGroupRepository, UserUserGroupRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IQuestionBlockRepository, QuestionBlockRepository>();
@@ -51,8 +57,10 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddTransient<INotificationTemplateRepository, NotificationTemplateRepository>();
             services.AddTransient<IBookmarkRepository, BookmarkRepository>();
             services.AddTransient<IProviderRepository, ProviderRepository>();
+            services.AddTransient<IUserProviderRepository, UserProviderRepository>();
             services.AddTransient<INotificationRepository, NotificationRepository>();
             services.AddTransient<IUserNotificationRepository, UserNotificationRepository>();
+            services.AddTransient<IScopeRepository, ScopeRepository>();
 
             // Resources
             services.AddScoped<IArticleResourceVersionRepository, ArticleResourceVersionRepository>();
@@ -86,6 +94,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<IResourceVersionUserAcceptanceRepository, ResourceVersionUserAcceptanceRepository>();
             services.AddScoped<IAssessmentResourceVersionRepository, AssessmentResourceVersionRepository>();
             services.AddScoped<IResourceVersionProviderRepository, ResourceVersionProviderRepository>();
+            services.AddScoped<IResourceVersionEventRepository, ResourceVersionEventRepository>();
 
             // Activity
             services.AddScoped<IResourceActivityRepository, ResourceActivityRepository>();
@@ -95,6 +104,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<IAssessmentResourceActivityInteractionRepository, AssessmentResourceActivityInteractionRepository>();
             services.AddScoped<IAssessmentResourceActivityInteractionAnswerRepository, AssessmentResourceActivityInteractionAnswerRepository>();
             services.AddScoped<IMediaResourceActivityRepository, MediaResourceActivityRepository>();
+            services.AddScoped<IMediaResourcePlayedSegmentRepository, MediaResourcePlayedSegmentRepository>();
             services.AddScoped<IMediaResourceActivityInteractionRepository, MediaResourceActivityInteractionRepository>();
             services.AddScoped<INodeActivityRepository, NodeActivityRepository>();
 
@@ -114,6 +124,16 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddScoped<IInternalSystemRepository, InternalSystemRepository>();
             services.AddScoped<IMigrationSourceRepository, MigrationSourceRepository>();
+
+            // Event
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IEventLogRepository, EventLogRepository>();
+
+            // Content
+            services.AddScoped<IPageRepository, PageRepository>();
+            services.AddScoped<IPageSectionDetailRepository, PageSectionDetailRepository>();
+            services.AddScoped<IPageSectionRepository, IPageSectionRepository>();
+            services.AddScoped<IVideoAssetRepository, VideoAssetRepository>();
         }
     }
 }

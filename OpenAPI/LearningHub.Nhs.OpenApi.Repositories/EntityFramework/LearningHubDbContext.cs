@@ -718,6 +718,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         public virtual DbSet<Provider> Provider { get; set; }
 
         /// <summary>
+        /// Gets or sets User Provider.
+        /// </summary>
+        public virtual DbSet<UserProvider> UserProvider { get; set; }
+
+        /// <summary>
         /// Gets or sets Resource Version Provider.
         /// </summary>
         public virtual DbSet<ResourceVersionProvider> ResourceVersionProvider { get; set; }

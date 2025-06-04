@@ -109,6 +109,17 @@
             return new Models.ViewModels.BulkCatalogueViewModel(catalogueViewModels);
         }
 
+        /// <summary>
+        /// The Get Basic Catalogue.
+        /// </summary>
+        /// <param name="catalogueNodeId">The catalogueNode.</param>
+        /// <returns>The catalogues.</returns>
+        public CatalogueBasicViewModel GetBasicCatalogue(int catalogueNodeId)
+        {
+            var catalogue = this.catalogueNodeVersionRepository.GetBasicCatalogue(catalogueNodeId);
+            return this.mapper.Map<CatalogueBasicViewModel>(catalogue);
+        }
+
 
         /// <summary>
         /// The GetCatalogue.
@@ -400,6 +411,24 @@
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// The GetCatalogues.
+        /// </summary>
+        /// <param name="catalogueIds">The catalogue ids.</param>
+        /// <returns>The catalogues.</returns>
+        public async Task<List<CatalogueViewModel>> GetCatalogues(List<int> catalogueIds)
+        {
+            var catalogueViewModels = new List<CatalogueViewModel>();
+
+            if (catalogueIds.Count > 0)
+            {
+                var catalogueNodeVersions = await this.catalogueNodeVersionRepository.GetCatalogues(catalogueIds);
+                catalogueViewModels = this.mapper.Map<List<CatalogueViewModel>>(catalogueNodeVersions);
+            }
+
+            return catalogueViewModels;
         }
 
         /// <summary>
@@ -768,18 +797,6 @@
 
             return retVal;
         }
-
-        /// <summary>
-        /// The Get Basic Catalogue.
-        /// </summary>
-        /// <param name="catalogueNodeId">The catalogueNode.</param>
-        /// <returns>The catalogues.</returns>
-        public CatalogueBasicViewModel GetBasicCatalogue(int catalogueNodeId)
-        {
-            var catalogue = this.catalogueNodeVersionRepository.GetBasicCatalogue(catalogueNodeId);
-            return this.mapper.Map<CatalogueBasicViewModel>(catalogue);
-        }
-
 
         /// <summary>
         /// The HideCatalogueAsync.

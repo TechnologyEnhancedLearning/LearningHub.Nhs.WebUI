@@ -25,10 +25,11 @@
         /// Initializes a new instance of the <see cref="CatalogueService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="cacheService">The cacheService.</param>
-        public CatalogueService(ILearningHubHttpClient learningHubHttpClient, ILogger<CatalogueService> logger, ICacheService cacheService)
-        : base(learningHubHttpClient, logger)
+        public CatalogueService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<CatalogueService> logger, ICacheService cacheService)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.cacheService = cacheService;
         }
@@ -70,7 +71,7 @@
         {
             CatalogueViewModel viewmodel = new CatalogueViewModel { };
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"catalogue/catalogue/{reference}";
             var response = await client.GetAsync(request).ConfigureAwait(false);

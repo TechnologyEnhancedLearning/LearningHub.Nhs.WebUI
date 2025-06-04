@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using System.Web;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities;
@@ -14,8 +15,6 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
-    using System.Security.Claims;
-    using System.Security.Principal;
 
     /// <summary>
     /// The log controller.
@@ -111,6 +110,26 @@
             {
                 return BadRequest(new ApiResponse(false, vr));
             }
+        }
+
+        /// <summary>
+        /// Get a filtered page of LH User records.
+        /// </summary>
+        /// <param name="page">The page.</param>
+        /// <param name="pageSize">The page size.</param>
+        /// <param name="sortColumn">The sort column.</param>
+        /// <param name="sortDirection">The sort direction.</param>
+        /// <param name="presetFilter">The preset filter.</param>
+        /// <param name="filter">The filter.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpGet]
+        [Route("GetLHUserAdminBasicFilteredPage/{page}/{pageSize}/{sortColumn}/{sortDirection}/{presetFilter}/{filter}")]
+        public async Task<IActionResult> GetLHUserAdminBasicFilteredPage(int page, int pageSize, string sortColumn, string sortDirection, string presetFilter, string filter)
+        {
+            presetFilter = HttpUtility.UrlDecode(presetFilter);
+            filter = HttpUtility.UrlDecode(filter);
+            PagedResultSet<LearningHub.Nhs.Models.User.UserAdminBasicViewModel> pagedResultSet = await this.userService.GetUserAdminBasicPageAsync(page, pageSize, sortColumn, sortDirection, presetFilter, filter);
+            return this.Ok(pagedResultSet);
         }
 
         /// <summary>

@@ -7,7 +7,9 @@ namespace LearningHub.NHS.OpenAPI.Controllers
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.Models.Resource;
+    using LearningHub.Nhs.Models.Resource.Admin;
     using LearningHub.Nhs.Models.Resource.Contribute;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.Validation;
@@ -289,6 +291,20 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         public async Task<ActionResult> GetFileStatusDetailsAsync([FromQuery] int[] fileIds)
         {
             return this.Ok(await this.resourceService.GetFileStatusDetailsAsync(fileIds));
+        }
+
+        /// <summary>
+        /// The create resource version validation result async.
+        /// </summary>
+        /// <param name="validationResultViewModel">The validationResultViewModel<see cref="ResourceVersionValidationResultViewModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        [Route("CreateResourceVersionValidationResult")]
+        public async Task<IActionResult> CreateResourceVersionValidationResultAsync(ResourceVersionValidationResultViewModel validationResultViewModel)
+        {
+            var vr = await this.resourceService.CreateResourceVersionValidationResultAsync(validationResultViewModel);
+
+            return this.Ok(new ApiResponse(true, vr));
         }
 
         /// <summary>
@@ -1242,7 +1258,6 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             }
         }
 
-
         /// <summary>
         /// The save file chunk detail async.
         /// </summary>
@@ -1318,6 +1333,120 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             {
                 return this.BadRequest(new ApiResponse(false, vr));
             }
+        }
+
+        /// <summary>
+        /// Get a filtered page of User records.
+        /// </summary>
+        /// <param name="pagingRequestModel">The filter<see cref="PagingRequestModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        [Route("GetResourceAdminSearchFilteredPage")]
+        public async Task<IActionResult> GetResourceAdminSearchFilteredPage([FromBody] PagingRequestModel pagingRequestModel)
+        {
+            var pagedResultSet = await this.resourceService.GetResourceAdminSearchFilteredPageAsync(this.CurrentUserId.GetValueOrDefault(), pagingRequestModel);
+            return this.Ok(pagedResultSet);
+        }
+
+        /// <summary>
+        /// Transfer Resource Ownership.
+        /// </summary>
+        /// <param name="transferResourceOwnershipViewModel">The transferResourceOwnershipViewModel<see cref="TransferResourceOwnershipViewModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        [Route("TransferResourceOwnership")]
+        public async Task<IActionResult> TransferResourceOwnershipAsync(TransferResourceOwnershipViewModel transferResourceOwnershipViewModel)
+        {
+            var vr = await this.resourceService.TransferResourceOwnership(transferResourceOwnershipViewModel, this.CurrentUserId.GetValueOrDefault());
+
+            if (vr.IsValid)
+            {
+                return this.Ok(new ApiResponse(true, vr));
+            }
+            else
+            {
+                return this.BadRequest(new ApiResponse(false, vr));
+            }
+        }
+
+        /// <summary>
+        /// The get resource version events.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetResourceVersionEvents/{resourceVersionId}")]
+        public async Task<ActionResult> GetResourceVersionEventsAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetResourceVersionEventsAsync(resourceVersionId));
+        }
+
+        /// <summary>
+        /// Create resource version event.
+        /// </summary>
+        /// <param name="resourceVersionEventViewModel">resourceVersionEventViewModel.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost]
+        [Route("CreateResourceVersionEvent")]
+        public IActionResult CreateResourceVersionEvent(ResourceVersionEventViewModel resourceVersionEventViewModel)
+        {
+            if (resourceVersionEventViewModel.CreateUserId == 0)
+            {
+                resourceVersionEventViewModel.CreateUserId = this.CurrentUserId.GetValueOrDefault();
+            }
+
+            this.resourceService.CreateResourceVersionEvent(resourceVersionEventViewModel);
+            var vr = new LearningHubValidationResult(true);
+
+            return this.Ok(new ApiResponse(true, vr));
+        }
+
+        /// <summary>
+        /// Get specific ResourceVersionViewModel by Id.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet("GetResourceVersionExtendedViewModel/{resourceVersionId}")]
+        public async Task<ActionResult> GetResourceVersionExtendedViewModelAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetResourceVersionExtendedViewModelAsync(resourceVersionId, this.CurrentUserId.GetValueOrDefault()));
+        }
+
+        /// <summary>
+        /// The get resource version Dev Id details.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetResourceVersionDevIdDetails/{resourceVersionId}")]
+        public async Task<ActionResult> GetResourceVersionDevIdDetails(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetResourceVersionDevIdDetailsAync(resourceVersionId));
+        }
+
+        /// <summary>
+        /// To check devId already exists against a resource.
+        /// </summary>
+        /// <param name="devId">The devId<see cref="string"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("DoesDevIdExists/{devId}")]
+        public async Task<ActionResult> DoesDevIdExists(string devId)
+        {
+            return this.Ok(await this.resourceService.DoesDevIdExistsAync(devId));
+        }
+
+        /// <summary>
+        /// Update dev Id details.
+        /// </summary>
+        /// <param name="resourceVersionDevIdViewModel">The ResourceVersionDevIdViewModel<see cref="ResourceVersionDevIdViewModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPut]
+        [Route("UpdateDevId")]
+        public async Task<IActionResult> UpdateDevId([FromBody] ResourceVersionDevIdViewModel resourceVersionDevIdViewModel)
+        {
+            await this.resourceService.UpdateDevIdDetailsAsync(resourceVersionDevIdViewModel, this.CurrentUserId.GetValueOrDefault());
+            return this.Ok();
         }
 
 

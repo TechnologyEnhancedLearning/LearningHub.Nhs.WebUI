@@ -54,6 +54,7 @@
         /// Initializes a new instance of the <see cref="UserService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learningHubHttpClient<see cref="ILearningHubHttpClient"/>.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="userApiHttpClient">The userApiHttpClient<see cref="IUserApiHttpClient"/>.</param>
         /// <param name="logger">The logger<see cref="ILogger{UserService}"/>.</param>
         /// <param name="settings">The settings<see cref="IOptions{Settings}"/>.</param>
@@ -66,6 +67,7 @@
         /// <param name="loginWizardService">The login wizard service service<see cref="loginWizardService"/>.</param>
         public UserService(
             ILearningHubHttpClient learningHubHttpClient,
+            IOpenApiHttpClient openApiHttpClient,
             IUserApiHttpClient userApiHttpClient,
             ILogger<UserService> logger,
             IOptions<Settings> settings,
@@ -76,7 +78,7 @@
             ILocationService locationService,
             IGradeService gradeService,
             ILoginWizardService loginWizardService)
-            : base(learningHubHttpClient, logger)
+              : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.userApiHttpClient = userApiHttpClient;
             this.settings = settings.Value;

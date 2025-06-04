@@ -19,9 +19,10 @@ namespace LearningHub.Nhs.WebUI.Services
         /// Initializes a new instance of the <see cref="CardService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The Learning Hub Http Client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">The logger.</param>
-        public CardService(ILearningHubHttpClient learningHubHttpClient, ILogger<CardService> logger)
-            : base(learningHubHttpClient, logger)
+        public CardService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<CardService> logger)
+             : base(learningHubHttpClient, openApiHttpClient, logger)
         {
         }
 

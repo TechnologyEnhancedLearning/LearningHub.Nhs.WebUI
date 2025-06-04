@@ -14,9 +14,10 @@
         /// Initializes a new instance of the <see cref="DetectJsLogService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">Logger.</param>
-        public DetectJsLogService(ILearningHubHttpClient learningHubHttpClient, ILogger<DetectJsLogService> logger)
-        : base(learningHubHttpClient, logger)
+        public DetectJsLogService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<DetectJsLogService> logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
         }
 

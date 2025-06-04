@@ -36,6 +36,20 @@
             return await this.bookmarkService.GetAllByParent(this.TokenWithoutBearer);
         }
 
+        /// <summary>
+        /// The GetAllByParent.
+        /// </summary>
+        /// <param name="parentId">The parentId.</param>
+        /// <param name="all">The all.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetAllByParent/{parentId?}")]
+        public async Task<IActionResult> GetAllByParent(int? parentId, bool? all = false)
+        {
+            var bookmarks = await this.bookmarkService.GetAllByParent(this.CurrentUserId.GetValueOrDefault(), parentId, all);
+            return this.Ok(bookmarks);
+        }
+
 
         /// <summary>
         /// The Create.

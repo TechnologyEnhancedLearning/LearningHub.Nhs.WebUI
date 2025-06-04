@@ -27,14 +27,16 @@
         /// </summary>
         private readonly IFileService fileService;
         private readonly IAzureMediaService azureMediaService;
+        private readonly IOpenApiHttpClient openApiHttpClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learningHubHttpClient<see cref="ILearningHubHttpClient"/>.</param>
+        /// <param name="openApiHttpClient">The openApiHttpClient.</param>
         /// <param name="fileService">The fileService<see cref="IFileService"/>.</param>
         /// <param name="azureMediaService">azureMediaService.</param>
-        public ContentService(ILearningHubHttpClient learningHubHttpClient, IFileService fileService, IAzureMediaService azureMediaService)
+        public ContentService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, IFileService fileService, IAzureMediaService azureMediaService)
         : base(learningHubHttpClient)
         {
             this.fileService = fileService;
@@ -48,7 +50,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task DiscardAsync(int pageId)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = $"content/discard/{pageId}";
             var response = await client.PutAsync(request, null).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
@@ -68,7 +70,7 @@
         {
             PageViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = !includeHidden ? $"content/page/{id}" : $"content/page-all/{id}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -97,7 +99,7 @@
         {
             PageSectionDetailViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"content/page-section-detail/{id}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -126,7 +128,7 @@
         {
             PageSectionDetailViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"content/editable-page-section-detail/{pageSectionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -154,7 +156,7 @@
         {
             PageResultViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"content/pages";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -181,7 +183,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task PublishAsync(int pageId)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = $"content/publish/{pageId}";
             var response = await client.PutAsync(request, null).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
@@ -214,7 +216,7 @@
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"content/page-image-section-detail/{pageId}";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -232,7 +234,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task ChangeOrderAsync(UpdatePageSectionOrderModel requestViewModel)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = "content/change-order/";
             var content = new StringContent(
                 JsonConvert.SerializeObject(requestViewModel),
@@ -259,7 +261,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task CloneAsync(int pageSectionId)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = $"content/clone/{pageSectionId}";
             var response = await client.PutAsync(request, null).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
@@ -276,7 +278,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task HideAsync(int pageSectionId)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = $"content/hide/{pageSectionId}";
             var response = await client.PutAsync(request, null).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
@@ -293,7 +295,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task UnHideAsync(int pageSectionId)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = $"content/unhide/{pageSectionId}";
             var response = await client.PutAsync(request, null).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
@@ -310,7 +312,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task DeleteAsync(int pageSectionId)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = $"content/delete/{pageSectionId}";
             var response = await client.PutAsync(request, null).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
@@ -376,7 +378,7 @@
         {
             List<FileTypeViewModel> fileTypeList = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetFileTypes";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -459,7 +461,7 @@
             var json = JsonConvert.SerializeObject(fileCreateRequestViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"content/save-attribute-file";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -493,7 +495,7 @@
             var json = JsonConvert.SerializeObject(fileCreateRequestViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"content/save-video-asset";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -593,7 +595,7 @@
         {
             FileChunkDetailViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetFileChunkDetail/{fileChunkDetailId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -624,7 +626,7 @@
             var json = JsonConvert.SerializeObject(fileChunkDetailCreateRequestViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/SaveFileChunkDetail";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -682,7 +684,7 @@
         public async Task DeleteFileChunkDetailAsync(int fileChunkDetailId)
         {
             ApiResponse apiResponse = null;
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/DeleteFileChunkDetail/{fileChunkDetailId}";
             var response = await client.DeleteAsync(request).ConfigureAwait(false);
@@ -814,7 +816,7 @@
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"content/update-video-asset";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -844,7 +846,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<int> CreatePageSectionAsync(PageSectionViewModel requestViewModel)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = "content/create-page-section/";
             var content = new StringContent(
                 JsonConvert.SerializeObject(requestViewModel),
@@ -874,7 +876,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task UpdatePageSectionDetailAsync(PageSectionDetailViewModel updateViewModel)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = "content/update-page-section-detail/";
             var content = new StringContent(
                 JsonConvert.SerializeObject(updateViewModel),
@@ -899,7 +901,7 @@
         {
             PageSectionDetailViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"content/page-section-detail-video/{id}";
             var response = await client.GetAsync(request).ConfigureAwait(false);

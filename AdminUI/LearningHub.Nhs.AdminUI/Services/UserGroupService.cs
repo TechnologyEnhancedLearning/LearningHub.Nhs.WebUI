@@ -112,7 +112,7 @@ namespace LearningHub.Nhs.AdminUI.Services
         {
             UserGroupAdminDetailViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/GetUserGroupAdminDetailById/{id}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -141,7 +141,7 @@ namespace LearningHub.Nhs.AdminUI.Services
         {
             List<RoleUserGroupViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/GetUserGroupAdminRoleDetailById/{id}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -171,7 +171,7 @@ namespace LearningHub.Nhs.AdminUI.Services
             var json = JsonConvert.SerializeObject(userGroup);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/CreateUserGroup";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -214,7 +214,7 @@ namespace LearningHub.Nhs.AdminUI.Services
             var json = JsonConvert.SerializeObject(userGroup);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/UpdateUserGroup";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -258,7 +258,7 @@ namespace LearningHub.Nhs.AdminUI.Services
             var json = JsonConvert.SerializeObject(userGroup);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/DeleteUserGroup";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -308,7 +308,7 @@ namespace LearningHub.Nhs.AdminUI.Services
             var json = JsonConvert.SerializeObject(userUserGroups);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/AddUserUserGroups";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -359,7 +359,7 @@ namespace LearningHub.Nhs.AdminUI.Services
             var json = JsonConvert.SerializeObject(roleUserGroups);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/AddRoleUserGroups";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -403,7 +403,7 @@ namespace LearningHub.Nhs.AdminUI.Services
             var json = JsonConvert.SerializeObject(userGroup);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/DeleteUserUserGroup";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -447,7 +447,7 @@ namespace LearningHub.Nhs.AdminUI.Services
             var json = JsonConvert.SerializeObject(roleUserGroupUpdate);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/DeleteRoleUserGroup";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -502,7 +502,7 @@ namespace LearningHub.Nhs.AdminUI.Services
             var filter = JsonConvert.SerializeObject(pagingRequestModel.Filter);
             var presetFilter = JsonConvert.SerializeObject(pagingRequestModel.PresetFilter);
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/GetUserUserGroupAdminFilteredPage"
                 + $"/{pagingRequestModel.Page}"
@@ -551,7 +551,7 @@ namespace LearningHub.Nhs.AdminUI.Services
             var filter = JsonConvert.SerializeObject(pagingRequestModel.Filter);
             var presetFilter = JsonConvert.SerializeObject(pagingRequestModel.PresetFilter);
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/GetRoleUserGroupAdminFilteredPage"
                 + $"/{pagingRequestModel.Page}"
@@ -598,7 +598,7 @@ namespace LearningHub.Nhs.AdminUI.Services
         {
             List<RoleUserGroupViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/GetUserGroupRoleDetail";
             var response = await client.GetAsync(request).ConfigureAwait(false);

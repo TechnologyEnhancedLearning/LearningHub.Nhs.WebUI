@@ -1,3 +1,5 @@
+using System;
+
 namespace LearningHub.Nhs.OpenApi.Models.Configuration
 {
     /// <summary>
@@ -54,6 +56,16 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// Gets or sets <see cref="ResourcePublishQueueRouteName"/>.
         /// </summary>
         public string ResourcePublishQueueRouteName { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="ContentManagementQueueName"/>.
+        /// </summary>
+        public string ContentManagementQueueName { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="DetailedMediaActivityRecordingStartDate"/>.
+        /// </summary>
+        public DateTimeOffset DetailedMediaActivityRecordingStartDate { get; set; }
 
         /// <summary>
         /// Gets or sets <see cref="Notifications"/>.

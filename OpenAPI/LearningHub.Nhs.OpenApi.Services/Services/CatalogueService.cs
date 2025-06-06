@@ -76,7 +76,7 @@
         /// <param name="bookmarkRepository"></param>
         /// <param name="nodeActivityRepository"></param>
         /// <param name="findwiseApiFacade"></param>
-        public CatalogueService(ICatalogueRepository catalogueRepository, INodeRepository nodeRepository, IUserUserGroupRepository userUserGroupRepository, IMapper mapper, IOptions<FindwiseConfig> findwiseConfig, IOptions<LearningHubConfig> learningHubConfig, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, INodeResourceRepository nodeResourceRepository, IResourceVersionRepository resourceVersionRepository, IRoleUserGroupRepository roleUserGroupRepository, IProviderService providerService, ICatalogueAccessRequestRepository catalogueAccessRequestRepository, IUserRepository userRepository, IUserProfileRepository userProfileRepository, IEmailSenderService emailSenderService, IBookmarkRepository bookmarkRepository,INodeActivityRepository nodeActivityRepository, IFindwiseApiFacade findwiseApiFacade)
+        public CatalogueService(ICatalogueRepository catalogueRepository, INodeRepository nodeRepository, IUserUserGroupRepository userUserGroupRepository, IMapper mapper, IOptions<FindwiseConfig> findwiseConfig, IOptions<LearningHubConfig> learningHubConfig, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, INodeResourceRepository nodeResourceRepository, IResourceVersionRepository resourceVersionRepository, IRoleUserGroupRepository roleUserGroupRepository, IProviderService providerService, ICatalogueAccessRequestRepository catalogueAccessRequestRepository, IUserRepository userRepository, IUserProfileRepository userProfileRepository, IEmailSenderService emailSenderService, IBookmarkRepository bookmarkRepository,INodeActivityRepository nodeActivityRepository, IFindwiseApiFacade findwiseApiFacade, INotificationSenderService notificationSenderService, ITimezoneOffsetManager timezoneOffsetManager)
         {
             this.catalogueRepository = catalogueRepository;
             this.nodeRepository = nodeRepository;
@@ -96,6 +96,8 @@
             this.findwiseApiFacade = findwiseApiFacade;
             this.learningHubConfig = learningHubConfig.Value;
             this.findwiseConfig = findwiseConfig.Value;
+            this.timezoneOffsetManager = timezoneOffsetManager;
+            this.notificationSenderService = notificationSenderService;
         }
 
         /// <summary>

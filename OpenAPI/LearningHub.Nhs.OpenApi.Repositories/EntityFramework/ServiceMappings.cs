@@ -148,12 +148,15 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, CatalogueNodeVersionMap>();
             services.AddSingleton<IEntityTypeMap, CatalogueNodeVersionKeywordMap>();
             services.AddSingleton<IEntityTypeMap, CatalogueNodeVersionProviderMap>();
+            services.AddSingleton<IEntityTypeMap, HierarchyEditMap>();
+            services.AddSingleton<IEntityTypeMap, HierarchyEditDetailMap>();
             services.AddSingleton<IEntityTypeMap, FolderNodeVersionMap>();
             services.AddSingleton<IEntityTypeMap, NodeMap>();
             services.AddSingleton<IEntityTypeMap, NodeLinkMap>();
             services.AddSingleton<IEntityTypeMap, NodeVersionMap>();
             services.AddSingleton<IEntityTypeMap, NodePathMap>();
             services.AddSingleton<IEntityTypeMap, NodePathNodeMap>();
+            services.AddSingleton<IEntityTypeMap, NodeResourceLookupMap>();
             services.AddSingleton<IEntityTypeMap, NodeResourceMap>();
             services.AddSingleton<IEntityTypeMap, PublicationMap>();
             services.AddSingleton<IEntityTypeMap, ResourceAzureMediaAssetMap>();

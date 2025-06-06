@@ -1,4 +1,5 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
 
 @using System.Linq;
 @using System.Web;
@@ -10,99 +11,124 @@
 @using LearningHub.Nhs.Models.Search.SearchClick;
 
 @{
-  var resourceResult = Model.ResourceSearchResult;
-  var pagingModel = Model.ResourceResultPaging;
-  var index = pagingModel.CurrentPage * pagingModel.PageSize;
-  var searchString = HttpUtility.UrlEncode(Model.SearchString);
+	var resourceResult = Model.ResourceSearchResult;
+	var pagingModel = Model.ResourceResultPaging;
+	var index = pagingModel.CurrentPage * pagingModel.PageSize;
+	var searchString = HttpUtility.UrlEncode(Model.SearchString);
 
-  string GetUrl(int resourceReferenceId, int itemIndex, int nodePathId, SearchClickPayloadModel payload)
-  {
-    var searchSignal = payload?.SearchSignal;
-    string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
-    string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
+	string GetUrl(int resourceReferenceId, int itemIndex, int nodePathId, SearchClickPayloadModel payload)
+	{
+		var searchSignal = payload?.SearchSignal;
+		string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
+		string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
 
-    return $@"/search/record-resource-click?url=/Resource/{resourceReferenceId}&nodePathId={nodePathId}&itemIndex={payload?.HitNumber}
+		return $@"/search/record-resource-click?url=/Resource/{resourceReferenceId}&nodePathId={nodePathId}&itemIndex={payload?.HitNumber}
 &pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={payload?.SearchSignal?.Stats?.TotalHits}&searchText={searchString}&resourceReferenceId={resourceReferenceId}
 &groupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal?.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal.UserQuery)}
 &query={searchSignalQueryEncoded}&title={payload?.DocumentFields?.Title}";
-  }
+	}
 
-  bool showCatalogueFieldsInResources = ViewBag.ShowCatalogueFieldsInResources == null || ViewBag.ShowCatalogueFieldsInResources == true;
-  bool resourceAccessLevelFilterSelected = resourceResult.SearchResourceAccessLevelFilters.Any(f => f.Selected);
+	string GetMoodleCourseUrl(string courseId)
+	{
+		var prefix = "M";
+		if (courseId.StartsWith(prefix))
+		{
+			courseId = courseId.Replace(prefix, ""); ;
+		}
+
+		var apiBaseUrl = Configuration["MoodleAPIConfig:BaseUrl"];
+		string path = $"course/view.php";
+		string returnUrl = $@"{apiBaseUrl}/{path}?id={courseId}";
+
+		return returnUrl;
+	}
+
+	bool showCatalogueFieldsInResources = ViewBag.ShowCatalogueFieldsInResources == null || ViewBag.ShowCatalogueFieldsInResources == true;
+	bool resourceAccessLevelFilterSelected = resourceResult.SearchResourceAccessLevelFilters.Any(f => f.Selected);
 }
 
 @foreach (var item in resourceResult.DocumentModel)
 {
-  var provider = item.Providers?.FirstOrDefault();
+	var provider = item.Providers?.FirstOrDefault();
 
-  <div class="resource-item nhsuk-list-item--border nhsuk-u-padding-bottom-4 nhsuk-u-margin-bottom-4">
-    <h3 class="nhsuk-heading-xs nhsuk-u-margin-bottom-2">
-      <a class="nhsuk-card__link" href="@GetUrl(item.ResourceReferenceId, index, item.NodePathId??0, item.Click.Payload)">@item.Title</a>
-    </h3>
+	<div class="resource-item nhsuk-list-item--border nhsuk-u-padding-bottom-4 nhsuk-u-margin-bottom-4">
+		<h3 class="nhsuk-heading-xs nhsuk-u-margin-bottom-2">
+			@if (item.ResourceType == "moodle")
+			{
+				<a class="nhsuk-card__link" href="@GetMoodleCourseUrl(item.Id)">@item.Title</a>
+			}
+			else
+			{
+				<a class="nhsuk-card__link" href="@GetUrl(item.ResourceReferenceId, index, item.NodePathId??0, item.Click.Payload)">@item.Title</a>
+			}
+		</h3>
 
-    @if (provider != null)
-    {
-      <div>
-        <div class="provider-details">
-          <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name" class="logo" />
-          <span class="title">@ProviderHelper.GetProviderString(provider.Name)</span>
-        </div>
-      </div>
-    }
-    @if (item.CatalogueRestrictedAccess && !Model.HideRestrictedBadge && showCatalogueFieldsInResources)
-    {
-      <p class="nhsuk-body-s nhsuk-u-margin-bottom-2 nhsuk-u-font-weight-bold">
-        @((item.CatalogueHasAccess || this.User.IsInRole("Administrator")) ? "Access Granted" : "Access restricted")
-      </p>
-    }
+		@if (provider != null)
+		{
+			<div>
+				<div class="provider-details">
+					<img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name" class="logo" />
+					<span class="title">@ProviderHelper.GetProviderString(provider.Name)</span>
+				</div>
+			</div>
+		}
+		@if (item.CatalogueRestrictedAccess && !Model.HideRestrictedBadge && showCatalogueFieldsInResources)
+		{
+			<p class="nhsuk-body-s nhsuk-u-margin-bottom-2 nhsuk-u-font-weight-bold">
+				@((item.CatalogueHasAccess || this.User.IsInRole("Administrator")) ? "Access Granted" : "Access restricted")
+			</p>
+		}
 
-    @if (!resourceAccessLevelFilterSelected)
-    {
-      <div class="nhsuk-body-s nhsuk-u-margin-bottom-2">
-        <div class="nhsuk-u-margin-right-4">
-          <strong>Audience access level: </strong>
-          @ResourceAccessLevelHelper.GetResourceAccessLevelText((ResourceAccessibilityEnum)item.ResourceAccessLevel)
-        </div>
-      </div>
-    }
+		@if (!resourceAccessLevelFilterSelected)
+		{
+			<div class="nhsuk-body-s nhsuk-u-margin-bottom-2">
+				<div class="nhsuk-u-margin-right-4">
+					<strong>Audience access level: </strong>
+					@ResourceAccessLevelHelper.GetResourceAccessLevelText((ResourceAccessibilityEnum)item.ResourceAccessLevel)
+				</div>
+			</div>
+		}
 
 
-    <div class="resource-info nhsuk-body-s nhsuk-u-margin-bottom-2">
-      <div class="nhsuk-u-margin-right-4">
-        <strong>Type: </strong>
-        @UtilityHelper.GetPrettifiedResourceTypeName(UtilityHelper.ToEnum<ResourceTypeEnum>(item.ResourceType), 0)
-      </div>
-      <div>
-        @await Html.PartialAsync("../Shared/_StarRating.cshtml", item.Rating)
-      </div>
-    </div>
+		<div class="resource-info nhsuk-body-s nhsuk-u-margin-bottom-2">
+			<div class="nhsuk-u-margin-right-4">
+				<strong>Type: </strong>
+				@UtilityHelper.GetPrettifiedResourceTypeNameMoodle(UtilityHelper.ToEnum<ResourceTypeEnumMoodle>(item.ResourceType), 0)
+			</div>
+			<div>
+				@if (item.ResourceType != "moodle")
+				{
+					@await Html.PartialAsync("../Shared/_StarRating.cshtml", item.Rating)
+				}
+			</div>
+		</div>
 
-    <p class="nhsuk-body-s nhsuk-u-margin-bottom-2 resource-description line-clamp-3">
-      @item.Description
-    </p>
+		<p class="nhsuk-body-s nhsuk-u-margin-bottom-2 resource-description line-clamp-3">
+			@item.Description
+		</p>
 
-    <div class="resource-author">
-      @if (!string.IsNullOrWhiteSpace(item.CatalogueBadgeUrl) && showCatalogueFieldsInResources)
-      {
-        <img class="resource-catalogue-badge" src="/search/image/@item.CatalogueBadgeUrl" alt="Provider's catalogue badge"/>
-      }
+		<div class="resource-author">
+			@if (!string.IsNullOrWhiteSpace(item.CatalogueBadgeUrl) && showCatalogueFieldsInResources)
+			{
+				<img class="resource-catalogue-badge" src="/search/image/@item.CatalogueBadgeUrl" alt="Provider's catalogue badge" />
+			}
 
-      @if (!string.IsNullOrEmpty(item.CatalogueName) && !this.Model.CatalogueId.HasValue && showCatalogueFieldsInResources)
-      {
-        <div class="nhsuk-u-margin-right-3">
-          <a href="@("/Catalogue/" + item.CatalogueUrl)" class="catalogue-resource-search-result-name">@item.CatalogueName</a>
-        </div>
-      }
+			@if (!string.IsNullOrEmpty(item.CatalogueName) && !this.Model.CatalogueId.HasValue && showCatalogueFieldsInResources)
+			{
+				<div class="nhsuk-u-margin-right-3">
+					<a href="@("/Catalogue/" + item.CatalogueUrl)" class="catalogue-resource-search-result-name">@item.CatalogueName</a>
+				</div>
+			}
 
-      <div>
-        @UtilityHelper.GetAttribution(item.Authors)
-        @if (!string.IsNullOrEmpty(item.AuthoredDate))
-        {
-          @UtilityHelper.GetInOn(item.AuthoredDate)
-          @: @item.AuthoredDate
-        }
-      </div>
-    </div>
-  </div>
-  index++;
+			<div>
+				@UtilityHelper.GetAttribution(item.Authors)
+				@if (!string.IsNullOrEmpty(item.AuthoredDate))
+				{
+					@UtilityHelper.GetInOn(item.AuthoredDate)
+					@: @item.AuthoredDate
+				}
+			</div>
+		</div>
+	</div>
+	index++;
 }

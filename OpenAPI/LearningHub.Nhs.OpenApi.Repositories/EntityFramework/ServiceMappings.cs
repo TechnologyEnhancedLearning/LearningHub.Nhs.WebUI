@@ -8,6 +8,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.OpenApi.Repositories.Map.Content;
     using LearningHub.Nhs.OpenApi.Repositories.Map.External;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Hierarchy;
+    using LearningHub.Nhs.OpenApi.Repositories.Map.Maintenance;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Messaging;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Resources;
     using Microsoft.EntityFrameworkCore;
@@ -170,6 +171,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, RoadmapMap>();
             services.AddSingleton<IEntityTypeMap, RoadmapTypeMap>();
             services.AddSingleton<IEntityTypeMap, EventMap>();
+            services.AddSingleton<IEntityTypeMap, InternalSystemMap>();
             services.AddSingleton<IEntityTypeMap, ExternalSystemMap>();
             services.AddSingleton<IEntityTypeMap, ExternalSystemDeepLinkMap>();
             services.AddSingleton<IEntityTypeMap, ExternalSystemUserMap>();

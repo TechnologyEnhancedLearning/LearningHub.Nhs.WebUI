@@ -150,7 +150,7 @@
             };
 
             var content = new System.Net.Http.StringContent(JsonConvert.SerializeObject(eventEntity), Encoding.UTF8, "application/json");
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"event/Create";
             var response = await client.PostAsync(request, content).ConfigureAwait(false);

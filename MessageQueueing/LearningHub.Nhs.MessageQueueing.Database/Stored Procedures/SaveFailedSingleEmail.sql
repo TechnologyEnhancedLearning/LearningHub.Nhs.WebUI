@@ -1,4 +1,14 @@
-﻿CREATE PROCEDURE [dbo].[SaveFailedSingleEmail]
+﻿-------------------------------------------------------------------------------
+-- Author       Arunima George
+-- Created      27-05-2025
+-- Purpose      Save one-off(like otp emails) failed email request.
+--
+-- Modification History
+--
+-- 27-05-2025  Arunima George	Initial Revision
+-------------------------------------------------------------------------------
+
+CREATE PROCEDURE [dbo].[SaveFailedSingleEmail]
 	@Recipient nvarchar(255),
 	@TemplateId nvarchar(50),
 	@Personalisation nvarchar(max),

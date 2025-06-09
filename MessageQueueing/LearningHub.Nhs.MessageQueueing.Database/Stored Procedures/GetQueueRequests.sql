@@ -1,4 +1,14 @@
-﻿CREATE PROCEDURE [dbo].[GetQueueRequests]
+﻿-------------------------------------------------------------------------------
+-- Author       Arunima George
+-- Created      27-05-2025
+-- Purpose      Fetch pending/failed email requests from QueueRequests table.
+--
+-- Modification History
+--
+-- 27-05-2025  Arunima George	Initial Revision
+-------------------------------------------------------------------------------
+
+CREATE PROCEDURE [dbo].[GetQueueRequests]
 AS
 BEGIN
 

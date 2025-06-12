@@ -11,6 +11,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.OpenApi.Repositories.Map.Maintenance;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Messaging;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Resources;
+    using LearningHub.Nhs.OpenApi.Repositories.Map.Resources.Blocks;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -80,6 +81,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, PageSectionMap>();
             services.AddSingleton<IEntityTypeMap, PageSectionDetailMap>();
             services.AddSingleton<IEntityTypeMap, ImageAssetMap>();
+            services.AddSingleton<IEntityTypeMap, ImageCarouselBlockMap>();
             services.AddSingleton<IEntityTypeMap, VideoAssetMap>();
 
             services.AddSingleton<IEntityTypeMap, PartialFileMap>();

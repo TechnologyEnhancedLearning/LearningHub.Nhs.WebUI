@@ -38,7 +38,7 @@
 
 		var apiBaseUrl = Configuration["MoodleAPIConfig:BaseUrl"];
 		string path = $"course/view.php";
-		string returnUrl = $@"{apiBaseUrl}/{path}?id={courseId}";
+		string returnUrl = $@"{apiBaseUrl}{path}?id={courseId}";
 
 		return returnUrl;
 	}

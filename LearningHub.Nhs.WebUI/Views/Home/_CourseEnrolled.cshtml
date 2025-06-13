@@ -12,7 +12,7 @@
     {
         var apiBaseUrl = Configuration["MoodleAPIConfig:BaseUrl"];        
         string path = $"course/view.php";
-        string returnUrl = $@"{apiBaseUrl}/{path}?id={courseId}";
+        string returnUrl = $@"{apiBaseUrl}{path}?id={courseId}";
 
         return returnUrl;
     }
@@ -21,11 +21,9 @@
     <div class="nhsuk-card-banner-container">
         @if (!string.IsNullOrWhiteSpace(Model.CourseImage))
         {
-            if (Model.CourseImage.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+            @if (Model.CourseImage.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
             {
-                <object class="nhsuk-card__img nhsuk-card-banner" type="image/svg+xml" data="@Model.CourseImage">
-                    <img src="/images/default-course.jpg" alt="Fallback image" />
-                </object>
+                <img class="nhsuk-card__img nhsuk-card-banner" src="@Model.CourseImage" alt="Course image" onerror="this.onerror=null;this.src='/images/default-course.jpg';" />
             }
             else
             {

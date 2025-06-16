@@ -81,10 +81,10 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public IQueryable<CatalogueNodeVersion> GetPublishedCataloguesForUserAsync(int userId)
         {
-            var communityCatalogue = this.DbContext.CatalogueNodeVersion.AsNoTracking()
-                    .Include(cnv => cnv.NodeVersion.Node)
-                    .Where(cnv => cnv.NodeVersion.VersionStatusEnum == VersionStatusEnum.Published
-                            && cnv.NodeVersion.NodeId == 1 /* Community Catalogue */);
+            ////var communityCatalogue = this.DbContext.CatalogueNodeVersion.AsNoTracking()
+            ////        .Include(cnv => cnv.NodeVersion.Node)
+            ////        .Where(cnv => cnv.NodeVersion.VersionStatusEnum == VersionStatusEnum.Published
+            ////                && cnv.NodeVersion.NodeId == 1 /* Community Catalogue */);
 
             var cataloguesForUser = from cnv in this.DbContext.CatalogueNodeVersion.Include(cnv => cnv.NodeVersion.Node).AsNoTracking()
                                     join nv in this.DbContext.NodeVersion.Where(cnv => cnv.VersionStatusEnum == VersionStatusEnum.Published && !cnv.Deleted) // .Include(nv => nv.Node)
@@ -99,7 +99,7 @@
                                         on nv.Id equals n.CurrentNodeVersionId
                                     select cnv;
 
-            var returnedCatalogues = communityCatalogue.Union(cataloguesForUser).Distinct()
+            var returnedCatalogues = cataloguesForUser.Distinct()
                                                         .OrderBy(cnv => cnv.NodeVersion.NodeId != 1)
                                                         .ThenBy(cnv => cnv.Name);
 

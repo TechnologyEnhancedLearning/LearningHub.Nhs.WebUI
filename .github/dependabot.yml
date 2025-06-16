@@ -4,6 +4,12 @@
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
 version: 2
+registries:
+  learninghubfeed:
+    type: nuget-feed
+    url: https://pkgs.dev.azure.com/e-LfH/_packaging/LearningHubFeed/nuget/v3/index.json
+    username: "kevin.whittaker" 
+    password: ${{ secrets.AZURE_DEVOPS_PAT }}   
 updates:
   - package-ecosystem: "nuget" 
     directory: "/" # Location of package manifests

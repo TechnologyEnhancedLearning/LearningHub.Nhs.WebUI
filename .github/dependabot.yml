@@ -16,6 +16,8 @@ updates:
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
+    registries:
+      - learninghubfeed
     target-branch: "Develop/Features/TD-3683_implement_central_package_management_webui"
     ignore:
       # Ignore updates to packages that start with 'Wildcards'

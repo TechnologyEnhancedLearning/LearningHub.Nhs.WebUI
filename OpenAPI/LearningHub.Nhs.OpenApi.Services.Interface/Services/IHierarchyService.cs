@@ -55,6 +55,15 @@
         Task<CatalogueLocationsViewModel> GetCatalogueLocationsForResourceReference(int resourceReferenceId);
 
         /// <summary>
+        /// Gets the contents of a node for the catalogue landing page - i.e. published folders and published resources only.
+        /// Only returns the items found directly in the specified node, does not recurse down through subfolders.
+        /// </summary>
+        /// <param name="nodeId">The node id.</param>
+        /// <param name="includeEmptyFolder">Include Empty Folder or not.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<List<NodeContentBrowseViewModel>> GetNodeContentsForCatalogueBrowse(int nodeId, bool includeEmptyFolder);
+
+        /// <summary>
         /// Gets the contents of a node for the My Contributions page - i.e. published folders only, and all resources (i.e. all statuses).
         /// Only returns the items found directly in the specified node, does not recurse down through subfolders.
         /// </summary>

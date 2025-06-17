@@ -7,8 +7,10 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.OpenApi.Repositories.Map.Content;
     using LearningHub.Nhs.OpenApi.Repositories.Map.External;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Hierarchy;
+    using LearningHub.Nhs.OpenApi.Repositories.Map.Maintenance;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Messaging;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Resources;
+    using LearningHub.Nhs.OpenApi.Repositories.Map.Resources.Blocks;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -63,6 +65,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, FileChunkDetailMap>();
             services.AddSingleton<IEntityTypeMap, GenericFileResourceVersionMap>();
             services.AddSingleton<IEntityTypeMap, ImageResourceVersionMap>();
+            services.AddSingleton<IEntityTypeMap, HtmlResourceVersionMap>();
             services.AddSingleton<IEntityTypeMap, VideoResourceVersionMap>();
             services.AddSingleton<IEntityTypeMap, AudioResourceVersionMap>();
             services.AddSingleton<IEntityTypeMap, ScormResourceVersionMap>();
@@ -77,11 +80,13 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, PageSectionMap>();
             services.AddSingleton<IEntityTypeMap, PageSectionDetailMap>();
             services.AddSingleton<IEntityTypeMap, ImageAssetMap>();
+            services.AddSingleton<IEntityTypeMap, ImageCarouselBlockMap>();
             services.AddSingleton<IEntityTypeMap, VideoAssetMap>();
 
             services.AddSingleton<IEntityTypeMap, PartialFileMap>();
             services.AddSingleton<IEntityTypeMap, PermissionMap>();
             services.AddSingleton<IEntityTypeMap, PermissionRoleMap>();
+            services.AddSingleton<IEntityTypeMap, ProviderMap>();
             services.AddSingleton<IEntityTypeMap, PublicationMap>();
             services.AddSingleton<IEntityTypeMap, QuestionBlockMap>();
             services.AddSingleton<IEntityTypeMap, QuestionAnswerMap>();
@@ -95,6 +100,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, ResourceVersionFlagMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionKeywordMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionMap>();
+            services.AddSingleton<IEntityTypeMap, ResourceVersionProviderMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionUserAcceptanceMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionValidationResultMap>();
             services.AddSingleton<IEntityTypeMap, ResourceVersionValidationRuleResultMap>();
@@ -103,8 +109,14 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, RoleMap>();
             services.AddSingleton<IEntityTypeMap, RoleUserGroupMap>();
             services.AddSingleton<IEntityTypeMap, ScopeMap>();
+            services.AddSingleton<IEntityTypeMap, UserBookmarkMap>();
             services.AddSingleton<IEntityTypeMap, RoleUserGroupMap>();
             services.AddSingleton<IEntityTypeMap, TextBlockMap>();
+            services.AddSingleton<IEntityTypeMap, ScormActivityInteractionMap>();
+            services.AddSingleton<IEntityTypeMap, ScormActivityInteractionCorrectResponseMap>();
+            services.AddSingleton<IEntityTypeMap, ScormActivityInteractionObjectiveMap>();
+            services.AddSingleton<IEntityTypeMap, ScormActivityMap>();
+            services.AddSingleton<IEntityTypeMap, ScormActivityObjectiveMap>();
             services.AddSingleton<IEntityTypeMap, UserMap>();
             services.AddSingleton<IEntityTypeMap, UserGroupMap>();
             services.AddSingleton<IEntityTypeMap, UserGroupAttributeMap>();
@@ -123,6 +135,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, ResourceSyncMap>();
             services.AddSingleton<IEntityTypeMap, EmailTemplateMap>();
             services.AddSingleton<IEntityTypeMap, EmailTemplateLayoutMap>();
+            services.AddSingleton<IEntityTypeMap, EmailChangeValidationTokenMap>();
             services.AddSingleton<IEntityTypeMap, MessageMap>();
             services.AddSingleton<IEntityTypeMap, MessageSendMap>();
             services.AddSingleton<IEntityTypeMap, MessageSendRecipientMap>();
@@ -135,15 +148,21 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, NodeActivityMap>();
             services.AddSingleton<IEntityTypeMap, CatalogueNodeVersionMap>();
             services.AddSingleton<IEntityTypeMap, CatalogueNodeVersionKeywordMap>();
+            services.AddSingleton<IEntityTypeMap, CatalogueNodeVersionProviderMap>();
+            services.AddSingleton<IEntityTypeMap, HierarchyEditMap>();
+            services.AddSingleton<IEntityTypeMap, HierarchyEditDetailMap>();
+            services.AddSingleton<IEntityTypeMap, FolderNodeVersionMap>();
             services.AddSingleton<IEntityTypeMap, NodeMap>();
             services.AddSingleton<IEntityTypeMap, NodeLinkMap>();
             services.AddSingleton<IEntityTypeMap, NodeVersionMap>();
             services.AddSingleton<IEntityTypeMap, NodePathMap>();
             services.AddSingleton<IEntityTypeMap, NodePathNodeMap>();
+            services.AddSingleton<IEntityTypeMap, NodeResourceLookupMap>();
             services.AddSingleton<IEntityTypeMap, NodeResourceMap>();
             services.AddSingleton<IEntityTypeMap, PublicationMap>();
             services.AddSingleton<IEntityTypeMap, ResourceAzureMediaAssetMap>();
             services.AddSingleton<IEntityTypeMap, AssessmentResourceActivityMap>();
+            services.AddSingleton<IEntityTypeMap, AssessmentResourceActivityMatchQuestionMap>();
             services.AddSingleton<IEntityTypeMap, AssessmentResourceActivityInteractionMap>();
             services.AddSingleton<IEntityTypeMap, AssessmentResourceActivityInteractionAnswerMap>();
             services.AddSingleton<IEntityTypeMap, MediaResourceActivityMap>();
@@ -152,6 +171,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, RoadmapMap>();
             services.AddSingleton<IEntityTypeMap, RoadmapTypeMap>();
             services.AddSingleton<IEntityTypeMap, EventMap>();
+            services.AddSingleton<IEntityTypeMap, InternalSystemMap>();
             services.AddSingleton<IEntityTypeMap, ExternalSystemMap>();
             services.AddSingleton<IEntityTypeMap, ExternalSystemDeepLinkMap>();
             services.AddSingleton<IEntityTypeMap, ExternalSystemUserMap>();

@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Constants;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Hierarchy;
@@ -26,28 +27,26 @@
         /// </summary>
         private readonly IUserService userService;
 
-
-
         /// <summary>
         /// The node repository.
         /// </summary>
         private readonly INodeRepository nodeRepository;
 
-       
+        /// <summary>
+        /// The rating service.
+        /// </summary>
+        private readonly IRatingService ratingService;
 
         /// <summary>
         /// The node path repository.
         /// </summary>
         private readonly INodePathRepository nodePathRepository;
 
-       
-
         /// <summary>
         /// The folder node version repository.
         /// </summary>
         private readonly IFolderNodeVersionRepository folderNodeVersionRepository;
-
-       
+        
         /// <summary>
         /// The caching service.
         /// </summary>
@@ -141,6 +140,7 @@
             IHierarchyEditRepository hierarchyEditRepository,
             INodeResourceLookupRepository nodeResourceLookupRepository,
             IPublicationRepository publicationRepository,
+            IRatingService ratingService,
             ICachingService cachingService,
             ILogger<HierarchyService> logger,
             IOptions<LearningHubConfig> learningHubConfig,
@@ -154,11 +154,14 @@
             this.queueCommunicatorService = queueCommunicatorService;
             this.nodeRepository = nodeRepository;
             this.nodePathRepository = nodePathRepository;
+            this.nodeResourceRepository = nodeResourceRepository;
             this.folderNodeVersionRepository = folderNodeVersionRepository;
             this.hierarchyEditDetailRepository = hierarchyEditDetailRepository;
             this.hierarchyEditRepository = hierarchyEditRepository;
             this.publicationRepository = publicationRepository;
             this.nodeResourceLookupRepository = nodeResourceLookupRepository;
+            this.resourceReferenceRepository = resourceReferenceRepository;
+            this.ratingService = ratingService;
             this.cachingService = cachingService;
             this.logger = logger;
             this.mapper = mapper;
@@ -251,6 +254,75 @@
             }
 
             return vm;
+        }
+
+        /// <summary>
+        /// Gets the contents of a node for the catalogue landing page - i.e. published folders and published resources only.
+        /// Only returns the items found directly in the specified node, does not recurse down through subfolders.
+        /// </summary>
+        /// <param name="nodeId">The node id.</param>
+        /// <param name="includeEmptyFolder">Include Empty Folder or not.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<List<NodeContentBrowseViewModel>> GetNodeContentsForCatalogueBrowse(int nodeId, bool includeEmptyFolder)
+        {
+            // Attempt to retrieve from cache. If not found then add to cache.
+            // Note: include basic resource rating information when serving from the cache.
+            var retVal = new List<NodeContentBrowseViewModel>();
+
+            string cacheKey = $"{CacheKeys.PublishedNodeContents}:{nodeId}";
+            var nodeContents = await this.cachingService.GetAsync<List<NodeContentBrowseViewModel>>(cacheKey);
+            if (includeEmptyFolder)
+            {
+                nodeContents.ResponseEnum = CacheReadResponseEnum.NotFound;
+            }
+
+            if (nodeContents.ResponseEnum == CacheReadResponseEnum.Found)
+            {
+                retVal = nodeContents.Item;
+            }
+            else
+            {
+                retVal = await this.nodeRepository.GetNodeContentsForCatalogueBrowse(nodeId, includeEmptyFolder);
+
+                // Ensure that any Node only exists once in the returned data set.
+                var duplicateNodes = retVal.Where(n => n.NodeId.HasValue).GroupBy(x => x.NodeId).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+                if (duplicateNodes.Count > 0)
+                {
+                    throw new Exception($"Corrupt data. Duplicate Nodes returned in NodeContent for NodeId={nodeId}");
+                }
+
+                if (!includeEmptyFolder)
+                {
+                    await this.cachingService.SetAsync(cacheKey, retVal);
+                }
+            }
+
+            var list = retVal.Where(ncm => ncm.ResourceVersionId.HasValue);
+
+            if (list.Count() > 0)
+            {
+                var tasks = list.Select(async ncm =>
+                {
+                    string cacheKey = $"{CacheKeys.RatingSummaryBasic}:{ncm.ResourceVersionId.Value}";
+                    var retVal = await this.cachingService.GetAsync<RatingSummaryBasicViewModel>(cacheKey);
+                    return retVal.ResponseEnum == CacheReadResponseEnum.Found ? retVal.Item : null;
+                });
+
+                var ratings = await Task.WhenAll(tasks);
+
+                foreach (var ncm in list.Where(ncm => ncm.ResourceVersionId.HasValue))
+                {
+                    var rating = ratings.Where(r => r != null && r.EntityVersionId == ncm.ResourceVersionId.Value).FirstOrDefault();
+                    if (rating == null)
+                    {
+                        rating = await this.ratingService.GetRatingSummaryBasic(ncm.ResourceVersionId.Value);
+                    }
+
+                    ncm.RatingSummaryBasicViewModel = rating;
+                }
+            }
+
+            return retVal;
         }
 
         /// <summary>

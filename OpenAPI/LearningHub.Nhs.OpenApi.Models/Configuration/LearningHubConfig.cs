@@ -55,5 +55,75 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// </summary>
         public string ResourcePublishQueueRouteName { get; set; } = null!;
 
+        /// <summary>
+        /// Gets or sets <see cref="Notifications"/>.
+        /// </summary>
+        public NotificationSetting Notifications { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="MyContributionsUrl"/>.
+        /// </summary>
+        public string MyContributionsUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="MyLearningUrl"/>.
+        /// </summary>
+        public string MyLearningUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="MyBookmarksUrl"/>.
+        /// </summary>
+        public string MyBookmarksUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="SearchUrl"/>.
+        /// </summary>
+        public string SearchUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="AdminUrl"/>.
+        /// </summary>
+        public string AdminUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="ForumsUrl"/>.
+        /// </summary>
+        public string ForumsUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="HelpUrl"/>.
+        /// </summary>
+        public string HelpUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="MyRecordsUrl"/>.
+        /// </summary>
+        public string MyRecordsUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="NotificationsUrl"/>.
+        /// </summary>
+        public string NotificationsUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="RegisterUrl"/>.
+        /// </summary>
+        public string RegisterUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="SignOutUrl"/>.
+        /// </summary>
+        public string SignOutUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="MyAccountUrl"/>.
+        /// </summary>
+        public string MyAccountUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="BrowseCataloguesUrl"/>.
+        /// </summary>
+        public string BrowseCataloguesUrl { get; set; } = null!;
+
     }
 }

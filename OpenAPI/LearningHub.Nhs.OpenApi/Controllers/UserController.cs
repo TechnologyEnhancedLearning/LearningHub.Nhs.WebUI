@@ -303,6 +303,18 @@
         }
 
         /// <summary>
+        /// Get specific User Profile by Id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpGet]
+        [Route("GetUserProfile/{id}")]
+        public async Task<ActionResult<UserProfile>> GetUserProfileAsync(int id)
+        {
+            return this.Ok(await this.userProfileService.GetByIdAsync(id));
+        }
+
+        /// <summary>
         /// The GetActiveContent.
         /// </summary>
         /// <returns>The active content.</returns>

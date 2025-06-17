@@ -38,6 +38,19 @@
         }
 
         /// <summary>
+        /// Gets AllCatalogues.
+        /// </summary>
+        /// <param name="filterChar">The filterChar.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet]
+        [Route("allcatalogues/{filterChar}")]
+        public async Task<IActionResult> GetAllCataloguesAsync(string filterChar = null)
+        {
+            var response = await this.catalogueService.GetAllCataloguesAsync(filterChar, this.CurrentUserId.GetValueOrDefault());
+            return this.Ok(response);
+        }
+
+        /// <summary>
         /// The GetCatalogue.
         /// </summary>
         /// <param name="id">The catalogue node version id.</param>

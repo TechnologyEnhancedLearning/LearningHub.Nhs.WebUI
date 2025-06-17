@@ -223,5 +223,13 @@
         /// <returns>The validation result.</returns>
         Task<LearningHubValidationResult> AcceptAccessAsync(int userId, int accessRequestId);
 
+        /// <summary>
+        /// GetAllCataloguesAsync.
+        /// </summary>
+        /// <param name="filterChar">filterChar.</param>
+        /// <param name="userId">userId.</param>
+        /// <returns>The allcatalogue result based on letters.</returns>
+        Task<AllCatalogueResponseViewModel> GetAllCataloguesAsync(string filterChar, int userId);
+
     }
 }

@@ -22,7 +22,7 @@ updates:
     registries:
       - learninghubfeed
       - nuget.org
-    target-branch: "Develop/Features/TD-3683_implement_central_package_management_webui"
+    target-branch: "Automatic_version_update_dependabot"
     ignore:
       # Ignore updates to packages that start with 'Wildcards'
       - dependency-name: "Microsoft.FeatureManagement.AspNetCore*"
@@ -60,7 +60,7 @@ updates:
     directory: "LearningHub.Nhs.WebUI/" # Location of package manifests
     schedule:
       interval: "daily"
-    target-branch: "Develop/Features/TD-3683_implement_central_package_management_webui"
+    target-branch: "Automatic_version_update_dependabot"
     #  - "dependencies"
     open-pull-requests-limit: 10
     ignore:
@@ -72,7 +72,7 @@ updates:
     directory: "AdminUI/LearningHub.Nhs.AdminUI/" # Location of package manifests
     schedule:
       interval: "daily"
-    target-branch: "Develop/Features/TD-3683_implement_central_package_management_webui"
+    target-branch: "Automatic_version_update_dependabot"
     #  - "dependencies"
     open-pull-requests-limit: 10
     ignore:

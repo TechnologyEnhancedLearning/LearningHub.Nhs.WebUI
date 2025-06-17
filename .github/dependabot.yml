@@ -32,13 +32,7 @@ updates:
       - dependency-name: "UK.NHS.CookieBanner"   
       - dependency-name: "GDS.MultiPageFormData"      
       - dependency-name: "linqtotwitter*"             
-      # Ignore some updates to the package
-      - dependency-name: "Microsoft.VisualStudio.Web.CodeGeneration.Design"
-        versions: [">7.0.0"]
-      - dependency-name: "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
-        versions: [">7.0.0"]
-      - dependency-name: "Microsoft.AspNetCore.Mvc.Testing"
-        versions: [">7.0.0"]
+      # Ignore some updates to the package    
       - dependency-name: "Azure.Storage.Files.Shares"
         versions: [">12.11.0"]
       - dependency-name: "FluentAssertions"

@@ -12,7 +12,7 @@
     /// <summary>
     /// Catalogue controller.
     /// </summary>
-    [Route("Catalogues")]
+    [Route("Catalogue")]
     [Authorize]
     public class CatalogueController : OpenApiControllerBase
     {

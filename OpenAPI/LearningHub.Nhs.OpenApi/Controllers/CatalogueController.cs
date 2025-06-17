@@ -53,6 +53,19 @@
         /// <summary>
         /// The GetCatalogue.
         /// </summary>
+        /// <param name="searchTerm">The searchTerm.</param>
+        /// <returns>The catalogues.</returns>
+        [HttpGet]
+        [Route("Catalogues")]
+        public IActionResult GetCatalogues(string searchTerm)
+        {
+            var catalogues = this.catalogueService.GetCatalogues(searchTerm);
+            return this.Ok(catalogues);
+        }
+
+        /// <summary>
+        /// The GetCatalogue.
+        /// </summary>
         /// <param name="id">The catalogue node version id.</param>
         /// <returns>The catalogue.</returns>
         [HttpGet]

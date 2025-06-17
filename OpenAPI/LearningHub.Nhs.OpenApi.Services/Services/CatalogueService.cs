@@ -11,6 +11,7 @@
     using LearningHub.Nhs.Models.Email.Models;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Activity;
+    using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Resource;
@@ -183,6 +184,25 @@
             return this.mapper.Map<CatalogueBasicViewModel>(catalogue);
         }
 
+        /// <summary>
+        /// The GetCatalogues.
+        /// </summary>
+        /// <param name="searchTerm">The searchTerm.</param>
+        /// <returns>The catalogues.</returns>
+        public List<CatalogueViewModel> GetCatalogues(string searchTerm)
+        {
+            IQueryable<CatalogueNodeVersion> catalogueVersions = this.catalogueNodeVersionRepository.GetAll()
+                 .Include(x => x.Keywords)
+                  .Include(x => x.CatalogueNodeVersionProvider).Where(x => !x.Deleted)
+                 .Include(x => x.NodeVersion)
+                 .ThenInclude(x => x.Node);
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                catalogueVersions = catalogueVersions.Where(x => x.Name.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            return this.mapper.ProjectTo<CatalogueViewModel>(catalogueVersions).ToList();
+        }
 
         /// <summary>
         /// The GetCatalogue.

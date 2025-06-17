@@ -27,6 +27,13 @@
         public Task<BulkCatalogueViewModel> GetAllCatalogues();
 
         /// <summary>
+        /// The GetCatalogues.
+        /// </summary>
+        /// <param name="searchTerm">The searchTerm.</param>
+        /// <returns>The catalogues.</returns>
+        List<CatalogueViewModel> GetCatalogues(string searchTerm);
+
+        /// <summary>
         /// The GetCatalogue.
         /// </summary>
         /// <param name="id">The id.</param>

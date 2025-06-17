@@ -45,7 +45,7 @@
         /// <inheritdoc />
         public async Task<List<RoleUserGroupViewModel>> GetRoleUserGroupDetailAsync()
         {
-            var cacheKey = $"{this.contextAccessor.HttpContext.User.Identity.GetCurrentUserId()}:AllRolesWithPermissions";
+            var cacheKey = $"{this.contextAccessor.HttpContext.User.Identity.GetCurrentUserId()}:AllRolesWithPermissions";        
             return await this.cacheService.GetOrFetchAsync(cacheKey, () => this.FetchRoleUserGroupDetailAsync());
         }
 
@@ -54,6 +54,18 @@
         {
             var cacheKey = $"{userId}:AllRolesWithPermissions";
             return await this.cacheService.GetOrFetchAsync(cacheKey, () => this.FetchRoleUserGroupDetailForUserAsync(userId));
+        }
+
+        /// <inheritdoc />
+        public async Task<bool> UserHasCatalogueContributionPermission()
+        {
+            var userRoleGroups = await this.GetRoleUserGroupDetailAsync();
+            if (userRoleGroups != null && userRoleGroups.Any(r => r.RoleName == "Local Admin" || r.RoleName == "Editor"))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <inheritdoc />

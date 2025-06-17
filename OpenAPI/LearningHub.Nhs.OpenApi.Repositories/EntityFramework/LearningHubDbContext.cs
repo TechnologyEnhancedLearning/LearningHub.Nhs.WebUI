@@ -24,7 +24,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     /// <summary>
     /// The learning hub db context.
     /// </summary>
-    public class LearningHubDbContext : DbContext
+    public partial class LearningHubDbContext : DbContext
     {
         /// <summary>
         /// The options..
@@ -39,6 +39,14 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             : base(options.Options)
         {
             this.options = options;
+        }
+
+        /// <summary>
+        /// Gets the Options.
+        /// </summary>
+        public LearningHubDbContextOptions Options
+        {
+            get { return this.options; }
         }
 
         /// <summary>
@@ -176,6 +184,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets the resource version validation result.
         /// </summary>
         public virtual DbSet<ResourceVersionValidationResult> ResourceVersionValidationResult { get; set; }
+
+        /// <summary>
+        /// Gets or sets the resource version validation rule result.
+        /// </summary>
+        public virtual DbSet<ResourceVersionValidationRuleResult> ResourceVersionValidationRuleResult { get; set; }
 
         /// <summary>
         /// Gets or sets the resource version event..
@@ -465,6 +478,8 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets the catalogue node version.
         /// </summary>
         public virtual DbSet<CatalogueNodeVersion> CatalogueNodeVersion { get; set; }
+
+        public virtual DbSet<CatalogueNodeVersionProvider> CatalogueNodeVersionProvider { get; set; }
 
         /// <summary>
         /// Gets or sets the catalogue node version keyword..

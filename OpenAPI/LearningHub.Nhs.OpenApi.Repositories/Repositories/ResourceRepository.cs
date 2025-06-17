@@ -16,7 +16,6 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
     /// <inheritdoc />
     public class ResourceRepository : GenericRepository<Resource>, IResourceRepository
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceRepository"/> class.
         /// </summary>
@@ -184,6 +183,17 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                             .Where(rv => rv.Id == resourceVersionId && !rv.Resource.Deleted)
                             .Select(rv => rv.Resource)
                             .FirstOrDefaultAsync();
+        }
+
+
+        /// <summary>
+        /// Returns a bool to indicate if the resourceVersionId corresponds to a current version of a resource.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<bool> IsCurrentVersionAsync(int resourceVersionId)
+        {
+            return await this.DbContext.Resource.AnyAsync(r => r.CurrentResourceVersionId == resourceVersionId && !r.Deleted);
         }
 
 

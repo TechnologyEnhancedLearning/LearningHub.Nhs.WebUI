@@ -37,5 +37,15 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="resourceId">The resource id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task RemoveResourceFromSearchAsync(int resourceId);
+
+        /// <summary>
+        /// The send resource for search Async method.
+        /// </summary>
+        /// <param name="searchResourceRequestModel">The search resource model.</param>
+        /// <param name="userId">The user id.</param>
+        /// <param name="iterations">number of iterations.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<bool> SendResourceForSearchAsync(SearchResourceRequestModel searchResourceRequestModel, int userId, int? iterations);
+
     }
 }

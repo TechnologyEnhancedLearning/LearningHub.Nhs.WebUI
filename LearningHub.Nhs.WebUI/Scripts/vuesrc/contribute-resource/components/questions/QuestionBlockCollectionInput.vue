@@ -5,7 +5,7 @@
                 <div class="mr-20">
                     <ckeditorwithhint v-if="richText" :initialValue="message" :maxLength="textMaxLength" @change="updateByCkEditor" />
                     <div v-else>
-                        <textarea class="form-control text-input"
+                        <textarea class="form-control text-input nhsuk-textarea"
                                   placeholder="Text input"
                                   rows="4"
                                   :maxlength="textMaxLength"

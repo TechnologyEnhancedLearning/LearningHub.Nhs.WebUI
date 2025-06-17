@@ -38,7 +38,7 @@
         /// <summary>
         /// Gets or sets the selected grade id.
         /// </summary>
-        public int? SelectedGradeId { get; set; }
+        public string SelectedGradeId { get; set; }
 
         /// <summary>
         /// Gets or sets the grade list.

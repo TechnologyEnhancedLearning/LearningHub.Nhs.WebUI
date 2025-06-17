@@ -206,7 +206,6 @@ namespace LearningHub.Nhs.WebUI.Controllers
         {
             if (this.User?.Identity.IsAuthenticated == true)
             {
-                this.Settings.ConcurrentId = this.CurrentUserId;
                 this.Logger.LogInformation("User is authenticated: User is {fullname} and userId is: {lhuserid}", this.User.Identity.GetCurrentName(), this.User.Identity.GetCurrentUserId());
                 if (this.User.IsInRole("Administrator") || this.User.IsInRole("BlueUser") || this.User.IsInRole("ReadOnly") || this.User.IsInRole("BasicUser"))
                 {
@@ -220,7 +219,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     this.ViewBag.ValidMoodleUser = this.CurrentMoodleUserId > 0;
                     if (enableMoodle && myLearningDashboard == "my-enrolled-courses")
                     {
-                       enrolledCoursesTask = this.dashboardService.GetEnrolledCoursesFromMoodleAsync(this.CurrentMoodleUserId, 1);
+                        enrolledCoursesTask = this.dashboardService.GetEnrolledCoursesFromMoodleAsync(this.CurrentMoodleUserId, 1);
                     }
 
                     await Task.WhenAll(learningTask, resourcesTask, cataloguesTask);
@@ -386,39 +385,10 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 return this.Redirect(returnUrl);
             }
 
-            // Add successful logout to the UserHistory
-            UserHistoryViewModel userHistory = new UserHistoryViewModel()
-            {
-                UserId = this.Settings.ConcurrentId,
-                UserHistoryTypeId = (int)UserHistoryType.Logout,
-                Detail = @"User session time out",
-            };
-
-            this.userService.StoreUserHistory(userHistory);
-
             this.ViewBag.AuthTimeout = this.authConfig.AuthTimeout;
             this.ViewBag.ReturnUrl = returnUrl;
 
             return this.View();
-        }
-
-        /// <summary>
-        /// The SessionTimeout.
-        /// </summary>
-        /// <returns>The <see cref="IActionResult"/>.</returns>
-        [HttpPost("browser-close")]
-        public IActionResult BrowserClose()
-        {
-            // Add browser close to the UserHistory
-            UserHistoryViewModel userHistory = new UserHistoryViewModel()
-            {
-                UserId = this.CurrentUserId,
-                UserHistoryTypeId = (int)UserHistoryType.Logout,
-                Detail = @"User browser closed",
-            };
-
-            this.userService.StoreUserHistory(userHistory);
-            return this.Ok(true);
         }
 
         /// <summary>

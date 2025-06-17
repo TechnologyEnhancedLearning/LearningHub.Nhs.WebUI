@@ -228,3 +228,24 @@ form label.nhsuk-u-visually-hidden {
     margin-top: auto !important;
     margin-bottom: auto !important;
 }
+.btn:focus, .btn.focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem $nhsuk-yellow !important;
+    background-color: $govuk-focus-highlight-yellow;
+}
+/*Add a background color to the radio button when focused */
+.nhsuk-radios__input:focus + .radioButton {
+    box-shadow: 0 0 0 3px $nhsuk-yellow;
+}
+/*Add a background color to the radio button when focused */
+.nhsuk-checkboxes__input:focus + .checkmark {
+    box-shadow: 0 0 0 4px $nhsuk-yellow;
+}
+
+.accessible-link:focus {
+    outline: none;
+    text-decoration: none;
+    color: $nhsuk-black;
+    box-shadow: 0 0 0 4px $nhsuk-yellow;
+}
+

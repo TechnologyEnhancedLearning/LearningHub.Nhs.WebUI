@@ -58,7 +58,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Resources
                 .Include(r => r.ResourceVersion).AsNoTracking()
                 .Include(r => r.ResourceVersionValidationRuleResults).AsNoTracking()
                 .Include(r => r.CreateUser).AsNoTracking()
-                .Where(r => r.ResourceVersionId == resourceVersionId && r.ResourceVersion.VersionStatusEnum == LearningHub.Nhs.Models.Enums.VersionStatusEnum.FailedToPublish)
+                .Where(r => r.ResourceVersionId == resourceVersionId && r.ResourceVersion.VersionStatusEnum == Nhs.Models.Enums.VersionStatusEnum.FailedToPublish)
                 .OrderByDescending(r => r.Id)
                 .FirstOrDefaultAsync();
         }

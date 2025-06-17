@@ -71,7 +71,7 @@
                 for example, how it was developed or what is required for it to be used.
             </div>
             <div class="col-12 mt-3">
-                <textarea class="form-control" id="additionalinfo" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
+                <textarea class="form-control nhsuk-textarea" id="additionalinfo" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
             </div>
             <div class="col-12 footer-text">
                 You can enter a maximum of 250 characters
@@ -108,22 +108,22 @@
                 <div class="row">
                     <label class="checkContainer mr-0" style="margin-left:10px;">
                         <span>Don't display</span>
-                        <input type="radio" name="esrLinkType" v-model="localGenericFileDetail.esrLinkType" value="1" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)" checked>
+                        <input type="radio" name="esrLinkType" class="nhsuk-radios__input" v-model="localGenericFileDetail.esrLinkType" value="1" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)" checked>
                         <span class="radioButton"></span>
                     </label>
                     <label class="checkContainer ml-3" v-if="resourceCatalogueCount<=1">
                         <span>Display only to me</span>
-                        <input type="radio" name="esrLinkType" v-model="localGenericFileDetail.esrLinkType" value="2" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
+                        <input type="radio" name="esrLinkType" class="nhsuk-radios__input" v-model="localGenericFileDetail.esrLinkType" value="2" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
                         <span class="radioButton"></span>
                     </label>
                     <label class="checkContainer ml-3" v-if="resourceCatalogueCount>1">
                         <span>Display only to me and other catalogue editors</span>
-                        <input type="radio" name="esrLinkType" v-model="localGenericFileDetail.esrLinkType" value="3" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
+                        <input type="radio" name="esrLinkType" class="nhsuk-radios__input" v-model="localGenericFileDetail.esrLinkType" value="3" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
                         <span class="radioButton"></span>
                     </label>
                     <label class="checkContainer ml-3">
                         <span>Display to everyone</span>
-                        <input type="radio" name="esrLinkType" v-model="localGenericFileDetail.esrLinkType" value="4" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
+                        <input type="radio" name="esrLinkType"class="nhsuk-radios__input"  v-model="localGenericFileDetail.esrLinkType" value="4" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
                         <span class="radioButton"></span>
                     </label>
                 </div>

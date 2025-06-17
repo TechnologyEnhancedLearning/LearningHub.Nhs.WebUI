@@ -1,15 +1,26 @@
 <template>
     <div>
-        <ckeditor v-model="description" :config="editorConfig" @ready="onEditorReady" @blur="onBlur"></ckeditor>
-        <div :class="[`pt-2 footer-text${this.valid ? '' : ' text-danger'}`]">{{ hint }}</div>
+        <ckeditor v-model="description"
+                  :config="editorConfig"
+                  @ready="onEditorReady"
+                  @blur="onBlur"
+                  tabindex="0"
+                  :aria-describedby="'editor-hint'"
+                  role="textbox"></ckeditor>
+        <div :id="'editor-hint'"
+             :class="[`pt-2 footer-text${this.valid ? '' : ' text-danger'}`]"
+             aria-live="polite">
+            {{ hint }}
+        </div>
     </div>
 </template>
+
 
 <script lang="ts">
     import Vue, { PropOptions } from 'vue';
     import CKEditorToolbar from './models/ckeditorToolbar';
     import CKEditor from 'ckeditor4-vue/dist/legacy.js';
-    import {getRemainingCharacters, getRemainingCharactersFromHtml} from "./helpers/ckeditorValidationHelper";
+    import { getRemainingCharacters, getRemainingCharactersFromHtml } from "./helpers/ckeditorValidationHelper";
 
     const getCharactersText = (n: number) => n === 1 ? `${n} character` : `${n} characters`;
 

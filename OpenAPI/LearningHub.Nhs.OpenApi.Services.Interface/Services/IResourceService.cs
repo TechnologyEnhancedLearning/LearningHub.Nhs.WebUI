@@ -279,6 +279,13 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         Task<File> GetFileAsync(int fileId);
 
         /// <summary>
+        /// The get image details by id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ImageViewModel}"/>.</returns>
+        Task<ImageViewModel> GetImageDetailsByIdAsync(int resourceVersionId);
+
+        /// <summary>
         /// The create file details for an article async.
         /// </summary>
         /// <param name="fileCreateRequestViewModel">The fileCreateRequestViewModel<see cref="FileCreateRequestViewModel"/>.</param>
@@ -349,6 +356,14 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="publishViewModel">The publishViewModel<see cref="PublishViewModel"/>.</param>
         /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
         Task<LearningHubValidationResult> SubmitResourceVersionForPublish(PublishViewModel publishViewModel);
+
+        /// <summary>
+        /// Submits a published resource version to the Findwise search.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<(bool success, int resourceReferenceId)> SubmitResourceVersionToSearchAsync(int resourceVersionId, int userId);
 
 
         /// <summary>

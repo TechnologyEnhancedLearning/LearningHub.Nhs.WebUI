@@ -22,8 +22,8 @@
         /// <param name="tzOffsetManager">The Timezone offset manager.</param>
         public GenericRepository(LearningHubDbContext dbContext, ITimezoneOffsetManager tzOffsetManager)
         {
-            DbContext = dbContext;
-            TimezoneOffsetManager = tzOffsetManager;
+            this.DbContext = dbContext;
+            this.TimezoneOffsetManager = tzOffsetManager;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@
         /// <returns>The <see cref="IQueryable"/>.</returns>
         public IQueryable<TEntity> GetAll()
         {
-            return DbContext.Set<TEntity>().AsNoTracking();
+            return this.DbContext.Set<TEntity>().AsNoTracking();
         }
 
         /// <summary>
@@ -53,18 +53,18 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public virtual async Task<int> CreateAsync(int userId, TEntity entity)
         {
-            await DbContext.Set<TEntity>().AddAsync(entity);
-            SetAuditFieldsForCreate(userId, entity);
+            await this.DbContext.Set<TEntity>().AddAsync(entity);
+            this.SetAuditFieldsForCreate(userId, entity);
             try
             {
-                await DbContext.SaveChangesAsync();
+                await this.DbContext.SaveChangesAsync();
             }
             catch (Exception)
             {
                 throw;
             }
 
-            DbContext.Entry(entity).State = EntityState.Detached;
+            this.DbContext.Entry(entity).State = EntityState.Detached;
 
             return entity.Id;
         }
@@ -77,13 +77,13 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public virtual async Task UpdateAsync(int userId, TEntity entity)
         {
-            DbContext.Set<TEntity>().Update(entity);
+            this.DbContext.Set<TEntity>().Update(entity);
 
-            SetAuditFieldsForUpdate(userId, entity);
+            this.SetAuditFieldsForUpdate(userId, entity);
 
-            await DbContext.SaveChangesAsync();
+            await this.DbContext.SaveChangesAsync();
 
-            DbContext.Entry(entity).State = EntityState.Detached;
+            this.DbContext.Entry(entity).State = EntityState.Detached;
         }
 
         /// <summary>
@@ -93,13 +93,13 @@
         /// <param name="entity">The entity.</param>
         public virtual void Update(int userId, TEntity entity)
         {
-            DbContext.Set<TEntity>().Update(entity);
+            this.DbContext.Set<TEntity>().Update(entity);
 
-            SetAuditFieldsForUpdate(userId, entity);
+            this.SetAuditFieldsForUpdate(userId, entity);
 
-            DbContext.SaveChanges();
+            this.DbContext.SaveChanges();
 
-            DbContext.Entry(entity).State = EntityState.Detached;
+            this.DbContext.Entry(entity).State = EntityState.Detached;
         }
 
         /// <summary>
@@ -109,7 +109,7 @@
         /// <param name="entity">The entity.</param>
         public void SetAuditFieldsForCreate(int userId, EntityBase entity)
         {
-            var amendDate = GetAmendDate();
+            var amendDate = this.GetAmendDate();
 
             entity.Deleted = false;
             entity.CreateUserId = userId;
@@ -128,11 +128,11 @@
         {
             if (isCreate)
             {
-                SetAuditFieldsForCreate(userId, entity);
+                this.SetAuditFieldsForCreate(userId, entity);
             }
             else
             {
-                SetAuditFieldsForDelete(userId, entity);
+                this.SetAuditFieldsForDelete(userId, entity);
             }
         }
 
@@ -144,13 +144,13 @@
         public void SetAuditFieldsForUpdate(int userId, EntityBase entity)
         {
             entity.AmendUserId = userId;
-            entity.AmendDate = GetAmendDate();
-            DbContext.Entry(entity).Property("CreateUserId").IsModified = false;
-            DbContext.Entry(entity).Property("CreateDate").IsModified = false;
+            entity.AmendDate = this.GetAmendDate();
+            this.DbContext.Entry(entity).Property("CreateUserId").IsModified = false;
+            this.DbContext.Entry(entity).Property("CreateDate").IsModified = false;
             if (entity.GetType() == typeof(User))
             {
-                DbContext.Entry(entity).Property("VersionStartTime").IsModified = false;
-                DbContext.Entry(entity).Property("VersionEndTime").IsModified = false;
+                this.DbContext.Entry(entity).Property("VersionStartTime").IsModified = false;
+                this.DbContext.Entry(entity).Property("VersionEndTime").IsModified = false;
             }
         }
 
@@ -163,14 +163,14 @@
         {
             entity.Deleted = true;
             entity.AmendUserId = userId;
-            entity.AmendDate = GetAmendDate();
-            DbContext.Entry(entity).Property("CreateUserId").IsModified = false;
-            DbContext.Entry(entity).Property("CreateDate").IsModified = false;
+            entity.AmendDate = this.GetAmendDate();
+            this.DbContext.Entry(entity).Property("CreateUserId").IsModified = false;
+            this.DbContext.Entry(entity).Property("CreateDate").IsModified = false;
         }
 
         private DateTimeOffset GetAmendDate()
         {
-            var tzOffset = TimezoneOffsetManager.UserTimezoneOffset;
+            var tzOffset = this.TimezoneOffsetManager.UserTimezoneOffset;
             return tzOffset.HasValue ? new DateTimeOffset(DateTime.UtcNow.AddMinutes(tzOffset.Value).Ticks, TimeSpan.FromMinutes(tzOffset.Value)) : DateTimeOffset.Now;
         }
     }

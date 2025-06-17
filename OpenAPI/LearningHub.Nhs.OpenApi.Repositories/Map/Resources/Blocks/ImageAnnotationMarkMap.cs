@@ -1,20 +1,18 @@
-﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.Resources
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.Resources.Blocks
 {
     using LearningHub.Nhs.Models.Entities.Resource;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
     /// <summary>
-    /// The whole slide image annotation map.
+    /// The image annotation mark map.
     /// </summary>
     public class ImageAnnotationMarkMap : BaseEntityMap<ImageAnnotationMark>
     {
         /// <summary>
         /// The internal map.
         /// </summary>
-        /// <param name="modelBuilder">
-        /// The model builder.
-        /// </param>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void InternalMap(EntityTypeBuilder<ImageAnnotationMark> modelBuilder)
         {
             modelBuilder.ToTable("ImageAnnotationMark", "resources");

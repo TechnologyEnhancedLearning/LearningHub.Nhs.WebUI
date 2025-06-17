@@ -22,7 +22,7 @@
                 This will not be shown on screen but it will help those using screen readers.
             </div>
             <div class="col-12 mt-3">
-                <textarea class="form-control" id="alttag" name="alttag" aria-labelledby="alttag-label" rows="4" maxlength="125" v-model="localImageDetail.altTag" @change="setProperty('altTag', $event.target.value)" @input="altTextKeyup"></textarea>
+                <textarea class="form-control nhsuk-textarea" id="alttag" name="alttag" aria-labelledby="alttag-label" rows="4" maxlength="125" v-model="localImageDetail.altTag" @change="setProperty('altTag', $event.target.value)" @input="altTextKeyup"></textarea>
             </div>
             <div class="col-12 footer-text">
                 You can enter a maximum of 125 characters
@@ -40,7 +40,7 @@
                 for example, how it was developed or what is required for it to be used.
             </div>
             <div class="col-12 mt-3">
-                <textarea class="form-control" id="additionalinfo" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
+                <textarea class="form-control nhsuk-textarea" id="additionalinfo" aria-labelledby="additionalinfo-label" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
             </div>
             <div class="col-12 footer-text">
                 You can enter a maximum of 250 characters

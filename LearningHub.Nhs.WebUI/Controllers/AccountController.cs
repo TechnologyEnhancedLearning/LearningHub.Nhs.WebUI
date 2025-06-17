@@ -1168,6 +1168,16 @@
         }
 
         /// <summary>
+        /// The user already has an already active session. Then prevent concurrent access to the Learning Hub.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpGet]
+        public IActionResult AlreadyAnActiveSession()
+        {
+            return this.View();
+        }
+
+        /// <summary>
         /// The ForgotPassword.
         /// </summary>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>

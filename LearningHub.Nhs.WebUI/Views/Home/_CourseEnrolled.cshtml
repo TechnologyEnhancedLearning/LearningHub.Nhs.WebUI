@@ -2,15 +2,17 @@
 @using LearningHub.Nhs.WebUI.Extensions
 @using LearningHub.Nhs.WebUI.Helpers
 @model MoodleCourseResponseViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+
 @{
     bool providerExists = false;
     string cardStyle = "card-provider-details--blank";
 
-    string GetUrl(int courseId)
+    string GetMoodleCourseUrl(int courseId)
     {
-        string host = $"http://localhost";
+        var apiBaseUrl = Configuration["MoodleAPIConfig:BaseUrl"];        
         string path = $"course/view.php";
-        string returnUrl = $@"{host}/{path}?id={courseId}";
+        string returnUrl = $@"{apiBaseUrl}{path}?id={courseId}";
 
         return returnUrl;
     }
@@ -19,11 +21,9 @@
     <div class="nhsuk-card-banner-container">
         @if (!string.IsNullOrWhiteSpace(Model.CourseImage))
         {
-            if (Model.CourseImage.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+            @if (Model.CourseImage.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
             {
-                <object class="nhsuk-card__img nhsuk-card-banner" type="image/svg+xml" data="@Model.CourseImage">
-                    <img src="/images/default-course.jpg" alt="Fallback image" />
-                </object>
+                <img class="nhsuk-card__img nhsuk-card-banner" src="@Model.CourseImage" alt="Course image" onerror="this.onerror=null;this.src='/images/default-course.jpg';" />
             }
             else
             {
@@ -47,7 +47,7 @@
 
     <div class="nhsuk-card__content dashboard-card-content">
         <h3 class="nhsuk-card__heading nhsuk-heading-m">
-            <a class="nhsuk-card__link" href="@GetUrl(Model.Id.Value)">@Model.DisplayName</a>
+            <a class="nhsuk-card__link" href="@GetMoodleCourseUrl(Model.Id.Value)">@Model.DisplayName</a>
         </h3>
         <div class="nhsuk-card__description dashboard-card-body">
 
@@ -58,7 +58,7 @@
             <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
                 @if (@Model?.Progress != null)
                 {
-                    <div>Progress: @Model.Progress%</div>
+                    <div>Progress: @Model.ProgressPercentage</div>
                 }
             </div>
 

@@ -72,5 +72,12 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         /// <returns>The <see cref="Task"/>.</returns>
         Task<Resource> GetByResourceVersionIdAsync(int resourceVersionId);
 
+        /// <summary>
+        /// Returns a bool to indicate if the resourceVersionId corresponds to a current version of a resource.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<bool> IsCurrentVersionAsync(int resourceVersionId);
+
     }
 }

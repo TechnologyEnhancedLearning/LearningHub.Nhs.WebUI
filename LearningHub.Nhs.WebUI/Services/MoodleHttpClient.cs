@@ -26,7 +26,7 @@
         public MoodleHttpClient(HttpClient httpClient, IConfiguration config)
         {
             this.httpClient = httpClient;
-            this.moodleAPIBaseUrl = config["MoodleAPIConfig:BaseUrl"];
+            this.moodleAPIBaseUrl = config["MoodleAPIConfig:BaseUrl"] + "webservice/rest/server.php";
             this.moodleAPIMoodleWSRestFormat = config["MoodleAPIConfig:MoodleWSRestFormat"];
             this.moodleAPIWSToken = config["MoodleAPIConfig:WSToken"];
         }

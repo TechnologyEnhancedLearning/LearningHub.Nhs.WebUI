@@ -42,14 +42,14 @@
                 <div class="row">
                     <label class="checkContainer mr-0" style="margin-left:10px;">
                         <span>Default (1024 x 768)</span>
-                        <input type="radio" name="scormWindowType" v-model="localScormDetail.useDefaultPopupWindowSize" v-bind:value="true" @click="selectPopupWindowSize($event.target.value)" data-toggle="collapse" data-target="#advancedScormWindowSizePanel" checked />
+                        <input type="radio" name="scormWindowType" class="nhsuk-radios__input" v-model="localScormDetail.useDefaultPopupWindowSize" v-bind:value="true" @click="selectPopupWindowSize($event.target.value)" data-toggle="collapse" data-target="#advancedScormWindowSizePanel" checked />
                         <span class="radioButton"></span>
                     </label>
                 </div>
                 <div class="row">
                     <label class="checkContainer mr-0" style="margin-left:10px;">
                         <span>Advanced</span>
-                        <input type="radio" name="scormWindowType" v-model="localScormDetail.useDefaultPopupWindowSize" v-bind:value="false" @click="selectPopupWindowSize($event.target.value)" data-toggle="collapse" data-target="#advancedScormWindowSizePanel" />
+                        <input type="radio" name="scormWindowType" class="nhsuk-radios__input" v-model="localScormDetail.useDefaultPopupWindowSize" v-bind:value="false" @click="selectPopupWindowSize($event.target.value)" data-toggle="collapse" data-target="#advancedScormWindowSizePanel" />
                         <span class="radioButton"></span>
                     </label>
                 </div>
@@ -106,22 +106,22 @@
                 <div class="row">
                     <label class="checkContainer mr-0" style="margin-left:10px;">
                         <span>Don't display</span>
-                        <input type="radio" name="esrLinkType" v-model="localScormDetail.esrLinkType" value="1" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)" checked>
+                        <input type="radio" name="esrLinkType" class="nhsuk-radios__input" v-model="localScormDetail.esrLinkType" value="1" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)" checked>
                         <span class="radioButton"></span>
                     </label>
                     <label class="checkContainer ml-3" v-if="resourceCatalogueCount<=1">
                         <span>Display only to me</span>
-                        <input type="radio" name="esrLinkType" v-model="localScormDetail.esrLinkType" value="2" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
+                        <input type="radio" name="esrLinkType" class="nhsuk-radios__input" v-model="localScormDetail.esrLinkType" value="2" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
                         <span class="radioButton"></span>
                     </label>
                     <label class="checkContainer ml-3" v-if="resourceCatalogueCount>1">
                         <span>Display only to me and other catalogue editors</span>
-                        <input type="radio" name="esrLinkType" v-model="localScormDetail.esrLinkType" value="3" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
+                        <input type="radio" name="esrLinkType" class="nhsuk-radios__input" v-model="localScormDetail.esrLinkType" value="3" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
                         <span class="radioButton"></span>
                     </label>
                     <label class="checkContainer ml-3">
                         <span>Display to everyone</span>
-                        <input type="radio" name="esrLinkType" v-model="localScormDetail.esrLinkType" value="4" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
+                        <input type="radio" name="esrLinkType" class="nhsuk-radios__input" v-model="localScormDetail.esrLinkType" value="4" data-toggle="modal" data-target="#esrLinkModal" @click="showWarningModal($event.target.name, $event.target.value)">
                         <span class="radioButton"></span>
                     </label>
                 </div>
@@ -137,7 +137,7 @@
                 <div class="mt-3">
                     <label class="checkContainer mb-0">
                         <p class="pl-3 mb-0">Yes, make this resource available to download.</p>
-                        <input type="checkbox" name="canDownload" v-model="localScormDetail.canDownload" @click="resourceDownloadable($event.target.name, $event.target.checked)" />
+                        <input type="checkbox" name="canDownload"  class= "nhsuk-checkboxes__input" v-model="localScormDetail.canDownload" @click="resourceDownloadable($event.target.name, $event.target.checked)" />
                         <span class="checkmark"></span>
                     </label>
                 </div>
@@ -153,7 +153,7 @@
                 <div class="mt-3">
                     <label class="checkContainer mb-0">
                         <p class="pl-3 mb-0">Yes, clear the suspend data.</p>
-                        <input type="checkbox" name="clearSuspendData" v-model="localScormDetail.clearSuspendData" @click="resourceClearSuspendData($event.target.name, $event.target.checked)" />
+                        <input type="checkbox" name="clearSuspendData" class= "nhsuk-checkboxes__input" v-model="localScormDetail.clearSuspendData" @click="resourceClearSuspendData($event.target.name, $event.target.checked)" />
                         <span class="checkmark"></span>
                     </label>
                 </div>

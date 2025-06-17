@@ -28,10 +28,15 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<ICatalogueService, CatalogueService>();
             services.AddScoped<IBookmarkService, BookmarkService>();
             services.AddScoped<ILearningHubApiHttpClient, LearningHubApiHttpClient>();
+            services.AddScoped<INavigationPermissionService, NavigationPermissionService>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IUserNotificationService, UserNotificationService>();
 
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IFileTypeService, FileTypeService>();
             services.AddScoped<IHierarchyService, HierarchyService>();
+            services.AddScoped<IRatingService, RatingService>();
+            services.AddScoped<IResourceSyncService, ResourceSyncService>();
             services.AddScoped<ISecurityService, SecurityService>();
             services.AddScoped<IUserService, UserService>();
             services.AddTransient<IQueueCommunicatorService, QueueCommunicatorService>();

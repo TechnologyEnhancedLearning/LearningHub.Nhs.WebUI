@@ -13,14 +13,14 @@
         <div class="row">
             <label class="checkContainer ml-3">
                 <span class="my-auto">Make this resource available to everyone within the Learning Hub community.</span>
-                <input type="radio" name="resourceAccessibilityEnum" v-model="localResourceDetail.resourceAccessibilityEnum" v-bind:value="2" @click="setProperty($event.target.name, $event.target.value)" />
+                <input type="radio" class="nhsuk-radios__input" name="resourceAccessibilityEnum" v-model="localResourceDetail.resourceAccessibilityEnum" v-bind:value="2" @click="setProperty($event.target.name, $event.target.value)" />
                 <span class="radioButton"></span>
             </label>
         </div>
         <div class="row">
             <label class="checkContainer ml-3">
                 <span class="my-auto">Make this resource available only to the NHS and Social care workforce community.</span>
-                <input type="radio" name="resourceAccessibilityEnum" v-model="localResourceDetail.resourceAccessibilityEnum" v-bind:value="3" @click="setProperty($event.target.name, $event.target.value)" checked />
+                <input type="radio"  class="nhsuk-radios__input" name="resourceAccessibilityEnum" v-model="localResourceDetail.resourceAccessibilityEnum" v-bind:value="3" @click="setProperty($event.target.name, $event.target.value)" checked />
                 <span class="radioButton"></span>
             </label>
         </div>
@@ -148,5 +148,5 @@
             left: 4px;
             width: 12px;
             height: 12px;
-        }    
+        }
 </style>

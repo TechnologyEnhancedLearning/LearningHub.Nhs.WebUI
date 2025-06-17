@@ -21,7 +21,7 @@
                             <div class="form-group col-12 mt-5">
                                 <h2 id="title-label" class="nhsuk-heading-l">Title<i v-if="$v.resourceDetailTitle.$invalid" class="warningTriangle fa-solid fa-triangle-exclamation"></i></h2>
                                 <div class="mb-3"><label for="resourceDetail_title">Give your resource a concise, useful title that will make sense to learners.</label></div>
-                                <input type="text" class="form-control" aria-labelledby="title-label" maxlength="255" id="resourceDetail_title" name="resourceDetail_title" v-model="resourceDetailTitle" @change="setTitle($event.target.value)" autocomplete="off" v-bind:disabled="resourceLoading">
+                                <input type="text" class="form-control nhsuk-input" aria-labelledby="title-label" maxlength="255" id="resourceDetail_title" name="resourceDetail_title" v-model="resourceDetailTitle" @change="setTitle($event.target.value)" autocomplete="off" v-bind:disabled="resourceLoading">
                             </div>
                         </div>
                         <div class="row mt-4">
@@ -125,7 +125,7 @@
                                                 </div>
                                                 <div class="p-4 uploadInnerBox mt-4">
                                                     <div class="upload-btn-wrapper nhsuk-u-font-size-16">
-                                                        <label for="fileUpload" class="nhsuk-button nhsuk-button--secondary">Choose file</label> No file chosen
+                                                        <label for="fileUpload" class="nhsuk-button nhsuk-button--secondary" tabindex="0">Choose file</label> No file chosen
                                                         <input hidden type="file" id="fileUpload" aria-label="Choose file" ref="fileUpload" @change="onScormPackageFileChange($event)" />
                                                     </div>
                                                 </div>
@@ -359,7 +359,7 @@
                                                     <div>
                                                         <div class="modal-section-header"><label for="notes">Notes</label></div>
                                                         <p class="mt-1">Provide information to help learners understand why this new version has been created.</p>
-                                                        <textarea class="form-control" id="notes" v-bind:class="{ 'input-validation-error': $v.publishNotes.$invalid && $v.publishNotes.$dirty }" rows="4" maxlength="4000" v-model="publishNotes"></textarea>
+                                                        <textarea class="form-control nhsuk-textarea" id="notes" v-bind:class="{ 'input-validation-error': $v.publishNotes.$invalid && $v.publishNotes.$dirty }" rows="4" maxlength="4000" v-model="publishNotes"></textarea>
                                                         <div class="error-text pt-3" v-if="$v.publishNotes.$invalid && $v.publishNotes.$dirty">
                                                             <span class="text-danger">Enter notes.</span>
                                                         </div>
@@ -401,7 +401,8 @@
                                                                    v-model.trim="currentPassword"
                                                                    placeholder="Current password"
                                                                    @blur="$v.currentPassword.$touch()"
-                                                                   v-bind:class="{ 'input-validation-error': $v.currentPassword.$error}">
+                                                                   v-bind:class="{ 'input-validation-error': $v.currentPassword.$error}"
+                                                                   @keydown.enter="submitPassword">
                                                         </div>
 
                                                         <div class="row" v-if="showError">
@@ -1167,7 +1168,6 @@
     })
 
 </script>
-
 <style lang="scss" scoped>
     .resource-area-body-file-upload {
         min-height: auto !important;
@@ -1180,4 +1180,5 @@
     .password-div-width{
         max-width:70% !important;
         }
+
 </style>

@@ -163,10 +163,10 @@ namespace LearningHub.Nhs.WebUI.Services
                     {
                         var filter = filters.Where(x => x.DisplayName == filteritem).FirstOrDefault();
 
-                        if (filter != null && UtilityHelper.FindwiseResourceTypeDict.ContainsKey(filter.DisplayName))
+                        if (filter != null && UtilityHelper.FindwiseResourceMoodleTypeDict.ContainsKey(filter.DisplayName))
                         {
-                            var resourceTypeEnum = UtilityHelper.FindwiseResourceTypeDict[filter.DisplayName];
-                            var searchfilter = new SearchFilterModel() { DisplayName = UtilityHelper.GetPrettifiedResourceTypeName(resourceTypeEnum), Count = filter.Count, Value = filteritem, Selected = searchRequest.Filters?.Contains(filter.DisplayName) ?? false };
+                            var resourceTypeEnum = UtilityHelper.FindwiseResourceMoodleTypeDict[filter.DisplayName];
+                            var searchfilter = new SearchFilterModel() { DisplayName = UtilityHelper.GetPrettifiedResourceTypeNameMoodle(resourceTypeEnum), Count = filter.Count, Value = filteritem, Selected = searchRequest.Filters?.Contains(filter.DisplayName) ?? false };
                             searchfilters.Add(searchfilter);
                         }
                     }

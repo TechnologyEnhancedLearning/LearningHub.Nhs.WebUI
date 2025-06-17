@@ -33,6 +33,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
     {
         private readonly Mock<ILearningHubService> learningHubService;
         private readonly ResourceService resourceService;
+        private readonly Mock<IResourceSyncService> resourceSyncService;
         private readonly Mock<IResourceRepository> resourceRepository;
         private readonly Mock<ILogger<ResourceService>> logger;
         private readonly Mock<IMapper> mapper;
@@ -44,47 +45,46 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         private readonly Mock<IScormResourceVersionRepository> scormResourceVersionRepository;
         private readonly Mock<IGenericFileResourceVersionRepository> genericFileResourceVersionRepository;
         private readonly Mock<IResourceVersionRepository> resourceVersionRepository;
-     private readonly Mock<IAssessmentResourceActivityMatchQuestionRepository> assessmentResourceActivityMatchQuestionRepository;
-     private readonly Mock<IHtmlResourceVersionRepository> htmlResourceVersionRepository;
-     private readonly Mock<IArticleResourceVersionRepository> articleResourceVersionRepository;
+        private readonly Mock<IAssessmentResourceActivityMatchQuestionRepository> assessmentResourceActivityMatchQuestionRepository;
+        private readonly Mock<IHtmlResourceVersionRepository> htmlResourceVersionRepository;
+        private readonly Mock<IArticleResourceVersionRepository> articleResourceVersionRepository;
         private readonly Mock<IArticleResourceVersionFileRepository> articleResourceVersionFileRepository;
         private readonly Mock<IAudioResourceVersionRepository> audioResourceVersionRepository;
         private readonly Mock<IBookmarkRepository> bookmarkRepository;
-     private readonly Mock<IImageResourceVersionRepository> imageResourceVersionRepository;
-     private readonly Mock<IVideoResourceVersionRepository> videoResourceVersionRepository;
-     private readonly Mock<IAssessmentResourceVersionRepository> assessmentResourceVersionRepository;
-     private readonly Mock<IResourceLicenceRepository> resourceLicenceRepository;
-     private readonly Mock<IResourceReferenceRepository> resourceReferenceRepository;
-     private readonly Mock<IResourceVersionUserAcceptanceRepository> resourceVersionUserAcceptanceRepository;
-     private readonly Mock<IResourceVersionFlagRepository> resourceVersionFlagRepository;
-     private readonly Mock<IResourceVersionValidationResultRepository> resourceVersionValidationResultRepository;
-     private readonly Mock<IResourceVersionKeywordRepository> resourceVersionKeywordRepository;
-     private readonly Mock<ICatalogueNodeVersionRepository> catalogueNodeVersionRepository;
-     private readonly Mock<IEmbeddedResourceVersionRepository> embeddedResourceVersionRepository;
-     private readonly Mock<IVideoRepository> videoRepository;
-     private readonly Mock<IWholeSlideImageRepository> wholeSlideImageRepository;
-     private readonly Mock<INodePathRepository> nodePathRepository;
-     private readonly Mock<INodeResourceRepository> nodeResourceRepository;
-     private readonly Mock<IEquipmentResourceVersionRepository> equipmentResourceVersionRepository;
-     private readonly Mock<IPublicationRepository> publicationRepository;
-     private readonly Mock<IQuestionBlockRepository> questionBlockRepository;
-     private readonly Mock<IMigrationSourceRepository> migrationSourceRepository;
+        private readonly Mock<IImageResourceVersionRepository> imageResourceVersionRepository;
+        private readonly Mock<IVideoResourceVersionRepository> videoResourceVersionRepository;
+        private readonly Mock<IAssessmentResourceVersionRepository> assessmentResourceVersionRepository;
+        private readonly Mock<IResourceLicenceRepository> resourceLicenceRepository;
+        private readonly Mock<IResourceReferenceRepository> resourceReferenceRepository;
+        private readonly Mock<IResourceVersionUserAcceptanceRepository> resourceVersionUserAcceptanceRepository;
+        private readonly Mock<IResourceVersionFlagRepository> resourceVersionFlagRepository;
+        private readonly Mock<IResourceVersionValidationResultRepository> resourceVersionValidationResultRepository;
+        private readonly Mock<IResourceVersionKeywordRepository> resourceVersionKeywordRepository;
+        private readonly Mock<ICatalogueNodeVersionRepository> catalogueNodeVersionRepository;
+        private readonly Mock<IEmbeddedResourceVersionRepository> embeddedResourceVersionRepository;
+        private readonly Mock<IVideoRepository> videoRepository;
+        private readonly Mock<IWholeSlideImageRepository> wholeSlideImageRepository;
+        private readonly Mock<INodePathRepository> nodePathRepository;
+        private readonly Mock<INodeResourceRepository> nodeResourceRepository;
+        private readonly Mock<IEquipmentResourceVersionRepository> equipmentResourceVersionRepository;
+        private readonly Mock<IPublicationRepository> publicationRepository;
+        private readonly Mock<IQuestionBlockRepository> questionBlockRepository;
+        private readonly Mock<IMigrationSourceRepository> migrationSourceRepository;
         private readonly Mock<DbContext> dbContext;
-        // private readonly Mock<LearningHubDbContext> dbContext;
         private readonly Mock<INodeRepository> nodeRepository;
-     private readonly Mock<IFileRepository> fileRepository;
+        private readonly Mock<IFileRepository> fileRepository;
         private readonly Mock<IOptions<AzureConfig>> azureConfig;
         private readonly Mock<IOptions<LearningHubConfig>> learningHubConfig;
-     private readonly Mock<ICachingService> cachingService;
-     private readonly Mock<ISearchService> searchService;
-     private readonly Mock<ICatalogueService> catalogueService;
-     private readonly Mock<IUserService> userService;
-     private readonly Mock<IProviderService> providerService;
-     private readonly Mock<IInternalSystemService> internalSystemService;
-     private readonly Mock<IQueueCommunicatorService> queueCommunicatorService;
-     private readonly Mock<IResourceVersionProviderRepository> resourceVersionProviderRepository;
-     private readonly Mock<IResourceVersionAuthorRepository> resourceVersionAuthorRepository;
-     private readonly Mock<IFileChunkDetailRepository> fileChunkDetailRepository;
+        private readonly Mock<ICachingService> cachingService;
+        private readonly Mock<ISearchService> searchService;
+        private readonly Mock<ICatalogueService> catalogueService;
+        private readonly Mock<IUserService> userService;
+        private readonly Mock<IProviderService> providerService;
+        private readonly Mock<IInternalSystemService> internalSystemService;
+        private readonly Mock<IQueueCommunicatorService> queueCommunicatorService;
+        private readonly Mock<IResourceVersionProviderRepository> resourceVersionProviderRepository;
+        private readonly Mock<IResourceVersionAuthorRepository> resourceVersionAuthorRepository;
+        private readonly Mock<IFileChunkDetailRepository> fileChunkDetailRepository;
         private readonly int currentUserId;
 
         public ResourceServiceTests()
@@ -93,10 +93,11 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.currentUserId = 57541;
 
             this.learningHubService = new Mock<ILearningHubService>();
+            this.resourceSyncService = new Mock<IResourceSyncService>();
             this.resourceRepository = new Mock<IResourceRepository>();
             this.fileRepository = new Mock<IFileRepository>();
             this.articleResourceVersionFileRepository = new Mock<IArticleResourceVersionFileRepository>();
-            this.articleResourceVersionRepository= new Mock<IArticleResourceVersionRepository>();
+            this.articleResourceVersionRepository = new Mock<IArticleResourceVersionRepository>();
             this.mapper = new Mock<IMapper>();
             this.fileTypeService = new Mock<IFileTypeService>();
             this.userProfileService = new Mock<IUserProfileService>();
@@ -144,7 +145,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.resourceVersionAuthorRepository = new Mock<IResourceVersionAuthorRepository>();
             this.fileChunkDetailRepository = new Mock<IFileChunkDetailRepository>();
             this.logger = new Mock<ILogger<ResourceService>>();
-            this.resourceService = new ResourceService(this.learningHubService.Object, this.internalSystemService.Object, this.resourceVersionAuthorRepository.Object, this.fileChunkDetailRepository.Object, this.queueCommunicatorService.Object, this.resourceRepository.Object, this.resourceVersionProviderRepository.Object, this.providerService.Object, this.articleResourceVersionFileRepository.Object, this.publicationRepository.Object, this.migrationSourceRepository.Object, this.questionBlockRepository.Object, this.videoRepository.Object, this.wholeSlideImageRepository.Object, this.embeddedResourceVersionRepository.Object, this.equipmentResourceVersionRepository.Object, this.imageResourceVersionRepository.Object, this.bookmarkRepository.Object, this.assessmentResourceActivityMatchQuestionRepository.Object, this.resourceVersionKeywordRepository.Object, this.resourceVersionValidationResultRepository.Object, this.logger.Object, this.webLinkResourceVersionRepository.Object, this.caseResourceVersionRepository.Object, this.scormResourceVersionRepository.Object, this.genericFileResourceVersionRepository.Object, this.resourceVersionRepository.Object, this.htmlResourceVersionRepository.Object,this.mapper.Object, this.fileRepository.Object, this.azureConfig.Object, this.learningHubConfig.Object, this.userProfileService.Object, this.resourceVersionFlagRepository.Object, this.articleResourceVersionRepository.Object, this.audioResourceVersionRepository.Object, this.videoResourceVersionRepository.Object, this.assessmentResourceVersionRepository.Object, this.resourceLicenceRepository.Object, this.resourceReferenceRepository.Object, this.resourceVersionUserAcceptanceRepository.Object, this.catalogueNodeVersionRepository.Object, this.cachingService.Object, this.searchService.Object, this.catalogueService.Object, this.nodeResourceRepository.Object, this.nodePathRepository.Object, this.userService.Object, this.nodeRepository.Object, this.dbContext.Object.As<LearningHubDbContext>());
+            this.resourceService = new ResourceService(this.learningHubService.Object, this.fileTypeService.Object, this.blockCollectionRepository.Object, this.internalSystemService.Object, this.resourceVersionAuthorRepository.Object, this.fileChunkDetailRepository.Object, this.queueCommunicatorService.Object, this.resourceRepository.Object, this.resourceVersionProviderRepository.Object, this.providerService.Object, this.articleResourceVersionFileRepository.Object, this.publicationRepository.Object, this.migrationSourceRepository.Object, this.questionBlockRepository.Object, this.videoRepository.Object, this.wholeSlideImageRepository.Object, this.embeddedResourceVersionRepository.Object, this.equipmentResourceVersionRepository.Object, this.imageResourceVersionRepository.Object, this.bookmarkRepository.Object, this.assessmentResourceActivityMatchQuestionRepository.Object, this.resourceVersionKeywordRepository.Object, this.resourceVersionValidationResultRepository.Object, this.logger.Object, this.webLinkResourceVersionRepository.Object, this.caseResourceVersionRepository.Object, this.scormResourceVersionRepository.Object, this.genericFileResourceVersionRepository.Object, this.resourceVersionRepository.Object, this.htmlResourceVersionRepository.Object, this.mapper.Object, this.fileRepository.Object, this.azureConfig.Object, this.learningHubConfig.Object, this.userProfileService.Object, this.resourceVersionFlagRepository.Object, this.articleResourceVersionRepository.Object, this.audioResourceVersionRepository.Object, this.videoResourceVersionRepository.Object, this.assessmentResourceVersionRepository.Object, this.resourceLicenceRepository.Object, this.resourceReferenceRepository.Object, this.resourceVersionUserAcceptanceRepository.Object, this.catalogueNodeVersionRepository.Object, this.cachingService.Object, this.searchService.Object, this.catalogueService.Object, this.nodeResourceRepository.Object, this.nodePathRepository.Object, this.userService.Object, this.nodeRepository.Object,this.resourceSyncService.Object, this.dbContext.Object.As<LearningHubDbContext>());
         }
 
         private List<ResourceActivityDTO> ResourceActivityDTOList => new List<ResourceActivityDTO>()

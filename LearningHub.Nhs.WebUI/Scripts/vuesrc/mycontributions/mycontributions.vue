@@ -85,12 +85,12 @@
             <div class="lh-container-xl radio-options mt-5" v-if="selectedCatalogue && selectedCatalogue.nodeId>1">
                 <label class="checkContainer mb-0 mr-5">
                     View my contributions ({{userTotal}})
-                    <input type="radio" name="restrictToCurrentUser" v-model="restrictToCurrentUser" :value="true" @change="setRestrictToCurrentUser()" />
+                    <input type="radio" name="restrictToCurrentUser" class="nhsuk-radios__input" v-model="restrictToCurrentUser" :value="true" @change="setRestrictToCurrentUser()" />
                     <span class="radioButton"></span>
                 </label>
                 <label class="checkContainer mb-0">
                     View all resources in this catalogue ({{catalogueTotal}})
-                    <input type="radio" name="restrictToCurrentUser" v-model="restrictToCurrentUser" :value="false" @change="setRestrictToCurrentUser()" />
+                    <input type="radio" name="restrictToCurrentUser" class="nhsuk-radios__input" v-model="restrictToCurrentUser" :value="false" @change="setRestrictToCurrentUser()" />
                     <span class="radioButton"></span>
                 </label>
             </div>

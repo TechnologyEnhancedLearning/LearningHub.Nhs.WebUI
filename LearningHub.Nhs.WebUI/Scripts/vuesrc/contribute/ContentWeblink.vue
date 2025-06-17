@@ -10,7 +10,7 @@
                 This can be found in the address bar of your browser, for example, https://www.england.nhs.uk
             </div>
             <div class="col-12 mt-3">
-                <input type="text" id="web-link-text" name="web-link-text" aria-labelledby="web-link-label" aria-describedby="web-link-labelhint" placeholder="https://" class="form-control" v-bind:class="{ 'input-validation-error': (!urlIsAccessible || $v.localWeblinkDetail.url.$invalid) && $v.localWeblinkDetail.url.$dirty }" v-model="localWeblinkDetail.url" @change="setProperty('url', $event.target.value)" @input="urlKeyup" />
+                <input type="text" id="web-link-text" name="web-link-text" aria-labelledby="web-link-label" aria-describedby="web-link-labelhint" placeholder="https://" class="form-control nhsuk-input" v-bind:class="{ 'input-validation-error': (!urlIsAccessible || $v.localWeblinkDetail.url.$invalid) && $v.localWeblinkDetail.url.$dirty }" v-model="localWeblinkDetail.url" @change="setProperty('url', $event.target.value)" @input="urlKeyup" />
             </div>
         </div>
         <div class="error-text pt-3" v-if="!$v.localWeblinkDetail.url.url && $v.localWeblinkDetail.url.$dirty">
@@ -31,7 +31,7 @@
                 you can change the way it is shown to learners so that they understand what it is for, for example, NHS England.
             </div>
             <div class="col-12 mt-3">
-                <input type="text" id="localWeblinkDetaildisplayText" name= "localWeblinkDetaildisplayText" aria-labelledby="text-to-display-label" describedby="localWeblinkDetaildisplayTexthint" class="form-control" maxlength="50" v-model="localWeblinkDetail.displayText" @change="setProperty('displayText', $event.target.value)" />
+                <input type="text" id="localWeblinkDetaildisplayText" name= "localWeblinkDetaildisplayText" aria-labelledby="text-to-display-label" describedby="localWeblinkDetaildisplayTexthint" class="form-control nhsuk-input" maxlength="50" v-model="localWeblinkDetail.displayText" @change="setProperty('displayText', $event.target.value)" />
             </div>
             <div class="col-12 footer-text" id="localWeblinkDetaildisplayTexthint">
                 You can enter a maximum of 50 characters
@@ -49,7 +49,7 @@
                 for example, how it was developed or what is required for it to be used.
             </div>
             <div class="col-12 mt-3">
-                <textarea class="form-control" id="additionalinfo-label" name="additionalinfo-label" aria-labelledby="additionalinfo-label" aria-describedby="additionalinfo-label-hint" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
+                <textarea class="form-control nhsuk-textarea" id="additionalinfo-label" name="additionalinfo-label" aria-labelledby="additionalinfo-label" aria-describedby="additionalinfo-label-hint" rows="4" maxlength="250" v-model="additionalInformation" @change="setAdditionalInformation($event.target.value)"></textarea>
             </div>
             <div class="col-12 footer-text" id="additionalinfo-label-hint">
                 You can enter a maximum of 250 characters

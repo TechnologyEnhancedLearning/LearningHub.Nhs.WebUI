@@ -3,6 +3,7 @@
     using System;
     using System.IdentityModel.Tokens.Jwt;
     using System.Net;
+    using AspNetCoreRateLimit;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Binders;
     using LearningHub.Nhs.Models.Enums;
@@ -132,7 +133,7 @@
             });
 
             services.AddControllersWithViews().AddNewtonsoftJson();
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddControllersWithViews();
 
             services.AddFeatureManagement();
         }

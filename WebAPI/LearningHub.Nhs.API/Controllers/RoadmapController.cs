@@ -2,8 +2,10 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using AutoMapper;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities;
+    using LearningHub.Nhs.Models.Notification;
     using LearningHub.Nhs.Models.RoadMap;
     using LearningHub.Nhs.Services.Interface;
     using Microsoft.AspNetCore.Authorization;
@@ -19,6 +21,7 @@
     public class RoadmapController : ApiControllerBase
     {
         private readonly IRoadmapService roadmapService;
+        private readonly IMapper mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RoadmapController"/> class.
@@ -26,13 +29,16 @@
         /// <param name="userService">The user service.</param>
         /// <param name="roadmapService">The roadmap service.</param>
         /// <param name="logger">The logger.</param>
+        /// <param name="mapper">The mapper.</param>
         public RoadmapController(
             IUserService userService,
             IRoadmapService roadmapService,
-            ILogger<RoadmapController> logger)
+            ILogger<RoadmapController> logger,
+            IMapper mapper)
             : base(userService, logger)
         {
             this.roadmapService = roadmapService;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -69,6 +75,22 @@
         public async Task<Roadmap> GetRoadmap(int id)
         {
             return await this.roadmapService.GetRoadmap(id);
+        }
+
+        /// <summary>
+        /// The GetRoadmap.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The roadmap.</returns>
+        [HttpGet]
+        [Route("GetRoadMapsById/{id}")]
+        public async Task<RoadMapViewModel> GetRoadMapsById(int id)
+        {
+            var roadMap = await this.roadmapService.GetRoadmapUser(id);
+            var roadmapviewmodel = this.mapper.Map<RoadMapViewModel>(roadMap);
+            roadmapviewmodel.CreateUserName = roadMap.CreateUser.UserName;
+            roadmapviewmodel.AmendUserName = roadMap.AmendUser.UserName;
+            return roadmapviewmodel;
         }
 
         /// <summary>

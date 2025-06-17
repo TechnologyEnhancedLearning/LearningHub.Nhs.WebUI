@@ -1,27 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<Platforms>x64</Platforms>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
-
   <ItemGroup>
-   <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-   <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
-   <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-   <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.46" />
-   <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
-   <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-	 <PackageReference Update="StyleCop.Analyzers" Version="1.1.118">
-		<PrivateAssets>all</PrivateAssets>
-		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	</PackageReference>
-    <PackageReference Include="System.Collections" Version="4.3.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+    <PackageReference Include="elfhHub.Nhs.Models" />
+    <PackageReference Include="LearningHub.Nhs.Caching" />
+    <PackageReference Include="LearningHub.Nhs.Models" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Update="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Collections" />
   </ItemGroup>
-
-  <ItemGroup>    
+  <ItemGroup>
     <ProjectReference Include="..\MigrationTool\LearningHub.Nhs.Migration.Models\LearningHub.Nhs.Migration.Models.csproj" />
   </ItemGroup>
-
 </Project>

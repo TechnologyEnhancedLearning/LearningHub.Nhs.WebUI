@@ -197,7 +197,15 @@
             if (userGroup.IsNew())
             {
                 validationResult = await this.userGroupService.CreateUserGroup(userGroup);
-                userGroup = await this.userGroupService.GetUserGroupAdminDetailbyIdAsync(validationResult.CreatedId.Value);
+                if (validationResult.IsValid)
+                {
+                    userGroup = await this.userGroupService.GetUserGroupAdminDetailbyIdAsync(validationResult.CreatedId.Value);
+                }
+                else
+                {
+                    this.ViewBag.ErrorMessage = $"Update failed: {string.Join(Environment.NewLine, validationResult.Details)}";
+                    return this.View("Details", userGroup);
+                }
             }
             else
             {

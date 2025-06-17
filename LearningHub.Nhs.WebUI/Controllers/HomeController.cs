@@ -7,6 +7,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using System.Net.Http;
     using System.Threading.Tasks;
     using elfhHub.Nhs.Models.Common;
+    using elfhHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Content;
     using LearningHub.Nhs.Models.Enums.Content;
     using LearningHub.Nhs.Models.Extensions;
@@ -15,13 +16,13 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
-    using Microsoft.ApplicationInsights.AspNetCore;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.FeatureManagement;
@@ -39,6 +40,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         private readonly IDashboardService dashboardService;
         private readonly IContentService contentService;
         private readonly IFeatureManager featureManager;
+        private readonly Microsoft.Extensions.Configuration.IConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController"/> class.
@@ -53,6 +55,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="dashboardService">Dashboard service.</param>
         /// <param name="contentService">Content service.</param>
         /// <param name="featureManager"> featureManager.</param>
+        /// <param name="configuration"> config.</param>
         public HomeController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
@@ -63,7 +66,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
             LearningHubAuthServiceConfig authConfig,
             IDashboardService dashboardService,
             IContentService contentService,
-            IFeatureManager featureManager)
+            IFeatureManager featureManager,
+            Microsoft.Extensions.Configuration.IConfiguration configuration)
         : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.authConfig = authConfig;
@@ -72,6 +76,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             this.dashboardService = dashboardService;
             this.contentService = contentService;
             this.featureManager = featureManager;
+            this.configuration = configuration;
         }
 
         /// <summary>
@@ -133,11 +138,12 @@ namespace LearningHub.Nhs.WebUI.Controllers
         public IActionResult Error(int? httpStatusCode)
         {
             string originalPathUrlMessage = null;
-
+            string originalPath = null;
             if (httpStatusCode.HasValue && httpStatusCode.Value == 404)
             {
                 var exceptionHandlerPathFeature = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-                originalPathUrlMessage = $"Page Not Found url: {exceptionHandlerPathFeature?.OriginalPath}. ";
+                originalPath = exceptionHandlerPathFeature?.OriginalPath;
+                originalPathUrlMessage = $"Page Not Found url: {originalPath}. ";
             }
 
             if (this.User.Identity.IsAuthenticated)
@@ -207,6 +213,15 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     var resourcesTask = this.dashboardService.GetResourcesAsync(resourceDashboard, 1);
                     var cataloguesTask = this.dashboardService.GetCataloguesAsync(catalogueDashboard, 1);
 
+                    var enrolledCoursesTask = Task.FromResult(new List<MoodleCourseResponseViewModel>());
+                    var enableMoodle = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.EnableMoodle)).Result;
+                    this.ViewBag.EnableMoodle = enableMoodle;
+                    this.ViewBag.ValidMoodleUser = this.CurrentMoodleUserId > 0;
+                    if (enableMoodle && myLearningDashboard == "my-enrolled-courses")
+                    {
+                        enrolledCoursesTask = this.dashboardService.GetEnrolledCoursesFromMoodleAsync(this.CurrentMoodleUserId, 1);
+                    }
+
                     await Task.WhenAll(learningTask, resourcesTask, cataloguesTask);
 
                     var model = new DashboardViewModel()
@@ -214,6 +229,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                         MyLearnings = await learningTask,
                         Resources = await resourcesTask,
                         Catalogues = await cataloguesTask,
+                        EnrolledCourses = await enrolledCoursesTask,
                     };
 
                     if (!string.IsNullOrEmpty(this.Request.Query["preview"]) && Convert.ToBoolean(this.Request.Query["preview"]))
@@ -320,6 +336,29 @@ namespace LearningHub.Nhs.WebUI.Controllers
         }
 
         /// <summary>
+        /// The ChangePasswordAcknowledgement.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        public IActionResult ChangePasswordAcknowledgement()
+        {
+            return this.View();
+        }
+
+        /// <summary>
+        /// StatusUpdate.
+        /// </summary>
+        /// <returns>Actionresult.</returns>
+        public IActionResult UserLogout()
+        {
+            if (!(this.User?.Identity.IsAuthenticated ?? false))
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            return new SignOutResult(new[] { CookieAuthenticationDefaults.AuthenticationScheme, "oidc" });
+        }
+
+        /// <summary>
         /// The Logout.
         /// This is directly referenced in the LoginWizardFilter to allow
         /// logouts to bypass LoginWizard redirects.
@@ -329,12 +368,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
         [AllowAnonymous]
         public IActionResult Logout()
         {
-            if (!(this.User?.Identity.IsAuthenticated ?? false))
-            {
-                return this.RedirectToAction("Index");
-            }
-
-            return new SignOutResult(new[] { CookieAuthenticationDefaults.AuthenticationScheme, "oidc" });
+            var redirectUri = $"{this.configuration["LearningHubAuthServiceConfig:Authority"]}/Home/SetIsPasswordUpdate?isLogout=true";
+            return this.Redirect(redirectUri);
         }
 
         /// <summary>
@@ -352,6 +387,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
 
             this.ViewBag.AuthTimeout = this.authConfig.AuthTimeout;
             this.ViewBag.ReturnUrl = returnUrl;
+
             return this.View();
         }
 

@@ -1,4 +1,9 @@
-﻿CREATE PROCEDURE [hierarchy].[GetCataloguesCount] (
+﻿-------------------------------------------------------------------------------
+-- Author       Arunima George
+-- Created      15-08-2024
+-- Purpose      Get Cataloges for View all cataoge page
+
+CREATE PROCEDURE [hierarchy].[GetCataloguesCount] (
 	 @userId INT
 	)
 AS

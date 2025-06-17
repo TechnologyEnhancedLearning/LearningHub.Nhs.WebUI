@@ -9,6 +9,7 @@
 -- 09-11-2020  RobS	Initial Revision
 -- 30-10-2023  RobS Updates for changes to activity status. Ending ResourceActivity status is now 'Incomplete' if
 --             user hasn't played whole media file. Used to be 'Completed'.
+-- 23-04-2025  SA   TD-4382 - added the condition to exclude the deleted resource versions 
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [activity].[CalculatePlayedMediaSegments]
@@ -41,7 +42,7 @@ from [resources].[ResourceVersion] (nolock) rv
 	left join [resources].[AudioResourceVersion] (nolock) arv on arv.ResourceVersionId = rv.Id
 where rv.ResourceId = @ResourceId
 	and rv.MajorVersion = @MajorVersion
-	and rv.VersionStatusId > 1
+	and rv.VersionStatusId > 1 and rv.Deleted = 0
 --select @DurationInSeconds
 
 -- Start the analysis.

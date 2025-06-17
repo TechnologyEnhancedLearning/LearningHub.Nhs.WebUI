@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities;
+    using LearningHub.Nhs.Models.RoadMap;
 
     /// <summary>
     /// Defines the <see cref="IRoadmapService" />.
@@ -35,6 +36,13 @@
         /// </summary>
         /// <returns>The <see cref="List{Roadmap}"/>.</returns>
         Task<List<Roadmap>> GetUpdates();
+
+        /// <summary>
+        /// The GetIdAsync.
+        /// </summary>
+        /// <param name="id">The id<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{Roadmap}"/>.</returns>
+        Task<RoadMapViewModel> GetIdAsync(int id);
 
         /// <summary>
         /// The UpdateRoadmap.

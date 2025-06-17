@@ -419,6 +419,15 @@
         Task<EmailChangeValidationTokenViewModel> RegenerateEmailChangeValidationTokenAsync(string newPrimaryEmail, bool isUserRoleUpgrade);
 
         /// <summary>
+        /// User Can request for password reset.
+        /// </summary>
+        /// <param name="emailAddress">The email Address.</param>
+        /// <param name="passwordRequestLimitingPeriod">The passwordRequestLimitingPeriod.</param>
+        /// <param name="passwordRequestLimit">ThepasswordRequestLimit.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<bool> CanRequestPasswordResetAsync(string emailAddress, int passwordRequestLimitingPeriod, int passwordRequestLimit);
+
+        /// <summary>
         /// GenerateEmailChangeValidationTokenAndSendEmail.
         /// </summary>
         /// <param name="emailAddress">The email Address.</param>
@@ -455,6 +464,13 @@
         /// <param name="userId">The user id.</param>
         /// <returns>providers.</returns>
         Task<List<ProviderViewModel>> GetProvidersByUserIdAsync(int userId);
+
+        /// <summary>
+        /// To Check User Has An ActiveSession.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<PagedResultSet<UserHistoryViewModel>> CheckUserHasAnActiveSessionAsync(int userId);
 
         /// <summary>
         /// To get the Base64MD5HashDigest value.

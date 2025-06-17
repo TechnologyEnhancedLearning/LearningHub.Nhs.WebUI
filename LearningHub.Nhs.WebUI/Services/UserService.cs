@@ -1641,6 +1641,31 @@
         }
 
         /// <inheritdoc/>
+        public async Task<bool> CanRequestPasswordResetAsync(string emailAddress, int passwordRequestLimitingPeriod, int passwordRequestLimit)
+        {
+            bool status = false;
+
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+
+            var request = $"User/CanRequestPasswordReset/{emailAddress}/{passwordRequestLimitingPeriod}/{passwordRequestLimit}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                status = JsonConvert.DeserializeObject<bool>(result);
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return status;
+        }
+
+        /// <inheritdoc/>
         public async Task<EmailChangeValidationTokenViewModel> GenerateEmailChangeValidationTokenAndSendEmailAsync(string emailAddress, bool isUserRoleUpgrade)
         {
             EmailChangeValidationTokenViewModel viewmodel = null;
@@ -1837,6 +1862,28 @@
             }
 
             return viewmodel;
+        }
+
+        /// <inheritdoc/>
+        public async Task<PagedResultSet<UserHistoryViewModel>> CheckUserHasAnActiveSessionAsync(int userId)
+        {
+            PagedResultSet<UserHistoryViewModel> userHistoryViewModel = new PagedResultSet<UserHistoryViewModel>();
+
+            var client = await this.userApiHttpClient.GetClientAsync();
+            var request = $"UserHistory/CheckUserHasActiveSession/{userId}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                userHistoryViewModel = JsonConvert.DeserializeObject<PagedResultSet<UserHistoryViewModel>>(result);
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return userHistoryViewModel;
         }
 
         /// <summary>

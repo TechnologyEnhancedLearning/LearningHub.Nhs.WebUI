@@ -1,7 +1,7 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.SecurityQuestionSelectViewModel
 @{
     string[] textualNumber = new string[] { "first", "second", "third", "fourth", "fifth" };
-
+    ViewData["DisableValidation"] = true;
     var errorHasOccurred = !ViewData.ModelState.IsValid;
 }
 

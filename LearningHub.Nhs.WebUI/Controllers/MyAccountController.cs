@@ -21,10 +21,12 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Routing;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using NHSUKViewComponents.Web.ViewModels;
     using ChangePasswordViewModel = LearningHub.Nhs.WebUI.Models.UserProfile.ChangePasswordViewModel;
+    using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
     /// <summary>
     /// The UserController.
@@ -43,6 +45,7 @@
         private readonly ISpecialtyService specialtyService;
         private readonly ILocationService locationService;
         private readonly ICacheService cacheService;
+        private readonly IConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MyAccountController"/> class.
@@ -61,6 +64,7 @@
         /// <param name="locationService">The locationService.</param>
         /// <param name="multiPageFormService">The multiPageFormService<see cref="IMultiPageFormService"/>.</param>
         /// <param name="cacheService">The cacheService<see cref="ICacheService"/>.</param>
+        /// <param name="configuration">The cacheService<see cref="IConfiguration"/>.</param>
         public MyAccountController(
                 IWebHostEnvironment hostingEnvironment,
                 ILogger<ResourceController> logger,
@@ -75,7 +79,8 @@
                 ISpecialtyService specialtyService,
                 ILocationService locationService,
                 IMultiPageFormService multiPageFormService,
-                ICacheService cacheService)
+                ICacheService cacheService,
+                IConfiguration configuration)
                 : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.userService = userService;
@@ -88,6 +93,7 @@
             this.locationService = locationService;
             this.multiPageFormService = multiPageFormService;
             this.cacheService = cacheService;
+            this.configuration = configuration;
         }
 
         private string LoginWizardCacheKey => $"{this.CurrentUserId}:LoginWizard";
@@ -452,9 +458,8 @@
             if (this.ModelState.IsValid)
             {
                 await this.userService.UpdatePassword(model.NewPassword);
-
-                this.ViewBag.SuccessMessage = CommonValidationErrorMessages.PasswordSuccessMessage;
-                return this.View("SuccessMessage");
+                var redirectUri = $"{this.configuration["LearningHubAuthServiceConfig:Authority"]}/Home/SetIsPasswordUpdate?isLogout=false";
+                return this.Redirect(redirectUri);
             }
             else
             {
@@ -673,27 +678,35 @@
                 return this.View("ChangeCurrentRole", viewModel);
             }
 
-            if (formSubmission && viewModel.SelectedJobRoleId.HasValue)
-            {
-                var newRoleId = viewModel.SelectedJobRoleId.Value;
-                var jobRole = await this.jobRoleService.GetByIdAsync(newRoleId);
-
-                if (jobRole.MedicalCouncilId > 0 && jobRole.MedicalCouncilId < 4)
-                {
-                    return this.RedirectToAction(nameof(this.ChangeMedicalCouncilNo), new UserMedicalCouncilNoUpdateViewModel { SelectedJobRoleId = newRoleId });
-                }
-                else
-                {
-                    return this.RedirectToAction(nameof(this.ChangeGrade), new UserGradeUpdateViewModel { SelectedJobRoleId = newRoleId });
-                }
-            }
-
             if (!string.IsNullOrWhiteSpace(viewModel.FilterText))
             {
                 var jobRoles = await this.jobRoleService.GetPagedFilteredAsync(viewModel.FilterText, viewModel.CurrentPage, viewModel.PageSize);
                 viewModel.RoleList = jobRoles.Item2;
                 viewModel.TotalItems = jobRoles.Item1;
                 viewModel.HasItems = jobRoles.Item1 > 0;
+            }
+
+            if (formSubmission)
+            {
+                if (viewModel.SelectedJobRoleId.HasValue)
+                {
+                    var newRoleId = viewModel.SelectedJobRoleId.Value;
+                    var jobRole = await this.jobRoleService.GetByIdAsync(newRoleId);
+
+                    if (jobRole.MedicalCouncilId > 0 && jobRole.MedicalCouncilId < 4)
+                    {
+                        return this.RedirectToAction(nameof(this.ChangeMedicalCouncilNo), new UserMedicalCouncilNoUpdateViewModel { SelectedJobRoleId = newRoleId });
+                    }
+                    else
+                    {
+                        return this.RedirectToAction(nameof(this.ChangeGrade), new UserGradeUpdateViewModel { SelectedJobRoleId = newRoleId });
+                    }
+                }
+                else
+                {
+                    this.ModelState.AddModelError(nameof(viewModel.SelectedJobRoleId), CommonValidationErrorMessages.RoleRequired);
+                    return this.View("ChangeCurrentRole", viewModel);
+                }
             }
 
             return this.View("ChangeCurrentRole", viewModel);
@@ -795,26 +808,37 @@
             viewModel.Grade = profile.Grade;
             viewModel.SelectedJobRole = jobRole.NameWithStaffGroup;
             viewModel.SelectedMedicalCouncilId = jobRole.MedicalCouncilId;
-
-            if (this.User.IsInRole("BasicUser") || (formSubmission && viewModel.SelectedGradeId.HasValue))
+            if (formSubmission)
             {
-                var medicalCouncilNoRequired = jobRole.MedicalCouncilId > 0 && jobRole.MedicalCouncilId < 4;
-                await this.userService.UpdateUserEmployment(
-                    new elfhHub.Nhs.Models.Entities.UserEmployment
-                    {
-                        Id = profile.EmploymentId,
-                        UserId = profile.Id,
-                        JobRoleId = viewModel.SelectedJobRoleId,
-                        MedicalCouncilId = medicalCouncilNoRequired ? jobRole.MedicalCouncilId : null,
-                        MedicalCouncilNo = medicalCouncilNoRequired ? (viewModel.SelectedMedicalCouncilNo ?? profile.MedicalCouncilNo) : null,
-                        GradeId = viewModel.SelectedGradeId,
-                        SpecialtyId = profile.SpecialtyId,
-                        StartDate = profile.JobStartDate,
-                        LocationId = profile.LocationId,
-                    });
+                if (this.User.IsInRole("BasicUser") || viewModel.SelectedGradeId != null)
+                {
+                    var medicalCouncilNoRequired = jobRole.MedicalCouncilId > 0 && jobRole.MedicalCouncilId < 4;
+                    await this.userService.UpdateUserEmployment(
+                        new elfhHub.Nhs.Models.Entities.UserEmployment
+                        {
+                            Id = profile.EmploymentId,
+                            UserId = profile.Id,
+                            JobRoleId = viewModel.SelectedJobRoleId,
+                            MedicalCouncilId = medicalCouncilNoRequired ? jobRole.MedicalCouncilId : null,
+                            MedicalCouncilNo = medicalCouncilNoRequired ? (viewModel.SelectedMedicalCouncilNo ?? profile.MedicalCouncilNo) : null,
+                            GradeId = Convert.ToInt32(viewModel.SelectedGradeId),
+                            SpecialtyId = profile.SpecialtyId,
+                            StartDate = profile.JobStartDate,
+                            LocationId = profile.LocationId,
+                        });
 
-                this.ViewBag.SuccessMessage = "Your job details have been changed";
-                return this.View("SuccessMessage");
+                    this.ViewBag.SuccessMessage = "Your job details have been changed";
+                    return this.View("SuccessMessage");
+                }
+                else
+                {
+                    this.ModelState.AddModelError(nameof(viewModel.SelectedGradeId), CommonValidationErrorMessages.GradeRequired);
+                    return this.View("ChangeGrade", viewModel);
+                }
+            }
+            else
+            {
+                viewModel.SelectedGradeId = profile.GradeId.ToString();
             }
 
             return this.View("ChangeGrade", viewModel);

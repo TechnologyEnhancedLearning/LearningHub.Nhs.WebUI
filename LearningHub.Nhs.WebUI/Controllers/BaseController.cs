@@ -3,6 +3,7 @@
     using System.Net.Http;
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.WebUI.Configuration;
+    using LearningHub.Nhs.WebUI.Extensions;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Models;
@@ -75,6 +76,11 @@
         /// Gets the CurrentUserId.
         /// </summary>
         protected int CurrentUserId => this.User.Identity.GetCurrentUserId();
+
+        /// <summary>
+        /// Gets the CurrentUserId.
+        /// </summary>
+        protected int CurrentMoodleUserId => this.User.Identity.GetMoodleUserId();
 
         /// <summary>
         /// The OnActionExecuting.

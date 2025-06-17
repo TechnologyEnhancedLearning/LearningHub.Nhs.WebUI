@@ -1,10 +1,15 @@
 ﻿namespace LearningHub.Nhs.WebUI.Services
 {
     using System;
+    using System.Collections.Generic;
+    using System.Net.Http;
+    using System.Runtime.InteropServices.WindowsRuntime;
     using System.Text;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Dashboard;
     using LearningHub.Nhs.Models.Entities.Analytics;
+    using LearningHub.Nhs.Models.Entities.Reporting;
+    using LearningHub.Nhs.Services.Interface;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
     using Microsoft.Extensions.Logging;
@@ -15,14 +20,18 @@
     /// </summary>
     public class DashboardService : BaseService<DashboardService>, IDashboardService
     {
+        private readonly IMoodleHttpClient moodleHttpClient;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DashboardService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">learningHubHttpClient.</param>
         /// <param name="logger">logger.</param>
-        public DashboardService(ILearningHubHttpClient learningHubHttpClient, ILogger<DashboardService> logger)
+        /// <param name="moodleHttpClient">MoodleHttpClient.</param>
+        public DashboardService(ILearningHubHttpClient learningHubHttpClient, ILogger<DashboardService> logger, IMoodleHttpClient moodleHttpClient)
          : base(learningHubHttpClient, logger)
         {
+            this.moodleHttpClient = moodleHttpClient;
         }
 
         /// <summary>
@@ -109,6 +118,20 @@
                 throw new Exception("AccessDenied");
             }
 
+            return viewmodel;
+        }
+
+        /// <summary>
+        /// GetEnrolledCoursesFromMoodleAsync.
+        /// </summary>
+        /// <param name="currentUserId">The dashboard type.</param>
+        /// <param name="pageNumber">The page Number.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<List<MoodleCourseResponseViewModel>> GetEnrolledCoursesFromMoodleAsync(int currentUserId, int pageNumber)
+        {
+            List<MoodleCourseResponseViewModel> viewmodel = new List<MoodleCourseResponseViewModel> { };
+            MoodleApiService moodleApiService = new MoodleApiService(this.moodleHttpClient);
+            viewmodel = await moodleApiService.GetEnrolledCoursesAsync(currentUserId, pageNumber);
             return viewmodel;
         }
 

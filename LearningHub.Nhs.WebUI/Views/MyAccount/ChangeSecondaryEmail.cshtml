@@ -1,6 +1,7 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserEmailDetailsViewModel
 
 @{
+  ViewData["DisableValidation"] = true;
   ViewData["Title"] = "My Account - Change secondary email";
   var errorHasOccurred = !ViewData.ModelState.IsValid;
 }

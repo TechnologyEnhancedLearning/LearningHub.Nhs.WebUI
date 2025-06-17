@@ -1,5 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -7,21 +6,16 @@
     <NoWarn>$(NoWarn),1573,1591,1712</NoWarn>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <CodeAnalysisRuleSet />
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <CodeAnalysisRuleSet />
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.46" />
+    <PackageReference Include="LearningHub.Nhs.Models" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
   </ItemGroup>
-
 </Project>

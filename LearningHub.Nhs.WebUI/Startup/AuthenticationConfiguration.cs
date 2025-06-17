@@ -1,12 +1,14 @@
 ﻿namespace LearningHub.Nhs.WebUI.Startup
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Linq;
     using System.Threading.Tasks;
     using IdentityModel;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Handlers;
+    using LearningHub.Nhs.WebUI.Helpers;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -68,6 +70,7 @@
 
                 options.ClaimActions.MapUniqueJsonKey("role", "role");
                 options.ClaimActions.MapUniqueJsonKey("name", "elfh_userName");
+                options.ClaimActions.MapUniqueJsonKey("moodle_username", "preferred_username");
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     NameClaimType = JwtClaimTypes.Name,

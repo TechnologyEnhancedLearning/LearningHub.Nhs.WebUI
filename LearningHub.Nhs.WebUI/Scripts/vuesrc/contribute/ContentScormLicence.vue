@@ -5,12 +5,12 @@
         <div class="row mt-4">
             <label class="checkContainer" style="margin-right:20px; margin-left:10px;">
                 Unavailable
-                <input type="radio" name="canDownload" v-model="localScormDetail.canDownload" v-bind:value="false" @click="setProperty($event.target.name, $event.target.value)" checked>
+                <input type="radio" name="canDownload" class="nhsuk-radios__input" v-model="localScormDetail.canDownload" v-bind:value="false" @click="setProperty($event.target.name, $event.target.value)" checked>
                 <span class="radioButton"></span>
             </label>
             <label class="checkContainer">
                 Available
-                <input type="radio" name="canDownload" v-model="localScormDetail.canDownload" v-bind:value="true" @click="setProperty($event.target.name, $event.target.value)">
+                <input type="radio" name="canDownload" class="nhsuk-radios__input" v-model="localScormDetail.canDownload" v-bind:value="true" @click="setProperty($event.target.name, $event.target.value)">
                 <span class="radioButton"></span>
             </label>
         </div>

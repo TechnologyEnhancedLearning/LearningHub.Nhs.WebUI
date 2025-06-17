@@ -11,7 +11,7 @@
 
             <div class="p-4 uploadInnerBox">
                 <div class="upload-btn-wrapper nhsuk-u-font-size-16">
-                    <label for="fileUpload" class="nhsuk-button nhsuk-button--secondary">Choose file</label> No file chosen
+                    <label for="fileUpload" class="nhsuk-button nhsuk-button--secondary" tabindex="0">Choose file</label> No file chosen
                     <input type="file" id="fileUpload" :accept="fileAccept" aria-label="Choose file" ref="fileUpload" v-on:change="onResourceFileChange" hidden />
                 </div>
             </div>

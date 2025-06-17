@@ -77,7 +77,7 @@
         </div>
         <div id="character-count-component-status-message"
              class="character-count-component-status-message"
-             aria-live="polite">
+             >
             <span>
                 You have {{ charactersDiff }} character{{ charactersDiffPlural ? 's' : '' }} remaining
             </span>

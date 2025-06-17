@@ -108,6 +108,21 @@
         }
 
         /// <summary>
+        /// The get roadmap with Userdetails.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The roadmap.</returns>
+        public async Task<Roadmap> GetRoadmapUser(int id)
+        {
+            return await this.roadmapRepository.GetAll()
+             .Include(n => n.AmendUser)
+             .Include(n => n.CreateUser)
+              .Where(n => n.Id == id)
+                .AsNoTracking()
+                .SingleOrDefaultAsync();
+        }
+
+        /// <summary>
         /// The delete roadmap.
         /// </summary>
         /// <param name="userId">The user id.</param>

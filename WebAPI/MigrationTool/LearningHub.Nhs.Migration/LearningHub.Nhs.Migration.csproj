@@ -1,30 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Platforms>x64</Platforms>
-	</PropertyGroup>
-
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.16.1" />
-    <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
-    <PackageReference Include="FluentValidation" Version="11.11.0" />
-    <PackageReference Include="HtmlSanitizer" Version="6.0.453" />
-    <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.46" />
-	<PackageReference Update="StyleCop.Analyzers" Version="1.1.118">
-		<PrivateAssets>all</PrivateAssets>
-		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	</PackageReference>
+    <PackageReference Include="AngleSharp" />
+    <PackageReference Include="elfhHub.Nhs.Models" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="HtmlSanitizer" />
+    <PackageReference Include="LearningHub.Nhs.Caching" />
+    <PackageReference Include="LearningHub.Nhs.Models" />
+    <PackageReference Update="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\..\LearningHub.Nhs.Api.Shared\LearningHub.Nhs.Api.Shared.csproj" />
-		<ProjectReference Include="..\..\LearningHub.Nhs.Repository.Interface\LearningHub.Nhs.Repository.Interface.csproj" />
-		<ProjectReference Include="..\..\LearningHub.Nhs.Services.Interface\LearningHub.Nhs.Services.Interface.csproj" />
-		<ProjectReference Include="..\LearningHub.Nhs.Migration.Interface\LearningHub.Nhs.Migration.Interface.csproj" />
-		<ProjectReference Include="..\LearningHub.Nhs.Migration.Models\LearningHub.Nhs.Migration.Models.csproj" />
-	</ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\..\LearningHub.Nhs.Api.Shared\LearningHub.Nhs.Api.Shared.csproj" />
+    <ProjectReference Include="..\..\LearningHub.Nhs.Repository.Interface\LearningHub.Nhs.Repository.Interface.csproj" />
+    <ProjectReference Include="..\..\LearningHub.Nhs.Services.Interface\LearningHub.Nhs.Services.Interface.csproj" />
+    <ProjectReference Include="..\LearningHub.Nhs.Migration.Interface\LearningHub.Nhs.Migration.Interface.csproj" />
+    <ProjectReference Include="..\LearningHub.Nhs.Migration.Models\LearningHub.Nhs.Migration.Models.csproj" />
+  </ItemGroup>
 </Project>

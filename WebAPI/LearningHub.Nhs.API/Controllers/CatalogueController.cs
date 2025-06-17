@@ -123,7 +123,7 @@
         /// <returns>The updated catalogue.</returns>
         [HttpPut]
         [Route("Catalogues")]
-        public async Task<IActionResult> UpdateCatalogue(CatalogueViewModel viewModel)
+        public async Task<IActionResult> UpdateCatalogue([FromBody] CatalogueViewModel viewModel)
         {
             try
             {
@@ -375,14 +375,13 @@
         /// <summary>
         /// Gets AllCatalogues.
         /// </summary>
-        /// <param name="pageSize">The pageSize.</param>
         /// <param name="filterChar">The filterChar.</param>
         /// <returns>IActionResult.</returns>
         [HttpGet]
-        [Route("allcatalogues/{pageSize}/{filterChar}")]
-        public async Task<IActionResult> GetAllCataloguesAsync(int pageSize, string filterChar = null)
+        [Route("allcatalogues/{filterChar}")]
+        public async Task<IActionResult> GetAllCataloguesAsync(string filterChar = null)
         {
-            var response = await this.catalogueService.GetAllCataloguesAsync(pageSize, filterChar, this.CurrentUserId);
+            var response = await this.catalogueService.GetAllCataloguesAsync(filterChar, this.CurrentUserId);
             return this.Ok(response);
         }
     }

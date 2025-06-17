@@ -49,7 +49,7 @@
 
 </div>
   @if (User.Identity.IsAuthenticated) {
-    <input type="checkbox" id="header-dropdown-menu-control" aria-labelledby="Main navigation menu" role="button">
+    <input type="checkbox" tabindex="-1" id="header-dropdown-menu-control" aria-labelledby="Main navigation menu" aria-hidden="true">
     <nav class="nhsuk-header__navigation app-width-container" id="header-navigation" role="navigation" aria-label="Primary navigation" aria-labelledby="label-navigation">
         <p class="nhsuk-header__navigation-title"><span id="label-navigation">Menu</span>
           <button class="nhsuk-header__navigation-close" id="close-menu">

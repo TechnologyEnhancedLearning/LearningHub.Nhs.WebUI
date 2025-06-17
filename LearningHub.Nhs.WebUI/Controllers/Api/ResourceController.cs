@@ -2,7 +2,10 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Net.Http.Headers;
+    using System.Threading;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Resource;
@@ -10,6 +13,7 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
     using LearningHub.Nhs.Models.Resource.Contribute;
     using LearningHub.Nhs.WebUI.Interfaces;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
 
@@ -69,9 +73,10 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
             }
 
             var file = await this.fileService.DownloadFileAsync(filePath, fileName);
+
             if (file != null)
             {
-                return this.File(file.Content, file.ContentType, fileName);
+                return !string.IsNullOrEmpty(file.DownloadUrl) ? this.Redirect(file.DownloadUrl) : this.File(file.Content, file.ContentType, fileName);
             }
             else
             {
@@ -106,7 +111,8 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
                     ActivityStatus = ActivityStatusEnum.Completed,
                 };
                 await this.activityService.CreateResourceActivityAsync(activity);
-                return this.File(file.Content, file.ContentType, fileName);
+
+                return !string.IsNullOrEmpty(file.DownloadUrl) ? this.Redirect(file.DownloadUrl) : this.File(file.Content, file.ContentType, fileName);
             }
             else
             {
@@ -250,6 +256,33 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
             {
                 return this.BadRequest();
             }
+        }
+
+        /// <summary>
+        /// The RecordExternalReferenceUserAgreementAsync.
+        /// </summary>
+        /// <param name="model">model.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpPost]
+        [Route(" CreateResourceVersionValidationResult")]
+        public async Task<ActionResult> CreateResourceVersionValidationResultAsync([FromBody] ResourceVersionValidationResultViewModel model)
+        {
+            await this.resourceService.CreateResourceVersionValidationResultAsync(model);
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// The RecordExternalReferenceUserAgreementAsync.
+        /// </summary>
+        /// <param name="filename">model.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpPost]
+        [Route(" CreateResourceVersionValidationResults")]
+        public async Task<ActionResult> CreateResourceVersionValidationResultAsync([FromBody] string filename)
+        {
+            ResourceVersionValidationResultViewModel model = new ResourceVersionValidationResultViewModel();
+            await this.resourceService.CreateResourceVersionValidationResultAsync(model);
+            return this.Ok();
         }
 
         /// <summary>
@@ -584,6 +617,21 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         {
             var result = await this.resourceService.GetObsoleteResourceFile(resourceVersionId, deletedResource);
             return result;
+        }
+
+        /// <summary>
+        /// Reads from the source stream in chunks and writes to the destination stream,
+        /// flushing after each chunk to help keep the connection active.
+        /// </summary>
+        private async Task StreamFileWithKeepAliveAsync(Stream source, Stream destination, CancellationToken cancellationToken)
+        {
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
+            {
+                await destination.WriteAsync(buffer, 0, bytesRead, cancellationToken);
+                await destination.FlushAsync(cancellationToken);
+            }
         }
     }
 }

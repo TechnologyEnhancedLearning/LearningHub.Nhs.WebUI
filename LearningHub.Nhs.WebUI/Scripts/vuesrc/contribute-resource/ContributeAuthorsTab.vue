@@ -23,8 +23,8 @@
                         <div class="mt-5" v-if="!isCurrentUserSavedAsAuthor">
                             <label class="checkContainer" for="currentUserAuthor">
                                 I am the author or co-author
-                                <input type="checkbox" id="currentUserAuthor" v-model="authorIsContributor" v-on:change="currentUserAuthorChange">
-                                <span class="checkmark"></span>
+                                <input type="checkbox" id="currentUserAuthor" class="nhsuk-checkboxes__input" v-model="authorIsContributor" v-on:change="currentUserAuthorChange">
+                                <span class="checkmark nhsuk-input"></span>
                             </label>
                         </div>
                         <CharacterCount v-model="authorName"

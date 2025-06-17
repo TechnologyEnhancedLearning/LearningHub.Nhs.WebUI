@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ckeditor v-model="description" :config="editorConfig" @ready="onEditorReady" @blur="onBlur"></ckeditor>
+        <ckeditor class="nhsuk-textarea" v-model="description" :config="editorConfig" @ready="onEditorReady" @blur="onBlur"></ckeditor>
         <div :class="[`pt-2 footer-text${this.valid ? '' : ' text-danger'}`]">{{ hint }}</div>
     </div>
 </template>

@@ -25,11 +25,16 @@
                     <div class="pt-0 pb-4">
                         <div class="heading" id="headingProvidedBy">
                             <div class="mb-0">
-                                <a href="#" class="collapsed" data-toggle="collapse" data-target="#collapseProvidedByInfo" aria-expanded="false" aria-controls="collapseProvidedByInfo">
-                                    <div class="accordion-arrow">Why should I flag a resource as 'Developed with'</div>
+                                <a href="#" class="collapsed text-decoration-skip" style="color:#005EB8;" data-toggle="collapse" data-target="#collapseProvidedByInfo" aria-expanded="false" aria-controls="collapseProvidedByInfo">
+                                    <div class="accordion-arrow"></div>
+                                    <span class="pl-3">
+                                        Why should I flag a resource as 'Developed with'
+                                    </span>
                                 </a>
                             </div>
                         </div>
+
+
                         <div id="collapseProvidedByInfo" class="collapse" aria-labelledby="headingProvidedBy" data-parent="#provided-by-info-accordion">
                             <div class="content col-12">
                                 <p>
@@ -57,7 +62,7 @@
                 Write a description that explains the resource and its benefits to learners.
             </div>
             <div class="col-12 my-3">
-                <ckeditorwithhint :initialValue="this.resourceDescription" :maxLength="1800" @blur="saveDescription" @change="changeDescription" />
+                <ckeditorwithhint :initialValue="this.resourceDescription" :maxLength="1800" @blur="saveDescription" @change="changeDescription"/>
             </div>
         </div>
 
@@ -68,7 +73,7 @@
                     <div class="mt-3">
                         <label class="checkContainer mb-0" for="sensitivecontent">
                             Yes
-                            <input type="checkbox" id="sensitivecontent" v-model="sensitiveContent" @click="setSensitiveContent($event.target.checked)">
+                            <input type="checkbox" id="sensitivecontent" class="nhsuk-checkboxes__input" v-model="sensitiveContent" @click="setSensitiveContent($event.target.checked)">
                             <span class="checkmark"></span>
                         </label>
                     </div>
@@ -96,7 +101,7 @@
                     To help learners find this resource, type one or more relevant keywords separated by commas and click 'Add'.
                 </div>
                 <div class="col-12 mt-4 input-with-button">
-                    <input id="newKeyword" aria-labelledby="keyword-label" aria-describedby="keyworddesc" type="text" class="form-control" maxlength="260" v-model="newKeyword" v-bind:class="{ 'input-validation-error': keywordError }" @input="keywordError=false" @change="keywordChange" />
+                    <input id="newKeyword" aria-labelledby="keyword-label" aria-describedby="keyworddesc" type="text" class="form-control nhsuk-input" maxlength="260" v-model="newKeyword" v-bind:class="{ 'input-validation-error': keywordError }" @input="keywordError=false" @change="keywordChange" />
                     <button type="button" class="nhsuk-button nhsuk-button--secondary ml-3 nhsuk-u-margin-bottom-0" @click="addKeyword">&nbsp;Add</button>
                 </div>
                 <div class="col-12 footer-text" id="keyword-label">
@@ -126,7 +131,7 @@
             </div>
             <div class="row">
                 <div class="col-12 form-group">
-                    <select id="licenceSelection" aria-labelledby="licence-label" class="form-control" v-model="resourceLicenceId" @change="licenceSelected">
+                    <select id="licenceSelection" aria-labelledby="licence-label" class="form-control nhsuk-input" v-model="resourceLicenceId" @change="licenceSelected">
                         <option disabled v-bind:value="0">Please choose...</option>
                         <option v-for="licence in resourceLicences" :value="licence.id">
                             {{ licence.title }}
@@ -153,7 +158,7 @@
                 <div>
                     <label class="checkContainer" for="currentUserAuthor">
                         I am the author or co-author
-                        <input type="checkbox" id="currentUserAuthor" v-model="currentUserAuthor" @change="currentUserAuthorChange">
+                        <input type="checkbox" class="nhsuk-checkboxes__input" id="currentUserAuthor" v-model="currentUserAuthor" @change="currentUserAuthorChange">
                         <span class="checkmark"></span>
                     </label>
                 </div>
@@ -171,7 +176,7 @@
                             <label class="mb-0" for="authorName">Author name</label>
                         </div>
                         <div class="col-12">
-                            <input type="text" id="authorName" name="authorName" class="form-control" aria-describedby="authorNamehint" v-bind:class="{ 'input-validation-error': authorError }" maxlength="100" v-model="authorName" v-bind:disabled="currentUserAuthor" @input="authorError=false" />
+                            <input type="text" id="authorName" name="authorName" class="form-control nhsuk-input" aria-describedby="authorNamehint" v-bind:class="{ 'input-validation-error': authorError }" maxlength="100" v-model="authorName" v-bind:disabled="currentUserAuthor" @input="authorError=false" />
                         </div>
                         <div class="col-12 footer-text" id="authorNamehint">
                             You can enter a maximum of 100 characters
@@ -180,7 +185,7 @@
                             <label class="mb-0" for="authorOganisation">Organisation</label>
                         </div>
                         <div class="col-12">
-                            <input type="text" id="authorOganisation" name="authorOganisation" aria-describedby="authorOganisationhint" class="form-control" v-bind:class="{ 'input-validation-error': authorError }" maxlength="100" v-model="authorOganisation" @input="authorError=false" />
+                            <input type="text" id="authorOganisation" name="authorOganisation" aria-describedby="authorOganisationhint" class="form-control nhsuk-input" v-bind:class="{ 'input-validation-error': authorError }" maxlength="100" v-model="authorOganisation" @input="authorError=false" />
                         </div>
                         <div class="col-12 footer-text" id="authorOganisationhint">
                             You can enter a maximum of 100 characters
@@ -190,7 +195,7 @@
                         <label class="mb-0" for="authorRole">Role <span class="optional">(optional)</span></label>
                     </div>
                     <div class="col-12">
-                        <input type="text" id="authorRole" name="authorRole" class="form-control" maxlength="100" v-model="authorRole" aria-describedby="authorRolehint" />
+                        <input type="text" id="authorRole" name="authorRole" class="form-control nhsuk-input" maxlength="100" v-model="authorRole" aria-describedby="authorRolehint" />
                     </div>
                     <div class="col-12 footer-text" id="authorRolehint">
                         You can enter a maximum of 100 characters
@@ -223,12 +228,12 @@
                 <div class="mb-10">
                     <label class="checkContainer mr-0">
                         <span>Yes</span>
-                        <input type="radio" name="resourceCertificateRadio" value="true" v-model="certificateEnabled" @click="certificateEnabledChange($event.target.value)" />
+                        <input type="radio" name="resourceCertificateRadio" class="nhsuk-radios__input" value="true" v-model="certificateEnabled" @click="certificateEnabledChange($event.target.value)" />
                         <span class="radioButton"></span>
                     </label>
                     <label class="checkContainer mr-0">
                         <span>No</span>
-                        <input type="radio" name="resourceCertificateRadio" value="false" v-model="certificateEnabled" @click="certificateEnabledChange($event.target.value)" />
+                        <input type="radio" name="resourceCertificateRadio"  class="nhsuk-radios__input" value="false" v-model="certificateEnabled" @click="certificateEnabledChange($event.target.value)" />
                         <span class="radioButton"></span>
                     </label>
                 </div>
@@ -597,3 +602,49 @@
         })
 
 </script>
+<style lang="scss" scoped>
+    @use "../../../Styles/abstracts/all" as *;
+    label {
+           display: inline-flex;
+           align-items: center;
+           gap: 5px; /* space between radio and text */
+           margin: 7px;
+    }
+    /*Add a background color to the radio button when focused */
+    .radio-button:focus {
+        box-shadow: 0 0 0 4px $nhsuk-yellow !important;
+        outline: 0;
+        //box-shadow: 0 0 0 4px rgba(255, 255, 0, 0.5);
+    }
+
+    .radio-button {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 24px;
+        height: 24px;
+        border: 2px solid black;
+        border-radius: 50%;
+        position: relative;
+        cursor: pointer;
+        transition: box-shadow 0.3s;
+        outline: none;
+    }
+
+    /* Yellow glow on focus */
+    .radio-button:focus {
+        box-shadow: 0 0 0 4px $nhsuk-yellow; /* yellow circle */
+    }
+
+    /* Inner black dot when selected */
+    .radio-button:checked::before {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 12px;
+        height: 12px;
+        background-color: black;
+        border-radius: 50%;
+    }
+                         
+</style>

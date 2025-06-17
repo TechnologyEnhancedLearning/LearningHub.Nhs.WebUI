@@ -5,7 +5,7 @@
         <CatalogueSelectorAccordion/>
         
         <div class="form-group">
-            <select class="form-control" aria-labelledby="primary-catalogue-heading" id="catalogue" v-model="selectedCatalogue" @change="catalogueChange">
+            <select class="form-control nhsuk-input" aria-labelledby="primary-catalogue-heading" id="catalogue" v-model="selectedCatalogue" @change="catalogueChange">
                 <option disabled v-bind:value="{ nodeId: 0 }">Please choose...</option>
                 <option v-for="catalogue in userCatalogues" :value="catalogue">
                     {{getCatalogueName(catalogue)}}

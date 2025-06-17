@@ -86,5 +86,4 @@ UPDATE [resources].[ResourceVersion] SET CertificateEnabled = 0 WHERE VersionSta
 :r .\Scripts\AttributeData.sql 
 :r .\Scripts\PPSXFileType.sql
 :r .\Scripts\UpdateFileTypes.sql
-:r .\Scripts\CreateResourceTypeValidationRule.sql
 

@@ -15,14 +15,14 @@
                 <div class="row">
                     <label class="checkContainer ml-3">
                         <span class="my-auto">Make this resource available to everyone within the Learning Hub community.</span>
-                        <input type="radio" name="resourceAccessibilityEnum" v-model="resourceDetails.resourceAccessibilityEnum" v-bind:value="2"/>
+                        <input type="radio" class="nhsuk-radios__input" name="resourceAccessibilityEnum" v-model="resourceDetails.resourceAccessibilityEnum" v-bind:value="2"/>
                         <span class="radioButton"></span>
                     </label>
                 </div>
                 <div class="row">
                     <label class="checkContainer ml-3">
                         <span class="my-auto">Make this resource available only to the NHS and Social care workforce community.</span>
-                        <input type="radio" name="resourceAccessibilityEnum" v-model="resourceDetails.resourceAccessibilityEnum" v-bind:value="3"/>
+                        <input type="radio" class="nhsuk-radios__input" name="resourceAccessibilityEnum" v-model="resourceDetails.resourceAccessibilityEnum" v-bind:value="3"/>
                         <span class="radioButton"></span>
                     </label>
                 </div>

@@ -78,7 +78,7 @@
         {
             List<RoleUserGroupViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/GetUserGroupRoleDetail";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -102,7 +102,7 @@
         {
             List<RoleUserGroupViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/GetUserGroupRoleDetailByUserId/{userId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);

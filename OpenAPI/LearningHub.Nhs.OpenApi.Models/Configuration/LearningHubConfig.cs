@@ -137,5 +137,26 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// </summary>
         public string BrowseCataloguesUrl { get; set; } = null!;
 
+
+
+        /// <summary>
+        /// Gets or sets <see cref="AuthClientIdentityKey"/>.
+        /// </summary>
+        public string AuthClientIdentityKey { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="LHClientIdentityKey"/>.
+        /// </summary>
+        public string LHClientIdentityKey { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="ContentServerClientIdentityKey"/>.
+        /// </summary>
+        public string ContentServerClientIdentityKey { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="ReportApiClientIdentityKey"/>.
+        /// </summary>
+        public string ReportApiClientIdentityKey { get; set; } = null!;
     }
 }

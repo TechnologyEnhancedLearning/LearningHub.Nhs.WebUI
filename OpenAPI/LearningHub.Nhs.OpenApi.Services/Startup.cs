@@ -62,6 +62,7 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IProviderService, ProviderService>();
             services.AddScoped<IUserProviderService, UserProviderService>();
             services.AddScoped<IUserGroupService, UserGroupService>();
+            services.AddScoped<IUserPasswordResetRequestsService, UserPasswordResetRequestsService>();
         }
     }
 }

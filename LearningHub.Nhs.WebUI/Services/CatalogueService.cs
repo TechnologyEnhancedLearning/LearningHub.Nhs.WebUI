@@ -42,7 +42,7 @@
         {
             List<CatalogueBasicViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Catalogue/GetForCurrentUser";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -99,7 +99,7 @@
         {
             CatalogueViewModel viewmodel = new CatalogueViewModel { };
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"catalogue/catalogues/{catalogueNodeVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -127,7 +127,7 @@
         {
             CatalogueViewModel viewmodel = new CatalogueViewModel { };
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"catalogue/catalogue-recorded/{reference}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -155,7 +155,7 @@
         {
             CatalogueResourceResponseViewModel viewmodel = new CatalogueResourceResponseViewModel { };
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var json = JsonConvert.SerializeObject(requestViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -186,7 +186,7 @@
         {
             var request = $"Catalogue/CanCurrentUserEditCatalogue/{catalogueId}";
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var response = await client.GetAsync(request).ConfigureAwait(false);
             var catalogueIsEditable = false;
 
@@ -214,7 +214,7 @@
         {
             var request = $"Catalogue/AccessDetails/{reference}";
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var response = await client.GetAsync(request).ConfigureAwait(false);
             var accessDetails = new CatalogueAccessDetailsViewModel();
 
@@ -242,7 +242,7 @@
         {
             var request = $"Catalogue/GetLatestCatalogueAccessRequest/{catalogueNodeId}";
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var response = await client.GetAsync(request).ConfigureAwait(false);
             var car = new CatalogueAccessRequestViewModel();
 
@@ -276,7 +276,7 @@
         {
             var request = $"Catalogue/RequestAccess/{reference}/{accessType}";
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var content = new StringContent(JsonConvert.SerializeObject(vm), Encoding.UTF8, "application/json");
             var response = await client.PostAsync(request, content).ConfigureAwait(false);
             var catalogueAccessRequested = false;
@@ -309,7 +309,7 @@
         {
             var request = $"Catalogue/InviteUser";
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var content = new StringContent(JsonConvert.SerializeObject(vm), Encoding.UTF8, "application/json");
             var response = await client.PostAsync(request, content).ConfigureAwait(false);
             var catalogueAccessRequested = false;
@@ -345,7 +345,7 @@
             var json = JsonConvert.SerializeObject(requestModel);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Catalogue/GetRestrictedCatalogueAccessRequests";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -378,7 +378,7 @@
         {
             var viewmodel = new RestrictedCatalogueSummaryViewModel();
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"catalogue/GetRestrictedCatalogueSummary/{catalogueNodeId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -413,7 +413,7 @@
             var json = JsonConvert.SerializeObject(requestModel);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Catalogue/GetRestrictedCatalogueUsers";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -447,7 +447,7 @@
         {
             var request = $"Catalogue/AcceptAccessRequest/{accessRequestId}";
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var content = new StringContent(JsonConvert.SerializeObject(new { }));
             var response = await client.PostAsync(request, content).ConfigureAwait(false);
             var catalogueAccessRequested = new LearningHubValidationResult();
@@ -479,7 +479,7 @@
         {
             var request = $"Catalogue/RejectAccessRequest/{accessRequestId}";
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var content = new StringContent(JsonConvert.SerializeObject(new CatalogueAccessRejectionViewModel { RejectionReason = rejectionReason }), Encoding.UTF8, "application/json");
             var response = await client.PostAsync(request, content).ConfigureAwait(false);
             var vr = new LearningHubValidationResult();
@@ -508,7 +508,7 @@
         {
             var request = $"Catalogue/DismissAccessRequest/{catalogueNodeId}";
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var content = new StringContent(JsonConvert.SerializeObject(new { }));
             var response = await client.PostAsync(request, content).ConfigureAwait(false);
             var vr = new LearningHubValidationResult(false);
@@ -537,7 +537,7 @@
         {
             var request = $"Catalogue/AccessRequest/{catalogueAccessRequestId}";
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var response = await client.GetAsync(request).ConfigureAwait(false);
             var catalogueAccessRequest = new CatalogueAccessRequestViewModel();
 
@@ -571,7 +571,7 @@
             var json = JsonConvert.SerializeObject(userGroup);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/DeleteUserUserGroup";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -612,7 +612,7 @@
         public async Task<AllCatalogueResponseViewModel> GetAllCatalogueAsync(string filterChar)
         {
             AllCatalogueResponseViewModel viewmodel = new AllCatalogueResponseViewModel { };
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"catalogue/allcatalogues/{filterChar}";
             var response = await client.GetAsync(request).ConfigureAwait(false);

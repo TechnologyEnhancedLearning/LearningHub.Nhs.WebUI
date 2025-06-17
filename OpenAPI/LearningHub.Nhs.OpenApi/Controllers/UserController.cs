@@ -34,6 +34,7 @@
         private readonly ICacheService cacheService;
         private readonly LearningHubConfig learningHubConfig;
         private readonly IUserNotificationService userNotificationService;
+        private readonly IUserPasswordResetRequestsService userPasswordResetRequestsService;
         private readonly INavigationPermissionService permissionService;
 
         /// <summary>
@@ -57,6 +58,7 @@
             IUserProfileService userProfileService,
             ISecurityService securityService,
             IUserNotificationService userNotificationService,
+            IUserPasswordResetRequestsService userPasswordResetRequestsService,
             INavigationPermissionService permissionService,
             ICacheService cacheService,
             IOptions<LearningHubConfig> learningHubConfig)
@@ -65,6 +67,7 @@
             this.securityService = securityService;
             this.userService = userService;
             this.userNotificationService = userNotificationService;
+            this.userPasswordResetRequestsService = userPasswordResetRequestsService;
             this.permissionService = permissionService;
             this.cacheService = cacheService;
             this.learningHubConfig = learningHubConfig.Value;
@@ -274,6 +277,39 @@
         {
             var result = await securityService.ValidateEmailChangeTokenAsync(token.DecodeParameter(), locToken.DecodeParameter(), isUserRoleUpgrade);
             return this.Ok(result);
+        }
+
+        /// <summary>
+        /// Check user can request password reset.
+        /// </summary>
+        /// <param name="emailAddress">emailAddress.</param>
+        /// <param name="passwordRequestLimitingPeriod">The passwordRequestLimitingPeriod.</param>
+        /// <param name="passwordRequestLimit">ThepasswordRequestLimit.</param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("CanRequestPasswordReset/{emailAddress}/{passwordRequestLimitingPeriod}/{passwordRequestLimit}")]
+        public async Task<bool> CanRequestPasswordReset(string emailAddress, int passwordRequestLimitingPeriod, int passwordRequestLimit)
+        {
+            var result = await this.userPasswordResetRequestsService.CanRequestPasswordReset(emailAddress, passwordRequestLimitingPeriod, passwordRequestLimit);
+            if (result)
+            {
+                await this.userPasswordResetRequestsService.CreateUserPasswordRequest(emailAddress);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// The GetActiveContent.
+        /// </summary>
+        /// <returns>The active content.</returns>
+        [HttpGet("GetActiveContent")]
+        public async Task<IActionResult> GetActiveContent()
+        {
+            return this.Ok(await this.userService.GetActiveContentAsync(this.CurrentUserId.GetValueOrDefault()));
         }
 
         /// <summary>

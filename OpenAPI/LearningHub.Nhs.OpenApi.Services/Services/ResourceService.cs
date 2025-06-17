@@ -4342,5 +4342,299 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         {
             await this.resourceVersionRepository.UpdateDevIdAsync(currentUserId, resourceVersionDevIdViewModel);
         }
+
+        /// <summary>
+        /// The get resource card extended view model async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceCardExtendedViewModel}"/>.</returns>
+        public async Task<ResourceCardExtendedViewModel> GetResourceCardExtendedViewModelAsync(int resourceVersionId, int userId)
+        {
+            var card = await this.GetResourceCardExtendedDetailsAsync(resourceVersionId, userId);
+
+            return card;
+        }
+
+        /// <summary>
+        /// The get my contributions view model async.
+        /// </summary>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <param name="requestModel">The requestModel<see cref="ResourceContributionsRequestViewModel"/>.</param>
+        /// <param name="readOnly">The readOnly<see cref="bool"/>.</param>
+        /// <returns>The <see cref="List{ContributedResourceCardViewModel}"/>.</returns>
+        public List<ContributedResourceCardViewModel> GetContributions(int userId, ResourceContributionsRequestViewModel requestModel, bool readOnly)
+        {
+            var retVal = new List<ContributedResourceCardViewModel>();
+
+            var contributions = this.resourceVersionRepository.GetContributions(userId, requestModel);
+
+            var models = this.mapper.Map<List<ContributedResourceCardViewModel>>(contributions);
+
+            return models;
+        }
+
+        /// <summary>
+        /// The get my resource view model async.
+        /// </summary>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{MyResourceViewModel}"/>.</returns>
+        public async Task<MyResourceViewModel> GetMyResourceViewModelAsync(int userId)
+        {
+            var retVal = new MyResourceViewModel();
+
+            var rvs = await this.resourceVersionRepository.GetResourceCards(true);
+
+            foreach (var rv in rvs)
+            {
+                var card = new ResourceCardViewModel();
+
+                await this.PopulateResourceCardViewModel(card, rv, userId);
+
+                retVal.Cards.Add(card);
+            }
+
+            return retVal;
+        }
+
+        /// <summary>
+        /// The get resource card extended details async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceCardExtendedViewModel}"/>.</returns>
+        private async Task<ResourceCardExtendedViewModel> GetResourceCardExtendedDetailsAsync(int resourceVersionId, int userId)
+        {
+            var card = new ResourceCardExtendedViewModel();
+
+            var rv = await this.resourceVersionRepository.GetByIdAsync(resourceVersionId, true);
+
+            if (rv != null)
+            {
+                await this.PopulateResourceCardViewModel(card, rv, userId);
+
+                var rr = await this.resourceReferenceRepository.GetDefaultByResourceIdAsync(rv.ResourceId);
+                if (rr != null)
+                {
+                    card.ResourceReferenceId = rr.Id;
+                }
+
+                switch (rv.Resource.ResourceTypeEnum)
+                {
+                    case ResourceTypeEnum.Article:
+
+                        var articleDetails = await this.GetArticleDetailsByIdAsync(rv.Id);
+                        card.ArticleDetails = articleDetails;
+                        break;
+
+                    case ResourceTypeEnum.Equipment:
+
+                        var equipmentDetails = await this.GetEquipmentDetailsByIdAsync(rv.Id);
+                        card.EquipmentDetails = equipmentDetails;
+                        break;
+
+                    case ResourceTypeEnum.WebLink:
+
+                        var weblinkDetails = await this.GetWebLinkDetailsByIdAsync(rv.Id);
+                        card.WebLinkDetails = weblinkDetails;
+                        break;
+
+                    case ResourceTypeEnum.GenericFile:
+
+                        var genericFileDetails = await this.GetGenericFileDetailsByIdAsync(rv.Id);
+                        card.GenericFileDetails = genericFileDetails;
+                        break;
+
+                    case ResourceTypeEnum.Image:
+
+                        var imageDetails = await this.GetImageDetailsByIdAsync(rv.Id);
+                        card.ImageDetails = imageDetails;
+                        break;
+
+                    case ResourceTypeEnum.Embedded:
+
+                        var embedDetails = await this.GetEmbeddedResourceVersionByIdAsync(rv.Id);
+                        card.EmbedCodeDetails = embedDetails;
+                        break;
+
+                    case ResourceTypeEnum.Video:
+
+                        var videoDetails = await this.GetVideoDetailsByIdAsync(rv.Id);
+                        card.VideoDetails = videoDetails;
+                        break;
+
+                    case ResourceTypeEnum.Audio:
+
+                        var audioDetails = await this.GetAudioDetailsByIdAsync(rv.Id);
+                        card.AudioDetails = audioDetails;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            return card;
+        }
+
+        /// <summary>
+        /// The populate resource version card summary.
+        /// </summary>
+        /// <param name="card">The card<see cref="ResourceCardViewModel"/>.</param>
+        /// <param name="resourceVersion">The resourceVersion<see cref="ResourceVersion"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        private async Task PopulateResourceCardViewModel(ResourceCardViewModel card, ResourceVersion resourceVersion, int userId)
+        {
+            await this.PopulateResourceVersionViewModel(card, resourceVersion);
+
+            card.Id = resourceVersion.Id;
+
+            // Set flags related to the previous published version when the card status is "Draft" or "Publishing"
+            // "InEdit" and "PreviousPublishedStatusEnum" indication
+            if (resourceVersion.Resource.CurrentResourceVersionId.HasValue &&
+                (resourceVersion.VersionStatusEnum == VersionStatusEnum.Draft
+                || resourceVersion.VersionStatusEnum == VersionStatusEnum.Publishing))
+            {
+                if (resourceVersion.VersionStatusEnum == VersionStatusEnum.Draft)
+                {
+                    card.InEdit = true;
+                }
+
+                card.PreviousPublishedStatusEnum = resourceVersion.Resource.CurrentResourceVersion.VersionStatusEnum;
+                if (card.PreviousPublishedStatusEnum == VersionStatusEnum.Unpublished)
+                {
+                    var previousEvents = this.resourceVersionEventRepository.GetByResourceVersionIdAsync(resourceVersion.Resource.CurrentResourceVersionId.Value);
+                    var unpublishEvent = previousEvents.Where(e => e.ResourceVersionEventType == ResourceVersionEventTypeEnum.Unpublished).FirstOrDefault();
+                    if (unpublishEvent != null)
+                    {
+                        var u = await this.userProfileService.GetByIdAsync(unpublishEvent.CreateUserId);
+                        card.UnpublishedByAdmin = this.userService.IsAdminUser(u.Id) && u.Id != userId;
+                        card.UnpublishedBy = $"{u.UserName}";
+                        card.UnpublishedDate = unpublishEvent.CreateDate.DateTime;
+                    }
+                }
+            }
+
+            // Created details
+            var cu = await this.userProfileService.GetByIdAsync(resourceVersion.CreateUserId);
+            card.CreatedBy = $"{cu.FirstName} {cu.LastName}";
+            card.CreatedDate = resourceVersion.CreateDate.DateTime;
+
+            // Unpublished details
+            if (resourceVersion.VersionStatusEnum == VersionStatusEnum.Unpublished)
+            {
+                var unpublishEvent = resourceVersion.ResourceVersionEvent.Where(e => e.ResourceVersionEventType == ResourceVersionEventTypeEnum.Unpublished)
+                                                                         .OrderByDescending(e => e.Id)
+                                                                         .FirstOrDefault();
+                if (unpublishEvent != null)
+                {
+                    var u = await this.userProfileService.GetByIdAsync(unpublishEvent.CreateUserId);
+                    card.UnpublishedByAdmin = this.userService.IsAdminUser(u.Id) && u.Id != userId;
+                    card.UnpublishedBy = $"{u.UserName}";
+                    card.UnpublishedDate = unpublishEvent.CreateDate.DateTime;
+                }
+            }
+
+            // 'Flagged' details
+            var flag = resourceVersion.ResourceVersionFlag.FirstOrDefault(f => f.IsActive);
+            if (flag != null)
+            {
+                card.IsFlagged = true;
+                var u = await this.userProfileService.GetByIdAsync(flag.CreateUserId);
+                card.FlaggedByAdmin = this.userService.IsAdminUser(u.Id);
+                card.FlaggedBy = $"{u.FirstName} {u.LastName}";
+                card.FlaggedDate = flag.CreateDate.DateTime;
+            }
+        }
+        /// <summary>
+        /// The populate resource version view model.
+        /// </summary>
+        /// <param name="resourceVersionViewModel">The resourceVersionViewModel<see cref="ResourceVersionViewModel"/>.</param>
+        /// <param name="resourceVersion">The resourceVersion<see cref="ResourceVersion"/>.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        private async Task PopulateResourceVersionViewModel(ResourceVersionViewModel resourceVersionViewModel, ResourceVersion resourceVersion)
+        {
+            if (resourceVersion != null)
+            {
+                resourceVersionViewModel.ResourceId = resourceVersion.ResourceId;
+                resourceVersionViewModel.ResourceVersionId = resourceVersion.Id;
+                resourceVersionViewModel.VersionStatusEnum = resourceVersion.VersionStatusEnum;
+                resourceVersionViewModel.Title = resourceVersion.Title;
+                resourceVersionViewModel.Description = resourceVersion.Description;
+                resourceVersionViewModel.SensitiveContent = resourceVersion.SensitiveContent;
+                resourceVersionViewModel.ResourceTypeEnum = resourceVersion.Resource.ResourceTypeEnum;
+                resourceVersionViewModel.MajorVersion = resourceVersion.MajorVersion;
+                resourceVersionViewModel.MinorVersion = resourceVersion.MinorVersion;
+
+                if (resourceVersion.ReviewDate.HasValue)
+                {
+                    resourceVersionViewModel.NextReviewDate = resourceVersion.ReviewDate.Value.DateTime;
+                }
+
+                resourceVersionViewModel.AdditionalInformation = resourceVersion.AdditionalInformation;
+                resourceVersionViewModel.ResourceFree = !resourceVersion.HasCost;
+                resourceVersionViewModel.Cost = resourceVersion.HasCost ? (double)resourceVersion.Cost : 0.00d;
+
+                resourceVersionViewModel.Keywords = new List<string>();
+                foreach (var k in resourceVersion.ResourceVersionKeyword)
+                {
+                    resourceVersionViewModel.Keywords.Add(k.Keyword);
+                }
+
+                resourceVersionViewModel.Authors = new List<string>();
+                foreach (var a in resourceVersion.ResourceVersionAuthor)
+                {
+                    string displayText = string.Empty;
+
+                    if (!string.IsNullOrEmpty(a.AuthorName) && !string.IsNullOrEmpty(a.Organisation))
+                    {
+                        displayText = string.Join(", ", a.AuthorName, a.Organisation);
+                    }
+
+                    if (!string.IsNullOrEmpty(a.AuthorName) && string.IsNullOrEmpty(a.Organisation))
+                    {
+                        displayText = a.AuthorName;
+                    }
+
+                    if (string.IsNullOrEmpty(a.AuthorName) && !string.IsNullOrEmpty(a.Organisation))
+                    {
+                        displayText = a.Organisation;
+                    }
+
+                    if (!string.IsNullOrEmpty(a.Role))
+                    {
+                        displayText += ", " + a.Role;
+                    }
+
+                    resourceVersionViewModel.Authors.Add(displayText);
+                }
+
+                resourceVersionViewModel.AuthoredDate = resourceVersion.CreateDate.DateTime;
+
+                if (resourceVersion.VersionStatusEnum == VersionStatusEnum.Published
+                    || resourceVersion.VersionStatusEnum == VersionStatusEnum.Unpublished)
+                {
+                    if (resourceVersion.Publication != null)
+                    {
+                        var u = await this.userProfileService.GetByIdAsync(resourceVersion.Publication.CreateUserId);
+                        resourceVersionViewModel.PublishedBy = $"{u.FirstName} {u.LastName}";
+                        resourceVersionViewModel.PublishedDate = resourceVersion.Publication.CreateDate.DateTime;
+                        resourceVersionViewModel.PublishedNotes = resourceVersion.Publication.Notes;
+                    }
+                }
+
+                if (resourceVersion.ResourceLicence != null)
+                {
+                    resourceVersionViewModel.LicenseName = resourceVersion.ResourceLicence.Title;
+                }
+
+                resourceVersionViewModel.CreateUserId = resourceVersion.CreateUserId;
+                resourceVersionViewModel.CreateUser = resourceVersion.CreateUser.UserName;
+                resourceVersionViewModel.CreateDate = resourceVersion.CreateDate;
+            }
+        }
+
     }
+
 }

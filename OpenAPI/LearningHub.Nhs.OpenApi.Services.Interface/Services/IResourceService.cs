@@ -195,6 +195,30 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         MyContributionsTotalsViewModel GetMyContributionTotals(int catalogueId, int userId);
 
         /// <summary>
+        /// The get resource card extended view model async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceCardExtendedViewModel}"/>.</returns>
+        Task<ResourceCardExtendedViewModel> GetResourceCardExtendedViewModelAsync(int resourceVersionId, int userId);
+
+        /// <summary>
+        /// The get my contributions view model async.
+        /// </summary>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <param name="resourceContributionsRequestViewModel">The resourceContributionsRequestViewModel<see cref="ResourceContributionsRequestViewModel"/>.</param>
+        /// <param name="readOnly">The readOnly<see cref="bool"/>.</param>
+        /// <returns>The <see cref="List{ContributedResourceCardViewModel}"/>.</returns>
+        List<ContributedResourceCardViewModel> GetContributions(int userId, ResourceContributionsRequestViewModel resourceContributionsRequestViewModel, bool readOnly);
+
+        /// <summary>
+        /// The get my resource view model async.
+        /// </summary>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{MyResourceViewModel}"/>.</returns>
+        Task<MyResourceViewModel> GetMyResourceViewModelAsync(int userId);
+
+        /// <summary>
         /// The has published resources method.
         /// </summary>
         /// <param name="userId">The user id.</param>

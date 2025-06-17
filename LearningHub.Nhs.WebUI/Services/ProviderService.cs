@@ -48,7 +48,7 @@
         {
             List<ProviderViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Provider/GetProvidersByUserId/{userId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -77,7 +77,7 @@
         {
             List<ProviderViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Provider/GetProvidersByResource/{resourceVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -112,7 +112,7 @@
         {
             List<ProviderViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Provider/all";
             var response = await client.GetAsync(request).ConfigureAwait(false);

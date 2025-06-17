@@ -77,6 +77,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, MediaBlockMap>();
             services.AddSingleton<IEntityTypeMap, ImageMap>();
             services.AddSingleton<IEntityTypeMap, NotificationMap>();
+            services.AddSingleton<IEntityTypeMap, NotificationTypeMap>();
             services.AddSingleton<IEntityTypeMap, PageMap>();
             services.AddSingleton<IEntityTypeMap, PageSectionMap>();
             services.AddSingleton<IEntityTypeMap, PageSectionDetailMap>();
@@ -138,6 +139,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, EmailTemplateMap>();
             services.AddSingleton<IEntityTypeMap, EmailTemplateLayoutMap>();
             services.AddSingleton<IEntityTypeMap, EmailChangeValidationTokenMap>();
+            services.AddSingleton<IEntityTypeMap, PasswordResetRequestsMap>();
             services.AddSingleton<IEntityTypeMap, MessageMap>();
             services.AddSingleton<IEntityTypeMap, MessageSendMap>();
             services.AddSingleton<IEntityTypeMap, MessageSendRecipientMap>();

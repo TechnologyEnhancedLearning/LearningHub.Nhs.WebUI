@@ -80,6 +80,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         public virtual DbSet<RoleUserGroup> RoleUserGroup { get; set; }
 
         /// <summary>
+        /// Gets or sets the password requests.
+        /// </summary>
+        public virtual DbSet<PasswordResetRequests> PasswordResetRequests { get; set; }
+
+        /// <summary>
         /// Gets or sets the email change validation token.
         /// </summary>
         public virtual DbSet<EmailChangeValidationToken> EmailChangeValidationToken { get; set; }

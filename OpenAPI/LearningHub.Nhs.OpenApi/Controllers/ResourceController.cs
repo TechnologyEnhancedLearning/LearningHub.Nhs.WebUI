@@ -667,6 +667,42 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             return this.Ok(this.resourceService.GetMyContributionTotals(catalogueId, this.CurrentUserId.GetValueOrDefault()));
         }
 
+        /// <summary>
+        /// Returns Resource Cards for "My Contributions".
+        /// </summary>
+        /// <param name="resourceContributionsRequestViewModel">The resourceContributionsRequestViewModel<see cref="ResourceContributionsRequestViewModel"/>.</param>
+        /// <returns>The <see cref="ActionResult"/>.</returns>
+        [HttpPost]
+        [Route("GetContributions")]
+        public ActionResult GetMyContributionsAsync(ResourceContributionsRequestViewModel resourceContributionsRequestViewModel)
+        {
+            return this.Ok(this.resourceService.GetContributions(this.CurrentUserId.GetValueOrDefault(), resourceContributionsRequestViewModel, this.HttpContext.User.IsInRole("ReadOnly")));
+        }
+
+
+        /// <summary>
+        /// Returns Resource Cards.
+        /// </summary>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetMyResourceViewModel")]
+        public async Task<ActionResult> GetMyResourceViewModelAsync()
+        {
+            return this.Ok(await this.resourceService.GetMyResourceViewModelAsync(this.CurrentUserId.GetValueOrDefault()));
+        }
+
+        /// <summary>
+        /// Returns Extended Card details for the supplied Id (resourceVersionId).
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("ResourceCardExtendedViewModel/{resourceVersionId}")]
+        public async Task<ActionResult> GetResourceCardExtendedViewModelAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetResourceCardExtendedViewModelAsync(resourceVersionId, this.CurrentUserId.GetValueOrDefault()));
+        }
+
 
         /// <summary>
         /// Returns if the user has published resources.

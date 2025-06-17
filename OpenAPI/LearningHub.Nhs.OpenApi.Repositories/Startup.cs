@@ -52,6 +52,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<IQuestionBlockRepository, QuestionBlockRepository>();
             services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
             services.AddScoped<IEmailChangeValidationTokenRepository, EmailChangeValidationTokenRepository>();
+            services.AddScoped<IUserPasswordResetRequestsRepository, UserPasswordResetRequestsRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddTransient<INotificationTemplateRepository, NotificationTemplateRepository>();

@@ -48,7 +48,7 @@
             var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"dashboard/myaccesslearning/{dashboardType}/{pageNumber}";
-            var response = await client.GetAsync(request).ConfigureAwait(false);
+            var response = await client.GetAsync(request).ConfigureAwait(true);
 
             if (response.IsSuccessStatusCode)
             {

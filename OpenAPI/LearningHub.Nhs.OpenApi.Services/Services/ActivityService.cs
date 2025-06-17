@@ -830,7 +830,7 @@
         /// <returns>The task that resolves to true if the selection is valid.</returns>
         private async Task<bool> UserAnswerSelectionIsValid(int userId, bool answerInOrder, AssessmentResourceActivity assessmentResourceActivity, CreateAssessmentResourceActivityInteractionViewModel createAssessmentResourceActivityInteractionViewModel)
         {
-            return !answerInOrder || await UserHasAnsweredQuestionsUpTo(userId, assessmentResourceActivity.Id, createAssessmentResourceActivityInteractionViewModel.QuestionNumber);
+            return !answerInOrder || await this.UserHasAnsweredQuestionsUpTo(userId, assessmentResourceActivity.Id, createAssessmentResourceActivityInteractionViewModel.QuestionNumber);
         }
 
         /// <summary>

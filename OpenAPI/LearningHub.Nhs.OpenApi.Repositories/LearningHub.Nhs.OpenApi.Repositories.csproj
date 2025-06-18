@@ -1,33 +1,27 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <RootNamespace>LearningHub.Nhs.OpenApi.Repositories</RootNamespace>
-        <Nullable>enable</Nullable>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Platforms>x64</Platforms>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      <CodeAnalysisRuleSet />
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      <CodeAnalysisRuleSet />
-    </PropertyGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\LearningHub.Nhs.OpenApi.Repositories.Interface\LearningHub.Nhs.OpenApi.Repositories.Interface.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="AutoMapper" Version="10.1.1" />
-      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-      <PackageReference Include="IdentityModel" Version="4.6.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.20" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />
-      <PackageReference Include="NLog.Web.AspNetCore" Version="4.15.0" />
-    </ItemGroup>
-
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>LearningHub.Nhs.OpenApi.Repositories</RootNamespace>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <CodeAnalysisRuleSet />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <CodeAnalysisRuleSet />
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LearningHub.Nhs.OpenApi.Repositories.Interface\LearningHub.Nhs.OpenApi.Repositories.Interface.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+    <PackageReference Include="IdentityModel" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Include="NLog.Web.AspNetCore" />
+  </ItemGroup>
 </Project>

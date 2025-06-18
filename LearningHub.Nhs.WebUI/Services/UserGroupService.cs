@@ -47,7 +47,8 @@
         public async Task<List<RoleUserGroupViewModel>> GetRoleUserGroupDetailAsync()
         {
             var cacheKey = $"{this.contextAccessor.HttpContext.User.Identity.GetCurrentUserId()}:AllRolesWithPermissions";
-            return await this.cacheService.GetOrFetchAsync(cacheKey, () => this.FetchRoleUserGroupDetailAsync());
+            ////return await this.cacheService.GetOrFetchAsync(cacheKey, () => this.FetchRoleUserGroupDetailAsync());
+            return await this.FetchRoleUserGroupDetailAsync();
         }
 
         /// <inheritdoc />

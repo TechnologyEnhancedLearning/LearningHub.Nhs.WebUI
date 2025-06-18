@@ -3,6 +3,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web;
     using LearningHub.Nhs.Models.Entities.Activity;
@@ -117,6 +119,62 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             catch (Exception ex)
             {
                 throw new Exception("Removal of resource from search failed: " + resourceId.ToString() + " : " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// The send resource for search Async method.
+        /// </summary>
+        /// <param name="searchResourceRequestModel">The resource to be added to search.</param>
+        /// <param name="userId">The user id.</param>
+        /// <param name="iterations">number of iterations.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<bool> SendResourceForSearchAsync(SearchResourceRequestModel searchResourceRequestModel, int userId, int? iterations)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(this.findwiseConfig.IndexMethod))
+                {
+                    this.logger.LogWarning("The FindWiseIndexMethod is not configured. Resource not added to search results");
+                }
+                else
+                {
+                    List<SearchResourceRequestModel> resourceList =[searchResourceRequestModel];
+
+                    var json = JsonConvert.SerializeObject(resourceList, new JsonSerializerSettings() { DateFormatString = "yyyy-MM-dd" });
+
+                    var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+                    var client = await this.findwiseClient.GetClient(this.findwiseConfig.IndexUrl);
+
+                    var request = string.Format(this.findwiseConfig.SearchBaseUrl, this.findwiseConfig.CollectionIds.Resource) + $"?token={this.findwiseConfig.Token}";
+                    var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
+                    iterations--;
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                    {
+                        this.logger.LogError("Save to FindWise failed for resourceId:" + searchResourceRequestModel.Id.ToString() + "HTTP Status Code:" + response.StatusCode.ToString());
+                        throw new Exception("AccessDenied");
+                    }
+                    else if (!response.IsSuccessStatusCode)
+                    {
+                        if (iterations < 0)
+                        {
+                            this.logger.LogError("Save to FindWise failed for resourceId:" + searchResourceRequestModel.Id.ToString() + "HTTP Status Code:" + response.StatusCode.ToString());
+                            throw new Exception("Posting of resource to search failed: " + stringContent);
+                        }
+
+                        await this.SendResourceForSearchAsync(searchResourceRequestModel, userId, iterations);
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Posting of resource to search failed: " + searchResourceRequestModel.Id + " : " + ex.Message);
             }
         }
 

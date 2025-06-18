@@ -90,11 +90,10 @@ namespace LearningHub.NHS.OpenAPI
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
                 options.Filters.Add(new AuthorizeFilter());
-            })
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
             });
+
+            services.AddMvc()
+                  .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddSwaggerGen(
                 c =>

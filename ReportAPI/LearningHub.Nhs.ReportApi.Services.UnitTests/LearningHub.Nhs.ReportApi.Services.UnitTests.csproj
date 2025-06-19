@@ -1,38 +1,46 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CodeAnalysisRuleSet />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <CodeAnalysisRuleSet />
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="AutoFixture" />
-    <PackageReference Include="LearningHub.Nhs.Models" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="Moq" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="coverlet.collector">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LearningHub.Nhs.ReportApi.Services.Interface\LearningHub.Nhs.ReportApi.Services.Interface.csproj" />
-    <ProjectReference Include="..\LearningHub.Nhs.ReportApi.Services\LearningHub.Nhs.ReportApi.Services.csproj" />
-    <ProjectReference Include="..\LearningHub.Nhs.ReportApi.Shared\LearningHub.Nhs.ReportApi.Shared.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
-  </ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<CodeAnalysisRuleSet />
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<CodeAnalysisRuleSet />
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoFixture" Version="4.18.1" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.1" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+		<PackageReference Include="Moq" Version="4.20.72" />
+		<PackageReference Include="xunit" Version="2.4.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="3.0.1">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="coverlet.collector" Version="6.0.4">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\LearningHub.Nhs.ReportApi.Services.Interface\LearningHub.Nhs.ReportApi.Services.Interface.csproj" />
+		<ProjectReference Include="..\LearningHub.Nhs.ReportApi.Services\LearningHub.Nhs.ReportApi.Services.csproj" />
+		<ProjectReference Include="..\LearningHub.Nhs.ReportApi.Shared\LearningHub.Nhs.ReportApi.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
+	</ItemGroup>
+
 </Project>

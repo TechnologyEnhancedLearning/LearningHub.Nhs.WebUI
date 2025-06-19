@@ -1,23 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CodeAnalysisRuleSet />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <CodeAnalysisRuleSet />
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Azure.Messaging.ServiceBus" />
-    <PackageReference Include="LearningHub.Nhs.Models" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LearningHub.Nhs.ReportApi.Shared\LearningHub.Nhs.ReportApi.Shared.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
-  </ItemGroup>
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<CodeAnalysisRuleSet />
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<CodeAnalysisRuleSet />
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.3" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\LearningHub.Nhs.ReportApi.Shared\LearningHub.Nhs.ReportApi.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
+	</ItemGroup>
+
 </Project>

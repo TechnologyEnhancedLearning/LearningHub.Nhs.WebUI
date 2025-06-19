@@ -521,6 +521,22 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             return caseViewModel;
         }
 
+        /// <summary>
+        /// The GetExternalContentDetails.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">userId.</param>
+        /// <returns>The <see cref="Task{ExternalContentDetailsViewModel}"/>.</returns>
+        public async Task<ExternalContentDetailsViewModel> GetExternalContentDetails(int resourceVersionId, int userId)
+        {
+            var viewModel = await this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, userId);
+            if (viewModel != null)
+            {
+                viewModel.HostedContentUrl = $"{this.learningHubConfig.ContentServerUrl}/{viewModel.ExternalReference}/".ToLower();
+            }
+
+            return viewModel;
+        }
 
         /// <summary>
         /// The GetFileStatusDetailsAsync.
@@ -666,6 +682,55 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             var licenceList = await this.mapper.ProjectTo<ResourceLicenceViewModel>(licences).ToListAsync();
             return licenceList;
         }
+
+        /// <summary>
+        /// The get resource version by id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceDetailViewModel}"/>.</returns>
+        public async Task<ResourceDetailViewModel> GetResourceVersionByIdAsync(int resourceVersionId)
+        {
+            var resourceVersion = await this.resourceVersionRepository.GetBasicByIdAsync(resourceVersionId);
+
+            var vm = this.mapper.Map<ResourceDetailViewModel>(resourceVersion);
+
+            var nodeResources = await this.nodeResourceRepository.GetByResourceIdAsync(vm.ResourceId);
+            var draftNodeResources = nodeResources.Where(x => x.VersionStatusEnum == VersionStatusEnum.Draft).ToList();
+            var publishedNodeResources = nodeResources.Where(x => x.VersionStatusEnum == VersionStatusEnum.Published || x.VersionStatusEnum == VersionStatusEnum.Unpublished).ToList();
+
+            if (draftNodeResources.Count() == 0)
+            {
+                if (publishedNodeResources != null && publishedNodeResources.Count == 1)
+                {
+                    vm.NodeId = publishedNodeResources[0].NodeId;
+                    vm.ResourceCatalogueId = await this.nodePathRepository.GetCatalogueRootNodeId(publishedNodeResources[0].NodeId);
+                }
+                else
+                {
+                    vm.NodeId = 0;
+                    vm.ResourceCatalogueId = 0;
+                }
+            }
+            else if (draftNodeResources.Count() > 1)
+            {
+                throw new Exception("Resource must belong to a single catalogue. ResourceVersionId: " + vm.ResourceVersionId.ToString() + ". ResourceId: " + vm.ResourceId.ToString() + ", VersionStatusEnum:" + vm.VersionStatusEnum.ToString());
+            }
+            else
+            {
+                vm.NodeId = draftNodeResources[0].NodeId;
+                vm.ResourceCatalogueId = await this.nodePathRepository.GetCatalogueRootNodeId(draftNodeResources[0].NodeId);
+            }
+
+            if (publishedNodeResources != null && publishedNodeResources.Count == 1)
+            {
+                vm.PublishedResourceCatalogueId = await this.nodePathRepository.GetCatalogueRootNodeId(publishedNodeResources[0].NodeId);
+            }
+
+            vm.Flags = await this.GetResourceVersionFlagViewModels(resourceVersion.ResourceVersionFlag);
+
+            return vm;
+        }
+
 
         /// <summary>
         /// The get resource version view model async.
@@ -1265,54 +1330,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         public async Task<bool> HasPublishedResourcesAsync(int userId)
         {
             return await this.resourceRepository.UserHasPublishedResourcesAsync(userId);
-        }
-
-        /// <summary>
-        /// The get resource version by id async.
-        /// </summary>
-        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
-        /// <returns>The <see cref="Task{ResourceDetailViewModel}"/>.</returns>
-        public async Task<ResourceDetailViewModel> GetResourceVersionByIdAsync(int resourceVersionId)
-        {
-            var resourceVersion = await this.resourceVersionRepository.GetBasicByIdAsync(resourceVersionId);
-
-            var vm = this.mapper.Map<ResourceDetailViewModel>(resourceVersion);
-
-            var nodeResources = await this.nodeResourceRepository.GetByResourceIdAsync(vm.ResourceId);
-            var draftNodeResources = nodeResources.Where(x => x.VersionStatusEnum == VersionStatusEnum.Draft).ToList();
-            var publishedNodeResources = nodeResources.Where(x => x.VersionStatusEnum == VersionStatusEnum.Published || x.VersionStatusEnum == VersionStatusEnum.Unpublished).ToList();
-
-            if (draftNodeResources.Count() == 0)
-            {
-                if (publishedNodeResources != null && publishedNodeResources.Count == 1)
-                {
-                    vm.NodeId = publishedNodeResources[0].NodeId;
-                    vm.ResourceCatalogueId = await this.nodePathRepository.GetCatalogueRootNodeId(publishedNodeResources[0].NodeId);
-                }
-                else
-                {
-                    vm.NodeId = 0;
-                    vm.ResourceCatalogueId = 0;
-                }
-            }
-            else if (draftNodeResources.Count() > 1)
-            {
-                throw new Exception("Resource must belong to a single catalogue. ResourceVersionId: " + vm.ResourceVersionId.ToString() + ". ResourceId: " + vm.ResourceId.ToString() + ", VersionStatusEnum:" + vm.VersionStatusEnum.ToString());
-            }
-            else
-            {
-                vm.NodeId = draftNodeResources[0].NodeId;
-                vm.ResourceCatalogueId = await this.nodePathRepository.GetCatalogueRootNodeId(draftNodeResources[0].NodeId);
-            }
-
-            if (publishedNodeResources.Count == 1)
-            {
-                vm.PublishedResourceCatalogueId = await this.nodePathRepository.GetCatalogueRootNodeId(publishedNodeResources[0].NodeId);
-            }
-
-            vm.Flags = await this.GetResourceVersionFlagViewModels(resourceVersion.ResourceVersionFlag);
-
-            return vm;
         }
 
         /// <summary>

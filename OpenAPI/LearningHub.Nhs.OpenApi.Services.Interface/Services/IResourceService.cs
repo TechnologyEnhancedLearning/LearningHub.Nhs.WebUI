@@ -226,6 +226,13 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         Task<bool> HasPublishedResourcesAsync(int userId);
 
         /// <summary>
+        /// The get resource version by id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceDetailViewModel}"/>.</returns>
+        Task<ResourceDetailViewModel> GetResourceVersionByIdAsync(int resourceVersionId);
+
+        /// <summary>
         /// The get resource by activityStatusIds async.
         /// </summary>
         /// <param name="activityStatusIds">activityStatusIds.</param>
@@ -299,6 +306,14 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="resourceVersionId">The resource version id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<CaseViewModel> GetCaseDetailsByIdAsync(int resourceVersionId);
+
+        /// <summary>
+        /// The GetExternalContentDetails.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">userId.</param>
+        /// <returns>The <see cref="Task{ExternalContentDetailsViewModel}"/>.</returns>
+        Task<ExternalContentDetailsViewModel> GetExternalContentDetails(int resourceVersionId, int userId);
 
         /// <summary>
         /// The get case resource version async.

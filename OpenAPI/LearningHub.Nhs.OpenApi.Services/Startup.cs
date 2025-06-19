@@ -31,6 +31,7 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<INavigationPermissionService, NavigationPermissionService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IUserNotificationService, UserNotificationService>();
+            services.AddScoped<IUserGroupService, UserGroupService>();
 
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IFileTypeService, FileTypeService>();

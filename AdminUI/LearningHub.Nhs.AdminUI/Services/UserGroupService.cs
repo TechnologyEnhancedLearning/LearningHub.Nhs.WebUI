@@ -32,15 +32,17 @@ namespace LearningHub.Nhs.AdminUI.Services
         /// Initializes a new instance of the <see cref="UserGroupService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learningHubHttpClient<see cref="ILearningHubHttpClient"/>.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="contextAccessor">The http context accessor.</param>
         /// <param name="cacheService">The cacheService.</param>
         /// <param name="roleService">The roleService.</param>
         public UserGroupService(
             ILearningHubHttpClient learningHubHttpClient,
+            IOpenApiHttpClient openApiHttpClient,
             ICacheService cacheService,
             IRoleService roleService,
             IHttpContextAccessor contextAccessor)
-        : base(learningHubHttpClient)
+        : base(learningHubHttpClient, openApiHttpClient)
         {
             this.contextAccessor = contextAccessor;
             this.cacheService = cacheService;

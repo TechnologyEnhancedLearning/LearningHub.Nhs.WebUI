@@ -48,8 +48,8 @@
         function autocomplete(input, minLength) {
             if (input != null) {
                 input.addEventListener("input", function () {
-                    var val = this.value;
-                    if (val.length < minLength) {
+                    var val = this.value.trimStart();
+                    if (val.length < minLength || val.trim() === "") {
                         closeAllLists();
                         return false;
                     }

@@ -2,7 +2,7 @@
 	
 	<PropertyGroup>
 		<!-- Enable centralised version control for packages -->
-		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
 	</PropertyGroup>
 
 

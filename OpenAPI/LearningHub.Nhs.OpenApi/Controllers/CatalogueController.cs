@@ -57,7 +57,7 @@
         /// <returns>The catalogues.</returns>
         [HttpGet]
         [Route("Catalogues")]
-        public IActionResult GetCatalogues(string searchTerm)
+        public IActionResult GetCatalogues([FromQuery] string? searchTerm)
         {
             var catalogues = this.catalogueService.GetCatalogues(searchTerm);
             return this.Ok(catalogues);
@@ -152,7 +152,7 @@
         /// <returns>The actionResult.</returns>
         [HttpPost]
         [Route("Catalogues")]
-        public async Task<IActionResult> CreateCatalogue(CatalogueViewModel viewModel)
+        public async Task<IActionResult> CreateCatalogue([FromBody] CatalogueViewModel viewModel)
         {
             try
             {
@@ -237,7 +237,7 @@
         /// <returns>The updated catalogue.</returns>
         [HttpPut]
         [Route("Catalogues")]
-        public async Task<IActionResult> UpdateCatalogue(CatalogueViewModel viewModel)
+        public async Task<IActionResult> UpdateCatalogue([FromBody] CatalogueViewModel viewModel)
         {
             try
             {

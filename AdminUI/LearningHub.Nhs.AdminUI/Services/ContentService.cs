@@ -37,7 +37,7 @@
         /// <param name="fileService">The fileService<see cref="IFileService"/>.</param>
         /// <param name="azureMediaService">azureMediaService.</param>
         public ContentService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, IFileService fileService, IAzureMediaService azureMediaService)
-        : base(learningHubHttpClient)
+        : base(learningHubHttpClient, openApiHttpClient)
         {
             this.fileService = fileService;
             this.azureMediaService = azureMediaService;

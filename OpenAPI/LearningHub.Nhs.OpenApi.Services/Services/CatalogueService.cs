@@ -189,7 +189,7 @@
         /// </summary>
         /// <param name="searchTerm">The searchTerm.</param>
         /// <returns>The catalogues.</returns>
-        public List<CatalogueViewModel> GetCatalogues(string searchTerm)
+        public List<CatalogueViewModel> GetCatalogues(string? searchTerm)
         {
             IQueryable<CatalogueNodeVersion> catalogueVersions = this.catalogueNodeVersionRepository.GetAll()
                  .Include(x => x.Keywords)

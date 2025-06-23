@@ -31,7 +31,7 @@
             ILearningHubHttpClient learningHubHttpClient,
             IOpenApiHttpClient openApiHttpClient,
             IOpenApiFacade openApiFacade)
-        : base(learningHubHttpClient, openApiHttpClient)
+        : base(learningHubHttpClient)
         {
             this.facade = openApiFacade;
         }

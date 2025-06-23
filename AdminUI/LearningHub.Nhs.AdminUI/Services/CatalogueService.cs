@@ -25,9 +25,11 @@
         /// Initializes a new instance of the <see cref="CatalogueService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learningHubHttpClient<see cref="ILearningHubHttpClient"/>.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="openApiFacade">The openApiFacade<see cref="IOpenApiFacade"/>.</param>
         public CatalogueService(
             ILearningHubHttpClient learningHubHttpClient,
+            IOpenApiHttpClient openApiHttpClient,
             IOpenApiFacade openApiFacade)
         : base(learningHubHttpClient)
         {

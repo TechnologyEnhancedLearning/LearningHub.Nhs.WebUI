@@ -280,6 +280,10 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     Catalogues = new Nhs.Models.Dashboard.DashboardCatalogueResponseViewModel { Type = catalogueDashBoard },
                 };
 
+                var enableMoodle = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.EnableMoodle)).Result;
+                this.ViewBag.EnableMoodle = enableMoodle;
+                this.ViewBag.ValidMoodleUser = this.CurrentMoodleUserId > 0;
+
                 bool isAjax = this.HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest";
 
                 if (isAjax)

@@ -62,7 +62,7 @@
         public async Task<bool> UserHasCatalogueContributionPermission()
         {
             var userRoleGroups = await this.GetRoleUserGroupDetailAsync();
-            if (userRoleGroups != null && userRoleGroups.Any(r => r.RoleEnum == RoleEnum.LocalAdmin || r.RoleEnum == RoleEnum.Editor))
+            if (userRoleGroups != null && userRoleGroups.Any(r => r.RoleEnum == RoleEnum.Editor))
             {
                 return true;
             }

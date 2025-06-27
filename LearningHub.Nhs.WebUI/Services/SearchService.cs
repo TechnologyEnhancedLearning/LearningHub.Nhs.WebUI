@@ -512,7 +512,7 @@ namespace LearningHub.Nhs.WebUI.Services
                 int createId = 0;
 
                 var client = await this.OpenApiHttpClient.GetClientAsync();
-                var request = this.settings.OpenApiUrl + "Search/SubmitFeedback";
+                var request = $"Search/SubmitFeedback";
                 var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
                 var response = await client.PostAsync(request, content).ConfigureAwait(false);
 

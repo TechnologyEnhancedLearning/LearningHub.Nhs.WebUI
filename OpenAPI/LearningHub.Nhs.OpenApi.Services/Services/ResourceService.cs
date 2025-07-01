@@ -112,63 +112,66 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// Initializes a new instance of the <see cref="ResourceService"/> class.
         /// The search service.
         /// </summary>
-        /// <param name="logger">Logger.</param>
-        /// <param name="webLinkResourceVersionRepository"></param>
-        /// <param name="caseResourceVersionRepository"></param>
-        /// <param name="scormResourceVersionRepository"></param>
-        /// <param name="genericFileResourceVersionRepository"></param>
-        /// <param name="resourceVersionRepository"></param>
-        /// <param name="htmlResourceVersionRepository"></param>
-        /// <param name="mapper"></param>
-        /// <param name="fileRepository"></param>
-        /// <param name="azureConfig"></param>
-        /// <param name="learningHubConfig"></param>
-        /// <param name="userProfileService"></param>
-        /// <param name="resourceVersionFlagRepository"></param>
-        /// <param name="articleResourceVersionRepository"></param>
-        /// <param name="audioResourceVersionRepository"></param>
-        /// <param name="videoResourceVersionRepository"></param>
-        /// <param name="assessmentResourceVersionRepository"></param>
-        /// <param name="resourceLicenceRepository"></param>
-        /// <param name="resourceReferenceRepository"></param>
-        /// <param name="resourceVersionUserAcceptanceRepository"></param>
-        /// <param name="catalogueNodeVersionRepository"></param>
-        /// <param name="cachingService"></param>
-        /// <param name="searchService"></param>
-        /// <param name="catalogueService"></param>
-        /// <param name="nodeResourceRepository"></param>
-        /// <param name="nodePathRepository"></param>
-        /// <param name="userService"></param>
-        /// <param name="nodeRepository"></param>
-        /// <param name="dbContext"></param>
-        /// <param name=""></param>
-        /// <param name="learningHubService">
-        /// The <see cref="ILearningHubService"/>.
-        /// </param>
-        /// <param name="fileTypeService"></param>
-        /// <param name="blockCollectionRepository"></param>
-        /// <param name="internalSystemService"></param>
-        /// <param name="resourceVersionAuthorRepository"></param>
-        /// <param name="fileChunkDetailRepository"></param>
-        /// <param name="queueCommunicatorService"></param>
-        /// <param name="resourceRepository">
-        /// The <see cref="IResourceRepository"/>.
-        /// </param>
-        /// <param name="resourceVersionProviderRepository"></param>
-        /// <param name="providerService"></param>
-        /// <param name="articleResourceVersionFileRepository"></param>
-        /// <param name="publicationRepository"></param>
-        /// <param name="migrationSourceRepository"></param>
-        /// <param name="questionBlockRepository"></param>
-        /// <param name="videoRepository"></param>
-        /// <param name="wholeSlideImageRepository"></param>
-        /// <param name="embeddedResourceVersionRepository"></param>
-        /// <param name="equipmentResourceVersionRepository"></param>
-        /// <param name="imageResourceVersionRepository"></param>
-        /// <param name="bookmarkRepository"></param>
-        /// <param name="assessmentResourceActivityMatchQuestionRepository"></param>
-        /// <param name="resourceVersionKeywordRepository"></param>
-        /// <param name="resourceVersionValidationResultRepository"></param>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResourceService"/> class.
+        /// </summary>
+        /// <param name="logger">The logger instance.</param>
+        /// <param name="webLinkResourceVersionRepository">The repository for web link resource versions.</param>
+        /// <param name="caseResourceVersionRepository">The repository for case resource versions.</param>
+        /// <param name="scormResourceVersionRepository">The repository for SCORM resource versions.</param>
+        /// <param name="genericFileResourceVersionRepository">The repository for generic file resource versions.</param>
+        /// <param name="resourceVersionRepository">The repository for all resource versions.</param>
+        /// <param name="htmlResourceVersionRepository">The repository for HTML resource versions.</param>
+        /// <param name="mapper">The mapper for object-object mapping.</param>
+        /// <param name="fileRepository">The repository for file storage and retrieval.</param>
+        /// <param name="azureConfig">The Azure configuration settings.</param>
+        /// <param name="learningHubConfig">The Learning Hub configuration settings.</param>
+        /// <param name="userProfileService">The service to manage user profiles.</param>
+        /// <param name="resourceVersionFlagRepository">The repository for flags on resource versions.</param>
+        /// <param name="articleResourceVersionRepository">The repository for article resource versions.</param>
+        /// <param name="audioResourceVersionRepository">The repository for audio resource versions.</param>
+        /// <param name="videoResourceVersionRepository">The repository for video resource versions.</param>
+        /// <param name="assessmentResourceVersionRepository">The repository for assessment resource versions.</param>
+        /// <param name="resourceLicenceRepository">The repository for resource licences.</param>
+        /// <param name="resourceReferenceRepository">The repository for resource references.</param>
+        /// <param name="resourceVersionUserAcceptanceRepository">The repository for user acceptance of resource versions.</param>
+        /// <param name="catalogueNodeVersionRepository">The repository for catalogue node versions.</param>
+        /// <param name="cachingService">The service for caching data.</param>
+        /// <param name="searchService">The service for resource search functionality.</param>
+        /// <param name="catalogueService">The service to manage catalogues.</param>
+        /// <param name="nodeResourceRepository">The repository for node-resource relationships.</param>
+        /// <param name="nodePathRepository">The repository for node paths.</param>
+        /// <param name="userService">The service for user management.</param>
+        /// <param name="nodeRepository">The repository for nodes.</param>
+        /// <param name="resourceSyncService">The service for syncing resources.</param>
+        /// <param name="resourceSyncRepository">The repository for synced resources.</param>
+        /// <param name="resourceVersionEventRepository">The repository for resource version events.</param>
+        /// <param name="dbContext">The database context instance.</param>
+        /// <param name="learningHubService">The <see cref="ILearningHubService"/> instance.</param>
+        /// <param name="fileTypeService">The service for file type operations.</param>
+        /// <param name="blockCollectionRepository">The repository for block collections.</param>
+        /// <param name="internalSystemService">The service for internal system operations.</param>
+        /// <param name="resourceVersionAuthorRepository">The repository for authors of resource versions.</param>
+        /// <param name="fileChunkDetailRepository">The repository for file chunk details.</param>
+        /// <param name="queueCommunicatorService">The service for queue communication.</param>
+        /// <param name="resourceRepository">The <see cref="IResourceRepository"/> instance.</param>
+        /// <param name="resourceVersionProviderRepository">The repository for resource version providers.</param>
+        /// <param name="providerService">The service for managing providers.</param>
+        /// <param name="articleResourceVersionFileRepository">The repository for article resource version files.</param>
+        /// <param name="publicationRepository">The repository for publications.</param>
+        /// <param name="migrationSourceRepository">The repository for migration sources.</param>
+        /// <param name="questionBlockRepository">The repository for question blocks.</param>
+        /// <param name="videoRepository">The repository for video resources.</param>
+        /// <param name="wholeSlideImageRepository">The repository for whole-slide images.</param>
+        /// <param name="embeddedResourceVersionRepository">The repository for embedded resource versions.</param>
+        /// <param name="equipmentResourceVersionRepository">The repository for equipment resource versions.</param>
+        /// <param name="imageResourceVersionRepository">The repository for image resource versions.</param>
+        /// <param name="bookmarkRepository">The repository for bookmarks.</param>
+        /// <param name="assessmentResourceActivityMatchQuestionRepository">The repository for assessment activity-question matches.</param>
+        /// <param name="resourceVersionKeywordRepository">The repository for resource version keywords.</param>
+        /// <param name="resourceVersionValidationResultRepository">The repository for validation results of resource versions.</param>
+        
+
         public ResourceService(ILearningHubService learningHubService, IFileTypeService fileTypeService, IBlockCollectionRepository blockCollectionRepository, IInternalSystemService internalSystemService, IResourceVersionAuthorRepository resourceVersionAuthorRepository, IFileChunkDetailRepository fileChunkDetailRepository, IQueueCommunicatorService queueCommunicatorService, IResourceRepository resourceRepository, IResourceVersionProviderRepository resourceVersionProviderRepository, IProviderService providerService, IArticleResourceVersionFileRepository articleResourceVersionFileRepository, IPublicationRepository publicationRepository, IMigrationSourceRepository migrationSourceRepository, IQuestionBlockRepository questionBlockRepository, IVideoRepository videoRepository, IWholeSlideImageRepository wholeSlideImageRepository, IEmbeddedResourceVersionRepository embeddedResourceVersionRepository, IEquipmentResourceVersionRepository equipmentResourceVersionRepository, IImageResourceVersionRepository imageResourceVersionRepository, IBookmarkRepository bookmarkRepository, IAssessmentResourceActivityMatchQuestionRepository assessmentResourceActivityMatchQuestionRepository, IResourceVersionKeywordRepository resourceVersionKeywordRepository, IResourceVersionValidationResultRepository resourceVersionValidationResultRepository, ILogger<ResourceService> logger, IWebLinkResourceVersionRepository webLinkResourceVersionRepository, ICaseResourceVersionRepository caseResourceVersionRepository, IScormResourceVersionRepository scormResourceVersionRepository, IGenericFileResourceVersionRepository genericFileResourceVersionRepository, IResourceVersionRepository resourceVersionRepository, IHtmlResourceVersionRepository htmlResourceVersionRepository, IMapper mapper, IFileRepository fileRepository, IOptions<AzureConfig> azureConfig, IOptions<LearningHubConfig> learningHubConfig, IUserProfileService userProfileService, IResourceVersionFlagRepository resourceVersionFlagRepository, IArticleResourceVersionRepository articleResourceVersionRepository, IAudioResourceVersionRepository audioResourceVersionRepository, IVideoResourceVersionRepository videoResourceVersionRepository, IAssessmentResourceVersionRepository assessmentResourceVersionRepository, IResourceLicenceRepository resourceLicenceRepository, IResourceReferenceRepository resourceReferenceRepository, IResourceVersionUserAcceptanceRepository resourceVersionUserAcceptanceRepository, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, ICachingService cachingService, ISearchService searchService, ICatalogueService catalogueService, INodeResourceRepository nodeResourceRepository, INodePathRepository nodePathRepository, IUserService userService, INodeRepository nodeRepository, IResourceSyncService resourceSyncService, IResourceSyncRepository resourceSyncRepository, IResourceVersionEventRepository resourceVersionEventRepository, LearningHubDbContext dbContext)
         {
             this.learningHubService = learningHubService;

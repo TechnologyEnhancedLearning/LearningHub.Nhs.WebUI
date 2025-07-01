@@ -4395,6 +4395,25 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         }
 
         /// <summary>
+        /// The get my contributions view model async.
+        /// </summary>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <param name="myContributionsRequestViewModel">The myContributionsRequestViewModel<see cref="MyContributionsRequestViewModel"/>.</param>
+        /// <returns>The <see cref="List{MyContributionsBasicDetailsViewModel}"/>.</returns>
+        public List<MyContributionsBasicDetailsViewModel> GetMyContributions(int userId, MyContributionsRequestViewModel myContributionsRequestViewModel)
+        {
+            var resourceVersions = this.resourceVersionRepository.GetAll()
+                .Where(rv => !rv.Deleted &&
+                        rv.CreateUserId == userId &&
+                        rv.Resource.ResourceTypeEnum == myContributionsRequestViewModel.ResourceType &&
+                        rv.VersionStatusEnum == myContributionsRequestViewModel.Status);
+
+            var models = this.mapper.Map<List<MyContributionsBasicDetailsViewModel>>(resourceVersions);
+            return models;
+        }
+
+
+        /// <summary>
         /// The get my resource view model async.
         /// </summary>
         /// <param name="userId">The userId<see cref="int"/>.</param>

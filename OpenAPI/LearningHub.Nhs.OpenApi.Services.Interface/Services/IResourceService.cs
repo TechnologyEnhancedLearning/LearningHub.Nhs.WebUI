@@ -212,6 +212,14 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         List<ContributedResourceCardViewModel> GetContributions(int userId, ResourceContributionsRequestViewModel resourceContributionsRequestViewModel, bool readOnly);
 
         /// <summary>
+        /// The get my contributions view model async.
+        /// </summary>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <param name="myContributionsRequestViewModel">The myContributionsRequestViewModel<see cref="MyContributionsRequestViewModel"/>.</param>
+        /// <returns>The <see cref="List{MyContributionsBasicDetailsViewModel}"/>.</returns>
+        List<MyContributionsBasicDetailsViewModel> GetMyContributions(int userId, MyContributionsRequestViewModel myContributionsRequestViewModel);
+
+        /// <summary>
         /// The get my resource view model async.
         /// </summary>
         /// <param name="userId">The userId<see cref="int"/>.</param>

@@ -701,12 +701,24 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             return this.Ok(this.resourceService.GetContributions(this.CurrentUserId.GetValueOrDefault(), resourceContributionsRequestViewModel, this.HttpContext.User.IsInRole("ReadOnly")));
         }
 
+		/// <summary>
+		/// Returns the requested contributions.
+		/// </summary>
+		/// <param name="myContributionsRequestViewModel">The myContributionsRequestViewModel<see cref="MyContributionsRequestViewModel"/>.</param>
+		/// <returns>The <see cref="ActionResult"/>.</returns>
+		[HttpPost]
+		[Route("GetMyContributions")]
+		public ActionResult GetMyContributions(MyContributionsRequestViewModel myContributionsRequestViewModel)
+		{
+			return this.Ok(this.resourceService.GetMyContributions(this.CurrentUserId.GetValueOrDefault(), myContributionsRequestViewModel));
+		}
 
-        /// <summary>
-        /// Returns Resource Cards.
-        /// </summary>
-        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
-        [HttpGet]
+
+		/// <summary>
+		/// Returns Resource Cards.
+		/// </summary>
+		/// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+		[HttpGet]
         [Route("GetMyResourceViewModel")]
         public async Task<ActionResult> GetMyResourceViewModelAsync()
         {

@@ -59,8 +59,8 @@
 		<PackageVersion Include="Microsoft.FeatureManagement" Version="4.1.0" />
 		<PackageVersion Include="Microsoft.FeatureManagement.AspNetCore" Version="3.2.0" />
 		<PackageVersion Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.3.0" />
-		<PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.12.0" />
-		<PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.12.0" />
+		<PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.12.1" />
+		<PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.12.1" />
 		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
 		<PackageVersion Include="Microsoft.Rest.ClientRuntime.Azure.Authentication" Version="2.4.1" />
 		<PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.8.3" />
@@ -70,11 +70,11 @@
 		<PackageVersion Include="NBuilder" Version="6.1.0" />
 		<PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageVersion Include="NHSUKViewComponents.Web" Version="1.0.29" />
-		<PackageVersion Include="NLog.Schema" Version="5.5.0" />
-		<PackageVersion Include="NLog.Web.AspNetCore" Version="5.5.0" />
+		<PackageVersion Include="NLog.Schema" Version="6.0.1" />
+		<PackageVersion Include="NLog.Web.AspNetCore" Version="6.0.1" />
 		<PackageVersion Include="Selenium.Axe" Version="4.0.21" />
-		<PackageVersion Include="Selenium.Support" Version="4.33.0" />
-		<PackageVersion Include="Selenium.WebDriver" Version="4.33.0" />
+		<PackageVersion Include="Selenium.Support" Version="4.34.0" />
+		<PackageVersion Include="Selenium.WebDriver" Version="4.34.0" />
 		<PackageVersion Include="Selenium.WebDriver.ChromeDriver" Version="133.0.6943.5300" />
 		<PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
 		<PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
@@ -83,7 +83,7 @@
 		<PackageVersion Include="System.Configuration.ConfigurationManager" Version="9.0.6" />
 		<PackageVersion Include="System.Data.SqlClient" Version="4.9.0" />
 		<PackageVersion Include="System.Drawing.Common" Version="9.0.6" />
-		<PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.12.0" />
+		<PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
 		<PackageVersion Include="System.Security.Cryptography.Pkcs" Version="9.0.6" />
 		<PackageVersion Include="tusdotnet" Version="2.10.0" />
 		<PackageVersion Include="UAParser" Version="3.1.47" />

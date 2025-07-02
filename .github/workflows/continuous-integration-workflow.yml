@@ -83,8 +83,7 @@ jobs:
       - name: Use Node 20 with Yarn
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'yarn'
+          node-version: '20'          
 
       - name: Upgrade npm to the latest version
         run: npm install -g npm@6.14.8

@@ -32,6 +32,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\MessageQueueing\LearningHub.Nhs.MessageQueueing\LearningHub.Nhs.MessageQueueing.csproj" />
+      <ProjectReference Include="..\..\MessagingService\LearningHub.Nhs.MessagingService\LearningHub.Nhs.MessagingService.csproj" />
       <ProjectReference Include="..\LearningHub.Nhs.OpenApi.Repositories.Interface\LearningHub.Nhs.OpenApi.Repositories.Interface.csproj" />
       <ProjectReference Include="..\LearningHub.Nhs.OpenApi.Repositories\LearningHub.Nhs.OpenApi.Repositories.csproj" />
       <ProjectReference Include="..\LearningHub.Nhs.OpenApi.Services.Interface\LearningHub.Nhs.OpenApi.Services.Interface.csproj" />

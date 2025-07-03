@@ -6176,6 +6176,125 @@
       }
     }
   },
+    },
+    "/GovNotifyMessage/SendSms": {
+      "post": {
+        "tags": [
+          "SendSms"
+        ],
+        "summary": "Send an SMS.",
+        "requestBody": {
+          "description": "The Sends an SMS using the UK Gov.Notify service.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.SmsRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.SmsRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.SmsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SMS successfully sent."
+          },
+          "400": {
+            "description": "Bad request, invalid input."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/GovNotifyMessage/SendEmail": {
+      "post": {
+        "tags": [
+          "SendEmail"
+        ],
+        "summary": "Send an Email.",
+        "requestBody": {
+          "description": "Sends an email using the UK Gov.Notify service.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.EmailRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.EmailRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.EmailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email successfully sent."
+          },
+          "400": {
+            "description": "Bad request, invalid input."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/GovNotifyMessage/QueueRequests": {
+      "post": {
+        "tags": [
+          "QueueRequests"
+        ],
+        "summary": "Queue one or more email/sms request for later processing.",
+        "requestBody": {
+          "description": "A list of sms/email requests to be queued for sending.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.QueueRequestsList"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.QueueRequestsList"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.QueueRequestsList"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Requests are queued successfully."
+          },
+          "400": {
+            "description": "Bad request, invalid input."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    }
+  },
   "components": {
     "schemas": {
       "LearningHub.Nhs.Models.Bookmark.UserBookmarkViewModel": {
@@ -14279,6 +14398,86 @@
           }
         },
         "additionalProperties": false
+      },
+      "LearningHub.Nhs.Models.GovNotifyMessaging.SmsRequest": {
+        "type": "object",
+        "required": [ "PhoneNumber", "TemplateId" ],
+        "properties": {
+          "PhoneNumber": {
+            "type": "string",
+            "nullable": false,
+            "description": "The recipient's mobile number."
+          },
+          "TemplateId": {
+            "type": "string",
+            "nullable": false,
+            "description": "The ID of the template to be used for the email."
+          },
+          "Personalisation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Key-value pairs for personalising the sms template."
+          }
+        }
+      },
+      "LearningHub.Nhs.Models.GovNotifyMessaging.EmailRequest": {
+        "type": "object",
+        "properties": {
+          "Recipient": {
+            "type": "string",
+            "nullable": false,
+            "description": "The recipient's email address."
+          },
+          "TemplateId": {
+            "type": "string",
+            "nullable": false,
+            "description": "The ID of the template to be used for the email."
+          },
+          "Personalisation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Key-value pairs for personalising the email template."
+          }
+        }
+      },
+      "LearningHub.Nhs.Models.GovNotifyMessaging.QueueRequestsList": {
+        "type": "object",
+        "properties": {
+          "Messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.QueueRequests"
+            }
+          }
+        }
+      },
+      "LearningHub.Nhs.Models.GovNotifyMessaging.QueueRequests": {
+        "type": "object",
+        "properties": {
+          "Recipient": {
+            "type": "string",
+            "nullable": false
+          },
+          "TemplateId": {
+            "type": "string",
+            "nullable": false
+          },
+          "DeliverAfter": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Personalisation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Key-value pairs for personalising the template."
+          }
+        }
       }
     },
     "securitySchemes": {

@@ -31,7 +31,10 @@ namespace LearningHub.NHS.OpenAPI
     using Microsoft.OpenApi.Models;
     using Microsoft.AspNetCore.Authorization;
     using LearningHub.NHS.OpenAPI.Authentication;
-    using LearningHub.Nhs.Api.Authentication;
+    using System.Configuration;
+    using LearningHub.Nhs.MessagingService;
+    using LearningHub.Nhs.MessageQueueing;
+    using Microsoft.AspNetCore.Authentication.Cookies;
 
     /// <summary>
     /// The Startup class.
@@ -61,6 +64,7 @@ namespace LearningHub.NHS.OpenAPI
             services.AddConfig(this.Configuration);
 
             services.AddApiKeyAuth();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
             services.AddAuthentication()
             .AddJwtBearer(options =>
@@ -91,10 +95,10 @@ namespace LearningHub.NHS.OpenAPI
                 options.Filters.Add(new HttpResponseExceptionFilter());
                 options.Filters.Add(new AuthorizeFilter());
             });
-
             services.AddMvc()
                   .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
+            services.AddMessagingServices(this.Configuration);
+            services.AddQueueingRepositories(this.Configuration);
             services.AddSwaggerGen(
                 c =>
                 {

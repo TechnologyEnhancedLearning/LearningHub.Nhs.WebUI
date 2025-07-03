@@ -18,8 +18,9 @@
         /// Initializes a new instance of the <see cref="EventService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learningHubHttpClient<see cref="ILearningHubHttpClient"/>.</param>
-        public EventService(ILearningHubHttpClient learningHubHttpClient)
-            : base(learningHubHttpClient)
+        /// <param name="openApiHttpClient">The openApiHttpClient<see cref="IOpenApiHttpClient"/>.</param>
+        public EventService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient)
+            : base(learningHubHttpClient, openApiHttpClient)
         {
         }
 
@@ -30,7 +31,7 @@
             var json = JsonConvert.SerializeObject(eventEntity);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Event/Create";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);

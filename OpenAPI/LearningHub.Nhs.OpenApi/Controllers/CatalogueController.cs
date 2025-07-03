@@ -12,7 +12,7 @@
     /// <summary>
     /// Catalogue controller.
     /// </summary>
-    [Route("Catalogues")]
+    [Route("Catalogue")]
     [Authorize]
     public class CatalogueController : OpenApiControllerBase
     {
@@ -35,6 +35,32 @@
         public async Task<Nhs.OpenApi.Models.ViewModels.BulkCatalogueViewModel> GetAllCatalogues()
         {
             return await this.catalogueService.GetAllCatalogues();
+        }
+
+        /// <summary>
+        /// Gets AllCatalogues.
+        /// </summary>
+        /// <param name="filterChar">The filterChar.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet]
+        [Route("allcatalogues/{filterChar}")]
+        public async Task<IActionResult> GetAllCataloguesAsync(string filterChar = null)
+        {
+            var response = await this.catalogueService.GetAllCataloguesAsync(filterChar, this.CurrentUserId.GetValueOrDefault());
+            return this.Ok(response);
+        }
+
+        /// <summary>
+        /// The GetCatalogue.
+        /// </summary>
+        /// <param name="searchTerm">The searchTerm.</param>
+        /// <returns>The catalogues.</returns>
+        [HttpGet]
+        [Route("Catalogues")]
+        public IActionResult GetCatalogues([FromQuery] string? searchTerm)
+        {
+            var catalogues = this.catalogueService.GetCatalogues(searchTerm);
+            return this.Ok(catalogues);
         }
 
         /// <summary>
@@ -126,7 +152,7 @@
         /// <returns>The actionResult.</returns>
         [HttpPost]
         [Route("Catalogues")]
-        public async Task<IActionResult> CreateCatalogue(CatalogueViewModel viewModel)
+        public async Task<IActionResult> CreateCatalogue([FromBody] CatalogueViewModel viewModel)
         {
             try
             {
@@ -211,7 +237,7 @@
         /// <returns>The updated catalogue.</returns>
         [HttpPut]
         [Route("Catalogues")]
-        public async Task<IActionResult> UpdateCatalogue(CatalogueViewModel viewModel)
+        public async Task<IActionResult> UpdateCatalogue([FromBody] CatalogueViewModel viewModel)
         {
             try
             {

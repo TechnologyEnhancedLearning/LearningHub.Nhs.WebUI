@@ -80,7 +80,8 @@ namespace LearningHub.NHS.OpenAPI
             });
 
             services.AddCustomMiddleware();
-            services.AddSingleton<IAuthorizationHandler, ReadWriteHandler>();
+            services.AddSingleton<IAuthorizationHandler, ReadWriteHandler>(); 
+            services.AddSingleton<IAuthorizationHandler, AuthorizeOrCallFromLHHandler>();
 
             services.AddRepositories(this.Configuration);
             services.AddServices();
@@ -93,11 +94,9 @@ namespace LearningHub.NHS.OpenAPI
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
                 options.Filters.Add(new AuthorizeFilter());
-            })
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
             });
+            services.AddMvc()
+                  .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddMessagingServices(this.Configuration);
             services.AddQueueingRepositories(this.Configuration);
             services.AddSwaggerGen(
@@ -161,6 +160,10 @@ namespace LearningHub.NHS.OpenAPI
 
             services.AddAuthorization(options =>
             {
+                options.AddPolicy(
+                       "AuthorizeOrCallFromLH",
+                       policy => policy.Requirements.Add(new AuthorizeOrCallFromLHRequirement()));
+
                 options.AddPolicy(
                     "ReadWrite",
                     policy => policy.Requirements.Add(new ReadWriteRequirement()));

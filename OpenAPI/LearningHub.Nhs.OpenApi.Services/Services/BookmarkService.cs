@@ -9,6 +9,7 @@
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Resources;
     using LearningHub.Nhs.OpenApi.Services.HttpClients;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@
         private readonly IOptions<LearningHubApiConfig> learningHubApiConfig;
         private readonly IMapper mapper;
         private readonly IBookmarkRepository bookmarkRepository;
+        private readonly IResourceReferenceRepository resourceReferenceRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BookmarkService"/> class.
@@ -30,10 +32,11 @@
         /// <param name="learningHubApiConfig">Learning Hub Api config details.</param>
         /// <param name="mapper">The mapper<see cref="IMapper"/>.</param>
         /// <param name="bookmarkRepository">The bookmarkRepository<see cref="IBookmarkRepository"/>.</param>
-        public BookmarkService(IOptions<LearningHubApiConfig> learningHubApiConfig, IMapper mapper, IBookmarkRepository bookmarkRepository)
+        public BookmarkService(IOptions<LearningHubApiConfig> learningHubApiConfig, IMapper mapper, IBookmarkRepository bookmarkRepository, IResourceReferenceRepository resourceReferenceRepository)
         {
             this.mapper = mapper;
             this.bookmarkRepository = bookmarkRepository;
+            this.resourceReferenceRepository = resourceReferenceRepository;
             this.learningHubApiConfig = learningHubApiConfig;
         }
 
@@ -52,6 +55,29 @@
 
             return JsonConvert.DeserializeObject<List<UserBookmarkViewModel>>(
                 response.Content.ReadAsStringAsync().Result);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IEnumerable<UserBookmarkViewModel>> GetAllByParent(int currentUserId, int? parentId, bool? all = false)
+        {
+            var userBookmarks = this.bookmarkRepository.GetAll().Where(ub => ub.UserId == currentUserId && ub.Deleted == false).OrderBy(ub => ub.Position).ThenBy(ub => ub.AmendDate);
+
+            var bookmarks = all == true ? userBookmarks : userBookmarks.Where(ub => ub.ParentId == parentId);
+
+            var userBookmarkResult = this.mapper.Map<IEnumerable<UserBookmarkViewModel>>(bookmarks);
+
+            foreach (var b in userBookmarkResult.Where(ub => ub.BookmarkTypeId == 1))
+            {
+                b.ChildrenCount = userBookmarks.Where(ub => ub.ParentId == b.Id).Count();
+            }
+
+            foreach (var b in userBookmarkResult.Where(ub => ub.ResourceReferenceId.HasValue))
+            {
+                var resourceRef = await this.resourceReferenceRepository.GetByOriginalResourceReferenceIdAsync(b.ResourceReferenceId.Value, false);
+                b.ResourceTypeId = (int?)resourceRef.Resource.ResourceTypeEnum;
+            }
+
+            return userBookmarkResult;
         }
 
         public async Task<int> Create(int currentUserId, UserBookmarkViewModel bookmarkViewModel)

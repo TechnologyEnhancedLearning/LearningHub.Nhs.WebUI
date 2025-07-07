@@ -35,6 +35,7 @@ namespace LearningHub.NHS.OpenAPI
     using LearningHub.Nhs.MessagingService;
     using LearningHub.Nhs.MessageQueueing;
     using Microsoft.AspNetCore.Authentication.Cookies;
+    using LearningHub.Nhs.Api.Authentication;
 
     /// <summary>
     /// The Startup class.

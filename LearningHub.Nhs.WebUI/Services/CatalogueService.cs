@@ -269,12 +269,13 @@
         /// The RequestAccessAsync.
         /// </summary>
         /// <param name="reference">The catalogue reference.</param>
+        /// <param name="catalogueName">The catalogue catalogueName.</param>
         /// <param name="vm">The view model.</param>
         /// <param name="accessType">The accessType.</param>
         /// <returns>The task.</returns>
-        public async Task<LearningHubValidationResult> RequestAccessAsync(string reference, CatalogueAccessRequestViewModel vm, string accessType)
+        public async Task<LearningHubValidationResult> RequestAccessAsync(string reference, string catalogueName, CatalogueAccessRequestViewModel vm, string accessType)
         {
-            var request = $"Catalogue/RequestAccess/{reference}/{accessType}";
+            var request = $"Catalogue/RequestAccess/{reference}/{catalogueName}/{accessType}";
 
             var client = await this.OpenApiHttpClient.GetClientAsync();
             var content = new StringContent(JsonConvert.SerializeObject(vm), Encoding.UTF8, "application/json");

@@ -7,7 +7,10 @@
     using LearningHub.Nhs.MessageQueueing.Repositories;
     using LearningHub.Nhs.MessagingService.Interfaces;
     using LearningHub.Nhs.Models.Entities.GovNotifyMessaging;
+    using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.GovNotifyMessaging;
+    using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
+    using LearningHub.Nhs.OpenApi.Services.Services.Messaging;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
@@ -21,16 +24,18 @@
     {
         private readonly IGovNotifyService messageService;
         private readonly IMessageQueueRepository messageQueueRepository;
+        private readonly IGovMessageService govMessageService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GovNotifyMessagingController"/> class.
         /// </summary>
         /// <param name="messageService">The message service.</param>
         /// <param name="messageQueueRepository">The email Queue Repository.</param>
-        public GovNotifyMessagingController(IGovNotifyService messageService, IMessageQueueRepository messageQueueRepository)
+        public GovNotifyMessagingController(IGovNotifyService messageService, IMessageQueueRepository messageQueueRepository, IGovMessageService govMessageService)
         {
             this.messageService = messageService;
             this.messageQueueRepository = messageQueueRepository;
+            this.govMessageService = govMessageService;
         }
 
         /// <summary>
@@ -44,30 +49,15 @@
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(request.Recipient) || string.IsNullOrWhiteSpace(request.TemplateId))
-                {
-                    return this.BadRequest("Email and template ID are required");
-                }
+                var response = await this.govMessageService.SendEmailAsync(request);
 
-                var response = await this.messageService.SendEmailAsync(request.Recipient, request.TemplateId, request.Personalisation);
-
-                Dictionary<string, string> test = new Dictionary<string, string>();
-                if (response != null)
+                if (!response.IsSuccess)
                 {
-                    if (!response.IsSuccess && (request.Id == null || request.Id <= 0))
-                    {
-                        var failedRequest = new SingleEmailFailedRequest
-                        {
-                            Recipient = request.Recipient,
-                            TemplateId = request.TemplateId,
-                            Personalisation = request.Personalisation != null ? JsonConvert.SerializeObject(request.Personalisation.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToString())) : null,
-                            ErrorMessage = response.ErrorMessage,
-                        };
-                        await this.messageQueueRepository.SaveFailedSingleEmail(failedRequest);
-                    }
+                    return this.BadRequest(new { error = response.ErrorMessage });
                 }
 
                 return this.Ok(response);
+
             }
             catch (Exception ex)
             {
@@ -109,22 +99,25 @@
         [HttpPost]
         public async Task<IActionResult> QueueRequests([FromBody] QueueMessageList request)
         {
-            if (request?.Messages == null || !request.Messages.Any())
-            {
-                return this.BadRequest("At least one email must be provided in the request.");
-            }
+            ////if (request?.Messages == null || !request.Messages.Any())
+            ////{
+            ////    return this.BadRequest("At least one email must be provided in the request.");
+            ////}
 
-            var requests = request.Messages.Select(q => new QueueRequests
-            {
-                Recipient = q.Recipient,
-                TemplateId = q.TemplateId,
-                Personalisation = q.Personalisation != null ? JsonConvert.SerializeObject(q.Personalisation) : null,
-                DeliverAfter = q.DeliverAfter ?? null,
-            });
+            ////var requests = request.Messages.Select(q => new QueueRequests
+            ////{
+            ////    Recipient = q.Recipient,
+            ////    TemplateId = q.TemplateId,
+            ////    Personalisation = q.Personalisation != null ? JsonConvert.SerializeObject(q.Personalisation) : null,
+            ////    DeliverAfter = q.DeliverAfter ?? null,
+            ////});
 
-            await this.messageQueueRepository.QueueMessagesAsync(requests);
+            ////await this.messageQueueRepository.QueueMessagesAsync(requests);
+            ////return this.Ok(new { Message = $"{requests.Count()} message requests queued successfully." });
 
-            return this.Ok(new { Message = $"{requests.Count()} message requests queued successfully." });
+            await this.govMessageService.QueueRequestsAsync(request);
+
+            return this.Ok(new { Message = $"{request.Messages.Count} message requests queued successfully." });
         }
 
         /// <summary>
@@ -135,7 +128,7 @@
         [HttpGet]
         public async Task<IEnumerable<PendingMessageRequests>> PendingMessageRequests()
         {
-           return await this.messageQueueRepository.GetPendingEmailsAsync();
+            return await this.messageQueueRepository.GetPendingEmailsAsync();
         }
 
         /// <summary>

@@ -43,19 +43,19 @@
             {
                 var normalisedPersonlisation = new Dictionary<string, dynamic>();
                 if (personalisation != null)
+                {
+                    foreach (var item in personalisation)
                     {
-                        foreach (var item in personalisation)
+                        if (item.Value is JsonElement element)
                         {
-                            if (item.Value is JsonElement element)
-                            {
-                                normalisedPersonlisation[item.Key] = element.ToString();
-                            }
-                            else
-                            {
-                                normalisedPersonlisation[item.Key] = item.Value;
-                            }
+                            normalisedPersonlisation[item.Key] = element.ToString();
+                        }
+                        else
+                        {
+                            normalisedPersonlisation[item.Key] = item.Value;
                         }
                     }
+                }
 
                 var response = await this.client.SendEmailAsync(email, templateId, normalisedPersonlisation);
                 return new GovNotifyResponse

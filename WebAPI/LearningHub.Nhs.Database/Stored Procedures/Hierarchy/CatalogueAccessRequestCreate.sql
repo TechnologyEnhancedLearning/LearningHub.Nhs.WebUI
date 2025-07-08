@@ -7,6 +7,7 @@
 --
 -- 01-02-2021 <> Initial Revision
 -- 12-01-2024  Swapnamol Abraham Added Role ID referernce
+-- 08-07-2025  SA        GOVnotify Implementation
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[CatalogueAccessRequestCreate]
 (
@@ -43,76 +44,76 @@ BEGIN
 				@CurrentUserFullName = FirstName + ' ' + LastName
 			FROM [hub].[UserProfile] where Id = @currentUserId;
 
-			DECLARE @emailTemplateBody nvarchar(max);
-			DECLARE @emailTemplateSubject nvarchar(max);
-			IF @accessType = 'access'
-			BEGIN
-			SELECT 
-				@emailTemplateBody = REPLACE(etl.Body, '[Content]', et.Body),
-				@emailTemplateSubject = et.Subject
-			FROM 
-				[messaging].[EmailTemplate] et
-			JOIN [messaging].[EmailTemplateLayout] etl on et.LayoutId = etl.Id
-			WHERE et.Title = 'CatalogueAccessRequest';
-			END
-			ELSE
-			BEGIN
-			SELECT 
-				@emailTemplateBody = REPLACE(etl.Body, '[Content]', et.Body),
-				@emailTemplateSubject = et.Subject
-			FROM 
-				[messaging].[EmailTemplate] et
-			JOIN [messaging].[EmailTemplateLayout] etl on et.LayoutId = etl.Id
-			WHERE et.Title = 'CataloguePermissionRequest';
-			END
+			--DECLARE @emailTemplateBody nvarchar(max);
+			--DECLARE @emailTemplateSubject nvarchar(max);
+			--IF @accessType = 'access'
+			--BEGIN
+			--SELECT 
+			--	@emailTemplateBody = REPLACE(etl.Body, '[Content]', et.Body),
+			--	@emailTemplateSubject = et.Subject
+			--FROM 
+			--	[messaging].[EmailTemplate] et
+			--JOIN [messaging].[EmailTemplateLayout] etl on et.LayoutId = etl.Id
+			--WHERE et.Title = 'CatalogueAccessRequest';
+			--END
+			--ELSE
+			--BEGIN
+			--SELECT 
+			--	@emailTemplateBody = REPLACE(etl.Body, '[Content]', et.Body),
+			--	@emailTemplateSubject = et.Subject
+			--FROM 
+			--	[messaging].[EmailTemplate] et
+			--JOIN [messaging].[EmailTemplateLayout] etl on et.LayoutId = etl.Id
+			--WHERE et.Title = 'CataloguePermissionRequest';
+			--END
 
-			DECLARE @AdminUserCursor CURSOR 
-			SET @AdminUserCursor = CURSOR FAST_FORWARD 
-			FOR
-			SELECT DISTINCT
-				up.FirstName as AdminFirstName,
-				u.Id as AdminUserId
-			FROM 
-				[hub].[UserUserGroup] uug
-			JOIN 
-				(
-					SELECT UserGroupId FROM [hub].[RoleUserGroup] rug
-					JOIN [hub].[Scope] s on rug.ScopeId = s.Id
-					WHERE s.CatalogueNodeId = @catalogueNodeId
-					AND rug.RoleId = @localAdminRoleId
-					AND s.Deleted = 0 AND rug.Deleted = 0
-					AND s.Deleted = 0
-				) arug on uug.UserGroupId = arug.UserGroupId
-			JOIN [hub].[User] u on u.Id = uug.UserId
-			JOIN [hub].[UserProfile] up on up.Id = u.Id
-			where uug.Deleted = 0 and u.Deleted = 0 and up.Deleted = 0;
+			--DECLARE @AdminUserCursor CURSOR 
+			--SET @AdminUserCursor = CURSOR FAST_FORWARD 
+			--FOR
+			--SELECT DISTINCT
+			--	up.FirstName as AdminFirstName,
+			--	u.Id as AdminUserId
+			--FROM 
+			--	[hub].[UserUserGroup] uug
+			--JOIN 
+			--	(
+			--		SELECT UserGroupId FROM [hub].[RoleUserGroup] rug
+			--		JOIN [hub].[Scope] s on rug.ScopeId = s.Id
+			--		WHERE s.CatalogueNodeId = @catalogueNodeId
+			--		AND rug.RoleId = @localAdminRoleId
+			--		AND s.Deleted = 0 AND rug.Deleted = 0
+			--		AND s.Deleted = 0
+			--	) arug on uug.UserGroupId = arug.UserGroupId
+			--JOIN [hub].[User] u on u.Id = uug.UserId
+			--JOIN [hub].[UserProfile] up on up.Id = u.Id
+			--where uug.Deleted = 0 and u.Deleted = 0 and up.Deleted = 0;
 
-			DECLARE @adminFirstName nvarchar(max);
-			DECLARE @adminUserId nvarchar(max); 
+			--DECLARE @adminFirstName nvarchar(max);
+			--DECLARE @adminUserId nvarchar(max); 
 
-			OPEN @AdminUserCursor;
-			FETCH NEXT FROM @AdminUserCursor INTO @adminFirstName, @adminUserId;
+			--OPEN @AdminUserCursor;
+			--FETCH NEXT FROM @AdminUserCursor INTO @adminFirstName, @adminUserId;
 
-			WHILE @@FETCH_STATUS = 0
-			BEGIN
-				DECLARE @fullSubject nvarchar(max);
-				DECLARE @fullBody nvarchar(max);
+			--WHILE @@FETCH_STATUS = 0
+			--BEGIN
+			--	DECLARE @fullSubject nvarchar(max);
+			--	DECLARE @fullBody nvarchar(max);
 
-				SELECT 
-				@fullSubject = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@emailTemplateSubject, '[AdminFirstName]', @adminFirstName), '[UserEmailAddress]', @currentUserEmailAddress), '[CatalogueName]', @catalogueName), '[UserMessage]', @message), '[UserFullName]', @currentUserFullName), '[ManageAccessUrl]', @catalogueManageAccessUrl),
-				@fullBody = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@emailTemplateBody, '[AdminFirstName]', @adminFirstName), '[UserEmailAddress]', @currentUserEmailAddress), '[CatalogueName]', @catalogueName), '[UserMessage]', @message), '[UserFullName]', @currentUserFullName), '[ManageAccessUrl]', @catalogueManageAccessUrl);
+			--	SELECT 
+			--	@fullSubject = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@emailTemplateSubject, '[AdminFirstName]', @adminFirstName), '[UserEmailAddress]', @currentUserEmailAddress), '[CatalogueName]', @catalogueName), '[UserMessage]', @message), '[UserFullName]', @currentUserFullName), '[ManageAccessUrl]', @catalogueManageAccessUrl),
+			--	@fullBody = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@emailTemplateBody, '[AdminFirstName]', @adminFirstName), '[UserEmailAddress]', @currentUserEmailAddress), '[CatalogueName]', @catalogueName), '[UserMessage]', @message), '[UserFullName]', @currentUserFullName), '[ManageAccessUrl]', @catalogueManageAccessUrl);
 
-				exec [messaging].[CreateEmailForUser] 
-					@fullSubject,
-					@fullBody,
-					@adminUserId,
-					@currentUserId, 
-					@UserTimezoneOffset;
+			--	exec [messaging].[CreateEmailForUser] 
+			--		@fullSubject,
+			--		@fullBody,
+			--		@adminUserId,
+			--		@currentUserId, 
+			--		@UserTimezoneOffset;
 
-				FETCH NEXT FROM @AdminUserCursor INTO @adminFirstName, @adminUserId;
-			END;
-			CLOSE @AdminUserCursor;
-			DEALLOCATE @AdminUserCursor;
+			--	FETCH NEXT FROM @AdminUserCursor INTO @adminFirstName, @adminUserId;
+			--END;
+			--CLOSE @AdminUserCursor;
+			--DEALLOCATE @AdminUserCursor;
 
 			INSERT INTO [hierarchy].[CatalogueAccessRequest]
 			(UserId, CatalogueNodeId, EmailAddress, Message, Status, Deleted, CreateUserId, CreateDate, AmendUserId, AmendDate, RoleId)

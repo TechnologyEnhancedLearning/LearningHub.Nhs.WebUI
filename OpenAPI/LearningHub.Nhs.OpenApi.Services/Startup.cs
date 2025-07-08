@@ -53,6 +53,7 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IEmailSenderService, EmailSenderService>();
             services.AddScoped<IEmailTemplateService, EmailTemplateService>();
             services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IGovMessageService, GovMessageService>();
             services.AddScoped<INotificationTemplateService, NotificationTemplateService>();
             services.AddScoped<INotificationSenderService, NotificationSenderService>();
             services.AddScoped<IInternalSystemService, InternalSystemService>();

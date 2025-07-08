@@ -69,10 +69,11 @@
         /// The RequestAccessAsync.
         /// </summary>
         /// <param name="reference">The catalogue reference.</param>
+        /// <param name="catalogueName">The catalogue name.</param>
         /// <param name="vm">The view model.</param>
         /// <param name="accessType">The accessType.</param>
         /// <returns>The task.</returns>
-        Task<LearningHubValidationResult> RequestAccessAsync(string reference, CatalogueAccessRequestViewModel vm, string accessType);
+        Task<LearningHubValidationResult> RequestAccessAsync(string reference, string catalogueName, CatalogueAccessRequestViewModel vm, string accessType);
 
         /// <summary>
         /// The InviteUserAsync.

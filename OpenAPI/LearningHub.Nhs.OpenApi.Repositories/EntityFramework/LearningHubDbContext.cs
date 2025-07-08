@@ -19,6 +19,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.User;
     using Microsoft.EntityFrameworkCore;
+    using CatalogueAdminViewModel = LearningHub.Nhs.Models.Hierarchy.CatalogueAdminViewModel;
     using Event = LearningHub.Nhs.Models.Entities.Analytics.Event;
 
     /// <summary>
@@ -392,6 +393,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// </summary>
         public virtual DbSet<NodeViewModel> NodeViewModel { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the CatalogueAdminViewModel.
+        /// </summary>
+        public virtual DbSet<CatalogueAdminViewModel> CatalogueAdminViewModel { get; set; }
 
         /// <summary>
         /// Gets or sets the NodePathNodeViewModel.

@@ -4,16 +4,19 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Caching;
     using AutoMapper;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json;
+    using Microsoft.AspNetCore.Http;
 
     /// <summary>
     /// The user group service.
@@ -25,6 +28,7 @@
         /// </summary>
         private readonly IMapper mapper;
 
+        private readonly IRoleUserGroupRepository roleUserGroupRepository;
         /// <summary>
         /// The catalogue service.
         /// </summary>
@@ -58,6 +62,8 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="UserGroupService"/> class.
         /// </summary>
+        /// <param name="roleUserGroupRepository">roleUserGroupRepository.</param>
+        public UserGroupService(IRoleUserGroupRepository roleUserGroupRepository)
         /// <param name="catalogueService">The catalogue service.</param>
         /// <param name="userGroupRepository">The user group repository.</param>
         /// <param name="userUserGroupRepository">The user - user group repository.</param>
@@ -172,7 +178,7 @@
                         retVal.Add(new LearningHubValidationResult(false, detail));
                     }
                 }
-            }
+        }
 
             return retVal;
         }
@@ -921,16 +927,18 @@
                     break;
                 default:
                     if (sortDirection == "D")
-                    {
+        {
+            var userRoleGroups = await this.roleUserGroupRepository.GetRoleUserGroupViewModelsByUserId(userId);
+            if (userRoleGroups != null && userRoleGroups.Any(r => r.RoleEnum == RoleEnum.LocalAdmin || r.RoleEnum == RoleEnum.Editor))
                         items = items.OrderByDescending(x => x.Id);
                     }
                     else
-                    {
+            {
                         items = items.OrderBy(x => x.Id);
-                    }
+            }
 
                     break;
-            }
+        }
 
             return items;
         }

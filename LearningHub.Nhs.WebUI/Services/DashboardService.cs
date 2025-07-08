@@ -26,10 +26,11 @@
         /// Initializes a new instance of the <see cref="DashboardService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">learningHubHttpClient.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">logger.</param>
         /// <param name="moodleHttpClient">MoodleHttpClient.</param>
-        public DashboardService(ILearningHubHttpClient learningHubHttpClient, ILogger<DashboardService> logger, IMoodleHttpClient moodleHttpClient)
-         : base(learningHubHttpClient, logger)
+        public DashboardService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<DashboardService> logger, IMoodleHttpClient moodleHttpClient)
+           : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.moodleHttpClient = moodleHttpClient;
         }
@@ -44,7 +45,7 @@
         {
             DashboardMyLearningResponseViewModel viewmodel = new DashboardMyLearningResponseViewModel { };
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"dashboard/myaccesslearning/{dashboardType}/{pageNumber}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -73,7 +74,7 @@
         {
             DashboardCatalogueResponseViewModel viewmodel = new DashboardCatalogueResponseViewModel { };
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"dashboard/catalogues/{dashboardType}/{pageNumber}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -102,7 +103,7 @@
         {
             DashboardResourceResponseViewModel viewmodel = new DashboardResourceResponseViewModel { };
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"dashboard/resources/{dashboardType}/{pageNumber}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -149,7 +150,7 @@
             };
 
             var content = new System.Net.Http.StringContent(JsonConvert.SerializeObject(eventEntity), Encoding.UTF8, "application/json");
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"event/Create";
             var response = await client.PostAsync(request, content).ConfigureAwait(false);

@@ -19,16 +19,17 @@
         /// Initializes a new instance of the <see cref="BoomarkService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learningHubHttpClient<see cref="ILearningHubHttpClient"/>.</param>
+        /// <param name="openApiHttpClient">The openApiHttpClient<see cref="IOpenApiHttpClient"/>.</param>
         /// <param name="logger">The logger<see cref="ILogger{MyLearningService}"/>.</param>
-        public BoomarkService(ILearningHubHttpClient learningHubHttpClient, ILogger<BoomarkService> logger)
-            : base(learningHubHttpClient, logger)
+        public BoomarkService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<BoomarkService> logger)
+            : base(learningHubHttpClient, openApiHttpClient, logger)
         {
         }
 
         /// <inheritdoc/>
         public async Task<int> Create(UserBookmarkViewModel bookmarkViewModel)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = "bookmark/Create";
             var content = new StringContent(
                 JsonConvert.SerializeObject(bookmarkViewModel),
@@ -56,7 +57,7 @@
         /// <inheritdoc/>
         public async Task<int> Edit(UserBookmarkViewModel bookmarkViewModel)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = "bookmark/Edit";
             var content = new StringContent(
                 JsonConvert.SerializeObject(bookmarkViewModel),
@@ -84,7 +85,7 @@
         /// <inheritdoc/>
         public async Task DeleteFolder(int bookmarkId)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = $"bookmark/deletefolder/{bookmarkId}";
             var response = await client.DeleteAsync(request).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -98,7 +99,7 @@
         /// <inheritdoc/>
         public async Task<IEnumerable<UserBookmarkViewModel>> GetAllByParent(int? parentId, bool? all = false)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = $"bookmark/GetAllByParent/{parentId}?all={all}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -120,7 +121,7 @@
         /// <inheritdoc/>
         public async Task<int> Toggle(UserBookmarkViewModel bookmarkViewModel)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = "bookmark/toggle";
             var content = new StringContent(
                 JsonConvert.SerializeObject(bookmarkViewModel),

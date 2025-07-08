@@ -56,6 +56,17 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         Task<bool> UserHasPublishedResourcesAsync(int userId);
 
         /// <summary>
+        /// The transfer resource ownership.
+        /// </summary>
+        /// <param name="resourceId">The resource id.</param>
+        /// <param name="newOwnerUsername">The new owner username.</param>
+        /// <param name="userId">The user id.</param>
+        void TransferResourceOwnership(
+            int resourceId,
+            string newOwnerUsername,
+            int userId);
+
+        /// <summary>
         /// The create resource async.
         /// </summary>
         /// <param name="resourceType">The resource type.</param>

@@ -137,5 +137,13 @@
         /// <param name="userId">The userId.</param>
         /// <returns>The catalogues.</returns>
         Task<List<AllCatalogueViewModel>> GetAllCataloguesAsync(int pageSize, string filterChar, int userId);
+
+        /// <summary>
+        /// Gets catalogues based on filter character.
+        /// </summary>
+        /// <param name="filterChar">The filterChar.</param>
+        /// <param name="userId">The userId.</param>
+        /// <returns>The catalogues.</returns>
+        Task<List<AllCatalogueViewModel>> GetAllCataloguesAsync(string filterChar, int userId);
     }
 }

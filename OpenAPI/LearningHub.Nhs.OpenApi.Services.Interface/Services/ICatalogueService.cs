@@ -14,10 +14,24 @@
     public interface ICatalogueService
     {
         /// <summary>
+        /// The Get Basic Catalogue.
+        /// </summary>
+        /// <param name="catalogueNodeId">The catalogueNode.</param>
+        /// <returns>The catalogues.</returns>
+        CatalogueBasicViewModel GetBasicCatalogue(int catalogueNodeId);
+
+        /// <summary>
         /// get all catalogues async.
         /// </summary>
         /// <returns>BulkCatalogueViewModel.</returns>
         public Task<BulkCatalogueViewModel> GetAllCatalogues();
+
+        /// <summary>
+        /// The GetCatalogues.
+        /// </summary>
+        /// <param name="searchTerm">The searchTerm.</param>
+        /// <returns>The catalogues.</returns>
+        List<CatalogueViewModel> GetCatalogues(string searchTerm);
 
         /// <summary>
         /// The GetCatalogue.
@@ -88,6 +102,14 @@
         /// <param name="catalogueId">The catalogue id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<bool> CanUserEditCatalogueAsync(int userId, int catalogueId);
+
+
+        /// <summary>
+        /// The GetCatalogues.
+        /// </summary>
+        /// <param name="catalogueIds">The catalogueIds.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<List<CatalogueViewModel>> GetCatalogues(List<int> catalogueIds);
 
         /// <summary>
         /// Returns basic catalogues for user.
@@ -207,6 +229,22 @@
         /// <param name="accessRequestId">The accessRequestId.</param>
         /// <returns>The validation result.</returns>
         Task<LearningHubValidationResult> AcceptAccessAsync(int userId, int accessRequestId);
+
+        /// <summary>
+        /// GetAllCataloguesAsync.
+        /// </summary>
+        /// <param name="filterChar">filterChar.</param>
+        /// <param name="userId">userId.</param>
+        /// <returns>The allcatalogue result based on letters.</returns>
+        Task<AllCatalogueResponseViewModel> GetAllCataloguesAsync(string filterChar, int userId);
+
+        /// <summary>
+        /// The UpdateCatalogueOwnerAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="catalogueOwner">The catalogue owner.</param>
+        /// <returns>The catalogue view model.</returns>
+        Task<LearningHubValidationResult> UpdateCatalogueOwnerAsync(int userId, CatalogueOwnerViewModel catalogueOwner);
 
     }
 }

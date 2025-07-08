@@ -13,11 +13,6 @@
     public interface IUserGroupService
     {
         /// <summary>
-        /// The GetRoleUserGroupDetailAsync.
-        /// </summary>
-        /// <returns>The <see cref="Task{List}"/>.</returns>
-        Task<bool> UserHasCatalogueContributionPermission(int userId);
-
         /// The get by id async.
         /// </summary>
         /// <param name="id">The id.</param>

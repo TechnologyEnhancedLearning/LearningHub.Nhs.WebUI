@@ -1,27 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Platforms>x64</Platforms>
-	</PropertyGroup>
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-		<CodeAnalysisRuleSet />
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      <CodeAnalysisRuleSet />
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-		<CodeAnalysisRuleSet />
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      <CodeAnalysisRuleSet />
+    </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
-		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />
-	</ItemGroup>
+    <ItemGroup>
+		  <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
+		  <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\LearningHub.Nhs.OpenApi.Models\LearningHub.Nhs.OpenApi.Models.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\LearningHub.Nhs.OpenApi.Models\LearningHub.Nhs.OpenApi.Models.csproj" />
+    </ItemGroup>
 
 </Project>

@@ -5,15 +5,7 @@
 @{
 	ViewData["Title"] = "Learning Hub - Home";
 
-	var isReadOnly = false;
-	if (User.IsInRole("ReadOnly") || User.IsInRole("BasicUser"))
-	{
-		isReadOnly = true;
-	}
-	else if (User.IsInRole("BlueUser") && !this.ViewBag.userHasContributePermission)
-	{
-		isReadOnly = true;
-	}
+	var isReadOnly = User.IsInRole("ReadOnly") || User.IsInRole("BasicUser");
 }
 
 @section styles {

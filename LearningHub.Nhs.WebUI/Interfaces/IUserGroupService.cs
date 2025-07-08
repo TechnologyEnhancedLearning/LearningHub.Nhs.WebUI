@@ -23,12 +23,6 @@
         Task<List<RoleUserGroupViewModel>> GetRoleUserGroupDetailForUserAsync(int userId);
 
         /// <summary>
-        /// The UserHasCatalogueContributionPermission.
-        /// </summary>
-        /// <returns>The <see cref="UserHasCatalogueContributionPermission"/>.</returns>
-        Task<bool> UserHasCatalogueContributionPermission();
-
-        /// <summary>
         /// Check if user has given permission.
         /// </summary>
         /// <param name="permissionCode">To check against permission code.</param>

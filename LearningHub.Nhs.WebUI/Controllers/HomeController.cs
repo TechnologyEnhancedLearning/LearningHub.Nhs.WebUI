@@ -40,7 +40,6 @@ namespace LearningHub.Nhs.WebUI.Controllers
         private readonly IDashboardService dashboardService;
         private readonly IContentService contentService;
         private readonly IFeatureManager featureManager;
-        private readonly IUserGroupService userGroupService;
         private readonly Microsoft.Extensions.Configuration.IConfiguration configuration;
 
         /// <summary>
@@ -56,7 +55,6 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="dashboardService">Dashboard service.</param>
         /// <param name="contentService">Content service.</param>
         /// <param name="featureManager"> featureManager.</param>
-        /// <param name="userGroupService"> userGroupService.</param>
         /// <param name="configuration"> config.</param>
         public HomeController(
             IHttpClientFactory httpClientFactory,
@@ -69,7 +67,6 @@ namespace LearningHub.Nhs.WebUI.Controllers
             IDashboardService dashboardService,
             IContentService contentService,
             IFeatureManager featureManager,
-            IUserGroupService userGroupService,
             Microsoft.Extensions.Configuration.IConfiguration configuration)
         : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
@@ -79,7 +76,6 @@ namespace LearningHub.Nhs.WebUI.Controllers
             this.dashboardService = dashboardService;
             this.contentService = contentService;
             this.featureManager = featureManager;
-            this.userGroupService = userGroupService;
             this.configuration = configuration;
         }
 
@@ -216,7 +212,6 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     var learningTask = this.dashboardService.GetMyAccessLearningsAsync(myLearningDashboard, 1);
                     var resourcesTask = this.dashboardService.GetResourcesAsync(resourceDashboard, 1);
                     var cataloguesTask = this.dashboardService.GetCataloguesAsync(catalogueDashboard, 1);
-                    var userGroupsTask = this.userGroupService.UserHasCatalogueContributionPermission();
 
                     var enrolledCoursesTask = Task.FromResult(new List<MoodleCourseResponseViewModel>());
                     var enableMoodle = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.EnableMoodle)).Result;
@@ -227,7 +222,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                         enrolledCoursesTask = this.dashboardService.GetEnrolledCoursesFromMoodleAsync(this.CurrentMoodleUserId, 1);
                     }
 
-                    await Task.WhenAll(learningTask, resourcesTask, cataloguesTask, userGroupsTask);
+                    await Task.WhenAll(learningTask, resourcesTask, cataloguesTask);
 
                     var model = new DashboardViewModel()
                     {
@@ -236,8 +231,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                         Catalogues = await cataloguesTask,
                         EnrolledCourses = await enrolledCoursesTask,
                     };
-                    var userHasContributePermission = await userGroupsTask;
-                    this.ViewBag.userHasContributePermission = userHasContributePermission;
+
                     if (!string.IsNullOrEmpty(this.Request.Query["preview"]) && Convert.ToBoolean(this.Request.Query["preview"]))
                     {
                         return this.View("LandingPage", await this.GetLandingPageContent(Convert.ToBoolean(this.Request.Query["preview"])));

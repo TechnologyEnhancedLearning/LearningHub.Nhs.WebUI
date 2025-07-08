@@ -366,13 +366,7 @@
                 },
                 new Dictionary<string, object>
                 {
-                    { "title", "My learning" },
-                    { "url", this.learningHubConfig.MyLearningUrl },
-                    { "visible", model.ShowMyLearning },
-                },
-                new Dictionary<string, object>
-                {
-                    { "title", "My contributions" },
+                    { "title", "My Contributions" },
                     { "url", this.learningHubConfig.MyContributionsUrl },
                     { "visible", model.ShowMyContributions },
                 },

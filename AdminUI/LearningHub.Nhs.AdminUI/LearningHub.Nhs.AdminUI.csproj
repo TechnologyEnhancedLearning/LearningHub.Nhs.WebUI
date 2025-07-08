@@ -1,16 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<AssemblyVersion>1.0.0.0</AssemblyVersion>
-		<FileVersion>1.0.0.0</FileVersion>
-		<Version>1.0.0</Version>
-		<UserSecretsId>31abd8b9-4223-4ff3-896b-a46530c9e15c</UserSecretsId>
-		<ApplicationInsightsResourceId>/subscriptions/57c55d5f-78c1-4373-a021-ff8357548f51/resourceGroups/LearningHubNhsUk-AdminUI-Prod-RG/providers/microsoft.insights/components/LearningHubNhsUk-AdminUI-Prod</ApplicationInsightsResourceId>
-		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Platforms>x64</Platforms>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+	<AssemblyVersion>1.0.0.0</AssemblyVersion>
+	<FileVersion>1.0.0.0</FileVersion>
+	<Version>1.0.0</Version>
+    <UserSecretsId>31abd8b9-4223-4ff3-896b-a46530c9e15c</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/57c55d5f-78c1-4373-a021-ff8357548f51/resourceGroups/LearningHubNhsUk-AdminUI-Prod-RG/providers/microsoft.insights/components/LearningHubNhsUk-AdminUI-Prod</ApplicationInsightsResourceId>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<Platforms>x64</Platforms>
+  </PropertyGroup>
 	<ItemGroup>
 		<Compile Remove="Views\Notification\**" />
 		<Content Remove="Views\Notification\**" />

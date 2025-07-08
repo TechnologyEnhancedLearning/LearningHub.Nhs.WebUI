@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Caching;
-    using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -57,18 +56,6 @@
         {
             var cacheKey = $"{userId}:AllRolesWithPermissions";
             return await this.cacheService.GetOrFetchAsync(cacheKey, () => this.FetchRoleUserGroupDetailForUserAsync(userId));
-        }
-
-        /// <inheritdoc />
-        public async Task<bool> UserHasCatalogueContributionPermission()
-        {
-            var userRoleGroups = await this.GetRoleUserGroupDetailAsync();
-            if (userRoleGroups != null && userRoleGroups.Any(r => r.RoleEnum == RoleEnum.Editor))
-            {
-                return true;
-            }
-
-            return false;
         }
 
         /// <inheritdoc />

@@ -238,5 +238,13 @@
         /// <returns>The allcatalogue result based on letters.</returns>
         Task<AllCatalogueResponseViewModel> GetAllCataloguesAsync(string filterChar, int userId);
 
+        /// <summary>
+        /// The UpdateCatalogueOwnerAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="catalogueOwner">The catalogue owner.</param>
+        /// <returns>The catalogue view model.</returns>
+        Task<LearningHubValidationResult> UpdateCatalogueOwnerAsync(int userId, CatalogueOwnerViewModel catalogueOwner);
+
     }
 }

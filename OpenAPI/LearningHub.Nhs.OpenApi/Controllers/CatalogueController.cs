@@ -374,5 +374,25 @@
             return this.Ok(await this.catalogueService.AcceptAccessAsync(this.CurrentUserId.GetValueOrDefault(), accessRequestId));
         }
 
+        /// <summary>
+        /// The UpdateCatalogueOwner.
+        /// </summary>
+        /// <param name="viewModel">The catalogue owner.</param>
+        /// <returns>The updated catalogue owner.</returns>
+        [HttpPut]
+        [Route("UpdateCatalogueOwner")]
+        public async Task<IActionResult> UpdateCatalogueOwner(CatalogueOwnerViewModel viewModel)
+        {
+            try
+            {
+                var vr = await this.catalogueService.UpdateCatalogueOwnerAsync(this.CurrentUserId.GetValueOrDefault(), viewModel);
+                return this.Ok(new ApiResponse(true, vr));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
+        }
+
     }
 }

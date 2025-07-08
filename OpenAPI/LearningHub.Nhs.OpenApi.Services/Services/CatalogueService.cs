@@ -1190,6 +1190,18 @@
                 IsValid = !details.Any(),
             };
         }
+        /// <summary>
+        /// The UpdateCatalogueOwnerAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="catalogueOwner">The catalogue owner.</param>
+        /// <returns>The catalogue view model.</returns>
+        public async Task<LearningHubValidationResult> UpdateCatalogueOwnerAsync(int userId, CatalogueOwnerViewModel catalogueOwner)
+        {
+            await this.catalogueNodeVersionRepository.UpdateCatalogueOwnerAsync(userId, catalogueOwner);
+
+            return new LearningHubValidationResult(true);
+        }
 
     }
 }

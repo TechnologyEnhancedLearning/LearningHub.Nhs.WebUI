@@ -6176,125 +6176,126 @@
       }
     }
   },
-    },
-    "/GovNotifyMessage/SendSms": {
-      "post": {
-        "tags": [
-          "SendSms"
-        ],
-        "summary": "Send an SMS.",
-        "requestBody": {
-          "description": "The Sends an SMS using the UK Gov.Notify service.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.SmsRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.SmsRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.SmsRequest"
-              }
+
+  "/GovNotifyMessage/SendSms": {
+    "post": {
+      "tags": [
+        "SendSms"
+      ],
+      "summary": "Send an SMS.",
+      "requestBody": {
+        "description": "The Sends an SMS using the UK Gov.Notify service.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.SmsRequest"
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "SMS successfully sent."
           },
-          "400": {
-            "description": "Bad request, invalid input."
+          "text/json": {
+            "schema": {
+              "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.SmsRequest"
+            }
           },
-          "500": {
-            "description": "Internal server error."
+          "application/*+json": {
+            "schema": {
+              "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.SmsRequest"
+            }
           }
         }
-      }
-    },
-    "/GovNotifyMessage/SendEmail": {
-      "post": {
-        "tags": [
-          "SendEmail"
-        ],
-        "summary": "Send an Email.",
-        "requestBody": {
-          "description": "Sends an email using the UK Gov.Notify service.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.EmailRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.EmailRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.EmailRequest"
-              }
-            }
-          }
+      },
+      "responses": {
+        "200": {
+          "description": "SMS successfully sent."
         },
-        "responses": {
-          "200": {
-            "description": "Email successfully sent."
-          },
-          "400": {
-            "description": "Bad request, invalid input."
-          },
-          "500": {
-            "description": "Internal server error."
-          }
-        }
-      }
-    },
-    "/GovNotifyMessage/QueueRequests": {
-      "post": {
-        "tags": [
-          "QueueRequests"
-        ],
-        "summary": "Queue one or more email/sms request for later processing.",
-        "requestBody": {
-          "description": "A list of sms/email requests to be queued for sending.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.QueueRequestsList"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.QueueRequestsList"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.QueueRequestsList"
-              }
-            }
-          }
+        "400": {
+          "description": "Bad request, invalid input."
         },
-        "responses": {
-          "200": {
-            "description": "Requests are queued successfully."
-          },
-          "400": {
-            "description": "Bad request, invalid input."
-          },
-          "500": {
-            "description": "Internal server error."
-          }
+        "500": {
+          "description": "Internal server error."
         }
       }
     }
   },
+  "/GovNotifyMessage/SendEmail": {
+    "post": {
+      "tags": [
+        "SendEmail"
+      ],
+      "summary": "Send an Email.",
+      "requestBody": {
+        "description": "Sends an email using the UK Gov.Notify service.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.EmailRequest"
+            }
+          },
+          "text/json": {
+            "schema": {
+              "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.EmailRequest"
+            }
+          },
+          "application/*+json": {
+            "schema": {
+              "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.EmailRequest"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Email successfully sent."
+        },
+        "400": {
+          "description": "Bad request, invalid input."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    }
+  },
+  "/GovNotifyMessage/QueueRequests": {
+    "post": {
+      "tags": [
+        "QueueRequests"
+      ],
+      "summary": "Queue one or more email/sms request for later processing.",
+      "requestBody": {
+        "description": "A list of sms/email requests to be queued for sending.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.QueueRequestsList"
+            }
+          },
+          "text/json": {
+            "schema": {
+              "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.QueueRequestsList"
+            }
+          },
+          "application/*+json": {
+            "schema": {
+              "$ref": "#/components/schemas/LearningHub.Nhs.Models.GovNotifyMessaging.QueueRequestsList"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Requests are queued successfully."
+        },
+        "400": {
+          "description": "Bad request, invalid input."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    }
+
+  },
+
   "components": {
     "schemas": {
       "LearningHub.Nhs.Models.Bookmark.UserBookmarkViewModel": {

@@ -50,11 +50,6 @@
         private IScopeRepository scopeRepository;
 
         /// <summary>
-        /// The role user group repository.
-        /// </summary>
-        private IRoleUserGroupRepository roleUserGroupRepository;
-
-        /// <summary>
         /// The user group attribute repository.
         /// </summary>
         private IUserGroupAttributeRepository userGroupAttributeRepository;
@@ -63,12 +58,10 @@
         /// Initializes a new instance of the <see cref="UserGroupService"/> class.
         /// </summary>
         /// <param name="roleUserGroupRepository">roleUserGroupRepository.</param>
-        public UserGroupService(IRoleUserGroupRepository roleUserGroupRepository)
         /// <param name="catalogueService">The catalogue service.</param>
         /// <param name="userGroupRepository">The user group repository.</param>
         /// <param name="userUserGroupRepository">The user - user group repository.</param>
         /// <param name="scopeRepository">The scope repository.</param>
-        /// <param name="roleUserGroupRepository">The role - user group repository.</param>
         /// <param name="userGroupAttributeRepository">The user group attribute repository.</param>
         /// <param name="mapper">The mapper.</param>
         public UserGroupService(
@@ -108,6 +101,18 @@
         public async Task<UserGroup> GetByIdAsync(int id, bool includeRoles)
         {
             return await userGroupRepository.GetByIdAsync(id, includeRoles);
+        }
+
+        /// <inheritdoc />
+        public async Task<bool> UserHasCatalogueContributionPermission(int userId)
+        {
+            var userRoleGroups = await this.roleUserGroupRepository.GetRoleUserGroupViewModelsByUserId(userId);
+            if (userRoleGroups != null && userRoleGroups.Any(r => r.RoleEnum == RoleEnum.LocalAdmin || r.RoleEnum == RoleEnum.Editor))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -927,18 +932,16 @@
                     break;
                 default:
                     if (sortDirection == "D")
-        {
-            var userRoleGroups = await this.roleUserGroupRepository.GetRoleUserGroupViewModelsByUserId(userId);
-            if (userRoleGroups != null && userRoleGroups.Any(r => r.RoleEnum == RoleEnum.LocalAdmin || r.RoleEnum == RoleEnum.Editor))
+                    {
                         items = items.OrderByDescending(x => x.Id);
                     }
                     else
-            {
+                    {
                         items = items.OrderBy(x => x.Id);
-            }
+                    }
 
                     break;
-        }
+            }
 
             return items;
         }

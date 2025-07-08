@@ -6,7 +6,6 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
     using System.Net;
     using System.Threading.Tasks;
     using AutoMapper;
-    using FizzWare.NBuilder;
     using FluentAssertions;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
@@ -24,9 +23,8 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
     using LearningHub.Nhs.OpenApi.Tests.TestHelpers;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.Extensions.Options;
-    using Moq;
+    using Moq; 
     using Xunit;
 
     public class ResourceServiceTests

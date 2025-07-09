@@ -8,6 +8,7 @@
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Messaging;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
+    using EmailTemplate = Nhs.Models.Entities.Messaging.EmailTemplate;
 
     /// <summary>
     /// The EmailTemplateService.
@@ -204,6 +205,16 @@
             }
 
             return new EmailDetails { Body = body, Subject = subject, EmailAddress = model.EmailAddress };
+        }
+
+        /// <summary>
+        /// The GetEmailTemplate.
+        /// </summary>
+        /// <param name="emailTemplateTypeId">The email template type id.</param>
+        /// <returns>The template.</returns>
+        public EmailTemplate GetEmailTemplateById(int emailTemplateTypeId)
+        {
+            return this.emailTemplateRepository.GetTemplate(emailTemplateTypeId);
         }
 
         private string Replace(string str, Dictionary<string, string> replacements)

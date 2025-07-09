@@ -54,5 +54,15 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         ///  Gets or sets the index method.
         /// </summary>
         public string IndexMethod { get; set; } = null!;
+
+        /// <summary>
+        ///  Gets or sets the auto suggestion click component.
+        /// </summary>
+        public string UrlAutoSuggestionClickComponent { get; set; } = null!;
+
+        /// <summary>
+        ///  Gets or sets the url click component.
+        /// </summary>
+        public string UrlClickComponent { get; set; } = null!;
     }
 }

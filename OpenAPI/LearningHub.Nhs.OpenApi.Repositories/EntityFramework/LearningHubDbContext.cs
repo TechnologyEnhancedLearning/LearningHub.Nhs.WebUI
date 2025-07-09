@@ -19,6 +19,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.User;
     using Microsoft.EntityFrameworkCore;
+    using CatalogueAdminViewModel = LearningHub.Nhs.Models.Hierarchy.CatalogueAdminViewModel;
     using Event = LearningHub.Nhs.Models.Entities.Analytics.Event;
 
     /// <summary>
@@ -78,6 +79,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets the role user group..
         /// </summary>
         public virtual DbSet<RoleUserGroup> RoleUserGroup { get; set; }
+
+        /// <summary>
+        /// Gets or sets the password requests.
+        /// </summary>
+        public virtual DbSet<PasswordResetRequests> PasswordResetRequests { get; set; }
 
         /// <summary>
         /// Gets or sets the email change validation token.
@@ -387,6 +393,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// </summary>
         public virtual DbSet<NodeViewModel> NodeViewModel { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the CatalogueAdminViewModel.
+        /// </summary>
+        public virtual DbSet<CatalogueAdminViewModel> CatalogueAdminViewModel { get; set; }
 
         /// <summary>
         /// Gets or sets the NodePathNodeViewModel.
@@ -716,6 +727,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets Provider.
         /// </summary>
         public virtual DbSet<Provider> Provider { get; set; }
+
+        /// <summary>
+        /// Gets or sets User Provider.
+        /// </summary>
+        public virtual DbSet<UserProvider> UserProvider { get; set; }
 
         /// <summary>
         /// Gets or sets Resource Version Provider.

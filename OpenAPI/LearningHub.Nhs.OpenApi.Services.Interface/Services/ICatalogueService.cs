@@ -14,10 +14,24 @@
     public interface ICatalogueService
     {
         /// <summary>
+        /// The Get Basic Catalogue.
+        /// </summary>
+        /// <param name="catalogueNodeId">The catalogueNode.</param>
+        /// <returns>The catalogues.</returns>
+        CatalogueBasicViewModel GetBasicCatalogue(int catalogueNodeId);
+
+        /// <summary>
         /// get all catalogues async.
         /// </summary>
         /// <returns>BulkCatalogueViewModel.</returns>
         public Task<BulkCatalogueViewModel> GetAllCatalogues();
+
+        /// <summary>
+        /// The GetCatalogues.
+        /// </summary>
+        /// <param name="searchTerm">The searchTerm.</param>
+        /// <returns>The catalogues.</returns>
+        List<CatalogueViewModel> GetCatalogues(string searchTerm);
 
         /// <summary>
         /// The GetCatalogue.
@@ -67,10 +81,11 @@
         /// </summary>
         /// <param name="currentUserId">The currentUserId.</param>
         /// <param name="reference">The reference.</param>
+        ///  <param name="catalogueName">The catalogueName.</param>
         /// <param name="vm">The view model.</param>
         /// <param name="accessType">The accessType.</param>
         /// <returns>The bool.</returns>
-        Task<bool> RequestAccessAsync(int currentUserId, string reference, CatalogueAccessRequestViewModel vm, string accessType);
+        Task<bool> RequestAccessAsync(int currentUserId, string reference,string catalogueName, CatalogueAccessRequestViewModel vm, string accessType);
 
         /// <summary>
         /// The InviteUserAsync.
@@ -88,6 +103,14 @@
         /// <param name="catalogueId">The catalogue id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<bool> CanUserEditCatalogueAsync(int userId, int catalogueId);
+
+
+        /// <summary>
+        /// The GetCatalogues.
+        /// </summary>
+        /// <param name="catalogueIds">The catalogueIds.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<List<CatalogueViewModel>> GetCatalogues(List<int> catalogueIds);
 
         /// <summary>
         /// Returns basic catalogues for user.
@@ -207,6 +230,14 @@
         /// <param name="accessRequestId">The accessRequestId.</param>
         /// <returns>The validation result.</returns>
         Task<LearningHubValidationResult> AcceptAccessAsync(int userId, int accessRequestId);
+
+        /// <summary>
+        /// GetAllCataloguesAsync.
+        /// </summary>
+        /// <param name="filterChar">filterChar.</param>
+        /// <param name="userId">userId.</param>
+        /// <returns>The allcatalogue result based on letters.</returns>
+        Task<AllCatalogueResponseViewModel> GetAllCataloguesAsync(string filterChar, int userId);
 
     }
 }

@@ -34,12 +34,14 @@
         /// </summary>
         /// <param name="settings">The Settings.</param>
         /// <param name="learningHubHttpClient">The learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">The logger.</param>
         public PartialFileUploadService(
             IOptions<Settings> settings,
             ILearningHubHttpClient learningHubHttpClient,
+            IOpenApiHttpClient openApiHttpClient,
             ILogger<PartialFileUploadService> logger)
-            : base(learningHubHttpClient, logger)
+              : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.settings = settings.Value;
         }

@@ -3554,6 +3554,31 @@
         }
       }
     },
+    "/Resource/GetExternalContentDetailsById/{resourceVersionId}": {
+      "get": {
+        "tags": [
+          "Resource"
+        ],
+        "summary": "Get External content details of a resource by ResourceVersionId.",
+        "parameters": [
+          {
+            "name": "resourceVersionId",
+            "in": "path",
+            "description": "The resourceVersionIdSystem.Int32.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Resource/GetWeblinkDetails/{resourceVersionId}": {
       "get": {
         "tags": [
@@ -3675,6 +3700,31 @@
           "Resource"
         ],
         "summary": "Get all resource licences.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Resource/GetResourceVersion/{resourceVersionId}": {
+      "get": {
+        "tags": [
+          "Resource"
+        ],
+        "summary": "Get specific ResourceVersion by Id.",
+        "parameters": [
+          {
+            "name": "resourceVersionId",
+            "in": "path",
+            "description": "The resourceVersionIdSystem.Int32.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"

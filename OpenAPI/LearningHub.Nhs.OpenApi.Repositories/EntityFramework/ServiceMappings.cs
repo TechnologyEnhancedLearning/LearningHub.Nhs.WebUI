@@ -4,12 +4,14 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.Models.Automapper;
     using LearningHub.Nhs.OpenApi.Repositories.Map;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Activity;
+    using LearningHub.Nhs.OpenApi.Repositories.Map.Analytics;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Content;
     using LearningHub.Nhs.OpenApi.Repositories.Map.External;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Hierarchy;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Maintenance;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Messaging;
-    using LearningHub.Nhs.OpenApi.Repositories.Map.Resources;
+	using LearningHub.Nhs.OpenApi.Repositories.Map.Migrations;
+	using LearningHub.Nhs.OpenApi.Repositories.Map.Resources;
     using LearningHub.Nhs.OpenApi.Repositories.Map.Resources.Blocks;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -76,6 +78,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, MediaBlockMap>();
             services.AddSingleton<IEntityTypeMap, ImageMap>();
             services.AddSingleton<IEntityTypeMap, NotificationMap>();
+            services.AddSingleton<IEntityTypeMap, NotificationTypeMap>();
             services.AddSingleton<IEntityTypeMap, PageMap>();
             services.AddSingleton<IEntityTypeMap, PageSectionMap>();
             services.AddSingleton<IEntityTypeMap, PageSectionDetailMap>();
@@ -87,6 +90,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, PermissionMap>();
             services.AddSingleton<IEntityTypeMap, PermissionRoleMap>();
             services.AddSingleton<IEntityTypeMap, ProviderMap>();
+            services.AddSingleton<IEntityTypeMap, UserProviderMap>();
             services.AddSingleton<IEntityTypeMap, PublicationMap>();
             services.AddSingleton<IEntityTypeMap, QuestionBlockMap>();
             services.AddSingleton<IEntityTypeMap, QuestionAnswerMap>();
@@ -136,6 +140,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, EmailTemplateMap>();
             services.AddSingleton<IEntityTypeMap, EmailTemplateLayoutMap>();
             services.AddSingleton<IEntityTypeMap, EmailChangeValidationTokenMap>();
+            services.AddSingleton<IEntityTypeMap, PasswordResetRequestsMap>();
             services.AddSingleton<IEntityTypeMap, MessageMap>();
             services.AddSingleton<IEntityTypeMap, MessageSendMap>();
             services.AddSingleton<IEntityTypeMap, MessageSendRecipientMap>();
@@ -175,6 +180,9 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, ExternalSystemMap>();
             services.AddSingleton<IEntityTypeMap, ExternalSystemDeepLinkMap>();
             services.AddSingleton<IEntityTypeMap, ExternalSystemUserMap>();
+            services.AddSingleton<IEntityTypeMap, MigrationMap>();
+            services.AddSingleton<IEntityTypeMap, MigrationInputRecordMap>();
+            services.AddSingleton<IEntityTypeMap, MigrationSourceMap>();
 
             // External
             services.AddSingleton<IEntityTypeMap, UserProfileMap>();

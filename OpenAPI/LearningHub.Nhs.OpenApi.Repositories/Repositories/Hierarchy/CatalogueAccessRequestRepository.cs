@@ -1,10 +1,12 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Hierarchy
 {
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
+    using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Hierarchy;
@@ -74,6 +76,37 @@
             var param5 = new SqlParameter("@p5", SqlDbType.NVarChar) { Value = accessType };
             var param6 = new SqlParameter("@p6", SqlDbType.Int) { Value = roleId };
             await DbContext.Database.ExecuteSqlRawAsync("exec [hierarchy].[CatalogueAccessRequestCreate] @p0, @p1, @p2, @p3, @p4, @p5, @p6", param0, param1, param2, param3, param4, param5, param6);
+        }
+
+        /// <summary>
+        /// The GetCatalogueAdminDetailsAsync.
+        /// </summary>
+        /// <param name="currentUserId">The currentUserId.</param>
+        /// <param name="reference">The reference.</param>
+        /// <param name="roleId">The roleId.</param>
+        /// <param name="accessType">The accessType.</param>
+        /// <returns>The task.</returns>
+        public async Task<List<CatalogueAdminViewModel>> GetCatalogueAdminDetailsAsync(
+            int currentUserId,
+            string reference,
+            int roleId,
+            string accessType)
+        {
+            try
+            {
+                var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = currentUserId };
+                var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = reference };
+                var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+                var param3 = new SqlParameter("@p3", SqlDbType.NVarChar) { Value = accessType };
+                var param4 = new SqlParameter("@p4", SqlDbType.Int) { Value = roleId };
+                ////await DbContext.Database.ExecuteSqlRawAsync("exec [hierarchy].[GetCatalogueAdminDetails] @p0, @p1, @p2, @p3, @p4", param0, param1, param2, param3, param4);
+                var retVal = await this.DbContext.CatalogueAdminViewModel.FromSqlRaw("hierarchy.GetCatalogueAdminDetails @p0, @p1, @p2, @p3, @p4", param0, param1, param2, param3, param4).AsNoTracking().ToListAsync();
+                return retVal;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
     }
 }

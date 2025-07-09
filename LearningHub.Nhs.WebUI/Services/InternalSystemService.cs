@@ -16,9 +16,10 @@
         /// Initializes a new instance of the <see cref="InternalSystemService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">Logger.</param>
-        public InternalSystemService(ILearningHubHttpClient learningHubHttpClient, ILogger<InternalSystemService> logger)
-        : base(learningHubHttpClient, logger)
+        public InternalSystemService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<InternalSystemService> logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
         }
 

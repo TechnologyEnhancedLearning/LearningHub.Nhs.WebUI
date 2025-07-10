@@ -171,8 +171,8 @@
         [Route("my-contributions/{selectedTab}/{catalogueId}/{nodeId}")]
         public async Task<IActionResult> MyContributions()
         {
-            bool usergroup = await this.userGroupService.UserHasCatalogueContributionPermission();
-            if ((this.User.IsInRole("ReadOnly") || this.User.IsInRole("BasicUser")) || (!usergroup && (!await this.resourceService.UserHasPublishedResourcesAsync())))
+            bool catalogueContributionPermission = await this.userGroupService.UserHasCatalogueContributionPermission();
+            if ((this.User.IsInRole("ReadOnly") || this.User.IsInRole("BasicUser")) || (!catalogueContributionPermission && (!await this.resourceService.UserHasPublishedResourcesAsync())))
             {
                 return this.RedirectToAction("AccessDenied", "Home");
             }

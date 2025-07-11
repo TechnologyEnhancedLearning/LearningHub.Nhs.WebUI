@@ -1,5 +1,6 @@
 ﻿namespace LearningHub.Nhs.MessageQueueing.Repositories
 {
+    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Threading.Tasks;
@@ -74,17 +75,18 @@
         }
 
         /// <summary>
-        /// The Save failed Single Emails.
+        /// The Save Single Emails.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task SaveFailedSingleEmail(SingleEmailFailedRequest request)
+        public async Task SaveSingleEmailTransactions(SingleEmailRequest request)
         {
             var param0 = new SqlParameter("@p0", SqlDbType.NVarChar) { Value = request.Recipient };
             var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = request.TemplateId };
-            var param2 = new SqlParameter("@p2", SqlDbType.NVarChar) { Value = request.Personalisation };
-            var param3 = new SqlParameter("@p3", SqlDbType.NVarChar) { Value = request.ErrorMessage };
-            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.SaveFailedSingleEmail @p0, @p1, @p2, @p3", param0, param1, param2, param3);
+            var param2 = new SqlParameter("@p2", SqlDbType.NVarChar) { Value = request.Personalisation == null ? DBNull.Value : request.Personalisation };
+            var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = request.Status };
+            var param4 = new SqlParameter("@p4", SqlDbType.NVarChar) { Value = request.ErrorMessage == null ? DBNull.Value : request.ErrorMessage };
+            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.SaveSingleEmailTransactions @p0, @p1, @p2, @p3, @p4", param0, param1, param2, param3, param4);
         }
     }
 }

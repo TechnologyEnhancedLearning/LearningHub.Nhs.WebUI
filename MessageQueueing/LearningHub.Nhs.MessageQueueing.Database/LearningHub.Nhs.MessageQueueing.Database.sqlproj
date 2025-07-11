@@ -71,11 +71,14 @@
     <Build Include="Stored Procedures\GetQueueRequests.sql" />
     <Build Include="Stored Procedures\MessageDeliveryFailed.sql" />
     <Build Include="Stored Procedures\MessageDeliverySuccess.sql" />
-    <Build Include="Stored Procedures\SaveFailedSingleEmail.sql" />
+    <Build Include="Stored Procedures\SaveSingleEmailTransactions.sql" />
     <Build Include="User-Defined Table Types\QueueRequestTableType.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Post-Deploy\Scripts\RequestStatusData.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\RequestTypeData.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scripts\Post-Deploy\Script.PostDeployment.sql" />
   </ItemGroup>
 </Project>

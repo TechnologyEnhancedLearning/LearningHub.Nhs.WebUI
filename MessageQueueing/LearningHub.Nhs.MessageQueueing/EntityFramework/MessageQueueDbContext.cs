@@ -31,8 +31,6 @@
             get { return this.options; }
         }
 
-        ////public virtual DbSet<QueueRequests> QueueRequests { get; set; }
-
         /// <summary>
         /// Gets or sets the PendingMessageRequests.
         /// </summary>

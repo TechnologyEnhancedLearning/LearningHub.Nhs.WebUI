@@ -38,10 +38,10 @@
         Task MessageDeliverySuccess(GovNotifyResponse response);
 
         /// <summary>
-        /// Save failed one-off email.
+        /// Save one-off emails.
         /// </summary>
         /// <param name="request">The email request.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task SaveFailedSingleEmail(SingleEmailFailedRequest request);
+        Task SaveSingleEmailTransactions(SingleEmailRequest request);
     }
 }

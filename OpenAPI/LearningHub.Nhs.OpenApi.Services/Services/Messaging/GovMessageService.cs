@@ -8,6 +8,7 @@
     using LearningHub.Nhs.MessagingService.Interfaces;
     using LearningHub.Nhs.Models.Entities.GovNotifyMessaging;
     using LearningHub.Nhs.Models.Entities.Messaging;
+    using LearningHub.Nhs.Models.Enums.GovNotifyMessaging;
     using LearningHub.Nhs.Models.GovNotifyMessaging;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Messaging;
     using LearningHub.Nhs.OpenApi.Services.Interface.HttpClients;
@@ -61,19 +62,19 @@
 
             response = await this.messageService.SendEmailAsync(request.Recipient, request.TemplateId, request.Personalisation);
 
-            Dictionary<string, string> test = new Dictionary<string, string>();
             if (response != null)
             {
-                if (!response.IsSuccess && (request.Id == null || request.Id <= 0))
+                if (request.Id == null || request.Id <= 0)
                 {
-                    var failedRequest = new SingleEmailFailedRequest
+                    var emailRequest = new SingleEmailRequest
                     {
                         Recipient = request.Recipient,
                         TemplateId = request.TemplateId,
                         Personalisation = request.Personalisation != null ? JsonConvert.SerializeObject(request.Personalisation.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToString())) : null,
+                        Status = response.IsSuccess == true ? RequestStatusEnum.Sent : RequestStatusEnum.Failed,
                         ErrorMessage = response.ErrorMessage,
                     };
-                    await this.messageQueueRepository.SaveFailedSingleEmail(failedRequest);
+                    await this.messageQueueRepository.SaveSingleEmailTransactions(emailRequest);
                 }
             }
 

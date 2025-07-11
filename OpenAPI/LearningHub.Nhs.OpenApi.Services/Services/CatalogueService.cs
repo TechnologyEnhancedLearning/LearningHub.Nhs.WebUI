@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.ConstrainedExecution;
     using System.Threading.Tasks;
     using AutoMapper;
     using LearningHub.Nhs.Models.Catalogue;
@@ -430,65 +431,43 @@
         {
             var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)(accessType == "access" ? EmailTemplates.CatalogueAccessRequest : EmailTemplates.CataloguePermissionRequest));
 
-            var catalogueAdmin = await this.catalogueAccessRequestRepository.GetCatalogueAdminDetailsAsync(
-                currentUserId,
-                reference,
-                vm.RoleId,
-                accessType);
+            var catalogueAdmin = await this.catalogueAccessRequestRepository.GetCatalogueAdminDetailsAsync(currentUserId, reference, vm.RoleId, accessType);
 
-            var personalisation = new Dictionary<string, string>
-            {
-                ////["Requstername"] = vm.UserFullName,
-                ////["RequsterEmail"] = vm.EmailAddress,
-                ["name"] = vm.UserFullName,
-                ["catalogue name"] = catalogueName,
-                ["message text"] = vm.Message,
-                ////["Review request"] = this.learningHubConfig.BaseUrl + "Catalogue/Manage/" + reference,
-            };
-
-            // Create a list of EmailRequest objects from catalogueAdmin recipients
-            var queueMessage = catalogueAdmin
+            var queueMessages = catalogueAdmin
                 .Where(admin => !string.IsNullOrEmpty(admin.EmailAddress))
                 .Select(admin => new QueueMessage
                 {
                     Recipient = admin.EmailAddress,
                     TemplateId = emailTemplate.TemplateId,
-                    Personalisation = personalisation,
+                    Personalisation = new Dictionary<string, string>
+                    {
+                        ["catalogue admin name"] = admin.FirstName,
+                        ["name"] = vm.UserFullName,
+                        ["email"] = vm.EmailAddress,
+                        ["catalogue name"] = catalogueName,
+                        ["message text"] = vm.Message,
+                        ["Review request url"] = this.learningHubConfig.BaseUrl + "Catalogue/Manage/" + reference,
+                    },
                 })
                 .ToList();
 
-            if (queueMessage.Count > 0)
+            if (queueMessages.Count > 0)
             {
-                // Wrap in QueueMessageList
                 var queueMessageList = new QueueMessageList
                 {
-                    Messages = queueMessage,
+                    Messages = queueMessages,
                 };
 
                 await this.govMessageService.QueueRequestsAsync(queueMessageList);
             }
 
-            ////var personalisation = new Dictionary<string, dynamic>();
-            ////personalisation["name"] = vm.UserFullName;
-            ////personalisation["catalogue name"] = catalogueName;
-            ////personalisation["message text"] = vm.Message;
-            ////personalisation["Review request"] = this.learningHubConfig.BaseUrl + "Catalogue/Manage/" + reference;
-            ////var emailRequest = new EmailRequest
-            ////{
-            ////    Recipient = "swapnamol.abraham@nhs.net",
-            ////    TemplateId = emailTemplate.TemplateId,
-            ////    Personalisation = personalisation,
-            ////};
-
-            ////await this.govMessageService.QueueRequestsAsync(emailRequest);
-
             await this.catalogueAccessRequestRepository.CreateCatalogueAccessRequestAsync(
-    currentUserId,
-    reference,
-    vm.Message,
-    vm.RoleId,
-    this.learningHubConfig.BaseUrl + "Catalogue/Manage/" + reference,
-    accessType);
+        currentUserId,
+        reference,
+        vm.Message,
+        vm.RoleId,
+        this.learningHubConfig.BaseUrl + "Catalogue/Manage/" + reference,
+        accessType);
             return true;
         }
 
@@ -503,24 +482,40 @@
             var catalogue = this.catalogueNodeVersionRepository.GetBasicCatalogue(vm.CatalogueNodeId);
             var user = await this.userProfileRepository.GetByIdAsync(currentUserId);
             var invitedUser = await this.userProfileRepository.GetByEmailAddressAsync(vm.EmailAddress);
-            var greeting = "Hi there";
-            if (invitedUser != null)
+            ////var greeting = "Hi there";
+            ////if (invitedUser != null)
+            ////{
+            ////    greeting = $"Dear {invitedUser.FirstName}";
+            ////}
+
+            ////var emailModel = new SendEmailModel<CatalogueAccessInviteEmailModel>(
+            ////    new CatalogueAccessInviteEmailModel
+            ////    {
+            ////        CatalogueName = catalogue.Name,
+            ////        CatalogueUrl = $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}",
+            ////        AdminFullName = $"{user.FirstName} {user.LastName}",
+            ////        CreateAccountUrl = $"{this.learningHubConfig.BaseUrl}Registration/create-an-account",
+            ////        Greeting = greeting,
+            ////    });
+            ////emailModel.EmailAddress = vm.EmailAddress;
+            ////await this.emailSenderService.SendAccessRequestInviteEmail(currentUserId, emailModel);
+
+            var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)EmailTemplates.CatalogueAccessInvitation);
+
+            var personalisation = new Dictionary<string, dynamic>();
+            personalisation["name"] = user.FirstName;
+            personalisation["catalogue name"] = catalogue.Name;
+            personalisation["catalogue name url"] = $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}";
+
+            var emailRequest = new EmailRequest
             {
-                greeting = $"Dear {invitedUser.FirstName}";
-            }
+                Recipient = vm.EmailAddress,
+                TemplateId = emailTemplate.TemplateId,
+                Personalisation = personalisation,
+            };
 
-            var emailModel = new SendEmailModel<CatalogueAccessInviteEmailModel>(
-                new CatalogueAccessInviteEmailModel
-                {
-                    CatalogueName = catalogue.Name,
-                    CatalogueUrl = $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}",
-                    AdminFullName = $"{user.FirstName} {user.LastName}",
-                    CreateAccountUrl = $"{this.learningHubConfig.BaseUrl}Registration/create-an-account",
-                    Greeting = greeting,
-                });
-            emailModel.EmailAddress = vm.EmailAddress;
+            await this.govMessageService.SendEmailAsync(emailRequest);
 
-            await this.emailSenderService.SendAccessRequestInviteEmail(currentUserId, emailModel);
             return true;
         }
 
@@ -1160,8 +1155,9 @@
             var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)EmailTemplates.CatalogueAccessRequestFailure);
 
             var personalisation = new Dictionary<string, dynamic>();
-            personalisation["name"] = car.UserProfile.FirstName + " " + car.UserProfile.LastName;
+            personalisation["name"] = car.UserProfile.FirstName;
             personalisation["catalogue name"] = catalogue.Name;
+            personalisation["catalogue name url"] = $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}";
             personalisation["reason"] = responseMessage;
 
             var emailRequest = new EmailRequest
@@ -1264,8 +1260,9 @@
             var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)EmailTemplates.CatalogueAccessRequestSuccess);
 
             var personalisation = new Dictionary<string, dynamic>();
-            personalisation["name"] = catalogueAccessRequest.UserProfile.FirstName + " " + catalogueAccessRequest.UserProfile.LastName;
+            personalisation["name"] = catalogueAccessRequest.UserProfile.FirstName;
             personalisation["catalogue name"] = catalogue.Name;
+            personalisation["catalogue name url"] = $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}";
 
             var emailRequest = new EmailRequest
             {

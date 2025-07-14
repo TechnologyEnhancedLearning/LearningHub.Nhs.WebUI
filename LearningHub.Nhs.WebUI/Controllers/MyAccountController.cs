@@ -458,7 +458,7 @@
             if (this.ModelState.IsValid)
             {
                 await this.userService.UpdatePassword(model.NewPassword);
-                var redirectUri = $"{this.configuration["LearningHubAuthServiceConfig:Authority"]}/Home/SetIsPasswordUpdate?isLogout=false";
+                var redirectUri = $"{this.configuration["LearningHubAuthServiceConfig:Authority"]}/Home/SetIsPasswordUpdate?isPasswordUpdate=true";
                 return this.Redirect(redirectUri);
             }
             else

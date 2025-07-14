@@ -378,7 +378,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         [AllowAnonymous]
         public IActionResult Logout()
         {
-            var redirectUri = $"{this.configuration["LearningHubAuthServiceConfig:Authority"]}/Home/SetIsPasswordUpdate?isLogout=true";
+            var redirectUri = $"{this.configuration["LearningHubAuthServiceConfig:Authority"]}/Home/SetIsPasswordUpdate?isPasswordUpdate=false";
             return this.Redirect(redirectUri);
         }
 

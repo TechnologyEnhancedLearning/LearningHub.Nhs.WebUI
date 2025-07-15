@@ -9,67 +9,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-
-      - name: Modify web.config files in all apps
-        shell: pwsh
-        run: |
-          $webConfigPaths = @(
-            "${{ github.workspace }}\AdminUI\LearningHub.Nhs.AdminUI\web.config",
-            "${{ github.workspace }}\WebAPI\LearningHub.Nhs.Api\web.config",
-            "${{ github.workspace }}\LearningHub.Nhs.WebUI\web.config"
-          )
-
-          foreach ($path in $webConfigPaths) {
-            if (Test-Path $path) {
-              Write-Host "Modifying $path"
-              [xml]$config = Get-Content $path
-  
-              if (-not $config.configuration.'system.webServer') {
-                  $systemWebServer = $config.CreateElement("system.webServer")
-                  $config.configuration.AppendChild($systemWebServer) | Out-Null
-              } else {
-                  $systemWebServer = $config.configuration.'system.webServer'
-              }
-  
-              if (-not $systemWebServer.httpProtocol) {
-                  $httpProtocol = $config.CreateElement("httpProtocol")
-                  $systemWebServer.AppendChild($httpProtocol) | Out-Null
-              } else {
-                  $httpProtocol = $systemWebServer.httpProtocol
-              }
-  
-              if (-not $httpProtocol.customHeaders) {
-                  $customHeaders = $config.CreateElement("customHeaders")
-                  $httpProtocol.AppendChild($customHeaders) | Out-Null
-              } else {
-                  $customHeaders = $httpProtocol.customHeaders
-              }
-  
-              foreach ($name in @("X-Powered-By", "Server")) {
-                  $removeNode = $config.CreateElement("remove")
-                  $removeNode.SetAttribute("name", $name)
-                  $customHeaders.AppendChild($removeNode) | Out-Null
-              }
-  
-              if (-not $systemWebServer.security) {
-                  $security = $config.CreateElement("security")
-                  $systemWebServer.AppendChild($security) | Out-Null
-              } else {
-                  $security = $systemWebServer.security
-              }
-  
-              if (-not $security.requestFiltering) {
-                  $requestFiltering = $config.CreateElement("requestFiltering")
-                  $requestFiltering.SetAttribute("removeServerHeader", "true")
-                  $security.AppendChild($requestFiltering) | Out-Null
-              }
-  
-              $config.Save($path)
-            } else {
-              Write-Host "File not found: $path"
-            }
-          }
-
+      
       - name: Setup .NET Core SDK 8.0
         uses: actions/setup-dotnet@v3
         with:
@@ -80,30 +20,27 @@ jobs:
           dotnet nuget remove source LearningHubFeed || true
           dotnet nuget add source 'https://pkgs.dev.azure.com/e-LfH/_packaging/LearningHubFeed/nuget/v3/index.json' --name 'LearningHubFeed'  --username 'kevin.whittaker' --password ${{ secrets.AZURE_DEVOPS_PAT }} --store-password-in-clear-text      
       
-      - name: Use Node 20 with Yarn
+      - name: Use Node 14
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Upgrade npm to the latest version
-        run: npm install -g npm@6.14.8
+          node-version: '14'
+          cache: 'npm'  
           
-      - name: Typescript install WebUI
-        run: yarn install --network-timeout 600000 --frozen-lockfile
+      - name: npm install WebUI
+        run: npm install 
         working-directory: ./LearningHub.Nhs.WebUI
-
-      - name: Typescript build WebUI
-        run: yarn build:webpack
+      
+      - name: npm build WebUI
+        run: npm run build:webpack
         working-directory: ./LearningHub.Nhs.WebUI     
       
-      - name: Typescript install AdminUI
-        run: yarn install 
+      - name: npm install AdminUI
+        run: npm install 
         working-directory: ./AdminUI/LearningHub.Nhs.AdminUI
-
-      - name: Typescript build AdminUI
-        run: yarn build:webpack
-        working-directory: ./AdminUI/LearningHub.Nhs.AdminUI     
+      
+      - name: npm build AdminUI
+        run: npm run build:webpack
+        working-directory: ./AdminUI/LearningHub.Nhs.AdminUI   
       
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.0.3
@@ -183,5 +120,4 @@ jobs:
           }
           
       # - name: Test
-        # run: dotnet test ${{ env.BuildParameters.TestProjects }}       
-     
+        # run: dotnet test ${{ env.BuildParameters.TestProjects }}            

@@ -2,15 +2,19 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.Models.Resource;
+    using LearningHub.Nhs.Models.Resource.Admin;
     using LearningHub.Nhs.Models.Resource.Contribute;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
-    using FileChunkDetailViewModel = Nhs.Models.Resource.Contribute.FileChunkDetailViewModel;
-    using FileCreateRequestViewModel = Nhs.Models.Resource.Contribute.FileCreateRequestViewModel;
-    using FileDeleteRequestModel = Nhs.Models.Resource.Contribute.FileDeleteRequestModel;
+    using FileChunkDetailViewModel = LearningHub.Nhs.Models.Resource.Contribute.FileChunkDetailViewModel;
+    using FileCreateRequestViewModel = LearningHub.Nhs.Models.Resource.Contribute.FileCreateRequestViewModel;
+    using FileDeleteRequestModel = LearningHub.Nhs.Models.Resource.Contribute.FileDeleteRequestModel;
 
     /// <summary>
     /// The ResourceService interface.
@@ -49,6 +53,14 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="resourceReferenceId">The resource reference id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<ResourceVersionViewModel> GetResourceVersionByResourceReferenceAsync(int resourceReferenceId);
+
+        /// <summary>
+        /// Get file directory for unpublished or deleted versions.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="deletedResource">.</param>
+        /// <returns>The <see cref="List{String}"/>.</returns>
+        Task<List<string>> GetObsoleteResourceFile(int resourceVersionId, bool deletedResource = false);
 
         /// <summary>
         /// The unpublish resource version.
@@ -183,11 +195,50 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         MyContributionsTotalsViewModel GetMyContributionTotals(int catalogueId, int userId);
 
         /// <summary>
+        /// The get resource card extended view model async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceCardExtendedViewModel}"/>.</returns>
+        Task<ResourceCardExtendedViewModel> GetResourceCardExtendedViewModelAsync(int resourceVersionId, int userId);
+
+        /// <summary>
+        /// The get my contributions view model async.
+        /// </summary>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <param name="resourceContributionsRequestViewModel">The resourceContributionsRequestViewModel<see cref="ResourceContributionsRequestViewModel"/>.</param>
+        /// <param name="readOnly">The readOnly<see cref="bool"/>.</param>
+        /// <returns>The <see cref="List{ContributedResourceCardViewModel}"/>.</returns>
+        List<ContributedResourceCardViewModel> GetContributions(int userId, ResourceContributionsRequestViewModel resourceContributionsRequestViewModel, bool readOnly);
+
+        /// <summary>
+        /// The get my contributions view model async.
+        /// </summary>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <param name="myContributionsRequestViewModel">The myContributionsRequestViewModel<see cref="MyContributionsRequestViewModel"/>.</param>
+        /// <returns>The <see cref="List{MyContributionsBasicDetailsViewModel}"/>.</returns>
+        List<MyContributionsBasicDetailsViewModel> GetMyContributions(int userId, MyContributionsRequestViewModel myContributionsRequestViewModel);
+
+        /// <summary>
+        /// The get my resource view model async.
+        /// </summary>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{MyResourceViewModel}"/>.</returns>
+        Task<MyResourceViewModel> GetMyResourceViewModelAsync(int userId);
+
+        /// <summary>
         /// The has published resources method.
         /// </summary>
         /// <param name="userId">The user id.</param>
         /// <returns>If the user has published resources.</returns>
         Task<bool> HasPublishedResourcesAsync(int userId);
+
+        /// <summary>
+        /// The get resource version by id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceDetailViewModel}"/>.</returns>
+        Task<ResourceDetailViewModel> GetResourceVersionByIdAsync(int resourceVersionId);
 
         /// <summary>
         /// The get resource by activityStatusIds async.
@@ -263,6 +314,22 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="resourceVersionId">The resource version id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<CaseViewModel> GetCaseDetailsByIdAsync(int resourceVersionId);
+
+        /// <summary>
+        /// The GetExternalContentDetails.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">userId.</param>
+        /// <returns>The <see cref="Task{ExternalContentDetailsViewModel}"/>.</returns>
+        Task<ExternalContentDetailsViewModel> GetExternalContentDetails(int resourceVersionId, int userId);
+
+        /// <summary>
+        /// The get case resource version async.
+        /// </summary>
+        /// <param name="excludeResourceVersionId">The resource version id.</param>
+        /// <param name="resourceType">The resource type.</param>
+        /// <returns>The <see cref="List{T}"/>.</returns>
+        Task<List<string>> GetResourceBlockCollectionsFilePathAsync(int excludeResourceVersionId, ResourceTypeEnum resourceType);
 
         /// <summary>
         /// The GetFileStatusDetailsAsync.
@@ -341,6 +408,12 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
         Task<LearningHubValidationResult> CreateNewResourceVersionAsync(int resourceId, int currentUserId);
 
+        /// <summary>
+        /// The create resource version validation result async.
+        /// </summary>
+        /// <param name="validationResultViewModel">The validationResultViewModel<see cref="ResourceVersionValidationResultViewModel"/>.</param>
+        /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
+        Task<LearningHubValidationResult> CreateResourceVersionValidationResultAsync(ResourceVersionValidationResultViewModel validationResultViewModel);
 
         /// <summary>
         /// The set resource type.
@@ -381,6 +454,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="userId">The userId<see cref="int"/>.</param>
         /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
         Task<LearningHubValidationResult> DeleteResourceVersionAsync(int resourceVersionId, int userId);
+
 
         /// <summary>
         /// The update generic file detail async.
@@ -506,6 +580,22 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         Task DeleteResourceVersionFlagAsync(int resourceVersionFlagId, int userId);
 
         /// <summary>
+        /// Returns a list of basic resource info - filtered, sorted and paged as required.
+        /// </summary>
+        /// <param name="currentUserId">The userId<see cref="int"/>.</param>
+        /// <param name="pagingRequestModel">The request detail <see cref="PagingRequestModel"/>.</param>
+        /// <returns>The <see cref="PagedResultSet{ResourceAdminSearchResultViewModel}"/>.</returns>
+        Task<PagedResultSet<ResourceAdminSearchResultViewModel>> GetResourceAdminSearchFilteredPageAsync(int currentUserId, PagingRequestModel pagingRequestModel);
+
+        /// <summary>
+        /// Transfer Resource Ownership.
+        /// </summary>
+        /// <param name="transferResourceOwnershipViewModel">The transferResourceOwnershipViewModel<see cref="TransferResourceOwnershipViewModel"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
+        Task<LearningHubValidationResult> TransferResourceOwnership(TransferResourceOwnershipViewModel transferResourceOwnershipViewModel, int userId);
+
+        /// <summary>
         /// The update web link resource version async.
         /// </summary>
         /// <param name="webLinkViewModel">The webLinkViewModel<see cref="WebLinkViewModel"/>.</param>
@@ -561,6 +651,49 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="userId">The userId<see cref="int"/>.</param>
         /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
         Task<LearningHubValidationResult> CreateFileDetailsAsync(FileCreateRequestViewModel fileCreateRequestViewModel, int userId);
+
+        /// <summary>
+        /// The get resource version events async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="List{ResourceVersionEventViewModel}"/>.</returns>
+        Task<List<ResourceVersionEventViewModel>> GetResourceVersionEventsAsync(int resourceVersionId);
+
+        /// <summary>
+        /// Create resource version event.
+        /// </summary>
+        /// <param name="resourceVersionEventViewModel">The resourceVersionEventViewModel<see cref="ResourceVersionEventViewModel"/>.</param>
+        void CreateResourceVersionEvent(ResourceVersionEventViewModel resourceVersionEventViewModel);
+
+        /// <summary>
+        /// The get extended resource version view model async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceVersionExtendedViewModel}"/>.</returns>
+        Task<ResourceVersionExtendedViewModel> GetResourceVersionExtendedViewModelAsync(int resourceVersionId, int userId);
+
+        /// <summary>
+        /// The GetResourceVersionDevIdDetailsAync.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceVersionDevIdViewModel}"/>.</returns>
+        Task<ResourceVersionDevIdViewModel> GetResourceVersionDevIdDetailsAync(int resourceVersionId);
+
+        /// <summary>
+        /// The get resource version dev id async.
+        /// </summary>
+        /// <param name="devId">The devId<see cref="string"/>.</param>
+        /// <returns>The <see cref="bool"/>.</returns>
+        Task<bool> DoesDevIdExistsAync(string devId);
+
+        /// <summary>
+        /// Update Dev Id details.
+        /// </summary>
+        /// <param name="resourceVersionDevIdViewModel">The resourceVersionDevIdViewModel.</param>
+        /// <param name="currentUserId">The currentUserId.</param>
+        /// <returns>The <see cref="List{ResourceVersionDevIdViewModel}"/>.</returns>
+        Task UpdateDevIdDetailsAsync(ResourceVersionDevIdViewModel resourceVersionDevIdViewModel, int currentUserId);
 
     }
 }

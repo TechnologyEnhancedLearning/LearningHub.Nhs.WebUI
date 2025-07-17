@@ -17,6 +17,15 @@
         Task<IEnumerable<UserBookmarkViewModel>> GetAllByParent(string authHeader);
 
         /// <summary>
+        /// The GetAllByParent.
+        /// </summary>
+        /// <param name="currentUserId">The currentUserId<see cref="int"/>.</param>
+        /// <param name="parentId">The parentId.</param>
+        /// <param name="all">The all.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<IEnumerable<UserBookmarkViewModel>> GetAllByParent(int currentUserId, int? parentId, bool? all = false);
+
+        /// <summary>
         /// The Create.
         /// </summary>
         /// <param name="currentUserId">The currentUserId<see cref="int"/>.</param>

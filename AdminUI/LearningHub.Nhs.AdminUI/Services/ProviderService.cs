@@ -24,19 +24,20 @@
         /// <summary>
         /// Defines the _facade.
         /// </summary>
-        private readonly ILearningHubApiFacade facade;
+        private readonly IOpenApiFacade facade;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProviderService"/> class.
         /// </summary>
         /// <param name="cacheService">The cache service.</param>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
-        /// <param name="learningHubApiFacade">The learningHubApiFacade<see cref="ILearningHubApiFacade"/>.</param>
-        public ProviderService(ICacheService cacheService, ILearningHubHttpClient learningHubHttpClient, ILearningHubApiFacade learningHubApiFacade)
+        /// <param name="openApiHttpClient">open api http client.</param>
+        /// <param name="openApiFacade">The openApiFacade<see cref="IOpenApiFacade"/>.</param>
+        public ProviderService(ICacheService cacheService, ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, IOpenApiFacade openApiFacade)
         : base(learningHubHttpClient)
         {
             this.cacheService = cacheService;
-            this.facade = learningHubApiFacade;
+            this.facade = openApiFacade;
         }
 
         /// <inheritdoc />

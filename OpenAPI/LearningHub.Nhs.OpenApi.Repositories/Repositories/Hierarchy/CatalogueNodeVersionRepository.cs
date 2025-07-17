@@ -389,5 +389,21 @@
               .AsNoTracking().ToListAsync();
             return result;
         }
+
+        /// <summary>
+        /// Gets catalogues based on filter character.
+        /// </summary>
+        /// <param name="filterChar">The filterChar.</param>
+        /// <param name="userId">The userId.</param>
+        /// <returns>resources.</returns>
+        public async Task<List<AllCatalogueViewModel>> GetAllCataloguesAsync(string filterChar, int userId)
+        {
+            var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+            var param1 = new SqlParameter("@filterChar", SqlDbType.NVarChar, 10) { Value = filterChar.Trim() };
+
+            var result = await this.DbContext.AllCatalogueViewModel.FromSqlRaw("[hierarchy].[GetCatalogues] @userId, @filterChar", param0, param1)
+              .AsNoTracking().ToListAsync();
+            return result;
+        }
     }
 }

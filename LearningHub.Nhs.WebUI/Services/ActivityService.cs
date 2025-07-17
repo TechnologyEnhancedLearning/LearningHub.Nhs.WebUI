@@ -9,6 +9,8 @@
     using LearningHub.Nhs.Models.Resource.Activity;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Services;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
 

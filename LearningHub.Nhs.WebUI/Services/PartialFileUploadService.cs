@@ -20,7 +20,9 @@
     using Newtonsoft.Json;
     using tusdotnet.Models;
     using tusdotnet.Models.Configuration;
-
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Services;
+    using LearningHub.Nhs.WebUI.Shared.Models;
     /// <summary>
     /// Defines the <see cref="PartialFileUploadService" />.
     /// </summary>

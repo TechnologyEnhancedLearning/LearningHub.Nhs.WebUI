@@ -1,0 +1,12 @@
+[
+  {
+    "Name": "IIS Local",
+    "Projects": [
+      {
+        "Path": "LearningHub.Nhs.WebUI\\LearningHub.Nhs.WebUI.csproj",
+        "Action": "Start",
+        "DebugTarget": "IIS Local"
+      }
+    ]
+  }
+]

@@ -44,7 +44,7 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IInternalSystemService, InternalSystemService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<ICachingService, CachingService>();
-            services.AddScoped<ICacheService, CacheService>();
+            services.AddScoped<ICacheService, CacheService>(); //open api has it! qqqq
             services.AddScoped<IProviderService, ProviderService>();
 
         }

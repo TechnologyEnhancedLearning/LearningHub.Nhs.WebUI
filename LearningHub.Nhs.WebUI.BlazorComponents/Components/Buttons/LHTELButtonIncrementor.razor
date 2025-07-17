@@ -1,0 +1,75 @@
+﻿@using Microsoft.Extensions.Logging
+@using Microsoft.JSInterop
+@using TELBlazor.Components.Components.BaseComponents
+@using TELBlazor.Components.Core
+@using TELBlazor.Components.Core.Compliance
+@using TELBlazor.Components.Core.Enums
+@inject IJSRuntime JSRuntime
+@implements IAccessibleComponent
+@inherits TELComponentBase
+@inject ILogger<LHTELButtonIncrementor> Logger
+
+<TELButton
+    @attributes="AdditionalAttributes"
+    ButtonText="@ComputedButtonText"
+    OnClick="@HandleClick"
+    IsSubmitButtonForEditForm="@IsSubmitButtonForEditForm"
+    NoJSActionUrl="@NoJSActionUrl"
+    FormData="@FormData"
+    ButtonStyle="@ButtonStyle"
+    PreventDoubleClick="@PreventDoubleClick"
+    AdditionalCssClasses="@AdditionalCssClasses"
+    AriaLabel="@AriaLabel"
+    AssistiveText="@AssistiveText"
+    TabIndex="@TabIndex"
+    ToolTipTitle="@ToolTipTitle" />
+
+
+@code {
+    // Expose all original parameters, plus your own
+    [Parameter] public string ButtonText { get; set; } = "Button";
+    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter] public bool IsSubmitButtonForEditForm { get; set; }
+    [Parameter] public string NoJSActionUrl { get; set; }
+    [Parameter] public Dictionary<string, string> FormData { get; set; }
+    [Parameter] public TELButtonStyle ButtonStyle { get; set; } = TELButtonStyle.Primary;
+    [Parameter] public bool PreventDoubleClick { get; set; } = false;
+    [Parameter] public string AdditionalCssClasses { get; set; }
+    [Parameter] public string AriaLabel { get; set; }
+    [Parameter] public string AssistiveText { get; set; }
+    [Parameter] public int TabIndex { get; set; } = 0;
+    [Parameter] public string ToolTipTitle { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> AdditionalAttributes { get; set; }
+
+    private int incrementCount = 0;
+
+    private string ComputedButtonText => $"{ButtonText} ({incrementCount})";
+    // private async Task LogToConsole()
+    // {
+    //     await JSRuntime.InvokeVoidAsync("console.log", $"HostType {HostType}",HostType);
+    // }
+    // protected async override void OnInitialized()
+    // {
+    //     await LogToConsole();
+    // }
+    //protected override async Task OnAfterRenderAsync(bool firstRender) { await LogToConsole(); }
+    private async Task HandleClick()
+    {
+        Logger.LogInformation($"LHTELButtonIncrementor clicked: {ButtonText}");
+        // await LogToConsole();
+        incrementCount++;
+        if (OnClick.HasDelegate)
+        {
+            await OnClick.InvokeAsync(null);
+        }
+    }
+
+    // These properties are public, satisfying the interface, but not a Parameter because I wanted to force it to be used in the contract of the interface but the component can do that itself
+    public string AriaRole { get; set; } = "Button";
+    public string AriaDescribedBy { get; set; } = $"assistive-text-{Guid.NewGuid()}";
+
+
+   
+}

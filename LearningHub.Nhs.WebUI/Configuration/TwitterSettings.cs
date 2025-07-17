@@ -28,6 +28,7 @@
         /// <summary>
         /// Gets or sets the ScreenName.
         /// </summary>
+        /// 
         public string ScreenName { get; set; }
     }
 }

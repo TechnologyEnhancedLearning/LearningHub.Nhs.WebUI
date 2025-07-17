@@ -5,6 +5,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    @* <base href="~/" /> qqqq*@
+    <base href="/" />
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -50,11 +52,15 @@
     @await Html.PartialAsync("_GoogleAnalytics")
     <partial name="~/Views/Shared/_TimezoneInfoScriptPartial.cshtml" />
     <partial name="~/Views/Shared/_GoogleTagManagerPartial.cshtml" />
+    @* <component type="typeof(Microsoft.AspNetCore.Components.Web.HeadOutlet)" render-mode="WebAssemblyPrerendered" />qqqq *@
+    <component type="typeof(Microsoft.AspNetCore.Components.Web.HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body class="">
     <script>
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
-
+        /*qqqq*/
+        /*  we want to know if this browser has js enabled so we can assume thats the case for the whole session and tell blazor it can render js version ones rather than rerendering when it detects js !Warning not dynamic if jsisenabled midsession wont change! also if js is turned off the cookie will remain*/
+        document.cookie = "jsEnabled=true; path=/";
     </script>
     <a class="nhsuk-skip-link" href="#maincontent">Skip to main content</a>
 
@@ -158,6 +164,7 @@
     <partial name="~/Views/Shared/_SessionManagerScriptPartial.cshtml" />
     <partial name="~/Views/Shared/_JavascriptDetectorPartial.cshtml" />
     <partial name="~/Views/Shared/_SupportUrlsScriptPartial.cshtml" />
+    <script src="_framework/blazor.web.js"></script>
     @RenderSection("Scripts", required: false)
 
     <script type="text/javascript" src="~/js/mkplayer-ui-custom.js" asp-append-version="true"></script>

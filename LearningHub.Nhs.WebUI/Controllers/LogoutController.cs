@@ -13,7 +13,7 @@
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Handlers;
     using LearningHub.Nhs.WebUI.Interfaces;
-
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.IdentityModel.Tokens;

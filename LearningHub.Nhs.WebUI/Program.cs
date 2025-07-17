@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using LearningHub.Nhs.WebUI;
+using LearningHub.Nhs.WebUI.BlazorPageHosting;
 using LearningHub.Nhs.WebUI.Interfaces;
 using LearningHub.Nhs.WebUI.JsDetection;
 using LearningHub.Nhs.WebUI.Middleware;
@@ -18,7 +19,6 @@ using NLog.Web;
 using tusdotnet;
 using tusdotnet.Models;
 using tusdotnet.Models.Configuration;
-
 #pragma warning restore SA1200 // Using directives should be placed correctly
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
@@ -37,16 +37,20 @@ try
 
     builder.Services.AddHostedService<TimedHostedService>();
     builder.Services.ConfigureServices(builder.Configuration, builder.Environment);
-
+    builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://lh-web.dev.local") });
     var app = builder.Build();
-
     var appLifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
     var jsDetectionLogger = app.Services.GetRequiredService<IJsDetectionLogger>();
     appLifetime.ApplicationStopping.Register(async () => await jsDetectionLogger.FlushCounters());
+    app.UseBlazorFrameworkFiles();
+    app.UseStaticFiles();
 
+    // qqqq remove later
+    app.UseAntiforgery();
     if (app.Environment.IsDevelopment())
     {
         app.UseDeveloperExceptionPage();
+        app.UseWebAssemblyDebugging();
     }
     else
     {
@@ -84,7 +88,6 @@ try
     app.UseAuthorization();
 
     app.UseMiddleware<NLogMiddleware>();
-    app.UseStaticFiles();
 
     app.Map(TimezoneInfoMiddleware.TimezoneInfoUrl, b => b.UseMiddleware<TimezoneInfoMiddleware>());
 
@@ -108,6 +111,15 @@ try
         };
     });
 
+    // qqqq blazor
+    // .AddAdditionalAssemblies(typeof(TELBlazor.Components.ShowCase.E2ETests.WasmServerHost.Client._Imports).Assembly)
+    app.MapRazorComponents<App>()
+        .AddInteractiveServerRenderMode()
+        .AddInteractiveWebAssemblyRenderMode()
+        .AddAdditionalAssemblies(typeof(LearningHub.Nhs.WebUI.BlazorComponents._Imports).Assembly)
+        .AddAdditionalAssemblies(typeof(TELBlazor.Components._Imports).Assembly)
+        .AddAdditionalAssemblies(typeof(LearningHub.Nhs.WebUI.BlazorClient._Imports).Assembly);
+
     app.Run();
 }
 catch (Exception ex)
@@ -118,4 +130,12 @@ catch (Exception ex)
 finally
 {
     LogManager.Shutdown();
+}
+
+/// <summary>
+/// The entry point for the application.  qqqq only needed if use playwright
+/// This partial class is used for in-memory testing in the Atoz Blazor Playwright example.
+/// </summary>
+public partial class Program
+{
 }

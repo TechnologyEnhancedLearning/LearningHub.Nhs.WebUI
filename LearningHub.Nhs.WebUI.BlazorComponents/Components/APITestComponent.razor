@@ -1,0 +1,105 @@
+﻿@using System.Net.Http.Json
+@inject HttpClient Http
+<div class="p-4 border rounded space-y-4">
+    <h3 class="text-lg font-semibold">Endpoint Tester</h3>
+
+    @if (providedEndpoints != null && providedEndpoints.Any())
+    {
+        @for (int i = 0; i < providedEndpoints.Count; i++)
+        {
+            var index = i; // Capture the index for the lambda
+                           <div class="space-y-2">
+                               <h4 class="text-lg font-semibold">Provided Endpoint @(index + 1)</h4>
+                               <div>
+                                   <b>Original Provided Endpoint:</b>
+                                   <p>@providedEndpoints[index]</p>
+                               </div>
+                               <input class="form-input w-full" @bind="providedEndpoints[index]" placeholder="Override provided endpoint..." />
+                               <button class="btn btn-primary" @onclick="() => CallProvidedEndpoint(index)">Call Provided Endpoint @(index + 1)</button>
+                               <div>
+                                   <strong>Response from provided endpoint @(index + 1):</strong>
+                                   <pre class="bg-light p-2 border rounded" style="max-height: 200px; overflow-y: auto;">@providedResponses[index]</pre>
+                               </div>
+                           </div>
+                           <hr />
+        }
+    }
+
+    <div class="space-y-2">
+        <h4 class="text-lg font-semibold">Custom Endpoint</h4>
+        <p>try: <b>https://lh-api.dev.local/api/Catalogue/GetLatestCatalogueAccessRequest/43</b> to get access denied its hitting the api directly not via internal api</p>
+        <input class="form-input w-full" @bind="customEndpoint" placeholder="Enter custom endpoint..." />
+        <button class="btn btn-secondary" @onclick="CallCustomEndpoint">Call Custom Endpoint</button>
+        <div>
+            <strong>Response from custom endpoint:</strong>
+            <pre style="max-height: 200px; overflow-y: auto; background-color: #f5f5f5; padding: 8px; border: 1px solid #ddd; border-radius: 4px; white-space: pre-wrap;">@customResponse</pre>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<string> providedEndpoints = new();
+    private List<string> providedResponses = new();
+    private string? customEndpoint;
+    private string? customResponse;
+
+    protected override void OnInitialized()
+    {
+        // Define your endpoints here
+        var defaultEndpoints = new List<string>
+        {
+            "/api/home/test-data",// our controller api
+            "/api/search/GetCatalogueSearchResults?searchString=test&pageIndex=0&groupId=3fa85f64-5717-4562-b3fc-2c963f66afa6&pageSize=10&searchId=0&eventTypeEnum=1", //our internal api
+            "/api/grade/GetGradesForJobRole/1240", //our internal api Doesnt use authorise
+            "/api/grade/catalogue/GetLatestCatalogueAccessRequest/43" //just get a 204 but can compate again https://lh-api.dev.local/api/Catalogue/GetLatestCatalogueAccessRequest/500 for 401
+            // api/Catalogue/GetLatestCatalogueAccessRequest/500
+            // qqqq i need an example of it not working with the client
+            // what about userapi
+            // what about adminui
+            // what about our db!
+        };
+
+        providedEndpoints = new List<string>(defaultEndpoints);
+        providedResponses = new List<string>(new string[defaultEndpoints.Count]);
+    }
+
+    private async Task CallProvidedEndpoint(int index)
+    {
+        if (index >= 0 && index < providedEndpoints.Count && !string.IsNullOrWhiteSpace(providedEndpoints[index]))
+        {
+            try
+            {
+                providedResponses[index] = await Http.GetStringAsync(providedEndpoints[index]);
+            }
+            catch (Exception ex)
+            {
+                providedResponses[index] = $"Error: {ex.Message}";
+            }
+        }
+    }
+
+    private async Task CallCustomEndpoint()
+    {
+        if (!string.IsNullOrWhiteSpace(customEndpoint))
+        {
+            // try
+            // {
+            //     customResponse = await Http.GetStringAsync(customEndpoint);
+            // }
+            // catch (Exception ex)
+            // {
+            //     customResponse = $"Error: {ex.Message}";
+            // }
+            try
+            {
+                var response = await Http.SendAsync(new HttpRequestMessage(HttpMethod.Get, customEndpoint));
+                var content = await response.Content.ReadAsStringAsync();
+                customResponse = $"**Status:** {response.StatusCode}\n\n{content}";
+            }
+            catch (Exception ex)
+            {
+                customResponse = $"**Error:** {ex.Message}";
+            }
+        }
+    }
+}

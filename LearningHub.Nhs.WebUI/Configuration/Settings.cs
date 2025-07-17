@@ -1,12 +1,14 @@
 namespace LearningHub.Nhs.WebUI.Configuration
 {
     using System;
-    using LearningHub.Nhs.WebUI.Models.Contribute;
+    using LearningHub.Nhs.WebUI.Shared.Configuration;
+    using LearningHub.Nhs.WebUI.Shared.Configuration.ConfigurationSeperatingInterfaces;
+    using LearningHub.Nhs.WebUI.Shared.Models.Contribute;
 
     /// <summary>
     /// Defines the <see cref="Settings" />.
     /// </summary>
-    public class Settings
+    public class Settings : IPublicSettings
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Settings"/> class.
@@ -249,7 +251,7 @@ namespace LearningHub.Nhs.WebUI.Configuration
         /// <summary>
         /// Gets or sets the FindwiseSettings.
         /// </summary>
-        public FindwiseSettings FindwiseSettings { get; set; } = new FindwiseSettings();
+        public IFindwiseSettings FindwiseSettings { get; set; } = new FindwiseSettings();
 
         /// <summary>
         /// Gets or sets the MediaKindSettings.

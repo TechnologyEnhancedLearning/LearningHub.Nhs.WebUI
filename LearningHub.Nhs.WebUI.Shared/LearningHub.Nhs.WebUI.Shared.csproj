@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <RunAnalyzers>false</RunAnalyzers>
+	  <!--reenable when set up-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="C:\Users\NM2.W9215KB2\.nuget\packages\telblazor.components\1.9.0\contentFiles\any\net8.0\TELBlazorPackageVersion\VersionInfo.TELBlazorAssembly.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <!--qqqq these have aspnetcore :(-->
+    <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
+    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />
+    <PackageReference Include="TELBlazor.Components" Version="1.9.0" />
+  </ItemGroup>
+
+
+</Project>

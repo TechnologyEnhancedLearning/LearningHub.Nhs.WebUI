@@ -1,4 +1,9 @@
-﻿@using LearningHub.Nhs.WebUI.Models
+﻿@using LearningHub.Nhs.WebUI.BlazorComponents.Components.Buttons
+@using LearningHub.Nhs.WebUI.Models
+@using TELBlazor.Components.Components.BaseComponents
+@using TELBlazor.Components.Core.Enums
+@using TELBlazor.Components.OptionalImplementations.Test.TestComponents.SearchExperiment
+@using LearningHub.Nhs.WebUI.BlazorComponents.Components
 @model LandingPageViewModel
 @inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.WebUI.Configuration.Settings> options
 @{
@@ -37,6 +42,48 @@
             Sign up, explore and learn
         </div>
     </div>
+
+@*             <component type="typeof(TELButton)" render-mode="ServerPrerendered"
+        param-IsSubmitButtonForEditForm="false"
+        param-NoJSActionUrl="nojsfallback/mvcendpoint/telbuttonshowcase"
+        param-FormData="@(new Dictionary<string, string> { { "increment", "1" } })"
+        param-OnClick="@IncrementCount"
+        param-ButtonStyle="TELButtonStyle.Warning"
+        param-PreventDoubleClick="false"
+        param-ButtonText="@ButtonText"
+        param-AdditionalCssClasses=""
+        param-AriaLabel="Click Counter"
+        param-AssistiveText="Click to increase the number"
+        param-TabIndex="0"
+        param-ToolTipTitle="Click to increment" /> *@
+    @* render-mode="WebAssemblyPrerendered" qqqq *@
+        <component 
+            type="typeof(LHTELButtonIncrementor)"
+               render-mode="WebAssemblyPrerendered"
+            param-IsSubmitButtonForEditForm="false"
+            param-NoJSActionUrl=@("nojsfallback/mvcendpoint/telbuttonshowcase")
+            param-FormData=@(new Dictionary<string, string> { { "increment", "1" } })
+            param-ButtonStyle="TELButtonStyle.Warning"
+            param-PreventDoubleClick="false"
+            param-ButtonText=@("LH TEL Button Incrementor increment: ")
+            param-AdditionalCssClasses=@("")
+            param-AriaLabel=@("Click Counter")
+            param-AssistiveText=@("Click to increase the number")
+            param-TabIndex="0"
+            param-ToolTipTitle=@("Click to increment") />
+
+            <!--remember this is actually using the service from the package which we would never do thats only test-->
+        <component type="typeof(SearchExperiment)" render-mode="WebAssemblyPrerendered"
+               param-NoJSActionUrl="@Model.NoJSActionUrl"
+               param-NoJSControllerSetSearchText="@Model.NoJSSearchText"
+               param-NoJSControllerSetSearchResults="@Model.NoJSSearchResults"
+               param-NoJSControllerSetSuggestions="@Model.NoJSSuggestions" />
+
+
+    <component type="typeof(APITestComponent)"
+               render-mode="WebAssemblyPrerendered"
+                />
+
 
     <div class="landing-page__access-container">
         <div class="nhsuk-width-container app-width-container">

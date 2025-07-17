@@ -10,7 +10,8 @@
     using LearningHub.Nhs.WebUI.Interfaces;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
-
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Services;
     /// <summary>
     /// Defines the <see cref="TermsAndConditionsService" />.
     /// </summary>

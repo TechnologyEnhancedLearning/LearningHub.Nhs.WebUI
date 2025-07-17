@@ -7,6 +7,8 @@
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Services;
     using Microsoft.Extensions.Logging;
 
     /// <summary>

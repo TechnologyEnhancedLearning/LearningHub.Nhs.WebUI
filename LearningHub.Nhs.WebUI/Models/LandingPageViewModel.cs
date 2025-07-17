@@ -16,6 +16,11 @@
         {
             this.LoginInput = new LoginInputModel();
         }
+        public string NoJSSearchText { get; set; } = "MVC set but really would start blank";
+        public string NoJSActionUrl { get; set; } = "/nojsformsubmitstubpage";
+        public List<string> NoJSSearchResults { get; set; } = new List<string>() { "!!Set by mvc but really would start blank!!", "In a nojs browser", " the user would first get a blanks components ", " they then send their data", " the Controller would provide", "this static info back", "including original provideds search", "having used the same service", "serverside in its controller" };
+        public List<string> NoJSSuggestions { get; set; } = new List<string>() { "!!Set by mvc but really would start blank!!", "Unsure if this would work ", "it might do but we wouldnt", " want to spam a page reload per button press ", " so maybe there would be different suggestions in nojs" };
+
 
         /// <summary>
         /// Gets or sets a value indicating whether AuthenticatedNotAuthorised.

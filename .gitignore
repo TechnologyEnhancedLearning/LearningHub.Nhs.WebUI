@@ -53,3 +53,14 @@ obj
 /AdminUI/LearningHub.Nhs.AdminUI/LearningHub.Nhs.AdminUI.csproj.user
 /WebAPI/LearningHub.Nhs.API/LearningHub.Nhs.Api.csproj.user
 /ReportAPI/LearningHub.Nhs.ReportApi/web.config
+/LearningHub.Nhs.WebUI.BlazorClient/Properties/launchSettings.json
+/LearningHub.Nhs.WebUI.BlazorClient/wwwroot/appsettings.ci.json
+/LearningHub.Nhs.WebUI.BlazorClient/wwwroot/appsettings.Development.json
+/LearningHub.Nhs.WebUI.BlazorClient/wwwroot/appsettings.json
+/LearningHub.Nhs.WebUI.BlazorClient/wwwroot/appsettings.Production.json
+/LearningHub.Nhs.WebUI.BlazorClient/nuget.config
+/LearningHub.Nhs.WebUI.BlazorClient/wwwroot/appsettings.Development.json
+/LearningHub.Nhs.WebUI.BlazorClient/wwwroot/appsettings.json
+/LearningHub.Nhs.WebUI.BlazorComponents.UnitTests/appsettings.json
+/LearningHub.Nhs.WebUI.BlazorComponents.UnitTests/appsettings.Development.json
+/LearningHub.Nhs.WebUI.BlazorComponents.UnitTests/appsettings.Production.json

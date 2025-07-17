@@ -7,7 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.Nhs.WebUI", "Le
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B5D48B6A-D4A7-494E-89C0-64428232D242}"
 	ProjectSection(SolutionItems) = preProject
-		Directory.Build.props = Directory.Build.props
+		.editorconfig = .editorconfig
+		global.json = global.json
 		StyleCop.ruleset = StyleCop.ruleset
 	EndProjectSection
 EndProject
@@ -80,6 +81,16 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.Nhs.ReportApi.Shared", "ReportAPI\LearningHub.Nhs.ReportApi.Shared\LearningHub.Nhs.ReportApi.Shared.csproj", "{6167F037-166C-4C5A-81BE-55618E77D4E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningHub.Nhs.WebUI.AutomatedUiTests", "LearningHub.Nhs.WebUI.AutomatedUiTests\LearningHub.Nhs.WebUI.AutomatedUiTests.csproj", "{A84EC50B-2B01-4819-A2B1-BD867B7595CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningHub.Nhs.WebUI.BlazorComponents", "LearningHub.Nhs.WebUI.BlazorComponents\LearningHub.Nhs.WebUI.BlazorComponents.csproj", "{003FFF08-DA96-4578-BB98-7C2861469710}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningHub.Nhs.WebUI.BlazorClient", "LearningHub.Nhs.WebUI.BlazorClient\LearningHub.Nhs.WebUI.BlazorClient.csproj", "{5A33B9F8-6F57-49BB-B084-353E560C2729}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningHub.Nhs.WebUI.BlazorComponents.UnitTests", "LearningHub.Nhs.WebUI.BlazorComponents.UnitTests\LearningHub.Nhs.WebUI.BlazorComponents.UnitTests.csproj", "{63A9CC91-8E2F-4449-9574-756151E250E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningHub.Nhs.WebUI.BlazorComponents.E2ETests", "LearningHub.Nhs.WebUI.BlazorComponents.E2ETests\LearningHub.Nhs.WebUI.BlazorComponents.E2ETests.csproj", "{C44CADD4-AB36-4E7D-A109-556CE8AB336E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningHub.Nhs.WebUI.Shared", "LearningHub.Nhs.WebUI.Shared\LearningHub.Nhs.WebUI.Shared.csproj", "{BD59140D-2D57-437A-8CC8-818026166C11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -345,6 +356,46 @@ Global
 		{A84EC50B-2B01-4819-A2B1-BD867B7595CA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A84EC50B-2B01-4819-A2B1-BD867B7595CA}.Release|x64.ActiveCfg = Release|Any CPU
 		{A84EC50B-2B01-4819-A2B1-BD867B7595CA}.Release|x64.Build.0 = Release|Any CPU
+		{003FFF08-DA96-4578-BB98-7C2861469710}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{003FFF08-DA96-4578-BB98-7C2861469710}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{003FFF08-DA96-4578-BB98-7C2861469710}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{003FFF08-DA96-4578-BB98-7C2861469710}.Debug|x64.Build.0 = Debug|Any CPU
+		{003FFF08-DA96-4578-BB98-7C2861469710}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{003FFF08-DA96-4578-BB98-7C2861469710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{003FFF08-DA96-4578-BB98-7C2861469710}.Release|x64.ActiveCfg = Release|Any CPU
+		{003FFF08-DA96-4578-BB98-7C2861469710}.Release|x64.Build.0 = Release|Any CPU
+		{5A33B9F8-6F57-49BB-B084-353E560C2729}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A33B9F8-6F57-49BB-B084-353E560C2729}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A33B9F8-6F57-49BB-B084-353E560C2729}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5A33B9F8-6F57-49BB-B084-353E560C2729}.Debug|x64.Build.0 = Debug|Any CPU
+		{5A33B9F8-6F57-49BB-B084-353E560C2729}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A33B9F8-6F57-49BB-B084-353E560C2729}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A33B9F8-6F57-49BB-B084-353E560C2729}.Release|x64.ActiveCfg = Release|Any CPU
+		{5A33B9F8-6F57-49BB-B084-353E560C2729}.Release|x64.Build.0 = Release|Any CPU
+		{63A9CC91-8E2F-4449-9574-756151E250E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63A9CC91-8E2F-4449-9574-756151E250E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63A9CC91-8E2F-4449-9574-756151E250E6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{63A9CC91-8E2F-4449-9574-756151E250E6}.Debug|x64.Build.0 = Debug|Any CPU
+		{63A9CC91-8E2F-4449-9574-756151E250E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63A9CC91-8E2F-4449-9574-756151E250E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63A9CC91-8E2F-4449-9574-756151E250E6}.Release|x64.ActiveCfg = Release|Any CPU
+		{63A9CC91-8E2F-4449-9574-756151E250E6}.Release|x64.Build.0 = Release|Any CPU
+		{C44CADD4-AB36-4E7D-A109-556CE8AB336E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C44CADD4-AB36-4E7D-A109-556CE8AB336E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C44CADD4-AB36-4E7D-A109-556CE8AB336E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C44CADD4-AB36-4E7D-A109-556CE8AB336E}.Debug|x64.Build.0 = Debug|Any CPU
+		{C44CADD4-AB36-4E7D-A109-556CE8AB336E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C44CADD4-AB36-4E7D-A109-556CE8AB336E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C44CADD4-AB36-4E7D-A109-556CE8AB336E}.Release|x64.ActiveCfg = Release|Any CPU
+		{C44CADD4-AB36-4E7D-A109-556CE8AB336E}.Release|x64.Build.0 = Release|Any CPU
+		{BD59140D-2D57-437A-8CC8-818026166C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD59140D-2D57-437A-8CC8-818026166C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD59140D-2D57-437A-8CC8-818026166C11}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BD59140D-2D57-437A-8CC8-818026166C11}.Debug|x64.Build.0 = Debug|Any CPU
+		{BD59140D-2D57-437A-8CC8-818026166C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD59140D-2D57-437A-8CC8-818026166C11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD59140D-2D57-437A-8CC8-818026166C11}.Release|x64.ActiveCfg = Release|Any CPU
+		{BD59140D-2D57-437A-8CC8-818026166C11}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

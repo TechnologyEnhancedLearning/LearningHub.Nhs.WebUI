@@ -1,4 +1,6 @@
-﻿namespace LearningHub.Nhs.WebUI.Models.Contribute
+﻿using LearningHub.Nhs.WebUI.Shared.Models.Contribute;
+
+namespace LearningHub.Nhs.WebUI.Models.Contribute
 {
     /// <summary>
     /// Defines the <see cref="ContributeSettingsModel" />.

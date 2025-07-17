@@ -4,6 +4,8 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Content;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Services;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
 

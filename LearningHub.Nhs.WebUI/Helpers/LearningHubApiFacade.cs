@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
     using Newtonsoft.Json;
 
     /// <summary>

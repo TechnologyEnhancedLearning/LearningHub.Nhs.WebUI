@@ -11,19 +11,21 @@
     using LearningHub.Nhs.Models.Dashboard;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Hierarchy;
-    using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.WebUI.Shared.Models.Search;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models.Catalogue;
-    using LearningHub.Nhs.WebUI.Models.Search;
+    using LearningHub.Nhs.WebUI.Shared.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.Models.Search;
 
     /// <summary>
     /// CatalogueController.
@@ -270,7 +272,7 @@
             {
                 if (viewModel.SearchResults == null)
                 {
-                    viewModel.SearchResults = new Models.Search.SearchResultViewModel();
+                    viewModel.SearchResults = new LearningHub.Nhs.WebUI.Shared.Models.Search.SearchResultViewModel();
                 }
 
                 if (search.Term != null)

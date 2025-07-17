@@ -1,11 +1,5 @@
 namespace LearningHub.Nhs.WebUI.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Net.Http;
-    using System.Threading.Tasks;
     using elfhHub.Nhs.Models.Common;
     using elfhHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Content;
@@ -16,6 +10,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Models.Search;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Authorization;
@@ -26,6 +22,12 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.FeatureManagement;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
     using Settings = LearningHub.Nhs.WebUI.Configuration.Settings;
 
     /// <summary>
@@ -41,6 +43,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         private readonly IContentService contentService;
         private readonly IFeatureManager featureManager;
         private readonly Microsoft.Extensions.Configuration.IConfiguration configuration;
+        private readonly ISearchService searchService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController"/> class.
@@ -67,6 +70,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             IDashboardService dashboardService,
             IContentService contentService,
             IFeatureManager featureManager,
+            ISearchService searchService,
             Microsoft.Extensions.Configuration.IConfiguration configuration)
         : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
@@ -77,7 +81,61 @@ namespace LearningHub.Nhs.WebUI.Controllers
             this.contentService = contentService;
             this.featureManager = featureManager;
             this.configuration = configuration;
+            this.searchService = searchService;
         }
+        //public string NoJSSearchText { get; set; } = "MVC set but really would start blank";
+        //public string NoJSActionUrl { get; set; } = "/NoJSSearchSubmitOnHomePage";
+        //public List<string> NoJSSearchResults { get; set; } = new List<string>() { "!!Set by mvc but really would start blank!!", "In a nojs browser", " the user would first get a blanks components ", " they then send their data", " the Controller would provide", "this static info back", "including original provideds search", "having used the same service", "serverside in its controller" };
+        //public List<string> NoJSSuggestions { get; set; } = new List<string>() { "!!Set by mvc but really would start blank!!", "Unsure if this would work ", "it might do but we wouldnt", " want to spam a page reload per button press ", " so maybe there would be different suggestions in nojs" };
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        [HttpPost] // or [HttpGet] depending on your form
+        [Route("NoJSSearchSubmitOnHomePage")] // or whatever route you're using
+        public async Task<IActionResult> Search(string term)
+        {
+            var model = await this.GetLandingPageContent(false);
+            //LandingPageViewModel
+            // we recreate the state here see mvcblazor for where we have stateservices and store it in the serivces
+            model.NoJSSearchText = term;
+            model.NoJSSearchResults = (await searchService.SearchAsync(term)).ToList();
+            model.NoJSSuggestions = (await searchService.GetSuggestionsAsync(term)).ToList();
+            this.ViewBag.TwitterScreenName = this.Settings.TwitterCredentials.ScreenName;
+            this.ViewBag.TwitterScreenName = "@NHSE_TEL";
+            return this.View("LandingPage", model);
+        }
+
+
+
+        [Authorize]
+        [HttpGet]
+        [Route("api/home/test-data")]
+        public IActionResult GetTestData()
+        {
+            try {                 // This is just an example of how you might return some test data.
+                // You can replace this with any logic you need.
+                var userId = this.User.Identity.GetCurrentUserId(); // Assuming this is your extension method
+                var name = this.User.Identity.GetCurrentName(); // Another assumed extension
+                return this.Json(new
+                {
+                    Message = "Hello from the HomeController API!",
+                    Timestamp = DateTime.UtcNow,
+                    User = new { Name = name, Id = userId }
+                });
+            }
+            catch (Exception ex)
+            {
+                return this.Json(new
+                {
+                    Message = "Hello from the HomeController API! Hit me but my logic failed",
+                    Timestamp = DateTime.UtcNow,
+                    User = new { Name = "Ooops error", Id = 99 }
+                });
+            }
+
+
+  
+        }
+
 
         /// <summary>
         /// The Aboutus.
@@ -417,6 +475,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         private async Task<LandingPageViewModel> GetLandingPageContent(bool preview = false)
         {
             var model = new LandingPageViewModel { PageSectionDetailViewModels = new List<PageSectionDetailViewModel>() };
+            model.NoJSActionUrl = "/NoJSSearchSubmitOnHomePage";
             var pageViewModel = await this.contentService.GetPageByIdAsync(1, preview);
             model.PageViewModel = pageViewModel;
             model.DisplayAudioVideo = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.DisplayAudioVideoResource)).Result;

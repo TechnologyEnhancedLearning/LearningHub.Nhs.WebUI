@@ -7,6 +7,8 @@ namespace LearningHub.Nhs.WebUI.Services
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Services;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
 

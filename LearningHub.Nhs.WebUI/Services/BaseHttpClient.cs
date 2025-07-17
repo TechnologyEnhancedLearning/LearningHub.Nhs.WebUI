@@ -12,6 +12,7 @@
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Extensions;
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
@@ -20,7 +21,7 @@
     /// <summary>
     /// The abstract api http client.
     /// </summary>
-    public abstract class BaseHttpClient
+    public abstract class BaseHttpClient : IAPIHttpClient
     {
         private static readonly ConcurrentDictionary<int, object> DictionaryLocks = new ConcurrentDictionary<int, object>();
 
@@ -81,7 +82,7 @@
             {
                 this.logger.LogError("Temp Debugging: LearningHubHttpClient > GetClientAsync User is authenticated. User=" + currentContext.User.Identity.GetCurrentName());
             }
-
+            // qqqq so wont have this client side
             if (currentContext?.User?.Identity?.IsAuthenticated == true)
             {
                 // should we renew access and refresh tokens?
@@ -147,7 +148,7 @@
             this.httpClient.BaseAddress = new Uri(this.ApiUrl);
             this.httpClient.DefaultRequestHeaders.Accept.Clear();
             this.httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            this.httpClient.DefaultRequestHeaders.Add("Client-Identity-Key", this.WebSettings.LHClientIdentityKey);
+            this.httpClient.DefaultRequestHeaders.Add("Client-Identity-Key", this.WebSettings.LHClientIdentityKey);// qqqq isnt this a security risk?
         }
 
         /// <summary>

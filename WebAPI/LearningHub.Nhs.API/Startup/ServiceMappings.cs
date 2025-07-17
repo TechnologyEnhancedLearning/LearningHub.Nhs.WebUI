@@ -259,7 +259,7 @@ namespace LearningHub.Nhs.Api
 
             // Caching services
             services.AddScoped<ICachingService, CachingService>();
-            services.AddScoped<ICacheService, CacheService>();
+            services.AddScoped<ICacheService, CacheService>();//webapi has it qqqq
 
             // Transactions
             services.AddScoped<ITransactionManager, TransactionManager>();

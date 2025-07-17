@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<RunAnalyzers>false</RunAnalyzers><!--reenable when set up-->
+	  <BlazorWebAssemblyEnableDebugging>true</BlazorWebAssemblyEnableDebugging>
+	  <DebugType>full</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.8" />
+
+
+	<!-- Logging -->
+	<PackageReference Include="Serilog" Version="4.2.0" />
+	<PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+	<PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
+	<PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />
+	<PackageReference Include="Serilog.Sinks.BrowserConsole" Version="8.0.0" />
+	<PackageReference Include="Serilog.Sinks.Http" Version="8.0.0" />
+
+	<!-- Utilities -->
+	<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+	<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+	<PackageReference Include="TELBlazor.Components" Version="1.9.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+<ItemGroup>
+    <Content Remove="Properties\launchSettings.template.json" />
+</ItemGroup>
+
+<ItemGroup>
+    <ProjectReference Include="..\LearningHub.Nhs.WebUI.BlazorComponents\LearningHub.Nhs.WebUI.BlazorComponents.csproj" />
+    <ProjectReference Include="..\LearningHub.Nhs.WebUI.Shared\LearningHub.Nhs.WebUI.Shared.csproj" />
+</ItemGroup>
+	<!--qqqq i think this is dangerous really we would want a package that doesnt use aspnet core-->
+	<Target Name="AllowUsingAspNetCoreInBlazorWasm" AfterTargets="ProcessFrameworkReferences">
+		<ItemGroup>
+			<UnavailableRuntimePack Remove="Microsoft.AspNetCore.App" />
+		</ItemGroup>
+	</Target>
+</Project>

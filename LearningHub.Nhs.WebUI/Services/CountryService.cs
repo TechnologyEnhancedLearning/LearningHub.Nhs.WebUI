@@ -6,6 +6,9 @@
     using elfhHub.Nhs.Models.Common;
     using elfhHub.Nhs.Models.Entities;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Services;
+    using LearningHub.Nhs.WebUI.Shared.Models;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
 

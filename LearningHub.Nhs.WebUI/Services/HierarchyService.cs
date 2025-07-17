@@ -7,7 +7,9 @@
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using Microsoft.Extensions.Logging;
-
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Services;
+    using LearningHub.Nhs.WebUI.Shared.Models;
     /// <summary>
     /// The catalogue service.
     /// </summary>

@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <RunAnalyzers>false</RunAnalyzers>
+	  <!--reenable when set up-->
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+	  <!--qqqq<Configurations>Debug;Release;ci</Configurations>
+	  <DefineConstants Condition="'$(HeadlessTesting)' == 'true'">$(DefineConstants);HEADLESS_TESTING</DefineConstants>-->
+
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="AutoFixture" Version="4.18.1" />
+	  <PackageReference Include="coverlet.msbuild" Version="6.0.4" />
+	  <!--<PackageReference Include="coverlet.collector" /> try not to use both if dont have to-->
+	  <PackageReference Include="Deque.AxeCore.Playwright" Version="4.10.1" />
+	  <PackageReference Include="FluentAssertions" Version="8.0.1" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+	  <PackageReference Include="Microsoft.Playwright" Version="1.50.0" />
+	  <PackageReference Include="Microsoft.Playwright.MSTest" Version="1.50.0" />
+	  <PackageReference Include="Microsoft.Playwright.Xunit" Version="1.50.0" />
+	  <PackageReference Include="Verify.Playwright" Version="3.0.0" />
+	  <PackageReference Include="xunit" Version="2.9.0" />
+	  <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" PrivateAssets="all" />
+	  <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LearningHub.Nhs.WebUI\LearningHub.Nhs.WebUI.csproj" />
+  </ItemGroup>
+
+
+	<ItemGroup>
+		<Using Include="Xunit" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <Folder Include="Reports\" />
+	</ItemGroup>
+
+
+</Project>

@@ -24,7 +24,8 @@
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
     using LearningHub.Nhs.WebUI.Models.UserProfile;
-
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Management.Media.Models;
 

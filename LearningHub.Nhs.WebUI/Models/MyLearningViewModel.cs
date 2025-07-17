@@ -7,7 +7,7 @@
     using System.Reflection;
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.Models.Paging;
-    using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.WebUI.Shared.Models.Search;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Models.Learning;
     using NHSUKViewComponents.Web.ViewModels;

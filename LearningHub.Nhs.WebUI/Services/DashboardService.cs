@@ -12,6 +12,8 @@
     using LearningHub.Nhs.Services.Interface;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Services;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
 

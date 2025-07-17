@@ -15,12 +15,15 @@
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models.Contribute;
+    using LearningHub.Nhs.WebUI.Shared.Services;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.VisualBasic;
     using MK.IO.Models;
     using Newtonsoft.Json;
-
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Services;
+    using LearningHub.Nhs.WebUI.Shared.Models;
     /// <summary>
     /// Defines the <see cref="ContributeService" />.
     /// </summary>

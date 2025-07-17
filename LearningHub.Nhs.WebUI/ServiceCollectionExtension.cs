@@ -123,8 +123,8 @@
             {
                 envPrefix += $"_{Environment.MachineName}";
             }
-
-            // Set up redis caching.
+            //qqqq caching
+            // Set up redis caching. 
             services.AddDistributedCache(opt =>
             {
                 opt.RedisConnectionString = configuration.GetConnectionString("LearningHubRedis");

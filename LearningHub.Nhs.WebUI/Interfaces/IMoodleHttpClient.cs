@@ -1,5 +1,6 @@
 ﻿namespace LearningHub.Nhs.Services.Interface
 {
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
     using System.Net.Http;
     using System.Threading.Tasks;
 

@@ -15,6 +15,7 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
+
     /// <summary>
     /// The abstract api http client.
     /// </summary>

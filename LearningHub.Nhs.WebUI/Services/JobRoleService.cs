@@ -10,7 +10,9 @@
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using NuGet.Common;
-
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Services;
+    using LearningHub.Nhs.WebUI.Shared.Models;
     /// <summary>
     /// Defines the <see cref="JobRoleService" />.
     /// </summary>

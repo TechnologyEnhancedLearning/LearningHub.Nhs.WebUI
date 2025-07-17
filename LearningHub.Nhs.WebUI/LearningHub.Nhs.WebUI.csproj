@@ -11,6 +11,11 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Platforms>x64</Platforms>
 		<GenerateRuntimeConfigDevFile>true</GenerateRuntimeConfigDevFile>
+		<!--added to match blazor but probably not vital so could be removed qqqq-->
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RunAnalyzers>false</RunAnalyzers>
+		<!--reenable when set up-->
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(RunConfiguration)' == 'Custom' ">
@@ -104,9 +109,14 @@
 
 
 	<ItemGroup>
+		<!--For Blazor-->
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+		
 		<PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
+		<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
 		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
 		<PackageReference Include="GDS.MultiPageFormData" Version="1.0.6" />
@@ -136,6 +146,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.1" />
+		<PackageReference Include="TELBlazor.Components" Version="1.9.0" />
 		<PackageReference Include="tusdotnet" Version="2.8.0" />
 		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.7.1">
 			<PrivateAssets>all</PrivateAssets>
@@ -165,6 +176,12 @@
 		<Folder Include="wwwroot\lib\bootstrap\" />
 		<Folder Include="wwwroot\lib\fontawesome-free-6.4.2-web\" />
 		<Folder Include="wwwroot\migrations\EastMidlandsDeanery_files\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\LearningHub.Nhs.WebUI.BlazorClient\LearningHub.Nhs.WebUI.BlazorClient.csproj" />
+	  <ProjectReference Include="..\LearningHub.Nhs.WebUI.BlazorComponents\LearningHub.Nhs.WebUI.BlazorComponents.csproj" />
+	  <ProjectReference Include="..\LearningHub.Nhs.WebUI.Shared\LearningHub.Nhs.WebUI.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

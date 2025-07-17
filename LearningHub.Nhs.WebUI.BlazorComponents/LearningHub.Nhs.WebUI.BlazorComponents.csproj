@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<RunAnalyzers>false</RunAnalyzers><!--reenable when set up-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Remove="C:\dev\repos\LearningHub.Nhs.WebUI\StyleCop.json" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.16" />
+    <PackageReference Include="NLog.Schema" Version="5.3.4" />
+    <PackageReference Include="TELBlazor.Components" Version="1.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LearningHub.Nhs.WebUI.Shared\LearningHub.Nhs.WebUI.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

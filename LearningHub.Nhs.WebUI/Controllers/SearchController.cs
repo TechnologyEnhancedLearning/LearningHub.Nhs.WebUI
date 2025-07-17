@@ -5,11 +5,11 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.WebUI.Shared.Models.Search;
     using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Interfaces;
-    using LearningHub.Nhs.WebUI.Models.Search;
+    using LearningHub.Nhs.WebUI.Shared.Models.Search;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -17,6 +17,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Settings = LearningHub.Nhs.WebUI.Configuration.Settings;
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.Models.Search;
 
     /// <summary>
     /// The SearchController.

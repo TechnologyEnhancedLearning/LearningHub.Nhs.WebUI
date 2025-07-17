@@ -2,6 +2,8 @@
 @using LearningHub.Nhs.Models.Dashboard
 @using LearningHub.Nhs.Models.Resource.ResourceDisplay;
 @using LearningHub.Nhs.Models.Enums;
+@using LearningHub.Nhs.WebUI.BlazorComponents.Components
+@using TELBlazor.Components.OptionalImplementations.Test.TestComponents.SearchExperiment
 @{
 	ViewData["Title"] = "Learning Hub - Home";
 
@@ -23,7 +25,17 @@
 				<img src="images\dashboard\hero\LH-dashboard-banner_640x320.jpg" class="hero-image" alt="" />
 			</picture>
 		</div>
+		<component type="typeof(SearchExperiment)" render-mode="WebAssemblyPrerendered"
+				   param-NoJSActionUrl=@("notWiredUp")
+				   param-NoJSControllerSetSearchText=@("notWiredUp")
+				   param-NoJSControllerSetSearchResults=@(new List<string>(){"notWiredUp"})
+				   param-NoJSControllerSetSuggestions=@(new List<string>() { "notWiredUp" }) />
 
+		<component type="typeof(APITestComponent)"
+				   render-mode="WebAssemblyPrerendered"
+				   />
+		<component type="typeof(APIBFFTestComponent)"
+				   render-mode="WebAssemblyPrerendered" />
 		<div class="nhsuk-width-container app-width-container">
 			<div id="my-learning">
 				<partial name="_MyAccessedLearningTray" model="Model" />

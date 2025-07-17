@@ -1,0 +1,105 @@
+﻿@using System.Net.Http.Json
+@using LearningHub.Nhs.WebUI.Shared.Interfaces;
+@inject ILearningHubHttpClient LearningHubClient
+@* @inject IUserApiHttpClient UserApiClient *@
+
+<div class="p-4 border rounded space-y-4">
+    <h3 class="text-lg font-semibold">BFF Endpoint Tester</h3>
+
+    <!-- LearningHub API Tests -->
+    <div class="space-y-2">
+        <h4 class="text-lg font-semibold text-blue-600">LearningHub API (via BFF)</h4>
+        @for (int i = 0; i < learningHubEndpoints.Count; i++)
+        {
+            var index = i;
+            <div class="space-y-2 p-3 bg-blue-50 rounded">
+                <div>
+                    <b>LearningHub Endpoint @(index + 1):</b>
+                    <p class="text-sm text-gray-600">@learningHubEndpoints[index]</p>
+                </div>
+                <input class="form-input w-full" @bind="learningHubEndpoints[index]" placeholder="Override endpoint..." />
+                <button class="btn btn-danger" @onclick="() => CallLearningHubEndpoint(index)">Call LearningHub Endpoint @(index + 1)</button>
+                <div>
+                    <strong>Response:</strong>
+                    <pre class="bg-white p-2 border rounded" style="max-height: 200px; overflow-y: auto;">@learningHubResponses[index]</pre>
+                </div>
+            </div>
+        }
+    </div>
+
+    <hr class="my-4" />
+
+
+    <!-- Custom LearningHub Test -->
+    <div class="space-y-2">
+        <h4 class="text-lg font-semibold text-blue-600">Custom LearningHub Test</h4>
+        <input class="form-input w-full" @bind="customLearningHubEndpoint" placeholder="Enter custom LearningHub endpoint..." />
+        <button class="btn btn-warning" @onclick="CallCustomLearningHubEndpoint">Call Custom LearningHub Endpoint</button>
+        <div>
+            <strong>Response:</strong>
+            <pre style="max-height: 200px; overflow-y: auto; background-color: #f5f5f5; padding: 8px; border: 1px solid #ddd; border-radius: 4px; white-space: pre-wrap;">@customLearningHubResponse</pre>
+        </div>
+    </div>
+
+ 
+</div>
+
+@code {
+    // LearningHub API endpoints
+    private List<string> learningHubEndpoints = new();
+    private List<string> learningHubResponses = new();
+    private string? customLearningHubEndpoint;
+    private string? customLearningHubResponse;
+
+
+
+    protected override void OnInitialized()
+    {
+        // LearningHub API endpoints (these will go through BFF to lh-api)
+
+        //	(external is 'https://lh-api.dev.local/api/Catalogue/GetLatestCatalogueAccessRequest/500')
+        // we dont want internal thats going to be removed https://lh-web.dev.local/api/catalogue/GetLatestCatalogueAccessRequest/500
+        // we want to achieve it by hitting bff so https://bff/lh-api.dev.local/api/ -> https://bff/lh-api.dev.local/api/Catalogue/GetLatestCatalogueAccessRequest/500
+        var defaultLearningHubEndpoints = new List<string>
+        {
+            "Catalogue/GetLatestCatalogueAccessRequest/43"
+        };
+        learningHubEndpoints = new List<string>(defaultLearningHubEndpoints);
+        learningHubResponses = new List<string>(new string[defaultLearningHubEndpoints.Count]);
+    }
+
+    private async Task CallLearningHubEndpoint(int index)
+    {
+        if (index >= 0 && index < learningHubEndpoints.Count && !string.IsNullOrWhiteSpace(learningHubEndpoints[index]))
+        {
+            try
+            {
+                var client = await LearningHubClient.GetClientAsync();
+                var response = await client.GetAsync(learningHubEndpoints[index]);
+                learningHubResponses[index] = await response.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                learningHubResponses[index] = $"Error: {ex.Message}";
+            }
+        }
+    }
+
+
+    private async Task CallCustomLearningHubEndpoint()
+    {
+        if (!string.IsNullOrWhiteSpace(customLearningHubEndpoint))
+        {
+            try
+            {
+                var client = await LearningHubClient.GetClientAsync();
+                customLearningHubResponse = await client.GetStringAsync(customLearningHubEndpoint);
+            }
+            catch (Exception ex)
+            {
+                customLearningHubResponse = $"Error: {ex.Message}";
+            }
+        }
+    }
+
+}

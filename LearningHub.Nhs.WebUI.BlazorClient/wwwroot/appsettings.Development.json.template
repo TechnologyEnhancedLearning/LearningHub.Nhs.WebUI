@@ -1,0 +1,35 @@
+﻿{
+  "APIs": {
+  },
+
+  "Serilog": {
+    "Using": [
+      "Serilog.Sinks.BrowserConsole"
+    ],
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Warning",
+        "System": "Warning"
+      }
+    },
+    "WriteTo": [
+      {
+        "Name": "BrowserConsole",
+        "Args": {
+          "formatter": "Serilog.Formatting.Compact.CompactJsonFormatter, Serilog.Formatting.Compact"
+        }
+      }
+    ],
+    "Enrich": [ "FromLogContext", "WithMachineName", "WithProcessId", "WithThreadId" ],
+    "Properties": {
+      "Application": "LearningHub Nhs WebUI Blazor Client",
+      "Environment": "Development"
+    }
+  },
+  "Properties": {
+    "Application": "LearningHub Nhs WebUI Blazor Client",
+    "Environment": "Development"
+  },
+  "AllowedHosts": "*"
+}

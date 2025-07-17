@@ -540,7 +540,7 @@ const getMKPlayerKey = async function (): Promise<string> {
             return response.data;
         })
         .catch(e => {
-            console.error('Error fetching Media Kind MKPlayer Key', e)
+            /*console.error('Error fetching Media Kind MKPlayer Key', e)*/
             throw e;
         });
 };

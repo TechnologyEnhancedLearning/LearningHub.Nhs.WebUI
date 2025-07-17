@@ -4,15 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LearningHub.NHS.OpenAPI
 {
-    using System.Collections.Generic;
-    using System.IO;
     using AspNetCore.Authentication.ApiKey;
-    using LearningHub.NHS.OpenAPI.Auth;
-    using LearningHub.NHS.OpenAPI.Configuration;
-    using LearningHub.NHS.OpenAPI.Middleware;
+    using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.OpenApi.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
     using LearningHub.Nhs.OpenApi.Services;
+    using LearningHub.NHS.OpenAPI.Auth;
+    using LearningHub.NHS.OpenAPI.Configuration;
+    using LearningHub.NHS.OpenAPI.Middleware;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
@@ -25,11 +26,11 @@ namespace LearningHub.NHS.OpenAPI
     using Microsoft.Extensions.Hosting;
     using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
-    using LearningHub.Nhs.Caching;
-    using LearningHub.Nhs.Models.Enums;
-    using System.Configuration;
     using System;
-    using LearningHub.Nhs.Models.Extensions;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.IO;
+    using System.Net.Http;
 
     /// <summary>
     /// The Startup class.
@@ -57,23 +58,23 @@ namespace LearningHub.NHS.OpenAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddConfig(this.Configuration);
+            //qqqq put back in
+            //services.AddApiKeyAuth();
+            //qqqq put back in
+            //services.AddAuthentication()
+            //.AddJwtBearer(options =>
+            //{
+            //    options.Authority = this.Configuration.GetValue<string>("LearningHUbAuthServiceConfig:Authority");
+            //    options.TokenValidationParameters = new TokenValidationParameters()
+            //    {
+            //        NameClaimType = "given_name",
+            //        RoleClaimType = "role",
+            //        ValidateAudience = true,
+            //        ValidAudiences = new List<string> { "learninghubopenapi", "learninghubapi" },
+            //    };
+            //});
 
-            services.AddApiKeyAuth();
-
-            services.AddAuthentication()
-            .AddJwtBearer(options =>
-            {
-                options.Authority = this.Configuration.GetValue<string>("LearningHUbAuthServiceConfig:Authority");
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    NameClaimType = "given_name",
-                    RoleClaimType = "role",
-                    ValidateAudience = true,
-                    ValidAudiences = new List<string> { "learninghubopenapi", "learninghubapi" },
-                };
-            });
-
-            services.AddCustomMiddleware();
+            //services.AddCustomMiddleware();
 
             services.AddRepositories(this.Configuration);
             services.AddServices();
@@ -83,63 +84,64 @@ namespace LearningHub.NHS.OpenAPI
                     options.UseSqlServer(this.Configuration.GetConnectionString("LearningHub")));
             services.AddApplicationInsightsTelemetry();
             services.AddControllers(options => options.Filters.Add(new HttpResponseExceptionFilter()));
-            services.AddControllers(opt => { opt.Filters.Add(new AuthorizeFilter()); });
+            //services.AddControllers(opt => { opt.Filters.Add(new AuthorizeFilter()); });
+            services.AddControllers();
             services.AddSwaggerGen(
                 c =>
                 {
                     // For docs see https://github.com/domaindrivendev/Swashbuckle.AspNetCore
                     c.SwaggerDoc("dev", new OpenApiInfo { Title = "LearningHub.NHS.OpenAPI", Version = "dev" });
                     c.CustomSchemaIds(type => type.FullName);
-                    c.AddSecurityDefinition(
-                        "ApiKey",
-                        new OpenApiSecurityScheme
-                        {
-                            Type = SecuritySchemeType.ApiKey,
-                            In = ParameterLocation.Header,
-                            Name = AuthConstants.ApiKeyHeaderName,
-                        });
-                    c.AddSecurityRequirement(
-                        new OpenApiSecurityRequirement
-                        {
-                            {
-                                new OpenApiSecurityScheme
-                                {
-                                    Reference = new OpenApiReference
-                                        { Type = ReferenceType.SecurityScheme, Id = "ApiKey" },
-                                },
-                                new string[] { } // Must be empty since not oauth2 - see https://github.com/domaindrivendev/Swashbuckle.AspNetCore#add-security-definitions-and-requirements
-                            },
-                        });
-                    c.AddSecurityDefinition(
-                        "OAuth",
-                        new OpenApiSecurityScheme
-                        {
-                            Type = SecuritySchemeType.OAuth2,
-                            In = ParameterLocation.Header,
-                            Name = "Authorization",
-                            Flows = new OpenApiOAuthFlows
-                            {
-                                AuthorizationCode = new OpenApiOAuthFlow
-                                {
-                                    AuthorizationUrl = new System.Uri(this.Configuration.GetValue<string>("LearningHUbAuthServiceConfig:AuthorizationUrl")),
-                                    TokenUrl = new System.Uri(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:TokenUrl")),
-                                    Scopes = new Dictionary<string, string>
-                                    {
-                                        { "learninghubapi", string.Empty },
-                                    },
-                                },
-                            },
-                        });
-                    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                    {
-                        {
-                            new OpenApiSecurityScheme
-                            {
-                                Reference = new OpenApiReference { Id = "OAuth", Type = ReferenceType.SecurityScheme },
-                            },
-                            new string[] { }
-                        },
-                    });
+                    //c.AddSecurityDefinition(
+                    //    "ApiKey",
+                    //    new OpenApiSecurityScheme
+                    //    {
+                    //        Type = SecuritySchemeType.ApiKey,
+                    //        In = ParameterLocation.Header,
+                    //        Name = AuthConstants.ApiKeyHeaderName,
+                    //    });
+                    //c.AddSecurityRequirement(
+                    //    new OpenApiSecurityRequirement
+                    //    {
+                    //        {
+                    //            new OpenApiSecurityScheme
+                    //            {
+                    //                Reference = new OpenApiReference
+                    //                    { Type = ReferenceType.SecurityScheme, Id = "ApiKey" },
+                    //            },
+                    //            new string[] { } // Must be empty since not oauth2 - see https://github.com/domaindrivendev/Swashbuckle.AspNetCore#add-security-definitions-and-requirements
+                    //        },
+                    //    });
+                    //c.AddSecurityDefinition(
+                    //    "OAuth",
+                    //    new OpenApiSecurityScheme
+                    //    {
+                    //        Type = SecuritySchemeType.OAuth2,
+                    //        In = ParameterLocation.Header,
+                    //        Name = "Authorization",
+                    //        Flows = new OpenApiOAuthFlows
+                    //        {
+                    //            AuthorizationCode = new OpenApiOAuthFlow
+                    //            {
+                    //                AuthorizationUrl = new System.Uri(this.Configuration.GetValue<string>("LearningHUbAuthServiceConfig:AuthorizationUrl")),
+                    //                TokenUrl = new System.Uri(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:TokenUrl")),
+                    //                Scopes = new Dictionary<string, string>
+                    //                {
+                    //                    { "learninghubapi", string.Empty },
+                    //                },
+                    //            },
+                    //        },
+                    //    });
+                    //c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                    //{
+                    //    {
+                    //        new OpenApiSecurityScheme
+                    //        {
+                    //            Reference = new OpenApiReference { Id = "OAuth", Type = ReferenceType.SecurityScheme },
+                    //        },
+                    //        new string[] { }
+                    //    },
+                    //});
                 });
 
             var environment = this.Configuration.GetValue<EnvironmentEnum>("Environment");
@@ -156,6 +158,17 @@ namespace LearningHub.NHS.OpenAPI
                 option.DefaultExpiryInMinutes = 60;
             });
 
+            //qqqq delete later
+            services.AddCors(options =>
+            {
+                //qqqq check works just to get iprovider working
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder
+                    .WithOrigins("https://localhost:7209", "https://lh-web.dev.local", "https://lh-api.dev.local/api/")
+                    .AllowAnyOrigin()                  
+                    .AllowAnyHeader()
+                                      .AllowAnyMethod());
+            });
         }
 
         /// <summary>
@@ -170,23 +183,23 @@ namespace LearningHub.NHS.OpenAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.Use(async (context, next) =>
-            {
-                // Check context headers to determine which authentication scheme is appropriate
-                string scheme = ApiKeyDefaults.AuthenticationScheme;
-                if (context.Request.Headers.Keys.Contains("Authorization"))
-                {
-                    scheme = JwtBearerDefaults.AuthenticationScheme;
-                }
+            //app.Use(async (context, next) =>
+            //{
+            //    // Check context headers to determine which authentication scheme is appropriate
+            //    string scheme = ApiKeyDefaults.AuthenticationScheme;
+            //    if (context.Request.Headers.Keys.Contains("Authorization"))
+            //    {
+            //        scheme = JwtBearerDefaults.AuthenticationScheme;
+            //    }
 
-                var result = await context.AuthenticateAsync(scheme);
-                if (result.Succeeded)
-                {
-                    context.User = result.Principal;
-                }
+            //    var result = await context.AuthenticateAsync(scheme);
+            //    if (result.Succeeded)
+            //    {
+            //        context.User = result.Principal;
+            //    }
 
-                await next();
-            });
+            //    await next();
+            //});
 
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -194,7 +207,7 @@ namespace LearningHub.NHS.OpenAPI
                 RequestPath = "/SwaggerDefinitions",
             });
 
-            app.UseCustomMiddleware();
+            //app.UseCustomMiddleware();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -205,32 +218,34 @@ namespace LearningHub.NHS.OpenAPI
                 }
 
                 c.SwaggerEndpoint("/SwaggerDefinitions/v1.3.0.json", "v1.3.0");
-                c.OAuthClientId(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:ClientId"));
-                c.OAuthClientSecret(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:ClientSecret"));
-                c.OAuthScopes(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:Scopes"));
-                c.OAuthUsePkce();
+                //c.OAuthClientId(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:ClientId"));
+                //c.OAuthClientSecret(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:ClientSecret"));
+                //c.OAuthScopes(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:Scopes"));
+                //c.OAuthUsePkce();
             });
-
-            ////app.Use(async (context, next) =>
-            ////{
-            ////    context.Response.Headers.Add("content-security-policy", "object-src 'none'; frame-ancestors 'none'; sandbox allow-forms allow-same-origin allow-scripts allow-popups; base-uri 'self';");
-            ////    context.Response.Headers.Add("Referrer-Policy", "no-referrer");
-            ////    context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-            ////    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-            ////    context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
-            ////    context.Response.Headers.Add("X-XSS-protection", "0");
-            ////    await next();
-            ////});
+            //qqqq recomment out later 
+//            app.Use(async (context, next) =>
+            //{
+            //    context.Response.Headers.Add("content-security-policy", "object-src 'none'; frame-ancestors 'none'; sandbox allow-forms allow-same-origin allow-scripts allow-popups; base-uri 'self';");
+            //    context.Response.Headers.Add("Referrer-Policy", "no-referrer");
+            //    context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+            //    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+            //    context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+            //    context.Response.Headers.Add("X-XSS-protection", "0");
+            //    await next();
+            //});
+            // qqqq delete later just us a big static with a wait as a fake api
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseAuth();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
+            //app.UseAuth();
+            app.UseCors("AllowSpecificOrigin");//qqqq dekete kater
+            // definately put this back in
+            //app.UseAuthentication();
+            //app.UseAuthorization();
+  
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

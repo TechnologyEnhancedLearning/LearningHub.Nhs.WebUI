@@ -1,0 +1,88 @@
+﻿@using LearningHub.Nhs.WebUI.BlazorComponents.Components.Buttons
+@using LearningHub.Nhs.WebUI.BlazorComponents.UnitTests.DI
+@using TELBlazor.Components.Core.Enums
+@inherits TestContext
+
+@code{
+    private readonly Fixture _fixture;
+    private readonly ITestOutputHelper _outputHelper; //This is for showing logger outputs in the the testrunner
+
+    public LHTELButtonIncrementorTests(ITestOutputHelper outputHelper)
+    {
+        // Initialize AutoFixture
+        _fixture = new Fixture();
+        _outputHelper = outputHelper;
+    }
+
+    public TestContext CreateTestContext(InMemorySink inMemorySink, bool JSEnabled)//Require it so remember to test it
+    {
+        //Arrange
+
+        var ctx = new TestContext();
+        ctx.Services.AddFallbackServiceProvider(new FallbackServiceProvider());
+
+        // Create a mock of IGS_JSEnabled
+        var mockTELBlazorBaseComponentConfiguration = new Mock<TELBlazor.Components.Core.Configuration.ITELBlazorBaseComponentConfiguration>();
+        mockTELBlazorBaseComponentConfiguration.Setup(c => c.JSEnabled).Returns(JSEnabled); // Mock behavior for JSIsEnabled
+        mockTELBlazorBaseComponentConfiguration.Setup(c => c.HostType).Returns("Unit Test"); // Mock behavior for WhoAmI
+
+
+        ctx.Services.AddLogging(_outputHelper, inMemorySink);
+        ctx.Services.AddScoped(_ => mockTELBlazorBaseComponentConfiguration.Object);
+
+        return ctx;
+    }
+
+    [Trait("Category", "Functionality")]
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void LHTELButtonIncrementor_OnClick_IncrementsButtonName(bool preventDoubleClick)
+    {
+        // Setup
+        InMemorySink inMemorySink = new InMemorySink();
+        bool JSEnabled = true; // qqqq not setting up a controller for it and a service
+        using var ctx = CreateTestContext(inMemorySink, JSEnabled);
+
+        var noJsActionUrl = _fixture.Create<string>();
+        var formData = _fixture.Create<Dictionary<string, string>>();
+        var buttonStyle = _fixture.Create<TELButtonStyle>();
+        var buttonText = _fixture.Create<string>();
+        var ariaLabel = "Click Counter";
+        var assistiveText = _fixture.Create<string>();
+        var tabIndex = _fixture.Create<int>();
+        var toolTipTitle = _fixture.Create<string>();
+        var isSubmitButtonForEditForm = false;
+        //bool preventDoubleClick = _fixture.Create<bool>();//qqqq may need it but hopefully not
+        int timesClicked = new Random().Next(1, 100);
+
+        // Arrange
+        var cut = ctx.RenderComponent<LHTELButtonIncrementor>(parameters => parameters
+            .Add(p => p.IsSubmitButtonForEditForm, isSubmitButtonForEditForm)
+            .Add(p => p.NoJSActionUrl, noJsActionUrl)
+            .Add(p => p.FormData, formData)
+            // .Add(p => p.OnClick, onClick)
+            .Add(p => p.ButtonStyle, buttonStyle)
+            .Add(p => p.PreventDoubleClick, preventDoubleClick)
+            .Add(p => p.ButtonText, buttonText)
+            .Add(p => p.AriaLabel, ariaLabel)
+            .Add(p => p.AssistiveText, assistiveText)
+            .Add(p => p.TabIndex, tabIndex)
+            .Add(p => p.ToolTipTitle, toolTipTitle)
+            //AriaRole using default value button
+            );
+
+        // Act
+        var button = cut.Find($"button[aria-label='{@ariaLabel}']");
+
+        for(int i = 0; i < timesClicked; i++){button.Click();}
+
+        var buttonTextOutcome = button.TextContent;
+        int expectedClickedOutcomeInt = preventDoubleClick? Math.Min(timesClicked, 1) : timesClicked;
+        string expectedClickOutcomeText = $"({expectedClickedOutcomeInt.ToString()})";
+
+        // Assert
+        Assert.True(buttonTextOutcome.Contains(expectedClickOutcomeText));
+        
+    }
+}

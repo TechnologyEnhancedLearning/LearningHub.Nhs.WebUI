@@ -4,12 +4,15 @@
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Enums;
-    using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.WebUI.Shared.Models.Search;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using LearningHub.Nhs.WebUI.Shared.Interfaces;
+    using LearningHub.Nhs.WebUI.Shared.Helpers;
+    using LearningHub.Nhs.Models.Search;
 
     /// <summary>
     /// Defines the <see cref="SearchController" />.

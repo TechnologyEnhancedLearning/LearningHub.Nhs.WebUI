@@ -30,7 +30,6 @@
     /// </summary>
     public class SearchService : BaseService<SearchService>, ISearchService
     {
-        ///private readonly Settings settings;qqqq
         private readonly IPublicSettings publicSettings;
         private IProviderService providerService;
 

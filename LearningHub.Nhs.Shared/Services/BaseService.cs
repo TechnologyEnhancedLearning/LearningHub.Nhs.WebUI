@@ -1,6 +1,6 @@
-﻿namespace LearningHub.Nhs.WebUI.Services
+﻿namespace LearningHub.Nhs.Shared.Services
 {
-    using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
     using Microsoft.Extensions.Logging;
 
     /// <summary>

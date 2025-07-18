@@ -7,9 +7,11 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.Search.SearchClick;
+    using LearningHub.Nhs.Shared.Interfaces.Services;
+    using LearningHub.Nhs.Shared.Models.Search;
+    using LearningHub.Nhs.Shared.Services;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Interfaces;
-    using LearningHub.Nhs.WebUI.Models.Search;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;

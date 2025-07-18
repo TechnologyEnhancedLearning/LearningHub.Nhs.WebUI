@@ -5,6 +5,11 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.Shared.Helpers;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
+    using LearningHub.Nhs.Shared.Interfaces.Services;
+    using LearningHub.Nhs.Shared.Models.Search;
+    using LearningHub.Nhs.Shared.Services;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;

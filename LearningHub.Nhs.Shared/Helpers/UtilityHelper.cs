@@ -8,6 +8,7 @@
     using HtmlAgilityPack;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Hierarchy;
+    using LearningHub.Nhs.Shared.Helpers;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     /// <summary>

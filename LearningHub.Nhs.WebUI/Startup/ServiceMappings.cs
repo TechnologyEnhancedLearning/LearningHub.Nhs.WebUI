@@ -5,6 +5,9 @@
     using LearningHub.Nhs.Models.OpenAthens;
     using LearningHub.Nhs.Services;
     using LearningHub.Nhs.Services.Interface;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
+    using LearningHub.Nhs.Shared.Interfaces.Services;
+    using LearningHub.Nhs.Shared.Services;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;

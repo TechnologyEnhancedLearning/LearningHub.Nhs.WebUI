@@ -48,7 +48,6 @@
         {
             this.publicSettings = publicSettings.Value;
             this.providerService = providerService;
-            this.providerService = providerService;
         }
 
         /// <summary>

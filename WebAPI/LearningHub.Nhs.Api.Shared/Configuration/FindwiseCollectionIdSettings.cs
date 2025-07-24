@@ -19,5 +19,10 @@
         /// Gets or sets the AutoSuggestion collection id.
         /// </summary>
         public string AutoSuggestion { get; set; }
+
+        /// <summary>
+        /// Gets or sets the moodle collection id.
+        /// </summary>
+        public string Moodle { get; set; }
     }
 }

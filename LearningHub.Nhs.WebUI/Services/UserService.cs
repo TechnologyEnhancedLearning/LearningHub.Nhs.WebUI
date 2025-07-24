@@ -54,6 +54,7 @@
         /// Initializes a new instance of the <see cref="UserService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learningHubHttpClient<see cref="ILearningHubHttpClient"/>.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="userApiHttpClient">The userApiHttpClient<see cref="IUserApiHttpClient"/>.</param>
         /// <param name="logger">The logger<see cref="ILogger{UserService}"/>.</param>
         /// <param name="settings">The settings<see cref="IOptions{Settings}"/>.</param>
@@ -66,6 +67,7 @@
         /// <param name="loginWizardService">The login wizard service service<see cref="loginWizardService"/>.</param>
         public UserService(
             ILearningHubHttpClient learningHubHttpClient,
+            IOpenApiHttpClient openApiHttpClient,
             IUserApiHttpClient userApiHttpClient,
             ILogger<UserService> logger,
             IOptions<Settings> settings,
@@ -76,7 +78,7 @@
             ILocationService locationService,
             IGradeService gradeService,
             ILoginWizardService loginWizardService)
-            : base(learningHubHttpClient, logger)
+              : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.userApiHttpClient = userApiHttpClient;
             this.settings = settings.Value;
@@ -94,7 +96,7 @@
         {
             List<ActiveContentViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = "User/GetActiveContent";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -334,7 +336,7 @@
         {
             UserProfile viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = "User/GetCurrentUserProfile";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -359,7 +361,7 @@
         {
             UserProfile viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"User/GetUserProfile/{userId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -387,7 +389,7 @@
             var json = JsonConvert.SerializeObject(userProfile);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"User/CreateUserProfile";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -422,7 +424,7 @@
             var json = JsonConvert.SerializeObject(userProfile);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"User/UpdateUserProfile";
             var response = await client.PutAsync(request, stringContent).ConfigureAwait(false);
@@ -623,7 +625,7 @@
         {
             UserLHBasicViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"User/GetByUserId/{id}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -1094,7 +1096,7 @@
             var json = JsonConvert.SerializeObject(userUpdateViewModel);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"User/UpdateUser";
 
@@ -1130,7 +1132,7 @@
             var json = JsonConvert.SerializeObject(newLhUser);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"User/CreateUser";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1566,7 +1568,7 @@
         {
             EmailChangeValidationTokenResult tokenResult = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"User/ValidateEmailChangeToken/{Uri.EscapeUriString(token.EncodeParameter())}/{Uri.EscapeUriString(loctoken.EncodeParameter())}/{isUserRoleUpgrade}";
 
@@ -1595,7 +1597,7 @@
         {
             EmailChangeValidationTokenViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = "User/GetLastIssuedEmailChangeValidationToken";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -1620,7 +1622,7 @@
         {
             EmailChangeValidationTokenViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"User/ReGenerateEmailChangeValidationToken/{newPrimaryEmail}/{isUserRoleUpgrade}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -1645,7 +1647,7 @@
         {
             bool status = false;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"User/CanRequestPasswordReset/{emailAddress}/{passwordRequestLimitingPeriod}/{passwordRequestLimit}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -1670,7 +1672,7 @@
         {
             EmailChangeValidationTokenViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"User/GenerateEmailChangeValidationTokenAndSendEmail/{emailAddress}/{isUserRoleUpgrade}";
 
@@ -1694,7 +1696,7 @@
         /// <inheritdoc/>
         public async Task CancelEmailChangeValidationTokenAsync()
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"User/CancelEmailChangeValidationToken";
 
@@ -1844,7 +1846,7 @@
         {
             List<ProviderViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Provider/GetProvidersByUserId/{userId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);

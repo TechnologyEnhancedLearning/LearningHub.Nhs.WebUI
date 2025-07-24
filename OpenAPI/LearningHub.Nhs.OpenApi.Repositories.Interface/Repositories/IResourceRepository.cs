@@ -56,6 +56,17 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         Task<bool> UserHasPublishedResourcesAsync(int userId);
 
         /// <summary>
+        /// The transfer resource ownership.
+        /// </summary>
+        /// <param name="resourceId">The resource id.</param>
+        /// <param name="newOwnerUsername">The new owner username.</param>
+        /// <param name="userId">The user id.</param>
+        void TransferResourceOwnership(
+            int resourceId,
+            string newOwnerUsername,
+            int userId);
+
+        /// <summary>
         /// The create resource async.
         /// </summary>
         /// <param name="resourceType">The resource type.</param>
@@ -71,6 +82,13 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         /// <param name="resourceVersionId">The resource version id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<Resource> GetByResourceVersionIdAsync(int resourceVersionId);
+
+        /// <summary>
+        /// Returns a bool to indicate if the resourceVersionId corresponds to a current version of a resource.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<bool> IsCurrentVersionAsync(int resourceVersionId);
 
     }
 }

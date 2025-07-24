@@ -22,9 +22,10 @@
         /// </summary>
         /// <param name="cacheService">The cache service.</param>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">Logger.</param>
-        public ProviderService(ICacheService cacheService, ILearningHubHttpClient learningHubHttpClient, ILogger<ProviderService> logger)
-        : base(learningHubHttpClient, logger)
+        public ProviderService(ICacheService cacheService, ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<ProviderService> logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.cacheService = cacheService;
         }
@@ -47,7 +48,7 @@
         {
             List<ProviderViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Provider/GetProvidersByUserId/{userId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -76,7 +77,7 @@
         {
             List<ProviderViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Provider/GetProvidersByResource/{resourceVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -111,7 +112,7 @@
         {
             List<ProviderViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Provider/all";
             var response = await client.GetAsync(request).ConfigureAwait(false);

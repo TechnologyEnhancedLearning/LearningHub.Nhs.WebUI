@@ -28,6 +28,11 @@
         public string LearningHubApiUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets the OpenApiUrl.
+        /// </summary>
+        public string OpenApiUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets the user api url.
         /// </summary>
         public string UserApiUrl { get; set; }

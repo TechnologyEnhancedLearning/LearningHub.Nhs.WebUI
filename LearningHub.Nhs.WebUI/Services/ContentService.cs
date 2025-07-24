@@ -18,10 +18,11 @@
         /// Initializes a new instance of the <see cref="ContentService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">Logger.</param>
         /// <param name="azureMediaService">azureMediaService.</param>
-        public ContentService(ILearningHubHttpClient learningHubHttpClient, ILogger<ContentService> logger, IAzureMediaService azureMediaService)
-        : base(learningHubHttpClient, logger)
+        public ContentService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<ContentService> logger, IAzureMediaService azureMediaService)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.azureMediaService = azureMediaService;
         }
@@ -36,7 +37,7 @@
         {
             PageViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var response = await client.GetAsync($"content/page/{id}?publishedOnly={!preview}&preview={preview}").ConfigureAwait(false);
 
@@ -63,7 +64,7 @@
         {
             PageSectionDetailViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var response = await client.GetAsync($"content/page-section-detail-video/{id}").ConfigureAwait(false);
 

@@ -19,8 +19,7 @@
                             A catalogue is a curated set of resources that has its own web page.
                         </p>
                         <p>
-                            You can contribute a resource as an editor of a catalogue or in your own name.
-                            To contribute a resource in your own name, select Community contributions from the drop down menu.
+                            You can contribute a resource as an editor of a catalogue.
                         </p>
                         <p>
                             You can manage all resources that you have contributed in the My contributions area.

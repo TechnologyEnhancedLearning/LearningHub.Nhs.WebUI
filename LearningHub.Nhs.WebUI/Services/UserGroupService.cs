@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -25,17 +26,19 @@
         /// Initializes a new instance of the <see cref="UserGroupService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="contextAccessor">The http context accessor.</param>
         /// <param name="cacheService">The cacheService.</param>
         /// <param name="roleService">roleService.</param>
         public UserGroupService(
             ILearningHubHttpClient learningHubHttpClient,
+            IOpenApiHttpClient openApiHttpClient,
             ILogger<UserGroupService> logger,
             IHttpContextAccessor contextAccessor,
             ICacheService cacheService,
             IRoleService roleService)
-        : base(learningHubHttpClient, logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.contextAccessor = contextAccessor;
             this.cacheService = cacheService;
@@ -54,6 +57,18 @@
         {
             var cacheKey = $"{userId}:AllRolesWithPermissions";
             return await this.cacheService.GetOrFetchAsync(cacheKey, () => this.FetchRoleUserGroupDetailForUserAsync(userId));
+        }
+
+        /// <inheritdoc />
+        public async Task<bool> UserHasCatalogueContributionPermission()
+        {
+            var userRoleGroups = await this.GetRoleUserGroupDetailAsync();
+            if (userRoleGroups != null && userRoleGroups.Any(r => r.RoleEnum == RoleEnum.Editor))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <inheritdoc />
@@ -76,7 +91,7 @@
         {
             List<RoleUserGroupViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/GetUserGroupRoleDetail";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -100,7 +115,7 @@
         {
             List<RoleUserGroupViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/GetUserGroupRoleDetailByUserId/{userId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);

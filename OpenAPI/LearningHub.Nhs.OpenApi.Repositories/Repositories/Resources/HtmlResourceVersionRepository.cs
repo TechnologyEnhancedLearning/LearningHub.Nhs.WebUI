@@ -30,7 +30,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<HtmlResourceVersion> GetByIdAsync(int id)
         {
-            return await DbContext.HtmlResourceVersion.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id && !r.Deleted);
+            return await this.DbContext.HtmlResourceVersion.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id && !r.Deleted);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<HtmlResourceVersion> GetByResourceVersionIdAsync(int resourceVersionid, bool includeDeleted = false)
         {
-            return await DbContext.HtmlResourceVersion
+            return await this.DbContext.HtmlResourceVersion
                 .Include(gfrv => gfrv.File).ThenInclude(f => f.FileType)
                 .AsNoTracking().FirstOrDefaultAsync(gfrv => gfrv.ResourceVersionId == resourceVersionid && (includeDeleted || !gfrv.Deleted));
         }

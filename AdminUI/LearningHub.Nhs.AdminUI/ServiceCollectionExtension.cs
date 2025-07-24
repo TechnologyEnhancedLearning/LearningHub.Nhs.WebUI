@@ -86,6 +86,7 @@
             services.AddSingleton(configuration);
 
             services.AddScoped<ILearningHubApiFacade, LearningHubApiFacade>();
+            services.AddScoped<IOpenApiFacade, OpenApiFacade>();
             services.AddScoped<IResourceService, ResourceService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserGroupService, UserGroupService>();
@@ -132,11 +133,19 @@
                             ServerCertificateCustomValidationCallback =
                                           HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
                         });
+                services.AddHttpClient<IOpenApiHttpClient, OpenApiHttpClient>()
+                   .ConfigurePrimaryHttpMessageHandler(
+                       () => new HttpClientHandler
+                       {
+                           ServerCertificateCustomValidationCallback =
+                                         HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                       });
             }
             else
             {
                 services.AddHttpClient<ILearningHubHttpClient, LearningHubHttpClient>();
                 services.AddHttpClient<IUserApiHttpClient, UserApiHttpClient>();
+                services.AddHttpClient<IOpenApiHttpClient, OpenApiHttpClient>();
             }
 
             services.AddTransient<CookieEventHandler>();

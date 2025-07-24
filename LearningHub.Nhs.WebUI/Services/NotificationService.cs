@@ -22,9 +22,10 @@
         /// Initializes a new instance of the <see cref="NotificationService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">Logger.</param>
-        public NotificationService(ILearningHubHttpClient learningHubHttpClient, ILogger<NotificationService> logger)
-        : base(learningHubHttpClient, logger)
+        public NotificationService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<NotificationService> logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
         }
 
@@ -95,7 +96,7 @@
         {
             PagedResultSet<UserNotificationViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var content = new StringContent(JsonConvert.SerializeObject(pagingRequestModel), Encoding.UTF8, "application/json");
 
@@ -124,7 +125,7 @@
         {
             UserNotification viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserNotification/GetById/{id}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -153,7 +154,7 @@
         {
             UserNotification viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserNotification/GetByIdAndUserId/{id}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -182,7 +183,7 @@
         {
             int count = 0;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserNotification/GetUserUnreadNotificationCount/{userid}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -212,7 +213,7 @@
             var json = JsonConvert.SerializeObject(notification);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserNotification/PutAsync";
             var response = await client.PutAsync(request, stringContent).ConfigureAwait(false);
@@ -245,7 +246,7 @@
             var json = JsonConvert.SerializeObject(notification);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserNotification/PostAsync";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);

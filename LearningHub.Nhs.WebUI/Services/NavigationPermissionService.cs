@@ -11,14 +11,19 @@
     public class NavigationPermissionService : INavigationPermissionService
     {
         private readonly IResourceService resourceService;
+        private readonly IUserGroupService userGroupService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationPermissionService"/> class.
         /// </summary>
         /// <param name="resourceService">Resource service.</param>
-        public NavigationPermissionService(IResourceService resourceService)
+        /// <param name="userGroupService">UserGroup service.</param>
+        public NavigationPermissionService(
+        IResourceService resourceService,
+        IUserGroupService userGroupService)
         {
             this.resourceService = resourceService;
+            this.userGroupService = userGroupService;
         }
 
         /// <summary>
@@ -52,7 +57,7 @@
             }
             else if (user.IsInRole("BlueUser"))
             {
-                return this.AuthenticatedBlueUser(controllerName);
+                return await this.AuthenticatedBlueUser(controllerName);
             }
             else
             {
@@ -114,11 +119,11 @@
         /// </summary>
         /// <param name="controllerName">The controller name.</param>
         /// <returns>The <see cref="NavigationModel"/>.</returns>
-        private NavigationModel AuthenticatedBlueUser(string controllerName)
+        private async Task<NavigationModel> AuthenticatedBlueUser(string controllerName)
         {
             return new NavigationModel()
             {
-                ShowMyContributions = true,
+                ShowMyContributions = await this.userGroupService.UserHasCatalogueContributionPermission(),
                 ShowMyLearning = true,
                 ShowMyBookmarks = true,
                 ShowSearch = controllerName != "search" && controllerName != string.Empty,

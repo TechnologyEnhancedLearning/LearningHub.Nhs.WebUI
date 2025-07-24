@@ -1,6 +1,5 @@
-﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map
+﻿namespace LearningHub.Nhs.OpenApi.Repositories.Map.Analytics
 {
-    using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Analytics;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;

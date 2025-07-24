@@ -39,9 +39,10 @@
         /// <param name="azureMediaService">Azure media service.</param>
         /// <param name="mediaService">MKIO media service.</param>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">Logger.</param>
-        public ContributeService(IFileService fileService, IResourceService resourceService, IAzureMediaService azureMediaService, ILearningHubHttpClient learningHubHttpClient, ILogger<ContributeService> logger, IAzureMediaService mediaService)
-        : base(learningHubHttpClient, logger)
+        public ContributeService(IFileService fileService, IResourceService resourceService, IAzureMediaService azureMediaService, ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<ContributeService> logger, IAzureMediaService mediaService)
+        : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.fileService = fileService;
             this.resourceService = resourceService;
@@ -62,7 +63,7 @@
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/CreateNewResourceVersion";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -96,7 +97,7 @@
             var json = JsonConvert.SerializeObject(resourceAuthorViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/AddResourceVersionAuthor";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -130,7 +131,7 @@
             var json = JsonConvert.SerializeObject(resourceKeywordViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/AddResourceVersionKeyword";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -163,7 +164,7 @@
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/DeleteArticleFile";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -193,7 +194,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task DeleteFileChunkDetailAsync(int fileChunkDetailId)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/DeleteFileChunkDetail/{fileChunkDetailId}";
             var response = await client.DeleteAsync(request).ConfigureAwait(false);
@@ -224,7 +225,7 @@
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/DeleteResourceAttributeFile";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -257,7 +258,7 @@
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/DeleteResourceVersionAuthor";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -290,7 +291,7 @@
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/DeleteResourceVersionKeyword";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -320,7 +321,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<LearningHubValidationResult> DeleteResourceVersionAsync(int resourceVersionId)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/DeleteResourceVersion/{resourceVersionId}";
             var response = await client.DeleteAsync(request).ConfigureAwait(false);
@@ -356,7 +357,7 @@
         {
             FileChunkDetailViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetFileChunkDetail/{fileChunkDetailId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -799,7 +800,7 @@
             var json = JsonConvert.SerializeObject(fileCreateRequestViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/SaveArticleAttachedFileDetails";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -833,7 +834,7 @@
             var json = JsonConvert.SerializeObject(articleViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/UpdateArticleDetail";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -867,7 +868,7 @@
             var json = JsonConvert.SerializeObject(fileChunkDetailCreateRequestViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/SaveFileChunkDetail";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -901,7 +902,7 @@
             var json = JsonConvert.SerializeObject(fileCreateRequestViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/SaveFileDetails";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -935,7 +936,7 @@
             var json = JsonConvert.SerializeObject(genericFileViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/UpdateGenericFileDetail";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -969,7 +970,7 @@
             var json = JsonConvert.SerializeObject(scormUpdateRequestViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/UpdateScormDetail";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1003,7 +1004,7 @@
             var json = JsonConvert.SerializeObject(htmlResource);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/UpdateHtmlDetail";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1037,7 +1038,7 @@
             var json = JsonConvert.SerializeObject(imageViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/UpdateImageDetail";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1071,7 +1072,7 @@
             var json = JsonConvert.SerializeObject(fileCreateRequestViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/SaveResourceAttributeFileDetails";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1128,7 +1129,7 @@
             var json = JsonConvert.SerializeObject(weblinkViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/UpdateWeblinkDetail";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1162,7 +1163,7 @@
             var json = JsonConvert.SerializeObject(caseViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/UpdateCaseDetail";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1196,7 +1197,7 @@
             var json = JsonConvert.SerializeObject(assessmentViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/UpdateAssessmentDetail";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1230,7 +1231,7 @@
             var json = JsonConvert.SerializeObject(publishViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/SubmitResourceVersionForPublish";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1335,7 +1336,7 @@
             var json = JsonConvert.SerializeObject(resourceDetailViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/CreateResource";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1368,7 +1369,7 @@
             var json = JsonConvert.SerializeObject(resourceDetailViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/UpdateResourceVersion";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);

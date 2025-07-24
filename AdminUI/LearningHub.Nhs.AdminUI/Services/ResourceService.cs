@@ -24,8 +24,9 @@
         /// Initializes a new instance of the <see cref="ResourceService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learningHubHttpClient<see cref="ILearningHubHttpClient"/>.</param>
-        public ResourceService(ILearningHubHttpClient learningHubHttpClient)
-        : base(learningHubHttpClient)
+        /// <param name="openApiHttpClient">The openApiHttpClient<see cref="IOpenApiHttpClient"/>.</param>
+        public ResourceService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient)
+        : base(learningHubHttpClient, openApiHttpClient)
         {
         }
 
@@ -50,7 +51,7 @@
 
             var filter = JsonConvert.SerializeObject(pagingRequestModel.Filter);
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var json = JsonConvert.SerializeObject(pagingRequestModel);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
@@ -82,7 +83,7 @@
         {
             List<ResourceVersionEventViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceVersionEvents/{resourceVersionId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -111,7 +112,7 @@
         {
             ResourceVersionValidationResultViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceVersionValidationResult/{resourceVersionId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -140,7 +141,7 @@
         {
             ResourceVersionDevIdViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceVersionDevIdDetails/{resourceVersionId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -167,7 +168,7 @@
         /// <returns>The <see cref="List{ResourceVersionDevIdViewModel}"/>.</returns>
         public async Task<bool> DoesDevIdExistsAsync(string devId)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/DoesDevIdExists/{devId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -198,7 +199,7 @@
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/UpdateDevId";
             var response = await client.PutAsync(request, stringContent).ConfigureAwait(false);
@@ -223,7 +224,7 @@
         {
             ResourceVersionExtendedViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceVersionExtendedViewModel/{resourceVersionId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -252,7 +253,7 @@
         {
             List<ResourceVersionViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceVersions/{resourceId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -283,7 +284,7 @@
             var json = JsonConvert.SerializeObject(new { resourceVersionId });
             var stringContent = new StringContent(resourceVersionId.ToString(), Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/RevertToDraft";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -335,7 +336,7 @@
             var json = JsonConvert.SerializeObject(vm);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/TransferResourceOwnership";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -382,7 +383,7 @@
             var json = JsonConvert.SerializeObject(vm);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/UnpublishResourceVersion";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -433,7 +434,7 @@
             var json = JsonConvert.SerializeObject(vm);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/CreateResourceVersionEvent";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);

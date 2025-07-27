@@ -1,0 +1,20 @@
+﻿@using LearningHub.Nhs.WebUI.Models.SideMenu
+@model SideNavViewModel
+
+@foreach (var group in Model.Groups)
+{
+    <ul class="nhsuk-list side-nav__list">
+        @foreach (var item in group.Items)
+        {
+            var isActive = item.IsActive?.Invoke(Model.RouteData) ?? false;
+            <li class="@(isActive ? "selected" : "")">
+                <a asp-controller="@item.Controller" asp-action="@item.Action">
+                    @item.Text
+                </a>
+            </li>
+        }
+    </ul>
+}
+
+
+@* @await Component.InvokeAsync("SideNav", new { groupTitle = "Account" }) *@

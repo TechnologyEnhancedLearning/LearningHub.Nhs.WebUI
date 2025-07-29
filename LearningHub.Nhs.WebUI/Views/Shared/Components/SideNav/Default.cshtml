@@ -3,18 +3,31 @@
 
 @foreach (var group in Model.Groups)
 {
-    <ul class="nhsuk-list side-nav__list">
-        @foreach (var item in group.Items)
-        {
-            var isActive = item.IsActive?.Invoke(Model.RouteData) ?? false;
-            <li class="@(isActive ? "selected" : "")">
-                <a asp-controller="@item.Controller" asp-action="@item.Action">
-                    @item.Text
-                </a>
-            </li>
-        }
-    </ul>
+   
+    <input type="checkbox" id="navToggle" class="nav-toggle" hidden />
+
+    <label for="navToggle" class="side-nav__toggle" aria-controls="sideNav">
+        <span class="menu-icon">»</span> Open page menu
+    </label>
+
+    <div id="sideNav" class="side-nav__container">
+        <label for="navToggle" class="side-nav__close">
+            Close page menu <span class="menu-icon">«</span>
+        </label>
+
+        <nav class="side-nav" aria-label="@(group.GroupTitle) navigation">
+            <ul class="nhsuk-list side-nav__list">
+                @foreach (var item in group.Items)
+                {
+                    var isActive = item.IsActive?.Invoke(Model.RouteData) ?? false;
+                    <li class="side-nav__item @(isActive ? "side-nav__item--active" : "")">
+                        <a class="nhsuk-link" asp-controller="@item.Controller" asp-action="@item.Action">
+                            @item.Text
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+
 }
-
-
-@* @await Component.InvokeAsync("SideNav", new { groupTitle = "Account" }) *@

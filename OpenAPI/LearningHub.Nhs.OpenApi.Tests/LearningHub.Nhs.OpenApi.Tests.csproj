@@ -25,6 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\LearningHub.Nhs.OpenApi.Services.Interface\LearningHub.Nhs.OpenApi.Services.Interface.csproj" />
 		<ProjectReference Include="..\LearningHub.NHS.OpenAPI\LearningHub.NHS.OpenAPI.csproj" />
 	</ItemGroup>
 

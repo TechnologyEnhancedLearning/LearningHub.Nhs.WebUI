@@ -28,17 +28,19 @@
         /// Initializes a new instance of the <see cref="UserGroupService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="contextAccessor">The http context accessor.</param>
         /// <param name="cacheService">The cacheService.</param>
         /// <param name="roleService">roleService.</param>
         public UserGroupService(
             ILearningHubHttpClient learningHubHttpClient,
+            IOpenApiHttpClient openApiHttpClient,
             ILogger<UserGroupService> logger,
             IHttpContextAccessor contextAccessor,
             ICacheService cacheService,
             IRoleService roleService)
-        : base(learningHubHttpClient, logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.contextAccessor = contextAccessor;
             this.cacheService = cacheService;
@@ -91,7 +93,7 @@
         {
             List<RoleUserGroupViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/GetUserGroupRoleDetail";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -115,7 +117,7 @@
         {
             List<RoleUserGroupViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/GetUserGroupRoleDetailByUserId/{userId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);

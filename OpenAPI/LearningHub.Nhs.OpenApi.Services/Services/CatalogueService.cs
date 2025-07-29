@@ -11,6 +11,7 @@
     using LearningHub.Nhs.Models.Email.Models;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Activity;
+    using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Resource;
@@ -111,6 +112,97 @@
             return new Models.ViewModels.BulkCatalogueViewModel(catalogueViewModels);
         }
 
+        /// <summary>
+        /// GetAllCataloguesAsync.
+        /// </summary>
+        /// <param name="filterChar">The filterChar.</param>
+        /// <param name="userId">The userId.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<AllCatalogueResponseViewModel> GetAllCataloguesAsync(string filterChar, int userId)
+        {
+            var catalogueAlphaCount = this.catalogueNodeVersionRepository.GetAllCataloguesAlphaCount(userId);
+            var filterCharMod = filterChar.Trim() == "0-9" ? "[0-9]" : filterChar;
+            var count = catalogueAlphaCount.FirstOrDefault(ca => ca.Alphabet == filterChar.ToUpper()).Count;
+            string prevChar = null, nextChar = null, curChar = null;
+            var filterCharIndex = catalogueAlphaCount.FindIndex(ca => ca.Alphabet == filterChar.ToUpper());
+
+            // check count and assign prev and next letter
+            if (count != 0)
+            {
+                for (int i = 0; i < catalogueAlphaCount.Count; i++)
+                {
+                    if (i == filterCharIndex && i == 0)
+                    {
+                        prevChar = null;
+                    }
+
+                    if (i == filterCharIndex && i == catalogueAlphaCount.Count - 1)
+                    {
+                        nextChar = null;
+                    }
+
+                    if (catalogueAlphaCount[i].Count > 0 && i < filterCharIndex)
+                    {
+                        curChar = catalogueAlphaCount[i].Alphabet;
+                        prevChar = curChar;
+                    }
+
+                    if (catalogueAlphaCount[i].Count > 0 && i > filterCharIndex)
+                    {
+                        curChar = catalogueAlphaCount[i].Alphabet;
+                        nextChar = curChar;
+                        break;
+                    }
+                }
+            }
+
+            var catalogues = await this.catalogueNodeVersionRepository.GetAllCataloguesAsync(filterCharMod, userId);
+            foreach (var catalogue in catalogues)
+            {
+                catalogue.Providers = await this.providerService.GetByCatalogueVersionIdAsync(catalogue.NodeVersionId);
+            }
+
+            var response = new AllCatalogueResponseViewModel
+            {
+                CataloguesCount = catalogueAlphaCount,
+                Catalogues = catalogues,
+                FilterChar = filterChar.ToUpper(),
+                PrevChar = prevChar,
+                NextChar = nextChar,
+            };
+            return response;
+        }
+
+        /// <summary>
+        /// The Get Basic Catalogue.
+        /// </summary>
+        /// <param name="catalogueNodeId">The catalogueNode.</param>
+        /// <returns>The catalogues.</returns>
+        public CatalogueBasicViewModel GetBasicCatalogue(int catalogueNodeId)
+        {
+            var catalogue = this.catalogueNodeVersionRepository.GetBasicCatalogue(catalogueNodeId);
+            return this.mapper.Map<CatalogueBasicViewModel>(catalogue);
+        }
+
+        /// <summary>
+        /// The GetCatalogues.
+        /// </summary>
+        /// <param name="searchTerm">The searchTerm.</param>
+        /// <returns>The catalogues.</returns>
+        public List<CatalogueViewModel> GetCatalogues(string? searchTerm)
+        {
+            IQueryable<CatalogueNodeVersion> catalogueVersions = this.catalogueNodeVersionRepository.GetAll()
+                 .Include(x => x.Keywords)
+                  .Include(x => x.CatalogueNodeVersionProvider).Where(x => !x.Deleted)
+                 .Include(x => x.NodeVersion)
+                 .ThenInclude(x => x.Node);
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                catalogueVersions = catalogueVersions.Where(x => x.Name.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            return this.mapper.ProjectTo<CatalogueViewModel>(catalogueVersions).ToList();
+        }
 
         /// <summary>
         /// The GetCatalogue.
@@ -402,6 +494,24 @@
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// The GetCatalogues.
+        /// </summary>
+        /// <param name="catalogueIds">The catalogue ids.</param>
+        /// <returns>The catalogues.</returns>
+        public async Task<List<CatalogueViewModel>> GetCatalogues(List<int> catalogueIds)
+        {
+            var catalogueViewModels = new List<CatalogueViewModel>();
+
+            if (catalogueIds.Count > 0)
+            {
+                var catalogueNodeVersions = await this.catalogueNodeVersionRepository.GetCatalogues(catalogueIds);
+                catalogueViewModels = this.mapper.Map<List<CatalogueViewModel>>(catalogueNodeVersions);
+            }
+
+            return catalogueViewModels;
         }
 
         /// <summary>
@@ -772,18 +882,6 @@
         }
 
         /// <summary>
-        /// The Get Basic Catalogue.
-        /// </summary>
-        /// <param name="catalogueNodeId">The catalogueNode.</param>
-        /// <returns>The catalogues.</returns>
-        public CatalogueBasicViewModel GetBasicCatalogue(int catalogueNodeId)
-        {
-            var catalogue = this.catalogueNodeVersionRepository.GetBasicCatalogue(catalogueNodeId);
-            return this.mapper.Map<CatalogueBasicViewModel>(catalogue);
-        }
-
-
-        /// <summary>
         /// The HideCatalogueAsync.
         /// </summary>
         /// <param name="userId">The userId.</param>
@@ -1091,6 +1189,18 @@
                 Details = details,
                 IsValid = !details.Any(),
             };
+        }
+        /// <summary>
+        /// The UpdateCatalogueOwnerAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="catalogueOwner">The catalogue owner.</param>
+        /// <returns>The catalogue view model.</returns>
+        public async Task<LearningHubValidationResult> UpdateCatalogueOwnerAsync(int userId, CatalogueOwnerViewModel catalogueOwner)
+        {
+            await this.catalogueNodeVersionRepository.UpdateCatalogueOwnerAsync(userId, catalogueOwner);
+
+            return new LearningHubValidationResult(true);
         }
 
     }

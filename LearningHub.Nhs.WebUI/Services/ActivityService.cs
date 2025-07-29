@@ -23,9 +23,10 @@
         /// Initializes a new instance of the <see cref="ActivityService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">OpenApiHttpClient http client.</param>
         /// <param name="logger">Logger.</param>
-        public ActivityService(ILearningHubHttpClient learningHubHttpClient, ILogger<ActivityService> logger)
-        : base(learningHubHttpClient, logger)
+        public ActivityService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<ActivityService> logger)
+        : base(learningHubHttpClient, openApiHttpClient, logger)
         {
         }
 

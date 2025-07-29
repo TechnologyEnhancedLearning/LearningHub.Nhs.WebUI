@@ -185,6 +185,22 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
                             .FirstOrDefaultAsync();
         }
 
+        /// <summary>
+        /// The transfer resource ownership.
+        /// </summary>
+        /// <param name="resourceId">The resource id.</param>
+        /// <param name="newOwnerUsername">The new owner username.</param>
+        /// <param name="userId">The user id.</param>
+        public void TransferResourceOwnership(int resourceId, string newOwnerUsername, int userId)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = resourceId };
+            var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = newOwnerUsername };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = userId };
+            var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+            this.DbContext.Database.ExecuteSqlRaw("resources.ResourceReassignOwnership @p0, @p1, @p2, @p3", param0, param1, param2, param3);
+        }
+
 
         /// <summary>
         /// Returns a bool to indicate if the resourceVersionId corresponds to a current version of a resource.

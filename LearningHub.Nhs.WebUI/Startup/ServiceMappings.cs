@@ -8,6 +8,7 @@
     using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.Shared.Interfaces.Services;
     using LearningHub.Nhs.Shared.Services;
+    using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -42,6 +43,14 @@
                                           HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
                         });
 
+                services.AddHttpClient<IOpenApiHttpClient, OpenApiHttpClient>()
+                 .ConfigurePrimaryHttpMessageHandler(
+                     () => new HttpClientHandler
+                     {
+                         ServerCertificateCustomValidationCallback =
+                                       HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                     });
+
                 services.AddHttpClient<IUserApiHttpClient, UserApiHttpClient>()
                     .ConfigurePrimaryHttpMessageHandler(
                         () => new HttpClientHandler
@@ -68,6 +77,7 @@
             else
             {
                 services.AddHttpClient<ILearningHubHttpClient, LearningHubHttpClient>();
+                services.AddHttpClient<IOpenApiHttpClient, OpenApiHttpClient>();
                 services.AddHttpClient<IUserApiHttpClient, UserApiHttpClient>();
                 services.AddHttpClient<ILearningHubReportApiClient, LearningHubReportApiClient>();
                 services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>();
@@ -75,6 +85,7 @@
 
             // Config
             services.Configure<OpenAthensScopes>(configuration.GetSection("OpenAthensScopes"));
+            services.Configure<BFFPathValidationOptions>(configuration.GetSection(BFFPathValidationOptions.SectionName));
 
             // Learning Hub Services
             services.AddTransient<INavigationPermissionService, NavigationPermissionService>();
@@ -106,6 +117,7 @@
             services.AddScoped<IPartialFileUploadService, PartialFileUploadService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<ILearningHubApiFacade, LearningHubApiFacade>();
+            services.AddScoped<IOpenApiFacade, OpenApiFacade>();
             services.AddScoped<IBookmarkService, BoomarkService>();
             services.AddScoped<IUserSessionHelper, UserSessionHelper>();
             services.AddScoped<IDetectJsLogService, DetectJsLogService>();

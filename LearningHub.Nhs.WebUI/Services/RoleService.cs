@@ -23,9 +23,10 @@
         /// </summary>
         /// <param name="cacheService">The cache service.</param>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">Logger.</param>
-        public RoleService(ICacheService cacheService, ILearningHubHttpClient learningHubHttpClient, ILogger<RoleService> logger)
-        : base(learningHubHttpClient, logger)
+        public RoleService(ICacheService cacheService, ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<RoleService> logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.cacheService = cacheService;
         }

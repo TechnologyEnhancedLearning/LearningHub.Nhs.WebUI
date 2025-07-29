@@ -38,11 +38,13 @@
                 && typeof(TEntityType) != typeof(EmbeddedResourceVersion)
                 && typeof(TEntityType) != typeof(EquipmentResourceVersion)
                 && typeof(TEntityType) != typeof(GenericFileResourceVersion)
+                && typeof(TEntityType) != typeof(HtmlResourceVersion)
                 && typeof(TEntityType) != typeof(ImageResourceVersion)
                 && typeof(TEntityType) != typeof(VideoResourceVersion)
                 && typeof(TEntityType) != typeof(WebLinkResourceVersion)
                 && typeof(TEntityType) != typeof(ResourceLicence)
-                && typeof(TEntityType) != typeof(User))
+                && typeof(TEntityType) != typeof(User)
+                && typeof(TEntityType) != typeof(UserBookmark))
             {
                 builder.Entity<TEntityType>().HasQueryFilter(e => !e.Deleted);
             }

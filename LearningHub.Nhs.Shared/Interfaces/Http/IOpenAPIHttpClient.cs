@@ -12,7 +12,7 @@ namespace LearningHub.Nhs.Shared.Interfaces.Http
     /// <para>
     /// Inherits from <see cref="IAPIHttpClient"/> to enable
     /// dependency injection of a specific implementation configured with
-    /// a user-related API endpoint or settings.
+    /// a openapi-related API endpoint or settings.
     /// </para>
     ///
     /// <para>

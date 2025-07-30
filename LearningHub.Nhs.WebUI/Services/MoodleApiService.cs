@@ -3,15 +3,15 @@
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
+    using System.Text;
     using System.Text.Json;
     using System.Threading.Tasks;
-    using LearningHub.Nhs.Models.Entities.Reporting;
+    using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.Services.Interface;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
+    using MoodleCourseCompletionModel = Nhs.Models.Moodle.API.MoodleCourseCompletionModel;
 
     /// <summary>
     /// MoodleApiService.
@@ -19,14 +19,52 @@
     public class MoodleApiService : IMoodleApiService
     {
         private readonly IMoodleHttpClient moodleHttpClient;
+        private readonly IOpenApiHttpClient openApiHttpClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoodleApiService"/> class.
         /// </summary>
         /// <param name="moodleHttpClient">moodleHttpClient.</param>
-        public MoodleApiService(IMoodleHttpClient moodleHttpClient)
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
+        public MoodleApiService(IMoodleHttpClient moodleHttpClient, IOpenApiHttpClient openApiHttpClient)
         {
             this.moodleHttpClient = moodleHttpClient;
+            this.openApiHttpClient = openApiHttpClient;
+        }
+
+        /// <summary>
+        /// GetMoodleUserIdByUsernameAsync.
+        /// </summary>
+        /// <param name="currentUserId">current User Id.</param>
+        /// <returns>UserId from Moodle.</returns>
+        public async Task<int> GetMoodleUserIdByUsernameAsync(int currentUserId)
+        {
+            int moodleUserId = 0;
+
+            try
+            {
+                var client = await this.openApiHttpClient.GetClientAsync();
+
+                var request = $"Moodle/GetMoodleUserId/{currentUserId}";
+                var response = await client.GetAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    moodleUserId = JsonConvert.DeserializeObject<int>(result);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    throw new Exception("AccessDenied");
+                }
+
+                return moodleUserId;
+            }
+            catch (Exception ex)
+            {
+                // this.Logger.LogError(string.Format("Error occurred in GetSearchResultAsync: {0}", ex.Message));
+                return moodleUserId;
+            }
         }
 
         /// <summary>
@@ -35,10 +73,10 @@
         /// <param name="userId">Moodle user id.</param>
         /// <param name="pageNumber">The page Number.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<List<MoodleCourseResponseViewModel>> GetEnrolledCoursesAsync(int userId, int pageNumber)
+        public async Task<List<MoodleCourseResponseModel>> GetEnrolledCoursesAsync(int userId, int pageNumber)
         {
-            List<MoodleCourseResponseViewModel> viewmodel = new List<MoodleCourseResponseViewModel> { };
-            MoodleApiService moodleApiService = new MoodleApiService(this.moodleHttpClient);
+            List<MoodleCourseResponseModel> viewmodel = new List<MoodleCourseResponseModel> { };
+            MoodleApiService moodleApiService = new MoodleApiService(this.moodleHttpClient, this.openApiHttpClient);
 
             var client = await this.moodleHttpClient.GetClient();
             string additionalParameters = $"userid={userId}";
@@ -57,7 +95,7 @@
                 // Check if it's a JSON object and contains "exception"
                 if (!(root.ValueKind == JsonValueKind.Object && root.TryGetProperty("exception", out _)))
                 {
-                    viewmodel = JsonConvert.DeserializeObject<List<MoodleCourseResponseViewModel>>(result);
+                    viewmodel = JsonConvert.DeserializeObject<List<MoodleCourseResponseModel>>(result);
 
                     foreach (var course in viewmodel)
                     {
@@ -84,11 +122,11 @@
         /// <param name="userId">Moodle user id.</param>
         /// <param name="courseId">Moodle course id.</param>
         /// <param name="pageNumber">pageNumber.</param>
-        /// <returns> List of MoodleCourseResponseViewModel.</returns>
-        public async Task<MoodleCourseCompletionViewModel> GetCourseCompletionAsync(int userId, int courseId, int pageNumber)
+        /// <returns> List of MoodleCourseResponseModel.</returns>
+        public async Task<MoodleCourseCompletionModel> GetCourseCompletionAsync(int userId, int courseId, int pageNumber)
         {
-            MoodleCourseCompletionViewModel viewmodel = new MoodleCourseCompletionViewModel { };
-            MoodleApiService moodleApiService = new MoodleApiService(this.moodleHttpClient);
+            MoodleCourseCompletionModel viewmodel = new MoodleCourseCompletionModel { };
+            MoodleApiService moodleApiService = new MoodleApiService(this.moodleHttpClient, this.openApiHttpClient);
 
             var client = await this.moodleHttpClient.GetClient();
             string additionalParameters = $"userid={userId}&courseid={courseId}";
@@ -105,7 +143,7 @@
 
                 if (string.IsNullOrEmpty(canViewReport.Exception))
                 {
-                    viewmodel = JsonConvert.DeserializeObject<MoodleCourseCompletionViewModel>(result);
+                    viewmodel = JsonConvert.DeserializeObject<MoodleCourseCompletionModel>(result);
                 }
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||

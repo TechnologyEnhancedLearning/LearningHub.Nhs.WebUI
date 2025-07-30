@@ -7,7 +7,7 @@ namespace LearningHub.Nhs.WebUI.Configuration
     /// <summary>
     /// Defines the <see cref="Settings" />.
     /// </summary>
-    public class Settings
+    public class Settings : PublicSettings
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Settings"/> class.
@@ -31,6 +31,11 @@ namespace LearningHub.Nhs.WebUI.Configuration
         /// Gets or sets the LearningHubApiUrl.
         /// </summary>
         public string LearningHubApiUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the OpenApiUrl.
+        /// </summary>
+        public string OpenApiUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the UserApiUrl.

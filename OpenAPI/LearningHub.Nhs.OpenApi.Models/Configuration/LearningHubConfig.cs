@@ -1,3 +1,5 @@
+using System;
+
 namespace LearningHub.Nhs.OpenApi.Models.Configuration
 {
     /// <summary>
@@ -54,6 +56,16 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// Gets or sets <see cref="ResourcePublishQueueRouteName"/>.
         /// </summary>
         public string ResourcePublishQueueRouteName { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="ContentManagementQueueName"/>.
+        /// </summary>
+        public string ContentManagementQueueName { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="DetailedMediaActivityRecordingStartDate"/>.
+        /// </summary>
+        public DateTimeOffset DetailedMediaActivityRecordingStartDate { get; set; }
 
         /// <summary>
         /// Gets or sets <see cref="Notifications"/>.
@@ -125,5 +137,26 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// </summary>
         public string BrowseCataloguesUrl { get; set; } = null!;
 
+
+
+        /// <summary>
+        /// Gets or sets <see cref="AuthClientIdentityKey"/>.
+        /// </summary>
+        public string AuthClientIdentityKey { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="LHClientIdentityKey"/>.
+        /// </summary>
+        public string LHClientIdentityKey { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="ContentServerClientIdentityKey"/>.
+        /// </summary>
+        public string ContentServerClientIdentityKey { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="ReportApiClientIdentityKey"/>.
+        /// </summary>
+        public string ReportApiClientIdentityKey { get; set; } = null!;
     }
 }

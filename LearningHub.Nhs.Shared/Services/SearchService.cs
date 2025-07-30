@@ -30,7 +30,6 @@
     /// </summary>
     public class SearchService : BaseService<SearchService>, ISearchService
     {
-        ///private readonly Settings settings;qqqq
         private readonly IPublicSettings publicSettings;
         private IProviderService providerService;
 
@@ -38,17 +37,14 @@
         /// Initializes a new instance of the <see cref="SearchService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="providerService">Provider service.</param>
         /// <param name="logger">Logger.</param>
         /// <param name="settings">Settings.</param>
-        public SearchService(ILearningHubHttpClient learningHubHttpClient, 
-            IProviderService providerService, 
-            ILogger<SearchService> logger, 
-            IOptions<PublicSettings> publicSettings)
+        public SearchService(ILearningHubHttpClient learningHubHttpClient, IProviderService providerService, ILogger<SearchService> logger, IOptions<PublicSettings> publicSettings)
         : base(learningHubHttpClient, logger)
         {
             this.publicSettings = publicSettings.Value;
-            this.providerService = providerService;
             this.providerService = providerService;
         }
 
@@ -353,7 +349,7 @@
             try
             {
                 int createId = 0;
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 var json = JsonConvert.SerializeObject(searchActionResourceModel);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -396,7 +392,7 @@
             try
             {
                 int createId = 0;
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 var json = JsonConvert.SerializeObject(searchActionCatalogueModel);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -435,7 +431,7 @@
             try
             {
                 int createId = 0;
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 var json = JsonConvert.SerializeObject(searchRequestModel);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -475,7 +471,7 @@
 
             try
             {
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 searchRequestModel.SearchText = this.DecodeProblemCharacters(searchRequestModel.SearchText);
 
@@ -555,7 +551,7 @@
 
             try
             {
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 catalogueSearchRequestModel.SearchText = this.DecodeProblemCharacters(catalogueSearchRequestModel.SearchText);
 
@@ -601,7 +597,7 @@
             try
             {
                 int createId = 0;
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 var json = JsonConvert.SerializeObject(catalogueSearchRequestModel);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -645,7 +641,7 @@
 
             try
             {
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 catalogueSearchRequestModel.SearchText = this.DecodeProblemCharacters(catalogueSearchRequestModel.SearchText);
 
@@ -688,7 +684,7 @@
         /// <returns>The auto suggestion list.</returns>
         public async Task<AutoSuggestionModel> GetAutoSuggestionList(string term)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = $"Search/GetAutoSuggestionResult/{term}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
 
@@ -715,7 +711,7 @@
         {
             try
             {
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 var json = JsonConvert.SerializeObject(clickPayloadModel);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");

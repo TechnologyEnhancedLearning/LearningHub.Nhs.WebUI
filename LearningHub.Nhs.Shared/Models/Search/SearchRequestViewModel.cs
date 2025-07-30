@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Microsoft.AspNetCore.Mvc;//qqqq
+    using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
     /// Defines the <see cref="SearchRequestViewModel" />.

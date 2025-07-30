@@ -21,13 +21,15 @@
         /// Initializes a new instance of the <see cref="GradeService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="userApiHttpClient">User api http client.</param>
         /// <param name="logger">Logger.</param>
         public GradeService(
             ILearningHubHttpClient learningHubHttpClient,
+            IOpenApiHttpClient openApiHttpClient,
             IUserApiHttpClient userApiHttpClient,
             ILogger<GradeService> logger)
-        : base(learningHubHttpClient, logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.userApiHttpClient = userApiHttpClient;
         }

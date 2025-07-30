@@ -36,11 +36,12 @@ namespace LearningHub.Nhs.WebUI.Services
         /// Initializes a new instance of the <see cref="ResourceService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="azureMediaService">Azure media services.</param>
         /// <param name="logger">Logger.</param>
         /// <param name="settings">Settings.</param>
-        public ResourceService(ILearningHubHttpClient learningHubHttpClient, IAzureMediaService azureMediaService, ILogger<ResourceService> logger, IOptions<Settings> settings)
-        : base(learningHubHttpClient, logger)
+        public ResourceService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, IAzureMediaService azureMediaService, ILogger<ResourceService> logger, IOptions<Settings> settings)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.settings = settings.Value;
             this.azureMediaService = azureMediaService;
@@ -57,7 +58,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             var stringContent = new StringContent(resourceVersionId.ToString(), Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/AcceptSensitiveContent";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -89,7 +90,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             ArticleViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetArticleDetails/{resourceVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -118,7 +119,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             AudioViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetAudioDetails/{resourceVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -147,7 +148,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             ResourceHeaderViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceHeaderViewModelAsync/{id}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -175,7 +176,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             List<FileTypeViewModel> fileTypeList = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetFileTypes";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -204,7 +205,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             GenericFileViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetGenericFileDetails/{resourceVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -233,7 +234,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             HtmlResourceViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetHtmlDetails/{resourceVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -262,7 +263,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             ScormViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetScormDetails/{resourceVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -290,7 +291,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             ExternalContentDetailsViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetExternalContentDetailsById/{resourceVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -319,7 +320,7 @@ namespace LearningHub.Nhs.WebUI.Services
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/RecordExternalReferenceUserAgreement";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -351,7 +352,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             ImageViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetImageDetails/{resourceVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -380,7 +381,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             ResourceInformationViewModel resourceInfo = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceInformationViewModelAsync/{id}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -409,7 +410,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             ResourceItemViewModel resourceItem = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceItemViewModelAsync/{id}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -455,7 +456,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             List<ResourceLicenceViewModel> licences = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceLicences";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -484,7 +485,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             CatalogueLocationsViewModel resourceLocations = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetCatalogueLocations/{id}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -513,7 +514,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             ResourceDetailViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceVersion/{resourceVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -542,7 +543,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             ResourceVersionViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceVersionViewModel/{resourceVersionId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -571,7 +572,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             ResourceVersionExtendedViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceVersionExtendedViewModel/{resourceVersionId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -611,7 +612,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             VideoViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetVideoDetails/{resourceVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -650,7 +651,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             WebLinkViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetWeblinkDetails/{resourceVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -679,7 +680,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             CaseViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetCaseDetails/{resourceVersionId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -708,7 +709,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             AssessmentViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetAssessmentDetails/{resourceVersionId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -737,7 +738,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             AssessmentViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetAssessmentContent/{resourceVersionId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -766,7 +767,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             AssessmentProgressViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetAssessmentProgress/resource/{resourceVersionId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -795,7 +796,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             AssessmentProgressViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetAssessmentProgress/activity/{assessmentResourceActivityId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -824,7 +825,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             List<FileViewModel> viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             string queryString = string.Join("&", fileIds.Select(fileId => $"fileIds={fileId}"));
             var request = $"Resource/GetFileStatusDetails?{queryString}";
@@ -857,7 +858,7 @@ namespace LearningHub.Nhs.WebUI.Services
             var json = JsonConvert.SerializeObject(rv);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/UnpublishResourceVersion";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -886,7 +887,7 @@ namespace LearningHub.Nhs.WebUI.Services
         /// <returns>The <see cref="bool"/>.</returns>
         public async Task<bool> UserHasPublishedResourcesAsync()
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/HasPublishedResources";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -918,7 +919,7 @@ namespace LearningHub.Nhs.WebUI.Services
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/DuplicateResource";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -965,7 +966,7 @@ namespace LearningHub.Nhs.WebUI.Services
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/DuplicateBlocks";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1009,7 +1010,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var response = await client.PostAsync("Resource/GetMyContributions", stringContent).ConfigureAwait(false);
 
@@ -1032,7 +1033,7 @@ namespace LearningHub.Nhs.WebUI.Services
         /// <returns>The <see cref="T:Task{IEnumerable{int}}"/>.</returns>
         public async Task<IEnumerable<int>> GetAllPublishedResourceAsync()
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var response = await client.GetAsync("Resource/GetAllPublishedResource").ConfigureAwait(false);
 
@@ -1058,7 +1059,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             ResourceVersionValidationResultViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceVersionValidationResult/{resourceVersionId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -1087,7 +1088,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             ResourceVersionExtendedViewModel viewmodel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceVersionExtendedViewModel/{resourceVersionId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -1118,7 +1119,7 @@ namespace LearningHub.Nhs.WebUI.Services
             var json = JsonConvert.SerializeObject(new { resourceVersionId });
             var stringContent = new StringContent(resourceVersionId.ToString(), Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/RevertToDraft";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1162,7 +1163,7 @@ namespace LearningHub.Nhs.WebUI.Services
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/AddResourceProvider";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1208,7 +1209,7 @@ namespace LearningHub.Nhs.WebUI.Services
             var json = JsonConvert.SerializeObject(validationResultViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/CreateResourceVersionValidationResult";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1239,7 +1240,7 @@ namespace LearningHub.Nhs.WebUI.Services
             var json = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/DeleteResourceProvider";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -1280,7 +1281,7 @@ namespace LearningHub.Nhs.WebUI.Services
         public async Task<LearningHubValidationResult> DeleteAllResourceVersionProviderAsync(int resourceVersionId)
         {
             var content = new StringContent(JsonConvert.SerializeObject(new { }));
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = $"Resource/DeleteAllResourceProvider/{resourceVersionId}";
             var response = await client.PostAsync(request, content).ConfigureAwait(false);
 
@@ -1322,7 +1323,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             List<string> filePaths = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetObsoleteResourceFile/{resourceVersionId}/{deletedResource}";
             var response = await client.GetAsync(request).ConfigureAwait(false);

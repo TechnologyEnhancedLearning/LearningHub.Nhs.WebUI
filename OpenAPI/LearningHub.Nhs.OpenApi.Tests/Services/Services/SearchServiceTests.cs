@@ -3,6 +3,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using AutoMapper;
     using FizzWare.NBuilder;
     using FluentAssertions;
     using FluentAssertions.Execution;
@@ -32,10 +33,11 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         private readonly Mock<ILearningHubService> learningHubService;
         private readonly Mock<IResourceRepository> resourceRepository;
         private readonly Mock<IResourceService> resourceService;
+        private readonly Mock<IEventService> eventService;
         private readonly SearchService searchService;
         private readonly Mock<IOptions<FindwiseConfig>> findwiseConfig;
         private Mock<ILogger<SearchService>> mockLogger;
-
+        private readonly Mock<IMapper> mapper;
 
         public SearchServiceTests()
         {
@@ -43,14 +45,19 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.learningHubService = new Mock<ILearningHubService>();
             this.resourceRepository = new Mock<IResourceRepository>();
             this.resourceService = new Mock<IResourceService>();
+            this.eventService = new Mock<IEventService>();
+            this.mapper = new Mock<IMapper>();
+
             this.findwiseConfig = new Mock<IOptions<FindwiseConfig>>();
             this.mockLogger = new Mock<ILogger<SearchService>>();
             this.searchService = new SearchService(
                 this.learningHubService.Object,
+                this.eventService.Object,
                 this.findwiseClient.Object,
                 this.findwiseConfig.Object,
                 this.resourceRepository.Object,
-                this.mockLogger.Object);
+                this.mockLogger.Object,
+                this.mapper.Object);
         }
 
         public static IEnumerable<object[]> TestFindwiseResultModel => new[]

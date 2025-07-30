@@ -40,21 +40,6 @@ body {
     font-size: px2rem(16);
 }
 
-
-#header-dropdown-menu-control {
-    opacity: 0;
-    position: absolute;
-}
-
-#header-dropdown-menu-control:checked ~ .nhsuk-header__navigation:not(.js-show) {
-    display: block
-}
-
-#header-mobile-search-control {
-    display: none;
-}
-
-
 button[data-toggle="modal"] {
     color: #005eb8;
     padding: 0;
@@ -125,36 +110,15 @@ li.autosuggestion-option:last-of-type {
         top: 100%;
     }
 }
-
 /* tablet */
 @media (max-width: px2rem(768)) {
-
     .autosuggestion-menu {
         top: 100%;
     }
-
-    #header-mobile-search-control {
-        display: block;
-        opacity: 0;
-        position: absolute;
-    }
-
 }
 
 /* mobile  */
 @media (max-width: px2rem(640)) {
-
-    #header-mobile-search-control {
-        display: block;
-        opacity: 0;
-        position: absolute;
-    }
-
-    #header-mobile-search-control:checked ~ .nhsuk-header__search .nhsuk-header__search-wrap {
-        display: block;
-    }
-
-
     .autosuggestion-menu {
         top: 100%;
     }

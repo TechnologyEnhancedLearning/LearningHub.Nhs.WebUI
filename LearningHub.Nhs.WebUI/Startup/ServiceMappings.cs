@@ -85,7 +85,8 @@
 
             // Config
             services.Configure<OpenAthensScopes>(configuration.GetSection("OpenAthensScopes"));
-            services.Configure<BFFPathValidationOptions>(configuration.GetSection(BFFPathValidationOptions.SectionName));
+
+            // services.Configure<BFFPathValidationOptions>(configuration.GetSection(BFFPathValidationOptions.SectionName));
 
             // Learning Hub Services
             services.AddTransient<INavigationPermissionService, NavigationPermissionService>();

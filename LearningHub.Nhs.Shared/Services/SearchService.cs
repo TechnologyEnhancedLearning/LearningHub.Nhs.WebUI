@@ -1,20 +1,5 @@
-﻿namespace LearningHub.Nhs.Shared.Services
+namespace LearningHub.Nhs.WebUI.Services
 {
-    using HtmlAgilityPack;
-    using LearningHub.Nhs.Models.Common;
-    using LearningHub.Nhs.Models.Enums;
-    using LearningHub.Nhs.Models.Search;
-    using LearningHub.Nhs.Models.Search.SearchClick;
-    using LearningHub.Nhs.Shared.Configuration;
-    using LearningHub.Nhs.Shared.Helpers;
-    using LearningHub.Nhs.Shared.Interfaces.Configuration;
-    using LearningHub.Nhs.Shared.Interfaces.Http;
-    using LearningHub.Nhs.Shared.Interfaces.Services;
-    using LearningHub.Nhs.Shared.Models.Search;
-    using LearningHub.Nhs.WebUI.Helpers;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -24,29 +9,39 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
+    using HtmlAgilityPack;
+    using LearningHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.Models.Search.SearchClick;
+    using LearningHub.Nhs.WebUI.Configuration;
+    using LearningHub.Nhs.WebUI.Helpers;
+    using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Models.Search;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Defines the <see cref="SearchService" />.
     /// </summary>
     public class SearchService : BaseService<SearchService>, ISearchService
     {
-        private readonly IPublicSettings publicSettings;
+        private readonly Settings settings;
         private IProviderService providerService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="providerService">Provider service.</param>
         /// <param name="logger">Logger.</param>
         /// <param name="settings">Settings.</param>
-        public SearchService(ILearningHubHttpClient learningHubHttpClient, 
-            IProviderService providerService, 
-            ILogger<SearchService> logger, 
-            IOptions<PublicSettings> publicSettings)
-        : base(learningHubHttpClient, logger)
+        public SearchService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, IProviderService providerService, ILogger<SearchService> logger, IOptions<Settings> settings)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
-            this.publicSettings = publicSettings.Value;
+            this.settings = settings.Value;
             this.providerService = providerService;
         }
 
@@ -73,8 +68,8 @@
             var suggestedCatalogue = string.Empty;
             var suggestedResource = string.Empty;
 
-            var resourceSearchPageSize = this.publicSettings.FindwiseSettings.ResourceSearchPageSize;
-            var catalogueSearchPageSize = this.publicSettings.FindwiseSettings.CatalogueSearchPageSize;
+            var resourceSearchPageSize = this.settings.FindwiseSettings.ResourceSearchPageSize;
+            var catalogueSearchPageSize = this.settings.FindwiseSettings.CatalogueSearchPageSize;
 
             var resourceSearchRequestModel = new SearchRequestModel
             {
@@ -259,8 +254,8 @@
         public async Task<int> RegisterSearchEventsAsync(SearchRequestViewModel search, SearchFormActionTypeEnum action, int resourceCount = 0, int catalogueCount = 0)
         {
             var eventId = 0;
-            var resourceSearchPageSize = this.publicSettings.FindwiseSettings.ResourceSearchPageSize;
-            var catalogueSearchPageSize = this.publicSettings.FindwiseSettings.CatalogueSearchPageSize;
+            var resourceSearchPageSize = this.settings.FindwiseSettings.ResourceSearchPageSize;
+            var catalogueSearchPageSize = this.settings.FindwiseSettings.CatalogueSearchPageSize;
 
             var sortBy = search.Sortby.HasValue ? (SearchSortTypeEnum)search.Sortby : SearchSortTypeEnum.Relevance;
 
@@ -351,7 +346,7 @@
             try
             {
                 int createId = 0;
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 var json = JsonConvert.SerializeObject(searchActionResourceModel);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -394,7 +389,7 @@
             try
             {
                 int createId = 0;
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 var json = JsonConvert.SerializeObject(searchActionCatalogueModel);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -433,7 +428,7 @@
             try
             {
                 int createId = 0;
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 var json = JsonConvert.SerializeObject(searchRequestModel);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -473,7 +468,7 @@
 
             try
             {
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 searchRequestModel.SearchText = this.DecodeProblemCharacters(searchRequestModel.SearchText);
 
@@ -516,8 +511,8 @@
             {
                 int createId = 0;
 
-                var client = await this.LearningHubHttpClient.GetClientAsync();
-                var request = this.publicSettings.LearningHubApiUrl + "Search/SubmitFeedback";
+                var client = await this.OpenApiHttpClient.GetClientAsync();
+                var request = $"Search/SubmitFeedback";
                 var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
                 var response = await client.PostAsync(request, content).ConfigureAwait(false);
 
@@ -553,7 +548,7 @@
 
             try
             {
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 catalogueSearchRequestModel.SearchText = this.DecodeProblemCharacters(catalogueSearchRequestModel.SearchText);
 
@@ -599,7 +594,7 @@
             try
             {
                 int createId = 0;
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 var json = JsonConvert.SerializeObject(catalogueSearchRequestModel);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -643,7 +638,7 @@
 
             try
             {
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 catalogueSearchRequestModel.SearchText = this.DecodeProblemCharacters(catalogueSearchRequestModel.SearchText);
 
@@ -686,7 +681,7 @@
         /// <returns>The auto suggestion list.</returns>
         public async Task<AutoSuggestionModel> GetAutoSuggestionList(string term)
         {
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
             var request = $"Search/GetAutoSuggestionResult/{term}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
 
@@ -713,7 +708,7 @@
         {
             try
             {
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 var json = JsonConvert.SerializeObject(clickPayloadModel);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");

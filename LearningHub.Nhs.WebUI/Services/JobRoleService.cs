@@ -24,13 +24,15 @@
         /// Initializes a new instance of the <see cref="JobRoleService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="userApiHttpClient">User api http client.</param>
         /// <param name="logger">Logger.</param>
         public JobRoleService(
             ILearningHubHttpClient learningHubHttpClient,
+            IOpenApiHttpClient openApiHttpClient,
             IUserApiHttpClient userApiHttpClient,
             ILogger<JobRoleService> logger)
-        : base(learningHubHttpClient, logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.userApiHttpClient = userApiHttpClient;
         }

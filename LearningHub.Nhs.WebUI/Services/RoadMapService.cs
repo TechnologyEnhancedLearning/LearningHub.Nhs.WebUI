@@ -18,9 +18,10 @@
         /// Initializes a new instance of the <see cref="RoadMapService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">Learing hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">Logger.</param>
-        public RoadMapService(ILearningHubHttpClient learningHubHttpClient, ILogger<RoadMapService> logger)
-        : base(learningHubHttpClient, logger)
+        public RoadMapService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<RoadMapService> logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
         }
 

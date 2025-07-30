@@ -82,10 +82,6 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public IQueryable<CatalogueNodeVersion> GetPublishedCataloguesForUserAsync(int userId)
         {
-            var communityCatalogue = DbContext.CatalogueNodeVersion.AsNoTracking()
-                    .Include(cnv => cnv.NodeVersion.Node)
-                    .Where(cnv => cnv.NodeVersion.VersionStatusEnum == VersionStatusEnum.Published
-                            && cnv.NodeVersion.NodeId == 1 /* Community Catalogue */);
 
             var cataloguesForUser = from cnv in DbContext.CatalogueNodeVersion.Include(cnv => cnv.NodeVersion.Node).AsNoTracking()
                                     join nv in DbContext.NodeVersion.Where(cnv => cnv.VersionStatusEnum == VersionStatusEnum.Published && !cnv.Deleted) // .Include(nv => nv.Node)
@@ -100,9 +96,9 @@
                                         on nv.Id equals n.CurrentNodeVersionId
                                     select cnv;
 
-            var returnedCatalogues = communityCatalogue.Union(cataloguesForUser).Distinct()
-                                                        .OrderBy(cnv => cnv.NodeVersion.NodeId != 1)
-                                                        .ThenBy(cnv => cnv.Name);
+            var returnedCatalogues = cataloguesForUser.Distinct()
+                                                         .OrderBy(cnv => cnv.NodeVersion.NodeId != 1)
+                                                         .ThenBy(cnv => cnv.Name);
 
             return returnedCatalogues;
         }
@@ -386,6 +382,22 @@
             var param3 = new SqlParameter("@fetchRows", SqlDbType.Int) { Value = pageSize };
 
             var result = await DbContext.AllCatalogueViewModel.FromSqlRaw("[hierarchy].[GetCatalogues] @userId, @filterChar, @OffsetRows, @fetchRows", param0, param1, param2, param3)
+              .AsNoTracking().ToListAsync();
+            return result;
+        }
+
+        /// <summary>
+        /// Gets catalogues based on filter character.
+        /// </summary>
+        /// <param name="filterChar">The filterChar.</param>
+        /// <param name="userId">The userId.</param>
+        /// <returns>resources.</returns>
+        public async Task<List<AllCatalogueViewModel>> GetAllCataloguesAsync(string filterChar, int userId)
+        {
+            var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+            var param1 = new SqlParameter("@filterChar", SqlDbType.NVarChar, 10) { Value = filterChar.Trim() };
+
+            var result = await this.DbContext.AllCatalogueViewModel.FromSqlRaw("[hierarchy].[GetCatalogues] @userId, @filterChar", param0, param1)
               .AsNoTracking().ToListAsync();
             return result;
         }

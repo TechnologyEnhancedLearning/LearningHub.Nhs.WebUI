@@ -42,6 +42,14 @@
                                           HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
                         });
 
+                services.AddHttpClient<IOpenApiHttpClient, OpenApiHttpClient>()
+                 .ConfigurePrimaryHttpMessageHandler(
+                     () => new HttpClientHandler
+                     {
+                         ServerCertificateCustomValidationCallback =
+                                       HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                     });
+
                 services.AddHttpClient<IUserApiHttpClient, UserApiHttpClient>()
                     .ConfigurePrimaryHttpMessageHandler(
                         () => new HttpClientHandler
@@ -68,6 +76,7 @@
             else
             {
                 services.AddHttpClient<ILearningHubHttpClient, LearningHubHttpClient>();
+                services.AddHttpClient<IOpenApiHttpClient, OpenApiHttpClient>();
                 services.AddHttpClient<IUserApiHttpClient, UserApiHttpClient>();
                 services.AddHttpClient<ILearningHubReportApiClient, LearningHubReportApiClient>();
                 services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>();
@@ -106,6 +115,7 @@
             services.AddScoped<IPartialFileUploadService, PartialFileUploadService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<ILearningHubApiFacade, LearningHubApiFacade>();
+            services.AddScoped<IOpenApiFacade, OpenApiFacade>();
             services.AddScoped<IBookmarkService, BoomarkService>();
             services.AddScoped<IUserSessionHelper, UserSessionHelper>();
             services.AddScoped<IDetectJsLogService, DetectJsLogService>();

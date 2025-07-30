@@ -22,6 +22,7 @@
     /// The bff prefix is followed by the API name (e.g. "learninghub", "userapi") and the path to the specific endpoint to enable easy routing to different APIs.
     /// See confluence for more details on the BFF pattern and how to use this controller.
     /// </summary>
+    /// The authorize same site cookie is used for security between client and server. API calls relying on policys such as AuthorizeOrCallFromLH may not be proxied as they require the Authorization header to be present.
     [Authorize]
     [Route("bff/{apiName}/{**path}")]
     [ApiController]
@@ -41,7 +42,6 @@
         /// <param name="learningHubClient">The HTTP client for the Learning Hub API.</param>
         /// <param name="userAPIClient">The HTTP client for the User API.</param>
         /// <param name="openAPIClient">The HTTP client for the Open API.</param>
-        /// <param name="settings">The application settings.</param>
         /// <param name="bffPathValidationOptions">The options for validating BFF paths.</param>
         public BFFController(
             ILogger<BFFController> logger,
@@ -51,11 +51,7 @@
             IOptions<BFFPathValidationOptions> bffPathValidationOptions)
             : base(logger)
         {
-            // qqqq should i be using the httpfactory -  i think no
-            // services.AddHttpClient<ILearningHubHttpClient, LearningHubHttpClient>();
-            // services.AddHttpClient<IUserApiHttpClient, UserApiHttpClient>();
-            // services.AddHttpClient<ILearningHubReportApiClient, LearningHubReportApiClient>();
-            // services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>();
+            // Clients the BFF is being given access to, these are the only clients that can be used to proxy requests.
             this.apiClients = new List<IAPIHttpClient>()
             {
                 learningHubClient,
@@ -79,25 +75,12 @@
         [HttpPatch]
         public async Task<IActionResult> ProxyRequest(string apiName, string path)
         {
-            // qqqq
-            // we want to do this - oh but it wont be in domain!
-            // it will be https://lh-web.dev.local/bff/ the api name so we need to set the name the same ... it doesnt need to be the same but may aswell
-            // the other local ones are https://lh-web.dev.local/api/
-            // https://lh-openapi.dev.local/
-            // "LearningHubUrl": "https://lh-web.dev.local/",
-            // "ELfhHubUrl": "https://test-portal.e-lfhtech.org.uk ",
-            // "LearningHubApiUrl": "https://lh-api.dev.local/api/",
-            // "UserApiUrl": "https://lh-userapi.dev.local/api/",
-            // "LearningHubAdminUrl": "https://lh-admin.dev.local/",
             string sanitizedPath = path?.Trim('/').ToLowerInvariant() ?? string.Empty;
             string sanitizedApiName = apiName?.Trim('/').ToLowerInvariant() ?? string.Empty;
 
             IAPIHttpClient apiClient;
             try
             {
-                // qqqq qqqq !!!! need single end point to test
-                // ApiUrl = "https://lh-api.dev.local/api/"
-                // "lh-api.dev.local"
                 apiClient = this.apiClients.Single(x =>
                 {
                     try
@@ -113,10 +96,10 @@
             }
             catch (Exception e)
             {
+                this.Logger.LogError(e, "Failed to find API client for {ApiName}", sanitizedApiName);
                 return this.BadRequest($"Unknown API alias: {sanitizedApiName}");
             }
 
-            // api/catalogue/getlatestcatalogueaccessrequest/500 qqqq
             if (!this.IsPathAllowed(sanitizedPath))
             {
                 return this.Forbid("This path is not allowed via BFF proxy.");
@@ -131,7 +114,15 @@
                 targetUrl += this.Request.QueryString.Value;
             }
 
-            // No headers added becaue all security is handled by host httpclients via baseclient
+            /*
+                 No headers for Auth, host, connection, user agent, added becaue all security is handled by serverside httpclients via baseclient
+                 BaseHttpClient should handle content-type, timezone and tokens.
+                 Note: We do not forward the Authorization header as the BFF pattern uses same-site cookies for authentication.
+                 This means the BFF controller is responsible for handling authentication and authorization.
+                 We also do not forward the Host header as it may not match the target API's expected host.
+                 Header copying would only be needed if: APIs start checking for custom client headers (X-Custom-Header, X-Correlation-Id, etc.)
+            */
+
             // Copy body if necessary (for POST, PUT, PATCH, etc.)
             var method = new HttpMethod(this.Request.Method);
             var requestMessage = new HttpRequestMessage(method, targetUrl);
@@ -152,8 +143,6 @@
                 var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
 
                 // Handle redirects with token preservation
-                // if we are redirected the client may not handle it as it isnt the token holder so we need to continue using the bff until we get the outcome
-                // qqqq we would avoid hitting authorization because we dont want to redirect the component to a page its the mvc that would want redirecting, the mvc page to another mvc page. So we may never need this
                 if (response.StatusCode == System.Net.HttpStatusCode.Redirect ||
                     response.StatusCode == System.Net.HttpStatusCode.Found ||
                     response.StatusCode == System.Net.HttpStatusCode.TemporaryRedirect ||
@@ -179,7 +168,12 @@
             }
         }
 
-        // qqqq make sure this gets tested
+        /*
+         Handle redirects with token preservation
+         if we are redirected the client may not handle it as it isnt the token holder so we need to continue using the bff until we get the outcome
+         if the BFF caller is not expecting redirects but only data they should handle the 302 response and redirect themselves.
+         E.g. A compontent that uses the BFF to fetch data may not be appropriate for redirecting to a specific page so the consuming client may need to have a way of handling page redirects.
+        */
         private async Task<IActionResult> HandleRedirect(HttpResponseMessage response, IAPIHttpClient apiClient)
         {
             var location = response.Headers.Location?.ToString();
@@ -212,6 +206,8 @@
                 var client = await apiClient.GetClientAsync();
                 var redirectResponse = await client.SendAsync(redirectRequest);
                 var content = await redirectResponse.Content.ReadAsStringAsync();
+
+                // Our data apis are expected to return JSON, but we can handle other content types if necessary.
                 var contentType = redirectResponse.Content.Headers.ContentType?.MediaType ?? "application/json";
 
                 return new ContentResult
@@ -238,6 +234,7 @@
             // Check blacklist first
             if (this.bffPathValidationOptions.Value.BlockedPathSegments.Any(blocked => normalizedPath.Contains(blocked.ToLowerInvariant())))
             {
+                this.Logger.LogError(" Black listed path {path} was requested and blocked", normalizedPath);
                 return false;
             }
 

@@ -1,4 +1,4 @@
-﻿namespace LearningHub.Nhs.WebUI.Interfaces
+﻿namespace LearningHub.Nhs.Shared.Interfaces.Services
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

@@ -12,6 +12,8 @@
     using Azure.Storage.Files.Shares;
     using Azure.Storage.Files.Shares.Models;
     using LearningHub.Nhs.Models.Resource.Files;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
+    using LearningHub.Nhs.Shared.Services;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
     using Microsoft.AspNetCore.StaticFiles;

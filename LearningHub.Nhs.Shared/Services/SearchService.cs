@@ -1,5 +1,20 @@
-namespace LearningHub.Nhs.WebUI.Services
+﻿namespace LearningHub.Nhs.Shared.Services
 {
+    using HtmlAgilityPack;
+    using LearningHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Search;
+    using LearningHub.Nhs.Models.Search.SearchClick;
+    using LearningHub.Nhs.Shared.Configuration;
+    using LearningHub.Nhs.Shared.Helpers;
+    using LearningHub.Nhs.Shared.Interfaces.Configuration;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
+    using LearningHub.Nhs.Shared.Interfaces.Services;
+    using LearningHub.Nhs.Shared.Models.Search;
+    using LearningHub.Nhs.WebUI.Helpers;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -9,39 +24,30 @@ namespace LearningHub.Nhs.WebUI.Services
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
-    using HtmlAgilityPack;
-    using LearningHub.Nhs.Models.Common;
-    using LearningHub.Nhs.Models.Enums;
-    using LearningHub.Nhs.Models.Search;
-    using LearningHub.Nhs.Models.Search.SearchClick;
-    using LearningHub.Nhs.WebUI.Configuration;
-    using LearningHub.Nhs.WebUI.Helpers;
-    using LearningHub.Nhs.WebUI.Interfaces;
-    using LearningHub.Nhs.WebUI.Models.Search;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Defines the <see cref="SearchService" />.
     /// </summary>
     public class SearchService : BaseService<SearchService>, ISearchService
     {
-        private readonly Settings settings;
+        private readonly IPublicSettings publicSettings;
         private IProviderService providerService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchService"/> class.
         /// </summary>
-        /// <param name="learningHubHttpClient">Learning hub http client.</param>
         /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="providerService">Provider service.</param>
         /// <param name="logger">Logger.</param>
-        /// <param name="settings">Settings.</param>
-        public SearchService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, IProviderService providerService, ILogger<SearchService> logger, IOptions<Settings> settings)
-          : base(learningHubHttpClient, openApiHttpClient, logger)
+        /// <param name="publicSettings">Settings.</param>
+        public SearchService(
+            IOpenApiHttpClient openApiHttpClient, 
+            IProviderService providerService, 
+            ILogger<SearchService> logger, 
+            IOptions<PublicSettings> publicSettings)
+        : base(openApiHttpClient, logger)
         {
-            this.settings = settings.Value;
+            this.publicSettings = publicSettings.Value;
             this.providerService = providerService;
         }
 
@@ -68,8 +74,8 @@ namespace LearningHub.Nhs.WebUI.Services
             var suggestedCatalogue = string.Empty;
             var suggestedResource = string.Empty;
 
-            var resourceSearchPageSize = this.settings.FindwiseSettings.ResourceSearchPageSize;
-            var catalogueSearchPageSize = this.settings.FindwiseSettings.CatalogueSearchPageSize;
+            var resourceSearchPageSize = this.publicSettings.FindwiseSettings.ResourceSearchPageSize;
+            var catalogueSearchPageSize = this.publicSettings.FindwiseSettings.CatalogueSearchPageSize;
 
             var resourceSearchRequestModel = new SearchRequestModel
             {
@@ -254,8 +260,8 @@ namespace LearningHub.Nhs.WebUI.Services
         public async Task<int> RegisterSearchEventsAsync(SearchRequestViewModel search, SearchFormActionTypeEnum action, int resourceCount = 0, int catalogueCount = 0)
         {
             var eventId = 0;
-            var resourceSearchPageSize = this.settings.FindwiseSettings.ResourceSearchPageSize;
-            var catalogueSearchPageSize = this.settings.FindwiseSettings.CatalogueSearchPageSize;
+            var resourceSearchPageSize = this.publicSettings.FindwiseSettings.ResourceSearchPageSize;
+            var catalogueSearchPageSize = this.publicSettings.FindwiseSettings.CatalogueSearchPageSize;
 
             var sortBy = search.Sortby.HasValue ? (SearchSortTypeEnum)search.Sortby : SearchSortTypeEnum.Relevance;
 
@@ -512,7 +518,7 @@ namespace LearningHub.Nhs.WebUI.Services
                 int createId = 0;
 
                 var client = await this.OpenApiHttpClient.GetClientAsync();
-                var request = $"Search/SubmitFeedback";
+                var request = this.publicSettings.LearningHubApiUrl + "Search/SubmitFeedback";
                 var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
                 var response = await client.PostAsync(request, content).ConfigureAwait(false);
 

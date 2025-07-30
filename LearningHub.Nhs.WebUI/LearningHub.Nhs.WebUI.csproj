@@ -168,6 +168,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\LearningHub.Nhs.Shared\LearningHub.Nhs.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<TypeScriptCompile Include="jest.config.ts" />
 		<TypeScriptCompile Include="Scripts\vuesrc\helpers\utils.ts" />
 		<TypeScriptCompile Include="Scripts\vuesrc\models\mylearning\assessmentDetailsModel.ts" />

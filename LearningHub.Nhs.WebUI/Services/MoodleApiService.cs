@@ -139,7 +139,7 @@
             {
                 var result = response.Content.ReadAsStringAsync().Result;
 
-                var canViewReport = JsonConvert.DeserializeObject<MoodleCompletionResponseViewModel>(result);
+                var canViewReport = JsonConvert.DeserializeObject<MoodleCompletionResponseModel>(result);
 
                 if (string.IsNullOrEmpty(canViewReport.Exception))
                 {

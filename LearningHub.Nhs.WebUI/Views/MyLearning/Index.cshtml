@@ -17,6 +17,27 @@
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/mylearning.css" asp-append-version="true" />
 
 }
+
+@section NavBreadcrumbs {
+
+    <section class="nhsuk-hero">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+
+                    <div class="nhsuk-u-padding-top-4">
+                        <a href="/">Home</a>
+                        <i class="fa-solid fa-chevron-right nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+                    </div>
+                    <div class="nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-5">
+                        <h1 class="nhsuk-heading-xl">My learning activity</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
 <div class="my-learning">
     <div class="nhsuk-width-container app-width-container">
         <div class="nhsuk-grid-row nhsuk-u-padding-top-9 nhsuk-u-padding-bottom-9">
@@ -25,7 +46,7 @@
                 {
                     <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
                 }
-                <h1 class="nhsuk-heading-xl">My learning</h1>
+               @*  <h1 class="nhsuk-heading-xl">My learning</h1> *@
                 <p class="nhsuk-body-l">
                     You can use this page to search and filter learning resources you've accessed, download certificates and generate a report
                     of your activity.

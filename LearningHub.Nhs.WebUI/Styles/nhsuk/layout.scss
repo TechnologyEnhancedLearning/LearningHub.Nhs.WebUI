@@ -9,6 +9,21 @@ body {
     padding: 0 px2rem(32);
 }
 
+.nhsuk-hero {
+    background-color: $color_nhsuk-blue;
+    color: #fff;
+    position: relative;
+}
+
+.nhsuk-hero a,
+.nhsuk-hero a:visited,
+.nhsuk-hero a:hover,
+.nhsuk-hero a:active,
+.nhsuk-hero i {
+    color: $color_nhsuk-white;
+}
+
+
 .nhsuk-width-container.app-width-container {
     max-width: px2rem(1208);
     margin: 0 auto;

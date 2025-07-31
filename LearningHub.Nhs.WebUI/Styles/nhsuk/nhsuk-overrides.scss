@@ -179,7 +179,7 @@ form label.nhsuk-u-visually-hidden {
 
 // Below taken from layout.scss
 // Overrides largely due to
-//     - Highly customised header 
+//     - Highly customised header
 //     - Use of full browser width hero images and full width colour bands
 //     - Beta banner
 //
@@ -195,128 +195,142 @@ form label.nhsuk-u-visually-hidden {
 }
 
 // Header items
-    .nhsuk-header {
-        padding: 0 px2rem(32);
-    }
+.nhsuk-header {
+    padding: 0 px2rem(32);
+}
 
-    .nhsuk-header .nhsuk-width-container.app-width-container {
-        max-width: px2rem(1144);
-        margin: 0 auto;
-    }
+.nhsuk-header .nhsuk-width-container.app-width-container {
+    max-width: px2rem(1144);
+    margin: 0 auto;
+}
 
-    .nhsuk-width-container.app-width-container.beta-banner {
-        padding: px2rem(8) px2rem(32);
-        max-width: px2rem(1208);
-        margin: 0 auto;
-    }
+.nhsuk-width-container.app-width-container.beta-banner {
+    padding: px2rem(8) px2rem(32);
+    max-width: px2rem(1208);
+    margin: 0 auto;
+}
 
-    .nhsuk-header .nhsuk-header__container::after {
-        content: none;
-    }
+.nhsuk-header .nhsuk-header__container::after {
+    content: none;
+}
 
-    .nhsuk-header__navigation.app-width-container {
-        max-width: px2rem(1144);
-    }
+.nhsuk-header__navigation.app-width-container {
+    max-width: px2rem(1144);
+}
 
-    .nhsuk-header__container.app-width-container {
-        display: flex;
-        justify-content: space-between;
-        gap: 0 px2rem(24);
-        padding: px2rem(16) 0;
-    }
+.nhsuk-header__container.app-width-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 0 px2rem(24);
+    padding: px2rem(16) 0;
+}
 
-    .nhsuk-header__logo {
-        flex: 1 0 0;
-    }
+.nhsuk-header__logo {
+    flex: 1 0 0;
+}
 
-    .nhsuk-header__logo .nhsuk-header__link--service {
-        display: inline-flex;
-    }
+.nhsuk-header__logo .nhsuk-header__link--service {
+    display: inline-flex;
+}
 
-    .nhsuk-header__service-name {
-        font-size: px2rem(19);
-    }
+.nhsuk-header__service-name {
+    font-size: px2rem(19);
+}
 
-    .nhsuk-header__notification-dot {
-        position: absolute;
-        top: px2rem(8);
-        right: px2rem(-10);
-        font-size: px2rem(11);
-        line-height: px2rem(18);
-        font-weight: 900;
-        background: $nhsuk-error-color;
-        color: white;
-        min-width: px2rem(18);
-        height: px2rem(18);
-        text-align: center;
-        border-radius: px2rem(9);
-        padding: px2rem(1) px2rem(3) 0;
-    }
+.nhsuk-header__notification-dot {
+    position: absolute;
+    top: px2rem(8);
+    right: px2rem(-10);
+    font-size: px2rem(11);
+    line-height: px2rem(18);
+    font-weight: 900;
+    background: $nhsuk-error-color;
+    color: white;
+    min-width: px2rem(18);
+    height: px2rem(18);
+    text-align: center;
+    border-radius: px2rem(9);
+    padding: px2rem(1) px2rem(3) 0;
+}
 
-    .nhsuk-header__menu {
-        display: none;
-    }
+.nhsuk-header__menu {
+    display: none;
+}
 
-    .nhsuk-header__search .nhsuk-search__input {
+.nhsuk-header__search .nhsuk-search__input {
+    width: px2rem(260);
+}
+
+.nhsuk-header__search {
+    .nhsuk-search__input {
         width: px2rem(260);
-    }
 
-    .nhsuk-header__search {
-        .nhsuk-search__input {
-            width: px2rem(260);
-
-            &::-moz-placeholder {
-                opacity: 1;
-            }
-        }
-
-        #search > label.nhsuk-u-visually-hidden {
-            background-color: $nhsuk-white;
+        &::-moz-placeholder {
+            opacity: 1;
         }
     }
 
-    .nhsuk-header__break {
-        display: none;
+    #search > label.nhsuk-u-visually-hidden {
+        background-color: $nhsuk-white;
     }
+}
 
-    .nhsuk-header__mobile-only-nav {
-        display: none;
-    }
+#header-dropdown-menu-control {
+    opacity: 0;
+    position: absolute;
+}
 
-    .nhsuk-header__mobile-break {
-        display: none;
-    }
 
-    .nhsuk-header__navigation-item--current {
-        a {
-            font-weight: bold;
-        }
-    }
+#header-dropdown-menu-control:checked ~ .nhsuk-header__navigation:not(.js-show) {
+    display: block
+}
 
-    .nhsuk-account__login {
-        // also a header item
-        font-size: px2rem(14);
-        float: right;
-        position: relative;
-        z-index: 2;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: px2rem(24);
-    }
+#header-mobile-search-control {
+    display: none;
+}
 
-    .nhsuk-account__login--link,
-    .nhsuk-account__login--link:visited,
-    .nhsuk-account__login--link:hover {
-        // all header items
-        color: #fff;
+.nhsuk-header__break {
+    display: none;
+}
+
+.nhsuk-header__mobile-only-nav {
+    display: none;
+}
+
+.nhsuk-header__mobile-break {
+    display: none;
+}
+
+.nhsuk-header__navigation-item--current {
+    a {
+        font-weight: bold;
     }
+}
+
+.nhsuk-account__login {
+    // also a header item
+    font-size: px2rem(14);
+    float: right;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: px2rem(24);
+}
+
+.nhsuk-account__login--link,
+.nhsuk-account__login--link:visited,
+.nhsuk-account__login--link:hover {
+    // all header items
+    color: #fff;
+}
 
 
 // End of header items
 
 
-.app-width-container--full {
+.nhsuk-width-container.app-width-container--full {
     // used to allow placement of hero (full width) images
     margin: 0;
     max-width: none
@@ -354,7 +368,7 @@ form label.nhsuk-u-visually-hidden {
 /* small desktop */
 @media (max-width: px2rem(989)) {
 
-    //entirely headers 
+    //entirely headers
 
     .nhsuk-header__container {
         flex-wrap: wrap;
@@ -383,6 +397,13 @@ form label.nhsuk-u-visually-hidden {
 
     .nhsuk-header__logo {
         order: 0;
+    }
+
+    .nhsuk-account__login {
+        // also part of the header
+        order: 1;
+        margin-left: auto;
+        margin-right: 0px;
     }
 
     .nhsuk-header__break {
@@ -461,14 +482,6 @@ form label.nhsuk-u-visually-hidden {
         box-shadow: 0 0 0 2px white;
         z-index: 10;
     }
-
-    .nhsuk-account__login {
-        // also part of the header
-        order: 1;
-        margin-left: auto;
-        margin-right: 0px;
-    }
-
 }
 
 @media (max-width: px2rem(768)) {
@@ -508,19 +521,6 @@ form label.nhsuk-u-visually-hidden {
 
     .nhsuk-header__mobile-only-nav .nhsuk-header__search-toggle {
         margin-left: px2rem(12);
-    }
-
-    #header-dropdown-menu-control {
-        opacity: 0;
-        position: absolute;
-    }
-
-    #header-dropdown-menu-control:checked ~ .nhsuk-header__navigation:not(.js-show) {
-        display: block
-    }
-
-    #header-mobile-search-control {
-        display: none;
     }
 
     .nhsuk-header__break {
@@ -570,21 +570,6 @@ form label.nhsuk-u-visually-hidden {
         margin: px2rem(16) px2rem(-16) 0;
         border-bottom: 1px solid $color_nhsuk-grey-4;
     }
-
-    #header-mobile-search-control {
-        display: block;
-        opacity: 0;
-        position: absolute;
-    }
-
-    #header-mobile-search-control:checked ~ .nhsuk-header__search .nhsuk-header__search-wrap {
-        display: block;
-    }
-
-    .nhsuk-width-container.nhsuk-header__container.app-width-container {
-        padding-bottom: 0;
-    }
-
 }
 
 @media (max-width: px2rem(640)) {
@@ -670,7 +655,7 @@ form label.nhsuk-u-visually-hidden {
         margin: px2rem(16) px2rem(-16) 0;
         border-bottom: 1px solid $color_nhsuk-grey-4;
     }
-    
+
     #header-mobile-search-control {
         display: block;
         opacity: 0;

@@ -11,6 +11,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using LearningHub.Nhs.Models.Content;
     using LearningHub.Nhs.Models.Enums.Content;
     using LearningHub.Nhs.Models.Extensions;
+    using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Helpers;
@@ -218,13 +219,12 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     var cataloguesTask = this.dashboardService.GetCataloguesAsync(catalogueDashboard, 1);
                     var userGroupsTask = this.userGroupService.UserHasCatalogueContributionPermission();
 
-                    var enrolledCoursesTask = Task.FromResult(new List<MoodleCourseResponseViewModel>());
-                    var enableMoodle = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.EnableMoodle)).Result;
-                    this.ViewBag.EnableMoodle = enableMoodle;
-                    this.ViewBag.ValidMoodleUser = this.CurrentMoodleUserId > 0;
+                    var enrolledCoursesTask = Task.FromResult(new List<MoodleCourseResponseModel>());
+                    (bool enableMoodle, int currentMoodleUserId) = await this.GetMoodleFeatureStateAsync();
+
                     if (enableMoodle && myLearningDashboard == "my-enrolled-courses")
                     {
-                        enrolledCoursesTask = this.dashboardService.GetEnrolledCoursesFromMoodleAsync(this.CurrentMoodleUserId, 1);
+                        enrolledCoursesTask = this.dashboardService.GetEnrolledCoursesFromMoodleAsync(currentMoodleUserId, 1);
                     }
 
                     await Task.WhenAll(learningTask, resourcesTask, cataloguesTask, userGroupsTask);
@@ -280,9 +280,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     Catalogues = new Nhs.Models.Dashboard.DashboardCatalogueResponseViewModel { Type = catalogueDashBoard },
                 };
 
-                var enableMoodle = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.EnableMoodle)).Result;
-                this.ViewBag.EnableMoodle = enableMoodle;
-                this.ViewBag.ValidMoodleUser = this.CurrentMoodleUserId > 0;
+                (bool enableMoodle, int currentMoodleUserId) = await this.GetMoodleFeatureStateAsync();
 
                 bool isAjax = this.HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest";
 
@@ -448,6 +446,29 @@ namespace LearningHub.Nhs.WebUI.Controllers
             {
                 return new LandingPageViewModel { PageSectionDetailViewModels = new List<PageSectionDetailViewModel>(), PageViewModel = new PageViewModel { PageSections = new List<PageSectionViewModel> { } } };
             }
+        }
+
+        /// <summary>
+        /// Asynchronously retrieves the state of the Moodle feature and the current Moodle user ID.
+        /// </summary>
+        /// <remarks>The method checks if the Moodle feature is enabled and retrieves the current Moodle
+        /// user ID. If the user ID is not already set, it attempts to obtain it asynchronously from the dashboard
+        /// service.</remarks>
+        /// <returns>A tuple containing a boolean indicating whether the Moodle feature is enabled and an integer representing
+        /// the current Moodle user ID.</returns>
+        private async Task<(bool enableMoodle, int currentMoodleUserId)> GetMoodleFeatureStateAsync()
+        {
+            var enableMoodle = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.EnableMoodle)).Result;
+            this.ViewBag.EnableMoodle = enableMoodle;
+            int currentMoodleUserId = this.CurrentMoodleUserId;
+
+            if (currentMoodleUserId == 0)
+            {
+                currentMoodleUserId = await this.dashboardService.GetMoodleUserIdAsync(this.CurrentUserId);
+            }
+
+            this.ViewBag.ValidMoodleUser = currentMoodleUserId > 0;
+            return (enableMoodle, currentMoodleUserId);
         }
     }
 }

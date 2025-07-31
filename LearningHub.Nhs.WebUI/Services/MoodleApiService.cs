@@ -8,10 +8,11 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.Services.Interface;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
     using Newtonsoft.Json;
-    using MoodleCourseCompletionModel = Nhs.Models.Moodle.API.MoodleCourseCompletionModel;
+    using MoodleCourseCompletionModel = LearningHub.Nhs.Models.Moodle.API.MoodleCourseCompletionModel;
 
     /// <summary>
     /// MoodleApiService.

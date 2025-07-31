@@ -1,5 +1,6 @@
 ﻿namespace LearningHub.Nhs.WebUI.Startup
 {
+    using System.Net.Http;
     using GDS.MultiPageFormData;
     using LearningHub.Nhs.Models.OpenAthens;
     using LearningHub.Nhs.Services;
@@ -17,7 +18,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using System.Net.Http;
 
     /// <summary>
     /// The service mappings.

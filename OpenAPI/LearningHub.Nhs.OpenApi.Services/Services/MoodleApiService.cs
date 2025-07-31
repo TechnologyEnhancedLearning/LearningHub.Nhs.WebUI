@@ -11,6 +11,7 @@
     using System.Net;
     using System.Net.Http;
     using System.Text;
+    using System.Text.Json;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -31,6 +32,7 @@
             this.moodleHttpClient = moodleHttpClient;
             this.logger = logger;
         }
+
         /// <summary>
         /// GetMoodleUserIdByUsernameAsync.
         /// </summary>
@@ -51,16 +53,89 @@
         }
 
 
+        /// <summary>
+        /// GetEnrolledCoursesAsync.
+        /// </summary>
+        /// <param name="userId">Moodle user id.</param>
+        /// <param name="pageNumber">The page Number.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<List<MoodleCourseResponseModel>> GetEnrolledCoursesAsync(int userId, int pageNumber)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                { "userid", userId.ToString() }
+            };
+
+            // Fetch enrolled courses
+            var enrolledCourses = await GetCallMoodleApiAsync<List<MoodleCourseResponseModel>>(
+                "core_enrol_get_users_courses",
+                parameters
+            );
+
+            if (enrolledCourses == null || enrolledCourses.Count == 0)
+                return new List<MoodleCourseResponseModel>();
+
+            // Load course completion info in parallel
+            var completionTasks = enrolledCourses
+                .Where(c => c.Id.HasValue)
+                .Select(async course =>
+                {
+                    try
+                    {
+                        course.CourseCompletionViewModel = await GetCourseCompletionAsync(userId, course.Id.Value, pageNumber);
+                    }
+                    catch (Exception ex)
+                    {
+                        course.CourseCompletionViewModel = new MoodleCourseCompletionModel
+                        {
+                            CompletionStatus = null,
+                        };
+                    }
+
+                    return course;
+                });
+
+            var enrichedCourses = await Task.WhenAll(completionTasks);
+
+            return enrichedCourses.ToList();
+
+        }
+
+        /// <summary>
+        /// GetEnrolledCoursesAsync.
+        /// </summary>
+        /// <param name="userId">Moodle user id.</param>
+        /// <param name="courseId">Moodle course id.</param>
+        /// <param name="pageNumber">pageNumber.</param>
+        /// <returns> List of MoodleCourseResponseModel.</returns>
+        public async Task<MoodleCourseCompletionModel> GetCourseCompletionAsync(int userId, int courseId, int pageNumber)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                { "userid", userId.ToString() },
+                { "courseid", courseId.ToString() }
+            };
+
+            // Call Moodle API and parse response
+            var result = await GetCallMoodleApiAsync<MoodleCourseCompletionModel>("core_completion_get_course_completion_status", parameters);
+
+            // If Moodle did not return an exception, return parsed completion data
+            if (result.Warnings.Count == 0)
+            {
+                // Optionally map/convert if needed
+                return JsonConvert.DeserializeObject<MoodleCourseCompletionModel>(JsonConvert.SerializeObject(result));
+            }
+
+            return new MoodleCourseCompletionModel(); // Return empty model or null as fallback
+        }
+
         private async Task<T> GetCallMoodleApiAsync<T>(string wsFunction, Dictionary<string, string> parameters)
         {
             var client = await this.moodleHttpClient.GetClient();
             string defaultParameters = this.moodleHttpClient.GetDefaultParameters();
 
-            // Build URL query
-            var queryBuilder = new StringBuilder();
-
-            queryBuilder.Append($"&wsfunction={wsFunction}");
-
+            // Build URL query string
+            var queryBuilder = new StringBuilder($"&wsfunction={wsFunction}");
             foreach (var param in parameters)
             {
                 queryBuilder.Append($"&{param.Key}={Uri.EscapeDataString(param.Value)}");
@@ -73,7 +148,33 @@
 
             if (response.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<T>(result);
+                // Moodle may still return an error with 200 OK
+                try
+                {
+                    using var document = JsonDocument.Parse(result);
+                    var root = document.RootElement;
+
+                    if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("exception", out var exceptionProp))
+                    {
+                        string? message = root.TryGetProperty("message", out var messageProp)
+                            ? messageProp.GetString()
+                            : "Unknown error";
+
+                        this.logger.LogError($"Moodle returned an exception: {exceptionProp.GetString()}, Message: {message}");
+                        throw new Exception($"Moodle API Error: {exceptionProp.GetString()}, Message: {message}");
+                    }
+                }
+                catch (System.Text.Json.JsonException ex)
+                {
+                    this.logger.LogError(ex, "Failed to parse Moodle API response as JSON.");
+                    throw;
+                }
+
+                var deserialized = JsonConvert.DeserializeObject<T>(result);
+
+                return deserialized == null
+                    ? throw new Exception($"Failed to deserialize Moodle API response into type {typeof(T).Name}. Raw response: {result}")
+                    : deserialized;
             }
             else if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
             {
@@ -82,9 +183,10 @@
             }
             else
             {
-                this.logger.LogError($"Moodle API error. Status Code: {response.StatusCode}, Message: {result}");
+                this.logger.LogError($"Moodle API error. Status Code: {response.StatusCode}, Response: {result}");
                 throw new Exception("Error with MoodleApi");
             }
         }
+
     }
 }

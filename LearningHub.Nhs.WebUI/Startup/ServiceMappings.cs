@@ -3,8 +3,6 @@
     using System.Net.Http;
     using GDS.MultiPageFormData;
     using LearningHub.Nhs.Models.OpenAthens;
-    using LearningHub.Nhs.Services;
-    using LearningHub.Nhs.Services.Interface;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -62,13 +60,6 @@
                          ServerCertificateCustomValidationCallback =
                                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
                      });
-                services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>()
-                 .ConfigurePrimaryHttpMessageHandler(
-                     () => new HttpClientHandler
-                     {
-                         ServerCertificateCustomValidationCallback =
-                                       HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
-                     });
             }
             else
             {
@@ -76,7 +67,6 @@
                 services.AddHttpClient<IOpenApiHttpClient, OpenApiHttpClient>();
                 services.AddHttpClient<IUserApiHttpClient, UserApiHttpClient>();
                 services.AddHttpClient<ILearningHubReportApiClient, LearningHubReportApiClient>();
-                services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>();
             }
 
             // Config

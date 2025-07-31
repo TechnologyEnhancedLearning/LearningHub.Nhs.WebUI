@@ -1,8 +1,10 @@
 ﻿namespace LearningHub.NHS.OpenAPI.Controllers
 {
+    using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -14,14 +16,33 @@
     public class MoodleController : Controller
     {
         private readonly IMoodleApiService moodleService;
+        private readonly MoodleConfig moodleConfig;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoodleController"/> class.
         /// </summary>
         /// <param name="moodleService">The moodle service.</param>
-        public MoodleController(IMoodleApiService moodleService)
+        /// <param name="moodleConfig">Moodel config.</param>
+        public MoodleController(IMoodleApiService moodleService, IOptions<MoodleConfig> moodleConfig)
         {
             this.moodleService = moodleService;
+            this.moodleConfig = moodleConfig.Value;
+        }
+
+        /// <summary>
+        /// The GetSafeMoodleConfig.
+        /// </summary>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetSafeMoodleConfig")]
+        public IActionResult GetSafeMoodleConfig()
+        {
+            // Only expose safe config values
+            return Ok(new
+            {
+                apiBaseUrl = this.moodleConfig.ApiBaseUrl,
+                coursePath = this.moodleConfig.CoursePath,
+            });
         }
 
         /// <summary>
@@ -37,6 +58,27 @@
             {
                 var moodleUser = await this.moodleService.GetMoodleUserIdByUsernameAsync(currentUserId.Value);
                 return this.Ok(moodleUser);
+            }
+            else
+            {
+                return this.Ok(0);
+            }
+        }
+
+        /// <summary>
+        /// GetEnrolledCoursesAsync.
+        /// </summary>
+        /// <param name="currentUserId">Moodle user id.</param>
+        /// <param name="pageNumber">The page Number.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpGet]
+        [Route("GetEnrolledCourses/{currentUserId?}")]
+        public async Task<IActionResult> GetEnrolledCoursesAsync(int? currentUserId, int pageNumber = 0)
+        {
+            if (currentUserId.HasValue)
+            {
+                var entrolledCourses = await this.moodleService.GetEnrolledCoursesAsync(currentUserId.Value, pageNumber);
+                return this.Ok(entrolledCourses);
             }
             else
             {

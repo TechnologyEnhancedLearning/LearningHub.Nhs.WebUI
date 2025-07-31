@@ -14,16 +14,26 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// <summary>
         /// Gets or sets the base url for the Moodle service.
         /// </summary>
-        public string APIBaseUrl { get; set; } = null!;
+        public string ApiBaseUrl { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the Web service Rest Format.
         /// </summary>
-        public string APIWSRestFormat { get; set; } = null!;
+        public string ApiWsRestFormat { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the token.
         /// </summary>
-        public string APIWSToken { get; set; } = null!;
+        public string ApiWsToken { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the token.
+        /// </summary>
+        public string ApiPath { get; set; } = "webservice/rest/server.php";
+
+        /// <summary>
+        /// Gets or sets the token.
+        /// </summary>
+        public string CoursePath { get; set; } = "course/view.php";
     }
 }

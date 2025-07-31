@@ -23,6 +23,7 @@ namespace LearningHub.Nhs.OpenApi.Services
         public static void AddServices(this IServiceCollection services)
         {
             services.AddScoped<IFindwiseClient, FindwiseClient>();
+            services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<ILearningHubService, LearningHubService>();
             services.AddScoped<IResourceService, ResourceService>();
@@ -33,6 +34,7 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IUserNotificationService, UserNotificationService>();
             services.AddScoped<IUserGroupService, UserGroupService>();
+            services.AddScoped<IMoodleApiService, MoodleApiService>();
 
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IEventLogService, EventLogService>();

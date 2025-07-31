@@ -37,19 +37,19 @@
         /// <summary>
         /// Findwise Moodle resource type dictionary.
         /// </summary>
-        public static readonly Dictionary<string, ResourceTypeEnumMoodle> FindwiseResourceMoodleTypeDict = new Dictionary<string, ResourceTypeEnumMoodle>()
+        public static readonly Dictionary<string, ResourceTypeEnum> FindwiseResourceMoodleTypeDict = new Dictionary<string, ResourceTypeEnum>()
         {
-            { "video", ResourceTypeEnumMoodle.Video },
-            { "article", ResourceTypeEnumMoodle.Article },
-            { "case", ResourceTypeEnumMoodle.Case },
-            { "weblink", ResourceTypeEnumMoodle.WebLink },
-            { "audio", ResourceTypeEnumMoodle.Audio },
-            { "scorm", ResourceTypeEnumMoodle.Scorm },
-            { "assessment", ResourceTypeEnumMoodle.Assessment },
-            { "genericfile", ResourceTypeEnumMoodle.GenericFile },
-            { "image", ResourceTypeEnumMoodle.Image },
-            { "html", ResourceTypeEnumMoodle.Html },
-            { "moodle", ResourceTypeEnumMoodle.Course },
+            { "video", ResourceTypeEnum.Video },
+            { "article", ResourceTypeEnum.Article },
+            { "case", ResourceTypeEnum.Case },
+            { "weblink", ResourceTypeEnum.WebLink },
+            { "audio", ResourceTypeEnum.Audio },
+            { "scorm", ResourceTypeEnum.Scorm },
+            { "assessment", ResourceTypeEnum.Assessment },
+            { "genericfile", ResourceTypeEnum.GenericFile },
+            { "image", ResourceTypeEnum.Image },
+            { "html", ResourceTypeEnum.Html },
+            { "moodle", ResourceTypeEnum.Moodle },
         };
 
         /// <summary>
@@ -174,41 +174,39 @@
         /// <param name="resourceType">The resource type.</param>
         /// <param name="durationInMilliseconds">The media duration in milliseconds.</param>
         /// <returns>The resource type name, and duration if applicable.</returns>
-        public static string GetPrettifiedResourceTypeNameMoodle(ResourceTypeEnumMoodle resourceType, int? durationInMilliseconds = 0)
+        public static string GetPrettifiedResourceTypeNameMoodle(ResourceTypeEnum resourceType, int? durationInMilliseconds = 0)
         {
             switch (resourceType)
             {
-                case ResourceTypeEnumMoodle.Assessment:
+                case ResourceTypeEnum.Assessment:
                     return "Assessment";
-                case ResourceTypeEnumMoodle.Article:
+                case ResourceTypeEnum.Article:
                     return "Article";
-                case ResourceTypeEnumMoodle.Audio:
+                case ResourceTypeEnum.Audio:
                     string durationText = GetDurationText(durationInMilliseconds ?? 0);
                     durationText = string.IsNullOrEmpty(durationText) ? string.Empty : " - " + durationText;
                     return "Audio" + durationText;
-                case ResourceTypeEnumMoodle.Equipment:
+                case ResourceTypeEnum.Equipment:
                     return "Equipment";
-                case ResourceTypeEnumMoodle.Image:
+                case ResourceTypeEnum.Image:
                     return "Image";
-                case ResourceTypeEnumMoodle.Scorm:
+                case ResourceTypeEnum.Scorm:
                     return "elearning";
-                case ResourceTypeEnumMoodle.Video:
+                case ResourceTypeEnum.Video:
                     durationText = GetDurationText(durationInMilliseconds ?? 0);
                     durationText = string.IsNullOrEmpty(durationText) ? string.Empty : " - " + durationText;
                     return "Video" + durationText;
-                case ResourceTypeEnumMoodle.WebLink:
+                case ResourceTypeEnum.WebLink:
                     return "Web link";
-                case ResourceTypeEnumMoodle.GenericFile:
+                case ResourceTypeEnum.GenericFile:
                     return "File";
-                case ResourceTypeEnumMoodle.Embedded:
+                case ResourceTypeEnum.Embedded:
                     return "Embedded";
-                case ResourceTypeEnumMoodle.Case:
+                case ResourceTypeEnum.Case:
                     return "Case";
-                case ResourceTypeEnumMoodle.Html:
+                case ResourceTypeEnum.Html:
                     return "HTML";
-                case ResourceTypeEnumMoodle.Moodle:
-                    return "Course";
-                case ResourceTypeEnumMoodle.Course:
+                case ResourceTypeEnum.Moodle:
                     return "Course";
                 default:
                     return "File";

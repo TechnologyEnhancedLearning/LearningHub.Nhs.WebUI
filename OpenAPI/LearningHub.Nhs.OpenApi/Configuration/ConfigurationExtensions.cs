@@ -41,6 +41,11 @@ namespace LearningHub.NHS.OpenAPI.Configuration
         public const string AzureSectionName = "Azure";
 
         /// <summary>
+        /// The FindwiseSectionName.
+        /// </summary>
+        public const string MoodleSectionName = "Moodle";
+
+        /// <summary>
         /// Adds config.
         /// </summary>
         /// <param name="services">The service collection.</param>
@@ -58,6 +63,8 @@ namespace LearningHub.NHS.OpenAPI.Configuration
             services.AddOptions<LearningHubApiConfig>().Bind(config.GetSection(LearningHubApiSectionName));
 
             services.AddOptions<AzureConfig>().Bind(config.GetSection(AzureSectionName));
+
+            services.AddOptions<MoodleConfig>().Bind(config.GetSection(MoodleSectionName));
         }
 
         private static OptionsBuilder<T> RegisterPostConfigure<T>(this OptionsBuilder<T> builder)

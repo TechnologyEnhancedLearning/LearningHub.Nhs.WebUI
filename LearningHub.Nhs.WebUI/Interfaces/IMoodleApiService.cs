@@ -26,12 +26,10 @@
         Task<List<MoodleCourseResponseModel>> GetEnrolledCoursesAsync(int currentUserId, int pageNumber);
 
         /// <summary>
-        /// GetEnrolledCoursesAsync.
+        /// GetCourseUrl.
         /// </summary>
-        /// <param name="userId">Moodle user id.</param>
-        /// <param name="courseId">Moodle course id.</param>
-        /// <param name="pageNumber">pageNumber.</param>
-        /// <returns> List of MoodleCourseResponseModel.</returns>
-        Task<MoodleCourseCompletionModel> GetCourseCompletionAsync(int userId, int courseId, int pageNumber);
+        /// <param name="courseId">course Id. </param>
+        /// <returns>return course URL.</returns>
+        string GetCourseUrl(int courseId);
     }
 }

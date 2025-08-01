@@ -78,6 +78,9 @@
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
+            var moodleApiSettings = configuration.GetSection("MoodleAPIConfig");
+            services.Configure<MoodleApiConfig>(moodleApiSettings);
+
             var settingsSection = configuration.GetSection("Settings");
 
             services.Configure<Settings>(settingsSection);

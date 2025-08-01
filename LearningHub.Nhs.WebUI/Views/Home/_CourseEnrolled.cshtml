@@ -3,7 +3,7 @@
 @using LearningHub.Nhs.WebUI.Extensions
 @using LearningHub.Nhs.WebUI.Helpers
 @model MoodleCourseResponseModel
-@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+@inject LearningHub.Nhs.WebUI.Interfaces.IMoodleApiService moodleApiService;
 
 @{
     bool providerExists = false;
@@ -11,11 +11,7 @@
 
     string GetMoodleCourseUrl(int courseId)
     {
-        var apiBaseUrl = Configuration["MoodleAPIConfig:BaseUrl"];        
-        string path = $"course/view.php";
-        string returnUrl = $@"{apiBaseUrl}{path}?id={courseId}";
-
-        return returnUrl;
+        return moodleApiService.GetCourseUrl(courseId);
     }
 }
 <div class="nhsuk-card dashboard-card">

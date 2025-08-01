@@ -1,8 +1,10 @@
 ﻿namespace LearningHub.NHS.OpenAPI.Controllers
 {
+    using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -37,6 +39,27 @@
             {
                 var moodleUser = await this.moodleService.GetMoodleUserIdByUsernameAsync(currentUserId.Value);
                 return this.Ok(moodleUser);
+            }
+            else
+            {
+                return this.Ok(0);
+            }
+        }
+
+        /// <summary>
+        /// GetEnrolledCoursesAsync.
+        /// </summary>
+        /// <param name="currentUserId">Moodle user id.</param>
+        /// <param name="pageNumber">The page Number.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpGet]
+        [Route("GetEnrolledCourses/{currentUserId?}")]
+        public async Task<IActionResult> GetEnrolledCoursesAsync(int? currentUserId, int pageNumber = 0)
+        {
+            if (currentUserId.HasValue)
+            {
+                var entrolledCourses = await this.moodleService.GetEnrolledCoursesAsync(currentUserId.Value, pageNumber);
+                return this.Ok(entrolledCourses);
             }
             else
             {

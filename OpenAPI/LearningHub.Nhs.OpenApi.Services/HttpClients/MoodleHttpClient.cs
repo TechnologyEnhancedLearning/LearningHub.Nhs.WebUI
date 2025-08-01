@@ -20,9 +20,9 @@ namespace LearningHub.Nhs.OpenApi.Services.HttpClients
         private readonly HttpClient httpClient = new();
 
         private bool initialised = false;
-        private string moodleAPIBaseUrl;
-        private string moodleAPIMoodleWSRestFormat;
-        private string moodleAPIWSToken;
+        private string moodleApiUrl;
+        private string moodleApiMoodleWsRestFormat;
+        private string moodleApiWsToken;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoodleHttpClient"/> class.
@@ -34,9 +34,9 @@ namespace LearningHub.Nhs.OpenApi.Services.HttpClients
             this.moodleConfig = moodleConfig.Value;
             this.httpClient = httpClient;
 
-            this.moodleAPIBaseUrl = this.moodleConfig.APIBaseUrl + "webservice/rest/server.php";
-            this.moodleAPIMoodleWSRestFormat = this.moodleConfig.APIWSRestFormat;
-            this.moodleAPIWSToken = this.moodleConfig.APIWSToken;
+            this.moodleApiUrl = this.moodleConfig.ApiBaseUrl + this.moodleConfig.ApiPath;
+            this.moodleApiMoodleWsRestFormat = this.moodleConfig.ApiWsRestFormat;
+            this.moodleApiWsToken = this.moodleConfig.ApiWsToken;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace LearningHub.Nhs.OpenApi.Services.HttpClients
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<HttpClient> GetClient()
         {
-            this.Initialise(this.moodleAPIBaseUrl);
+            this.Initialise(this.moodleApiUrl);
             return this.httpClient;
         }
 
@@ -55,8 +55,8 @@ namespace LearningHub.Nhs.OpenApi.Services.HttpClients
         /// <returns>defaultParameters.</returns>
         public string GetDefaultParameters()
         {
-            string defaultParameters = $"wstoken={this.moodleAPIWSToken}"
-                              + $"&moodlewsrestformat={this.moodleAPIMoodleWSRestFormat}";
+            string defaultParameters = $"wstoken={this.moodleApiWsToken}"
+                              + $"&moodlewsrestformat={this.moodleApiMoodleWsRestFormat}";
 
             return defaultParameters;
         }

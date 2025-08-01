@@ -1,7 +1,5 @@
-﻿using System;
+﻿using LearningHub.Nhs.Models.Moodle.API;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
@@ -17,5 +15,22 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="currentUserId">The current LH User Id.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         Task<int> GetMoodleUserIdByUsernameAsync(int currentUserId);
+
+        /// <summary>
+        /// GetEnrolledCoursesAsync.
+        /// </summary>
+        /// <param name="currentUserId">Moodle user id.</param>
+        /// <param name="pageNumber">pageNumber.</param>
+        /// <returns> List of MoodleCourseResponseModel.</returns>
+        Task<List<MoodleCourseResponseModel>> GetEnrolledCoursesAsync(int currentUserId, int pageNumber);
+
+        /// <summary>
+        /// GetEnrolledCoursesAsync.
+        /// </summary>
+        /// <param name="userId">Moodle user id.</param>
+        /// <param name="courseId">Moodle course id.</param>
+        /// <param name="pageNumber">pageNumber.</param>
+        /// <returns> List of MoodleCourseResponseModel.</returns>
+        Task<MoodleCourseCompletionModel> GetCourseCompletionAsync(int userId, int courseId, int pageNumber);
     }
 }

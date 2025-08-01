@@ -109,7 +109,7 @@
 	<ItemGroup>
 		<!--For Blazor-->
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.8" />
-		<PackageReference Include="TELBlazor.Components" Version="1.9.0" />
+		<PackageReference Include="TELBlazor.Components" Version="1.9.3-local" />
 		<!--<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />		 qqqq check -->
 		<!--<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" /> qqqq check-->
 		
@@ -179,6 +179,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\LearningHub.Nhs.Shared\LearningHub.Nhs.Shared.csproj" />
+	  <ProjectReference Include="..\LearningHub.Nhs.WebUI.BlazorClient\LearningHub.Nhs.WebUI.BlazorClient.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

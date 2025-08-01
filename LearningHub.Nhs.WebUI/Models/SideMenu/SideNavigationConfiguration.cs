@@ -26,30 +26,30 @@
                     new SideNavigationItem
                     {
                         Text = "Personal details",
-                        Controller = "Account",
-                        Action = "PersonalDetails",
-                        IsActive = route => MatchRoute(route, "Account", "PersonalDetails"),
+                        Controller = "MyAccount",
+                        Action = "Index",
+                        IsActive = route => MatchRoute(route, "MyAccount", "PersonalDetails"),
                     },
                     new SideNavigationItem
                     {
                         Text = "My employment",
-                        Controller = "Account",
-                        Action = "MyEmployment",
-                        IsActive = route => MatchRoute(route, "Account", "MyEmployment"),
+                        Controller = "MyAccount",
+                        Action = "MyEmploymentDetails",
+                        IsActive = route => MatchRoute(route, "MyAccount", "MyEmploymentDetails"),
                     },
                     new SideNavigationItem
                     {
                         Text = "Security",
-                        Controller = "Account",
-                        Action = "Security",
-                        IsActive = route => MatchRoute(route, "Account", "Security"),
+                        Controller = "MyAccount",
+                        Action = "MyAccountSecurity",
+                        IsActive = route => MatchRoute(route, "MyAccount", "MyAccountSecurity"),
                     },
                     new SideNavigationItem
                     {
                         Text = "Notification",
-                        Controller = "Account",
-                        Action = "Notification",
-                        IsActive = route => MatchRoute(route, "Account", "Notification"),
+                        Controller = "Notification",
+                        Action = "Index",
+                        IsActive = route => MatchRoute(route, "Notification", "Index"),
                     },
                 },
             },

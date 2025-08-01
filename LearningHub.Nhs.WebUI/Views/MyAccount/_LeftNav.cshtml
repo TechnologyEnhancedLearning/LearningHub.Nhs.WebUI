@@ -1,0 +1,43 @@
+﻿
+@{
+}
+
+@section Styles {
+    <style>
+        .my-account-page-banner {
+            width:100%;
+            height:208px;
+background-color:blue;
+        }
+
+        .my-account-home-link {
+            color: white;
+            font-size: 16px;
+            font-family: Frutiger LT Std;
+            font-weight: 400;
+            text-decoration: underline;
+            line-height: 24px;
+            word-wrap: break-word
+        }
+
+        .my-account-page-heading{
+            color: white;
+            font-size: 48px;
+            font-family: Frutiger LT Std;
+            font-weight: 700;
+            line-height: 56px;
+            word-wrap: break-word;
+        }
+    </style>
+}
+
+@* <div class="my-account-page-banner">
+    <div class="my-account-home-link">
+        <a>Home</a>
+    </div>
+    <div class="my-account-page-heading">
+        My Account
+    </div>
+</div> *@
+
+@await Component.InvokeAsync("SideNav", new { groupTitle = "Account" })

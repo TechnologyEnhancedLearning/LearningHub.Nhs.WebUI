@@ -1,0 +1,110 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.MyAccountPersonalDetailsViewModel
+
+@{
+  ViewData["DisableValidation"] = true;
+  ViewData["Title"] = "My Account - Change first name";
+  var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+<div class="bg-white">
+  <div class="nhsuk-width-container app-width-container">
+    <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+        <form asp-controller="MyAccount" asp-action="UpdatePersonalDetails" method="post">
+      <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-three-quarters nhsuk-u-padding-bottom-5">
+          @if (errorHasOccurred)
+          {
+            <vc:error-summary order-of-property-names="@(new[] { nameof(Model.FirstName) })" />
+          }
+          <div>
+                        <h1 class="nhsuk-heading-xl">Update personal details</h1>
+                       @*  <div class="nhsuk-caption-l" id="contact-hint">
+                            First name
+                        </div> *@
+
+                        @* <h1 class="nhsuk-heading-xl">first name</h1> *@
+                        <div>
+                            <vc:text-input asp-for="FirstName"
+                                           label="First Name"
+                                           populate-with-current-value="true"
+                                           type="text"
+                                           spell-check="false"
+                                           hint-text=""
+                                           autocomplete="given-name"
+                                           css-class="nhsuk-u-width-one-half "
+                                           required="true"
+                                           required-client-side-error-message="Enter a first name" />
+                            @* <input name="LastName" type="hidden" asp-for="@Model.LastName" />
+                            <input name="PreferredName" type="hidden" asp-for="@Model.PreferredName" /> *@
+                        </div>
+          </div>
+
+          <div>
+                        @* <div class="nhsuk-caption-l" id="contact-hint">
+                            Change last name
+                        </div>
+                        <h1 class="nhsuk-heading-xl">Update your last name</h1> *@
+                        <div>
+                            <vc:text-input asp-for="LastName"
+                                           label="Last Name"
+                                           populate-with-current-value="true"
+                                           type="text"
+                                           spell-check="false"
+                                           hint-text=""
+                                           autocomplete="family-name"
+                                           css-class="nhsuk-u-width-one-half"
+                                           required="true"
+                                           required-client-side-error-message="Enter a last name" />
+                           @*  <input name="FirstName" type="hidden" asp-for="@Model.FirstName" />
+                            <input name="PreferredName" type="hidden" asp-for="@Model.PreferredName" /> *@
+                        </div>
+          </div>
+
+          <div>
+                        @* <div class="nhsuk-caption-l" id="contact-hint">
+                            Change preferred name
+                        </div>
+                        <h1 class="nhsuk-heading-xl">Update your preferred name</h1> *@
+                        <div>
+                            <vc:text-input asp-for="PreferredName"
+                                           label="Preferred Name"
+                                           populate-with-current-value="true"
+                                           type="text"
+                                           spell-check="false"
+                                           hint-text=""
+                                           autocomplete="nickname"
+                                           css-class="nhsuk-u-width-one-half"
+                                           required="false" />
+                           @*  <input name="FirstName" type="hidden" asp-for="@Model.FirstName" />
+                            <input name="LastName" type="hidden" asp-for="@Model.LastName" /> *@
+                        </div>
+          </div>
+
+          <div>
+                        @* <div class="nhsuk-grid-row">
+                            <div class="nhsuk-grid-column-full">
+                                <h1 class="nhsuk-heading-xl">Enter your new primary email address</h1>
+                            </div>
+                        </div> *@
+                        <div>
+                            <vc:text-input asp-for="PrimaryEmailAddress"
+                                           label="Primary email address"
+                                           populate-with-current-value="true"
+                                           type="text"
+                                           spell-check="false"
+                                           hint-text=""
+                                           autocomplete="email"
+                                           css-class="nhsuk-u-width-one-half"
+                                           required="true" />
+                        </div>
+          </div>
+          
+          <div class="nhsuk-u-padding-bottom-5">
+            <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+              Save changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

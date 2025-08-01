@@ -131,8 +131,91 @@
                 }
             }
 
+            var userPersonalDetails = await this.userService.GetMyAccountPersonalDetailsAsync();
+            ////var userProfileSummary = await this.userService.GetUserProfileSummaryAsync();
+            ////var userProfileSummary1 = await this.userService.GetCurrentUserBasicDetailsAsync();
+            return this.View("Index", userPersonalDetails);
+        }
+
+        /// <summary>
+        /// MyEmploymentDetails.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
+        [HttpGet]
+        [Route("myaccount-employement")]
+        public async Task<IActionResult> MyEmploymentDetails()
+        {
+            var employmentDetails = await this.userService.GetMyEmploymentDetailsAsync();
+            return this.View("MyEmployment", employmentDetails);
+        }
+
+        /// <summary>
+        /// User profile actions.
+        /// </summary>
+        /// <param name="returnUrl">The redirect back url.</param>
+        /// <param name="checkDetails">Whether to check account details.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet]
+        [Route("myaccount-security")]
+        public async Task<IActionResult> MyAccountSecurity(string returnUrl = null, bool? checkDetails = false)
+        {
+            var securityDetails = await this.userService.GetMyAccountSecurityDetailsAsync();
+            return this.View("MyAccountSecurity", securityDetails);
+        }
+
+        /// <summary>
+        /// ChangePersonalDetails.
+        /// </summary>
+        /// <returns>ActionResult.</returns>
+        [HttpGet]
+        [Route("myaccount/ChangePersonalDetails")]
+        public async Task<IActionResult> ChangePersonalDetails()
+        {
+            var userPersonalDetails = await this.userService.GetMyAccountPersonalDetailsAsync();
+            return this.View("ChangePersonalDetails", userPersonalDetails);
+        }
+
+        /// <summary>
+        /// To Update first name.
+        /// </summary>
+        /// <param name="model">model.</param>
+        /// <returns>ActionResult.</returns>
+        [HttpPost]
+        public async Task<IActionResult> UpdatePersonalDetails(MyAccountPersonalDetailsViewModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("ChangePersonalDetails", model);
+            }
+
+            await this.userService.UpdateMyAccountPersonalDetailsAsync(this.CurrentUserId, model);
+            await this.MyAccountUpdatePrimaryEmail(model.PrimaryEmailAddress);
+            this.ViewBag.SuccessMessage = "Success";
+            return this.View("SuccessMessage");
+        }
+
+        /// <summary>
+        /// ChangeLocation.
+        /// </summary>
+        /// <param name="selectedCountryId">country id.</param>
+        /// <returns>ActionResult.</returns>
+        [HttpGet]
+        [Route("myaccount/ChangeLocation")]
+        public async Task<IActionResult> ChangeLocation(int? selectedCountryId)
+        {
+            this.TempData.Clear();
+            var userLocationViewModel = await this.userService.GetUserLocationDetailsAsync();
             var userProfileSummary = await this.userService.GetUserProfileSummaryAsync();
-            return this.View("Index", userProfileSummary);
+            if (selectedCountryId.HasValue)
+            {
+                userLocationViewModel.SelectedCountryId = selectedCountryId;
+            }
+
+            await this.multiPageFormService.SetMultiPageFormData(
+                userLocationViewModel,
+                MultiPageFormDataFeature.AddRegistrationPrompt,
+                this.TempData);
+            return this.View("ChangeLocation", new Tuple<UserProfileSummaryViewModel, UserLocationViewModel>(userProfileSummary, userLocationViewModel));
         }
 
         /// <summary>
@@ -827,8 +910,10 @@
                             LocationId = profile.LocationId,
                         });
 
-                    this.ViewBag.SuccessMessage = "Your job details have been changed";
-                    return this.View("SuccessMessage");
+                    ////this.ViewBag.SuccessMessage = "Your job details have been changed";
+                    ////return this.View("SuccessMessage");
+
+                    return this.RedirectToAction(nameof(this.ChangePrimarySpecialty), new UserPrimarySpecialtyUpdateViewModel { });
                 }
                 else
                 {
@@ -887,8 +972,10 @@
                             LocationId = profile.LocationId,
                         });
 
-                    this.ViewBag.SuccessMessage = "Your primary specialty has been changed";
-                    return this.View("SuccessMessage");
+                    ////this.ViewBag.SuccessMessage = "Your primary specialty has been changed";
+                    ////return this.View("SuccessMessage");
+
+                    return this.RedirectToAction(nameof(this.ChangeStartDate), new UserStartDateUpdateViewModel { });
                 }
                 else
                 {
@@ -940,8 +1027,10 @@
                             LocationId = profile.LocationId,
                         });
 
-                    this.ViewBag.SuccessMessage = "Your job start date has been changed";
-                    return this.View("SuccessMessage");
+                    ////this.ViewBag.SuccessMessage = "Your job start date has been changed";
+                    ////return this.View("SuccessMessage");
+
+                    return this.RedirectToAction(nameof(this.ChangeWorkPlace), new UserWorkPlaceUpdateViewModel { });
                 }
             }
             else
@@ -1012,7 +1101,7 @@
                     await this.cacheService.SetAsync(this.LoginWizardCacheKey, Newtonsoft.Json.JsonConvert.SerializeObject(loginWizardViewModel));
                 }
 
-                this.ViewBag.SuccessMessage = "Your place of work has been changed";
+                this.ViewBag.SuccessMessage = "Your employment details have been updated";
                 return this.View("SuccessMessage");
             }
 
@@ -1196,6 +1285,54 @@
             await this.userService.CancelEmailChangeValidationTokenAsync();
             this.ViewBag.SuccessMessage = CommonValidationErrorMessages.EmailCancelMessage;
             return this.View("SuccessMessage");
+        }
+
+        private async Task MyAccountUpdatePrimaryEmail(string primaryEmailAddress)
+        {
+            bool userPrimaryEmailAddressChanged = false;
+            var user = await this.userService.GetUserByUserIdAsync(this.CurrentUserId);
+            if (user != null)
+            {
+                if (!string.IsNullOrEmpty(primaryEmailAddress) && user.EmailAddress.ToLower() != primaryEmailAddress.ToLower())
+                {
+                    userPrimaryEmailAddressChanged = true;
+                }
+            }
+
+            if (userPrimaryEmailAddressChanged)
+            {
+                if (await this.userService.DoesEmailAlreadyExist(primaryEmailAddress))
+                {
+                    this.ModelState.AddModelError(
+                               nameof(primaryEmailAddress),
+                               CommonValidationErrorMessages.DuplicateEmailAddress);
+                    ////return this.View("ChangePrimaryEmail", primaryEmailAddress);
+                }
+                else
+                {
+                    var isUserRoleUpgrade = await this.userService.ValidateUserRoleUpgradeAsync(user.EmailAddress, primaryEmailAddress);
+                    UserRoleUpgrade userRoleUpgradeModel = new UserRoleUpgrade()
+                    {
+                        UserId = this.CurrentUserId,
+                        EmailAddress = primaryEmailAddress,
+                    };
+                    if (isUserRoleUpgrade)
+                    {
+                        userRoleUpgradeModel.UserHistoryTypeId = (int)UserHistoryType.UserRoleUpgarde;
+                    }
+                    else
+                    {
+                        userRoleUpgradeModel.UserHistoryTypeId = (int)UserHistoryType.UserDetails;
+                    }
+
+                    await this.userService.GenerateEmailChangeValidationTokenAndSendEmailAsync(primaryEmailAddress, isUserRoleUpgrade);
+                    await this.userService.UpdateUserRoleUpgradeAsync();
+                    await this.userService.CreateUserRoleUpgradeAsync(userRoleUpgradeModel);
+                    ////this.ViewBag.SuccessMessage = CommonValidationErrorMessages.EmailChangeRequestedSucessMessage;
+                    ////this.ViewBag.Status = "Valid";
+                    ////return this.View("ConfirmEmailSuccessMessage");
+                }
+            }
         }
     }
 }

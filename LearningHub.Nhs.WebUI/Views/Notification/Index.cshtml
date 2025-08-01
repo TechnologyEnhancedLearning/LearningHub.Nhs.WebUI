@@ -1,7 +1,9 @@
 ﻿@{
     ViewData["Title"] = "System notifications";
 }
-
+<div class="nhsuk-grid-column-one-third">
+    @await Component.InvokeAsync("SideNav", new { groupTitle = "Account" })
+</div>
 <div id="notificationcontainer" v-cloak>
     <notifications />
 </div>

@@ -1,0 +1,194 @@
+﻿@using LearningHub.Nhs.WebUI.Models.UserProfile
+@model Tuple<UserProfileSummaryViewModel, UserLocationViewModel>
+@{
+  ViewData["DisableValidation"] = true;
+  ViewData["Title"] = "My Account - Change country";
+  var errorHasOccurred = !ViewData.ModelState.IsValid;
+    const string professionalRegConditionalId = "professional-reg-conditional-Id";
+    var optionYesSelected = true;
+}
+<div class="bg-white">
+  <div class="nhsuk-width-container app-width-container">
+    <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-5">
+        <div class="nhsuk-caption-l" id="contact-hint">
+          Change country
+        </div>
+        @if (Model.Item2.FilterText == null)
+        {
+          <h1 class="nhsuk-heading-xl">Update your country</h1>
+        }
+        @if (Model.Item2.FilterText == null)
+        {
+          <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds">
+              <h1 class="nhsuk-label-wrapper">
+                <label class="nhsuk-body-m" for="example-heading">
+                  Current selected country
+                </label>
+              </h1>
+              <div class="nhsuk-body-m" id="contact-hint">
+                @Model.Item1.CountryName
+              </div>
+              <div class="nhsuk-u-padding-bottom-9">
+                <hr class="nhsuk-section-break nhsuk-section-break--visible ">
+              </div>
+            </div>
+          </div>
+        }
+        else
+        {
+          <h1 class="nhsuk-heading-xl">Search results for @Model.Item2.FilterText</h1>
+        }
+
+        <div class="search-width-container nhsuk-u-width-two-thirds nhsuk-u-padding-bottom-5">
+          <form asp-controller="MyAccount" asp-action="SearchCountry" method="get">
+            @if (Model.Item2.FilterText == null || Model.Item2.Country.Count() == 0)
+            {
+              <p class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">Search for example, England</p>
+            }
+            <div class="nhsuk-form-group search-box-container" style="white-space:nowrap">
+              <label class="nhsuk-label nhsuk-u-visually-hidden" for="FilterText">Filter</label>
+              <input class="nhsuk-input nhsuk-u-width-two-thirds search-box" placeholder="" id="FilterText" name="FilterText" value="@Model.Item2.FilterText" type="search" aria-required="true">
+              <button class="nhsuk-search__submit__green" type="submit">
+                <svg class="nhsuk-icon nhsuk-icon__search__green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
+                </svg>
+                <span class="nhsuk-u-visually-hidden">Search</span>
+              </button>
+            </div>
+          </form>
+        </div>
+        <form asp-controller="MyAccount" asp-action="UpdateCountry" method="post">
+          @if (Model.Item2.Country != null && Model.Item2.Country.Count() > 0)
+          {
+            <div class="nhsuk-grid-row">
+              <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-form-group">
+                  <fieldset class="nhsuk-fieldset">
+                    <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--l">
+                      <h3 class="nhsuk-fieldset__heading">
+                        Select your country
+                      </h3>
+                    </legend>
+                    <div class="nhsuk-radios">
+                      @foreach (var countries in Model.Item2.Country)
+                      {
+                        <div class="nhsuk-radios__item">
+
+                          <input type="radio" checked="checked" name="SelectedCountryId" asp-for="Item2.SelectedCountryId" value="@countries.Value" id="@countries.Label" class="nhsuk-radios__input" data-val="false" />
+
+                          <label class="nhsuk-label nhsuk-radios__label" for="@countries.Label">
+                            @countries.Label
+                          </label>
+                        </div>
+                      }
+                    </div>
+                    <input type="hidden" name="SelectedRegionId" asp-for="Item2.SelectedRegionId" />
+                  </fieldset>
+                </div>
+              </div>
+            </div>
+            <div class="nhsuk-u-padding-bottom-5">
+              <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+                Save
+              </button>
+            </div>
+          }
+          else
+          {
+            if (Model.Item2.FilterText != null || @errorHasOccurred)
+            {
+              @await Html.PartialAsync("SerachNoResults", Model.Item2.FilterText)
+            }
+          }
+        </form>
+
+                <div class="nhsuk-form-group">
+
+                    <fieldset class="nhsuk-fieldset" aria-describedby="contact-hint">
+                        <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--l">
+                            <h1 class="nhsuk-fieldset__heading">
+                                How would you prefer to be contacted?
+                            </h1>
+                        </legend>
+                        <div class="nhsuk-hint" id="contact-hint">
+                            Select one option
+                        </div>
+                        <div class="nhsuk-radios nhsuk-radios--conditional">
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="contact-1" name="contact" type="radio" value="email" aria-controls="conditional-contact-1" aria-expanded="false">
+                                <label class="nhsuk-label nhsuk-radios__label" for="contact-1">
+                                    Email
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__conditional nhsuk-radios__conditional--hidden" id="conditional-contact-1">
+                                <div class="nhsuk-form-group">
+                                    <label class="nhsuk-label" for="email">
+                                        Email address
+                                    </label> <input class="nhsuk-input nhsuk-u-width-two-thirds" id="email" name="email" type="text">
+                                </div>
+
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="contact-2" name="contact" type="radio" value="phone" aria-controls="conditional-contact-2" aria-expanded="false">
+                                <label class="nhsuk-label nhsuk-radios__label" for="contact-2">
+                                    Phone
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__conditional nhsuk-radios__conditional--hidden" id="conditional-contact-2">
+                                <div class="nhsuk-form-group">
+                                    <label class="nhsuk-label" for="phone">
+                                        Phone number
+                                    </label> <input class="nhsuk-input nhsuk-u-width-two-thirds" id="phone" name="phone" type="text">
+                                </div>
+
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="contact-3" name="contact" type="radio" value="" aria-controls="conditional-contact-3" aria-expanded="false">
+                                <label class="nhsuk-label nhsuk-radios__label" for="contact-3">
+                                    Text message
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__conditional nhsuk-radios__conditional--hidden" id="conditional-contact-3">
+                                <div class="nhsuk-form-group">
+                                    <label class="nhsuk-label" for="mobile">
+                                        Mobile phone number
+                                    </label> <input class="nhsuk-input nhsuk-u-width-two-thirds" id="mobile" name="mobile" type="text">
+                                </div>
+
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+
+                <div class="nhsuk-radios__item">
+                    <input name="Test1"
+                           class="nhsuk-radios__input"
+                           id="HasProfessionalRegistrationNumber_Yes"
+                           type="radio"
+                           value="true"
+                           aria-controls="@professionalRegConditionalId"
+                    @(optionYesSelected ? "checked" : "") />
+                    <label class="nhsuk-label nhsuk-radios__label" for="HasProfessionalRegistrationNumber_Yes">
+                        Yes
+                    </label>
+                </div>
+                <div class="nhsuk-radios__conditional @(optionYesSelected ? " " : " nhsuk-radios__conditional--hidden")"
+                     id="@professionalRegConditionalId">
+                    <vc:text-input asp-for="Test11"
+                                   label="Professional Registration Number"
+                                   populate-with-current-value="true"
+                                   type="text"
+                                   spell-check="false"
+                                   hint-text=""
+                                   autocomplete="off"
+                                   css-class="nhsuk-u-width-one-half"
+                                   required="true" />
+                </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -368,3 +368,38 @@ input:required:invalid, input:focus:invalid {
 i {
     color: #4C6272;
 }
+
+.my_account_section {
+    align-items: flex-start;
+    display: inline-flex;
+    justify-content: flex-start;
+    display: inline-flex;
+    gap: 32px;
+    padding-top: 48px;
+    padding-bottom: 48px;
+}
+
+/*.my-account-page-banner {
+    width: 100%;
+    height: 208px;
+    background-color: $nhsuk-blue;
+}
+
+.my-account-home-link {
+    color: $nhsuk-white;
+    font-size: 16px;
+    font-family: Frutiger LT Std;
+    font-weight: 400;
+    text-decoration: underline;
+    line-height: 24px;
+    word-wrap: break-word
+}
+
+.my-account-page-heading {
+    color: $nhsuk-white;
+    font-size: 48px;
+    font-family: Frutiger LT Std;
+    font-weight: 700;
+    line-height: 56px;
+    word-wrap: break-word;
+}*/

@@ -1901,5 +1901,160 @@
 
             return Convert.ToBase64String(abHashDigest);
         }
+
+        /// <summary>
+        /// Get Personal details of current user for My Account.
+        /// </summary>
+        /// <returns>UserPersonalDetailsViewModel.</returns>
+        public async Task<MyAccountPersonalDetailsViewModel> GetMyAccountPersonalDetailsAsync()
+        {
+            MyAccountPersonalDetailsViewModel viewModel = null;
+
+            PersonalDetailsViewModel personalDetailsModel = await this.GetCurrentUserPersonalDetailsAsync();
+
+            if (personalDetailsModel != null)
+            {
+                viewModel = new MyAccountPersonalDetailsViewModel
+                {
+                    UserName = personalDetailsModel.UserName,
+                    FirstName = personalDetailsModel.FirstName,
+                    LastName = personalDetailsModel.LastName,
+                    PreferredName = personalDetailsModel.PreferredName,
+                    Name = personalDetailsModel.FirstName + " " + personalDetailsModel.LastName,
+                    PrimaryEmailAddress = personalDetailsModel.PrimaryEmailAddress,
+                    NewPrimaryEmailAddress = personalDetailsModel.NewPrimaryEmailAddress,
+                };
+            }
+
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Update MyAccount Personal Details Async.
+        /// </summary>
+        /// <param name="userId">userId.</param>
+        /// <param name="model">personal details.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task UpdateMyAccountPersonalDetailsAsync(int userId, MyAccountPersonalDetailsViewModel model)
+        {
+            PersonalDetailsViewModel personalDetailsViewModel = new PersonalDetailsViewModel
+            {
+                UserId = userId,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PreferredName = model.PreferredName,
+            };
+
+            var json = JsonConvert.SerializeObject(personalDetailsViewModel);
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = await this.userApiHttpClient.GetClientAsync();
+            var request = $"ElfhUser/UpdateMyAccountPersonalDetails";
+            var response = await client.PutAsync(request, stringContent).ConfigureAwait(false);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Update personal details failed!");
+            }
+        }
+
+        /// <summary>
+        /// Get MyEmployment Details Async.
+        /// </summary>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<MyAccountEmploymentDetailsViewModel> GetMyEmploymentDetailsAsync()
+        {
+            MyAccountEmploymentDetailsViewModel viewModel = null;
+
+            var personalDetailsModel = await this.GetCurrentUserPersonalDetailsAsync();
+            var employmentViewModel = await this.GetPrimaryUserEmploymentForUser(personalDetailsModel.UserId);
+
+            if (personalDetailsModel != null)
+            {
+                viewModel = new MyAccountEmploymentDetailsViewModel
+                {
+                    Id = personalDetailsModel.UserId,
+
+                    EmploymentId = employmentViewModel.Id,
+                    JobRoleId = employmentViewModel.JobRoleId,
+                    MedicalCouncilId = employmentViewModel.MedicalCouncilId,
+                    MedicalCouncilNo = employmentViewModel.MedicalCouncilNo,
+                    GradeId = employmentViewModel.GradeId,
+                    SpecialtyId = employmentViewModel.SpecialtyId,
+                    JobStartDate = employmentViewModel.StartDate,
+                    LocationId = employmentViewModel.LocationId,
+                };
+
+                if (personalDetailsModel.CountryId.HasValue)
+                {
+                    var country = await this.countryService.GetByIdAsync(personalDetailsModel.CountryId.Value);
+                    viewModel.CountryName = country.Name;
+                }
+
+                if (personalDetailsModel.RegionId.HasValue)
+                {
+                    var region = await this.regionService.GetByIdAsync(personalDetailsModel.RegionId.Value);
+                    viewModel.RegionName = region.Name;
+                }
+
+                if (employmentViewModel.JobRoleId.HasValue)
+                {
+                    var job = await this.jobRoleService.GetByIdAsync(employmentViewModel.JobRoleId.Value);
+                    viewModel.JobRole = job.Name;
+
+                    if (employmentViewModel.GradeId.HasValue)
+                    {
+                        var grades = await this.gradeService.GetGradesForJobRoleAsync(employmentViewModel.JobRoleId.Value);
+                        var grade = grades.SingleOrDefault(g => g.Id == employmentViewModel.GradeId.Value);
+                        viewModel.Grade = grade?.Name;
+                    }
+                }
+
+                if (employmentViewModel.SpecialtyId.HasValue)
+                {
+                    var specialities = await this.specialtyService.GetSpecialtiesAsync();
+                    var specialty = specialities.Single(s => s.Id == employmentViewModel.SpecialtyId.Value);
+                    viewModel.PrimarySpecialty = specialty.Name;
+                }
+
+                var location = await this.locationService.GetByIdAsync(employmentViewModel.LocationId);
+                viewModel.PlaceOfWork = $"{location.Name}<br />Address: {location.Address}<br />Org Code: {location.NhsCode}";
+            }
+
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Get MyAccount Security Details Async.
+        /// </summary>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<MyAccountSecurityViewModel> GetMyAccountSecurityDetailsAsync()
+        {
+            MyAccountSecurityViewModel viewModel = null;
+
+            var personalDetailsModel = await this.GetCurrentUserPersonalDetailsAsync();
+            var securityQuestionsViewModel = await this.loginWizardService.GetSecurityQuestionsModel(personalDetailsModel.UserId);
+
+            if (personalDetailsModel != null)
+            {
+                viewModel = new MyAccountSecurityViewModel
+                {
+                    Id = personalDetailsModel.UserId,
+                    SecondaryEmailAddress = personalDetailsModel.SecondaryEmailAddress,
+                    SecurityFirstQuestion = securityQuestionsViewModel.UserSecurityQuestions.Any() ? securityQuestionsViewModel.UserSecurityQuestions.First().QuestionText : null,
+                    SecuritySecondQuestion = (securityQuestionsViewModel.UserSecurityQuestions.Any() && securityQuestionsViewModel.UserSecurityQuestions.Count > 1) ? securityQuestionsViewModel.UserSecurityQuestions[1].QuestionText : null,
+                    LastUpdated = personalDetailsModel.LastUpdated,
+                    PasswordHash = personalDetailsModel.PasswordHash,
+                    SecurityQuestionLastUpdated = securityQuestionsViewModel.UserSecurityQuestions.Any() ? securityQuestionsViewModel.UserSecurityQuestions.OrderByDescending(s => s.AmendDate).Max(s => (DateTimeOffset?)s.AmendDate) : null,
+                };
+            }
+
+            return viewModel;
+        }
     }
 }

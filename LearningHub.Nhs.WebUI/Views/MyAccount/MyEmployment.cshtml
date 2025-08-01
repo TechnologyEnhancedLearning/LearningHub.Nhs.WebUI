@@ -1,0 +1,108 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.MyAccountEmploymentDetailsViewModel
+
+@{    
+   ViewData["Title"] = "My employment";
+  var isgeneralUser = User.IsInRole("BasicUser");
+}
+<div class="bg-white nhsuk-u-padding-bottom-8">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-third">
+                @await Component.InvokeAsync("SideNav", new { groupTitle = "Account" })
+            </div>
+            <div class="nhsuk-grid-column-two-thirds">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+        }
+                <h2 class="nhsuk-heading-l">@ViewData["Title"]</h2>
+        <h3 class="nhsuk-heading-l">Job details</h3>
+        <dl class="nhsuk-summary-list">
+
+            <div class="nhsuk-summary-list__row">
+                <dt class="nhsuk-summary-list__key">Current role</dt>
+                <dd class="nhsuk-summary-list__value">@Model.JobRole</dd>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.MedicalCouncilNo))
+            {
+                <div class="nhsuk-summary-list__row">
+                    <dt class="nhsuk-summary-list__key">Professional registration number</dt>
+                    <dd class="nhsuk-summary-list__value">@Model.MedicalCouncilNo</dd>
+                </div>
+            }
+            @if (!User.IsInRole("BasicUser"))
+            {
+                <div class="nhsuk-summary-list__row">
+                    <dt class="nhsuk-summary-list__key">Grade</dt>
+                    <dd class="nhsuk-summary-list__value">@Model.Grade</dd>
+                </div>
+
+                <div class="nhsuk-summary-list__row">
+                    <dt class="nhsuk-summary-list__key">Primary specialty</dt>
+                    <dd class="nhsuk-summary-list__value">@Model.PrimarySpecialty</dd>
+                </div>
+
+                <div class="nhsuk-summary-list__row">
+                    <dt class="nhsuk-summary-list__key">Start date</dt>
+                    <dd class="nhsuk-summary-list__value">@Model.JobStartDate?.ToString("dd MMMM yyyy")</dd>
+                </div>
+
+                <div class="nhsuk-summary-list__row">
+                    <dt class="nhsuk-summary-list__key">Place of work</dt>
+                    <dd class="nhsuk-summary-list__value">@Html.Raw(Model.PlaceOfWork)</dd>
+                </div>
+            }
+        </dl>
+
+        <a asp-action="ChangeCurrentRole">
+            Update details
+        </a>
+
+        <h3 class="nhsuk-heading-l">Location</h3>
+
+       
+        <dl class="nhsuk-summary-list nhsuk-u-width-two-thirds">
+
+            <div class="nhsuk-summary-list__row">
+                <dt class="nhsuk-summary-list__key">
+                    Country
+                </dt>
+                <dd class="nhsuk-summary-list__value">
+                    @Model.CountryName
+                </dd>
+
+            </div>
+            @if (Model.CountryName == "England")
+            {
+                <div class="nhsuk-summary-list__row">
+                    <dt class="nhsuk-summary-list__key">
+                        Region
+                    </dt>
+                    <dd class="nhsuk-summary-list__value">
+                        @Model.RegionName
+                    </dd>
+
+                </div>
+            }
+        </dl>
+
+                <a asp-action="ChangeLocation">
+            Update location
+        </a>
+
+        @if (this.ViewBag.CheckDetails == true)
+        {
+            <form asp-controller="MyAccount" asp-action="CheckDetails" method="post">
+                <input name="returnUrl" type="hidden" asp-for="@Context.Request.Query["returnUrl"]" />
+                <div class="nhsuk-u-padding-bottom-5">
+                    <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+                        Confirm
+                    </button>
+                </div>
+            </form>
+        }
+        </div>
+        </div>
+    </div>
+</div>

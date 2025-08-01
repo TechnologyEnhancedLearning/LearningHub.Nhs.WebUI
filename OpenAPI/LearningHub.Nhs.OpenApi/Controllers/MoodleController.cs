@@ -16,33 +16,14 @@
     public class MoodleController : Controller
     {
         private readonly IMoodleApiService moodleService;
-        private readonly MoodleConfig moodleConfig;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoodleController"/> class.
         /// </summary>
         /// <param name="moodleService">The moodle service.</param>
-        /// <param name="moodleConfig">Moodel config.</param>
-        public MoodleController(IMoodleApiService moodleService, IOptions<MoodleConfig> moodleConfig)
+        public MoodleController(IMoodleApiService moodleService)
         {
             this.moodleService = moodleService;
-            this.moodleConfig = moodleConfig.Value;
-        }
-
-        /// <summary>
-        /// The GetSafeMoodleConfig.
-        /// </summary>
-        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
-        [HttpGet]
-        [Route("GetSafeMoodleConfig")]
-        public IActionResult GetSafeMoodleConfig()
-        {
-            // Only expose safe config values
-            return Ok(new
-            {
-                apiBaseUrl = this.moodleConfig.ApiBaseUrl,
-                coursePath = this.moodleConfig.CoursePath,
-            });
         }
 
         /// <summary>

@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Moodle.API;
+    using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -13,14 +15,17 @@
     public class MoodleApiService : IMoodleApiService
     {
         private readonly IOpenApiHttpClient openApiHttpClient;
+        private readonly MoodleApiConfig configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoodleApiService"/> class.
         /// </summary>
         /// <param name="openApiHttpClient">The Open Api Http Client.</param>
-        public MoodleApiService(IOpenApiHttpClient openApiHttpClient)
+        /// <param name="configuration">configuration.</param>
+        public MoodleApiService(IOpenApiHttpClient openApiHttpClient, IOptions<MoodleApiConfig> configuration)
         {
             this.openApiHttpClient = openApiHttpClient;
+            this.configuration = configuration.Value;
         }
 
         /// <summary>
@@ -92,6 +97,18 @@
                 // this.Logger.LogError(string.Format("Error occurred in GetSearchResultAsync: {0}", ex.Message));
                 return viewmodel;
             }
+        }
+
+        /// <summary>
+        /// GetCourseUrl.
+        /// </summary>
+        /// <param name="courseId">course Id. </param>
+        /// <returns>return course URL.</returns>
+        public string GetCourseUrl(int courseId)
+        {
+            var apiBaseUrl = this.configuration.BaseUrl;
+            string path = this.configuration.CoursePath;
+            return $"{apiBaseUrl}{path}?id={courseId}";
         }
     }
 }

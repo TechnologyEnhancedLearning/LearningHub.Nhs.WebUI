@@ -17,15 +17,19 @@
     /// </summary>
     public class DashboardService : BaseService<DashboardService>, IDashboardService
     {
+        private readonly IMoodleApiService moodleApiService;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DashboardService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">learningHubHttpClient.</param>
         /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">logger.</param>
-        public DashboardService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<DashboardService> logger)
+        /// <param name="moodleApiService">MoodleApiService.</param>
+        public DashboardService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<DashboardService> logger, IMoodleApiService moodleApiService)
            : base(learningHubHttpClient, openApiHttpClient, logger)
         {
+            this.moodleApiService = moodleApiService;
         }
 
         /// <summary>
@@ -124,8 +128,7 @@
         public async Task<List<MoodleCourseResponseModel>> GetEnrolledCoursesFromMoodleAsync(int currentUserId, int pageNumber)
         {
             List<MoodleCourseResponseModel> viewmodel = new List<MoodleCourseResponseModel> { };
-            MoodleApiService moodleApiService = new MoodleApiService(this.OpenApiHttpClient);
-            viewmodel = await moodleApiService.GetEnrolledCoursesAsync(currentUserId, pageNumber);
+            viewmodel = await this.moodleApiService.GetEnrolledCoursesAsync(currentUserId, pageNumber);
             return viewmodel;
         }
 
@@ -136,8 +139,7 @@
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         public async Task<int> GetMoodleUserIdAsync(int currentUserId)
         {
-            MoodleApiService moodleApiService = new MoodleApiService(this.OpenApiHttpClient);
-            var moodleUserId = await moodleApiService.GetMoodleUserIdByUsernameAsync(currentUserId);
+            var moodleUserId = await this.moodleApiService.GetMoodleUserIdByUsernameAsync(currentUserId);
             return moodleUserId;
         }
 

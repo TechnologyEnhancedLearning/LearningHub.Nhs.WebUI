@@ -24,5 +24,12 @@
         /// <param name="pageNumber">pageNumber.</param>
         /// <returns> List of MoodleCourseResponseModel.</returns>
         Task<List<MoodleCourseResponseModel>> GetEnrolledCoursesAsync(int currentUserId, int pageNumber);
+
+        /// <summary>
+        /// GetCourseUrl.
+        /// </summary>
+        /// <param name="courseId">course Id. </param>
+        /// <returns>return course URL.</returns>
+        string GetCourseUrl(int courseId);
     }
 }

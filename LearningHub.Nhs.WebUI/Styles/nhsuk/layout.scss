@@ -4,6 +4,57 @@ body {
     overflow-wrap: break-word;
 }
 
+.nhsuk-header {
+    padding: 0 px2rem(32);
+}
+
+.nhsuk-hero {
+    background-color: $color_nhsuk-blue;
+    color: #fff;
+    position: relative;
+}
+
+.nhsuk-hero a,
+.nhsuk-hero a:visited,
+.nhsuk-hero a:hover,
+.nhsuk-hero a:active,
+.nhsuk-hero i {
+    color: $color_nhsuk-white;
+}
+
+
+.nhsuk-width-container.app-width-container {
+    max-width: px2rem(1208);
+    margin: 0 auto;
+    padding-left: px2rem(32);
+    padding-right: px2rem(32);
+}
+
+.nhsuk-header .nhsuk-width-container.app-width-container {
+    max-width: px2rem(1144);
+    margin: 0 auto;
+}
+
+.nhsuk-width-container.app-width-container.beta-banner {
+    padding: px2rem(8) px2rem(32);
+    max-width: px2rem(1208);
+    margin: 0 auto;
+}
+
+.nhsuk-header .nhsuk-header__container::after {
+    content: none;
+}
+
+.nhsuk-header__navigation.app-width-container {
+    max-width: px2rem(1144);
+}
+
+.app-width-container--full {
+    margin: 0;
+    max-width: none
+}
+
+
 
 .app-main-wrapper--no-padding {
     padding: 0

@@ -56,3 +56,4 @@ obj
 /AdminUI/LearningHub.Nhs.AdminUI/web.config
 /LearningHub.Nhs.WebUI/web.config
 /WebAPI/LearningHub.Nhs.API/web.config
+/LearningHub.Nhs.WebUI/nuget.config

@@ -97,6 +97,9 @@
 	<ItemGroup>
 		<CodeAnalysisDictionary Include="CustomDictionary.xml" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="nuget.config.template" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="compilerconfig.json" />
@@ -104,6 +107,13 @@
 
 
 	<ItemGroup>
+		<!--For Blazor-->
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.8" />
+		<PackageReference Include="TELBlazor.Components" Version="1.9.0" />
+		<!--<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />		 qqqq check -->
+		<!--<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" /> qqqq check-->
+		
+
 		<PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />

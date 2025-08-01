@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using LearningHub.Nhs.WebUI;
+using LearningHub.Nhs.WebUI.BlazorPageHosting;
 using LearningHub.Nhs.WebUI.Interfaces;
 using LearningHub.Nhs.WebUI.JsDetection;
 using LearningHub.Nhs.WebUI.Middleware;
@@ -18,7 +19,6 @@ using NLog.Web;
 using tusdotnet;
 using tusdotnet.Models;
 using tusdotnet.Models.Configuration;
-
 #pragma warning restore SA1200 // Using directives should be placed correctly
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
@@ -43,10 +43,13 @@ try
     var appLifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
     var jsDetectionLogger = app.Services.GetRequiredService<IJsDetectionLogger>();
     appLifetime.ApplicationStopping.Register(async () => await jsDetectionLogger.FlushCounters());
+    app.UseBlazorFrameworkFiles();
+    app.UseStaticFiles();
 
     if (app.Environment.IsDevelopment())
     {
         app.UseDeveloperExceptionPage();
+        app.UseWebAssemblyDebugging();
     }
     else
     {
@@ -107,6 +110,14 @@ try
             },
         };
     });
+
+    app.MapRazorComponents<App>()
+        .AddInteractiveServerRenderMode()
+        .AddInteractiveWebAssemblyRenderMode()
+
+        // .AddAdditionalAssemblies(typeof(LearningHub.Nhs.WebUI.BlazorComponents._Imports).Assembly) // qqqq later
+        // .AddAdditionalAssemblies(typeof(LearningHub.Nhs.WebUI.BlazorClient._Imports).Assembly); qqqq later
+        .AddAdditionalAssemblies(typeof(TELBlazor.Components._Imports).Assembly);
 
     app.Run();
 }

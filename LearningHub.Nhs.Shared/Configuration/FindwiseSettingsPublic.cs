@@ -1,9 +1,15 @@
-﻿namespace LearningHub.Nhs.WebUI.Configuration
+﻿namespace LearningHub.Nhs.Shared.Configuration
 {
+    using LearningHub.Nhs.Shared.Interfaces.Configuration;
     /// <summary>
-    /// Defines the <see cref="FindwiseSettings" />.
+    /// Represents a public-facing set of configuration values for Findwise search,
+    /// intended to be safely exposed to client-side applications or public APIs.
+    /// 
+    /// <para>
+    /// Contains only non-sensitive data such as page sizes for various search types.
+    /// </para>
     /// </summary>
-    public class FindwiseSettings
+    public class FindwiseSettingsPublic : IFindwiseSettingsPublic
     {
         /// <summary>
         /// Gets or sets the ResourceSearchPageSize.

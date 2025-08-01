@@ -2,6 +2,8 @@
 {
     using System;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
+    using LearningHub.Nhs.Shared.Services;
     using LearningHub.Nhs.WebUI.Interfaces;
     using Microsoft.Extensions.Logging;
 

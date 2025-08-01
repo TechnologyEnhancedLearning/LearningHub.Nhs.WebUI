@@ -1,4 +1,4 @@
-﻿namespace LearningHub.Nhs.WebUI.Services
+﻿namespace LearningHub.Nhs.Shared.Services
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,8 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Provider;
-    using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
+    using LearningHub.Nhs.Shared.Interfaces.Services;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
 

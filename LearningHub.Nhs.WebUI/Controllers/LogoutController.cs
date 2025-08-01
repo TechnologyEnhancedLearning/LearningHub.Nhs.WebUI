@@ -6,14 +6,11 @@
     using System.Security.Claims;
     using System.Security.Cryptography;
     using System.Threading.Tasks;
-
     using IdentityModel;
     using IdentityModel.Client;
-
+    using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Handlers;
-    using LearningHub.Nhs.WebUI.Interfaces;
-
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.IdentityModel.Tokens;

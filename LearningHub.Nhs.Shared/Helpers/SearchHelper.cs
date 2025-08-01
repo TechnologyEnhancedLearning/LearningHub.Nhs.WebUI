@@ -1,4 +1,4 @@
-﻿namespace LearningHub.Nhs.WebUI.Helpers
+﻿namespace LearningHub.Nhs.Shared.Helpers
 {
     using System.Collections.Generic;
     using LearningHub.Nhs.Models.Enums;

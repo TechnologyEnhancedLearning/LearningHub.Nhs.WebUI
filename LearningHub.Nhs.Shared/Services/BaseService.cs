@@ -1,6 +1,6 @@
-﻿namespace LearningHub.Nhs.WebUI.Services
+﻿namespace LearningHub.Nhs.Shared.Services
 {
-    using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
     using Microsoft.Extensions.Logging;
 
     /// <summary>
@@ -36,6 +36,20 @@
             this.openApiHttpClient = openApiHttpClient;
             this.logger = logger;
         }
+
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseService{T}"/> class.
+        /// </summary>
+        /// <param name="openApiHttpClient">The openApiHttpClient<see cref="IOpenApiHttpClient"/>.</param>
+        /// <param name="logger">The logger<see cref="ILogger{T}"/>.</param>
+        protected BaseService(IOpenApiHttpClient openApiHttpClient, ILogger<T> logger)
+        {
+            this.openApiHttpClient = openApiHttpClient;
+            this.logger = logger;
+        }
+
 
         /// <summary>
         /// Gets the LearningHubHttpClient.

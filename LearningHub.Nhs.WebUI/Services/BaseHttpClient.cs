@@ -10,6 +10,7 @@
     using IdentityModel.Client;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Extensions;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Extensions;
     using Microsoft.AspNetCore.Authentication;
@@ -20,7 +21,7 @@
     /// <summary>
     /// The abstract api http client.
     /// </summary>
-    public abstract class BaseHttpClient
+    public abstract class BaseHttpClient : IAPIHttpClient
     {
         private static readonly ConcurrentDictionary<int, object> DictionaryLocks = new ConcurrentDictionary<int, object>();
 

@@ -1,4 +1,4 @@
-﻿namespace LearningHub.Nhs.WebUI.Helpers;
+﻿namespace LearningHub.Nhs.Shared.Helpers;
 
 /// <summary>
 /// Represents the types of resources available in Moodle.

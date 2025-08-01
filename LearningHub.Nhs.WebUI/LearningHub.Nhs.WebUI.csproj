@@ -113,7 +113,7 @@
 		<PackageReference Include="HtmlAgilityPack" Version="1.11.72" />
 		<PackageReference Include="IdentityModel" Version="4.6.0" />
 		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.50" />
 		<PackageReference Include="linqtotwitter" Version="6.9.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.EventCounterCollector" Version="2.21.0" />
@@ -165,6 +165,10 @@
 		<Folder Include="wwwroot\lib\bootstrap\" />
 		<Folder Include="wwwroot\lib\fontawesome-free-6.4.2-web\" />
 		<Folder Include="wwwroot\migrations\EastMidlandsDeanery_files\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\LearningHub.Nhs.Shared\LearningHub.Nhs.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

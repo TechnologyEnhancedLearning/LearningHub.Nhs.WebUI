@@ -1,8 +1,8 @@
-﻿namespace LearningHub.Nhs.WebUI.Models.Search
+﻿namespace LearningHub.Nhs.Shared.Models.Search
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc;//qqqq
 
     /// <summary>
     /// Defines the <see cref="SearchRequestViewModel" />.

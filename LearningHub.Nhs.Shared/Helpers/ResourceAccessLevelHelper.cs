@@ -1,7 +1,6 @@
-﻿namespace LearningHub.Nhs.WebUI.Helpers
+﻿namespace LearningHub.Nhs.Shared.Helpers
 {
     using LearningHub.Nhs.Models.Enums;
-    using Microsoft.AspNetCore.Mvc.Rendering;
 
     /// <summary>
     /// Defines the <see cref="ResourceAccessLevelHelper" />.
@@ -11,7 +10,7 @@
         /// <summary>
         /// Get resource access level text.
         /// </summary>
-        /// <param name="resourceAccessibilityEnum">The htmlhelper<see cref="IHtmlHelper"/>.</param>
+        /// <param name="resourceAccessibilityEnum">The enum value to get display text for.</param>
         /// <returns>The <see cref="string"/>.</returns>
         public static string GetResourceAccessLevelText(this ResourceAccessibilityEnum resourceAccessibilityEnum)
         {

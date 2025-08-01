@@ -5,6 +5,10 @@
     using LearningHub.Nhs.Models.OpenAthens;
     using LearningHub.Nhs.Services;
     using LearningHub.Nhs.Services.Interface;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
+    using LearningHub.Nhs.Shared.Interfaces.Services;
+    using LearningHub.Nhs.Shared.Services;
+    using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -81,6 +85,7 @@
 
             // Config
             services.Configure<OpenAthensScopes>(configuration.GetSection("OpenAthensScopes"));
+            services.Configure<BFFPathValidationOptions>(configuration.GetSection(BFFPathValidationOptions.SectionName));
 
             // Learning Hub Services
             services.AddTransient<INavigationPermissionService, NavigationPermissionService>();

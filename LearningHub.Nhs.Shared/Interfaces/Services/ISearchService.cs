@@ -1,10 +1,10 @@
-﻿namespace LearningHub.Nhs.WebUI.Interfaces
+﻿namespace LearningHub.Nhs.Shared.Interfaces.Services
 {
+    using LearningHub.Nhs.Shared.Models.Search;
+    using LearningHub.Nhs.Models.Search.SearchClick;
     using System.Security.Principal;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Search;
-    using LearningHub.Nhs.Models.Search.SearchClick;
-    using LearningHub.Nhs.WebUI.Models.Search;
 
     /// <summary>
     /// Defines the <see cref="ISearchService" />.

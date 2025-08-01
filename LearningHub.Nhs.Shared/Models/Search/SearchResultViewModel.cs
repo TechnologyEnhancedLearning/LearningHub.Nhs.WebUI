@@ -1,4 +1,4 @@
-﻿namespace LearningHub.Nhs.WebUI.Models.Search
+﻿namespace LearningHub.Nhs.Shared.Models.Search
 {
     using System;
     using LearningHub.Nhs.Models.Paging;

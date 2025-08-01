@@ -1,6 +1,7 @@
 ﻿namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Shared.Interfaces.Services;
     using LearningHub.Nhs.WebUI.Interfaces;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;

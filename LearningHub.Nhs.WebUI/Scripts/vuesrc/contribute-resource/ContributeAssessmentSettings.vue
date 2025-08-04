@@ -74,9 +74,7 @@
                                 <ckeditorwithhint v-on:blur="setEndGuidance"
                                                   v-on:inputValidity="setGuidanceValidity"
                                                   :maxLength="1000"
-                                                  :initialValue="endGuidance"
-                                                  :for="guidance"
-                                                  :id="guidance"/>
+                                                  :initialValue="endGuidance"/>
                             </div>
                             <div class="tip">
                                 <h3>Tip</h3>

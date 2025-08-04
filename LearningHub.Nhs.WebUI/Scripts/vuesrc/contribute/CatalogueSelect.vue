@@ -26,7 +26,7 @@
                                 A catalogue is a curated set of resources that has its own web page.
                             </p>
                             <p>
-                                You can contribute a resource as an editor of a catalogue. 
+                                You can contribute a resource as an editor of a catalogue.
                             </p>
                             <p>
                                 You can manage all resources that you have contributed in the My contributions area.
@@ -45,9 +45,11 @@
                     </option>
                 </select>
             </div>
-            <div v-if="selectedCatalogue.hidden" class="highlighted-info">
-                You have selected a hidden catalogue.
-                If you publish this resource, learners will only be able to access it when the catalogue is made available by Learning Hub platform administrators.
+            <div  v-if="value > 1">
+                <div v-if="selectedCatalogue.hidden" class="highlighted-info">
+                    You have selected a hidden catalogue.
+                    If you publish this resource, learners will only be able to access it when the catalogue is made available by Learning Hub platform administrators.
+                </div>
             </div>
         </div>
     </div>
@@ -87,8 +89,11 @@
             },
         },
         created() {
-            if (this.value > 0) {
+            if (this.value > 1) {
                 this.selectedCatalogue = this.userCatalogues.find(c => c.nodeId == this.value);
+            }
+            else {
+                this.selectedCatalogue = new CatalogueModel({ nodeId: 0 });
             }
         }
     })

@@ -10,7 +10,7 @@
             <div class="ml-15">{{catalogue.name}}</div>
         </div>
         <div v-else>
-            <p>Please select a catalogue</p>
+            <p>No catalogue available.</p>
         </div>
         <a href="#" class="change-text-button accessible-link" v-if="!selectionInProgress && allowChange" v-on:click.prevent="onChangeClick">Change</a>
     </div>

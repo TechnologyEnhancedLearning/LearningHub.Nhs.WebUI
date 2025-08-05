@@ -32,6 +32,11 @@ namespace LearningHub.Nhs.WebUI.Configuration
         public string LearningHubApiUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets the OpenApiUrl.
+        /// </summary>
+        public string OpenApiUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets the UserApiUrl.
         /// </summary>
         public string UserApiUrl { get; set; }
@@ -195,11 +200,6 @@ namespace LearningHub.Nhs.WebUI.Configuration
         /// Gets or sets the PasswordRequestLimit.
         /// </summary>
         public int PasswordRequestLimit { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ConcurrentId.
-        /// </summary>
-        public int ConcurrentId { get; set; }
 
         /// <summary>
         /// Gets or sets the SupportUrls.

@@ -3,6 +3,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -10,15 +11,18 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using AutoMapper;
     using Azure.Storage.Blobs;
     using Azure.Storage.Blobs.Specialized;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Constants;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Entities.Resource.Blocks;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.Models.Provider;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.Activity;
+    using LearningHub.Nhs.Models.Resource.Admin;
     using LearningHub.Nhs.Models.Resource.Blocks;
     using LearningHub.Nhs.Models.Resource.Contribute;
     using LearningHub.Nhs.Models.Resource.Files;
@@ -100,67 +104,75 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         private readonly IResourceVersionProviderRepository resourceVersionProviderRepository;
         private readonly IResourceVersionAuthorRepository resourceVersionAuthorRepository;
         private readonly IFileChunkDetailRepository fileChunkDetailRepository;
+        private readonly IResourceSyncService resourceSyncService;
+        private readonly IResourceSyncRepository resourceSyncRepository;
+        private readonly IResourceVersionEventRepository resourceVersionEventRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceService"/> class.
         /// The search service.
         /// </summary>
-        /// <param name="logger">Logger.</param>
-        /// <param name="webLinkResourceVersionRepository"></param>
-        /// <param name="caseResourceVersionRepository"></param>
-        /// <param name="scormResourceVersionRepository"></param>
-        /// <param name="genericFileResourceVersionRepository"></param>
-        /// <param name="resourceVersionRepository"></param>
-        /// <param name="htmlResourceVersionRepository"></param>
-        /// <param name="mapper"></param>
-        /// <param name="fileRepository"></param>
-        /// <param name="azureConfig"></param>
-        /// <param name="learningHubConfig"></param>
-        /// <param name="userProfileService"></param>
-        /// <param name="resourceVersionFlagRepository"></param>
-        /// <param name="articleResourceVersionRepository"></param>
-        /// <param name="audioResourceVersionRepository"></param>
-        /// <param name="videoResourceVersionRepository"></param>
-        /// <param name="assessmentResourceVersionRepository"></param>
-        /// <param name="resourceLicenceRepository"></param>
-        /// <param name="resourceReferenceRepository"></param>
-        /// <param name="resourceVersionUserAcceptanceRepository"></param>
-        /// <param name="catalogueNodeVersionRepository"></param>
-        /// <param name="cachingService"></param>
-        /// <param name="searchService"></param>
-        /// <param name="catalogueService"></param>
-        /// <param name="nodeResourceRepository"></param>
-        /// <param name="nodePathRepository"></param>
-        /// <param name="userService"></param>
-        /// <param name="nodeRepository"></param>
-        /// <param name="dbContext"></param>
-        /// <param name=""></param>
-        /// <param name="learningHubService">
-        /// The <see cref="ILearningHubService"/>.
-        /// </param>
-        /// <param name="internalSystemService"></param>
-        /// <param name="resourceVersionAuthorRepository"></param>
-        /// <param name="fileChunkDetailRepository"></param>
-        /// <param name="queueCommunicatorService"></param>
-        /// <param name="resourceRepository">
-        /// The <see cref="IResourceRepository"/>.
-        /// </param>
-        /// <param name="resourceVersionProviderRepository"></param>
-        /// <param name="providerService"></param>
-        /// <param name="articleResourceVersionFileRepository"></param>
-        /// <param name="publicationRepository"></param>
-        /// <param name="migrationSourceRepository"></param>
-        /// <param name="questionBlockRepository"></param>
-        /// <param name="videoRepository"></param>
-        /// <param name="wholeSlideImageRepository"></param>
-        /// <param name="embeddedResourceVersionRepository"></param>
-        /// <param name="equipmentResourceVersionRepository"></param>
-        /// <param name="imageResourceVersionRepository"></param>
-        /// <param name="bookmarkRepository"></param>
-        /// <param name="assessmentResourceActivityMatchQuestionRepository"></param>
-        /// <param name="resourceVersionKeywordRepository"></param>
-        /// <param name="resourceVersionValidationResultRepository"></param>
-        public ResourceService(ILearningHubService learningHubService, IInternalSystemService internalSystemService, IResourceVersionAuthorRepository resourceVersionAuthorRepository, IFileChunkDetailRepository fileChunkDetailRepository, IQueueCommunicatorService queueCommunicatorService, IResourceRepository resourceRepository, IResourceVersionProviderRepository resourceVersionProviderRepository, IProviderService providerService, IArticleResourceVersionFileRepository articleResourceVersionFileRepository, IPublicationRepository publicationRepository, IMigrationSourceRepository migrationSourceRepository, IQuestionBlockRepository questionBlockRepository, IVideoRepository videoRepository, IWholeSlideImageRepository wholeSlideImageRepository, IEmbeddedResourceVersionRepository embeddedResourceVersionRepository, IEquipmentResourceVersionRepository equipmentResourceVersionRepository, IImageResourceVersionRepository imageResourceVersionRepository, IBookmarkRepository bookmarkRepository, IAssessmentResourceActivityMatchQuestionRepository assessmentResourceActivityMatchQuestionRepository, IResourceVersionKeywordRepository resourceVersionKeywordRepository, IResourceVersionValidationResultRepository resourceVersionValidationResultRepository, ILogger<ResourceService> logger, IWebLinkResourceVersionRepository webLinkResourceVersionRepository, ICaseResourceVersionRepository caseResourceVersionRepository, IScormResourceVersionRepository scormResourceVersionRepository, IGenericFileResourceVersionRepository genericFileResourceVersionRepository, IResourceVersionRepository resourceVersionRepository, IHtmlResourceVersionRepository htmlResourceVersionRepository, IMapper mapper, IFileRepository fileRepository, IOptions<AzureConfig> azureConfig, IOptions<LearningHubConfig> learningHubConfig, IUserProfileService userProfileService, IResourceVersionFlagRepository resourceVersionFlagRepository, IArticleResourceVersionRepository articleResourceVersionRepository, IAudioResourceVersionRepository audioResourceVersionRepository, IVideoResourceVersionRepository videoResourceVersionRepository, IAssessmentResourceVersionRepository assessmentResourceVersionRepository, IResourceLicenceRepository resourceLicenceRepository, IResourceReferenceRepository resourceReferenceRepository, IResourceVersionUserAcceptanceRepository resourceVersionUserAcceptanceRepository, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, ICachingService cachingService, ISearchService searchService, ICatalogueService catalogueService, INodeResourceRepository nodeResourceRepository, INodePathRepository nodePathRepository, IUserService userService, INodeRepository nodeRepository, LearningHubDbContext dbContext)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResourceService"/> class.
+        /// </summary>
+        /// <param name="logger">The logger instance.</param>
+        /// <param name="webLinkResourceVersionRepository">The repository for web link resource versions.</param>
+        /// <param name="caseResourceVersionRepository">The repository for case resource versions.</param>
+        /// <param name="scormResourceVersionRepository">The repository for SCORM resource versions.</param>
+        /// <param name="genericFileResourceVersionRepository">The repository for generic file resource versions.</param>
+        /// <param name="resourceVersionRepository">The repository for all resource versions.</param>
+        /// <param name="htmlResourceVersionRepository">The repository for HTML resource versions.</param>
+        /// <param name="mapper">The mapper for object-object mapping.</param>
+        /// <param name="fileRepository">The repository for file storage and retrieval.</param>
+        /// <param name="azureConfig">The Azure configuration settings.</param>
+        /// <param name="learningHubConfig">The Learning Hub configuration settings.</param>
+        /// <param name="userProfileService">The service to manage user profiles.</param>
+        /// <param name="resourceVersionFlagRepository">The repository for flags on resource versions.</param>
+        /// <param name="articleResourceVersionRepository">The repository for article resource versions.</param>
+        /// <param name="audioResourceVersionRepository">The repository for audio resource versions.</param>
+        /// <param name="videoResourceVersionRepository">The repository for video resource versions.</param>
+        /// <param name="assessmentResourceVersionRepository">The repository for assessment resource versions.</param>
+        /// <param name="resourceLicenceRepository">The repository for resource licences.</param>
+        /// <param name="resourceReferenceRepository">The repository for resource references.</param>
+        /// <param name="resourceVersionUserAcceptanceRepository">The repository for user acceptance of resource versions.</param>
+        /// <param name="catalogueNodeVersionRepository">The repository for catalogue node versions.</param>
+        /// <param name="cachingService">The service for caching data.</param>
+        /// <param name="searchService">The service for resource search functionality.</param>
+        /// <param name="catalogueService">The service to manage catalogues.</param>
+        /// <param name="nodeResourceRepository">The repository for node-resource relationships.</param>
+        /// <param name="nodePathRepository">The repository for node paths.</param>
+        /// <param name="userService">The service for user management.</param>
+        /// <param name="nodeRepository">The repository for nodes.</param>
+        /// <param name="resourceSyncService">The service for syncing resources.</param>
+        /// <param name="resourceSyncRepository">The repository for synced resources.</param>
+        /// <param name="resourceVersionEventRepository">The repository for resource version events.</param>
+        /// <param name="dbContext">The database context instance.</param>
+        /// <param name="learningHubService">The <see cref="ILearningHubService"/> instance.</param>
+        /// <param name="fileTypeService">The service for file type operations.</param>
+        /// <param name="blockCollectionRepository">The repository for block collections.</param>
+        /// <param name="internalSystemService">The service for internal system operations.</param>
+        /// <param name="resourceVersionAuthorRepository">The repository for authors of resource versions.</param>
+        /// <param name="fileChunkDetailRepository">The repository for file chunk details.</param>
+        /// <param name="queueCommunicatorService">The service for queue communication.</param>
+        /// <param name="resourceRepository">The <see cref="IResourceRepository"/> instance.</param>
+        /// <param name="resourceVersionProviderRepository">The repository for resource version providers.</param>
+        /// <param name="providerService">The service for managing providers.</param>
+        /// <param name="articleResourceVersionFileRepository">The repository for article resource version files.</param>
+        /// <param name="publicationRepository">The repository for publications.</param>
+        /// <param name="migrationSourceRepository">The repository for migration sources.</param>
+        /// <param name="questionBlockRepository">The repository for question blocks.</param>
+        /// <param name="videoRepository">The repository for video resources.</param>
+        /// <param name="wholeSlideImageRepository">The repository for whole-slide images.</param>
+        /// <param name="embeddedResourceVersionRepository">The repository for embedded resource versions.</param>
+        /// <param name="equipmentResourceVersionRepository">The repository for equipment resource versions.</param>
+        /// <param name="imageResourceVersionRepository">The repository for image resource versions.</param>
+        /// <param name="bookmarkRepository">The repository for bookmarks.</param>
+        /// <param name="assessmentResourceActivityMatchQuestionRepository">The repository for assessment activity-question matches.</param>
+        /// <param name="resourceVersionKeywordRepository">The repository for resource version keywords.</param>
+        /// <param name="resourceVersionValidationResultRepository">The repository for validation results of resource versions.</param>
+        
+
+        public ResourceService(ILearningHubService learningHubService, IFileTypeService fileTypeService, IBlockCollectionRepository blockCollectionRepository, IInternalSystemService internalSystemService, IResourceVersionAuthorRepository resourceVersionAuthorRepository, IFileChunkDetailRepository fileChunkDetailRepository, IQueueCommunicatorService queueCommunicatorService, IResourceRepository resourceRepository, IResourceVersionProviderRepository resourceVersionProviderRepository, IProviderService providerService, IArticleResourceVersionFileRepository articleResourceVersionFileRepository, IPublicationRepository publicationRepository, IMigrationSourceRepository migrationSourceRepository, IQuestionBlockRepository questionBlockRepository, IVideoRepository videoRepository, IWholeSlideImageRepository wholeSlideImageRepository, IEmbeddedResourceVersionRepository embeddedResourceVersionRepository, IEquipmentResourceVersionRepository equipmentResourceVersionRepository, IImageResourceVersionRepository imageResourceVersionRepository, IBookmarkRepository bookmarkRepository, IAssessmentResourceActivityMatchQuestionRepository assessmentResourceActivityMatchQuestionRepository, IResourceVersionKeywordRepository resourceVersionKeywordRepository, IResourceVersionValidationResultRepository resourceVersionValidationResultRepository, ILogger<ResourceService> logger, IWebLinkResourceVersionRepository webLinkResourceVersionRepository, ICaseResourceVersionRepository caseResourceVersionRepository, IScormResourceVersionRepository scormResourceVersionRepository, IGenericFileResourceVersionRepository genericFileResourceVersionRepository, IResourceVersionRepository resourceVersionRepository, IHtmlResourceVersionRepository htmlResourceVersionRepository, IMapper mapper, IFileRepository fileRepository, IOptions<AzureConfig> azureConfig, IOptions<LearningHubConfig> learningHubConfig, IUserProfileService userProfileService, IResourceVersionFlagRepository resourceVersionFlagRepository, IArticleResourceVersionRepository articleResourceVersionRepository, IAudioResourceVersionRepository audioResourceVersionRepository, IVideoResourceVersionRepository videoResourceVersionRepository, IAssessmentResourceVersionRepository assessmentResourceVersionRepository, IResourceLicenceRepository resourceLicenceRepository, IResourceReferenceRepository resourceReferenceRepository, IResourceVersionUserAcceptanceRepository resourceVersionUserAcceptanceRepository, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, ICachingService cachingService, ISearchService searchService, ICatalogueService catalogueService, INodeResourceRepository nodeResourceRepository, INodePathRepository nodePathRepository, IUserService userService, INodeRepository nodeRepository, IResourceSyncService resourceSyncService, IResourceSyncRepository resourceSyncRepository, IResourceVersionEventRepository resourceVersionEventRepository, LearningHubDbContext dbContext)
         {
             this.learningHubService = learningHubService;
             this.resourceRepository = resourceRepository;
@@ -199,6 +211,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             this.providerService = providerService;
             this.nodePathRepository = nodePathRepository;
             this.nodeResourceRepository = nodeResourceRepository;
+            this.blockCollectionRepository = blockCollectionRepository;
             this.nodeRepository = nodeRepository;
             this.searchService = searchService;
             this.cachingService = cachingService;
@@ -208,6 +221,14 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             this.migrationSourceRepository = migrationSourceRepository;
             this.queueCommunicatorService = queueCommunicatorService;
             this.internalSystemService = internalSystemService;
+            this.catalogueNodeVersionRepository = catalogueNodeVersionRepository;
+            this.assessmentResourceVersionRepository = assessmentResourceVersionRepository;
+            this.wholeSlideImageRepository = wholeSlideImageRepository;
+            this.videoRepository = videoRepository;
+            this.fileTypeService = fileTypeService;
+            this.resourceSyncService = resourceSyncService;
+            this.resourceSyncRepository = resourceSyncRepository;
+            this.resourceVersionEventRepository = resourceVersionEventRepository;
         }
 
         /// <summary>
@@ -483,6 +504,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         public async Task<CaseViewModel> GetCaseDetailsByIdAsync(int resourceVersionId)
         {
             CaseResourceVersion caseResourceVersion = await this.caseResourceVersionRepository.GetByResourceVersionIdAsync(resourceVersionId);
+            var number = caseResourceVersion?.BlockCollectionId;
             BlockCollection blockCollection = await this.blockCollectionRepository.GetBlockCollection(caseResourceVersion?.BlockCollectionId);
 
             BlockCollectionViewModel blockCollectionViewModel = null;
@@ -502,6 +524,22 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             return caseViewModel;
         }
 
+        /// <summary>
+        /// The GetExternalContentDetails.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">userId.</param>
+        /// <returns>The <see cref="Task{ExternalContentDetailsViewModel}"/>.</returns>
+        public async Task<ExternalContentDetailsViewModel> GetExternalContentDetails(int resourceVersionId, int userId)
+        {
+            var viewModel = await this.resourceVersionRepository.GetExternalContentDetails(resourceVersionId, userId);
+            if (viewModel != null)
+            {
+                viewModel.HostedContentUrl = $"{this.learningHubConfig.ContentServerUrl}/{viewModel.ExternalReference}/".ToLower();
+            }
+
+            return viewModel;
+        }
 
         /// <summary>
         /// The GetFileStatusDetailsAsync.
@@ -649,6 +687,55 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         }
 
         /// <summary>
+        /// The get resource version by id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceDetailViewModel}"/>.</returns>
+        public async Task<ResourceDetailViewModel> GetResourceVersionByIdAsync(int resourceVersionId)
+        {
+            var resourceVersion = await this.resourceVersionRepository.GetBasicByIdAsync(resourceVersionId);
+
+            var vm = this.mapper.Map<ResourceDetailViewModel>(resourceVersion);
+
+            var nodeResources = await this.nodeResourceRepository.GetByResourceIdAsync(vm.ResourceId);
+            var draftNodeResources = nodeResources.Where(x => x.VersionStatusEnum == VersionStatusEnum.Draft).ToList();
+            var publishedNodeResources = nodeResources.Where(x => x.VersionStatusEnum == VersionStatusEnum.Published || x.VersionStatusEnum == VersionStatusEnum.Unpublished).ToList();
+
+            if (draftNodeResources.Count() == 0)
+            {
+                if (publishedNodeResources != null && publishedNodeResources.Count == 1)
+                {
+                    vm.NodeId = publishedNodeResources[0].NodeId;
+                    vm.ResourceCatalogueId = await this.nodePathRepository.GetCatalogueRootNodeId(publishedNodeResources[0].NodeId);
+                }
+                else
+                {
+                    vm.NodeId = 0;
+                    vm.ResourceCatalogueId = 0;
+                }
+            }
+            else if (draftNodeResources.Count() > 1)
+            {
+                throw new Exception("Resource must belong to a single catalogue. ResourceVersionId: " + vm.ResourceVersionId.ToString() + ". ResourceId: " + vm.ResourceId.ToString() + ", VersionStatusEnum:" + vm.VersionStatusEnum.ToString());
+            }
+            else
+            {
+                vm.NodeId = draftNodeResources[0].NodeId;
+                vm.ResourceCatalogueId = await this.nodePathRepository.GetCatalogueRootNodeId(draftNodeResources[0].NodeId);
+            }
+
+            if (publishedNodeResources != null && publishedNodeResources.Count == 1)
+            {
+                vm.PublishedResourceCatalogueId = await this.nodePathRepository.GetCatalogueRootNodeId(publishedNodeResources[0].NodeId);
+            }
+
+            vm.Flags = await this.GetResourceVersionFlagViewModels(resourceVersion.ResourceVersionFlag);
+
+            return vm;
+        }
+
+
+        /// <summary>
         /// The get resource version view model async.
         /// </summary>
         /// <param name="resourceVersionId">The resource version id.</param>
@@ -704,6 +791,63 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             var rv = await this.resourceVersionRepository.GetCurrentForResourceReferenceIdAsync(resourceReferenceId);
 
             return await this.GetResourceVersionViewModelAsync(rv.Id);
+        }
+
+        /// <summary>
+        /// Returns a list of basic resource info - filtered, sorted and paged as required.
+        /// </summary>
+        /// <param name="currentUserId">The userId<see cref="int"/>.</param>
+        /// <param name="pagingRequestModel">The request detail <see cref="PagingRequestModel"/>.</param>
+        /// <returns>The <see cref="PagedResultSet{ResourceAdminSearchResultViewModel}"/>.</returns>
+        public async Task<PagedResultSet<ResourceAdminSearchResultViewModel>> GetResourceAdminSearchFilteredPageAsync(int currentUserId, PagingRequestModel pagingRequestModel)
+        {
+            PagedResultSet<ResourceAdminSearchResultViewModel> result = new PagedResultSet<ResourceAdminSearchResultViewModel>();
+
+            var items = this.resourceVersionRepository.GetAllAdminSearch(currentUserId);
+
+            items = this.FilterItems(items, pagingRequestModel.Filter);
+
+            result.TotalItemCount = items.Count();
+
+            items = this.OrderItems(items, pagingRequestModel.SortColumn, pagingRequestModel.SortDirection);
+
+            items = items.Skip((pagingRequestModel.Page - 1) * pagingRequestModel.PageSize).Take(pagingRequestModel.PageSize);
+
+            result.Items = await this.mapper.ProjectTo<ResourceAdminSearchResultViewModel>(items).ToListAsync();
+
+            var resourceSyncs = this.resourceSyncRepository.GetSyncListForUser(currentUserId, false);
+            foreach (var item in result.Items)
+            {
+                item.MarkedForSync = resourceSyncs.Any(x => x.ResourceId == item.ResourceVersionId);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Transfer Resource Ownership.
+        /// </summary>
+        /// <param name="transferResourceOwnershipViewModel">The transferResourceOwnershipViewModel<see cref="TransferResourceOwnershipViewModel"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
+        public async Task<LearningHubValidationResult> TransferResourceOwnership(TransferResourceOwnershipViewModel transferResourceOwnershipViewModel, int userId)
+        {
+            var vr = new LearningHubValidationResult(true);
+
+            var newOwner = await this.userService.GetByUsernameAsync(transferResourceOwnershipViewModel.NewOwnerUsername);
+            if (newOwner == null)
+            {
+                vr.Add(new LearningHubValidationResult(false, $"New Owner Username '{transferResourceOwnershipViewModel.NewOwnerUsername}' does not exist"));
+            }
+
+            await this.CheckAndRemoveResourceVersionProviderAsync(transferResourceOwnershipViewModel.ResourceVersionId, newOwner.Id);
+
+            if (vr.IsValid)
+            {
+                this.resourceRepository.TransferResourceOwnership(transferResourceOwnershipViewModel.ResourceId, transferResourceOwnershipViewModel.NewOwnerUsername, userId);
+            }
+
+            return vr;
         }
 
         /// <summary>
@@ -1189,54 +1333,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         public async Task<bool> HasPublishedResourcesAsync(int userId)
         {
             return await this.resourceRepository.UserHasPublishedResourcesAsync(userId);
-        }
-
-        /// <summary>
-        /// The get resource version by id async.
-        /// </summary>
-        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
-        /// <returns>The <see cref="Task{ResourceDetailViewModel}"/>.</returns>
-        public async Task<ResourceDetailViewModel> GetResourceVersionByIdAsync(int resourceVersionId)
-        {
-            var resourceVersion = await this.resourceVersionRepository.GetBasicByIdAsync(resourceVersionId);
-
-            var vm = this.mapper.Map<ResourceDetailViewModel>(resourceVersion);
-
-            var nodeResources = await this.nodeResourceRepository.GetByResourceIdAsync(vm.ResourceId);
-            var draftNodeResources = nodeResources.Where(x => x.VersionStatusEnum == VersionStatusEnum.Draft).ToList();
-            var publishedNodeResources = nodeResources.Where(x => x.VersionStatusEnum == VersionStatusEnum.Published || x.VersionStatusEnum == VersionStatusEnum.Unpublished).ToList();
-
-            if (draftNodeResources.Count() == 0)
-            {
-                if (publishedNodeResources != null && publishedNodeResources.Count == 1)
-                {
-                    vm.NodeId = publishedNodeResources[0].NodeId;
-                    vm.ResourceCatalogueId = await this.nodePathRepository.GetCatalogueRootNodeId(publishedNodeResources[0].NodeId);
-                }
-                else
-                {
-                    vm.NodeId = 0;
-                    vm.ResourceCatalogueId = 0;
-                }
-            }
-            else if (draftNodeResources.Count() > 1)
-            {
-                throw new Exception("Resource must belong to a single catalogue. ResourceVersionId: " + vm.ResourceVersionId.ToString() + ". ResourceId: " + vm.ResourceId.ToString() + ", VersionStatusEnum:" + vm.VersionStatusEnum.ToString());
-            }
-            else
-            {
-                vm.NodeId = draftNodeResources[0].NodeId;
-                vm.ResourceCatalogueId = await this.nodePathRepository.GetCatalogueRootNodeId(draftNodeResources[0].NodeId);
-            }
-
-            if (publishedNodeResources.Count == 1)
-            {
-                vm.PublishedResourceCatalogueId = await this.nodePathRepository.GetCatalogueRootNodeId(publishedNodeResources[0].NodeId);
-            }
-
-            vm.Flags = await this.GetResourceVersionFlagViewModels(resourceVersion.ResourceVersionFlag);
-
-            return vm;
         }
 
         /// <summary>
@@ -2173,6 +2269,320 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         }
 
         /// <summary>
+        /// Get file directory for unpublished or deleted versions.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="deletedResource">.</param>
+        /// <returns>The <see cref="List{String}"/>.</returns>
+        public async Task<List<string>> GetObsoleteResourceFile(int resourceVersionId, bool deletedResource = false)
+        {
+            var retVal = new List<string>();
+            var resourceVersion = await this.GetResourceVersionByIdAsync(resourceVersionId);
+            if (resourceVersion != null)
+            {
+                if (resourceVersion.ResourceType == ResourceTypeEnum.Assessment)
+                {
+                    if (deletedResource)
+                    {
+                        var assessmentFiles = await this.GetResourceBlockCollectionsFilePathAsync(resourceVersionId, ResourceTypeEnum.Assessment);
+                        if (assessmentFiles.Any())
+                        {
+                            retVal.AddRange(assessmentFiles);
+                        }
+                    }
+                    else
+                    {
+                        var assessmentDetails = await this.GetAssessmentViewModel(resourceVersionId);
+                        var rvs = await this.resourceVersionRepository.GetResourceVersionsAsync(resourceVersion.ResourceId);
+                        rvs = rvs.Where(x => x.Id != resourceVersionId && x.PublicationId > 0).OrderByDescending(x => x.PublicationId).ToList();
+                        var rv = rvs.FirstOrDefault();
+                        var currentAssessmentVersion = await this.GetAssessmentViewModel(rv.Id);
+                        List<string> deletableFiles = null;
+                        if (assessmentDetails is { EndGuidance: { } } && assessmentDetails.EndGuidance.Blocks != null)
+                        {
+                            var endGuidanceFiles = this.CheckBlockFile(assessmentDetails.EndGuidance, currentAssessmentVersion.EndGuidance);
+                            if (endGuidanceFiles.Any())
+                            {
+                                deletableFiles = await this.GetResourceBlockCollectionsFilePathAsync(rv.Id, ResourceTypeEnum.Assessment);
+                                retVal.AddRange(from entry in endGuidanceFiles
+                                                where deletableFiles.Contains(entry)
+                                                select entry);
+                            }
+                        }
+
+                        if (assessmentDetails is { AssessmentContent: { } } && assessmentDetails.AssessmentContent.Blocks != null)
+                        {
+                            var assessmentContentFiles = this.CheckBlockFile(assessmentDetails.AssessmentContent, currentAssessmentVersion.AssessmentContent);
+                            if (assessmentContentFiles.Any())
+                            {
+                                deletableFiles ??= await this.GetResourceBlockCollectionsFilePathAsync(rv.Id, ResourceTypeEnum.Assessment);
+                                retVal.AddRange(from entry in assessmentContentFiles
+                                                where deletableFiles.Contains(entry)
+                                                select entry);
+                            }
+                        }
+                    }
+                }
+                else if (resourceVersion.ResourceType == ResourceTypeEnum.Case)
+                {
+                    var caseFiles = new List<string>();
+                    if (deletedResource)
+                    {
+                        caseFiles = await this.GetResourceBlockCollectionsFilePathAsync(resourceVersionId, ResourceTypeEnum.Case);
+                    }
+                    else
+                    {
+                        var caseDetails = await this.GetCaseDetailsByIdAsync(resourceVersionId);
+                        var rvs = await this.resourceVersionRepository.GetResourceVersionsAsync(resourceVersion.ResourceId);
+                        rvs = rvs.Where(x => x.Id != resourceVersionId && x.PublicationId > 0).OrderByDescending(x => x.PublicationId).ToList();
+                        var rv = rvs.FirstOrDefault();
+                        if (rv != null)
+                        {
+                            var currentCaseVersion = await this.GetCaseDetailsByIdAsync(rv.Id);
+                            var nonpublishedFiles = this.CheckBlockFile(caseDetails.BlockCollection, currentCaseVersion.BlockCollection);
+                            if (nonpublishedFiles.Any())
+                            {
+                                var deletableCaseFiles = await this.GetResourceBlockCollectionsFilePathAsync(rv.Id, ResourceTypeEnum.Case);
+                                caseFiles.AddRange(from entry in nonpublishedFiles
+                                                   where deletableCaseFiles.Contains(entry)
+                                                   select entry);
+                            }
+                        }
+                    }
+
+                    if (caseFiles.Any())
+                    {
+                        retVal.AddRange(caseFiles);
+                    }
+                }
+                else
+                {
+                    // get latest published resource version
+                    var rvs = await this.resourceVersionRepository.GetResourceVersionsAsync(resourceVersion.ResourceId);
+                    rvs = rvs.Where(x => x.Id != resourceVersionId && x.PublicationId > 0).OrderByDescending(x => x.PublicationId).ToList();
+                    var rv = rvs.FirstOrDefault();
+                    var extendedResourceVersion = rv != null ? await this.GetResourceVersionExtendedViewModelAsync(rv.Id) : null;
+                    switch (resourceVersion.ResourceType)
+                    {
+                        case ResourceTypeEnum.Scorm:
+                            var scormResource = await this.GetScormDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
+                            {
+                                if (scormResource?.ContentFilePath != extendedResourceVersion.ScormDetails.ContentFilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.ScormDetails.ContentFilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(scormResource?.File?.FilePath);
+                                    }
+                                }
+                            }
+                            else if (rv == null && deletedResource)
+                            {
+                                retVal.Add(scormResource?.File?.FilePath);
+                            }
+
+                            break;
+                        case ResourceTypeEnum.Html:
+                            var htmlResource = await this.GetHtmlDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
+                            {
+                                if (htmlResource?.ContentFilePath != extendedResourceVersion.HtmlDetails.ContentFilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.HtmlDetails.ContentFilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(htmlResource?.File?.FilePath);
+                                    }
+                                }
+                            }
+                            else if (rv == null && deletedResource)
+                            {
+                                retVal.Add(htmlResource?.File?.FilePath);
+                            }
+
+                            break;
+                        case ResourceTypeEnum.GenericFile:
+                            var fileResource = await this.GetGenericFileDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
+                            {
+                                if (fileResource?.File.FilePath != extendedResourceVersion.GenericFileDetails.File.FilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.GenericFileDetails.File.FilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(fileResource?.File?.FilePath);
+                                    }
+                                }
+                            }
+                            else if (rv == null && deletedResource)
+                            {
+                                retVal.Add(fileResource.File.FilePath);
+                            }
+
+                            break;
+                        case ResourceTypeEnum.Image:
+                            var imageResource = await this.GetImageDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
+                            {
+                                if (imageResource?.File.FilePath != extendedResourceVersion.ImageDetails.File.FilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.ImageDetails.File.FilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(imageResource.File.FilePath);
+                                    }
+                                }
+                            }
+                            else if (rv == null && deletedResource)
+                            {
+                                retVal.Add(imageResource.File.FilePath);
+                            }
+
+                            break;
+                        case ResourceTypeEnum.Audio:
+                            var audioResource = await this.GetAudioDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
+                            {
+                                if (audioResource?.File?.FilePath != extendedResourceVersion.AudioDetails.File.FilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.AudioDetails.File.FilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(audioResource.File.FilePath);
+                                    }
+                                }
+
+                                if (audioResource?.ResourceAzureMediaAsset?.FilePath != extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.AudioDetails.ResourceAzureMediaAsset.FilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(audioResource.ResourceAzureMediaAsset.FilePath);
+                                    }
+                                }
+                            }
+                            else if (rv == null && deletedResource)
+                            {
+                                retVal.Add(audioResource?.File?.FilePath);
+                                if (audioResource?.ResourceAzureMediaAsset?.FilePath != null)
+                                {
+                                    retVal.Add(audioResource.ResourceAzureMediaAsset.FilePath);
+                                }
+                            }
+
+                            break;
+                        case ResourceTypeEnum.Video:
+                            var videoResource = await this.GetVideoDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
+                            {
+                                if (videoResource?.File?.FilePath != extendedResourceVersion.VideoDetails.File.FilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.VideoDetails.File.FilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(videoResource.File.FilePath);
+                                    }
+                                }
+
+                                if (videoResource?.ResourceAzureMediaAsset?.FilePath != extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath)
+                                {
+                                    if (!deletedResource)
+                                    {
+                                        retVal.Add(extendedResourceVersion.VideoDetails.ResourceAzureMediaAsset.FilePath);
+                                    }
+                                    else
+                                    {
+                                        retVal.Add(videoResource.ResourceAzureMediaAsset.FilePath);
+                                    }
+                                }
+                            }
+                            else if (rv == null && deletedResource)
+                            {
+                                retVal.Add(videoResource?.File?.FilePath);
+                                if (videoResource?.ResourceAzureMediaAsset?.FilePath != null)
+                                {
+                                    retVal.Add(videoResource.ResourceAzureMediaAsset.FilePath);
+                                }
+                            }
+
+                            break;
+                        case ResourceTypeEnum.Article:
+                            var articleResource = await this.GetArticleDetailsByIdAsync(resourceVersionId);
+                            if (rv != null)
+                            {
+                                var inputResourceFiles = articleResource.Files.ToList();
+                                var previousPublishedfiles = extendedResourceVersion.ArticleDetails?.Files?.ToList();
+                                if (!deletedResource)
+                                {
+                                    if (previousPublishedfiles.Any())
+                                    {
+                                        foreach (var file in previousPublishedfiles)
+                                        {
+                                            if (!inputResourceFiles.Where(x => x.FilePath == file.FilePath).Any())
+                                            {
+                                                retVal.Add(file.FilePath);
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (inputResourceFiles.Any())
+                                    {
+                                        foreach (var file in inputResourceFiles)
+                                        {
+                                            if (!previousPublishedfiles.Where(x => x.FilePath == file.FilePath).Any())
+                                            {
+                                                retVal.Add(file.FilePath);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else if (rv == null && deletedResource)
+                            {
+                                var inputResourceFiles = articleResource.Files.ToList();
+                                if (inputResourceFiles.Any())
+                                {
+                                    foreach (var file in inputResourceFiles)
+                                    {
+                                        retVal.Add(file.FilePath);
+                                    }
+                                }
+                            }
+
+                            break;
+                    }
+                }
+            }
+
+            return retVal.Distinct().ToList();
+        }
+
+
+        /// <summary>
         /// Creation of a new resource version.
         /// </summary>
         /// <param name="resourceId">The resourceId<see cref="int"/>.</param>
@@ -2281,6 +2691,20 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             }
 
             return new LearningHubValidationResult(true);
+        }
+
+        /// <summary>
+        /// Submits a published resource version to the Findwise search.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<(bool success, int resourceReferenceId)> SubmitResourceVersionToSearchAsync(int resourceVersionId, int userId)
+        {
+            var searchResourceRequestModel = await this.resourceSyncService.BuildSearchResourceRequestModel(resourceVersionId);
+            bool success = await this.searchService.SendResourceForSearchAsync(searchResourceRequestModel, userId, 3);
+
+            return (success, searchResourceRequestModel.ResourceReferenceId);
         }
 
         /// <summary>
@@ -2772,6 +3196,27 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         }
 
         /// <summary>
+        /// The get case resource version async.
+        /// </summary>
+        /// <param name="excludeResourceVersionId">The resource version id.</param>
+        /// <param name="resourceType">The resource type.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<List<string>> GetResourceBlockCollectionsFilePathAsync(int excludeResourceVersionId, ResourceTypeEnum resourceType)
+        {
+            var pathList = new List<string>();
+            var collection = await this.blockCollectionRepository.GetResourceBlockCollectionsFileAsync(excludeResourceVersionId, resourceType);
+            if (!string.IsNullOrWhiteSpace(collection))
+            {
+                pathList = collection.Split(',')
+                                    .Select(item => item.Trim())
+                                    .Where(item => !string.IsNullOrEmpty(item))
+                                    .ToList();
+            }
+
+            return pathList;
+        }
+
+        /// <summary>
         /// The update case resource version async.
         /// </summary>
         /// <param name="caseViewModel">The case view model.</param>
@@ -3071,6 +3516,24 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             }
         }
 
+        /// <summary>
+        /// The create resource version validation result async.
+        /// </summary>
+        /// <param name="validationResultViewModel">The validationResultViewModel<see cref="ResourceVersionValidationResultViewModel"/>.</param>
+        /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
+        public async Task<LearningHubValidationResult> CreateResourceVersionValidationResultAsync(ResourceVersionValidationResultViewModel validationResultViewModel)
+        {
+            var resourceVersionValidationResult = this.mapper.Map<ResourceVersionValidationResult>(validationResultViewModel);
+            var id = await this.resourceVersionValidationResultRepository.CreateAsync(validationResultViewModel.AmendUserId, resourceVersionValidationResult);
+
+            var vr = new LearningHubValidationResult()
+            {
+                CreatedId = id,
+                IsValid = true,
+            };
+
+            return vr;
+        }
 
         /// <summary>
         /// Set the resource catalogue.
@@ -3725,5 +4188,492 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             }
         }
 
+        /// <summary>
+        /// Filter the items for resource version search.
+        /// </summary>
+        /// <param name="items">The items<see cref="IQueryable{ResourceVersion}"/>.</param>
+        /// <param name="filterCriteria">The filterCriteria<see cref="List{PagingColumnFilter}"/>.</param>
+        /// <returns>The <see cref="IQueryable{ResourceVersion}"/>.</returns>
+        private IQueryable<ResourceVersion> FilterItems(IQueryable<ResourceVersion> items, List<PagingColumnFilter> filterCriteria)
+        {
+            if (filterCriteria == null || filterCriteria.Count == 0)
+            {
+                return items;
+            }
+
+            foreach (var filter in filterCriteria)
+            {
+                switch (filter.Column.ToLower())
+                {
+                    case "versionid":
+                        items = items.Where(x => x.Id == int.Parse(filter.Value));
+                        break;
+                    case "referenceid":
+                        items = items.Where(x => x.Resource.ResourceReference.Any(rr => rr.OriginalResourceReferenceId == int.Parse(filter.Value) && !rr.Deleted));
+                        break;
+                    case "title":
+                        items = items.Where(x => x.Title.Contains(filter.Value));
+                        break;
+                    case "createuser":
+                        items = items.Where(x => x.CreateUser.UserName.Contains(filter.Value));
+                        break;
+                    case "userid":
+                        // Used by User Detail screen Contributions tab to filter by userId.
+                        items = items.Where(x => x.CreateUser.Id == int.Parse(filter.Value));
+                        break;
+                    case "createdate":
+                        var filteredDate = DateTime.ParseExact(filter.Value, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
+                        items = items.Where(x => x.CreateDate >= filteredDate && x.CreateDate < filteredDate.AddDays(1));
+                        break;
+                    case "type":
+                        if (Enum.TryParse<ResourceTypeEnum>(filter.Value, out var resourceType))
+                        {
+                            items = items.Where(x => x.Resource.ResourceTypeEnum == resourceType);
+                        }
+
+                        break;
+                    case "status":
+                        if (Enum.TryParse<VersionStatusEnum>(filter.Value, out var statusType))
+                        {
+                            items = items.Where(x => x.VersionStatusEnum == statusType);
+                        }
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return items;
+        }
+
+        /// <summary>
+        /// Order the items for resource version search.
+        /// </summary>
+        /// <param name="items">The items<see cref="IQueryable{ResourceVersion}"/>.</param>
+        /// <param name="sortColumn">The sortColumn<see cref="string"/>.</param>
+        /// <param name="sortDirection">The sortDirection<see cref="string"/>.</param>
+        /// <returns>The <see cref="IQueryable{ResourceVersion}"/>.</returns>
+        private IQueryable<ResourceVersion> OrderItems(IQueryable<ResourceVersion> items, string sortColumn, string sortDirection)
+        {
+            switch (sortColumn.ToLower())
+            {
+                case "title":
+                    if (sortDirection == "D")
+                    {
+                        items = items.OrderByDescending(x => x.Title);
+                    }
+                    else
+                    {
+                        items = items.OrderBy(x => x.Title);
+                    }
+
+                    break;
+                case "createuser":
+                    if (sortDirection == "D")
+                    {
+                        items = items.OrderByDescending(x => x.CreateUser.UserName);
+                    }
+                    else
+                    {
+                        items = items.OrderBy(x => x.CreateUser.UserName);
+                    }
+
+                    break;
+                case "referenceid":
+                    if (sortDirection == "D")
+                    {
+                        items = items.OrderByDescending(x => x.Resource.ResourceReference.First().OriginalResourceReferenceId);
+                    }
+                    else
+                    {
+                        items = items.OrderBy(x => x.Resource.ResourceReference.First().OriginalResourceReferenceId);
+                    }
+
+                    break;
+                default:
+                    if (sortDirection == "D")
+                    {
+                        items = items.OrderByDescending(x => x.Id);
+                    }
+                    else
+                    {
+                        items = items.OrderBy(x => x.Id);
+                    }
+
+                    break;
+            }
+
+            return items;
+        }
+
+        /// <summary>
+        /// The get resource version events async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="List{ResourceVersionEventViewModel}"/>.</returns>
+        public async Task<List<ResourceVersionEventViewModel>> GetResourceVersionEventsAsync(int resourceVersionId)
+        {
+            var res = this.resourceVersionEventRepository.GetByResourceVersionIdAsync(resourceVersionId);
+
+            var retVal = await this.mapper.ProjectTo<ResourceVersionEventViewModel>(res).ToListAsync();
+
+            return retVal;
+        }
+
+        /// <summary>
+        /// The get resource version dev id async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="List{ResourceVersionDevIdViewModel}"/>.</returns>
+        public async Task<ResourceVersionDevIdViewModel> GetResourceVersionDevIdDetailsAync(int resourceVersionId)
+        {
+            ResourceVersionDevIdViewModel resourceVersionDevIdViewModel = new ResourceVersionDevIdViewModel();
+            var res = await this.resourceVersionRepository.GetByResourceVersionByIdAsync(resourceVersionId);
+            resourceVersionDevIdViewModel.ResourceVersionId = res.Id;
+            resourceVersionDevIdViewModel.DevId = res.DevId;
+            return resourceVersionDevIdViewModel;
+        }
+
+        /// <summary>
+        /// The get resource version dev id async.
+        /// </summary>
+        /// <param name="devId">The devId<see cref="string"/>.</param>
+        /// <returns>The <see cref="bool"/>.</returns>
+        public async Task<bool> DoesDevIdExistsAync(string devId)
+        {
+            var res = await this.resourceVersionRepository.DoesDevIdExistsAync(devId);
+
+            if (res != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Update Dev Id details.
+        /// </summary>
+        /// <param name="resourceVersionDevIdViewModel">The resourceVersionDevIdViewModel.</param>
+        /// <param name="currentUserId">The currentUserId.</param>
+        /// <returns>The <see cref="List{ResourceVersionDevIdViewModel}"/>.</returns>
+        public async Task UpdateDevIdDetailsAsync(ResourceVersionDevIdViewModel resourceVersionDevIdViewModel, int currentUserId)
+        {
+            await this.resourceVersionRepository.UpdateDevIdAsync(currentUserId, resourceVersionDevIdViewModel);
+        }
+
+        /// <summary>
+        /// The get resource card extended view model async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceCardExtendedViewModel}"/>.</returns>
+        public async Task<ResourceCardExtendedViewModel> GetResourceCardExtendedViewModelAsync(int resourceVersionId, int userId)
+        {
+            var card = await this.GetResourceCardExtendedDetailsAsync(resourceVersionId, userId);
+
+            return card;
+        }
+
+        /// <summary>
+        /// The get my contributions view model async.
+        /// </summary>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <param name="requestModel">The requestModel<see cref="ResourceContributionsRequestViewModel"/>.</param>
+        /// <param name="readOnly">The readOnly<see cref="bool"/>.</param>
+        /// <returns>The <see cref="List{ContributedResourceCardViewModel}"/>.</returns>
+        public List<ContributedResourceCardViewModel> GetContributions(int userId, ResourceContributionsRequestViewModel requestModel, bool readOnly)
+        {
+            var retVal = new List<ContributedResourceCardViewModel>();
+
+            var contributions = this.resourceVersionRepository.GetContributions(userId, requestModel);
+
+            var models = this.mapper.Map<List<ContributedResourceCardViewModel>>(contributions);
+
+            return models;
+        }
+
+        /// <summary>
+        /// The get my contributions view model async.
+        /// </summary>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <param name="myContributionsRequestViewModel">The myContributionsRequestViewModel<see cref="MyContributionsRequestViewModel"/>.</param>
+        /// <returns>The <see cref="List{MyContributionsBasicDetailsViewModel}"/>.</returns>
+        public List<MyContributionsBasicDetailsViewModel> GetMyContributions(int userId, MyContributionsRequestViewModel myContributionsRequestViewModel)
+        {
+            var resourceVersions = this.resourceVersionRepository.GetAll()
+                .Where(rv => !rv.Deleted &&
+                        rv.CreateUserId == userId &&
+                        rv.Resource.ResourceTypeEnum == myContributionsRequestViewModel.ResourceType &&
+                        rv.VersionStatusEnum == myContributionsRequestViewModel.Status);
+
+            var models = this.mapper.Map<List<MyContributionsBasicDetailsViewModel>>(resourceVersions);
+            return models;
+        }
+
+
+        /// <summary>
+        /// The get my resource view model async.
+        /// </summary>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{MyResourceViewModel}"/>.</returns>
+        public async Task<MyResourceViewModel> GetMyResourceViewModelAsync(int userId)
+        {
+            var retVal = new MyResourceViewModel();
+
+            var rvs = await this.resourceVersionRepository.GetResourceCards(true);
+
+            foreach (var rv in rvs)
+            {
+                var card = new ResourceCardViewModel();
+
+                await this.PopulateResourceCardViewModel(card, rv, userId);
+
+                retVal.Cards.Add(card);
+            }
+
+            return retVal;
+        }
+
+        /// <summary>
+        /// The get resource card extended details async.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceCardExtendedViewModel}"/>.</returns>
+        private async Task<ResourceCardExtendedViewModel> GetResourceCardExtendedDetailsAsync(int resourceVersionId, int userId)
+        {
+            var card = new ResourceCardExtendedViewModel();
+
+            var rv = await this.resourceVersionRepository.GetByIdAsync(resourceVersionId, true);
+
+            if (rv != null)
+            {
+                await this.PopulateResourceCardViewModel(card, rv, userId);
+
+                var rr = await this.resourceReferenceRepository.GetDefaultByResourceIdAsync(rv.ResourceId);
+                if (rr != null)
+                {
+                    card.ResourceReferenceId = rr.Id;
+                }
+
+                switch (rv.Resource.ResourceTypeEnum)
+                {
+                    case ResourceTypeEnum.Article:
+
+                        var articleDetails = await this.GetArticleDetailsByIdAsync(rv.Id);
+                        card.ArticleDetails = articleDetails;
+                        break;
+
+                    case ResourceTypeEnum.Equipment:
+
+                        var equipmentDetails = await this.GetEquipmentDetailsByIdAsync(rv.Id);
+                        card.EquipmentDetails = equipmentDetails;
+                        break;
+
+                    case ResourceTypeEnum.WebLink:
+
+                        var weblinkDetails = await this.GetWebLinkDetailsByIdAsync(rv.Id);
+                        card.WebLinkDetails = weblinkDetails;
+                        break;
+
+                    case ResourceTypeEnum.GenericFile:
+
+                        var genericFileDetails = await this.GetGenericFileDetailsByIdAsync(rv.Id);
+                        card.GenericFileDetails = genericFileDetails;
+                        break;
+
+                    case ResourceTypeEnum.Image:
+
+                        var imageDetails = await this.GetImageDetailsByIdAsync(rv.Id);
+                        card.ImageDetails = imageDetails;
+                        break;
+
+                    case ResourceTypeEnum.Embedded:
+
+                        var embedDetails = await this.GetEmbeddedResourceVersionByIdAsync(rv.Id);
+                        card.EmbedCodeDetails = embedDetails;
+                        break;
+
+                    case ResourceTypeEnum.Video:
+
+                        var videoDetails = await this.GetVideoDetailsByIdAsync(rv.Id);
+                        card.VideoDetails = videoDetails;
+                        break;
+
+                    case ResourceTypeEnum.Audio:
+
+                        var audioDetails = await this.GetAudioDetailsByIdAsync(rv.Id);
+                        card.AudioDetails = audioDetails;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            return card;
+        }
+
+        /// <summary>
+        /// The populate resource version card summary.
+        /// </summary>
+        /// <param name="card">The card<see cref="ResourceCardViewModel"/>.</param>
+        /// <param name="resourceVersion">The resourceVersion<see cref="ResourceVersion"/>.</param>
+        /// <param name="userId">The userId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        private async Task PopulateResourceCardViewModel(ResourceCardViewModel card, ResourceVersion resourceVersion, int userId)
+        {
+            await this.PopulateResourceVersionViewModel(card, resourceVersion);
+
+            card.Id = resourceVersion.Id;
+
+            // Set flags related to the previous published version when the card status is "Draft" or "Publishing"
+            // "InEdit" and "PreviousPublishedStatusEnum" indication
+            if (resourceVersion.Resource.CurrentResourceVersionId.HasValue &&
+                (resourceVersion.VersionStatusEnum == VersionStatusEnum.Draft
+                || resourceVersion.VersionStatusEnum == VersionStatusEnum.Publishing))
+            {
+                if (resourceVersion.VersionStatusEnum == VersionStatusEnum.Draft)
+                {
+                    card.InEdit = true;
+                }
+
+                card.PreviousPublishedStatusEnum = resourceVersion.Resource.CurrentResourceVersion.VersionStatusEnum;
+                if (card.PreviousPublishedStatusEnum == VersionStatusEnum.Unpublished)
+                {
+                    var previousEvents = this.resourceVersionEventRepository.GetByResourceVersionIdAsync(resourceVersion.Resource.CurrentResourceVersionId.Value);
+                    var unpublishEvent = previousEvents.Where(e => e.ResourceVersionEventType == ResourceVersionEventTypeEnum.Unpublished).FirstOrDefault();
+                    if (unpublishEvent != null)
+                    {
+                        var u = await this.userProfileService.GetByIdAsync(unpublishEvent.CreateUserId);
+                        card.UnpublishedByAdmin = this.userService.IsAdminUser(u.Id) && u.Id != userId;
+                        card.UnpublishedBy = $"{u.UserName}";
+                        card.UnpublishedDate = unpublishEvent.CreateDate.DateTime;
+                    }
+                }
+            }
+
+            // Created details
+            var cu = await this.userProfileService.GetByIdAsync(resourceVersion.CreateUserId);
+            card.CreatedBy = $"{cu.FirstName} {cu.LastName}";
+            card.CreatedDate = resourceVersion.CreateDate.DateTime;
+
+            // Unpublished details
+            if (resourceVersion.VersionStatusEnum == VersionStatusEnum.Unpublished)
+            {
+                var unpublishEvent = resourceVersion.ResourceVersionEvent.Where(e => e.ResourceVersionEventType == ResourceVersionEventTypeEnum.Unpublished)
+                                                                         .OrderByDescending(e => e.Id)
+                                                                         .FirstOrDefault();
+                if (unpublishEvent != null)
+                {
+                    var u = await this.userProfileService.GetByIdAsync(unpublishEvent.CreateUserId);
+                    card.UnpublishedByAdmin = this.userService.IsAdminUser(u.Id) && u.Id != userId;
+                    card.UnpublishedBy = $"{u.UserName}";
+                    card.UnpublishedDate = unpublishEvent.CreateDate.DateTime;
+                }
+            }
+
+            // 'Flagged' details
+            var flag = resourceVersion.ResourceVersionFlag.FirstOrDefault(f => f.IsActive);
+            if (flag != null)
+            {
+                card.IsFlagged = true;
+                var u = await this.userProfileService.GetByIdAsync(flag.CreateUserId);
+                card.FlaggedByAdmin = this.userService.IsAdminUser(u.Id);
+                card.FlaggedBy = $"{u.FirstName} {u.LastName}";
+                card.FlaggedDate = flag.CreateDate.DateTime;
+            }
+        }
+        /// <summary>
+        /// The populate resource version view model.
+        /// </summary>
+        /// <param name="resourceVersionViewModel">The resourceVersionViewModel<see cref="ResourceVersionViewModel"/>.</param>
+        /// <param name="resourceVersion">The resourceVersion<see cref="ResourceVersion"/>.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        private async Task PopulateResourceVersionViewModel(ResourceVersionViewModel resourceVersionViewModel, ResourceVersion resourceVersion)
+        {
+            if (resourceVersion != null)
+            {
+                resourceVersionViewModel.ResourceId = resourceVersion.ResourceId;
+                resourceVersionViewModel.ResourceVersionId = resourceVersion.Id;
+                resourceVersionViewModel.VersionStatusEnum = resourceVersion.VersionStatusEnum;
+                resourceVersionViewModel.Title = resourceVersion.Title;
+                resourceVersionViewModel.Description = resourceVersion.Description;
+                resourceVersionViewModel.SensitiveContent = resourceVersion.SensitiveContent;
+                resourceVersionViewModel.ResourceTypeEnum = resourceVersion.Resource.ResourceTypeEnum;
+                resourceVersionViewModel.MajorVersion = resourceVersion.MajorVersion;
+                resourceVersionViewModel.MinorVersion = resourceVersion.MinorVersion;
+
+                if (resourceVersion.ReviewDate.HasValue)
+                {
+                    resourceVersionViewModel.NextReviewDate = resourceVersion.ReviewDate.Value.DateTime;
+                }
+
+                resourceVersionViewModel.AdditionalInformation = resourceVersion.AdditionalInformation;
+                resourceVersionViewModel.ResourceFree = !resourceVersion.HasCost;
+                resourceVersionViewModel.Cost = resourceVersion.HasCost ? (double)resourceVersion.Cost : 0.00d;
+
+                resourceVersionViewModel.Keywords = new List<string>();
+                foreach (var k in resourceVersion.ResourceVersionKeyword)
+                {
+                    resourceVersionViewModel.Keywords.Add(k.Keyword);
+                }
+
+                resourceVersionViewModel.Authors = new List<string>();
+                foreach (var a in resourceVersion.ResourceVersionAuthor)
+                {
+                    string displayText = string.Empty;
+
+                    if (!string.IsNullOrEmpty(a.AuthorName) && !string.IsNullOrEmpty(a.Organisation))
+                    {
+                        displayText = string.Join(", ", a.AuthorName, a.Organisation);
+                    }
+
+                    if (!string.IsNullOrEmpty(a.AuthorName) && string.IsNullOrEmpty(a.Organisation))
+                    {
+                        displayText = a.AuthorName;
+                    }
+
+                    if (string.IsNullOrEmpty(a.AuthorName) && !string.IsNullOrEmpty(a.Organisation))
+                    {
+                        displayText = a.Organisation;
+                    }
+
+                    if (!string.IsNullOrEmpty(a.Role))
+                    {
+                        displayText += ", " + a.Role;
+                    }
+
+                    resourceVersionViewModel.Authors.Add(displayText);
+                }
+
+                resourceVersionViewModel.AuthoredDate = resourceVersion.CreateDate.DateTime;
+
+                if (resourceVersion.VersionStatusEnum == VersionStatusEnum.Published
+                    || resourceVersion.VersionStatusEnum == VersionStatusEnum.Unpublished)
+                {
+                    if (resourceVersion.Publication != null)
+                    {
+                        var u = await this.userProfileService.GetByIdAsync(resourceVersion.Publication.CreateUserId);
+                        resourceVersionViewModel.PublishedBy = $"{u.FirstName} {u.LastName}";
+                        resourceVersionViewModel.PublishedDate = resourceVersion.Publication.CreateDate.DateTime;
+                        resourceVersionViewModel.PublishedNotes = resourceVersion.Publication.Notes;
+                    }
+                }
+
+                if (resourceVersion.ResourceLicence != null)
+                {
+                    resourceVersionViewModel.LicenseName = resourceVersion.ResourceLicence.Title;
+                }
+
+                resourceVersionViewModel.CreateUserId = resourceVersion.CreateUserId;
+                resourceVersionViewModel.CreateUser = resourceVersion.CreateUser.UserName;
+                resourceVersionViewModel.CreateDate = resourceVersion.CreateDate;
+            }
+        }
+
     }
+
 }

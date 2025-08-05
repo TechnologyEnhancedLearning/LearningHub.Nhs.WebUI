@@ -22,12 +22,6 @@
 
             modelBuilder.ToTable("ResourceVersionValidationResult", "resources");
 
-            modelBuilder.HasOne(d => d.ResourceVersion)
-                .WithMany()
-                .HasForeignKey(d => d.ResourceVersionId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ResourceVersionValidationResult_ResourceVersion");
-
             modelBuilder.Property(e => e.Details)
                 .IsRequired()
                 .HasMaxLength(1024);

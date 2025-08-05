@@ -1,6 +1,10 @@
 ﻿namespace LearningHub.NHS.OpenAPI.Controllers
 {
+    using System;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Models.Provider;
+    using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -19,14 +23,19 @@
         private readonly IProviderService providerService;
 
         /// <summary>
+        /// The User Provider service.
+        /// </summary>
+        private readonly IUserProviderService userProviderService;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ProviderController"/> class.
         /// </summary>
-        /// <param name="providerService">
-        /// The Provider service.
-        /// <param name="logger">The logger.</param>
-        public ProviderController(IProviderService providerService)
+        /// <param name="providerService">The Provider service.</param>
+        /// <param name="userProviderService">The userProviderService.</param>
+        public ProviderController(IProviderService providerService, IUserProviderService userProviderService)
         {
             this.providerService = providerService;
+            this.userProviderService = userProviderService;
         }
 
         /// <summary>
@@ -73,6 +82,26 @@
         public async Task<ActionResult> GetProvidersByResourceVersionIdAsync(int resourceVersionId)
         {
             return this.Ok(await providerService.GetByResourceVersionIdAsync(resourceVersionId));
+        }
+
+        /// <summary>
+        /// Update user providers.
+        /// </summary>
+        /// <param name="userProviderUpdateViewModel">The user provider update model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpPost]
+        [Route("UpdateUserProvider")]
+        public async Task<IActionResult> UpdateUserProviderAsync(UserProviderUpdateViewModel userProviderUpdateViewModel)
+        {
+            try
+            {
+                var vr = await this.userProviderService.UpdateUserProviderAsync(userProviderUpdateViewModel);
+                return this.Ok(new ApiResponse(true, vr));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
         }
 
     }

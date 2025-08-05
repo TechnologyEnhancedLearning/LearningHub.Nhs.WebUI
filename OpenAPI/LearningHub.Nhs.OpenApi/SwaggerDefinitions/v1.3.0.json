@@ -2393,6 +2393,37 @@
         }
       }
     },
+    "/Hierarchy/GetNodeContentsForCatalogueBrowse/{nodeId}/{includeEmptyFolder}": {
+      "get": {
+        "tags": [
+          "Hierarchy"
+        ],
+        "parameters": [
+          {
+            "name": "nodeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "includeEmptyFolder",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Hierarchy/GetNodeContentsAdmin/{nodeId}/{readOnly}": {
       "get": {
         "tags": [
@@ -3207,7 +3238,7 @@
         }
       }
     },
-    "/Resource/GetResourceReferenceByOriginalId/{originalResourceReferenceId}": {
+    "/Resource/{resourceReferenceId}": {
       "get": {
         "tags": [
           "Resource"
@@ -3215,7 +3246,7 @@
         "summary": "GET by Id.",
         "parameters": [
           {
-            "name": "originalResourceReferenceId",
+            "name": "resourceReferenceId",
             "in": "path",
             "description": "id.",
             "required": true,
@@ -3423,7 +3454,7 @@
         }
       }
     },
-    "/Resource/{id}": {
+    "/Resource/GetResource/{id}": {
       "get": {
         "tags": [
           "Resource"
@@ -3504,6 +3535,31 @@
           "Resource"
         ],
         "summary": "Get specific GetScormFileDetails by ResourceVersionId.",
+        "parameters": [
+          {
+            "name": "resourceVersionId",
+            "in": "path",
+            "description": "The resourceVersionIdSystem.Int32.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Resource/GetExternalContentDetailsById/{resourceVersionId}": {
+      "get": {
+        "tags": [
+          "Resource"
+        ],
+        "summary": "Get External content details of a resource by ResourceVersionId.",
         "parameters": [
           {
             "name": "resourceVersionId",
@@ -3644,6 +3700,31 @@
           "Resource"
         ],
         "summary": "Get all resource licences.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Resource/GetResourceVersion/{resourceVersionId}": {
+      "get": {
+        "tags": [
+          "Resource"
+        ],
+        "summary": "Get specific ResourceVersion by Id.",
+        "parameters": [
+          {
+            "name": "resourceVersionId",
+            "in": "path",
+            "description": "The resourceVersionIdSystem.Int32.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -5031,6 +5112,29 @@
         }
       }
     },
+    "/Resource/GetImageDetails/{resourceVersionId}": {
+      "get": {
+        "tags": [
+          "Resource"
+        ],
+        "parameters": [
+          {
+            "name": "resourceVersionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Resource/UpdateImageDetail": {
       "post": {
         "tags": [
@@ -5997,21 +6101,18 @@
         "tags": [
           "User"
         ],
-        "summary": "Validate email change token.",
         "parameters": [
           {
             "name": "token",
             "in": "path",
-            "description": "The token.",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "loctoken",
+            "name": "locToken",
             "in": "path",
-            "description": "The loc Token.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6020,7 +6121,6 @@
           {
             "name": "isUserRoleUpgrade",
             "in": "path",
-            "description": "isUserRoleUpgrade.",
             "required": true,
             "schema": {
               "type": "boolean"
@@ -6030,6 +6130,47 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/User/GetLHUserNavigation": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  }
+                }
+              }
+            }
           }
         }
       }

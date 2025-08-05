@@ -19,19 +19,21 @@
         /// <summary>
         /// Defines the _facade.
         /// </summary>
-        private readonly ILearningHubApiFacade facade;
+        private readonly IOpenApiFacade facade;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CatalogueService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learningHubHttpClient<see cref="ILearningHubHttpClient"/>.</param>
-        /// <param name="learningHubApiFacade">The learningHubApiFacade<see cref="ILearningHubApiFacade"/>.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
+        /// <param name="openApiFacade">The openApiFacade<see cref="IOpenApiFacade"/>.</param>
         public CatalogueService(
             ILearningHubHttpClient learningHubHttpClient,
-            ILearningHubApiFacade learningHubApiFacade)
+            IOpenApiHttpClient openApiHttpClient,
+            IOpenApiFacade openApiFacade)
         : base(learningHubHttpClient)
         {
-            this.facade = learningHubApiFacade;
+            this.facade = openApiFacade;
         }
 
         /// <summary>

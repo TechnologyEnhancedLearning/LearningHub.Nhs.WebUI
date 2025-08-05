@@ -20,9 +20,10 @@
         /// Initializes a new instance of the <see cref="MyLearningService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learningHubHttpClient.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">The logger.</param>
-        public MyLearningService(ILearningHubHttpClient learningHubHttpClient, ILogger<MyLearningService> logger)
-        : base(learningHubHttpClient, logger)
+        public MyLearningService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<MyLearningService> logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
         }
 
@@ -38,7 +39,7 @@
             var json = JsonConvert.SerializeObject(requestModel);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"MyLearning/GetActivityDetailed";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -67,7 +68,7 @@
         public async Task<List<PlayedSegmentViewModel>> GetPlayedSegments(int resourceId, int majorVersion)
         {
             List<PlayedSegmentViewModel> viewModel = null;
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"MyLearning/GetPlayedSegments/{resourceId}/{majorVersion}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -98,7 +99,7 @@
         public async Task<Tuple<int, MyLearningDetailedItemViewModel>> GetResourceCertificateDetails(int resourceReferenceId, int? majorVersion = 0, int? minorVersion = 0, int? userId = 0)
         {
             Tuple<int, MyLearningDetailedItemViewModel> viewModel = null;
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"MyLearning/GetResourceCertificateDetails/{resourceReferenceId}/{majorVersion}/{minorVersion}/{userId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);

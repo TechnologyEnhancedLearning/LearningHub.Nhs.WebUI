@@ -83,7 +83,7 @@
 
         <div class="row mt-5">
             <div class="form-group col-12">
-                <h2 id="keyword-label" class="nhsuk-heading-l"><label for="newKeyword">Keywords</label> <i v-if="keywords.length==0" class="warningTriangle fa-solid fa-triangle-exclamation"></i></h2>
+                <h2 id="keyword-label" class="nhsuk-heading-l"><label for="newKeyword" class="keyword-label">Keywords</label> <i v-if="keywords.length==0" class="warningTriangle fa-solid fa-triangle-exclamation"></i></h2>
             </div>
         </div>
         <div class="row">
@@ -333,8 +333,9 @@
                 return this.$store.state.resourceDetail.resourceType;
             },
             showCatalogueSelect(): boolean {
-                return (this.resourceDetail.resourceCatalogueId === this.resourceDetail.nodeId) || // show if user is contributing into the catalogue root
-                    !Boolean(this.$route.query.initialCreate);                                 // or if the user is editing an existing draft (initialCreate=false)
+                //return (this.resourceDetail.resourceCatalogueId === this.resourceDetail.nodeId) || // show if user is contributing into the catalogue root
+                //    !Boolean(this.$route.query.initialCreate);                                 // or if the user is editing an existing draft (initialCreate=false)
+                return (!Boolean(this.$route.query.initialCreate));
             },
             newKeywordTrimmed(): string {
                 return this.newKeyword?.trim().replace(/ +(?= )/g, '');

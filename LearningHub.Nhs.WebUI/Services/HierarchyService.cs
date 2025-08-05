@@ -16,21 +16,23 @@
         /// <summary>
         /// Defines the _facade.
         /// </summary>
-        private readonly ILearningHubApiFacade facade;
+        private readonly IOpenApiFacade facade;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HierarchyService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learning hub http client.</param>
-        /// <param name="learningHubApiFacade">The learningHubApiFacade<see cref="ILearningHubApiFacade"/>.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
+        /// <param name="openApiFacade">The openApiFacade<see cref="IOpenApiFacade"/>.</param>
         /// <param name="logger">The logger.</param>
         public HierarchyService(
             ILearningHubHttpClient learningHubHttpClient,
-            ILearningHubApiFacade learningHubApiFacade,
+            IOpenApiHttpClient openApiHttpClient,
+            IOpenApiFacade openApiFacade,
             ILogger<HierarchyService> logger)
-        : base(learningHubHttpClient, logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
-            this.facade = learningHubApiFacade;
+            this.facade = openApiFacade;
         }
 
         /// <summary>

@@ -114,7 +114,7 @@ const setCommonContentState = function (state: State) {
         && state.resourceDetail.resourceAccessibilityEnum !== ResourceAccessibility.None
         && state.resourceDetail.description !== ''
         && (state.resourceDetail.resourceLicenceId > 0 || state.resourceDetail.resourceType === ResourceType.WEBLINK)
-        && state.resourceDetail.resourceCatalogueId > 0
+        && state.resourceDetail.resourceCatalogueId > 1
         && state.resourceDetail.resourceAuthors.length > 0
         && state.resourceDetail.certificateEnabled !== null
         && state.resourceDetail.resourceKeywords.length > 0;

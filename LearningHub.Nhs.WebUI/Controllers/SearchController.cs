@@ -81,7 +81,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
 
             if (filterApplied)
             {
-                await this.searchService.RegisterSearchEventsAsync(search, SearchFormActionTypeEnum.ApplyFilter, searchResult.ResourceSearchResult.TotalHits);
+                await this.searchService.RegisterSearchEventsAsync(search, SearchFormActionTypeEnum.ApplyFilter, searchResult.ResourceSearchResult?.TotalHits ?? 0);
             }
 
             if (noSortFilterError)

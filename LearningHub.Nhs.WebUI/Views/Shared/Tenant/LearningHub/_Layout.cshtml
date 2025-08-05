@@ -21,6 +21,7 @@
     <link rel="manifest" href="~/site.webmanifest.json">
     <link href="~/css/nhsuk/common.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/nhsuk/layout.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/nhsuk/nhsuk-overrides.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" />
     <noscript>
         <link href="~/css/no-js/no-js.css" rel="stylesheet" asp-append-version="true" />
@@ -161,13 +162,6 @@
     @RenderSection("Scripts", required: false)
 
     <script type="text/javascript" src="~/js/mkplayer-ui-custom.js" asp-append-version="true"></script>
-    <script type="text/javascript" src="~/js/pageunload.js" asp-append-version="true"></script>
-
-    <script type="text/javascript">
-        // Bind the function to the unload event
-        window.onunload = tellServerBrowserClosed;
-
-    </script>
 
 </body>
 </html>

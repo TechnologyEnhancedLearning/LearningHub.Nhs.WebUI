@@ -93,9 +93,14 @@
         public int? Category { get; set; }
 
         /// <summary>
+        /// Gets the progress percentage formatted as a string.
+        /// </summary>
+        public string ProgressPercentage => $"{System.Math.Round(this.Progress ?? 0)}%";
+
+        /// <summary>
         /// Gets or sets the progress.
         /// </summary>
-        public int? Progress { get; set; }
+        public double? Progress { get; set; }
 
         /// <summary>
         /// Gets or sets the completion status.

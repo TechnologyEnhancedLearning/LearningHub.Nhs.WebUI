@@ -38,7 +38,7 @@
         /// <returns>The <see cref="IQueryable"/>.</returns>
         public IQueryable<ResourceVersion> GetAllAdminSearch(int userId)
         {
-            return DbContext.Set<ResourceVersion>()
+            return this.DbContext.Set<ResourceVersion>()
                 .Include(r => r.Resource)
                 .ThenInclude(r => r.ResourceReference)
                 .Include(n => n.CreateUser)
@@ -59,7 +59,7 @@
         /// <returns>The resource version list.</returns>
         public async Task<List<ResourceVersion>> GetResourceVersionsForSearchSubmission(List<int> resourceVersionIds)
         {
-            return await DbContext.ResourceVersion
+            return await this.DbContext.ResourceVersion
                     .Include(x => x.Resource).ThenInclude(r => r.ResourceReference)
                     .Include(x => x.ResourceVersionKeyword)
                     .Include(x => x.ResourceVersionAuthor)
@@ -81,7 +81,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<ResourceVersion> GetBasicByIdAsync(int id)
         {
-            return await DbContext.ResourceVersion
+            return await this.DbContext.ResourceVersion
                 .Include(rv => rv.Resource)
                     .ThenInclude(r => r.CurrentResourceVersion)
                 .Include(rv => rv.Resource)
@@ -105,7 +105,7 @@
             ResourceVersion retVal;
             if (includeEvents)
             {
-                retVal = await DbContext.ResourceVersion.AsNoTracking()
+                retVal = await this.DbContext.ResourceVersion.AsNoTracking()
                              .Include(r => r.Resource)
                              .Include(r => r.Publication).AsNoTracking()
                              .Include(r => r.ResourceVersionKeyword).AsNoTracking()
@@ -121,7 +121,7 @@
             }
             else
             {
-                retVal = await DbContext.ResourceVersion.AsNoTracking()
+                retVal = await this.DbContext.ResourceVersion.AsNoTracking()
                              .Include(r => r.Resource)
                              .Include(r => r.Publication).AsNoTracking()
                              .Include(r => r.ResourceVersionKeyword).AsNoTracking()
@@ -145,7 +145,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<ResourceVersion> GetCurrentForResourceAsync(int resourceId)
         {
-            return await DbContext.ResourceVersion.AsNoTracking()
+            return await this.DbContext.ResourceVersion.AsNoTracking()
                        .Include(r => r.Resource)
                        .Include(r => r.Publication).AsNoTracking()
                        .Include(r => r.ResourceVersionKeyword).AsNoTracking()
@@ -168,7 +168,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<ResourceVersion> GetCurrentResourceDetailsAsync(int resourceId)
         {
-            return await DbContext.ResourceVersion.AsNoTracking()
+            return await this.DbContext.ResourceVersion.AsNoTracking()
                        .Include(r => r.Resource)
                        .Include(r => r.Publication).AsNoTracking()
                        .Include(r => r.ResourceVersionKeyword).AsNoTracking()
@@ -192,7 +192,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<ResourceVersion> GetByResourceVersionByIdAsync(int resourceVersionId)
         {
-            return await DbContext.ResourceVersion.OrderByDescending(r => r.Id).FirstOrDefaultAsync(x => x.Id == resourceVersionId);
+            return await this.DbContext.ResourceVersion.OrderByDescending(r => r.Id).FirstOrDefaultAsync(x => x.Id == resourceVersionId);
         }
 
         /// <summary>
@@ -202,7 +202,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<ResourceVersion> DoesDevIdExistsAync(string devId)
         {
-            return await DbContext.ResourceVersion.OrderByDescending(r => r.Id).FirstOrDefaultAsync(x => x.DevId == devId);
+            return await this.DbContext.ResourceVersion.OrderByDescending(r => r.Id).FirstOrDefaultAsync(x => x.DevId == devId);
         }
 
         /// <summary>
@@ -212,7 +212,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<ResourceVersion> GetCurrentPublicationForResourceAsync(int resourceId)
         {
-            return await DbContext.ResourceVersion.AsNoTracking()
+            return await this.DbContext.ResourceVersion.AsNoTracking()
                        .Include(r => r.Resource)
                        .OrderByDescending(r => r.Id)
                        .FirstOrDefaultAsync(r => r.ResourceId == resourceId
@@ -232,7 +232,7 @@
 
             if (includeEvents)
             {
-                retVal = await DbContext.ResourceVersion.AsNoTracking()
+                retVal = await this.DbContext.ResourceVersion.AsNoTracking()
                                         .Include(r => r.Resource).AsNoTracking()
                                         .Include(r => r.Publication).AsNoTracking()
                                         .Include(r => r.ResourceVersionKeyword).AsNoTracking()
@@ -245,7 +245,7 @@
             }
             else
             {
-                retVal = await DbContext.ResourceVersion.AsNoTracking()
+                retVal = await this.DbContext.ResourceVersion.AsNoTracking()
                                         .Include(r => r.Resource).AsNoTracking()
                                         .Include(r => r.Publication).AsNoTracking()
                                         .Include(r => r.ResourceVersionKeyword).AsNoTracking()
@@ -268,7 +268,7 @@
         {
             ResourceVersion retVal = null;
 
-            var or = DbContext.ResourceReference.OrderByDescending(r => r.Id).FirstOrDefault(x => x.OriginalResourceReferenceId == resourceReferenceId);
+            var or = this.DbContext.ResourceReference.OrderByDescending(r => r.Id).FirstOrDefault(x => x.OriginalResourceReferenceId == resourceReferenceId);
 
             if (or != null)
             {
@@ -287,7 +287,7 @@
         {
             ResourceVersion retVal = null;
 
-            var or = DbContext.ResourceReference.OrderByDescending(r => r.Id).FirstOrDefault(x => x.OriginalResourceReferenceId == resourceReferenceId);
+            var or = this.DbContext.ResourceReference.OrderByDescending(r => r.Id).FirstOrDefault(x => x.OriginalResourceReferenceId == resourceReferenceId);
 
             if (or != null)
             {
@@ -306,7 +306,7 @@
         {
             ResourceVersion retVal = null;
 
-            var rr = DbContext.ResourceReference.FirstOrDefault(x => x.OriginalResourceReferenceId == resourceReferenceId);
+            var rr = this.DbContext.ResourceReference.FirstOrDefault(x => x.OriginalResourceReferenceId == resourceReferenceId);
 
             if (rr != null)
             {
@@ -323,7 +323,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<List<ResourceVersion>> GetResourceVersionsAsync(int resourceId)
         {
-            return await DbContext.ResourceVersion.AsNoTracking()
+            return await this.DbContext.ResourceVersion.AsNoTracking()
                                                     .Include(r => r.Resource).AsNoTracking()
                                                     .Include(r => r.Publication).AsNoTracking()
                                                     .Include(r => r.ResourceVersionKeyword).AsNoTracking()
@@ -344,7 +344,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public new async Task UpdateAsync(int userId, ResourceVersion resourceVersion)
         {
-            var resourceVersionUpdate = DbContext.ResourceVersion
+            var resourceVersionUpdate = this.DbContext.ResourceVersion
                 .SingleOrDefault(r => r.Id == resourceVersion.Id);
 
             if (resourceVersionUpdate != null)
@@ -361,7 +361,7 @@
                 SetAuditFieldsForUpdate(userId, resourceVersionUpdate);
             }
 
-            await DbContext.SaveChangesAsync();
+            await this.DbContext.SaveChangesAsync();
         }
 
         /// <summary>
@@ -372,7 +372,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task UpdateDevIdAsync(int userId, ResourceVersionDevIdViewModel resourceVersionDevIdViewModel)
         {
-            var resourceVersionUpdate = DbContext.ResourceVersion
+            var resourceVersionUpdate = this.DbContext.ResourceVersion
                 .SingleOrDefault(r => r.Id == resourceVersionDevIdViewModel.ResourceVersionId);
 
             if (resourceVersionUpdate != null)
@@ -382,7 +382,7 @@
                 SetAuditFieldsForUpdate(userId, resourceVersionUpdate);
             }
 
-            await DbContext.SaveChangesAsync();
+            await this.DbContext.SaveChangesAsync();
         }
 
         /// <summary>
@@ -398,7 +398,7 @@
             var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = userId };
             var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
 
-            DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionSetResourceType @p0, @p1, @p2, @p3", param0, param1, param2, param3);
+            this.DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionSetResourceType @p0, @p1, @p2, @p3", param0, param1, param2, param3);
         }
 
         /// <summary>
@@ -408,7 +408,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<ResourceTypeEnum> GetResourceType(int resourceVersionId)
         {
-            return await DbContext.ResourceVersion
+            return await this.DbContext.ResourceVersion
                .Include(rv => rv.Resource).AsNoTracking()
                .Where(rv => rv.Id == resourceVersionId)
                .Select(rv => rv.Resource.ResourceTypeEnum)
@@ -442,7 +442,7 @@
                 sql += ", @PublicationDate=@p6";
             }
 
-            DbContext.Database.ExecuteSqlRaw(sql, sqlParams);
+            this.DbContext.Database.ExecuteSqlRaw(sql, sqlParams);
 
             return (int)param5.Value;
         }
@@ -462,7 +462,7 @@
             var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = userId };
             var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
 
-            DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionUnpublish @p0, @p1, @p2, @p3", param0, param1, param2, param3);
+            this.DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionUnpublish @p0, @p1, @p2, @p3", param0, param1, param2, param3);
         }
 
         /// <summary>
@@ -476,7 +476,7 @@
             var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = userId };
             var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
 
-            DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionRevertToDraft @p0, @p1, @p2", param0, param1, param2);
+            this.DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionRevertToDraft @p0, @p1, @p2", param0, param1, param2);
         }
 
         /// <summary>
@@ -490,7 +490,7 @@
             var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = userId };
             var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
 
-            DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionDelete @p0, @p1, @p2", param0, param1, param2);
+            this.DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionDelete @p0, @p1, @p2", param0, param1, param2);
         }
 
         /// <summary>
@@ -501,7 +501,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public Task<bool> DoesVersionExist(int resourceId, VersionStatusEnum status)
         {
-            return DbContext.ResourceVersion.AnyAsync(rv => rv.ResourceId == resourceId && rv.VersionStatusEnum == status);
+            return this.DbContext.ResourceVersion.AnyAsync(rv => rv.ResourceId == resourceId && rv.VersionStatusEnum == status);
         }
 
         /// <summary>
@@ -517,7 +517,7 @@
             var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
             var param3 = new SqlParameter("@p3", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
-            await DbContext.Database.ExecuteSqlRawAsync("resources.ResourceVersionCreateNext @p0, @p1, @p2, @p3 output", param0, param1, param2, param3);
+            await this.DbContext.Database.ExecuteSqlRawAsync("resources.ResourceVersionCreateNext @p0, @p1, @p2, @p3 output", param0, param1, param2, param3);
 
             return (int)param3.Value;
         }
@@ -535,7 +535,7 @@
             var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
             var param3 = new SqlParameter("@p3", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
-            await DbContext.Database.ExecuteSqlRawAsync("resources.ResourceVersionCreateDuplicate @p0, @p1, @p2, @p3 output", param0, param1, param2, param3);
+            await this.DbContext.Database.ExecuteSqlRawAsync("resources.ResourceVersionCreateDuplicate @p0, @p1, @p2, @p3 output", param0, param1, param2, param3);
 
             return (int)param3.Value;
         }
@@ -567,7 +567,7 @@
         ////    var param4 = new SqlParameter("@p4", SqlDbType.DateTimeOffset) { Value = activityStart };
         ////    var param5 = new SqlParameter("@p5", SqlDbType.DateTimeOffset) { Value = activityEnd };
 
-        ////    this.DbContext.Database.ExecuteSqlCommand("activity.ResourceActivityCreate @p0, @p1, @p2, @p3, @p4, @p5", param0, param1, param2, param3, param4, param5);
+        ////    this.this.DbContext.Database.ExecuteSqlCommand("activity.ResourceActivityCreate @p0, @p1, @p2, @p3, @p4, @p5", param0, param1, param2, param3, param4, param5);
         ////}
 
         /// <summary>
@@ -578,7 +578,7 @@
         /// <returns>A boolean.</returns>
         public async Task<bool> HasUserCompletedActivity(int userId, int resourceVersionId)
         {
-            return await DbContext.ResourceActivity.AnyAsync(x => x.UserId == userId && x.ResourceVersionId == resourceVersionId);
+            return await this.DbContext.ResourceActivity.AnyAsync(x => x.UserId == userId && x.ResourceVersionId == resourceVersionId);
         }
 
         /// <summary>
@@ -592,7 +592,7 @@
             var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = userId };
             var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
 
-            DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionSubmitForPublishing @p0, @p1, @p2", param0, param1, param2);
+            this.DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionSubmitForPublishing @p0, @p1, @p2", param0, param1, param2);
         }
 
         /// <summary>
@@ -605,7 +605,7 @@
             var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = resourceVersionId };
             var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = userId };
 
-            DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionPublishing @p0, @p1", param0, param1);
+            this.DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionPublishing @p0, @p1", param0, param1);
         }
 
         /// <summary>
@@ -618,7 +618,7 @@
             var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = resourceVersionId };
             var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = userId };
 
-            DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionFailedToPublish @p0, @p1", param0, param1);
+            this.DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionFailedToPublish @p0, @p1", param0, param1);
         }
 
         /// <summary>
@@ -636,7 +636,7 @@
             var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = userId };
             var param4 = new SqlParameter("@p4", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
 
-            DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionEventCreate @p0, @p1, @p2, @p3, @p4", param0, param1, param2, param3, param4);
+            this.DbContext.Database.ExecuteSqlRaw("resources.ResourceVersionEventCreate @p0, @p1, @p2, @p3, @p4", param0, param1, param2, param3, param4);
         }
 
         /// <summary>
@@ -658,7 +658,7 @@
             var param8 = new SqlParameter("@UnpublishedCount", SqlDbType.Int) { Direction = ParameterDirection.Output };
             var param9 = new SqlParameter("@UserUnpublishedCount", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
-            DbContext.Database.ExecuteSqlRaw("resources.GetContributionTotals @catalogueNodeId, @userId, @ActionRequiredCount output, @UserActionRequiredCount output, @DraftCount output, @UserDraftCount output, @PublishedCount output, @UserPublishedCount output, @UnpublishedCount output, @UserUnpublishedCount output", param0, param1, param2, param3, param4, param5, param6, param7, param8, param9);
+            this.DbContext.Database.ExecuteSqlRaw("resources.GetContributionTotals @catalogueNodeId, @userId, @ActionRequiredCount output, @UserActionRequiredCount output, @DraftCount output, @UserDraftCount output, @PublishedCount output, @UserPublishedCount output, @UnpublishedCount output, @UserUnpublishedCount output", param0, param1, param2, param3, param4, param5, param6, param7, param8, param9);
 
             var myContributionsTotalsViewModel = new MyContributionsTotalsViewModel();
 
@@ -711,7 +711,7 @@
 
             sql += " @catalogueNodeId, @userId, @offset, @take, @restrictToCurrentUser";
 
-            var contributions = DbContext.ResourceContributionDto.FromSqlRaw(sql, param0, param1, param2, param3, param4).ToList();
+            var contributions = this.DbContext.ResourceContributionDto.FromSqlRaw(sql, param0, param1, param2, param3, param4).ToList();
             return contributions;
         }
 
@@ -732,22 +732,22 @@
             switch (dashboardType)
             {
                 case "my-certificates":
-                    dashboardResources = DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyLearningCertificatesDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyLearningCertificatesDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
                     break;
                 case "my-recent-completed":
-                    dashboardResources = DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyRecentCompletedDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyRecentCompletedDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
                     break;
                 case "my-in-progress":
-                    dashboardResources = DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyInProgressDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyInProgressDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
                     break;
                 case "recent-resources":
-                    dashboardResources = DbContext.DashboardResourceDto.FromSqlRaw("resources.GetRecentDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetRecentDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
                     break;
                 case "rated-resources":
-                    dashboardResources = DbContext.DashboardResourceDto.FromSqlRaw("resources.GetRatedDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetRatedDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
                     break;
                 case "popular-resources":
-                    dashboardResources = DbContext.DashboardResourceDto.FromSqlRaw("resources.GetPopularDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetPopularDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
                     break;
             }
 
@@ -773,7 +773,7 @@
             var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = destinationBlockCollectionId };
             var param2 = new SqlParameter("@p2", SqlDbType.Structured) { Value = ids, TypeName = "resources.IDList" };
             var param5 = new SqlParameter("@p5", SqlDbType.Int) { Direction = ParameterDirection.Output };
-            await DbContext.Database.ExecuteSqlRawAsync(
+            await this.DbContext.Database.ExecuteSqlRawAsync(
                 "resources.BlockCollectionWithBlocksCreateDuplicate @p0, @p1, @p2, @p3, @p4, @p5 output", param0, param1, param2, param3, param4, param5);
             return param5.Value == DBNull.Value ? -1 : (int)param5.Value;
         }
@@ -791,7 +791,7 @@
                 var param0 = new SqlParameter("@resourceVersionId", SqlDbType.Int) { Value = resourceVersionId };
                 var param1 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
 
-                var retVal = await DbContext.ExternalContentDetailsViewModel.FromSqlRaw("[resources].[GetExternalContentDetails] @resourceVersionId, @userId", param0, param1).AsNoTracking().ToListAsync();
+                var retVal = await this.DbContext.ExternalContentDetailsViewModel.FromSqlRaw("[resources].[GetExternalContentDetails] @resourceVersionId, @userId", param0, param1).AsNoTracking().ToListAsync();
                 ExternalContentDetailsViewModel externalContentDetailsViewModel = retVal.AsEnumerable().FirstOrDefault();
                 return externalContentDetailsViewModel;
             }

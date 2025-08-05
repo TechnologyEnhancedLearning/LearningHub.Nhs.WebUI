@@ -27,8 +27,7 @@
                 </template>
 
                 <!-- When catalogue has no value -->
-                <div v-else>
-                    <p>No catalogue available.</p>
+                <div v-else>                 
                     <CatalogueView :catalogue="savedCatalogue"
                                    @change-click="showSelector"
                                    :selection-in-progress="selectionInProgress"

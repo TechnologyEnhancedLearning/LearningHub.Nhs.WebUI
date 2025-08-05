@@ -280,14 +280,36 @@ li.autosuggestion-option:last-of-type {
 }
 
 .side-nav__item {
-    padding: 12px 16px;
     border-bottom: 1px solid #d8dde0;
+    margin-bottom: 0 !important;
+    padding:0;
 }
 
-.side-nav__item--active a {
-    font-weight: bold;
-    text-decoration: underline;
+
+
+
+.side-nav__item:last-child {
+    border-bottom: none;
 }
+
+.side-nav__item a {
+    font-weight: 700;
+    display: block;
+    padding: 22px 12px;
+}
+
+
+
+.side-nav__item--active a {
+    text-decoration: none;
+    color: $nhsuk-black;
+}
+
+.side-nav__item--active {
+    background-color: #e8f0f7;
+}
+
+
 
 .side-nav__toggle,
 .side-nav__close {

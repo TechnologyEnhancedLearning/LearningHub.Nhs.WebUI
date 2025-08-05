@@ -333,8 +333,9 @@
                 return this.$store.state.resourceDetail.resourceType;
             },
             showCatalogueSelect(): boolean {
-                return (this.resourceDetail.resourceCatalogueId === this.resourceDetail.nodeId) || // show if user is contributing into the catalogue root
-                    !Boolean(this.$route.query.initialCreate);                                 // or if the user is editing an existing draft (initialCreate=false)
+                //return (this.resourceDetail.resourceCatalogueId === this.resourceDetail.nodeId) || // show if user is contributing into the catalogue root
+                //    !Boolean(this.$route.query.initialCreate);                                 // or if the user is editing an existing draft (initialCreate=false)
+                return (!Boolean(this.$route.query.initialCreate));
             },
             newKeywordTrimmed(): string {
                 return this.newKeyword?.trim().replace(/ +(?= )/g, '');

@@ -432,7 +432,7 @@
                 return this.resourceDetails.resourceLicenceId > 0;
             },
             locationTabComplete(): boolean {
-                return this.resourceDetails.resourceCatalogueId > 0;
+                return this.resourceDetails.resourceCatalogueId > 1;
             },
             certificateTabComplete(): boolean {
                 return this.resourceDetails.certificateEnabled !== null;

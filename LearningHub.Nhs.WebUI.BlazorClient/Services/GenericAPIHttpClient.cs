@@ -1,8 +1,11 @@
-﻿using LearningHub.Nhs.Shared.Interfaces.Http;
+﻿// qqqq using LearningHub.Nhs.Shared.Interfaces.Http;
 
-namespace LearningHub.Nhs.WebUI.BlazorClient.Services
+using LearningHub.Nhs.WebUI.BlazorClient.TestDeleteMe.FromShared;
+
+//namespace LearningHub.Nhs.WebUI.BlazorClient.Services // qqqq weird suggestion need to shame namespace!!??
+namespace LearningHub.Nhs.WebUI.BlazorClient.TestDeleteMe.FromShared
 {
-    public class GenericAPIHttpClient : IAPIHttpClient, ILearningHubHttpClient, IUserApiHttpClient // Implementing multiple interfaces
+    public class GenericAPIHttpClient : IAPIHttpClient, ILearningHubHttpClient, IUserApiHttpClient, ILearningHubHttpClientTest // Implementing multiple interfaces
     {
         private readonly HttpClient _httpClient; // Private field to hold the injected HttpClient
 

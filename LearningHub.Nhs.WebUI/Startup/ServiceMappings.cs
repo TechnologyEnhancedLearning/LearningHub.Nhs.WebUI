@@ -1,6 +1,8 @@
 ﻿namespace LearningHub.Nhs.WebUI.Startup
 {
+    using System;
     using System.Net.Http;
+    using Blazored.LocalStorage;
     using GDS.MultiPageFormData;
     using LearningHub.Nhs.Models.OpenAthens;
     using LearningHub.Nhs.Services;
@@ -18,6 +20,9 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using TELBlazor.Components.Core.Configuration;
+    using TELBlazor.Components.Core.Services.HelperServices;
+    using TELBlazor.Components.OptionalImplementations.Test.TestComponents.SearchExperiment;
 
     /// <summary>
     /// The service mappings.
@@ -36,6 +41,15 @@
             if (env.IsDevelopment())
             {
                 services.AddHttpClient<ILearningHubHttpClient, LearningHubHttpClient>()
+                    .ConfigurePrimaryHttpMessageHandler(
+                        () => new HttpClientHandler
+                        {
+                            ServerCertificateCustomValidationCallback =
+                                          HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                        });
+
+                // qqqq remove test
+                services.AddHttpClient<BlazorClient.TestDeleteMe.FromShared.ILearningHubHttpClientTest, BlazorClient.TestDeleteMe.FromShared.GenericAPIHttpClient>()
                     .ConfigurePrimaryHttpMessageHandler(
                         () => new HttpClientHandler
                         {
@@ -85,7 +99,13 @@
 
             // Config
             services.Configure<OpenAthensScopes>(configuration.GetSection("OpenAthensScopes"));
-            services.Configure<BFFPathValidationOptions>(configuration.GetSection(BFFPathValidationOptions.SectionName));
+            services.Configure<BFFPathValidationOptions>(configuration.GetSection("Settings:" + BFFPathValidationOptions.SectionName)); // qqqq
+
+            // Blazor
+            services.AddRazorComponents()
+                .AddInteractiveServerComponents()
+                .AddCircuitOptions(opt => opt.DetailedErrors = true)
+                .AddInteractiveWebAssemblyComponents();
 
             // Learning Hub Services
             services.AddTransient<INavigationPermissionService, NavigationPermissionService>();
@@ -132,6 +152,30 @@
             services.AddScoped<LoginWizardFilter>();
             services.AddScoped<SsoLoginFilterAttribute>();
             services.AddScoped<OfflineCheckFilter>();
+
+            // <!-- blazor architecture keep at bottom so can use existing services and map them-->
+
+            // <!--qqqq blazor services maybe collection so all together and update show whats missing-->
+            // Future candidates for DI collection
+            services.AddBlazoredLocalStorage();
+            services.AddSingleton<ITELBlazorBaseComponentConfiguration>(provider =>
+            {
+                return new TELBlazorBaseComponentConfiguration
+                {
+                    JSEnabled = true, // qqqq may need to implement as do from prototype if lh doesnt have a way
+
+                    // HostType = $"{builder.Configuration["Properties:Environment"]} {builder.Configuration["Properties:Application"]}"
+                    // qqqq back to this one
+                    HostType = $"{configuration["Properties:Environment"]} {configuration["Properties:Application"]}",
+
+                    // HostType = "Server",
+                };
+            });
+
+            services.AddScoped<ILogLevelSwitcherService, NLogLogLevelSwitcherService>();
+
+            // services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            // qqqq services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(configuration["Settings:LearningHubWebUiUrl"]) });
         }
     }
 }

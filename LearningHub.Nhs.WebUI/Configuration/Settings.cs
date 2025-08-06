@@ -2,12 +2,13 @@ namespace LearningHub.Nhs.WebUI.Configuration
 {
     using System;
     using LearningHub.Nhs.Shared.Configuration;
+    using LearningHub.Nhs.Shared.Interfaces.Configuration;
     using LearningHub.Nhs.WebUI.Models.Contribute;
 
     /// <summary>
     /// Defines the <see cref="Settings" />.
     /// </summary>
-    public class Settings
+    public class Settings : IPublicSettings
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Settings"/> class.
@@ -31,6 +32,9 @@ namespace LearningHub.Nhs.WebUI.Configuration
         /// Gets or sets the LearningHubApiUrl.
         /// </summary>
         public string LearningHubApiUrl { get; set; }
+
+        /// <inheritdoc/>
+        public string LearningHubApiBFFUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the OpenApiUrl.
@@ -255,7 +259,7 @@ namespace LearningHub.Nhs.WebUI.Configuration
         /// <summary>
         /// Gets or sets the FindwiseSettings.
         /// </summary>
-        public FindwiseSettingsPublic FindwiseSettings { get; set; } = new FindwiseSettingsPublic();
+        public IFindwiseSettingsPublic FindwiseSettings { get; set; } = new FindwiseSettingsPublic();
 
         /// <summary>
         /// Gets or sets the MediaKindSettings.

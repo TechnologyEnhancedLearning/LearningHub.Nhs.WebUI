@@ -1,6 +1,5 @@
-﻿namespace LearningHub.Nhs.Shared.Configuration
+﻿namespace LearningHub.Nhs.WebUI.BlazorClient.TestDeleteMe.FromShared
 {
-    using LearningHub.Nhs.Shared.Interfaces.Configuration;
     /// <summary>
     /// Represents configuration values that are safe to expose to clientside frontend applications
     /// (such as Blazor WebAssembly) or public-facing APIs.

@@ -23,7 +23,7 @@
     /// See confluence for more details on the BFF pattern and how to use this controller.
     /// </summary>
     /// The authorize same site cookie is used for security between client and server. API calls relying on policys such as AuthorizeOrCallFromLH may not be proxied as they require the Authorization header to be present.
-    [Authorize]
+    [Authorize] // QQQQ !!!! PUTBACKIN !!!!!!!!!!!!!!!!!!
     [Route("bff/{apiName}/{**path}")]
     [ApiController]
     public class BFFController : BaseApiController
@@ -78,6 +78,8 @@
             string sanitizedPath = path?.Trim('/').ToLowerInvariant() ?? string.Empty;
             string sanitizedApiName = apiName?.Trim('/').ToLowerInvariant() ?? string.Empty;
 
+            // https://lh-web.dev.local/bff/lh-api.dev.local/Catalogue/GetLatestCatalogueAccessRequest/500
+            // qqqq lh-api.dev.local getting this
             IAPIHttpClient apiClient;
             try
             {
@@ -102,6 +104,7 @@
 
             if (!this.IsPathAllowed(sanitizedPath))
             {
+                // qqqq "catalogue/getlatestcatalogueaccessrequest/500"
                 return this.Forbid("This path is not allowed via BFF proxy.");
             }
 
@@ -239,6 +242,7 @@
             }
 
             // Check whitelist
+            // qqqqq catalogue/    vs "catalogue/getlatestcatalogueaccessrequest/500"
             return this.bffPathValidationOptions.Value.AllowedPathPrefixes.Any(prefix => normalizedPath.StartsWith(prefix.ToLowerInvariant()));
         }
     }

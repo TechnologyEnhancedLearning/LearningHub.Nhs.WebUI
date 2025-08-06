@@ -1,17 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
 	<PropertyGroup>
+		<!--<InvariantGlobalization>true</InvariantGlobalization>--><!-- mysterious stack overflow qqqq -->
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<BlazorWebAssemblyEnableDebugging>true</BlazorWebAssemblyEnableDebugging>
-		<DebugType>full</DebugType>
+		<!--<BlazorWebAssemblyEnableDebugging>true</BlazorWebAssemblyEnableDebugging>
+		<DebugType>full</DebugType>-->
+		<!--<NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+		<StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode> qqqq -->
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
+		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" /> <!--// has aspnetcore in it qqqq we just need the interface-->
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.8" />
 
+		<!--Configuration http -->
+		<!--<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />qqqq-->
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
 
 		<!-- Logging -->
 		<PackageReference Include="Serilog" Version="4.2.0" />
@@ -27,27 +34,19 @@
 		<PackageReference Include="TELBlazor.Components" Version="1.9.3-local" />
 	</ItemGroup>
 
-
 	<ItemGroup>
 		<Folder Include="Properties\" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Remove="C:\Users\NM2.W9215KB2\.nuget\packages\telblazor.components\1.9.0\contentFiles\any\net8.0\TELBlazorPackageVersion\VersionInfo.TELBlazorAssembly.cs" />
-		<Content Remove="Properties\launchSettings.template.json" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Content Include="nuget.config.template" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\LearningHub.Nhs.Shared\LearningHub.Nhs.Shared.csproj" />
-	</ItemGroup>
 	<!--qqqq i think this is dangerous really we would want a package that doesnt use aspnet core-->
-	<Target Name="AllowUsingAspNetCoreInBlazorWasm" AfterTargets="ProcessFrameworkReferences">
+	<!--Also is it some how affecting the base route of wasm-->
+	<!--<Target Name="AllowUsingAspNetCoreInBlazorWasm" AfterTargets="ProcessFrameworkReferences">
 		<ItemGroup>
 			<UnavailableRuntimePack Remove="Microsoft.AspNetCore.App" />
 		</ItemGroup>
-	</Target>
+	</Target>-->
 </Project>
+ 

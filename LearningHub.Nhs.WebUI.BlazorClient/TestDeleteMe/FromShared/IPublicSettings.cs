@@ -1,4 +1,4 @@
-﻿namespace LearningHub.Nhs.Shared.Interfaces.Configuration
+﻿namespace LearningHub.Nhs.WebUI.BlazorClient.TestDeleteMe.FromShared
 {
     /// <summary>
     /// Defines a contract for configuration data that is non-sensitive and safe to expose publicly

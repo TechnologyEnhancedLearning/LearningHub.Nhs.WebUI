@@ -87,7 +87,6 @@ try
     app.UseAuthorization();
 
     app.UseMiddleware<NLogMiddleware>();
-    app.UseStaticFiles();
 
     app.Map(TimezoneInfoMiddleware.TimezoneInfoUrl, b => b.UseMiddleware<TimezoneInfoMiddleware>());
 
@@ -114,9 +113,7 @@ try
     app.MapRazorComponents<App>()
         .AddInteractiveServerRenderMode()
         .AddInteractiveWebAssemblyRenderMode()
-
-        // .AddAdditionalAssemblies(typeof(LearningHub.Nhs.WebUI.BlazorComponents._Imports).Assembly) // qqqq later
-        // .AddAdditionalAssemblies(typeof(LearningHub.Nhs.WebUI.BlazorClient._Imports).Assembly); qqqq later
+        .AddAdditionalAssemblies(typeof(LearningHub.Nhs.WebUI.BlazorClient._Imports).Assembly)
         .AddAdditionalAssemblies(typeof(TELBlazor.Components._Imports).Assembly);
 
     app.Run();

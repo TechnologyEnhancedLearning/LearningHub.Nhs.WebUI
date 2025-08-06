@@ -7,7 +7,9 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<!--qqqq we may only need Icaching interface-->
 		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
+		<!---has fluentvalidation aspnet.core in it may not need it if it didnt have it it would be safe qqqq-->
 		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.50" />
 	</ItemGroup>
 
@@ -15,5 +17,5 @@
 	  <Folder Include="Models\Contribute\" />
 	  <Folder Include="Models\Paging\" />
 	</ItemGroup>
-	
+
 </Project>

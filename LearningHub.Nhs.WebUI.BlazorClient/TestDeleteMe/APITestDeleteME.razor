@@ -1,0 +1,100 @@
+﻿@using LearningHub.Nhs.WebUI.BlazorClient.TestDeleteMe.FromShared @*remove later qqqq*@
+
+@*@using Microsoft.AspNetCore.Components;qqqq*@
+@inject ILearningHubHttpClientTest LearningHubBFFHttpClient
+@inherits TELBlazor.Components.Core.TELComponentBase
+@*we are hiding what is in the base class by doing the logger this way but the telbutton does it to so it needs sorting*@
+<form>
+    <input type="text" @bind="ApiRoute" />
+    <button type="button" @onclick=@(async () => await CallApi())>Call API Log Response</button>
+</form>
+
+@code {
+    string ApiRoute = "Catalogue/GetLatestCatalogueAccessRequest/43"; // Default route 500
+
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized(); // Call the base method
+        Logger.LogInformation("Serilogging");
+
+
+        Logger.LogInformation(
+            "API Test Component initialized with default route: {Route}",
+            ApiRoute
+        );
+
+        Logger.LogInformation("!!!!!!!!!!!!!!!!!!!!!!!!! Base Component");
+    }
+
+    private  async Task CallApi()
+    {
+        try
+        {
+            
+            Logger.LogInformation("Base Component");
+            var httpClient = await LearningHubBFFHttpClient.GetClientAsync();
+
+            Logger.LogInformation("📡 BaseAddress should be https://lh-web.dev.local/bff/lh-api.dev.local/ . HttpClient BaseAddress: {BaseAddress}", httpClient.BaseAddress?.ToString());
+            Logger.LogInformation($"Logger: Calling via the bff this api route: {ApiRoute}");
+            Logger.LogInformation("📡 Target: {TargetUrl}", "https://lh-web.dev.local/bff/lh-api.dev.local/Catalogue/GetLatestCatalogueAccessRequest/500");
+            // Assuming httpClient.BaseAddress is set
+            string fullUrl = new Uri(httpClient.BaseAddress, ApiRoute).ToString();
+            Logger.LogInformation("Making request to: {FullUrl}", fullUrl);
+
+            // Now use standard HttpClient methods
+            var response = await httpClient.GetAsync(ApiRoute); //qqqq here it doesnt seem to be using base address
+            string responseContent = await response.Content.ReadAsStringAsync();
+
+            Logger.LogInformation("API Response - Status: {Status}, Content: {Content}",
+                response.StatusCode, responseContent);
+
+            /* qqqq
+             * // https://bff/lh-api.dev.local/api/Catalogue/GetLatestCatalogueAccessRequest/500 - wrong
+             * // -> think need // https://lh-web.dev.local/bff/lh-api.dev.local/Catalogue/GetLatestCatalogueAccessRequest/500
+            
+             
+             
+             
+             // "LearningHubApiUrl": "https://lh-api.dev.local/api/",
+            // "LearningHubApiBFFUrl": "https://bff/lh-api.dev.local/api/",
+            // IOptions<Settings> webSettings,
+            // this.WebSettings.LearningHubApiUrl;
+            client.BaseAddress = new Uri(publicSettings.LearningHubApiBFFUrl); // or whatever your BFF port is
+            });
+        */
+            // Register your BFF-pointing clients
+        // var client = await HttpClient.GetClientAsync();
+        // Console.WriteLine("ConsoleWriteline:APIClient BaseAddress: {Route}", client.BaseAddress);
+        // Logger.LogInformation("APIClient BaseAddress: {Route}", client.BaseAddress);
+        // var response = await client.GetAsync(ApiRoute);
+        // string responseContent = await response.Content.ReadAsStringAsync();
+        // int statusCode = (int)response.StatusCode;
+
+        // if (response.IsSuccessStatusCode)
+        // {
+        //     Console.WriteLine("ConsoleWriteline: API call successful! Status: {StatusCode}, Content: {Content}", statusCode, responseContent);
+        //     Logger.LogInformation("API call successful! Status: {StatusCode}, Content: {Content}", statusCode, responseContent);
+        // }
+        // else
+        // {
+        //     Console.WriteLine("ConsoleWriteline: API call failed! Status: {StatusCode}, Error Content: {ErrorContent}", statusCode, responseContent);
+        //     Logger.LogError("API call failed! Status: {StatusCode}, Error Content: {ErrorContent}", statusCode, responseContent);
+        // }
+
+
+            // await Task.Delay(1000);
+            // StateHasChanged();
+
+        }
+        catch (Exception ex)
+        {
+                    // FIX 5: Log exceptions with ILogger.
+            Logger.LogCritical("in exception");
+            Logger.LogCritical(ex,"argh");
+            Logger.LogError(ex, "An error occurred during API call to route: {Route}", ApiRoute);
+
+        }
+    }
+}

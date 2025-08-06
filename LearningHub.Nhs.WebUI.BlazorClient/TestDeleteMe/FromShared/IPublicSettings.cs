@@ -21,17 +21,31 @@
         /// <summary>
         /// Gets or sets the LearningHubApiUrl.
         /// </summary>
-        public string LearningHubApiUrl { get; set; }
+        string LearningHubApiUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the UserApiUrl.
+        /// </summary>
+        string UserApiUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the LearningHubAdminUrl.
+        /// </summary>
+        string LearningHubAdminUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the OpenApiUrl.
         /// </summary>
-        public string OpenApiUrl { get; set; }
+        string OpenApiUrl { get; set; }
+
         /// <summary>
         /// Gets or sets the LearningHubApiBFFUrl used to proxy via same domain cookie to the BFF LearningHubAPI calls.
         /// </summary>
-        public string LearningHubApiBFFUrl { get; set; }
+        string LearningHubApiBFFUrl { get; set; }
 
-        public IFindwiseSettingsPublic FindwiseSettings { get; set; }
+        /// <summary>
+        /// Gets or sets the Findwise settings.
+        /// </summary>
+        IFindwiseSettingsPublic FindwiseSettings { get; set; }
     }
 }

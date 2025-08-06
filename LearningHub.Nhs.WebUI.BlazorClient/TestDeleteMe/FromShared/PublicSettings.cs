@@ -14,6 +14,10 @@
     {
         /// <inheritdoc/>
         public string LearningHubApiUrl { get; set; }
+        /// <inheritdoc/>
+        public string UserApiUrl { get; set; }
+        /// <inheritdoc/>
+        public string LearningHubAdminUrl { get; set; }
         /// <summary>
         /// Gets or sets the OpenApiUrl.
         /// </summary>

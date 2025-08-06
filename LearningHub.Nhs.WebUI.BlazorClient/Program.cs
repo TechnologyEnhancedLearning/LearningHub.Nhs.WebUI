@@ -1,6 +1,8 @@
 //using LearningHub.Nhs.Models.Entities;
 // Still required server side even if not used so components dont fail
 using Blazored.LocalStorage;
+using LearningHub.Nhs.WebUI.BlazorClient.DI;
+
 
 // qqqq Test try without aspentcore library contamination
 //using LearningHub.Nhs.Caching;
@@ -81,48 +83,14 @@ try
     builder.Services.AddBlazoredLocalStorage();
 
 
+    // Register your BFF using httpclient ILearningHubHttpClient
+    builder.Services.AddBffHttpClient<ILearningHubHttpClientTest, GenericAPIHttpClient>(settings => settings.LearningHubApiUrl);
 
-    /* qqqq
-        // "LearningHubApiUrl": "https://lh-api.dev.local/api/",
-        // "LearningHubApiBFFUrl": "https://bff/lh-api.dev.local/api/",
-        // IOptions<Settings> webSettings,
-        // this.WebSettings.LearningHubApiUrl;
-        client.BaseAddress = new Uri(publicSettings.LearningHubApiBFFUrl); // or whatever your BFF port is
-    });
-     */
+    // Register your BFF using httpclient IUserApiHttpClient
+    builder.Services.AddBffHttpClient<IUserApiHttpClient, GenericAPIHttpClient>(settings => settings.UserApiUrl);
 
-    // Register your BFF - pointing clients
-    builder.Services.AddHttpClient<ILearningHubHttpClientTest, GenericAPIHttpClient>((serviceProvider, client) =>
-    {
-        IPublicSettings publicSettings = serviceProvider.GetRequiredService<IOptions<PublicSettings>>().Value;
-
-        // Log the URL to the console for debugging purposes.
-        // qqqq
-        Console.WriteLine($"[Configuration Log] Using Learning Hub API BFF URL: {publicSettings.LearningHubApiBFFUrl}");
-        Console.WriteLine($"public settings: {publicSettings}");
-        Uri apiUri = new Uri(publicSettings.LearningHubApiUrl);
-        string apiHost = apiUri.Host;
-        // qqqq may need forward slases
-        client.BaseAddress = new Uri($"{publicSettings.LearningHubApiBFFUrl}{apiHost}/"); // or whatever your BFF port is
-    });
-
-
-    //builder.Services.AddHttpClient<IUserApiHttpClient, GenericAPIHttpClient>(client =>
-    //{
-    //    client.BaseAddress = new Uri("https://localhost:5001/bff/lh-userapi/");
-    //});
-    //// LearningHubApiUrl-> //"LearningHubApiUrl": "https://lh-web.dev.local/bff/Catalogue/GetLatestCatalogueAccessRequest/500/lh-api.dev.local/api/", -->  //"LearningHubApiUrl": "https://lh-api.dev.local/api/",
-
-    //builder.Services.AddHttpClient<ILearningHubHttpClient, GenericAPIHttpClient>(client =>
-    //{
-    //    client.BaseAddress = new Uri("https://lh-web.dev.local/bff/lh-api.dev.local/"); // or whatever your BFF port is
-    //});
-
-    //// "UserApiUrl": "https://bff/lh-userapi.dev.local/api/",  --> //"UserApiUrl": "https://lh-userapi.dev.local/api/",
-    //builder.Services.AddHttpClient<IUserApiHttpClient, GenericAPIHttpClient>(client =>
-    //{
-    //    client.BaseAddress = new Uri("https://lh-web.dev.local/bff/lh-userapi.dev.local/");
-    //});
+    // Register your BFF using httpclient IOpenApiHttpClient
+    builder.Services.AddBffHttpClient<IOpenApiHttpClient, GenericAPIHttpClient>(settings => settings.OpenApiUrl);
 
 
     builder.Services.AddScoped<LoggingLevelSwitch>(sp => levelSwitch);

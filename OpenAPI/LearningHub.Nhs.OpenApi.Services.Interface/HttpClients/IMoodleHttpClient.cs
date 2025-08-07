@@ -1,8 +1,8 @@
-﻿namespace LearningHub.Nhs.Services.Interface
-{
-    using System.Net.Http;
-    using System.Threading.Tasks;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
 
+namespace LearningHub.Nhs.OpenApi.Services.Interface.HttpClients
+{
     /// <summary>
     /// The Moodle Http Client interface.
     /// </summary>

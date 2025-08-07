@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using LearningHub.Nhs.Models.Dashboard;
+    using LearningHub.Nhs.Models.Moodle.API;
 
     /// <summary>
     /// Defines the <see cref="DashboardViewModel" />.
@@ -33,6 +34,6 @@
         /// <summary>
         /// Gets or sets a list of enrolled courses to be displayed in the dashboard.
         /// </summary>
-        public List<MoodleCourseResponseViewModel> EnrolledCourses { get; set; }
+        public List<MoodleCourseResponseModel> EnrolledCourses { get; set; }
     }
 }

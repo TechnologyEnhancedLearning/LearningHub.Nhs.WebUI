@@ -2,14 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Runtime.InteropServices.WindowsRuntime;
     using System.Text;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Dashboard;
     using LearningHub.Nhs.Models.Entities.Analytics;
-    using LearningHub.Nhs.Models.Entities.Reporting;
-    using LearningHub.Nhs.Services.Interface;
+    using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
     using Microsoft.Extensions.Logging;
@@ -20,7 +17,7 @@
     /// </summary>
     public class DashboardService : BaseService<DashboardService>, IDashboardService
     {
-        private readonly IMoodleHttpClient moodleHttpClient;
+        private readonly IMoodleApiService moodleApiService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DashboardService"/> class.
@@ -28,11 +25,11 @@
         /// <param name="learningHubHttpClient">learningHubHttpClient.</param>
         /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">logger.</param>
-        /// <param name="moodleHttpClient">MoodleHttpClient.</param>
-        public DashboardService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<DashboardService> logger, IMoodleHttpClient moodleHttpClient)
+        /// <param name="moodleApiService">MoodleApiService.</param>
+        public DashboardService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<DashboardService> logger, IMoodleApiService moodleApiService)
            : base(learningHubHttpClient, openApiHttpClient, logger)
         {
-            this.moodleHttpClient = moodleHttpClient;
+            this.moodleApiService = moodleApiService;
         }
 
         /// <summary>
@@ -128,12 +125,22 @@
         /// <param name="currentUserId">The dashboard type.</param>
         /// <param name="pageNumber">The page Number.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<List<MoodleCourseResponseViewModel>> GetEnrolledCoursesFromMoodleAsync(int currentUserId, int pageNumber)
+        public async Task<List<MoodleCourseResponseModel>> GetEnrolledCoursesFromMoodleAsync(int currentUserId, int pageNumber)
         {
-            List<MoodleCourseResponseViewModel> viewmodel = new List<MoodleCourseResponseViewModel> { };
-            MoodleApiService moodleApiService = new MoodleApiService(this.moodleHttpClient);
-            viewmodel = await moodleApiService.GetEnrolledCoursesAsync(currentUserId, pageNumber);
+            List<MoodleCourseResponseModel> viewmodel = new List<MoodleCourseResponseModel> { };
+            viewmodel = await this.moodleApiService.GetEnrolledCoursesAsync(currentUserId, pageNumber);
             return viewmodel;
+        }
+
+        /// <summary>
+        /// GetEnrolledCoursesFromMoodleAsync.
+        /// </summary>
+        /// <param name="currentUserId">The current User Id type.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<int> GetMoodleUserIdAsync(int currentUserId)
+        {
+            var moodleUserId = await this.moodleApiService.GetMoodleUserIdByUsernameAsync(currentUserId);
+            return moodleUserId;
         }
 
         /// <summary>

@@ -1,17 +1,16 @@
-﻿namespace LearningHub.Nhs.WebUI.Interfaces
-{
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using LearningHub.Nhs.Models.Moodle.API;
-    using MoodleCourseCompletionModel = LearningHub.Nhs.Models.Moodle.API.MoodleCourseCompletionModel;
+﻿using LearningHub.Nhs.Models.Moodle.API;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
+namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
+{
     /// <summary>
     /// IMoodleApiService.
     /// </summary>
     public interface IMoodleApiService
     {
         /// <summary>
-        /// GetMoodleUserIdByUsernameAsync.
+        /// GetResourcesAsync.
         /// </summary>
         /// <param name="currentUserId">The current LH User Id.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
@@ -26,10 +25,12 @@
         Task<List<MoodleCourseResponseModel>> GetEnrolledCoursesAsync(int currentUserId, int pageNumber);
 
         /// <summary>
-        /// GetCourseUrl.
+        /// GetEnrolledCoursesAsync.
         /// </summary>
-        /// <param name="courseId">course Id. </param>
-        /// <returns>return course URL.</returns>
-        string GetCourseUrl(int courseId);
+        /// <param name="userId">Moodle user id.</param>
+        /// <param name="courseId">Moodle course id.</param>
+        /// <param name="pageNumber">pageNumber.</param>
+        /// <returns> List of MoodleCourseResponseModel.</returns>
+        Task<MoodleCourseCompletionModel> GetCourseCompletionAsync(int userId, int courseId, int pageNumber);
     }
 }

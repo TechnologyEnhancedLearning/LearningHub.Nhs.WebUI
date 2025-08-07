@@ -314,11 +314,11 @@
                 return this.$store.state.userProviders;
             },
             resourceCatalogueCount(): number {
-                if (!this.$store.state.userCatalogues) {
+                if (!this.$store.state.userCatalogues) {              
                     return 0;
                 } else {
                     return this.$store.state.userCatalogues.length;
-                }
+                }     
             },
             userIsAuthor(): boolean {
                 return this.authors.filter(a => a.isContributor).length > 0;
@@ -333,9 +333,8 @@
                 return this.$store.state.resourceDetail.resourceType;
             },
             showCatalogueSelect(): boolean {
-                //return (this.resourceDetail.resourceCatalogueId === this.resourceDetail.nodeId) || // show if user is contributing into the catalogue root
-                //    !Boolean(this.$route.query.initialCreate);                                 // or if the user is editing an existing draft (initialCreate=false)
-                return (!Boolean(this.$route.query.initialCreate));
+                return (this.resourceDetail.resourceCatalogueId === this.resourceDetail.nodeId) || // show if user is contributing into the catalogue root
+                    !Boolean(this.$route.query.initialCreate);                                 // or if the user is editing an existing draft (initialCreate=false)
             },
             newKeywordTrimmed(): string {
                 return this.newKeyword?.trim().replace(/ +(?= )/g, '');

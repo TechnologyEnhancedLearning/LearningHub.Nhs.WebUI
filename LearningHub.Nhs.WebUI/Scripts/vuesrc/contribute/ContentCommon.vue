@@ -314,11 +314,11 @@
                 return this.$store.state.userProviders;
             },
             resourceCatalogueCount(): number {
-                if (!this.$store.state.userCatalogues) {
+                if (!this.$store.state.userCatalogues) {              
                     return 0;
                 } else {
                     return this.$store.state.userCatalogues.length;
-                }
+                }     
             },
             userIsAuthor(): boolean {
                 return this.authors.filter(a => a.isContributor).length > 0;

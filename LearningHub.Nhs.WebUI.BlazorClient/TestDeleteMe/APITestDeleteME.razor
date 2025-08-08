@@ -1,0 +1,66 @@
+﻿@using LearningHub.Nhs.Shared.Interfaces.Http
+@inject ILearningHubHttpClient LearningHubBFFHttpClient
+@inherits TELBlazor.Components.Core.TELComponentBase
+<form>
+    <h3>⚠️ Works when required service packages moved to BlazorClient currently will fail on call, happens due to the runtime hack AllowUsingAspNetCoreInBlazorWasm ⚠️</h3>
+    <input type="text" @bind="ApiRoute" />
+    <button type="button" @onclick=@(async () => await CallApi())>Call API Log Response</button>
+</form>
+<div>
+    <strong>Response from custom endpoint:</strong>
+    <pre style="max-height: 200px; overflow-y: auto; background-color: #f5f5f5; padding: 8px; border: 1px solid #ddd; border-radius: 4px; white-space: pre-wrap;">@APIResponse</pre>
+</div>
+
+@code {
+    string ApiRoute = "Catalogue/GetLatestCatalogueAccessRequest/43"; // Default route 500
+    string? APIResponse = "No response yet";
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized(); // Call the base method
+        Logger.LogInformation("Serilogging");
+
+
+        Logger.LogInformation(
+            "API Test Component initialized with default route: {Route}",
+            ApiRoute
+        );
+
+        Logger.LogInformation("!!!!!!!!!!!!!!!!!!!!!!!!! Base Component");
+    }
+
+    private  async Task CallApi()
+    {
+        try
+        {  
+            Logger.LogInformation("Base Component");
+            var httpClient = await LearningHubBFFHttpClient.GetClientAsync();
+
+            Logger.LogInformation("📡 BaseAddress should be https://lh-web.dev.local/bff/lh-api.dev.local/ . HttpClient BaseAddress: {BaseAddress}", httpClient.BaseAddress?.ToString());
+            Logger.LogInformation($"Logger: Calling via the bff this api route: {ApiRoute}");
+            Logger.LogInformation("📡 Target: {TargetUrl}", "https://lh-web.dev.local/bff/lh-api.dev.local/Catalogue/GetLatestCatalogueAccessRequest/500");
+            // Assuming httpClient.BaseAddress is set
+            string fullUrl = new Uri(httpClient.BaseAddress, ApiRoute).ToString();
+            Logger.LogInformation("Making request to: {FullUrl}", fullUrl);
+
+            // Now use standard HttpClient methods
+            var response = await httpClient.GetAsync(ApiRoute);
+            string responseContent = await response.Content.ReadAsStringAsync();
+
+            Logger.LogInformation("API Response - Status: {Status}, Content: {Content}",
+                response.StatusCode, responseContent);
+           
+            var content = await response.Content.ReadAsStringAsync();
+            APIResponse = $"**Status:** {response.StatusCode}\n\n{content}";
+
+            /* qqqq
+             * // -> think need // https://lh-web.dev.local/bff/lh-api.dev.local/Catalogue/GetLatestCatalogueAccessRequest/500
+            */
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "An error occurred during API call to route: {Route}", ApiRoute);
+        }
+    }
+}

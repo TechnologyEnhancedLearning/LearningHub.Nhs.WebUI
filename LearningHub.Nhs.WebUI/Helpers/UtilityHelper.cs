@@ -33,25 +33,6 @@
             { "html", ResourceTypeEnum.Html },
         };
 
-        /// TODO: Remove this method after adding to Moodle resource types to models project.
-        /// <summary>
-        /// Findwise Moodle resource type dictionary.
-        /// </summary>
-        public static readonly Dictionary<string, ResourceTypeEnum> FindwiseResourceMoodleTypeDict = new Dictionary<string, ResourceTypeEnum>()
-        {
-            { "video", ResourceTypeEnum.Video },
-            { "article", ResourceTypeEnum.Article },
-            { "case", ResourceTypeEnum.Case },
-            { "weblink", ResourceTypeEnum.WebLink },
-            { "audio", ResourceTypeEnum.Audio },
-            { "scorm", ResourceTypeEnum.Scorm },
-            { "assessment", ResourceTypeEnum.Assessment },
-            { "genericfile", ResourceTypeEnum.GenericFile },
-            { "image", ResourceTypeEnum.Image },
-            { "html", ResourceTypeEnum.Html },
-            { "moodle", ResourceTypeEnum.Moodle },
-        };
-
         /// <summary>
         /// The FormatTwitterDate.
         /// </summary>
@@ -139,7 +120,7 @@
                 case ResourceTypeEnum.Article:
                     return "Article";
                 case ResourceTypeEnum.Audio:
-                    string durationText = GetDurationText(durationInMilliseconds ?? 0);
+                    string durationText = FormattingHelper.GetDurationText(durationInMilliseconds ?? 0);
                     durationText = string.IsNullOrEmpty(durationText) ? string.Empty : " - " + durationText;
                     return "Audio" + durationText;
                 case ResourceTypeEnum.Equipment:
@@ -149,7 +130,7 @@
                 case ResourceTypeEnum.Scorm:
                     return "elearning";
                 case ResourceTypeEnum.Video:
-                    durationText = GetDurationText(durationInMilliseconds ?? 0);
+                    durationText = FormattingHelper.GetDurationText(durationInMilliseconds ?? 0);
                     durationText = string.IsNullOrEmpty(durationText) ? string.Empty : " - " + durationText;
                     return "Video" + durationText;
                 case ResourceTypeEnum.WebLink:
@@ -164,139 +145,6 @@
                     return "HTML";
                 default:
                     return "File";
-            }
-        }
-
-        /// TODO: Remove this method after adding to Moodle resource types to models project.
-        /// <summary>
-        /// Returns a prettified resource type name, suitable for display in the UI. Includes video/audio duration string.
-        /// </summary>
-        /// <param name="resourceType">The resource type.</param>
-        /// <param name="durationInMilliseconds">The media duration in milliseconds.</param>
-        /// <returns>The resource type name, and duration if applicable.</returns>
-        public static string GetPrettifiedResourceTypeNameMoodle(ResourceTypeEnum resourceType, int? durationInMilliseconds = 0)
-        {
-            switch (resourceType)
-            {
-                case ResourceTypeEnum.Assessment:
-                    return "Assessment";
-                case ResourceTypeEnum.Article:
-                    return "Article";
-                case ResourceTypeEnum.Audio:
-                    string durationText = GetDurationText(durationInMilliseconds ?? 0);
-                    durationText = string.IsNullOrEmpty(durationText) ? string.Empty : " - " + durationText;
-                    return "Audio" + durationText;
-                case ResourceTypeEnum.Equipment:
-                    return "Equipment";
-                case ResourceTypeEnum.Image:
-                    return "Image";
-                case ResourceTypeEnum.Scorm:
-                    return "elearning";
-                case ResourceTypeEnum.Video:
-                    durationText = GetDurationText(durationInMilliseconds ?? 0);
-                    durationText = string.IsNullOrEmpty(durationText) ? string.Empty : " - " + durationText;
-                    return "Video" + durationText;
-                case ResourceTypeEnum.WebLink:
-                    return "Web link";
-                case ResourceTypeEnum.GenericFile:
-                    return "File";
-                case ResourceTypeEnum.Embedded:
-                    return "Embedded";
-                case ResourceTypeEnum.Case:
-                    return "Case";
-                case ResourceTypeEnum.Html:
-                    return "HTML";
-                case ResourceTypeEnum.Moodle:
-                    return "Course";
-                default:
-                    return "File";
-            }
-        }
-
-        /// <summary>
-        /// Returns a prettified resource type name, suitable for display in the UI. Excludes video/audio duration string.
-        /// </summary>
-        /// <param name="resourceType">The resource type.</param>
-        /// <returns>The resource type name, and duration if applicable.</returns>
-        public static string GetPrettifiedResourceTypeName(ResourceTypeEnum resourceType)
-        {
-            switch (resourceType)
-            {
-                case ResourceTypeEnum.Assessment:
-                    return "Assessment";
-                case ResourceTypeEnum.Article:
-                    return "Article";
-                case ResourceTypeEnum.Audio:
-                    return "Audio";
-                case ResourceTypeEnum.Equipment:
-                    return "Equipment";
-                case ResourceTypeEnum.Image:
-                    return "Image";
-                case ResourceTypeEnum.Scorm:
-                    return "elearning";
-                case ResourceTypeEnum.Video:
-                    return "Video";
-                case ResourceTypeEnum.WebLink:
-                    return "Web link";
-                case ResourceTypeEnum.GenericFile:
-                    return "File";
-                case ResourceTypeEnum.Embedded:
-                    return "Embedded";
-                case ResourceTypeEnum.Case:
-                    return "Case";
-                case ResourceTypeEnum.Html:
-                    return "HTML";
-                default:
-                    return "File";
-            }
-        }
-
-        /// <summary>
-        /// Returns a number of milliseconds converted into a duration string, such as "10 min 15 sec". Includes rounding to match the behaviour of the Azure Media Player.
-        /// </summary>
-        /// <param name="durationInMilliseconds">The number of milliseconds.</param>
-        /// <returns>The duration string.</returns>
-        public static string GetDurationText(int durationInMilliseconds)
-        {
-            if (durationInMilliseconds > 0)
-            {
-                // Azure media player rounds duration to nearest second. e.g. 8:59.88 becomes 9:00. LH needs to match.
-                int nearestSecond = (int)Math.Round(((double)durationInMilliseconds) / 1000);
-                var duration = new TimeSpan(0, 0, nearestSecond);
-                string returnValue = string.Empty;
-
-                // If duration greater than an hour, don't return the seconds part.
-                if (duration.Hours > 0)
-                {
-                    returnValue = $"{duration.Hours} hr {duration.Minutes} min ";
-
-                    // Exclude "0 min" from the return value.
-                    if (returnValue.EndsWith(" 0 min "))
-                    {
-                        returnValue = returnValue.Replace("0 min ", string.Empty);
-                    }
-                }
-                else
-                {
-                    returnValue = $"{duration.Minutes} min {duration.Seconds} sec ";
-
-                    // Exclude "0 min" and "0 sec" from the return value.
-                    if (returnValue.StartsWith("0 min "))
-                    {
-                        returnValue = returnValue.Replace("0 min ", string.Empty);
-                    }
-
-                    if (returnValue.EndsWith(" 0 sec "))
-                    {
-                        returnValue = returnValue.Replace("0 sec ", string.Empty);
-                    }
-                }
-
-                return returnValue;
-            }
-            else
-            {
-                return string.Empty;
             }
         }
 

@@ -11,7 +11,6 @@
     using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.Shared.Interfaces.Services;
     using LearningHub.Nhs.Shared.Models.Search;
-    using LearningHub.Nhs.WebUI.Helpers;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
@@ -170,10 +169,10 @@
                     {
                         var filter = filters.Where(x => x.DisplayName == filteritem).FirstOrDefault();
 
-                        if (filter != null && UtilityHelper.FindwiseResourceMoodleTypeDict.ContainsKey(filter.DisplayName))
+                        if (filter != null && MoodleHelper.FindwiseResourceMoodleTypeDict.ContainsKey(filter.DisplayName))
                         {
-                            var resourceTypeEnum = UtilityHelper.FindwiseResourceMoodleTypeDict[filter.DisplayName];
-                            var searchfilter = new SearchFilterModel() { DisplayName = UtilityHelper.GetPrettifiedResourceTypeNameMoodle(resourceTypeEnum), Count = filter.Count, Value = filteritem, Selected = searchRequest.Filters?.Contains(filter.DisplayName) ?? false };
+                            var resourceTypeEnum = MoodleHelper.FindwiseResourceMoodleTypeDict[filter.DisplayName];
+                            var searchfilter = new SearchFilterModel() { DisplayName = MoodleHelper.GetPrettifiedResourceTypeNameMoodle(resourceTypeEnum), Count = filter.Count, Value = filteritem, Selected = searchRequest.Filters?.Contains(filter.DisplayName) ?? false };
                             searchfilters.Add(searchfilter);
                         }
                     }

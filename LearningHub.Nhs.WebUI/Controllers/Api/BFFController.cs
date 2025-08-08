@@ -78,6 +78,7 @@
             string sanitizedPath = path?.Trim('/').ToLowerInvariant() ?? string.Empty;
             string sanitizedApiName = apiName?.Trim('/').ToLowerInvariant() ?? string.Empty;
 
+            // qqqq https://lh-web.dev.local/bff/lh-api.dev.local/Catalogue/GetLatestCatalogueAccessRequest/500
             IAPIHttpClient apiClient;
             try
             {
@@ -102,6 +103,7 @@
 
             if (!this.IsPathAllowed(sanitizedPath))
             {
+                // qqqq "catalogue/getlatestcatalogueaccessrequest/500"
                 return this.Forbid("This path is not allowed via BFF proxy.");
             }
 

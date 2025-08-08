@@ -16,16 +16,21 @@
         /// <inheritdoc/>
         public string LearningHubApiUrl { get; set; }
 
-        /// <inheritdoc/>
-        public int ResourceSearchPageSize { get; set; }
+        /// <summary>
+        /// Gets or sets the UserApiUrl.
+        /// </summary>
+        public string UserApiUrl { get; set; }
 
-        /// <inheritdoc/>
-        public int CatalogueSearchPageSize { get; set; }
-
-        /// <inheritdoc/>
-        public int AllCatalogueSearchPageSize { get; set; }
-
+        /// <summary>
+        /// Gets or sets the OpenApiUrl.
+        /// </summary>
+        public string OpenApiUrl { get; set; }
+        /// <summary>
+        /// Backend for Frontend (BFF) URL for the Learning Hub API accessed by samesite cookie and uses httpclients with bearers to access external apis.
+        /// </summary>
+        public string LearningHubApiBFFUrl { get; set; }
         /// <inheritdoc/>
         public IFindwiseSettingsPublic FindwiseSettings { get; set; }
+        
     }
 }

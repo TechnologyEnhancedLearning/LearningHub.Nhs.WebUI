@@ -48,15 +48,6 @@
                                           HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
                         });
 
-                // qqqq remove test
-                services.AddHttpClient<BlazorClient.TestDeleteMe.FromShared.ILearningHubHttpClientTest, BlazorClient.TestDeleteMe.FromShared.GenericAPIHttpClient>()
-                    .ConfigurePrimaryHttpMessageHandler(
-                        () => new HttpClientHandler
-                        {
-                            ServerCertificateCustomValidationCallback =
-                                          HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
-                        });
-
                 services.AddHttpClient<IOpenApiHttpClient, OpenApiHttpClient>()
                  .ConfigurePrimaryHttpMessageHandler(
                      () => new HttpClientHandler

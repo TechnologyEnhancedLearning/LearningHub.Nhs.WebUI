@@ -12,7 +12,7 @@
     /// <summary>
     /// The learning hub http client.
     /// </summary>
-    public class LearningHubHttpClient : BaseHttpClient, ILearningHubHttpClient // qqqq
+    public class LearningHubHttpClient : BaseHttpClient, ILearningHubHttpClient
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LearningHubHttpClient"/> class.

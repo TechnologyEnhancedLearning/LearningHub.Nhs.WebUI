@@ -1,9 +1,10 @@
-﻿using LearningHub.Nhs.Caching;// has aspnetcore in it qqqq we just need the interface
+﻿using LearningHub.Nhs.Caching;
 
 namespace LearningHub.Nhs.WebUI.BlazorClient.Services
 {
     /// <summary>
     /// We may use storage, we may just stub it and throw an error, we cant directly use redis we may access it via an api
+    /// The cachestub currently just returns there is nothing available so the caller then will revert to calling the api.
     /// </summary>
     public class WasmCacheServiceStub : ICacheService
     {

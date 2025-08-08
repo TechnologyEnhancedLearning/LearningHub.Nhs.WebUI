@@ -3,17 +3,14 @@
 using Blazored.LocalStorage;
 using LearningHub.Nhs.WebUI.BlazorClient.DI;
 
-
-// qqqq Test try without aspentcore library contamination
-//using LearningHub.Nhs.Caching;
-//using LearningHub.Nhs.Shared.Configuration;
-//using LearningHub.Nhs.Shared.Interfaces;
-//using LearningHub.Nhs.Shared.Interfaces.Configuration;
-//using LearningHub.Nhs.Shared.Interfaces.Http;
-//using LearningHub.Nhs.Shared.Interfaces.Services;
-//using LearningHub.Nhs.Shared.Services;
+using LearningHub.Nhs.Caching;
+using LearningHub.Nhs.Shared.Configuration;
+using LearningHub.Nhs.Shared.Interfaces;
+using LearningHub.Nhs.Shared.Interfaces.Configuration;
+using LearningHub.Nhs.Shared.Interfaces.Http;
+using LearningHub.Nhs.Shared.Interfaces.Services;
+using LearningHub.Nhs.Shared.Services;
 using LearningHub.Nhs.WebUI.BlazorClient.Services;
-using LearningHub.Nhs.WebUI.BlazorClient.TestDeleteMe.FromShared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -36,9 +33,8 @@ using TELBlazor.Components.Core.Configuration;
 using TELBlazor.Components.Core.Services.HelperServices;
 using TELBlazor.Components.OptionalImplementations.Core.Services.HelperServices;
 
-// qqqq should be loading the appsettings apparently
-var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 var http = new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) };
 var env = builder.HostEnvironment.Environment;
@@ -84,7 +80,7 @@ try
 
 
     // Register your BFF using httpclient ILearningHubHttpClient
-    builder.Services.AddBffHttpClient<ILearningHubHttpClientTest, GenericAPIHttpClient>(settings => settings.LearningHubApiUrl);
+    builder.Services.AddBffHttpClient<ILearningHubHttpClient, GenericAPIHttpClient>(settings => settings.LearningHubApiUrl);
 
     // Register your BFF using httpclient IUserApiHttpClient
     builder.Services.AddBffHttpClient<IUserApiHttpClient, GenericAPIHttpClient>(settings => settings.UserApiUrl);
@@ -96,9 +92,11 @@ try
     builder.Services.AddScoped<LoggingLevelSwitch>(sp => levelSwitch);
     builder.Services.AddScoped<ILogLevelSwitcherService, SerilogLogLevelSwitcherService>();
 
-    // qqqq will need back in post removing asp.net shared
-    //builder.Services.AddScoped<ICacheService, WasmCacheServiceStub>(); // had to change provider not to use it previously trying again
-    //builder.Services.AddScoped<IProviderService, ProviderService>();
+    builder.Services.AddScoped<ICacheService, WasmCacheServiceStub>();
+
+    // qqqq will go in a shared DI service collection extension
+    builder.Services.AddScoped<IProviderService, ProviderService>();
+    builder.Services.AddScoped<ISearchService, SearchService>();
 
     await builder.Build().RunAsync();
 }

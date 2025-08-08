@@ -9,8 +9,6 @@
     using TELBlazor.Components.Core.Models.Logging;
     using TELBlazor.Components.Core.Services.HelperServices;
 
-    // qqqq this file needs completely reviewing
-
     /// <summary>
     /// Provides functionality for managing log levels in applications using NLog.
     /// </summary>
@@ -61,16 +59,6 @@
         /// <inheritdoc/>
         public string SetLogLevel(string level)
         {
-            // if (string.IsNullOrWhiteSpace(level))
-            // {
-            //    _logger.LogWarning("Log level was null or empty.");
-            //    return GetCurrentLogLevel();
-            // }
-            // if (!Enum.TryParse<LogLevel>(level, true, out var parsedLevel))
-            // {
-            //    _logger.LogWarning("Invalid log level: {Level}", level);
-            //    return GetCurrentLogLevel();
-            // }
             this.logger.LogInformation("Requested to change log level to {Level}, but NLog does not support runtime changes in WASM.", level);
             this.LogAllLevels("After 'Change'");
 
@@ -105,23 +93,5 @@
                 this.logger.LogError(ex, "Error storing log level to local storage.");
             }
         }
-
-        // private async Task<string?> GetStoredLogLevelWithExpiration()
-        // {
-        //    try
-        //    {
-        //        var storedItem = await _localStorage.GetItemAsync<LocalStorageLogLevel>(LogLevelKey);
-        //        if (storedItem == null || DateTime.UtcNow > storedItem.Expires)
-        //        {
-        //            await _localStorage.RemoveItemAsync(LogLevelKey);
-        //            return null;
-        //        }
-        //        return storedItem.Level;
-        //    }
-        //    catch
-        //    {
-        //        return null;
-        //    }
-        // }
     }
 }

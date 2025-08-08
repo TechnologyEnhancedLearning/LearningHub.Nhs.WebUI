@@ -243,7 +243,7 @@
             </div>
         </div>
 
-        <catalogue-select v-if="resourceCatalogueCount>1 && showCatalogueSelect" v-model.number="resourceCatalogueId" @input="catalogueSelected"></catalogue-select>
+        <catalogue-select v-if="resourceCatalogueCount>0 && showCatalogueSelect" v-model.number="resourceCatalogueId" @input="catalogueSelected"></catalogue-select>
     </div>
 </template>
 

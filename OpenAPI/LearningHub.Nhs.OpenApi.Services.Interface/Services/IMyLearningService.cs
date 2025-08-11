@@ -20,6 +20,22 @@
         Task<MyLearningDetailedViewModel> GetActivityDetailed(int userId, MyLearningRequestModel requestModel);
 
         /// <summary>
+        /// Gets the user recent my leraning activities.
+        /// </summary>
+        /// /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<MyLearningActivitiesDetailedViewModel> GetUserRecentMyLearningActivitiesAsync(int userId, MyLearningRequestModel requestModel);
+
+        /// <summary>
+        /// Gets history of users my leraning activities.
+        /// </summary>
+        /// /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<MyLearningActivitiesDetailedViewModel> GetUserLearningHistoryAsync(int userId, MyLearningRequestModel requestModel);
+
+        /// <summary>
         /// Gets the played segment data for the progress modal in My Learning screen.
         /// </summary>
         /// /// <param name="userId">The user id.</param>

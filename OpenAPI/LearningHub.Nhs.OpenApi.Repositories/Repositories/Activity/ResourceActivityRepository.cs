@@ -11,6 +11,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
     using LearningHub.Nhs.OpenApi.Repositories.Helpers;
@@ -180,7 +181,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
         /// <param name="requestModel">requestModel.</param>
         /// <param name="detailedMediaActivityRecordingStartDate">detailedMediaActivityRecordingStartDate.</param>
         /// <returns>ResourceActivity.</returns>
-        public async Task<IQueryable<ResourceActivity>> GetByUserIdFromSP(int userId,Nhs.Models.MyLearning.MyLearningRequestModel requestModel, DateTimeOffset detailedMediaActivityRecordingStartDate)
+        public async Task<IQueryable<ResourceActivity>> GetByUserIdFromSP(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel, DateTimeOffset detailedMediaActivityRecordingStartDate)
         {
             (DateTimeOffset? startDate, DateTimeOffset? endDate) = this.ApplyDatesFilter(requestModel);
             (string strResourceTypes, bool resourceTypeFlag) = this.ApplyResourceTypesfilters(requestModel);
@@ -230,6 +231,46 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
             }).ToList();
 
             return listOfresourceActivities.OrderByDescending(r => r.ActivityStart).AsQueryable();
+        }
+
+        /// <summary>
+        /// Get User Recent My LearningActivities.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">requestModel.</param>
+        /// <returns></returns>
+        public async Task<List<MyLearningActivitiesViewModel>> GetUserRecentMyLearningActivities(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel)
+        {
+            try
+            {
+                var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+                var result = await DbContext.MyLearningActivitiesViewModel.FromSqlRaw("EXEC activity.GetUserRecentLearningActivities @userId", param0).AsNoTracking().ToListAsync();     
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get User Recent My LearningActivities.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">requestModel.</param>
+        /// <returns></returns>
+        public async Task<List<MyLearningActivitiesViewModel>> GetUserLearningHistory(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel)
+        {
+            try
+            {
+                var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+                var result = await DbContext.MyLearningActivitiesViewModel.FromSqlRaw("EXEC activity.GetUsersLearningHistory @userId", param0).AsNoTracking().ToListAsync();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         /// <summary>

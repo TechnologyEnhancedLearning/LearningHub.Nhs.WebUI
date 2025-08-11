@@ -415,6 +415,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         public virtual DbSet<NodeContentAdminViewModel> NodeContentAdminViewModel { get; set; }
 
         /// <summary>
+        /// Gets or sets the User recent my learning activities.
+        /// </summary>
+        public virtual DbSet<MyLearningActivitiesViewModel> MyLearningActivitiesViewModel { get; set; }
+
+        /// <summary>
         /// Gets or sets the node resource..
         /// </summary>
         public virtual DbSet<NodeResource> NodeResource { get; set; }

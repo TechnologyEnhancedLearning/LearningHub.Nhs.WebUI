@@ -60,31 +60,31 @@
                 {
                     new SideNavigationItem
                     {
-                        Text = "Recent",
-                        Controller = "Activity",
-                        Action = "Recent",
+                        Text = "Recent learning",
+                        Controller = "MyLearning",
+                        Action = "Index",
                         IsActive = route => MatchRoute(route, "Activity", "Recent"),
                     },
                     new SideNavigationItem
                     {
-                        Text = "Bookmark",
-                        Controller = "Activity",
+                        Text = "Bookmarks",
+                        Controller = "MyLearning",
                         Action = "Bookmark",
                         IsActive = route => MatchRoute(route, "Activity", "Bookmark"),
                     },
                     new SideNavigationItem
                     {
                         Text = "Certificates",
-                        Controller = "Activity",
+                        Controller = "MyLearning",
                         Action = "Certificates",
                         IsActive = route => MatchRoute(route, "Activity", "Certificates"),
                     },
                     new SideNavigationItem
                     {
                         Text = "Learning history",
-                        Controller = "Activity",
-                        Action = "Learninghistory",
-                        IsActive = route => MatchRoute(route, "Activity", "Learninghistory"),
+                        Controller = "MyLearning",
+                        Action = "LearningHistory",
+                        IsActive = route => MatchRoute(route, "Activity", "LearningHistory"),
                     },
                 },
             },

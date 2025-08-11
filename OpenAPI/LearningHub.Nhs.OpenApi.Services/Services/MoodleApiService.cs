@@ -101,6 +101,75 @@
 
         }
 
+
+        /// <summary>
+        /// GetEnrolledCoursesAsync.
+        /// </summary>
+        /// <param name="userId">Moodle user id.</param>
+        /// <param name="months">The page Number.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<List<MoodleEnrolledCourseResponseModel>> GetRecentEnrolledCoursesAsync(int userId, int? months = null)
+        {
+            try
+            {
+                userId = 3;
+                var parameters = new Dictionary<string, string>
+            {
+                { "userid", userId.ToString() },
+                { "months", months.ToString() }
+            };
+
+                // Fetch enrolled courses
+                var recentEnrolledCourses = await GetCallMoodleApiAsync<List<MoodleEnrolledCourseResponseModel>>(
+                    "mylearningservice_get_recent_courses",
+                    parameters
+                );
+
+                if (recentEnrolledCourses == null || recentEnrolledCourses.Count == 0)
+                    return new List<MoodleEnrolledCourseResponseModel>();
+
+                return recentEnrolledCourses.ToList();
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// GetUserLearningHistory.
+        /// </summary>
+        /// <param name="userId">Moodle user id.</param>
+        /// <param name="months">The page Number.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<List<MoodleEnrolledCourseResponseModel>> GetUserLearningHistoryAsync(int userId, int? months = null)
+        {
+            try
+            {
+                userId = 3;
+                var parameters = new Dictionary<string, string>
+            {
+                { "userid", userId.ToString() },
+                { "months", months.ToString() }
+            };
+
+                // Fetch enrolled courses
+                var recentEnrolledCourses = await GetCallMoodleApiAsync<List<MoodleEnrolledCourseResponseModel>>(
+                    "mylearningservice_get_recent_courses",
+                    parameters
+                );
+
+                if (recentEnrolledCourses == null || recentEnrolledCourses.Count == 0)
+                    return new List<MoodleEnrolledCourseResponseModel>();
+
+                return recentEnrolledCourses.ToList();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         /// <summary>
         /// GetEnrolledCoursesAsync.
         /// </summary>

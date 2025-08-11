@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.WebUI.Models;
 
     /// <summary>
@@ -69,6 +70,102 @@
             }
 
             return typeText;
+        }
+
+        /// <summary>
+        /// Get resource type details.
+        /// </summary>
+        /// <param name="resourceType">resourceType.</param>
+        /// <returns>The string.</returns>
+        public static string GetResourceTypeDesc(ResourceTypeEnum resourceType)
+        {
+            string typeText = string.Empty;
+            switch (resourceType)
+            {
+                case ResourceTypeEnum.Assessment:
+                    typeText = "Assessment";
+                    break;
+                case ResourceTypeEnum.Article:
+                    typeText = "Article";
+                    break;
+                case ResourceTypeEnum.Audio:
+                    typeText = "Audio";
+                    break;
+                case ResourceTypeEnum.GenericFile:
+                    typeText = "File";
+                    break;
+                case ResourceTypeEnum.Image:
+                    typeText = "Image";
+                    break;
+                case ResourceTypeEnum.Scorm:
+                    typeText = "elearning";
+                    break;
+                case ResourceTypeEnum.Video:
+                    typeText = "Video";
+                    break;
+                case ResourceTypeEnum.WebLink:
+                    typeText = "Web link";
+                    break;
+                case ResourceTypeEnum.Case:
+                    typeText = "Case";
+                    break;
+                case ResourceTypeEnum.Html:
+                    typeText = "HTML";
+                    break;
+                case ResourceTypeEnum.Moodle:
+                    typeText = "Course";
+                    break;
+                default:
+                    typeText = string.Empty;
+                    break;
+            }
+
+            return typeText;
+        }
+
+        /// <summary>
+        /// GetActivityStatusDisplayText.
+        /// </summary>
+        /// <param name="activity">The activity.</param>
+        /// <returns>The string.</returns>
+        public static string GetActivityStatusDisplayText(MyLearningCombainedActivitiesViewModel activity)
+        {
+            if (activity.ActivityStatus == ActivityStatusEnum.Completed || activity.ActivityStatus == ActivityStatusEnum.Passed || activity.ActivityStatus == ActivityStatusEnum.Passed || activity.ActivityStatus == ActivityStatusEnum.Viewed || activity.ActivityStatus == ActivityStatusEnum.Downloaded)
+            {
+                return "Completed";
+            }
+            else
+            {
+                return "InProgress";
+            }
+        }
+
+        /// <summary>
+        /// CanDownloadCertificate.
+        /// </summary>
+        /// <param name="activitiesViewModel">The activityDetailedItemViewModel.</param>
+        /// <returns>The <see cref="bool"/>bool.</returns>
+        public static bool CanCertificateawarded(this MyLearningCombainedActivitiesViewModel activitiesViewModel)
+        {
+            if (activitiesViewModel.CertificateEnabled == true)
+            {
+                if (activitiesViewModel.ResourceType == ResourceTypeEnum.Scorm)
+                {
+                    if (GetActivityStatusDisplayText(activitiesViewModel) == "Completed" || GetActivityStatusDisplayText(activitiesViewModel) == "Passed")
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (GetActivityStatusDisplayText(activitiesViewModel) == "Completed" || GetActivityStatusDisplayText(activitiesViewModel) == "Passed" || GetActivityStatusDisplayText(activitiesViewModel) == "Downloaded")
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

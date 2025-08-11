@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Diagnostics.PerformanceData;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
@@ -25,6 +27,10 @@
         /// The resourceActivityRepository.
         /// </summary>
         private readonly IResourceActivityRepository resourceActivityRepository;
+
+        /// <summary>
+        /// The catalogueNodeVersionRepository.
+        /// </summary>
         private readonly ICatalogueNodeVersionRepository catalogueNodeVersionRepository;
 
         /// <summary>
@@ -53,6 +59,11 @@
         private readonly IMediaResourceActivityRepository mediaResourceActivity;
 
         /// <summary>
+        /// The moodleApiService.
+        /// </summary>
+        private readonly IMoodleApiService moodleApiService;
+
+        /// <summary>
         /// The mapper.
         /// </summary>
         private readonly IMapper mapper;
@@ -74,6 +85,7 @@
         /// <param name="settings">The settings.</param>
         /// <param name="scormActivityRepository">The scormActivityRepository.</param>
         /// <param name="mediaResourceActivity">The mediaResourceActivity.</param>
+        /// <param name="moodleApiService">The moodleApiService.</param>
         public MyLearningService(
             IResourceActivityRepository resourceActivityRepository,
             IMediaResourcePlayedSegmentRepository mediaResourcePlayedSegmentRepository,
@@ -83,7 +95,8 @@
             IMapper mapper,
             IOptions<LearningHubConfig> settings,
             IScormActivityRepository scormActivityRepository,
-            IMediaResourceActivityRepository mediaResourceActivity)
+            IMediaResourceActivityRepository mediaResourceActivity,
+            IMoodleApiService moodleApiService)
         {
             this.resourceActivityRepository = resourceActivityRepository;
             this.mediaResourcePlayedSegmentRepository = mediaResourcePlayedSegmentRepository;
@@ -94,6 +107,7 @@
             this.settings = settings.Value;
             this.scormActivityRepository = scormActivityRepository;
             this.mediaResourceActivity = mediaResourceActivity;
+            this.moodleApiService = moodleApiService;
         }
 
         /// <summary>
@@ -118,6 +132,178 @@
             viewModel.Activities = await this.PopulateMyLearningDetailedItemViewModels(activityEntities, userId);
 
             return viewModel;
+        }
+
+        /// <summary>
+        /// Gets the user recent my leraning activities..
+        /// </summary>
+        /// /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<MyLearningActivitiesDetailedViewModel> GetUserRecentMyLearningActivitiesAsync(int userId, MyLearningRequestModel requestModel)
+        {
+            try
+            {
+                var result = await resourceActivityRepository.GetUserRecentMyLearningActivities(userId, requestModel);
+
+                var entrolledCourses = await this.moodleApiService.GetRecentEnrolledCoursesAsync(userId, 6);
+
+                var mappedMyLearningActivities = result.Select(Activity => new MyLearningCombainedActivitiesViewModel
+                {
+                    UserId = userId,
+                    ResourceId = Activity.ResourceId,
+                    ResourceVersionId = Activity.ResourceVersionId,
+                    ResourceReferenceId = Activity.ResourceReferenceId,
+                    IsCurrentResourceVersion = Activity.IsCurrentResourceVersion,
+                    MajorVersion = Activity.MajorVersion,
+                    MinorVersion = Activity.MinorVersion,
+                    ResourceType = Activity.ResourceType,
+                    Title = Activity.Title,
+                    CertificateEnabled = Activity.CertificateEnabled,
+                    ActivityStatus = Activity.ActivityStatus,
+                    ActivityDate = Activity.ActivityDate,
+                    ScorePercentage = Activity.ScorePercentage,
+                    TotalActivities = 0,
+                    CompletedActivities = 0,
+                }).ToList();
+
+                var mappedEnrolledCourses = entrolledCourses.Select(course => new MyLearningCombainedActivitiesViewModel
+                {
+                    UserId = userId,
+                    ResourceId = (int)course.Id,
+                    ResourceVersionId = (int)course.Id,
+                    IsCurrentResourceVersion = true,
+                    ResourceReferenceId = (int)course.Id,
+                    MajorVersion = 1,
+                    MinorVersion = 0,
+                    ResourceType = ResourceTypeEnum.Moodle,
+                    Title = course.DisplayName,
+                    CertificateEnabled = course.CertificateEnabled,
+                    ActivityStatus = (bool)course.Completed ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
+                    ActivityDate = DateTimeOffset.FromUnixTimeMilliseconds((long)course.LastAccess),
+                    ScorePercentage = Convert.ToInt32(course.ProgressPercentage.TrimEnd('%')),
+                    TotalActivities = course.TotalActivities,
+                    CompletedActivities = course.CompletedActivities,
+                }).ToList();
+
+                // Combine both result sets
+                var combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
+               
+                if (requestModel.Complete)
+                {
+                    combainedUserActivities = combainedUserActivities.Where(x => x.ActivityStatus == ActivityStatusEnum.Completed || x.ActivityStatus == ActivityStatusEnum.Passed).ToList();
+                }
+                else if (requestModel.Incomplete)
+                {
+                    combainedUserActivities = combainedUserActivities.Where(x => x.ActivityStatus == ActivityStatusEnum.Incomplete || x.ActivityStatus == ActivityStatusEnum.Failed).ToList();
+                }
+                
+                var pagedResults = combainedUserActivities.OrderByDescending(activity => activity.ActivityDate).Skip(requestModel.Skip).Take(requestModel.Take).ToList();
+
+                // Count total records.
+                MyLearningActivitiesDetailedViewModel viewModel = new MyLearningActivitiesDetailedViewModel()
+                {
+                    TotalCount = combainedUserActivities.Count(),
+                    Activities = pagedResults,
+                };
+
+                return viewModel;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the user learning history activities.
+        /// </summary>
+        /// /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<MyLearningActivitiesDetailedViewModel> GetUserLearningHistoryAsync(int userId, MyLearningRequestModel requestModel)
+        {
+            try
+            {
+                var result = await resourceActivityRepository.GetUserLearningHistory(userId, requestModel);
+
+                var entrolledCourses = await this.moodleApiService.GetRecentEnrolledCoursesAsync(userId);
+
+                List<MyLearningCombainedActivitiesViewModel> mappedMyLearningActivities = new();
+                List<MyLearningCombainedActivitiesViewModel> mappedEnrolledCourses = new();
+                List<MyLearningCombainedActivitiesViewModel> combainedUserActivities = new();
+
+                if (result != null)
+                {
+                    mappedMyLearningActivities = result.Select(activity => new MyLearningCombainedActivitiesViewModel
+                    {
+                        UserId = userId,
+                        ResourceId = activity.ResourceId,
+                        ResourceVersionId = activity.ResourceVersionId,
+                        ResourceReferenceId = activity.ResourceReferenceId,
+                        IsCurrentResourceVersion = activity.IsCurrentResourceVersion,
+                        MajorVersion = activity.MajorVersion,
+                        MinorVersion = activity.MinorVersion,
+                        ResourceType = activity.ResourceType,
+                        Title = activity.Title,
+                        CertificateEnabled = activity.CertificateEnabled,
+                        ActivityStatus = activity.ActivityStatus,
+                        ActivityDate = activity.ActivityDate,
+                        ScorePercentage = activity.ScorePercentage,
+                        TotalActivities = 0,
+                        CompletedActivities = 0,
+                    }).ToList();
+                }
+
+                if (entrolledCourses != null)
+                {
+                    mappedEnrolledCourses = entrolledCourses.Select(course => new MyLearningCombainedActivitiesViewModel
+                    {
+                        UserId = userId,
+                        ResourceId = (int)course.Id,
+                        ResourceVersionId = (int)course.Id,
+                        IsCurrentResourceVersion = true,
+                        ResourceReferenceId = (int)course.Id,
+                        MajorVersion = 1,
+                        MinorVersion = 0,
+                        ResourceType = ResourceTypeEnum.Moodle,
+                        Title = course.DisplayName,
+                        CertificateEnabled = course.CertificateEnabled,
+                        ActivityStatus = (bool)course.Completed ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
+                        ActivityDate = DateTimeOffset.FromUnixTimeMilliseconds((long)course.LastAccess),
+                        ScorePercentage = int.TryParse(course.ProgressPercentage.TrimEnd('%'), out var score) ? score : 0,
+                        TotalActivities = course.TotalActivities,
+                        CompletedActivities = course.CompletedActivities,
+                    }).ToList();
+                }
+
+                // Combine both result sets
+                combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
+
+                if (requestModel.Complete)
+                {
+                    combainedUserActivities = combainedUserActivities.Where(x => x.ActivityStatus == ActivityStatusEnum.Completed || x.ActivityStatus == ActivityStatusEnum.Passed).ToList();
+                }
+                else if (requestModel.Incomplete)
+                {
+                    combainedUserActivities = combainedUserActivities.Where(x => x.ActivityStatus == ActivityStatusEnum.Incomplete || x.ActivityStatus == ActivityStatusEnum.Failed).ToList();
+                }
+
+                var pagedResults = combainedUserActivities.OrderByDescending(activity => activity.ActivityDate).Skip(requestModel.Skip).Take(requestModel.Take).ToList();
+
+                // Count total records.
+                MyLearningActivitiesDetailedViewModel viewModel = new MyLearningActivitiesDetailedViewModel()
+                {
+                    TotalCount = combainedUserActivities.Count(),
+                    Activities = pagedResults,
+                };
+
+                return viewModel;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         /// <summary>

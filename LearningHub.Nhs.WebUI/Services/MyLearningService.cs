@@ -60,6 +60,70 @@
         }
 
         /// <summary>
+        /// Gets the user recent my leraning activities.
+        /// </summary>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<MyLearningActivitiesDetailedViewModel> GetUserRecentMyLearningActivities(MyLearningRequestModel requestModel)
+        {
+            MyLearningActivitiesDetailedViewModel viewModel = null;
+
+            var json = JsonConvert.SerializeObject(requestModel);
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = await this.OpenApiHttpClient.GetClientAsync();
+
+            var request = $"MyLearning/GetUserRecentMyLearningActivities";
+            var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewModel = JsonConvert.DeserializeObject<MyLearningActivitiesDetailedViewModel>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Gets the user recent my leraning activities.
+        /// </summary>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<MyLearningActivitiesDetailedViewModel> GetUserLearningHistory(MyLearningRequestModel requestModel)
+        {
+            MyLearningActivitiesDetailedViewModel viewModel = null;
+
+            var json = JsonConvert.SerializeObject(requestModel);
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = await this.OpenApiHttpClient.GetClientAsync();
+
+            var request = $"MyLearning/GetUserLearningHistory";
+            var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewModel = JsonConvert.DeserializeObject<MyLearningActivitiesDetailedViewModel>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewModel;
+        }
+
+        /// <summary>
         /// Gets the played segment data for the progress modal in My Learning screen.
         /// </summary>
         /// <param name="resourceId">The resourceId.</param>

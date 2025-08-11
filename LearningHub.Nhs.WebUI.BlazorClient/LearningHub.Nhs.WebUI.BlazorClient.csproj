@@ -12,8 +12,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.2" />
-		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.50" />
+		<!--<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.2" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.50" />-->
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.8" />
 
 		<!--Configuration http -->
@@ -44,6 +44,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\LearningHub.Nhs.Shared\LearningHub.Nhs.Shared.csproj" />
+	  <ProjectReference Include="..\LearningHub.Nhs.WebUI.Shared\LearningHub.Nhs.WebUI.Shared.csproj" />
 	</ItemGroup>
 	<!--qqqq THIS MUST NOT GO INTO PRODUCTION-->
 	<Target Name="AllowUsingAspNetCoreInBlazorWasm" AfterTargets="ProcessFrameworkReferences">

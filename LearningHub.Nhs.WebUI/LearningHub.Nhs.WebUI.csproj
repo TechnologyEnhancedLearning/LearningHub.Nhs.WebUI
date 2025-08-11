@@ -177,6 +177,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\LearningHub.Nhs.Shared\LearningHub.Nhs.Shared.csproj" />
 	  <ProjectReference Include="..\LearningHub.Nhs.WebUI.BlazorClient\LearningHub.Nhs.WebUI.BlazorClient.csproj" />
+	  <ProjectReference Include="..\LearningHub.Nhs.WebUI.Shared\LearningHub.Nhs.WebUI.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

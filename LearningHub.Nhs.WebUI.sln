@@ -95,6 +95,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningHub.Nhs.Shared", "L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningHub.Nhs.WebUI.BlazorClient", "LearningHub.Nhs.WebUI.BlazorClient\LearningHub.Nhs.WebUI.BlazorClient.csproj", "{A7DA82FE-A46C-47E9-8BD6-7FD7A8376CBA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningHub.Nhs.WebUI.Shared", "LearningHub.Nhs.WebUI.Shared\LearningHub.Nhs.WebUI.Shared.csproj", "{22596C8C-EF3A-4046-BB85-012D851D8D16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -375,6 +377,14 @@ Global
 		{A7DA82FE-A46C-47E9-8BD6-7FD7A8376CBA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A7DA82FE-A46C-47E9-8BD6-7FD7A8376CBA}.Release|x64.ActiveCfg = Release|Any CPU
 		{A7DA82FE-A46C-47E9-8BD6-7FD7A8376CBA}.Release|x64.Build.0 = Release|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Debug|x64.Build.0 = Debug|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Release|x64.ActiveCfg = Release|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

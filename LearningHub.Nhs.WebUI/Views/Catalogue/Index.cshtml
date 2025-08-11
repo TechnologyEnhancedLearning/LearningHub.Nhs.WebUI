@@ -9,16 +9,15 @@
     ViewData["Title"] = "Catalogue";
 
 
-  bool CanManage()
-  {
-    return IsInRole(RoleEnum.LocalAdmin);
-  }
+    bool CanManage()
+    {
+        return IsInRole(RoleEnum.LocalAdmin);
+    }
 
-  bool Unlocked()
-  {
-    return IsInRole(RoleEnum.LocalAdmin) || IsInRole(RoleEnum.Editor) || IsInRole(RoleEnum.Reader) ;
-    //// || this.User.IsInRole("Administrator")
-  }
+    bool Unlocked()
+    {
+        return IsInRole(RoleEnum.LocalAdmin) || IsInRole(RoleEnum.Editor) || IsInRole(RoleEnum.Reader) || this.User.IsInRole("Administrator");
+    }
 
   bool IsInRole(RoleEnum role)
   {

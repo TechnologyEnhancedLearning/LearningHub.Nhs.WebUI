@@ -23,7 +23,7 @@
         /// </summary>
         public MyLearningUserActivitiesViewModel()
         {
-            this.Activities = new List<MyLearningCombainedActivitiesViewModel>();
+            this.Activities = new List<MyLearningCombinedActivitiesViewModel>();
         }
 
         /// <summary>
@@ -32,7 +32,7 @@
         /// <param name="requestModel">MyLearningRequestModel.</param>
         public MyLearningUserActivitiesViewModel(MyLearningRequestModel requestModel)
         {
-            this.Activities = new List<MyLearningCombainedActivitiesViewModel>();
+            this.Activities = new List<MyLearningCombinedActivitiesViewModel>();
             foreach (PropertyInfo prop in requestModel.GetType().GetProperties())
             {
                 this.GetType().GetProperty(prop.Name).SetValue(this, prop.GetValue(requestModel, null), null);
@@ -62,7 +62,7 @@
         /// <summary>
         /// Gets or sets the Activities.
         /// </summary>
-        public List<MyLearningCombainedActivitiesViewModel> Activities { get; set; }
+        public List<MyLearningCombinedActivitiesViewModel> Activities { get; set; }
 
         /// <summary>
         /// Gets or sets the learning result paging.

@@ -128,7 +128,7 @@
         /// </summary>
         /// <param name="activity">The activity.</param>
         /// <returns>The string.</returns>
-        public static string GetActivityStatusDisplayText(MyLearningCombainedActivitiesViewModel activity)
+        public static string GetActivityStatusDisplayText(MyLearningCombinedActivitiesViewModel activity)
         {
             if (activity.ActivityStatus == ActivityStatusEnum.Completed || activity.ActivityStatus == ActivityStatusEnum.Passed || activity.ActivityStatus == ActivityStatusEnum.Passed || activity.ActivityStatus == ActivityStatusEnum.Viewed || activity.ActivityStatus == ActivityStatusEnum.Downloaded)
             {
@@ -145,7 +145,7 @@
         /// </summary>
         /// <param name="activitiesViewModel">The activityDetailedItemViewModel.</param>
         /// <returns>The <see cref="bool"/>bool.</returns>
-        public static bool CanCertificateawarded(this MyLearningCombainedActivitiesViewModel activitiesViewModel)
+        public static bool CanCertificateawarded(this MyLearningCombinedActivitiesViewModel activitiesViewModel)
         {
             if (activitiesViewModel.CertificateEnabled == true)
             {

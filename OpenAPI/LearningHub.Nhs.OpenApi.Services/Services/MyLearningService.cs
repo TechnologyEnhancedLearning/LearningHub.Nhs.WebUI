@@ -148,7 +148,7 @@
 
                 var entrolledCourses = await this.moodleApiService.GetRecentEnrolledCoursesAsync(userId, 6);
 
-                var mappedMyLearningActivities = result.Select(Activity => new MyLearningCombainedActivitiesViewModel
+                var mappedMyLearningActivities = result.Select(Activity => new MyLearningCombinedActivitiesViewModel
                 {
                     UserId = userId,
                     ResourceId = Activity.ResourceId,
@@ -167,7 +167,7 @@
                     CompletedActivities = 0,
                 }).ToList();
 
-                var mappedEnrolledCourses = entrolledCourses.Select(course => new MyLearningCombainedActivitiesViewModel
+                var mappedEnrolledCourses = entrolledCourses.Select(course => new MyLearningCombinedActivitiesViewModel
                 {
                     UserId = userId,
                     ResourceId = (int)course.Id,
@@ -229,13 +229,13 @@
 
                 var entrolledCourses = await this.moodleApiService.GetRecentEnrolledCoursesAsync(userId);
 
-                List<MyLearningCombainedActivitiesViewModel> mappedMyLearningActivities = new();
-                List<MyLearningCombainedActivitiesViewModel> mappedEnrolledCourses = new();
-                List<MyLearningCombainedActivitiesViewModel> combainedUserActivities = new();
+                List<MyLearningCombinedActivitiesViewModel> mappedMyLearningActivities = new();
+                List<MyLearningCombinedActivitiesViewModel> mappedEnrolledCourses = new();
+                List<MyLearningCombinedActivitiesViewModel> combainedUserActivities = new();
 
                 if (result != null)
                 {
-                    mappedMyLearningActivities = result.Select(activity => new MyLearningCombainedActivitiesViewModel
+                    mappedMyLearningActivities = result.Select(activity => new MyLearningCombinedActivitiesViewModel
                     {
                         UserId = userId,
                         ResourceId = activity.ResourceId,
@@ -257,7 +257,7 @@
 
                 if (entrolledCourses != null)
                 {
-                    mappedEnrolledCourses = entrolledCourses.Select(course => new MyLearningCombainedActivitiesViewModel
+                    mappedEnrolledCourses = entrolledCourses.Select(course => new MyLearningCombinedActivitiesViewModel
                     {
                         UserId = userId,
                         ResourceId = (int)course.Id,

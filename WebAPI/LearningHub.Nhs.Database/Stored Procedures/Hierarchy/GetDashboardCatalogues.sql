@@ -219,7 +219,7 @@ BEGIN
 				,cnv.CardImageUrl
 				,cnv.Url
 				,cnv.RestrictedAccess
-				,CAST(CASE WHEN cnv.RestrictedAccess = 1 THEN 0 ELSE 1 END AS bit) AS HasAccess
+				,CAST(CASE WHEN cnv.RestrictedAccess = 1 AND auth.CatalogueNodeId IS NULL THEN 0 ELSE 1 END AS bit) AS HasAccess
 				,ub.Id AS BookMarkId
 			    ,CAST(ISNULL(ub.[Deleted], 1) ^ 1 AS BIT) AS IsBookmarked 
 			FROM @MyActivity ma

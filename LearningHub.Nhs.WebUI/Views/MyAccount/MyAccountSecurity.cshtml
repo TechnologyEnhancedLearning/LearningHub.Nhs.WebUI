@@ -1,7 +1,26 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.MyAccountSecurityViewModel
 
-@{    
-   ViewData["Title"] = "Security";
+@{
+    ViewData["Title"] = "Security";
+}
+@section NavBreadcrumbs {
+
+    <section class="nhsuk-hero">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+
+                    <div class="nhsuk-u-padding-top-3 nhsuk-u-padding-bottom-3">
+                        <a href="/">Home</a>
+                        <i class="fa-solid fa-chevron-right nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+                    </div>
+                    <div class="nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-7">
+                        <h1 class="nhsuk-heading-xl">My account</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 }
 <div class="bg-white nhsuk-u-padding-bottom-8">
     <div class="nhsuk-width-container app-width-container">
@@ -11,69 +30,69 @@
             </div>
             <div class="nhsuk-grid-column-two-thirds">
 
-        @if (!ViewData.ModelState.IsValid)
-        {
-            <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
-        }
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                }
 
-        <h2 class="nhsuk-heading-l">Security</h2>
-        <dl class="nhsuk-summary-list">
+                <h2 class="nhsuk-heading-l">Security</h2>
+                <dl class="nhsuk-summary-list">
 
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    Secondary email address
-                </dt>
-                <dd class="nhsuk-summary-list__value">
-                    @Model.SecondaryEmailAddress
-                </dd>
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Secondary email address
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @Model.SecondaryEmailAddress
+                        </dd>
 
-                <dd class="nhsuk-summary-list__actions">
+                        <dd class="nhsuk-summary-list__actions">
 
-                    <a asp-action="ChangeSecondaryEmail">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;secondry email</span>
-                    </a>
+                            <a asp-action="ChangeSecondaryEmail">
+                                Change<span class="nhsuk-u-visually-hidden">&nbsp;secondry email</span>
+                            </a>
 
-                </dd>
+                        </dd>
 
-            </div>
+                    </div>
 
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    Password
-                </dt>
-                <dd class="nhsuk-summary-list__value" typeof="password">
-                    *************
-                </dd>
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Password
+                        </dt>
+                        <dd class="nhsuk-summary-list__value" typeof="password">
+                            *************
+                        </dd>
 
-                <dd class="nhsuk-summary-list__actions">
+                        <dd class="nhsuk-summary-list__actions">
 
-                    <a asp-action="ConfirmPassword">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;password</span>
-                    </a>
+                            <a asp-action="ConfirmPassword">
+                                Change<span class="nhsuk-u-visually-hidden">&nbsp;password</span>
+                            </a>
 
-                </dd>
+                        </dd>
 
-            </div>
+                    </div>
 
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    Security questions
-                </dt>
-                <dd class="nhsuk-summary-list__value">
-                   Set on @Model.SecurityQuestionLastUpdated
-                </dd>
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Security questions
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            Set on @Model.SecurityQuestionLastUpdated
+                        </dd>
 
-                <dd class="nhsuk-summary-list__actions">
+                        <dd class="nhsuk-summary-list__actions">
 
-                    <a asp-action="SecurityQuestionsDetails" asp-route-questionIndex="1">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;security question 2</span>
-                    </a>
+                            <a asp-action="SecurityQuestionsDetails" asp-route-questionIndex="0">
+                                Change<span class="nhsuk-u-visually-hidden">&nbsp;security questions</span>
+                            </a>
 
-                </dd>
+                        </dd>
 
-            </div>
+                    </div>
 
-           @*  <div class="nhsuk-summary-list__row">
+                    @*  <div class="nhsuk-summary-list__row">
                 <dt class="nhsuk-summary-list__key">
                     First security question
                 </dt>
@@ -107,20 +126,20 @@
                 </dd>
 
             </div> *@
-        </dl>
+                </dl>
 
-        @if (this.ViewBag.CheckDetails == true)
-        {
-            <form asp-controller="MyAccount" asp-action="CheckDetails" method="post">
-                <input name="returnUrl" type="hidden" asp-for="@Context.Request.Query["returnUrl"]" />
-                <div class="nhsuk-u-padding-bottom-5">
-                    <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
-                        Confirm
-                    </button>
-                </div>
-            </form>
-        }
-    </div>
-    </div>
+                @if (this.ViewBag.CheckDetails == true)
+                {
+                    <form asp-controller="MyAccount" asp-action="CheckDetails" method="post">
+                        <input name="returnUrl" type="hidden" asp-for="@Context.Request.Query["returnUrl"]" />
+                        <div class="nhsuk-u-padding-bottom-5">
+                            <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+                                Confirm
+                            </button>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
     </div>
 </div>

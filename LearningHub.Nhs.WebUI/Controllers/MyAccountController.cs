@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -20,11 +21,14 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Newtonsoft.Json.Linq;
     using NHSUKViewComponents.Web.ViewModels;
+    using static IdentityModel.ClaimComparer;
     using ChangePasswordViewModel = LearningHub.Nhs.WebUI.Models.UserProfile.ChangePasswordViewModel;
     using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
@@ -197,25 +201,66 @@
         /// <summary>
         /// ChangeLocation.
         /// </summary>
-        /// <param name="selectedCountryId">country id.</param>
         /// <returns>ActionResult.</returns>
         [HttpGet]
         [Route("myaccount/ChangeLocation")]
-        public async Task<IActionResult> ChangeLocation(int? selectedCountryId)
+        public async Task<IActionResult> ChangeLocation()
         {
             this.TempData.Clear();
-            var userLocationViewModel = await this.userService.GetUserLocationDetailsAsync();
-            var userProfileSummary = await this.userService.GetUserProfileSummaryAsync();
-            if (selectedCountryId.HasValue)
+            var userLocationViewModel = await this.userService.GetMyAccountLocationDetailsAsync();
+            var allUKcountries = await this.countryService.GetAllUKCountries();
+            var allUKnoncountries = await this.countryService.GetAllNonUKCountries();
+            var regions = await this.regionService.GetAllAsync();
+
+            List<RadiosItemViewModel> radio = new List<RadiosItemViewModel>();
+            foreach (var country in allUKcountries)
             {
-                userLocationViewModel.SelectedCountryId = selectedCountryId;
+                var newradio = new RadiosItemViewModel(country.Id.ToString(), country.Name, false, country.Name);
+                radio.Add(newradio);
             }
 
-            await this.multiPageFormService.SetMultiPageFormData(
-                userLocationViewModel,
-                MultiPageFormDataFeature.AddRegistrationPrompt,
-                this.TempData);
-            return this.View("ChangeLocation", new Tuple<UserProfileSummaryViewModel, UserLocationViewModel>(userProfileSummary, userLocationViewModel));
+            if (allUKnoncountries.Any(v => v.Id == userLocationViewModel.SelectedCountryId))
+            {
+                ////userLocationViewModel.SelectedOtherCountry = true;
+                userLocationViewModel.SelectedOtherCountryId = userLocationViewModel.SelectedCountryId;
+                userLocationViewModel.SelectedCountryId = 0;
+            }
+
+            userLocationViewModel.Country = radio;
+            userLocationViewModel.OtherCountryOptions = SelectListHelper.MapOptionsToSelectListItems(allUKnoncountries, userLocationViewModel.SelectedOtherCountryId);
+
+            userLocationViewModel.RegionOptions = SelectListHelper.MapOptionsToSelectListItems(regions, userLocationViewModel.SelectedRegionId);
+            return this.View("MyAccountChangeLocation", userLocationViewModel);
+        }
+
+        /// <summary>
+        /// To update location details.
+        /// </summary>
+        /// <param name="model">model.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        public async Task<IActionResult> UpdateMyAccountLocationDetails(MyAccountLocationViewModel model)
+        {
+            if (this.ModelState.IsValid)
+            {
+                if (model?.SelectedCountryId == 0)
+                {
+                    model.SelectedCountryId = model.SelectedOtherCountryId;
+                }
+
+                if (model.SelectedCountryId != 1)
+                {
+                    model.SelectedRegionId = null;
+                }
+
+                await this.userService.UpdateMyAccountLocationDetailsAsync(this.CurrentUserId, model);
+                this.ViewBag.SuccessMessage = CommonValidationErrorMessages.CountrySuccessMessage;
+                return this.View("SuccessMessage");
+            }
+            else
+            {
+                return this.View("MyAccountChangeLocation", model);
+            }
         }
 
         /// <summary>

@@ -1,0 +1,113 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.MyAccountLocationViewModel
+@{
+    ViewData["DisableValidation"] = true;
+    ViewData["Title"] = "My Account - Location";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+<div class="bg-white">
+    <div class="nhsuk-width-container app-width-container">
+        <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-5">
+                <div class="nhsuk-caption-l" id="contact-hint">
+                    Update location details
+                </div>
+                @* @if (Model.Item2.FilterText == null)
+                {
+                    <h1 class="nhsuk-heading-xl">Update your country</h1>
+                } *@
+                @if (Model.SelectedCountryName != null)
+                {
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-two-thirds">
+                            <h1 class="nhsuk-label-wrapper">
+                                <label class="nhsuk-body-m" for="example-heading">
+                                    Current selected country
+                                </label>
+                            </h1>
+                            <div class="nhsuk-body-m" id="contact-hint">
+                                @Model.SelectedCountryName
+                            </div>
+                            <div class="nhsuk-u-padding-bottom-9">
+                                <hr class="nhsuk-section-break nhsuk-section-break--visible ">
+                            </div>
+                        </div>
+                    </div>
+                }
+                @*  else
+                {
+                    <h1 class="nhsuk-heading-xl">Search results for @Model.Item2.FilterText</h1>
+                } *@
+                 <form asp-controller="MyAccount" asp-action="UpdateMyAccountLocationDetails" method="post">
+                <div class="nhsuk-radios">
+                    @if (Model.Country != null && Model.Country.Any())
+                    {
+                        @foreach (var country in Model.Country)
+                        {
+                            @if (country.Label.ToUpper() == "ENGLAND")
+                            {
+                                <div class="nhsuk-radios--conditional">
+                                    <div class="nhsuk-radios__item">
+                                        <input type="radio" asp-for="SelectedCountryId" value="@(country.Value)" id="country@(country.Value)" class="nhsuk-radios__input" data-val="false"
+                                               aria-controls="conditional-region" aria-expanded="false" />
+                                        <label class="nhsuk-label nhsuk-radios__label nhsuk-u-reading-width" for="country@(country.Value)">
+                                            @(country.Label)
+                                        </label>
+                                        <div class="nhsuk-radios__conditional" id="conditional-region">
+                                            <vc:select-list asp-for="@nameof(Model.SelectedRegionId)"
+                                                            label="Region"
+                                                            value="@Model.SelectedRegionId"
+                                                            hint-text="select a region"
+                                                            required="true"
+                                                            css-class="nhsuk-u-width-full"
+                                                            default-option="select a region"
+                                                            select-list-options="@Model.RegionOptions" />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="nhsuk-radios__item">
+                                    <input type="radio" asp-for="SelectedCountryId" value="@(country.Value)" id="country@(country.Value)" class="nhsuk-radios__input" data-val="false" />
+                                    <label class="nhsuk-label nhsuk-radios__label nhsuk-u-reading-width" for="country@(country.Value)">
+                                        @(country.Label)
+                                    </label>
+                                </div>
+                            }
+                            
+                        }
+                        <div class="nhsuk-radios--conditional">
+                        <div class="nhsuk-radios__item">
+                                    <input type="radio" asp-for="SelectedCountryId" value="0" id="country0" class="nhsuk-radios__input" data-val="false"
+                                       aria-controls="conditional-nonUK" aria-expanded="false" />
+                            <label class="nhsuk-label nhsuk-radios__label nhsuk-u-reading-width" for="country0">
+                                Other
+                            </label>
+                                <div class="nhsuk-radios__conditional nhsuk-u-margin-bottom-0" id="conditional-nonUK">
+                                        <vc:select-list asp-for="SelectedOtherCountryId"
+                                                    label="Country"
+                                                        value="@Model.SelectedOtherCountryId"
+                                                    hint-text="select a country"
+                                                    required="true"
+                                                    css-class="nhsuk-u-width-full"
+                                                    default-option="Select a country"
+                                                    select-list-options="@Model.OtherCountryOptions" />
+
+                                </div>
+                        </div>
+                        </div>
+
+                    }
+                </div>
+                    <div class="nhsuk-u-padding-bottom-5">
+                        <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+                            Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

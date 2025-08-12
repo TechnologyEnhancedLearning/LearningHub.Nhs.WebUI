@@ -504,5 +504,19 @@
         /// </summary>
         /// <returns>The <see cref="Task{MyAccountSecurityViewModel}"/>.</returns>
         Task<MyAccountSecurityViewModel> GetMyAccountSecurityDetailsAsync();
+
+        /// <summary>
+        /// Get MyAccount Location Details Async.
+        /// </summary>
+        /// <returns>The <see cref="Task{MyAccountLocationViewModel}"/>.</returns>
+        Task<MyAccountLocationViewModel> GetMyAccountLocationDetailsAsync();
+
+        /// <summary>
+        /// Update MyAccount Location Details Async.
+        /// </summary>
+        /// <param name="userId">userId.</param>
+        /// <param name="model">MyAccountLocationViewModel.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task UpdateMyAccountLocationDetailsAsync(int userId, MyAccountLocationViewModel model);
     }
 }

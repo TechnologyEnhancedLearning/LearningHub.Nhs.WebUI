@@ -2030,6 +2030,41 @@
         }
 
         /// <summary>
+        /// GetMyAccountLocationDetailsAsync.
+        /// </summary>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<MyAccountLocationViewModel> GetMyAccountLocationDetailsAsync()
+        {
+            MyAccountLocationViewModel viewModel = null;
+
+            var personalDetailsModel = await this.GetCurrentUserPersonalDetailsAsync();
+            var employmentViewModel = await this.GetPrimaryUserEmploymentForUser(personalDetailsModel.UserId);
+
+            if (personalDetailsModel != null)
+            {
+                viewModel = new MyAccountLocationViewModel
+                {
+                    SelectedCountryId = personalDetailsModel.CountryId,
+                    SelectedRegionId = personalDetailsModel.RegionId,
+                };
+
+                if (personalDetailsModel.CountryId.HasValue)
+                {
+                    var country = await this.countryService.GetByIdAsync(personalDetailsModel.CountryId.Value);
+                    viewModel.SelectedCountryName = country.Name;
+                }
+
+                if (personalDetailsModel.RegionId.HasValue)
+                {
+                    var region = await this.regionService.GetByIdAsync(personalDetailsModel.RegionId.Value);
+                    viewModel.SelectedRegionName = region.Name;
+                }
+            }
+
+            return viewModel;
+        }
+
+        /// <summary>
         /// Get MyAccount Security Details Async.
         /// </summary>
         /// <returns>The <see cref="Task"/>.</returns>
@@ -2055,6 +2090,39 @@
             }
 
             return viewModel;
+        }
+
+        /// <summary>
+        /// Update MyAccount Location Details Async.
+        /// </summary>
+        /// <param name="userId">userId.</param>
+        /// <param name="model">MyAccountLocationViewModel.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task UpdateMyAccountLocationDetailsAsync(int userId, MyAccountLocationViewModel model)
+        {
+            PersonalDetailsViewModel personalDetailsViewModel = new PersonalDetailsViewModel
+            {
+                UserId = userId,
+                CountryId = model.SelectedCountryId,
+                RegionId = model.SelectedRegionId,
+            };
+
+            var json = JsonConvert.SerializeObject(personalDetailsViewModel);
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = await this.userApiHttpClient.GetClientAsync();
+            var request = $"ElfhUser/UpdateLocationDetails";
+            var response = await client.PutAsync(request, stringContent).ConfigureAwait(false);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Update user location details failed!");
+            }
         }
     }
 }

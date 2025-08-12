@@ -137,6 +137,38 @@
         }
 
         /// <summary>
+        /// GetEnrolledCoursesAsync.
+        /// </summary>
+        /// <param name="userId">Moodle user id.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<List<MoodleEnrolledCourseResponseModel>> GetEnrolledCoursesHistoryAsync(int userId)
+        {
+            try
+            {
+                userId = 3;
+                var parameters = new Dictionary<string, string>
+            {
+                { "userid", userId.ToString() }
+            };
+
+                // Fetch enrolled courses
+                var recentEnrolledCourses = await GetCallMoodleApiAsync<List<MoodleEnrolledCourseResponseModel>>(
+                    "mylearningservice_get_recent_courses",
+                    parameters
+                );
+
+                if (recentEnrolledCourses == null || recentEnrolledCourses.Count == 0)
+                    return new List<MoodleEnrolledCourseResponseModel>();
+
+                return recentEnrolledCourses.ToList();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// GetUserLearningHistory.
         /// </summary>
         /// <param name="userId">Moodle user id.</param>

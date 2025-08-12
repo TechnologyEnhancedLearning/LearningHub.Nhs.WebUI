@@ -5,7 +5,7 @@
 --
 -- Modification History
 -------------------------------------------------------------------------------
-ALTER PROCEDURE [activity].[GetUserRecentLearningActivities] (
+CREATE PROCEDURE [activity].[GetUserRecentLearningActivities] (
 	 @userId INT	
 	)
 AS

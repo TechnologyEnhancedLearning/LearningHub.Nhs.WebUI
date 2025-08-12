@@ -227,7 +227,7 @@
             {
                 var result = await resourceActivityRepository.GetUserLearningHistory(userId, requestModel);
 
-                var entrolledCourses = await this.moodleApiService.GetRecentEnrolledCoursesAsync(userId);
+                var entrolledCourses = await this.moodleApiService.GetEnrolledCoursesHistoryAsync(userId);
 
                 List<MyLearningCombinedActivitiesViewModel> mappedMyLearningActivities = new();
                 List<MyLearningCombinedActivitiesViewModel> mappedEnrolledCourses = new();

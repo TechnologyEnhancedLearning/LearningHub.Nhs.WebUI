@@ -30,7 +30,15 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="userId">Moodle user id.</param>
         /// <param name="months">pageNumber.</param>
         /// <returns> List of MoodleCourseResponseModel.</returns>
-        Task<List<MoodleEnrolledCourseResponseModel>> GetRecentEnrolledCoursesAsync(int userId, int? months = null);
+        Task<List<MoodleEnrolledCourseResponseModel>> GetRecentEnrolledCoursesAsync(int userId, int? months = null); 
+
+        /// <summary>
+        /// GetEnrolledCoursesAsync.
+        /// </summary>
+        /// <param name="userId">Moodle user id.</param>
+        /// <param name="months">pageNumber.</param>
+        /// <returns> List of MoodleCourseResponseModel.</returns>
+        Task<List<MoodleEnrolledCourseResponseModel>> GetEnrolledCoursesHistoryAsync(int userId);
 
         /// <summary>
         /// GetEnrolledCoursesAsync.

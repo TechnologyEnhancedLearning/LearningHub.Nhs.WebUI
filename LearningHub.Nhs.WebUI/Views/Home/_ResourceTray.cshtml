@@ -43,10 +43,6 @@
         </div>
         <div class="navbar-collapse collapse" id="collapsingResourcesSubNavbar">
             <ul class="navbar-nav">
-                <li class="subnavwhite-item @(Model.Resources.Type == "popular-resources" ? "active" : string.Empty)">
-                    <a tabindex="0" class="subnavwhite-link text-nowrap"
-                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="@(Model.MyLearnings.Type)" asp-route-resourceDashboard="popular-resources" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="resources">Most accessed</a>
-                </li>
                 <li class="subnavwhite-item @(Model.Resources.Type == "rated-resources" ? "active" : string.Empty)">
                     <a tabindex="0" class="subnavwhite-link text-nowrap"
                        asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="@(Model.MyLearnings.Type)" asp-route-resourceDashboard="rated-resources" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="resources">Highly rated</a>
@@ -55,6 +51,11 @@
                     <a tabindex="0" class="subnavwhite-link text-nowrap"
                        asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="@(Model.MyLearnings.Type)" asp-route-resourceDashboard="recent-resources" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="resources">Recently added</a>
                 </li>
+                <li class="subnavwhite-item @(Model.Resources.Type == "popular-resources" ? "active" : string.Empty)">
+                    <a tabindex="0" class="subnavwhite-link text-nowrap"
+                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="@(Model.MyLearnings.Type)" asp-route-resourceDashboard="popular-resources" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="resources">Most accessed</a>
+                </li>
+
             </ul>
         </div>
     </nav>
@@ -62,7 +63,7 @@
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
             <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred nhsuk-u-margin-bottom-2">
-                @if(@Model.Resources.Resources != null)
+                @if (@Model.Resources.Resources != null)
                 {
                     @foreach (var resource in Model.Resources.Resources)
                     {

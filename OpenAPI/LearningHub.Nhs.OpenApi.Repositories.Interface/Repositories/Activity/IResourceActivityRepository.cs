@@ -80,6 +80,22 @@
         Task<IQueryable<ResourceActivity>> GetByUserIdFromSP(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel, DateTimeOffset detailedMediaActivityRecordingStartDate);
 
         /// <summary>
+        /// Get recent my learning Activity By user id.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">requestModel.</param>
+        /// <returns>ResourceActivity.</returns>
+       Task <List<MyLearningActivitiesViewModel>> GetUserRecentMyLearningActivities(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel);
+
+        /// <summary>
+        /// Get user learning history.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">requestModel.</param>
+        /// <returns>ResourceActivity.</returns>
+        Task<List<MyLearningActivitiesViewModel>> GetUserLearningHistory(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel);
+
+        /// <summary>
         /// Check if scorm activity has been completed.
         /// </summary>
         /// <param name="userId">The user id.</param>

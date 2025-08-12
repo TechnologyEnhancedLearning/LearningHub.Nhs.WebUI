@@ -1,80 +1,6 @@
 ﻿@use "../abstracts/all" as *;
 @use "nhsuk" as *;
 
-.nhsuk-u-font-style-italic {
-    font-style: italic;
-}
-
-.nhsuk-button--red {
-    background-color: $nhsuk-red !important;
-
-    &:hover {
-        background-color: $nhsuk-red-hover !important;
-        border-color: $nhsuk-red-hover !important;
-    }
-}
-
-.nhsuk-button--beta-login {
-    background-color: $nhsuk-blue;
-    box-shadow: 0 4px 0 #002f5c;
-}
-
-.nhsuk-button--beta-login:hover {
-    background-color: $nhsuk-btn-blue-hover;
-}
-
-// By default, the text on reverse (white) buttons turns white once clicked, rendering them invisible.
-.nhsuk-button--reverse:visited {
-    color: $nhsuk-black
-}
-
-.nhsuk-back-link {
-    padding: px2rem(20) 0;
-    margin-bottom: 0;
-}
-
-.nhsuk-radios__divider {
-    text-align: left;
-    width: unset;
-}
-
-.nhsuk-radios__item label {
-    font-family: $font-stack;
-}
-
-/*  Conditional radio buttons - Note: The nhsuk-radios__conditional element needs to be a SIBLING of the radio button input element
-    otherwise the CSS selector won't work. See Views/Bookmark/Move.cshtml for a usage example. 
-    The NHSUK component (nhsuk-radios__conditional) requires JavaScript to work. These tweaks allow it to work without.
-*/
-.nhsuk-radios__conditional {
-    display: none;
-    margin-left: -22px;
-    margin-top: 8px;
-}
-
-.nhsuk-radios__input:checked ~ .nhsuk-radios__conditional {
-    display: block !important;
-}
-
-/* jquery unbobtrusive validation style over */
-.nhsuk-error-summary__list li {
-    color: $nhsuk-red;
-}
-
-.nhsuk-form-group.input-validation-error {
-    @extend .nhsuk-form-group--error;
-}
-
-.nhsuk-input.input-validation-error {
-    @extend .nhsuk-input--error
-}
-
-.nhsuk-input:focus {
-    border: 2px solid #212b32;
-    box-shadow: inset 0 0 0 2px;
-    outline: 4px solid #ffeb3b; /* 1 */
-    outline-offset: 0;
-}
 
 .display--hide {
     display: none !important;
@@ -120,92 +46,6 @@
 }
 
 
-.nhsuk-bg-light-blue {
-    background-color: $nhsuk-light-blue-color;
-}
-
-.nhsuk-bg-pale-blue {
-    background-color: $nhsuk-pale-blue-color;
-}
-
-.nhsuk-bg-white {
-    background-color: $color_nhsuk-white;
-}
-
-.nhsuk-width-container.search-width-container {
-    max-width: px2rem(752);
-    margin: 0 auto;
-    padding-left: px2rem(68);
-    padding-right: px2rem(68);
-}
-
-#maincontent {
-
-    button[class^='nhsuk-search__submit'] span.nhsuk-u-visually-hidden {
-        color: $color_nhsuk-grey-1;
-        background-color: $color_nhsuk-white;
-    }
-}
-
-form label.nhsuk-u-visually-hidden {
-    color: $color_nhsuk-grey-1;
-    background-color: $color_nhsuk-white;
-}
-
-/* One third column layout that switches to full width at the small desktop breakpoint (990px) instead of mobile. */
-.nhsuk-grid-column-one-third-small-desktop {
-    @extend .nhsuk-grid-column-one-third;
-    width: 33.3333333333% !important;
-
-    @media (max-width: px2rem(990)) {
-        width: 100% !important;
-    }
-}
-
-
-/* Tweaks to styling for single card view. */
-@media(min-width: 768px) and (max-width: 990px) {
-    .nhsuk-card-group .nhsuk-grid-column-one-third-small-desktop {
-        max-width: 600px !important;
-    }
-
-    .nhsuk-card-group--centred {
-        justify-content: center !important;
-    }
-}
-
-.nhsuk-card-banner-container {
-    padding-bottom: 42.86%;
-    position: relative;
-}
-
-.nhsuk-card-banner {
-    height: 100%;
-    object-fit: cover;
-    object-position: left;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-}
-
-.nhsuk-card-banner-empty {
-    background-color: $nhsuk-pale-blue-color;
-    border-bottom: 1px solid #d8dde0;
-}
-
-.nhsuk-error-message.error-message--margin-bottom-1 {
-    margin-bottom: nhsuk-spacing(1);
-}
-
-.nhsuk-u-margin-bottom-2point5 {
-    margin-bottom: 12px;
-
-    @media(max-width: 641px) {
-        margin-bottom: 10px;
-    }
-}
 
 .word-break__break-word {
     word-break: break-word;
@@ -216,9 +56,7 @@ form label.nhsuk-u-visually-hidden {
     justify-content: space-between;
 }
 
-.nhsuk-button--no-shrink {
-    white-space: nowrap;
-}
+
 
 .modal-footer--buttons {
     justify-content: space-between !important;
@@ -232,14 +70,6 @@ form label.nhsuk-u-visually-hidden {
     outline: 0;
     box-shadow: 0 0 0 0.2rem $nhsuk-yellow !important;
     background-color: $govuk-focus-highlight-yellow;
-}
-/*Add a background color to the radio button when focused */
-.nhsuk-radios__input:focus + .radioButton {
-    box-shadow: 0 0 0 3px $nhsuk-yellow;
-}
-/*Add a background color to the radio button when focused */
-.nhsuk-checkboxes__input:focus + .checkmark {
-    box-shadow: 0 0 0 4px $nhsuk-yellow;
 }
 
 .accessible-link:focus {

@@ -18,6 +18,20 @@
         Task<MyLearningDetailedViewModel> GetActivityDetailed(MyLearningRequestModel requestModel);
 
         /// <summary>
+        /// Gets the user recent my leraning activities..
+        /// </summary>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<MyLearningActivitiesDetailedViewModel> GetUserRecentMyLearningActivities(MyLearningRequestModel requestModel);
+
+        /// <summary>
+        /// Gets the user leraning history.
+        /// </summary>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<MyLearningActivitiesDetailedViewModel> GetUserLearningHistory(MyLearningRequestModel requestModel);
+
+        /// <summary>
         /// Gets the played segment data for the progress modal in My Learning screen.
         /// </summary>
         /// <param name="resourceId">The resourceId.</param>

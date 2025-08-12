@@ -83,7 +83,7 @@
 
         <div class="row mt-5">
             <div class="form-group col-12">
-                <h2 id="keyword-label" class="nhsuk-heading-l"><label for="newKeyword">Keywords</label> <i v-if="keywords.length==0" class="warningTriangle fa-solid fa-triangle-exclamation"></i></h2>
+                <h2 id="keyword-label" class="nhsuk-heading-l"><label for="newKeyword" class="keyword-label">Keywords</label> <i v-if="keywords.length==0" class="warningTriangle fa-solid fa-triangle-exclamation"></i></h2>
             </div>
         </div>
         <div class="row">

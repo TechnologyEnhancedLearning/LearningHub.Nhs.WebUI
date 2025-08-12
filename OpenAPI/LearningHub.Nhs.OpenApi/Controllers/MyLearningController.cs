@@ -53,6 +53,32 @@
         }
 
         /// <summary>
+        /// Gets the user recent my leraning activities.
+        /// </summary>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost]
+        [Route("GetUserRecentMyLearningActivities")]
+        public async Task<IActionResult> GetUserRecentMyLearningActivities([FromBody] MyLearningRequestModel requestModel)
+        {
+            var activityModel = await this.myLearningService.GetUserRecentMyLearningActivitiesAsync(this.CurrentUserId.GetValueOrDefault(), requestModel);
+            return this.Ok(activityModel);
+        }
+
+        /// <summary>
+        /// Gets the user recent my leraning activities.
+        /// </summary>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost]
+        [Route("GetUserLearningHistory")]
+        public async Task<IActionResult> GetUserLearningHistory([FromBody] MyLearningRequestModel requestModel)
+        {
+            var activityModel = await this.myLearningService.GetUserLearningHistoryAsync(this.CurrentUserId.GetValueOrDefault(), requestModel);
+            return this.Ok(activityModel);
+        }
+
+        /// <summary>
         /// Gets the played segment data for the progress modal in My Learning screen.
         /// </summary>
         /// <param name="resourceId">The resourceId.</param>

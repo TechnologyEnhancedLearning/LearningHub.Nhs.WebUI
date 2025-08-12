@@ -17,6 +17,7 @@
     using LearningHub.Nhs.WebUI.JsDetection;
     using LearningHub.Nhs.WebUI.Services;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -149,24 +150,30 @@
             // <!--qqqq blazor services maybe collection so all together and update show whats missing-->
             // Future candidates for DI collection
             services.AddBlazoredLocalStorage();
+
+            /* The base TELBlazor Configuration inherited by other components uses this configuration to tell blazor components ahead of time if the browser has Javascript (need to load the wasm and hydrate) via JsEnabled.
+               This allows for logic and UI to be implemented specifically for no js if desired without a second load of the component, where this may be desireable.
+               Host information is also provided which is useful for debugging.
+            */
             services.AddSingleton<ITELBlazorBaseComponentConfiguration>(provider =>
             {
+                var httpContextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
+                var context = httpContextAccessor.HttpContext;
+                bool jsEnabled = false;
+
+                if (context != null && context.Request.Cookies.TryGetValue("jsEnabled", out var jsCookieValue))
+                {
+                    jsEnabled = jsCookieValue == "true";
+                }
+
                 return new TELBlazorBaseComponentConfiguration
                 {
-                    JSEnabled = true, // qqqq may need to implement as do from prototype if lh doesnt have a way
-
-                    // HostType = $"{builder.Configuration["Properties:Environment"]} {builder.Configuration["Properties:Application"]}"
-                    // qqqq back to this one
+                    JSEnabled = jsEnabled,
                     HostType = $"{configuration["Properties:Environment"]} {configuration["Properties:Application"]}",
-
-                    // HostType = "Server",
                 };
             });
 
             services.AddScoped<ILogLevelSwitcherService, NLogLogLevelSwitcherService>();
-
-            // services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            // qqqq services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(configuration["Settings:LearningHubWebUiUrl"]) });
         }
     }
 }

@@ -14,7 +14,7 @@
 		<PackageVersion Include="LearningHub.Nhs.Models" Version="3.0.48" />
 		<PackageVersion Include="UK.NHS.CookieBanner" Version="2.0.7" />
 
-		<PackageVersion Include="AngleSharp" Version="0.16.1" />
+		<PackageVersion Include="AngleSharp" Version="1.3.0" />
 		<PackageVersion Include="AspNetCore.Authentication.ApiKey" Version="9.0.0" />
 		<PackageVersion Include="AspNetCoreRateLimit" Version="5.0.0" />
 		<PackageVersion Include="AutoFixture" Version="4.18.1" />
@@ -31,7 +31,7 @@
 		<PackageVersion Include="FluentValidation" Version="12.0.0" />
 		<PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.1" />
 		<PackageVersion Include="HtmlAgilityPack" Version="1.12.1" />
-		<PackageVersion Include="HtmlSanitizer" Version="6.0.453" />
+		<PackageVersion Include="HtmlSanitizer" Version="9.0.886" />
 		<PackageVersion Include="IdentityModel" Version="4.6.0" />
 		<PackageVersion Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
 		<PackageVersion Include="linqtotwitter" Version="6.9.0" />

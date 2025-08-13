@@ -97,6 +97,9 @@
 	<ItemGroup>
 		<CodeAnalysisDictionary Include="CustomDictionary.xml" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="nuget.config.template" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="compilerconfig.json" />
@@ -104,6 +107,10 @@
 
 
 	<ItemGroup>
+		<!--For Blazor-->
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.8" />
+		<PackageReference Include="TELBlazor.Components" Version="1.9.3-local" />
+
 		<PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
@@ -112,7 +119,7 @@
 		<PackageReference Include="GDS.MultiPageFormData" Version="1.0.6" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.11.72" />
 		<PackageReference Include="IdentityModel" Version="4.6.0" />
-		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
+		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.2" />
 		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.50" />
 		<PackageReference Include="linqtotwitter" Version="6.9.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
@@ -169,6 +176,8 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\LearningHub.Nhs.Shared\LearningHub.Nhs.Shared.csproj" />
+	  <ProjectReference Include="..\LearningHub.Nhs.WebUI.BlazorClient\LearningHub.Nhs.WebUI.BlazorClient.csproj" />
+	  <ProjectReference Include="..\LearningHub.Nhs.WebUI.Shared\LearningHub.Nhs.WebUI.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

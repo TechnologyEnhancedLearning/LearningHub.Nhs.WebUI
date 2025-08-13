@@ -56,3 +56,8 @@ obj
 /AdminUI/LearningHub.Nhs.AdminUI/web.config
 /LearningHub.Nhs.WebUI/web.config
 /WebAPI/LearningHub.Nhs.API/web.config
+/LearningHub.Nhs.WebUI/nuget.config
+/LearningHub.Nhs.WebUI.BlazorClient/Properties/launchSettings.json
+/LearningHub.Nhs.WebUI.BlazorClient/wwwroot/appsettings.json
+/LearningHub.Nhs.WebUI.BlazorClient/wwwroot/appsettings.Development.json
+/LearningHub.Nhs.WebUI.BlazorClient/nuget.config

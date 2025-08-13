@@ -62,7 +62,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="filterApplied">filter applied.</param>
         /// <returns>The actionResult.</returns>
         [HttpGet("results")]
-        public async Task<IActionResult> Index(SearchRequestViewModel search, bool noSortFilterError = false, bool emptyFeedbackError = false, bool filterApplied = false)
+        public async Task<IActionResult> Index([FromQuery] SearchRequestViewModel search, bool noSortFilterError = false, bool emptyFeedbackError = false, bool filterApplied = false)
         {
             search.SearchId ??= 0;
             search.GroupId = !string.IsNullOrWhiteSpace(search.GroupId) && Guid.TryParse(search.GroupId, out Guid groupId) ? groupId.ToString() : Guid.NewGuid().ToString();

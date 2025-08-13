@@ -11,7 +11,6 @@
     using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.Shared.Interfaces.Services;
     using LearningHub.Nhs.Shared.Models.Search;
-    using LearningHub.Nhs.WebUI.Helpers;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
@@ -30,7 +29,7 @@
     /// </summary>
     public class SearchService : BaseService<SearchService>, ISearchService
     {
-        private readonly IPublicSettings publicSettings;
+        private readonly IExposableSettings ExposableSettings;
         private IProviderService providerService;
 
         /// <summary>
@@ -39,15 +38,15 @@
         /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="providerService">Provider service.</param>
         /// <param name="logger">Logger.</param>
-        /// <param name="publicSettings">Settings.</param>
+        /// <param name="ExposableSettings">Settings.</param>
         public SearchService(
             IOpenApiHttpClient openApiHttpClient, 
             IProviderService providerService, 
             ILogger<SearchService> logger, 
-            IOptions<PublicSettings> publicSettings)
+            IOptions<ExposableSettings> ExposableSettings)
         : base(openApiHttpClient, logger)
         {
-            this.publicSettings = publicSettings.Value;
+            this.ExposableSettings = ExposableSettings.Value;
             this.providerService = providerService;
         }
 
@@ -74,8 +73,8 @@
             var suggestedCatalogue = string.Empty;
             var suggestedResource = string.Empty;
 
-            var resourceSearchPageSize = this.publicSettings.FindwiseSettings.ResourceSearchPageSize;
-            var catalogueSearchPageSize = this.publicSettings.FindwiseSettings.CatalogueSearchPageSize;
+            var resourceSearchPageSize = this.ExposableSettings.FindwiseSettings.ResourceSearchPageSize;
+            var catalogueSearchPageSize = this.ExposableSettings.FindwiseSettings.CatalogueSearchPageSize;
 
             var resourceSearchRequestModel = new SearchRequestModel
             {
@@ -170,10 +169,10 @@
                     {
                         var filter = filters.Where(x => x.DisplayName == filteritem).FirstOrDefault();
 
-                        if (filter != null && UtilityHelper.FindwiseResourceMoodleTypeDict.ContainsKey(filter.DisplayName))
+                        if (filter != null && MoodleHelper.FindwiseResourceMoodleTypeDict.ContainsKey(filter.DisplayName))
                         {
-                            var resourceTypeEnum = UtilityHelper.FindwiseResourceMoodleTypeDict[filter.DisplayName];
-                            var searchfilter = new SearchFilterModel() { DisplayName = UtilityHelper.GetPrettifiedResourceTypeNameMoodle(resourceTypeEnum), Count = filter.Count, Value = filteritem, Selected = searchRequest.Filters?.Contains(filter.DisplayName) ?? false };
+                            var resourceTypeEnum = MoodleHelper.FindwiseResourceMoodleTypeDict[filter.DisplayName];
+                            var searchfilter = new SearchFilterModel() { DisplayName = MoodleHelper.GetPrettifiedResourceTypeNameMoodle(resourceTypeEnum), Count = filter.Count, Value = filteritem, Selected = searchRequest.Filters?.Contains(filter.DisplayName) ?? false };
                             searchfilters.Add(searchfilter);
                         }
                     }
@@ -260,8 +259,8 @@
         public async Task<int> RegisterSearchEventsAsync(SearchRequestViewModel search, SearchFormActionTypeEnum action, int resourceCount = 0, int catalogueCount = 0)
         {
             var eventId = 0;
-            var resourceSearchPageSize = this.publicSettings.FindwiseSettings.ResourceSearchPageSize;
-            var catalogueSearchPageSize = this.publicSettings.FindwiseSettings.CatalogueSearchPageSize;
+            var resourceSearchPageSize = this.ExposableSettings.FindwiseSettings.ResourceSearchPageSize;
+            var catalogueSearchPageSize = this.ExposableSettings.FindwiseSettings.CatalogueSearchPageSize;
 
             var sortBy = search.Sortby.HasValue ? (SearchSortTypeEnum)search.Sortby : SearchSortTypeEnum.Relevance;
 
@@ -518,7 +517,7 @@
                 int createId = 0;
 
                 var client = await this.OpenApiHttpClient.GetClientAsync();
-                var request = this.publicSettings.LearningHubApiUrl + "Search/SubmitFeedback";
+                var request = this.ExposableSettings.LearningHubApiUrl + "Search/SubmitFeedback";
                 var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
                 var response = await client.PostAsync(request, content).ConfigureAwait(false);
 

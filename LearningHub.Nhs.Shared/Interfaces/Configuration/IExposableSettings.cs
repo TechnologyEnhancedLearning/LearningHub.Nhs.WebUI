@@ -16,13 +16,27 @@
     /// without risking exposure of sensitive information.
     /// </para>
     /// </summary>
-    public interface IPublicSettings
+    public interface IExposableSettings
     {
         /// <summary>
         /// Gets or sets the LearningHubApiUrl.
         /// </summary>
         public string LearningHubApiUrl { get; set; }
 
-        public IFindwiseSettingsPublic FindwiseSettings { get; set; }
+        /// <summary>
+        /// Gets or sets the UserApiUrl.
+        /// </summary>
+        public string UserApiUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the OpenApiUrl.
+        /// </summary>
+        public string OpenApiUrl { get; set; }
+        /// <summary>
+        /// Gets or sets the LearningHubApiBFFUrl used to proxy via same domain cookie to the BFF LearningHubAPI calls.
+        /// </summary>
+        public string LearningHubApiBFFUrl { get; set; }
+
+        public IExposableFindwiseSettings FindwiseSettings { get; set; }
     }
 }

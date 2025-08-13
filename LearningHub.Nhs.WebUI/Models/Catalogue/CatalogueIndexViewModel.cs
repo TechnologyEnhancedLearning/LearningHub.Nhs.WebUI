@@ -4,7 +4,7 @@
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Models.User;
-    using LearningHub.Nhs.WebUI.Models.Search;
+    using LearningHub.Nhs.Shared.Models.Search;
 
     /// <summary>
     /// Defines the <see cref="CatalogueIndexViewModel" />.

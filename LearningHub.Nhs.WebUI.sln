@@ -4,11 +4,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.Nhs.WebUI", "LearningHub.Nhs.WebUI\LearningHub.Nhs.WebUI.csproj", "{16BBF937-C1E9-4240-B56E-20E3E5FA2005}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9F1B0470-E809-49FE-A6E8-152C7EBD012E} = {9F1B0470-E809-49FE-A6E8-152C7EBD012E}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B5D48B6A-D4A7-494E-89C0-64428232D242}"
 	ProjectSection(SolutionItems) = preProject
-		Directory.Build.props = Directory.Build.props
-		Directory.Packages.props = Directory.Packages.props
+		.editorconfig = .editorconfig
+		global.json = global.json
 		StyleCop.ruleset = StyleCop.ruleset
 	EndProjectSection
 EndProject
@@ -17,6 +20,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MigrationTool", "MigrationTool", "{94676CCE-A38B-4FAF-905E-CE85CE95845E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.Nhs.Api", "WebAPI\LearningHub.Nhs.API\LearningHub.Nhs.Api.csproj", "{21F15E96-314F-4F39-822F-C2568CDC4A5A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9F1B0470-E809-49FE-A6E8-152C7EBD012E} = {9F1B0470-E809-49FE-A6E8-152C7EBD012E}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.Nhs.Api.Shared", "WebAPI\LearningHub.Nhs.Api.Shared\LearningHub.Nhs.Api.Shared.csproj", "{719833B9-EC79-48F2-9123-C4DF111AE9AA}"
 EndProject
@@ -51,6 +57,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdminUI", "AdminUI", "{9642BC19-BAE7-45A9-B4F2-8D7529786CDC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.Nhs.AdminUI", "AdminUI\LearningHub.Nhs.AdminUI\LearningHub.Nhs.AdminUI.csproj", "{1C97A3C2-73E8-4AFF-92EF-F65B4899FADB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9F1B0470-E809-49FE-A6E8-152C7EBD012E} = {9F1B0470-E809-49FE-A6E8-152C7EBD012E}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenAPI", "OpenAPI", "{66ED23A2-F15A-4ECB-A84D-736C95BEFC61}"
 EndProject
@@ -81,6 +90,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearningHub.Nhs.ReportApi.Shared", "ReportAPI\LearningHub.Nhs.ReportApi.Shared\LearningHub.Nhs.ReportApi.Shared.csproj", "{6167F037-166C-4C5A-81BE-55618E77D4E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningHub.Nhs.WebUI.AutomatedUiTests", "LearningHub.Nhs.WebUI.AutomatedUiTests\LearningHub.Nhs.WebUI.AutomatedUiTests.csproj", "{A84EC50B-2B01-4819-A2B1-BD867B7595CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningHub.Nhs.Shared", "LearningHub.Nhs.Shared\LearningHub.Nhs.Shared.csproj", "{9F1B0470-E809-49FE-A6E8-152C7EBD012E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningHub.Nhs.WebUI.BlazorClient", "LearningHub.Nhs.WebUI.BlazorClient\LearningHub.Nhs.WebUI.BlazorClient.csproj", "{A7DA82FE-A46C-47E9-8BD6-7FD7A8376CBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningHub.Nhs.WebUI.Shared", "LearningHub.Nhs.WebUI.Shared\LearningHub.Nhs.WebUI.Shared.csproj", "{22596C8C-EF3A-4046-BB85-012D851D8D16}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -346,6 +361,30 @@ Global
 		{A84EC50B-2B01-4819-A2B1-BD867B7595CA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A84EC50B-2B01-4819-A2B1-BD867B7595CA}.Release|x64.ActiveCfg = Release|Any CPU
 		{A84EC50B-2B01-4819-A2B1-BD867B7595CA}.Release|x64.Build.0 = Release|Any CPU
+		{9F1B0470-E809-49FE-A6E8-152C7EBD012E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F1B0470-E809-49FE-A6E8-152C7EBD012E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F1B0470-E809-49FE-A6E8-152C7EBD012E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9F1B0470-E809-49FE-A6E8-152C7EBD012E}.Debug|x64.Build.0 = Debug|Any CPU
+		{9F1B0470-E809-49FE-A6E8-152C7EBD012E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F1B0470-E809-49FE-A6E8-152C7EBD012E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F1B0470-E809-49FE-A6E8-152C7EBD012E}.Release|x64.ActiveCfg = Release|Any CPU
+		{9F1B0470-E809-49FE-A6E8-152C7EBD012E}.Release|x64.Build.0 = Release|Any CPU
+		{A7DA82FE-A46C-47E9-8BD6-7FD7A8376CBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7DA82FE-A46C-47E9-8BD6-7FD7A8376CBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7DA82FE-A46C-47E9-8BD6-7FD7A8376CBA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A7DA82FE-A46C-47E9-8BD6-7FD7A8376CBA}.Debug|x64.Build.0 = Debug|Any CPU
+		{A7DA82FE-A46C-47E9-8BD6-7FD7A8376CBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7DA82FE-A46C-47E9-8BD6-7FD7A8376CBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7DA82FE-A46C-47E9-8BD6-7FD7A8376CBA}.Release|x64.ActiveCfg = Release|Any CPU
+		{A7DA82FE-A46C-47E9-8BD6-7FD7A8376CBA}.Release|x64.Build.0 = Release|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Debug|x64.Build.0 = Debug|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Release|x64.ActiveCfg = Release|Any CPU
+		{22596C8C-EF3A-4046-BB85-012D851D8D16}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -32,12 +32,14 @@
 				TotalCount = Model.MyLearnings.TotalCount
 			};
 
-	var enableMoodle = this.ViewBag.EnableMoodle;
-	var validMoodleUser = this.ViewBag.ValidMoodleUser;
+	bool enableMoodle = (bool?)ViewBag.EnableMoodle ?? false;
+	bool validMoodleUser = (bool?)ViewBag.ValidMoodleUser ?? false;
 }
 <div class="dashboardTray">
 	<h2>My accessed learning</h2>
-
+	<!--qqqq--->
+	<component type="typeof(LearningHub.Nhs.WebUI.BlazorClient.TestDeleteMe.APITestDeleteME)"
+			   render-mode="WebAssemblyPrerendered" />
 	<nav class="subnavbarwhite nhsuk-bg-grey navbar-expand-md nhsuk-u-margin-bottom-5">
 		<input class="subnav-hidden-checkbox" id="mylearning-subnav-hidden-checkbox" role="button" type="checkbox" aria-controls="collapsingMyLearningSubNavbar" aria-labelledby="mylearning-subnav-hidden-checkbox-label">
 		<div class="bar">

@@ -1,19 +1,29 @@
 ﻿namespace LearningHub.Nhs.WebUI.Startup
 {
+    using System;
     using System.Net.Http;
+    using Blazored.LocalStorage;
     using GDS.MultiPageFormData;
     using LearningHub.Nhs.Models.OpenAthens;
     using LearningHub.Nhs.Services;
     using LearningHub.Nhs.Services.Interface;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
+    using LearningHub.Nhs.Shared.Interfaces.Services;
+    using LearningHub.Nhs.Shared.Services;
+    using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.JsDetection;
     using LearningHub.Nhs.WebUI.Services;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using TELBlazor.Components.Core.Configuration;
+    using TELBlazor.Components.Core.Services.HelperServices;
+    using TELBlazor.Components.OptionalImplementations.Test.TestComponents.SearchExperiment;
 
     /// <summary>
     /// The service mappings.
@@ -81,6 +91,13 @@
 
             // Config
             services.Configure<OpenAthensScopes>(configuration.GetSection("OpenAthensScopes"));
+            services.Configure<BFFPathValidationOptions>(configuration.GetSection("Settings:" + BFFPathValidationOptions.SectionName)); // qqqq
+
+            // Blazor
+            services.AddRazorComponents()
+                .AddInteractiveServerComponents()
+                .AddCircuitOptions(opt => opt.DetailedErrors = true)
+                .AddInteractiveWebAssemblyComponents();
 
             // Learning Hub Services
             services.AddTransient<INavigationPermissionService, NavigationPermissionService>();
@@ -127,6 +144,36 @@
             services.AddScoped<LoginWizardFilter>();
             services.AddScoped<SsoLoginFilterAttribute>();
             services.AddScoped<OfflineCheckFilter>();
+
+            // <!-- blazor architecture keep at bottom so can use existing services and map them-->
+
+            // <!--qqqq blazor services maybe collection so all together and update show whats missing-->
+            // Future candidates for DI collection
+            services.AddBlazoredLocalStorage();
+
+            /* The base TELBlazor Configuration inherited by other components uses this configuration to tell blazor components ahead of time if the browser has Javascript (need to load the wasm and hydrate) via JsEnabled.
+               This allows for logic and UI to be implemented specifically for no js if desired without a second load of the component, where this may be desireable.
+               Host information is also provided which is useful for debugging.
+            */
+            services.AddSingleton<ITELBlazorBaseComponentConfiguration>(provider =>
+            {
+                var httpContextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
+                var context = httpContextAccessor.HttpContext;
+                bool jsEnabled = false;
+
+                if (context != null && context.Request.Cookies.TryGetValue("jsEnabled", out var jsCookieValue))
+                {
+                    jsEnabled = jsCookieValue == "true";
+                }
+
+                return new TELBlazorBaseComponentConfiguration
+                {
+                    JSEnabled = jsEnabled,
+                    HostType = $"{configuration["Properties:Environment"]} {configuration["Properties:Application"]}",
+                };
+            });
+
+            services.AddScoped<ILogLevelSwitcherService, NLogLogLevelSwitcherService>();
         }
     }
 }

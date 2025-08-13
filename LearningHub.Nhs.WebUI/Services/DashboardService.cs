@@ -9,7 +9,10 @@
     using LearningHub.Nhs.Models.Dashboard;
     using LearningHub.Nhs.Models.Entities.Analytics;
     using LearningHub.Nhs.Models.Entities.Reporting;
+    using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.Services.Interface;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
+    using LearningHub.Nhs.Shared.Services;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
     using Microsoft.Extensions.Logging;
@@ -128,12 +131,24 @@
         /// <param name="currentUserId">The dashboard type.</param>
         /// <param name="pageNumber">The page Number.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<List<MoodleCourseResponseViewModel>> GetEnrolledCoursesFromMoodleAsync(int currentUserId, int pageNumber)
+        public async Task<List<MoodleCourseResponseModel>> GetEnrolledCoursesFromMoodleAsync(int currentUserId, int pageNumber)
         {
-            List<MoodleCourseResponseViewModel> viewmodel = new List<MoodleCourseResponseViewModel> { };
-            MoodleApiService moodleApiService = new MoodleApiService(this.moodleHttpClient);
+            List<MoodleCourseResponseModel> viewmodel = new List<MoodleCourseResponseModel> { };
+            MoodleApiService moodleApiService = new MoodleApiService(this.moodleHttpClient, this.OpenApiHttpClient);
             viewmodel = await moodleApiService.GetEnrolledCoursesAsync(currentUserId, pageNumber);
             return viewmodel;
+        }
+
+        /// <summary>
+        /// GetEnrolledCoursesFromMoodleAsync.
+        /// </summary>
+        /// <param name="currentUserId">The current User Id type.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<int> GetMoodleUserIdAsync(int currentUserId)
+        {
+            MoodleApiService moodleApiService = new MoodleApiService(this.moodleHttpClient, this.OpenApiHttpClient);
+            var moodleUserId = await moodleApiService.GetMoodleUserIdByUsernameAsync(currentUserId);
+            return moodleUserId;
         }
 
         /// <summary>

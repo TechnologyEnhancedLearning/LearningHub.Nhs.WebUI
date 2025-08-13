@@ -9,7 +9,7 @@
     /// It does not contain any secure credentials or internal service configuration.
     /// </para>
     /// </summary>
-    public interface IFindwiseSettingsPublic
+    public interface IExposableFindwiseSettings
     {
         /// <summary>
         /// Gets or sets the page size for resource search results.

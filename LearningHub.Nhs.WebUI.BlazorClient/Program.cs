@@ -42,7 +42,7 @@ using var envSettings = await http.GetStreamAsync($"appsettings.{env}.json");
 
 builder.Configuration.AddJsonStream(envSettings);
 
-builder.Services.Configure<PublicSettings>(builder.Configuration.GetSection("Settings"));
+builder.Services.Configure<ExposableSettings>(builder.Configuration.GetSection("Settings"));
 builder.Logging.ClearProviders();
 
 // Read default logging level from configuration

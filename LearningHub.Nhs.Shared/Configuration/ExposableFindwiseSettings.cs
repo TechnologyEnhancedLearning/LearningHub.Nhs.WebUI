@@ -9,7 +9,7 @@
     /// Contains only non-sensitive data such as page sizes for various search types.
     /// </para>
     /// </summary>
-    public class FindwiseSettingsPublic : IFindwiseSettingsPublic
+    public class ExposableFindwiseSettings : IExposableFindwiseSettings
     {
         /// <summary>
         /// Gets or sets the ResourceSearchPageSize.

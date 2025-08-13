@@ -6,12 +6,12 @@
     /// (such as Blazor WebAssembly) or public-facing APIs.
     /// 
     /// <para>
-    /// Implements <see cref="IPublicSettings"/> and contains only non-sensitive, non-secret
+    /// Implements <see cref="IExposableSettings"/> and contains only non-sensitive, non-secret
     /// values such as public API endpoints and pagination settings. This separation ensures
     /// that secure or private configuration data is not inadvertently exposed to clients.
     /// </para>
     /// </summary>
-    public class PublicSettings : IPublicSettings
+    public class ExposableSettings : IExposableSettings
     {
         /// <inheritdoc/>
         public string LearningHubApiUrl { get; set; }
@@ -30,7 +30,7 @@
         /// </summary>
         public string LearningHubApiBFFUrl { get; set; }
         /// <inheritdoc/>
-        public IFindwiseSettingsPublic FindwiseSettings { get; set; }
+        public IExposableFindwiseSettings FindwiseSettings { get; set; }
         
     }
 }

@@ -16,7 +16,7 @@
     /// without risking exposure of sensitive information.
     /// </para>
     /// </summary>
-    public interface IPublicSettings
+    public interface IExposableSettings
     {
         /// <summary>
         /// Gets or sets the LearningHubApiUrl.
@@ -37,6 +37,6 @@
         /// </summary>
         public string LearningHubApiBFFUrl { get; set; }
 
-        public IFindwiseSettingsPublic FindwiseSettings { get; set; }
+        public IExposableFindwiseSettings FindwiseSettings { get; set; }
     }
 }

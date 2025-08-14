@@ -8,8 +8,6 @@
     using LearningHub.Nhs.Services;
     using LearningHub.Nhs.Services.Interface;
     using LearningHub.Nhs.Shared.Interfaces.Http;
-    using LearningHub.Nhs.Shared.Interfaces.Services;
-    using LearningHub.Nhs.Shared.Services;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Helpers;
@@ -23,7 +21,6 @@
     using Microsoft.Extensions.Hosting;
     using TELBlazor.Components.Core.Configuration;
     using TELBlazor.Components.Core.Services.HelperServices;
-    using TELBlazor.Components.OptionalImplementations.Test.TestComponents.SearchExperiment;
 
     /// <summary>
     /// The service mappings.

@@ -1,14 +1,8 @@
-//using LearningHub.Nhs.Models.Entities;
-// Still required server side even if not used so components dont fail
-using Blazored.LocalStorage;
+using Blazored.LocalStorage; // Still required server side even if not used so components dont fail to build
 using LearningHub.Nhs.WebUI.BlazorClient.DI;
 
 using LearningHub.Nhs.Shared.Configuration;
-using LearningHub.Nhs.Shared.Interfaces;
-using LearningHub.Nhs.Shared.Interfaces.Configuration;
 using LearningHub.Nhs.Shared.Interfaces.Http;
-using LearningHub.Nhs.Shared.Interfaces.Services;
-using LearningHub.Nhs.Shared.Services;
 using LearningHub.Nhs.WebUI.BlazorClient.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;

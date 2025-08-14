@@ -2,8 +2,8 @@
 {
     using System.Net.Http;
     using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.WebUI.Configuration;
-    using LearningHub.Nhs.WebUI.Interfaces;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;

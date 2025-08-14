@@ -9,6 +9,7 @@
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Notification;
     using LearningHub.Nhs.Models.Paging;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.WebUI.Interfaces;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;

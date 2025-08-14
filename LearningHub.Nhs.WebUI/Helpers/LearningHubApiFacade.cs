@@ -5,7 +5,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;
-    using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
     using Newtonsoft.Json;
 
     /// <summary>

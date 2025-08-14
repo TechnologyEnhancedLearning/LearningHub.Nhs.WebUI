@@ -1,6 +1,5 @@
-using Blazored.LocalStorage; // Still required server side even if not used so components dont fail to build
+using Blazored.LocalStorage;
 using LearningHub.Nhs.WebUI.BlazorClient.DI;
-
 using LearningHub.Nhs.Shared.Configuration;
 using LearningHub.Nhs.Shared.Interfaces.Http;
 using LearningHub.Nhs.WebUI.BlazorClient.Services;
@@ -25,7 +24,6 @@ using System;
 using TELBlazor.Components.Core.Configuration;
 using TELBlazor.Components.Core.Services.HelperServices;
 using TELBlazor.Components.OptionalImplementations.Core.Services.HelperServices;
-
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -54,7 +52,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 // Add Serilog to logging providers
-builder.Logging.AddSerilog(Log.Logger, dispose: true);//qqqq may not need dispose for client
+builder.Logging.AddSerilog(Log.Logger);
 
 //for really bad fails
 try
@@ -85,7 +83,7 @@ try
     builder.Services.AddScoped<LoggingLevelSwitch>(sp => levelSwitch);
     builder.Services.AddScoped<ILogLevelSwitcherService, SerilogLogLevelSwitcherService>();
 
-    // TODO builder.Services.AddScoped<ICacheService, WasmCacheServiceStub>();
+    // TODO (QQQQ) implement post TD-5925 builder.Services.AddScoped<ICacheService, WasmCacheServiceStub>();
 
     await builder.Build().RunAsync();
 }

@@ -88,7 +88,7 @@
 
             // Config
             services.Configure<OpenAthensScopes>(configuration.GetSection("OpenAthensScopes"));
-            services.Configure<BFFPathValidationOptions>(configuration.GetSection("Settings:" + BFFPathValidationOptions.SectionName)); // qqqq
+            services.Configure<BFFPathValidationOptions>(configuration.GetSection("Settings:" + BFFPathValidationOptions.SectionName));
 
             // Blazor
             services.AddRazorComponents()
@@ -143,8 +143,6 @@
             services.AddScoped<OfflineCheckFilter>();
 
             // <!-- blazor architecture keep at bottom so can use existing services and map them-->
-
-            // <!--qqqq blazor services maybe collection so all together and update show whats missing-->
             // Future candidates for DI collection
             services.AddBlazoredLocalStorage();
 

@@ -1,4 +1,4 @@
-﻿// TODO: using LearningHub.Nhs.Caching;
+﻿// TODO (QQQQ) implement post TD-5925: using LearningHub.Nhs.Models;
 
 namespace LearningHub.Nhs.WebUI.BlazorClient.Services
 {
@@ -6,7 +6,7 @@ namespace LearningHub.Nhs.WebUI.BlazorClient.Services
     /// We may use storage, we may just stub it and throw an error, we cant directly use redis we may access it via an api
     /// The cachestub currently just returns there is nothing available so the caller then will revert to calling the api.
     /// </summary>
-    public class WasmCacheServiceStub // TODO: ICacheService
+    public class WasmCacheServiceStub // TODO (QQQQ) implement post TD-5925 and get from NHS.Models: ICacheService
     {
         public Task<T> GetAsync<T>(string key)
         {

@@ -109,7 +109,7 @@
 	<ItemGroup>
 		<!--For Blazor-->
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.8" />
-		<PackageReference Include="TELBlazor.Components" Version="1.9.3-local" />
+		<PackageReference Include="TELBlazor.Components" Version="1.10.0" />
 
 		<PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />

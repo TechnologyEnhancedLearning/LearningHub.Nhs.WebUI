@@ -29,7 +29,7 @@
 		<!-- Utilities -->
 		<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
-		<PackageReference Include="TELBlazor.Components" Version="1.9.3-local" />
+		<PackageReference Include="TELBlazor.Components" Version="1.10.0" />
 	</ItemGroup>
 
 	<ItemGroup>

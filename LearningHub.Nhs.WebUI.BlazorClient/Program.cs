@@ -72,13 +72,13 @@ try
     builder.Services.AddBlazoredLocalStorage();
 
 
-    // Register your BFF using httpclient ILearningHubHttpClient
+    // Register BFF using httpclient ILearningHubHttpClient
     builder.Services.AddBffHttpClient<ILearningHubHttpClient, GenericAPIHttpClient>(settings => settings.LearningHubApiUrl);
 
-    // Register your BFF using httpclient IUserApiHttpClient
+    // Register BFF using httpclient IUserApiHttpClient
     builder.Services.AddBffHttpClient<IUserApiHttpClient, GenericAPIHttpClient>(settings => settings.UserApiUrl);
 
-    // Register your BFF using httpclient IOpenApiHttpClient
+    // Register BFF using httpclient IOpenApiHttpClient
     builder.Services.AddBffHttpClient<IOpenApiHttpClient, GenericAPIHttpClient>(settings => settings.OpenApiUrl);
 
 

@@ -37,7 +37,20 @@
             Sign up, explore and learn
         </div>
     </div>
-
+    <!--qqqq-->
+    <component type="typeof(TELBlazor.Components.Components.BaseComponents.TELButton)"
+               render-mode="WebAssemblyPrerendered"
+               param-IsSubmitButtonForEditForm="false"
+               param-NoJSActionUrl="@("nojsfallback/mvcendpoint/telbuttonshowcase")"
+               param-FormData="@(new Dictionary<string, string>{{"increment","1"}})"
+               param-ButtonStyle="TELBlazor.Components.Core.Enums.TELButtonStyle.Warning"
+               param-PreventDoubleClick="false"
+               param-ButtonText="@("Click me!")"
+               param-AdditionalCssClasses="@("")"
+               param-AriaLabel="@("Click Counter")"
+               param-AssistiveText="@("Click to increase the number")"
+               param-TabIndex="0"
+               param-ToolTipTitle="@("Click to increment")" />
     <div class="landing-page__access-container">
         <div class="nhsuk-width-container app-width-container">
             <div class="nhsuk-grid-row">

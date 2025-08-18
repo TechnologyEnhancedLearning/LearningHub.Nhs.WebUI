@@ -17,7 +17,7 @@
     /// </summary>
     [Route("Hierarchy")]
     [ApiController]
-    [Authorize]
+    [Authorize(Policy = "AuthorizeOrCallFromLH")]
     public class HierarchyController : OpenApiControllerBase
     {
         private readonly IHierarchyService hierarchyService;

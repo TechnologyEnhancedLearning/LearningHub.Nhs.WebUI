@@ -28,7 +28,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
     /// Resource controller.
     /// </summary>
     [Route("Resource")]
-    [Authorize]
+    [Authorize(Policy = "AuthorizeOrCallFromLH")]
     [ApiController]
     public class ResourceController : OpenApiControllerBase
     {

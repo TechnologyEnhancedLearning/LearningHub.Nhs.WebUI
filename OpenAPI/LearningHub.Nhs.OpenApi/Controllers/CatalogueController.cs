@@ -13,7 +13,7 @@
     /// Catalogue controller.
     /// </summary>
     [Route("Catalogue")]
-    [Authorize]
+    [Authorize(Policy = "AuthorizeOrCallFromLH")]
     [ApiController]
     public class CatalogueController : OpenApiControllerBase
     {

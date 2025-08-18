@@ -14,6 +14,7 @@
     /// </summary>
     [Route("Catalogue")]
     [Authorize]
+    [ApiController]
     public class CatalogueController : OpenApiControllerBase
     {
         private readonly ICatalogueService catalogueService;

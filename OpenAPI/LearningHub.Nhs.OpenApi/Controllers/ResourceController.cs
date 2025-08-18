@@ -29,6 +29,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
     /// </summary>
     [Route("Resource")]
     [Authorize]
+    [ApiController]
     public class ResourceController : OpenApiControllerBase
     {
         private const int MaxNumberOfReferenceIds = 1000;

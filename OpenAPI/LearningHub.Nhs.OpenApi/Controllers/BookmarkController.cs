@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Bookmark;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
@@ -11,6 +12,7 @@
     /// </summary>
     [Route("Bookmark")]
     [ApiController]
+    [Authorize]
     public class BookmarkController : OpenApiControllerBase
     {
         private readonly IBookmarkService bookmarkService;

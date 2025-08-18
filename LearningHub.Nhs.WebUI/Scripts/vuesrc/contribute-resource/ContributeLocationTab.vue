@@ -85,14 +85,15 @@
                 return new CatalogueModel({ nodeId: 0 });
             },
             resourceDescription(): string {
-                return this.resourceDetails.description;
+                return this.resourceDetails.description; 
             },
             isDividerVisible(): boolean {
                 return this.resourceDetails.resourceCatalogueId >= 0 && this.selectionInProgress;
             },
             allowCatalogueChange(): boolean {
-                return (!Boolean(this.$route.query.initialCreate));   // allow if user is contributing into the catalogue root // or if the user is editing an existing draft (initialCreate=false)
-                //this.resourceDetails.resourceCatalogueId === this.resourceDetails.nodeId) ||
+                return (this.resourceDetails.resourceCatalogueId === this.resourceDetails.nodeId) || // allow if user is contributing into the catalogue root
+                    !Boolean(this.$route.query.initialCreate);
+                // allow if user is contributing into the catalogue root // or if the user is editing an existing draft (initialCreate=false)
             },
             onChangeClick() {
                 this.$emit('change-click');

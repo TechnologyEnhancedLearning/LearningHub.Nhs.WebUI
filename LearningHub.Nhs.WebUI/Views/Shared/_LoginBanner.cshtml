@@ -10,7 +10,7 @@
             <p>You have to be signed in to use this resource.</p>
             <div>
                 <a asp-controller="Account" asp-action="AuthorisationRequired" asp-route-originalUrl="@originalUrl"
-                    class="nhsuk-button nhsuk-button--beta-login nhsuk-u-margin-right-3">Learning Hub Log in</a>
+                    class="nhsuk-button nhsuk-u-margin-right-3">Learning Hub Log in</a>
                 <a asp-controller="OpenAthens" asp-action="Login" asp-route-returnUrl="@authRequiredReturnUrl" asp-route-invalidScope="false"
                     class="nhsuk-button nhsuk-button--secondary">OpenAthens Log in</a>
             </div>

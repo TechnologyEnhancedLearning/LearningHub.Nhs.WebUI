@@ -382,10 +382,11 @@
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
         /// <param name="file">The file<see cref="IFormFile"/>.</param>
+        /// <param name="fileSize">The fileSize<see cref="int"/>.</param>
         /// <param name="existingFileId">The existingFileId<see cref="int"/>.</param>
         /// <param name="currentUserId">The currentUserId<see cref="int"/>.</param>
         /// <returns>The <see cref="Task{FileUploadResult}"/>.</returns>
-        public async Task<FileUploadResult> ProcessArticleFileAsync(int resourceVersionId, IFormFile file, int existingFileId, int currentUserId)
+        public async Task<FileUploadResult> ProcessArticleFileAsync(int resourceVersionId, IFormFile file, int fileSize, int existingFileId, int currentUserId)
         {
             var filelocation = string.Empty;
             string extension = Path.GetExtension(file.FileName).Replace(".", string.Empty);
@@ -415,7 +416,7 @@
                 FileTypeId = fileType == null ? 0 : fileType.Id,
                 FileName = file.FileName,
                 FilePath = filelocation,
-                FileSize = (int)(file.Length / 1000),
+                FileSize = (int)(fileSize / 1000),
                 ReplacedFileId = existingFileId,
             });
 
@@ -425,7 +426,7 @@
                 ResourceVersionId = resourceVersionId,
                 FileName = file.FileName,
                 FileTypeId = fileType == null ? 0 : fileType.Id,
-                FileSizeKb = (int)(file.Length / 1000),
+                FileSizeKb = (int)(fileSize / 1000),
                 Invalid = false,
             };
         }

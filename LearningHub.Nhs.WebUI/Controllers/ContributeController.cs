@@ -197,8 +197,9 @@
             var file = inputForm.Files[0];
             int.TryParse(inputForm["resourceVersionId"], out int resourceVersionId);
             int.TryParse(inputForm["changeingFileId"], out int existingFileId);
+            int.TryParse(inputForm["fileSize"], out int fileSize);
             var currentUserId = this.User.Identity.GetCurrentUserId();
-            return await this.contributeService.ProcessArticleFileAsync(resourceVersionId, file, existingFileId, currentUserId);
+            return await this.contributeService.ProcessArticleFileAsync(resourceVersionId, file, fileSize, existingFileId, currentUserId);
         }
 
         /// <summary>

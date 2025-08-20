@@ -37,6 +37,21 @@
         public GenericListViewModel OptionalSpecialtyItem { get; set; }
 
         /// <summary>
+        /// Gets or sets the selected job role id.
+        /// </summary>
+        public int? SelectedJobRoleId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected grade id.
+        /// </summary>
+        public string SelectedGradeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected medical council number.
+        /// </summary>
+        public string SelectedMedicalCouncilNo { get; set; }
+
+        /// <summary>
         /// sets the list of radio specialty.
         /// </summary>
         /// <returns>The <see cref="IEnumerable{RadiosItemViewModel}"/>.</returns>

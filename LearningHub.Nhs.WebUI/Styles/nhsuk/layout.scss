@@ -104,6 +104,11 @@ li.autosuggestion-option:last-of-type {
     border-bottom: none !important;
 }
 
+.form-group-wrapper--error {
+    border-left: none;
+    padding-left: 0;
+}
+
 /* small desktop */
 @media (max-width: px2rem(989)) {
     .autosuggestion-menu {

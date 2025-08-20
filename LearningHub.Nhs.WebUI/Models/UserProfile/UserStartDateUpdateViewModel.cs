@@ -30,6 +30,16 @@
         /// </summary>
         public int? Year { get; set; }
 
+        /////// <summary>
+        /////// Gets or sets filter text.
+        /////// </summary>
+        ////public string FilterText { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected primary specialty id.
+        /// </summary>
+        public int? SelectedPrimarySpecialtyId { get; set; }
+
         /// <summary>
         /// Gets or sets the GetDate.
         /// </summary>

@@ -118,5 +118,61 @@
 
             return viewmodel;
         }
+
+        /// <summary>
+        /// Get a list of Uk Country records..
+        /// </summary>
+        /// <returns>The <see cref="T:Task{List{GenericListViewModel}}"/>.</returns>
+        public async Task<List<GenericListViewModel>> GetAllUKCountries()
+        {
+            List<GenericListViewModel> viewmodel = null;
+
+            var client = await this.userApiHttpClient.GetClientAsync();
+
+            var request = $"Country/GetAllUKCountries";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewmodel = JsonConvert.DeserializeObject<List<GenericListViewModel>>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewmodel;
+        }
+
+        /// <summary>
+        /// Get a list of non Uk Country records.
+        /// </summary>
+        /// <returns>The <see cref="T:Task{List{GenericListViewModel}}"/>.</returns>
+        public async Task<List<GenericListViewModel>> GetAllNonUKCountries()
+        {
+            List<GenericListViewModel> viewmodel = null;
+
+            var client = await this.userApiHttpClient.GetClientAsync();
+
+            var request = $"Country/GetAllNonUKCountries";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewmodel = JsonConvert.DeserializeObject<List<GenericListViewModel>>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewmodel;
+        }
     }
 }

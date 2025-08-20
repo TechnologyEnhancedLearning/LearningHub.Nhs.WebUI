@@ -68,5 +68,55 @@
         /// Gets or sets the learning result paging.
         /// </summary>
         public PagingViewModel MyLearningPaging { get; set; }
+
+        /// <summary>
+        /// sets the list of certificate checkboxes.
+        /// </summary>
+        /// <returns>The <see cref="List{CheckboxListItemViewModel}"/>.</returns>
+        public List<CheckboxListItemViewModel> CertificateFilterCheckbox()
+        {
+            var checkboxes = new List<CheckboxListItemViewModel>()
+            {
+                new CheckboxListItemViewModel("CertificateEnabled", "Certificate", null),
+            };
+            return checkboxes;
+        }
+
+        /// <summary>
+        /// sets the list of status checkboxes.
+        /// </summary>
+        /// <returns>The <see cref="List{CheckboxListItemViewModel}"/>.</returns>
+        public List<CheckboxListItemViewModel> StatusFilterCheckbox()
+        {
+            var checkboxes = new List<CheckboxListItemViewModel>()
+            {
+                new CheckboxListItemViewModel("Complete", "Completed", null),
+                new CheckboxListItemViewModel("Incomplete", "In progress", null),
+            };
+            return checkboxes;
+        }
+
+        /// <summary>
+        /// sets the list of type checkboxes.
+        /// </summary>
+        /// <returns>The <see cref="List{CheckboxListItemViewModel}"/>.</returns>
+        public List<CheckboxListItemViewModel> TypeFilterCheckbox()
+        {
+            var checkboxes = new List<CheckboxListItemViewModel>()
+            {
+                new CheckboxListItemViewModel("Article", "Article", null),
+                new CheckboxListItemViewModel("Assessment", "Assessment", null),
+                new CheckboxListItemViewModel("Audio", "Audio", null),
+                new CheckboxListItemViewModel("Case", "Case", null),
+                new CheckboxListItemViewModel("Elearning", "elearning", null),
+                new CheckboxListItemViewModel("File", "File", null),
+                new CheckboxListItemViewModel("Html", "HTML", null),
+                new CheckboxListItemViewModel("Image", "Image", null),
+                new CheckboxListItemViewModel("Video", "Video", null),
+                new CheckboxListItemViewModel("Weblink", "Weblink", null),
+                new CheckboxListItemViewModel("Courses", "Courses", null),
+            };
+            return checkboxes;
+        }
     }
 }

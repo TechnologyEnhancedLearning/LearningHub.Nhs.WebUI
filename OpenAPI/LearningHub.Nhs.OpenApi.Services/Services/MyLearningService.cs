@@ -8,7 +8,10 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using LearningHub.Nhs.Models.Entities.Activity;
+    using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Enums.Report;
+    using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Repositories.Helpers;
@@ -146,7 +149,7 @@
             {
                 var result = await resourceActivityRepository.GetUserRecentMyLearningActivities(userId, requestModel);
 
-                var entrolledCourses = await this.moodleApiService.GetRecentEnrolledCoursesAsync(userId, 6);
+                var entrolledCourses = await this.moodleApiService.GetRecentEnrolledCoursesAsync(userId, requestModel, 6);
 
                 var mappedMyLearningActivities = result.Select(Activity => new MyLearningCombinedActivitiesViewModel
                 {
@@ -179,7 +182,7 @@
                     ResourceType = ResourceTypeEnum.Moodle,
                     Title = course.DisplayName,
                     CertificateEnabled = course.CertificateEnabled,
-                    ActivityStatus = (bool)course.Completed ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
+                    ActivityStatus = (course.Completed == true || course.ProgressPercentage.TrimEnd('%') == "100") ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
                     ActivityDate = DateTimeOffset.FromUnixTimeMilliseconds((long)course.LastAccess),
                     ScorePercentage = Convert.ToInt32(course.ProgressPercentage.TrimEnd('%')),
                     TotalActivities = course.TotalActivities,
@@ -188,16 +191,7 @@
 
                 // Combine both result sets
                 var combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
-               
-                if (requestModel.Complete)
-                {
-                    combainedUserActivities = combainedUserActivities.Where(x => x.ActivityStatus == ActivityStatusEnum.Completed || x.ActivityStatus == ActivityStatusEnum.Passed).ToList();
-                }
-                else if (requestModel.Incomplete)
-                {
-                    combainedUserActivities = combainedUserActivities.Where(x => x.ActivityStatus == ActivityStatusEnum.Incomplete || x.ActivityStatus == ActivityStatusEnum.Failed).ToList();
-                }
-                
+
                 var pagedResults = combainedUserActivities.OrderByDescending(activity => activity.ActivityDate).Skip(requestModel.Skip).Take(requestModel.Take).ToList();
 
                 // Count total records.
@@ -225,9 +219,27 @@
         {
             try
             {
-                var result = await resourceActivityRepository.GetUserLearningHistory(userId, requestModel);
+                (string strActivityStatus, bool activityStatusEnumFlag) = resourceActivityRepository.GetActivityStatusFilter(requestModel);
+                (string strResourceTypes, bool resourceTypeFlag) = resourceActivityRepository.ApplyResourceTypesfilters(requestModel);
+                var result = new List<MyLearningActivitiesViewModel>();
 
-                var entrolledCourses = await this.moodleApiService.GetEnrolledCoursesHistoryAsync(userId);
+                if (
+        (!activityStatusEnumFlag && !resourceTypeFlag && !requestModel.Courses) ||
+        (activityStatusEnumFlag && resourceTypeFlag && !requestModel.Courses) ||
+        (activityStatusEnumFlag && !resourceTypeFlag && !requestModel.Courses) ||
+        (!activityStatusEnumFlag && resourceTypeFlag && !requestModel.Courses) ||
+        (!activityStatusEnumFlag && resourceTypeFlag && requestModel.Courses) ||
+        (activityStatusEnumFlag && resourceTypeFlag && requestModel.Courses))
+                {
+                    if (requestModel.SearchText != null)
+                    {
+                        result = await resourceActivityRepository.GetUserLearningHistoryBasedonSearchText(userId, requestModel);
+                    }
+                    else
+                    {
+                        result = await resourceActivityRepository.GetUserLearningHistory(userId, requestModel);
+                    }
+                }
 
                 List<MyLearningCombinedActivitiesViewModel> mappedMyLearningActivities = new();
                 List<MyLearningCombinedActivitiesViewModel> mappedEnrolledCourses = new();
@@ -255,39 +267,42 @@
                     }).ToList();
                 }
 
-                if (entrolledCourses != null)
+                List<MoodleEnrolledCourseResponseModel> entrolledCourses = new();
+
+                if (
+                    (!activityStatusEnumFlag && !resourceTypeFlag && !requestModel.Courses) ||
+                    (!activityStatusEnumFlag && !resourceTypeFlag && requestModel.Courses) ||
+                    (!activityStatusEnumFlag && resourceTypeFlag && requestModel.Courses) ||
+                    (activityStatusEnumFlag && resourceTypeFlag && requestModel.Courses) ||
+                    (activityStatusEnumFlag && !resourceTypeFlag && requestModel.Courses) ||
+                    (activityStatusEnumFlag && !resourceTypeFlag && !requestModel.Courses))
                 {
-                    mappedEnrolledCourses = entrolledCourses.Select(course => new MyLearningCombinedActivitiesViewModel
+                    entrolledCourses = await this.moodleApiService.GetEnrolledCoursesHistoryAsync(userId, requestModel);
+                    if (entrolledCourses != null)
                     {
-                        UserId = userId,
-                        ResourceId = (int)course.Id,
-                        ResourceVersionId = (int)course.Id,
-                        IsCurrentResourceVersion = true,
-                        ResourceReferenceId = (int)course.Id,
-                        MajorVersion = 1,
-                        MinorVersion = 0,
-                        ResourceType = ResourceTypeEnum.Moodle,
-                        Title = course.DisplayName,
-                        CertificateEnabled = course.CertificateEnabled,
-                        ActivityStatus = (bool)course.Completed ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
-                        ActivityDate = DateTimeOffset.FromUnixTimeMilliseconds((long)course.LastAccess),
-                        ScorePercentage = int.TryParse(course.ProgressPercentage.TrimEnd('%'), out var score) ? score : 0,
-                        TotalActivities = course.TotalActivities,
-                        CompletedActivities = course.CompletedActivities,
-                    }).ToList();
+                        mappedEnrolledCourses = entrolledCourses.Select(course => new MyLearningCombinedActivitiesViewModel
+                        {
+                            UserId = userId,
+                            ResourceId = (int)course.Id,
+                            ResourceVersionId = (int)course.Id,
+                            IsCurrentResourceVersion = true,
+                            ResourceReferenceId = (int)course.Id,
+                            MajorVersion = 1,
+                            MinorVersion = 0,
+                            ResourceType = ResourceTypeEnum.Moodle,
+                            Title = course.DisplayName,
+                            CertificateEnabled = course.CertificateEnabled,
+                            ActivityStatus = (course.Completed == true || course.ProgressPercentage.TrimEnd('%') == "100")? ActivityStatusEnum.Completed:ActivityStatusEnum.Incomplete,
+                            ActivityDate = DateTimeOffset.FromUnixTimeMilliseconds((long)course.LastAccess),
+                            ScorePercentage = int.TryParse(course.ProgressPercentage.TrimEnd('%'), out var score) ? score : 0,
+                            TotalActivities = course.TotalActivities,
+                            CompletedActivities = course.CompletedActivities,
+                        }).ToList();
+                    }
                 }
 
                 // Combine both result sets
                 combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
-
-                if (requestModel.Complete)
-                {
-                    combainedUserActivities = combainedUserActivities.Where(x => x.ActivityStatus == ActivityStatusEnum.Completed || x.ActivityStatus == ActivityStatusEnum.Passed).ToList();
-                }
-                else if (requestModel.Incomplete)
-                {
-                    combainedUserActivities = combainedUserActivities.Where(x => x.ActivityStatus == ActivityStatusEnum.Incomplete || x.ActivityStatus == ActivityStatusEnum.Failed).ToList();
-                }
 
                 var pagedResults = combainedUserActivities.OrderByDescending(activity => activity.ActivityDate).Skip(requestModel.Skip).Take(requestModel.Take).ToList();
 

@@ -7,8 +7,10 @@
     using System.Threading.Tasks;
     using elfhHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.MyLearning;
+    using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -16,15 +18,19 @@
     /// </summary>
     public class MyLearningService : BaseService<MyLearningService>, IMyLearningService
     {
+        private readonly Settings settings;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MyLearningService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learningHubHttpClient.</param>
         /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">The logger.</param>
-        public MyLearningService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<MyLearningService> logger)
+        /// <param name="settings">The settings.</param>
+        public MyLearningService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<MyLearningService> logger, IOptions<Settings> settings)
           : base(learningHubHttpClient, openApiHttpClient, logger)
         {
+            this.settings = settings.Value;
         }
 
         /// <summary>
@@ -181,6 +187,16 @@
             }
 
             return viewModel;
+        }
+
+        /// <summary>
+        /// GetCourseUrl.
+        /// </summary>
+        /// <param name="resourceReferenceId">resourceReference Id. </param>
+        /// <returns>return course URL.</returns>
+        public string GetResourceUrl(int resourceReferenceId)
+        {
+            return this.settings.LearningHubWebUiUrl.Trim() + "Resource/" + resourceReferenceId + "/Item";
         }
     }
 }

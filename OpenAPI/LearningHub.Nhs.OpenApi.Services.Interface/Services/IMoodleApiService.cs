@@ -1,4 +1,5 @@
 ﻿using LearningHub.Nhs.Models.Moodle.API;
+using LearningHub.Nhs.Models.MyLearning;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -28,17 +29,18 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// GetEnrolledCoursesAsync.
         /// </summary>
         /// <param name="userId">Moodle user id.</param>
-        /// <param name="months">pageNumber.</param>
+        /// <param name="requestModel">MyLearningRequestModel requestModel.</param>
+        /// <param name="months">months.</param>
         /// <returns> List of MoodleCourseResponseModel.</returns>
-        Task<List<MoodleEnrolledCourseResponseModel>> GetRecentEnrolledCoursesAsync(int userId, int? months = null); 
+        Task<List<MoodleEnrolledCourseResponseModel>> GetRecentEnrolledCoursesAsync(int userId, MyLearningRequestModel requestModel, int? months = null);
 
         /// <summary>
         /// GetEnrolledCoursesAsync.
         /// </summary>
         /// <param name="userId">Moodle user id.</param>
-        /// <param name="months">pageNumber.</param>
+        /// <param name="requestModel">MyLearningRequestModel requestModel.</param>
         /// <returns> List of MoodleCourseResponseModel.</returns>
-        Task<List<MoodleEnrolledCourseResponseModel>> GetEnrolledCoursesHistoryAsync(int userId);
+        Task<List<MoodleEnrolledCourseResponseModel>> GetEnrolledCoursesHistoryAsync(int userId, MyLearningRequestModel requestModel);
 
         /// <summary>
         /// GetEnrolledCoursesAsync.

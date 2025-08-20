@@ -4,6 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using LearningHub.Nhs.WebUI.Attributes;
     using LearningHub.Nhs.WebUI.Helpers;
+    using LearningHub.Nhs.WebUI.Validation;
 
     /// <summary>
     /// Defines the <see cref="MyAccountPersonalDetailsViewModel" />.
@@ -60,5 +61,15 @@
         /// Gets or sets the new primary email address.
         /// </summary>
         public string NewPrimaryEmailAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SecondaryEmailAddress.
+        /// </summary>
+        [DataType(DataType.EmailAddress)]
+        [NotEqual("PrimaryEmailAddress", ErrorMessage = CommonValidationErrorMessages.SecondaryEmailShouldNotBeSame)]
+        [MaxLength(100, ErrorMessage = CommonValidationErrorMessages.TooLongEmail)]
+        [EmailAddress(ErrorMessage = CommonValidationErrorMessages.InvalidEmail)]
+        [NoWhitespace(ErrorMessage = CommonValidationErrorMessages.WhitespaceInEmail)]
+        public string SecondaryEmailAddress { get; set; }
     }
 }

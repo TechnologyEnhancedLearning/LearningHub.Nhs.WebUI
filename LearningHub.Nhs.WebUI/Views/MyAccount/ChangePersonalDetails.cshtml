@@ -7,10 +7,10 @@
 }
 <div class="bg-white">
   <div class="nhsuk-width-container app-width-container">
-    <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+    <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back to my account" />
         <form asp-controller="MyAccount" asp-action="UpdatePersonalDetails" method="post">
       <div class="nhsuk-grid-row">
-        <div class="nhsuk-grid-column-three-quarters nhsuk-u-padding-bottom-5">
+                <div class="nhsuk-grid-column-full nhsuk-u-padding-bottom-5">
           @if (errorHasOccurred)
           {
             <vc:error-summary order-of-property-names="@(new[] { nameof(Model.FirstName) })" />
@@ -24,13 +24,13 @@
                         @* <h1 class="nhsuk-heading-xl">first name</h1> *@
                         <div>
                             <vc:text-input asp-for="FirstName"
-                                           label="First Name"
+                                           label="First name"
                                            populate-with-current-value="true"
                                            type="text"
                                            spell-check="false"
                                            hint-text=""
                                            autocomplete="given-name"
-                                           css-class="nhsuk-u-width-one-half "
+                                           css-class="nhsuk-u-width-one-half"
                                            required="true"
                                            required-client-side-error-message="Enter a first name" />
                             @* <input name="LastName" type="hidden" asp-for="@Model.LastName" />
@@ -45,7 +45,7 @@
                         <h1 class="nhsuk-heading-xl">Update your last name</h1> *@
                         <div>
                             <vc:text-input asp-for="LastName"
-                                           label="Last Name"
+                                           label="Last name"
                                            populate-with-current-value="true"
                                            type="text"
                                            spell-check="false"
@@ -66,7 +66,7 @@
                         <h1 class="nhsuk-heading-xl">Update your preferred name</h1> *@
                         <div>
                             <vc:text-input asp-for="PreferredName"
-                                           label="Preferred Name"
+                                           label="Preferred name"
                                            populate-with-current-value="true"
                                            type="text"
                                            spell-check="false"
@@ -97,6 +97,18 @@
                                            required="true" />
                         </div>
           </div>
+
+                    <div>
+                        <vc:text-input asp-for="SecondaryEmailAddress"
+                                       label="Secondary email address"
+                                       populate-with-current-value="true"
+                                       type="text"
+                                       spell-check="false"
+                                       hint-text=""
+                                       autocomplete="email"
+                                       css-class="nhsuk-u-width-one-half"
+                                       required="false" />
+                    </div>
           
           <div class="nhsuk-u-padding-bottom-5">
             <button class="nhsuk-button" data-module="nhsuk-button" type="submit">

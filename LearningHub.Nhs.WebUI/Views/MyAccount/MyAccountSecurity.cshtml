@@ -22,39 +22,21 @@
         </div>
     </section>
 }
-<div class="bg-white nhsuk-u-padding-bottom-8">
+<div class="bg-white nhsuk-u-padding-bottom-9 nhsuk-u-padding-top-9">
     <div class="nhsuk-width-container app-width-container">
         <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-one-third">
+            <div class="nhsuk-grid-column-one-quarter">
                 @await Component.InvokeAsync("SideNav", new { groupTitle = "Account" })
             </div>
-            <div class="nhsuk-grid-column-two-thirds">
+            <div class="nhsuk-grid-column-three-quarters">
 
                 @if (!ViewData.ModelState.IsValid)
                 {
                     <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
                 }
 
-                <h2 class="nhsuk-heading-l">Security</h2>
+                <h2 class="nhsuk-heading-l nhsuk-u-padding-bottom-7">Security</h2>
                 <dl class="nhsuk-summary-list">
-
-                    <div class="nhsuk-summary-list__row">
-                        <dt class="nhsuk-summary-list__key">
-                            Secondary email address
-                        </dt>
-                        <dd class="nhsuk-summary-list__value">
-                            @Model.SecondaryEmailAddress
-                        </dd>
-
-                        <dd class="nhsuk-summary-list__actions">
-
-                            <a asp-action="ChangeSecondaryEmail">
-                                Change<span class="nhsuk-u-visually-hidden">&nbsp;secondry email</span>
-                            </a>
-
-                        </dd>
-
-                    </div>
 
                     <div class="nhsuk-summary-list__row">
                         <dt class="nhsuk-summary-list__key">
@@ -84,48 +66,13 @@
 
                         <dd class="nhsuk-summary-list__actions">
 
-                            <a asp-action="SecurityQuestionsDetails" asp-route-questionIndex="0">
+                            <a asp-action="MyAccountSecurityQuestionsDetails">
                                 Change<span class="nhsuk-u-visually-hidden">&nbsp;security questions</span>
                             </a>
 
                         </dd>
 
                     </div>
-
-                    @*  <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    First security question
-                </dt>
-                <dd class="nhsuk-summary-list__value">
-                    @Model.SecurityFirstQuestion
-                </dd>
-
-                <dd class="nhsuk-summary-list__actions">
-
-                    <a asp-action="SecurityQuestionsDetails" asp-route-questionIndex="0">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;security question 1</span>
-                    </a>
-
-                </dd>
-
-            </div>
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    Second security question
-                </dt>
-                <dd class="nhsuk-summary-list__value">
-                    @Model.SecuritySecondQuestion
-                </dd>
-
-                <dd class="nhsuk-summary-list__actions">
-
-                    <a asp-action="SecurityQuestionsDetails" asp-route-questionIndex="1">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;security question 2</span>
-                    </a>
-
-                </dd>
-
-            </div> *@
                 </dl>
 
                 @if (this.ViewBag.CheckDetails == true)

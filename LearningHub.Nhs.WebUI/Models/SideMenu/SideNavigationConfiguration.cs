@@ -28,7 +28,7 @@
                         Text = "Personal details",
                         Controller = "MyAccount",
                         Action = "Index",
-                        IsActive = route => MatchRoute(route, "MyAccount", "PersonalDetails"),
+                        IsActive = route => MatchRoute(route, "MyAccount", "Index"),
                     },
                     new SideNavigationItem
                     {

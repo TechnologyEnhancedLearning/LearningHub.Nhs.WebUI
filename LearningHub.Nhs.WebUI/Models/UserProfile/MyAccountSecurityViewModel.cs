@@ -27,10 +27,10 @@
         /// </summary>
         public string SecuritySecondQuestion { get; set; }
 
-        /// <summary>
-        /// Gets or sets the LastUpdated.
-        /// </summary>
-        public DateTimeOffset LastUpdated { get; set; }
+        /////// <summary>
+        /////// Gets or sets the LastUpdated.
+        /////// </summary>
+        ////public DateTimeOffset LastUpdated { get; set; }
 
         /// <summary>
         /// Gets or sets the PasswordHash.
@@ -40,6 +40,6 @@
         /// <summary>
         /// Gets or sets the SecurityQuestionLastUpdated.
         /// </summary>
-        public DateTimeOffset? SecurityQuestionLastUpdated { get; set; }
+        public string SecurityQuestionLastUpdated { get; set; }
     }
 }

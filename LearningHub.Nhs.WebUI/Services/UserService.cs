@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -1923,6 +1924,7 @@
                     Name = personalDetailsModel.FirstName + " " + personalDetailsModel.LastName,
                     PrimaryEmailAddress = personalDetailsModel.PrimaryEmailAddress,
                     NewPrimaryEmailAddress = personalDetailsModel.NewPrimaryEmailAddress,
+                    SecondaryEmailAddress = personalDetailsModel.SecondaryEmailAddress,
                 };
             }
 
@@ -1943,6 +1945,7 @@
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 PreferredName = model.PreferredName,
+                SecondaryEmailAddress = model.SecondaryEmailAddress,
             };
 
             var json = JsonConvert.SerializeObject(personalDetailsViewModel);
@@ -2083,9 +2086,9 @@
                     SecondaryEmailAddress = personalDetailsModel.SecondaryEmailAddress,
                     SecurityFirstQuestion = securityQuestionsViewModel.UserSecurityQuestions.Any() ? securityQuestionsViewModel.UserSecurityQuestions.First().QuestionText : null,
                     SecuritySecondQuestion = (securityQuestionsViewModel.UserSecurityQuestions.Any() && securityQuestionsViewModel.UserSecurityQuestions.Count > 1) ? securityQuestionsViewModel.UserSecurityQuestions[1].QuestionText : null,
-                    LastUpdated = personalDetailsModel.LastUpdated,
+                    ////LastUpdated = personalDetailsModel.LastUpdated,
                     PasswordHash = personalDetailsModel.PasswordHash,
-                    SecurityQuestionLastUpdated = securityQuestionsViewModel.UserSecurityQuestions.Any() ? securityQuestionsViewModel.UserSecurityQuestions.OrderByDescending(s => s.AmendDate).Max(s => (DateTimeOffset?)s.AmendDate) : null,
+                    SecurityQuestionLastUpdated = securityQuestionsViewModel.UserSecurityQuestions.Any() ? securityQuestionsViewModel.UserSecurityQuestions.OrderByDescending(s => s.AmendDate).Max(s => s.AmendDate).Value.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) : string.Empty,
                 };
             }
 

@@ -20,5 +20,16 @@
         {
             return options.Select(o => new SelectListItem(o.Name, o.Id.ToString(), o.Id == selectedId)).ToList();
         }
+
+        /// <summary>
+        /// MapSelectListWithSelection.
+        /// </summary>
+        /// <param name="options">options.</param>
+        /// <param name="selectedId">selectedId.</param>
+        /// <returns>SelectListItem.</returns>
+        public static IEnumerable<SelectListItem> MapSelectListWithSelection(IEnumerable<SelectListItem> options, string selectedId = null)
+        {
+            return options.Select(o => new SelectListItem(o.Text, o.Value, o.Value == selectedId)).ToList();
+        }
     }
 }

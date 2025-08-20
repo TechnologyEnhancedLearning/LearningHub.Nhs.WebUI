@@ -1,17 +1,32 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserPrimarySpecialtyUpdateViewModel
 
 @{
-  ViewData["DisableValidation"] = true;
-  ViewData["Title"] = "Update Primary Specialty";
-  var errorHasOccurred = !ViewData.ModelState.IsValid;
-  var selectSpecialtyError = ((TagBuilder)Html.ValidationMessageFor(m => m.SelectedPrimarySpecialtyId)).HasInnerHtml;
+    ViewData["DisableValidation"] = true;
+    ViewData["Title"] = "Update Primary Specialty";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    var selectSpecialtyError = ((TagBuilder)Html.ValidationMessageFor(m => m.SelectedPrimarySpecialtyId)).HasInnerHtml;
 }
 
 <div class="create-account">
-  <div class="nhsuk-width-container app-width-container">
-    <div class="nhsuk-grid-row">
-      <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
-        <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
+                @if (!string.IsNullOrEmpty(Model.SelectedGradeId))
+                {
+                    var changeGradeData = new Dictionary<string, string>
+                    {
+                    { "SelectedGradeId", Model.SelectedGradeId },
+                    { "SelectedJobRoleId", Model.SelectedJobRoleId.ToString() },
+                    { "SelectedMedicalCouncilNo", Model.SelectedMedicalCouncilNo }
+                    };
+
+                    <vc:back-link asp-controller="MyAccount" asp-action="ChangeGrade" link-text="Back to: Update Job Grade" asp-all-route-data="@changeGradeData" />
+                }
+                else
+                {
+                    <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+                }
+                
 
         @if (errorHasOccurred)
         {

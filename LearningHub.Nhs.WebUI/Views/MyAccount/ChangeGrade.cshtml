@@ -21,7 +21,7 @@
                 { "SelectedMedicalCouncilNo", Model.SelectedMedicalCouncilNo }
                 };
 
-                    <vc:back-link asp-controller="MyAccount" asp-action="ChangeMedicalCouncilNo" link-text="Go back" asp-all-route-data="@changeMedicalNoRouteData" />
+                    <vc:back-link asp-controller="MyAccount" asp-action="ChangeMedicalCouncilNo" link-text="Back to: Update Medical Council Number" asp-all-route-data="@changeMedicalNoRouteData" />
                 }
                 else
                 {
@@ -29,7 +29,7 @@
                 { "SelectedJobRoleId", Model.SelectedJobRoleId.ToString() },
                 { "FilterText", Model.SelectedJobRole }
                 };
-                    <vc:back-link asp-controller="MyAccount" asp-action="ChangeCurrentRole" link-text="Go back" asp-all-route-data="@changeRoleRouteData" />
+                    <vc:back-link asp-controller="MyAccount" asp-action="ChangeCurrentRole" link-text="Back to: Update Current Role" asp-all-route-data="@changeRoleRouteData" />
                 }
 
                 @if (errorHasOccurred)

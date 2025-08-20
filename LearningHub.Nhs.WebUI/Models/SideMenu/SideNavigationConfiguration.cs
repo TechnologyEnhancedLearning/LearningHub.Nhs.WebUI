@@ -58,33 +58,33 @@
                 GroupTitle = "Activity",
                 Items = new List<SideNavigationItem>
                 {
-                    new SideNavigationItem
+                   new SideNavigationItem
                     {
                         Text = "Recent learning",
                         Controller = "MyLearning",
                         Action = "Index",
-                        IsActive = route => MatchRoute(route, "Activity", "Recent"),
+                        IsActive = route => MatchRoute(route, "MyLearning", "Index"),
                     },
-                    new SideNavigationItem
+                   new SideNavigationItem
                     {
                         Text = "Bookmarks",
-                        Controller = "MyLearning",
-                        Action = "Bookmark",
-                        IsActive = route => MatchRoute(route, "Activity", "Bookmark"),
+                        Controller = "Bookmark",
+                        Action = "Index",
+                        IsActive = route => MatchRoute(route, "Bookmark", "Index"),
                     },
-                    new SideNavigationItem
+                   new SideNavigationItem
                     {
                         Text = "Certificates",
                         Controller = "MyLearning",
                         Action = "Certificates",
                         IsActive = route => MatchRoute(route, "Activity", "Certificates"),
                     },
-                    new SideNavigationItem
+                   new SideNavigationItem
                     {
                         Text = "Learning history",
                         Controller = "MyLearning",
                         Action = "LearningHistory",
-                        IsActive = route => MatchRoute(route, "Activity", "LearningHistory"),
+                        IsActive = route => MatchRoute(route, "MyLearning", "LearningHistory"),
                     },
                 },
             },

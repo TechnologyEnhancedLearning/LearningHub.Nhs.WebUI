@@ -458,8 +458,6 @@
                 Viewed = learningRequest.Viewed,
                 Launched = learningRequest.Launched,
                 CertificateEnabled = learningRequest.CertificateEnabled,
-                Catalogues = learningRequest.Catalogues,
-                Resources = learningRequest.Resources,
                 Courses = learningRequest.Courses,
             };
 

@@ -1,6 +1,8 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Services.Services
 {
     using LearningHub.Nhs.Models.Moodle.API;
+    using LearningHub.Nhs.Models.MyLearning;
+    using LearningHub.Nhs.Models.Report.ReportCreate;
     using LearningHub.Nhs.OpenApi.Services.Interface.HttpClients;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.Extensions.Logging;
@@ -106,50 +108,37 @@
         /// GetEnrolledCoursesAsync.
         /// </summary>
         /// <param name="userId">Moodle user id.</param>
-        /// <param name="months">The page Number.</param>
+        /// <param name="requestModel">MyLearningRequestModel.</param>
+        /// <param name="months">The months.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<List<MoodleEnrolledCourseResponseModel>> GetRecentEnrolledCoursesAsync(int userId, int? months = null)
+        public async Task<List<MoodleEnrolledCourseResponseModel>> GetRecentEnrolledCoursesAsync(int userId, MyLearningRequestModel requestModel, int? months = null)
         {
             try
             {
                 userId = 3;
+
+                string statusFilter = string.Empty; ;
+
+                if ((requestModel.Incomplete && requestModel.Complete)  || (!requestModel.Incomplete && !requestModel.Complete))
+                {
+                    statusFilter = string.Empty; ;
+                }
+                else if (requestModel.Incomplete)
+                {
+                    statusFilter = "inprogress";
+                }
+                else
+                {
+                    statusFilter = "completed";
+                }
+
                 var parameters = new Dictionary<string, string>
-            {
-                { "userid", userId.ToString() },
-                { "months", months.ToString() }
-            };
-
-                // Fetch enrolled courses
-                var recentEnrolledCourses = await GetCallMoodleApiAsync<List<MoodleEnrolledCourseResponseModel>>(
-                    "mylearningservice_get_recent_courses",
-                    parameters
-                );
-
-                if (recentEnrolledCourses == null || recentEnrolledCourses.Count == 0)
-                    return new List<MoodleEnrolledCourseResponseModel>();
-
-                return recentEnrolledCourses.ToList();
-            }
-            catch(Exception ex)
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// GetEnrolledCoursesAsync.
-        /// </summary>
-        /// <param name="userId">Moodle user id.</param>
-        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<List<MoodleEnrolledCourseResponseModel>> GetEnrolledCoursesHistoryAsync(int userId)
-        {
-            try
-            {
-                userId = 3;
-                var parameters = new Dictionary<string, string>
-            {
-                { "userid", userId.ToString() }
-            };
+{
+    { "userid", userId.ToString() },
+    { "months", months.ToString() },
+    { "statusfilter", statusFilter },
+    { "search", requestModel.SearchText ?? string.Empty }
+};
 
                 // Fetch enrolled courses
                 var recentEnrolledCourses = await GetCallMoodleApiAsync<List<MoodleEnrolledCourseResponseModel>>(
@@ -169,21 +158,37 @@
         }
 
         /// <summary>
-        /// GetUserLearningHistory.
+        /// GetEnrolledCoursesAsync.
         /// </summary>
         /// <param name="userId">Moodle user id.</param>
-        /// <param name="months">The page Number.</param>
+        /// <param name="requestModel">MyLearningRequestModel requestModel.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<List<MoodleEnrolledCourseResponseModel>> GetUserLearningHistoryAsync(int userId, int? months = null)
+        public async Task<List<MoodleEnrolledCourseResponseModel>> GetEnrolledCoursesHistoryAsync(int userId, MyLearningRequestModel requestModel)
         {
             try
             {
                 userId = 3;
+                string statusFilter = string.Empty;
+
+                if ((requestModel.Incomplete && requestModel.Complete) || (!requestModel.Incomplete && !requestModel.Complete))
+                {
+                    statusFilter = string.Empty;
+                }
+                else if (requestModel.Incomplete)
+                {
+                    statusFilter = "inprogress";
+                }
+                else
+                {
+                    statusFilter = "completed";
+                }
+
                 var parameters = new Dictionary<string, string>
-            {
-                { "userid", userId.ToString() },
-                { "months", months.ToString() }
-            };
+{
+    { "userid", userId.ToString() },
+    { "statusfilter", statusFilter },
+    { "search", requestModel.SearchText ?? string.Empty }
+};
 
                 // Fetch enrolled courses
                 var recentEnrolledCourses = await GetCallMoodleApiAsync<List<MoodleEnrolledCourseResponseModel>>(

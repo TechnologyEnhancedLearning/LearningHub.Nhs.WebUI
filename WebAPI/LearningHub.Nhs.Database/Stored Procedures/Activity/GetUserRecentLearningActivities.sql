@@ -6,7 +6,8 @@
 -- Modification History
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserRecentLearningActivities] (
-	 @userId INT	
+	 @userId INT,
+	 @activityStatuses varchar(50) = NULL
 	)
 AS
 BEGIN
@@ -29,10 +30,12 @@ BEGIN
     ra.NodePathId AS NodePathId,
 	r.ResourceTypeId AS ResourceType,
 	rv.Title AS Title,
+	--rv.[Description] AS ResourceDescription,
 	rv.CertificateEnabled AS CertificateEnabled,
 	rvp.ProviderId AS ProviderId,
 	ISNULL(ara.ActivityStatusId,  ra.ActivityStatusId) AS ActivityStatus,
     ra.ActivityStart AS ActivityDate,
+   -- ara.ActivityEnd,
     ISNULL(ara.DurationSeconds, 0) AS ActivityDurationSeconds,
     ara.Score AS ScorePercentage,
 	arv.AssessmentType AS AssessmentType,
@@ -57,6 +60,13 @@ BEGIN
   WHERE ra.LaunchResourceActivityId IS NULL AND ra.userid = @userId 
   AND ra.deleted = 0
   AND r.ResourceTypeId IN(2,6,7,10,11) AND ra.ActivityStart >= DATEADD(MONTH, -6, SYSDATETIMEOFFSET())  
+  AND (
+						@activityStatuses IS NULL OR
+						ISNULL(ara.ActivityStatusId, ra.ActivityStatusId) IN (
+							SELECT TRY_CAST(value AS INT)
+							FROM STRING_SPLIT(@activityStatuses, ',')
+							WHERE TRY_CAST(value AS INT) IS NOT NULL)
+			)
 ) 
 SELECT ActivityId,
        LaunchResourceActivityId,

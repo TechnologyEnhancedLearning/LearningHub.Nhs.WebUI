@@ -48,5 +48,12 @@
         /// <param name="userId">The userId.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<Tuple<int, MyLearningDetailedItemViewModel>> GetResourceCertificateDetails(int resourceReferenceId, int? majorVersion = 0, int? minorVersion = 0, int? userId = 0);
+
+        /// <summary>
+        /// Gets the resource URL for a given resource reference ID.
+        /// </summary>
+        /// <param name="resourceReferenceId">resourceReferenceId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        string GetResourceUrl(int resourceReferenceId);
     }
 }

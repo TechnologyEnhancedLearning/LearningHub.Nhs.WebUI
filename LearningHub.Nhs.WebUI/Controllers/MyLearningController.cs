@@ -458,6 +458,7 @@
                 Viewed = learningRequest.Viewed,
                 Launched = learningRequest.Launched,
                 CertificateEnabled = learningRequest.CertificateEnabled,
+                Courses = learningRequest.Courses,
             };
 
             if (myLearningDashboard != null)
@@ -625,6 +626,50 @@
             }
 
             return this.View(new Tuple<UserBasicViewModel, MyLearningViewModel>(userDetails, response));
+        }
+
+        /// <summary>
+        /// Function to export activity report to pdf.
+        /// </summary>
+        /// <param name="myLearningRequestModel">myLearningRequestModel.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [Route("/MyLearning/DownloadActivities")]
+        [HttpPost]
+        public async Task<IActionResult> DownloadActivities(MyLearningRequestModel myLearningRequestModel)
+        {
+            var filter = myLearningRequestModel;
+            filter.Skip = 0;
+            filter.Take = 999;
+            var userDetails = await this.userService.GetCurrentUserBasicDetailsAsync();
+            var response = new MyLearningUserActivitiesViewModel();
+            var result = await this.myLearningService.GetUserLearningHistory(filter);
+            if (result != null)
+            {
+                response.TotalCount = result.TotalCount;
+                response.Activities = result.Activities;
+            }
+
+            Tuple<UserBasicViewModel, MyLearningUserActivitiesViewModel> modelData = Tuple.Create(userDetails, response);
+            var renderedViewHTML = RenderRazorViewToString(this, "DownloadActivityRecords", modelData);
+            ReportStatusModel reportStatusModel = new ReportStatusModel();
+            var pdfReportResponse = await this.pdfReportService.PdfReport(renderedViewHTML, userDetails.Id);
+            if (pdfReportResponse != null)
+            {
+                do
+                {
+                    reportStatusModel = await this.pdfReportService.PdfReportStatus(pdfReportResponse);
+                }
+                while (reportStatusModel.Id == 1);
+
+                var pdfReportFile = await this.pdfReportService.GetPdfReportFile(pdfReportResponse);
+                if (pdfReportFile != null)
+                {
+                    var fileName = "ActivityReport.pdf";
+                    return this.File(pdfReportFile, FileHelper.GetContentTypeFromFileName(fileName), fileName);
+                }
+            }
+
+            return this.View(new Tuple<UserBasicViewModel, MyLearningUserActivitiesViewModel>(userDetails, response));
         }
 
         /// <summary>

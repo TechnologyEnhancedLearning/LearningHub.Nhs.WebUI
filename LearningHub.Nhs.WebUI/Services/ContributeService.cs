@@ -13,6 +13,7 @@
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.Contribute;
     using LearningHub.Nhs.Models.Validation;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models.Contribute;
     using Microsoft.AspNetCore.Http;
@@ -27,6 +28,7 @@
     public class ContributeService : BaseService<ContributeService>, IContributeService
     {
         private readonly IAzureMediaService azureMediaService;
+        private readonly ILearningHubHttpClient learningHubHttpClient;
         private readonly IAzureMediaService mediaService;
         private readonly IFileService fileService;
         private readonly IResourceService resourceService;
@@ -47,6 +49,7 @@
             this.fileService = fileService;
             this.resourceService = resourceService;
             this.azureMediaService = azureMediaService;
+            this.learningHubHttpClient = learningHubHttpClient;
             this.mediaService = mediaService;
         }
 

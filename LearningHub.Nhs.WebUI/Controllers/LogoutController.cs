@@ -9,7 +9,7 @@
 
     using IdentityModel;
     using IdentityModel.Client;
-
+    using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Handlers;
     using LearningHub.Nhs.WebUI.Interfaces;

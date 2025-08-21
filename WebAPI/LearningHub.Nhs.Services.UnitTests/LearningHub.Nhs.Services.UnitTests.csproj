@@ -9,7 +9,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="AutoFixture" Version="4.18.1" />
-		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
+		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.11" />
 		<PackageReference Include="EntityFrameworkCore.Testing.Moq" Version="5.0.0" />
 		<PackageReference Include="FluentAssertions" Version="8.0.1" />
 		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />

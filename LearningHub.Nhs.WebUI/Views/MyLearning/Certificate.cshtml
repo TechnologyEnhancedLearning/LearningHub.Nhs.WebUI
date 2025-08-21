@@ -1,0 +1,214 @@
+﻿@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Helpers
+@using LearningHub.Nhs.WebUI.Models
+@using LearningHub.Nhs.WebUI.Models.Learning
+@model MyLearningUserCertificatesViewModel;
+@{
+    ViewData["Title"] = "Certificates";
+    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    var distintResourceType = new List<string>();
+    if (Model.UserCertificates.Any())
+    {
+        var distinctIds = Model.UserCertificates.Select(c => c.ResourceTypeId).Distinct();
+        distintResourceType = distinctIds.Where(id => Enum.IsDefined(typeof(ResourceTypeEnum), id))
+        .Select(id => Enum.GetName(typeof(ResourceTypeEnum), id)).OrderBy(name => name).ToList();
+    }
+
+}
+
+@functions {
+    bool IsEntryActive(string entry)
+    {
+        var prop = Model.GetType().GetProperty(entry);
+        return prop != null && prop.PropertyType == typeof(bool) && (bool)prop.GetValue(Model);
+    }
+}
+
+@section styles {
+
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/mylearning.css" asp-append-version="true" />
+
+}
+@section NavBreadcrumbs {
+
+<section class="nhsuk-hero">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+
+                <div class="nhsuk-u-padding-top-3 nhsuk-u-padding-bottom-3">
+                    <a href="/">Home</a>
+                    <i class="fa-solid fa-chevron-right nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+                </div>
+                <div class="nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-7">
+                    <h1 class="nhsuk-heading-xl">My learning activity</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+}
+
+
+<div class="my-learning">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <!-- Left column: SideNav -->
+            <div class="nhsuk-grid-column-one-quarter">
+                @await Component.InvokeAsync("SideNav", new { groupTitle = "Activity" })
+            </div>
+
+            <!-- Right column: Main content -->
+            <div class="nhsuk-grid-column-three-quarters">
+                <div>
+                    <h2 class="nhsuk-heading-l">Certificates</h2>
+                </div>
+
+                <div class="nhsuk-u-padding-top-3">
+                    @if (errorHasOccurred)
+                    {
+                        <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                    }
+
+                    <form asp-controller="MyLearning" asp-action="Certificate" method="post" asp-fragment="search-results">
+
+                        <div class="nhsuk-form-group search-box-container nhsuk-u-padding-bottom-1" style="white-space:nowrap">
+                            <label class="nhsuk-label nhsuk-u-visually-hidden" for="SearchText">Search Text</label>
+                            <input class="nhsuk-input nhsuk-u-width-one-half search-box" placeholder="" id="SearchText" name="SearchText" value="@Model.SearchText" type="text" aria-required="true">
+                            <button class="nhsuk-search__submit" name="MyLearningFormActionType" value=@MyLearningFormActionTypeEnum.BasicSearch type="submit">
+                                <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
+                                </svg>
+                                <span class="nhsuk-u-visually-hidden">Search</span>
+                            </button>
+
+                        </div>
+                        <h3 class="nhsuk-heading-m">@Model.TotalCount @(Model.TotalCount > 1 ? "s" : "")</h3>
+                    </form>
+                </div>
+
+                <div class="search-filters">
+
+                    <div>
+                        <span class="nhsuk-u-padding-right-3 nhsuk-u-primary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">Show</span>
+
+
+
+                        @if (distintResourceType.Any())
+                        {
+                            <a asp-action="Certificate"
+                            class="nhsuk-u-padding-right-3 nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-text-align-centre"
+                            title="All">
+                                <span class="nhsuk-bg-pale-blue">All</span>
+                            </a>
+
+                            @foreach (var entry in distintResourceType)
+                            {
+                                var routeValues = new Dictionary<string, string>{{ entry, "true" }};
+
+                                <a asp-action="Index"
+                                   asp-all-route-data="routeValues"
+                                   class="nhsuk-u-padding-right-3 nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold"
+                                   title="@entry">
+                                    @if (IsEntryActive(entry))
+                                    {
+                                        <span class="nhsuk-bg-pale-blue">@entry</span>
+                                    }
+                                    else
+                                    {
+                                        @entry
+                                    }
+                                </a>
+
+                            }
+
+                        }
+                        else
+                        {
+                            <a asp-action="Certificate"
+                               class="nhsuk-u-padding-right-3 nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-text-align-centre"
+                               title="All">
+                                <span class="nhsuk-bg-pale-blue">All</span>
+                            </a>
+                        }
+
+
+
+                    </div>
+                    <div class="nhsuk-u-padding-bottom-5">
+                        <hr class="nhsuk-section-break nhsuk-section-break--visible nhsuk-u-padding-bottom-4">
+                    </div>
+
+                </div>
+
+                <div class="nhsuk-u-padding-bottom-4">
+                    <hr class="nhsuk-section-break nhsuk-section-break--visible">
+                </div>
+                <div>
+                    <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred">
+                        @foreach (var certificate in Model.UserCertificates)
+                        {
+
+                            var activityDate = certificate.AwardedDate.Date;
+                            var today = DateTime.Today;
+                            var dateTimeText = activityDate == today ? "Today"
+                            : activityDate == today.AddDays(-1) ? "Yesterday"
+                            : activityDate.ToString("dd MMM yyyy");
+
+
+
+                            <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+                                <div class="nhsuk-card dashboard-card">
+
+                                    <div class="nhsuk-card__content dashboard-card-content">
+                                        <div>
+                                            <h3 class="nhsuk-card__heading nhsuk-heading-m line-clamp-2">
+                                                @if ((ResourceTypeEnum)certificate.ResourceTypeId == ResourceTypeEnum.Moodle)
+                                                {
+                                                    <a class="nhsuk-card__link" href="@(certificate.CertificatePreviewUrl)">@UtilityHelper.StripHtmlFromString(certificate.Title)</a>
+                                                }
+                                                else
+                                                {
+                                                    <a class="nhsuk-card__link" href="@("/Resource/" + certificate.ResourceReferenceId)">@UtilityHelper.StripHtmlFromString(certificate.Title)</a>
+                                                }
+                                               
+                                            </h3>
+                                        </div>
+                                        <div class="nhsuk-card__description dashboard-card-body">
+                                            <div>
+                                                <div class="nhsuk-body-s nhsuk-u-margin-bottom-2point5">
+                                                    <span class="nhsuk-u-font-weight-bold">Type:</span> @UtilityHelper.GetPrettifiedResourceTypeName((ResourceTypeEnum)certificate.ResourceTypeId)
+                                                </div>
+                                                <div class="nhsuk-u-margin-bottom-2point5 line-clamp-3">
+                                                    @if ((ResourceTypeEnum)certificate.ResourceTypeId == ResourceTypeEnum.Moodle)
+                                                    {
+                                                        <a class="nhsuk-card__link" target="_blank" href="@(certificate.CertificateDownloadUrl)">Download</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="nhsuk-card__link" target="_blank" href="@("/Resource/" + certificate.ResourceReferenceId)">Download</a>
+                                                    }
+                                                </div>
+                                                <div class="nhsuk-u-font-size-16 nhsuk-u-margin-bottom-2point5 line-clamp-1">
+                                                    <span class="nhsuk-u-font-weight-bold">Awarded:</span> @(dateTimeText)
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                        </li>
+                    }
+                    </ul>
+                </div>
+
+                <div>
+                    @await Html.PartialAsync("_CertificatePaging", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

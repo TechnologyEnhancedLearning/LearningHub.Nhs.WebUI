@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.MyLearning;
 
     /// <summary>

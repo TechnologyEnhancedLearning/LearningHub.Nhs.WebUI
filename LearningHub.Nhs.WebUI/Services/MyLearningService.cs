@@ -5,13 +5,9 @@
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
-    using elfhHub.Nhs.Models.Common;
-    using LearningHub.Nhs.Models.Common;
-    using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;

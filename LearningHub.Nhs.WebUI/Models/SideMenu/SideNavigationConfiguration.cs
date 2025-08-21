@@ -77,7 +77,7 @@
                         Text = "Certificates",
                         Controller = "MyLearning",
                         Action = "Certificates",
-                        IsActive = route => MatchRoute(route, "Activity", "Certificates"),
+                        IsActive = route => MatchRoute(route, "MyLearning", "Certificates"),
                     },
                     new SideNavigationItem
                     {

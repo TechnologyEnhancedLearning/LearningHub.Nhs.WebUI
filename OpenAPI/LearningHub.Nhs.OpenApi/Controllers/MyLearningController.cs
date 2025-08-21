@@ -108,5 +108,20 @@
             var certificateDetails = await this.myLearningService.GetResourceCertificateDetails((userId == 0) ? this.CurrentUserId.GetValueOrDefault() : (int)userId, resourceReferenceId, majorVersion, minorVersion);
             return this.Ok(certificateDetails);
         }
+
+        /// <summary>
+        /// Gets the user certificate details.
+        /// </summary>
+        /// <param name="requestModel">
+        /// The requestModel.
+        /// </param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpPost]
+        [Route("GetUserCertificateDetails")]
+        public async Task<IActionResult> GetUserCertificateDetails([FromBody] MyLearningRequestModel requestModel)
+        {
+            var certificateDetails = await this.myLearningService.GetUserCertificateDetails(this.CurrentUserId.GetValueOrDefault(), requestModel);
+            return this.Ok(certificateDetails);
+        }
     }
 }

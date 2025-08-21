@@ -437,6 +437,7 @@
             var routeData = model.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(model)?.ToString());
             routeData.Remove("MostRecentResources");
             routeData.Remove("Activities");
+            routeData.Remove("UserCertificates");
             routeData.Remove("TotalCount");
             routeData.Remove("MyLearningPaging");
             routeData.Remove("Skip");

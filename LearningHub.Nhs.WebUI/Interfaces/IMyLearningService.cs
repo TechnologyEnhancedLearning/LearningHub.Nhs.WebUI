@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.MyLearning;
 
     /// <summary>
@@ -48,6 +49,13 @@
         /// <param name="userId">The userId.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<Tuple<int, MyLearningDetailedItemViewModel>> GetResourceCertificateDetails(int resourceReferenceId, int? majorVersion = 0, int? minorVersion = 0, int? userId = 0);
+
+        /// <summary>
+        /// Gets the user certificates.
+        /// </summary>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(MyLearningRequestModel requestModel);
 
         /// <summary>
         /// Gets the resource URL for a given resource reference ID.

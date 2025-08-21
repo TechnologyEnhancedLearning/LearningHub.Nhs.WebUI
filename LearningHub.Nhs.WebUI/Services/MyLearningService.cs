@@ -6,9 +6,12 @@
     using System.Text;
     using System.Threading.Tasks;
     using elfhHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
@@ -178,6 +181,38 @@
             {
                 var result = response.Content.ReadAsStringAsync().Result;
                 viewModel = JsonConvert.DeserializeObject<Tuple<int, MyLearningDetailedItemViewModel>>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Gets the user certificates.
+        /// </summary>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(MyLearningRequestModel requestModel)
+        {
+            MyLearningCertificatesDetailedViewModel viewModel = null;
+
+            var json = JsonConvert.SerializeObject(requestModel);
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = await this.OpenApiHttpClient.GetClientAsync();
+
+            var request = $"MyLearning/GetUserCertificateDetails";
+            var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewModel = JsonConvert.DeserializeObject<MyLearningCertificatesDetailedViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
                         ||

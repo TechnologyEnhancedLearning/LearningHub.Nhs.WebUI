@@ -62,3 +62,4 @@ obj
 /LearningHub.Nhs.WebUI.BlazorClient/wwwroot/appsettings.Development.json
 /LearningHub.Nhs.WebUI.BlazorClient/nuget.config
 /LearningHub.Nhs.WebUI.BlazorClient/LearningHub.Nhs.WebUI.BlazorClient.csproj.user
+/nuget.config

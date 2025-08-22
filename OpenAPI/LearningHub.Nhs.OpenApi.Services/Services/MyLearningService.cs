@@ -618,14 +618,18 @@
         public async Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(int userId, MyLearningRequestModel requestModel)
         {
             Task<List<MoodleUserCertificateResponseModel>>? courseCertificatesTask = null;
-            string filteredResource = GetFilteredResourceType(requestModel);
+            var filteredResource = GetFilteredResourceType(requestModel);
 
-            if (filteredResource == null || (!string.IsNullOrWhiteSpace(filteredResource) && requestModel.Courses))
+            if (filteredResource.Count() == 0 || (filteredResource.Any() && requestModel.Courses))
             {
-                courseCertificatesTask = moodleApiService.GetUserCertificateAsync(userId, requestModel.SearchText);
+                courseCertificatesTask = !string.IsNullOrWhiteSpace(requestModel.SearchText) ? 
+                    moodleApiService.GetUserCertificateAsync(userId, requestModel.SearchText) : moodleApiService.GetUserCertificateAsync(userId);
+
             }
 
-            var resourceCertificatesTask = resourceRepository.GetUserCertificateDetails(userId, requestModel.SearchText);
+            var resourceCertificatesTask = !string.IsNullOrWhiteSpace(requestModel.SearchText) ?
+                 resourceRepository.GetUserCertificateDetails(userId, requestModel.SearchText) : resourceRepository.GetUserCertificateDetails(userId);
+
 
             // Await all active tasks in parallel
             if (courseCertificatesTask != null)
@@ -658,15 +662,13 @@
 
             var allCertificates = resourceCertificates.Concat(mappedCourseCertificates);
 
-            if (!string.IsNullOrWhiteSpace(filteredResource))
+            if (filteredResource != null && filteredResource.Any())
             {
-                if (Enum.TryParse<ResourceTypeEnum>(filteredResource, true, out var result))
-                {
-                    int resourceTypeId = (int)result;
-                    allCertificates = allCertificates.Where(c => c.ResourceTypeId == resourceTypeId);
-                }
+                var allowedTypeIds = filteredResource
+                    .Select(entry => Enum.TryParse<ResourceTypeEnum>(entry, true, out var parsed) ? (int?)parsed : null)
+                    .Where(id => id.HasValue).Select(id => id.Value).ToHashSet();
 
-
+                allCertificates = allCertificates.Where(c => allowedTypeIds.Contains(c.ResourceTypeId));
             }
 
             var orderedCertificates = allCertificates.OrderByDescending(c => c.AwardedDate);
@@ -795,24 +797,31 @@
             return query;
         }
 
-        private static string GetFilteredResourceType(MyLearningRequestModel model)
+        private static List<string> GetFilteredResourceType(MyLearningRequestModel model)
         {
             var selectors = new Dictionary<string, Func<MyLearningRequestModel, bool>>
-                {
-                    { nameof(model.Weblink), m => m.Weblink },
-                    { nameof(model.File), m => m.File },
-                    { nameof(model.Video), m => m.Video },
-                    { nameof(model.Article), m => m.Article },
-                    { nameof(model.Case), m => m.Case },
-                    { nameof(model.Image), m => m.Image },
-                    { nameof(model.Audio), m => m.Audio },
-                    { nameof(model.Elearning), m => m.Elearning },
-                    { nameof(model.Html), m => m.Html },
-                    { nameof(model.Assessment), m => m.Assessment },
-                    { nameof(model.Courses), m => m.Courses }
-                };
+            {
+                { nameof(model.Weblink),    m => m.Weblink },
+                { nameof(model.File),       m => m.File },
+                { nameof(model.Video),      m => m.Video },
+                { nameof(model.Article),    m => m.Article },
+                { nameof(model.Case),       m => m.Case },
+                { nameof(model.Image),      m => m.Image },
+                { nameof(model.Audio),      m => m.Audio },
+                { nameof(model.Elearning),  m => m.Elearning },
+                { nameof(model.Html),       m => m.Html },
+                { nameof(model.Assessment), m => m.Assessment },
+                { nameof(model.Courses),    m => m.Courses }
+            };
 
-            return selectors.FirstOrDefault(kvp => kvp.Value(model)).Key;
+            var normalisationMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                { nameof(model.Courses), "Moodle" }
+            };
+
+            return selectors
+                .Where(kvp => kvp.Value(model))
+                .Select(kvp => normalisationMap.TryGetValue(kvp.Key, out var mapped) ? mapped : kvp.Key).ToList();
         }
 
     }

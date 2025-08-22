@@ -196,6 +196,15 @@
         }
     }
 
+    .nhsuk-card--radius-6 {
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .nhsuk-card__heading.nhsuk-heading-m.nhsuk-font-weight-regular {
+        font-weight: 400 !important;
+    }
+
     label {
         font-family: $font-stack;
     }

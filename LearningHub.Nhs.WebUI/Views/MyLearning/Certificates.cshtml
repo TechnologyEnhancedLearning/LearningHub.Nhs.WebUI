@@ -8,11 +8,35 @@
     var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
     var errorHasOccurred = !ViewData.ModelState.IsValid;
     var distintResourceType = new List<string>();
+    var routeData = ViewActivityHelper.GetActivityParameters(Model);
     if (Model.UserCertificates.Any())
     {
         var distinctIds = Model.UserCertificates.Select(c => c.ResourceTypeId).Distinct();
         distintResourceType = distinctIds.Where(id => Enum.IsDefined(typeof(ResourceTypeEnum), id))
         .Select(id => Enum.GetName(typeof(ResourceTypeEnum), id)).OrderBy(name => name).ToList();
+    }
+    var searchMessage = string.Empty;
+    if (Model.UserCertificates.Any())
+    {
+        int currentPage = Model.MyLearningPaging.CurrentPage;
+        int pageSize = Model.MyLearningPaging.PageSize;
+        int totalCount = Model.TotalCount;
+
+        int startIndex = (currentPage * pageSize) + 1;
+        int endIndex = Math.Min(startIndex + Model.UserCertificates.Count() - 1, totalCount);
+
+        if (startIndex == endIndex)
+        {
+            searchMessage = $"Showing {endIndex} of {totalCount} certificate{(totalCount == 1 ? "" : "s")}";
+        }
+        else
+        {
+            searchMessage = $"Showing {startIndex}–{endIndex} of {totalCount} certificates";
+        }
+    }
+    else
+    {
+        searchMessage = "No certificates found";
     }
 
 }
@@ -24,6 +48,27 @@
         return prop != null && prop.PropertyType == typeof(bool) && (bool)prop.GetValue(Model);
     }
 }
+@functions {
+    public string CertificatePreviewUrl(int resourceReferenceId) =>
+        Url.Action("Certificate", "MyLearning", new { resourceReferenceId });
+
+    public string DownloadCertificateUrl(
+       int resourceReferenceId,
+       int? majorVersion = 1,
+       int? minorVersion = 0
+       ) =>
+       Url.Action(
+           "DownloadCertificate",
+           "MyLearning",  
+           new
+           {
+               resourceReferenceId,
+               majorVersion,
+               minorVersion,
+           }
+       );
+}
+
 
 @section styles {
 
@@ -51,9 +96,10 @@
 }
 
 
+
 <div class="my-learning">
     <div class="nhsuk-width-container app-width-container">
-        <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-row nhsuk-u-padding-top-7">
             <!-- Left column: SideNav -->
             <div class="nhsuk-grid-column-one-quarter">
                 @await Component.InvokeAsync("SideNav", new { groupTitle = "Activity" })
@@ -61,18 +107,37 @@
 
             <!-- Right column: Main content -->
             <div class="nhsuk-grid-column-three-quarters">
-                <div>
-                    <h2 class="nhsuk-heading-l">Certificates</h2>
-                </div>
+                    <div class="nhsuk-heading-l">
+                        <svg width="31" height="40" viewBox="0 0 31 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="31" height="40" viewBox="0 0 31 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_1279_20951)">
+                                    <path d="M22.2978 31.628V38.6523C22.2978 39.0299 21.2822 39.2093 20.735 38.929L15.979 36.4692C15.6155 36.2822 14.9746 36.286 14.6223 36.4804L10.3199 38.8617C9.78392 39.157 8.73828 38.985 8.73828 38.5963V29.3477" stroke="#007F3B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M30.1024 15.1421C30.1024 16.1851 28.2135 17.0038 27.9887 17.9832C27.7638 18.9626 29.1018 20.5477 28.6595 21.4561C28.2173 22.3645 26.1522 22.3009 25.5151 23.0972C24.878 23.8935 25.4102 25.8785 24.6081 26.5178C23.8061 27.157 21.9922 26.1925 21.0627 26.6411C20.1333 27.0897 19.7697 29.1009 18.7578 29.329C17.7459 29.557 16.5579 27.9009 15.5122 27.9009C14.4666 27.9009 13.2448 29.5533 12.2666 29.329C11.2885 29.1047 10.8762 27.0785 9.96173 26.6411C9.04727 26.2038 7.21459 27.1533 6.41631 26.5178C5.61803 25.8823 6.15022 23.8972 5.50934 23.0972C4.86847 22.2972 2.81467 22.3832 2.36869 21.4561C1.9227 20.529 3.26816 18.9925 3.03954 17.9832C2.81093 16.9738 0.925781 16.1888 0.925781 15.1421C0.925781 14.0953 2.81467 13.2804 3.03954 12.3009C3.26441 11.3215 1.92644 9.73646 2.36869 8.82805C2.81093 7.91964 4.87597 7.98319 5.51309 7.18693C6.15022 6.39067 5.61803 4.40562 6.42006 3.76637C7.22209 3.12712 9.03603 4.0916 9.96548 3.643C10.8949 3.19441 11.2585 1.18319 12.2704 0.955154C13.2823 0.727116 14.4703 2.38319 15.516 2.38319C16.5616 2.38319 17.7834 0.730855 18.7616 0.955154C19.7397 1.17945 20.152 3.20562 21.0665 3.643C21.9809 4.08039 23.8136 3.13085 24.6119 3.76637C25.4102 4.40188 24.878 6.38693 25.5189 7.18693C26.1597 7.98693 28.2135 7.90095 28.6595 8.82805C29.1055 9.75515 27.76 11.2916 27.9887 12.3009C28.2173 13.3103 30.1024 14.0953 30.1024 15.1421Z" fill="#F2F8FD" />
+                                    <path d="M30.1024 15.1421C30.1024 16.1851 28.2135 17.0038 27.9887 17.9832C27.7638 18.9626 29.1018 20.5477 28.6595 21.4561C28.2173 22.3645 26.1522 22.3009 25.5151 23.0972C24.878 23.8935 25.4102 25.8785 24.6081 26.5178C23.8061 27.157 21.9922 26.1925 21.0627 26.6411C20.1333 27.0897 19.7697 29.1009 18.7578 29.329C17.7459 29.557 16.5579 27.9009 15.5122 27.9009C14.4666 27.9009 13.2448 29.5533 12.2666 29.329C11.2885 29.1047 10.8762 27.0785 9.96173 26.6411C9.04727 26.2038 7.21459 27.1533 6.41631 26.5178C5.61803 25.8823 6.15022 23.8972 5.50934 23.0972C4.86847 22.2972 2.81467 22.3832 2.36869 21.4561C1.9227 20.529 3.26816 18.9925 3.03954 17.9832C2.81093 16.9738 0.925781 16.1888 0.925781 15.1421C0.925781 14.0953 2.81467 13.2804 3.03954 12.3009C3.26441 11.3215 1.92644 9.73646 2.36869 8.82805C2.81093 7.91964 4.87597 7.98319 5.51309 7.18693C6.15022 6.39067 5.61803 4.40562 6.42006 3.76637C7.22209 3.12712 9.03603 4.0916 9.96548 3.643C10.8949 3.19441 11.2585 1.18319 12.2704 0.955154C13.2823 0.727116 14.4703 2.38319 15.516 2.38319C16.5616 2.38319 17.7834 0.730855 18.7616 0.955154C19.7398 1.17945 20.152 3.20562 21.0665 3.643C21.9809 4.08039 23.8136 3.13085 24.6119 3.76637C25.4102 4.40188 24.878 6.38693 25.5189 7.18693C26.1597 7.98693 28.2135 7.90095 28.6595 8.82805C29.1055 9.75515 27.76 11.2916 27.9887 12.3009C28.2173 13.3103 30.1024 14.0953 30.1024 15.1421Z" stroke="#007F3B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M15.4 22.1539L8.23047 13.395L11.3374 8.79688H19.9424L22.8132 13.395L15.4 22.1539Z" fill="#F2F8FD" stroke="#007F3B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M15.4662 22.1539L12.1719 13.395L13.5998 8.79688H17.55L18.8655 13.395L15.4662 22.1539Z" fill="#F2F8FD" stroke="#007F3B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M8.53906 13.3281H20.2547" stroke="#007F3B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1279_20951">
+                                        <rect width="31" height="40" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
 
+                        </svg>
+                        <span>Certificates</span>
+                    </div>
+                    
                 <div class="nhsuk-u-padding-top-3">
                     @if (errorHasOccurred)
                     {
                         <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
                     }
 
-                    <form asp-controller="MyLearning" asp-action="Certificate" method="post" asp-fragment="search-results">
-
+                    <form asp-controller="MyLearning" asp-action="Certificates" method="post" asp-fragment="search-results">
+                        <div class="nhsuk-grid-row">
+                            <div class="nhsuk-grid-column-three-quarters">
                         <div class="nhsuk-form-group search-box-container nhsuk-u-padding-bottom-1" style="white-space:nowrap">
                             <label class="nhsuk-label nhsuk-u-visually-hidden" for="SearchText">Search Text</label>
                             <input class="nhsuk-input nhsuk-u-width-one-half search-box" placeholder="" id="SearchText" name="SearchText" value="@Model.SearchText" type="text" aria-required="true">
@@ -84,67 +149,55 @@
                             </button>
 
                         </div>
-                        <h3 class="nhsuk-heading-m">@Model.TotalCount @(Model.TotalCount > 1 ? "s" : "")</h3>
+                        </div>
+                        </div>
+                        <h3 class="nhsuk-heading-m">@searchMessage </h3>
+
                     </form>
                 </div>
-
-                <div class="search-filters">
-
-                    <div>
-                        <span class="nhsuk-u-padding-right-3 nhsuk-u-primary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">Show</span>
-
-
-
-                        @if (distintResourceType.Any())
-                        {
-                            <a asp-action="Certificate"
-                            class="nhsuk-u-padding-right-3 nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-text-align-centre"
-                            title="All">
-                                <span class="nhsuk-bg-pale-blue">All</span>
-                            </a>
-
-                            @foreach (var entry in distintResourceType)
-                            {
-                                var routeValues = new Dictionary<string, string>{{ entry, "true" }};
-
-                                <a asp-action="Index"
-                                   asp-all-route-data="routeValues"
-                                   class="nhsuk-u-padding-right-3 nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold"
-                                   title="@entry">
-                                    @if (IsEntryActive(entry))
-                                    {
-                                        <span class="nhsuk-bg-pale-blue">@entry</span>
-                                    }
-                                    else
-                                    {
-                                        @entry
-                                    }
+                <div>
+                    <div class="search-filters">
+                        <form asp-controller="MyLearning" asp-action="certificates" method="post" asp-fragment="search-results">
+                            <input type="hidden" asp-for="@Model.SearchText" />
+                            <div class="nhs-item-row">
+                                <div class="nhsuk-u-padding-bottom-3">
+                                    Sorted by <strong class='nhsuk-tag'>Date order</strong>
+                                </div>
+                                <a class="nhsuk-u-font-weight-bold" asp-action="certificates" asp-route-searchText="@Model.SearchText" asp-route-myLearningFormActionType="@MyLearningFormActionTypeEnum.ClearAllFilters">
+                                    Clear all filters
                                 </a>
+                            </div>
+                            <details class="nhsuk-details nhsuk-expander nhsuk-u-margin-bottom-7">
 
-                            }
+                                <summary class="nhsuk-details__summary nhsuk-u-padding-0">
+                                    <span class="nhsuk-details__summary-text">
+                                        Filter results
+                                    </span>
+                                </summary>
 
-                        }
-                        else
-                        {
-                            <a asp-action="Certificate"
-                               class="nhsuk-u-padding-right-3 nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-text-align-centre"
-                               title="All">
-                                <span class="nhsuk-bg-pale-blue">All</span>
-                            </a>
-                        }
+                                <div class="search-filter-items nhsuk-u-padding-top-3">
+                                    <div class="filterForm">
+                                        <vc:checkboxes label="Filter by type:"
+                                                       populate-with-current-values="true"
+                                                       checkboxes="@Model.TypeFilterCheckbox()"
+                                                       hint-text=""
+                                                       required="false"
+                                                       css-class="nhsuk-grid-column-one-quarter"
+                                                       errormessage="" />
+                                    </div>
+                                    <hr class="nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-0" />
+                                    <button data-module="nhsuk-button" type="submit" class="nhsuk-button nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0" name="MyLearningFormActionType" value="@MyLearningFormActionTypeEnum.ApplyMajorFilters" title="Apply">Apply</button>
+                                </div>
 
-
-
+                            </details>
+                        </form>
                     </div>
-                    <div class="nhsuk-u-padding-bottom-5">
-                        <hr class="nhsuk-section-break nhsuk-section-break--visible nhsuk-u-padding-bottom-4">
-                    </div>
-
                 </div>
 
                 <div class="nhsuk-u-padding-bottom-4">
                     <hr class="nhsuk-section-break nhsuk-section-break--visible">
                 </div>
+
                 <div>
                     <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred">
                         @foreach (var certificate in Model.UserCertificates)
@@ -159,50 +212,45 @@
 
 
                             <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
-                                <div class="nhsuk-card dashboard-card">
+                                <div class="nhsuk-card dashboard-card nhsuk-card--radius-6">
 
-                                    <div class="nhsuk-card__content dashboard-card-content">
-                                        <div>
-                                            <h3 class="nhsuk-card__heading nhsuk-heading-m line-clamp-2">
+                                    <div class="nhsuk-card__content">
+                                        <h3 class="nhsuk-card__heading nhsuk-heading-m nhsuk-font-weight-regular line-clamp-1">
                                                 @if ((ResourceTypeEnum)certificate.ResourceTypeId == ResourceTypeEnum.Moodle)
                                                 {
-                                                    <a class="nhsuk-card__link" href="@(certificate.CertificatePreviewUrl)">@UtilityHelper.StripHtmlFromString(certificate.Title)</a>
+                                                <a class="nhsuk-card__link" title="@certificate.Title" target="_blank" href="@(certificate.CertificatePreviewUrl)">@certificate.Title</a>
                                                 }
                                                 else
                                                 {
-                                                    <a class="nhsuk-card__link" href="@("/Resource/" + certificate.ResourceReferenceId)">@UtilityHelper.StripHtmlFromString(certificate.Title)</a>
+                                                <a class="nhsuk-card__link" title="@certificate.Title" target="_blank" href="@CertificatePreviewUrl(certificate.ResourceReferenceId)">@certificate.Title</a>
                                                 }
                                                
                                             </h3>
-                                        </div>
-                                        <div class="nhsuk-card__description dashboard-card-body">
-                                            <div>
-                                                <div class="nhsuk-body-s nhsuk-u-margin-bottom-2point5">
+                                        <div class="nhsuk-card__description">
+                                                <div class="nhsuk-body-s nhsuk-u-margin-bottom-2point5 nhsuk-u-secondary-text-color  line-clamp-1">
                                                     <span class="nhsuk-u-font-weight-bold">Type:</span> @UtilityHelper.GetPrettifiedResourceTypeName((ResourceTypeEnum)certificate.ResourceTypeId)
                                                 </div>
-                                                <div class="nhsuk-u-margin-bottom-2point5 line-clamp-3">
+                                                <div class="nhsuk-u-margin-bottom-2point5 line-clamp-1">
                                                     @if ((ResourceTypeEnum)certificate.ResourceTypeId == ResourceTypeEnum.Moodle)
                                                     {
                                                         <a class="nhsuk-card__link" target="_blank" href="@(certificate.CertificateDownloadUrl)">Download</a>
                                                     }
                                                     else
                                                     {
-                                                        <a class="nhsuk-card__link" target="_blank" href="@("/Resource/" + certificate.ResourceReferenceId)">Download</a>
+                                                    <a class="nhsuk-card__link" title="@certificate.Title" target="_blank" href="@DownloadCertificateUrl(certificate.ResourceReferenceId, certificate.MajorVersion, certificate.MinorVersion)">@certificate.Title</a>
+
                                                     }
                                                 </div>
                                                 <div class="nhsuk-u-font-size-16 nhsuk-u-margin-bottom-2point5 line-clamp-1">
                                                     <span class="nhsuk-u-font-weight-bold">Awarded:</span> @(dateTimeText)
                                                 </div>
-
-
-                                            </div>
-
                                         </div>
                                     </div>
                                 </div>
                         </li>
                     }
                     </ul>
+
                 </div>
 
                 <div>

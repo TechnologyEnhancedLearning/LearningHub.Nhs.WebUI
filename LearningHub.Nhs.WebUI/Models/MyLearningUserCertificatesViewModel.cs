@@ -5,6 +5,7 @@
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.WebUI.Models.Learning;
+    using NHSUKViewComponents.Web.ViewModels;
 
     /// <summary>
     /// Defines the <see cref="MyLearningUserCertificatesViewModel" />.
@@ -56,5 +57,28 @@
         /// Gets or sets the learning result paging.
         /// </summary>
         public PagingViewModel MyLearningPaging { get; set; }
+
+        /// <summary>
+        /// sets the list of type checkboxes.
+        /// </summary>
+        /// <returns>The <see cref="List{CheckboxListItemViewModel}"/>.</returns>
+        public List<CheckboxListItemViewModel> TypeFilterCheckbox()
+        {
+            var checkboxes = new List<CheckboxListItemViewModel>()
+            {
+                new CheckboxListItemViewModel("Article", "Article", null),
+                new CheckboxListItemViewModel("Assessment", "Assessment", null),
+                new CheckboxListItemViewModel("Audio", "Audio", null),
+                new CheckboxListItemViewModel("Case", "Case", null),
+                new CheckboxListItemViewModel("Elearning", "elearning", null),
+                new CheckboxListItemViewModel("File", "File", null),
+                new CheckboxListItemViewModel("Html", "HTML", null),
+                new CheckboxListItemViewModel("Image", "Image", null),
+                new CheckboxListItemViewModel("Video", "Video", null),
+                new CheckboxListItemViewModel("Weblink", "Weblink", null),
+                new CheckboxListItemViewModel("Courses", "Courses", null),
+            };
+            return checkboxes;
+        }
     }
 }

@@ -741,7 +741,7 @@
         /// </summary>
         /// <param name="certificateRequest">The certificateRequest.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        [Route("mylearning/certificate")]
+        [Route("mylearning/certificates")]
         [HttpGet]
         [HttpPost]
         public async Task<IActionResult> Certificates(MyLearningUserCertificatesViewModel certificateRequest = null)
@@ -775,6 +775,15 @@
                     myLearningRequestModel.Skip = certificateRequest.CurrentPageIndex * MyLearningPageSize;
                     break;
                 case MyLearningFormActionTypeEnum.BasicSearch:
+
+                    myLearningRequestModel = new MyLearningRequestModel
+                    {
+                        SearchText = certificateRequest.SearchText?.Trim(),
+                        Skip = certificateRequest.CurrentPageIndex * MyLearningPageSize,
+                        Take = MyLearningPageSize,
+                    };
+                    break;
+                case MyLearningFormActionTypeEnum.ClearAllFilters:
 
                     myLearningRequestModel = new MyLearningRequestModel
                     {
@@ -846,6 +855,7 @@
         /// <param name="minorVersion">The minorVersion.</param>
         /// <param name="userId">The userId.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpGet]
         [HttpPost]
         [Route("mylearning/downloadcertificate")]
         public async Task<IActionResult> DownloadCertificate(int resourceReferenceId, int? majorVersion = 0, int? minorVersion = 0, int? userId = 0)

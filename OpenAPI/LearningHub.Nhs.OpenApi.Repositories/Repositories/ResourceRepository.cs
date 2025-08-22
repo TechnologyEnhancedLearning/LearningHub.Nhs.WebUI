@@ -98,13 +98,13 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
         /// <returns>A <see cref="Task{UserCertificateViewModel}"/> representing the result of the asynchronous operation.</returns>
         public async Task<List<UserCertificateViewModel>> GetUserCertificateDetails(int userId, string filterText = "")
         {
-            var result = new List<UserCertificateViewModel>();                                 
-            var param0 = new SqlParameter("@UserId", SqlDbType.Int) { Value = userId };
-            var param1 = new SqlParameter("@FilterText", SqlDbType.NVarChar, 200) { Value = filterText.Trim() ?? string.Empty };
+            var result = new List<UserCertificateViewModel>(); 
+                var param0 = new SqlParameter("@UserId", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@FilterText", SqlDbType.NVarChar, 200) { Value = filterText.Trim() ?? string.Empty };
 
-            result = await this.DbContext.UserCertificateViewModel
-                .FromSqlRaw("EXEC resources.GetUserCertificateDetails @UserId = @UserId, @FilterText = @FilterText", param0, param1).AsNoTracking().ToListAsync();
-            return result;
+                result = await this.DbContext.UserCertificateViewModel
+                    .FromSqlRaw("resources.GetUserCertificateDetails @UserId = @UserId, @FilterText = @FilterText", param0, param1).AsNoTracking().ToListAsync();
+                return result;
         }
 
 

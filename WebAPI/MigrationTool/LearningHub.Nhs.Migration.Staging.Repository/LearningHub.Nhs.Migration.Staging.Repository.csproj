@@ -15,9 +15,11 @@
     <ProjectReference Include="..\LearningHub.Nhs.Migration.Models\LearningHub.Nhs.Migration.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" />
     <PackageReference Update="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>
 </Project>

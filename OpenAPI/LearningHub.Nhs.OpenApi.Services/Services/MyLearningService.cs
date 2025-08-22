@@ -7,19 +7,23 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
+    using Azure.Core;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
-    using LearningHub.Nhs.Models.Enums.Report;
     using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Repositories.Helpers;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Activity;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Hierarchy;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// The rating service.
@@ -62,6 +66,11 @@
         private readonly IMediaResourceActivityRepository mediaResourceActivity;
 
         /// <summary>
+        /// The resource repository.
+        /// </summary>
+        private readonly IResourceRepository resourceRepository;
+
+        /// <summary>
         /// The moodleApiService.
         /// </summary>
         private readonly IMoodleApiService moodleApiService;
@@ -88,6 +97,7 @@
         /// <param name="settings">The settings.</param>
         /// <param name="scormActivityRepository">The scormActivityRepository.</param>
         /// <param name="mediaResourceActivity">The mediaResourceActivity.</param>
+        /// <param name="resourceRepository">The resourceActivity</param>
         /// <param name="moodleApiService">The moodleApiService.</param>
         public MyLearningService(
             IResourceActivityRepository resourceActivityRepository,
@@ -99,6 +109,7 @@
             IOptions<LearningHubConfig> settings,
             IScormActivityRepository scormActivityRepository,
             IMediaResourceActivityRepository mediaResourceActivity,
+            IResourceRepository resourceRepository,
             IMoodleApiService moodleApiService)
         {
             this.resourceActivityRepository = resourceActivityRepository;
@@ -110,6 +121,7 @@
             this.settings = settings.Value;
             this.scormActivityRepository = scormActivityRepository;
             this.mediaResourceActivity = mediaResourceActivity;
+            this.resourceRepository = resourceRepository;
             this.moodleApiService = moodleApiService;
         }
 
@@ -597,6 +609,86 @@
             return viewModels;
         }
 
+        /// <summary>
+        /// Gets the resource certificate details.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">The request model</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(int userId, MyLearningRequestModel requestModel)
+        {
+            Task<List<MoodleUserCertificateResponseModel>>? courseCertificatesTask = null;
+            var filteredResource = GetFilteredResourceType(requestModel);
+
+            if (filteredResource.Count() == 0 || (filteredResource.Any() && requestModel.Courses))
+            {
+                courseCertificatesTask = !string.IsNullOrWhiteSpace(requestModel.SearchText) ? 
+                    moodleApiService.GetUserCertificateAsync(userId, requestModel.SearchText) : moodleApiService.GetUserCertificateAsync(userId);
+
+            }
+
+            var resourceCertificatesTask = !string.IsNullOrWhiteSpace(requestModel.SearchText) ?
+                 resourceRepository.GetUserCertificateDetails(userId, requestModel.SearchText) : resourceRepository.GetUserCertificateDetails(userId);
+
+
+            // Await all active tasks in parallel
+            if (courseCertificatesTask != null)
+                await Task.WhenAll(courseCertificatesTask, resourceCertificatesTask);
+            else
+                await resourceCertificatesTask;
+
+            var resourceCertificates = resourceCertificatesTask.Result ?? Enumerable.Empty<UserCertificateViewModel>();
+
+            IEnumerable<UserCertificateViewModel> mappedCourseCertificates = Enumerable.Empty<UserCertificateViewModel>();
+
+            if (courseCertificatesTask != null)
+            {
+                var courseCertificates = courseCertificatesTask.Result ?? Enumerable.Empty<MoodleUserCertificateResponseModel>();
+
+                mappedCourseCertificates = courseCertificates.Select(c => new UserCertificateViewModel
+                {
+                    Title = string.IsNullOrWhiteSpace(c.ResourceTitle) ? c.ResourceName : c.ResourceTitle,
+                    ResourceTypeId = (int)ResourceTypeEnum.Moodle,
+                    ResourceReferenceId = 0,
+                    MajorVersion = 0,
+                    MinorVersion = 0,
+                    AwardedDate = c.AwardedDate.HasValue
+                        ? DateTimeOffset.FromUnixTimeSeconds(c.AwardedDate.Value)
+                        : DateTimeOffset.MinValue,
+                    CertificatePreviewUrl = c.PreviewLink,
+                    CertificateDownloadUrl = c.DownloadLink
+                });
+            }
+
+            var allCertificates = resourceCertificates.Concat(mappedCourseCertificates);
+
+            if (filteredResource != null && filteredResource.Any())
+            {
+                var allowedTypeIds = filteredResource
+                    .Select(entry => Enum.TryParse<ResourceTypeEnum>(entry, true, out var parsed) ? (int?)parsed : null)
+                    .Where(id => id.HasValue).Select(id => id.Value).ToHashSet();
+
+                allCertificates = allCertificates.Where(c => allowedTypeIds.Contains(c.ResourceTypeId));
+            }
+
+            var orderedCertificates = allCertificates.OrderByDescending(c => c.AwardedDate);
+
+            var totalCount = orderedCertificates.Count();
+            var pagedResults = orderedCertificates
+                .Skip(requestModel.Skip)
+                .Take(requestModel.Take)
+                .ToList();
+
+            return new MyLearningCertificatesDetailedViewModel
+            {
+                Certificates = pagedResults,
+                TotalCount = totalCount
+            };
+        }
+
+
+
+
         private IQueryable<ResourceActivity> ApplyFilters(IQueryable<ResourceActivity> query, MyLearningRequestModel requestModel)
         {
             // Text filter - Title, Keywords or Description.
@@ -704,5 +796,33 @@
 
             return query;
         }
+
+        private static List<string> GetFilteredResourceType(MyLearningRequestModel model)
+        {
+            var selectors = new Dictionary<string, Func<MyLearningRequestModel, bool>>
+            {
+                { nameof(model.Weblink),    m => m.Weblink },
+                { nameof(model.File),       m => m.File },
+                { nameof(model.Video),      m => m.Video },
+                { nameof(model.Article),    m => m.Article },
+                { nameof(model.Case),       m => m.Case },
+                { nameof(model.Image),      m => m.Image },
+                { nameof(model.Audio),      m => m.Audio },
+                { nameof(model.Elearning),  m => m.Elearning },
+                { nameof(model.Html),       m => m.Html },
+                { nameof(model.Assessment), m => m.Assessment },
+                { nameof(model.Courses),    m => m.Courses }
+            };
+
+            var normalisationMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                { nameof(model.Courses), "Moodle" }
+            };
+
+            return selectors
+                .Where(kvp => kvp.Value(model))
+                .Select(kvp => normalisationMap.TryGetValue(kvp.Key, out var mapped) ? mapped : kvp.Key).ToList();
+        }
+
     }
 }

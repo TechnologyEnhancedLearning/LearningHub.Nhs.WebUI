@@ -50,6 +50,13 @@
         Task<Tuple<int, MyLearningDetailedItemViewModel>> GetResourceCertificateDetails(int resourceReferenceId, int? majorVersion = 0, int? minorVersion = 0, int? userId = 0);
 
         /// <summary>
+        /// Gets the user certificates.
+        /// </summary>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(MyLearningRequestModel requestModel);
+
+        /// <summary>
         /// Gets the resource URL for a given resource reference ID.
         /// </summary>
         /// <param name="resourceReferenceId">resourceReferenceId.</param>

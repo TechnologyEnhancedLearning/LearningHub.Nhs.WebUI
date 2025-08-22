@@ -50,5 +50,13 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="pageNumber">pageNumber.</param>
         /// <returns> List of MoodleCourseResponseModel.</returns>
         Task<MoodleCourseCompletionModel> GetCourseCompletionAsync(int userId, int courseId, int pageNumber);
+
+        /// <summary>
+        /// GetUserLearningHistory.
+        /// </summary>
+        /// <param name="userId">Moodle user id.</param>
+        /// <param name="filterText">The page Number.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<List<MoodleUserCertificateResponseModel>> GetUserCertificateAsync(int userId, string filterText = "");
     }
 }

@@ -737,6 +737,77 @@
         }
 
         /// <summary>
+        /// Get user certificates.
+        /// </summary>
+        /// <param name="certificateRequest">The certificateRequest.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [Route("mylearning/certificates")]
+        [HttpGet]
+        [HttpPost]
+        public async Task<IActionResult> Certificates(MyLearningUserCertificatesViewModel certificateRequest = null)
+        {
+            var myLearningRequestModel = new MyLearningRequestModel
+            {
+                SearchText = certificateRequest.SearchText?.Trim(),
+                Skip = certificateRequest.CurrentPageIndex * MyLearningPageSize,
+                Take = MyLearningPageSize,
+                File = certificateRequest.File,
+                Video = certificateRequest.Video,
+                Article = certificateRequest.Article,
+                Case = certificateRequest.Case,
+                Image = certificateRequest.Image,
+                Audio = certificateRequest.Audio,
+                Elearning = certificateRequest.Elearning,
+                Html = certificateRequest.Html,
+                Assessment = certificateRequest.Assessment,
+                Courses = certificateRequest.Courses,
+            };
+
+            switch (certificateRequest.MyLearningFormActionType)
+            {
+                case MyLearningFormActionTypeEnum.NextPageChange:
+                    certificateRequest.CurrentPageIndex += 1;
+                    myLearningRequestModel.Skip = certificateRequest.CurrentPageIndex * MyLearningPageSize;
+                    break;
+
+                case MyLearningFormActionTypeEnum.PreviousPageChange:
+                    certificateRequest.CurrentPageIndex -= 1;
+                    myLearningRequestModel.Skip = certificateRequest.CurrentPageIndex * MyLearningPageSize;
+                    break;
+                case MyLearningFormActionTypeEnum.BasicSearch:
+
+                    myLearningRequestModel = new MyLearningRequestModel
+                    {
+                        SearchText = certificateRequest.SearchText?.Trim(),
+                        Skip = certificateRequest.CurrentPageIndex * MyLearningPageSize,
+                        Take = MyLearningPageSize,
+                    };
+                    break;
+                case MyLearningFormActionTypeEnum.ClearAllFilters:
+
+                    myLearningRequestModel = new MyLearningRequestModel
+                    {
+                        SearchText = certificateRequest.SearchText?.Trim(),
+                        Skip = certificateRequest.CurrentPageIndex * MyLearningPageSize,
+                        Take = MyLearningPageSize,
+                    };
+                    break;
+            }
+
+            var result = await this.myLearningService.GetUserCertificateDetails(myLearningRequestModel);
+            var response = new MyLearningUserCertificatesViewModel(myLearningRequestModel);
+
+            if (result != null)
+            {
+                response.TotalCount = result.TotalCount;
+                response.UserCertificates = result.Certificates;
+            }
+
+            response.MyLearningPaging = new MyLearningPagingModel() { CurrentPage = certificateRequest.CurrentPageIndex, PageSize = MyLearningPageSize, TotalItems = response.TotalCount, HasItems = response.TotalCount > 0 };
+            return this.View(response);
+        }
+
+        /// <summary>
         /// Gets the certificate details of an activity.
         /// </summary>
         /// <param name="resourceReferenceId">The resourceReferenceId.</param>
@@ -784,6 +855,7 @@
         /// <param name="minorVersion">The minorVersion.</param>
         /// <param name="userId">The userId.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpGet]
         [HttpPost]
         [Route("mylearning/downloadcertificate")]
         public async Task<IActionResult> DownloadCertificate(int resourceReferenceId, int? majorVersion = 0, int? minorVersion = 0, int? userId = 0)

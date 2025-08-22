@@ -208,6 +208,40 @@
         }
 
         /// <summary>
+        /// GetUserLearningHistory.
+        /// </summary>
+        /// <param name="userId">Moodle user id.</param>
+        /// <param name="filterText">The page Number.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<List<MoodleUserCertificateResponseModel>> GetUserCertificateAsync(int userId, string filterText="")
+        {
+            try
+            {
+                userId = 3;
+                var parameters = new Dictionary<string, string>
+            {
+                { "userid", userId.ToString() },
+                { "searchterm", filterText }
+            };
+
+                // Fetch enrolled courses
+                var userCertificates = await GetCallMoodleApiAsync<List<MoodleUserCertificateResponseModel>>(
+                    "mylearningservice_get_user_certificates",
+                    parameters
+                );
+
+                if (userCertificates == null || userCertificates.Count == 0)
+                    return new List<MoodleUserCertificateResponseModel>();
+
+                return userCertificates.ToList();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// GetEnrolledCoursesAsync.
         /// </summary>
         /// <param name="userId">Moodle user id.</param>

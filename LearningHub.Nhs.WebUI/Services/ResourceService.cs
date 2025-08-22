@@ -15,6 +15,7 @@ namespace LearningHub.Nhs.WebUI.Services
     using LearningHub.Nhs.Models.Resource.Contribute;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.Validation;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
     using Microsoft.Extensions.Logging;

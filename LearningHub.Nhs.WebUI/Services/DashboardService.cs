@@ -10,6 +10,7 @@
     using LearningHub.Nhs.Models.Entities.Analytics;
     using LearningHub.Nhs.Models.Entities.Reporting;
     using LearningHub.Nhs.Services.Interface;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
     using Microsoft.Extensions.Logging;

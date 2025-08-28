@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Bookmark;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
@@ -11,6 +12,7 @@
     /// </summary>
     [Route("Bookmark")]
     [ApiController]
+    [Authorize]
     public class BookmarkController : OpenApiControllerBase
     {
         private readonly IBookmarkService bookmarkService;
@@ -25,17 +27,26 @@
         }
 
         /// <summary>
-        /// <summary>
-        /// Gets all bookmarks by parent.
+        /// The GetAllByParent.
         /// </summary>
-        /// <returns>Bookmarks.</returns>
+        /// <param name="parentId">The parentId.</param>
+        /// <param name="all">The all.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         [HttpGet]
         [Route("GetAllByParent")]
-        public async Task<IEnumerable<UserBookmarkViewModel>> GetAllByParent()
+        [Route("GetAllByParent/{parentId?}")]
+        public async Task<IActionResult> GetAllByParent(int? parentId, bool? all = false)
         {
-            return await this.bookmarkService.GetAllByParent(this.TokenWithoutBearer);
+            if (this.CurrentUserId.GetValueOrDefault() != null)
+            {
+                var bookmarks = await this.bookmarkService.GetAllByParent(this.CurrentUserId.GetValueOrDefault(), parentId, all);
+                return this.Ok(bookmarks);
+            }
+            else
+            {
+                return this.Ok(await this.bookmarkService.GetAllByParent(this.TokenWithoutBearer));
+            }
         }
-
 
         /// <summary>
         /// The Create.

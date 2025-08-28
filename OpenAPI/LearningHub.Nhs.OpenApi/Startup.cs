@@ -8,10 +8,12 @@ namespace LearningHub.NHS.OpenAPI
     using System.Collections.Generic;
     using System.IO;
     using AspNetCore.Authentication.ApiKey;
+    using LearningHub.Nhs.Api.Authentication;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.NHS.OpenAPI.Auth;
+    using LearningHub.NHS.OpenAPI.Authentication;
     using LearningHub.NHS.OpenAPI.Configuration;
     using LearningHub.NHS.OpenAPI.Middleware;
     using LearningHub.Nhs.OpenApi.Repositories;
@@ -19,9 +21,9 @@ namespace LearningHub.NHS.OpenAPI
     using LearningHub.Nhs.OpenApi.Services;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -29,8 +31,6 @@ namespace LearningHub.NHS.OpenAPI
     using Microsoft.Extensions.Hosting;
     using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
-    using Microsoft.AspNetCore.Authorization;
-    using LearningHub.NHS.OpenAPI.Authentication;
 
     /// <summary>
     /// The Startup class.
@@ -61,8 +61,12 @@ namespace LearningHub.NHS.OpenAPI
 
             services.AddApiKeyAuth();
 
-            services.AddAuthentication()
-            .AddJwtBearer(options =>
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+           .AddJwtBearer(options =>
             {
                 options.Authority = this.Configuration.GetValue<string>("LearningHUbAuthServiceConfig:Authority");
                 options.TokenValidationParameters = new TokenValidationParameters()
@@ -76,6 +80,7 @@ namespace LearningHub.NHS.OpenAPI
 
             services.AddCustomMiddleware();
             services.AddSingleton<IAuthorizationHandler, ReadWriteHandler>();
+            services.AddSingleton<IAuthorizationHandler, AuthorizeOrCallFromLHHandler>();
 
             services.AddRepositories(this.Configuration);
             services.AddServices();
@@ -87,12 +92,10 @@ namespace LearningHub.NHS.OpenAPI
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
-                options.Filters.Add(new AuthorizeFilter());
-            })
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
             });
+
+            services.AddMvc()
+                  .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddSwaggerGen(
                 c =>
@@ -155,6 +158,10 @@ namespace LearningHub.NHS.OpenAPI
 
             services.AddAuthorization(options =>
             {
+                options.AddPolicy(
+                       "AuthorizeOrCallFromLH",
+                       policy => policy.Requirements.Add(new AuthorizeOrCallFromLHRequirement()));
+
                 options.AddPolicy(
                     "ReadWrite",
                     policy => policy.Requirements.Add(new ReadWriteRequirement()));

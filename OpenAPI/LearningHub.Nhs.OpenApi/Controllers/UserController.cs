@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using System.Web;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities;
@@ -14,8 +15,6 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
-    using System.Security.Claims;
-    using System.Security.Principal;
 
     /// <summary>
     /// The log controller.
@@ -35,6 +34,7 @@
         private readonly ICacheService cacheService;
         private readonly LearningHubConfig learningHubConfig;
         private readonly IUserNotificationService userNotificationService;
+        private readonly IUserPasswordResetRequestsService userPasswordResetRequestsService;
         private readonly INavigationPermissionService permissionService;
 
         /// <summary>
@@ -58,6 +58,7 @@
             IUserProfileService userProfileService,
             ISecurityService securityService,
             IUserNotificationService userNotificationService,
+            IUserPasswordResetRequestsService userPasswordResetRequestsService,
             INavigationPermissionService permissionService,
             ICacheService cacheService,
             IOptions<LearningHubConfig> learningHubConfig)
@@ -66,6 +67,7 @@
             this.securityService = securityService;
             this.userService = userService;
             this.userNotificationService = userNotificationService;
+            this.userPasswordResetRequestsService = userPasswordResetRequestsService;
             this.permissionService = permissionService;
             this.cacheService = cacheService;
             this.learningHubConfig = learningHubConfig.Value;
@@ -111,6 +113,26 @@
             {
                 return BadRequest(new ApiResponse(false, vr));
             }
+        }
+
+        /// <summary>
+        /// Get a filtered page of LH User records.
+        /// </summary>
+        /// <param name="page">The page.</param>
+        /// <param name="pageSize">The page size.</param>
+        /// <param name="sortColumn">The sort column.</param>
+        /// <param name="sortDirection">The sort direction.</param>
+        /// <param name="presetFilter">The preset filter.</param>
+        /// <param name="filter">The filter.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpGet]
+        [Route("GetLHUserAdminBasicFilteredPage/{page}/{pageSize}/{sortColumn}/{sortDirection}/{presetFilter}/{filter}")]
+        public async Task<IActionResult> GetLHUserAdminBasicFilteredPage(int page, int pageSize, string sortColumn, string sortDirection, string presetFilter, string filter)
+        {
+            presetFilter = HttpUtility.UrlDecode(presetFilter);
+            filter = HttpUtility.UrlDecode(filter);
+            PagedResultSet<LearningHub.Nhs.Models.User.UserAdminBasicViewModel> pagedResultSet = await this.userService.GetUserAdminBasicPageAsync(page, pageSize, sortColumn, sortDirection, presetFilter, filter);
+            return this.Ok(pagedResultSet);
         }
 
         /// <summary>
@@ -258,6 +280,51 @@
         }
 
         /// <summary>
+        /// Check user can request password reset.
+        /// </summary>
+        /// <param name="emailAddress">emailAddress.</param>
+        /// <param name="passwordRequestLimitingPeriod">The passwordRequestLimitingPeriod.</param>
+        /// <param name="passwordRequestLimit">ThepasswordRequestLimit.</param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("CanRequestPasswordReset/{emailAddress}/{passwordRequestLimitingPeriod}/{passwordRequestLimit}")]
+        public async Task<bool> CanRequestPasswordReset(string emailAddress, int passwordRequestLimitingPeriod, int passwordRequestLimit)
+        {
+            var result = await this.userPasswordResetRequestsService.CanRequestPasswordReset(emailAddress, passwordRequestLimitingPeriod, passwordRequestLimit);
+            if (result)
+            {
+                await this.userPasswordResetRequestsService.CreateUserPasswordRequest(emailAddress);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get specific User Profile by Id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpGet]
+        [Route("GetUserProfile/{id}")]
+        public async Task<ActionResult<UserProfile>> GetUserProfileAsync(int id)
+        {
+            return this.Ok(await this.userProfileService.GetByIdAsync(id));
+        }
+
+        /// <summary>
+        /// The GetActiveContent.
+        /// </summary>
+        /// <returns>The active content.</returns>
+        [HttpGet("GetActiveContent")]
+        public async Task<IActionResult> GetActiveContent()
+        {
+            return this.Ok(await this.userService.GetActiveContentAsync(this.CurrentUserId.GetValueOrDefault()));
+        }
+
+        /// <summary>
         /// GetLHUserNavigation.
         /// </summary>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
@@ -299,7 +366,13 @@
                 },
                 new Dictionary<string, object>
                 {
-                    { "title", "My Contributions" },
+                    { "title", "My learning" },
+                    { "url", this.learningHubConfig.MyLearningUrl },
+                    { "visible", model.ShowMyLearning },
+                },
+                new Dictionary<string, object>
+                {
+                    { "title", "My contributions" },
                     { "url", this.learningHubConfig.MyContributionsUrl },
                     { "visible", model.ShowMyContributions },
                 },

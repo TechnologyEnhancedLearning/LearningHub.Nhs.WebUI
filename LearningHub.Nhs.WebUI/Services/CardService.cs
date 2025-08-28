@@ -19,9 +19,10 @@ namespace LearningHub.Nhs.WebUI.Services
         /// Initializes a new instance of the <see cref="CardService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The Learning Hub Http Client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">The logger.</param>
-        public CardService(ILearningHubHttpClient learningHubHttpClient, ILogger<CardService> logger)
-            : base(learningHubHttpClient, logger)
+        public CardService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<CardService> logger)
+             : base(learningHubHttpClient, openApiHttpClient, logger)
         {
         }
 
@@ -34,7 +35,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             MyContributionsTotalsViewModel totals = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetMyContributionsTotals/{catalogueId.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -63,7 +64,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             List<ContributedResourceCardViewModel> myContributionCards = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var json = JsonConvert.SerializeObject(resourceContributionsRequestViewModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -94,7 +95,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             MyResourceViewModel myresourcecards = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetMyResourceViewModel";
             var response = await client.GetAsync(request).ConfigureAwait(false);
@@ -123,7 +124,7 @@ namespace LearningHub.Nhs.WebUI.Services
         {
             ResourceCardExtendedViewModel resourceCardExtendedViewModel = null;
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/ResourceCardExtendedViewModel/{id.ToString()}";
             var response = await client.GetAsync(request).ConfigureAwait(false);

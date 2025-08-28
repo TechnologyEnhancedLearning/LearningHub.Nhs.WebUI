@@ -1,34 +1,34 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <IsPackable>false</IsPackable>
-	<Platforms>x64</Platforms>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<IsPackable>false</IsPackable>
+		<Platforms>x64</Platforms>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
-    <PackageReference Include="FluentAssertions" Version="8.0.1" />
-    <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-    <PackageReference Include="Moq" Version="4.20.72" />
-	<PackageReference Update="StyleCop.Analyzers" Version="1.1.118">
-		<PrivateAssets>all</PrivateAssets>
-		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	</PackageReference>
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
+		<PackageReference Include="FluentAssertions" Version="8.0.1" />
+		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+		<PackageReference Include="Moq" Version="4.20.72" />
+		<PackageReference Update="StyleCop.Analyzers" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="xunit" Version="2.4.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="3.0.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\LearningHub.Nhs.Api.Shared\LearningHub.Nhs.Api.Shared.csproj" />
-    <ProjectReference Include="..\LearningHub.Nhs.API\LearningHub.Nhs.Api.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\LearningHub.Nhs.Api.Shared\LearningHub.Nhs.Api.Shared.csproj" />
+		<ProjectReference Include="..\LearningHub.Nhs.API\LearningHub.Nhs.Api.csproj" />
+	</ItemGroup>
 
 </Project>

@@ -61,8 +61,8 @@
 
             if (retVal.IsValid)
             {
-                retVal.CreatedId = await userProfileRepository.CreateAsync(userId, userProfile);
-            }
+                    retVal.CreatedId = await userProfileRepository.CreateAsync(userId, userProfile);
+                }
 
             return retVal;
         }

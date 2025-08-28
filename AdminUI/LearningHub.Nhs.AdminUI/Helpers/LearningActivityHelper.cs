@@ -85,7 +85,15 @@
                 case ResourceTypeEnum.Article:
                     return "Read";
                 case ResourceTypeEnum.Audio:
-                    return "Played " + GetDurationText(myLearningDetailedItemViewModel.ActivityDurationSeconds * 1000);
+                    if ((myLearningDetailedItemViewModel.ActivityDurationSeconds * 1000) > myLearningDetailedItemViewModel.ResourceDurationMilliseconds)
+                    {
+                        return "Played " + GetDurationText(myLearningDetailedItemViewModel.ResourceDurationMilliseconds);
+                    }
+                    else
+                    {
+                        return "Played " + GetDurationText(myLearningDetailedItemViewModel.ActivityDurationSeconds * 1000);
+                    }
+
                 case ResourceTypeEnum.Embedded:
                     return string.Empty;
                 case ResourceTypeEnum.Equipment:
@@ -113,7 +121,15 @@
                     }
 
                 case ResourceTypeEnum.Video:
-                    return "Played " + GetDurationText(myLearningDetailedItemViewModel.ActivityDurationSeconds * 1000);
+                    if ((myLearningDetailedItemViewModel.ActivityDurationSeconds * 1000) > myLearningDetailedItemViewModel.ResourceDurationMilliseconds)
+                    {
+                        return "Played " + GetDurationText(myLearningDetailedItemViewModel.ResourceDurationMilliseconds);
+                    }
+                    else
+                    {
+                        return "Played " + GetDurationText(myLearningDetailedItemViewModel.ActivityDurationSeconds * 1000);
+                    }
+
                 case ResourceTypeEnum.WebLink:
                     return "Visited";
                 case ResourceTypeEnum.Html:

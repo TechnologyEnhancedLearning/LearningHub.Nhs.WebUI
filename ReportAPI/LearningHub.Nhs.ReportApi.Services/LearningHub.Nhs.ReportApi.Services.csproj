@@ -1,37 +1,37 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CodeAnalysisRuleSet />
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<CodeAnalysisRuleSet />
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <CodeAnalysisRuleSet />
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<CodeAnalysisRuleSet />
+	</PropertyGroup>
 
 
-  <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.3" />   
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />   
-    <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.36" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="10.1.1" />
+		<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.3" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.36" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\LearningHub.Nhs.ReportApi.Services.Interface\LearningHub.Nhs.ReportApi.Services.Interface.csproj" />
-    <ProjectReference Include="..\LearningHub.Nhs.ReportApi.Shared\LearningHub.Nhs.ReportApi.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\LearningHub.Nhs.ReportApi.Services.Interface\LearningHub.Nhs.ReportApi.Services.Interface.csproj" />
+		<ProjectReference Include="..\LearningHub.Nhs.ReportApi.Shared\LearningHub.Nhs.ReportApi.Shared.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
+	</ItemGroup>
 
 </Project>

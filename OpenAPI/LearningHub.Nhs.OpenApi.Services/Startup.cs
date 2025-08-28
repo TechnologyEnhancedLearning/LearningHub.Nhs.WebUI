@@ -8,6 +8,7 @@ namespace LearningHub.Nhs.OpenApi.Services
     using LearningHub.Nhs.OpenApi.Services.Services;
     using LearningHub.Nhs.OpenApi.Services.Services.Findwise;
     using LearningHub.Nhs.OpenApi.Services.Services.Messaging;
+    using LearningHub.Nhs.Services;
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
@@ -31,8 +32,17 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<INavigationPermissionService, NavigationPermissionService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IUserNotificationService, UserNotificationService>();
+            services.AddScoped<IUserGroupService, UserGroupService>();
+
+            services.AddScoped<IDashboardService, DashboardService>();
+            services.AddScoped<IEventLogService, EventLogService>();
+            services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IPageService, PageService>();
+            services.AddScoped<IResourceReferenceService, ResourceReferenceService>();
 
             services.AddScoped<IActivityService, ActivityService>();
+            services.AddScoped<IMyLearningService, MyLearningService>();
+            services.AddScoped<IUserLearningRecordService, UserLearningRecordService>();
             services.AddScoped<IFileTypeService, FileTypeService>();
             services.AddScoped<IHierarchyService, HierarchyService>();
             services.AddScoped<IRatingService, RatingService>();
@@ -51,7 +61,9 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<ICachingService, CachingService>();
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<IProviderService, ProviderService>();
-
+            services.AddScoped<IUserProviderService, UserProviderService>();
+            services.AddScoped<IUserGroupService, UserGroupService>();
+            services.AddScoped<IUserPasswordResetRequestsService, UserPasswordResetRequestsService>();
         }
     }
 }

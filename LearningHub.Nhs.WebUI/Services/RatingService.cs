@@ -19,9 +19,10 @@
         /// Initializes a new instance of the <see cref="RatingService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
+        /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">Logger.</param>
-        public RatingService(ILearningHubHttpClient learningHubHttpClient, ILogger<RatingService> logger)
-        : base(learningHubHttpClient, logger)
+        public RatingService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<RatingService> logger)
+          : base(learningHubHttpClient, openApiHttpClient, logger)
         {
         }
 

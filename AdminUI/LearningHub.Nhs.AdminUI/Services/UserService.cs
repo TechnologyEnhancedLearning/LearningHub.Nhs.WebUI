@@ -31,10 +31,11 @@
         /// Initializes a new instance of the <see cref="UserService"/> class.
         /// </summary>
         /// <param name="learningHubHttpClient">The learningHubHttpClient<see cref="ILearningHubHttpClient"/>.</param>
+        /// <param name="openApiHttpClient">The openApiHttpClient <see cref="IOpenApiHttpClient"/>.</param>
         /// <param name="cacheService">The CacheService <see cref="ICacheService"/>.</param>
         /// <param name="userApiHttpClient">The userApiHttpClient <see cref="IUserApiHttpClient"/>.</param>
-        public UserService(ILearningHubHttpClient learningHubHttpClient, ICacheService cacheService, IUserApiHttpClient userApiHttpClient)
-        : base(learningHubHttpClient)
+        public UserService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ICacheService cacheService, IUserApiHttpClient userApiHttpClient)
+        : base(learningHubHttpClient, openApiHttpClient)
         {
             this.cacheService = cacheService;
             this.userApiHttpClient = userApiHttpClient;
@@ -166,7 +167,7 @@
             var filter = JsonConvert.SerializeObject(pagingRequestModel.Filter);
             var presetFilter = JsonConvert.SerializeObject(pagingRequestModel.PresetFilter);
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"User/GetLHUserAdminBasicFilteredPage"
                 + $"/{pagingRequestModel.Page}"
@@ -274,7 +275,7 @@
             var modelString = JsonConvert.SerializeObject(pagingRequestModel);
             var content = new StringContent(modelString, Encoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"Resource/GetResourceAdminSearchFilteredPage";
 
@@ -459,7 +460,7 @@
             var json = JsonConvert.SerializeObject(userUserGroups);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-            var client = await this.LearningHubHttpClient.GetClientAsync();
+            var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"UserGroup/AddUserUserGroups";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
@@ -565,7 +566,7 @@
                 var filter = JsonConvert.SerializeObject(pagingRequestModel.Filter);
                 var presetFilter = JsonConvert.SerializeObject(pagingRequestModel.PresetFilter);
 
-                var client = await this.LearningHubHttpClient.GetClientAsync();
+                var client = await this.OpenApiHttpClient.GetClientAsync();
 
                 var request = $"UserLearningRecord/GetUserLearningRecords"
                     + $"/{pagingRequestModel.Page}"

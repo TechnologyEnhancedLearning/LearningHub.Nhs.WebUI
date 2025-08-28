@@ -7,7 +7,9 @@ namespace LearningHub.NHS.OpenAPI.Controllers
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.Models.Resource;
+    using LearningHub.Nhs.Models.Resource.Admin;
     using LearningHub.Nhs.Models.Resource.Contribute;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.Validation;
@@ -26,7 +28,8 @@ namespace LearningHub.NHS.OpenAPI.Controllers
     /// Resource controller.
     /// </summary>
     [Route("Resource")]
-    [Authorize]
+    [Authorize(Policy = "AuthorizeOrCallFromLH")]
+    [ApiController]
     public class ResourceController : OpenApiControllerBase
     {
         private const int MaxNumberOfReferenceIds = 1000;
@@ -280,6 +283,17 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         }
 
         /// <summary>
+        /// The GetExternalContentDetailsById.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet("GetExternalContentDetailsById/{resourceVersionId}")]
+        public async Task<ActionResult> GetScormContentDetailsById(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetExternalContentDetails(resourceVersionId, this.CurrentUserId.GetValueOrDefault()));
+        }
+
+        /// <summary>
         /// The GetFileStatusDetailsAsync.
         /// </summary>
         /// <param name="fileIds">The File Ids.</param>
@@ -289,6 +303,20 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         public async Task<ActionResult> GetFileStatusDetailsAsync([FromQuery] int[] fileIds)
         {
             return this.Ok(await this.resourceService.GetFileStatusDetailsAsync(fileIds));
+        }
+
+        /// <summary>
+        /// The create resource version validation result async.
+        /// </summary>
+        /// <param name="validationResultViewModel">The validationResultViewModel<see cref="ResourceVersionValidationResultViewModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        [Route("CreateResourceVersionValidationResult")]
+        public async Task<IActionResult> CreateResourceVersionValidationResultAsync(ResourceVersionValidationResultViewModel validationResultViewModel)
+        {
+            var vr = await this.resourceService.CreateResourceVersionValidationResultAsync(validationResultViewModel);
+
+            return this.Ok(new ApiResponse(true, vr));
         }
 
         /// <summary>
@@ -324,6 +352,17 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         public async Task<ActionResult> GetResourceLicences()
         {
             return this.Ok(await this.resourceService.GetResourceLicencesAsync());
+        }
+
+        /// <summary>
+        /// Get specific ResourceVersion by Id.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet("GetResourceVersion/{resourceVersionId}")]
+        public async Task<ActionResult> GetResourceVersionAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetResourceVersionByIdAsync(resourceVersionId));
         }
 
         /// <summary>
@@ -651,6 +690,54 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             return this.Ok(this.resourceService.GetMyContributionTotals(catalogueId, this.CurrentUserId.GetValueOrDefault()));
         }
 
+        /// <summary>
+        /// Returns Resource Cards for "My Contributions".
+        /// </summary>
+        /// <param name="resourceContributionsRequestViewModel">The resourceContributionsRequestViewModel<see cref="ResourceContributionsRequestViewModel"/>.</param>
+        /// <returns>The <see cref="ActionResult"/>.</returns>
+        [HttpPost]
+        [Route("GetContributions")]
+        public ActionResult GetMyContributionsAsync(ResourceContributionsRequestViewModel resourceContributionsRequestViewModel)
+        {
+            return this.Ok(this.resourceService.GetContributions(this.CurrentUserId.GetValueOrDefault(), resourceContributionsRequestViewModel, this.HttpContext.User.IsInRole("ReadOnly")));
+        }
+
+		/// <summary>
+		/// Returns the requested contributions.
+		/// </summary>
+		/// <param name="myContributionsRequestViewModel">The myContributionsRequestViewModel<see cref="MyContributionsRequestViewModel"/>.</param>
+		/// <returns>The <see cref="ActionResult"/>.</returns>
+		[HttpPost]
+		[Route("GetMyContributions")]
+		public ActionResult GetMyContributions(MyContributionsRequestViewModel myContributionsRequestViewModel)
+		{
+			return this.Ok(this.resourceService.GetMyContributions(this.CurrentUserId.GetValueOrDefault(), myContributionsRequestViewModel));
+		}
+
+
+		/// <summary>
+		/// Returns Resource Cards.
+		/// </summary>
+		/// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+		[HttpGet]
+        [Route("GetMyResourceViewModel")]
+        public async Task<ActionResult> GetMyResourceViewModelAsync()
+        {
+            return this.Ok(await this.resourceService.GetMyResourceViewModelAsync(this.CurrentUserId.GetValueOrDefault()));
+        }
+
+        /// <summary>
+        /// Returns Extended Card details for the supplied Id (resourceVersionId).
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("ResourceCardExtendedViewModel/{resourceVersionId}")]
+        public async Task<ActionResult> GetResourceCardExtendedViewModelAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetResourceCardExtendedViewModelAsync(resourceVersionId, this.CurrentUserId.GetValueOrDefault()));
+        }
+
 
         /// <summary>
         /// Returns if the user has published resources.
@@ -746,7 +833,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         [HttpPost]
         [Route("CreateResource")]
-        public async Task<IActionResult> CreateResourceAsync(ResourceDetailViewModel viewModel)
+        public async Task<IActionResult> CreateResourceAsync([FromBody] ResourceDetailViewModel viewModel)
         {
             var vr = await this.resourceService.CreateResourceAsync(viewModel, this.CurrentUserId.GetValueOrDefault());
             if (vr.IsValid)
@@ -839,7 +926,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         [HttpPost]
         [Authorize(Policy = "ReadWrite")]
         [Route("UpdateResourceVersion")]
-        public async Task<IActionResult> UpdateResourceVersionAsync(ResourceDetailViewModel resourceDetailViewModel)
+        public async Task<IActionResult> UpdateResourceVersionAsync([FromBody] ResourceDetailViewModel resourceDetailViewModel)
         {
             var vr = await this.resourceService.UpdateResourceVersionAsync(resourceDetailViewModel, this.CurrentUserId.GetValueOrDefault());
 
@@ -1041,7 +1128,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         [HttpPost]
         [Route("UpdateAudioDetail")]
-        public async Task<IActionResult> UpdateAudioDetailAsync(AudioUpdateRequestViewModel audioViewModel)
+        public async Task<IActionResult> UpdateAudioDetailAsync([FromBody] AudioUpdateRequestViewModel audioViewModel)
         {
             var vr = await this.resourceService.UpdateAudioDetailAsync(audioViewModel, this.CurrentUserId.GetValueOrDefault());
 
@@ -1062,7 +1149,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         [HttpPost]
         [Route("UpdateArticleDetail")]
-        public async Task<IActionResult> UpdateArticleDetailAsync(ArticleUpdateRequestViewModel articleViewModel)
+        public async Task<IActionResult> UpdateArticleDetailAsync([FromBody] ArticleUpdateRequestViewModel articleViewModel)
         {
             var vr = await this.resourceService.UpdateArticleDetailAsync(articleViewModel, this.CurrentUserId.GetValueOrDefault());
 
@@ -1242,7 +1329,6 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             }
         }
 
-
         /// <summary>
         /// The save file chunk detail async.
         /// </summary>
@@ -1318,6 +1404,120 @@ namespace LearningHub.NHS.OpenAPI.Controllers
             {
                 return this.BadRequest(new ApiResponse(false, vr));
             }
+        }
+
+        /// <summary>
+        /// Get a filtered page of User records.
+        /// </summary>
+        /// <param name="pagingRequestModel">The filter<see cref="PagingRequestModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        [Route("GetResourceAdminSearchFilteredPage")]
+        public async Task<IActionResult> GetResourceAdminSearchFilteredPage([FromBody] PagingRequestModel pagingRequestModel)
+        {
+            var pagedResultSet = await this.resourceService.GetResourceAdminSearchFilteredPageAsync(this.CurrentUserId.GetValueOrDefault(), pagingRequestModel);
+            return this.Ok(pagedResultSet);
+        }
+
+        /// <summary>
+        /// Transfer Resource Ownership.
+        /// </summary>
+        /// <param name="transferResourceOwnershipViewModel">The transferResourceOwnershipViewModel<see cref="TransferResourceOwnershipViewModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        [Route("TransferResourceOwnership")]
+        public async Task<IActionResult> TransferResourceOwnershipAsync(TransferResourceOwnershipViewModel transferResourceOwnershipViewModel)
+        {
+            var vr = await this.resourceService.TransferResourceOwnership(transferResourceOwnershipViewModel, this.CurrentUserId.GetValueOrDefault());
+
+            if (vr.IsValid)
+            {
+                return this.Ok(new ApiResponse(true, vr));
+            }
+            else
+            {
+                return this.BadRequest(new ApiResponse(false, vr));
+            }
+        }
+
+        /// <summary>
+        /// The get resource version events.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetResourceVersionEvents/{resourceVersionId}")]
+        public async Task<ActionResult> GetResourceVersionEventsAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetResourceVersionEventsAsync(resourceVersionId));
+        }
+
+        /// <summary>
+        /// Create resource version event.
+        /// </summary>
+        /// <param name="resourceVersionEventViewModel">resourceVersionEventViewModel.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost]
+        [Route("CreateResourceVersionEvent")]
+        public IActionResult CreateResourceVersionEvent(ResourceVersionEventViewModel resourceVersionEventViewModel)
+        {
+            if (resourceVersionEventViewModel.CreateUserId == 0)
+            {
+                resourceVersionEventViewModel.CreateUserId = this.CurrentUserId.GetValueOrDefault();
+            }
+
+            this.resourceService.CreateResourceVersionEvent(resourceVersionEventViewModel);
+            var vr = new LearningHubValidationResult(true);
+
+            return this.Ok(new ApiResponse(true, vr));
+        }
+
+        /// <summary>
+        /// Get specific ResourceVersionViewModel by Id.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet("GetResourceVersionExtendedViewModel/{resourceVersionId}")]
+        public async Task<ActionResult> GetResourceVersionExtendedViewModelAsync(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetResourceVersionExtendedViewModelAsync(resourceVersionId, this.CurrentUserId.GetValueOrDefault()));
+        }
+
+        /// <summary>
+        /// The get resource version Dev Id details.
+        /// </summary>
+        /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetResourceVersionDevIdDetails/{resourceVersionId}")]
+        public async Task<ActionResult> GetResourceVersionDevIdDetails(int resourceVersionId)
+        {
+            return this.Ok(await this.resourceService.GetResourceVersionDevIdDetailsAync(resourceVersionId));
+        }
+
+        /// <summary>
+        /// To check devId already exists against a resource.
+        /// </summary>
+        /// <param name="devId">The devId<see cref="string"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("DoesDevIdExists/{devId}")]
+        public async Task<ActionResult> DoesDevIdExists(string devId)
+        {
+            return this.Ok(await this.resourceService.DoesDevIdExistsAync(devId));
+        }
+
+        /// <summary>
+        /// Update dev Id details.
+        /// </summary>
+        /// <param name="resourceVersionDevIdViewModel">The ResourceVersionDevIdViewModel<see cref="ResourceVersionDevIdViewModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPut]
+        [Route("UpdateDevId")]
+        public async Task<IActionResult> UpdateDevId([FromBody] ResourceVersionDevIdViewModel resourceVersionDevIdViewModel)
+        {
+            await this.resourceService.UpdateDevIdDetailsAsync(resourceVersionDevIdViewModel, this.CurrentUserId.GetValueOrDefault());
+            return this.Ok();
         }
 
 

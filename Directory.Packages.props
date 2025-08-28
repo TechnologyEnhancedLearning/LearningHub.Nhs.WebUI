@@ -78,7 +78,7 @@
 		<PackageVersion Include="Selenium.WebDriver.ChromeDriver" Version="133.0.6943.5300" />
 		<PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
 		<PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
-		<PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.1" />
+		<PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.4" />
 		<PackageVersion Include="System.Collections" Version="4.3.0" />
 		<PackageVersion Include="System.Configuration.ConfigurationManager" Version="9.0.6" />
 		<PackageVersion Include="System.Data.SqlClient" Version="4.9.0" />

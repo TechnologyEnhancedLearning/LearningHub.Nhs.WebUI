@@ -37,7 +37,7 @@
         {
             PageViewModel viewmodel = null;
 
-            var client = await this.OpenApiHttpClient.GetClientAsync();
+            var client = await this.LearningHubHttpClient.GetClientAsync();
 
             var response = await client.GetAsync($"content/page/{id}?publishedOnly={!preview}&preview={preview}").ConfigureAwait(false);
 
@@ -64,7 +64,7 @@
         {
             PageSectionDetailViewModel viewmodel = null;
 
-            var client = await this.OpenApiHttpClient.GetClientAsync();
+            var client = await this.LearningHubHttpClient.GetClientAsync();
 
             var response = await client.GetAsync($"content/page-section-detail-video/{id}").ConfigureAwait(false);
 

@@ -138,11 +138,35 @@
         /// <summary>
         /// MyEmploymentDetails.
         /// </summary>
+        /// <param name="checkDetails">Whether to check account details.</param>
         /// <returns>IActionResult.</returns>
         [HttpGet]
         [Route("myaccount-employement")]
-        public async Task<IActionResult> MyEmploymentDetails()
+        public async Task<IActionResult> MyEmploymentDetails(bool? checkDetails = false)
         {
+            string loginWizardCacheKey = $"{this.CurrentUserId}:LoginWizard";
+            var (cacheExists, loginWizard) = await this.cacheService.TryGetAsync<Models.Account.LoginWizardViewModel>(loginWizardCacheKey);
+
+            if (checkDetails == true || cacheExists)
+            {
+                this.ViewBag.CheckDetails = true;
+
+                var rules = loginWizard.LoginWizardStagesRemaining.SelectMany(l => l.LoginWizardRules.Where(r => r.Required));
+                foreach (var rule in rules)
+                {
+                    this.ModelState.AddModelError(string.Empty, rule.Description);
+                }
+
+                if (this.TempData.ContainsKey("IsJobRoleRequired"))
+                {
+                    if (this.TempData["IsJobRoleRequired"] != null && (bool)this.TempData["IsJobRoleRequired"] == true)
+                    {
+                        this.ModelState.AddModelError(string.Empty, CommonValidationErrorMessages.RoleRequired);
+                        this.TempData["IsJobRoleRequired"] = null;
+                    }
+                }
+            }
+
             var employmentDetails = await this.userService.GetMyEmploymentDetailsAsync();
             return this.View("MyEmployment", employmentDetails);
         }
@@ -312,13 +336,13 @@
                     return this.View("MyAccountSecurityQuestionsDetails", securityViewModel);
                 }
 
-                if (viewModel.SelectedFirstQuestionId > 0)
+                if (viewModel.SelectedFirstQuestionId > 0 && string.IsNullOrEmpty(viewModel.SecurityFirstQuestionAnswerHash))
                 {
                     this.ModelState.AddModelError(nameof(viewModel.SecurityFirstQuestionAnswerHash), CommonValidationErrorMessages.InvalidSecurityQuestionAnswer);
                     return this.View("MyAccountSecurityQuestionsDetails", securityViewModel);
                 }
 
-                if (viewModel.SelectedSecondQuestionId > 0)
+                if (viewModel.SelectedSecondQuestionId > 0 && string.IsNullOrEmpty(viewModel.SecuritySecondQuestionAnswerHash))
                 {
                     this.ModelState.AddModelError(nameof(viewModel.SecuritySecondQuestionAnswerHash), CommonValidationErrorMessages.InvalidSecurityQuestionAnswer);
                     return this.View("MyAccountSecurityQuestionsDetails", securityViewModel);
@@ -331,15 +355,15 @@
                     new UserSecurityQuestionViewModel
                     {
                         Id = securityViewModel.UserSecurityFirstQuestionId,
-                        SecurityQuestionId = securityViewModel.SelectedFirstQuestionId,
-                        SecurityQuestionAnswerHash = securityViewModel.SecurityFirstQuestionAnswerHash,
+                        SecurityQuestionId = viewModel.SelectedFirstQuestionId,
+                        SecurityQuestionAnswerHash = viewModel.SecurityFirstQuestionAnswerHash,
                         UserId = this.CurrentUserId,
                     },
                     new UserSecurityQuestionViewModel
                     {
                         Id = securityViewModel.UserSecuritySecondQuestionId,
-                        SecurityQuestionId = securityViewModel.SelectedSecondQuestionId,
-                        SecurityQuestionAnswerHash = securityViewModel.SecuritySecondQuestionAnswerHash,
+                        SecurityQuestionId = viewModel.SelectedSecondQuestionId,
+                        SecurityQuestionAnswerHash = viewModel.SecuritySecondQuestionAnswerHash,
                         UserId = this.CurrentUserId,
                     },
                 };

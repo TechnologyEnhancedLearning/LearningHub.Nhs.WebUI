@@ -2,15 +2,15 @@
 
 @{
     ViewData["DisableValidation"] = true;
-    ViewData["Title"] = "My Account - Change security question";
+    ViewData["Title"] = "Login Wizard";
     var errorHasOccurred = !ViewData.ModelState.IsValid;
 }
 
 <div class="bg-white">
     <div class="nhsuk-width-container app-width-container">
-        <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
-
-        <form asp-controller="MyAccount" asp-action="MyAccountSecurityQuestionsDetails" method="get">
+@*         <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" /> *@
+        
+        <form asp-controller="LoginWizard" asp-action="UpdateSecurityQuestionPost" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
 
             <partial name="~/Views/MyAccount/_MyAccountSecurityQuestions.cshtml" model="@Model" />
 

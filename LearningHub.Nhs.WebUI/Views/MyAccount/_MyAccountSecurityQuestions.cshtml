@@ -1,0 +1,81 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.MyAcountSecurityQuestionsViewModel
+
+@{
+    ViewData["DisableValidation"] = true;
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+
+<div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-three-quarters nhsuk-u-padding-bottom-5">
+        @if (errorHasOccurred)
+        {
+            <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+        }
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-caption-l" id="contact-hint">
+                    Set your security questions
+                </div>
+                <h1 class="nhsuk-heading-xl">Choose your security questions</h1>
+            </div>
+        </div>
+        <div class="nhsuk-label nhsuk-u-width-two-thirds nhsuk-u-padding-bottom-3" id="contact-hint">
+            These security questions can be used to help you to sign in if you forget your password. Please be assured that anything you enter on this page is encrypted and will not be visible to anyone, including system administrators.
+        </div>
+        <div class="nhsuk-label nhsuk-padding-top-2" id="contact-hint">
+            <p>Your two security questions must be different from each other.</p>
+        </div>
+        <div class="nhsuk-label nhsuk-padding-top-2" id="contact-hint">
+            <p>We will only use this information to help you sign in to the Learning Hub.</p>
+        </div>
+
+        <div>
+            <vc:select-list asp-for="SelectedFirstQuestionId"
+                            label="Set your first security question"
+                            value="@Model.SelectedFirstQuestionId"
+                            hint-text=""
+                            required="true"
+                            css-class="nhsuk-u-width-two-thirds"
+                            default-option=""
+                            select-list-options="@Model.FirstSecurityQuestions" />
+        </div>
+
+        <div>
+            <vc:text-input asp-for="SecurityFirstQuestionAnswerHash"
+                           label="Enter your answer"
+                           populate-with-current-value="true"
+                           type="password"
+                           spell-check="false"
+                           hint-text=""
+                           autocomplete=""
+                           css-class="nhsuk-u-width-two-thirds"
+                           required="true"
+                           required-client-side-error-message="Enter an answer" />
+            <input type="hidden" name="UserSecurityFirstQuestionId" value="@Model.UserSecurityFirstQuestionId" />
+        </div>
+        <div>
+            <vc:select-list asp-for="SelectedSecondQuestionId"
+                            label="Set your second security question"
+                            value="@Model.SelectedSecondQuestionId"
+                            hint-text=""
+                            required="true"
+                            css-class="nhsuk-u-width-two-thirds"
+                            default-option=""
+                            select-list-options="@Model.SecondSecurityQuestions" />
+        </div>
+
+        <div>
+            <vc:text-input asp-for="SecuritySecondQuestionAnswerHash"
+                           label="Enter your answer"
+                           populate-with-current-value="true"
+                           type="password"
+                           spell-check="false"
+                           hint-text=""
+                           autocomplete=""
+                           css-class="nhsuk-u-width-two-thirds"
+                           required="true"
+                           required-client-side-error-message="Enter an answer" />
+            <input type="hidden" name="UserSecuritySecondQuestionId" value="@Model.UserSecuritySecondQuestionId" />
+        </div>
+    </div>
+</div>

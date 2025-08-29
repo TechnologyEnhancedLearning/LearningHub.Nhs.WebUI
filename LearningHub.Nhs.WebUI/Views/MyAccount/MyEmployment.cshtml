@@ -30,6 +30,14 @@
                 @await Component.InvokeAsync("SideNav", new { groupTitle = "Account" })
             </div>
             <div class="nhsuk-grid-column-three-quarters">
+                @if (this.ViewBag.CheckDetails == true)
+                {
+                    <div class="nhsuk-inset-text">
+                        <span class="nhsuk-u-visually-hidden">Information: </span>
+                        <p>Please check that your details are up-to-date.</p>
+                    </div>
+                }
+
                 @if (!ViewData.ModelState.IsValid)
                 {
                     <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
@@ -115,7 +123,7 @@
                 {
                     <form asp-controller="MyAccount" asp-action="CheckDetails" method="post">
                         <input name="returnUrl" type="hidden" asp-for="@Context.Request.Query["returnUrl"]" />
-                        <div class="nhsuk-u-padding-bottom-5">
+                        <div class="nhsuk-u-padding-bottom-5 nhsuk-u-padding-top-5">
                             <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
                                 Confirm
                             </button>

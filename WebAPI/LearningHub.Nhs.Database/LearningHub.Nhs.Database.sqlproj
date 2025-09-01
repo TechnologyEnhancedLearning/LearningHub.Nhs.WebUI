@@ -542,6 +542,7 @@
     <Build Include="Stored Procedures\Activity\GetUserRecentLearningActivities.sql" />
     <Build Include="Stored Procedures\Activity\GetUsersLearningHistory.sql" />
     <Build Include="Stored Procedures\Activity\GetUsersLearningHistory_Search.sql" />
+    <Build Include="Stored Procedures\Resources\GetUsercertificateDetails.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

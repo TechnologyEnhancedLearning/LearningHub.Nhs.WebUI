@@ -377,7 +377,10 @@ li.autosuggestion-option:last-of-type {
     transform: rotate(180deg);
 }
 
-
+.form-group-wrapper--error {
+    border-left: none !important;
+    padding-left: 0 !important;
+}
 
 /* large desktop */
 @media (min-width: px2rem(990)) {

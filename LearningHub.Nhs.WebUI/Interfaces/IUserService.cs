@@ -478,5 +478,45 @@
         /// <param name="szString">the string.</param>
         /// <returns>base64 string.</returns>
         string Base64MD5HashDigest(string szString);
+
+        /// <summary>
+        /// The get current user profile for My account.
+        /// </summary>
+        /// <returns>The <see cref="Task{MyAccountPersonalDetailsViewModel}"/>.</returns>
+        Task<MyAccountPersonalDetailsViewModel> GetMyAccountPersonalDetailsAsync();
+
+        /// <summary>
+        /// Update MyAccount Personal Details Async.
+        /// </summary>
+        /// <param name="userId">userId.</param>
+        /// <param name="model">MyAccountPersonalDetailsViewModel.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task UpdateMyAccountPersonalDetailsAsync(int userId, MyAccountPersonalDetailsViewModel model);
+
+        /// <summary>
+        /// Get MyEmployment Details Async.
+        /// </summary>
+        /// <returns>The <see cref="Task{MyAccountEmploymentDetailsViewModel}"/>.</returns>
+        Task<MyAccountEmploymentDetailsViewModel> GetMyEmploymentDetailsAsync();
+
+        /// <summary>
+        /// Get MyAccount Security Details Async.
+        /// </summary>
+        /// <returns>The <see cref="Task{MyAccountSecurityViewModel}"/>.</returns>
+        Task<MyAccountSecurityViewModel> GetMyAccountSecurityDetailsAsync();
+
+        /// <summary>
+        /// Get MyAccount Location Details Async.
+        /// </summary>
+        /// <returns>The <see cref="Task{MyAccountLocationViewModel}"/>.</returns>
+        Task<MyAccountLocationViewModel> GetMyAccountLocationDetailsAsync();
+
+        /// <summary>
+        /// Update MyAccount Location Details Async.
+        /// </summary>
+        /// <param name="userId">userId.</param>
+        /// <param name="model">MyAccountLocationViewModel.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task UpdateMyAccountLocationDetailsAsync(int userId, MyAccountLocationViewModel model);
     }
 }

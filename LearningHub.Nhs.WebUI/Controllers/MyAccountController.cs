@@ -131,8 +131,308 @@
                 }
             }
 
-            var userProfileSummary = await this.userService.GetUserProfileSummaryAsync();
-            return this.View("Index", userProfileSummary);
+            var userPersonalDetails = await this.userService.GetMyAccountPersonalDetailsAsync();
+            return this.View("Index", userPersonalDetails);
+        }
+
+        /// <summary>
+        /// MyEmploymentDetails.
+        /// </summary>
+        /// <param name="checkDetails">Whether to check account details.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet]
+        [Route("myaccount-employement")]
+        public async Task<IActionResult> MyEmploymentDetails(bool? checkDetails = false)
+        {
+            string loginWizardCacheKey = $"{this.CurrentUserId}:LoginWizard";
+            var (cacheExists, loginWizard) = await this.cacheService.TryGetAsync<Models.Account.LoginWizardViewModel>(loginWizardCacheKey);
+
+            if (checkDetails == true || cacheExists)
+            {
+                this.ViewBag.CheckDetails = true;
+
+                var rules = loginWizard.LoginWizardStagesRemaining.SelectMany(l => l.LoginWizardRules.Where(r => r.Required));
+                foreach (var rule in rules)
+                {
+                    this.ModelState.AddModelError(string.Empty, rule.Description);
+                }
+
+                if (this.TempData.ContainsKey("IsJobRoleRequired"))
+                {
+                    if (this.TempData["IsJobRoleRequired"] != null && (bool)this.TempData["IsJobRoleRequired"] == true)
+                    {
+                        this.ModelState.AddModelError(string.Empty, CommonValidationErrorMessages.RoleRequired);
+                        this.TempData["IsJobRoleRequired"] = null;
+                    }
+                }
+            }
+
+            var employmentDetails = await this.userService.GetMyEmploymentDetailsAsync();
+            return this.View("MyEmployment", employmentDetails);
+        }
+
+        /// <summary>
+        /// User profile actions.
+        /// </summary>
+        /// <param name="returnUrl">The redirect back url.</param>
+        /// <param name="checkDetails">Whether to check account details.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet]
+        [Route("myaccount-security")]
+        public async Task<IActionResult> MyAccountSecurity(string returnUrl = null, bool? checkDetails = false)
+        {
+            var securityDetails = await this.userService.GetMyAccountSecurityDetailsAsync();
+            return this.View("MyAccountSecurity", securityDetails);
+        }
+
+        /// <summary>
+        /// ChangePersonalDetails.
+        /// </summary>
+        /// <returns>ActionResult.</returns>
+        [HttpGet]
+        [Route("myaccount/ChangePersonalDetails")]
+        public async Task<IActionResult> ChangePersonalDetails()
+        {
+            var userPersonalDetails = await this.userService.GetMyAccountPersonalDetailsAsync();
+            return this.View("ChangePersonalDetails", userPersonalDetails);
+        }
+
+        /// <summary>
+        /// To Update first name.
+        /// </summary>
+        /// <param name="model">model.</param>
+        /// <returns>ActionResult.</returns>
+        [HttpPost]
+        public async Task<IActionResult> UpdatePersonalDetails(MyAccountPersonalDetailsViewModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("ChangePersonalDetails", model);
+            }
+
+            bool isSamePrimaryEmailPendingforValidate = await this.userService.CheckSamePrimaryemailIsPendingToValidate(model.SecondaryEmailAddress);
+            if (isSamePrimaryEmailPendingforValidate)
+            {
+                this.ModelState.AddModelError(string.Empty, CommonValidationErrorMessages.SecondaryEmailShouldNotBeSame);
+                return this.View("ChangePersonalDetails", model);
+            }
+
+            await this.userService.UpdateMyAccountPersonalDetailsAsync(this.CurrentUserId, model);
+            await this.MyAccountUpdatePrimaryEmail(model.PrimaryEmailAddress);
+            this.ViewBag.SuccessMessage = CommonValidationErrorMessages.PersonalDetailsSuccessMessage;
+            this.ViewBag.MyAction = "Index";
+            return this.View("SuccessMessageMyAccount");
+        }
+
+        /// <summary>
+        /// ChangeLocation.
+        /// </summary>
+        /// <param name="model">model.</param>
+        /// <param name="formSubmission">formSubmission.</param>
+        /// <returns>ActionResult.</returns>
+        [HttpGet]
+        [Route("myaccount/ChangeLocation")]
+        public async Task<IActionResult> ChangeLocation([FromQuery] MyAccountLocationViewModel model, bool formSubmission = false)
+        {
+            var userLocationViewModel = await this.userService.GetMyAccountLocationDetailsAsync();
+            var allUKcountries = await this.countryService.GetAllUKCountries();
+            var allnonUKcountries = await this.countryService.GetAllNonUKCountries();
+            var regions = await this.regionService.GetAllAsync();
+
+            List<RadiosItemViewModel> radio = new List<RadiosItemViewModel>();
+            foreach (var country in allUKcountries)
+            {
+                var newradio = new RadiosItemViewModel(country.Id.ToString(), country.Name, false, country.Name);
+                radio.Add(newradio);
+            }
+
+            if (allnonUKcountries.Any(v => v.Id == userLocationViewModel.SelectedCountryId))
+            {
+                userLocationViewModel.SelectedOtherCountryId = userLocationViewModel.SelectedCountryId;
+                userLocationViewModel.SelectedCountryId = 0;
+            }
+
+            userLocationViewModel.Country = radio;
+            userLocationViewModel.OtherCountryOptions = SelectListHelper.MapOptionsToSelectListItems(allnonUKcountries, userLocationViewModel.SelectedOtherCountryId);
+
+            userLocationViewModel.RegionOptions = SelectListHelper.MapOptionsToSelectListItems(regions, userLocationViewModel.SelectedRegionId);
+
+            if (formSubmission)
+            {
+                if (model?.SelectedCountryId == null)
+                {
+                    this.ModelState.AddModelError(nameof(model.SelectedCountryId), CommonValidationErrorMessages.CountryRequired);
+                    return this.View("MyAccountChangeLocation", userLocationViewModel);
+                }
+                else if (model.SelectedCountryId == 1 && model.SelectedRegionId == null)
+                {
+                    userLocationViewModel.HasSelectedRegion = true;
+                    this.ModelState.AddModelError(nameof(model.SelectedRegionId), CommonValidationErrorMessages.RegionRequired);
+                    return this.View("MyAccountChangeLocation", userLocationViewModel);
+                }
+                else if (model.SelectedCountryId != 1)
+                {
+                    model.SelectedRegionId = null;
+                }
+
+                if (model?.SelectedCountryId == 0)
+                {
+                    if (model.SelectedOtherCountryId != null && model.SelectedOtherCountryId > 0)
+                    {
+                        model.SelectedCountryId = model.SelectedOtherCountryId;
+                    }
+                    else
+                    {
+                        userLocationViewModel.HasSelectedOtherCountry = true;
+                        this.ModelState.AddModelError(nameof(model.SelectedOtherCountryId), CommonValidationErrorMessages.CountryRequired);
+                        return this.View("MyAccountChangeLocation", userLocationViewModel);
+                    }
+                }
+
+                if (this.ModelState.IsValid)
+                {
+                    await this.userService.UpdateMyAccountLocationDetailsAsync(this.CurrentUserId, model);
+                    this.ViewBag.SuccessMessage = CommonValidationErrorMessages.LocationDetailsSuccessMessage;
+                    this.ViewBag.MyAction = "MyEmploymentDetails";
+                    return this.View("SuccessMessageMyAccount");
+                }
+            }
+
+            return this.View("MyAccountChangeLocation", userLocationViewModel);
+        }
+
+        /// <summary>
+        /// SecurityQuestionsDetails.
+        /// </summary>
+        /// <param name="viewModel">viewModel.</param>
+        /// <param name="formSubmission">formSubmission.</param>
+        /// <returns>ActionResult.</returns>
+        [HttpGet]
+        [Route("myaccount/MyAccountSecurityQuestionsDetails")]
+        public async Task<IActionResult> MyAccountSecurityQuestionsDetails([FromQuery] MyAcountSecurityQuestionsViewModel viewModel, bool formSubmission = false)
+        {
+            MyAcountSecurityQuestionsViewModel securityViewModel = new MyAcountSecurityQuestionsViewModel();
+            var result = await this.loginWizardService.GetSecurityQuestionsModel(this.CurrentUserId);
+
+            if (result != null)
+            {
+                if (result.UserSecurityQuestions != null && result.UserSecurityQuestions.Count > 0)
+                {
+                    securityViewModel.SelectedFirstQuestionId = result.UserSecurityQuestions[0].SecurityQuestionId;
+                    securityViewModel.SelectedSecondQuestionId = result.UserSecurityQuestions.Count > 1 ? result.UserSecurityQuestions[1].SecurityQuestionId : 0;
+                    securityViewModel.UserSecurityFirstQuestionId = result.UserSecurityQuestions[0].Id;
+                    securityViewModel.UserSecuritySecondQuestionId = result.UserSecurityQuestions.Count > 1 ? result.UserSecurityQuestions[1].Id : 0;
+                }
+
+                securityViewModel.FirstSecurityQuestions = SelectListHelper.MapSelectListWithSelection(result.SecurityQuestions, Convert.ToString(securityViewModel.SelectedFirstQuestionId));
+                securityViewModel.SecondSecurityQuestions = SelectListHelper.MapSelectListWithSelection(result.SecurityQuestions, Convert.ToString(securityViewModel.SelectedSecondQuestionId));
+            }
+
+            if (formSubmission && viewModel != null)
+            {
+                if (viewModel.SelectedFirstQuestionId == viewModel.SelectedSecondQuestionId)
+                {
+                    this.ModelState.AddModelError("DuplicateQuestion", CommonValidationErrorMessages.DuplicateQuestion);
+                    return this.View("MyAccountSecurityQuestionsDetails", securityViewModel);
+                }
+
+                if (viewModel.SelectedFirstQuestionId > 0 && string.IsNullOrEmpty(viewModel.SecurityFirstQuestionAnswerHash))
+                {
+                    this.ModelState.AddModelError(nameof(viewModel.SecurityFirstQuestionAnswerHash), CommonValidationErrorMessages.InvalidSecurityQuestionAnswer);
+                    return this.View("MyAccountSecurityQuestionsDetails", securityViewModel);
+                }
+
+                if (viewModel.SelectedSecondQuestionId > 0 && string.IsNullOrEmpty(viewModel.SecuritySecondQuestionAnswerHash))
+                {
+                    this.ModelState.AddModelError(nameof(viewModel.SecuritySecondQuestionAnswerHash), CommonValidationErrorMessages.InvalidSecurityQuestionAnswer);
+                    return this.View("MyAccountSecurityQuestionsDetails", securityViewModel);
+                }
+
+                if (this.ModelState.IsValid)
+                {
+                    var userSecurityQuestions = new List<UserSecurityQuestionViewModel>
+                {
+                    new UserSecurityQuestionViewModel
+                    {
+                        Id = securityViewModel.UserSecurityFirstQuestionId,
+                        SecurityQuestionId = viewModel.SelectedFirstQuestionId,
+                        SecurityQuestionAnswerHash = viewModel.SecurityFirstQuestionAnswerHash,
+                        UserId = this.CurrentUserId,
+                    },
+                    new UserSecurityQuestionViewModel
+                    {
+                        Id = securityViewModel.UserSecuritySecondQuestionId,
+                        SecurityQuestionId = viewModel.SelectedSecondQuestionId,
+                        SecurityQuestionAnswerHash = viewModel.SecuritySecondQuestionAnswerHash,
+                        UserId = this.CurrentUserId,
+                    },
+                };
+
+                    await this.userService.UpdateUserSecurityQuestions(userSecurityQuestions);
+
+                    this.ViewBag.SuccessMessage = CommonValidationErrorMessages.SecurityQuestionSuccessMessage;
+                    this.ViewBag.MyAction = "MyAccountSecurity";
+                    return this.View("SuccessMessageMyAccount");
+                }
+                else
+                {
+                    return this.View("MyAccountSecurityQuestionsDetails", securityViewModel);
+                }
+            }
+
+            return this.View("MyAccountSecurityQuestionsDetails", securityViewModel);
+        }
+
+        /// <summary>
+        /// To update security questions.
+        /// </summary>
+        /// <param name="model">model.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        public async Task<IActionResult> UpdateMyAccountSecurityQuestions(MyAcountSecurityQuestionsViewModel model)
+        {
+            bool duplicatesExist = false;
+
+            if (model.SelectedFirstQuestionId == model.SelectedSecondQuestionId)
+            {
+                duplicatesExist = true;
+            }
+
+            if (duplicatesExist)
+            {
+                this.ModelState.AddModelError("DuplicateQuestion", CommonValidationErrorMessages.DuplicateQuestion);
+                return this.View("MyAccountSecurityQuestionsDetails", model);
+            }
+
+            if (this.ModelState.IsValid)
+            {
+                var userSecurityQuestions = new List<UserSecurityQuestionViewModel>
+                {
+                    new UserSecurityQuestionViewModel
+                    {
+                        Id = model.UserSecurityFirstQuestionId,
+                        SecurityQuestionId = model.SelectedFirstQuestionId,
+                        SecurityQuestionAnswerHash = model.SecurityFirstQuestionAnswerHash,
+                        UserId = this.CurrentUserId,
+                    },
+                    new UserSecurityQuestionViewModel
+                    {
+                        Id = model.UserSecuritySecondQuestionId,
+                        SecurityQuestionId = model.SelectedSecondQuestionId,
+                        SecurityQuestionAnswerHash = model.SecuritySecondQuestionAnswerHash,
+                        UserId = this.CurrentUserId,
+                    },
+                };
+
+                await this.userService.UpdateUserSecurityQuestions(userSecurityQuestions);
+
+                this.ViewBag.SuccessMessage = CommonValidationErrorMessages.FirstQuestionSuccessMessage;
+                return this.View("SuccessMessage");
+            }
+            else
+            {
+                return this.View("MyAccountSecurityQuestionsDetails", model);
+            }
         }
 
         /// <summary>
@@ -827,8 +1127,7 @@
                             LocationId = profile.LocationId,
                         });
 
-                    this.ViewBag.SuccessMessage = "Your job details have been changed";
-                    return this.View("SuccessMessage");
+                    return this.RedirectToAction(nameof(this.ChangePrimarySpecialty), new UserPrimarySpecialtyUpdateViewModel { });
                 }
                 else
                 {
@@ -862,6 +1161,9 @@
             viewModel.PageSize = UserDetailContentPageSize;
             viewModel.CurrentPage = viewModel.CurrentPage == 0 ? 1 : viewModel.CurrentPage;
             viewModel.OptionalSpecialtyItem = optionalSpecialty.FirstOrDefault(x => x.Name.ToLower() == "not applicable");
+            viewModel.SelectedGradeId = profile.GradeId?.ToString() ?? null;
+            viewModel.SelectedJobRoleId = profile.JobRoleId;
+            viewModel.SelectedMedicalCouncilNo = profile.MedicalCouncilNo;
 
             if (searchSubmission && string.IsNullOrWhiteSpace(viewModel.FilterText))
             {
@@ -887,8 +1189,7 @@
                             LocationId = profile.LocationId,
                         });
 
-                    this.ViewBag.SuccessMessage = "Your primary specialty has been changed";
-                    return this.View("SuccessMessage");
+                    return this.RedirectToAction(nameof(this.ChangeStartDate), new UserStartDateUpdateViewModel { });
                 }
                 else
                 {
@@ -940,8 +1241,7 @@
                             LocationId = profile.LocationId,
                         });
 
-                    this.ViewBag.SuccessMessage = "Your job start date has been changed";
-                    return this.View("SuccessMessage");
+                    return this.RedirectToAction(nameof(this.ChangeWorkPlace), new UserWorkPlaceUpdateViewModel { });
                 }
             }
             else
@@ -977,51 +1277,60 @@
                 return this.View("ChangeWorkPlace", viewModel);
             }
 
-            if (formSubmission && viewModel.SelectedWorkPlaceId.HasValue)
-            {
-                await this.userService.UpdateUserEmployment(
-                    new elfhHub.Nhs.Models.Entities.UserEmployment
-                    {
-                        Id = profile.EmploymentId,
-                        UserId = profile.Id,
-                        JobRoleId = profile.JobRoleId,
-                        MedicalCouncilId = profile.MedicalCouncilId,
-                        MedicalCouncilNo = profile.MedicalCouncilNo,
-                        GradeId = profile.GradeId,
-                        SpecialtyId = profile.SpecialtyId,
-                        StartDate = profile.JobStartDate,
-                        LocationId = viewModel.SelectedWorkPlaceId.Value,
-                    });
-
-                var (cacheExists, loginWizard) = await this.cacheService.TryGetAsync<Models.Account.LoginWizardViewModel>(this.LoginWizardCacheKey);
-
-                if (cacheExists && loginWizard.LoginWizardStagesRemaining.Any(l => l.Id == (int)LoginWizardStageEnum.PlaceOfWork))
-                {
-                    await this.loginWizardService.SaveLoginWizardStageActivity(LoginWizardStageEnum.PlaceOfWork, this.CurrentUserId);
-
-                    var stagePlaceOfWork = loginWizard.LoginWizardStages.FirstOrDefault(s => s.Id == (int)LoginWizardStageEnum.PlaceOfWork);
-                    loginWizard.LoginWizardStagesCompleted.Add(stagePlaceOfWork);
-
-                    var loginWizardViewModel = new LoginWizardStagesViewModel
-                    {
-                        IsFirstLogin = loginWizard.IsFirstLogin,
-                        LoginWizardStages = loginWizard.LoginWizardStages,
-                        LoginWizardStagesCompleted = loginWizard.LoginWizardStagesCompleted,
-                    };
-
-                    await this.cacheService.SetAsync(this.LoginWizardCacheKey, Newtonsoft.Json.JsonConvert.SerializeObject(loginWizardViewModel));
-                }
-
-                this.ViewBag.SuccessMessage = "Your place of work has been changed";
-                return this.View("SuccessMessage");
-            }
-
             if (!string.IsNullOrWhiteSpace(viewModel.FilterText))
             {
                 var locations = await this.locationService.GetPagedFilteredAsync(viewModel.FilterText, viewModel.CurrentPage, viewModel.PageSize);
                 viewModel.WorkPlaceList = locations.Item2;
                 viewModel.TotalItems = locations.Item1;
                 viewModel.HasItems = locations.Item1 > 0;
+            }
+
+            if (formSubmission)
+            {
+                if (viewModel.SelectedWorkPlaceId.HasValue)
+                {
+                    await this.userService.UpdateUserEmployment(
+                       new elfhHub.Nhs.Models.Entities.UserEmployment
+                       {
+                           Id = profile.EmploymentId,
+                           UserId = profile.Id,
+                           JobRoleId = profile.JobRoleId,
+                           MedicalCouncilId = profile.MedicalCouncilId,
+                           MedicalCouncilNo = profile.MedicalCouncilNo,
+                           GradeId = profile.GradeId,
+                           SpecialtyId = profile.SpecialtyId,
+                           StartDate = profile.JobStartDate,
+                           LocationId = viewModel.SelectedWorkPlaceId.Value,
+                       });
+
+                    var (cacheExists, loginWizard) = await this.cacheService.TryGetAsync<Models.Account.LoginWizardViewModel>(this.LoginWizardCacheKey);
+
+                    if (cacheExists && loginWizard.LoginWizardStagesRemaining.Any(l => l.Id == (int)LoginWizardStageEnum.PlaceOfWork))
+                    {
+                        await this.loginWizardService.SaveLoginWizardStageActivity(LoginWizardStageEnum.PlaceOfWork, this.CurrentUserId);
+
+                        var stagePlaceOfWork = loginWizard.LoginWizardStages.FirstOrDefault(s => s.Id == (int)LoginWizardStageEnum.PlaceOfWork);
+                        loginWizard.LoginWizardStagesCompleted.Add(stagePlaceOfWork);
+
+                        var loginWizardViewModel = new LoginWizardStagesViewModel
+                        {
+                            IsFirstLogin = loginWizard.IsFirstLogin,
+                            LoginWizardStages = loginWizard.LoginWizardStages,
+                            LoginWizardStagesCompleted = loginWizard.LoginWizardStagesCompleted,
+                        };
+
+                        await this.cacheService.SetAsync(this.LoginWizardCacheKey, Newtonsoft.Json.JsonConvert.SerializeObject(loginWizardViewModel));
+                    }
+
+                    this.ViewBag.SuccessMessage = CommonValidationErrorMessages.EmploymentDetailsUpdated;
+                    this.ViewBag.MyAction = "MyEmploymentDetails";
+                    return this.View("SuccessMessageMyAccount");
+                }
+                else
+                {
+                    this.ModelState.AddModelError(nameof(viewModel.SelectedWorkPlaceId), CommonValidationErrorMessages.WorkPlace);
+                    return this.View("ChangeWorkPlace", viewModel);
+                }
             }
 
             return this.View("ChangeWorkPlace", viewModel);
@@ -1196,6 +1505,50 @@
             await this.userService.CancelEmailChangeValidationTokenAsync();
             this.ViewBag.SuccessMessage = CommonValidationErrorMessages.EmailCancelMessage;
             return this.View("SuccessMessage");
+        }
+
+        private async Task MyAccountUpdatePrimaryEmail(string primaryEmailAddress)
+        {
+            bool userPrimaryEmailAddressChanged = false;
+            var user = await this.userService.GetUserByUserIdAsync(this.CurrentUserId);
+            if (user != null)
+            {
+                if (!string.IsNullOrEmpty(primaryEmailAddress) && user.EmailAddress.ToLower() != primaryEmailAddress.ToLower())
+                {
+                    userPrimaryEmailAddressChanged = true;
+                }
+            }
+
+            if (userPrimaryEmailAddressChanged)
+            {
+                if (await this.userService.DoesEmailAlreadyExist(primaryEmailAddress))
+                {
+                    this.ModelState.AddModelError(
+                               nameof(primaryEmailAddress),
+                               CommonValidationErrorMessages.DuplicateEmailAddress);
+                }
+                else
+                {
+                    var isUserRoleUpgrade = await this.userService.ValidateUserRoleUpgradeAsync(user.EmailAddress, primaryEmailAddress);
+                    UserRoleUpgrade userRoleUpgradeModel = new UserRoleUpgrade()
+                    {
+                        UserId = this.CurrentUserId,
+                        EmailAddress = primaryEmailAddress,
+                    };
+                    if (isUserRoleUpgrade)
+                    {
+                        userRoleUpgradeModel.UserHistoryTypeId = (int)UserHistoryType.UserRoleUpgarde;
+                    }
+                    else
+                    {
+                        userRoleUpgradeModel.UserHistoryTypeId = (int)UserHistoryType.UserDetails;
+                    }
+
+                    await this.userService.GenerateEmailChangeValidationTokenAndSendEmailAsync(primaryEmailAddress, isUserRoleUpgrade);
+                    await this.userService.UpdateUserRoleUpgradeAsync();
+                    await this.userService.CreateUserRoleUpgradeAsync(userRoleUpgradeModel);
+                }
+            }
         }
     }
 }

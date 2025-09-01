@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -9,7 +9,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.11" />
 		<PackageReference Include="FluentAssertions" Version="5.10.3" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.52" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
 		<PackageReference Include="Moq" Version="4.16.1" />
 		<PackageReference Include="NBuilder" Version="6.1.0" />

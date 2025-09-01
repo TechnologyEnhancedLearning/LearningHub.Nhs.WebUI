@@ -351,6 +351,13 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// </summary>
         public virtual DbSet<DashboardResourceDto> DashboardResourceDto { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the UserCertificateViewModel
+        /// Gets or sets DashboardResourceDto. These are not entities. They are returned from the [resources].[GetUserCertificateDetails] stored proc..
+        /// </summary>
+        public virtual DbSet<UserCertificateViewModel> UserCertificateViewModel { get; set; }
+
         /// <summary>
         /// Gets or sets the ExternalContentDetailsViewModel.
         /// </summary>
@@ -413,6 +420,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets the NodeContentAdminViewModel.
         /// </summary>
         public virtual DbSet<NodeContentAdminViewModel> NodeContentAdminViewModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the User recent my learning activities.
+        /// </summary>
+        public virtual DbSet<MyLearningActivitiesViewModel> MyLearningActivitiesViewModel { get; set; }
 
         /// <summary>
         /// Gets or sets the node resource..

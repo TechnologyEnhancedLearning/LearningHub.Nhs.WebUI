@@ -144,31 +144,7 @@
 
             if (currentStage?.Id == (int)LoginWizardStageEnum.SecurityQuestions)
             {
-                SecurityQuestionsViewModel securityQuestions = await this.loginWizardService.GetSecurityQuestionsModel(this.CurrentUserId);
-
-                while (securityQuestions.UserSecurityQuestions.Count < this.Settings.SecurityQuestionsToAsk)
-                {
-                    securityQuestions.UserSecurityQuestions.Add(new UserSecurityQuestionViewModel());
-                }
-
-                foreach (var answer in securityQuestions.UserSecurityQuestions)
-                {
-                    if (!string.IsNullOrEmpty(answer.SecurityQuestionAnswerHash))
-                    {
-                        answer.SecurityQuestionAnswerHash = "********";
-                    }
-                }
-
-                this.TempData.Clear();
-                var securityViewModel = new SecurityViewModel()
-                {
-                    SecurityQuestions = securityQuestions.SecurityQuestions,
-                    UserSecurityQuestions = securityQuestions.UserSecurityQuestions,
-                };
-
-                await this.multiPageFormService.SetMultiPageFormData(securityViewModel, MultiPageFormDataFeature.EditRegistrationPrompt, this.TempData);
-
-                return this.RedirectToAction("SelectSecurityQuestion", new RouteValueDictionary { { "questionIndex", 0 }, { "returnUrl", returnUrl } });
+                return this.RedirectToAction("SelectSecurityQuestions", new { returnUrl });
             }
 
             if (currentStage?.Id == (int)LoginWizardStageEnum.JobRole || currentStage?.Id == (int)LoginWizardStageEnum.PlaceOfWork || currentStage?.Id == (int)LoginWizardStageEnum.PersonalDetails)
@@ -213,10 +189,18 @@
                     {
                         return this.RedirectToAction("AccountInformationNeeded");
                     }
+                    else if (currentStage?.Id == (int)LoginWizardStageEnum.JobRole || currentStage?.Id == (int)LoginWizardStageEnum.PlaceOfWork)
+                    {
+                        return this.RedirectToAction("MyEmploymentDetails", "MyAccount", new { returnUrl, checkDetails = true });
+                    }
                     else
                     {
                         return this.RedirectToAction("Index", "MyAccount", new { returnUrl, checkDetails = true });
                     }
+                }
+                else if (currentStage?.Id == (int)LoginWizardStageEnum.JobRole || currentStage?.Id == (int)LoginWizardStageEnum.PlaceOfWork)
+                {
+                    return this.RedirectToAction("MyEmploymentDetails", "MyAccount", new { returnUrl, checkDetails = true });
                 }
                 else
                 {
@@ -583,6 +567,106 @@
             await this.multiPageFormService.ClearMultiPageFormData(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
             this.TempData.Clear();
             return this.RedirectToAction("Index", new RouteValueDictionary { { "returnUrl", accountModel.WizardReturnUrl } });
+        }
+
+        /// <summary>
+        /// Action for starting the security question multiPageForm stage of the wizard.
+        /// </summary>
+        /// <param name="returnUrl">The URL to return to after the login wizard has been completed.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [ResponseCache(CacheProfileName = "Never")]
+        public async Task<IActionResult> SelectSecurityQuestions(string returnUrl)
+        {
+            MyAcountSecurityQuestionsViewModel securityViewModel = new MyAcountSecurityQuestionsViewModel();
+            var result = await this.loginWizardService.GetSecurityQuestionsModel(this.CurrentUserId);
+
+            if (result != null)
+            {
+                securityViewModel.FirstSecurityQuestions = SelectListHelper.MapSelectListWithSelection(result.SecurityQuestions, Convert.ToString(securityViewModel.SelectedFirstQuestionId));
+                securityViewModel.SecondSecurityQuestions = SelectListHelper.MapSelectListWithSelection(result.SecurityQuestions, Convert.ToString(securityViewModel.SelectedSecondQuestionId));
+            }
+
+            this.ViewBag.ReturnUrl = returnUrl;
+            return this.View("SecurityQuestionsDetails", securityViewModel);
+        }
+
+        /// <summary>
+        /// Action for choosing security questions.
+        /// </summary>
+        /// <param name="model">The MyAcountSecurityQuestionsViewModel.</param>
+        /// <param name="returnUrl">The URL to return to after the login wizard has been completed.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        [ResponseCache(CacheProfileName = "Never")]
+        public async Task<IActionResult> UpdateSecurityQuestionPost(MyAcountSecurityQuestionsViewModel model, string returnUrl)
+        {
+            MyAcountSecurityQuestionsViewModel securityViewModel = new MyAcountSecurityQuestionsViewModel();
+            var result = await this.loginWizardService.GetSecurityQuestionsModel(this.CurrentUserId);
+
+            if (result != null)
+            {
+                securityViewModel.FirstSecurityQuestions = SelectListHelper.MapSelectListWithSelection(result.SecurityQuestions, Convert.ToString(securityViewModel.SelectedFirstQuestionId));
+                securityViewModel.SecondSecurityQuestions = SelectListHelper.MapSelectListWithSelection(result.SecurityQuestions, Convert.ToString(securityViewModel.SelectedSecondQuestionId));
+            }
+
+            if (model != null)
+            {
+                if (model.SelectedFirstQuestionId == model.SelectedSecondQuestionId)
+                {
+                    this.ModelState.AddModelError("DuplicateQuestion", CommonValidationErrorMessages.DuplicateQuestion);
+                }
+
+                if (model.SelectedFirstQuestionId > 0 && string.IsNullOrEmpty(model.SecurityFirstQuestionAnswerHash))
+                {
+                    this.ModelState.AddModelError(nameof(model.SecurityFirstQuestionAnswerHash), CommonValidationErrorMessages.InvalidSecurityQuestionAnswer);
+                }
+
+                if (model.SelectedSecondQuestionId > 0 && string.IsNullOrEmpty(model.SecuritySecondQuestionAnswerHash))
+                {
+                    this.ModelState.AddModelError(nameof(model.SecuritySecondQuestionAnswerHash), CommonValidationErrorMessages.InvalidSecurityQuestionAnswer);
+                }
+
+                if (this.ModelState.IsValid)
+                {
+                    var userSecurityQuestions = new List<UserSecurityQuestionViewModel>
+                {
+                    new UserSecurityQuestionViewModel
+                    {
+                        SecurityQuestionId = model.SelectedFirstQuestionId,
+                        SecurityQuestionAnswerHash = model.SecurityFirstQuestionAnswerHash,
+                        UserId = this.CurrentUserId,
+                    },
+                    new UserSecurityQuestionViewModel
+                    {
+                        SecurityQuestionId = model.SelectedSecondQuestionId,
+                        SecurityQuestionAnswerHash = model.SecuritySecondQuestionAnswerHash,
+                        UserId = this.CurrentUserId,
+                    },
+                };
+
+                    await this.userService.UpdateUserSecurityQuestions(userSecurityQuestions);
+
+                    // Mark stage complete.
+                    var (cacheExists, loginWizard) = await this.cacheService.TryGetAsync<LoginWizardViewModel>(this.LoginWizardCacheKey);
+
+                    if (cacheExists)
+                    {
+                        await this.CompleteLoginWizardStageAsync(loginWizard, LoginWizardStageEnum.SecurityQuestions);
+                        this.TempData.Clear();
+                        return this.RedirectToAction("Index", new RouteValueDictionary { { "returnUrl", returnUrl } });
+                    }
+
+                    this.TempData.Clear();
+                    return this.Redirect("/");
+                }
+                else
+                {
+                    this.ViewBag.ReturnUrl = returnUrl;
+                    return this.View("SecurityQuestionsDetails", securityViewModel);
+                }
+            }
+
+            return this.View("SecurityQuestionsDetails", securityViewModel);
         }
 
         /// <summary>

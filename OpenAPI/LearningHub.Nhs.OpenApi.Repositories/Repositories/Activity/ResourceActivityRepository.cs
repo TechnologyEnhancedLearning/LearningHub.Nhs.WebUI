@@ -11,6 +11,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
     using LearningHub.Nhs.OpenApi.Repositories.Helpers;
@@ -180,7 +181,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
         /// <param name="requestModel">requestModel.</param>
         /// <param name="detailedMediaActivityRecordingStartDate">detailedMediaActivityRecordingStartDate.</param>
         /// <returns>ResourceActivity.</returns>
-        public async Task<IQueryable<ResourceActivity>> GetByUserIdFromSP(int userId,Nhs.Models.MyLearning.MyLearningRequestModel requestModel, DateTimeOffset detailedMediaActivityRecordingStartDate)
+        public async Task<IQueryable<ResourceActivity>> GetByUserIdFromSP(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel, DateTimeOffset detailedMediaActivityRecordingStartDate)
         {
             (DateTimeOffset? startDate, DateTimeOffset? endDate) = this.ApplyDatesFilter(requestModel);
             (string strResourceTypes, bool resourceTypeFlag) = this.ApplyResourceTypesfilters(requestModel);
@@ -230,6 +231,77 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
             }).ToList();
 
             return listOfresourceActivities.OrderByDescending(r => r.ActivityStart).AsQueryable();
+        }
+
+        /// <summary>
+        /// Get User Recent My LearningActivities.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">requestModel.</param>
+        /// <returns></returns>
+        public async Task<List<MyLearningActivitiesViewModel>> GetUserRecentMyLearningActivities(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel)
+        {
+            try
+            {
+                (string strActivityStatus, bool activityStatusEnumFlag) = this.GetActivityStatusFilter(requestModel);
+                var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@activityStatuses", SqlDbType.NVarChar) { Value = activityStatusEnumFlag == false ? DBNull.Value : strActivityStatus };
+                var result = await DbContext.MyLearningActivitiesViewModel.FromSqlRaw("EXEC activity.GetUserRecentLearningActivities @userId, @activityStatuses", param0,param1).AsNoTracking().ToListAsync();     
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get User Recent My LearningActivities.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">requestModel.</param>
+        /// <returns></returns>
+        public async Task<List<MyLearningActivitiesViewModel>> GetUserLearningHistory(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel)
+        {
+            try
+            {
+                (string strActivityStatus, bool activityStatusEnumFlag) = this.GetActivityStatusFilter(requestModel);
+                (string strResourceTypes, bool resourceTypeFlag) = this.ApplyResourceTypesfilters(requestModel);
+                var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@activityStatuses", SqlDbType.NVarChar) { Value = activityStatusEnumFlag == false ? DBNull.Value : strActivityStatus };
+                var param2 = new SqlParameter("@resourceTypes", SqlDbType.NVarChar) { Value = resourceTypeFlag == false ? DBNull.Value : strResourceTypes };
+                var result = await DbContext.MyLearningActivitiesViewModel.FromSqlRaw("EXEC activity.GetUsersLearningHistory @userId, @activityStatuses,@resourceTypes", param0, param1, param2).AsNoTracking().ToListAsync();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get User Recent My LearningActivities.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">requestModel.</param>
+        /// <returns></returns>
+        public async Task<List<MyLearningActivitiesViewModel>> GetUserLearningHistoryBasedonSearchText(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel)
+        {
+            try
+            {
+                (string strActivityStatus, bool activityStatusEnumFlag) = this.GetActivityStatusFilter(requestModel);
+                (string strResourceTypes, bool resourceTypeFlag) = this.ApplyResourceTypesfilters(requestModel);
+                var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@searchText", SqlDbType.NVarChar) { Value = requestModel.SearchText };
+                var param2 = new SqlParameter("@activityStatuses", SqlDbType.NVarChar) { Value = activityStatusEnumFlag == false ? DBNull.Value : strActivityStatus };
+                var param3 = new SqlParameter("@resourceTypes", SqlDbType.NVarChar) { Value = resourceTypeFlag == false ? DBNull.Value : strResourceTypes };
+                var result = await DbContext.MyLearningActivitiesViewModel.FromSqlRaw("EXEC activity.GetUsersLearningHistory_Search @userId,@searchText, @activityStatuses,@resourceTypes", param0,param1, param2,param3).AsNoTracking().ToListAsync();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -570,7 +642,12 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
             return (startDate, endDate);
         }
 
-        private (string strResourceTypes, bool resourceTypeFlag) ApplyResourceTypesfilters(MyLearningRequestModel requestModel)
+        /// <summary>
+        /// ApplyResourceTypesfilters.
+        /// </summary>
+        /// <param name="requestModel">The requestModel.</param>
+        /// <returns></returns>
+        public (string strResourceTypes, bool resourceTypeFlag) ApplyResourceTypesfilters(MyLearningRequestModel requestModel)
         {
             var listOfResourceTypeEnum = Enum.GetValues(typeof(ResourceTypeEnum)).Cast<int>().ToList();
             listOfResourceTypeEnum.Remove((int)ResourceTypeEnum.Undefined);
@@ -681,6 +758,35 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
                 }
             }
 
+            return (string.Join(",", listOfactivityStatusesEnum), activityStatusEnumFlag);
+        }
+
+        /// <summary>
+        /// GetActivityStatusFilter.
+        /// </summary>
+        /// <param name="requestModel">The requestModel.</param>
+        /// <returns></returns>
+        public (string strActivityStatus, bool activityStatusEnumFlag) GetActivityStatusFilter(MyLearningRequestModel requestModel)
+        {
+            var listOfactivityStatusesEnum = Enum.GetValues(typeof(ActivityStatusEnum)).Cast<int>().ToList();
+            var activityStatusEnumFlag = false;
+            if(requestModel.Complete && !requestModel.Incomplete)
+            {
+                activityStatusEnumFlag = true;
+                listOfactivityStatusesEnum.Remove((int)ActivityStatusEnum.Incomplete);
+                listOfactivityStatusesEnum.Remove((int)ActivityStatusEnum.InProgress);
+                listOfactivityStatusesEnum.Remove((int)ActivityStatusEnum.Failed);
+
+            }
+            else if(!requestModel.Complete && requestModel.Incomplete)
+            {
+                activityStatusEnumFlag = true;
+                listOfactivityStatusesEnum.Remove((int)ActivityStatusEnum.Completed);
+                listOfactivityStatusesEnum.Remove((int)ActivityStatusEnum.Passed);
+                listOfactivityStatusesEnum.Remove((int)ActivityStatusEnum.Launched);
+                listOfactivityStatusesEnum.Remove((int)ActivityStatusEnum.Downloaded);
+                listOfactivityStatusesEnum.Remove((int)ActivityStatusEnum.Viewed);
+            }         
             return (string.Join(",", listOfactivityStatusesEnum), activityStatusEnumFlag);
         }
     }

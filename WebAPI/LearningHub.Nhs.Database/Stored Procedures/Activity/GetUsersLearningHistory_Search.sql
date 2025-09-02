@@ -77,6 +77,6 @@ BEGIN
 							FROM STRING_SPLIT(@resourceTypes, ',')
 						)
 					  )
-				ORDER BY ra.Id ASC;
+				ORDER BY ActivityDate desc;
 		
 END

@@ -4,6 +4,7 @@
 -- Purpose      Get Users recent learning acrtivities
 --
 -- Modification History
+-- 02-Sep-2025       SA        Incorrect Syntax 
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserRecentLearningActivities] (
 	 @userId INT,
@@ -12,7 +13,7 @@ CREATE PROCEDURE [activity].[GetUserRecentLearningActivities] (
 AS
 BEGIN
 
-	WITH CTERecentActivities AS (
+	;WITH CTERecentActivities AS (
     SELECT 
     ra.Id AS ActivityId,
     ara.LaunchResourceActivityId AS LaunchResourceActivityId,

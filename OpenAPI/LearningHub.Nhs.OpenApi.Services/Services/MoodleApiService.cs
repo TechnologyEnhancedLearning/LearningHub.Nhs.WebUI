@@ -115,8 +115,6 @@
         {
             try
             {
-                userId = 3;
-
                 string statusFilter = string.Empty; ;
 
                 if ((requestModel.Incomplete && requestModel.Complete)  || (!requestModel.Incomplete && !requestModel.Complete))
@@ -167,7 +165,6 @@
         {
             try
             {
-                userId = 3;
                 string statusFilter = string.Empty;
 
                 if ((requestModel.Incomplete && requestModel.Complete) || (!requestModel.Incomplete && !requestModel.Complete))
@@ -217,7 +214,6 @@
         {
             try
             {
-                userId = 3;
                 var parameters = new Dictionary<string, string>
             {
                 { "userid", userId.ToString() },

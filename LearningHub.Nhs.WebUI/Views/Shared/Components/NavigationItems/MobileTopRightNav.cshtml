@@ -6,13 +6,13 @@
 @model NavigationModel
 
 <!-- start Mobile nav -->
-@if (!Model.ShowHelp)
+@* @if (!Model.ShowHelp)
 {
     <a class="nhsuk-account__login--link" href="@(settings.Value.SupportUrls.SupportSite)" target="_blank">Help</a>
-}
+} 
 
 else
-{
+{*@
     @if (Model.ShowMyAccount)
     {
     <a class="nhsuk-account__login--link" asp-controller="Myaccount" asp-action="Index">My account</a>
@@ -31,6 +31,6 @@ else
             <span class="nhsuk-u-visually-hidden">Search</span>
         </button>
     }
-}
+@* } *@
 
 <!-- end Mobile nav -->

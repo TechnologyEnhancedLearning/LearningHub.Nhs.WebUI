@@ -241,18 +241,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
         /// <returns></returns>
         public async Task<List<MyLearningActivitiesViewModel>> GetUserRecentMyLearningActivities(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel)
         {
-            try
-            {
                 (string strActivityStatus, bool activityStatusEnumFlag) = this.GetActivityStatusFilter(requestModel);
                 var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
                 var param1 = new SqlParameter("@activityStatuses", SqlDbType.NVarChar) { Value = activityStatusEnumFlag == false ? DBNull.Value : strActivityStatus };
                 var result = await DbContext.MyLearningActivitiesViewModel.FromSqlRaw("EXEC activity.GetUserRecentLearningActivities @userId, @activityStatuses", param0,param1).AsNoTracking().ToListAsync();     
                 return result;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
         }
 
         /// <summary>
@@ -263,8 +256,6 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
         /// <returns></returns>
         public async Task<List<MyLearningActivitiesViewModel>> GetUserLearningHistory(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel)
         {
-            try
-            {
                 (string strActivityStatus, bool activityStatusEnumFlag) = this.GetActivityStatusFilter(requestModel);
                 (string strResourceTypes, bool resourceTypeFlag) = this.ApplyResourceTypesfilters(requestModel);
                 var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
@@ -272,11 +263,6 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
                 var param2 = new SqlParameter("@resourceTypes", SqlDbType.NVarChar) { Value = resourceTypeFlag == false ? DBNull.Value : strResourceTypes };
                 var result = await DbContext.MyLearningActivitiesViewModel.FromSqlRaw("EXEC activity.GetUsersLearningHistory @userId, @activityStatuses,@resourceTypes", param0, param1, param2).AsNoTracking().ToListAsync();
                 return result;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
         }
 
         /// <summary>

@@ -59,5 +59,5 @@ BEGIN
 						SELECT value
 						FROM STRING_SPLIT(@resourceTypes, ','))
 				)
-		ORDER BY ra.Id asc
+		ORDER BY ra.ActivityStart desc
 END

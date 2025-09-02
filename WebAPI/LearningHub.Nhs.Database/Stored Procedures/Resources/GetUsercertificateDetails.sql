@@ -86,7 +86,7 @@ BEGIN
         ) AS ResourceReferenceID,
         rv.MajorVersion,
         rv.MinorVersion,
-        ra.ActivityStart AS AwardedDate,
+        COALESCE(ra.ActivityEnd, ra.ActivityStart) AS AwardedDate,
 		NULL AS CertificateDownloadUrl,
 		NULL AS CertificatePreviewUrl
     FROM #MyActivity ma

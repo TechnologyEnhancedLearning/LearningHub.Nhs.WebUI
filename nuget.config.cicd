@@ -6,27 +6,25 @@
 	<packageSources>
 		<!--Clean and just use these sources-->
 		<clear />
-		<!--<add key="TELLocalNugetFeed" value="%TEL_LOCAL_FEED%" />-->
 		<add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-		<add key="TELGitNugetFeed" value="%TEL_GITHUB_FEED%" />
-		<add key="TELAzureNugetFeed" value="%TEL_AZURE_FEED%" />
+		<add key="TELGitNugetFeed" value="https://nuget.pkg.github.com/TechnologyEnhancedLearning/index.json" />
+		<add key="TELAzureLearningHubNugetFeed" value="https://pkgs.dev.azure.com/e-LfH/_packaging/LearningHubFeed/nuget/v3/index.json" />
 	</packageSources>
 
 	<packageSourceCredentials>
 		<TELGitNugetFeed>
-			<add key="Username" value="%TEL_GITHUB_USERNAME%" />
+			<add key="Username" value="%TEL_GITHUB_DEVOPS_USERNAME%" />
 			<!--cleartext for benefit of github actions-->
-			<add key="ClearTextPassword" value="%TEL_GITHUB_TOKEN%" />
+			<add key="ClearTextPassword" value="%TEL_GITHUB_PACKAGE_READ_PAT%" />
 		</TELGitNugetFeed>
 
-		<TELAzureNugetFeed>
-			<!--Instead of windows user account credentials https://dev.azure.com/e-LfH/_usersSettings/tokens-->
-			<add key="Username" value="%TEL_AZURE_USERNAME%" />
+		<TELAzureLearningHubNugetFeed>
+			<add key="Username" value="%TEL_AZURE_DEVOPS_USERNAME%" />
 			<!--cleartext for benefit of github actions-->
-			<add key="ClearTextPassword" value="%TEL_AZURE_PAT%" />
-		</TELAzureNugetFeed>
+			<add key="ClearTextPassword" value="%TEL_AZURE_DEVOPS_PAT%" />
+		</TELAzureLearningHubNugetFeed>
 	</packageSourceCredentials>
-
+	
 	<!--Use local package first if not found use remote-->
 	<!--<packageSource key="TELLocalNugetFeed">
 		<package pattern="*" />
@@ -38,7 +36,7 @@
 			<package pattern="*" />
 		</packageSource>
 
-		<packageSource key="TELAzureNugetFeed">
+		<packageSource key="TELAzureLearningHubNugetFeed">
 			<package pattern="LearningHub.*" />
 		</packageSource>
 

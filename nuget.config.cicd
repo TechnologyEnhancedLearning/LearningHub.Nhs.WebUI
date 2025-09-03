@@ -33,11 +33,20 @@
 	<packageSourceMapping>
 		<packageSource key="TELGitNugetFeed">
 			<package pattern="TELBlazor.*" />
-			<package pattern="*" />
+			<package pattern="NHSETELViewComponents" />
+			<!-- Best practice to only apply all to one source but we may want to enable it for convenience (and we do duplicate some packages across both sources) -->
+			<!-- <package pattern="*" /> -->
 		</packageSource>
 
 		<packageSource key="TELAzureLearningHubNugetFeed">
-			<package pattern="LearningHub.*" />
+			<package pattern="LearningHub.Nhs.*" />
+			<package pattern="elfhHub.Nhs.*" />
+			<package pattern="GDS.MultiPageFormData" />
+			<package pattern="NHSUKSearchSortFilterPaginate" />
+			<package pattern="NHSUKViewComponents.Web" />
+			<package pattern="UK.NHS.CookieBanner*" />
+			<!-- Best practice to only apply all to one source but we may want to enable it for convenience (and we do duplicate some packages across both sources) -->
+			<!-- <package pattern="*" /> -->
 		</packageSource>
 
 		<!--Check official nuget last-->

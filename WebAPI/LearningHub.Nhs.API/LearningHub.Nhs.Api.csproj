@@ -26,7 +26,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.9" />
+		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.8" />
 		<PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
 		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
 		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />

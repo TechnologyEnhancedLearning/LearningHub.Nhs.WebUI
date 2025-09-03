@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
-    using System.Runtime.InteropServices.WindowsRuntime;
     using System.Text;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Dashboard;

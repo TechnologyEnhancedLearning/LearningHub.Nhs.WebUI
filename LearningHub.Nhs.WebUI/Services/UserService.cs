@@ -19,6 +19,7 @@
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.Models.Validation;
+    using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;

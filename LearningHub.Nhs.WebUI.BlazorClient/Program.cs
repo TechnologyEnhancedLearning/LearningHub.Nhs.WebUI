@@ -63,7 +63,7 @@ try
         return new TELBlazorBaseComponentConfiguration
         {
             JSEnabled = true, //if we are inject the client then it is true
-            HostType = $"{builder.Configuration["Properties:Environment"]} {builder.Configuration["Properties:Application"]}"
+            HostType = $"{builder.Configuration["Environment"]} {builder.Configuration["Properties:Application"]}"
         };
     });
 

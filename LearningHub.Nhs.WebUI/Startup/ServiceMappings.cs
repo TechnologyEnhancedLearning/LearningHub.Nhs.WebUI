@@ -164,7 +164,7 @@
                 return new TELBlazorBaseComponentConfiguration
                 {
                     JSEnabled = jsEnabled,
-                    HostType = $"{configuration["Properties:Environment"]} {configuration["Properties:Application"]}",
+                    HostType = $"{configuration["Environment"]} {configuration["Properties:Application"]}",
                 };
             });
 

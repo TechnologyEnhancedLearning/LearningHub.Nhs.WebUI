@@ -60,10 +60,15 @@ try
     // Candidates for DI collection
     builder.Services.AddSingleton<ITELBlazorBaseComponentConfiguration>(sp =>
     {
+        var environment = builder.Configuration["Environment"];
+        // Azure cant have differing application values so we default to assembly name if not set
+        var application = builder.Configuration["Properties:Application"] ??
+                         typeof(Program).Assembly.GetName().Name;
+
         return new TELBlazorBaseComponentConfiguration
         {
             JSEnabled = true, //if we are inject the client then it is true
-            HostType = $"{builder.Configuration["Environment"]} {builder.Configuration["Properties:Application"]}"
+            HostType = $"{environment} {application}",
         };
     });
 

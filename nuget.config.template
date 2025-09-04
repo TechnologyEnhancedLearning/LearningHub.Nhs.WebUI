@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+	<!-- using environmental variables: 
+		* for cicd sed replace environmental variables
+	-->
+	<packageSources>
+		<!--Clean and just use these sources-->
+		<clear />
+		<!--Local at the top so can override remote feeds-->
+		<!--<add key="TELLocalNugetFeed" value="%TEL_LOCAL_FEED%" />-->
+		<add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+		<add key="TELGitNugetFeed" value="https://nuget.pkg.github.com/TechnologyEnhancedLearning/index.json" />
+		<add key="TELAzureLearningHubNugetFeed" value="https://pkgs.dev.azure.com/e-LfH/_packaging/LearningHubFeed/nuget/v3/index.json" />
+	</packageSources>
+
+	<packageSourceCredentials>
+		<TELGitNugetFeed>
+			<add key="Username" value="%TEL_GITHUB_DEVOPS_USERNAME%" />
+			<!--cleartext for benefit of github actions-->
+			<add key="ClearTextPassword" value="%TEL_GITHUB_PACKAGE_READ_PAT%" />
+		</TELGitNugetFeed>
+
+		<TELAzureLearningHubNugetFeed>
+			<add key="Username" value="%TEL_AZURE_DEVOPS_USERNAME%" />
+			<!--cleartext for benefit of github actions-->
+			<add key="ClearTextPassword" value="%TEL_AZURE_DEVOPS_PAT%" />
+		</TELAzureLearningHubNugetFeed>
+	</packageSourceCredentials>
+
+	<!--Use local package first if not found use remote-->
+	<!--<packageSource key="TELLocalNugetFeed">
+		<package pattern="*" />
+	</packageSource>-->
+	
+	<packageSourceMapping>
+		<packageSource key="TELGitNugetFeed">
+			<package pattern="TELBlazor.*" />
+			<package pattern="NHSETELViewComponents" />
+			<!-- Best practice to only apply all to one source but we may want to enable it for convenience (and we do duplicate some packages across both sources) -->
+			<!-- <package pattern="*" /> -->
+		</packageSource>
+
+		<packageSource key="TELAzureLearningHubNugetFeed">
+			<package pattern="LearningHub.Nhs.*" />
+			<package pattern="elfhHub.Nhs.*" />
+			<package pattern="GDS.MultiPageFormData" />
+			<package pattern="NHSUKSearchSortFilterPaginate" />
+			<package pattern="NHSUKViewComponents.Web" />
+			<package pattern="UK.NHS.CookieBanner" />
+			<!-- Best practice to only apply all to one source but we may want to enable it for convenience (and we do duplicate some packages across both sources) -->
+			<!-- <package pattern="*" /> -->
+		</packageSource>
+
+		<!--Check official nuget last-->
+		<packageSource key="nuget.org">
+			<package pattern="*" />
+		</packageSource>
+	</packageSourceMapping>
+</configuration>

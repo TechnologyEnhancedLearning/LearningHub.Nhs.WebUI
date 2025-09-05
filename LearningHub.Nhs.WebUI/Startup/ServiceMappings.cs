@@ -1,7 +1,7 @@
-﻿using TELBlazor.Components.Core.Configuration;
-
-namespace LearningHub.Nhs.WebUI.Startup
+﻿namespace LearningHub.Nhs.WebUI.Startup
 {
+    using System;
+    using System.Net.Http;
     using Blazored.LocalStorage;
     using GDS.MultiPageFormData;
     using LearningHub.Nhs.Models.OpenAthens;
@@ -19,8 +19,6 @@ namespace LearningHub.Nhs.WebUI.Startup
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using System;
-    using System.Net.Http;
     using TELBlazor.Components.Core.Configuration;
     using TELBlazor.Components.Core.Services.HelperServices;
     using static System.Net.Mime.MediaTypeNames;
@@ -159,10 +157,12 @@ namespace LearningHub.Nhs.WebUI.Startup
                 var context = httpContextAccessor.HttpContext;
                 bool jsEnabled = false;
 
-                var environment = builder.Configuration["Environment"];
+                var configuration = provider.GetRequiredService<IConfiguration>();
+
+                var environment = configuration["Environment"];
 
                 // Azure cant have differing application values so we default to assembly name if not set
-                var application = builder.Configuration["Properties:Application"] ??
+                var application = configuration["Properties:Application"] ??
                                  typeof(Program).Assembly.GetName().Name;
 
                 if (context != null && context.Request.Cookies.TryGetValue("jsEnabled", out var jsCookieValue))

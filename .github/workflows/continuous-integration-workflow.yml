@@ -3,6 +3,12 @@ on: [push]
 env:
   BuildParameters.RestoreBuildProjects: '**/*.csproj'
   BuildParameters.TestProjects: '**/*[Tt]ests/*.csproj'
+  
+  # Nuget Feed Credentials
+  TEL_GITHUB_DEVOPS_USERNAME: ${{ secrets.TEL_GITHUB_DEVOPS_USERNAME }}
+  TEL_GITHUB_PACKAGE_READ_PAT: ${{ secrets.TEL_GITHUB_PACKAGE_READ_PAT }}
+  TEL_AZURE_DEVOPS_USERNAME: ${{ secrets.TEL_AZURE_DEVOPS_USERNAME }}
+  TEL_AZURE_DEVOPS_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
 jobs:
   build:
     name: Build and test
@@ -15,10 +21,45 @@ jobs:
         with:
           dotnet-version: 8.0.x     
 
-      - name: Add Azure artifact
+      # Todo: remove check once all pipeline work and have the file         
+      - name: Check if nuget.config.cicd exists
+        id: check_nuget_cicd
+        run: |
+          if (Test-Path "nuget.config.cicd") {
+            echo "exists=true" >> $env:GITHUB_OUTPUT
+            echo "nuget.config.cicd exists"
+          } else {
+            echo "exists=false" >> $env:GITHUB_OUTPUT
+            echo "nuget.config.cicd doesnt exist"
+          }
+        shell: pwsh
+       
+      # Remove local nuget.config (Should be gitignored) and create nuget.config from nuget.config.cicd
+      # Todo: remove if once all pipeline work and have the file  
+      - name: Setup NuGet with CICD config
+        if: steps.check_nuget_cicd.outputs.exists == 'true'
+        run: |
+          if (Test-Path "nuget.config") { Remove-Item "nuget.config" }
+          Copy-Item "nuget.config.cicd" "nuget.config"
+        shell: pwsh
+          
+      # Replace env values with github secrets    
+      - name: Replace environment variables in nuget config
+        if: steps.check_nuget_cicd.outputs.exists == 'true'
+        run: |
+          (Get-Content nuget.config) -replace '%TEL_GITHUB_DEVOPS_USERNAME%', $env:TEL_GITHUB_DEVOPS_USERNAME | Set-Content nuget.config
+          (Get-Content nuget.config) -replace '%TEL_GITHUB_PACKAGE_READ_PAT%', $env:TEL_GITHUB_PACKAGE_READ_PAT | Set-Content nuget.config
+          (Get-Content nuget.config) -replace '%TEL_AZURE_DEVOPS_USERNAME%', $env:TEL_AZURE_DEVOPS_USERNAME | Set-Content nuget.config
+          (Get-Content nuget.config) -replace '%TEL_AZURE_DEVOPS_PAT%', $env:TEL_AZURE_DEVOPS_PAT | Set-Content nuget.config
+        shell: pwsh
+         
+      # Todo: remove fallback once all pipeline work and have the file 
+      - name: Setup NuGet with Azure DevOps (fallback)
+        if: steps.check_nuget_cicd.outputs.exists == 'false'
         run: |
           dotnet nuget remove source LearningHubFeed || true
-          dotnet nuget add source 'https://pkgs.dev.azure.com/e-LfH/_packaging/LearningHubFeed/nuget/v3/index.json' --name 'LearningHubFeed'  --username 'kevin.whittaker' --password ${{ secrets.AZURE_DEVOPS_PAT }} --store-password-in-clear-text      
+          dotnet nuget add source 'https://pkgs.dev.azure.com/e-LfH/_packaging/LearningHubFeed/nuget/v3/index.json' --name 'LearningHubFeed' --username 'kevin.whittaker' --password ${{ secrets.AZURE_DEVOPS_PAT }} --store-password-in-clear-text
+         
       
       - name: Use Node 14
         uses: actions/setup-node@v4

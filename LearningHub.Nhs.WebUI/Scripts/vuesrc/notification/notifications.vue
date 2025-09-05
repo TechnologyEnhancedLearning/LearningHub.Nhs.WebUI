@@ -1,7 +1,7 @@
 <template>
         <div class="notifications-panel lh-container-xl">
             <div :class="[showMessage ? 'd-none' : 'd-block']">
-                <h2 class="nhsuk-heading-l nhsuk-u-padding-bottom-5">System notifications</h2>
+                <h2 class="nhsuk-heading-l nhsuk-u-padding-bottom-5">Notifications</h2>
                 <notification ref="priorityNotification"
                               :priorityType="this.NotificationPriority.Priority"
                               :showContent="this.showPriorityContent"

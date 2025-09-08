@@ -1,7 +1,7 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.MyAccountPersonalDetailsViewModel
 
 @{
-    ViewData["Title"] = "Personal Details";
+    ViewData["Title"] = "Personal details";
     var isgeneralUser = User.IsInRole("BasicUser");
 }
 @section NavBreadcrumbs {
@@ -23,7 +23,7 @@
         </div>
     </section>
 }
-<div class="bg-white nhsuk-u-padding-bottom-9 nhsuk-u-padding-top-9">
+<div class="bg-white nhsuk-u-padding-bottom-7 nhsuk-u-padding-top-7">
     <div class="nhsuk-width-container app-width-container">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-quarter">
@@ -83,7 +83,7 @@
                     </div>
                     <div class="nhsuk-summary-list__row">
                         <dt class="nhsuk-summary-list__key">
-                            Primary email address
+                            Work email
                         </dt>
                         @if (Model.NewPrimaryEmailAddress != "" && Model.NewPrimaryEmailAddress != null)
                         {
@@ -102,7 +102,7 @@
 
                     <div class="nhsuk-summary-list__row">
                         <dt class="nhsuk-summary-list__key">
-                            Secondary email address
+                            Secondary email
                         </dt>
                         <dd class="nhsuk-summary-list__value">
                             @Model.SecondaryEmailAddress

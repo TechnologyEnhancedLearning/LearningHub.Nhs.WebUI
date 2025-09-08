@@ -1942,9 +1942,9 @@
             PersonalDetailsViewModel personalDetailsViewModel = new PersonalDetailsViewModel
             {
                 UserId = userId,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                PreferredName = model.PreferredName,
+                FirstName = model.FirstName.Trim(),
+                LastName = model.LastName.Trim(),
+                PreferredName = model.PreferredName?.Trim(),
                 SecondaryEmailAddress = model.SecondaryEmailAddress,
             };
 

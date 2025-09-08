@@ -210,6 +210,37 @@
                 return this.View("ChangePersonalDetails", model);
             }
 
+            if (model.PrimaryEmailAddress.ToLower() == model.SecondaryEmailAddress?.ToLower())
+            {
+                this.ModelState.AddModelError(nameof(model.SecondaryEmailAddress), CommonValidationErrorMessages.SecondaryEmailShouldNotBeSame);
+                return this.View("ChangePersonalDetails", model);
+            }
+
+            bool userPrimaryEmailAddressChanged = false;
+            var user = await this.userService.GetUserByUserIdAsync(this.CurrentUserId);
+            if (user != null)
+            {
+                if (!string.IsNullOrEmpty(model.PrimaryEmailAddress) && user.EmailAddress.ToLower() != model.PrimaryEmailAddress.ToLower())
+                {
+                    userPrimaryEmailAddressChanged = true;
+                }
+            }
+
+            if (userPrimaryEmailAddressChanged)
+            {
+                if (await this.userService.DoesEmailAlreadyExist(model.PrimaryEmailAddress))
+                {
+                    this.ModelState.AddModelError(
+                               nameof(model.PrimaryEmailAddress),
+                               CommonValidationErrorMessages.DuplicateEmailAddress);
+                    return this.View("ChangePersonalDetails", model);
+                }
+                else
+                {
+                    await this.MyAccountUpdatePrimaryEmail(user.EmailAddress, model.PrimaryEmailAddress);
+                }
+            }
+
             bool isSamePrimaryEmailPendingforValidate = await this.userService.CheckSamePrimaryemailIsPendingToValidate(model.SecondaryEmailAddress);
             if (isSamePrimaryEmailPendingforValidate)
             {
@@ -218,7 +249,6 @@
             }
 
             await this.userService.UpdateMyAccountPersonalDetailsAsync(this.CurrentUserId, model);
-            await this.MyAccountUpdatePrimaryEmail(model.PrimaryEmailAddress);
             this.ViewBag.SuccessMessage = CommonValidationErrorMessages.PersonalDetailsSuccessMessage;
             this.ViewBag.MyAction = "Index";
             return this.View("SuccessMessageMyAccount");
@@ -1507,48 +1537,26 @@
             return this.View("SuccessMessage");
         }
 
-        private async Task MyAccountUpdatePrimaryEmail(string primaryEmailAddress)
+        private async Task MyAccountUpdatePrimaryEmail(string currentEmailAddress, string primaryEmailAddress)
         {
-            bool userPrimaryEmailAddressChanged = false;
-            var user = await this.userService.GetUserByUserIdAsync(this.CurrentUserId);
-            if (user != null)
+            var isUserRoleUpgrade = await this.userService.ValidateUserRoleUpgradeAsync(currentEmailAddress, primaryEmailAddress);
+            UserRoleUpgrade userRoleUpgradeModel = new UserRoleUpgrade()
             {
-                if (!string.IsNullOrEmpty(primaryEmailAddress) && user.EmailAddress.ToLower() != primaryEmailAddress.ToLower())
-                {
-                    userPrimaryEmailAddressChanged = true;
-                }
+                UserId = this.CurrentUserId,
+                EmailAddress = primaryEmailAddress,
+            };
+            if (isUserRoleUpgrade)
+            {
+                userRoleUpgradeModel.UserHistoryTypeId = (int)UserHistoryType.UserRoleUpgarde;
+            }
+            else
+            {
+                userRoleUpgradeModel.UserHistoryTypeId = (int)UserHistoryType.UserDetails;
             }
 
-            if (userPrimaryEmailAddressChanged)
-            {
-                if (await this.userService.DoesEmailAlreadyExist(primaryEmailAddress))
-                {
-                    this.ModelState.AddModelError(
-                               nameof(primaryEmailAddress),
-                               CommonValidationErrorMessages.DuplicateEmailAddress);
-                }
-                else
-                {
-                    var isUserRoleUpgrade = await this.userService.ValidateUserRoleUpgradeAsync(user.EmailAddress, primaryEmailAddress);
-                    UserRoleUpgrade userRoleUpgradeModel = new UserRoleUpgrade()
-                    {
-                        UserId = this.CurrentUserId,
-                        EmailAddress = primaryEmailAddress,
-                    };
-                    if (isUserRoleUpgrade)
-                    {
-                        userRoleUpgradeModel.UserHistoryTypeId = (int)UserHistoryType.UserRoleUpgarde;
-                    }
-                    else
-                    {
-                        userRoleUpgradeModel.UserHistoryTypeId = (int)UserHistoryType.UserDetails;
-                    }
-
-                    await this.userService.GenerateEmailChangeValidationTokenAndSendEmailAsync(primaryEmailAddress, isUserRoleUpgrade);
-                    await this.userService.UpdateUserRoleUpgradeAsync();
-                    await this.userService.CreateUserRoleUpgradeAsync(userRoleUpgradeModel);
-                }
-            }
+            await this.userService.GenerateEmailChangeValidationTokenAndSendEmailAsync(primaryEmailAddress, isUserRoleUpgrade);
+            await this.userService.UpdateUserRoleUpgradeAsync();
+            await this.userService.CreateUserRoleUpgradeAsync(userRoleUpgradeModel);
         }
     }
 }

@@ -66,7 +66,6 @@
         /// Gets or sets the SecondaryEmailAddress.
         /// </summary>
         [DataType(DataType.EmailAddress)]
-        [NotEqual("PrimaryEmailAddress", ErrorMessage = CommonValidationErrorMessages.SecondaryEmailShouldNotBeSame)]
         [MaxLength(100, ErrorMessage = CommonValidationErrorMessages.TooLongEmail)]
         [EmailAddress(ErrorMessage = CommonValidationErrorMessages.InvalidEmail)]
         [NoWhitespace(ErrorMessage = CommonValidationErrorMessages.WhitespaceInEmail)]

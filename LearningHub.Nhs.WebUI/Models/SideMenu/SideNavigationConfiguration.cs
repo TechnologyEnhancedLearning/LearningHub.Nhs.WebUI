@@ -46,7 +46,7 @@
                     },
                     new SideNavigationItem
                     {
-                        Text = "Notification",
+                        Text = "Notifications",
                         Controller = "Notification",
                         Action = "Index",
                         IsActive = route => MatchRoute(route, "Notification", "Index"),

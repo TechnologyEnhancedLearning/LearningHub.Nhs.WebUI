@@ -115,7 +115,7 @@
         {
             try
             {
-                var moodleUser = this.GetMoodleUserIdByUsernameAsync(userId);
+                int moodleUserId = await this.GetMoodleUserIdByUsernameAsync(userId);
                 string statusFilter = string.Empty; ;
 
                 if ((requestModel.Incomplete && requestModel.Complete)  || (!requestModel.Incomplete && !requestModel.Complete))
@@ -133,7 +133,7 @@
 
                 var parameters = new Dictionary<string, string>
 {
-    { "userid", moodleUser.Id.ToString() },
+    { "userid", moodleUserId.ToString() },
     { "months", months.ToString() },
     { "statusfilter", statusFilter },
     { "search", requestModel.SearchText ?? string.Empty }
@@ -166,7 +166,7 @@
         {
             try
             {
-                var moodleUser = this.GetMoodleUserIdByUsernameAsync(userId);
+                int moodleUserId = await this.GetMoodleUserIdByUsernameAsync(userId);
                 string statusFilter = string.Empty;
 
                 if ((requestModel.Incomplete && requestModel.Complete) || (!requestModel.Incomplete && !requestModel.Complete))
@@ -184,7 +184,7 @@
 
                 var parameters = new Dictionary<string, string>
 {
-    { "userid", moodleUser.Id.ToString() },
+    { "userid", moodleUserId.ToString() },
     { "statusfilter", statusFilter },
     { "search", requestModel.SearchText ?? string.Empty }
 };
@@ -216,10 +216,10 @@
         {
             try
             {
-                var moodleUser = this.GetMoodleUserIdByUsernameAsync(userId);
+                int moodleUserId = await this.GetMoodleUserIdByUsernameAsync(userId);
                 var parameters = new Dictionary<string, string>
             {
-                { "userid", moodleUser.Id.ToString() },
+                { "userid", moodleUserId.ToString() },
                 { "searchterm", filterText }
             };
 

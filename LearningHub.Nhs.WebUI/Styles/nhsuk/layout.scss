@@ -96,6 +96,16 @@ body {
     gap: px2rem(24);
 }
 
+.nhsuk-account__myaccount {
+    float: right;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: px2rem(8);
+}
+
 .nhsuk-header__notification-dot {
     position: absolute;
     top: px2rem(8);

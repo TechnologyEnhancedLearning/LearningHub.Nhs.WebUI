@@ -616,13 +616,9 @@
                     this.ModelState.AddModelError("DuplicateQuestion", CommonValidationErrorMessages.DuplicateQuestion);
                 }
 
-                if (model.SelectedFirstQuestionId > 0 && string.IsNullOrEmpty(model.SecurityFirstQuestionAnswerHash))
+                if ((model.SelectedFirstQuestionId > 0 && string.IsNullOrEmpty(model.SecurityFirstQuestionAnswerHash)) || (model.SelectedSecondQuestionId > 0 && string.IsNullOrEmpty(model.SecuritySecondQuestionAnswerHash)))
                 {
                     this.ModelState.AddModelError(nameof(model.SecurityFirstQuestionAnswerHash), CommonValidationErrorMessages.InvalidSecurityQuestionAnswer);
-                }
-
-                if (model.SelectedSecondQuestionId > 0 && string.IsNullOrEmpty(model.SecuritySecondQuestionAnswerHash))
-                {
                     this.ModelState.AddModelError(nameof(model.SecuritySecondQuestionAnswerHash), CommonValidationErrorMessages.InvalidSecurityQuestionAnswer);
                 }
 

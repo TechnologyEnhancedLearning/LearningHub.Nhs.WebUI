@@ -366,14 +366,9 @@
                     return this.View("MyAccountSecurityQuestionsDetails", securityViewModel);
                 }
 
-                if (viewModel.SelectedFirstQuestionId > 0 && string.IsNullOrEmpty(viewModel.SecurityFirstQuestionAnswerHash))
+                if ((viewModel.SelectedFirstQuestionId > 0 && string.IsNullOrEmpty(viewModel.SecurityFirstQuestionAnswerHash)) || (viewModel.SelectedSecondQuestionId > 0 && string.IsNullOrEmpty(viewModel.SecuritySecondQuestionAnswerHash)))
                 {
                     this.ModelState.AddModelError(nameof(viewModel.SecurityFirstQuestionAnswerHash), CommonValidationErrorMessages.InvalidSecurityQuestionAnswer);
-                    return this.View("MyAccountSecurityQuestionsDetails", securityViewModel);
-                }
-
-                if (viewModel.SelectedSecondQuestionId > 0 && string.IsNullOrEmpty(viewModel.SecuritySecondQuestionAnswerHash))
-                {
                     this.ModelState.AddModelError(nameof(viewModel.SecuritySecondQuestionAnswerHash), CommonValidationErrorMessages.InvalidSecurityQuestionAnswer);
                     return this.View("MyAccountSecurityQuestionsDetails", securityViewModel);
                 }

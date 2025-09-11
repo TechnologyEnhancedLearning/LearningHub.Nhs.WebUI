@@ -16,7 +16,7 @@
 
   if (returnUrl == "/")
   {
-    backToText += "Learning Hub";
+    backToText += "Home";
     controller = "home";
     action = "index";
   }
@@ -117,7 +117,7 @@
                            autocomplete="off"
                            css-class=""
                            required="true"
-                           required-client-side-error-message="@(Model.BookmarkTypeId == 1 ? "You must enter a folder name" : "You must enter a bookmark name")" />
+                           required-client-side-error-message="You must enter a folder name" />
             </div>
           </div>
         </div>

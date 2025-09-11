@@ -60,18 +60,18 @@
                         <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
                     }
                     <p class="nhsuk-body-m">
-                        You can use this page to search and filter learning resources you've accessed, download certificates and generate a report
+                        You can use this page to search and filter learning resources you've accessed and generate a report
                         of your activity.
                     </p>
 
                     <details class="nhsuk-details">
                         <summary class="nhsuk-details__summary">
                             <span class="nhsuk-details__summary-text">
-                                Learn how to manage My learning
+                                Learn how to manage Learning history
                             </span>
                         </summary>
                         <div class="nhsuk-details__text">
-                            <p>My learning displays an itemised activity table. This table details everything you have accessed in the Learning Hub.</p>
+                            <p>Learning history displays an itemised activity table. This table details everything you have accessed in the Learning Hub.</p>
                             <p>You can search your learning activity by entering a search term in the search box. This will only search your learning activity and not the entire Learning Hub. Results will be displayed placing your search term as the filter. To return to your full Itemised activity, either select clear all filters or uncheck your search term(s).</p>
                         </div>
                     </details>
@@ -92,7 +92,7 @@
 
                     <form asp-controller="MyLearning" asp-action="LearningHistory" method="post" asp-fragment="search-results">
 
-                        <h2 class="nhsuk-heading-l" id="search-results">Search within My learning</h2>
+                        <h2 class="nhsuk-heading-l" id="search-results">Search within Learning history</h2>
                         <div class="nhsuk-form-group search-box-container nhsuk-u-padding-bottom-1" style="white-space:nowrap">
                             <label class="nhsuk-label nhsuk-u-visually-hidden" for="SearchText">Search Text</label>
                             <input class="nhsuk-input nhsuk-u-width-one-half search-box" placeholder="" id="SearchText" name="SearchText" value="@Model.SearchText" type="text" aria-required="true">

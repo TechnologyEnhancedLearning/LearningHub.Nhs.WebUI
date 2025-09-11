@@ -11,6 +11,7 @@
     using GDS.MultiPageFormData;
     using GDS.MultiPageFormData.Enums;
     using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Models.WebUtilitiesInterfaces;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -20,6 +21,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
@@ -299,7 +301,9 @@
         {
             SecurityQuestionSelectViewModel securityViewModel = new SecurityQuestionSelectViewModel();
             var model = await this.loginWizardService.GetSecurityQuestionsModel(this.CurrentUserId);
-            securityViewModel.SecurityQuestions = model.SecurityQuestions;
+
+            // qqqq
+            securityViewModel.SecurityQuestions = model.SecurityQuestions.Select(q => new SelectListItem { Value = q.Value, Text = q.Text }).ToList();
             securityViewModel.QuestionIndex = questionIndex;
             securityViewModel.SelectedSecurityQuestionId = model.UserSecurityQuestions.ElementAt(questionIndex).SecurityQuestionId;
             return this.View("SecurityQuestionsDetails", securityViewModel);
@@ -505,7 +509,7 @@
         {
             bool duplicatesExist = false;
             var securityQuestionsViewModel = await this.loginWizardService.GetSecurityQuestionsModel(this.CurrentUserId);
-            model.SecurityQuestions = securityQuestionsViewModel.SecurityQuestions;
+            model.SecurityQuestions = securityQuestionsViewModel.SecurityQuestions.Select(q => new SelectListItem { Value = q.Value, Text = q.Text }).ToList();
 
             if (model.QuestionIndex == 0)
             {

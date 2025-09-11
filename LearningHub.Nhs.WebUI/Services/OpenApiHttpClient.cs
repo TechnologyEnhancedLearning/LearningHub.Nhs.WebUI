@@ -2,6 +2,7 @@
 {
     using System.Net.Http;
     using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Models.WebUtilitiesInterfaces;
     using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.WebUI.Configuration;
     using Microsoft.AspNetCore.Http;

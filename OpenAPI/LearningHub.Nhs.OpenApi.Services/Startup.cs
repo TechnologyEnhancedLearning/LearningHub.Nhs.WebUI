@@ -1,6 +1,7 @@
 namespace LearningHub.Nhs.OpenApi.Services
 {
     using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Models.WebUtilitiesInterfaces;
     using LearningHub.Nhs.OpenApi.Services.HttpClients;
     using LearningHub.Nhs.OpenApi.Services.Interface.HttpClients;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;

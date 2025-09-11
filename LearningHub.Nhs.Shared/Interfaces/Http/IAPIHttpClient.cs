@@ -1,4 +1,7 @@
-﻿namespace LearningHub.Nhs.Shared.Interfaces.Http
+﻿using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace LearningHub.Nhs.Shared.Interfaces.Http
 {
     /// <summary>
     /// Represents an HTTP client for a specific API.

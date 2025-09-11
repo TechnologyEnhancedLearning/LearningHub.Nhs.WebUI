@@ -1,6 +1,7 @@
 ﻿namespace LearningHub.Nhs.AdminUI.Models
 {
     using System.ComponentModel.DataAnnotations;
+    using LearningHub.Nhs.Caching.Binders;
     using LearningHub.Nhs.Models.Binders;
 
     /// <summary>

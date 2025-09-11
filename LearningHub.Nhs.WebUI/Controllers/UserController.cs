@@ -252,7 +252,10 @@
             else
             {
                 var questions = await this.loginWizardService.GetSecurityQuestions();
-                securityQuestionsModel.SecurityQuestions = questions.Select(q => new SelectListItem() { Value = q.Id.ToString(), Text = q.Text }).ToList();
+
+                // qqqq securityQuestionsModel.SecurityQuestions = questions.Select(q => new SelectListItem() { Value = q.Id.ToString(), Text = q.Text }).ToList();
+                // securityQuestionsModel.SecurityQuestions = questions.Select(q => new List<(string Value, string Text)>() { Value = q.Id.ToString(), Text = q.Text }).ToList();
+                securityQuestionsModel.SecurityQuestions = questions.Select(q => (Value: q.Id.ToString(), Text: q.Text)).ToList();
             }
 
             return this.View("AdditionalSecurity", securityQuestionsModel);

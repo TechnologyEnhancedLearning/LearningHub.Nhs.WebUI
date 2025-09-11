@@ -10,6 +10,7 @@
     using IdentityModel.Client;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Extensions;
+    using LearningHub.Nhs.Models.WebUtilitiesInterfaces;
     using LearningHub.Nhs.Shared.Interfaces.Http;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Extensions;

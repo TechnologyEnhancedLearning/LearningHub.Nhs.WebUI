@@ -117,7 +117,7 @@
                            autocomplete="off"
                            css-class=""
                            required="true"
-                           required-client-side-error-message="You must enter a folder name" />
+                           required-client-side-error-message="@(Model.BookmarkTypeId == 1 ? "You must enter a folder name" : "You must enter a bookmark name")" />
             </div>
           </div>
         </div>

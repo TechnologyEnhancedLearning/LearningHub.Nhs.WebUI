@@ -24,6 +24,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" />
     <ProjectReference Include="..\LearningHub.Nhs.Api.Shared\LearningHub.Nhs.Api.Shared.csproj" />
     <ProjectReference Include="..\LearningHub.Nhs.API\LearningHub.Nhs.Api.csproj" />

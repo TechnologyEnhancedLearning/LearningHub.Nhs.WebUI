@@ -1,14 +1,20 @@
-﻿
-BEGIN TRY
+﻿BEGIN TRY
     BEGIN TRANSACTION;
 
-    DECLARE @NewCatalogueId INT = 0; --this is the NodePathId in the resource reference table
-    DECLARE @ResourceOwnerId INT = 0; -- this is CreateUserId of the resources to be moved.
+	DECLARE @CatalogueId INT = 0; --this is catalog ID in the admin page
+	DECLARE @ResourceOwnerId INT = 0; -- this is CreateUserId of the resources to be moved.
+	DECLARE @NodePathId INT; 
     DECLARE @NewNodeId INT;
     DECLARE @NextDisplayOrder INT;
 
+	Select @NodePathId = np.Id from hierarchy.CatalogueNodeVersion cnv
+	inner join hierarchy.NodeVersion nv ON cnv.NodeVersionId = nv.Id
+	inner join hierarchy.Node n ON nv.NodeId = n.Id
+	inner join hierarchy.NodePath np ON n.Id = np.NodeId
+	Where cnv.Id = @CatalogueId and cnv.Deleted = 0 and nv.Deleted = 0 and n.Deleted = 0 and np.Deleted=0;
+
     -- Get the NodeId for the new catalogue
-    SELECT @NewNodeId = NodeId FROM [hierarchy].[NodePath] WHERE Id = @NewCatalogueId AND Deleted = 0;
+    SELECT @NewNodeId = NodeId FROM [hierarchy].[NodePath] WHERE Id = @NodePathId AND Deleted = 0;
 
     -- Get the current max DisplayOrder for that Node
     SELECT @NextDisplayOrder = ISNULL(MAX(DisplayOrder), 0) FROM [hierarchy].[NodeResource] WHERE NodeId = @NewNodeId AND Deleted = 0;
@@ -23,7 +29,7 @@ BEGIN TRY
 
     -- Update ResourceReference to point to new catalogue
     UPDATE rr
-    SET rr.NodePathId = @NewCatalogueId
+    SET rr.NodePathId = @NodePathId
     FROM [resources].[ResourceReference] rr
     INNER JOIN @UpdatedResources ur
         ON rr.ResourceId = ur.ResourceId

@@ -29,9 +29,8 @@
                                     <label asp-for="UserSecurityQuestions[i].SecurityQuestionId" class="control-label">Please select your @textualNumber[i] question</label>
                                 </dt>
                                 <dd class="nhsuk-summary-list__value">
-                                    @* qqqq original <select asp-for="UserSecurityQuestions[i].SecurityQuestionId" class="form-control" asp-items="@Model.SecurityQuestions"></select> *@
                                     <select asp-for="UserSecurityQuestions[i].SecurityQuestionId" class="form-control">
-                                        <!-- qqqq Manually populate the select list to keep Models agnostic -->
+                                        <!-- Manually populate the select list to keep Models agnostic -->
                                         @foreach (var question in Model.SecurityQuestions)
                                         {
                                             <option value="@question.Value">@question.Text</option>

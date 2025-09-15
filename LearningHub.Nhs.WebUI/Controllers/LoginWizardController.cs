@@ -306,7 +306,6 @@
 
             var viewModel = new SecurityQuestionSelectViewModel
             {
-                // qqqq
                 SecurityQuestions = securityViewModel.SecurityQuestions.Select(q => new SelectListItem { Value = q.Value, Text = q.Text }).ToList(),
                 QuestionIndex = questionIndex,
                 SelectedSecurityQuestionId = userQuestion.SecurityQuestionId,
@@ -358,7 +357,6 @@
             {
                 var viewModel = new SecurityQuestionSelectViewModel
                 {
-                    // qqqq
                     SecurityQuestions = securityViewModel.SecurityQuestions.Select(q => new SelectListItem { Value = q.Value, Text = q.Text }).ToList(),
                     QuestionIndex = model.QuestionIndex,
                 };
@@ -425,7 +423,6 @@
             {
                 var viewModel = new SecurityQuestionSelectViewModel
                 {
-                    // qqqq
                     SecurityQuestions = securityViewModel.SecurityQuestions.Select(q => new SelectListItem { Value = q.Value, Text = q.Text }).ToList(),
                     QuestionIndex = model.QuestionIndex,
                 };

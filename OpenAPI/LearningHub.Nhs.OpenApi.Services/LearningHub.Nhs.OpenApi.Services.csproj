@@ -30,7 +30,6 @@
 		<PackageReference Include="Azure.Storage.Files.Shares" Version="12.8.0" />
 		<PackageReference Include="LearningHub.Nhs.Caching" Version="3.0.0" />
 		<PackageReference Include="LearningHub.Nhs.Models" Version="4.0.3" />
-		<PackageReference Include="LearningHub.Nhs.Models" Version="4.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.1" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.1" />
 		<PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />

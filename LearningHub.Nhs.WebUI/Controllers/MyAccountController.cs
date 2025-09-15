@@ -302,7 +302,6 @@
             SecurityQuestionSelectViewModel securityViewModel = new SecurityQuestionSelectViewModel();
             var model = await this.loginWizardService.GetSecurityQuestionsModel(this.CurrentUserId);
 
-            // qqqq
             securityViewModel.SecurityQuestions = model.SecurityQuestions.Select(q => new SelectListItem { Value = q.Value, Text = q.Text }).ToList();
             securityViewModel.QuestionIndex = questionIndex;
             securityViewModel.SelectedSecurityQuestionId = model.UserSecurityQuestions.ElementAt(questionIndex).SecurityQuestionId;

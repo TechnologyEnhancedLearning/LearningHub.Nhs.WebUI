@@ -1,0 +1,84 @@
+﻿@using LearningHub.Nhs.Models.Dashboard
+@using LearningHub.Nhs.Models.Provider
+@using LearningHub.Nhs.Models.MyLearning;
+@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Extensions
+@using LearningHub.Nhs.WebUI.Models
+@using System.Linq
+@using System.Collections.Generic;
+@using LearningHub.Nhs.WebUI.Helpers
+@inject LearningHub.Nhs.WebUI.Interfaces.IMoodleApiService moodleApiService;
+@model Tuple<string, UserCertificateViewModel>
+
+@{
+    string cardStyle = Model.Item1.Contains("my-learning") ? "card-provider-details--darkblank" : "card-provider-details--blank";
+    var activityDate = Model.Item2.AwardedDate.Date;
+    var today = DateTime.Today;
+    var dateTimeText = activityDate == today ? "Today"
+    : activityDate == today.AddDays(-1) ? "Yesterday"
+    : activityDate.ToString("dd MMM yyyy");
+    string GetMoodleCourseUrl(int courseId)
+    {
+        return moodleApiService.GetCourseUrl(courseId);
+    }
+}
+@functions {
+    public string CertificatePreviewUrl(int resourceReferenceId) =>
+        Url.Action("Certificate", "MyLearning", new { resourceReferenceId });
+
+    public string DownloadCertificateUrl(
+       int resourceReferenceId,
+       int? majorVersion = 1,
+       int? minorVersion = 0
+       ) =>
+       Url.Action(
+           "DownloadCertificate",
+           "MyLearning",
+           new
+           {
+               resourceReferenceId,
+               majorVersion,
+               minorVersion,
+           }
+       );
+}
+<div class="nhsuk-card dashboard-card">
+    <div class="nhsuk-card__content dashboard-card-content">
+        <div>
+            <h3 class="nhsuk-card__heading nhsuk-heading-m line-clamp-2">
+
+                @if ((ResourceTypeEnum)Model.Item2.ResourceTypeId == ResourceTypeEnum.Moodle)
+                {
+                    <a class="nhsuk-card__link" title="@Model.Item2.Title" target="_blank" href="@(Model.Item2.CertificatePreviewUrl)">@Model.Item2.Title</a>
+                }
+                else
+                {
+                    <a class="nhsuk-card__link" title="@Model.Item2.Title" target="_blank" href="@CertificatePreviewUrl(Model.Item2.ResourceReferenceId)">@Model.Item2.Title</a>
+                }
+            </h3>
+        </div>
+        <div class="nhsuk-card__description dashboard-card-body">
+
+
+            <div class="nhs-item-row nhsuk-u-padding-bottom-3 nhsuk-u-padding-top-2">
+                <div>
+                    <span class="nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-padding-right-2">Type:</span>
+
+                    <span class="nhsuk-u-padding-right-3  nhsuk-u-font-size-16 nhsuk-u-secondary-text-color">
+                        @UtilityHelper.GetPrettifiedResourceTypeName((ResourceTypeEnum)Model.Item2.ResourceTypeId)
+                    </span>
+                </div>
+            </div>
+            <div>
+                <span class="nhsuk-u-padding-right-2 nhsuk-u-font-size-16 nhsuk-u-secondary-text-color nhsuk-u-font-weight-bold">
+                    Awarded:
+                </span>
+
+                <span class="nhsuk-u-font-size-16 nhsuk-u-secondary-text-color">
+                    @dateTimeText
+                </span>
+            </div>
+        </div>
+    </div>
+    @*  <div class="card-provider-details @cardStyle"></div> *@
+</div>

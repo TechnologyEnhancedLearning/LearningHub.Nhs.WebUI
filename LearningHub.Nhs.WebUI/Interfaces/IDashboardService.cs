@@ -20,6 +20,15 @@
         Task<DashboardMyLearningResponseViewModel> GetMyAccessLearningsAsync(string dashboardType, int pageNumber);
 
         /// <summary>
+        /// GetResourcesAsync.
+        /// </summary>
+        /// <param name="dashboardTrayLearningResourceType">The dashboardTrayLearningResource type.</param>
+        /// <param name="dashboardType">The dashboard type.</param>
+        /// <param name="pageNumber">The page Number.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<DashboardMyLearningResponseViewModel> GetMyCoursesAndElearning(string dashboardTrayLearningResourceType, string dashboardType, int pageNumber);
+
+        /// <summary>
         /// GetCataloguesAsync.
         /// </summary>
         /// <param name="dashboardType">The dashboard type.</param>

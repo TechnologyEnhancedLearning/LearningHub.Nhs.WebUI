@@ -251,7 +251,7 @@
                                     <div class="nhs-item-row nhsuk-u-padding-bottom-5 nhsuk-u-padding-top-4">
                                         @if (ViewActivityHelper.GetResourceTypeDesc(activity.ResourceType) == "Course")
                                         {
-                                            <div class="nhsuk-u-padding-top-4 nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-secondary-text-color" id="progressText"> @activity.TotalActivities of @activity.CompletedActivities activities completed</div>
+                                            <div class="nhsuk-u-padding-top-4 nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-secondary-text-color" id="progressText"> @activity.CompletedActivities of @activity.TotalActivities activities completed</div>
                                         }
                                         else
                                         {

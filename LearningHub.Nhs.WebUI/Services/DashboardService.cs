@@ -64,6 +64,36 @@
         /// <summary>
         /// GetCataloguesAsync.
         /// </summary>
+        /// <param name="dashboardTrayLearningResourceType">The dashboard Tray Learning Resource type.</param>
+        /// <param name="dashboardType">The dashboard type.</param>
+        /// <param name="pageNumber">The page Number.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<DashboardMyLearningResponseViewModel> GetMyCoursesAndElearning(string dashboardTrayLearningResourceType, string dashboardType, int pageNumber)
+        {
+            DashboardMyLearningResponseViewModel viewmodel = new DashboardMyLearningResponseViewModel { };
+
+            var client = await this.OpenApiHttpClient.GetClientAsync();
+
+            var request = $"dashboard/GetMyCoursesAndElearning/{dashboardTrayLearningResourceType}/{dashboardType}/{pageNumber}";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewmodel = JsonConvert.DeserializeObject<DashboardMyLearningResponseViewModel>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
+                       response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewmodel;
+        }
+
+        /// <summary>
+        /// GetCataloguesAsync.
+        /// </summary>
         /// <param name="dashboardType">The dashboard type.</param>
         /// <param name="pageNumber">The page Number.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>

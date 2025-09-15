@@ -203,29 +203,22 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <summary>
         /// Index.
         /// </summary>
+        /// <param name="dashboardTrayLearningResourceType">The resource type.</param>
         /// <param name="myLearningDashboard">The my learning dashboard type.</param>
         /// <param name="resourceDashboard">The resource dashboard type.</param>
         /// <param name="catalogueDashboard">The catalogue dashboard type.</param>
         /// <returns>Home page.</returns>
-        public async Task<IActionResult> Index(string myLearningDashboard = "my-in-progress", string resourceDashboard = "popular-resources", string catalogueDashboard = "popular-catalogues")
+        public async Task<IActionResult> Index(string dashboardTrayLearningResourceType = "all", string myLearningDashboard = "my-in-progress", string resourceDashboard = "popular-resources", string catalogueDashboard = "popular-catalogues")
         {
             if (this.User?.Identity.IsAuthenticated == true)
             {
                 this.Logger.LogInformation("User is authenticated: User is {fullname} and userId is: {lhuserid}", this.User.Identity.GetCurrentName(), this.User.Identity.GetCurrentUserId());
                 if (this.User.IsInRole("Administrator") || this.User.IsInRole("BlueUser") || this.User.IsInRole("ReadOnly") || this.User.IsInRole("BasicUser"))
                 {
-                    var learningTask = this.dashboardService.GetMyAccessLearningsAsync(myLearningDashboard, 1);
+                    var learningTask = this.dashboardService.GetMyCoursesAndElearning(dashboardTrayLearningResourceType, myLearningDashboard, 1);
                     var resourcesTask = this.dashboardService.GetResourcesAsync(resourceDashboard, 1);
                     var cataloguesTask = this.dashboardService.GetCataloguesAsync(catalogueDashboard, 1);
                     var userGroupsTask = this.userGroupService.UserHasCatalogueContributionPermission();
-
-                    var enrolledCoursesTask = Task.FromResult(new List<MoodleCourseResponseModel>());
-                    (bool enableMoodle, int currentMoodleUserId) = await this.GetMoodleFeatureStateAsync();
-
-                    if (enableMoodle && myLearningDashboard == "my-enrolled-courses")
-                    {
-                        enrolledCoursesTask = this.dashboardService.GetEnrolledCoursesFromMoodleAsync(currentMoodleUserId, 1);
-                    }
 
                     await Task.WhenAll(learningTask, resourcesTask, cataloguesTask, userGroupsTask);
 
@@ -234,7 +227,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                         MyLearnings = await learningTask,
                         Resources = await resourcesTask,
                         Catalogues = await cataloguesTask,
-                        EnrolledCourses = await enrolledCoursesTask,
+                        DashboardTrayLearningResourceType = dashboardTrayLearningResourceType,
                     };
                     var userHasContributePermission = await userGroupsTask;
                     this.ViewBag.userHasContributePermission = userHasContributePermission;
@@ -261,6 +254,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <summary>
         /// Load the specified dashobard page.
         /// </summary>
+        /// <param name="dashboardTrayLearningResourceType">dashboardTrayLearningResourceType.</param>
         /// <param name="dashBoardTray">dashBoardTray.</param>
         /// <param name="myLearningDashBoard">myLearningDashBoard.</param>
         /// <param name="resourceDashBoard">resourceDashBoard.</param>
@@ -268,8 +262,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="pageNumber">pageNumber.</param>
         /// <returns>Dashboard page.</returns>
         [Authorize]
-        [Route("/Home/loadpage/{dashBoardTray}/{myLearningDashBoard}/{resourceDashBoard}/{catalogueDashBoard}/{pageNumber:int}")]
-        public async Task<IActionResult> LoadPage(string dashBoardTray = "my-learning", string myLearningDashBoard = "in-progress", string resourceDashBoard = "popular-resources", string catalogueDashBoard = "recent-catalogues", int pageNumber = 1)
+        [Route("/Home/loadpage/{dashboardTrayLearningResourceType}/{dashBoardTray}/{myLearningDashBoard}/{resourceDashBoard}/{catalogueDashBoard}/{pageNumber:int}")]
+        public async Task<IActionResult> LoadPage(string dashboardTrayLearningResourceType = "all", string dashBoardTray = "my-learning", string myLearningDashBoard = "in-progress", string resourceDashBoard = "popular-resources", string catalogueDashBoard = "recent-catalogues", int pageNumber = 1)
         {
             if (this.User.IsInRole("Administrator") || this.User.IsInRole("BlueUser") || this.User.IsInRole("ReadOnly") || this.User.IsInRole("BasicUser"))
             {
@@ -278,9 +272,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     MyLearnings = new Nhs.Models.Dashboard.DashboardMyLearningResponseViewModel { Type = myLearningDashBoard },
                     Resources = new Nhs.Models.Dashboard.DashboardResourceResponseViewModel { Type = resourceDashBoard },
                     Catalogues = new Nhs.Models.Dashboard.DashboardCatalogueResponseViewModel { Type = catalogueDashBoard },
+                    DashboardTrayLearningResourceType = dashboardTrayLearningResourceType,
                 };
-
-                (bool enableMoodle, int currentMoodleUserId) = await this.GetMoodleFeatureStateAsync();
 
                 bool isAjax = this.HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest";
 
@@ -289,8 +282,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     switch (dashBoardTray)
                     {
                         case "my-learning":
-                            model.MyLearnings = await this.dashboardService.GetMyAccessLearningsAsync(myLearningDashBoard, pageNumber);
-                            return this.PartialView("_MyAccessedLearningTray", model);
+                            model.MyLearnings = await this.dashboardService.GetMyCoursesAndElearning(dashboardTrayLearningResourceType, myLearningDashBoard, pageNumber);
+                            return this.PartialView("_MyCoursesAndElearning", model);
                         case "resources":
                             model.Resources = await this.dashboardService.GetResourcesAsync(resourceDashBoard, pageNumber);
                             return this.PartialView("_ResourceTray", model);
@@ -301,13 +294,14 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 }
                 else
                 {
-                    var learningTask = this.dashboardService.GetMyAccessLearningsAsync(myLearningDashBoard, dashBoardTray == "my-learning" ? pageNumber : 1);
+                    var learningTask = this.dashboardService.GetMyCoursesAndElearning(dashboardTrayLearningResourceType, myLearningDashBoard, dashBoardTray == "my-learning" ? pageNumber : 1);
                     var resourcesTask = this.dashboardService.GetResourcesAsync(resourceDashBoard, dashBoardTray == "resources" ? pageNumber : 1);
                     var cataloguesTask = this.dashboardService.GetCataloguesAsync(catalogueDashBoard, dashBoardTray == "catalogues" ? pageNumber : 1);
                     await Task.WhenAll(learningTask, resourcesTask, cataloguesTask);
                     model.MyLearnings = await learningTask;
                     model.Resources = await resourcesTask;
                     model.Catalogues = await cataloguesTask;
+                    model.DashboardTrayLearningResourceType = dashboardTrayLearningResourceType;
                     return this.View("Dashboard", model);
                 }
             }

@@ -8,6 +8,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
     using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
@@ -288,6 +289,19 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Get User's in progress My LearningActivities.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="pageNumber">pageNumber.</param>
+        /// <returns></returns>
+        public async Task<List<MyLearningActivitiesViewModel>> GetUserInprogressLearningActivities(int userId, int pageNumber)
+        {
+            var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+            var result = await DbContext.MyLearningActivitiesViewModel.FromSqlRaw("EXEC activity.GetUserInProgressLearningActivities @userId", param0).AsNoTracking().ToListAsync();
+            return result;
         }
 
         /// <summary>

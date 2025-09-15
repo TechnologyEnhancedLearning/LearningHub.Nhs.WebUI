@@ -43,6 +43,13 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         Task<List<MoodleEnrolledCourseResponseModel>> GetEnrolledCoursesHistoryAsync(int userId, MyLearningRequestModel requestModel);
 
         /// <summary>
+        /// GetInProgressEnrolledCoursesAsync.
+        /// </summary>
+        /// <param name="userId">Moodle user id.</param>
+        /// <returns> List of MoodleCourseResponseModel.</returns>
+        Task<List<MoodleEnrolledCourseResponseModel>> GetInProgressEnrolledCoursesAsync(int userId);
+
+        /// <summary>
         /// GetEnrolledCoursesAsync.
         /// </summary>
         /// <param name="userId">Moodle user id.</param>

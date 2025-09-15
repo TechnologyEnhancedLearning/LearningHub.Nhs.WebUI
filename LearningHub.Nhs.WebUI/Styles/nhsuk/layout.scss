@@ -23,7 +23,32 @@ body {
     color: $color_nhsuk-white;
 }
 
+.nhs-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.nhs-progress-container {
+    display: flex;
+    height: 10px;
+    overflow: hidden;
+    line-height: 0;
+    font-size: 0.75rem;
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+}
 
+.nhs-progress-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    background-color: $nhsuk-green;
+    transition: width .6s ease;
+}
 .nhsuk-width-container.app-width-container {
     max-width: px2rem(1208);
     margin: 0 auto;

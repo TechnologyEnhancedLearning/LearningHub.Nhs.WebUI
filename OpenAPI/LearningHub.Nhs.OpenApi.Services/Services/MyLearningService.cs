@@ -157,50 +157,62 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<MyLearningActivitiesDetailedViewModel> GetUserRecentMyLearningActivitiesAsync(int userId, MyLearningRequestModel requestModel)
         {
+            try
+            {
                 var result = await resourceActivityRepository.GetUserRecentMyLearningActivities(userId, requestModel);
 
                 var entrolledCourses = await this.moodleApiService.GetRecentEnrolledCoursesAsync(userId, requestModel, 6);
+                List<MyLearningCombinedActivitiesViewModel> mappedMyLearningActivities = new();
+                List<MyLearningCombinedActivitiesViewModel> mappedEnrolledCourses = new();
+                List<MyLearningCombinedActivitiesViewModel> combainedUserActivities = new();
 
-                var mappedMyLearningActivities = result.Select(Activity => new MyLearningCombinedActivitiesViewModel
+                if (result != null)
                 {
-                    UserId = userId,
-                    ResourceId = Activity.ResourceId,
-                    ResourceVersionId = Activity.ResourceVersionId,
-                    ResourceReferenceId = Activity.ResourceReferenceId,
-                    IsCurrentResourceVersion = Activity.IsCurrentResourceVersion,
-                    MajorVersion = Activity.MajorVersion,
-                    MinorVersion = Activity.MinorVersion,
-                    ResourceType = Activity.ResourceType,
-                    Title = Activity.Title,
-                    CertificateEnabled = Activity.CertificateEnabled,
-                    ActivityStatus = Activity.ActivityStatus,
-                    ActivityDate = Activity.ActivityDate,
-                    ScorePercentage = Activity.ScorePercentage,
-                    TotalActivities = 0,
-                    CompletedActivities = 0,
-                }).ToList();
+                    mappedMyLearningActivities = result.Select(Activity => new MyLearningCombinedActivitiesViewModel
+                    {
+                        UserId = userId,
+                        ResourceId = Activity.ResourceId,
+                        ResourceVersionId = Activity.ResourceVersionId,
+                        ResourceReferenceId = Activity.ResourceReferenceId,
+                        IsCurrentResourceVersion = Activity.IsCurrentResourceVersion,
+                        MajorVersion = Activity.MajorVersion,
+                        MinorVersion = Activity.MinorVersion,
+                        ResourceType = Activity.ResourceType,
+                        Title = Activity.Title,
+                        CertificateEnabled = Activity.CertificateEnabled,
+                        ActivityStatus = Activity.ActivityStatus,
+                        ActivityDate = Activity.ActivityDate,
+                        ScorePercentage = Activity.ScorePercentage,
+                        TotalActivities = 0,
+                        CompletedActivities = 0,
+                    }).ToList();
+                }
 
-                var mappedEnrolledCourses = entrolledCourses.Select(course => new MyLearningCombinedActivitiesViewModel
+                if (entrolledCourses != null)
                 {
-                    UserId = userId,
-                    ResourceId = (int)course.Id,
-                    ResourceVersionId = (int)course.Id,
-                    IsCurrentResourceVersion = true,
-                    ResourceReferenceId = (int)course.Id,
-                    MajorVersion = 1,
-                    MinorVersion = 0,
-                    ResourceType = ResourceTypeEnum.Moodle,
-                    Title = course.DisplayName,
-                    CertificateEnabled = course.CertificateEnabled,
-                    ActivityStatus = (course.Completed == true || course.ProgressPercentage.TrimEnd('%') == "100") ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
-                    ActivityDate = DateTimeOffset.FromUnixTimeMilliseconds(course.LastAccess ?? 0),
-                    ScorePercentage = Convert.ToInt32(course.ProgressPercentage.TrimEnd('%')),
-                    TotalActivities = course.TotalActivities,
-                    CompletedActivities = course.CompletedActivities,
-                }).ToList();
+                    mappedEnrolledCourses = entrolledCourses.Select(course => new MyLearningCombinedActivitiesViewModel
+                    {
+                        UserId = userId,
+                        ResourceId = (int)course.Id,
+                        ResourceVersionId = (int)course.Id,
+                        IsCurrentResourceVersion = true,
+                        ResourceReferenceId = (int)course.Id,
+                        MajorVersion = 1,
+                        MinorVersion = 0,
+                        ResourceType = ResourceTypeEnum.Moodle,
+                        Title = course.DisplayName,
+                        CertificateEnabled = course.CertificateEnabled,
+                        ActivityStatus = (course.Completed == true || course.ProgressPercentage.TrimEnd('%') == "100") ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
+                        ActivityDate = DateTimeOffset.FromUnixTimeMilliseconds(course.LastAccess ?? 0),
+                        ScorePercentage = Convert.ToInt32(course.ProgressPercentage.TrimEnd('%')),
+                        TotalActivities = course.TotalActivities,
+                        CompletedActivities = course.CompletedActivities,
+                    }).ToList();
+                }
 
                 // Combine both result sets
-                var combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
+                 combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
+
 
                 var pagedResults = combainedUserActivities.OrderByDescending(activity => activity.ActivityDate).Skip(requestModel.Skip).Take(requestModel.Take).ToList();
 
@@ -212,6 +224,12 @@
                 };
 
                 return viewModel;
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         /// <summary>

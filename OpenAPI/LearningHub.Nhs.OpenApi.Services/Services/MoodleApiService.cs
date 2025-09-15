@@ -42,6 +42,7 @@
         /// <returns>UserId from Moodle.</returns>
         public async Task<int> GetMoodleUserIdByUsernameAsync(int currentUserId)
         {
+            currentUserId = 2299585;
             var parameters = new Dictionary<string, string>
             {
                 { "criteria[0][key]", "username" },
@@ -187,6 +188,42 @@
     { "userid", moodleUserId.ToString() },
     { "statusfilter", statusFilter },
     { "search", requestModel.SearchText ?? string.Empty }
+};
+
+                // Fetch enrolled courses
+                var recentEnrolledCourses = await GetCallMoodleApiAsync<List<MoodleEnrolledCourseResponseModel>>(
+                    "mylearningservice_get_recent_courses",
+                    parameters
+                );
+
+                if (recentEnrolledCourses == null || recentEnrolledCourses.Count == 0)
+                    return new List<MoodleEnrolledCourseResponseModel>();
+
+                return recentEnrolledCourses.ToList();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// GetInProgressEnrolledCoursesAsync.
+        /// </summary>
+        /// <param name="userId">Moodle user id.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<List<MoodleEnrolledCourseResponseModel>> GetInProgressEnrolledCoursesAsync(int userId)
+        {
+            try
+            {
+                int moodleUserId = await this.GetMoodleUserIdByUsernameAsync(userId);
+                string statusFilter = "inprogress";            
+
+                var parameters = new Dictionary<string, string>
+{
+    { "userid", moodleUserId.ToString() },
+    { "statusfilter", statusFilter },
+    { "search", string.Empty }
 };
 
                 // Fetch enrolled courses

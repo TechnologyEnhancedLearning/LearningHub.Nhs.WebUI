@@ -18,6 +18,7 @@
     <PackageReference Include="System.Collections" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
     <ProjectReference Include="..\MigrationTool\LearningHub.Nhs.Migration.Models\LearningHub.Nhs.Migration.Models.csproj" />

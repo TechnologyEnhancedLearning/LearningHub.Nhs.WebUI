@@ -29,7 +29,13 @@
                                     <label asp-for="UserSecurityQuestions[i].SecurityQuestionId" class="control-label">Please select your @textualNumber[i] question</label>
                                 </dt>
                                 <dd class="nhsuk-summary-list__value">
-                                    <select asp-for="UserSecurityQuestions[i].SecurityQuestionId" class="form-control" asp-items="@Model.SecurityQuestions"></select>
+                                    <select asp-for="UserSecurityQuestions[i].SecurityQuestionId" class="form-control">
+                                        <!-- Manually populate the select list to keep Models agnostic -->
+                                        @foreach (var question in Model.SecurityQuestions)
+                                        {
+                                            <option value="@question.Value">@question.Text</option>
+                                        }
+                                    </select>
                                     <span asp-validation-for="UserSecurityQuestions[i].SecurityQuestionId" class="text-danger"></span>
                                 </dd>
                             </div>

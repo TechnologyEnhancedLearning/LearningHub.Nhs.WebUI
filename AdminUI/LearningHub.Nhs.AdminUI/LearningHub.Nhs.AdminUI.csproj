@@ -83,13 +83,13 @@
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
 		<PackageReference Include="Azure.Storage.Files.Shares" Version="12.8.0" />
 		<PackageReference Include="BuildWebCompiler" Version="1.12.405" />
-		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.8" />
+		<PackageReference Include="elfhHub.Nhs.Models" Version="4.0.3" />
 		<PackageReference Include="FluentValidation" Version="11.11.0" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
 		<PackageReference Include="HtmlSanitizer" Version="6.0.453" />
 		<PackageReference Include="IdentityModel" Version="4.6.0" />
-		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.2" />
-		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />
+		<PackageReference Include="LearningHub.Nhs.Caching" Version="3.0.0" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="4.0.3" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.36" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.36" />

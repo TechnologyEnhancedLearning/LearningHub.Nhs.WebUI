@@ -5,7 +5,7 @@
     using System.Net;
     using AspNetCoreRateLimit;
     using LearningHub.Nhs.Caching;
-    using LearningHub.Nhs.Models.Binders;
+    using LearningHub.Nhs.Caching.Binders;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.WebUI.Configuration;

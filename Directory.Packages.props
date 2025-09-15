@@ -8,10 +8,9 @@
 
 	<ItemGroup>
 
-		<PackageVersion Include="elfhHub.Nhs.Models" Version="3.0.9" />
+		<PackageVersion Include="LearningHub.Nhs.Models" Version="4.0.3" />
 		<PackageVersion Include="GDS.MultiPageFormData" Version="1.0.6" />
-		<PackageVersion Include="LearningHub.Nhs.Caching" Version="2.0.2" />
-		<PackageVersion Include="LearningHub.Nhs.Models" Version="3.0.48" />
+		<PackageVersion Include="LearningHub.Nhs.Caching" Version="3.0.0" />
 		<PackageVersion Include="UK.NHS.CookieBanner" Version="2.0.7" />
 
 		<PackageVersion Include="AngleSharp" Version="0.16.1" />
@@ -28,7 +27,7 @@
 		<PackageVersion Include="coverlet.collector" Version="6.0.4" />
 		<PackageVersion Include="EntityFrameworkCore.Testing.Moq" Version="9.0.1" />
 		<PackageVersion Include="FluentAssertions" Version="6.12.0" />
-		<PackageVersion Include="FluentValidation" Version="12.0.0" />
+		<PackageVersion Include="FluentValidation" Version="11.11.0" />
 		<PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.1" />
 		<PackageVersion Include="HtmlAgilityPack" Version="1.12.1" />
 		<PackageVersion Include="HtmlSanitizer" Version="6.0.453" />

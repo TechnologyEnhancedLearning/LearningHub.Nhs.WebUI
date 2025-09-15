@@ -10,6 +10,7 @@ namespace LearningHub.Nhs.Api
     using LearningHub.Nhs.Migration.Validation;
     using LearningHub.Nhs.Migration.Validation.Helpers;
     using LearningHub.Nhs.Migration.Validation.Rules;
+    using LearningHub.Nhs.Models.WebUtilitiesInterfaces;
     using LearningHub.Nhs.Repository;
     using LearningHub.Nhs.Repository.Activity;
     using LearningHub.Nhs.Repository.Analytics;

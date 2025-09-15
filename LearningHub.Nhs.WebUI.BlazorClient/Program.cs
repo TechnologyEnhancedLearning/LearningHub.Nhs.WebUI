@@ -24,6 +24,7 @@ using System;
 using TELBlazor.Components.Core.Configuration;
 using TELBlazor.Components.Core.Services.HelperServices;
 using TELBlazor.Components.OptionalImplementations.Core.Services.HelperServices;
+using LearningHub.Nhs.Models.WebUtilitiesInterfaces;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -88,7 +89,7 @@ try
     builder.Services.AddScoped<LoggingLevelSwitch>(sp => levelSwitch);
     builder.Services.AddScoped<ILogLevelSwitcherService, SerilogLogLevelSwitcherService>();
 
-    // TODO (QQQQ) implement post TD-5925 builder.Services.AddScoped<ICacheService, WasmCacheServiceStub>();
+    builder.Services.AddScoped<ICacheService, WasmCacheServiceStub>();
 
     await builder.Build().RunAsync();
 }

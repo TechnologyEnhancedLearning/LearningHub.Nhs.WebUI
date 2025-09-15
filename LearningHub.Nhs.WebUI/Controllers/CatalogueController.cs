@@ -13,6 +13,7 @@
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.User;
+    using LearningHub.Nhs.Models.WebUtilitiesInterfaces;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Interfaces;

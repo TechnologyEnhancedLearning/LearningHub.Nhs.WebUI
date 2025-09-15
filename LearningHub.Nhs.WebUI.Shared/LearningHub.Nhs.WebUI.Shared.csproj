@@ -1,9 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+	  <!--Shared needs to be agnostic so uses netstandard 2.1 so can be widely consumed as it has maximum compatibility-->
+	  <TargetFrameworks>netstandard2.1</TargetFrameworks>
+	  <Nullable>enable</Nullable>
   </PropertyGroup>
+  <Target Name="CheckForIncompatiblePackages" BeforeTargets="Restore">
+	  <ItemGroup>
+		  <IncompatiblePackages Include="Microsoft.AspNetCore.Mvc;Microsoft.AspNetCore.App;System.Web;Microsoft.EntityFrameworkCore" />
+	  </ItemGroup>
+	  <Error Condition="'%(PackageReference.Identity)' != '' and '@(IncompatiblePackages->'%(Identity)')' == '%(PackageReference.Identity)'" Text="Incompatible package '%(PackageReference.Identity)' detected. Use .NET Standard 2.0-compatible packages for Blazor WASM compatibility." />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="LearningHub.Nhs.Models" Version="4.0.3" />
+  </ItemGroup>
 
 </Project>

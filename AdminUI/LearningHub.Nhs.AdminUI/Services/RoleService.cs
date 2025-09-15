@@ -7,6 +7,7 @@
     using LearningHub.Nhs.AdminUI.Interfaces;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.User;
+    using LearningHub.Nhs.Models.WebUtilitiesInterfaces;
 
     /// <summary>
     /// The role service.

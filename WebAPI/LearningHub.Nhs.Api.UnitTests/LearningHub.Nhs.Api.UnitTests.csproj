@@ -8,10 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="elfhHub.Nhs.Models" Version="3.0.8" />
+		<PackageReference Include="elfhHub.Nhs.Models" Version="4.0.3" />
 		<PackageReference Include="FluentAssertions" Version="8.0.1" />
-		<PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.48" />
+		<PackageReference Include="LearningHub.Nhs.Caching" Version="3.0.0" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="4.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
 		<PackageReference Include="Moq" Version="4.20.72" />

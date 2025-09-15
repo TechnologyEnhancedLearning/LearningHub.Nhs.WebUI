@@ -6,6 +6,7 @@
     using LearningHub.Nhs.Models.Entities.Analytics;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Extensions;
+    using LearningHub.Nhs.Models.WebUtilitiesInterfaces;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;

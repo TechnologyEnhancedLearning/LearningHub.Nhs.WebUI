@@ -11,6 +11,7 @@
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.Activity;
     using LearningHub.Nhs.Models.Validation;
+    using LearningHub.Nhs.Models.WebUtilitiesInterfaces;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Helpers;

@@ -1,16 +1,12 @@
 ﻿namespace LearningHub.Nhs.WebUI.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net.Http;
-    using System.Threading.Tasks;
     using elfhHub.Nhs.Models.Common;
     using elfhHub.Nhs.Models.Entities;
     using elfhHub.Nhs.Models.Enums;
     using GDS.MultiPageFormData;
     using GDS.MultiPageFormData.Enums;
     using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Models.WebUtilitiesInterfaces;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Helpers;
@@ -19,6 +15,7 @@
     using LearningHub.Nhs.WebUI.Models.UserProfile;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -309,7 +306,7 @@
 
             var viewModel = new SecurityQuestionSelectViewModel
             {
-                SecurityQuestions = securityViewModel.SecurityQuestions,
+                SecurityQuestions = securityViewModel.SecurityQuestions.Select(q => new SelectListItem { Value = q.Value, Text = q.Text }).ToList(),
                 QuestionIndex = questionIndex,
                 SelectedSecurityQuestionId = userQuestion.SecurityQuestionId,
             };
@@ -360,7 +357,7 @@
             {
                 var viewModel = new SecurityQuestionSelectViewModel
                 {
-                    SecurityQuestions = securityViewModel.SecurityQuestions,
+                    SecurityQuestions = securityViewModel.SecurityQuestions.Select(q => new SelectListItem { Value = q.Value, Text = q.Text }).ToList(),
                     QuestionIndex = model.QuestionIndex,
                 };
 
@@ -426,7 +423,7 @@
             {
                 var viewModel = new SecurityQuestionSelectViewModel
                 {
-                    SecurityQuestions = securityViewModel.SecurityQuestions,
+                    SecurityQuestions = securityViewModel.SecurityQuestions.Select(q => new SelectListItem { Value = q.Value, Text = q.Text }).ToList(),
                     QuestionIndex = model.QuestionIndex,
                 };
 

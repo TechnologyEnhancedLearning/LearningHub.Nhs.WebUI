@@ -21,6 +21,7 @@
     using LearningHub.Nhs.Models.Automapper;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Extensions;
+    using LearningHub.Nhs.Models.WebUtilitiesInterfaces;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Authentication.OpenIdConnect;

@@ -15,6 +15,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
+    using LearningHub.Nhs.Models.WebUtilitiesInterfaces;
 
     /// <summary>
     /// The log controller.

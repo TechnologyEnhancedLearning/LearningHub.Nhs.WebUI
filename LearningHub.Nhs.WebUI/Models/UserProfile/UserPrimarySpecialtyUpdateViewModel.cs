@@ -24,7 +24,7 @@
         /// <summary>
         /// Gets or sets the selected primary specialty id.
         /// </summary>
-        public int? SelectedPrimarySpecialtyId { get; set; }
+        public string SelectedPrimarySpecialtyId { get; set; }
 
         /// <summary>
         /// Gets or sets the SpecialtyList.

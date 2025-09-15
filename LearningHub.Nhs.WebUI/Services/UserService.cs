@@ -1212,7 +1212,7 @@
                 if (employmentViewModel.JobRoleId.HasValue)
                 {
                     var job = await this.jobRoleService.GetByIdAsync(employmentViewModel.JobRoleId.Value);
-                    viewModel.JobRole = job.Name;
+                    viewModel.JobRole = job.NameWithStaffGroup;
 
                     if (employmentViewModel.GradeId.HasValue)
                     {
@@ -2008,7 +2008,7 @@
                 if (employmentViewModel.JobRoleId.HasValue)
                 {
                     var job = await this.jobRoleService.GetByIdAsync(employmentViewModel.JobRoleId.Value);
-                    viewModel.JobRole = job.Name;
+                    viewModel.JobRole = job.NameWithStaffGroup;
 
                     if (employmentViewModel.GradeId.HasValue)
                     {

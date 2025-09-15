@@ -141,7 +141,7 @@
         /// <param name="checkDetails">Whether to check account details.</param>
         /// <returns>IActionResult.</returns>
         [HttpGet]
-        [Route("myaccount-employement")]
+        [Route("myaccount-employment")]
         public async Task<IActionResult> MyEmploymentDetails(bool? checkDetails = false)
         {
             string loginWizardCacheKey = $"{this.CurrentUserId}:LoginWizard";
@@ -1003,24 +1003,35 @@
                 return this.View("ChangeCurrentRole", viewModel);
             }
 
-            if (!string.IsNullOrWhiteSpace(viewModel.FilterText))
-            {
-                var jobRoles = await this.jobRoleService.GetPagedFilteredAsync(viewModel.FilterText, viewModel.CurrentPage, viewModel.PageSize);
-                viewModel.RoleList = jobRoles.Item2;
-                viewModel.TotalItems = jobRoles.Item1;
-                viewModel.HasItems = jobRoles.Item1 > 0;
-            }
-
             if (formSubmission)
             {
-                if (viewModel.SelectedJobRoleId.HasValue)
+                var hasSelectedJobRoleId = int.TryParse(viewModel.SelectedJobRoleId, out int currentRole);
+                if (hasSelectedJobRoleId && currentRole > 0)
                 {
-                    var newRoleId = viewModel.SelectedJobRoleId.Value;
+                    var newRoleId = currentRole;
                     var jobRole = await this.jobRoleService.GetByIdAsync(newRoleId);
 
                     if (jobRole.MedicalCouncilId > 0 && jobRole.MedicalCouncilId < 4)
                     {
                         return this.RedirectToAction(nameof(this.ChangeMedicalCouncilNo), new UserMedicalCouncilNoUpdateViewModel { SelectedJobRoleId = newRoleId });
+                    }
+                    else if (this.User.IsInRole("BasicUser"))
+                    {
+                        await this.userService.UpdateUserEmployment(
+                           new elfhHub.Nhs.Models.Entities.UserEmployment
+                           {
+                               Id = profile.EmploymentId,
+                               UserId = profile.Id,
+                               JobRoleId = newRoleId,
+                               GradeId = profile.GradeId,
+                               SpecialtyId = profile.SpecialtyId,
+                               StartDate = profile.JobStartDate,
+                               LocationId = profile.LocationId,
+                           });
+
+                        this.ViewBag.SuccessMessage = CommonValidationErrorMessages.EmploymentDetailsUpdated;
+                        this.ViewBag.MyAction = "MyEmploymentDetails";
+                        return this.View("SuccessMessageMyAccount");
                     }
                     else
                     {
@@ -1030,8 +1041,23 @@
                 else
                 {
                     this.ModelState.AddModelError(nameof(viewModel.SelectedJobRoleId), CommonValidationErrorMessages.RoleRequired);
-                    return this.View("ChangeCurrentRole", viewModel);
                 }
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(viewModel.FilterText))
+                {
+                    viewModel.FilterText = profile.JobRole;
+                    viewModel.SelectedJobRoleId = profile.JobRoleId.HasValue ? profile.JobRoleId.ToString() : string.Empty;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(viewModel.FilterText))
+            {
+                var jobRoles = await this.jobRoleService.GetPagedFilteredAsync(viewModel.FilterText, viewModel.CurrentPage, viewModel.PageSize);
+                viewModel.RoleList = jobRoles.Item2;
+                viewModel.TotalItems = jobRoles.Item1;
+                viewModel.HasItems = jobRoles.Item1 > 0;
             }
 
             return this.View("ChangeCurrentRole", viewModel);
@@ -1075,24 +1101,25 @@
                         this.ModelState.AddModelError(nameof(viewModel.SelectedMedicalCouncilNo), validateMedicalCouncilNumber);
                         return this.View("ChangeMedicalCouncilNumber", viewModel);
                     }
-                    else if (direct)
+                    else if (this.User.IsInRole("BasicUser") || direct)
                     {
                         await this.userService.UpdateUserEmployment(
-                            new elfhHub.Nhs.Models.Entities.UserEmployment
-                            {
-                                Id = profile.EmploymentId,
-                                UserId = profile.Id,
-                                JobRoleId = profile.JobRoleId,
-                                MedicalCouncilId = viewModel.SelectedMedicalCouncilId,
-                                MedicalCouncilNo = viewModel.SelectedMedicalCouncilNo,
-                                GradeId = profile.GradeId,
-                                SpecialtyId = profile.SpecialtyId,
-                                StartDate = profile.JobStartDate,
-                                LocationId = profile.LocationId,
-                            });
+                           new elfhHub.Nhs.Models.Entities.UserEmployment
+                           {
+                               Id = profile.EmploymentId,
+                               UserId = profile.Id,
+                               JobRoleId = viewModel.SelectedJobRoleId,
+                               MedicalCouncilId = viewModel.SelectedMedicalCouncilId,
+                               MedicalCouncilNo = viewModel.SelectedMedicalCouncilNo,
+                               GradeId = profile.GradeId,
+                               SpecialtyId = profile.SpecialtyId,
+                               StartDate = profile.JobStartDate,
+                               LocationId = profile.LocationId,
+                           });
 
-                        this.ViewBag.SuccessMessage = "Your medical council number has been changed";
-                        return this.View("SuccessMessage");
+                        this.ViewBag.SuccessMessage = CommonValidationErrorMessages.EmploymentDetailsUpdated;
+                        this.ViewBag.MyAction = "MyEmploymentDetails";
+                        return this.View("SuccessMessageMyAccount");
                     }
                     else
                     {
@@ -1109,6 +1136,13 @@
                 {
                     this.ModelState.AddModelError(nameof(viewModel.SelectedMedicalCouncilNo), $"Enter your {viewModel.SelectedMedicalCouncilCode} number");
                     return this.View("ChangeMedicalCouncilNumber", viewModel);
+                }
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(viewModel.SelectedMedicalCouncilNo))
+                {
+                    viewModel.SelectedMedicalCouncilNo = profile.MedicalCouncilNo;
                 }
             }
 
@@ -1198,8 +1232,10 @@
 
             if (formSubmission)
             {
-                if (viewModel.SelectedPrimarySpecialtyId.HasValue)
+                var hasSelectedPrimarySpeciality = int.TryParse(viewModel.SelectedPrimarySpecialtyId, out int selectedPrimarySpecialtyId);
+                if (hasSelectedPrimarySpeciality && selectedPrimarySpecialtyId > 0)
                 {
+                    var newPrimarySpecialtyId = selectedPrimarySpecialtyId;
                     await this.userService.UpdateUserEmployment(
                         new elfhHub.Nhs.Models.Entities.UserEmployment
                         {
@@ -1209,7 +1245,7 @@
                             MedicalCouncilId = profile.MedicalCouncilId,
                             MedicalCouncilNo = profile.MedicalCouncilNo,
                             GradeId = profile.GradeId,
-                            SpecialtyId = viewModel.SelectedPrimarySpecialtyId.Value,
+                            SpecialtyId = newPrimarySpecialtyId,
                             StartDate = profile.JobStartDate,
                             LocationId = profile.LocationId,
                         });
@@ -1218,8 +1254,15 @@
                 }
                 else
                 {
-                    this.ModelState.AddModelError(nameof(viewModel.SelectedPrimarySpecialtyId), CommonValidationErrorMessages.SpecialtyNotApplicable);
-                    return this.View("ChangePrimarySpecialty", viewModel);
+                    this.ModelState.AddModelError(nameof(viewModel.SelectedPrimarySpecialtyId), CommonValidationErrorMessages.SpecialtyRequired);
+                }
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(viewModel.FilterText))
+                {
+                    viewModel.FilterText = profile.PrimarySpecialty;
+                    viewModel.SelectedPrimarySpecialtyId = profile.SpecialtyId.HasValue ? profile.SpecialtyId.ToString() : string.Empty;
                 }
             }
 
@@ -1274,6 +1317,10 @@
                 this.ModelState.Remove("Day");
                 this.ModelState.Remove("Month");
                 this.ModelState.Remove("Year");
+
+                viewModel.Day = profile.JobStartDate.HasValue ? profile.JobStartDate.Value.Day : null;
+                viewModel.Month = profile.JobStartDate.HasValue ? profile.JobStartDate.GetValueOrDefault().Month : null;
+                viewModel.Year = profile.JobStartDate.HasValue ? profile.JobStartDate.Value.Year : null;
             }
 
             return this.View("ChangeStartDate", viewModel);

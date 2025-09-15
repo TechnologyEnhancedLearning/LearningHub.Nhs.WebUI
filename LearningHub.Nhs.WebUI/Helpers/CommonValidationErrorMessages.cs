@@ -254,5 +254,10 @@
         /// location Success Message.
         /// </summary>
         public const string PersonalDetailsSuccessMessage = "Your personal details has been changed";
+
+        /// <summary>
+        /// Security question Required.
+        /// </summary>
+        public const string SecurityQuestionRequired = "Please select a security question";
     }
 }

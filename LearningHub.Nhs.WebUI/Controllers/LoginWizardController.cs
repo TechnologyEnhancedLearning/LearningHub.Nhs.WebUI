@@ -611,6 +611,22 @@
 
             if (model != null)
             {
+                if ((model.SelectedFirstQuestionId == 0) || (model.SelectedSecondQuestionId == 0))
+                {
+                    if (model.SelectedFirstQuestionId == 0)
+                    {
+                        this.ModelState.AddModelError(nameof(model.SelectedFirstQuestionId), CommonValidationErrorMessages.SecurityQuestionRequired);
+                    }
+
+                    if (model.SelectedSecondQuestionId == 0)
+                    {
+                        this.ModelState.AddModelError(nameof(model.SelectedSecondQuestionId), CommonValidationErrorMessages.SecurityQuestionRequired);
+                    }
+
+                    this.ViewBag.ReturnUrl = returnUrl;
+                    return this.View("SecurityQuestionsDetails", securityViewModel);
+                }
+
                 if (model.SelectedFirstQuestionId == model.SelectedSecondQuestionId)
                 {
                     this.ModelState.AddModelError("DuplicateQuestion", CommonValidationErrorMessages.DuplicateQuestion);

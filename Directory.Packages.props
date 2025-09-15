@@ -11,7 +11,6 @@
 		<PackageVersion Include="LearningHub.Nhs.Models" Version="4.0.3" />
 		<PackageVersion Include="GDS.MultiPageFormData" Version="1.0.6" />
 		<PackageVersion Include="LearningHub.Nhs.Caching" Version="3.0.0" />
-		<PackageVersion Include="LearningHub.Nhs.Models" Version="4.0.3" />
 		<PackageVersion Include="UK.NHS.CookieBanner" Version="2.0.7" />
 
 		<PackageVersion Include="AngleSharp" Version="0.16.1" />

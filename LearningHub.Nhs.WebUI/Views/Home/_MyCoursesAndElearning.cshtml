@@ -45,12 +45,12 @@
             <ul class="navbar-nav">
                 <li class="subnavwhite-item nhsuk-bg-grey @(Model.MyLearnings.Type == "my-in-progress" ? "active" : string.Empty)">
                     <a tabindex="0" class="subnavwhite-link text-nowrap"
-                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="my-in-progress" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">In Progress</a>
+                       asp-controller="Home" asp-action="Index" asp-route-dashboardTrayLearningResourceType="all" asp-route-myLearningDashboard="my-in-progress" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">In Progress</a>
                 </li>
 
                 <li class="subnavwhite-item nhsuk-bg-grey @(Model.MyLearnings.Type == "my-certificates" ? "active" : string.Empty)">
                     <a tabindex="0" class="subnavwhite-link text-nowrap"
-                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="my-certificates" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">Certificates</a>
+                       asp-controller="Home" asp-action="Index" asp-route-dashboardTrayLearningResourceType="all" asp-route-myLearningDashboard="my-certificates" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">Certificates</a>
                 </li>
             </ul>
         </div>
@@ -59,26 +59,25 @@
     <div class="nhsuk-u-padding-bottom-3">
         <span class="nhsuk-u-padding-right-3 nhsuk-u-primary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">Show</span>
 
-        <a asp-action="Index" asp-route-dashboardTrayLearningResourceType="all" asp-route-myLearningDashboard="my-in-progress" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning"
-           class="nhsuk-u-padding-right-3 nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-text-align-centre"
+        <a asp-action="Index" asp-route-dashboardTrayLearningResourceType="all" asp-route-myLearningDashboard=@Model.MyLearnings.Type asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning"
+           class="nhsuk-u-padding-right-3 nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-text-align-centre @(Model.DashboardTrayLearningResourceType == "all" ? "active" : string.Empty)"
            title="All">
             <span class="nhsuk-bg-pale-blue">All</span>
         </a>
 
-        <a asp-action="Index" asp-route-dashboardTrayLearningResourceType="courses" asp-route-myLearningDashboard="my-in-progress" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning"
-           class="nhsuk-u-padding-right-3  nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold"
+        <a asp-action="Index" asp-route-dashboardTrayLearningResourceType="courses" asp-route-myLearningDashboard=@Model.MyLearnings.Type asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning"
+           class="subnavwhite-link text-nowrap nhsuk-u-padding-right-3 nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold @(Model.DashboardTrayLearningResourceType == "courses" ? "active" : string.Empty)"
            title="In progress">
             Courses
         </a>
 
-        <a asp-action="Index" asp-route-dashboardTrayLearningResourceType="elearning" asp-route-myLearningDashboard="my-in-progress" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning"
-           class="nhsuk-u-padding-right-3  nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold"
+        <a asp-action="Index" asp-route-dashboardTrayLearningResourceType="elearning" asp-route-myLearningDashboard=@Model.MyLearnings.Type asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning"
+           class="subnavwhite-link text-nowrap nhsuk-u-padding-right-3  nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold @(Model.DashboardTrayLearningResourceType == "elearning" ? "active" : string.Empty)"
            title="Completed">
             Elearning
         </a>
 
     </div>
-
     <div class="nhsuk-grid-row nhsuk-u-margin-bottom-2">
         <div class="nhsuk-grid-column-full">
             @if (Model.MyLearnings.Type == "my-in-progress" && Model.MyLearnings.Activities?.Count() > 0)

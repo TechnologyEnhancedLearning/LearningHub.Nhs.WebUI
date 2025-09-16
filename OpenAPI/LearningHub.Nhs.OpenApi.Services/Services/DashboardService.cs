@@ -237,7 +237,7 @@
                     Title = course.DisplayName,
                     CertificateEnabled = course.CertificateEnabled,
                     ActivityStatus = (course.Completed == true || course.ProgressPercentage.TrimEnd('%') == "100") ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
-                    ActivityDate = DateTimeOffset.FromUnixTimeMilliseconds(course.LastAccess ?? 0),
+                    ActivityDate = DateTimeOffset.FromUnixTimeMilliseconds(course.LastAccessDate ?? 0),
                     ScorePercentage = Convert.ToInt32(course.ProgressPercentage.TrimEnd('%')),
                     TotalActivities = course.TotalActivities,
                     CompletedActivities = course.CompletedActivities,
@@ -274,23 +274,30 @@
             try
             {
                 Task<List<MoodleUserCertificateResponseModel>>? courseCertificatesTask = null;
+                Task<List<UserCertificateViewModel>>? resourceCertificatesTask = null;
 
                 if (dashboardTrayLearningResourceType != "elearning")
                 {
                     courseCertificatesTask = moodleApiService.GetUserCertificateAsync(userId);
 
                 }
-
-                var resourceCertificatesTask = resourceRepository.GetUserCertificateDetails(userId);
-
+                if (dashboardTrayLearningResourceType != "courses")
+                {
+                    resourceCertificatesTask = resourceRepository.GetUserCertificateDetails(userId);
+                }
 
                 // Await all active tasks in parallel
-                if (courseCertificatesTask != null)
+                if (courseCertificatesTask != null & dashboardTrayLearningResourceType == "all")
                     await Task.WhenAll(courseCertificatesTask, resourceCertificatesTask);
-                else
+                else if (dashboardTrayLearningResourceType == "elearning")
                     await resourceCertificatesTask;
-
-                var resourceCertificates = resourceCertificatesTask.Result ?? Enumerable.Empty<UserCertificateViewModel>();
+                else
+                    await courseCertificatesTask;
+                IEnumerable<UserCertificateViewModel> resourceCertificates = Enumerable.Empty<UserCertificateViewModel>();
+                if (resourceCertificatesTask != null)
+                {
+                    resourceCertificates = resourceCertificatesTask.Result ?? Enumerable.Empty<UserCertificateViewModel>();
+                }
 
                 IEnumerable<UserCertificateViewModel> mappedCourseCertificates = Enumerable.Empty<UserCertificateViewModel>();
 

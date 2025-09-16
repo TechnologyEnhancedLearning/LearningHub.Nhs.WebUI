@@ -177,6 +177,7 @@
                         PrimarySpecialtyId = userEmployment.SpecialtyId.HasValue ? userEmployment.SpecialtyId.ToString() : null,
                         RegistrationNumber = userEmployment.MedicalCouncilNo,
                         StartDate = userEmployment.StartDate.HasValue ? userEmployment.StartDate.Value.DateTime : null,
+                        LocationId = userEmployment.LocationId.ToString(),
                     };
 
                     await this.multiPageFormService.SetMultiPageFormData(

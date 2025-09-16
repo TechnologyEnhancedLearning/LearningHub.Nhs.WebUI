@@ -35,5 +35,10 @@
         /// Gets or sets a list of enrolled courses to be displayed in the dashboard.
         /// </summary>
         public List<MoodleCourseResponseModel> EnrolledCourses { get; set; }
+
+        /// <summary>
+        /// Gets or sets the dashboard tray Learning resource type.
+        /// </summary>
+        public string DashboardTrayLearningResourceType { get; set; }
     }
 }

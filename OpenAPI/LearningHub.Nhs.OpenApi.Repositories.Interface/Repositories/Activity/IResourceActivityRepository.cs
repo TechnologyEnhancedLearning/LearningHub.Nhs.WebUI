@@ -104,6 +104,14 @@
         Task<List<MyLearningActivitiesViewModel>> GetUserLearningHistory(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel);
 
         /// <summary>
+        /// Get User's in progress My LearningActivities.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="pageNumber">pageNumber.</param>
+        /// <returns></returns>
+        Task<List<MyLearningActivitiesViewModel>> GetUserInprogressLearningActivities(int userId, int pageNumber);
+
+        /// <summary>
         /// Check if scorm activity has been completed.
         /// </summary>
         /// <param name="userId">The user id.</param>

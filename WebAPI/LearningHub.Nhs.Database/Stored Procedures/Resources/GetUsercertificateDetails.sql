@@ -6,6 +6,7 @@
 -- Modification History
 -- 
 -- 22-08-2025	Tobi	Initial Revision
+-- 16-09-2025   Tobi    Added null check for ResourceReferenceID
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [resources].[GetUsercertificateDetails]
     @UserId INT,
@@ -74,16 +75,16 @@ BEGIN
 	    rv.Id,
         rv.Title,
         r.ResourceTypeId,
-        (
-            SELECT TOP (1) rr.OriginalResourceReferenceId
-            FROM resources.ResourceReference rr
-            JOIN hierarchy.NodePath np
-              ON np.Id = rr.NodePathId
-             AND np.NodeId = n.Id
-             AND np.Deleted = 0
-            WHERE rr.ResourceId = rv.ResourceId
-              AND rr.Deleted = 0
-        ) AS ResourceReferenceID,
+        COALESCE((
+			SELECT TOP (1) rr.OriginalResourceReferenceId
+			FROM resources.ResourceReference rr
+			JOIN hierarchy.NodePath np
+			  ON np.Id = rr.NodePathId
+			 AND np.NodeId = n.Id
+			 AND np.Deleted = 0
+			WHERE rr.ResourceId = rv.ResourceId
+			  AND rr.Deleted = 0
+		), '') AS ResourceReferenceID,
         rv.MajorVersion,
         rv.MinorVersion,
         COALESCE(ra.ActivityEnd, ra.ActivityStart) AS AwardedDate,

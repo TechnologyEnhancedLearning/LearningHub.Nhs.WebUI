@@ -387,8 +387,28 @@
             activityEntities.RemoveAll(x => x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && (x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded || x.ActivityStatusId == (int)ActivityStatusEnum.Incomplete || x.ActivityStatusId == (int)ActivityStatusEnum.InProgress));
             if (activityEntities.Any() && activityEntities.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
             {
-                totalNumberOfAccess = activityQuery.SelectMany(x => x.AssessmentResourceActivity).OrderByDescending(a => a.CreateDate).ToList().Count();
-                activityEntities = activityEntities.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && x.AssessmentResourceActivity.FirstOrDefault().Score.HasValue && (int)Math.Round(x.AssessmentResourceActivity.FirstOrDefault().Score.Value, MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark).ToList();
+                totalNumberOfAccess = activityQuery.SelectMany(x => x.AssessmentResourceActivity)
+                                                   .OrderByDescending(a => a.CreateDate)
+                                                   .Count();
+
+                var assessmentType = activityEntities.First().ResourceVersion.AssessmentResourceVersion.AssessmentType;
+
+                if (assessmentType == AssessmentTypeEnum.Formal)
+                {
+                    activityEntities = activityEntities.Where(x => {
+                        var act = x.AssessmentResourceActivity.FirstOrDefault();
+                        var ver = x.ResourceVersion.AssessmentResourceVersion;
+                        return act != null && act.Score.HasValue &&
+                               Math.Round(act.Score.Value, MidpointRounding.AwayFromZero) >= ver.PassMark;
+                    }).ToList();
+                }
+                else if (assessmentType == AssessmentTypeEnum.Informal)
+                {
+                    activityEntities = activityEntities.Where(x => {
+                        var act = x.AssessmentResourceActivity.FirstOrDefault();
+                        return act != null && x.ActivityStatusId == (int)ActivityStatusEnum.Completed;
+                    }).ToList();
+                }
             }
             else if (activityEntities.Any() && (activityEntities.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Video || activityEntities.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio))
             {

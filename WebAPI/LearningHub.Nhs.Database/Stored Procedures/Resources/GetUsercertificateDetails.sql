@@ -54,17 +54,25 @@ BEGIN
                 )
                 OR ra.ActivityStatusId IN (3,5)
             ))
-         OR (r.ResourceTypeId = 11 AND (
+        OR (
+            r.ResourceTypeId = 11
+            AND (
+                -- Either passed by score, or completed with no pass mark
                 EXISTS (
                     SELECT 1
                     FROM activity.AssessmentResourceActivity ara
                     JOIN resources.AssessmentResourceVersion arv
                       ON arv.ResourceVersionId = ra.ResourceVersionId
                     WHERE ara.ResourceActivityId = ra.Id
-                      AND ara.Score >= arv.PassMark
+                      AND (
+                             ara.Score >= arv.PassMark -- formal assessment
+                          OR (ra.ActivityStatusId = 3 AND arv.AssessmentType = 1) --informal assessment
+                      )
                 )
-                OR ra.ActivityStatusId IN (3,5)
-            ))
+                -- Or explicitly marked as passed
+                OR ra.ActivityStatusId = 5
+            )
+        )
          OR (r.ResourceTypeId IN (1, 5, 8, 9, 10, 12) 
              AND ra.ActivityStatusId = 3)
           )

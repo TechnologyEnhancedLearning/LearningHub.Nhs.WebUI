@@ -92,6 +92,11 @@
         filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Weblink</strong>";
     }
 
+    @if (Model.Courses)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Courses</strong>";
+    }
+
     @if (string.IsNullOrWhiteSpace(filtersummary))
     {
         typeFilter = string.Empty;

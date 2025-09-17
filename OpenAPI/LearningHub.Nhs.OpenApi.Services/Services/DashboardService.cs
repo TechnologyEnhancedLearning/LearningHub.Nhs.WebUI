@@ -237,7 +237,10 @@
                     Title = course.DisplayName,
                     CertificateEnabled = course.CertificateEnabled,
                     ActivityStatus = (course.Completed == true || course.ProgressPercentage.TrimEnd('%') == "100") ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
-                    ActivityDate = DateTimeOffset.FromUnixTimeMilliseconds(course.LastAccessDate ?? 0),
+                    //ActivityDate = DateTimeOffset.FromUnixTimeMilliseconds(course.LastAccessDate ?? 0),
+                    ActivityDate = course.LastAccessDate.HasValue
+                            ? DateTimeOffset.FromUnixTimeSeconds(course.LastAccessDate.Value)
+                            : DateTimeOffset.MinValue,
                     ScorePercentage = Convert.ToInt32(course.ProgressPercentage.TrimEnd('%')),
                     TotalActivities = course.TotalActivities,
                     CompletedActivities = course.CompletedActivities,

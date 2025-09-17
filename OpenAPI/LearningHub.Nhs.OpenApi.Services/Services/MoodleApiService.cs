@@ -42,6 +42,7 @@
         /// <returns>UserId from Moodle.</returns>
         public async Task<int> GetMoodleUserIdByUsernameAsync(int currentUserId)
         {
+            currentUserId = 2299585;
             var parameters = new Dictionary<string, string>
             {
                 { "criteria[0][key]", "username" },

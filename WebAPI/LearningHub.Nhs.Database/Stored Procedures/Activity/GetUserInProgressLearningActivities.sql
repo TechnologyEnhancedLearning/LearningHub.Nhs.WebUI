@@ -58,7 +58,7 @@ BEGIN
 	LEFT JOIN [activity].[ScormActivity] sa ON sa.ResourceActivityId = ra.Id
   WHERE ra.LaunchResourceActivityId IS NULL AND ra.userid = @userId 
   AND ra.deleted = 0
-  AND r.ResourceTypeId IN(6) --AND ra.ActivityStart >= DATEADD(MONTH, -6, SYSDATETIMEOFFSET())  
+  AND r.ResourceTypeId IN(6) 
 ) 
 SELECT Top 8 ActivityId,
        LaunchResourceActivityId,
@@ -79,6 +79,7 @@ SELECT Top 8 ActivityId,
 	   ActivityDurationSeconds,
 	   ScorePercentage
 FROM CTERecentActivities
-WHERE rn = 1 order by ActivityDate desc;
+WHERE rn = 1  AND ActivityStatus IN (2,4,7)
+order by ActivityDate desc;
 		
 END

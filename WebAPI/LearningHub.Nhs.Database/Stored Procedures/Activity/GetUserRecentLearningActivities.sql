@@ -60,14 +60,7 @@ BEGIN
 	LEFT JOIN [activity].[ScormActivity] sa ON sa.ResourceActivityId = ra.Id
   WHERE ra.LaunchResourceActivityId IS NULL AND ra.userid = @userId 
   AND ra.deleted = 0
-  AND r.ResourceTypeId IN(2,6,7,10,11) AND ra.ActivityStart >= DATEADD(MONTH, -6, SYSDATETIMEOFFSET())  
-  AND (
-						@activityStatuses IS NULL OR
-						ISNULL(ara.ActivityStatusId, ra.ActivityStatusId) IN (
-							SELECT TRY_CAST(value AS INT)
-							FROM STRING_SPLIT(@activityStatuses, ',')
-							WHERE TRY_CAST(value AS INT) IS NOT NULL)
-			)
+  AND r.ResourceTypeId IN(2,6,7,10,11) AND ra.ActivityStart >= DATEADD(MONTH, -6, SYSDATETIMEOFFSET())
 ) 
 SELECT ActivityId,
        LaunchResourceActivityId,
@@ -88,6 +81,14 @@ SELECT ActivityId,
 	   ActivityDurationSeconds,
 	   ScorePercentage
 FROM CTERecentActivities
-WHERE rn = 1 order by ActivityDate desc;
+WHERE rn = 1 
+AND (
+						@activityStatuses IS NULL OR
+						ActivityStatus IN (
+							SELECT TRY_CAST(value AS INT)
+							FROM STRING_SPLIT(@activityStatuses, ',')
+							WHERE TRY_CAST(value AS INT) IS NOT NULL)
+			) 
+order by ActivityDate desc;
 		
 END

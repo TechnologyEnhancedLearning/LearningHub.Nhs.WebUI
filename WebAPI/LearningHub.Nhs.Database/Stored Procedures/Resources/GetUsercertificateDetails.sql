@@ -7,6 +7,7 @@
 -- 
 -- 22-08-2025	Tobi	Initial Revision
 -- 16-09-2025   Tobi    Added null check for ResourceReferenceID
+--17-09-2025    Swapna  Added resource version id
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [resources].[GetUsercertificateDetails]
     @UserId INT,
@@ -97,7 +98,8 @@ BEGIN
         rv.MinorVersion,
         COALESCE(ra.ActivityEnd, ra.ActivityStart) AS AwardedDate,
 		NULL AS CertificateDownloadUrl,
-		NULL AS CertificatePreviewUrl
+		NULL AS CertificatePreviewUrl,
+        rv.Id AS ResourceVersionId
     FROM #MyActivity ma
     JOIN activity.ResourceActivity ra 
         ON ra.Id = ma.ResourceActivityId

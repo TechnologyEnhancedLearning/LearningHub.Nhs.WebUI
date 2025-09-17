@@ -1,0 +1,120 @@
+﻿@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Helpers
+@using LearningHub.Nhs.WebUI.Models
+@using LearningHub.Nhs.WebUI.Models.Learning;
+@model MyLearningUserActivitiesViewModel;
+@{
+    string statusFilter = "Status: ";
+    string certificateFilter = string.Empty;
+    string typeFilter = "Type: ";
+    string filtersummary = string.Empty;
+
+    @if (Model.CertificateEnabled)
+    {
+        certificateFilter = $"Certificates: <strong class='nhsuk-tag'>Certificate</strong>";
+    }
+    @if (Model.Complete)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Completed</strong>";
+    }
+    @if (Model.Incomplete)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>In progress</strong>";
+    }
+    @if (Model.Passed)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Passed</strong>";
+    }
+    @if (Model.Failed)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Failed</strong>";
+    }
+    @if (Model.Downloaded)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Downloaded</strong>";
+    }
+  @if (Model.Viewed)
+  {
+    filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Viewed</strong>";
+  }
+  @if (Model.Launched)
+  {
+    filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Launched</strong>";
+  }
+    @if (string.IsNullOrWhiteSpace(filtersummary))
+    {
+        statusFilter = string.Empty;
+    }
+    else
+    {
+        statusFilter = statusFilter + filtersummary;
+        filtersummary = string.Empty;
+    }
+
+    @if (Model.Article)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Article</strong>";
+    }
+    @if (Model.Assessment)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Assessment</strong>";
+    }
+    @if (Model.Audio)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Audio</strong>";
+    }
+    @if (Model.Case)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Case</strong>";
+    }
+    @if (Model.Elearning)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>elearning</strong>";
+    }
+    @if (Model.Html)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>HTML</strong>";
+    }
+    @if (Model.File)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>File</strong>";
+    }
+    @if (Model.Image)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Image</strong>";
+    }
+    @if (Model.Video)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Video</strong>";
+    }
+    @if (Model.Weblink)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Weblink</strong>";
+    }
+
+    @if (string.IsNullOrWhiteSpace(filtersummary))
+    {
+        typeFilter = string.Empty;
+    }
+    else
+    {
+        typeFilter = typeFilter + filtersummary;
+    }
+
+}
+
+<div class="nhsuk-u-padding-bottom-4">
+    @if (!string.IsNullOrWhiteSpace(statusFilter) || !string.IsNullOrWhiteSpace(statusFilter))
+    {
+        <span>Filtered by </span>
+    }
+    @if (!string.IsNullOrWhiteSpace(statusFilter))
+    {
+        <span class="nhsuk-u-padding-right-3">@Html.Raw(statusFilter)</span>
+    }
+    @if (!string.IsNullOrWhiteSpace(typeFilter))
+    {
+        <span class="nhsuk-u-padding-right-3">@Html.Raw(typeFilter)</span>
+    }
+</div>
+

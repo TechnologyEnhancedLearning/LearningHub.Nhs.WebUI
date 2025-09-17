@@ -76,17 +76,6 @@
                             <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
                         }
                     </div>
-                        @if (item.Providers?.Count > 0)
-                        {
-                            <div class="card-provider-details">
-                                @ProviderHelper.GetProviderString(item.Providers.FirstOrDefault().Name)
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="card-provider-details @cardStyle"></div>
-                        }
-
                     <div class="nhsuk-card__content catalogue-card-content">
 
                         <h3 class="nhsuk-card__heading nhsuk-heading-m">
@@ -132,6 +121,16 @@
                             </div>
                         </div>
                     </div>
+                        @if (item.Providers?.Count > 0)
+                        {
+                            <div class="card-provider-details">
+                                @ProviderHelper.GetProviderString(item.Providers.FirstOrDefault().Name)
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="card-provider-details @cardStyle"></div>
+                        }
                 </div>
 
             </li>

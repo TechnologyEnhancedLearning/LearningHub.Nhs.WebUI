@@ -10,7 +10,7 @@
    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
    <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.11" />
    <PackageReference Include="LearningHub.Nhs.Caching" Version="2.0.0" />
-   <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.54" />
+   <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.55" />
    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
 	 <PackageReference Update="StyleCop.Analyzers" Version="1.1.118">

@@ -156,6 +156,21 @@
                     resource.Providers = await providerService.GetByResourceVersionIdAsync(resource.ResourceVersionId);
                 }
             }
+            if (myInProgressActivities.TotalCount > 0)
+            {
+                foreach (var activity in myInProgressActivities.Activities) 
+                {
+                    activity.Providers = await providerService.GetByResourceVersionIdAsync(activity.ResourceVersionId);
+                }
+            }
+
+            if (certificates.TotalCount > 0)
+            {
+                foreach (var certificate in certificates.Certificates)
+                {
+                    certificate.Providers = await providerService.GetByResourceVersionIdAsync(certificate.ResourceVersionId);
+                }
+            }
 
             var response = new DashboardMyLearningResponseViewModel
             {
@@ -318,7 +333,8 @@
                             ? DateTimeOffset.FromUnixTimeSeconds(c.AwardedDate.Value)
                             : DateTimeOffset.MinValue,
                         CertificatePreviewUrl = c.PreviewLink,
-                        CertificateDownloadUrl = c.DownloadLink
+                        CertificateDownloadUrl = c.DownloadLink,
+                        ResourceVersionId = 0
                     });
                 }
 

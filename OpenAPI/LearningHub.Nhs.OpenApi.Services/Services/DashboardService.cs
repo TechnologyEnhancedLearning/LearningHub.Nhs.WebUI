@@ -324,7 +324,7 @@
 
                 var allCertificates = resourceCertificates.Concat(mappedCourseCertificates);
 
-                var allowedTypeIds = new List<int> { 6 };
+                var allowedTypeIds = new List<int> { 6,13 };
 
                 allCertificates = allCertificates.Where(c => allowedTypeIds.Contains(c.ResourceTypeId));
 

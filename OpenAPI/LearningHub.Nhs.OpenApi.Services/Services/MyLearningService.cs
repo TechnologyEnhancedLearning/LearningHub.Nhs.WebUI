@@ -691,7 +691,8 @@
                         ? DateTimeOffset.FromUnixTimeSeconds(c.AwardedDate.Value)
                         : DateTimeOffset.MinValue,
                     CertificatePreviewUrl = c.PreviewLink,
-                    CertificateDownloadUrl = c.DownloadLink
+                    CertificateDownloadUrl = c.DownloadLink,
+                    ResourceVersionId = 0
                 });
             }
 

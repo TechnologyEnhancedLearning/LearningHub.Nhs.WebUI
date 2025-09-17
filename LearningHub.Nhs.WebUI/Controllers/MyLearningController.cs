@@ -94,181 +94,6 @@
             }
         }
 
-        /////// <summary>
-        /////// Index.
-        /////// </summary>
-        /////// <param name="learningRequest">learningRequest.</param>
-        /////// <param name="myLearningDashboard">The my learning dashboard type.</param>
-        /////// <returns>IActionResult.</returns>
-        ////[Route("MyLearning")]
-        ////[Route("MyLearning/activity")]
-        ////[HttpGet]
-        ////[HttpPost]
-        ////public async Task<IActionResult> Index(MyLearningViewModel learningRequest = null, string myLearningDashboard = null)
-        ////{
-        ////    var myLearningRequestModel = new MyLearningRequestModel
-        ////    {
-        ////        SearchText = learningRequest.SearchText?.Trim(),
-        ////        Skip = learningRequest.CurrentPageIndex * MyLearningPageSize,
-        ////        Take = MyLearningPageSize,
-        ////        TimePeriod = !string.IsNullOrWhiteSpace(learningRequest.TimePeriod) ? learningRequest.TimePeriod : "allDates",
-        ////        StartDate = learningRequest.StartDate,
-        ////        EndDate = learningRequest.EndDate,
-        ////        Weblink = learningRequest.Weblink,
-        ////        File = learningRequest.File,
-        ////        Video = learningRequest.Video,
-        ////        Article = learningRequest.Article,
-        ////        Case = learningRequest.Case,
-        ////        Image = learningRequest.Image,
-        ////        Audio = learningRequest.Audio,
-        ////        Elearning = learningRequest.Elearning,
-        ////        Html = learningRequest.Html,
-        ////        Assessment = learningRequest.Assessment,
-        ////        Complete = learningRequest.Complete,
-        ////        Incomplete = learningRequest.Incomplete,
-        ////        Passed = learningRequest.Passed,
-        ////        Failed = learningRequest.Failed,
-        ////        Downloaded = learningRequest.Downloaded,
-        ////        Viewed = learningRequest.Viewed,
-        ////        Launched = learningRequest.Launched,
-        ////        CertificateEnabled = learningRequest.CertificateEnabled,
-        ////    };
-
-        ////    if (myLearningDashboard != null)
-        ////    {
-        ////        if (myLearningDashboard == "my-in-progress")
-        ////        {
-        ////            myLearningRequestModel.Incomplete = true;
-        ////            myLearningRequestModel.Failed = true;
-        ////        }
-        ////        else if (myLearningDashboard == "my-recent-completed")
-        ////        {
-        ////            myLearningRequestModel.Complete = true;
-        ////            myLearningRequestModel.Passed = true;
-        ////            myLearningRequestModel.Downloaded = true;
-        ////        }
-        ////        else if (myLearningDashboard == "my-certificates")
-        ////        {
-        ////            myLearningRequestModel.CertificateEnabled = true;
-        ////            myLearningRequestModel.Complete = true;
-        ////            myLearningRequestModel.Passed = true;
-        ////            myLearningRequestModel.Downloaded = true;
-        ////        }
-        ////    }
-
-        ////    switch (learningRequest.MyLearningFormActionType)
-        ////    {
-        ////        case MyLearningFormActionTypeEnum.NextPageChange:
-        ////            learningRequest.CurrentPageIndex += 1;
-        ////            myLearningRequestModel.Skip = learningRequest.CurrentPageIndex * MyLearningPageSize;
-        ////            break;
-
-        ////        case MyLearningFormActionTypeEnum.PreviousPageChange:
-        ////            learningRequest.CurrentPageIndex -= 1;
-        ////            myLearningRequestModel.Skip = learningRequest.CurrentPageIndex * MyLearningPageSize;
-        ////            break;
-        ////        case MyLearningFormActionTypeEnum.BasicSearch:
-
-        ////            myLearningRequestModel = new MyLearningRequestModel
-        ////            {
-        ////                SearchText = learningRequest.SearchText?.Trim(),
-        ////                TimePeriod = !string.IsNullOrWhiteSpace(learningRequest.TimePeriod) ? learningRequest.TimePeriod : "allDates",
-        ////                Skip = learningRequest.CurrentPageIndex * MyLearningPageSize,
-        ////                Take = MyLearningPageSize,
-        ////            };
-        ////            break;
-
-        ////        case MyLearningFormActionTypeEnum.ApplyWeekFilter:
-        ////            myLearningRequestModel = new MyLearningRequestModel
-        ////            {
-        ////                SearchText = learningRequest.SearchText?.Trim(),
-        ////                TimePeriod = "thisWeek",
-        ////                Skip = learningRequest.CurrentPageIndex * MyLearningPageSize,
-        ////                Take = MyLearningPageSize,
-        ////            };
-        ////            break;
-        ////        case MyLearningFormActionTypeEnum.ApplyMonthFilter:
-        ////            myLearningRequestModel = new MyLearningRequestModel
-        ////            {
-        ////                SearchText = learningRequest.SearchText?.Trim(),
-        ////                TimePeriod = "thisMonth",
-        ////                Skip = learningRequest.CurrentPageIndex * MyLearningPageSize,
-        ////                Take = MyLearningPageSize,
-        ////            };
-        ////            break;
-
-        ////        case MyLearningFormActionTypeEnum.ApplyTwelveMonthFilter:
-        ////            myLearningRequestModel = new MyLearningRequestModel
-        ////            {
-        ////                SearchText = learningRequest.SearchText?.Trim(),
-        ////                TimePeriod = "last12Months",
-        ////                Skip = learningRequest.CurrentPageIndex * MyLearningPageSize,
-        ////                Take = MyLearningPageSize,
-        ////            };
-        ////            break;
-
-        ////        case MyLearningFormActionTypeEnum.ApplyMajorFilters:
-        ////            if (learningRequest.TimePeriod == "dateRange")
-        ////            {
-        ////                if (!this.ModelState.IsValid)
-        ////                {
-        ////                    break;
-        ////                }
-
-        ////                myLearningRequestModel.TimePeriod = learningRequest.TimePeriod;
-        ////                myLearningRequestModel.StartDate = learningRequest.GetStartDate().HasValue ? learningRequest.GetStartDate().Value : null;
-        ////                myLearningRequestModel.EndDate = learningRequest.GetEndDate().HasValue ? learningRequest.GetEndDate().Value : null;
-        ////            }
-
-        ////            break;
-
-        ////        case MyLearningFormActionTypeEnum.ClearAllFilters:
-
-        ////            myLearningRequestModel = new MyLearningRequestModel
-        ////            {
-        ////                SearchText = learningRequest.SearchText?.Trim(),
-        ////                Skip = learningRequest.CurrentPageIndex * MyLearningPageSize,
-        ////                TimePeriod = "allDates",
-        ////                Take = MyLearningPageSize,
-        ////            };
-        ////            break;
-        ////    }
-
-        ////    ////var result = await this.myLearningService.GetUserRecentMyLearningActivities(myLearningRequestModel);
-        ////    var result = await this.myLearningService.GetActivityDetailed(myLearningRequestModel);
-        ////    var response = new MyLearningViewModel(myLearningRequestModel);
-        ////    if (learningRequest.TimePeriod == "dateRange")
-        ////    {
-        ////        response.StartDay = learningRequest.StartDay;
-        ////        response.StartMonth = learningRequest.StartMonth;
-        ////        response.StartYear = learningRequest.StartYear;
-        ////        response.EndDay = learningRequest.EndDay;
-        ////        response.EndMonth = learningRequest.EndMonth;
-        ////        response.EndYear = learningRequest.EndYear;
-        ////    }
-
-        ////    if (result != null)
-        ////    {
-        ////        response.TotalCount = result.TotalCount;
-        ////        response.Activities = result.Activities.Select(entry => new ActivityDetailedItemViewModel(entry)).ToList();
-        ////        if (response.Activities.Any())
-        ////        {
-        ////            foreach (var activity in response.Activities)
-        ////            {
-        ////                if (!response.MostRecentResources.Contains(activity.ResourceId))
-        ////                {
-        ////                    activity.IsMostRecent = true;
-        ////                    response.MostRecentResources.Add(activity.ResourceId);
-        ////                }
-        ////            }
-        ////        }
-        ////    }
-
-        ////    response.MyLearningPaging = new MyLearningPagingModel() { CurrentPage = learningRequest.CurrentPageIndex, PageSize = MyLearningPageSize, TotalItems = response.TotalCount, HasItems = response.TotalCount > 0 };
-        ////    this.ViewBag.MyLearningHelpUrl = this.Settings.SupportUrls.MyLearningHelpUrl;
-        ////    return this.View(response);
-        ////}
-
         /// <summary>
         /// Index.
         /// </summary>
@@ -746,11 +571,12 @@
         [HttpPost]
         public async Task<IActionResult> Certificates(MyLearningUserCertificatesViewModel certificateRequest = null)
         {
+            int certificatePageSize = 6;
             var myLearningRequestModel = new MyLearningRequestModel
             {
                 SearchText = certificateRequest.SearchText?.Trim(),
-                Skip = certificateRequest.CurrentPageIndex * MyLearningPageSize,
-                Take = MyLearningPageSize,
+                Skip = certificateRequest.CurrentPageIndex * certificatePageSize,
+                Take = certificatePageSize,
                 File = certificateRequest.File,
                 Video = certificateRequest.Video,
                 Article = certificateRequest.Article,
@@ -767,20 +593,20 @@
             {
                 case MyLearningFormActionTypeEnum.NextPageChange:
                     certificateRequest.CurrentPageIndex += 1;
-                    myLearningRequestModel.Skip = certificateRequest.CurrentPageIndex * MyLearningPageSize;
+                    myLearningRequestModel.Skip = certificateRequest.CurrentPageIndex * certificatePageSize;
                     break;
 
                 case MyLearningFormActionTypeEnum.PreviousPageChange:
                     certificateRequest.CurrentPageIndex -= 1;
-                    myLearningRequestModel.Skip = certificateRequest.CurrentPageIndex * MyLearningPageSize;
+                    myLearningRequestModel.Skip = certificateRequest.CurrentPageIndex * certificatePageSize;
                     break;
                 case MyLearningFormActionTypeEnum.BasicSearch:
 
                     myLearningRequestModel = new MyLearningRequestModel
                     {
                         SearchText = certificateRequest.SearchText?.Trim(),
-                        Skip = certificateRequest.CurrentPageIndex * MyLearningPageSize,
-                        Take = MyLearningPageSize,
+                        Skip = certificateRequest.CurrentPageIndex * certificatePageSize,
+                        Take = certificatePageSize,
                     };
                     break;
                 case MyLearningFormActionTypeEnum.ClearAllFilters:
@@ -788,8 +614,8 @@
                     myLearningRequestModel = new MyLearningRequestModel
                     {
                         SearchText = certificateRequest.SearchText?.Trim(),
-                        Skip = certificateRequest.CurrentPageIndex * MyLearningPageSize,
-                        Take = MyLearningPageSize,
+                        Skip = certificateRequest.CurrentPageIndex * certificatePageSize,
+                        Take = certificatePageSize,
                     };
                     break;
             }

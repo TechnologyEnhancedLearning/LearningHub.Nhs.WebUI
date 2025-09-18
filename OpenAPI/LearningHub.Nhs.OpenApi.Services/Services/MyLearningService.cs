@@ -395,19 +395,15 @@
 
                 if (assessmentType == AssessmentTypeEnum.Formal)
                 {
-                    activityEntities = activityEntities.Where(x => {
-                        var act = x.AssessmentResourceActivity.FirstOrDefault();
-                        var ver = x.ResourceVersion.AssessmentResourceVersion;
-                        return act != null && act.Score.HasValue &&
-                               Math.Round(act.Score.Value, MidpointRounding.AwayFromZero) >= ver.PassMark;
-                    }).ToList();
+                    activityEntities = activityEntities.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && 
+                                                                   x.AssessmentResourceActivity.First().Score.HasValue && 
+                                                                   (int)Math.Round(x.AssessmentResourceActivity.First().Score.Value,
+                                                                       MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark)
+                                                                    .ToList();
                 }
                 else if (assessmentType == AssessmentTypeEnum.Informal)
                 {
-                    activityEntities = activityEntities.Where(x => {
-                        var act = x.AssessmentResourceActivity.FirstOrDefault();
-                        return act != null && x.ActivityStatusId == (int)ActivityStatusEnum.Completed;
-                    }).ToList();
+                    activityEntities = activityEntities.Where(x =>x.ActivityStatusId == (int)ActivityStatusEnum.Completed).ToList();
                 }
             }
             else if (activityEntities.Any() && (activityEntities.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Video || activityEntities.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio))

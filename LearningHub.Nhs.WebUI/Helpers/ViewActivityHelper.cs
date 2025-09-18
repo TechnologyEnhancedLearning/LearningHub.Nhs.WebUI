@@ -130,7 +130,24 @@
         /// <returns>The string.</returns>
         public static string GetActivityStatusDisplayText(MyLearningCombinedActivitiesViewModel activity)
         {
-            if (activity.ActivityStatus == ActivityStatusEnum.Completed || activity.ActivityStatus == ActivityStatusEnum.Passed || activity.ActivityStatus == ActivityStatusEnum.Passed || activity.ActivityStatus == ActivityStatusEnum.Viewed || activity.ActivityStatus == ActivityStatusEnum.Downloaded)
+            if (activity.ActivityStatus == ActivityStatusEnum.Completed || activity.ActivityStatus == ActivityStatusEnum.Passed || activity.ActivityStatus == ActivityStatusEnum.Viewed || activity.ActivityStatus == ActivityStatusEnum.Downloaded)
+            {
+                return "Completed";
+            }
+            else
+            {
+                return "InProgress";
+            }
+        }
+
+        /// <summary>
+        /// GetCertificateStatusDisplayText.
+        /// </summary>
+        /// <param name="activity">The activity.</param>
+        /// <returns>The string.</returns>
+        public static string GetCertificateStatusDisplayText(ActivityDetailedItemViewModel activity)
+        {
+            if (activity.ActivityStatus == ActivityStatusEnum.Completed || activity.ActivityStatus == ActivityStatusEnum.Passed || activity.ActivityStatus == ActivityStatusEnum.Viewed || activity.ActivityStatus == ActivityStatusEnum.Downloaded)
             {
                 return "Completed";
             }

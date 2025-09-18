@@ -47,6 +47,12 @@
     }
 }
 
+.course-card {
+    border: 1px solid #1C366A; 
+    border-radius: 8px; 
+    box-shadow: 2px 2px 0 #1C366A;
+}
+
 .dashboard-card-content {
     display: flex;
     flex-direction: column;

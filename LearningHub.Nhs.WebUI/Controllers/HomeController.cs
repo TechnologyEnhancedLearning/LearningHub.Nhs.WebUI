@@ -208,7 +208,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="resourceDashboard">The resource dashboard type.</param>
         /// <param name="catalogueDashboard">The catalogue dashboard type.</param>
         /// <returns>Home page.</returns>
-        public async Task<IActionResult> Index(string dashboardTrayLearningResourceType = "all", string myLearningDashboard = "my-in-progress", string resourceDashboard = "popular-resources", string catalogueDashboard = "popular-catalogues")
+        public async Task<IActionResult> Index(string dashboardTrayLearningResourceType = "all", string myLearningDashboard = "my-in-progress", string resourceDashboard = "my-recent-completed", string catalogueDashboard = "popular-catalogues")
         {
             if (this.User?.Identity.IsAuthenticated == true)
             {

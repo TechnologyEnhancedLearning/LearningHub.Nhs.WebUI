@@ -22,10 +22,10 @@
         return moodleApiService.GetCourseUrl(courseId);
     }
 }
-<div class="nhsuk-card dashboard-card">
+<div class="nhsuk-card dashboard-card @(ViewActivityHelper.GetResourceTypeDesc(Model.Item2.ResourceType) == "Course" ? "course-card" : string.Empty)">
     <div class="nhsuk-card__content dashboard-card-content">
         <div>
-            <h3 class="nhsuk-card__heading nhsuk-heading-m line-clamp-2">
+            <h3 class="nhsuk-card__heading nhsuk-heading-m line-clamp-5">
 
                 @if (ViewActivityHelper.GetResourceTypeDesc(Model.Item2.ResourceType) == "Course")
                 {

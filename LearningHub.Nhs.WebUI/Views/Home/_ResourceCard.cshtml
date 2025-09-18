@@ -16,7 +16,7 @@
 <div class="nhsuk-card dashboard-card">
   <div class="nhsuk-card__content dashboard-card-content">
     <div>
-      <h3 class="nhsuk-card__heading nhsuk-heading-m line-clamp-2">
+      <h3 class="nhsuk-card__heading nhsuk-heading-m line-clamp-5">
         <a class="nhsuk-card__link" asp-controller="Dashboard" asp-action="RecordDashboardNavigation" asp-route-eventType="@EventTypeEnum.DashBoardResourceView"
            asp-route-url="@("/Resource/" + Model.Item2.ResourceReferenceId)" asp-route-resourceReference="@Model.Item2.ResourceReferenceId">@UtilityHelper.StripHtmlFromString(Model.Item2.Title)</a>
       </h3>

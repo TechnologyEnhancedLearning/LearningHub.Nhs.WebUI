@@ -595,6 +595,7 @@
                         viewModel.AssessmentDetails = new MyLearningAssessmentDetails
                         {
                             PassMark = resourceActivity.ResourceVersion.AssessmentResourceVersion.PassMark,
+                            AssessmentTypeEnum = resourceActivity.ResourceVersion.AssessmentResourceVersion.AssessmentType,
                         };
                     }
                     else
@@ -631,6 +632,8 @@
                             CurrentAttempt = currentAttempt,
                             MaximumAttempts = resourceActivity.ResourceVersion.AssessmentResourceVersion.MaximumAttempts,
                             PassMark = resourceActivity.ResourceVersion.AssessmentResourceVersion.PassMark,
+                            AssessmentTypeEnum = resourceActivity.ResourceVersion.AssessmentResourceVersion.AssessmentType,
+
                         };
                     }
                 }

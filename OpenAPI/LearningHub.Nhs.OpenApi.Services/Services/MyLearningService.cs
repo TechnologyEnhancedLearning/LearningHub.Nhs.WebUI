@@ -373,6 +373,7 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<Tuple<int, MyLearningDetailedItemViewModel>> GetResourceCertificateDetails(int userId, int resourceReferenceId, int majorVersion, int minorVersion)
         {
+            userId = 2299493;
             MyLearningDetailedItemViewModel myLearningDetailedItemViewModel = null;
             var activityQuery = resourceActivityRepository.GetByUserId(userId);
             if (majorVersion > 0)
@@ -501,7 +502,8 @@
                 latestActivityCheck.RemoveAll(x => x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && (x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded || x.ActivityStatusId == (int)ActivityStatusEnum.Incomplete || x.ActivityStatusId == (int)ActivityStatusEnum.InProgress));
                 if (latestActivityCheck.Any() && latestActivityCheck.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
                 {
-                    latestActivityCheck = latestActivityCheck.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && x.AssessmentResourceActivity.FirstOrDefault().Score.HasValue && (int)Math.Round(x.AssessmentResourceActivity.FirstOrDefault().Score.Value, MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark).ToList();
+
+                    latestActivityCheck = latestActivityCheck.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && (x.ResourceVersion.AssessmentResourceVersion.AssessmentType == AssessmentTypeEnum.Formal && x.AssessmentResourceActivity.First().Score.HasValue && (int)Math.Round(x.AssessmentResourceActivity.First().Score.Value, MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark) ||(x.ResourceVersion.AssessmentResourceVersion.AssessmentType == AssessmentTypeEnum.Informal && x.ActivityStatusId == (int)ActivityStatusEnum.Completed)).ToList();
                 }
 
                 ResourceActivity expectedActivity = null;

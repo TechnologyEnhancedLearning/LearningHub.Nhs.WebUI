@@ -1,14 +1,12 @@
 ﻿-------------------------------------------------------------------------------
 -- Author       Swapnamol Abraham
--- Created      29-07-2025
--- Purpose      Get Users recent learning acrtivities
+-- Created      10-09-2025
+-- Purpose      Get Users In progress learning activities
 --
 -- Modification History
--- 02-Sep-2025       SA        Incorrect Syntax 
 -------------------------------------------------------------------------------
-CREATE PROCEDURE [activity].[GetUserRecentLearningActivities] (
-	 @userId INT,
-	 @activityStatuses varchar(50) = NULL
+CREATE PROCEDURE [activity].[GetUserInProgressLearningActivities] (
+	 @userId INT
 	)
 AS
 BEGIN
@@ -60,9 +58,9 @@ BEGIN
 	LEFT JOIN [activity].[ScormActivity] sa ON sa.ResourceActivityId = ra.Id
   WHERE ra.LaunchResourceActivityId IS NULL AND ra.userid = @userId 
   AND ra.deleted = 0
-  AND r.ResourceTypeId IN(2,6,7,10,11) AND ra.ActivityStart >= DATEADD(MONTH, -6, SYSDATETIMEOFFSET())
+  AND r.ResourceTypeId IN(6) 
 ) 
-SELECT ActivityId,
+SELECT Top 8 ActivityId,
        LaunchResourceActivityId,
 	   UserId,
 	   ResourceId,
@@ -81,14 +79,7 @@ SELECT ActivityId,
 	   ActivityDurationSeconds,
 	   ScorePercentage
 FROM CTERecentActivities
-WHERE rn = 1 
-AND (
-						@activityStatuses IS NULL OR
-						ActivityStatus IN (
-							SELECT TRY_CAST(value AS INT)
-							FROM STRING_SPLIT(@activityStatuses, ',')
-							WHERE TRY_CAST(value AS INT) IS NOT NULL)
-			) 
+WHERE rn = 1  AND ActivityStatus IN (2,4,7)
 order by ActivityDate desc;
 		
 END

@@ -47,6 +47,12 @@
     }
 }
 
+.course-card {
+    border: 1px solid #1C366A; 
+    border-radius: 8px; 
+    box-shadow: 2px 2px 0 #1C366A;
+}
+
 .dashboard-card-content {
     display: flex;
     flex-direction: column;
@@ -185,6 +191,33 @@ div.bmj-best-practice-logo-image {
     background-color: #f0f4f5;
 }
 
+.filterlink {
+    display: inline-block;
+    padding: 6px 12px;
+    font-weight: bold;
+    text-decoration: none;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    font-family: sans-serif;
+}
+.filteractive {
+    color: $nhsuk-blue;
+    border-color: #0b63ce;
+    background-color: $nhsuk-pale-blue-color;
+}
+
+.filterinactive {
+    color: #6e6e6e; 
+    border-color: #c2c2c2; 
+    background-color: #f1f1f1; 
+    opacity: 0.7; 
+}
+
+filterfocus {
+    color: black;
+    background-color: #ffeb3b;
+    border-color: #212b32;
+}
 .dashboard-paging {
     width: 100%;
     display: flex;

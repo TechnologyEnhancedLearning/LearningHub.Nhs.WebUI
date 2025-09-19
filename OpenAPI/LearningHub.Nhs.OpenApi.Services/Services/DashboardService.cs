@@ -156,6 +156,21 @@
                     resource.Providers = await providerService.GetByResourceVersionIdAsync(resource.ResourceVersionId);
                 }
             }
+            if (myInProgressActivities.TotalCount > 0)
+            {
+                foreach (var activity in myInProgressActivities.Activities) 
+                {
+                    activity.Providers = await providerService.GetByResourceVersionIdAsync(activity.ResourceVersionId);
+                }
+            }
+
+            if (certificates.TotalCount > 0)
+            {
+                foreach (var certificate in certificates.Certificates)
+                {
+                    certificate.Providers = await providerService.GetByResourceVersionIdAsync(certificate.ResourceVersionId);
+                }
+            }
 
             var response = new DashboardMyLearningResponseViewModel
             {
@@ -237,7 +252,9 @@
                     Title = course.DisplayName,
                     CertificateEnabled = course.CertificateEnabled,
                     ActivityStatus = (course.Completed == true || course.ProgressPercentage.TrimEnd('%') == "100") ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
-                    ActivityDate = DateTimeOffset.FromUnixTimeMilliseconds(course.LastAccess ?? 0),
+                    ActivityDate = course.LastAccessDate.HasValue
+                            ? DateTimeOffset.FromUnixTimeSeconds(course.LastAccessDate.Value)
+                            : DateTimeOffset.MinValue,
                     ScorePercentage = Convert.ToInt32(course.ProgressPercentage.TrimEnd('%')),
                     TotalActivities = course.TotalActivities,
                     CompletedActivities = course.CompletedActivities,
@@ -274,23 +291,30 @@
             try
             {
                 Task<List<MoodleUserCertificateResponseModel>>? courseCertificatesTask = null;
+                Task<List<UserCertificateViewModel>>? resourceCertificatesTask = null;
 
                 if (dashboardTrayLearningResourceType != "elearning")
                 {
                     courseCertificatesTask = moodleApiService.GetUserCertificateAsync(userId);
 
                 }
-
-                var resourceCertificatesTask = resourceRepository.GetUserCertificateDetails(userId);
-
+                if (dashboardTrayLearningResourceType != "courses")
+                {
+                    resourceCertificatesTask = resourceRepository.GetUserCertificateDetails(userId);
+                }
 
                 // Await all active tasks in parallel
-                if (courseCertificatesTask != null)
+                if (courseCertificatesTask != null & dashboardTrayLearningResourceType == "all")
                     await Task.WhenAll(courseCertificatesTask, resourceCertificatesTask);
-                else
+                else if (dashboardTrayLearningResourceType == "elearning")
                     await resourceCertificatesTask;
-
-                var resourceCertificates = resourceCertificatesTask.Result ?? Enumerable.Empty<UserCertificateViewModel>();
+                else
+                    await courseCertificatesTask;
+                IEnumerable<UserCertificateViewModel> resourceCertificates = Enumerable.Empty<UserCertificateViewModel>();
+                if (resourceCertificatesTask != null)
+                {
+                    resourceCertificates = resourceCertificatesTask.Result ?? Enumerable.Empty<UserCertificateViewModel>();
+                }
 
                 IEnumerable<UserCertificateViewModel> mappedCourseCertificates = Enumerable.Empty<UserCertificateViewModel>();
 
@@ -309,13 +333,14 @@
                             ? DateTimeOffset.FromUnixTimeSeconds(c.AwardedDate.Value)
                             : DateTimeOffset.MinValue,
                         CertificatePreviewUrl = c.PreviewLink,
-                        CertificateDownloadUrl = c.DownloadLink
+                        CertificateDownloadUrl = c.DownloadLink,
+                        ResourceVersionId = 0
                     });
                 }
 
                 var allCertificates = resourceCertificates.Concat(mappedCourseCertificates);
 
-                var allowedTypeIds = new List<int> { 6 };
+                var allowedTypeIds = new List<int> { 6,13 };
 
                 allCertificates = allCertificates.Where(c => allowedTypeIds.Contains(c.ResourceTypeId));
 

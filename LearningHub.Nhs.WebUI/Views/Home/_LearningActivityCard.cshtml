@@ -10,6 +10,7 @@
 @inject LearningHub.Nhs.WebUI.Interfaces.IMoodleApiService moodleApiService;
 @model Tuple<string, MyLearningCombinedActivitiesViewModel>
 @{
+    bool providerExists = Model.Item2.Providers?.Count > 0;
     string cardStyle = Model.Item1.Contains("my-learning") ? "card-provider-details--darkblank" : "card-provider-details--blank";
     var activityDate = Model.Item2.ActivityDate.Date;
     var today = DateTime.Today;
@@ -21,10 +22,10 @@
         return moodleApiService.GetCourseUrl(courseId);
     }
 }
-<div class="nhsuk-card dashboard-card">
+<div class="nhsuk-card dashboard-card @(ViewActivityHelper.GetResourceTypeDesc(Model.Item2.ResourceType) == "Course" ? "course-card" : string.Empty)">
     <div class="nhsuk-card__content dashboard-card-content">
         <div>
-            <h3 class="nhsuk-card__heading nhsuk-heading-m line-clamp-2">
+            <h3 class="nhsuk-card__heading nhsuk-heading-m line-clamp-5">
 
                 @if (ViewActivityHelper.GetResourceTypeDesc(Model.Item2.ResourceType) == "Course")
                 {
@@ -109,5 +110,14 @@
             </div>
         </div>
     </div>
-    @* <div class="card-provider-details @cardStyle"></div> *@
+    @if (providerExists)
+    {
+        <div class="card-provider-details">
+            @ProviderHelper.GetProviderString(Model.Item2.Providers.FirstOrDefault().Name)
+        </div>
+    }
+    else
+    {
+        <div class="card-provider-details @cardStyle"></div>
+    }
 </div>

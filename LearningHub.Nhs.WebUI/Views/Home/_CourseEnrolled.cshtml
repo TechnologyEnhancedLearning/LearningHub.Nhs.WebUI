@@ -32,16 +32,6 @@
             <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
         }
     </div>
-    @if (providerExists)
-    {
-        <div class="card-provider-details">
-        </div>
-    }
-    else
-    {
-        <div class="card-provider-details @cardStyle"></div>
-    }
-
     <div class="nhsuk-card__content dashboard-card-content">
         <h3 class="nhsuk-card__heading nhsuk-heading-m">
             <a class="nhsuk-card__link" href="@GetMoodleCourseUrl(Model.Id.Value)">@Model.DisplayName</a>
@@ -106,4 +96,13 @@
             </div>
         </div>
     </div>
+    @if (providerExists)
+    {
+        <div class="card-provider-details">
+        </div>
+    }
+    else
+    {
+        <div class="card-provider-details @cardStyle"></div>
+    }
 </div>

@@ -32,7 +32,7 @@
 <div class="dashboardTray">
     <h2>My courses and elearning</h2>
 
-    <nav class="subnavbarwhite nhsuk-bg-grey navbar-expand-md nhsuk-u-margin-bottom-5">
+    <nav class="subnavbarwhite nhsuk-bg-white  navbar-expand-md nhsuk-u-margin-bottom-5">
         <input class="subnav-hidden-checkbox" id="mylearning-subnav-hidden-checkbox" role="button" type="checkbox" aria-controls="collapsingMyLearningSubNavbar" aria-labelledby="mylearning-subnav-hidden-checkbox-label">
         <div class="bar">
             <div class="navbar-toggler navbar-toggler-left nhsuk-u-font-size-19">@GetActiveTabName()</div>
@@ -41,42 +41,43 @@
                 <i class="fa-solid fa-chevron-up display--hide"><span class="nhsuk-u-visually-hidden">Hide Resource Options</span></i>
             </label>
         </div>
-        <div class="navbar-collapse collapse nhsuk-bg-grey" id="collapsingMyLearningSubNavbar">
+        <div class="navbar-collapse collapse nhsuk-bg-white" id="collapsingMyLearningSubNavbar">
             <ul class="navbar-nav">
-                <li class="subnavwhite-item nhsuk-bg-grey @(Model.MyLearnings.Type == "my-in-progress" ? "active" : string.Empty)">
+                <li class="subnavwhite-item nhsuk-bg-white @(Model.MyLearnings.Type == "my-in-progress" ? "active" : string.Empty)">
                     <a tabindex="0" class="subnavwhite-link text-nowrap"
                        asp-controller="Home" asp-action="Index" asp-route-dashboardTrayLearningResourceType="all" asp-route-myLearningDashboard="my-in-progress" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">In Progress</a>
                 </li>
 
-                <li class="subnavwhite-item nhsuk-bg-grey @(Model.MyLearnings.Type == "my-certificates" ? "active" : string.Empty)">
+                <li class="subnavwhite-item nhsuk-bg-white @(Model.MyLearnings.Type == "my-certificates" ? "active" : string.Empty)">
                     <a tabindex="0" class="subnavwhite-link text-nowrap"
                        asp-controller="Home" asp-action="Index" asp-route-dashboardTrayLearningResourceType="all" asp-route-myLearningDashboard="my-certificates" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">Certificates</a>
                 </li>
             </ul>
         </div>
     </nav>
-
     <div class="nhsuk-u-padding-bottom-3">
         <span class="nhsuk-u-padding-right-3 nhsuk-u-primary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">Show</span>
-
-        <a asp-action="Index" asp-route-dashboardTrayLearningResourceType="all" asp-route-myLearningDashboard=@Model.MyLearnings.Type asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning"
-           class="nhsuk-u-padding-right-3 nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-text-align-centre @(Model.DashboardTrayLearningResourceType == "all" ? "active" : string.Empty)"
-           title="All">
-            <span class="nhsuk-bg-pale-blue">All</span>
-        </a>
-
-        <a asp-action="Index" asp-route-dashboardTrayLearningResourceType="courses" asp-route-myLearningDashboard=@Model.MyLearnings.Type asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning"
-           class="subnavwhite-link text-nowrap nhsuk-u-padding-right-3 nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold @(Model.DashboardTrayLearningResourceType == "courses" ? "active" : string.Empty)"
-           title="In progress">
-            Courses
-        </a>
-
-        <a asp-action="Index" asp-route-dashboardTrayLearningResourceType="elearning" asp-route-myLearningDashboard=@Model.MyLearnings.Type asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning"
-           class="subnavwhite-link text-nowrap nhsuk-u-padding-right-3  nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold @(Model.DashboardTrayLearningResourceType == "elearning" ? "active" : string.Empty)"
-           title="Completed">
-            Elearning
-        </a>
-
+        <span class="nhsuk-u-padding-right-3">
+            <a asp-action="Index" asp-route-dashboardTrayLearningResourceType="all" asp-route-myLearningDashboard=@Model.MyLearnings.Type asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning"
+               class="nhsuk-u-padding-right-3 nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-text-align-centre filterlink @(Model.DashboardTrayLearningResourceType == "all" ? "filteractive" : "filterinactive")"
+               title="All">
+                All
+            </a>
+        </span>
+        <span class="nhsuk-u-padding-right-3">
+            <a asp-action="Index" asp-route-dashboardTrayLearningResourceType="courses" asp-route-myLearningDashboard=@Model.MyLearnings.Type asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning"
+               class="subnavwhite-link text-nowrap nhsuk-u-padding-right-3 nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold filterlink @(Model.DashboardTrayLearningResourceType == "courses" ? "filteractive" : "filterinactive")"
+               title="Courses">
+                Courses
+            </a>
+        </span>
+        <span class="nhsuk-u-padding-right-3">
+            <a asp-action="Index" asp-route-dashboardTrayLearningResourceType="elearning" asp-route-myLearningDashboard=@Model.MyLearnings.Type asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning"
+               class="subnavwhite-link text-nowrap nhsuk-u-padding-right-3  nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold filterlink @(Model.DashboardTrayLearningResourceType == "elearning" ? "filteractive" : "filterinactive")"
+               title="Elearning">
+                Elearning
+            </a>
+        </span>
     </div>
     <div class="nhsuk-grid-row nhsuk-u-margin-bottom-2">
         <div class="nhsuk-grid-column-full">

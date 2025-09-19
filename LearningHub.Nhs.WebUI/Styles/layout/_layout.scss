@@ -320,6 +320,12 @@ input:required:invalid, input:focus:invalid {
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
+.line-clamp-5 {
+    display: -webkit-box !important;
+    overflow: hidden;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+}
 .search-box-container {
     display: flex;
     flex-direction: row;

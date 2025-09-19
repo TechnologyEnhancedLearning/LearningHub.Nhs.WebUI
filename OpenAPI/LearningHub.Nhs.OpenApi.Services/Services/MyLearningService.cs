@@ -373,7 +373,6 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<Tuple<int, MyLearningDetailedItemViewModel>> GetResourceCertificateDetails(int userId, int resourceReferenceId, int majorVersion, int minorVersion)
         {
-            userId = 2299493;
             MyLearningDetailedItemViewModel myLearningDetailedItemViewModel = null;
             var activityQuery = resourceActivityRepository.GetByUserId(userId);
             if (majorVersion > 0)

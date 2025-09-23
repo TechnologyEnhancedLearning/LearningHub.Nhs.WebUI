@@ -5,6 +5,7 @@
 --
 -- Modification History
 -- 02-Sep-2025       SA        Incorrect Syntax 
+-- 23-09-2025  SA Added new columns for displaying video/Audio Progress
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserRecentLearningActivities] (
 	 @userId INT,
@@ -43,7 +44,7 @@ BEGIN
 	arv.PassMark AS PassMark,
 	asra.score AS AssesmentScore,
 	mar.SecondsPlayed AS SecondsPlayed,
-	mar.PercentComplete AS PercentComplete,
+	ISNULL( CAST(mar.PercentComplete AS INT) ,0) AS PercentComplete,
 	sa.CmiCoreLesson_status AS CmiCoreLessonstatus,
 	sa.CmiCoreScoreMax AS CmiCoreScoreMax,
 	sa.CmiCoreSession_time AS CmiCoreSessiontime,
@@ -60,7 +61,7 @@ BEGIN
 	LEFT JOIN [activity].[ScormActivity] sa ON sa.ResourceActivityId = ra.Id
   WHERE ra.LaunchResourceActivityId IS NULL AND ra.userid = @userId 
   AND ra.deleted = 0
-  AND r.ResourceTypeId IN(2,6,7,10,11) AND ra.ActivityStart >= DATEADD(MONTH, -6, SYSDATETIMEOFFSET())
+  AND r.ResourceTypeId IN(2,6,7,10,11) AND ra.ActivityStart >= DATEADD(MONTH, -6, SYSDATETIMEOFFSET())  
 ) 
 SELECT ActivityId,
        LaunchResourceActivityId,
@@ -79,16 +80,18 @@ SELECT ActivityId,
 	   ActivityStatus,
 	   ActivityDate,
 	   ActivityDurationSeconds,
-	   ScorePercentage
+	   ScorePercentage,
+	   0 AS ResourceDurationMilliseconds,
+	   PercentComplete AS CompletionPercentage
 FROM CTERecentActivities
-WHERE rn = 1 
-AND (
+WHERE rn = 1
+ AND (
 						@activityStatuses IS NULL OR
 						ActivityStatus IN (
 							SELECT TRY_CAST(value AS INT)
 							FROM STRING_SPLIT(@activityStatuses, ',')
 							WHERE TRY_CAST(value AS INT) IS NOT NULL)
-			) 
+			)
 order by ActivityDate desc;
 		
 END

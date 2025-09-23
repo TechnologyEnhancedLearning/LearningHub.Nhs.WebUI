@@ -185,6 +185,9 @@
                         ScorePercentage = Activity.ScorePercentage,
                         TotalActivities = 0,
                         CompletedActivities = 0,
+                        IsMostRecent = false,
+                        ResourceDurationMilliseconds = Activity.ResourceDurationMilliseconds,
+                        CompletionPercentage = Activity.CompletionPercentage,
                     }).ToList();
                 }
 
@@ -209,11 +212,14 @@
                         ScorePercentage = Convert.ToInt32(course.ProgressPercentage.TrimEnd('%')),
                         TotalActivities = course.TotalActivities,
                         CompletedActivities = course.CompletedActivities,
+                        IsMostRecent = false,
+                        ResourceDurationMilliseconds = 0,
+                        CompletionPercentage=0,
                     }).ToList();
                 }
 
                 // Combine both result sets
-                 combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
+                combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
 
 
                 var pagedResults = combainedUserActivities.OrderByDescending(activity => activity.ActivityDate).Skip(requestModel.Skip).Take(requestModel.Take).ToList();
@@ -272,6 +278,13 @@
 
                 if (result != null)
                 {
+                    // Step 1: Get most recent date per ResourceId
+                    var mostRecentByResource = result
+                        .GroupBy(a => a.ResourceId)
+                        .ToDictionary(
+                            g => g.Key,
+                            g => g.Max(a => a.ActivityDate)
+                        );
                     mappedMyLearningActivities = result.Select(activity => new MyLearningCombinedActivitiesViewModel
                     {
                         UserId = userId,
@@ -289,6 +302,12 @@
                         ScorePercentage = activity.ScorePercentage,
                         TotalActivities = 0,
                         CompletedActivities = 0,
+
+                        //Set IsMostRecent if this is the most recent activity for the ResourceId
+                        IsMostRecent = mostRecentByResource.TryGetValue(activity.ResourceId, out var mostRecentDate)
+                       && activity.ActivityDate == mostRecentDate,
+                        ResourceDurationMilliseconds = activity.ResourceDurationMilliseconds,
+                        CompletionPercentage = activity.CompletionPercentage,
                     }).ToList();
                 }
 
@@ -324,6 +343,9 @@
                             ScorePercentage = int.TryParse(course.ProgressPercentage.TrimEnd('%'), out var score) ? score : 0,
                             TotalActivities = course.TotalActivities,
                             CompletedActivities = course.CompletedActivities,
+                            IsMostRecent = false,
+                            ResourceDurationMilliseconds = 0,
+                            CompletionPercentage = 0,
                         }).ToList();
                     }
                 }
@@ -399,8 +421,8 @@
 
                 if (assessmentType == AssessmentTypeEnum.Formal)
                 {
-                    activityEntities = activityEntities.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && 
-                                                                   x.AssessmentResourceActivity.First().Score.HasValue && 
+                    activityEntities = activityEntities.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null &&
+                                                                   x.AssessmentResourceActivity.First().Score.HasValue &&
                                                                    (int)Math.Round(x.AssessmentResourceActivity.First().Score.Value,
                                                                        MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark)
                                                                     .ToList();
@@ -501,7 +523,6 @@
                 latestActivityCheck.RemoveAll(x => x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && (x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded || x.ActivityStatusId == (int)ActivityStatusEnum.Incomplete || x.ActivityStatusId == (int)ActivityStatusEnum.InProgress));
                 if (latestActivityCheck.Any() && latestActivityCheck.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
                 {
-
                     latestActivityCheck = latestActivityCheck.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && (x.ResourceVersion.AssessmentResourceVersion.AssessmentType == AssessmentTypeEnum.Formal && x.AssessmentResourceActivity.FirstOrDefault() != null && x.AssessmentResourceActivity.First().Score.HasValue && (int)Math.Round(x.AssessmentResourceActivity.First().Score.Value, MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark) ||
                     (x.ResourceVersion.AssessmentResourceVersion.AssessmentType == AssessmentTypeEnum.Informal && x.AssessmentResourceActivity.FirstOrDefault() != null && x.AssessmentResourceActivity.First().Score.HasValue)).ToList();
                 }

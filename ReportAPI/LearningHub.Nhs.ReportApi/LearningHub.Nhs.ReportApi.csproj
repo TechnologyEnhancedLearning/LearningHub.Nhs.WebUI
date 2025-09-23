@@ -20,7 +20,7 @@
 
 	<ItemGroup>
 
-		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.56" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.57" />
 
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
 

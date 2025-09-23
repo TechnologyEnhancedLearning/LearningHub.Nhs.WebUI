@@ -66,8 +66,8 @@ BEGIN
                       ON arv.ResourceVersionId = ra.ResourceVersionId
                     WHERE ara.ResourceActivityId = ra.Id
                       AND (
-                             ara.Score >= arv.PassMark -- formal assessment
-                          OR (ra.ActivityStatusId = 3 AND arv.AssessmentType = 1) --informal assessment
+                             (arv.AssessmentType = 2 AND ara.Score >= arv.PassMark) -- formal assessment
+                          OR (arv.AssessmentType = 1 AND ara.Score is not null) -- informal assessment
                       )
                 )
                 -- Or explicitly marked as passed

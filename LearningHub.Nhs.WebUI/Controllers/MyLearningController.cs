@@ -139,20 +139,15 @@
                 if (myLearningDashboard == "my-in-progress")
                 {
                     myLearningRequestModel.Incomplete = true;
-                    myLearningRequestModel.Failed = true;
                 }
                 else if (myLearningDashboard == "my-recent-completed")
                 {
                     myLearningRequestModel.Complete = true;
-                    myLearningRequestModel.Passed = true;
-                    myLearningRequestModel.Downloaded = true;
                 }
                 else if (myLearningDashboard == "my-certificates")
                 {
                     myLearningRequestModel.CertificateEnabled = true;
                     myLearningRequestModel.Complete = true;
-                    myLearningRequestModel.Passed = true;
-                    myLearningRequestModel.Downloaded = true;
                 }
             }
 
@@ -291,20 +286,15 @@
                 if (myLearningDashboard == "my-in-progress")
                 {
                     myLearningRequestModel.Incomplete = true;
-                    myLearningRequestModel.Failed = true;
                 }
                 else if (myLearningDashboard == "my-recent-completed")
                 {
                     myLearningRequestModel.Complete = true;
-                    myLearningRequestModel.Passed = true;
-                    myLearningRequestModel.Downloaded = true;
                 }
                 else if (myLearningDashboard == "my-certificates")
                 {
                     myLearningRequestModel.CertificateEnabled = true;
                     myLearningRequestModel.Complete = true;
-                    myLearningRequestModel.Passed = true;
-                    myLearningRequestModel.Downloaded = true;
                 }
             }
 

@@ -429,7 +429,7 @@
                 }
                 else if (assessmentType == AssessmentTypeEnum.Informal)
                 {
-                    activityEntities = activityEntities.Where(x => x.ActivityStatusId == (int)ActivityStatusEnum.Completed).ToList();
+                    activityEntities = activityEntities.Where(x => x.AssessmentResourceActivity != null && x.AssessmentResourceActivity.FirstOrDefault() != null && x.AssessmentResourceActivity.First().Score.HasValue).ToList();// x.ActivityStatusId == (int)ActivityStatusEnum.Completed).ToList();
                 }
             }
             else if (activityEntities.Any() && (activityEntities.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Video || activityEntities.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Audio))
@@ -523,8 +523,8 @@
                 latestActivityCheck.RemoveAll(x => x.Resource.ResourceTypeEnum == ResourceTypeEnum.Scorm && (x.ActivityStatusId == (int)ActivityStatusEnum.Downloaded || x.ActivityStatusId == (int)ActivityStatusEnum.Incomplete || x.ActivityStatusId == (int)ActivityStatusEnum.InProgress));
                 if (latestActivityCheck.Any() && latestActivityCheck.FirstOrDefault()?.Resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
                 {
-
-                    latestActivityCheck = latestActivityCheck.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && (x.ResourceVersion.AssessmentResourceVersion.AssessmentType == AssessmentTypeEnum.Formal && x.AssessmentResourceActivity.First().Score.HasValue && (int)Math.Round(x.AssessmentResourceActivity.First().Score.Value, MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark) || (x.ResourceVersion.AssessmentResourceVersion.AssessmentType == AssessmentTypeEnum.Informal && x.ActivityStatusId == (int)ActivityStatusEnum.Completed)).ToList();
+                    latestActivityCheck = latestActivityCheck.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && (x.ResourceVersion.AssessmentResourceVersion.AssessmentType == AssessmentTypeEnum.Formal && x.AssessmentResourceActivity.FirstOrDefault() != null && x.AssessmentResourceActivity.First().Score.HasValue && (int)Math.Round(x.AssessmentResourceActivity.First().Score.Value, MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark) ||
+                    (x.ResourceVersion.AssessmentResourceVersion.AssessmentType == AssessmentTypeEnum.Informal && x.AssessmentResourceActivity.FirstOrDefault() != null && x.AssessmentResourceActivity.First().Score.HasValue)).ToList();
                 }
 
                 ResourceActivity expectedActivity = null;

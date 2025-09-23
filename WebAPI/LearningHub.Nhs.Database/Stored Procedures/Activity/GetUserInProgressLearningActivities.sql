@@ -41,7 +41,7 @@ BEGIN
 	arv.PassMark AS PassMark,
 	asra.score AS AssesmentScore,
 	mar.SecondsPlayed AS SecondsPlayed,
-	mar.PercentComplete AS PercentComplete,
+	ISNULL( CAST(mar.PercentComplete AS INT) ,0) AS PercentComplete,
 	sa.CmiCoreLesson_status AS CmiCoreLessonstatus,
 	sa.CmiCoreScoreMax AS CmiCoreScoreMax,
 	sa.CmiCoreSession_time AS CmiCoreSessiontime,
@@ -77,9 +77,11 @@ SELECT Top 8 ActivityId,
 	   ActivityStatus,
 	   ActivityDate,
 	   ActivityDurationSeconds,
-	   ScorePercentage
+	   ScorePercentage,
+	   0 AS ResourceDurationMilliseconds,
+	   PercentComplete AS CompletionPercentage
 FROM CTERecentActivities
-WHERE rn = 1  AND ActivityStatus IN (2,4,7)
-order by ActivityDate desc;
+WHERE rn = 1 AND ActivityStatus IN (2,4,7)
+			order by ActivityDate desc;
 		
 END

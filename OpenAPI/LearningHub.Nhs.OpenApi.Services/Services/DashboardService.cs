@@ -234,6 +234,9 @@
                     ScorePercentage = Activity.ScorePercentage,
                     TotalActivities = 0,
                     CompletedActivities = 0,
+                    IsMostRecent = false,
+                    ResourceDurationMilliseconds = Activity.ResourceDurationMilliseconds,
+                    CompletionPercentage = Activity.CompletionPercentage,
                 }).ToList();
             }
 
@@ -258,6 +261,9 @@
                     ScorePercentage = Convert.ToInt32(course.ProgressPercentage.TrimEnd('%')),
                     TotalActivities = course.TotalActivities,
                     CompletedActivities = course.CompletedActivities,
+                    IsMostRecent = false,
+                    ResourceDurationMilliseconds = 0,
+                    CompletionPercentage = 0,
                 }).ToList();
             }
 

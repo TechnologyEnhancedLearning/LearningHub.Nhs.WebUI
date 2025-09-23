@@ -4,6 +4,7 @@
 -- Purpose      Get Users learning history Search
 --
 -- Modification History
+-- 23-09-2025  SA Added new columns for displaying video/Audio Progress
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUsersLearningHistory_Search] (
 	 @userId INT,
@@ -37,7 +38,13 @@ BEGIN
 					ISNULL(ara.ActivityStatusId,  ra.ActivityStatusId) AS ActivityStatus,
 					ra.ActivityStart AS ActivityDate,
 					ISNULL(ara.DurationSeconds, 0) AS ActivityDurationSeconds,
-					ara.Score AS ScorePercentage
+					ara.Score AS ScorePercentage,
+					CASE 
+					WHEN ResourceTypeId = 2 THEN ISNULL(audiorv.DurationInMilliseconds, 0)
+					WHEN ResourceTypeId = 7 THEN ISNULL(videorv.DurationInMilliseconds, 0)
+					ELSE 0
+					END AS ResourceDurationMilliseconds,
+					ISNULL( CAST(mar.PercentComplete AS INT) ,0) AS CompletionPercentage
 				FROM activity.ResourceActivity ra
 				LEFT JOIN activity.ResourceActivity ara
 					ON ara.LaunchResourceActivityId = ra.Id
@@ -45,6 +52,8 @@ BEGIN
 				INNER JOIN [resources].[ResourceVersion] rv ON  rv.Id = ra.ResourceVersionId AND rv.deleted =0
 				LEFT JOIN [resources].[ResourceVersionProvider] rvp on rv.Id = rvp.ResourceVersionId
 				LEFT JOIN [resources].[AssessmentResourceVersion] arv ON arv.ResourceVersionId = ra.ResourceVersionId
+				LEFT JOIN [resources].[AudioResourceVersion] audiorv ON audiorv.ResourceVersionId = ra.ResourceVersionId
+		        LEFT JOIN [resources].[VideoResourceVersion] videorv ON videorv.ResourceVersionId = ra.ResourceVersionId
 				LEFT JOIN [activity].[AssessmentResourceActivity] asra ON asra.ResourceActivityId = ra.Id
 				LEFT JOIN [activity].[MediaResourceActivity] mar ON mar.ResourceActivityId = ra.Id
 				LEFT JOIN [activity].[ScormActivity] sa ON sa.ResourceActivityId = ra.Id

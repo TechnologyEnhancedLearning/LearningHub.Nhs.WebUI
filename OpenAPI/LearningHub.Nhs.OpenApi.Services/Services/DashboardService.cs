@@ -351,12 +351,13 @@
                 allCertificates = allCertificates.Where(c => allowedTypeIds.Contains(c.ResourceTypeId));
 
                 var orderedCertificates = allCertificates.OrderByDescending(c => c.AwardedDate);
+
                 int skip = (pageNumber - 1) * 3;
                 var totalCount = orderedCertificates.Count();
-                var pagedResults = orderedCertificates
-                        .Skip(skip)
-                        .Take(3)
-                        .ToList();
+                bool isLastPage = skip + 3 >= 8;
+                int pageSize = isLastPage ? 2 : 3;
+                var pagedResults = orderedCertificates.Skip(skip).Take(pageSize).ToList();
+
                 return new MyLearningCertificatesDetailedViewModel
                 {
                     Certificates = pagedResults,

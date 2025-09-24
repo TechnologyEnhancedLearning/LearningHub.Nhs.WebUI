@@ -155,7 +155,13 @@
                                         <div class="nhs-progress-bar" style="width: @(activity.ScorePercentage)%"></div>
                                     </div>
                                 }
-
+                                else @if (ViewActivityHelper.CanViewVidoProgress(activity))
+                                {
+                                    <div class="nhsuk-u-padding-top-1">
+                                        @activity.CompletionPercentage% complete
+                                        <a asp-controller="MyLearning" asp-action="ViewProgress" asp-route-resourceId="@activity.ResourceId" asp-route-version="@activity.MajorVersion" asp-route-maxTime="@activity.ResourceDurationMilliseconds" asp-route-returnUrl="@returnUrl" asp-route-resourceReferenceId="@activity.ResourceReferenceId">View Progress</a>
+                                    </div>
+                                }
 
                                 @if (ViewActivityHelper.CanCertificateawarded(activity))
                                 {

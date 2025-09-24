@@ -49,6 +49,11 @@ BEGIN
 	sa.CmiCoreScoreMax AS CmiCoreScoreMax,
 	sa.CmiCoreSession_time AS CmiCoreSessiontime,
 	sa.DurationSeconds AS DurationSeconds,
+	CASE 
+			WHEN ResourceTypeId = 2 THEN ISNULL(audiorv.DurationInMilliseconds, 0)
+			WHEN ResourceTypeId = 7 THEN ISNULL(videorv.DurationInMilliseconds, 0)
+			ELSE 0
+		    END AS ResourceDurationMilliseconds,
     ROW_NUMBER() OVER (PARTITION BY ra.ResourceId ORDER BY ISNULL(ara.ActivityEnd, ra.ActivityStart) DESC) AS rn
    FROM activity.ResourceActivity ra
 	LEFT JOIN activity.ResourceActivity ara ON ara.LaunchResourceActivityId = ra.Id
@@ -56,6 +61,8 @@ BEGIN
 	INNER JOIN [resources].[ResourceVersion] rv ON  rv.Id = ra.ResourceVersionId AND rv.Deleted = 0
 	LEFT JOIN [resources].[ResourceVersionProvider] rvp on rv.Id = rvp.ResourceVersionId
 	LEFT JOIN [resources].[AssessmentResourceVersion] arv ON arv.ResourceVersionId = ra.ResourceVersionId
+	LEFT JOIN [resources].[AudioResourceVersion] audiorv ON audiorv.ResourceVersionId = ra.ResourceVersionId
+	LEFT JOIN [resources].[VideoResourceVersion] videorv ON videorv.ResourceVersionId = ra.ResourceVersionId
 	LEFT JOIN [activity].[AssessmentResourceActivity] asra ON asra.ResourceActivityId = ra.Id
 	LEFT JOIN [activity].[MediaResourceActivity] mar ON mar.ResourceActivityId = ra.Id
 	LEFT JOIN [activity].[ScormActivity] sa ON sa.ResourceActivityId = ra.Id
@@ -81,7 +88,7 @@ SELECT ActivityId,
 	   ActivityDate,
 	   ActivityDurationSeconds,
 	   ScorePercentage,
-	   0 AS ResourceDurationMilliseconds,
+	   ResourceDurationMilliseconds,
 	   PercentComplete AS CompletionPercentage
 FROM CTERecentActivities
 WHERE rn = 1

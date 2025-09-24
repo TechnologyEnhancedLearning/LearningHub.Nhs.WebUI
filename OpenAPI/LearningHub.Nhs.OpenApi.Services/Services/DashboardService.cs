@@ -158,7 +158,7 @@
             }
             if (myInProgressActivities.TotalCount > 0)
             {
-                foreach (var activity in myInProgressActivities.Activities) 
+                foreach (var activity in myInProgressActivities.Activities)
                 {
                     activity.Providers = await providerService.GetByResourceVersionIdAsync(activity.ResourceVersionId);
                 }
@@ -270,15 +270,15 @@
             // Combine both result sets
             var combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
             int skip = (pageNumber - 1) * 3;
-            var totalCount = combainedUserActivities.Count();
-            bool isLastPage = skip + 3 >= 8;
+            var totalCount = combainedUserActivities.Count() > 8 ? 8 : combainedUserActivities.Count();
+            bool isLastPage = skip + 3 >= totalCount;
             int pageSize = isLastPage ? 2 : 3;
             var pagedResults = combainedUserActivities.OrderByDescending(activity => activity.ActivityDate).Skip(skip).Take(pageSize).ToList();
 
             // Count total records.
             MyLearningActivitiesDetailedViewModel viewModel = new MyLearningActivitiesDetailedViewModel()
             {
-                TotalCount = totalCount > 8 ? 8 : totalCount,
+                TotalCount = totalCount,
                 Activities = pagedResults,
             };
 
@@ -346,22 +346,22 @@
 
                 var allCertificates = resourceCertificates.Concat(mappedCourseCertificates);
 
-                var allowedTypeIds = new List<int> { 6,13 };
+                var allowedTypeIds = new List<int> { 6, 13 };
 
                 allCertificates = allCertificates.Where(c => allowedTypeIds.Contains(c.ResourceTypeId));
 
                 var orderedCertificates = allCertificates.OrderByDescending(c => c.AwardedDate);
 
                 int skip = (pageNumber - 1) * 3;
-                var totalCount = orderedCertificates.Count();
-                bool isLastPage = skip + 3 >= 8;
+                var totalCount = orderedCertificates.Count() > 8 ? 8 : orderedCertificates.Count();
+                bool isLastPage = skip + 3 >= totalCount;
                 int pageSize = isLastPage ? 2 : 3;
                 var pagedResults = orderedCertificates.Skip(skip).Take(pageSize).ToList();
 
                 return new MyLearningCertificatesDetailedViewModel
                 {
                     Certificates = pagedResults,
-                    TotalCount = totalCount > 8 ? 8 : totalCount
+                    TotalCount = totalCount
                 };
             }
             catch (Exception ex)

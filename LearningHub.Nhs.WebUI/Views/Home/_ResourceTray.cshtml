@@ -15,7 +15,7 @@
                 return "Most accessed";
             case "my-recent-completed":
             default:
-                return "Recently Completed";
+                return "Recently completed";
         }
     }
     var pagingViewModel = new DashBoardPagingViewModel
@@ -48,7 +48,7 @@
             <ul class="navbar-nav">
                 <li class="subnavwhite-item nhsuk-bg-grey @(Model.Resources.Type == "my-recent-completed" ? "active" : string.Empty)">
                     <a tabindex="0" class="subnavwhite-link text-nowrap"
-                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="@(Model.MyLearnings.Type)" asp-route-resourceDashboard="my-recent-completed" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="resources">Recently Completed</a>
+                       asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="@(Model.MyLearnings.Type)" asp-route-resourceDashboard="my-recent-completed" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="resources">Recently completed</a>
                 </li>
                 <li class="subnavwhite-item nhsuk-bg-grey @(Model.Resources.Type == "rated-resources" ? "active" : string.Empty)">
                     <a tabindex="0" class="subnavwhite-link text-nowrap"

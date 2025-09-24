@@ -168,6 +168,13 @@
 
                 if (result != null)
                 {
+                    // Step 1: Get most recent date per ResourceId
+                    var mostRecentByResource = result
+                        .GroupBy(a => a.ResourceId)
+                        .ToDictionary(
+                            g => g.Key,
+                            g => g.Max(a => a.ActivityDate)
+                        );
                     mappedMyLearningActivities = result.Select(Activity => new MyLearningCombinedActivitiesViewModel
                     {
                         UserId = userId,
@@ -185,9 +192,12 @@
                         ScorePercentage = Activity.ScorePercentage,
                         TotalActivities = 0,
                         CompletedActivities = 0,
-                        IsMostRecent = false,
+                        //Set IsMostRecent if this is the most recent activity for the ResourceId
+                        IsMostRecent = mostRecentByResource.TryGetValue(Activity.ResourceId, out var mostRecentDate)
+                       && Activity.ActivityDate == mostRecentDate,
                         ResourceDurationMilliseconds = Activity.ResourceDurationMilliseconds,
                         CompletionPercentage = Activity.CompletionPercentage,
+
                     }).ToList();
                 }
 
@@ -214,7 +224,7 @@
                         CompletedActivities = course.CompletedActivities,
                         IsMostRecent = false,
                         ResourceDurationMilliseconds = 0,
-                        CompletionPercentage=0,
+                        CompletionPercentage = 0,
                     }).ToList();
                 }
 

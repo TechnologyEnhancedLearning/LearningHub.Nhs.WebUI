@@ -279,11 +279,6 @@
             }
             else if (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment)
             {
-                if (activityDetailedItemViewModel.AssessmentDetails.AssessmentTypeEnum == AssessmentTypeEnum.Informal && (activityDetailedItemViewModel.Complete || GetActivityStatusText(activityDetailedItemViewModel) == "Completed"))
-                {
-                    return "Passed";
-                }
-
                 if (activityDetailedItemViewModel.Complete)
                 {
                     return activityDetailedItemViewModel.ScorePercentage >= activityDetailedItemViewModel.AssessmentDetails.PassMark ? "Passed" : "Failed";

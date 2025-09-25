@@ -168,6 +168,13 @@
 
                 if (result != null)
                 {
+                    // Step 1: Get most recent date per ResourceId
+                    var mostRecentByResource = result
+                        .GroupBy(a => a.ResourceId)
+                        .ToDictionary(
+                            g => g.Key,
+                            g => g.Max(a => a.ActivityDate)
+                        );
                     mappedMyLearningActivities = result.Select(Activity => new MyLearningCombinedActivitiesViewModel
                     {
                         UserId = userId,
@@ -185,6 +192,12 @@
                         ScorePercentage = Activity.ScorePercentage,
                         TotalActivities = 0,
                         CompletedActivities = 0,
+                        //Set IsMostRecent if this is the most recent activity for the ResourceId
+                        IsMostRecent = mostRecentByResource.TryGetValue(Activity.ResourceId, out var mostRecentDate)
+                       && Activity.ActivityDate == mostRecentDate,
+                        ResourceDurationMilliseconds = Activity.ResourceDurationMilliseconds,
+                        CompletionPercentage = Activity.CompletionPercentage,
+
                     }).ToList();
                 }
 
@@ -209,11 +222,14 @@
                         ScorePercentage = Convert.ToInt32(course.ProgressPercentage.TrimEnd('%')),
                         TotalActivities = course.TotalActivities,
                         CompletedActivities = course.CompletedActivities,
+                        IsMostRecent = false,
+                        ResourceDurationMilliseconds = 0,
+                        CompletionPercentage = 0,
                     }).ToList();
                 }
 
                 // Combine both result sets
-                 combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
+                combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
 
 
                 var pagedResults = combainedUserActivities.OrderByDescending(activity => activity.ActivityDate).Skip(requestModel.Skip).Take(requestModel.Take).ToList();
@@ -272,6 +288,13 @@
 
                 if (result != null)
                 {
+                    // Step 1: Get most recent date per ResourceId
+                    var mostRecentByResource = result
+                        .GroupBy(a => a.ResourceId)
+                        .ToDictionary(
+                            g => g.Key,
+                            g => g.Max(a => a.ActivityDate)
+                        );
                     mappedMyLearningActivities = result.Select(activity => new MyLearningCombinedActivitiesViewModel
                     {
                         UserId = userId,
@@ -289,6 +312,12 @@
                         ScorePercentage = activity.ScorePercentage,
                         TotalActivities = 0,
                         CompletedActivities = 0,
+
+                        //Set IsMostRecent if this is the most recent activity for the ResourceId
+                        IsMostRecent = mostRecentByResource.TryGetValue(activity.ResourceId, out var mostRecentDate)
+                       && activity.ActivityDate == mostRecentDate,
+                        ResourceDurationMilliseconds = activity.ResourceDurationMilliseconds,
+                        CompletionPercentage = activity.CompletionPercentage,
                     }).ToList();
                 }
 
@@ -324,6 +353,9 @@
                             ScorePercentage = int.TryParse(course.ProgressPercentage.TrimEnd('%'), out var score) ? score : 0,
                             TotalActivities = course.TotalActivities,
                             CompletedActivities = course.CompletedActivities,
+                            IsMostRecent = false,
+                            ResourceDurationMilliseconds = 0,
+                            CompletionPercentage = 0,
                         }).ToList();
                     }
                 }

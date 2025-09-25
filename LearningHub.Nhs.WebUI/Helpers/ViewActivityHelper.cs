@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.MyLearning;
@@ -393,6 +394,21 @@
         public static bool CanViewProgress(this ActivityDetailedItemViewModel activityDetailedItemViewModel)
         {
             if ((activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Video || activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Audio) && activityDetailedItemViewModel.ActivityStatus == ActivityStatusEnum.InProgress && activityDetailedItemViewModel.IsCurrentResourceVersion)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// CanView Video Progress.
+        /// </summary>
+        /// <param name="activitiesViewModel">The MyLearningCombinedActivitiesViewModel.</param>
+        /// <returns>The <see cref="bool"/>bool.</returns>
+        public static bool CanViewVidoProgress(this MyLearningCombinedActivitiesViewModel activitiesViewModel)
+        {
+            if ((activitiesViewModel.ResourceType == ResourceTypeEnum.Video || activitiesViewModel.ResourceType == ResourceTypeEnum.Audio) && activitiesViewModel.ActivityStatus == ActivityStatusEnum.Incomplete && activitiesViewModel.IsCurrentResourceVersion && activitiesViewModel.IsMostRecent)
             {
                 return true;
             }

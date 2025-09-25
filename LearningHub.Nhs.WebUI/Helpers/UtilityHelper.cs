@@ -143,6 +143,8 @@
                     return "Case";
                 case ResourceTypeEnum.Html:
                     return "HTML";
+                case ResourceTypeEnum.Moodle:
+                    return "Course";
                 default:
                     return "File";
             }

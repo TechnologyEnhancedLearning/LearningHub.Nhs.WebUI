@@ -993,20 +993,10 @@
 
         .my-learning table, th, td {
             width: 100%;
-            border: 1px solid;
-            border-color: #005eb8;
         }
 
         .my-learning th.Learningresource {
             width: 15%;
-        }
-
-        .my-learning thead tr:nth-child(odd) {
-            background-color: #f0f4f5 !important;
-        }
-
-        .my-learning tbody tr span {
-            background-color: #f0f4f5 !important;
         }
 
         @@media (max-width: 599px) {
@@ -1020,10 +1010,6 @@
         }
 
         .my-learning .summarytabledetails {
-            border: 1px solid #005eb8;
-        }
-
-        .my-learning .summarytabledetailscells {
             border: 1px solid #005eb8;
         }
 
@@ -1048,7 +1034,6 @@
 
         .my-learning table {
             width: 100%;
-            border: 1px solid #d8dde0;
         }
 
         .my-learning .no-table-spacing {
@@ -1070,25 +1055,59 @@
             margin: 0;
         }
 
+        .my-learning-column-width {
+            width: 110px;
+        }
+
+        .my-learning table tr {
+            border-bottom: 2px solid #d8dde0;
+        }
+
+        .my-learning-report-heading {
+            margin-left: -30px;
+        }
+
+        .my-learning-status-column-width {
+            width: 160px;
+        }
+
     </style>
 </head>
-<div class="my-learning">
+
+<div class="my-learning bg-white">
     <div class="nhsuk-width-container app-width-container">
         <div class="nhsuk-grid-row">
-            <div class="nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-7">
-                <h1 class="nhsuk-heading-xl">Activity report: <span class="no-wrap">  @Model.Item1.FirstName @Model.Item1.LastName (@Model.Item1.UserName)</h1>
+            <div class="nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-2">
+                <div class="lh-container-xl">
+                    <div>
+                        <img src="https://learninghub.nhs.uk/images/NHS-white.svg" alt="NHS" />
+                        <div class="header-title">Learning Hub<sup class="header-beta" style="color: #768692;">Beta</sup></div>
+                    </div>
+                </div>
+                <div class="lh-container-xl">
+                    <div class="activity-report-heading pb-4">
+                        <h1 class="nhsuk-heading-l">Activity report:  <span class="nhsuk-caption-l no-wrap">  @Model.Item1.FirstName @Model.Item1.LastName (@Model.Item1.UserName)</span></h1>
+                    </div>
+                </div>
             </div>
 
-
-            <!-- Right column: Main content -->
-            <div class="nhsuk-grid-column-full">
-                <div class="nhsuk-u-padding-bottom-4">
-                    <hr class="nhsuk-section-break nhsuk-section-break--visible">
-                </div>
-                <div>
+            <table style="width:100%;table-layout:fixed" role="table" class="nhsuk-table-responsive">
+                <thead role="rowgroup" class="nhsuk-table__head">
+                    <tr role="row">
+                        <th role="columnheader" class="nhsuk-u-padding-top-2 my-learning-column-width" scope="col">
+                            Id
+                        </th>
+                        <th role="columnheader" class="nhsuk-u-padding-top-2" scope="col">
+                            Title
+                        </th>
+                        <th role="columnheader" class="nhsuk-u-padding-top-2 my-learning-status-column-width" scope="col">
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="nhsuk-table__body">
                     @foreach (var activity in Model.Item2.Activities)
                     {
-
                         var isCompleted = ViewActivityHelper.GetActivityStatusDisplayText(activity) == ActivityStatusEnum.Completed.ToString();
 
                         var typeLabelClass = isCompleted ? "nhsuk-u-primary-text-color" : "nhsuk-u-secondary-text-color";
@@ -1102,19 +1121,21 @@
                         var dateTimeText = activityDate == today ? "Today"
                         : activityDate == today.AddDays(-1) ? "Yesterday"
                         : activityDate.ToString("dd MMM yyyy");
-
-                        <div>
-                            <span class="nhsuk-u-padding-bottom-3">
-                                @if (ViewActivityHelper.GetResourceTypeDesc(activity.ResourceType) == "Course")
-                                {
-                                    <a class="nhsuk-u-font-size-19" href="@GetMoodleCourseUrl(activity.ResourceId)">@activity.Title</a>
-                                }
-                                else
-                                {
-                                    <a class="nhsuk-u-font-size-19" href="@GetResourceUrl(activity.ResourceReferenceId)">@activity.Title</a>
-                                }
-                            </span>
-                            <div>
+                        <tr role="row" class="nhsuk-table__row">
+                            <td role="cell" class="nhsuk-table__cell word-wrapper">
+                                <span>@activity.ResourceReferenceId</span>
+                            </td>
+                            <td>
+                                <span class="nhsuk-u-padding-bottom-3">
+                                    @if (ViewActivityHelper.GetResourceTypeDesc(activity.ResourceType) == "Course")
+                                    {
+                                        <a class="nhsuk-u-font-size-19" href="@GetMoodleCourseUrl(activity.ResourceId)">@activity.Title</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="nhsuk-u-font-size-19" href="@GetResourceUrl(activity.ResourceReferenceId)">@activity.Title</a>
+                                    }
+                                </span>
                                 <div class="nhs-item-row nhsuk-u-padding-bottom-3 nhsuk-u-padding-top-2">
                                     <div>
                                         <span class="@typeLabelClass nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-padding-right-2">Type:</span>
@@ -1129,13 +1150,6 @@
 
                                         <span class="nhsuk-u-font-size-16 @accessedLabelClass">
                                             @dateTimeText
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span class="nhsuk-u-text-align-left  table-content-spacing">
-                                            <strong class="nhsuk-tag @tagColorClass">
-                                                @statusText
-                                            </strong>
                                         </span>
                                     </div>
                                 </div>
@@ -1184,11 +1198,21 @@
                                                 <span class="nhsuk-u-visually-hidden">No certificate available</span>
                                             </div>
                                         }
-                                        @if (activity.CertificateEnabled == true)
-                                        {
-                                            <div class="nhsuk nhsuk-u-font-size-16 nhsuk-u-secondary-text-color">
-                                                Includes a certificate
-                                                <span class="nhsuk-u-padding-left-1">
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                <span class="nhsuk-u-text-align-left  table-content-spacing">
+                                    <strong class="nhsuk-tag @tagColorClass">
+                                        @statusText
+                                    </strong>
+                                </span>
+                                <div class="nhs-item-row nhsuk-u-padding-bottom-5 nhsuk-u-padding-top-2">
+                                    @if (activity.CertificateEnabled == true)
+                                    {
+                                        <div class="nhsuk nhsuk-u-font-size-14 nhsuk-u-secondary-text-color">
+                                            Includes a certificate
+                                            <span class="nhsuk-u-padding-left-1">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="19" height="24" viewBox="0 0 19 24" fill="none">
                                                     <g clip-path="url(#clip0_1298_21764)">
                                                         <path d="M13.7817 18.9737V23.1883C13.7817 23.4148 13.1731 23.5225 12.8452 23.3543L9.9952 21.8784C9.77736 21.7662 9.39332 21.7685 9.18221 21.8851L6.60399 23.3139C6.28284 23.4911 5.65625 23.3879 5.65625 23.1546V17.6055" stroke="#AEB7BD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
@@ -1204,19 +1228,16 @@
                                                         </clipPath>
                                                     </defs>
                                                 </svg>
-                                                </span>
-                                            </div>
-                                        }
+                                            </span>
+                                        </div>
+                                    }
                                     </div>
-                                }
-                            </div>
-                            <div class="nhsuk-u-padding-bottom-5">
-                                <hr class="nhsuk-section-break nhsuk-section-break--visible ">
-                            </div>
-                        </div>
+                            </td>
+
+                        </tr>
                     }
-                </div>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

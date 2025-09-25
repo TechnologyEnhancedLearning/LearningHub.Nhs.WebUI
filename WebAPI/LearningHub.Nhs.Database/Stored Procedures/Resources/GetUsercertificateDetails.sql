@@ -58,17 +58,14 @@ BEGIN
         OR (
             r.ResourceTypeId = 11
             AND (
-                -- Either passed by score, or completed with no pass mark
+                -- Must be passed by score
                 EXISTS (
                     SELECT 1
                     FROM activity.AssessmentResourceActivity ara
                     JOIN resources.AssessmentResourceVersion arv
                       ON arv.ResourceVersionId = ra.ResourceVersionId
                     WHERE ara.ResourceActivityId = ra.Id
-                      AND (
-                             (arv.AssessmentType = 2 AND ara.Score >= arv.PassMark) -- formal assessment
-                          OR (arv.AssessmentType = 1 AND ara.Score is not null) -- informal assessment
-                      )
+                      AND ara.Score is not null AND ara.Score >= arv.PassMark -- formal AND informal assessment
                 )
                 -- Or explicitly marked as passed
                 OR ra.ActivityStatusId = 5

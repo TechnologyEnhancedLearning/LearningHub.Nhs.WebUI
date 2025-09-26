@@ -271,7 +271,8 @@
             var combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
             int skip = (pageNumber - 1) * 3;
             var totalCount = combainedUserActivities.Count() > 8 ? 8 : combainedUserActivities.Count();
-            bool isLastPage = skip + 3 >= totalCount;
+
+            bool isLastPage = skip + 3 >= 8;
             int pageSize = isLastPage ? 2 : 3;
             var pagedResults = combainedUserActivities.OrderByDescending(activity => activity.ActivityDate).Skip(skip).Take(pageSize).ToList();
 
@@ -354,7 +355,7 @@
 
                 int skip = (pageNumber - 1) * 3;
                 var totalCount = orderedCertificates.Count() > 8 ? 8 : orderedCertificates.Count();
-                bool isLastPage = skip + 3 >= totalCount;
+                bool isLastPage = skip + 3 >= 8;
                 int pageSize = isLastPage ? 2 : 3;
                 var pagedResults = orderedCertificates.Skip(skip).Take(pageSize).ToList();
 

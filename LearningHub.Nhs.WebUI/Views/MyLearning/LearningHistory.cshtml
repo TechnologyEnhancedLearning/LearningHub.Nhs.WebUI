@@ -187,6 +187,19 @@
                                 {
                                     <a class="nhsuk-u-font-size-19" href="@GetMoodleCourseUrl(activity.ResourceId)">@activity.Title</a>
                                 }
+                                else if (activity.ResourceType == ResourceTypeEnum.Video || activity.ResourceType == ResourceTypeEnum.Audio)
+                                {
+                                    if (activity.IsCurrentResourceVersion && activity.IsMostRecent)
+                                    {
+                                        <a class="nhsuk-u-font-size-19" asp-controller="Resource" asp-action="Index" asp-route-resourceReferenceId="@activity.ResourceReferenceId">@activity.Title</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="nhsuk-u-font-size-19">
+                                            @activity.Title<br>
+                                        </span>
+                                    }
+                                }
                                 else
                                 {
                                     <a class="nhsuk-u-font-size-19" asp-controller="Resource" asp-action="Index" asp-route-resourceReferenceId="@activity.ResourceReferenceId">@activity.Title</a>

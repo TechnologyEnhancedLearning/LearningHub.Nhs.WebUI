@@ -101,6 +101,8 @@
     <Folder Include="Triggers" />
     <Folder Include="Triggers\external" />
     <Folder Include="Stored Procedures\External" />
+    <Folder Include="Tables\Elfh" />
+    <Folder Include="Stored Procedures\Elfh" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\learningHub_Data.sql" />
@@ -546,6 +548,49 @@
     <Build Include="Stored Procedures\Activity\GetUsersLearningHistory_Search.sql" />
     <Build Include="Stored Procedures\Resources\GetUsercertificateDetails.sql" />
     <Build Include="Stored Procedures\Activity\GetUserInProgressLearningActivities.sql" />
+    <Build Include="Schemas\elfh.sql" />
+    <Build Include="Tables\Elfh\AttributeTBL.sql" />
+    <Build Include="Tables\Elfh\AttributeTypeTBL.sql" />
+    <Build Include="Tables\Elfh\CountryTBL.sql" />
+    <Build Include="Tables\Elfh\DeaneryTBL.sql" />
+    <Build Include="Tables\Elfh\EmailTemplateTBL.sql" />
+    <Build Include="Tables\Elfh\EmailTemplateTypeTBL.sql" />
+    <Build Include="Tables\Elfh\ExternalSystemTBL.sql" />
+    <Build Include="Tables\Elfh\GdcRegister.sql" />
+    <Build Include="Tables\Elfh\GmcLrmp.sql" />
+    <Build Include="Tables\Elfh\GradeTBL.sql" />
+    <Build Include="Tables\Elfh\IpCountryLookupTBL.sql" />
+    <Build Include="Tables\Elfh\JobRoleTBL.sql" />
+    <Build Include="Tables\Elfh\Location.sql" />
+    <Build Include="Tables\Elfh\locationTypeTBL.sql" />
+    <Build Include="Tables\Elfh\LoginWizardRuleTBL.sql" />
+    <Build Include="Tables\Elfh\LoginWizardStageActivityTBL.sql" />
+    <Build Include="Tables\Elfh\loginWizardStageTBL.sql" />
+    <Build Include="Tables\Elfh\MedicalCouncilTBL.sql" />
+    <Build Include="Tables\Elfh\RegionTBL.sql" />
+    <Build Include="Tables\Elfh\SchoolTBL.sql" />
+    <Build Include="Tables\Elfh\SpecialtyTBL.sql" />
+    <Build Include="Tables\Elfh\StaffGroupTBL.sql" />
+    <Build Include="Tables\Elfh\SystemSettingTBL.sql" />
+    <Build Include="Tables\Elfh\TenantSmtpTBL.sql" />
+    <Build Include="Tables\Elfh\TenantTBL.sql" />
+    <Build Include="Tables\Elfh\TenantUrlTBL.sql" />
+    <Build Include="Tables\Elfh\TermsAndConditionsTBL.sql" />
+    <Build Include="Tables\Elfh\UserAttributeTBL.sql" />
+    <Build Include="Tables\Elfh\UserEmploymentTBL.sql" />
+    <Build Include="Tables\Elfh\UserGroupTypeInputValidationTBL.sql" />
+    <Build Include="Tables\Elfh\UserHistoryAttributeTBL.sql" />
+    <Build Include="Tables\Elfh\UserHistoryTBL.sql" />
+    <Build Include="Tables\Elfh\userHistoryTypeTBL.sql" />
+    <Build Include="Tables\Elfh\UserPasswordValidationTokenTBL.sql" />
+    <Build Include="Tables\Elfh\UserRoleUpgradeTBL.sql" />
+    <Build Include="Tables\Elfh\UserTermsAndConditionsTBL.sql" />
+    <Build Include="Stored Procedures\Elfh\LinkEmploymentRecordToUser.sql" />
+    <Build Include="Stored Procedures\Elfh\UserDetailForAuthenticationByUserName.sql" />
+    <Build Include="Stored Procedures\Elfh\UserHistoryAttributeSave.sql" />
+    <Build Include="Stored Procedures\Elfh\UserHistoryInsert.sql" />
+    <Build Include="Stored Procedures\Elfh\UserHistoryLoadForLearningHubUser.sql" />
+    <Build Include="Stored Procedures\Elfh\UserHistoryLoadForUser.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

@@ -14,6 +14,7 @@
 -- 11 Aug 2023  RS  Added CardImageUrl column
 -- 27 Sep 2023  HV  Included Paging and user accessed catalogues
 -- 13 Nov 2023  SA  Included Node VersionId in also.
+-- 29 Sep 2025  SA  Integrated the provider dertails 
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetDashboardCatalogues]
 	@DashboardType			nvarchar(30),
@@ -57,10 +58,25 @@ BEGIN
 				,CAST(CASE WHEN cnv.RestrictedAccess = 1 AND auth.CatalogueNodeId IS NULL THEN 0 ELSE 1 END AS bit) AS HasAccess
 				,ub.Id AS BookMarkId
 			    ,CAST(ISNULL(ub.[Deleted], 1) ^ 1 AS BIT) AS IsBookmarked 
+				,cpAgg.ProvidersJson
 			FROM @Catalogues tc
 			JOIN [hierarchy].[Node] n ON tc.NodeId = n.Id
 			JOIN [hierarchy].[NodeVersion] nv ON nv.NodeId = n.Id
 			JOIN [hierarchy].[CatalogueNodeVersion] cnv ON cnv.NodeVersionId = nv.Id
+			LEFT JOIN (
+			SELECT 
+				cnp.CatalogueNodeVersionId,
+				JSON_QUERY('[' + STRING_AGG(
+					'{"Id":' + CAST(p.Id AS NVARCHAR) +
+					',"Name":"' + p.Name + '"' +
+					',"Description":"' + p.Description + '"' +
+					',"Logo":"' + ISNULL(p.Logo, '') + '"}', 
+				',') + ']') AS ProvidersJson
+			FROM hierarchy.CatalogueNodeVersionProvider cnp
+			JOIN hub.Provider p ON p.Id = cnp.ProviderId
+			WHERE p.Deleted = 0 and cnp.Deleted = 0
+			GROUP BY cnp.CatalogueNodeVersionId
+			) cpAgg ON cpAgg.CatalogueNodeVersionId = cnv.Id
 			JOIN hub.Scope s ON n.Id = s.CatalogueNodeId
 			LEFT JOIN hub.UserBookmark ub ON ub.UserId = @UserId AND ub.NodeId = nv.NodeId
 			LEFT JOIN (  SELECT DISTINCT CatalogueNodeId 
@@ -88,10 +104,25 @@ BEGIN
 				,CAST(CASE WHEN cnv.RestrictedAccess = 1 AND auth.CatalogueNodeId IS NULL THEN 0 ELSE 1 END AS bit) AS HasAccess
 				,ub.Id AS BookMarkId
 			    ,CAST(ISNULL(ub.[Deleted], 1) ^ 1 AS BIT) AS IsBookmarked 
+				,cpAgg.ProvidersJson
 			INTO #recentcatalogues
 			FROM [hierarchy].[Node] n
 			JOIN [hierarchy].[NodeVersion] nv ON nv.NodeId = n.Id
 			JOIN [hierarchy].[CatalogueNodeVersion] cnv ON cnv.NodeVersionId = nv.Id
+			LEFT JOIN (
+			SELECT 
+				cnp.CatalogueNodeVersionId,
+				JSON_QUERY('[' + STRING_AGG(
+					'{"Id":' + CAST(p.Id AS NVARCHAR) +
+					',"Name":"' + p.Name + '"' +
+					',"Description":"' + p.Description + '"' +
+					',"Logo":"' + ISNULL(p.Logo, '') + '"}', 
+				',') + ']') AS ProvidersJson
+			FROM hierarchy.CatalogueNodeVersionProvider cnp
+			JOIN hub.Provider p ON p.Id = cnp.ProviderId
+			WHERE p.Deleted = 0 and cnp.Deleted = 0
+			GROUP BY cnp.CatalogueNodeVersionId
+			) cpAgg ON cpAgg.CatalogueNodeVersionId = cnv.Id
 			LEFT JOIN hub.UserBookmark ub ON ub.UserId = @UserId AND ub.NodeId = nv.NodeId
 			LEFT JOIN (  SELECT DISTINCT CatalogueNodeId 
 						  FROM [hub].[RoleUserGroupView] rug JOIN hub.UserUserGroup uug ON rug.UserGroupId = uug.UserGroupId
@@ -141,10 +172,25 @@ BEGIN
 					) AS AverageRating
 					,ub.Id AS BookMarkId
 			    ,CAST(ISNULL(ub.[Deleted], 1) ^ 1 AS BIT) AS IsBookmarked 
+				,cpAgg.ProvidersJson
 			FROM @Catalogues tc
 			JOIN [hierarchy].[Node] n ON tc.NodeId = n.Id
 			JOIN [hierarchy].[NodeVersion] nv ON nv.NodeId = n.Id
 			JOIN [hierarchy].[CatalogueNodeVersion] cnv ON cnv.NodeVersionId = nv.Id
+			LEFT JOIN (
+			SELECT 
+				cnp.CatalogueNodeVersionId,
+				JSON_QUERY('[' + STRING_AGG(
+					'{"Id":' + CAST(p.Id AS NVARCHAR) +
+					',"Name":"' + p.Name + '"' +
+					',"Description":"' + p.Description + '"' +
+					',"Logo":"' + ISNULL(p.Logo, '') + '"}', 
+				',') + ']') AS ProvidersJson
+			FROM hierarchy.CatalogueNodeVersionProvider cnp
+			JOIN hub.Provider p ON p.Id = cnp.ProviderId
+			WHERE p.Deleted = 0 and cnp.Deleted = 0
+			GROUP BY cnp.CatalogueNodeVersionId
+			) cpAgg ON cpAgg.CatalogueNodeVersionId = cnv.Id
 			LEFT JOIN hub.UserBookmark ub ON ub.UserId = @UserId AND ub.NodeId = nv.NodeId
 			LEFT JOIN (  SELECT DISTINCT CatalogueNodeId 
 						  FROM [hub].[RoleUserGroupView] rug JOIN hub.UserUserGroup uug ON rug.UserGroupId = uug.UserGroupId
@@ -178,9 +224,24 @@ BEGIN
 				,CAST(CASE WHEN cnv.RestrictedAccess = 1 AND auth.CatalogueNodeId IS NULL THEN 0 ELSE 1 END AS bit) AS HasAccess
 				,ub.Id AS BookMarkId
 			    ,CAST(ISNULL(ub.[Deleted], 1) ^ 1 AS BIT) AS IsBookmarked 
+				,cpAgg.ProvidersJson
 			FROM [hierarchy].[Node] n
 			JOIN [hierarchy].[NodeVersion] nv ON nv.NodeId = n.Id
 			JOIN [hierarchy].[CatalogueNodeVersion] cnv ON cnv.NodeVersionId = nv.Id
+			LEFT JOIN (
+			SELECT 
+				cnp.CatalogueNodeVersionId,
+				JSON_QUERY('[' + STRING_AGG(
+					'{"Id":' + CAST(p.Id AS NVARCHAR) +
+					',"Name":"' + p.Name + '"' +
+					',"Description":"' + p.Description + '"' +
+					',"Logo":"' + ISNULL(p.Logo, '') + '"}', 
+				',') + ']') AS ProvidersJson
+			FROM hierarchy.CatalogueNodeVersionProvider cnp
+			JOIN hub.Provider p ON p.Id = cnp.ProviderId
+			WHERE p.Deleted = 0 and cnp.Deleted = 0
+			GROUP BY cnp.CatalogueNodeVersionId
+			) cpAgg ON cpAgg.CatalogueNodeVersionId = cnv.Id
 			LEFT JOIN hub.UserBookmark ub ON ub.UserId = @UserId AND ub.NodeId = nv.NodeId
 			LEFT JOIN (  SELECT DISTINCT CatalogueNodeId 
 						  FROM [hub].[RoleUserGroupView] rug JOIN hub.UserUserGroup uug ON rug.UserGroupId = uug.UserGroupId
@@ -219,13 +280,28 @@ BEGIN
 				,cnv.CardImageUrl
 				,cnv.Url
 				,cnv.RestrictedAccess
-				,CAST(CASE WHEN cnv.RestrictedAccess = 1 AND auth.CatalogueNodeId IS NULL THEN 0 ELSE 1 END AS bit) AS HasAccess
+				,CAST(CASE WHEN cnv.RestrictedAccess = 1 THEN 0 ELSE 1 END AS bit) AS HasAccess
 				,ub.Id AS BookMarkId
 			    ,CAST(ISNULL(ub.[Deleted], 1) ^ 1 AS BIT) AS IsBookmarked 
+				,cpAgg.ProvidersJson
 			FROM @MyActivity ma
 			JOIN [hierarchy].[Node] n ON ma.NodeId = n.Id
 			JOIN [hierarchy].[NodeVersion] nv ON nv.NodeId = ma.CatalogueNodeId
 			LEFT JOIN [hierarchy].[CatalogueNodeVersion] cnv ON cnv.NodeVersionId = nv.Id
+			LEFT JOIN (
+			SELECT 
+				cnp.CatalogueNodeVersionId,
+				JSON_QUERY('[' + STRING_AGG(
+					'{"Id":' + CAST(p.Id AS NVARCHAR) +
+					',"Name":"' + p.Name + '"' +
+					',"Description":"' + p.Description + '"' +
+					',"Logo":"' + ISNULL(p.Logo, '') + '"}', 
+				',') + ']') AS ProvidersJson
+			FROM hierarchy.CatalogueNodeVersionProvider cnp
+			JOIN hub.Provider p ON p.Id = cnp.ProviderId
+			WHERE p.Deleted = 0 and cnp.Deleted = 0
+			GROUP BY cnp.CatalogueNodeVersionId
+			) cpAgg ON cpAgg.CatalogueNodeVersionId = cnv.Id
 			INNER JOIN hub.Scope s ON ma.CatalogueNodeId = s.CatalogueNodeId
 			LEFT JOIN hub.UserBookmark ub ON ub.UserId = @UserId AND ub.NodeId = nv.NodeId
 			LEFT JOIN (  SELECT DISTINCT CatalogueNodeId 

@@ -15,6 +15,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Models.Messaging;
     using LearningHub.Nhs.Models.MyLearning;
+    using LearningHub.Nhs.Models.Notification;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.User;
@@ -123,6 +124,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets the Notification.
         /// </summary>
         public virtual DbSet<Notification> Notification { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Notification Count.
+        /// </summary>
+        public virtual DbSet<NotificationCount> NotificationCount { get; set; }
 
         /// <summary>
         /// Gets or sets the user notification..

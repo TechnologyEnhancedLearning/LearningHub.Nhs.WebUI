@@ -1,12 +1,14 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 {
     using System;
+    using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
+    using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -42,10 +44,25 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<int> GetUserUnreadNotificationCountAsync(int userId)
         {
-            return await GetActiveNotifications(userId, DateTimeOffset.Now)
-                            .Where(n => !n.UserNotification.ReadOnDate.HasValue)
-                            .CountAsync();
+            try
+            {
+                var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = this.TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+                var result = await this.DbContext
+                    .NotificationCount
+                    .FromSqlRaw("EXEC hub.GetActiveNotificationCount @p0, @p1", param0, param1)
+                    .ToListAsync();
+
+                return result.FirstOrDefault()?.UserNotificationCount ?? 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log ex
+                throw new Exception("Failed to get unread notification count: " + ex.Message);
+            }
         }
+
 
         /// <summary>
         /// The get all non dismissed.

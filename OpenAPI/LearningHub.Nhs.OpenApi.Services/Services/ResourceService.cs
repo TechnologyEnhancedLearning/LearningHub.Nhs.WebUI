@@ -3536,6 +3536,23 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         }
 
         /// <summary>
+        /// The get resource header view model async.
+        /// </summary>
+        /// <param name="resourceReferenceId">The resourceReferenceId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceHeaderViewModel}"/>.</returns>
+        public async Task<ResourceHeaderViewModel> GetResourceHeaderViewModelAsync(int resourceReferenceId)
+        {
+            var retVal = new ResourceHeaderViewModel();
+
+            var rv = await this.resourceVersionRepository.GetCurrentForResourceReferenceIdAsync(resourceReferenceId);
+
+            retVal.Id = resourceReferenceId;
+            retVal.Title = rv.Title;
+
+            return retVal;
+        }
+
+        /// <summary>
         /// Set the resource catalogue.
         /// </summary>
         /// <param name="nodeId">The nodeId<see cref="int"/>.</param>

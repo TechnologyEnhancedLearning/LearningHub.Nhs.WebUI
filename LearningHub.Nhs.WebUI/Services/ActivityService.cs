@@ -47,7 +47,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -82,7 +82,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewModel = JsonConvert.DeserializeObject<AssessmentViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
@@ -112,7 +112,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -147,7 +147,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -182,7 +182,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -215,7 +215,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<ScormActivityViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
@@ -245,7 +245,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 updateResponse = JsonConvert.DeserializeObject<ScormUpdateResponseViewModel>(result);
 
                 if (!updateResponse.IsValid)
@@ -279,7 +279,7 @@
             LearningHubValidationResult validationResult;
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 validationResult = JsonConvert.DeserializeObject<LearningHubValidationResult>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
@@ -330,7 +330,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<bool>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)

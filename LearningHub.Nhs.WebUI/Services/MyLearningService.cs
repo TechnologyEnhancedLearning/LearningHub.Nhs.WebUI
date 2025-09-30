@@ -46,7 +46,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewModel = JsonConvert.DeserializeObject<MyLearningDetailedViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -75,7 +75,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewModel = JsonConvert.DeserializeObject<List<PlayedSegmentViewModel>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -106,7 +106,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewModel = JsonConvert.DeserializeObject<Tuple<int, MyLearningDetailedItemViewModel>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized

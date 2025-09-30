@@ -45,7 +45,7 @@
                     NotificationId = notificationId,
                     Dismissed = true,
                 });
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 var apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
                 if (!apiResponse.ValidationResult.IsValid)
                 {
@@ -105,7 +105,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<PagedResultSet<UserNotificationViewModel>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
@@ -132,7 +132,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<UserNotification>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -161,7 +161,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<UserNotification>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -190,7 +190,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 count = JsonConvert.DeserializeObject<int>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -220,7 +220,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -253,7 +253,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 var apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)

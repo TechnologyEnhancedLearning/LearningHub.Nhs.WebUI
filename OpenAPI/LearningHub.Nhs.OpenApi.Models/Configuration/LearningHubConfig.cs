@@ -48,6 +48,11 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         public bool UseRedisCache { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets <see cref="MaxDatabaseRetryAttempts"/>.
+        /// </summary>
+        public int MaxDatabaseRetryAttempts {  get; set; } = 0;
+
+        /// <summary>
         /// Gets or sets <see cref="HierarchyEditPublishQueueName"/>.
         /// </summary>
         public string HierarchyEditPublishQueueName { get; set; } = null!;

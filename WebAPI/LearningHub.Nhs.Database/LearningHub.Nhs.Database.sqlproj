@@ -539,6 +539,7 @@
     <Build Include="Stored Procedures\Activity\GetAssessmentActivityCompletionPercentage.sql" />
     <Build Include="Tables\Hub\PasswordResetRequests.sql" />
     <Build Include="Stored Procedures\External\ExternalSystemUserCreate.sql" />
+    <Build Include="Stored Procedures\Hub\GetActiveNotificationCount.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

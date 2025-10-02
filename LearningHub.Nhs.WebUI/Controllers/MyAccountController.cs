@@ -1349,17 +1349,10 @@
                 return this.View("ChangeWorkPlace", viewModel);
             }
 
-            if (!string.IsNullOrWhiteSpace(viewModel.FilterText))
-            {
-                var locations = await this.locationService.GetPagedFilteredAsync(viewModel.FilterText, viewModel.CurrentPage, viewModel.PageSize);
-                viewModel.WorkPlaceList = locations.Item2;
-                viewModel.TotalItems = locations.Item1;
-                viewModel.HasItems = locations.Item1 > 0;
-            }
-
             if (formSubmission)
             {
-                if (viewModel.SelectedWorkPlaceId.HasValue)
+                var hasSelectedWorkPlace = int.TryParse(viewModel.SelectedWorkPlaceId, out int selectedWorkPlaceId);
+                if (hasSelectedWorkPlace && selectedWorkPlaceId > 0)
                 {
                     await this.userService.UpdateUserEmployment(
                        new elfhHub.Nhs.Models.Entities.UserEmployment
@@ -1372,7 +1365,7 @@
                            GradeId = profile.GradeId,
                            SpecialtyId = profile.SpecialtyId,
                            StartDate = profile.JobStartDate,
-                           LocationId = viewModel.SelectedWorkPlaceId.Value,
+                           LocationId = selectedWorkPlaceId,
                        });
 
                     var (cacheExists, loginWizard) = await this.cacheService.TryGetAsync<Models.Account.LoginWizardViewModel>(this.LoginWizardCacheKey);
@@ -1401,8 +1394,23 @@
                 else
                 {
                     this.ModelState.AddModelError(nameof(viewModel.SelectedWorkPlaceId), CommonValidationErrorMessages.WorkPlace);
-                    return this.View("ChangeWorkPlace", viewModel);
                 }
+            }
+            else
+            {
+                if (!searchSubmission)
+                {
+                    viewModel.SelectedWorkPlaceId = profile.LocationId.ToString();
+                    viewModel.FilterText = profile.LocationName;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(viewModel.FilterText))
+            {
+                var locations = await this.locationService.GetPagedFilteredAsync(viewModel.FilterText, viewModel.CurrentPage, viewModel.PageSize);
+                viewModel.WorkPlaceList = locations.Item2;
+                viewModel.TotalItems = locations.Item1;
+                viewModel.HasItems = locations.Item1 > 0;
             }
 
             return this.View("ChangeWorkPlace", viewModel);

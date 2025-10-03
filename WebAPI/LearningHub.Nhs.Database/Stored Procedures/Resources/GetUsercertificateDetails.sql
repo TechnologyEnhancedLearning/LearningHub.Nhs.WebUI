@@ -8,6 +8,7 @@
 -- 22-08-2025	Tobi	Initial Revision
 -- 16-09-2025   Tobi    Added null check for ResourceReferenceID
 --17-09-2025    Swapna  Added resource version id
+-- 01-10-2025  SA added assesment score and passmark and provider details
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [resources].[GetUsercertificateDetails]
     @UserId INT,
@@ -96,7 +97,8 @@ BEGIN
         COALESCE(ra.ActivityEnd, ra.ActivityStart) AS AwardedDate,
 		NULL AS CertificateDownloadUrl,
 		NULL AS CertificatePreviewUrl,
-        rv.Id AS ResourceVersionId
+        rv.Id AS ResourceVersionId,
+		rpAgg.ProvidersJson
     FROM #MyActivity ma
     JOIN activity.ResourceActivity ra 
         ON ra.Id = ma.ResourceActivityId
@@ -105,6 +107,20 @@ BEGIN
        AND rv.Deleted = 0
     JOIN resources.Resource r 
         ON r.Id = rv.ResourceId
+	LEFT JOIN (
+				SELECT 
+					rp.ResourceVersionId,
+					JSON_QUERY('[' + STRING_AGG(
+						'{"Id":' + CAST(p.Id AS NVARCHAR) +
+						',"Name":"' + p.Name + '"' +
+						',"Description":"' + p.Description + '"' +
+						',"Logo":"' + ISNULL(p.Logo, '') + '"}', 
+					',') + ']') AS ProvidersJson
+				FROM resources.ResourceVersionProvider rp
+				JOIN hub.Provider p ON p.Id = rp.ProviderId
+				WHERE p.Deleted = 0 and rp.Deleted = 0
+				GROUP BY rp.ResourceVersionId
+				) rpAgg ON rpAgg.ResourceVersionId = r.CurrentResourceVersionId
     JOIN hierarchy.Publication p 
         ON rv.PublicationId = p.Id 
        AND p.Deleted = 0
@@ -133,5 +149,3 @@ BEGIN
     ORDER BY ma.ResourceActivityId DESC, rv.Title
     OPTION (RECOMPILE);
 END;
-GO
-

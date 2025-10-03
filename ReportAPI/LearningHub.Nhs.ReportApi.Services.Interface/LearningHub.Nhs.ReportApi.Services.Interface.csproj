@@ -16,7 +16,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.3" />
-		<PackageReference Include="LearningHub.Nhs.Models" Version="3.0.59" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="4.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

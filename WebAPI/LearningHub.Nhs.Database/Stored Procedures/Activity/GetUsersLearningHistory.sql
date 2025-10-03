@@ -5,6 +5,7 @@
 --
 -- Modification History
 -- 23-09-2025  SA Added new columns for displaying video/Audio Progress
+-- 01-10-2025  SA added assesment score and passmark and provider details
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUsersLearningHistory] (
 	  @userId INT,
@@ -31,7 +32,6 @@ BEGIN
 			r.ResourceTypeId AS ResourceType,
 			rv.Title AS Title,
 			rv.CertificateEnabled AS CertificateEnabled,
-			rvp.ProviderId AS ProviderId,
 			ISNULL(ara.ActivityStatusId,  ra.ActivityStatusId) AS ActivityStatus,
 			ra.ActivityStart AS ActivityDate,
 			ISNULL(ara.DurationSeconds, 0) ActivityDurationSeconds,
@@ -41,13 +41,30 @@ BEGIN
 			WHEN ResourceTypeId = 7 THEN ISNULL(videorv.DurationInMilliseconds, 0)
 			ELSE 0
 		    END AS ResourceDurationMilliseconds,
-			ISNULL( CAST(mar.PercentComplete AS INT) ,0) AS CompletionPercentage
+			ISNULL( CAST(mar.PercentComplete AS INT) ,0) AS CompletionPercentage,
+			rpAgg.ProvidersJson,
+			arv.AssessmentType AS AssessmentType,
+	        arv.PassMark AS AssessmentPassMark,
+	        asra.score AS AssesmentScore
 		FROM activity.ResourceActivity ra
 		LEFT JOIN activity.ResourceActivity ara
 			ON ara.LaunchResourceActivityId = ra.Id
 		INNER JOIN [resources].[Resource] r ON  ra.ResourceId = r.Id
 		INNER JOIN [resources].[ResourceVersion] rv ON  rv.Id = ra.ResourceVersionId AND rv.deleted =0
-		LEFT JOIN [resources].[ResourceVersionProvider] rvp on rv.Id = rvp.ResourceVersionId
+		LEFT JOIN (
+		SELECT 
+			rp.ResourceVersionId,
+			JSON_QUERY('[' + STRING_AGG(
+				'{"Id":' + CAST(p.Id AS NVARCHAR) +
+				',"Name":"' + p.Name + '"' +
+				',"Description":"' + p.Description + '"' +
+				',"Logo":"' + ISNULL(p.Logo, '') + '"}', 
+			',') + ']') AS ProvidersJson
+		FROM resources.ResourceVersionProvider rp
+		JOIN hub.Provider p ON p.Id = rp.ProviderId
+		WHERE p.Deleted = 0 and rp.Deleted = 0
+		GROUP BY rp.ResourceVersionId
+		) rpAgg ON rpAgg.ResourceVersionId = r.CurrentResourceVersionId
 		LEFT JOIN [resources].[AssessmentResourceVersion] arv ON arv.ResourceVersionId = ra.ResourceVersionId
 		LEFT JOIN [resources].[AudioResourceVersion] audiorv ON audiorv.ResourceVersionId = ra.ResourceVersionId
 		LEFT JOIN [resources].[VideoResourceVersion] videorv ON videorv.ResourceVersionId = ra.ResourceVersionId

@@ -37,15 +37,17 @@
         [Route("GetAllByParent/{parentId?}")]
         public async Task<IActionResult> GetAllByParent(int? parentId, bool? all = false)
         {
-            if (this.CurrentUserId.GetValueOrDefault() != null)
+            var userId = this.CurrentUserId;
+
+            if (userId.HasValue && userId.Value != 4)
             {
-                var bookmarks = await this.bookmarkService.GetAllByParent(this.CurrentUserId.GetValueOrDefault(), parentId, all);
+                var bookmarks = await this.bookmarkService.GetAllByParent(userId.Value, parentId, all);
                 return this.Ok(bookmarks);
             }
-            else
-            {
-                return this.Ok(await this.bookmarkService.GetAllByParent(this.TokenWithoutBearer));
-            }
+
+            var fallbackBookmarks = await this.bookmarkService.GetAllByParent(this.TokenWithoutBearer);
+            return this.Ok(fallbackBookmarks);
+
         }
 
         /// <summary>

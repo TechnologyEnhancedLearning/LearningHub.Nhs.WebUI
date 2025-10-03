@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.Json;
     using System.Threading.Tasks;
     using AutoMapper;
     using LearningHub.Nhs.Models.Dashboard;
@@ -11,6 +12,7 @@
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Activity;
+    using LearningHub.Nhs.Models.Provider;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Hierarchy;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Resources;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity;
@@ -82,7 +84,10 @@
             {
                 foreach (var catalogue in catalogueList)
                 {
-                    catalogue.Providers = await providerService.GetByCatalogueVersionIdAsync(catalogue.NodeVersionId);
+                    if (!string.IsNullOrEmpty(catalogue.ProvidersJson))
+                    {
+                        catalogue.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(catalogue.ProvidersJson);
+                    }
                 }
             }
 
@@ -91,7 +96,10 @@
             {
                 foreach (var resource in resourceList)
                 {
-                    resource.Providers = await providerService.GetByResourceVersionIdAsync(resource.ResourceVersionId);
+                    if (!string.IsNullOrEmpty(resource.ProvidersJson))
+                    {
+                        resource.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(resource.ProvidersJson);
+                    }
                 }
             }
 
@@ -384,7 +392,10 @@
             var catalogueList = catalogues.Any() ? mapper.Map<List<DashboardCatalogueViewModel>>(catalogues) : new List<DashboardCatalogueViewModel>();
             foreach (var catalogue in catalogueList)
             {
-                catalogue.Providers = await providerService.GetByCatalogueVersionIdAsync(catalogue.NodeVersionId);
+                if (!string.IsNullOrEmpty(catalogue.ProvidersJson))
+                {
+                    catalogue.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(catalogue.ProvidersJson);
+                }
             }
 
             var response = new DashboardCatalogueResponseViewModel
@@ -412,7 +423,10 @@
 
             foreach (var resource in resourceList)
             {
-                resource.Providers = await providerService.GetByResourceVersionIdAsync(resource.ResourceVersionId);
+                if (!string.IsNullOrEmpty(resource.ProvidersJson))
+                {
+                    resource.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(resource.ProvidersJson);
+                }
             }
 
             var response = new DashboardResourceResponseViewModel

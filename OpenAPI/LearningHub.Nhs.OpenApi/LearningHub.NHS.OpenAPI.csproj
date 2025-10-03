@@ -17,9 +17,9 @@
 
     <ItemGroup>
         <PackageReference Include="AspNetCore.Authentication.ApiKey" Version="8.0.1" />
-        <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.12" />
+        <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.13" />
         <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
-        <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.57" />
+        <PackageReference Include="LearningHub.Nhs.Models" Version="3.0.59" />
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
         <PackageReference Include="Microsoft.ApplicationInsights.NLogTarget" Version="2.22.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.36" />

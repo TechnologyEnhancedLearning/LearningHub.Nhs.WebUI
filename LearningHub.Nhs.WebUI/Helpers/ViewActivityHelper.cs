@@ -174,6 +174,14 @@
                         return true;
                     }
                 }
+                else if (activitiesViewModel.ResourceType == ResourceTypeEnum.Assessment && activitiesViewModel.AssessmentType == (int)AssessmentTypeEnum.Informal && activitiesViewModel.AssesmentScore >= activitiesViewModel.AssessmentPassMark)
+                {
+                        return true;
+                }
+                else if (activitiesViewModel.ResourceType == ResourceTypeEnum.Assessment && activitiesViewModel.AssessmentType == (int)AssessmentTypeEnum.Informal)
+                {
+                    return false;
+                }
                 else
                 {
                     if (GetActivityStatusDisplayText(activitiesViewModel) == "Completed" || GetActivityStatusDisplayText(activitiesViewModel) == "Passed" || GetActivityStatusDisplayText(activitiesViewModel) == "Downloaded")

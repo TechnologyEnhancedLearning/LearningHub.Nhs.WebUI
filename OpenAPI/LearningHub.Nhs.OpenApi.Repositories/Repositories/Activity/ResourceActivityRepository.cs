@@ -242,11 +242,18 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
         /// <returns></returns>
         public async Task<List<MyLearningActivitiesViewModel>> GetUserRecentMyLearningActivities(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel)
         {
+            try
+            {
                 (string strActivityStatus, bool activityStatusEnumFlag) = this.GetActivityStatusFilter(requestModel);
                 var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
                 var param1 = new SqlParameter("@activityStatuses", SqlDbType.NVarChar) { Value = activityStatusEnumFlag == false ? DBNull.Value : strActivityStatus };
-                var result = await DbContext.MyLearningActivitiesViewModel.FromSqlRaw("EXEC activity.GetUserRecentLearningActivities @userId, @activityStatuses", param0,param1).AsNoTracking().ToListAsync();     
+                var result = await DbContext.MyLearningActivitiesViewModel.FromSqlRaw("EXEC activity.GetUserRecentLearningActivities @userId, @activityStatuses", param0, param1).AsNoTracking().ToListAsync();
                 return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         /// <summary>

@@ -46,9 +46,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Resources
         public async Task<ScormResourceVersion> GetByResourceVersionIdAsync(int resourceVersionId, bool includeDeleted = false)
         {
             return await DbContext.ScormResourceVersion
+            .Where(r => r.ResourceVersionId == resourceVersionId && (includeDeleted || !r.Deleted))
             .Include(r => r.File)
             .Include(r => r.ScormResourceVersionManifest)
-            .AsNoTracking().FirstOrDefaultAsync(r => r.ResourceVersionId == resourceVersionId && (includeDeleted || !r.Deleted));
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
         }
 
         /// <summary>

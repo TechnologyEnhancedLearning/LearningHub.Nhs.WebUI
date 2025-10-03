@@ -331,6 +331,18 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         }
 
         /// <summary>
+        /// The get resource header view model async.
+        /// </summary>
+        /// <param name="resourceReferenceId">The resourceReferenceId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetResourceHeaderViewModelAsync/{resourceReferenceId}")]
+        public async Task<ActionResult> GetResourceHeaderViewModelAsync(int resourceReferenceId)
+        {
+            return this.Ok(await this.resourceService.GetResourceHeaderViewModelAsync(resourceReferenceId));
+        }
+
+        /// <summary>
         /// The get file async.
         /// </summary>
         /// <param name="fileId">The fileId<see cref="int"/>.</param>

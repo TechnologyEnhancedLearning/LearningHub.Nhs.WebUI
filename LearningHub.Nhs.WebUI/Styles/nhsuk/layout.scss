@@ -28,6 +28,7 @@ body {
     justify-content: space-between;
     align-items: center;
 }
+
 .nhs-progress-container {
     display: flex;
     height: 10px;
@@ -49,6 +50,7 @@ body {
     background-color: $nhsuk-green;
     transition: width .6s ease;
 }
+
 .nhsuk-width-container.app-width-container {
     max-width: px2rem(1208);
     margin: 0 auto;
@@ -345,8 +347,15 @@ li.autosuggestion-option:last-of-type {
     font-size: 16px;
     padding: 10px 16px;
     border-radius: 25px;
-    margin: 10px;
     cursor: pointer;
+}
+
+.side-nav__close {
+    margin: 10px;
+}
+
+.menu-icon-text {
+    text-decoration: underline;
 }
 
 .menu-icon {
@@ -406,7 +415,6 @@ li.autosuggestion-option:last-of-type {
     border-left: none !important;
     padding-left: 0 !important;
 }
-
 /* large desktop */
 @media (min-width: px2rem(990)) {
 
@@ -442,8 +450,6 @@ li.autosuggestion-option:last-of-type {
         border-right: none;
     }
 }
-
-
 /* small desktop */
 @media (max-width: px2rem(989)) {
 
@@ -563,7 +569,6 @@ li.autosuggestion-option:last-of-type {
         top: 100%;
     }
 }
-
 /* tablet */
 @media (max-width: px2rem(768)) {
 
@@ -683,7 +688,6 @@ li.autosuggestion-option:last-of-type {
         background-color: #e8f0f7;
     }
 }
-
 /* mobile  */
 @media (max-width: px2rem(640)) {
 

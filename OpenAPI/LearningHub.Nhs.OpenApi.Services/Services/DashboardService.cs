@@ -17,6 +17,8 @@
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Resources;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using LearningHub.Nhs.Models.Entities.Resource;
+    using System.Diagnostics;
 
     /// <summary>
     /// The DashboardService.
@@ -152,7 +154,10 @@
             {
                 foreach (var catalogue in catalogueList)
                 {
-                    catalogue.Providers = await providerService.GetByCatalogueVersionIdAsync(catalogue.NodeVersionId);
+                    if (!string.IsNullOrEmpty(catalogue.ProvidersJson))
+                    {
+                        catalogue.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(catalogue.ProvidersJson);
+                    }
                 }
             }
 
@@ -161,14 +166,20 @@
             {
                 foreach (var resource in resourceList)
                 {
-                    resource.Providers = await providerService.GetByResourceVersionIdAsync(resource.ResourceVersionId);
+                    if (!string.IsNullOrEmpty(resource.ProvidersJson))
+                    {
+                        resource.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(resource.ProvidersJson);
+                    }
                 }
             }
             if (myInProgressActivities.TotalCount > 0)
             {
                 foreach (var activity in myInProgressActivities.Activities)
                 {
-                    activity.Providers = await providerService.GetByResourceVersionIdAsync(activity.ResourceVersionId);
+                    if (!string.IsNullOrEmpty(activity.ProvidersJson))
+                    {
+                        activity.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(activity.ProvidersJson);
+                    }
                 }
             }
 
@@ -176,7 +187,10 @@
             {
                 foreach (var certificate in certificates.Certificates)
                 {
-                    certificate.Providers = await providerService.GetByResourceVersionIdAsync(certificate.ResourceVersionId);
+                    if (!string.IsNullOrEmpty(certificate.ProvidersJson))
+                    {
+                        certificate.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(certificate.ProvidersJson);
+                    }
                 }
             }
 
@@ -245,6 +259,11 @@
                     IsMostRecent = false,
                     ResourceDurationMilliseconds = Activity.ResourceDurationMilliseconds,
                     CompletionPercentage = Activity.CompletionPercentage,
+                    ProvidersJson = Activity.ProvidersJson,
+                    AssesmentScore = Activity.AssesmentScore,
+                    AssessmentPassMark = Activity.AssessmentPassMark,
+                    AssessmentType = Activity.AssessmentType,
+                    CertificateAwardedDate = Activity.ActivityDate,
                 }).ToList();
             }
 
@@ -272,6 +291,13 @@
                     IsMostRecent = false,
                     ResourceDurationMilliseconds = 0,
                     CompletionPercentage = 0,
+                    ProvidersJson = null,
+                    AssesmentScore = 0,
+                    AssessmentPassMark = 0,
+                    AssessmentType = 0,
+                    CertificateAwardedDate = course.EndDate.HasValue
+                            ? DateTimeOffset.FromUnixTimeSeconds(course.EndDate.Value)
+                            : DateTimeOffset.MinValue,
                 }).ToList();
             }
 
@@ -349,7 +375,8 @@
                             : DateTimeOffset.MinValue,
                         CertificatePreviewUrl = c.PreviewLink,
                         CertificateDownloadUrl = c.DownloadLink,
-                        ResourceVersionId = 0
+                        ResourceVersionId = 0,
+                        ProvidersJson = null
                     });
                 }
 
@@ -394,7 +421,10 @@
             {
                 if (!string.IsNullOrEmpty(catalogue.ProvidersJson))
                 {
-                    catalogue.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(catalogue.ProvidersJson);
+                    if (!string.IsNullOrEmpty(catalogue.ProvidersJson))
+                    {
+                        catalogue.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(catalogue.ProvidersJson);
+                    }
                 }
             }
 
@@ -425,7 +455,10 @@
             {
                 if (!string.IsNullOrEmpty(resource.ProvidersJson))
                 {
-                    resource.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(resource.ProvidersJson);
+                    if (!string.IsNullOrEmpty(resource.ProvidersJson))
+                    {
+                        resource.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(resource.ProvidersJson);
+                    }
                 }
             }
 

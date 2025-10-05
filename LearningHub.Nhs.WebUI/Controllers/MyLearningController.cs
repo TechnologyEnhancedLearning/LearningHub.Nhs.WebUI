@@ -576,6 +576,7 @@
                 Elearning = certificateRequest.Elearning,
                 Html = certificateRequest.Html,
                 Assessment = certificateRequest.Assessment,
+                Weblink = certificateRequest.Weblink,
                 Courses = certificateRequest.Courses,
             };
 
@@ -619,7 +620,7 @@
                 response.UserCertificates = result.Certificates;
             }
 
-            response.MyLearningPaging = new MyLearningPagingModel() { CurrentPage = certificateRequest.CurrentPageIndex, PageSize = MyLearningPageSize, TotalItems = response.TotalCount, HasItems = response.TotalCount > 0 };
+            response.MyLearningPaging = new MyLearningPagingModel() { CurrentPage = certificateRequest.CurrentPageIndex, PageSize = certificatePageSize, TotalItems = response.TotalCount, HasItems = response.TotalCount > 0 };
             return this.View(response);
         }
 

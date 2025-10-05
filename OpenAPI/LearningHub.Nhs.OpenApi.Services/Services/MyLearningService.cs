@@ -197,6 +197,11 @@
                        && Activity.ActivityDate == mostRecentDate,
                         ResourceDurationMilliseconds = Activity.ResourceDurationMilliseconds,
                         CompletionPercentage = Activity.CompletionPercentage,
+                        ProvidersJson = Activity.ProvidersJson,
+                        AssesmentScore = Activity.AssesmentScore,
+                        AssessmentPassMark = Activity.AssessmentPassMark,
+                        AssessmentType = Activity.AssessmentType,
+                        CertificateAwardedDate = Activity.ActivityDate,
 
                     }).ToList();
                 }
@@ -225,6 +230,13 @@
                         IsMostRecent = false,
                         ResourceDurationMilliseconds = 0,
                         CompletionPercentage = 0,
+                        ProvidersJson = null,
+                        AssessmentPassMark = 0,
+                        AssessmentType = 0,
+                        AssesmentScore = 0,
+                        CertificateAwardedDate = course.EndDate.HasValue
+                            ? DateTimeOffset.FromUnixTimeSeconds(course.EndDate.Value)
+                            : DateTimeOffset.MinValue,
                     }).ToList();
                 }
 
@@ -318,6 +330,11 @@
                        && activity.ActivityDate == mostRecentDate,
                         ResourceDurationMilliseconds = activity.ResourceDurationMilliseconds,
                         CompletionPercentage = activity.CompletionPercentage,
+                        ProvidersJson = activity.ProvidersJson,
+                        AssessmentPassMark = activity.AssessmentPassMark,
+                        AssessmentType = activity.AssessmentType,
+                        AssesmentScore = activity.AssesmentScore,
+                        CertificateAwardedDate = activity.ActivityDate,
                     }).ToList();
                 }
 
@@ -356,6 +373,13 @@
                             IsMostRecent = false,
                             ResourceDurationMilliseconds = 0,
                             CompletionPercentage = 0,
+                            ProvidersJson = null,
+                            AssessmentPassMark = 0,
+                            AssessmentType = 0,
+                            AssesmentScore = 0,
+                            CertificateAwardedDate = course.EndDate.HasValue
+                            ? DateTimeOffset.FromUnixTimeSeconds(course.EndDate.Value)
+                            : DateTimeOffset.MinValue,
                         }).ToList();
                     }
                 }
@@ -429,8 +453,8 @@
 
                 var assessmentType = activityEntities.First().ResourceVersion.AssessmentResourceVersion.AssessmentType;
 
-                activityEntities = activityEntities.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null && 
-                                                                   x.AssessmentResourceActivity.First().Score.HasValue && 
+                activityEntities = activityEntities.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null &&
+                                                                   x.AssessmentResourceActivity.First().Score.HasValue &&
                                                                    (int)Math.Round(x.AssessmentResourceActivity.First().Score.Value,
                                                                        MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark)
                                                                     .ToList();
@@ -528,7 +552,7 @@
                 {
 
                     latestActivityCheck = latestActivityCheck.Where(x => x.AssessmentResourceActivity.FirstOrDefault() != null &&
-                    x.AssessmentResourceActivity.First().Score.HasValue && 
+                    x.AssessmentResourceActivity.First().Score.HasValue &&
                     (int)Math.Round(x.AssessmentResourceActivity.First().Score.Value, MidpointRounding.AwayFromZero) >= x.ResourceVersion.AssessmentResourceVersion.PassMark)
                         .ToList();
                 }
@@ -720,7 +744,8 @@
                         : DateTimeOffset.MinValue,
                     CertificatePreviewUrl = c.PreviewLink,
                     CertificateDownloadUrl = c.DownloadLink,
-                    ResourceVersionId = 0
+                    ResourceVersionId = 0,
+                    ProvidersJson = null,
                 });
             }
 
@@ -880,7 +905,10 @@
 
             var normalisationMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                { nameof(model.Courses), "Moodle" }
+                { nameof(model.Courses), "Moodle" },
+                { nameof(model.Elearning), "Scorm" },
+                { nameof(model.File), "GenericFile" },
+                { nameof(model.Weblink), "WebLink" },
             };
 
             return selectors

@@ -9,6 +9,7 @@
 @if (Model.ShowMyAccount)
 {
     <div class="nhsuk-account__myaccount">
+         <a asp-controller="Notification" asp-action="Index">
         <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none">
             <g clip-path="url(#clip0_5102_1890)">
                 <path d="M12.9984 14.7859C10.4797 14.7859 8.36719 12.7547 8.36719 10.1547C8.36719 7.55469 10.3984 5.52344 12.9984 5.52344C15.5172 5.52344 17.6297 7.55469 17.6297 10.1547C17.6297 12.7547 15.5172 14.7859 12.9984 14.7859Z" fill="white" />
@@ -20,6 +21,7 @@
                 </clipPath>
             </defs>
         </svg>
+        </a>
         @if (Model.NotificationCount > 0)
         {
             <div class="nhsuk-header__notification-dot">@NotificationDisplay()</div>

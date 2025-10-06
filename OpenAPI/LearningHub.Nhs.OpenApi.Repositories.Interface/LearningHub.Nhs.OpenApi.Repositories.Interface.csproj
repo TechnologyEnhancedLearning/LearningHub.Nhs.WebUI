@@ -17,7 +17,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="LearningHub.Nhs.Models" Version="4.0.1" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="4.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.7" />
 	</ItemGroup>
 

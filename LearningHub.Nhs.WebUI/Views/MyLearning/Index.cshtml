@@ -140,10 +140,18 @@
                                         <span class="nhsuk-u-padding-right-2 nhsuk-u-font-size-16 @accessedLabelClass nhsuk-u-font-weight-bold">
                                             @displayText:
                                         </span>
-
+                                        @if(isCompleted)
+                                        {
+                                        <span class="nhsuk-u-font-size-16 @accessedLabelClass">
+                                            @certificateAwardedText
+                                        </span>
+                                        }
+                                        else
+                                        {
                                         <span class="nhsuk-u-font-size-16 @accessedLabelClass">
                                             @dateTimeText
                                         </span>
+                                        }
                                     </div>
                                     <div>
                                         <span class="nhsuk-u-text-align-left  table-content-spacing">

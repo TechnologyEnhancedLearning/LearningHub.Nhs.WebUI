@@ -107,6 +107,43 @@ form label.nhsuk-u-visually-hidden {
     background-color: $color_nhsuk-white;
 }
 
+.nhsuk-account__myaccount {
+    float: right;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.nhsuk-account__icon-wrapper {
+    position: relative;
+    width: 26px;
+    height: 26px;
+}
+
+.nhsuk-header__notification-dot-mobile {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background-color: #d5281b;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50%;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.nhsuk-account__links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
 /* One third column layout that switches to full width at the small desktop breakpoint (990px) instead of mobile. */
 .nhsuk-grid-column-one-third-small-desktop {
     @extend .nhsuk-grid-column-one-third;

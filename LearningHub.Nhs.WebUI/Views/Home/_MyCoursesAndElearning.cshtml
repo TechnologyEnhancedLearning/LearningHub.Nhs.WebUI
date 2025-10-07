@@ -93,7 +93,7 @@
                                 <partial name="_LearningActivityCard" model="activityViewModel" />
                             </li>
                         }
-                        @if (isLastPage)
+                        @if (isLastPage && pagingViewModel.TotalCount >=8)
                         {
                             <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
                                 <div class="nhsuk-card dashboard-card">
@@ -146,7 +146,7 @@
                             <partial name="_CertificateCard" model="certificateViewmodel" />
                         </li>
                     }
-                    @if (isLastPage)
+                    @if (isLastPage && pagingViewModel.TotalCount >= 8)
                     {
                         <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
                             <div class="nhsuk-card dashboard-card">

@@ -555,7 +555,6 @@
     <Build Include="Tables\Elfh\DeaneryTBL.sql" />
     <Build Include="Tables\Elfh\EmailTemplateTBL.sql" />
     <Build Include="Tables\Elfh\EmailTemplateTypeTBL.sql" />
-    <Build Include="Tables\Elfh\ExternalSystemTBL.sql" />
     <Build Include="Tables\Elfh\GdcRegister.sql" />
     <Build Include="Tables\Elfh\GmcLrmp.sql" />
     <Build Include="Tables\Elfh\GradeTBL.sql" />
@@ -573,8 +572,6 @@
     <Build Include="Tables\Elfh\StaffGroupTBL.sql" />
     <Build Include="Tables\Elfh\SystemSettingTBL.sql" />
     <Build Include="Tables\Elfh\TenantSmtpTBL.sql" />
-    <Build Include="Tables\Elfh\TenantTBL.sql" />
-    <Build Include="Tables\Elfh\TenantUrlTBL.sql" />
     <Build Include="Tables\Elfh\TermsAndConditionsTBL.sql" />
     <Build Include="Tables\Elfh\UserAttributeTBL.sql" />
     <Build Include="Tables\Elfh\UserEmploymentTBL.sql" />
@@ -591,6 +588,8 @@
     <Build Include="Stored Procedures\Elfh\UserHistoryInsert.sql" />
     <Build Include="Stored Procedures\Elfh\UserHistoryLoadForLearningHubUser.sql" />
     <Build Include="Stored Procedures\Elfh\UserHistoryLoadForUser.sql" />
+    <Build Include="Tables\Elfh\TenantTBL.sql" />
+    <Build Include="Tables\Elfh\TenantUrlTBL.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

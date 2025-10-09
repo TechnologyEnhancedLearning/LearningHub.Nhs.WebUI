@@ -343,9 +343,9 @@
             {
                 var userId = this.User.Identity.GetCurrentUserId();
 
-                var (cacheExists, _) = await this.cacheService.TryGetAsync<string>($"{userId}:LoginWizard");
+                ////var (cacheExists, _) = await this.cacheService.TryGetAsync<string>($"{userId}:LoginWizard");
 
-                model = await this.permissionService.GetNavigationModelAsync(this.User, !cacheExists, string.Empty);
+                model = await this.permissionService.GetNavigationModelAsync(this.User, true, string.Empty);
 
                 model.NotificationCount = await this.userNotificationService.GetUserUnreadNotificationCountAsync(userId);
             }

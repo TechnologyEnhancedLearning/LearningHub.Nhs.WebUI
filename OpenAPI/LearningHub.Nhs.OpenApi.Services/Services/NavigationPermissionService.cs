@@ -172,7 +172,7 @@
         {
             return new NavigationModel()
             {
-                ShowMyContributions = await resourceService.HasPublishedResourcesAsync(userId),
+                ShowMyContributions = await this.userGroupService.UserHasCatalogueContributionPermission(userId),
                 ShowMyLearning = true,
                 ShowMyBookmarks = false,
                 ShowSearch = controllerName != "search" && controllerName != string.Empty,
@@ -196,7 +196,7 @@
         {
             return new NavigationModel()
             {
-                ShowMyContributions = await resourceService.HasPublishedResourcesAsync(userId),
+                ShowMyContributions = await this.userGroupService.UserHasCatalogueContributionPermission(userId),
                 ShowMyLearning = true,
                 ShowMyBookmarks = false,
                 ShowSearch = true,

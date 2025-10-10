@@ -26,7 +26,6 @@
         /// <summary>
         /// Gets or sets the FirstName.
         /// </summary>
-        [Required(ErrorMessage = "Enter a first name")]
         [StringLength(50, MinimumLength = 1, ErrorMessage = "First name must be less than 50 characters.")]
         [DisplayName("First name")]
         public string FirstName { get; set; }
@@ -34,7 +33,6 @@
         /// <summary>
         /// Gets or sets the LastName.
         /// </summary>
-        [Required(ErrorMessage = "Enter a last name")]
         [StringLength(50, MinimumLength = 1, ErrorMessage = "Last name must be less than 50 characters.")]
         [DisplayName("Last name")]
         public string LastName { get; set; }

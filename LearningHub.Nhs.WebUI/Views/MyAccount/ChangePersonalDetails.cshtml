@@ -1,23 +1,25 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.MyAccountPersonalDetailsViewModel
 
 @{
-  ViewData["DisableValidation"] = true;
-  ViewData["Title"] = "My Account - Change first name";
-  var errorHasOccurred = !ViewData.ModelState.IsValid;
+    ViewData["DisableValidation"] = true;
+    ViewData["Title"] = "My Account - Change first name";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
 }
 <div class="bg-white">
-  <div class="nhsuk-width-container app-width-container">
-    <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back to my account" />
+    <div class="nhsuk-width-container app-width-container">
+        <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back to my account" />
         <form asp-controller="MyAccount" asp-action="UpdatePersonalDetails" method="post">
-      <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full nhsuk-u-padding-bottom-5">
-          @if (errorHasOccurred)
-          {
-            <vc:error-summary order-of-property-names="@(new[] { nameof(Model.FirstName) })" />
-          }
-          <div>
+                    @if (errorHasOccurred)
+                    {
+                        <vc:error-summary order-of-property-names="@(new[] { nameof(Model.FirstName) })" />
+                    }
+                    <div>
                         <h1 class="nhsuk-heading-xl">Update personal details</h1>
-                            <vc:text-input asp-for="FirstName"
+                    </div>
+                    @*   TD-6335-Temporliy disabling updte names *@
+                    @*  <vc:text-input asp-for="FirstName"
                                            label="First name"
                                            populate-with-current-value="true"
                                            type="text"
@@ -27,7 +29,7 @@
                                            css-class="nhsuk-u-width-one-half"
                                            required="true"
                                            required-client-side-error-message="Enter a first name" />
-          </div>
+
 
           <div>
                             <vc:text-input asp-for="LastName"
@@ -41,30 +43,30 @@
                                            required="true"
                                            required-client-side-error-message="Enter a last name" />
           </div>
+ *@
+                    <div>
+                        <vc:text-input asp-for="PreferredName"
+                                       label="Preferred name"
+                                       populate-with-current-value="true"
+                                       type="text"
+                                       spell-check="false"
+                                       hint-text=""
+                                       autocomplete="nickname"
+                                       css-class="nhsuk-u-width-one-half"
+                                       required="false" />
+                    </div>
 
-          <div>
-                            <vc:text-input asp-for="PreferredName"
-                                           label="Preferred name"
-                                           populate-with-current-value="true"
-                                           type="text"
-                                           spell-check="false"
-                                           hint-text=""
-                                           autocomplete="nickname"
-                                           css-class="nhsuk-u-width-one-half"
-                                           required="false" />
-          </div>
-
-          <div>
-                            <vc:text-input asp-for="PrimaryEmailAddress"
-                                           label="Work email"
-                                           populate-with-current-value="true"
-                                           type="text"
-                                           spell-check="false"
-                                           hint-text=""
-                                           autocomplete="email"
-                                           css-class="nhsuk-u-width-one-half"
-                                           required="true" />
-          </div>
+                    <div>
+                        <vc:text-input asp-for="PrimaryEmailAddress"
+                                       label="Work email"
+                                       populate-with-current-value="true"
+                                       type="text"
+                                       spell-check="false"
+                                       hint-text=""
+                                       autocomplete="email"
+                                       css-class="nhsuk-u-width-one-half"
+                                       required="true" />
+                    </div>
 
                     <div>
                         <vc:text-input asp-for="SecondaryEmailAddress"
@@ -77,14 +79,14 @@
                                        css-class="nhsuk-u-width-one-half"
                                        required="false" />
                     </div>
-          
-          <div class="nhsuk-u-padding-bottom-5">
-            <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
-              Save changes
-            </button>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
+
+                    <div class="nhsuk-u-padding-bottom-5">
+                        <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+                            Save changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>

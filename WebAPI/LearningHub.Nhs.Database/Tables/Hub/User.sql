@@ -32,10 +32,6 @@
 ),
 	PERIOD FOR SYSTEM_TIME ([VersionStartTime], [VersionEndTime])
 ) ON [PRIMARY]
-WITH
-(
-SYSTEM_VERSIONING = ON ( HISTORY_TABLE = [hub].[UserHistory] )
-)
 GO
 
 ALTER TABLE [hub].[User] ADD  DEFAULT (getutcdate()) FOR [VersionStartTime]

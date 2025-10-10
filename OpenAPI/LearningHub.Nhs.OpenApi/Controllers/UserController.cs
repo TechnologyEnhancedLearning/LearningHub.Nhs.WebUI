@@ -341,7 +341,7 @@
             }
             else
             {
-                var userId = this.User.Identity.GetCurrentUserId();
+                var userId = this.CurrentUserId.GetValueOrDefault();
 
                 var (cacheExists, _) = await this.cacheService.TryGetAsync<string>($"{userId}:LoginWizard");
 

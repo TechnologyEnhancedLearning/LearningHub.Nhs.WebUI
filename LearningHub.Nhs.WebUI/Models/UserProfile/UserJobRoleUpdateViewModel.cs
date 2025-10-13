@@ -24,7 +24,7 @@
         /// <summary>
         /// Gets or sets the selected job role id.
         /// </summary>
-        public int? SelectedJobRoleId { get; set; }
+        public string SelectedJobRoleId { get; set; }
 
         /// <summary>
         /// Gets or sets the RoleList.

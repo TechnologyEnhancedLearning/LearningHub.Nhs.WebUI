@@ -229,5 +229,35 @@
         /// Message if the validation token expired.
         /// </summary>
         public const string EmailChangeValidationTokenInvalidMessage = "We cannot find the page you are looking for";
+
+        /// <summary>
+        /// Message if the validation token expired.
+        /// </summary>
+        public const string InvalidSecurityQuestionAnswer = "Enter an answer";
+
+        /// <summary>
+        /// Message if the validation token expired.
+        /// </summary>
+        public const string EmploymentDetailsUpdated = "Your employment details has been changed";
+
+        /// <summary>
+        /// security question Success Message.
+        /// </summary>
+        public const string SecurityQuestionSuccessMessage = "Your security questions has been changed";
+
+        /// <summary>
+        /// location Success Message.
+        /// </summary>
+        public const string LocationDetailsSuccessMessage = "Your location details has been changed";
+
+        /// <summary>
+        /// location Success Message.
+        /// </summary>
+        public const string PersonalDetailsSuccessMessage = "Your personal details has been changed";
+
+        /// <summary>
+        /// Security question Required.
+        /// </summary>
+        public const string SecurityQuestionRequired = "Please select a security question";
     }
 }

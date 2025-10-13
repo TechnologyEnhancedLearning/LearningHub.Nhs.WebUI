@@ -24,7 +24,7 @@
         /// <summary>
         /// Gets or sets the selected primary specialty id.
         /// </summary>
-        public int? SelectedPrimarySpecialtyId { get; set; }
+        public string SelectedPrimarySpecialtyId { get; set; }
 
         /// <summary>
         /// Gets or sets the SpecialtyList.
@@ -35,6 +35,21 @@
         /// Gets or sets the optional SpecialtyList.
         /// </summary>
         public GenericListViewModel OptionalSpecialtyItem { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected job role id.
+        /// </summary>
+        public int? SelectedJobRoleId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected grade id.
+        /// </summary>
+        public string SelectedGradeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected medical council number.
+        /// </summary>
+        public string SelectedMedicalCouncilNo { get; set; }
 
         /// <summary>
         /// sets the list of radio specialty.

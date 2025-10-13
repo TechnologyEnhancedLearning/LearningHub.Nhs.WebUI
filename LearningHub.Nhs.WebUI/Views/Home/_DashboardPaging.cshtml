@@ -2,9 +2,9 @@
 @model DashBoardPagingViewModel;
 @{
     var pagingModel = Model;
-    var previousUrl = $"/home/loadpage/{@pagingModel.DashboardTrayType}/{@pagingModel.MyLearningDashboard}/{@pagingModel.ResourceDashboard}/{@pagingModel.CatalogueDashboard}/{@Model.PreviousPage}";
-    var nextUrl = $"/home/loadpage/{@pagingModel.DashboardTrayType}/{@pagingModel.MyLearningDashboard}/{@pagingModel.ResourceDashboard}/{@pagingModel.CatalogueDashboard}/{@Model.NextPage}";
-    var queryParams = $"/?myLearningDashboard={@pagingModel.MyLearningDashboard}&resourceDashboard={@pagingModel.ResourceDashboard}&catalogueDashboard={@pagingModel.CatalogueDashboard}#{@pagingModel.DashboardTrayType}";
+    var previousUrl = $"/home/loadpage/{@pagingModel.DashboardTrayLearningResourceType}/{@pagingModel.DashboardTrayType}/{@pagingModel.MyLearningDashboard}/{@pagingModel.ResourceDashboard}/{@pagingModel.CatalogueDashboard}/{@Model.PreviousPage}";
+    var nextUrl = $"/home/loadpage/{@pagingModel.DashboardTrayLearningResourceType}/{@pagingModel.DashboardTrayType}/{@pagingModel.MyLearningDashboard}/{@pagingModel.ResourceDashboard}/{@pagingModel.CatalogueDashboard}/{@Model.NextPage}";
+    var queryParams = $"/?dashboardTrayLearningResourceType={@pagingModel.DashboardTrayLearningResourceType}&myLearningDashboard={@pagingModel.MyLearningDashboard}&resourceDashboard={@pagingModel.ResourceDashboard}&catalogueDashboard={@pagingModel.CatalogueDashboard}#{@pagingModel.DashboardTrayType}";
 }
 
 <nav class="nhsuk-u-width-full display--no-js-hide" role="navigation" aria-label="Pagination">

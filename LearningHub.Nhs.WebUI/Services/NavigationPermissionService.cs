@@ -73,6 +73,7 @@
         {
             return new NavigationModel()
             {
+                ShowHome = false,
                 ShowMyContributions = false,
                 ShowMyLearning = false,
                 ShowMyBookmarks = false,
@@ -98,15 +99,16 @@
         {
             return new NavigationModel()
             {
+                ShowHome = true,
                 ShowMyContributions = true,
                 ShowMyLearning = true,
-                ShowMyBookmarks = true,
+                ShowMyBookmarks = false,
                 ShowSearch = controllerName != "search" && controllerName != string.Empty,
                 ShowAdmin = true,
                 ShowForums = true,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = true,
-                ShowNotifications = true,
+                ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = true,
@@ -123,15 +125,16 @@
         {
             return new NavigationModel()
             {
+                ShowHome = true,
                 ShowMyContributions = await this.userGroupService.UserHasCatalogueContributionPermission(),
                 ShowMyLearning = true,
-                ShowMyBookmarks = true,
+                ShowMyBookmarks = false,
                 ShowSearch = controllerName != "search" && controllerName != string.Empty,
                 ShowAdmin = false,
                 ShowForums = true,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = true,
-                ShowNotifications = true,
+                ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = true,
@@ -147,13 +150,14 @@
         {
             return new NavigationModel()
             {
+                ShowHome = true,
                 ShowMyContributions = false,
                 ShowMyLearning = false,
                 ShowMyBookmarks = false,
                 ShowSearch = false,
                 ShowAdmin = false,
                 ShowForums = false,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = false,
                 ShowNotifications = false,
                 ShowRegister = false,
@@ -172,15 +176,16 @@
         {
             return new NavigationModel()
             {
+                ShowHome = true,
                 ShowMyContributions = await this.resourceService.UserHasPublishedResourcesAsync(),
                 ShowMyLearning = true,
-                ShowMyBookmarks = true,
+                ShowMyBookmarks = false,
                 ShowSearch = controllerName != "search" && controllerName != string.Empty,
                 ShowAdmin = false,
                 ShowForums = true,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = true,
-                ShowNotifications = true,
+                ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = false,
@@ -196,15 +201,16 @@
         {
             return new NavigationModel()
             {
+                ShowHome = true,
                 ShowMyContributions = await this.resourceService.UserHasPublishedResourcesAsync(),
                 ShowMyLearning = true,
-                ShowMyBookmarks = true,
+                ShowMyBookmarks = false,
                 ShowSearch = true,
                 ShowAdmin = false,
                 ShowForums = true,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = true,
-                ShowNotifications = true,
+                ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = true,
@@ -220,13 +226,14 @@
         {
             return new NavigationModel()
             {
+                ShowHome = true,
                 ShowMyContributions = false,
                 ShowMyLearning = false,
                 ShowMyBookmarks = false,
                 ShowSearch = false,
                 ShowAdmin = false,
                 ShowForums = false,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = false,
                 ShowNotifications = false,
                 ShowRegister = false,

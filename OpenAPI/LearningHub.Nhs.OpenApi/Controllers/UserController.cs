@@ -341,7 +341,7 @@
             }
             else
             {
-                var userId = this.User.Identity.GetCurrentUserId();
+                var userId = this.CurrentUserId.GetValueOrDefault();
 
                 var (cacheExists, _) = await this.cacheService.TryGetAsync<string>($"{userId}:LoginWizard");
 
@@ -358,52 +358,37 @@
         {
             var menu = new List<Dictionary<string, object>>
             {
-                new Dictionary<string, object>
+               new Dictionary<string, object>
                 {
-                    { "title", "Browse catalogues" },
-                    { "url", this.learningHubConfig.BrowseCataloguesUrl },
-                    { "visible", model.ShowBrowseCatalogues },
+                    { "title", "Home" },
+                    { "url", this.learningHubConfig.BaseUrl },
+                    { "visible", model.ShowMyLearning },
                 },
-                new Dictionary<string, object>
+               new Dictionary<string, object>
                 {
-                    { "title", "My learning" },
+                    { "title", "My learning activity" },
                     { "url", this.learningHubConfig.MyLearningUrl },
                     { "visible", model.ShowMyLearning },
                 },
-                new Dictionary<string, object>
+               new Dictionary<string, object>
                 {
                     { "title", "My contributions" },
                     { "url", this.learningHubConfig.MyContributionsUrl },
                     { "visible", model.ShowMyContributions },
                 },
-                new Dictionary<string, object>
+               new Dictionary<string, object>
                 {
-                    { "title", "My bookmarks" },
-                    { "url", this.learningHubConfig.MyBookmarksUrl },
-                    { "visible", model.ShowMyBookmarks },
+                    { "title", "Browse catalogues" },
+                    { "url", this.learningHubConfig.BrowseCataloguesUrl },
+                    { "visible", model.ShowBrowseCatalogues },
                 },
-                new Dictionary<string, object>
-                {
-                    { "title", "Help" },
-                    { "url", this.learningHubConfig.HelpUrl },
-                    { "visible", model.ShowHelp },
-                    { "openInNewTab", true },
-                },
-                new Dictionary<string, object>
-                {
-                    { "title", "Notifications" },
-                    { "url", this.learningHubConfig.NotificationsUrl },
-                    { "visible", model.ShowNotifications },
-                    { "hasNotification", model.NotificationCount > 0 },
-                    { "notificationCount", model.NotificationCount },
-                },
-                new Dictionary<string, object>
+               new Dictionary<string, object>
                 {
                     { "title", "Admin" },
                     { "url", this.learningHubConfig.AdminUrl },
                     { "visible", model.ShowAdmin },
                 },
-                new Dictionary<string, object>
+               new Dictionary<string, object>
                 {
                     { "title", "Sign Out" },
                     { "url", this.learningHubConfig.SignOutUrl },
@@ -411,8 +396,6 @@
                 },
             };
             return menu;
-
         }
-
     }
 }

@@ -2,7 +2,7 @@
 @using LearningHub.Nhs.WebUI.Models.Bookmark
 @model List<LearningHub.Nhs.Models.Bookmark.UserBookmarkViewModel>
 
-@section styles{
+@section styles {
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/bookmark.css" asp-append-version="true" />
 }
 
@@ -25,101 +25,113 @@
                     };
     }
 }
+@section NavBreadcrumbs {
 
-<div class="bg-white">
-    <div class="nhsuk-width-container app-width-container nhsuk-u-padding-bottom-9">
-        <vc:back-link asp-controller="Home" asp-action="Index" link-text="Back to: Learning Hub" />
+    <section class="nhsuk-hero">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
 
-        <h1>@ViewData["Title"]</h1>
-
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-full">
-                <p class="nhsuk-body-l nhsuk-u-reading-width">Save and organise your learning resources as bookmarks.</p>
-
-                <p class="nhsuk-u-reading-width">Bookmarks can be displayed individually or you can create folders to organise your learning resources.</p>
-
-                <details class="nhsuk-details nhsuk-u-margin-bottom-6">
-                    <summary class="nhsuk-details__summary">
-                        <span class="nhsuk-details__summary-text">
-                            Learn how to manage your bookmarks
-                        </span>
-                    </summary>
-                    <div class="nhsuk-details__text nhsuk-u-reading-width">
-                        <p>You can add as many learning resources as required to your bookmark manager, and have the option to rename, move or delete each one.</p>
-                        <p>To move a bookmark into a folder, select the learning resource and select ‘Move’.</p>
+                    <div class="nhsuk-u-padding-top-3 nhsuk-u-padding-bottom-3">
+                        <a href="/">Home</a>
+                        <i class="fa-solid fa-chevron-right nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
                     </div>
-                </details>
+                    <div class="nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-7">
+                        <h1 class="nhsuk-heading-xl">My learning activity</h1>
+                    </div>
+                </div>
             </div>
         </div>
+    </section>
+}
+<div class="bg-white">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row nhsuk-u-padding-top-7 nhsuk-u-padding-bottom-9">
+            <!-- Left column: SideNav -->
+            <div class="nhsuk-grid-column-one-quarter">
+                @await Component.InvokeAsync("SideNav", new { groupTitle = "Activity" })
+            </div>
 
-        <span id="bookmark-table"></span>
-        <a class="nhsuk-button" asp-controller="Bookmark" asp-action="BookmarkAddFolder" asp-route-returnUrl="/bookmark">Add a folder</a>
+            <div class="nhsuk-grid-column-three-quarters">
+                <div>
+                    <h2 class="nhsuk-heading-l">Bookmarks</h2>
+                </div>
+                <div>
+                    <p class="nhsuk-body-m nhsuk-u-reading-width">Save and organise your learning resources as bookmarks.</p>
+                    <p class="nhsuk-u-reading-width">Bookmarks can be displayed individually or you can create folders to organise your learning resources.</p>
+                    <details class="nhsuk-details nhsuk-u-margin-bottom-6">
+                        <summary class="nhsuk-details__summary">
+                            <span class="nhsuk-details__summary-text">
+                                Learn how to manage your bookmarks
+                            </span>
+                        </summary>
+                        <div class="nhsuk-details__text nhsuk-u-reading-width">
+                            <p>You can add as many learning resources as required to your bookmark manager, and have the option to rename, move or delete each one.</p>
+                            <p>To move a bookmark into a folder, select the learning resource and select ‘Move’.</p>
+                        </div>
+                    </details>
+                </div>
+                <div>
+                    <span id="bookmark-table"></span>
+                    <a class="nhsuk-button" asp-controller="Bookmark" asp-action="BookmarkAddFolder" asp-route-returnUrl="/bookmark">Add a folder</a>
 
-        <div class="nhsuk-expander-group">
+                    <div class="nhsuk-expander-group">
 
-            <table role="table" class="nhsuk-table-responsive tree-table-parent">
-                <thead role="rowgroup" class="nhsuk-table__head">
-                    <tr role="row">
-                        <th role="columnheader" class="" scope="col">Learning resource</th>
-                        <th role="columnheader" class="col-type" scope="col">Type</th>
-                        <th role="columnheader" class="col-organise" scope="col">Organise your bookmarks</th>
-                    </tr>
-                </thead>
-                <tbody role="rowgroup" class="nhsuk-table__body">
+                        <table role="table" class="nhsuk-table-responsive tree-table-parent">
+                            <thead role="rowgroup" class="nhsuk-table__head">
+                                <tr role="row">
+                                    <th role="columnheader" class="" scope="col">Learning resource</th>
+                                    <th role="columnheader" class="col-type" scope="col">Type</th>
+                                    <th role="columnheader" class="col-organise" scope="col">Organise your bookmarks</th>
+                                </tr>
+                            </thead>
+                            <tbody role="rowgroup" class="nhsuk-table__body">
 
-                    @{
-                        var topLevelBookmarks = Model.Where(m => m.ParentId == null).ToList();
+                                @{
+                                    var topLevelBookmarks = Model.Where(m => m.ParentId == null).ToList();
 
-                        if (!topLevelBookmarks.Any())
-                        {
-                            <tr role="row" class="nhsuk-table__row bookmark-item">
-                                <td role="cell" class="nhsuk-table__cell" colspan="3">
-                                    Your bookmarks will appear here.
-                                </td>
-                            </tr>
-                        }
-                        else
-                        {
-                            for (var i = 0; i < topLevelBookmarks.Count; i++)
-                            {
-                                var bookmark = topLevelBookmarks[i];
-                                var bookmarkAction = GetBookmarkAction(bookmark, i, topLevelBookmarks.Count);
-
-                                @if (bookmark.BookmarkTypeId == 1) // Folder.
-                                {
-                                    var childBookmarks = Model.Where(m => m.ParentId == bookmark.Id).ToList();
-                                    var bookmarkFolderViewModel = new BookmarkFolderViewModel()
+                                    if (!topLevelBookmarks.Any())
                                     {
-                                        FolderBookmark = new BookmarkItemViewModel { Bookmark = bookmark, Action = bookmarkAction },
-                                        ChildBookmarkItems = childBookmarks.Select((item, j) => new BookmarkItemViewModel
+                                        <tr role="row" class="nhsuk-table__row bookmark-item">
+                                            <td role="cell" class="nhsuk-table__cell" colspan="3">
+                                                Your bookmarks will appear here.
+                                            </td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        for (var i = 0; i < topLevelBookmarks.Count; i++)
                                         {
-                                            Bookmark = item,
-                                            Action = GetBookmarkAction(item, j, childBookmarks.Count),
-                                            IsChild = true,
-                                        }).ToList()
-                                    };
+                                            var bookmark = topLevelBookmarks[i];
+                                            var bookmarkAction = GetBookmarkAction(bookmark, i, topLevelBookmarks.Count);
 
-                                    <partial name="_BookmarkFolder" model="bookmarkFolderViewModel" />
+                                            @if (bookmark.BookmarkTypeId == 1) // Folder.
+                                            {
+                                                var childBookmarks = Model.Where(m => m.ParentId == bookmark.Id).ToList();
+                                                var bookmarkFolderViewModel = new BookmarkFolderViewModel()
+                        {
+                            FolderBookmark = new BookmarkItemViewModel { Bookmark = bookmark, Action = bookmarkAction },
+                            ChildBookmarkItems = childBookmarks.Select((item, j) => new BookmarkItemViewModel
+                            {
+                                Bookmark = item,
+                                Action = GetBookmarkAction(item, j, childBookmarks.Count),
+                                IsChild = true,
+                            }).ToList()
+                        };
+
+                                                <partial name="_BookmarkFolder" model="bookmarkFolderViewModel" />
+                                            }
+                                            else
+                                            {
+                                                <partial name="_BookmarkItem" model="new BookmarkItemViewModel{ Bookmark = bookmark, Action = bookmarkAction}" />
+                                            }
+                                        }
+                                    }
                                 }
-                                else
-                                {
-                                    <partial name="_BookmarkItem" model="new BookmarkItemViewModel{ Bookmark = bookmark, Action = bookmarkAction}" />
-                                }
-                            }
-                        }
-                    }
 
-                </tbody>
-            </table>
-        </div>
-
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-two-thirds">
-                <div class="help-panel nhsuk-u-padding-5">
-                    <h3>Get help</h3>
-                    <p>
-                        Find further guidance and support on how to manage bookmarks at the <a href="@ViewBag.BookmarksHelpUrl" target="_blank">Learning Hub help centre</a>.
-                    </p>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

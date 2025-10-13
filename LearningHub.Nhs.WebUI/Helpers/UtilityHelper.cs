@@ -30,25 +30,7 @@
             { "genericfile", ResourceTypeEnum.GenericFile },
             { "image", ResourceTypeEnum.Image },
             { "html", ResourceTypeEnum.Html },
-        };
-
-        /// TODO: Remove this method after adding to Moodle resource types to models project.
-        /// <summary>
-        /// Findwise Moodle resource type dictionary.
-        /// </summary>
-        public static readonly Dictionary<string, ResourceTypeEnumMoodle> FindwiseResourceMoodleTypeDict = new Dictionary<string, ResourceTypeEnumMoodle>()
-        {
-            { "video", ResourceTypeEnumMoodle.Video },
-            { "article", ResourceTypeEnumMoodle.Article },
-            { "case", ResourceTypeEnumMoodle.Case },
-            { "weblink", ResourceTypeEnumMoodle.WebLink },
-            { "audio", ResourceTypeEnumMoodle.Audio },
-            { "scorm", ResourceTypeEnumMoodle.Scorm },
-            { "assessment", ResourceTypeEnumMoodle.Assessment },
-            { "genericfile", ResourceTypeEnumMoodle.GenericFile },
-            { "image", ResourceTypeEnumMoodle.Image },
-            { "html", ResourceTypeEnumMoodle.Html },
-            { "moodle", ResourceTypeEnumMoodle.Course },
+            { "moodle", ResourceTypeEnum.Moodle },
         };
 
         /// <summary>
@@ -161,53 +143,7 @@
                     return "Case";
                 case ResourceTypeEnum.Html:
                     return "HTML";
-                default:
-                    return "File";
-            }
-        }
-
-        /// TODO: Remove this method after adding to Moodle resource types to models project.
-        /// <summary>
-        /// Returns a prettified resource type name, suitable for display in the UI. Includes video/audio duration string.
-        /// </summary>
-        /// <param name="resourceType">The resource type.</param>
-        /// <param name="durationInMilliseconds">The media duration in milliseconds.</param>
-        /// <returns>The resource type name, and duration if applicable.</returns>
-        public static string GetPrettifiedResourceTypeNameMoodle(ResourceTypeEnumMoodle resourceType, int? durationInMilliseconds = 0)
-        {
-            switch (resourceType)
-            {
-                case ResourceTypeEnumMoodle.Assessment:
-                    return "Assessment";
-                case ResourceTypeEnumMoodle.Article:
-                    return "Article";
-                case ResourceTypeEnumMoodle.Audio:
-                    string durationText = GetDurationText(durationInMilliseconds ?? 0);
-                    durationText = string.IsNullOrEmpty(durationText) ? string.Empty : " - " + durationText;
-                    return "Audio" + durationText;
-                case ResourceTypeEnumMoodle.Equipment:
-                    return "Equipment";
-                case ResourceTypeEnumMoodle.Image:
-                    return "Image";
-                case ResourceTypeEnumMoodle.Scorm:
-                    return "elearning";
-                case ResourceTypeEnumMoodle.Video:
-                    durationText = GetDurationText(durationInMilliseconds ?? 0);
-                    durationText = string.IsNullOrEmpty(durationText) ? string.Empty : " - " + durationText;
-                    return "Video" + durationText;
-                case ResourceTypeEnumMoodle.WebLink:
-                    return "Web link";
-                case ResourceTypeEnumMoodle.GenericFile:
-                    return "File";
-                case ResourceTypeEnumMoodle.Embedded:
-                    return "Embedded";
-                case ResourceTypeEnumMoodle.Case:
-                    return "Case";
-                case ResourceTypeEnumMoodle.Html:
-                    return "HTML";
-                case ResourceTypeEnumMoodle.Moodle:
-                    return "Course";
-                case ResourceTypeEnumMoodle.Course:
+                case ResourceTypeEnum.Moodle:
                     return "Course";
                 default:
                     return "File";
@@ -247,6 +183,8 @@
                     return "Case";
                 case ResourceTypeEnum.Html:
                     return "HTML";
+                case ResourceTypeEnum.Moodle:
+                    return "Course";
                 default:
                     return "File";
             }

@@ -416,6 +416,13 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         Task<LearningHubValidationResult> CreateResourceVersionValidationResultAsync(ResourceVersionValidationResultViewModel validationResultViewModel);
 
         /// <summary>
+        /// The get resource header view model async.
+        /// </summary>
+        /// <param name="resourceReferenceId">The resourceReferenceId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceHeaderViewModel}"/>.</returns>
+        Task<ResourceHeaderViewModel> GetResourceHeaderViewModelAsync(int resourceReferenceId);
+
+        /// <summary>
         /// The set resource type.
         /// </summary>
         /// <param name="resourceViewModel">The resourceViewModel<see cref="ResourceViewModel"/>.</param>

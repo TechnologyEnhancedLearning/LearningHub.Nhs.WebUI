@@ -51,6 +51,11 @@
         public int TotalCount { get; set; }
 
         /// <summary>
+        /// Gets or sets the dashboard tray Learning resource type.
+        /// </summary>
+        public string DashboardTrayLearningResourceType { get; set; }
+
+        /// <summary>
         /// Gets the display message.
         /// </summary>
         public string DisplayMessage

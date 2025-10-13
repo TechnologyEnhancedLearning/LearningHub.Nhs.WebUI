@@ -28,7 +28,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
     /// Resource controller.
     /// </summary>
     [Route("Resource")]
-    [Authorize]
+    [Authorize(Policy = "AuthorizeOrCallFromLH")]
     [ApiController]
     public class ResourceController : OpenApiControllerBase
     {
@@ -328,6 +328,18 @@ namespace LearningHub.NHS.OpenAPI.Controllers
         public async Task<ActionResult> GetFileTypes()
         {
             return this.Ok(await this.fileTypeService.GetAllAsync());
+        }
+
+        /// <summary>
+        /// The get resource header view model async.
+        /// </summary>
+        /// <param name="resourceReferenceId">The resourceReferenceId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("GetResourceHeaderViewModelAsync/{resourceReferenceId}")]
+        public async Task<ActionResult> GetResourceHeaderViewModelAsync(int resourceReferenceId)
+        {
+            return this.Ok(await this.resourceService.GetResourceHeaderViewModelAsync(resourceReferenceId));
         }
 
         /// <summary>

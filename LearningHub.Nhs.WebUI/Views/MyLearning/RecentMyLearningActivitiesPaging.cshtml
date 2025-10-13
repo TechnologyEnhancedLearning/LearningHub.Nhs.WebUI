@@ -1,0 +1,30 @@
+﻿<nav class="govuk-pagination" aria-label="Pagination">
+    @if (Model.HasPreviousPage)
+    {
+        <div class="govuk-pagination__prev">
+            <a class="govuk-link govuk-pagination__link" href="?page=@(Model.CurrentPage - 1)" rel="prev">
+                <span class="govuk-pagination__link-title">Previous<span class="govuk-visually-hidden"> page</span></span>
+            </a>
+        </div>
+    }
+
+    <ul class="govuk-pagination__list">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="govuk-pagination__item @(i == Model.CurrentPage ? "govuk-pagination__item--current" : "")">
+                <a class="govuk-link govuk-pagination__link" href="?page=@i" aria-label="Page @i" @(i == Model.CurrentPage ? "aria-current=\"page\"" : "")>
+                    @i
+                </a>
+            </li>
+        }
+    </ul>
+
+    @if (Model.HasNextPage)
+    {
+        <div class="govuk-pagination__next">
+            <a class="govuk-link govuk-pagination__link" href="?page=@(Model.CurrentPage + 1)" rel="next">
+                <span class="govuk-pagination__link-title">Next<span class="govuk-visually-hidden"> page</span></span>
+            </a>
+        </div>
+    }
+</nav>

@@ -31,8 +31,9 @@
         /// <param name="user">The user<see cref="IPrincipal"/>.</param>
         /// <param name="loginWizardComplete">The loginWizardComplete<see cref="bool"/>.</param>
         /// <param name="controllerName">The controller name.</param>
+        /// <param name="currentUserId">The current user id.</param>
         /// <returns>The <see cref="Task{NavigationModel}"/>.</returns>
-        public async Task<NavigationModel> GetNavigationModelAsync(IPrincipal user, bool loginWizardComplete, string controllerName)
+        public async Task<NavigationModel> GetNavigationModelAsync(IPrincipal user, bool loginWizardComplete, string controllerName, int currentUserId)
         {
             if (!loginWizardComplete && (user.IsInRole("Administrator") || user.IsInRole("ReadOnly") || user.IsInRole("BlueUser") || user.IsInRole("BasicUser")))
             {
@@ -48,15 +49,15 @@
             }
             else if (user.IsInRole("ReadOnly"))
             {
-                return await AuthenticatedReadOnly(controllerName,user.Identity.GetCurrentUserId());
+                return await AuthenticatedReadOnly(controllerName, currentUserId);
             }
             else if (user.IsInRole("BasicUser"))
             {
-                return await AuthenticatedBasicUserOnly(user.Identity.GetCurrentUserId());
+                return await AuthenticatedBasicUserOnly(currentUserId);
             }
             else if (user.IsInRole("BlueUser"))
             {
-                return await AuthenticatedBlueUser(controllerName, user.Identity.GetCurrentUserId());
+                return await AuthenticatedBlueUser(controllerName, currentUserId);
             }
             else
             {

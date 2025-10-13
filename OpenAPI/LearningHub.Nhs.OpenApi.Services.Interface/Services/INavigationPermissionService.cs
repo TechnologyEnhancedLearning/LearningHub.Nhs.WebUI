@@ -15,8 +15,9 @@
         /// <param name="user">User.</param>
         /// <param name="loginWizardComplete">Login wizard complete.</param>
         /// <param name="controllerName">Controller name.</param>
+        /// <param name="currentUserId">The current user id.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        Task<NavigationModel> GetNavigationModelAsync(IPrincipal user, bool loginWizardComplete, string controllerName);
+        Task<NavigationModel> GetNavigationModelAsync(IPrincipal user, bool loginWizardComplete, string controllerName, int currentUserId);
 
         /// <summary>
         /// The NotAuthenticated.

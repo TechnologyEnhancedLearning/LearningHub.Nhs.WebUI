@@ -46,6 +46,11 @@ namespace LearningHub.NHS.OpenAPI.Configuration
         public const string MoodleSectionName = "Moodle";
 
         /// <summary>
+        /// The DatabricksSectionName.
+        /// </summary>
+        public const string DatabricksSectionName = "Databricks";
+
+        /// <summary>
         /// Adds config.
         /// </summary>
         /// <param name="services">The service collection.</param>
@@ -65,6 +70,8 @@ namespace LearningHub.NHS.OpenAPI.Configuration
             services.AddOptions<AzureConfig>().Bind(config.GetSection(AzureSectionName));
 
             services.AddOptions<MoodleConfig>().Bind(config.GetSection(MoodleSectionName));
+
+            services.AddOptions<DatabricksConfig>().Bind(config.GetSection(DatabricksSectionName));
         }
 
         private static OptionsBuilder<T> RegisterPostConfigure<T>(this OptionsBuilder<T> builder)

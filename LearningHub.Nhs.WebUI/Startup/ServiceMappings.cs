@@ -81,6 +81,7 @@
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IRegionService, RegionService>();
+            services.AddScoped<IReportService, ReportService>();
             services.AddScoped<ICatalogueService, CatalogueService>();
             services.AddScoped<IHierarchyService, HierarchyService>();
             services.AddScoped<ICountryService, CountryService>();

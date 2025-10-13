@@ -142,6 +142,10 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// </summary>
         public string BrowseCataloguesUrl { get; set; } = null!;
 
+        /// <summary>
+        /// Gets or sets <see cref="ReportUrl"/>.
+        /// </summary>
+        public string ReportUrl { get; set; } = null!;
 
 
         /// <summary>

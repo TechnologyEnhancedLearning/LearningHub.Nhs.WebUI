@@ -55,6 +55,11 @@
         private IUserGroupAttributeRepository userGroupAttributeRepository;
 
         /// <summary>
+        /// The caching service.
+        /// </summary>
+        private readonly ICachingService cachingService;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UserGroupService"/> class.
         /// </summary>
         /// <param name="roleUserGroupRepository">roleUserGroupRepository.</param>
@@ -64,6 +69,7 @@
         /// <param name="scopeRepository">The scope repository.</param>
         /// <param name="userGroupAttributeRepository">The user group attribute repository.</param>
         /// <param name="mapper">The mapper.</param>
+        /// <param name="cachingService">The caching service.</param>
         public UserGroupService(
             ICatalogueService catalogueService,
             IUserGroupRepository userGroupRepository,
@@ -71,7 +77,8 @@
             IScopeRepository scopeRepository,
             IRoleUserGroupRepository roleUserGroupRepository,
             IUserGroupAttributeRepository userGroupAttributeRepository,
-            IMapper mapper)
+            IMapper mapper,
+            ICachingService cachingService)
         {
             this.catalogueService = catalogueService;
             this.userGroupRepository = userGroupRepository;
@@ -80,6 +87,7 @@
             this.roleUserGroupRepository = roleUserGroupRepository;
             this.userGroupAttributeRepository = userGroupAttributeRepository;
             this.mapper = mapper;
+            this.cachingService = cachingService;
         }
 
         /// <summary>
@@ -106,7 +114,21 @@
         /// <inheritdoc />
         public async Task<bool> UserHasCatalogueContributionPermission(int userId)
         {
-            var userRoleGroups = await this.roleUserGroupRepository.GetRoleUserGroupViewModelsByUserId(userId);
+
+            string cacheKey = $"{userId}:AllRolesWithPermissions";
+            var userRoleGroupsInCache = await this.cachingService.GetAsync<List<RoleUserGroupViewModel>>(cacheKey);
+            var userRoleGroups = new List<RoleUserGroupViewModel>();
+
+            if (userRoleGroupsInCache.ResponseEnum == CacheReadResponseEnum.Found)
+            {
+                userRoleGroups = userRoleGroupsInCache.Item;
+            }
+            else
+            {
+                userRoleGroups = await this.roleUserGroupRepository.GetRoleUserGroupViewModelsByUserId(userId);
+                await this.cachingService.SetAsync($"{userId}:AllRolesWithPermissions", userRoleGroups);
+            }
+
             if (userRoleGroups != null && userRoleGroups.Any(r => r.RoleEnum == RoleEnum.Editor))
             {
                 return true;

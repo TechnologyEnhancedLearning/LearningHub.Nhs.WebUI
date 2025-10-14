@@ -6,6 +6,7 @@
 -- Modification History
 -- 02-Sep-2025       SA        Incorrect Syntax 
 -- 23-09-2025  SA Added new columns for displaying video/Audio Progress
+-- 01-10-2025  SA added assesment score and passmark and provider details
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserRecentLearningActivities] (
 	 @userId INT,
@@ -34,14 +35,13 @@ BEGIN
 	rv.Title AS Title,
 	--rv.[Description] AS ResourceDescription,
 	rv.CertificateEnabled AS CertificateEnabled,
-	rvp.ProviderId AS ProviderId,
 	ISNULL(ara.ActivityStatusId,  ra.ActivityStatusId) AS ActivityStatus,
     ra.ActivityStart AS ActivityDate,
    -- ara.ActivityEnd,
     ISNULL(ara.DurationSeconds, 0) AS ActivityDurationSeconds,
     ara.Score AS ScorePercentage,
 	arv.AssessmentType AS AssessmentType,
-	arv.PassMark AS PassMark,
+	arv.PassMark AS AssessmentPassMark,
 	asra.score AS AssesmentScore,
 	mar.SecondsPlayed AS SecondsPlayed,
 	ISNULL( CAST(mar.PercentComplete AS INT) ,0) AS PercentComplete,
@@ -54,12 +54,26 @@ BEGIN
 			WHEN ResourceTypeId = 7 THEN ISNULL(videorv.DurationInMilliseconds, 0)
 			ELSE 0
 		    END AS ResourceDurationMilliseconds,
+			rpAgg.ProvidersJson,
     ROW_NUMBER() OVER (PARTITION BY ra.ResourceId ORDER BY ISNULL(ara.ActivityEnd, ra.ActivityStart) DESC) AS rn
    FROM activity.ResourceActivity ra
 	LEFT JOIN activity.ResourceActivity ara ON ara.LaunchResourceActivityId = ra.Id
 	INNER JOIN [resources].[Resource] r ON  ra.ResourceId = r.Id
 	INNER JOIN [resources].[ResourceVersion] rv ON  rv.Id = ra.ResourceVersionId AND rv.Deleted = 0
-	LEFT JOIN [resources].[ResourceVersionProvider] rvp on rv.Id = rvp.ResourceVersionId
+	LEFT JOIN (
+		SELECT 
+			rp.ResourceVersionId,
+			JSON_QUERY('[' + STRING_AGG(
+				'{"Id":' + CAST(p.Id AS NVARCHAR) +
+				',"Name":"' + p.Name + '"' +
+				',"Description":"' + p.Description + '"' +
+				',"Logo":"' + ISNULL(p.Logo, '') + '"}', 
+			',') + ']') AS ProvidersJson
+		FROM resources.ResourceVersionProvider rp
+		JOIN hub.Provider p ON p.Id = rp.ProviderId
+		WHERE p.Deleted = 0 and rp.Deleted = 0
+		GROUP BY rp.ResourceVersionId
+		) rpAgg ON rpAgg.ResourceVersionId = r.CurrentResourceVersionId
 	LEFT JOIN [resources].[AssessmentResourceVersion] arv ON arv.ResourceVersionId = ra.ResourceVersionId
 	LEFT JOIN [resources].[AudioResourceVersion] audiorv ON audiorv.ResourceVersionId = ra.ResourceVersionId
 	LEFT JOIN [resources].[VideoResourceVersion] videorv ON videorv.ResourceVersionId = ra.ResourceVersionId
@@ -83,13 +97,16 @@ SELECT ActivityId,
 	   ResourceType,
 	   Title,
 	   CertificateEnabled,
-	   ProviderId,
 	   ActivityStatus,
 	   ActivityDate,
 	   ActivityDurationSeconds,
 	   ScorePercentage,
 	   ResourceDurationMilliseconds,
-	   PercentComplete AS CompletionPercentage
+	   PercentComplete AS CompletionPercentage,
+	   ProvidersJson,
+	   AssessmentType,
+	   AssessmentPassMark,
+	   AssesmentScore
 FROM CTERecentActivities
 WHERE rn = 1
  AND (

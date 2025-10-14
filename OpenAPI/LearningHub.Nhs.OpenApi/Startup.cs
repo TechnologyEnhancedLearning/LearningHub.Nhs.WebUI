@@ -84,10 +84,6 @@ namespace LearningHub.NHS.OpenAPI
 
             services.AddRepositories(this.Configuration);
             services.AddServices();
-
-            services.AddDbContext<LearningHubDbContext>(
-                options =>
-                    options.UseSqlServer(this.Configuration.GetConnectionString("LearningHub")));
             services.AddApplicationInsightsTelemetry();
             services.AddControllers(options =>
             {

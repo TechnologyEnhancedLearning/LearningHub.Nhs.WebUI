@@ -1121,6 +1121,10 @@
                         var dateTimeText = activityDate == today ? "Today"
                         : activityDate == today.AddDays(-1) ? "Yesterday"
                         : activityDate.ToString("dd MMM yyyy");
+                        var certicateAwardedDate = activity.CertificateAwardedDate.Date;
+                        var certificateAwardedText = certicateAwardedDate == today ? "Today"
+                        : certicateAwardedDate == today.AddDays(-1) ? "Yesterday"
+                        : certicateAwardedDate.ToString("dd MMM yyyy");
                         <tr role="row" class="nhsuk-table__row">
                             <td role="cell" class="nhsuk-table__cell word-wrapper">
                                 <span>@activity.ResourceReferenceId</span>
@@ -1180,7 +1184,7 @@
                                                 </clipPath>
                                             </defs>
                                         </svg> <span class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-padding-right-2 nhsuk-u-padding-left-1">Certificate:</span>
-                                        <span class="nhsuk-u-font-size-16">awarded [@dateTimeText]</span>
+                                        <span class="nhsuk-u-font-size-16">awarded [@certificateAwardedText]</span>
 
                                     </div>
 

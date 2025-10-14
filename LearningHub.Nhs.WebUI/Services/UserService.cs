@@ -1231,6 +1231,7 @@
 
                 var location = await this.locationService.GetByIdAsync(employmentViewModel.LocationId);
                 viewModel.PlaceOfWork = $"{location.Name}<br />Address: {location.Address}<br />Org Code: {location.NhsCode}";
+                viewModel.LocationName = location.NameWithoutSubName;
             }
 
             return viewModel;
@@ -1942,8 +1943,6 @@
             PersonalDetailsViewModel personalDetailsViewModel = new PersonalDetailsViewModel
             {
                 UserId = userId,
-                FirstName = model.FirstName.Trim(),
-                LastName = model.LastName.Trim(),
                 PreferredName = model.PreferredName?.Trim(),
                 SecondaryEmailAddress = model.SecondaryEmailAddress,
             };

@@ -999,7 +999,7 @@
                 if (!string.IsNullOrWhiteSpace(accountCreation.LocationId))
                 {
                     var selectedLocation = await this.locationService.GetByIdAsync(int.Parse(accountCreation.LocationId));
-                    return this.View(new AccountCreationListViewModel { WorkPlaceList = new List<LocationBasicViewModel> { selectedLocation }, FilterText = selectedLocation.Name, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = 1, PageSize = UserRegistrationContentPageSize, HasItems = selectedLocation != null, CurrentPage = 1 }, LocationId = accountCreation.LocationId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+                    return this.View(new AccountCreationListViewModel { WorkPlaceList = new List<LocationBasicViewModel> { selectedLocation }, FilterText = selectedLocation.NameWithoutSubName, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = 1, PageSize = UserRegistrationContentPageSize, HasItems = selectedLocation != null, CurrentPage = 1 }, LocationId = accountCreation.LocationId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
                 }
 
                 accountCreationViewModel.PrimarySpecialtyId = accountCreation.PrimarySpecialtyId;

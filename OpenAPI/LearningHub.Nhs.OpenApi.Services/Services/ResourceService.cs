@@ -3587,6 +3587,23 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             return result;
         }
 
+        /// <summary>
+        /// The get resource header view model async.
+        /// </summary>
+        /// <param name="resourceReferenceId">The resourceReferenceId<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{ResourceHeaderViewModel}"/>.</returns>
+        public async Task<ResourceHeaderViewModel> GetResourceHeaderViewModelAsync(int resourceReferenceId)
+        {
+            var retVal = new ResourceHeaderViewModel();
+
+            var rv = await this.resourceVersionRepository.GetCurrentForResourceReferenceIdAsync(resourceReferenceId);
+
+            retVal.Id = resourceReferenceId;
+            retVal.Title = rv.Title;
+
+            return retVal;
+        }
+
         private LearningHubValidationResult ValidateRequestWithSourceBlockCollection(BlockCollection sourceBlockCollection, DuplicateBlocksRequestModel requestModel)
         {
             var result = new LearningHubValidationResult(false, "Duplicate Blocks async: ");

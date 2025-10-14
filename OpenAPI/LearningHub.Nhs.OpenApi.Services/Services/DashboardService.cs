@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.Json;
     using System.Threading.Tasks;
     using AutoMapper;
     using LearningHub.Nhs.Models.Dashboard;
@@ -11,10 +12,13 @@
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Activity;
+    using LearningHub.Nhs.Models.Provider;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Hierarchy;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Resources;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using LearningHub.Nhs.Models.Entities.Resource;
+    using System.Diagnostics;
 
     /// <summary>
     /// The DashboardService.
@@ -82,7 +86,10 @@
             {
                 foreach (var catalogue in catalogueList)
                 {
-                    catalogue.Providers = await providerService.GetByCatalogueVersionIdAsync(catalogue.NodeVersionId);
+                    if (!string.IsNullOrEmpty(catalogue.ProvidersJson))
+                    {
+                        catalogue.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(catalogue.ProvidersJson);
+                    }
                 }
             }
 
@@ -91,7 +98,10 @@
             {
                 foreach (var resource in resourceList)
                 {
-                    resource.Providers = await providerService.GetByResourceVersionIdAsync(resource.ResourceVersionId);
+                    if (!string.IsNullOrEmpty(resource.ProvidersJson))
+                    {
+                        resource.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(resource.ProvidersJson);
+                    }
                 }
             }
 
@@ -144,7 +154,10 @@
             {
                 foreach (var catalogue in catalogueList)
                 {
-                    catalogue.Providers = await providerService.GetByCatalogueVersionIdAsync(catalogue.NodeVersionId);
+                    if (!string.IsNullOrEmpty(catalogue.ProvidersJson))
+                    {
+                        catalogue.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(catalogue.ProvidersJson);
+                    }
                 }
             }
 
@@ -153,14 +166,20 @@
             {
                 foreach (var resource in resourceList)
                 {
-                    resource.Providers = await providerService.GetByResourceVersionIdAsync(resource.ResourceVersionId);
+                    if (!string.IsNullOrEmpty(resource.ProvidersJson))
+                    {
+                        resource.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(resource.ProvidersJson);
+                    }
                 }
             }
             if (myInProgressActivities.TotalCount > 0)
             {
                 foreach (var activity in myInProgressActivities.Activities)
                 {
-                    activity.Providers = await providerService.GetByResourceVersionIdAsync(activity.ResourceVersionId);
+                    if (!string.IsNullOrEmpty(activity.ProvidersJson))
+                    {
+                        activity.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(activity.ProvidersJson);
+                    }
                 }
             }
 
@@ -168,7 +187,10 @@
             {
                 foreach (var certificate in certificates.Certificates)
                 {
-                    certificate.Providers = await providerService.GetByResourceVersionIdAsync(certificate.ResourceVersionId);
+                    if (!string.IsNullOrEmpty(certificate.ProvidersJson))
+                    {
+                        certificate.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(certificate.ProvidersJson);
+                    }
                 }
             }
 
@@ -237,6 +259,11 @@
                     IsMostRecent = false,
                     ResourceDurationMilliseconds = Activity.ResourceDurationMilliseconds,
                     CompletionPercentage = Activity.CompletionPercentage,
+                    ProvidersJson = Activity.ProvidersJson,
+                    AssesmentScore = Activity.AssesmentScore,
+                    AssessmentPassMark = Activity.AssessmentPassMark,
+                    AssessmentType = Activity.AssessmentType,
+                    CertificateAwardedDate = Activity.ActivityDate,
                 }).ToList();
             }
 
@@ -264,6 +291,13 @@
                     IsMostRecent = false,
                     ResourceDurationMilliseconds = 0,
                     CompletionPercentage = 0,
+                    ProvidersJson = null,
+                    AssesmentScore = 0,
+                    AssessmentPassMark = 0,
+                    AssessmentType = 0,
+                    CertificateAwardedDate = course.EndDate.HasValue
+                            ? DateTimeOffset.FromUnixTimeSeconds(course.EndDate.Value)
+                            : DateTimeOffset.MinValue,
                 }).ToList();
             }
 
@@ -341,7 +375,8 @@
                             : DateTimeOffset.MinValue,
                         CertificatePreviewUrl = c.PreviewLink,
                         CertificateDownloadUrl = c.DownloadLink,
-                        ResourceVersionId = 0
+                        ResourceVersionId = 0,
+                        ProvidersJson = null
                     });
                 }
 
@@ -384,7 +419,13 @@
             var catalogueList = catalogues.Any() ? mapper.Map<List<DashboardCatalogueViewModel>>(catalogues) : new List<DashboardCatalogueViewModel>();
             foreach (var catalogue in catalogueList)
             {
-                catalogue.Providers = await providerService.GetByCatalogueVersionIdAsync(catalogue.NodeVersionId);
+                if (!string.IsNullOrEmpty(catalogue.ProvidersJson))
+                {
+                    if (!string.IsNullOrEmpty(catalogue.ProvidersJson))
+                    {
+                        catalogue.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(catalogue.ProvidersJson);
+                    }
+                }
             }
 
             var response = new DashboardCatalogueResponseViewModel
@@ -412,7 +453,13 @@
 
             foreach (var resource in resourceList)
             {
-                resource.Providers = await providerService.GetByResourceVersionIdAsync(resource.ResourceVersionId);
+                if (!string.IsNullOrEmpty(resource.ProvidersJson))
+                {
+                    if (!string.IsNullOrEmpty(resource.ProvidersJson))
+                    {
+                        resource.Providers = JsonSerializer.Deserialize<List<ProviderViewModel>>(resource.ProvidersJson);
+                    }
+                }
             }
 
             var response = new DashboardResourceResponseViewModel

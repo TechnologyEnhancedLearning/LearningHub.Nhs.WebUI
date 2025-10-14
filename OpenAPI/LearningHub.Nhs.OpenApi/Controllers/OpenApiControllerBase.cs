@@ -11,6 +11,8 @@
     /// </summary>
     public abstract class OpenApiControllerBase : ControllerBase, IDisposable
     {
+        private const int PortalAdminId = 4;
+
         /// <summary>
         /// Gets the current user's ID.
         /// </summary>
@@ -28,14 +30,14 @@
                     }
                     else
                     {
-                        // If parsing fails, return null - for apikey this will be the name
-                        return null;
+                        // If parsing fails, return PortalAdminId as default userId - for apikey this will be the name
+                        return PortalAdminId;
                     }
                 }
                 else
                 {
                     // When authorizing by ApiKey we do not have a user for example
-                    return null;
+                    return PortalAdminId;
                 }
             }
         }

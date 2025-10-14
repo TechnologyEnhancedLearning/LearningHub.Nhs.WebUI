@@ -75,7 +75,7 @@
             <a asp-action="Index" asp-route-dashboardTrayLearningResourceType="elearning" asp-route-myLearningDashboard=@Model.MyLearnings.Type asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning"
                class="subnavwhite-link text-nowrap nhsuk-u-padding-right-3  nhsuk-u-secondary-text-color nhsuk-u-font-size-16 nhsuk-u-font-weight-bold filterlink @(Model.DashboardTrayLearningResourceType == "elearning" ? "filteractive" : "filterinactive")"
                title="Elearning">
-                Elearning
+                elearning
             </a>
         </span>
     </div>
@@ -93,7 +93,7 @@
                                 <partial name="_LearningActivityCard" model="activityViewModel" />
                             </li>
                         }
-                        @if (isLastPage)
+                        @if (isLastPage && pagingViewModel.TotalCount >=8)
                         {
                             <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
                                 <div class="nhsuk-card dashboard-card">
@@ -146,7 +146,7 @@
                             <partial name="_CertificateCard" model="certificateViewmodel" />
                         </li>
                     }
-                    @if (isLastPage)
+                    @if (isLastPage && pagingViewModel.TotalCount >= 8)
                     {
                         <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
                             <div class="nhsuk-card dashboard-card">

@@ -554,7 +554,6 @@
     <Build Include="Tables\Elfh\DeaneryTBL.sql" />
     <Build Include="Tables\Elfh\EmailTemplateTBL.sql" />
     <Build Include="Tables\Elfh\EmailTemplateTypeTBL.sql" />
-    <Build Include="Tables\Elfh\ExternalSystemTBL.sql" />
     <Build Include="Tables\Elfh\GdcRegister.sql" />
     <Build Include="Tables\Elfh\GmcLrmp.sql" />
     <Build Include="Tables\Elfh\GradeTBL.sql" />

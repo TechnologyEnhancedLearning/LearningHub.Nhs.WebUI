@@ -23,7 +23,7 @@
 		<PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
 		<PackageVersion Include="Azure.Storage.Blobs" Version="12.24.1" />
 		<PackageVersion Include="Azure.Storage.Files.Shares" Version="12.11.0" />
-		<PackageVersion Include="Azure.Storage.Queues" Version="12.22.0" />
+		<PackageVersion Include="Azure.Storage.Queues" Version="12.24.0" />
 		<PackageVersion Include="BuildWebCompiler" Version="1.12.405" />
 		<PackageVersion Include="coverlet.collector" Version="6.0.4" />
 		<PackageVersion Include="EntityFrameworkCore.Testing.Moq" Version="9.0.1" />

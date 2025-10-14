@@ -20,10 +20,6 @@
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY],
 	PERIOD FOR SYSTEM_TIME ([VersionStartTime], [VersionEndTime])
 ) ON [PRIMARY]
-WITH
-(
-SYSTEM_VERSIONING = ON ( HISTORY_TABLE = [hub].[UserProfileHistory] )
-)
 GO
 
 ALTER TABLE hub.[UserProfile] ADD  DEFAULT (getutcdate()) FOR [VersionStartTime]

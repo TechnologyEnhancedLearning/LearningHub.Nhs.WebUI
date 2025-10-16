@@ -173,7 +173,7 @@ namespace LearningHub.NHS.OpenAPI
             services.AddDistributedCache(option =>
             {
                 option.RedisConnectionString = this.Configuration.GetConnectionString("LearningHubRedis");
-                option.KeyPrefix = envPrefix;
+                option.KeyPrefix = $"{envPrefix}_WebUI";
                 option.DefaultExpiryInMinutes = 60;
             });
 

@@ -167,6 +167,26 @@
         }
 
         /// <summary>
+        /// The CreateCatalogue.
+        /// </summary>
+        /// <param name="viewModel">The viewModel.</param>
+        /// <returns>The actionResult.</returns>
+        [HttpPost]
+        [Route("AddCategoryToCatalogue")]
+        public async Task<IActionResult> AddCategoryToCatalogue([FromBody] CatalogueViewModel viewModel)
+        {
+            try
+            {
+                var vr = await this.catalogueService.AddCategoryToCatalogueAsync(this.CurrentUserId.GetValueOrDefault(), viewModel);
+                return this.Ok(new ApiResponse(true, vr));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
+        }
+
+        /// <summary>
         /// Returns true if the catalogue is editable by the current user.
         /// </summary>
         /// <param name="catalogueId">The catalogue id.</param>

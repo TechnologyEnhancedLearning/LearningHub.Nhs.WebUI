@@ -1,6 +1,7 @@
 ﻿namespace LearningHub.Nhs.AdminUI.Controllers
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Drawing;
@@ -8,6 +9,7 @@
     using System.Net.Mail;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
+    using AngleSharp.Io;
     using LearningHub.Nhs.AdminUI.Configuration;
     using LearningHub.Nhs.AdminUI.Extensions;
     using LearningHub.Nhs.AdminUI.Interfaces;
@@ -15,12 +17,16 @@
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Common.Enums;
+    using LearningHub.Nhs.Models.Entities.Hierarchy;
+    using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.User;
+    using LearningHub.Nhs.Models.Validation;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
 
@@ -66,6 +72,11 @@
         private readonly IProviderService providerService;
 
         /// <summary>
+        /// Defines the moodleApiService.
+        /// </summary>
+        private readonly IMoodleApiService moodleApiService;
+
+        /// <summary>
         /// Defines the _settings.
         /// </summary>
         private readonly WebSettings settings;
@@ -98,6 +109,7 @@
         /// <param name="userGroupService">The userService<see cref="IUserGroupService"/>.</param>
         /// <param name="fileService">The fileService<see cref="IFileService"/>.</param>
         /// <param name="providerService">The providerService<see cref="IProviderService"/>.</param>
+        /// <param name="moodleApiService">The moodleApiService<see cref="IMoodleApiService"/>.</param>
         /// <param name="logger">The logger<see cref="ILogger{LogController}"/>.</param>
         /// <param name="options">The options<see cref="IOptions{WebSettings}"/>.</param>
         /// <param name="websettings">The websettings<see cref="IOptions{WebSettings}"/>.</param>
@@ -107,6 +119,7 @@
             IUserGroupService userGroupService,
             IFileService fileService,
             IProviderService providerService,
+            IMoodleApiService moodleApiService,
             ILogger<LogController> logger,
             IOptions<WebSettings> options,
             IOptions<WebSettings> websettings)
@@ -116,6 +129,7 @@
             this.userGroupService = userGroupService;
             this.fileService = fileService;
             this.providerService = providerService;
+            this.moodleApiService = moodleApiService;
             this.logger = logger;
             this.websettings = websettings;
             this.settings = options.Value;
@@ -248,6 +262,29 @@
                 return this.RedirectToAction("Error");
             }
 
+            this.ViewData["CatalogueName"] = vm.Name;
+            this.ViewData["id"] = id;
+
+            return this.View(vm);
+        }
+
+        /// <summary>
+        /// The CatalogueOwner.
+        /// </summary>
+        /// <param name="id">The id<see cref="int"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("MoodleCategory/{id}")]
+        public async Task<IActionResult> MoodleCategory(int id)
+        {
+            var vm = await this.catalogueService.GetCatalogueAsync(id);
+            if (vm == null)
+            {
+                return this.RedirectToAction("Error");
+            }
+
+            vm.MoodleCategories = await this.moodleApiService.GetAllMoodleCategoriesAsync();
+            vm.MoodleCategorySelectList = new SelectList(vm.MoodleCategories, "Id", "Name");
             this.ViewData["CatalogueName"] = vm.Name;
             this.ViewData["id"] = id;
 
@@ -675,6 +712,35 @@
                     success = false,
                     details = vr.Details.Count > 0 ? vr.Details[0] : $"Error adding user groups to catalogue",
                 });
+            }
+        }
+
+        /// <summary>
+        /// The AddCategoryToCatalogue.
+        /// </summary>
+        /// <param name="catalogueViewModel">The catalogueViewModel<see cref="CatalogueViewModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        [Route("AddCategoryToCatalogue")]
+        public async Task<IActionResult> AddCategoryToCatalogue(CatalogueViewModel catalogueViewModel)
+        {
+            ////if (catalogueViewModel.SelectedCategoryId == 0)
+            ////{
+            ////    this.ModelState.AddModelError("SelectedCategoryId", "Please select a category.");
+            ////}
+            var vm = await this.catalogueService.GetCatalogueAsync(catalogueViewModel.CatalogueNodeVersionId);
+            vm.SelectedCategoryId = catalogueViewModel.SelectedCategoryId;
+            var vr = await this.catalogueService.AddCategoryToCatalogue(vm);
+            if (vr.Success)
+            {
+                vm.MoodleCategories = await this.moodleApiService.GetAllMoodleCategoriesAsync();
+                vm.MoodleCategorySelectList = new SelectList(vm.MoodleCategories, "Id", "Name");
+                return this.View("MoodleCategory", vm);
+            }
+            else
+            {
+                this.ViewBag.ErrorMessage = $"Category Update failed.";
+                return this.View("MoodleCategory", vm);
             }
         }
 

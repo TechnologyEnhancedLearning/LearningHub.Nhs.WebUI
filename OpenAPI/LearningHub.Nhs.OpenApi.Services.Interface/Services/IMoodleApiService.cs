@@ -1,4 +1,5 @@
-﻿using LearningHub.Nhs.Models.Moodle.API;
+﻿using LearningHub.Nhs.Models.Moodle;
+using LearningHub.Nhs.Models.Moodle.API;
 using LearningHub.Nhs.Models.MyLearning;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -50,6 +51,12 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         Task<List<MoodleEnrolledCourseResponseModel>> GetInProgressEnrolledCoursesAsync(int userId);
 
         /// <summary>
+        /// GetAllMoodleCategoriesAsync.
+        /// </summary>
+        /// <returns>List of MoodleCategory.</returns>
+        Task<List<MoodleCategory>> GetAllMoodleCategoriesAsync();
+
+        /// <summary>
         /// GetEnrolledCoursesAsync.
         /// </summary>
         /// <param name="userId">Moodle user id.</param>
@@ -65,5 +72,19 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="filterText">The page Number.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         Task<List<MoodleUserCertificateResponseModel>> GetUserCertificateAsync(int userId, string filterText = "");
+
+        /// <summary>
+        /// GetCoursesByCategoryIdAsync.
+        /// </summary>
+        /// <param name="categoryId">The categoryId.</param>
+        /// <returns> List of MoodleCoursesResponseModel.</returns>
+        Task<MoodleCoursesResponseModel> GetCoursesByCategoryIdAsync(int categoryId);
+
+        /// <summary>
+        /// GetSubCategoryByCategoryIdAsync.
+        /// </summary>
+        /// <param name="categoryId">The categoryId.</param>
+        /// <returns> List of MoodleSubCategoryResponseModel.</returns>
+        Task<List<MoodleSubCategoryResponseModel>> GetSubCategoryByCategoryIdAsync(int categoryId);
     }
 }

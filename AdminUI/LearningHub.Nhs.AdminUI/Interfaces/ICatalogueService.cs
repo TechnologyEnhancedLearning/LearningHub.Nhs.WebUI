@@ -69,5 +69,12 @@
         /// <param name="catalogueOwner">The catalogue owner<see cref="CatalogueOwnerViewModel"/>.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<ApiResponse> UpdateCatalogueOwnerAsync(CatalogueOwnerViewModel catalogueOwner);
+
+        /// <summary>
+        /// AddCategoryToCatalogue
+        /// </summary>
+        /// <param name="catalogue">The catalogue.</param>
+        /// <returns></returns>
+        Task<ApiResponse> AddCategoryToCatalogue(CatalogueViewModel catalogue);
     }
 }

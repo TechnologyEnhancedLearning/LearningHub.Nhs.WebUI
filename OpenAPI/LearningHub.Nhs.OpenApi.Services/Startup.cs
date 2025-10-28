@@ -35,6 +35,7 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IUserNotificationService, UserNotificationService>();
             services.AddScoped<IUserGroupService, UserGroupService>();
             services.AddScoped<IMoodleApiService, MoodleApiService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IEventLogService, EventLogService>();

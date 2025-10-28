@@ -56,6 +56,14 @@
         Task UpdateCatalogueOwnerAsync(int userId, CatalogueOwnerViewModel vm);
 
         /// <summary>
+        /// The AddCategoryToCatalogueAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="vm">The viewmodel.</param>
+        /// <returns></returns>
+        Task AddCategoryToCatalogueAsync(int userId, CatalogueViewModel vm);
+
+        /// <summary>
         /// The CreateCatalogueAsync.
         /// </summary>
         /// <param name="userId">The userId.</param>

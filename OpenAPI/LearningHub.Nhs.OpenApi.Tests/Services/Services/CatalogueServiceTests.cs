@@ -43,6 +43,7 @@
         private readonly Mock<IOptions<FindwiseConfig>> findwiseConfig;
         private readonly Mock<INotificationSenderService> notificationSenderService;
         private readonly Mock<ITimezoneOffsetManager> timezoneOffsetManager;
+        private readonly Mock<ICategoryService> categoryService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CatalogueServiceTests"/> class.
@@ -69,7 +70,8 @@
             this.findwiseConfig = new Mock<IOptions<FindwiseConfig>>();
             this.notificationSenderService = new Mock<INotificationSenderService>();
             this.timezoneOffsetManager = new Mock<ITimezoneOffsetManager>();
-            this.catalogueService = new CatalogueService(this.catalogueRepository.Object, this.nodeRepository.Object, this.userUserGroupRepository.Object, this.mapper.Object, this.findwiseConfig.Object, this.learningHubConfig.Object, this.catalogueNodeVersionRepository.Object, this.nodeResourceRepository.Object, this.resourceVersionRepository.Object, this.roleUserGroupRepository.Object, this.providerService.Object, this.catalogueAccessRequestRepository.Object, this.userRepository.Object, this.userProfileRepository.Object, this.emailSenderService.Object, this.bookmarkRepository.Object, this.nodeActivityRepository.Object, this.findwiseApiFacade.Object,this.notificationSenderService.Object,this.timezoneOffsetManager.Object);
+            this.categoryService = new Mock<ICategoryService>();
+            this.catalogueService = new CatalogueService(this.catalogueRepository.Object, this.categoryService.Object, this.nodeRepository.Object, this.userUserGroupRepository.Object, this.mapper.Object, this.findwiseConfig.Object, this.learningHubConfig.Object, this.catalogueNodeVersionRepository.Object, this.nodeResourceRepository.Object, this.resourceVersionRepository.Object, this.roleUserGroupRepository.Object, this.providerService.Object, this.catalogueAccessRequestRepository.Object, this.userRepository.Object, this.userProfileRepository.Object, this.emailSenderService.Object, this.bookmarkRepository.Object, this.nodeActivityRepository.Object, this.findwiseApiFacade.Object,this.notificationSenderService.Object,this.timezoneOffsetManager.Object);
         }
 
         private static IEnumerable<CatalogueNodeVersion> CatalogueNodeVersionList => new List<CatalogueNodeVersion>()

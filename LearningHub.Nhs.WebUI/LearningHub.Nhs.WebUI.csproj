@@ -136,6 +136,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.1" />
+		<PackageReference Include="TELBlazor.Components" Version="1.16.4" />
 		<PackageReference Include="tusdotnet" Version="2.8.0" />
 		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.7.1">
 			<PrivateAssets>all</PrivateAssets>

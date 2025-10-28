@@ -1,0 +1,95 @@
+﻿<h3>AutoSuggest</h3>
+
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+<div class="autosuggest-container">
+    <input type="text" class="form-control"
+           placeholder="Search..."
+           @oninput="OnInputChanged"
+           @bind="@SearchText" />
+
+    @if (Suggestions?.Any() == true)
+    {
+        <ul class="list-group suggestion-box">
+            @foreach (var item in Suggestions)
+            {
+                <li class="list-group-item list-group-item-action" @onclick="() => SelectItem(item)">
+                    @item
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+<style>
+    .autosuggest-container {
+        position: relative;
+        width: 320px;
+    }
+
+    .suggestion-box {
+        position: absolute;
+        width: 100%;
+        z-index: 1200;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+        .suggestion-box li:hover {
+            cursor: pointer;
+            background-color: #f8f9fa;
+        }
+</style>
+
+@code {
+    [Parameter] public Func<string, Task<List<string>>>? SearchProvider { get; set; }
+    [Parameter] public EventCallback<string> OnSelected { get; set; }
+
+    private string SearchText { get; set; } = string.Empty;
+    private List<string> Suggestions { get; set; } = new();
+    private CancellationTokenSource? cts;
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        SearchText = e.Value?.ToString() ?? string.Empty;
+
+        cts?.Cancel();
+        cts = new CancellationTokenSource();
+
+        if (SearchText.Length < 3)
+        {
+            Suggestions.Clear();
+            StateHasChanged();
+            return;
+        }
+
+        try
+        {
+            // debounce
+            await Task.Delay(300, cts.Token);
+
+            if (SearchProvider is not null)
+            {
+                var results = await SearchProvider(SearchText);
+                Suggestions = results ?? new List<string>();
+            }
+        }
+        catch (OperationCanceledException) { /* user typed again */ }
+        catch (Exception ex)
+        {
+            // component remains agnostic — log client-side
+            Console.Error.WriteLine($"AutoSuggest Error: {ex.Message}");
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task SelectItem(string item)
+    {
+        SearchText = item;
+        Suggestions.Clear();
+        await OnSelected.InvokeAsync(item);
+    }
+}
+

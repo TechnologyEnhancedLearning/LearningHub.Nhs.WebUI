@@ -24,7 +24,7 @@
                             </a>
                         </div>
                         <h1>Catalogue Management</h1>
-                        <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-row" v-if="(catalogue.restrictedAccess || catalogue.hidden)">
                             <div class="nhsuk-grid-column-full">
                                 <p>You are managing the following catalogue and can invite users to request access.</p>
                                 <input type="button" class="nhsuk-button" @click="inviteUserModal()" value="Invite Users" v-if="(catalogue.restrictedAccess || catalogue.hidden)" />  

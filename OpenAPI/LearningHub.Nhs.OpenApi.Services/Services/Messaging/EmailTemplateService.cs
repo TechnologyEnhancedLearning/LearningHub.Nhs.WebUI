@@ -154,7 +154,7 @@
                 ["Content"] = emailTemplate.Body,
             });
             var model = emailModel.Model;
-            var expiraryDate = DateTime.Now.AddMinutes(model.TimeLimit);
+            var expiraryDate = DateTimeOffset.Now.AddMinutes(model.TimeLimit);
             var replacementDict = new Dictionary<string, string>
             {
                 ["UserFirstName"] = model.UserFirstName,

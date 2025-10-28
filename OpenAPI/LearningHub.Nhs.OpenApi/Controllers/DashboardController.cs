@@ -68,5 +68,20 @@
             var response = await dashboardService.GetMyAccessLearnings(dashboardType, pageNumber, this.CurrentUserId.GetValueOrDefault());
             return this.Ok(response);
         }
+
+        /// <summary>
+        /// Gets Catalogues.
+        /// </summary>
+        /// <param name="dashboardTrayLearningResourceType">The dashboardTrayLearningResource type.</param>
+        /// <param name="dashboardType">The dashboard type.</param>
+        /// <param name="pageNumber">The page Number.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet]
+        [Route("GetMyCoursesAndElearning/{dashboardTrayLearningResourceType}/{dashboardType}/{pageNumber}")]
+        public async Task<ActionResult> GetMyCoursesAndElearning(string dashboardTrayLearningResourceType, string dashboardType, int pageNumber = 1)
+        {
+            var response = await dashboardService.GetMyCoursesAndElearning(dashboardTrayLearningResourceType, dashboardType, pageNumber, this.CurrentUserId.GetValueOrDefault(), "All");
+            return this.Ok(response);
+        }
     }
 }

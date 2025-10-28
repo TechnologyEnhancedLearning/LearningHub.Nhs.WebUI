@@ -84,10 +84,6 @@ namespace LearningHub.NHS.OpenAPI
 
             services.AddRepositories(this.Configuration);
             services.AddServices();
-
-            services.AddDbContext<LearningHubDbContext>(
-                options =>
-                    options.UseSqlServer(this.Configuration.GetConnectionString("LearningHub")));
             services.AddApplicationInsightsTelemetry();
             services.AddControllers(options =>
             {
@@ -177,7 +173,7 @@ namespace LearningHub.NHS.OpenAPI
             services.AddDistributedCache(option =>
             {
                 option.RedisConnectionString = this.Configuration.GetConnectionString("LearningHubRedis");
-                option.KeyPrefix = envPrefix;
+                option.KeyPrefix = $"{envPrefix}_WebUI";
                 option.DefaultExpiryInMinutes = 60;
             });
 

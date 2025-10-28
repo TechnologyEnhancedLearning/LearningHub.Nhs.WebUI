@@ -187,11 +187,21 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             // External
             services.AddSingleton<IEntityTypeMap, UserProfileMap>();
 
-            var dbContextOptions = new DbContextOptionsBuilder<LearningHubDbContext>()
-                .UseSqlServer(configuration.GetConnectionString("LearningHubDbConnection")).Options;
+            // Configure LearningHubDbContextOptions per scope (per request)
+            services.AddScoped(sp =>
+            {
+                var dbOptions = sp.GetRequiredService<DbContextOptions<LearningHubDbContext>>();
+                var mappings = sp.GetServices<IEntityTypeMap>();
+                return new LearningHubDbContextOptions(dbOptions, mappings);
+            });
 
-            services.AddSingleton(dbContextOptions);
-            services.AddSingleton<LearningHubDbContextOptions>();
+            // Configure DbContext
+            var maxDatabaseRetryAttempts = configuration.GetValue<int>("LearningHub:MaxDatabaseRetryAttempts");
+            services.AddDbContext<LearningHubDbContext>(options =>
+                options.UseSqlServer(
+                    configuration.GetConnectionString("LearningHubDbConnection"),
+                    sqlOptions => sqlOptions.EnableRetryOnFailure(maxDatabaseRetryAttempts)
+                ));
         }
     }
 }

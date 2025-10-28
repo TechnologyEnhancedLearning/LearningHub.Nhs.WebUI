@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.WebUI.Models;
 
     /// <summary>
@@ -69,6 +71,127 @@
             }
 
             return typeText;
+        }
+
+        /// <summary>
+        /// Get resource type details.
+        /// </summary>
+        /// <param name="resourceType">resourceType.</param>
+        /// <returns>The string.</returns>
+        public static string GetResourceTypeDesc(ResourceTypeEnum resourceType)
+        {
+            string typeText = string.Empty;
+            switch (resourceType)
+            {
+                case ResourceTypeEnum.Assessment:
+                    typeText = "Assessment";
+                    break;
+                case ResourceTypeEnum.Article:
+                    typeText = "Article";
+                    break;
+                case ResourceTypeEnum.Audio:
+                    typeText = "Audio";
+                    break;
+                case ResourceTypeEnum.GenericFile:
+                    typeText = "File";
+                    break;
+                case ResourceTypeEnum.Image:
+                    typeText = "Image";
+                    break;
+                case ResourceTypeEnum.Scorm:
+                    typeText = "elearning";
+                    break;
+                case ResourceTypeEnum.Video:
+                    typeText = "Video";
+                    break;
+                case ResourceTypeEnum.WebLink:
+                    typeText = "Web link";
+                    break;
+                case ResourceTypeEnum.Case:
+                    typeText = "Case";
+                    break;
+                case ResourceTypeEnum.Html:
+                    typeText = "HTML";
+                    break;
+                case ResourceTypeEnum.Moodle:
+                    typeText = "Course";
+                    break;
+                default:
+                    typeText = string.Empty;
+                    break;
+            }
+
+            return typeText;
+        }
+
+        /// <summary>
+        /// GetActivityStatusDisplayText.
+        /// </summary>
+        /// <param name="activity">The activity.</param>
+        /// <returns>The string.</returns>
+        public static string GetActivityStatusDisplayText(MyLearningCombinedActivitiesViewModel activity)
+        {
+            if (activity.ActivityStatus == ActivityStatusEnum.Completed || activity.ActivityStatus == ActivityStatusEnum.Passed || activity.ActivityStatus == ActivityStatusEnum.Viewed || activity.ActivityStatus == ActivityStatusEnum.Downloaded)
+            {
+                return "Completed";
+            }
+            else
+            {
+                return "InProgress";
+            }
+        }
+
+        /// <summary>
+        /// GetCertificateStatusDisplayText.
+        /// </summary>
+        /// <param name="activity">The activity.</param>
+        /// <returns>The string.</returns>
+        public static string GetCertificateStatusDisplayText(ActivityDetailedItemViewModel activity)
+        {
+            if (activity.ActivityStatus == ActivityStatusEnum.Completed || activity.ActivityStatus == ActivityStatusEnum.Passed || activity.ActivityStatus == ActivityStatusEnum.Viewed || activity.ActivityStatus == ActivityStatusEnum.Downloaded)
+            {
+                return "Completed";
+            }
+            else
+            {
+                return "InProgress";
+            }
+        }
+
+        /// <summary>
+        /// CanDownloadCertificate.
+        /// </summary>
+        /// <param name="activitiesViewModel">The activityDetailedItemViewModel.</param>
+        /// <returns>The <see cref="bool"/>bool.</returns>
+        public static bool CanCertificateawarded(this MyLearningCombinedActivitiesViewModel activitiesViewModel)
+        {
+            if (activitiesViewModel.CertificateEnabled == true)
+            {
+                if (activitiesViewModel.ResourceType == ResourceTypeEnum.Scorm)
+                {
+                    if (GetActivityStatusDisplayText(activitiesViewModel) == "Completed" || GetActivityStatusDisplayText(activitiesViewModel) == "Passed")
+                    {
+                        return true;
+                    }
+                }
+                else if (activitiesViewModel.ResourceType == ResourceTypeEnum.Assessment && activitiesViewModel.AssessmentType == (int)AssessmentTypeEnum.Informal && activitiesViewModel.AssesmentScore >= activitiesViewModel.AssessmentPassMark)
+                {
+                    return true;
+                }
+                else if (activitiesViewModel.ResourceType == ResourceTypeEnum.Assessment && activitiesViewModel.AssessmentType == (int)AssessmentTypeEnum.Informal)
+                {
+                    return false;
+                }
+                else
+                {
+                    if (GetActivityStatusDisplayText(activitiesViewModel) == "Completed" || GetActivityStatusDisplayText(activitiesViewModel) == "Passed" || GetActivityStatusDisplayText(activitiesViewModel) == "Downloaded")
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -287,6 +410,21 @@
         }
 
         /// <summary>
+        /// CanView Video Progress.
+        /// </summary>
+        /// <param name="activitiesViewModel">The MyLearningCombinedActivitiesViewModel.</param>
+        /// <returns>The <see cref="bool"/>bool.</returns>
+        public static bool CanViewVidoProgress(this MyLearningCombinedActivitiesViewModel activitiesViewModel)
+        {
+            if ((activitiesViewModel.ResourceType == ResourceTypeEnum.Video || activitiesViewModel.ResourceType == ResourceTypeEnum.Audio) && activitiesViewModel.ActivityStatus == ActivityStatusEnum.Incomplete && activitiesViewModel.IsCurrentResourceVersion && activitiesViewModel.IsMostRecent)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// GetDurationText.
         /// </summary>
         /// <param name="durationInMilliseconds">The durationInMilliseconds<see cref="int"/>.</param>
@@ -340,6 +478,7 @@
             var routeData = model.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(model)?.ToString());
             routeData.Remove("MostRecentResources");
             routeData.Remove("Activities");
+            routeData.Remove("UserCertificates");
             routeData.Remove("TotalCount");
             routeData.Remove("MyLearningPaging");
             routeData.Remove("Skip");

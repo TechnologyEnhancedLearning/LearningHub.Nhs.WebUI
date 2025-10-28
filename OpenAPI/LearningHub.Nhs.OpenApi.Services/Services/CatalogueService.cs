@@ -543,7 +543,7 @@
             await this.RecordNodeActivity(userId, catalogue);
 
             var catalogueVM = this.mapper.Map<CatalogueViewModel>(catalogue);
-            var bookmark = this.bookmarkRepository.GetAll().Where(b => b.NodeId == catalogue.NodeId && b.UserId == userId).FirstOrDefault();
+            var bookmark = await this.bookmarkRepository.GetAll().Where(b => b.NodeId == catalogue.NodeId && b.UserId == userId).FirstOrDefaultAsync();
             catalogueVM.BookmarkId = bookmark?.Id;
             catalogueVM.IsBookmarked = !bookmark?.Deleted ?? false;
             catalogueVM.Providers = await this.providerService.GetByCatalogueVersionIdAsync(catalogueVM.Id);

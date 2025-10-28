@@ -220,12 +220,13 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity
 
         private async Task UpdateScormActivityAsync(int userId, ScormActivity updatedScormActivity)
         {
-            var existingScormActivity = DbContext.ScormActivity.Where(s => s.Id == updatedScormActivity.Id)
+            var existingScormActivity = this.DbContext.ScormActivity.Where(s => s.Id == updatedScormActivity.Id)
                         .Include(sao => sao.ScormActivityObjective)
                         .Include(sao => sao.ScormActivityInteraction)
                         .ThenInclude(sai => sai.ScormActivityInteractionCorrectResponse)
                         .Include(sai => sai.ScormActivityInteraction)
                         .ThenInclude(sai => sai.ScormActivityInteractionObjective)
+                        .AsSplitQuery()
                         .SingleOrDefault();
 
             updatedScormActivity.ResourceActivityId = existingScormActivity.ResourceActivityId;

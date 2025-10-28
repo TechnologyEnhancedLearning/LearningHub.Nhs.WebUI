@@ -9,7 +9,7 @@
 			case "in-progress":
 				return "In Progress";
 			case "my-recent-completed":
-				return "Recently Completed";
+				return "Recently completed";
 			case "my-certificates":
 				return "Certificates";
 			case "my-catalogues":
@@ -32,8 +32,8 @@
 				TotalCount = Model.MyLearnings.TotalCount
 			};
 
-	var enableMoodle = this.ViewBag.EnableMoodle;
-	var validMoodleUser = this.ViewBag.ValidMoodleUser;
+	bool enableMoodle = (bool?)ViewBag.EnableMoodle ?? false;
+	bool validMoodleUser = (bool?)ViewBag.ValidMoodleUser ?? false;
 }
 <div class="dashboardTray">
 	<h2>My accessed learning</h2>
@@ -55,7 +55,7 @@
 				</li>
 				<li class="subnavwhite-item nhsuk-bg-grey @(Model.MyLearnings.Type == "my-recent-completed" ? "active" : string.Empty)">
 					<a tabindex="0" class="subnavwhite-link text-nowrap"
-					   asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="my-recent-completed" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">Recently Completed</a>
+					   asp-controller="Home" asp-action="Index" asp-route-myLearningDashboard="my-recent-completed" asp-route-resourceDashboard="@(Model.Resources.Type)" asp-route-catalogueDashboard="@Model.Catalogues.Type" asp-fragment="my-learning">Recently completed</a>
 				</li>
 				<li class="subnavwhite-item nhsuk-bg-grey @(Model.MyLearnings.Type == "my-certificates" ? "active" : string.Empty)">
 					<a tabindex="0" class="subnavwhite-link text-nowrap"

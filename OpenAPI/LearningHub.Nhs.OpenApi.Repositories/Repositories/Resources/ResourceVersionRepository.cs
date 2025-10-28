@@ -731,14 +731,8 @@
             var dashboardResources = new List<DashboardResourceDto>();
             switch (dashboardType)
             {
-                case "my-certificates":
-                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyLearningCertificatesDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
-                    break;
                 case "my-recent-completed":
                     dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyRecentCompletedDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
-                    break;
-                case "my-in-progress":
-                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyInProgressDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
                     break;
                 case "recent-resources":
                     dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetRecentDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();

@@ -1,5 +1,5 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
-@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+@inject LearningHub.Nhs.WebUI.Interfaces.IMoodleApiService moodleApiService; 
 
 @using System.Linq;
 @using System.Web;
@@ -28,19 +28,30 @@
 &query={searchSignalQueryEncoded}&title={payload?.DocumentFields?.Title}";
 	}
 
-	string GetMoodleCourseUrl(string courseId)
+	string GetMoodleCourseUrl(string courseIdWithPrefix)
 	{
-		var prefix = "M";
-		if (courseId.StartsWith(prefix))
+		const string prefix = "M";
+
+		if (string.IsNullOrWhiteSpace(courseIdWithPrefix))
 		{
-			courseId = courseId.Replace(prefix, ""); ;
+			return string.Empty;
 		}
 
-		var apiBaseUrl = Configuration["MoodleAPIConfig:BaseUrl"];
-		string path = $"course/view.php";
-		string returnUrl = $@"{apiBaseUrl}{path}?id={courseId}";
+		if (!courseIdWithPrefix.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+		{
+			return string.Empty;
+		}
 
-		return returnUrl;
+		var courseIdPart = courseIdWithPrefix.Substring(prefix.Length);
+
+		if (int.TryParse(courseIdPart, out int courseId))
+		{
+			return moodleApiService.GetCourseUrl(courseId);
+		}
+		else
+		{
+			return string.Empty;
+		}
 	}
 
 	bool showCatalogueFieldsInResources = ViewBag.ShowCatalogueFieldsInResources == null || ViewBag.ShowCatalogueFieldsInResources == true;
@@ -93,7 +104,7 @@
 		<div class="resource-info nhsuk-body-s nhsuk-u-margin-bottom-2">
 			<div class="nhsuk-u-margin-right-4">
 				<strong>Type: </strong>
-				@UtilityHelper.GetPrettifiedResourceTypeNameMoodle(UtilityHelper.ToEnum<ResourceTypeEnumMoodle>(item.ResourceType), 0)
+				@UtilityHelper.GetPrettifiedResourceTypeName(UtilityHelper.ToEnum<ResourceTypeEnum>(item.ResourceType), 0)
 			</div>
 			<div>
 				@if (item.ResourceType != "moodle")

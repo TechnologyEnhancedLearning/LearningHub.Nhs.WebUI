@@ -201,6 +201,8 @@
     <None Include="Scripts\Pre-Deploy\Scripts\TD-807_AlterTable_HierarchyEditNodeResourceLookup.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\TD-887_PreLoginLandingPageChanges.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\TD-2902 Add resource types to Content Server.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-6109_Enable_CDC.sql" />
+    <None Include="Scripts\LH Database Scripts\Move CC resource to a custom catalogue.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="LearningHub.Nhs.Database.refactorlog" />
@@ -539,6 +541,12 @@
     <Build Include="Stored Procedures\Activity\GetAssessmentActivityCompletionPercentage.sql" />
     <Build Include="Tables\Hub\PasswordResetRequests.sql" />
     <Build Include="Stored Procedures\External\ExternalSystemUserCreate.sql" />
+    <Build Include="Stored Procedures\Activity\GetUserRecentLearningActivities.sql" />
+    <Build Include="Stored Procedures\Activity\GetUsersLearningHistory.sql" />
+    <Build Include="Stored Procedures\Activity\GetUsersLearningHistory_Search.sql" />
+    <Build Include="Stored Procedures\Resources\GetUsercertificateDetails.sql" />
+    <Build Include="Stored Procedures\Activity\GetUserInProgressLearningActivities.sql" />
+    <Build Include="Stored Procedures\Hub\GetActiveNotificationCount.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

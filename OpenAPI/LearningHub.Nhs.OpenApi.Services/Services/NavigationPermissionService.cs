@@ -31,8 +31,9 @@
         /// <param name="user">The user<see cref="IPrincipal"/>.</param>
         /// <param name="loginWizardComplete">The loginWizardComplete<see cref="bool"/>.</param>
         /// <param name="controllerName">The controller name.</param>
+        /// <param name="currentUserId">The current user id.</param>
         /// <returns>The <see cref="Task{NavigationModel}"/>.</returns>
-        public async Task<NavigationModel> GetNavigationModelAsync(IPrincipal user, bool loginWizardComplete, string controllerName)
+        public async Task<NavigationModel> GetNavigationModelAsync(IPrincipal user, bool loginWizardComplete, string controllerName, int currentUserId)
         {
             if (!loginWizardComplete && (user.IsInRole("Administrator") || user.IsInRole("ReadOnly") || user.IsInRole("BlueUser") || user.IsInRole("BasicUser")))
             {
@@ -48,15 +49,15 @@
             }
             else if (user.IsInRole("ReadOnly"))
             {
-                return await AuthenticatedReadOnly(controllerName,user.Identity.GetCurrentUserId());
+                return await AuthenticatedReadOnly(controllerName, currentUserId);
             }
             else if (user.IsInRole("BasicUser"))
             {
-                return await AuthenticatedBasicUserOnly(user.Identity.GetCurrentUserId());
+                return await AuthenticatedBasicUserOnly(currentUserId);
             }
             else if (user.IsInRole("BlueUser"))
             {
-                return await AuthenticatedBlueUser(controllerName, user.Identity.GetCurrentUserId());
+                return await AuthenticatedBlueUser(controllerName, currentUserId);
             }
             else
             {
@@ -99,13 +100,13 @@
             {
                 ShowMyContributions = true,
                 ShowMyLearning = true,
-                ShowMyBookmarks = true,
+                ShowMyBookmarks = false,
                 ShowSearch = controllerName != "search" && controllerName != string.Empty,
                 ShowAdmin = true,
                 ShowForums = true,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = true,
-                ShowNotifications = true,
+                ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = true,
@@ -125,13 +126,13 @@
             {
                 ShowMyContributions = await this.userGroupService.UserHasCatalogueContributionPermission(userId),
                 ShowMyLearning = true,
-                ShowMyBookmarks = true,
+                ShowMyBookmarks = false,
                 ShowSearch = controllerName != "search" && controllerName != string.Empty,
                 ShowAdmin = false,
                 ShowForums = true,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = true,
-                ShowNotifications = true,
+                ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = true,
@@ -153,7 +154,7 @@
                 ShowSearch = false,
                 ShowAdmin = false,
                 ShowForums = false,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = false,
                 ShowNotifications = false,
                 ShowRegister = false,
@@ -174,13 +175,13 @@
             {
                 ShowMyContributions = await resourceService.HasPublishedResourcesAsync(userId),
                 ShowMyLearning = true,
-                ShowMyBookmarks = true,
+                ShowMyBookmarks = false,
                 ShowSearch = controllerName != "search" && controllerName != string.Empty,
                 ShowAdmin = false,
                 ShowForums = true,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = true,
-                ShowNotifications = true,
+                ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = false,
@@ -198,13 +199,13 @@
             {
                 ShowMyContributions = await resourceService.HasPublishedResourcesAsync(userId),
                 ShowMyLearning = true,
-                ShowMyBookmarks = true,
+                ShowMyBookmarks = false,
                 ShowSearch = true,
                 ShowAdmin = false,
                 ShowForums = true,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = true,
-                ShowNotifications = true,
+                ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = true,
@@ -226,7 +227,7 @@
                 ShowSearch = false,
                 ShowAdmin = false,
                 ShowForums = false,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = false,
                 ShowNotifications = false,
                 ShowRegister = false,

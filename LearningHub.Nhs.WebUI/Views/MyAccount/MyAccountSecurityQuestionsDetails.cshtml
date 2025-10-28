@@ -1,0 +1,25 @@
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.MyAcountSecurityQuestionsViewModel
+
+@{
+    ViewData["DisableValidation"] = true;
+    ViewData["Title"] = "My Account - Change security question";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+
+<div class="bg-white">
+    <div class="nhsuk-width-container app-width-container">
+        <vc:back-link asp-controller="MyAccount" asp-action="MyAccountSecurity" link-text="Go back" />
+
+        <form asp-controller="MyAccount" asp-action="MyAccountSecurityQuestionsDetails" method="get">
+
+            <partial name="~/Views/MyAccount/_MyAccountSecurityQuestions.cshtml" model="@Model" />
+
+            <div class="nhsuk-u-padding-bottom-5">
+                <input type="hidden" name="formSubmission" value="true">
+                <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+                    Save changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

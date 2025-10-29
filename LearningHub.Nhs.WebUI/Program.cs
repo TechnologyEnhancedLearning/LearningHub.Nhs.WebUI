@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using LearningHub.Nhs.WebUI;
+using LearningHub.Nhs.WebUI.BlazorComponentHosting;
 using LearningHub.Nhs.WebUI.Interfaces;
 using LearningHub.Nhs.WebUI.JsDetection;
 using LearningHub.Nhs.WebUI.Middleware;
@@ -34,15 +35,21 @@ try
     builder.Logging.ClearProviders();
     builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
     builder.Host.UseNLog();
+    builder.Services.AddControllersWithViews();
 
     builder.Services.AddHostedService<TimedHostedService>();
     builder.Services.ConfigureServices(builder.Configuration, builder.Environment);
 
+    // Add Razor components
+    builder.Services.AddRazorComponents().AddInteractiveServerComponents();
     var app = builder.Build();
 
     var appLifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
     var jsDetectionLogger = app.Services.GetRequiredService<IJsDetectionLogger>();
     appLifetime.ApplicationStopping.Register(async () => await jsDetectionLogger.FlushCounters());
+
+    app.UseBlazorFrameworkFiles("/blazor");
+    app.UseStaticFiles();
 
     if (app.Environment.IsDevelopment())
     {
@@ -84,7 +91,6 @@ try
     app.UseAuthorization();
 
     app.UseMiddleware<NLogMiddleware>();
-    app.UseStaticFiles();
 
     app.Map(TimezoneInfoMiddleware.TimezoneInfoUrl, b => b.UseMiddleware<TimezoneInfoMiddleware>());
 
@@ -107,6 +113,11 @@ try
             },
         };
     });
+
+    // Map Razor components (needed for interactivity)
+    app.MapRazorComponents<App>() // App is your root component
+       .AddInteractiveServerRenderMode()
+       .AddAdditionalAssemblies(typeof(TELBlazor.Components._Imports).Assembly);
 
     app.Run();
 }

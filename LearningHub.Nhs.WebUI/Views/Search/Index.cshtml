@@ -9,7 +9,21 @@
 }
 
 <div class="search-page">
-    <div class="nhsuk-width-container app-width-container">     
+    <div class="nhsuk-width-container app-width-container">
+
+        <h2>Search (Blazor WASM mounted)</h2>
+
+        <div id="tel-auto-suggest">
+            Loading auto-suggest...
+        </div>
+
+        @* <h2>Fruit Search (Blazor Server Component)</h2>
+
+        <component type="typeof(TELAutoSuggestTextbox)"
+                   render-mode="Server"
+                   param-ApiUrl=@("/api/search/GetResult1")
+                   param-Placeholder="@("Type a fruit...")"/> *@
+
         @if (Model.DidYouMeanEnabled)
         {
             <p class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6 nhsuk-body-l">

@@ -167,6 +167,7 @@
 		<Folder Include="wwwroot\lib\bootstrap\" />
 		<Folder Include="wwwroot\lib\fontawesome-free-6.4.2-web\" />
 		<Folder Include="wwwroot\migrations\EastMidlandsDeanery_files\" />
+		<Folder Include="wwwroot\blazor\"/>
 	</ItemGroup>
 
 	<ItemGroup>

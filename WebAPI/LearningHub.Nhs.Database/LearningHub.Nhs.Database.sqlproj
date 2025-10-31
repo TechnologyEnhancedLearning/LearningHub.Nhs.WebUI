@@ -641,6 +641,7 @@
     <Build Include="Tables\Elfh\UserEmploymentResponsibilityTBL.sql" />
     <Build Include="Tables\Elfh\UserAdminLocationTBL.sql" />
     <Build Include="Stored Procedures\Hub\GetActiveNotificationCount.sql" />
+    <Build Include="Stored Procedures\Elfh\GetUserByOpenAthensId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

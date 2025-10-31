@@ -4,7 +4,7 @@
 ------------------------------------------------------------------------------------------------
 
 CREATE PROCEDURE elfh.proc_GetUserByOpenAthensId
-    @OpenAthensId varchar(100)
+    @OpenAthensId NVARCHAR(255)
 AS
 BEGIN
     SET NOCOUNT ON;

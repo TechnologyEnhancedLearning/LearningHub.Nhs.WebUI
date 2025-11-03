@@ -18,6 +18,7 @@
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Common.Enums;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
+    using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.Models.Resource;
@@ -283,8 +284,14 @@
                 return this.RedirectToAction("Error");
             }
 
-            vm.MoodleCategories = await this.moodleApiService.GetAllMoodleCategoriesAsync();
-            vm.MoodleCategorySelectList = new SelectList(vm.MoodleCategories, "Id", "Name");
+            var categories = await this.moodleApiService.GetAllMoodleCategoriesAsync();
+
+            vm.MoodleCategories = categories;
+
+            // Build hierarchical select list
+            var selectList = BuildList(categories, parentId: null, depth: 0);
+
+            vm.MoodleCategorySelectList = new SelectList(selectList, "Value", "Text");
             this.ViewData["CatalogueName"] = vm.Name;
             this.ViewData["id"] = id;
 
@@ -733,8 +740,11 @@
             var vr = await this.catalogueService.AddCategoryToCatalogue(vm);
             if (vr.Success)
             {
-                vm.MoodleCategories = await this.moodleApiService.GetAllMoodleCategoriesAsync();
-                vm.MoodleCategorySelectList = new SelectList(vm.MoodleCategories, "Id", "Name");
+                var categories = await this.moodleApiService.GetAllMoodleCategoriesAsync();
+                vm.MoodleCategories = categories;
+                // Build hierarchical select list
+                var selectList = BuildList(categories, parentId: null, depth: 0);
+                vm.MoodleCategorySelectList = new SelectList(selectList, "Value", "Text");
                 return this.View("MoodleCategory", vm);
             }
             else
@@ -1044,5 +1054,34 @@
                 this.ModelState.AddModelError("Notes", "The notes are required.");
             }
         }
+
+        private List<SelectListItem> BuildList(IEnumerable<MoodleCategory> allCategories, int? parentId, int depth)
+        {
+            var selectList = new List<SelectListItem>();
+
+            // Handle both null and 0 as top-level depending on Moodle data
+            var children = allCategories
+                .Where(c => c.Parent == parentId || (parentId == null && (c.Parent == 0 || c.Parent == 0)))
+                .OrderBy(c => c.Name)
+                .ToList();
+
+            foreach (var child in children)
+            {
+                // Indent with non-breaking spaces so browser keeps them
+                string indent = new string('\u00A0', depth * 3);
+
+                selectList.Add(new SelectListItem
+                {
+                    Value = child.Id.ToString(),
+                    Text = $"{indent}{child.Name}"
+                });
+
+                // Recursively add nested children
+                selectList.AddRange(BuildList(allCategories, child.Id, depth + 1));
+            }
+
+            return selectList;
+        }
+
     }
 }

@@ -28,7 +28,7 @@
             @foreach (Course item in Model.Courses)
             {
                 <div class="nhsuk-u-padding-bottom-3 nhsuk-u-padding-top-2">
-                    <h2 class="nhsuk-u-reading-width line-clamp-2"><a class="nhsuk-u-font-size-19" href="@GetMoodleCourseUrl(item.Categoryid)">@item.Displayname</a></h2>
+                    <h2 class="nhsuk-u-reading-width line-clamp-2"><a class="nhsuk-u-font-size-19" href="@GetMoodleCourseUrl(item.Id)">@item.Displayname</a></h2>
                     <div class="nhsuk-u-padding-right-5 nhsuk-u-padding-bottom-5">
                         <div class="nhsuk-u-padding-right-5 nhsuk-u-padding-bottom-3"><span class="nhsuk-u-font-weight-bold nhsuk-u-padding-right-2">Type:</span> Course</div>
                         <div class="line-clamp-3">

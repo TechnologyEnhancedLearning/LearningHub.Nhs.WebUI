@@ -212,7 +212,7 @@
             this.ViewBag.ActiveTab = tab;
 
             var catalogue = await this.catalogueService.GetCatalogueAsync(reference);
-            var catalogueCategoryId = await this.categoryService.GetCatalogueVersionCategoryAsync(catalogue.NodeVersionId);
+            var catalogueCategoryId = await this.categoryService.GetCatalogueVersionCategoryAsync(catalogue.Id);
             catalogue.SelectedCategoryId = catalogueCategoryId;
             if (catalogue == null)
             {
@@ -304,7 +304,7 @@
             }
             else if (tab == "courses")
             {
-                int categoryId = moodleCategoryId ?? await this.categoryService.GetCatalogueVersionCategoryAsync(catalogue.NodeVersionId);
+                int categoryId = moodleCategoryId ?? await this.categoryService.GetCatalogueVersionCategoryAsync(catalogue.Id);
                 var response = await this.categoryService.GetCoursesByCategoryIdAsync(categoryId);
                 viewModel.Courses = response.Courses;
 

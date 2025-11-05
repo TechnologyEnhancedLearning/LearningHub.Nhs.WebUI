@@ -1,35 +1,27 @@
 ﻿namespace LearningHub.Nhs.AdminUI.Controllers
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Drawing;
-    using System.Linq;
-    using System.Net.Mail;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using AngleSharp.Io;
     using LearningHub.Nhs.AdminUI.Configuration;
     using LearningHub.Nhs.AdminUI.Extensions;
     using LearningHub.Nhs.AdminUI.Interfaces;
     using LearningHub.Nhs.AdminUI.Models;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Common;
-    using LearningHub.Nhs.Models.Common.Enums;
-    using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Moodle;
-    using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.User;
-    using LearningHub.Nhs.Models.Validation;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Defines the <see cref="CatalogueController" />.
@@ -731,10 +723,10 @@
         [Route("AddCategoryToCatalogue")]
         public async Task<IActionResult> AddCategoryToCatalogue(CatalogueViewModel catalogueViewModel)
         {
-            ////if (catalogueViewModel.SelectedCategoryId == 0)
-            ////{
-            ////    this.ModelState.AddModelError("SelectedCategoryId", "Please select a category.");
-            ////}
+            if (catalogueViewModel.SelectedCategoryId == 0)
+            {
+                this.ModelState.AddModelError("SelectedCategoryId", "Please select a category.");
+            }
             var vm = await this.catalogueService.GetCatalogueAsync(catalogueViewModel.CatalogueNodeVersionId);
             vm.SelectedCategoryId = catalogueViewModel.SelectedCategoryId;
             var vr = await this.catalogueService.AddCategoryToCatalogue(vm);
@@ -754,6 +746,35 @@
             }
         }
 
+        /// <summary>
+        /// The RemoveCategoryFromCatalogue.
+        /// </summary>
+        /// <param name="categoryId">The categoryId/>.</param>
+        /// <param name="catalogueNodeVersionId">The CatalogueNodeVersionId.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("RemoveCategoryFromCatalogue/{categoryId}/{catalogueNodeVersionId}")]
+        public async Task<IActionResult> RemoveCategoryFromCatalogue(int categoryId, int catalogueNodeVersionId)
+        {
+            var vm = await this.catalogueService.GetCatalogueAsync(catalogueNodeVersionId);
+            vm.SelectedCategoryId = categoryId;
+            var vr = await this.catalogueService.RemoveCategoryFromCatalogue(vm);
+            if (vr.Success)
+            {
+                var categories = await this.moodleApiService.GetAllMoodleCategoriesAsync();
+                vm.MoodleCategories = categories;
+                vm.SelectedCategoryId = 0;
+                // Build hierarchical select list
+                var selectList = BuildList(categories, parentId: null, depth: 0);
+                vm.MoodleCategorySelectList = new SelectList(selectList, "Value", "Text");
+                return this.View("MoodleCategory", vm);
+            }
+            else
+            {
+                this.ViewBag.ErrorMessage = $"Category update failed.";
+                return this.View("MoodleCategory", vm);
+            }
+        }
         /// <summary>
         /// The CreateCatalogue.
         /// </summary>

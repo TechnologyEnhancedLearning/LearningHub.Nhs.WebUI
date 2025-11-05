@@ -158,6 +158,14 @@
         Task<LearningHubValidationResult> AddCategoryToCatalogueAsync(int userId, CatalogueViewModel catalogue);
 
         /// <summary>
+        /// The RemoveCategoryFromCatalogueAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="catalogue">The catalogue.</param>
+        /// <returns>The catalogue id.</returns>
+        Task<LearningHubValidationResult> RemoveCategoryFromCatalogueAsync(int userId, CatalogueViewModel catalogue);
+
+        /// <summary>
         /// The UpdateCatalogueAsync.
         /// </summary>
         /// <param name="userId">The userId.</param>

@@ -42,10 +42,14 @@
                 <div class="form-group">
                     @if (Model.SelectedCategoryId > 0)
                     {
-                        <div id="selectedCategoryDisplay" class="nhsuk-u-padding-left-3">
-                            <label>Selected Category:</label>
-                            <span class="selected-category nhsuk-u-padding-right-8">@selectedCategoryName</span>
-                            <a href="#" onclick="return DisplayCategory();">Change</a>
+                        <div class="nhs-item-row">
+                            <div id="selectedCategoryDisplay" class="nhsuk-u-padding-left-3">
+                                <label>Selected Category:</label>
+                                <span class="selected-category nhsuk-u-padding-right-8">@selectedCategoryName</span>
+
+                                <a href="#" onclick="return DisplayCategory();">Change</a>
+                                <a asp-controller="Catalogue" asp-action="RemoveCategoryFromCatalogue" asp-route-categoryId="@Model.SelectedCategoryId" asp-route-catalogueNodeVersionId="@Model.CatalogueNodeVersionId" class="nhsuk-u-padding-left-3">Remove</a>
+                            </div>
                         </div>
                     }
 
@@ -88,13 +92,12 @@
 @section Scripts {
     <script>
         function DisplayCategory() {
-            debugger
             // Show the category selection div
             document.getElementById('divcategory').style.display = 'block';
             document.getElementById('example-error').style.display = 'none'
             document.getElementById('errortext').style.display = 'none'
             document.getElementById('diverror').classList.remove('nhsuk-form-group--error');
-    
+
             // Hide the selected category display div
             var selectedCategoryDiv = document.getElementById('selectedCategoryDisplay');
             if (selectedCategoryDiv) {

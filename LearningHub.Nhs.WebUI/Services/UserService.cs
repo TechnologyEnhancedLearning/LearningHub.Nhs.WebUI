@@ -97,7 +97,7 @@
         {
             List<ActiveContentViewModel> viewmodel = null;
 
-            var client = await this.OpenApiHttpClient.GetClientAsync();
+            var client = await this.LearningHubHttpClient.GetClientAsync();
 
             var request = "User/GetActiveContent";
             var response = await client.GetAsync(request).ConfigureAwait(false);

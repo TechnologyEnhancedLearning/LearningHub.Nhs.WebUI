@@ -549,6 +549,7 @@
     <Build Include="Stored Procedures\Hub\GetActiveNotificationCount.sql" />
     <Build Include="Tables\Hierarchy\CatalogueNodeVersionCategory.sql" />
     <Build Include="Stored Procedures\Hierarchy\CatalogueNodeVersionCategoryCreate.sql" />
+    <Build Include="Stored Procedures\Hierarchy\RemoveCatalogueCategory.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

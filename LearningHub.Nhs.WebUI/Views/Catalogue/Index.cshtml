@@ -166,6 +166,13 @@
                     @Html.Raw(Model.NodeDetails.Description)
                 </div>
             }
+
+            @if (Model.MoodleCategories != null)
+            {
+                <div class="folder-description">
+                    @Html.Raw(Model.MoodleCategories.Last().Description)
+                </div>
+            }
         </div>
 
         @* Tab header *@
@@ -180,10 +187,10 @@
                 </label>
             </div>
             <div class="navbar-collapse collapse" id="catalogue-details">
-                <ul class="navbar-nav">
-                    <li class="subnavwhite-item @(ViewBag.ActiveTab == "browse" ? "active" : string.Empty)">
-                        <a tabindex="0" class="subnavwhite-link text-nowrap" asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-tab="browse" asp-fragment="catalogue-details">Resources</a>
-                    </li>
+                <ul class="navbar-nav">              
+                        <li class="subnavwhite-item @(ViewBag.ActiveTab == "browse" ? "active" : string.Empty)">
+                            <a tabindex="0" class="subnavwhite-link text-nowrap" asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-tab="browse" asp-fragment="catalogue-details">Resources</a>
+                        </li>
                     @if (Model.Catalogue.SelectedCategoryId > 0)
                     {
                         <li class="subnavwhite-item @(ViewBag.ActiveTab == "courses" ? "active" : string.Empty)">

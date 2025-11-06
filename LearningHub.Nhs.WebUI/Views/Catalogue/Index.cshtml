@@ -199,7 +199,11 @@
                             <a tabindex="0" class="subnavwhite-link text-nowrap" asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-tab="browse" asp-fragment="catalogue-details">Resources</a>
                         </li>
                     }
-                    @if (Model.Catalogue.SelectedCategoryId > 0)
+                    @if (Model.Catalogue.SelectedCategoryId > 0 &&
+                    (
+                    (Model.Courses != null && Model.Courses.Any()) ||
+                    (Model.SubCategories != null && Model.SubCategories.Any())
+                    ))
                     {
                         <li class="subnavwhite-item @(ViewBag.ActiveTab == "courses" ? "active" : string.Empty)">
                             <a tabindex="0" class="subnavwhite-link text-nowrap" asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-tab="courses" asp-fragment="catalogue-details">Courses</a>

@@ -94,9 +94,20 @@
         function DisplayCategory() {
             // Show the category selection div
             document.getElementById('divcategory').style.display = 'block';
-            document.getElementById('example-error').style.display = 'none'
-            document.getElementById('errortext').style.display = 'none'
-            document.getElementById('diverror').classList.remove('nhsuk-form-group--error');
+            var divexample = document.getElementById('example-error');
+            if (divexample) {
+                divexample.style.display = 'none';
+            }
+             var diverrortext = document.getElementById('errortext');
+            if (diverrortext) {
+                diverrortext.style.display = 'none';
+            }
+             var diverror = document.getElementById('diverror');
+            if (diverror) {
+                diverror.classList.remove('nhsuk-form-group--error');
+            }
+
+            document.getElementById('selectedCategoryDisplay').style.display = 'none';
 
             // Hide the selected category display div
             var selectedCategoryDiv = document.getElementById('selectedCategoryDisplay');

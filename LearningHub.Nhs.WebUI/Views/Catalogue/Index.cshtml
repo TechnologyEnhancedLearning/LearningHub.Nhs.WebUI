@@ -55,12 +55,17 @@
         }
     }
 
+    if (Model.Catalogue.SelectedCategoryId == 0)
+    {
+        ViewBag.ActiveTab = "browse";
+    }
+
     List<(string Title, string Url)> breadcrumbs;
     if (ViewBag.ActiveTab == "browse")
     {
         breadcrumbs = UtilityHelper.GetBreadcrumbsForFolderNodes(Model.NodePathNodes.SkipLast(1).ToList(), Model.Catalogue.Url);
     }
-    else if (ViewBag.ActiveTab == "courses")
+    else if (ViewBag.ActiveTab == "courses" && Model.Catalogue.SelectedCategoryId > 0)
     {
         breadcrumbs = UtilityHelper.GetBreadcrumbsForCourses(Model.MoodleCategories, Model.Catalogue.Url);
     }
@@ -145,13 +150,13 @@
             {
                 <div class="nhsuk-u-margin-bottom-4">
                     <a class="nhsuk-u-font-size-16" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
-                    asp-route-bookmarked="@Model.Catalogue.IsBookmarked"
-                    asp-route-id="@Model.Catalogue.BookmarkId"
-                    asp-route-title="@Model.Catalogue.Name.Truncate(60)"
-                    asp-route-nodeId="@Model.Catalogue.NodeId"
-                    asp-route-path="@Model.Catalogue.Url"
-                    asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)"
-                    aria-label="@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks">@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks</a>
+                       asp-route-bookmarked="@Model.Catalogue.IsBookmarked"
+                       asp-route-id="@Model.Catalogue.BookmarkId"
+                       asp-route-title="@Model.Catalogue.Name.Truncate(60)"
+                       asp-route-nodeId="@Model.Catalogue.NodeId"
+                       asp-route-path="@Model.Catalogue.Url"
+                       asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)"
+                       aria-label="@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks">@(Model.Catalogue.IsBookmarked ? "Remove from" : "Add to")  my bookmarks</a>
                 </div>
             }
 
@@ -187,10 +192,13 @@
                 </label>
             </div>
             <div class="navbar-collapse collapse" id="catalogue-details">
-                <ul class="navbar-nav">              
+                <ul class="navbar-nav">
+                    @if (Model.NodeContents.Count() > 0)
+                    {
                         <li class="subnavwhite-item @(ViewBag.ActiveTab == "browse" ? "active" : string.Empty)">
                             <a tabindex="0" class="subnavwhite-link text-nowrap" asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-tab="browse" asp-fragment="catalogue-details">Resources</a>
                         </li>
+                    }
                     @if (Model.Catalogue.SelectedCategoryId > 0)
                     {
                         <li class="subnavwhite-item @(ViewBag.ActiveTab == "courses" ? "active" : string.Empty)">

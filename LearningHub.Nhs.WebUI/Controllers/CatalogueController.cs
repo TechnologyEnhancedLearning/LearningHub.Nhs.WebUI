@@ -249,62 +249,31 @@
                 }
             }
 
-            if (tab == "browse")
+            if (nodeId.HasValue)
             {
-                if (nodeId.HasValue)
-                {
-                    // if nodeId has a value it means the user is looking at a subfolder of the catalogue.
-                    // Get the folder name and description, plus folder path data needed for the breadcrumbs.
-                    viewModel.NodeDetails = await this.hierarchyService.GetNodeDetails(nodeId.Value);
-                    viewModel.NodePathNodes = await this.hierarchyService.GetNodePathNodes(viewModel.NodeDetails.NodePathId);
-                }
-                else
-                {
-                    // Otherwise user is looking at catalogue root.
-                    nodeId = catalogue.NodeId;
+                // if nodeId has a value it means the user is looking at a subfolder of the catalogue.
+                // Get the folder name and description, plus folder path data needed for the breadcrumbs.
+                viewModel.NodeDetails = await this.hierarchyService.GetNodeDetails(nodeId.Value);
+                viewModel.NodePathNodes = await this.hierarchyService.GetNodePathNodes(viewModel.NodeDetails.NodePathId);
+            }
+            else
+            {
+                // Otherwise user is looking at catalogue root.
+                nodeId = catalogue.NodeId;
 
-                    viewModel.NodePathNodes = new List<NodeViewModel>
+                viewModel.NodePathNodes = new List<NodeViewModel>
                     {
                         new NodeViewModel { Name = catalogue.Name },
                     };
-                }
-
-                bool includeEmptyFolder = viewModel.UserGroups.Any(x => x.RoleId == (int)RoleEnum.LocalAdmin || x.RoleId == (int)RoleEnum.Editor || x.RoleId == (int)RoleEnum.Previewer) || this.User.IsInRole("Administrator");
-                var nodeContents = await this.hierarchyService.GetNodeContentsForCatalogueBrowse(nodeId.Value, includeEmptyFolder);
-                viewModel.NodeContents = nodeContents;
             }
-            else if (tab == "search")
+
+            bool includeEmptyFolder = viewModel.UserGroups.Any(x => x.RoleId == (int)RoleEnum.LocalAdmin || x.RoleId == (int)RoleEnum.Editor || x.RoleId == (int)RoleEnum.Previewer) || this.User.IsInRole("Administrator");
+            var nodeContents = await this.hierarchyService.GetNodeContentsForCatalogueBrowse(nodeId.Value, includeEmptyFolder);
+            viewModel.NodeContents = nodeContents;
+
+            int categoryId = moodleCategoryId ?? await this.categoryService.GetCatalogueVersionCategoryAsync(catalogue.Id);
+            if (categoryId > 0)
             {
-                if (viewModel.SearchResults == null)
-                {
-                    viewModel.SearchResults = new Models.Search.SearchResultViewModel();
-                }
-
-                if (search.Term != null)
-                {
-                    search.CatalogueId = catalogue.NodeId;
-                    search.SearchId ??= 0;
-                    search.GroupId = !string.IsNullOrWhiteSpace(search.GroupId) && Guid.TryParse(search.GroupId, out Guid groupId) ? groupId.ToString() : Guid.NewGuid().ToString();
-
-                    var searchResult = await this.searchService.PerformSearch(this.User, search);
-                    searchResult.CatalogueId = catalogue.NodeId;
-                    searchResult.CatalogueUrl = catalogue.Url;
-                    if (search.SearchId == 0 && searchResult.ResourceSearchResult != null)
-                    {
-                        var searchId = await this.searchService.RegisterSearchEventsAsync(
-                            search,
-                            SearchFormActionTypeEnum.SearchWithinCatalogue,
-                            searchResult.ResourceSearchResult.TotalHits);
-
-                        searchResult.ResourceSearchResult.SearchId = searchId;
-                    }
-
-                    viewModel.SearchResults = searchResult;
-                }
-            }
-            else if (tab == "courses")
-            {
-                int categoryId = moodleCategoryId ?? await this.categoryService.GetCatalogueVersionCategoryAsync(catalogue.Id);
                 var response = await this.categoryService.GetCoursesByCategoryIdAsync(categoryId);
                 viewModel.Courses = response.Courses;
 
@@ -351,6 +320,40 @@
                     {
                         new MoodleCategory { Name = catalogue.Name },
                     };
+                }
+            }
+            else
+            {
+                viewModel.Catalogue.SelectedCategoryId = 0;
+            }
+
+            if (tab == "search")
+            {
+                if (viewModel.SearchResults == null)
+                {
+                    viewModel.SearchResults = new Models.Search.SearchResultViewModel();
+                }
+
+                if (search.Term != null)
+                {
+                    search.CatalogueId = catalogue.NodeId;
+                    search.SearchId ??= 0;
+                    search.GroupId = !string.IsNullOrWhiteSpace(search.GroupId) && Guid.TryParse(search.GroupId, out Guid groupId) ? groupId.ToString() : Guid.NewGuid().ToString();
+
+                    var searchResult = await this.searchService.PerformSearch(this.User, search);
+                    searchResult.CatalogueId = catalogue.NodeId;
+                    searchResult.CatalogueUrl = catalogue.Url;
+                    if (search.SearchId == 0 && searchResult.ResourceSearchResult != null)
+                    {
+                        var searchId = await this.searchService.RegisterSearchEventsAsync(
+                            search,
+                            SearchFormActionTypeEnum.SearchWithinCatalogue,
+                            searchResult.ResourceSearchResult.TotalHits);
+
+                        searchResult.ResourceSearchResult.SearchId = searchId;
+                    }
+
+                    viewModel.SearchResults = searchResult;
                 }
             }
 

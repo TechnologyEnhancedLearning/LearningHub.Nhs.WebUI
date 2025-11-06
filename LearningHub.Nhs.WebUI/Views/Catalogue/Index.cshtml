@@ -54,8 +54,10 @@
                 return "Browse";
         }
     }
-
-    if (Model.Catalogue.SelectedCategoryId == 0)
+    if (Model.Catalogue.SelectedCategoryId == 0 ||
+     (Model.Catalogue.SelectedCategoryId > 0 &&
+      (Model.Courses == null || !Model.Courses.Any()) &&
+      (Model.SubCategories == null || !Model.SubCategories.Any())))
     {
         ViewBag.ActiveTab = "browse";
     }

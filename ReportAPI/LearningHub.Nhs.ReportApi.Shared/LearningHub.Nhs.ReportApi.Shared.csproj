@@ -16,6 +16,7 @@
     <PackageReference Include="LearningHub.Nhs.Models" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FluentValidation" />
     <PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
   </ItemGroup>
 </Project>

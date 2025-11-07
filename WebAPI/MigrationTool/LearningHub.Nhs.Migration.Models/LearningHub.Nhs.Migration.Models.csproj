@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="elfhHub.Nhs.Models" />
+    <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.AspNetCore" />
     <PackageReference Include="LearningHub.Nhs.Caching" />
     <PackageReference Include="LearningHub.Nhs.Models" />

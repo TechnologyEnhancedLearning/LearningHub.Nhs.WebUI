@@ -51,7 +51,7 @@
                 return "Search catalogue";
             case "browse":
             default:
-                return "Browse";
+                return "Resources";
         }
     }
     if (Model.Catalogue.SelectedCategoryId == 0 ||
@@ -116,7 +116,7 @@
 
         @* Catalogue header *@
         <div class="nhsuk-u-margin-bottom-7">
-            <partial name="_Breadcrumbs" model="new BreadcrumbViewModel { Breadcrumbs = breadcrumbs, ShowBackToParentOnMobile = true }" />
+            <partial name="_Breadcrumbs" model="new BreadcrumbViewModel { Breadcrumbs = breadcrumbs, ShowBackToParentOnMobile = false }" />
             @if (Model.Catalogue.Hidden)
             {
                 <div class="nhsuk-u-margin-bottom-4">

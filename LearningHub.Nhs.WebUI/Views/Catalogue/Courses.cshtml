@@ -20,7 +20,7 @@
                 <div class="nhsuk-u-padding-bottom-3 nhsuk-u-padding-top-2">
                     <h2 class="folder-title line-clamp-2">
                         <img src="/images/folder-icon.svg" alt="folder icon" />
-                        <a asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-moodleCategoryId="@item.Id">@item.Name</a>
+                        <a asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-moodleCategoryId="@item.Id">@Html.Raw(@item.Name)</a>
                     </h2>
                 </div>
                 <hr class="nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-0" />

@@ -1,7 +1,8 @@
 ﻿@page "/telautosuggest"
 @using System.Net.Http.Json
+@using LearningHub.Nhs.WebUI.TelBlazorClient.Services
 @using TELBlazor.Components
-@inject HttpClient Http
+@inject AppSettingsService Api
 
 <h3>AutoSuggest demo (WASM)</h3>
 
@@ -12,13 +13,28 @@
 
 @code {
     private string Selected = "";
+    private List<string>? Suggestions;
 
-    // Mock provider for standalone testing:
     private async Task<List<string>> SearchItemsAsync(string q)
-        {
+    {
         await Task.Delay(100); // simulate latency
-        var data = new[] { "Apple", "Apricot", "Avocado", "Banana", "Blackberry", "Blueberry", "Cherry", "Apple2" };
-        return data.Where(x => x.Contains(q, StringComparison.OrdinalIgnoreCase)).Take(10).ToList();
+        try
+        {
+            Suggestions = await Api.GetAutoSuggestionsAsync(q);
+        }
+        catch (HttpRequestException httpEx)
+        {
+            Console.Error.WriteLine($"HTTP Error: {httpEx.Message}");
+        }
+        catch (NotSupportedException)
+        {
+            Console.Error.WriteLine("The server returned a non-JSON response.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"AutoSuggest Error: {ex.Message}");
+        }
+        return Suggestions;
     }
 
     private void OnSelected(string s) => Selected = s;

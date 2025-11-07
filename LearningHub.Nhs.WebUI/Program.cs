@@ -41,15 +41,23 @@ try
     builder.Services.ConfigureServices(builder.Configuration, builder.Environment);
 
     // Add Razor components
-    builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+    ////builder.Services.AddRazorComponents().AddInteractiveServerComponents();
     var app = builder.Build();
 
     var appLifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
     var jsDetectionLogger = app.Services.GetRequiredService<IJsDetectionLogger>();
     appLifetime.ApplicationStopping.Register(async () => await jsDetectionLogger.FlushCounters());
 
-    app.UseBlazorFrameworkFiles("/blazor");
+    ////app.UseBlazorFrameworkFiles();
     app.UseStaticFiles();
+
+    // Manually map the published Blazor output
+    ////app.UseStaticFiles(new StaticFileOptions
+    ////{
+    ////    FileProvider = new PhysicalFileProvider(
+    ////        Path.Combine(app.Environment.WebRootPath, "blazor")),
+    ////    RequestPath = "/blazor",
+    ////});
 
     if (app.Environment.IsDevelopment())
     {
@@ -115,9 +123,9 @@ try
     });
 
     // Map Razor components (needed for interactivity)
-    app.MapRazorComponents<App>() // App is your root component
-       .AddInteractiveServerRenderMode()
-       .AddAdditionalAssemblies(typeof(TELBlazor.Components._Imports).Assembly);
+    ////app.MapRazorComponents<App>() // App is your root component
+    ////   .AddInteractiveServerRenderMode()
+    ////   .AddAdditionalAssemblies(typeof(TELBlazor.Components._Imports).Assembly);
 
     app.Run();
 }

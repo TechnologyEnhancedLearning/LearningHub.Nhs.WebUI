@@ -7,6 +7,59 @@
 @section styles{
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/search.css" asp-append-version="true" />
 }
+@* <script src="~/blazor/_framework/blazor.webassembly.js" autostart="false"></script>
+<script>
+
+    if (!window._blazorStarted) {
+            window._blazorStarted = Blazor.start({
+                loadBootResource: (type, name, defaultUri, integrity) => {
+                    // Handle both absolute and relative URIs cleanly
+                    let url = defaultUri;
+
+                    // Case 1: If defaultUri is absolute (starts with http)
+                    if (url.startsWith("http")) {
+                        // Avoid double prefixing
+                        if (!url.includes("/blazor/")) {
+                            url = url.replace("/_framework/", "/blazor/_framework/");
+                        }
+                    }
+                    // Case 2: If it's relative (_framework/...)
+                    else if (url.startsWith("_framework/")) {
+                        url = `/blazor/${url}`;
+                    }
+                    // Case 3: If it already has /blazor/
+                    else if (!url.startsWith("/blazor/")) {
+                        url = `/blazor/${url}`;
+                    }
+
+                    return url;
+                }
+            });
+        }
+    // Blazor.start({
+    //    loadBootResource: (type, name, defaultUri, integrity) => {
+    //         // Check if the default URI is already absolute
+    //         if (defaultUri.startsWith("http")) {
+    //             // Replace "/_framework/" with "/blazor/_framework/"
+    //             // return defaultUri.replace("/_framework/", "/blazor/_framework/");
+    //             return defaultUri;
+    //         }
+
+    //         // Otherwise, safely prefix /blazor/
+    //         return `/blazor/${defaultUri}`;
+    //     },
+    //     selector: '#tel-auto-suggest'
+    // });
+    //  Blazor.start({
+    //     loadBootResource: (type, name, defaultUri, integrity) =>
+    //         `/blazor/`,
+    //     selector: '#tel-auto-suggest'
+    // });
+    // console.log(defaultUri);
+    //    Blazor.start({
+    //   environmentBaseUrl: '/blazor/'
+    // });
+</script> *@
 
 <div class="search-page">
     <div class="nhsuk-width-container app-width-container">
@@ -16,8 +69,9 @@
         <div id="tel-auto-suggest">
             Loading auto-suggest...
         </div>
+        @* <component type="typeof(TELBlazor.Components.Components.BaseComponents.TELAutoSuggestTextbox)" render-mode="WebAssembly" /> *@
 
-        @* <h2>Fruit Search (Blazor Server Component)</h2>
+@*         <h3>Fruit Search (Blazor Server Component)</h3>
 
         <component type="typeof(TELAutoSuggestTextbox)"
                    render-mode="Server"

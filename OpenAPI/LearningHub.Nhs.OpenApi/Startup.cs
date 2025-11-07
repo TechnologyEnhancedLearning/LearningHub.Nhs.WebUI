@@ -60,6 +60,13 @@ namespace LearningHub.NHS.OpenAPI
             services.AddConfig(this.Configuration);
 
             services.AddApiKeyAuth();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowBlazorDev", policy =>
+                    policy.WithOrigins("https://localhost:7037", "https://lh-web.dev.local") // Blazor WASM app URL
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+            });
 
             services.AddAuthentication(options =>
             {
@@ -243,6 +250,7 @@ namespace LearningHub.NHS.OpenAPI
             ////    await next();
             ////});
 
+            app.UseCors("AllowBlazorDev");
             app.UseHttpsRedirection();
 
             app.UseRouting();

@@ -165,14 +165,12 @@
    @*  <script>
         window.__BlazorRuntimeBase = "/blazor/_framework/";
     </script> *@
-    <script src="~/blazor/_framework/blazor.webassembly.js"></script>
-@*     <script>
-        Blazor.start({
-          environmentBaseUrl: '/blazor/_framework/',
-          onStart: () => console.log('Blazor started OK'),
-          onError: err => console.error('Blazor startup error:', err)
-        });
-    </script> *@
+    <script src="~/_framework/blazor.webassembly.js" autostart="true"></script>
+@* <script>
+  Blazor.start({
+    environmentBaseUrl: '/blazor/_framework/'
+  });
+</script> *@
 
     @RenderSection("Scripts", required: false)
 

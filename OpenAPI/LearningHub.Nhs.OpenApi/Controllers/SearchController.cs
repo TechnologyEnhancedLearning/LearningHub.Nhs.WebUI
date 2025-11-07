@@ -258,7 +258,33 @@
         public async Task<IActionResult> GetAutoSuggestionResults(string term)
         {
             var autosuggestionViewModel = await this.GetAutoSuggestions(term);
-            return this.Ok(autosuggestionViewModel);
+            List<string> suggestions = new List<string>();
+
+            if (autosuggestionViewModel.CatalogueDocument.CatalogueDocumentList?.Count > 0)
+            {
+                foreach (var autoSuggestion in autosuggestionViewModel.CatalogueDocument.CatalogueDocumentList)
+                {
+                    suggestions.Add(autoSuggestion.Name);
+                }
+            }
+
+            if (autosuggestionViewModel.ResourceDocument.ResourceDocumentList?.Count > 0)
+            {
+                foreach (var autoSuggestion in autosuggestionViewModel.ResourceDocument.ResourceDocumentList)
+                {
+                    suggestions.Add(autoSuggestion.Title);
+                }
+            }
+
+            if (autosuggestionViewModel.ConceptDocument.ConceptDocumentList?.Count > 0)
+            {
+                foreach (var autoSuggestion in autosuggestionViewModel.ConceptDocument.ConceptDocumentList)
+                {
+                    suggestions.Add(autoSuggestion.Title);
+                }
+            }
+
+            return this.Ok(suggestions);
         }
 
         /// <summary>

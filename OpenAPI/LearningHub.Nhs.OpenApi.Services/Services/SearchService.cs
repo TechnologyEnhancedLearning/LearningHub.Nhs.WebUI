@@ -5,6 +5,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using System.Linq;
     using System.Net.Http;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Web;
     using AutoMapper;
@@ -92,8 +93,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// </summary>
         /// <param name="searchRequestModel">The search request model.</param>
         /// <param name="userId">The user id.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<SearchResultModel> GetSearchResultAsync(SearchRequestModel searchRequestModel, int userId)
+        public async Task<SearchResultModel> GetSearchResultAsync(SearchRequestModel searchRequestModel, int userId, CancellationToken cancellationToken = default)
         {
             SearchResultModel viewmodel = new SearchResultModel();
 
@@ -170,10 +172,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <param name="userId">
         /// The user id.
         /// </param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        public async Task<SearchCatalogueResultModel> GetCatalogueSearchResultAsync(CatalogueSearchRequestModel catalogSearchRequestModel, int userId)
+        public async Task<SearchCatalogueResultModel> GetCatalogueSearchResultAsync(CatalogueSearchRequestModel catalogSearchRequestModel, int userId, CancellationToken cancellationToken = default)
         {
             var viewmodel = new SearchCatalogueResultModel();
 
@@ -641,8 +644,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// The Get Auto suggestion Results Async method.
         /// </summary>
         /// <param name="term">The term.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term)
+        public async Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term, CancellationToken cancellationToken = default)
         {
             var viewmodel = new AutoSuggestionModel();
 

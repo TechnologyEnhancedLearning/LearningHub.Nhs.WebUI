@@ -89,24 +89,8 @@
                 var pageSize = searchRequestModel.PageSize;
                 var offset = searchRequestModel.PageIndex * pageSize;
 
-                // Build base filters
-                var filters = new Dictionary<string, List<string>>
-                {
-                    { "resource_collection", new List<string> { "Resource" } }
-                };
-
-                // Parse and merge additional filters from query string
-                var parsedFilters = SearchFilterBuilder.ParseFiltersFromQuery(searchRequestModel.FilterText);
-                foreach (var kvp in parsedFilters)
-                {
-                    if (filters.ContainsKey(kvp.Key))
-                        filters[kvp.Key].AddRange(kvp.Value);
-                    else
-                        filters.Add(kvp.Key, kvp.Value);
-                }
-
                 // Normalize resource_type filter values
-                SearchFilterBuilder.NormalizeResourceTypeFilters(filters);
+                var filters = SearchFilterBuilder.CombineAndNormaliseFilters(searchRequestModel.FilterText, searchRequestModel.ProviderFilterText);
 
                 // Build query string
                 var query = searchQueryType == SearchQueryType.Full

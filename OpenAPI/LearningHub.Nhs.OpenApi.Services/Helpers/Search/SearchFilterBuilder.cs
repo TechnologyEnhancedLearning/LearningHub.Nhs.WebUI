@@ -10,6 +10,38 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
     /// </summary>
     public static class SearchFilterBuilder
     {
+
+        public static Dictionary<string, List<string>> CombineAndNormaliseFilters(string requestTypeFilterText, string? providerFilterText)
+        {
+            var filters = new Dictionary<string, List<string>>
+            {
+              //  { "resource_collection", new List<string> { "Resource" } }
+            };
+
+            // Parse and merge additional filters from query string
+            var requestTypeFilters = ParseQueryStringFilters(requestTypeFilterText);
+            var providerFilters = ParseQueryStringFilters(providerFilterText);
+
+            // Merge filters from both sources
+            MergeFilterDictionary(filters, requestTypeFilters);
+            //  MergeFilterDictionary(filters, providerFilters);
+
+            NormalizeResourceTypeFilters(filters);
+
+            return filters;
+        }
+
+        private static void MergeFilterDictionary(Dictionary<string, List<string>> target, Dictionary<string, List<string>> source)
+        {
+            foreach (var kvp in source)
+            {
+                if (!target.ContainsKey(kvp.Key))
+                    target[kvp.Key] = new List<string>();
+
+                target[kvp.Key].AddRange(kvp.Value);
+            }
+        }
+
         /// <summary>
         /// Builds a filter expression from a dictionary of filters.
         /// </summary>
@@ -39,7 +71,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
         /// </summary>
         /// <param name="queryString">The query string to parse.</param>
         /// <returns>A dictionary of filter names and their values.</returns>
-        public static Dictionary<string, List<string>> ParseFiltersFromQuery(string? queryString)
+        public static Dictionary<string, List<string>> ParseQueryStringFilters(string? queryString)
         {
             var filters = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
@@ -55,7 +87,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
 
             foreach (string? key in parsed.AllKeys)
             {
-                if (key == null) 
+                if (key == null)
                     continue; // skip null keys
 
                 var values = parsed.GetValues(key);

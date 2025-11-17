@@ -1,5 +1,6 @@
 ﻿INSERT INTO ADFSyncMetadata (SyncDirection, TableName, LastSyncTime)
-VALUES  
+VALUES
+('ELFHtoLH', 'employmentReferenceTypeTBL', '1900-01-01'),
 ('ELFHtoLH', 'mergeUserTBL', '1900-01-01'),
 ('ELFHtoLH', 'userAdminLocationTBL', '1900-01-01'),
 ('ELFHtoLH', 'userEmploymentReferenceTBL', '1900-01-01'),

@@ -109,10 +109,11 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="groupId">The search group id.</param>
         /// <param name="searchId">The search id.</param>
         /// <param name="actionType">The action type.</param>
+        /// <param name="resourceCollectionFilter">The show filter.</param>
         /// <param name="feedback">The feedback.</param>
         /// <returns>The actionResult.</returns>
         [HttpPost("results")]
-        public async Task<IActionResult> IndexPost([FromQuery] SearchRequestViewModel search, int resourceCount, [FromForm] IEnumerable<string> filters, [FromForm] int? resourceAccessLevelId, [FromForm] IEnumerable<string> providerfilters, [FromForm] int? sortby, [FromForm] string groupId, [FromForm] int searchId, [FromQuery] string actionType, string feedback)
+        public async Task<IActionResult> IndexPost([FromQuery] SearchRequestViewModel search, int resourceCount, [FromForm] IEnumerable<string> filters, [FromForm] int? resourceAccessLevelId, [FromForm] IEnumerable<string> providerfilters, [FromForm] int? sortby, [FromForm] string groupId, [FromForm] int searchId, [FromQuery] string actionType, [FromQuery] string resourceCollectionFilter, string feedback)
         {
             if (actionType == "feedback")
             {

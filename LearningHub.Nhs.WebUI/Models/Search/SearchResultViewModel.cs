@@ -93,5 +93,10 @@
         /// Gets or sets Suggested Resource name.
         /// </summary>
         public string SuggestedResource { get; set; }
+
+        /// <summary>
+        /// Gets or sets the show filter (all, catalogues, courses, resources).
+        /// </summary>
+        public string ResourceCollectionFilter { get; set; }
     }
 }

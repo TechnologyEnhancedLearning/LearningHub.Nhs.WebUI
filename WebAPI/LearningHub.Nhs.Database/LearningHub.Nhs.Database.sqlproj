@@ -688,6 +688,9 @@
     <Build Include="Stored Procedures\Adf\AdfMergeUserRoleUpgrade.sql" />
     <Build Include="Stored Procedures\Adf\AdfMergeuserTermsAndConditions.sql" />
     <Build Include="Stored Procedures\Hierarchy\RemoveCatalogueCategory.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-6148-ADFtableData.sql" />
+    <Build Include="Tables\Adf\ADFSyncMetadata.sql" />
+    <Build Include="Stored Procedures\Adf\proc_UpdateLastSyncTimeAdf.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

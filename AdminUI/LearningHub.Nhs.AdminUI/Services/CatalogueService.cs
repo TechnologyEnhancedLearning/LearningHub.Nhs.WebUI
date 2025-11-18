@@ -1,14 +1,20 @@
 ﻿namespace LearningHub.Nhs.AdminUI.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Net;
+    using System.Net.Http;
+    using System.Text;
     using System.Threading.Tasks;
     using LearningHub.Nhs.AdminUI.Helpers;
     using LearningHub.Nhs.AdminUI.Interfaces;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.Models.Provider;
+    using LearningHub.Nhs.Models.User;
+    using LearningHub.Nhs.Models.Validation;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -132,5 +138,25 @@
         {
             return await this.facade.PutAsync("Catalogue/UpdateCatalogueOwner", catalogueOwner);
         }
+
+        /// <summary>
+        /// The AddUserGroupsToCatalogue.
+        /// </summary>
+        /// <param name="catalogue">The CatalogueViewModel.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        public async Task<ApiResponse> AddCategoryToCatalogue(CatalogueViewModel catalogue)
+        {
+            return await this.facade.PostAsync<ApiResponse, CatalogueViewModel>("Catalogue/AddCategoryToCatalogue", catalogue);
+        }
+
+        /// <summary>
+        /// The RemoveCategoryFromCatalogue.
+        /// </summary>
+        /// <param name="catalogue">The CatalogueViewModel.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        public async Task<ApiResponse> RemoveCategoryFromCatalogue(CatalogueViewModel catalogue)
+        {
+            return await this.facade.PostAsync<ApiResponse, CatalogueViewModel>("Catalogue/RemoveCategoryFromCatalogue", catalogue);
+        }    
     }
 }

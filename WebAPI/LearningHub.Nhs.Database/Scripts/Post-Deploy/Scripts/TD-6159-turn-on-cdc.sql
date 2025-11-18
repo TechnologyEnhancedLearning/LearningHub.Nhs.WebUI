@@ -123,3 +123,13 @@ EXEC sys.sp_cdc_enable_table
     @supports_net_changes = 0;
 GO
 
+
+EXEC sys.sp_cdc_enable_table
+    @source_schema = N'elfh',
+    @source_name   = N'userTermsAndConditionsTBL',
+    @role_name     = NULL,
+    @supports_net_changes = 0;
+GO
+
+
+

@@ -66,5 +66,17 @@
                 return this.Ok(0);
             }
         }
+
+        /// <summary>
+        /// GetAllMoodleCategoriesAsync.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpGet]
+        [Route("GetAllMoodleCategories")]
+        public async Task<IActionResult> GetAllMoodleCategoriesAsync()
+        {
+            var entrolledCourses = await this.moodleService.GetAllMoodleCategoriesAsync();
+            return this.Ok(entrolledCourses);
+        }
     }
 }

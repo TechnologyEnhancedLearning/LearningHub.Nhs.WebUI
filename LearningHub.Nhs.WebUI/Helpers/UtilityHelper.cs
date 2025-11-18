@@ -8,6 +8,7 @@
     using HtmlAgilityPack;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Hierarchy;
+    using LearningHub.Nhs.Models.Moodle;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     /// <summary>
@@ -492,6 +493,31 @@
                 }
 
                 breadcrumbs.Add((nodes[i].Name, nodeUrl));
+            }
+
+            return breadcrumbs;
+        }
+
+        /// <summary>
+        /// Returns breadcrumb tuple data ready to be passed into the _Breadcrumbs partial view when being used to display a folder path.
+        /// </summary>
+        /// <param name="moodleCategories">The list of folder nodes to display.</param>
+        /// <param name="catalogueUrl">The URL reference of the catalogue.</param>
+        /// <returns>A list of tuples, composed of Title and Url.</returns>
+        public static List<(string Title, string Url)> GetBreadcrumbsForCourses(List<MoodleCategory> moodleCategories, string catalogueUrl)
+        {
+            // Create breadcrumb tuple data
+            var breadcrumbs = new List<(string Title, string Url)> { ("Home", "/") };
+
+            for (int i = 0; i < moodleCategories.Count; i++)
+            {
+                string nodeUrl = $"/catalogue/{catalogueUrl}/courses";
+                if (i > 0)
+                {
+                    nodeUrl += $"?moodleCategoryId={moodleCategories[i].Id}";
+                }
+
+                breadcrumbs.Add((moodleCategories[i].Name, nodeUrl));
             }
 
             return breadcrumbs;

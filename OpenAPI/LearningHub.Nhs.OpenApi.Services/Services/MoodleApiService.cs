@@ -1,5 +1,6 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Services.Services
 {
+    using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.Models.Report.ReportCreate;
@@ -118,7 +119,7 @@
                 int moodleUserId = await this.GetMoodleUserIdByUsernameAsync(userId);
                 string statusFilter = string.Empty; ;
 
-                if ((requestModel.Incomplete && requestModel.Complete)  || (!requestModel.Incomplete && !requestModel.Complete))
+                if ((requestModel.Incomplete && requestModel.Complete) || (!requestModel.Incomplete && !requestModel.Complete))
                 {
                     statusFilter = string.Empty; ;
                 }
@@ -149,6 +150,35 @@
                     return new List<MoodleEnrolledCourseResponseModel>();
 
                 return recentEnrolledCourses.ToList();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// GetAllMoodleCategoriesAsync.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<List<MoodleCategory>> GetAllMoodleCategoriesAsync()
+        {
+            try
+            {
+                var parameters = new Dictionary<string, string>
+                {
+
+                };
+
+                var categories = await GetCallMoodleApiAsync<List<MoodleCategory>>(
+                    "core_course_get_categories",
+                    parameters
+                );
+
+                if (categories == null || categories.Count == 0)
+                    return new List<MoodleCategory>();
+
+                return categories.ToList();
             }
             catch (Exception ex)
             {
@@ -216,7 +246,7 @@
             try
             {
                 int moodleUserId = await this.GetMoodleUserIdByUsernameAsync(userId);
-                string statusFilter = "inprogress";            
+                string statusFilter = "inprogress";
 
                 var parameters = new Dictionary<string, string>
 {
@@ -248,7 +278,7 @@
         /// <param name="userId">Moodle user id.</param>
         /// <param name="filterText">The page Number.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<List<MoodleUserCertificateResponseModel>> GetUserCertificateAsync(int userId, string filterText="")
+        public async Task<List<MoodleUserCertificateResponseModel>> GetUserCertificateAsync(int userId, string filterText = "")
         {
             try
             {
@@ -269,6 +299,67 @@
                     return new List<MoodleUserCertificateResponseModel>();
 
                 return userCertificates.ToList();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// GetSubCategoryByCategoryIdAsync.
+        /// </summary>
+        /// <param name="categoryId">The categoryId.</param>
+        /// <returns></returns>
+        public async Task<List<MoodleSubCategoryResponseModel>> GetSubCategoryByCategoryIdAsync(int categoryId)
+        {
+            try
+            {
+                var parameters = new Dictionary<string, string>
+            {
+                { "criteria[0][key]", "id" },
+                { "criteria[0][value]", categoryId.ToString() }
+            };
+                // Fetch subcategory by category id
+                var subcategories = await GetCallMoodleApiAsync<List<MoodleSubCategoryResponseModel>>(
+                    "core_course_get_categories",
+                    parameters
+                );
+
+                if (subcategories == null || subcategories.Count == 0)
+                    return new List<MoodleSubCategoryResponseModel>();
+               
+                return subcategories.Where(sc => sc.Id != categoryId && sc.Parent == categoryId).ToList();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// GetCoursesByCategoryIdAsync.
+        /// </summary>
+        /// <param name="categoryId">The categoryId.</param>
+        /// <returns></returns>
+        public async Task<MoodleCoursesResponseModel> GetCoursesByCategoryIdAsync(int categoryId)
+        {
+            try
+            {
+                var parameters = new Dictionary<string, string>
+            {
+                { "field", "category" },
+                { "value", categoryId.ToString() }
+            };
+                // Fetch courses by category id
+                var courses = await GetCallMoodleApiAsync<MoodleCoursesResponseModel>(
+                    "core_course_get_courses_by_field",
+                    parameters
+                );
+
+                if (courses == null)
+                    return JsonConvert.DeserializeObject<MoodleCoursesResponseModel>(JsonConvert.SerializeObject(courses));
+                return courses;
             }
             catch (Exception ex)
             {

@@ -41,6 +41,9 @@ BEGIN
 			elfhuser.userName = @userName
 	  AND	
 			elfhuser.deleted = 0
+	  AND 
+		    up.deleted = 0
+
 	SET @Err = @@Error
 	RETURN @Err
 END

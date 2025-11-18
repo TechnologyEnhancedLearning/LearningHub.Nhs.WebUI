@@ -18,7 +18,26 @@ namespace LearningHub.Nhs.OpenApi.Models.ServiceModels.AzureSearch
         /// </summary>
         [SearchableField(IsKey = true)]
         [JsonPropertyName("id")]
-        public string Id { get; set; } = string.Empty;
+        public string PrefixedId { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets the numeric ID extracted from the PrefixedId.
+        /// </summary>
+        [JsonIgnore]
+        public string Id
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(PrefixedId))
+                    return "0"; 
+
+                var parts = PrefixedId.Split('_');
+                if (parts.Length != 2)
+                    return "0";
+
+                return int.TryParse(parts[1], out int id) ? id.ToString() : "0";
+            }
+        }
 
         /// <summary>
         /// Gets or sets the title.

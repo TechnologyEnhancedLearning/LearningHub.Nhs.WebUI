@@ -26,7 +26,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
             MergeFilterDictionary(filters, requestTypeFilters);
             //  MergeFilterDictionary(filters, providerFilters);
 
-            NormalizeResourceTypeFilters(filters);
+            NormaliseFilters(filters);
 
             return filters;
         }
@@ -105,10 +105,10 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
         }
 
         /// <summary>
-        /// Normalizes resource type filter values by capitalizing the first letter.
+        /// Normalizes resource type and resource collection filter values by capitalizing the first letter.
         /// </summary>
         /// <param name="filters">The filters dictionary to normalize.</param>
-        public static void NormalizeResourceTypeFilters(Dictionary<string, List<string>>? filters)
+        public static void NormaliseFilters(Dictionary<string, List<string>>? filters)
         {
             if (filters == null || !filters.ContainsKey("resource_type"))
                 return;

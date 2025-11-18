@@ -140,7 +140,7 @@
 
                         return new Document
                         {
-                            Id = doc.Id?.Substring(1),
+                            Id = doc.Id,
                             Title = doc.Title,
                             Description = doc.Description,
                             ResourceType = doc.ResourceType?.Contains("SCORM e-learning resource") == true ? "scorm" : doc.ResourceType,
@@ -301,7 +301,7 @@
 
                         return new CatalogueDocument
                         {
-                            Id = doc.Id?.Substring(1),
+                            Id = doc.Id,
                             Name = doc.Title,
                             Description = doc.Description,
                             Click = new SearchClickModel { Payload = new SearchClickPayloadModel { HitNumber = 1 }, Url = "binon" }
@@ -576,9 +576,10 @@
                 // Map SearchResourceRequestModel to PocSearchDocument
                 var document = new Models.ServiceModels.AzureSearch.SearchDocument
                 {
-                    Id = searchResourceRequestModel.Id.ToString(),
-                    Title = searchResourceRequestModel.Title ?? string.Empty,
                     // TODO: [BY]
+                    // Id = searchResourceRequestModel.Id.ToString(),
+                    // Title = searchResourceRequestModel.Title ?? string.Empty,
+                    
                     //Description = searchResourceRequestModel.Description ?? string.Empty,
                     //ResourceType = searchResourceRequestModel.ResourceType ?? string.Empty,
                     //ContentType = searchResourceRequestModel.ContentType,
@@ -641,7 +642,7 @@
 
                         return new CatalogueDocument
                         {
-                            Id = doc.Id?.Substring(1),
+                            Id = doc.Id,
                             Name = doc.Title,
                             Description = doc.Description,
                             Click = new SearchClickModel { Payload = new SearchClickPayloadModel { HitNumber = 1 }, Url = "binon" }

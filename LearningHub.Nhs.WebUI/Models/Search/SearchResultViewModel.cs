@@ -1,6 +1,7 @@
 ﻿namespace LearningHub.Nhs.WebUI.Models.Search
 {
     using System;
+    using System.Collections.Generic;
     using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.Models.Search;
 
@@ -97,6 +98,6 @@
         /// <summary>
         /// Gets or sets the show filter (all, catalogues, courses, resources).
         /// </summary>
-        public string ResourceCollectionFilter { get; set; }
+        public List<SearchFilterModel> ResourceCollectionFilter { get; set; }
     }
 }

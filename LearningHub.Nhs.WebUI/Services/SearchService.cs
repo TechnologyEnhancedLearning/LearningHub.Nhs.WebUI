@@ -75,7 +75,7 @@ namespace LearningHub.Nhs.WebUI.Services
             {
                 SearchId = searchRequest.SearchId.Value,
                 SearchText = searchString,
-                FilterText = searchRequest.Filters?.Any() == true ? $"&resource_type={string.Join("&resource_type=", searchRequest.Filters)}" : string.Empty,
+                FilterText = this.BuildFilterText(searchRequest.Filters, searchRequest.ResourceCollectionFilter),
                 ProviderFilterText = searchRequest.ProviderFilters?.Any() == true ? $"&provider_ids={string.Join("&provider_ids=", searchRequest.ProviderFilters)}" : string.Empty,
                 SortColumn = selectedSortItem.Value,
                 SortDirection = selectedSortItem?.SortDirection,
@@ -98,6 +98,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             SearchViewModel resourceResult = null;
             SearchCatalogueViewModel catalogueResult = null;
+            var resourceCollectionFilter = new List<SearchFilterModel>();
 
             if (searchString != string.Empty)
             {
@@ -203,6 +204,28 @@ namespace LearningHub.Nhs.WebUI.Services
                             }
                         }
                     }
+
+                    // Process resource_collection facets
+                    var collectionFacet = resourceResult.Facets.FirstOrDefault(x => x.Id == "resource_collection");
+                    if (collectionFacet != null && collectionFacet.Filters != null)
+                    {
+                        foreach (var filteritem in collectionFacet.Filters.Select(x => x.DisplayName).Distinct())
+                        {
+                            var filter = collectionFacet.Filters.Where(x => x.DisplayName == filteritem).FirstOrDefault();
+
+                            if (filter != null && !string.IsNullOrEmpty(filter.DisplayName))
+                            {
+                                var searchfilter = new SearchFilterModel()
+                                {
+                                    DisplayName = filter.DisplayName,
+                                    Count = filter.Count,
+                                    Value = filter.DisplayName.ToLower(),
+                                    Selected = searchRequest.ResourceCollectionFilter?.Contains(filter.DisplayName, StringComparer.OrdinalIgnoreCase) ?? false,
+                                };
+                                resourceCollectionFilter.Add(searchfilter);
+                            }
+                        }
+                    }
                 }
 
                 resourceResult.SortItemList = searchSortItemList;
@@ -222,6 +245,7 @@ namespace LearningHub.Nhs.WebUI.Services
                 ResourceSearchResult = resourceResult,
                 CatalogueSearchResult = catalogueResult,
 
+                // SearchCollectionFilters = resourceCollectionFilters,
                 ResourceResultPaging = new SearchResultPagingModel
                 {
                     CurrentPage = searchRequest.ResourcePageIndex ?? 0,
@@ -239,6 +263,8 @@ namespace LearningHub.Nhs.WebUI.Services
                 SuggestedCatalogue = suggestedCatalogue,
                 SuggestedResource = suggestedResource,
             };
+
+            searchResultViewModel.ResourceCollectionFilter = resourceCollectionFilter;
 
             return searchResultViewModel;
         }
@@ -271,7 +297,7 @@ namespace LearningHub.Nhs.WebUI.Services
                 GroupId = Guid.Parse(search.GroupId),
                 SortDirection = "descending",
                 SortColumn = sortBy.ToString(),
-                FilterText = search.Filters?.Any() == true ? string.Join(",", search.Filters) : null,
+                FilterText = this.BuildAnalyticsFilterText(search.Filters, search.ResourceCollectionFilter),
                 ResourceAccessLevelFilterText = search.ResourceAccessLevelId.HasValue ? search.ResourceAccessLevelId.Value.ToString() : null,
                 ProviderFilterText = search.ProviderFilters?.Any() == true ? string.Join(",", allproviders.Where(n => search.ProviderFilters.Contains(n.Id.ToString())).Select(x => x.Name).ToList()) : null,
             };
@@ -735,6 +761,52 @@ namespace LearningHub.Nhs.WebUI.Services
             {
                 throw new Exception(string.Format("Error sending AutoSuggestion click Action: {0}", ex.Message));
             }
+        }
+
+        /// <summary>
+        /// Builds the filter text combining resource type and resource collection filters.
+        /// </summary>
+        /// <param name="resourceTypeFilter">The resource type filters.</param>
+        /// <param name="resourceCollectionFilter">The resource collection filters.</param>
+        /// <returns>The combined filter text.</returns>
+        private string BuildFilterText(IEnumerable<string> resourceTypeFilter, IEnumerable<string> resourceCollectionFilter)
+        {
+            var filterParts = new List<string>();
+
+            if (resourceTypeFilter?.Any() == true)
+            {
+                filterParts.Add($"&resource_type={string.Join("&resource_type=", resourceTypeFilter)}");
+            }
+
+            if (resourceCollectionFilter?.Any() == true)
+            {
+                filterParts.Add($"&resource_collection={string.Join("&resource_collection=", resourceCollectionFilter)}");
+            }
+
+            return string.Join(string.Empty, filterParts);
+        }
+
+        /// <summary>
+        /// Builds the analytics filter text combining resource type and resource collection filters for logging.
+        /// </summary>
+        /// <param name="resourceTypeFilter">The resource type filters.</param>
+        /// <param name="resourceCollectionFilter">The resource collection filters.</param>
+        /// <returns>The combined filter text for analytics.</returns>
+        private string BuildAnalyticsFilterText(IEnumerable<string> resourceTypeFilter, IEnumerable<string> resourceCollectionFilter)
+        {
+            var filterParts = new List<string>();
+
+            if (resourceTypeFilter?.Any() == true)
+            {
+                filterParts.AddRange(resourceTypeFilter);
+            }
+
+            if (resourceCollectionFilter?.Any() == true)
+            {
+                filterParts.AddRange(resourceCollectionFilter.Select(f => $"collection:{f}"));
+            }
+
+            return filterParts.Any() ? string.Join(",", filterParts) : null;
         }
 
         /// <summary>

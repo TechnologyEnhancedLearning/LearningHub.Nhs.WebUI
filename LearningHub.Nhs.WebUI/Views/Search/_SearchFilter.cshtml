@@ -12,6 +12,7 @@
     var pageUrl = Model.CatalogueId > 0 ? "/catalogue/" + Model.CatalogueUrl + "/search" : "/search/results";
     var actionUrl = QueryHelpers.AddQueryString(pageUrl, queryParams);
     var pageFragment = "#search-filters";
+    var selectedResourceCollection = "all";
 
     string FilterSummary()
     {
@@ -62,27 +63,33 @@
                     <legend class="nhsuk-fieldset__legend">
                         <strong>Show</strong>
                     </legend>
+                    @foreach (var rc in Model.ResourceCollectionFilter)
+                    {
+                        if (rc.Selected)
+                            selectedResourceCollection = rc.Value;
+                    }
                     <div class="nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-radios__item">
-                            <input class="nhsuk-radios__input" id="show-all" name="resourceCollectionFilter" type="radio" value="all" checked="@((Model.ResourceCollectionFilter ?? "all") == "all")" onchange="this.form.submit()">
+                            <input class="nhsuk-radios__input" id="show-all" name="resourceCollectionFilter" type="radio" value="all" checked="@(selectedResourceCollection == "all") onchange="this.form.submit()">
                             <label class="nhsuk-label nhsuk-radios__label" for="show-all">
                                 All
                             </label>
-                        </div>                       
+                        </div>
                         <div class="nhsuk-radios__item">
-                            <input class="nhsuk-radios__input" id="show-catalogues" name="resourceCollectionFilter" type="radio" value="catalogues" checked="@((Model.ResourceCollectionFilter ?? "all") == "catalogues")" onchange="this.form.submit()">
+                            <input class="nhsuk-radios__input" id="show-catalogues" name="resourceCollectionFilter" type="radio" value="catalogue" checked="@(selectedResourceCollection == "catalogue")" onchange="this.form.submit()">
                             <label class="nhsuk-label nhsuk-radios__label" for="show-catalogues">
                                 Catalogues
                             </label>
                         </div>
                         <div class="nhsuk-radios__item">
-                            <input class="nhsuk-radios__input" id="show-courses" name="resourceCollectionFilter" type="radio" value="courses" checked="@((Model.ResourceCollectionFilter ?? "all") == "courses")" ange="this.form.submit()">
+                            <input class="nhsuk-radios__input" id="show-courses" name="resourceCollectionFilter" type="radio" value="course" checked="@(selectedResourceCollection == "course")"
+                                   onchange="this.form.submit()">
                             <label class="nhsuk-label nhsuk-radios__label" for="show-courses">
                                 Courses
                             </label>
                         </div>
                         <div class="nhsuk-radios__item">
-                            <input class="nhsuk-radios__input" id="show-resources" name="resourceCollectionFilter" type="radio" value="resources" checked="@((Model.ResourceCollectionFilter ?? "all") == "resources")" onchange="this.fsubmit()">
+                            <input class="nhsuk-radios__input" id="show-resources" name="resourceCollectionFilter" type="radio" value="resource" checked="@(selectedResourceCollection == "resource")" onchange="this.form.submit()">
                             <label class="nhsuk-label nhsuk-radios__label" for="show-resources">
                                 Resources
                             </label>

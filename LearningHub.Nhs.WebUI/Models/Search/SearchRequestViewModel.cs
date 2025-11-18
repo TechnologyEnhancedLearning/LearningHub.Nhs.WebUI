@@ -79,6 +79,6 @@
         /// <summary>
         /// Gets or sets the show filter (all, catalogues, courses, resources).
         /// </summary>
-        public string ResourceCollectionFilter { get; set; }
+        public IEnumerable<string> ResourceCollectionFilter { get; set; }
     }
 }

@@ -113,7 +113,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="feedback">The feedback.</param>
         /// <returns>The actionResult.</returns>
         [HttpPost("results")]
-        public async Task<IActionResult> IndexPost([FromQuery] SearchRequestViewModel search, int resourceCount, [FromForm] IEnumerable<string> filters, [FromForm] int? resourceAccessLevelId, [FromForm] IEnumerable<string> providerfilters, [FromForm] int? sortby, [FromForm] string groupId, [FromForm] int searchId, [FromQuery] string actionType, [FromQuery] string resourceCollectionFilter, string feedback)
+        public async Task<IActionResult> IndexPost([FromQuery] SearchRequestViewModel search, int resourceCount, [FromForm] IEnumerable<string> filters, [FromForm] int? resourceAccessLevelId, [FromForm] IEnumerable<string> providerfilters, [FromForm] int? sortby, [FromForm] string groupId, [FromForm] int searchId, [FromQuery] string actionType, [FromForm] IEnumerable<string> resourceCollectionFilter, string feedback)
         {
             if (actionType == "feedback")
             {
@@ -145,14 +145,17 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 var existingProviderFilters = (search.ProviderFilters ?? new List<string>()).OrderBy(t => t);
                 var newProviderFilters = providerfilters.OrderBy(t => t);
                 var filterProviderUpdated = !newProviderFilters.SequenceEqual(existingProviderFilters);
+                var existingResourceCollectionFilter = (search.ResourceCollectionFilter ?? new List<string>()).OrderBy(t => t);
+                var newResourceCollectionFilter = resourceCollectionFilter.OrderBy(t => t);
+                var filterResourceCollectionUpdated = !newResourceCollectionFilter.SequenceEqual(existingResourceCollectionFilter);
 
-                // No sort or resource type filter updated or resource access level filter updated or provider filter applied
-                if ((search.Sortby ?? 0) == sortby && !filterUpdated && !resourceAccessLevelFilterUpdated && !filterProviderUpdated)
+                // No sort or resource type filter updated or resource access level filter updated or provider filter applied or resource collection filter applied
+                if ((search.Sortby ?? 0) == sortby && !filterUpdated && !resourceAccessLevelFilterUpdated && !filterProviderUpdated && !filterResourceCollectionUpdated)
                 {
                     return await this.Index(search, noSortFilterError: true);
                 }
 
-                if (search.ResourcePageIndex > 0 && (filterUpdated || resourceAccessLevelFilterUpdated || filterProviderUpdated))
+                if (search.ResourcePageIndex > 0 && (filterUpdated || resourceAccessLevelFilterUpdated || filterProviderUpdated || filterResourceCollectionUpdated))
                 {
                     search.ResourcePageIndex = null;
                 }
@@ -164,6 +167,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             search.GroupId = groupId;
             search.SearchId = searchId;
             search.ResourceAccessLevelId = resourceAccessLevelId;
+            search.ResourceCollectionFilter = resourceCollectionFilter;
 
             var routeValues = new RouteValueDictionary(search)
             {

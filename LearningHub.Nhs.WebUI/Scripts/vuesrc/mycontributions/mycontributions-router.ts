@@ -11,34 +11,21 @@ const router = new Router({
             path: '/',
             redirect: '/my-contributions'
         },
-
         {
-            path: '/my-contributions/:status/:catalogueUrl/:nodeId(\\d+)',
+            path: '/my-contributions/:status(allcontent)/:catalogueUrl/:nodeId(\\d+)',
             name: 'MyContributionsStatusCatalogueNode',
             component: MyContributions
         },
-
-        // status + catalogue
         {
-            path: '/my-contributions/:status/:catalogueUrl',
+            path: '/my-contributions/:status?/:catalogueUrl?',
             name: 'MyContributionsStatusCatalogue',
             component: MyContributions
         },
-
-        // ONLY status
         {
-            path: '/my-contributions/:status',
+            path: '/my-contributions/:status?',
             name: 'MyContributionsStatus',
             component: MyContributions
         },
-
-        // fallback → only `/my-contributions`
-        {
-            path: '/my-contributions',
-            name: 'MyContributions',
-            component: MyContributions
-        },
-
         {
             path: '*',
             redirect: '/my-contributions'

@@ -8,6 +8,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.WebUI.Filters;
+    using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models.Search;
     using Microsoft.AspNetCore.Authorization;
@@ -16,6 +17,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Microsoft.FeatureManagement;
     using Settings = LearningHub.Nhs.WebUI.Configuration.Settings;
 
     /// <summary>
@@ -28,6 +30,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     {
         private readonly ISearchService searchService;
         private readonly IFileService fileService;
+        private readonly IFeatureManager featureManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchController"/> class.
@@ -38,17 +41,20 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="searchService">The searchService.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="fileService">The fileService.</param>
+        /// <param name="featureManager"> The Feature flag manager.</param>
         public SearchController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
             IOptions<Settings> settings,
             ISearchService searchService,
             ILogger<SearchController> logger,
-            IFileService fileService)
+            IFileService fileService,
+            IFeatureManager featureManager)
         : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.searchService = searchService;
             this.fileService = fileService;
+            this.featureManager = featureManager;
         }
 
         /// <summary>
@@ -65,7 +71,18 @@ namespace LearningHub.Nhs.WebUI.Controllers
             search.SearchId ??= 0;
             search.GroupId = !string.IsNullOrWhiteSpace(search.GroupId) && Guid.TryParse(search.GroupId, out Guid groupId) ? groupId.ToString() : Guid.NewGuid().ToString();
 
-            var searchResult = await this.searchService.PerformSearch(this.User, search);
+            // Fix: Ensure an instance of IFeatureManager is injected and used
+            var azureSearchEnabled = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.AzureSearch)).Result;
+            SearchResultViewModel searchResult = new SearchResultViewModel();
+
+            if (azureSearchEnabled)
+            {
+                searchResult = await this.searchService.PerformSearch(this.User, search);
+            }
+            else
+            {
+                searchResult = await this.searchService.PerformSearchInFindwise(this.User, search);
+            }
 
             if (search.SearchId == 0 && searchResult.ResourceSearchResult != null)
             {
@@ -73,10 +90,13 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     search,
                     SearchFormActionTypeEnum.BasicSearch,
                     searchResult.ResourceSearchResult.TotalHits,
-                    searchResult.CatalogueSearchResult.TotalHits);
+                    searchResult.CatalogueSearchResult != null ? searchResult.CatalogueSearchResult.TotalHits : 0);
 
                 searchResult.ResourceSearchResult.SearchId = searchId;
-                searchResult.CatalogueSearchResult.SearchId = searchId;
+                if (searchResult.CatalogueSearchResult != null)
+                {
+                    searchResult.CatalogueSearchResult.SearchId = searchId;
+                }
             }
 
             if (filterApplied)

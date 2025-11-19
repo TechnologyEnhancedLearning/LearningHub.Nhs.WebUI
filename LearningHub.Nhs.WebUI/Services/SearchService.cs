@@ -1,4 +1,4 @@
-namespace LearningHub.Nhs.WebUI.Services
+﻿namespace LearningHub.Nhs.WebUI.Services
 {
     using System;
     using System.Collections.Generic;
@@ -53,6 +53,226 @@ namespace LearningHub.Nhs.WebUI.Services
         /// <param name="searchRequest">The SearchRequestViewModel.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         public async Task<SearchResultViewModel> PerformSearch(IPrincipal user, SearchRequestViewModel searchRequest)
+        {
+            var searchSortType = 0;
+            if (searchRequest.Sortby.HasValue && Enum.IsDefined(typeof(SearchSortTypeEnum), searchRequest.Sortby))
+            {
+                searchSortType = searchRequest.Sortby.Value;
+            }
+
+            var searchString = searchRequest.Term?.Trim() ?? string.Empty;
+            var searchSortItemList = SearchHelper.GetSearchSortList();
+            var selectedSortItem = searchSortItemList.Where(x => x.SearchSortType == (SearchSortTypeEnum)searchSortType).FirstOrDefault();
+            var groupId = Guid.Parse(searchRequest.GroupId);
+            bool didYouMeanEnabled = false;
+            var suggestedCatalogue = string.Empty;
+            var suggestedResource = string.Empty;
+
+            var resourceSearchPageSize = this.settings.FindwiseSettings.ResourceSearchPageSize;
+            var catalogueSearchPageSize = this.settings.FindwiseSettings.CatalogueSearchPageSize;
+
+            var resourceSearchRequestModel = new SearchRequestModel
+            {
+                SearchId = searchRequest.SearchId.Value,
+                SearchText = searchString,
+                FilterText = this.BuildFilterText(searchRequest.Filters, searchRequest.ResourceCollectionFilter),
+                ProviderFilterText = searchRequest.ProviderFilters?.Any() == true ? $"&provider_ids={string.Join("&provider_ids=", searchRequest.ProviderFilters)}" : string.Empty,
+                SortColumn = selectedSortItem.Value,
+                SortDirection = selectedSortItem?.SortDirection,
+                PageIndex = searchRequest.ResourcePageIndex ?? 0,
+                PageSize = resourceSearchPageSize,
+                GroupId = groupId,
+                CatalogueId = searchRequest.CatalogueId,
+                ResourceAccessLevelFilterText = searchRequest.ResourceAccessLevelId.HasValue && searchRequest.ResourceAccessLevelId != (int)ResourceAccessibilityEnum.None ? $"&resource_access_level={searchRequest.ResourceAccessLevelId.Value}" : string.Empty,
+            };
+
+            SearchViewModel resourceResult = null;
+            var resourceCollectionFilter = new List<SearchFilterModel>();
+
+            if (searchString != string.Empty)
+            {
+                var resourceResultTask = this.GetSearchResultAsync(resourceSearchRequestModel);
+
+                if (searchRequest.CatalogueId.HasValue)
+                {
+                    // Search within a catalogue - resources only.
+                    await resourceResultTask;
+                    resourceResult = resourceResultTask.Result;
+                }
+                else
+                {
+                    await Task.WhenAll(resourceResultTask);
+
+                    resourceResult = resourceResultTask.Result;
+
+                    // Did you mean suggestion when no hits found
+                    if (resourceResult?.TotalHits == 0 && (resourceResult?.Spell?.Suggestions?.Count > 0))
+                    {
+                        didYouMeanEnabled = true;
+
+                        // pass the spell suggestion as new search text - resources
+                        if (resourceResult?.Spell?.Suggestions?.Count > 0)
+                        {
+                            resourceSearchRequestModel.SearchText = Regex.Replace(resourceResult?.Spell?.Suggestions?.FirstOrDefault().ToString(), "<.*?>", string.Empty);
+                            suggestedResource = resourceSearchRequestModel.SearchText;
+
+                            // calling findwise endpoint with new search text - resources
+                            resourceResultTask = this.GetSearchResultAsync(resourceSearchRequestModel);
+                        }
+
+                        await Task.WhenAll(resourceResultTask);
+
+                        resourceResult = resourceResultTask.Result;
+                    }
+                }
+
+                var searchfilters = new List<SearchFilterModel>();
+                var resourceAccessLevelFilters = new List<SearchFilterModel>();
+
+                var providerfilters = new List<SearchFilterModel>();
+
+                if (resourceResult != null && resourceResult.Facets != null && resourceResult.Facets.Length > 0)
+                {
+                    var filters = resourceResult.Facets.Where(x => x.Id == "resource_type").First().Filters;
+
+                    foreach (var filteritem in filters.Select(x => x.DisplayName.ToLower()).Distinct())
+                    {
+                        var filter = filters.Where(x => x.DisplayName == filteritem).FirstOrDefault();
+
+                        if (filter != null && UtilityHelper.FindwiseResourceTypeDict.ContainsKey(filter.DisplayName))
+                        {
+                            var resourceTypeEnum = UtilityHelper.FindwiseResourceTypeDict[filter.DisplayName];
+                            var searchfilter = new SearchFilterModel() { DisplayName = UtilityHelper.GetPrettifiedResourceTypeName(resourceTypeEnum), Count = filter.Count, Value = filteritem, Selected = searchRequest.Filters?.Contains(filter.DisplayName) ?? false };
+                            searchfilters.Add(searchfilter);
+                        }
+                    }
+
+                    if (user.IsInRole("BasicUser"))
+                    {
+                        var accessLevelFilters = resourceResult.Facets.Where(x => x.Id == "resource_access_level").First().Filters;
+
+                        var generalAccessValue = (int)ResourceAccessibilityEnum.GeneralAccess;
+                        var basicUserAudienceFilterItem = accessLevelFilters.Where(x => x.DisplayName == generalAccessValue.ToString()).FirstOrDefault();
+                        var basicResourceAccesslevelCount = basicUserAudienceFilterItem?.Count ?? 0;
+                        var basicUserAudienceFilter = new SearchFilterModel() { DisplayName = ResourceAccessLevelHelper.GetPrettifiedResourceAccessLevelOptionDisplayName(ResourceAccessibilityEnum.GeneralAccess), Count = basicResourceAccesslevelCount, Value = generalAccessValue.ToString(), Selected = (searchRequest.ResourceAccessLevelId ?? 0) == generalAccessValue };
+                        resourceAccessLevelFilters.Add(basicUserAudienceFilter);
+                    }
+
+                    filters = resourceResult.Facets.Where(x => x.Id == "provider_ids").First().Filters;
+
+                    if (filters.Length > 0)
+                    {
+                        var providers = await this.providerService.GetProviders();
+                        var provider_ids = providers.Select(n => n.Id).ToList();
+
+                        foreach (var filteritem in filters.Select(x => x.DisplayName.ToLower()).Distinct())
+                        {
+                            var filter = filters.Where(x => x.DisplayName == filteritem).FirstOrDefault();
+
+                            if (filter != null && provider_ids.Contains(Convert.ToInt32(filter.DisplayName)))
+                            {
+                                var provider = providers.Where(n => n.Id == Convert.ToInt32(filter.DisplayName)).FirstOrDefault();
+
+                                var searchfilter = new SearchFilterModel() { DisplayName = provider.Name, Count = filter.Count, Value = filteritem, Selected = searchRequest.ProviderFilters?.Contains(filter.DisplayName) ?? false };
+                                providerfilters.Add(searchfilter);
+                            }
+                        }
+                    }
+
+                    // Process resource_collection facets
+                    var collectionFacet = resourceResult.Facets.FirstOrDefault(x => x.Id == "resource_collection");
+                    if (collectionFacet != null && collectionFacet.Filters != null)
+                    {
+                        foreach (var filteritem in collectionFacet.Filters.Select(x => x.DisplayName).Distinct())
+                        {
+                            var filter = collectionFacet.Filters.Where(x => x.DisplayName == filteritem).FirstOrDefault();
+
+                            if (filter != null && !string.IsNullOrEmpty(filter.DisplayName))
+                            {
+                                var searchfilter = new SearchFilterModel()
+                                {
+                                    DisplayName = filter.DisplayName,
+                                    Count = filter.Count,
+                                    Value = filter.DisplayName.ToLower(),
+                                    Selected = searchRequest.ResourceCollectionFilter?.Contains(filter.DisplayName, StringComparer.OrdinalIgnoreCase) ?? false,
+                                };
+                                resourceCollectionFilter.Add(searchfilter);
+                            }
+                        }
+
+                        if (resourceCollectionFilter.Any())
+                        {
+                            // Sum of all counts
+                            var allCount = resourceCollectionFilter.Sum(x => x.Count);
+
+                            // If none selected ➜ All is selected
+                            // If ALL child filters are selected → All is selected
+                            var allSelected =
+                                !resourceCollectionFilter.Any(x => x.Selected) ||
+                                resourceCollectionFilter.All(x => x.Selected);
+
+                            // Create the ALL filter
+                            var allFilter = new SearchFilterModel
+                            {
+                                DisplayName = "All",
+                                Value = "all",
+                                Count = allCount,
+                                Selected = allSelected,
+                            };
+
+                            // Insert at top
+                            resourceCollectionFilter.Insert(0, allFilter);
+                        }
+                    }
+                }
+
+                resourceResult.SortItemList = searchSortItemList;
+                resourceResult.SortItemSelected = selectedSortItem;
+                resourceResult.SearchFilters = searchfilters;
+                resourceResult.SearchResourceAccessLevelFilters = resourceAccessLevelFilters;
+                resourceResult.SearchProviderFilters = providerfilters;
+            }
+
+            var searchResultViewModel = new SearchResultViewModel
+            {
+                SearchString = searchString,
+                GroupId = groupId,
+                FeedbackSubmitted = searchRequest.FeedbackSubmitted ?? false,
+                ResourceCurrentPageIndex = searchRequest.ResourcePageIndex ?? 0,
+                CatalogueCurrentPageIndex = searchRequest.CataloguePageIndex ?? 0,
+                ResourceSearchResult = resourceResult,
+
+                // SearchCollectionFilters = resourceCollectionFilters,
+                ResourceResultPaging = new SearchResultPagingModel
+                {
+                    CurrentPage = searchRequest.ResourcePageIndex ?? 0,
+                    PageSize = resourceSearchPageSize,
+                    TotalItems = resourceResult?.TotalHits ?? 0,
+                },
+
+                CatalogueResultPaging = new SearchResultPagingModel
+                {
+                    CurrentPage = searchRequest.CataloguePageIndex ?? 0,
+                    PageSize = catalogueSearchPageSize,
+                },
+                DidYouMeanEnabled = didYouMeanEnabled,
+                SuggestedCatalogue = suggestedCatalogue,
+                SuggestedResource = suggestedResource,
+            };
+
+            searchResultViewModel.ResourceCollectionFilter = resourceCollectionFilter;
+
+            return searchResultViewModel;
+        }
+
+        /// <summary>
+        /// Performs a search - either a combined resource and catalogue search, or just a resource search if
+        /// searching within a catalogue.
+        /// </summary>
+        /// <param name="user">user.</param>
+        /// <param name="searchRequest">The SearchRequestViewModel.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<SearchResultViewModel> PerformSearchInFindwise(IPrincipal user, SearchRequestViewModel searchRequest)
         {
             var searchSortType = 0;
             if (searchRequest.Sortby.HasValue && Enum.IsDefined(typeof(SearchSortTypeEnum), searchRequest.Sortby))

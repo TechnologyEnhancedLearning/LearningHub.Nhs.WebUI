@@ -54,12 +54,16 @@
                 return "Resources";
         }
     }
-    if (Model.Catalogue.SelectedCategoryId == 0 ||
-     (Model.Catalogue.SelectedCategoryId > 0 &&
-      (Model.Courses == null || !Model.Courses.Any()) &&
-      (Model.SubCategories == null || !Model.SubCategories.Any())))
+
+    if (ViewBag.ActiveTab == "Courses")
     {
-        ViewBag.ActiveTab = "browse";
+        if (Model.Catalogue.SelectedCategoryId == 0 ||
+         (Model.Catalogue.SelectedCategoryId > 0 &&
+          (Model.Courses == null || !Model.Courses.Any()) &&
+          (Model.SubCategories == null || !Model.SubCategories.Any())))
+        {
+            ViewBag.ActiveTab = "browse";
+        }
     }
 
     List<(string Title, string Url)> breadcrumbs;

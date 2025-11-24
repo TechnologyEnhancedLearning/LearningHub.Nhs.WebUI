@@ -14,5 +14,10 @@
         /// The DisplayAudioVideo.
         /// </summary>
         public const string DisplayAudioVideo = "DisplayAudioVideo";
+
+        /// <summary>
+        /// The AzureSearch.
+        /// </summary>
+        public const string AzureSearch = "AzureSearch";
     }
 }

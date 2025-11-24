@@ -1,6 +1,9 @@
-﻿@using Microsoft.Extensions.Options;
+﻿﻿@using Microsoft.Extensions.Options;
 @using LearningHub.Nhs.AdminUI.Configuration;
+@using LearningHub.Nhs.AdminUI.Helpers;
+@using Microsoft.FeatureManagement;
 @inject IOptions<WebSettings> webSettings
+@inject IFeatureManager featureManager
 
 @{
     var mainMenu = "Home";
@@ -13,7 +16,7 @@
         case "externalsystem":
         case "log":
         case "roadmap":
-        case "cms":    
+        case "cms":
         case "release":
         case "cache":
             mainMenu = "Settings";
@@ -44,7 +47,6 @@
     </div>
     <div class="d-none d-lg-block align-self-center">
         <div class="mx-auto">
-
         </div>
     </div>
     <div class="align-self-start">
@@ -81,9 +83,12 @@
                 <li class="nav-item @IsActive("Settings")">
                     <a class="nav-link" href="/externalsystem"><i class="fa-solid fa-gear fa-lg" title="System"></i>System</a>
                 </li>
-                <li class="nav-item" @IsActive("ResourceSync")>
-                    <a class="nav-link" href="/ResourceSync/Resources"><i class="fa-solid fa-gear fa-lg" title="Sync"></i>Sync</a>
-                </li>
+                @if (!await featureManager.IsEnabledAsync(FeatureFlags.AzureSearch))
+                {
+                    <li class="nav-item" @IsActive("ResourceSync")>
+                        <a class="nav-link" href="/ResourceSync/Resources"><i class="fa-solid fa-gear fa-lg" title="Sync"></i>Sync</a>
+                    </li>
+                }
             }
         </ul>
         <ul class="navbar-nav ml-auto">
@@ -102,4 +107,3 @@
         </ul>
     </div>
 </nav>
-

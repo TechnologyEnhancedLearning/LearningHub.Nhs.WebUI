@@ -16,7 +16,6 @@ namespace LearningHub.Nhs.OpenApi.Models.ServiceModels.AzureSearch
         /// <summary>
         /// Gets or sets the unique identifier.
         /// </summary>
-        [SearchableField(IsKey = true)]
         [JsonPropertyName("id")]
         public string PrefixedId { get; set; } = string.Empty;
 
@@ -31,7 +30,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ServiceModels.AzureSearch
                 if (string.IsNullOrWhiteSpace(PrefixedId))
                     return "0"; 
 
-                var parts = PrefixedId.Split('_');
+                var parts = PrefixedId.Split('-');
                 if (parts.Length != 2)
                     return "0";
 
@@ -42,14 +41,12 @@ namespace LearningHub.Nhs.OpenApi.Models.ServiceModels.AzureSearch
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
-        [SearchableField(IsSortable = true)]
         [JsonPropertyName("title")]
         public string Title { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
-        [SearchableField]
         [JsonPropertyName("description")]
         public string Description
         {
@@ -60,63 +57,63 @@ namespace LearningHub.Nhs.OpenApi.Models.ServiceModels.AzureSearch
         /// <summary>
         /// Gets or sets the resource type.
         /// </summary>
-        [SearchableField(IsFilterable = true, IsFacetable = true)]
         [JsonPropertyName("resource_collection")]
         public string ResourceCollection { get; set; } = string.Empty;
 
         /// <summary>
+        /// gets or sets the catalogue identifier.
+        /// </summary>
+        [JsonPropertyName("catalogue_id")]
+        public string CatalogueId { get; set; } = string.Empty;
+
+        [JsonPropertyName("resource_reference_id")]
+        public string ResourceReferenceId { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets the manual tag JSON.
         /// </summary>
-        [SearchableField(IsFilterable = true, IsFacetable = true)]
         [JsonPropertyName("manual_tag")]
         public string ManualTagJson { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the manual tags.
         /// </summary>
-        [SearchableField(IsFilterable = true, IsFacetable = true)]
         [JsonPropertyName("manualTags")]
         public List<string> ManualTags { get; set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the content type.
         /// </summary>
-        [SearchableField(IsFilterable = true, IsFacetable = true)]
         [JsonPropertyName("resource_type")]
         public string? ResourceType { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the date authored.
         /// </summary>
-        [SimpleField(IsFilterable = true, IsSortable = true)]
         [JsonPropertyName("date_authored")]
         public DateTime? DateAuthored { get; set; }
 
         /// <summary>
         /// Gets or sets the rating.
         /// </summary>
-        [SimpleField(IsFilterable = true, IsSortable = true)]
         [JsonPropertyName("rating")]
         public double? Rating { get; set; }
 
         /// <summary>
         /// Gets or sets the provider IDs.
         /// </summary>
-        [SearchableField]
         [JsonPropertyName("provider_ids")]
         public string ProviderIds { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether this is statutory mandatory.
         /// </summary>
-        [SimpleField(IsFilterable = true, IsFacetable = true)]
         [JsonPropertyName("statutory_mandatory")]
         public bool? StatutoryMandatory { get; set; }
 
         /// <summary>
         /// Gets or sets the author.
         /// </summary>
-        [SearchableField]
         [JsonPropertyName("author")]
         public string Author { get; set; } = string.Empty;
 

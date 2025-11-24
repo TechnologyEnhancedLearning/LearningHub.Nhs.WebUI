@@ -30,21 +30,8 @@
 
     string GetMoodleCourseUrl(string courseIdWithPrefix)
     {
-        const string prefix = "M";
-
-        if (string.IsNullOrWhiteSpace(courseIdWithPrefix))
-        {
-            return string.Empty;
-        }
-
-        if (!courseIdWithPrefix.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-        {
-            return string.Empty;
-        }
-
-        var courseIdPart = courseIdWithPrefix.Substring(prefix.Length);
-
-        if (int.TryParse(courseIdPart, out int courseId))
+       
+        if (int.TryParse(courseIdWithPrefix, out int courseId))
         {
             return moodleApiService.GetCourseUrl(courseId);
         }
@@ -60,87 +47,95 @@
 
 @foreach (var item in resourceResult.DocumentModel)
 {
-    var provider = item.Providers?.FirstOrDefault();
 
-    <div class="resource-item nhsuk-list-item--border nhsuk-u-padding-bottom-4 nhsuk-u-margin-bottom-4">
-        <h3 class="nhsuk-heading-xs nhsuk-u-margin-bottom-2">
-            @if (item.ResourceType == "moodle")
+    @if (item.ResourceType == "catalogue")
+    {
+        @await Html.PartialAsync("_SearchCatalogueResult", item)       
+    }
+    else
+    {
+        var provider = item.Providers?.FirstOrDefault();
+
+        <div class="resource-item nhsuk-list-item--border nhsuk-u-padding-bottom-4 nhsuk-u-margin-bottom-4">
+            <h3 class="nhsuk-heading-xs nhsuk-u-margin-bottom-2">
+                @if (item.ResourceType == "moodle")
+                {
+                    <a class="nhsuk-card__link" href="@GetMoodleCourseUrl(item.Id)">@item.Title</a>
+                }
+                else
+                {
+                    <a class="nhsuk-card__link" href="@GetUrl(item.ResourceReferenceId, index, item.NodePathId ?? 0, item.Click.Payload)">@item.Title</a>
+                }
+            </h3>
+
+            @if (provider != null)
             {
-                <a class="nhsuk-card__link" href="@GetMoodleCourseUrl(item.Id)">@item.Title</a>
-            }
-            else
-            {
-                <a class="nhsuk-card__link" href="@GetUrl(item.ResourceReferenceId, index, item.NodePathId ?? 0, item.Click.Payload)">@item.Title</a>
-            }
-        </h3>
-
-        @if (provider != null)
-        {
-            <div>
-                <div class="provider-details">
-                    <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name" class="logo" />
-                    <span class="title">@ProviderHelper.GetProviderString(provider.Name)</span>
-                </div>
-            </div>
-        }
-        @if (item.CatalogueRestrictedAccess && !Model.HideRestrictedBadge && showCatalogueFieldsInResources)
-        {
-            <p class="nhsuk-body-s nhsuk-u-margin-bottom-2 nhsuk-u-font-weight-bold">
-                @((item.CatalogueHasAccess || this.User.IsInRole("Administrator")) ? "Access Granted" : "Access restricted")
-            </p>
-        }
-
-        @if (!resourceAccessLevelFilterSelected)
-        {
-            <div class="nhsuk-body-s nhsuk-u-margin-bottom-2">
-                <div class="nhsuk-u-margin-right-4">
-                    <strong>Audience access level: </strong>
-                    @ResourceAccessLevelHelper.GetResourceAccessLevelText((ResourceAccessibilityEnum)item.ResourceAccessLevel)
-                </div>
-            </div>
-        }
-
-        @if (!string.IsNullOrEmpty(item.ResourceType))
-        {
-            <div class="resource-info nhsuk-body-s nhsuk-u-margin-bottom-2">
-                <div class="nhsuk-u-margin-right-4">
-                    <strong>Type: </strong>
-                    @UtilityHelper.GetPrettifiedResourceTypeName(UtilityHelper.ToEnum<ResourceTypeEnum>(item.ResourceType), 0)
-                </div>
                 <div>
-                    @if (item.ResourceType != "moodle")
+                    <div class="provider-details">
+                        <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name" class="logo" />
+                        <span class="title">@ProviderHelper.GetProviderString(provider.Name)</span>
+                    </div>
+                </div>
+            }
+            @if (item.CatalogueRestrictedAccess && !Model.HideRestrictedBadge && showCatalogueFieldsInResources)
+            {
+                <p class="nhsuk-body-s nhsuk-u-margin-bottom-2 nhsuk-u-font-weight-bold">
+                    @((item.CatalogueHasAccess || this.User.IsInRole("Administrator")) ? "Access Granted" : "Access restricted")
+                </p>
+            }
+
+            @if (!resourceAccessLevelFilterSelected)
+            {
+                <div class="nhsuk-body-s nhsuk-u-margin-bottom-2">
+                    <div class="nhsuk-u-margin-right-4">
+                        <strong>Audience access level: </strong>
+                        @ResourceAccessLevelHelper.GetResourceAccessLevelText((ResourceAccessibilityEnum)item.ResourceAccessLevel)
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(item.ResourceType))
+            {
+                <div class="resource-info nhsuk-body-s nhsuk-u-margin-bottom-2">
+                    <div class="nhsuk-u-margin-right-4">
+                        <strong>Type: </strong>
+                        @UtilityHelper.GetPrettifiedResourceTypeName(UtilityHelper.ToEnum<ResourceTypeEnum>(item.ResourceType), 0)
+                    </div>
+                    <div>
+                        @if (item.ResourceType != "moodle")
+                        {
+                            @await Html.PartialAsync("../Shared/_StarRating.cshtml", item.Rating)
+                        }
+                    </div>
+                </div>
+            }
+            <p class="nhsuk-body-s nhsuk-u-margin-bottom-2 resource-description line-clamp-3">
+                @item.Description
+            </p>
+
+            <div class="resource-author">
+                @if (!string.IsNullOrWhiteSpace(item.CatalogueBadgeUrl) && showCatalogueFieldsInResources)
+                {
+                    <img class="resource-catalogue-badge" src="/search/image/@item.CatalogueBadgeUrl" alt="Provider's catalogue badge" />
+                }
+
+                @if (!string.IsNullOrEmpty(item.CatalogueName) && !this.Model.CatalogueId.HasValue && showCatalogueFieldsInResources)
+                {
+                    <div class="nhsuk-u-margin-right-3">
+                        <a href="@("/Catalogue/" + item.CatalogueUrl)" class="catalogue-resource-search-result-name">@item.CatalogueName</a>
+                    </div>
+                }
+
+                <div>
+                    @UtilityHelper.GetAttribution(item.Authors)
+                    @if (!string.IsNullOrEmpty(item.AuthoredDate))
                     {
-                        @await Html.PartialAsync("../Shared/_StarRating.cshtml", item.Rating)
+                        @UtilityHelper.GetInOn(item.AuthoredDate)
+                        @: @item.AuthoredDate
                     }
                 </div>
             </div>
-        }
-        <p class="nhsuk-body-s nhsuk-u-margin-bottom-2 resource-description line-clamp-3">
-            @item.Description
-        </p>
-
-        <div class="resource-author">
-            @if (!string.IsNullOrWhiteSpace(item.CatalogueBadgeUrl) && showCatalogueFieldsInResources)
-            {
-                <img class="resource-catalogue-badge" src="/search/image/@item.CatalogueBadgeUrl" alt="Provider's catalogue badge" />
-            }
-
-            @if (!string.IsNullOrEmpty(item.CatalogueName) && !this.Model.CatalogueId.HasValue && showCatalogueFieldsInResources)
-            {
-                <div class="nhsuk-u-margin-right-3">
-                    <a href="@("/Catalogue/" + item.CatalogueUrl)" class="catalogue-resource-search-result-name">@item.CatalogueName</a>
-                </div>
-            }
-
-            <div>
-                @UtilityHelper.GetAttribution(item.Authors)
-                @if (!string.IsNullOrEmpty(item.AuthoredDate))
-                {
-                    @UtilityHelper.GetInOn(item.AuthoredDate)
-                    @: @item.AuthoredDate
-                }
-            </div>
         </div>
-    </div>
-    index++;
+        index++;        
+    }    
 }

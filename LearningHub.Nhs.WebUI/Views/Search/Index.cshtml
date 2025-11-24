@@ -56,15 +56,14 @@
                 </p>
             }
 
-            @if (azureSearchEnabled)
+            @*   @if (azureSearchEnabled) // [BY] Use this when we create quick filters for Azure Search
             {
                 @await Html.PartialAsync("_SearchFilter", Model)
-            }
-            else
-            {
-                @await Html.PartialAsync("_ResourceFilter", Model)
-            }            
-            
+            } *@
+
+            @await Html.PartialAsync("_ResourceFilter", Model)
+
+
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
                     <div class="nhsuk-u-reading-width">

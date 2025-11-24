@@ -85,7 +85,7 @@
 
             try
             {
-                var searchQueryType = SearchQueryType.Semantic;
+                var searchQueryType = SearchQueryType.Full;
                 var pageSize = searchRequestModel.PageSize;
                 var offset = searchRequestModel.PageIndex * pageSize;
 
@@ -106,31 +106,26 @@
                 SearchResults<Models.ServiceModels.AzureSearch.SearchDocument> filteredResponse = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(query, searchOptions, cancellationToken);
 
                 // Execute filtered search and unfiltered facet query in parallel
-                var filteredSearchTask1 = ExecuteSearchAsync(
-                    query,
-                    searchQueryType,
-                    offset,
-                    pageSize,
-                    filters,
-                    sortBy,
-                    includeFacets: true,
-                    cancellationToken);
+                //var filteredSearchTask1 = ExecuteSearchAsync(
+                //    query,
+                //    searchQueryType,
+                //    offset,
+                //    pageSize,
+                //    filters,
+                //    sortBy,
+                //    includeFacets: true,
+                //    cancellationToken);
 
                 //var unfilteredFacetsTask = GetUnfilteredFacetsAsync(
                 //    searchRequestModel.SearchText,
                 //    searchQueryType,
                 //    cancellationToken);
 
-               // await Task.WhenAll(filteredSearchTask);
+                // await Task.WhenAll(filteredSearchTask);
 
-             //   var filteredResponse = await filteredSearchTask;
+                //   var filteredResponse = await filteredSearchTask;
                 //var unfilteredFacets = await unfilteredFacetsTask;
-
-                var unfilteredFacets = await GetUnfilteredFacetsAsync(
-                   searchRequestModel.SearchText,
-                   filteredResponse.Facets,
-                   cancellationToken);
-
+                
                 // Map documents
                 var documents = filteredResponse.GetResults()
                     .Select(result =>
@@ -143,13 +138,26 @@
                             Id = doc.Id,
                             Title = doc.Title,
                             Description = doc.Description,
-                            ResourceType = doc.ResourceType?.Contains("SCORM e-learning resource") == true ? "scorm" : doc.ResourceType,
+                            ResourceType = MapToResourceType(doc.ResourceType),
                             ProviderIds = doc.ProviderIds?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList(),
-                            CatalogueIds = new List<int>(1),
+                            CatalogueIds =
+                                doc.ResourceType == "catalogue"
+                                    ? new List<int> { Convert.ToInt32(doc.Id) }  // convert single id → List<int>
+                                    : (
+                                        doc.CatalogueId?
+                                            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                            .Select(id => int.TryParse(id, out var val) ? val : 0)
+                                            .ToList()
+                                        ?? new List<int>()
+                                    ),
+                            //  CatalogueIds = doc.CatalogueId?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(id => int.TryParse(id, out var val) ? val : 0).ToList() ?? new List<int>(),
+                            //CatalogueIds = doc.CatalogueId?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList(),
+                            //CatalogueIds = new List<int>(1),
                             Rating = Convert.ToDecimal(doc.Rating),
                             Author = doc.Author,
                             Authors = doc.Author?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToList(),
                             AuthoredDate = doc.DateAuthored?.ToString(),
+                            ResourceReferenceId = int.TryParse(doc.ResourceReferenceId, out var id) ? id : 0,
                             Click = new SearchClickModel { Payload = new SearchClickPayloadModel { HitNumber = 1 }, Url = "binon" }
                         };
                     })
@@ -159,6 +167,11 @@
                 {
                     Documents = documents.ToArray()
                 };
+
+                var unfilteredFacets = await GetUnfilteredFacetsAsync(
+                   searchRequestModel.SearchText,
+                   filteredResponse.Facets,
+                   cancellationToken);
 
                 // Merge facets from filtered and unfiltered results
                 viewmodel.Facets = AzureSearchFacetHelper.MergeFacets(filteredResponse.Facets, unfilteredFacets, filters);
@@ -179,6 +192,28 @@
             }
         }
 
+        private string MapToResourceType(string resourceType)
+        {
+            if (string.IsNullOrWhiteSpace(resourceType))
+                return ResourceTypeEnum.Undefined.ToString();
+
+            string cleanedResourceType = resourceType
+                .Trim()
+                .ToLower()
+                .Replace(" ", "")
+                .Replace("_", "")
+                .Replace("-", "");
+
+            if (cleanedResourceType.StartsWith("scorm"))
+                cleanedResourceType = ResourceTypeEnum.Scorm.ToString();
+            else if (cleanedResourceType.StartsWith("web"))
+                cleanedResourceType = ResourceTypeEnum.WebLink.ToString();
+            else if (cleanedResourceType.Contains("file"))
+                cleanedResourceType = ResourceTypeEnum.GenericFile.ToString();
+
+            return cleanedResourceType;
+        }
+
         /// <summary>
         /// Executes a search query with the specified parameters.
         /// </summary>
@@ -191,19 +226,19 @@
         /// <param name="includeFacets">Whether to include facets in the results.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The search results.</returns>
-        private async Task<SearchResults<Models.ServiceModels.AzureSearch.SearchDocument>> ExecuteSearchAsync(
-            string query,
-            SearchQueryType searchQueryType,
-            int offset,
-            int pageSize,
-            Dictionary<string, List<string>> filters,
-            Dictionary<string, string> searchBy,
-            bool includeFacets,
-            CancellationToken cancellationToken)
-        {
-            var searchOptions = BuildSearchOptions(searchQueryType, offset, pageSize, filters, searchBy, includeFacets);
-            return await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(query, searchOptions, cancellationToken);
-        }
+        //private async Task<SearchResults<Models.ServiceModels.AzureSearch.SearchDocument>> ExecuteSearchAsync(
+        //    string query,
+        //    SearchQueryType searchQueryType,
+        //    int offset,
+        //    int pageSize,
+        //    Dictionary<string, List<string>> filters,
+        //    Dictionary<string, string> searchBy,
+        //    bool includeFacets,
+        //    CancellationToken cancellationToken)
+        //{
+        //    var searchOptions = BuildSearchOptions(searchQueryType, offset, pageSize, filters, searchBy, includeFacets);
+        //    return await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(query, searchOptions, cancellationToken);
+        //}
 
         /// <summary>
         /// Builds search options for Azure Search queries.
@@ -261,7 +296,7 @@
             }
 
             return facets ?? new Dictionary<string, IList<FacetResult>>();
-        }        
+        }
 
         /// <inheritdoc/>
         public async Task<SearchCatalogueResultModel> GetCatalogueSearchResultAsync(CatalogueSearchRequestModel catalogSearchRequestModel, int userId, CancellationToken cancellationToken = default)
@@ -554,10 +589,10 @@
         {
             try
             {
-                var adminClient = AzureSearchClientFactory.CreateAdminClient(this.azureSearchConfig);
+                // We are not currently implementing delete in Azure Search, it is handled via data source indexer
+                // var adminClient = AzureSearchClientFactory.CreateAdminClient(this.azureSearchConfig);
 
-                await adminClient.DeleteDocumentsAsync("id", new[] { resourceId.ToString() });
-                this.logger.LogInformation($"Resource {resourceId} removed from Azure Search index");
+                // await adminClient.DeleteDocumentsAsync("id", new[] { resourceId.ToString() });
             }
             catch (Exception ex)
             {
@@ -571,25 +606,11 @@
         {
             try
             {
-                var adminClient = AzureSearchClientFactory.CreateAdminClient(this.azureSearchConfig);
+                // We are not currently implementing in Azure Search, it is handled via data source indexer
 
-                // Map SearchResourceRequestModel to PocSearchDocument
-                var document = new Models.ServiceModels.AzureSearch.SearchDocument
-                {
-                    // TODO: [BY]
-                    // Id = searchResourceRequestModel.Id.ToString(),
-                    // Title = searchResourceRequestModel.Title ?? string.Empty,
-                    
-                    //Description = searchResourceRequestModel.Description ?? string.Empty,
-                    //ResourceType = searchResourceRequestModel.ResourceType ?? string.Empty,
-                    //ContentType = searchResourceRequestModel.ContentType,
-                    //DateAuthored = searchResourceRequestModel.DateAuthored,
-                    //Rating = searchResourceRequestModel.Rating,
-                    //Author = searchResourceRequestModel.Author ?? string.Empty,
-                };
-
-                await adminClient.IndexDocumentsAsync(IndexDocumentsBatch.Upload(new[] { document }));
-                this.logger.LogInformation($"Resource {searchResourceRequestModel.Id} added to Azure Search index");
+                // var adminClient = AzureSearchClientFactory.CreateAdminClient(this.azureSearchConfig);
+                // var document = new Models.ServiceModels.AzureSearch.SearchDocument{};
+                // await adminClient.IndexDocumentsAsync(IndexDocumentsBatch.Upload(new[] { document }));
                 return true;
             }
             catch (Exception ex)
@@ -602,9 +623,7 @@
         /// <inheritdoc/>
         public async Task<bool> SendCatalogueSearchEventAsync(SearchActionCatalogueModel searchActionCatalogueModel)
         {
-            // Azure Search doesn't need click tracking like Findwise
-            // Log the event but return true
-            this.logger.LogInformation($"Catalogue search click event logged for catalogue {searchActionCatalogueModel.CatalogueId}");
+            // We are not currently implementing in Azure Search, it is handled via data source indexer
             return await Task.FromResult(true);
         }
 
@@ -618,7 +637,7 @@
                 var offset = catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize;
                 var filters = new Dictionary<string, List<string>>
                 {
-                     { "resource_collection", new List<string> { "Catalogue" } }
+                     { "resource_collection", new List<string> { "catalogue" } }
                 };
 
                 var searchOptions = new SearchOptions
@@ -750,7 +769,7 @@
                 {
                     TotalHits = suggestResults.Count(),
                     ResourceDocumentList = suggestResults
-                        .Where(a => a.Type == "Resource")
+                        .Where(a => a.Type == "resource")
                         .Select(item => new AutoSuggestionResourceDocument
                         {
                             Id = item.Id?.Substring(1),
@@ -765,7 +784,7 @@
                 {
                     TotalHits = suggestResults.Count(),
                     CatalogueDocumentList = suggestResults
-                        .Where(a => a.Type == "Catalogue")
+                        .Where(a => a.Type == "catalogue")
                         .Select(item => new AutoSuggestionCatalogueDocument
                         {
                             Id = item.Id?.Substring(1),
@@ -806,9 +825,7 @@
         /// <inheritdoc/>
         public async Task<bool> SendAutoSuggestionEventAsync(AutoSuggestionClickPayloadModel clickPayloadModel)
         {
-            // Azure Search doesn't need click tracking like Findwise
-            // Log the event but return true
-            this.logger.LogInformation("Auto-suggestion click event logged");
+            // We are not currently implementing in Azure Search, it is handled via data source indexer
             return await Task.FromResult(true);
         }
 

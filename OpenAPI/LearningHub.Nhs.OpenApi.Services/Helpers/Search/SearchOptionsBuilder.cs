@@ -1,4 +1,4 @@
-namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
+﻿namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
 {
     using System;
     using System.Collections.Generic;
@@ -37,15 +37,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
                 ScoringProfile = "boostExactTitle"
             };
 
-            string? columns = sortBy?.Keys.FirstOrDefault();
-            string? directions = sortBy?.Values.FirstOrDefault();
-            string sortDirection = "asc";
-
-            string sortColumn = columns ?? "relevance";
-            if (directions?.StartsWith("desc", StringComparison.OrdinalIgnoreCase) ?? false)
-            {
-                sortDirection = "desc";
-            }
+            string sortByFinal = GetSortOption(sortBy);
 
             // Configure query type
             if (searchQueryType == SearchQueryType.Semantic)
@@ -60,12 +52,12 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
             {
                 searchOptions.QueryType = SearchQueryType.Simple;
                 searchOptions.SearchMode = SearchMode.Any;
-                searchOptions.OrderBy.Add($"{sortColumn} {sortDirection}");
+                searchOptions.OrderBy.Add(sortByFinal);
             }
             else
             {
                 searchOptions.QueryType = SearchQueryType.Full;
-                searchOptions.OrderBy.Add($"{sortColumn} {sortDirection}");
+                searchOptions.OrderBy.Add(sortByFinal);
             }
 
             // Add facets
@@ -84,5 +76,52 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
 
             return searchOptions;
         }
+
+        private static string GetSortOption(Dictionary<string, string>? sortBy)
+        {
+            // If null or empty → Azure Search will default to relevance
+            if (sortBy == null || sortBy.Count == 0)
+                return string.Empty;
+
+            // Extract key/value (only first pair used)
+            string? uiSortKey = sortBy.Keys.FirstOrDefault();
+            string? directionInput = sortBy.Values.FirstOrDefault();
+
+            // Handle empty key → no sorting
+            if (string.IsNullOrWhiteSpace(uiSortKey))
+                return string.Empty;
+
+            // Determine direction safely
+            string sortDirection =
+                directionInput != null &&
+                directionInput.StartsWith("desc", StringComparison.OrdinalIgnoreCase)
+                    ? "desc"
+                    : "asc";
+
+            // Map UI values to search fields
+            string? sortColumn = uiSortKey.Trim().ToLowerInvariant() switch
+            {
+                "avgrating" => "rating",
+                "rating" => "rating",
+
+                "authored_date" => "date_authored",
+                "authoreddate" => "date_authored",
+                "authoredDate" => "date_authored",
+
+                "title" => "title",
+                "atoz" => "title",
+                "alphabetical" => "title",
+                "ztoa" => "title",
+
+                _ => null // unknown sort → ignore
+            };
+
+            // No valid mapping → fall back to relevance
+            if (string.IsNullOrWhiteSpace(sortColumn))
+                return string.Empty;
+
+            return $"{sortColumn} {sortDirection}";
+        }
+
     }
 }

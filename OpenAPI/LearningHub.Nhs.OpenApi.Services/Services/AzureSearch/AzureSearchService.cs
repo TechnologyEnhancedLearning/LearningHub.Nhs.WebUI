@@ -142,7 +142,7 @@
                             ProviderIds = doc.ProviderIds?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList(),
                             CatalogueIds =
                                 doc.ResourceType == "catalogue"
-                                    ? new List<int> { Convert.ToInt32(doc.Id) }  // convert single id → List<int>
+                                    ? new List<int> { Convert.ToInt32(doc.Id) }  
                                     : (
                                         doc.CatalogueId?
                                             .Split(',', StringSplitOptions.RemoveEmptyEntries)
@@ -150,10 +150,7 @@
                                             .ToList()
                                         ?? new List<int>()
                                     ),
-                            //  CatalogueIds = doc.CatalogueId?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(id => int.TryParse(id, out var val) ? val : 0).ToList() ?? new List<int>(),
-                            //CatalogueIds = doc.CatalogueId?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList(),
-                            //CatalogueIds = new List<int>(1),
-                            Rating = Convert.ToDecimal(doc.Rating),
+                            Rating = Convert.ToDecimal(doc.Rating),                            
                             Author = doc.Author,
                             Authors = doc.Author?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToList(),
                             AuthoredDate = doc.DateAuthored?.ToString(),
@@ -213,60 +210,7 @@
 
             return cleanedResourceType;
         }
-
-        /// <summary>
-        /// Executes a search query with the specified parameters.
-        /// </summary>
-        /// <param name="query">The search query text.</param>
-        /// <param name="searchQueryType">The type of search query.</param>
-        /// <param name="offset">The number of results to skip.</param>
-        /// <param name="pageSize">The number of results to return.</param>
-        /// <param name="filters">The filters to apply.</param>
-        /// <param name="searchBy">The sort to apply.</param>
-        /// <param name="includeFacets">Whether to include facets in the results.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>The search results.</returns>
-        //private async Task<SearchResults<Models.ServiceModels.AzureSearch.SearchDocument>> ExecuteSearchAsync(
-        //    string query,
-        //    SearchQueryType searchQueryType,
-        //    int offset,
-        //    int pageSize,
-        //    Dictionary<string, List<string>> filters,
-        //    Dictionary<string, string> searchBy,
-        //    bool includeFacets,
-        //    CancellationToken cancellationToken)
-        //{
-        //    var searchOptions = BuildSearchOptions(searchQueryType, offset, pageSize, filters, searchBy, includeFacets);
-        //    return await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(query, searchOptions, cancellationToken);
-        //}
-
-        /// <summary>
-        /// Builds search options for Azure Search queries.
-        /// </summary>
-        /// <param name="searchQueryType">The type of search query.</param>
-        /// <param name="offset">The number of results to skip.</param>
-        /// <param name="pageSize">The number of results to return.</param>
-        /// <param name="filters">The filters to apply.</param>
-        /// <param name="sortBy">The sort to apply.</param>
-        /// <param name="includeFacets">Whether to include facets.</param>
-        /// <returns>The configured search options.</returns>
-        private SearchOptions BuildSearchOptions(
-            SearchQueryType searchQueryType,
-            int offset,
-            int pageSize,
-            Dictionary<string, List<string>> filters,
-            Dictionary<string, string> sortBy,
-            bool includeFacets)
-        {
-            return SearchOptionsBuilder.BuildSearchOptions(
-                searchQueryType,
-                offset,
-                pageSize,
-                filters,
-                sortBy,
-                includeFacets);
-        }
-
+        
         /// <summary>
         /// Gets unfiltered facets for a search term, using caching.
         /// </summary>

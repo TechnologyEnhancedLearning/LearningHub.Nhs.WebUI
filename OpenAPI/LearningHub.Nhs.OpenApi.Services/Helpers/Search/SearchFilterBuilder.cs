@@ -1,4 +1,4 @@
-namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
+﻿namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
 {
     using System;
     using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
         {
             var filters = new Dictionary<string, List<string>>
             {
-              //  { "resource_collection", new List<string> { "Resource" } }
+                //  { "resource_collection", new List<string> { "Resource" } }
             };
 
             // Parse and merge additional filters from query string
@@ -26,7 +26,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
             MergeFilterDictionary(filters, requestTypeFilters);
             //  MergeFilterDictionary(filters, providerFilters);
 
-            NormaliseFilters(filters);
+            //NormaliseFilters(filters);
 
             return filters;
         }
@@ -47,24 +47,92 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
         /// </summary>
         /// <param name="filters">The filters to apply.</param>
         /// <returns>The filter expression string.</returns>
-        public static string BuildFilterExpression(Dictionary<string, List<string>>? filters)
+        /// <summary>
+        /// Build an OData filter that supports multi-select values.
+        /// Pass a dictionary where key = field name, value = list of selected values.
+        /// If `collectionFields` contains a field name, that field will be treated as a collection and use any(...).
+        /// </summary>
+        public static string BuildFilterExpression(
+            Dictionary<string, List<string>>? filters,
+            ISet<string>? collectionFields = null)
         {
             if (filters == null || !filters.Any())
                 return string.Empty;
 
-            var filterExpressions = new List<string>();
+            collectionFields ??= new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var filter in filters)
+            // Handle spacing, NBSP, escaping quotes
+            string Normalize(string v)
             {
-                if (filter.Value?.Any() == true)
+                if (v == null) return string.Empty;
+
+                // Replace NBSP
+                v = v.Replace('\u00A0', ' ').Trim();
+
+                // Collapse multiple spaces
+                v = System.Text.RegularExpressions.Regex.Replace(v, @"\s+", " ");
+
+                // Escape single quotes for OData
+                v = v.Replace("'", "''");
+
+                return v;
+            }
+
+            var expressions = new List<string>();
+
+            foreach (var kvp in filters)
+            {
+                var field = kvp.Key;
+                var values = kvp.Value?.Where(v => !string.IsNullOrWhiteSpace(v)).ToList();
+
+                if (values == null || values.Count == 0)
+                    continue;
+
+                // Normalize all values
+                var normalizedValues = values.Select(Normalize).Distinct().ToList();
+
+                // Single value → use eq
+                if (normalizedValues.Count == 1)
                 {
-                    var values = string.Join(",", filter.Value);
-                    filterExpressions.Add($"search.in({filter.Key}, '{values}')");
+                    var v = normalizedValues[0];
+
+                    if (collectionFields.Contains(field))
+                    {
+                        expressions.Add($"{field}/any(t: t eq '{v}')");
+                    }
+                    else
+                    {
+                        expressions.Add($"{field} eq '{v}'");
+                    }
+
+                    continue;
+                }
+
+                // Multiple values → use OR conditions (ALWAYS works)
+                if (collectionFields.Contains(field))
+                {
+                    // collection field (array) → OR any(...) conditions
+                    var ors = normalizedValues
+                        .Select(v => $"{field}/any(t: t eq '{v}')");
+
+                    expressions.Add("(" + string.Join(" or ", ors) + ")");
+                }
+                else
+                {
+                    // single string field → OR eq conditions
+                    var ors = normalizedValues
+                        .Select(v => $"{field} eq '{v}'");
+
+                    expressions.Add("(" + string.Join(" or ", ors) + ")");
                 }
             }
 
-            return filterExpressions.Any() ? string.Join(" and ", filterExpressions) : string.Empty;
+            return expressions.Count > 0
+                ? string.Join(" and ", expressions)
+                : string.Empty;
         }
+
+
 
         /// <summary>
         /// Parses filter parameters from a query string.

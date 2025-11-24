@@ -26,6 +26,11 @@ namespace LearningHub.NHS.OpenAPI.Configuration
         public const string FindwiseSectionName = "Findwise";
 
         /// <summary>
+        /// The AzureSearchSectionName.
+        /// </summary>
+        public const string AzureSearchSectionName = "AzureSearch";
+
+        /// <summary>
         /// The LearningHubSectionName.
         /// </summary>
         public const string LearningHubSectionName = "LearningHub";
@@ -57,6 +62,8 @@ namespace LearningHub.NHS.OpenAPI.Configuration
                     .Bind(config.GetSection(AuthSectionName)));
 
             services.AddOptions<FindwiseConfig>().Bind(config.GetSection(FindwiseSectionName));
+
+            services.AddOptions<AzureSearchConfig>().Bind(config.GetSection(AzureSearchSectionName));
 
             services.AddOptions<LearningHubConfig>().Bind(config.GetSection(LearningHubSectionName));
 

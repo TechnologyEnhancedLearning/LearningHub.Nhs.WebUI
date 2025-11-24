@@ -83,7 +83,7 @@ namespace LearningHub.NHS.OpenAPI
             services.AddSingleton<IAuthorizationHandler, AuthorizeOrCallFromLHHandler>();
 
             services.AddRepositories(this.Configuration);
-            services.AddServices();
+            services.AddServices(this.Configuration);
             services.AddApplicationInsightsTelemetry();
             services.AddControllers(options =>
             {

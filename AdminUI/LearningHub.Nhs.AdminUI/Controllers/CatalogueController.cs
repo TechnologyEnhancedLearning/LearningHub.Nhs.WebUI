@@ -20,6 +20,7 @@
     using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
+    using System.Net;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
@@ -282,7 +283,10 @@
 
             // Build hierarchical select list
             var selectList = BuildList(categories, parentId: null, depth: 0);
-
+            foreach (var item in selectList)
+            {
+                item.Text = WebUtility.HtmlDecode(item.Text);
+            }
             vm.MoodleCategorySelectList = new SelectList(selectList, "Value", "Text");
             this.ViewData["CatalogueName"] = vm.Name;
             this.ViewData["id"] = id;
@@ -736,6 +740,12 @@
                 vm.MoodleCategories = categories;
                 // Build hierarchical select list
                 var selectList = BuildList(categories, parentId: null, depth: 0);
+      
+                foreach (var item in selectList)
+                {
+                    item.Text = WebUtility.HtmlDecode(item.Text);
+                }
+
                 vm.MoodleCategorySelectList = new SelectList(selectList, "Value", "Text");
                 return this.View("MoodleCategory", vm);
             }
@@ -766,6 +776,10 @@
                 vm.SelectedCategoryId = 0;
                 // Build hierarchical select list
                 var selectList = BuildList(categories, parentId: null, depth: 0);
+                foreach (var item in selectList)
+                {
+                    item.Text = WebUtility.HtmlDecode(item.Text);
+                }
                 vm.MoodleCategorySelectList = new SelectList(selectList, "Value", "Text");
                 return this.View("MoodleCategory", vm);
             }

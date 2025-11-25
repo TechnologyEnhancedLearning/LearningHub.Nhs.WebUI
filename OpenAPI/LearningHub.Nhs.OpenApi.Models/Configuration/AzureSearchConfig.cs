@@ -44,5 +44,10 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// Gets or sets the suggester name for auto-complete and suggestions.
         /// </summary>
         public string SuggesterName { get; set; } = "test-search-suggester";
+
+        /// <summary>
+        /// Gets or sets the search query type (semantic, full, or simple).
+        /// </summary>
+        public string SearchQueryType { get; set; } = "Semantic";
     }
 }

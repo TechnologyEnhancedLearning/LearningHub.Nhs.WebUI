@@ -1,15 +1,11 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Services.Services.AzureSearch
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
     using AutoMapper;
     using Azure.Search.Documents;
     using Azure.Search.Documents.Models;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
+    using LearningHub.Nhs.Models.Entities.Resource.Blocks;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.Search.SearchClick;
@@ -26,6 +22,12 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
     using Event = LearningHub.Nhs.Models.Entities.Analytics.Event;
 
 
@@ -85,7 +87,7 @@
 
             try
             {
-                var searchQueryType = SearchQueryType.Full;
+                var searchQueryType = SearchOptionsBuilder.ParseSearchQueryType(this.azureSearchConfig.SearchQueryType); ;
                 var pageSize = searchRequestModel.PageSize;
                 var offset = searchRequestModel.PageIndex * pageSize;
 
@@ -104,28 +106,8 @@
 
                 var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, offset, pageSize, filters, sortBy, true);
                 SearchResults<Models.ServiceModels.AzureSearch.SearchDocument> filteredResponse = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(query, searchOptions, cancellationToken);
+                var count = Convert.ToInt32(filteredResponse.TotalCount);
 
-                // Execute filtered search and unfiltered facet query in parallel
-                //var filteredSearchTask1 = ExecuteSearchAsync(
-                //    query,
-                //    searchQueryType,
-                //    offset,
-                //    pageSize,
-                //    filters,
-                //    sortBy,
-                //    includeFacets: true,
-                //    cancellationToken);
-
-                //var unfilteredFacetsTask = GetUnfilteredFacetsAsync(
-                //    searchRequestModel.SearchText,
-                //    searchQueryType,
-                //    cancellationToken);
-
-                // await Task.WhenAll(filteredSearchTask);
-
-                //   var filteredResponse = await filteredSearchTask;
-                //var unfilteredFacets = await unfilteredFacetsTask;
-                
                 // Map documents
                 var documents = filteredResponse.GetResults()
                     .Select(result =>
@@ -142,7 +124,7 @@
                             ProviderIds = doc.ProviderIds?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList(),
                             CatalogueIds =
                                 doc.ResourceType == "catalogue"
-                                    ? new List<int> { Convert.ToInt32(doc.Id) }  
+                                    ? new List<int> { Convert.ToInt32(doc.Id) }
                                     : (
                                         doc.CatalogueId?
                                             .Split(',', StringSplitOptions.RemoveEmptyEntries)
@@ -150,12 +132,12 @@
                                             .ToList()
                                         ?? new List<int>()
                                     ),
-                            Rating = Convert.ToDecimal(doc.Rating),                            
+                            Rating = Convert.ToDecimal(doc.Rating),
                             Author = doc.Author,
                             Authors = doc.Author?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToList(),
                             AuthoredDate = doc.DateAuthored?.ToString(),
                             ResourceReferenceId = int.TryParse(doc.ResourceReferenceId, out var id) ? id : 0,
-                            Click = new SearchClickModel { Payload = new SearchClickPayloadModel { HitNumber = 1 }, Url = "binon" }
+                            Click = BuildSearchClickModel(doc.Id, doc.Title, searchRequestModel.PageIndex, searchRequestModel.SearchId, filters, query, count)
                         };
                     })
                     .ToList();
@@ -173,7 +155,7 @@
                 // Merge facets from filtered and unfiltered results
                 viewmodel.Facets = AzureSearchFacetHelper.MergeFacets(filteredResponse.Facets, unfilteredFacets, filters);
 
-                var count = Convert.ToInt32(filteredResponse.TotalCount);
+
                 viewmodel.Stats = new Stats
                 {
                     TotalHits = count
@@ -187,59 +169,6 @@
                 this.logger.LogError(ex, "Azure Search query failed for search text: {SearchText}", searchRequestModel.SearchText);
                 throw;
             }
-        }
-
-        private string MapToResourceType(string resourceType)
-        {
-            if (string.IsNullOrWhiteSpace(resourceType))
-                return ResourceTypeEnum.Undefined.ToString();
-
-            string cleanedResourceType = resourceType
-                .Trim()
-                .ToLower()
-                .Replace(" ", "")
-                .Replace("_", "")
-                .Replace("-", "");
-
-            if (cleanedResourceType.StartsWith("scorm"))
-                cleanedResourceType = ResourceTypeEnum.Scorm.ToString();
-            else if (cleanedResourceType.StartsWith("web"))
-                cleanedResourceType = ResourceTypeEnum.WebLink.ToString();
-            else if (cleanedResourceType.Contains("file"))
-                cleanedResourceType = ResourceTypeEnum.GenericFile.ToString();
-
-            return cleanedResourceType;
-        }
-        
-        /// <summary>
-        /// Gets unfiltered facets for a search term, using caching.
-        /// </summary>
-        /// <param name="searchText">The search text.</param>
-        /// <param name="facets">The facet results.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>The unfiltered facet results.</returns>
-        private async Task<IDictionary<string, IList<FacetResult>>> GetUnfilteredFacetsAsync(
-            string searchText,
-            IDictionary<string, IList<FacetResult>> facets,
-            CancellationToken cancellationToken)
-        {
-            var cacheKey = $"AllFacets_{searchText?.ToLowerInvariant() ?? "*"}";
-            var cacheResponse = await this.cachingService.GetAsync<IDictionary<string, IList<CacheableFacetResult>>>(cacheKey);
-
-            if (cacheResponse.ResponseEnum == CacheReadResponseEnum.Found)
-            {
-                // Convert cached DTO back to FacetResult dictionary
-                return AzureSearchFacetHelper.ConvertFromCacheable(cacheResponse.Item);
-            }
-
-            if (facets != null)
-            {
-                // Convert to cacheable DTO before caching
-                var cacheableFacets = AzureSearchFacetHelper.ConvertToCacheable(facets);
-                await this.cachingService.SetAsync(cacheKey, cacheableFacets, DefaultFacetCacheExpirationMinutes, slidingExpiration: true);
-            }
-
-            return facets ?? new Dictionary<string, IList<FacetResult>>();
         }
 
         /// <inheritdoc/>
@@ -269,6 +198,7 @@
                     catalogSearchRequestModel.SearchText,
                     searchOptions,
                     cancellationToken);
+                var count = Convert.ToInt32(response.TotalCount);
 
                 var documentList = new CatalogueDocumentList
                 {
@@ -283,7 +213,7 @@
                             Id = doc.Id,
                             Name = doc.Title,
                             Description = doc.Description,
-                            Click = new SearchClickModel { Payload = new SearchClickPayloadModel { HitNumber = 1 }, Url = "binon" }
+                            Click = BuildSearchClickModel(doc.Id, doc.Title, catalogSearchRequestModel.PageIndex, catalogSearchRequestModel.SearchId, filters, catalogSearchRequestModel.SearchText, count)
                         };
                     })
                     .ToArray()
@@ -292,7 +222,7 @@
                 viewmodel.DocumentList = documentList;
                 viewmodel.Stats = new Stats
                 {
-                    TotalHits = Convert.ToInt32(response.TotalCount)
+                    TotalHits = count
                 };
                 catalogSearchRequestModel.TotalNumberOfHits = viewmodel.Stats.TotalHits;
 
@@ -594,6 +524,7 @@
 
                 SearchResults<Models.ServiceModels.AzureSearch.SearchDocument> response = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(
                     catalogSearchRequestModel.SearchText, searchOptions, cancellationToken);
+                var count = Convert.ToInt32(response.TotalCount);
 
                 var documentList = new CatalogueDocumentList
                 {
@@ -608,7 +539,7 @@
                             Id = doc.Id,
                             Name = doc.Title,
                             Description = doc.Description,
-                            Click = new SearchClickModel { Payload = new SearchClickPayloadModel { HitNumber = 1 }, Url = "binon" }
+                            Click = BuildSearchClickModel(doc.Id, doc.Title, catalogSearchRequestModel.PageIndex, catalogSearchRequestModel.SearchId, filters, catalogSearchRequestModel.SearchText, count)
                         };
                     })
                     .ToArray()
@@ -617,8 +548,9 @@
                 viewmodel.DocumentList = documentList;
                 viewmodel.Stats = new Stats
                 {
-                    TotalHits = Convert.ToInt32(response.TotalCount)
+                    TotalHits = count
                 };
+
                 catalogSearchRequestModel.TotalNumberOfHits = viewmodel.Stats.TotalHits;
 
                 return viewmodel;
@@ -718,7 +650,7 @@
                         {
                             Id = item.Id?.Substring(1),
                             Title = item.Text,
-                            Click = new AutoSuggestionClickModel { Payload = new AutoSuggestionClickPayloadModel { HitNumber = 1 }, Url = "binon" }
+                            Click = BuildAutoSuggestClickModel(item.Id?.Substring(1), item.Text, 0, 0 , term, suggestResults.Count())
                         })
                         .Take(3)
                         .ToList()
@@ -733,7 +665,7 @@
                         {
                             Id = item.Id?.Substring(1),
                             Name = item.Text,
-                            Click = new AutoSuggestionClickModel { Payload = new AutoSuggestionClickPayloadModel { HitNumber = 1 }, Url = "binon" }
+                            Click = BuildAutoSuggestClickModel(item.Id?.Substring(1), item.Text, 0, 0, term, suggestResults.Count())
                         })
                         .Take(3)
                         .ToList()
@@ -748,7 +680,7 @@
                             Id = item.Id?.Substring(1),
                             Concept = item.Text,
                             Title = item.Text,
-                            Click = new AutoSuggestionClickModel { Payload = new AutoSuggestionClickPayloadModel { HitNumber = 1 }, Url = "binon" }
+                            Click = BuildAutoSuggestClickModel(item.Id?.Substring(1), item.Text, 0, 0, term, autoResults.Count())
                         })
                         .ToList()
                 };
@@ -810,6 +742,102 @@
             }
 
             return resourceMetadataViewModels;
+        }
+
+
+        private static SearchClickModel BuildSearchClickModel(string targetUrl, string title, int hitNumber, long searchId, Dictionary<string, List<string>> filters, string query, int count)
+        {
+            return new SearchClickModel
+            {
+                Payload = new SearchClickPayloadModel
+                {
+                    ClickTargetUrl = targetUrl,
+                    DocumentFields = new SearchClickDocumentModel() { Name = title, Title = title },
+                    HitNumber = hitNumber,
+                    SearchSignal = new SearchClickSignalModel()
+                    {
+                        SearchId = Convert.ToString(searchId),
+                        Query = query + "&" + filters,
+                        UserQuery = query,
+                        TimeOfSearch = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+                        Stats = new SearchClickStatsModel() { TotalHits = count }
+                    },
+                }
+            };
+        }
+
+        private static AutoSuggestionClickModel BuildAutoSuggestClickModel(string targetUrl, string title, int hitNumber, long searchId, string query, int count)
+        {
+            return new AutoSuggestionClickModel
+            {
+                Payload = new AutoSuggestionClickPayloadModel
+                {
+                    ClickTargetUrl = targetUrl,
+                    DocumentFields = new SearchClickDocumentModel() { Name = title, Title = title },
+                    HitNumber = hitNumber,
+                    SearchSignal = new SearchClickSignalModel()
+                    {
+                        SearchId = Convert.ToString(searchId),
+                        Query = query,
+                        UserQuery = query,
+                        TimeOfSearch = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+                        Stats = new SearchClickStatsModel() { TotalHits = count }
+                    },
+                }
+            };
+        }
+
+        private string MapToResourceType(string resourceType)
+        {
+            if (string.IsNullOrWhiteSpace(resourceType))
+                return ResourceTypeEnum.Undefined.ToString();
+
+            string cleanedResourceType = resourceType
+                .Trim()
+                .ToLower()
+                .Replace(" ", "")
+                .Replace("_", "")
+                .Replace("-", "");
+
+            if (cleanedResourceType.StartsWith("scorm"))
+                cleanedResourceType = ResourceTypeEnum.Scorm.ToString();
+            else if (cleanedResourceType.StartsWith("web"))
+                cleanedResourceType = ResourceTypeEnum.WebLink.ToString();
+            else if (cleanedResourceType.Contains("file"))
+                cleanedResourceType = ResourceTypeEnum.GenericFile.ToString();
+
+            return cleanedResourceType;
+        }
+
+        /// <summary>
+        /// Gets unfiltered facets for a search term, using caching.
+        /// </summary>
+        /// <param name="searchText">The search text.</param>
+        /// <param name="facets">The facet results.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The unfiltered facet results.</returns>
+        private async Task<IDictionary<string, IList<FacetResult>>> GetUnfilteredFacetsAsync(
+            string searchText,
+            IDictionary<string, IList<FacetResult>> facets,
+            CancellationToken cancellationToken)
+        {
+            var cacheKey = $"AllFacets_{searchText?.ToLowerInvariant() ?? "*"}";
+            var cacheResponse = await this.cachingService.GetAsync<IDictionary<string, IList<CacheableFacetResult>>>(cacheKey);
+
+            if (cacheResponse.ResponseEnum == CacheReadResponseEnum.Found)
+            {
+                // Convert cached DTO back to FacetResult dictionary
+                return AzureSearchFacetHelper.ConvertFromCacheable(cacheResponse.Item);
+            }
+
+            if (facets != null)
+            {
+                // Convert to cacheable DTO before caching
+                var cacheableFacets = AzureSearchFacetHelper.ConvertToCacheable(facets);
+                await this.cachingService.SetAsync(cacheKey, cacheableFacets, DefaultFacetCacheExpirationMinutes, slidingExpiration: true);
+            }
+
+            return facets ?? new Dictionary<string, IList<FacetResult>>();
         }
 
         private ResourceMetadataViewModel MapToViewModel(Resource resource, List<ResourceActivityDTO> resourceActivities)

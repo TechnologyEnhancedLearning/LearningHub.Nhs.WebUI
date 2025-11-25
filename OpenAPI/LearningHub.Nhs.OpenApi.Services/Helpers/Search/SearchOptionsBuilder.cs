@@ -123,5 +123,26 @@
             return $"{sortColumn} {sortDirection}";
         }
 
+        /// <summary>
+        /// Parses the search query type from configuration string.
+        /// Parsing is case-insensitive. If the value is null, empty, or invalid, defaults to Semantic.
+        /// </summary>
+        /// <param name="searchQueryTypeString">The search query type string (semantic, full, or simple).</param>
+        /// <returns>The parsed SearchQueryType enum value.</returns>
+        public static SearchQueryType ParseSearchQueryType(string searchQueryTypeString)
+        {
+            if (string.IsNullOrWhiteSpace(searchQueryTypeString))
+            {
+                return SearchQueryType.Semantic;
+            }
+
+            if (Enum.TryParse<SearchQueryType>(searchQueryTypeString, ignoreCase: true, out var queryType) &&
+                (queryType == SearchQueryType.Semantic || queryType == SearchQueryType.Full || queryType == SearchQueryType.Simple))
+            {
+                return queryType;
+            }
+
+            return SearchQueryType.Semantic;
+        }
     }
 }

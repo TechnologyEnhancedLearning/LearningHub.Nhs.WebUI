@@ -165,7 +165,8 @@
    @*  <script>
         window.__BlazorRuntimeBase = "/blazor/_framework/";
     </script> *@
-    <script src="~/_framework/blazor.webassembly.js" autostart="true"></script>
+    @* <script src="~/blazor/_framework/blazor.webassembly.js" autostart="true" asp-append-version="true"></script> *@
+    <script src="~/_framework/blazor.webassembly.js" autostart="true" asp-append-version="true"></script>
 @* <script>
   Blazor.start({
     environmentBaseUrl: '/blazor/_framework/'

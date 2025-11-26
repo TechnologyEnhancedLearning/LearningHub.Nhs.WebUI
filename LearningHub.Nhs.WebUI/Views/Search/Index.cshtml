@@ -7,7 +7,7 @@
 @section styles{
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/search.css" asp-append-version="true" />
 }
-@* <script src="~/blazor/_framework/blazor.webassembly.js" autostart="false"></script>
+@* <script type="text/javascript" src="~/blazor/_framework/blazor.webassembly.js" autostart="false" asp-append-version="true"></script>
 <script>
 
     if (!window._blazorStarted) {
@@ -71,12 +71,12 @@
         </div>
         @* <component type="typeof(TELBlazor.Components.Components.BaseComponents.TELAutoSuggestTextbox)" render-mode="WebAssembly" /> *@
 
-@*         <h3>Fruit Search (Blazor Server Component)</h3>
+@*         <h3> Search (Blazor Server Component)</h3>
 
         <component type="typeof(TELAutoSuggestTextbox)"
                    render-mode="Server"
                    param-ApiUrl=@("/api/search/GetResult1")
-                   param-Placeholder="@("Type a fruit...")"/> *@
+                   param-Placeholder="@("Type a text...")"/> *@
 
         @if (Model.DidYouMeanEnabled)
         {

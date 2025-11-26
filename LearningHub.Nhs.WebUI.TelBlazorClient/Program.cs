@@ -25,7 +25,7 @@ using var tempClient = new HttpClient { BaseAddress = new Uri(builder.HostEnviro
 var apiSettings = new Settings
 {
     BaseUrl = "https://lh-openapi.dev.local/",
-    ApiKey = "123-456-789"
+    ApiKey = ""
 };
 
 // Step 3: Register services with DI

@@ -217,6 +217,52 @@
         }
 
         /// <summary>
+        /// The AddCategoryToCatalogueAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="vm">The catalogue view model.</param>
+        /// <returns>The task.</returns>
+        public async Task AddCategoryToCatalogueAsync(int userId, CatalogueViewModel vm)
+        {
+            try
+            {
+                var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = vm.CatalogueNodeVersionId };
+                var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = vm.SelectedCategoryId };
+                var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+                await DbContext.Database.ExecuteSqlRawAsync("hierarchy.CatalogueNodeVersionCategoryCreate @p0, @p1, @p2, @p3", param0, param1, param2, param3);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// The RemoveCategoryFromCatalogueAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="vm">The viewmodel.</param>
+        /// <returns></returns>
+        public async Task RemoveCategoryFromCatalogueAsync(int userId, CatalogueViewModel vm)
+        {
+            try
+            {
+                var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = vm.CatalogueNodeVersionId };
+                var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = vm.SelectedCategoryId };
+                var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+                await DbContext.Database.ExecuteSqlRawAsync("hierarchy.RemoveCatalogueCategory @p0, @p1, @p2, @p3", param0, param1, param2, param3);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Get Catlogue by reference.
         /// </summary>
         /// <param name="reference">The reference.</param>

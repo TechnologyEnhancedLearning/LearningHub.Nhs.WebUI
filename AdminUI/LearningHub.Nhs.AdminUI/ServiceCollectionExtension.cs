@@ -106,6 +106,7 @@
             services.AddTransient<IUserSessionHelper, UserSessionHelper>();
             services.AddTransient<IInternalSystemService, InternalSystemService>();
             services.AddScoped<IProviderService, ProviderService>();
+            services.AddScoped<IMoodleApiService, MoodleApiService>();
 
             // web settings binding
             var webSettings = new WebSettings();

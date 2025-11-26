@@ -1,0 +1,121 @@
+﻿@model LearningHub.Nhs.Models.Catalogue.CatalogueViewModel
+@inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.AdminUI.Configuration.WebSettings> _settings
+@using LearningHub.Nhs.Models.Enums
+@using Newtonsoft.Json
+@{
+    var page = CatalogueNavPage.Category;
+    ViewData["Title"] = "Manage Category";
+    var selectedCategoryName = Model.MoodleCategorySelectList
+        .FirstOrDefault(c => c.Value == Model.SelectedCategoryId.ToString())?.Text;
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+@section SideMenu {
+    @{
+        await Html.RenderPartialAsync("_NavSection");
+    }
+}
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h1 class="ml-5" id="catalogue-name-header">@Model.Name</h1>
+    </div>
+</div>
+
+@{
+    await Html.RenderPartialAsync("_CatalogueNav.cshtml", new CatalogueNavViewModel { Page = page, CatalogueId = Model.CatalogueNodeVersionId });
+}
+
+<div class="ml-5" style="max-width: 800px;">
+    <form method="POST" asp-action="AddCategoryToCatalogue" asp-controller="Catalogue">
+
+        <input type="hidden" id="CatalogueNodeVersionId" name="CatalogueNodeVersionId" value="@Model.CatalogueNodeVersionId" />
+        <input type="hidden" id="NodeId" name="NodeId" value="@Model.NodeId" />
+        <input type="hidden" id="NodeVersionId" name="NodeVersionId" value="@Model.NodeVersionId" />
+
+        <div class="row mt-5">
+            <div class="nhsuk-u-padding-left-3">
+                <h2 id="catalogue-owner-header">Manage category</h2>
+            </div>
+        </div>
+        <div class="mt-5">
+            <div class="row">
+                <div class="form-group">
+                    @if (Model.SelectedCategoryId > 0)
+                    {
+                        <div class="nhs-item-row">
+                            <div id="selectedCategoryDisplay" class="nhsuk-u-padding-left-3">
+                                <label>Selected Category:</label>
+                                <span class="selected-category nhsuk-u-padding-right-8">@selectedCategoryName</span>
+
+                                <a href="#" onclick="return DisplayCategory();">Change</a>
+                                <a asp-controller="Catalogue" asp-action="RemoveCategoryFromCatalogue" asp-route-categoryId="@Model.SelectedCategoryId" asp-route-catalogueNodeVersionId="@Model.CatalogueNodeVersionId" class="nhsuk-u-padding-left-3">Remove</a>
+                            </div>
+                        </div>
+                    }
+
+                    <div id="divcategory" class="nhsuk-u-padding-left-3" style="@(Model.SelectedCategoryId == 0 ? "display:block;" : "display:none;")">
+                        <div id="diverror" class="nhsuk-form-group @(errorHasOccurred ? "nhsuk-form-group--error" : "")">
+                            @if (errorHasOccurred)
+                            {
+                                <span id="example-error" class="nhsuk-error-message nhsuk-u-font-size-24">
+                                    <span id="errortext" class="nhsuk-u-visually-hidden">Error:</span> Please select a category.
+                                </span>
+                            }
+                            <div>
+                                <div class="nhsuk-u-padding-bottom-2">
+                                    <label>Select a Category:</label>
+                                </div>
+                            </div>
+                            <div class="nhsuk-u-padding-bottom-5">
+                                <div>
+                                    <select asp-for="SelectedCategoryId" asp-items="@Model.MoodleCategorySelectList" class="nhsuk-input nhsuk-u-font-size-24">
+                                        <option value="0">-- Select --</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nhsuk-u-padding-bottom-5">
+                            <div>
+                                <button type="submit" class="btn btn-common btn-success nhsuk-button">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+    <div style="height: 40px; width: 100%;"></div>
+</div>
+
+@section Scripts {
+    <script>
+        function DisplayCategory() {
+            // Show the category selection div
+            document.getElementById('divcategory').style.display = 'block';
+            var divexample = document.getElementById('example-error');
+            if (divexample) {
+                divexample.style.display = 'none';
+            }
+             var diverrortext = document.getElementById('errortext');
+            if (diverrortext) {
+                diverrortext.style.display = 'none';
+            }
+             var diverror = document.getElementById('diverror');
+            if (diverror) {
+                diverror.classList.remove('nhsuk-form-group--error');
+            }
+
+            document.getElementById('selectedCategoryDisplay').style.display = 'none';
+
+            // Hide the selected category display div
+            var selectedCategoryDiv = document.getElementById('selectedCategoryDisplay');
+            if (selectedCategoryDiv) {
+                selectedCategoryDiv.style.display = 'none';
+            }
+
+            return false;
+        }
+    </script>
+}

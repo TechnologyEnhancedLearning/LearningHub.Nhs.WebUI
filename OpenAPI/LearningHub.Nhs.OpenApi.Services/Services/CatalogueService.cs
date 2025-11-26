@@ -56,6 +56,7 @@
         private readonly FindwiseConfig findwiseConfig;
         private readonly INotificationSenderService notificationSenderService;
         private readonly ITimezoneOffsetManager timezoneOffsetManager;
+        private readonly ICategoryService categoryService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CatalogueService"/> class.
@@ -64,6 +65,7 @@
         /// <param name="catalogueRepository">
         /// The <see cref="ICatalogueRepository"/>.
         /// </param>
+        ///  <param name="categoryService"></param>
         /// <param name="mapper"></param>
         /// <param name="catalogueNodeVersionRepository"></param>
         /// <param name="nodeResourceRepository"></param>
@@ -77,9 +79,10 @@
         /// <param name="bookmarkRepository"></param>
         /// <param name="nodeActivityRepository"></param>
         /// <param name="findwiseApiFacade"></param>
-        public CatalogueService(ICatalogueRepository catalogueRepository, INodeRepository nodeRepository, IUserUserGroupRepository userUserGroupRepository, IMapper mapper, IOptions<FindwiseConfig> findwiseConfig, IOptions<LearningHubConfig> learningHubConfig, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, INodeResourceRepository nodeResourceRepository, IResourceVersionRepository resourceVersionRepository, IRoleUserGroupRepository roleUserGroupRepository, IProviderService providerService, ICatalogueAccessRequestRepository catalogueAccessRequestRepository, IUserRepository userRepository, IUserProfileRepository userProfileRepository, IEmailSenderService emailSenderService, IBookmarkRepository bookmarkRepository,INodeActivityRepository nodeActivityRepository, IFindwiseApiFacade findwiseApiFacade, INotificationSenderService notificationSenderService, ITimezoneOffsetManager timezoneOffsetManager)
+        public CatalogueService(ICatalogueRepository catalogueRepository, ICategoryService categoryService, INodeRepository nodeRepository, IUserUserGroupRepository userUserGroupRepository, IMapper mapper, IOptions<FindwiseConfig> findwiseConfig, IOptions<LearningHubConfig> learningHubConfig, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, INodeResourceRepository nodeResourceRepository, IResourceVersionRepository resourceVersionRepository, IRoleUserGroupRepository roleUserGroupRepository, IProviderService providerService, ICatalogueAccessRequestRepository catalogueAccessRequestRepository, IUserRepository userRepository, IUserProfileRepository userProfileRepository, IEmailSenderService emailSenderService, IBookmarkRepository bookmarkRepository,INodeActivityRepository nodeActivityRepository, IFindwiseApiFacade findwiseApiFacade, INotificationSenderService notificationSenderService, ITimezoneOffsetManager timezoneOffsetManager)
         {
             this.catalogueRepository = catalogueRepository;
+            this.categoryService = categoryService;
             this.nodeRepository = nodeRepository;
             this.userUserGroupRepository = userUserGroupRepository;
             this.mapper = mapper;
@@ -226,6 +229,7 @@
             // Used by the admin screen to inform the admin user if they need to add a user group.
             vm.HasUserGroup = this.GetRoleUserGroupsForCatalogue(vm.NodeId).Any();
             vm.Providers = await this.providerService.GetAllAsync();
+            vm.SelectedCategoryId = await this.categoryService.GetByCatalogueVersionIdAsync(vm.CatalogueNodeVersionId);
             return vm;
         }
 
@@ -591,6 +595,31 @@
             };
         }
 
+        /// <summary>
+        /// The AddCategoryToCatalogueAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="catalogue">The catalogue.</param>
+        /// <returns>The catalogue id.</returns>
+        public async Task<LearningHubValidationResult> AddCategoryToCatalogueAsync(int userId, CatalogueViewModel catalogue)
+        {
+            await this.catalogueNodeVersionRepository.AddCategoryToCatalogueAsync(userId, catalogue);
+
+            return new LearningHubValidationResult(true);
+        }
+
+        /// <summary>
+        /// The RemoveCategoryFromCatalogueAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="catalogue">The catalogue.</param>
+        /// <returns>The catalogue id.</returns>
+        public async Task<LearningHubValidationResult> RemoveCategoryFromCatalogueAsync(int userId, CatalogueViewModel catalogue)
+        {
+            await this.catalogueNodeVersionRepository.RemoveCategoryFromCatalogueAsync(userId, catalogue);
+
+            return new LearningHubValidationResult(true);
+        }
 
         /// <summary>
         /// The IsUserLocalAdminAsync.
@@ -650,9 +679,6 @@
                 IsValid = !details.Any(),
             };
         }
-
-
-
 
         /// <summary>
         /// Filter the items for resource version search.

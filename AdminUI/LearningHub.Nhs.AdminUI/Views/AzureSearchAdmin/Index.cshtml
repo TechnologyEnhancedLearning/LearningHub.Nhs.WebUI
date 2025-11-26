@@ -1,0 +1,222 @@
+﻿@model LearningHub.Nhs.AdminUI.Models.AzureSearchAdminViewModel
+@{
+    ViewData["Title"] = "Azure AI Search Management";
+    var message = TempData["Message"] as string;
+    var isError = TempData["IsError"] as bool? ?? false;
+}
+
+@section SideMenu {
+    @{
+        await Html.RenderPartialAsync("_NavSection");
+    }
+}
+
+<div class="panel-body admin-body">
+    <div class="d-flex flex-row justify-content-between col-12 admin-title">
+        Azure AI Search Management
+    </div>
+
+    <div class="admin-section">
+        @if (!string.IsNullOrEmpty(message))
+        {
+            <div class="col-12">
+                <p class="alert @(isError ? "alert-danger" : "alert-success")">@message</p>
+            </div>
+        }
+
+        <!-- Indexes Section -->
+        <div class="col-12 mb-4">
+            <h3 class="heading-md">Search Indexes</h3>
+            @if (Model.Indexes.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped lh-datatable">
+                        <thead>
+                            <tr>
+                                <th>Index Name</th>
+                                <th>Document Count</th>
+                                <th>Storage Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var index in Model.Indexes)
+                            {
+                                <tr>
+                                    <td>@index.Name</td>
+                                    <td>@(index.DocumentCount?.ToString("N0") ?? "N/A")</td>
+                                    <td>@(index.StorageSize.HasValue? FormatBytes(index.StorageSize.Value) : "N/A")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No indexes found or Azure Search is not configured.</p>
+            }
+        </div>
+
+        <!-- Indexers Section -->
+        <div class="col-12">
+            <h3 class="heading-md">Indexers</h3>
+            @if (Model.Indexers.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped lh-datatable">
+                        <thead>
+                            <tr>
+                                <th>Indexer Name</th>
+                                <th>Status</th>
+                                <th>Last Run</th>
+                                <th>Last Run Status</th>
+                                <th>Items Processed</th>
+                                <th>Items Failed</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var indexer in Model.Indexers)
+                            {
+                                <tr>
+                                    <td>@indexer.Name</td>
+                                    <td>
+                                        <span class="badge @GetStatusBadgeClass(indexer.Status)">@indexer.Status</span>
+                                    </td>
+                                    <td>@(indexer.LastRunTime?.ToString("dd/MM/yyyy HH:mm:ss") ?? "N/A")</td>
+                                    <td>
+                                        <span class="badge @GetLastRunStatusBadgeClass(indexer.LastRunStatus)">@(indexer.LastRunStatus ?? "N/A")</span>
+                                        @if (!string.IsNullOrEmpty(indexer.LastRunErrorMessage))
+                                        {
+                                            <button type="button" class="btn btn-link btn-sm" data-toggle="tooltip" title="@indexer.LastRunErrorMessage">
+                                                <i class="fa-solid fa-circle-info text-danger"></i>
+                                            </button>
+                                        }
+                                    </td>
+                                    <td>@(indexer.ItemsProcessed?.ToString("N0") ?? "N/A")</td>
+                                    <td>
+                                        @if (indexer.ItemsFailed > 0)
+                                        {
+                                            <span class="text-danger">@indexer.ItemsFailed?.ToString("N0")</span>
+                                        }
+                                        else
+                                        {
+                                            @(indexer.ItemsFailed?.ToString("N0") ?? "N/A")
+                                        }
+                                    </td>
+                                    <td>
+                                        <form asp-action="RunIndexer" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="indexerName" value="@indexer.Name" />
+                                            <button type="submit" class="btn btn-custom-green btn-sm" title="Run Indexer">
+                                                <i class="fa-solid fa-play"></i> Run
+                                            </button>
+                                        </form>
+                                        <button type="button" class="btn btn-admin btn-sm reset-indexer-btn"
+                                                data-indexer-name="@indexer.Name" title="Reset Indexer">
+                                            <i class="fa-solid fa-rotate-left"></i> Reset
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No indexers found or Azure Search is not configured.</p>
+            }
+        </div>
+
+        <div class="col-12 mt-4">
+            <p>
+                <a href="@Url.Action("Index")" class="btn btn-admin">
+                    <i class="fa-solid fa-rotate"></i> Refresh Status
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Reset Confirmation Modal -->
+<div id="confirmReset" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header alert-modal-header text-center">
+                <h2 class="heading-lg w-100"><i class="warningTriangle fas fa-exclamation-triangle pr-3"></i>Reset Indexer</h2>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to reset indexer '<span id="resetIndexerName"></span>'?</p>
+                <p class="text-muted">This will clear the indexer state and allow a full re-index on the next run.</p>
+            </div>
+            <div class="modal-footer alert-modal-footer">
+                <div class="form-group col-12 p-0 m-0">
+                    <div class="d-flex">
+                        <input type="button" class="btn btn-admin btn-cancel" data-dismiss="modal" value="Cancel" />
+                        <form id="resetForm" asp-action="ResetIndexer" method="post" class="ml-auto">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="indexerName" id="resetIndexerNameInput" />
+                            <button type="submit" class="btn btn-custom-green">Continue</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string FormatBytes(long bytes)
+    {
+        string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+        double len = bytes;
+        int order = 0;
+        while (len >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            len /= 1024;
+        }
+        return $"{len:0.##} {sizes[order]}";
+    }
+
+    string GetStatusBadgeClass(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "running" => "badge-primary",
+            "error" => "badge-danger",
+            _ => "badge-secondary"
+        };
+    }
+
+    string GetLastRunStatusBadgeClass(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "success" => "badge-success",
+            "transientfailure" or "transientFailure" => "badge-warning",
+            "persistentfailure" or "persistentFailure" => "badge-danger",
+            "reset" => "badge-info",
+            "inprogress" or "inProgress" => "badge-primary",
+            _ => "badge-secondary"
+        };
+    }
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Initialize tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Reset indexer confirmation
+            $('.reset-indexer-btn').on('click', function () {
+                var indexerName = $(this).data('indexer-name');
+                $('#resetIndexerName').text(indexerName);
+                $('#resetIndexerNameInput').val(indexerName);
+                $('#confirmReset').modal('show');
+            });
+        });
+    </script>
+}

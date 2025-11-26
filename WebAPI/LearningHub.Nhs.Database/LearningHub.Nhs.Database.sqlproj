@@ -680,7 +680,6 @@
     <Build Include="Stored Procedures\Adf\AdfMergeUserEmploymentResponsibility.sql" />
     <Build Include="Stored Procedures\Adf\AdfMergeUserGroupTypeInputValidation.sql" />
     <Build Include="Stored Procedures\Adf\AdfMergeUserHistory.sql" />
-    <Build Include="Stored Procedures\Adf\AdfMergeUserHistoryAttribute.sql" />
     <Build Include="Stored Procedures\Adf\AdfMergeUserHistoryType.sql" />
     <Build Include="Stored Procedures\Adf\AdfMergeUserPasswordValidationToke.sql" />
     <Build Include="Stored Procedures\Adf\AdfMergeUserProfileData.sql" />
@@ -691,6 +690,7 @@
     <None Include="Scripts\Post-Deploy\Scripts\TD-6148-ADFtableData.sql" />
     <Build Include="Tables\Adf\ADFSyncMetadata.sql" />
     <Build Include="Stored Procedures\Adf\proc_UpdateLastSyncTimeAdf.sql" />
+    <Build Include="Stored Procedures\Adf\AdfMergeUserGroupReporter.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

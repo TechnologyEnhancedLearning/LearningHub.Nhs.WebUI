@@ -265,5 +265,10 @@ namespace LearningHub.Nhs.WebUI.Configuration
         /// Gets or sets AllCataloguePageSize.
         /// </summary>
         public int AllCataloguePageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the StatMandId.
+        /// </summary>
+        public int StatMandId { get; set; } = 12;
     }
 }

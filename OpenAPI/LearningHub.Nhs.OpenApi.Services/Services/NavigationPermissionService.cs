@@ -13,16 +13,19 @@
     {
         private readonly IResourceService resourceService;
         private readonly IUserGroupService userGroupService;
+        private readonly IDatabricksService databricksService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationPermissionService"/> class.
         /// </summary>
         /// <param name="resourceService">Resource service.</param>
         /// <param name="userGroupService">userGroup service.</param>
-        public NavigationPermissionService(IResourceService resourceService, IUserGroupService userGroupService)
+        /// <param name="databricksService">databricksService.</param>
+        public NavigationPermissionService(IResourceService resourceService, IUserGroupService userGroupService, IDatabricksService databricksService)
         {
             this.resourceService = resourceService;
             this.userGroupService = userGroupService;
+            this.databricksService = databricksService;
         }
 
         /// <summary>
@@ -86,6 +89,7 @@
                 ShowSignOut = false,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
         }
 
@@ -111,6 +115,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = true,
             };
         }
 
@@ -137,6 +142,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = await this.databricksService.IsUserReporter(userId),
             };
         }
 
@@ -161,6 +167,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
         }
 
@@ -186,6 +193,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = true,
+                ShowReports = await this.databricksService.IsUserReporter(userId),
             };
         }
 
@@ -210,6 +218,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = false,
             };
         }
 
@@ -234,6 +243,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
         }
     }

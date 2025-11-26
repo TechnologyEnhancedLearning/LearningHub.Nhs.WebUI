@@ -68,6 +68,11 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         public string ContentManagementQueueName { get; set; } = null!;
 
         /// <summary>
+        /// Gets or sets <see cref="DatabricksProcessingQueueName"/>.
+        /// </summary>
+        public string DatabricksProcessingQueueName { get; set; } = null!;
+
+        /// <summary>
         /// Gets or sets <see cref="DetailedMediaActivityRecordingStartDate"/>.
         /// </summary>
         public DateTimeOffset DetailedMediaActivityRecordingStartDate { get; set; }
@@ -142,6 +147,15 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// </summary>
         public string BrowseCataloguesUrl { get; set; } = null!;
 
+        /// <summary>
+        /// Gets or sets <see cref="ReportUrl"/>.
+        /// </summary>
+        public string ReportUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the StatMandId.
+        /// </summary>
+        public int StatMandId { get; set; }
 
 
         /// <summary>

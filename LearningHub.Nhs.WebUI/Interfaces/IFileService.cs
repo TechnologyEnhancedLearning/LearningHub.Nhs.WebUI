@@ -53,5 +53,12 @@
         /// <param name="filePaths">.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task PurgeResourceFile(ResourceVersionExtendedViewModel vm = null, List<string> filePaths = null);
+
+        /// <summary>
+        /// The DownloadBlobFile.
+        /// </summary>
+        /// <param name="uri">uri.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<(Stream Stream, string FileName, string ContentType)> DownloadBlobFileAsync(string uri);
     }
 }

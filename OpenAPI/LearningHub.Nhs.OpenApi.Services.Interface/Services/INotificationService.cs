@@ -69,5 +69,14 @@
         /// <param name="errorMessage">Error message.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<int> CreatePublishFailedNotificationAsync(int userId, string resourceTitle, string errorMessage = "");
+
+        /// <summary>
+        /// Creates report processed notification.
+        /// </summary>
+        /// <param name="userId">The current user id.</param>
+        /// <param name="reportName">Report Name.</param>
+        /// <param name="reportContent">Report Content.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<int> CreateReportNotificationAsync(int userId, string reportName, string reportContent);
     }
 }

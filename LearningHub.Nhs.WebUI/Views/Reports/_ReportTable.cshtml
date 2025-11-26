@@ -1,0 +1,145 @@
+﻿@model LearningHub.Nhs.WebUI.Models.Report.CourseCompletionViewModel
+
+@{
+    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+}
+<style>
+    .nhsuk-table-responsive-wrapper {
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    .nhsuk-table-responsive {
+        font-size: 0.75rem; /* Smaller base font */
+        min-width: 100%;
+        border-collapse: collapse;
+    }
+
+    .nhsuk-table__cell,
+    .nhsuk-table__head th {
+        padding: 4px 8px; /* Reduce cell padding */
+        white-space: nowrap; /* Prevent wrapping */
+    }
+
+    .nhsuk-table-responsive__heading {
+        font-size: 0.7rem; /* Smaller responsive heading */
+        font-weight: bold;
+    }
+
+    .table-content-spacing {
+        font-size: 0.75rem;
+    }
+
+
+</style>
+
+@if (Model.TotalCount > 0)
+{
+    <div class="nhsuk-table-responsive-wrapper">
+    <table role="table" class="nhsuk-table-responsive">
+        <thead role="rowgroup" class="nhsuk-table__head">
+            <tr role="row">
+                <th role="columnheader" class="" scope="col">
+                    Username
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    First Name
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Last Name
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Email Address
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Medical Council No
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Medical Council Name
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Role
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Grade
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Location
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Programme Name
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Course Learning Path Name
+                </th>
+            </tr>
+        </thead>
+        <tbody class="nhsuk-table__body">
+            @foreach (var entry in Model.CourseCompletionRecords)
+            {
+                <tr role="row" class="nhsuk-table__row">
+                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                        <span class="nhsuk-table-responsive__heading"> Username </span>
+                        <span class="nhsuk-u-text-align-left table-content-spacing">
+                            @entry.UserName
+                        </span>
+                    </td>
+                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                        <span class="nhsuk-table-responsive__heading">First Name </span>
+                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.FirstName</span>
+
+                    </td>
+                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                        <span class="nhsuk-table-responsive__heading">Last Name </span>
+                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.LastName</span>
+
+                    </td>
+                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                        <span class="nhsuk-table-responsive__heading">Email Address </span>
+                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Email </span>
+
+                    </td>
+                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                        <span class="nhsuk-table-responsive__heading">Medical Council No </span>
+                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.MedicalCouncilNo</span>
+
+                    </td>
+                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                        <span class="nhsuk-table-responsive__heading">Medical Council Name </span>
+                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.MedicalCouncilName</span>
+
+                    </td>
+                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                        <span class="nhsuk-table-responsive__heading">Role </span>
+                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Role</span>
+
+                    </td>
+                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                        <span class="nhsuk-table-responsive__heading">Grade </span>
+                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Grade</span>
+
+                    </td>
+                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                        <span class="nhsuk-table-responsive__heading">Location </span>
+                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Location</span>
+
+                    </td>
+                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                        <span class="nhsuk-table-responsive__heading">Programme Name </span>
+                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Programme</span>
+
+                    </td>
+                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                        <span class="nhsuk-table-responsive__heading"> Course Learning Path Name </span>
+                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Course</span>
+
+                    </td>
+                </tr>
+
+
+            }
+
+        </tbody>
+    </table>
+    </div>
+}

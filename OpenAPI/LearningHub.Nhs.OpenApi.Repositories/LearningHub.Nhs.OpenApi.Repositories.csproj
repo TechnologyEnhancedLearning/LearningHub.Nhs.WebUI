@@ -24,7 +24,7 @@
 		<PackageReference Include="AutoMapper" Version="10.1.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
 		<PackageReference Include="IdentityModel" Version="4.6.0" />
-		<PackageReference Include="LearningHub.Nhs.Models" Version="4.0.3" />
+		<PackageReference Include="LearningHub.Nhs.Models" Version="4.0.5" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.20" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />

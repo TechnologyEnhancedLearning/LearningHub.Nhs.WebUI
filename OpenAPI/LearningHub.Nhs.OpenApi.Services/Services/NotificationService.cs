@@ -196,6 +196,34 @@
         }
 
         /// <summary>
+        /// Creates report processed notification.
+        /// </summary>
+        /// <param name="userId">The current user id.</param>
+        /// <param name="reportName">Report Name.</param>
+        /// <param name="reportContent">Report Content.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<int> CreateReportNotificationAsync(int userId, string reportName, string reportContent)
+        {
+            var title = learningHubConfig.Notifications.ReportTitle.Replace("[ReportName]", reportName).Replace("[ReportContent]", reportContent);
+
+            var message = learningHubConfig.Notifications.Report.Replace("[ReportName]", reportName).Replace("[ReportContent]", reportContent);
+
+
+            var notification = await this.CreateAsync(userId, this.UserSpecificNotification(
+                                    title, message, NotificationTypeEnum.ReportProcessed, NotificationPriorityEnum.General));
+
+            if (notification.CreatedId.HasValue)
+            {
+                return notification.CreatedId.Value;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+
+        /// <summary>
         /// Creates resource publish failed notification.
         /// </summary>
         /// <param name="userId">The current user id.</param>

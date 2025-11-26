@@ -6,6 +6,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Content;
+    using LearningHub.Nhs.Models.Entities.DatabricksReport;
     using LearningHub.Nhs.Models.Entities.External;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Entities.Messaging;
@@ -749,6 +750,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets User Provider.
         /// </summary>
         public virtual DbSet<UserProvider> UserProvider { get; set; }
+
+        /// <summary>
+        /// Gets or sets Report History.
+        /// </summary>
+        public virtual DbSet<ReportHistory> ReportHistory { get; set; }
 
         /// <summary>
         /// Gets or sets Resource Version Provider.

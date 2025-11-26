@@ -1,0 +1,56 @@
+@use "../../abstracts/all" as *;
+
+
+.user-report {
+    .nhsuk-details__summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .override-summary-color {
+        color: black !important;
+        font-weight: normal;
+        text-decoration: none;
+    }
+
+    .nhsuk-summary-list__key--tight {
+        flex: 0 0 20%;
+        width: auto;
+    }
+
+    .nhsuk-summary-list__row {
+        display: flex !important;
+        align-items: flex-start; /* optional: aligns top of key/value */
+    }
+
+    .nhsuk-summary-list__row {
+        border-bottom: none;
+    }
+
+    .nhsuk-summary-list__key, .nhsuk-summary-list__value, .nhsuk-summary-list__actions {
+        border: none;
+    }
+
+    .nhsuk-date-inline {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem; /* space between label and input */
+    }
+
+    .nhsuk-date-inline .nhsuk-label {
+        margin-bottom: 0;
+        white-space: nowrap;
+    }
+
+    .nhsuk-button--with-border {
+        border: 2px solid #005eb8; 
+        background-color: #ffffff; 
+        color: #005eb8; 
+    }
+
+    .nhsuk-button--with-border:hover {
+        background-color: #f0f8ff;
+        border-color: #003087; 
+    }
+}

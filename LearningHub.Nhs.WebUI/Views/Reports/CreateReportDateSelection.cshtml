@@ -1,0 +1,132 @@
+﻿@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Helpers
+@using LearningHub.Nhs.WebUI.Models
+@using LearningHub.Nhs.WebUI.Models.Learning
+@using NHSUKViewComponents.Web.ViewModels
+@model LearningHub.Nhs.WebUI.Models.Report.ReportCreationDateSelection;
+@{
+    ViewData["Title"] = "Select Date";
+    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    var customId = $"TimePeriod-{Model.PopulateDateRange().Count()}";
+    var hintTextLines = new List<string> { $"For example, {Model.StartDay} {Model.StartMonth} {Model.StartYear}" };
+    var endHintTextLines = new List<string> { $" " };
+}
+
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/reporting.css" asp-append-version="true" />
+}
+
+<div class="user-report">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-7">
+
+            <!--  Main content -->
+            <div class="nhsuk-grid-column-full">
+                <vc:back-link asp-controller="Reports" asp-action="CreateReportCourseSelection" link-text="Back to: Course Selection" />
+                <div class="nhsuk-hint">
+                    Create a course completion report
+                </div>
+                <h1 class="nhsuk-heading-xl">
+                    Reporting Period
+                </h1>
+                <div class="nhsuk-u-padding-bottom-9">
+
+                    @if (errorHasOccurred)
+                    {
+                        <vc:error-summary order-of-property-names="@(new[] { nameof(Model.TimePeriod) })" />
+                    }
+
+                    <form asp-controller="Reports" asp-action="CreateReportSummary" method="post">
+
+                        <div class="nhsuk-form-group">
+                            <fieldset class="nhsuk-fieldset">
+                                <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--l">
+                                    <h1 class="nhsuk-fieldset__heading">
+                                        
+                                    </h1>
+                                </legend>
+                                <div class="nhsuk-hint">
+                                    For the last:
+                                </div>
+                                <div class="nhsuk-radios" data-module="nhsuk-radios">
+                                    @foreach (var (radio, index) in Model.PopulateDateRange().Select((r, i) => (r, i)))
+                                    {
+                                        var radioId = $"TimePeriod-{index}";
+                                        <div class="nhsuk-radios__item">
+                                            <input class="nhsuk-radios__input"
+                                                   id="@radioId"
+                                                   name="TimePeriod"
+                                                   type="radio"
+                                                   value="@radio.Value"
+                                                   aria-describedby="@(!string.IsNullOrEmpty(radio.HintText) ? $"{radio.Value}-item-hint" : string.Empty)"
+                                                   data-val-required="Select a time period"
+                                                   data-val="true"
+                                            @(radio.Value == Model.TimePeriod ? "checked" : string.Empty) />
+                                            <label class="nhsuk-label nhsuk-radios__label" for="@radioId">
+                                                @radio.Label
+                                            </label>
+                                            @if (radio.HintText != null)
+                                            {
+                                                <div class="nhsuk-hint nhsuk-radios__hint" id="@radio.Value-item-hint">
+                                                    @radio.HintText
+                                                </div>
+                                            }
+                                        </div>
+
+                                    }
+                                    
+                                    <div class="nhsuk-radios__divider">or</div>
+
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input" id="@customId" name="TimePeriod" type="radio" value="Custom" @(Model.TimePeriod == "Custom" ? "checked" : string.Empty) />
+                                        <label class="nhsuk-label nhsuk-radios__label" for="@customId">
+                                            Custom date range
+                                        </label>
+                                    <div class="nhsuk-radios--conditional" id="@customId">
+                                            <div class="nhsuk-grid-column-full">
+                                                <div class="nhsuk-grid-column-one-half">
+                                                    <div class="nhsuk-form-group nhsuk-date-inline">
+                                                        <label class="nhsuk-label nhsuk-u-padding-top-8" for="StartDate">From</label>
+                                                        <vc:date-input id="StartDate"
+                                                                       label=""
+                                                                       day-id="StartDay"
+                                                                       month-id="StartMonth"
+                                                                       year-id="StartYear"
+                                                                       css-class=""
+                                                                       hint-text-lines="@hintTextLines" />
+                                                    </div>
+                                                </div>
+                                                <div class="nhsuk-grid-column-one-half">
+                                                    <div class="nhsuk-form-group nhsuk-date-inline">
+                                                        <label class="nhsuk-label nhsuk-u-padding-top-8" for="EndDate">To</label>
+                                                        <vc:date-input id="EndDate"
+                                                                       label=""
+                                                                       day-id="EndDay"
+                                                                       month-id="EndMonth"
+                                                                       year-id="EndYear"
+                                                                       css-class="nhsuk-u-padding-top-5"
+                                                                       hint-text-lines="@endHintTextLines" />
+                                                    </div>
+                                                </div>                                      
+                                            </div>          
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div class="nhsuk-form-group">
+
+                            <button class="nhsuk-button" type="submit">Continue</button>
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

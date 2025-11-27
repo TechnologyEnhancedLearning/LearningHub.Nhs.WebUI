@@ -210,7 +210,6 @@
     <Build Include="Tables\Elfh\MergeUserTBL.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\TD-6159-turn-off-cdc.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-6159-turn-on-cdc.sql" />
-    <None Include="Scripts\Post-Deploy\Scripts\TD-6625-AddtionalTable&amp;CDC.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="LearningHub.Nhs.Database.refactorlog" />

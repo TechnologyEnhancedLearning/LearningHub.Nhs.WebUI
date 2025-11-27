@@ -693,7 +693,7 @@
     <Build Include="Stored Procedures\Adf\proc_UpdateLastSyncTimeAdf.sql" />
     <Build Include="Tables\Databricks\ReportHistory.sql" />
     <Build Include="Tables\Elfh\UserGroupReporterTBL.sql" />
-    <Build Include="Scripts\Post-Deploy\Scripts\TD-6625-AddtionalTable-CDC.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-6625-AddtionalTable-CDC.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

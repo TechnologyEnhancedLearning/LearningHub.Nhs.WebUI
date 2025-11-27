@@ -622,7 +622,6 @@
     <Build Include="Tables\Elfh\UserAttributeTBL.sql" />
     <Build Include="Tables\Elfh\UserEmploymentTBL.sql" />
     <Build Include="Tables\Elfh\UserGroupTypeInputValidationTBL.sql" />
-    <Build Include="Tables\Elfh\UserHistoryAttributeTBL.sql" />
     <Build Include="Tables\Elfh\UserHistoryTBL.sql" />
     <Build Include="Tables\Elfh\userHistoryTypeTBL.sql" />
     <Build Include="Tables\Elfh\UserPasswordValidationTokenTBL.sql" />

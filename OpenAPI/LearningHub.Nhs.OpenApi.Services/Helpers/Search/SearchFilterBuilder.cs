@@ -100,6 +100,10 @@
                     {
                         expressions.Add($"{field}/any(t: t eq '{v}')");
                     }
+                    else if (v.Contains("false"))
+                    {
+                        expressions.Add($"{field} eq {v}");
+                    }
                     else
                     {
                         expressions.Add($"{field} eq '{v}'");

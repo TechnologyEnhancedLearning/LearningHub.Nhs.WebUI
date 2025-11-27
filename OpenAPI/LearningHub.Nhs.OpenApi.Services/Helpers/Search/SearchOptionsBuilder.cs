@@ -34,6 +34,7 @@
                 Skip = offset,
                 Size = pageSize,
                 IncludeTotalCount = true,
+                // Filter = "is_deleted eq false",
                 ScoringProfile = "boostExactTitle"
             };
 
@@ -67,6 +68,9 @@
                 searchOptions.Facets.Add("resource_collection");
                 searchOptions.Facets.Add("provider_ids");
             }
+
+            Dictionary<string, List<string>> deletFilter = new Dictionary<string, List<string>> {{ "is_deleted", new List<string> {"false"} }};
+            filters = filters == null ? deletFilter : filters.Concat(deletFilter).ToDictionary(k => k.Key, v => v.Value);
 
             // Apply filters
             if (filters?.Any() == true)

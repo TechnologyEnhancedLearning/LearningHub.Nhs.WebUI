@@ -28,6 +28,7 @@
             { "web link", ResourceTypeEnum.WebLink },
             { "audio", ResourceTypeEnum.Audio },
             { "scorm", ResourceTypeEnum.Scorm },
+            { "scorm e-learning resource", ResourceTypeEnum.Scorm },
             { "assessment", ResourceTypeEnum.Assessment },
             { "genericfile", ResourceTypeEnum.GenericFile },
             { "file", ResourceTypeEnum.GenericFile },

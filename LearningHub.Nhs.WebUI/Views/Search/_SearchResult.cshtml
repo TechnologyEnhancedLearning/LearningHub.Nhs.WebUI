@@ -15,11 +15,12 @@
     var pagingModel = Model.ResourceResultPaging;
     var index = pagingModel.CurrentPage * pagingModel.PageSize;
     var searchString = HttpUtility.UrlEncode(Model.SearchString);
+    string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
 
     string GetUrl(int resourceReferenceId, int itemIndex, int nodePathId, SearchClickPayloadModel payload)
     {
         var searchSignal = payload?.SearchSignal;
-        string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
+        
         string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
 
         return $@"/search/record-resource-click?url=/Resource/{resourceReferenceId}&nodePathId={nodePathId}&itemIndex={payload?.HitNumber}
@@ -50,7 +51,7 @@
 
     @if (item.ResourceType == "catalogue")
     {
-        @await Html.PartialAsync("_SearchCatalogueResult", item)       
+        @await Html.PartialAsync("_SearchCatalogueResult", (item, groupId, pagingModel.CurrentPage))
     }
     else
     {

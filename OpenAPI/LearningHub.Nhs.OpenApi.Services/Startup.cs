@@ -24,6 +24,7 @@ namespace LearningHub.Nhs.OpenApi.Services
         {
             services.AddScoped<IFindwiseClient, FindwiseClient>();
             services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>();
+            services.AddScoped<IDatabricksApiHttpClient, DatabricksApiHttpClient>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<ILearningHubService, LearningHubService>();
             services.AddScoped<IResourceService, ResourceService>();
@@ -36,6 +37,7 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IUserGroupService, UserGroupService>();
             services.AddScoped<IMoodleApiService, MoodleApiService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IDatabricksService, DatabricksService>();
 
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IEventLogService, EventLogService>();

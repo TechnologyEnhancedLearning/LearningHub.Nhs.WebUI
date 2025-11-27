@@ -259,5 +259,10 @@
         /// Security question Required.
         /// </summary>
         public const string SecurityQuestionRequired = "Please select a security question";
+
+        /// <summary>
+        /// Course Required.
+        /// </summary>
+        public const string CourseRequired = "Select a course";
     }
 }

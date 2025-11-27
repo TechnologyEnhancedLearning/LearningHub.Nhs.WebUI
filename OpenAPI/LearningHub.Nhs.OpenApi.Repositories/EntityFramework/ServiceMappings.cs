@@ -184,6 +184,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, MigrationMap>();
             services.AddSingleton<IEntityTypeMap, MigrationInputRecordMap>();
             services.AddSingleton<IEntityTypeMap, MigrationSourceMap>();
+            services.AddSingleton<IEntityTypeMap, ReportHistoryMap>();
 
             // External
             services.AddSingleton<IEntityTypeMap, UserProfileMap>();

@@ -1,0 +1,25 @@
+﻿CREATE TABLE [reports].[ReportHistory]
+(
+    [Id] INT NOT NULL IDENTITY (1, 1),
+    [CourseFilter] NVARCHAR(512) NULL,
+    [FirstRun] DATETIMEOFFSET(7) NOT NULL,
+    [LastRun] DATETIMEOFFSET(7) NOT NULL,
+    [PeriodDays] INT NOT NULL,
+    [StartDate][datetimeoffset](7) NULL,
+    [EndDate][datetimeoffset](7) NULL,
+    [DownloadRequest] BIT NULL,
+    [DownloadRequested][datetimeoffset](7) NULL,
+    [DownloadReady][datetimeoffset](7) NULL,
+    [ReportStatusId] INT NULL,
+    [FilePath] NVARCHAR(1024) NULL,
+    [DownloadedDate] [datetimeoffset](7) NULL,
+    [ParentJobRunId] INT NULL,
+    [JobRunId] INT NULL,
+    [ProcessingMessage] NVARCHAR(1024) NULL,
+   	[Deleted] [bit] NOT NULL,
+	[CreateUserId] INT NOT NULL,
+	[CreateDate] [datetimeoffset](7) NOT NULL,
+	[AmendUserId] INT NOT NULL,
+	[AmendDate] [datetimeoffset](7) NOT NULL,
+    CONSTRAINT [PK_Reports_ReportHistory] PRIMARY KEY CLUSTERED ([Id] ASC) ON [PRIMARY]
+);

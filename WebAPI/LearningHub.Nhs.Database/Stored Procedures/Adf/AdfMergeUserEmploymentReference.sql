@@ -7,13 +7,14 @@
 --
 -- 04-11-2025  Sarathlal	    Initial Revision
 -------------------------------------------------------------------------------
-CREATE PROCEDURE [AdfMergeUserEmploymentReference]
+CREATE PROCEDURE [dbo].[AdfMergeUserEmploymentReference]
     @UserEmploymentReferenceList dbo.UserEmploymentReferenceType READONLY
 AS
 BEGIN
     SET NOCOUNT ON;
 
 	SET IDENTITY_INSERT [elfh].[userEmploymentReferenceTBL] ON;
+	ALTER TABLE [elfh].[userEmploymentReferenceTBL] NOCHECK CONSTRAINT ALL;
     MERGE [elfh].[userEmploymentReferenceTBL] AS target
     USING @UserEmploymentReferenceList AS source
         ON target.[userEmploymentReferenceId] = source.[userEmploymentReferenceId]
@@ -47,5 +48,6 @@ BEGIN
             source.[amendDate]
         );
 		SET IDENTITY_INSERT [elfh].[userEmploymentReferenceTBL] OFF;
+		ALTER TABLE [elfh].[userEmploymentReferenceTBL] NOCHECK CONSTRAINT ALL;
 END
 GO

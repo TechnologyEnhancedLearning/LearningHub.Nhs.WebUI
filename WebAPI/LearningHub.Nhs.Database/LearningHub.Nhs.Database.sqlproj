@@ -693,6 +693,7 @@
     <Build Include="Tables\Adf\ADFSyncMetadata.sql" />
     <Build Include="Stored Procedures\Adf\proc_UpdateLastSyncTimeAdf.sql" />
     <Build Include="Tables\Databricks\ReportHistory.sql" />
+    <Build Include="Tables\Elfh\Table1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

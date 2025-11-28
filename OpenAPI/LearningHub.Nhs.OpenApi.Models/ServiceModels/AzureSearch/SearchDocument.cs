@@ -118,6 +118,12 @@ namespace LearningHub.Nhs.OpenApi.Models.ServiceModels.AzureSearch
         public string Author { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the url.
+        /// </summary>
+        [JsonPropertyName("url")]
+        public string Url { get; set; } = string.Empty;
+
+        /// <summary>
         /// Strips paragraph tags from input string.
         /// </summary>
         /// <param name="input">The input string.</param>

@@ -338,7 +338,14 @@ namespace LearningHub.Nhs.WebUI.Controllers
 
             var autoSuggestions = await this.searchService.GetAutoSuggestionList(term);
 
-            return this.PartialView("_AutoComplete", autoSuggestions);
+            var azureSearchEnabled = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.AzureSearch)).Result;
+
+            if (!azureSearchEnabled)
+            {
+                return this.PartialView("_AutoComplete", autoSuggestions);
+            }
+
+            return this.PartialView("_AutoSuggest", autoSuggestions);
         }
 
         /// <summary>

@@ -593,11 +593,13 @@
                 suggestOptions.Select.Add("manual_tag");
                 suggestOptions.Select.Add("resource_type");
                 suggestOptions.Select.Add("resource_collection");
+                suggestOptions.Select.Add("url");
+                suggestOptions.Select.Add("resource_reference_id");                
 
                 var autoOptions = new AutocompleteOptions
                 {
                     Mode = AutocompleteMode.OneTermWithContext,
-                    Size = 50
+                    Size = 5
                 };
 
                 var searchText = LuceneQueryBuilder.EscapeLuceneSpecialCharacters(term);
@@ -618,15 +620,19 @@
                     {
                         Id = r.Document.Id,
                         Text = r.Document.Title.Trim(),
+                        URL = r.Document.Url,
+                        ResourceReferenceId = (r.Document.ResourceCollection == "resource") ? r.Document.ResourceReferenceId : r.Document.Id,
                         Type = r.Document.ResourceCollection ?? "Suggestion"
                     });
 
-                var autoResults = autoResponse.Value.Results
+               var autoResults = autoResponse.Value.Results
                     .Where(r => !string.IsNullOrWhiteSpace(r.Text))
                     .Select((r, index) => new
                     {
                         Id = "A" + (index + 1),
                         Text = r.Text.Trim(),
+                        URL = string.Empty,
+                        ResourceReferenceId = (string?)null,
                         Type = "AutoComplete"
                     });
 
@@ -641,18 +647,19 @@
                     TotalHits = combined.Count
                 };
 
-                var autoSuggestionResource = new AutoSuggestionResource
+                var autoSuggestion = new AutoSuggestionResourceCollection
                 {
                     TotalHits = suggestResults.Count(),
-                    ResourceDocumentList = suggestResults
-                        .Where(a => a.Type == "resource")
-                        .Select(item => new AutoSuggestionResourceDocument
-                        {
-                            Id = item.Id?.Substring(1),
-                            Title = item.Text,
-                            Click = BuildAutoSuggestClickModel(item.Id?.Substring(1), item.Text, 0, 0 , term, suggestResults.Count())
-                        })
-                        .Take(3)
+                    DocumentList = suggestResults.Select(item => new AutoSuggestionResourceCollectionDocument
+                    {
+                        Id = item.Id,
+                        ResourceType = item.Type,
+                        URL = item.URL,
+                        ResourceReferenceId = item.ResourceReferenceId != null && int.TryParse(item.ResourceReferenceId, out var refId) ? refId : 0,
+                        Title = item.Text,
+                        Click = BuildAutoSuggestClickModel(item.Id, item.Text, 0, 0, term, suggestResults.Count())
+                    })
+                        .Take(5)
                         .ToList()
                 };
 
@@ -663,11 +670,11 @@
                         .Where(a => a.Type == "catalogue")
                         .Select(item => new AutoSuggestionCatalogueDocument
                         {
-                            Id = item.Id?.Substring(1),
+                            Id = item.Id,
                             Name = item.Text,
-                            Click = BuildAutoSuggestClickModel(item.Id?.Substring(1), item.Text, 0, 0, term, suggestResults.Count())
+                            Click = BuildAutoSuggestClickModel(item.Id, item.Text, 0, 0, term, suggestResults.Count())
                         })
-                        .Take(3)
+                        .Take(0)
                         .ToList()
                 };
 
@@ -677,15 +684,15 @@
                     ConceptDocumentList = autoResults
                         .Select(item => new AutoSuggestionConceptDocument
                         {
-                            Id = item.Id?.Substring(1),
+                            Id = item.Id,
                             Concept = item.Text,
                             Title = item.Text,
-                            Click = BuildAutoSuggestClickModel(item.Id?.Substring(1), item.Text, 0, 0, term, autoResults.Count())
+                            Click = BuildAutoSuggestClickModel(item.Id, item.Text, 0, 0, term, autoResults.Count())
                         })
                         .ToList()
                 };
 
-                viewmodel.ResourceDocument = autoSuggestionResource;
+                viewmodel.ResourceCollectionDocument = autoSuggestion;
                 viewmodel.CatalogueDocument = autoSuggestionCatalogue;
                 viewmodel.ConceptDocument = autoSuggestionConcept;
 

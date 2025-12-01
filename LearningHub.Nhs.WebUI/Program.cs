@@ -35,6 +35,19 @@ try
     builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
     builder.Host.UseNLog();
 
+    string corsMoodleUrl = builder.Configuration.GetValue<string>("MoodleAPIConfig:BaseUrl");
+
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("MoodleCORS", builder =>
+        {
+            builder.WithOrigins(corsMoodleUrl)
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials();
+        });
+    });
+
     builder.Services.AddHostedService<TimedHostedService>();
     builder.Services.ConfigureServices(builder.Configuration, builder.Environment);
 
@@ -77,6 +90,8 @@ try
     {
         app.UseHttpsRedirection();
     }
+
+    app.UseCors("MoodleCORS");
 
     app.UseRouting();
 

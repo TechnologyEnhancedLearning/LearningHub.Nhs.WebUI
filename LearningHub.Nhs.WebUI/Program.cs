@@ -41,7 +41,7 @@ try
     {
         options.AddPolicy("MoodleCORS", builder =>
         {
-            builder.WithOrigins(corsMoodleUrl)
+            builder.WithOrigins(corsMoodleUrl.TrimEnd('/'))
                    .AllowAnyHeader()
                    .AllowAnyMethod()
                    .AllowCredentials();

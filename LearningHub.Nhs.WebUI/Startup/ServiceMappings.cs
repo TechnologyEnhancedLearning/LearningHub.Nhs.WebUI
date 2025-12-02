@@ -87,6 +87,7 @@
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IJobRoleService, JobRoleService>();
             services.AddScoped<IGradeService, GradeService>();
+            services.AddScoped<INavigationRequestService, NavigationRequestService>();
             services.AddScoped<ISpecialtyService, SpecialtyService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ITermsAndConditionsService, TermsAndConditionsService>();

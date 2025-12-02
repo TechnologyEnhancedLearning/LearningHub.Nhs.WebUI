@@ -13,19 +13,19 @@
     public class NavigationItemsViewComponent : ViewComponent
     {
         private readonly ICacheService cacheService;
-        private INotificationService notificationService;
+        private INavigationRequestService navigationRequestService;
         private INavigationPermissionService permissionService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationItemsViewComponent"/> class.
         /// </summary>
-        /// <param name="permissionService">Permission service.</param>
-        /// <param name="notificationService">Notificatin service.</param>
+        /// <param name="navigationRequestService">navigation Request Service.</param>
+        /// <param name="permissionService">permissionService.</param>
         /// <param name="cacheService">The cacheService<see cref="ICacheService"/>.</param>
-        public NavigationItemsViewComponent(INavigationPermissionService permissionService, INotificationService notificationService, ICacheService cacheService)
+        public NavigationItemsViewComponent(INavigationRequestService navigationRequestService, INavigationPermissionService permissionService,  ICacheService cacheService)
         {
+            this.navigationRequestService = navigationRequestService;
             this.permissionService = permissionService;
-            this.notificationService = notificationService;
             this.cacheService = cacheService;
         }
 
@@ -58,9 +58,9 @@
 
                 var (cacheExists, _) = await this.cacheService.TryGetAsync<string>($"{userId}:LoginWizard");
 
-                model = await this.permissionService.GetNavigationModelAsync(this.User, !cacheExists, controllerName);
+                model = await this.navigationRequestService.GetNavigationModelAsync(this.User, !cacheExists, controllerName);
 
-                model.NotificationCount = await this.notificationService.GetUserUnreadNotificationCountAsync(userId);
+                model.NotificationCount = await this.navigationRequestService.GetNotificationCountAsync(userId);
             }
 
             return await Task.FromResult<IViewComponentResult>(this.View(navView, model));

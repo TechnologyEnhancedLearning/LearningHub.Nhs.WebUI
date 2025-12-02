@@ -91,9 +91,9 @@ try
         app.UseHttpsRedirection();
     }
 
-    app.UseCors("MoodleCORS");
-
     app.UseRouting();
+
+    app.UseCors("MoodleCORS");
 
     app.UseAuthentication();
     app.UseAuthorization();

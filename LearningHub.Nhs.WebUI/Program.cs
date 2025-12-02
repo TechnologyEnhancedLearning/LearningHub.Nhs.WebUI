@@ -36,12 +36,14 @@ try
     builder.Host.UseNLog();
 
     string corsMoodleUrl = builder.Configuration.GetValue<string>("MoodleAPIConfig:BaseUrl");
+    Uri moodleUri = new Uri(corsMoodleUrl);
+    string moodleBaseUrl = $"{moodleUri.Scheme}://{moodleUri.Host}";
 
     builder.Services.AddCors(options =>
     {
         options.AddPolicy("MoodleCORS", builder =>
         {
-            builder.WithOrigins(corsMoodleUrl)
+            builder.WithOrigins(moodleBaseUrl)
                    .AllowAnyHeader()
                    .AllowAnyMethod()
                    .AllowCredentials();

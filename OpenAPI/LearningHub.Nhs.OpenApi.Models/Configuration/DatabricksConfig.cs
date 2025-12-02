@@ -38,7 +38,7 @@
         /// <summary>
         /// Gets or sets the client scret of the service pricncipl.
         /// </summary>
-        public string clientSecret { get; set; } = null!;
+        public string ClientSecret { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the endpoint to check user permission.

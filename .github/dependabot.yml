@@ -4,27 +4,45 @@
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
 version: 2
+registries:
+  learninghubfeed:
+    type: nuget-feed
+    url: https://pkgs.dev.azure.com/e-LfH/_packaging/LearningHubFeed/nuget/v3/index.json
+    username: "kevin.whittaker" 
+    password: ${{ secrets.AZURE_DEVOPS_PAT }}   
+  nuget.org:
+    type: nuget-feed
+    url: "https://api.nuget.org/v3/index.json"  
 updates:
   - package-ecosystem: "nuget" 
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
+    registries:
+      - learninghubfeed
+      - nuget.org
     target-branch: "Automatic_version_update_dependabot"
     ignore:
       # Ignore updates to packages that start with 'Wildcards'
       - dependency-name: "Microsoft.FeatureManagement.AspNetCore*"
       - dependency-name: "LearningHub.Nhs.Models*"
       - dependency-name: "LearningHub.Nhs.Caching*"
-      - dependency-name: "elfhHub.Nhs.Models*"   
-      - dependency-name: "linqtotwitter*"         
-      # Ignore some updates to the package
-      - dependency-name: "Microsoft.VisualStudio.Web.CodeGeneration.Design"
-        versions: [">7.0.0"]
-      - dependency-name: "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
-        versions: [">7.0.0"]
-      - dependency-name: "Microsoft.AspNetCore.Mvc.Testing"
-        versions: [">7.0.0"]
+      - dependency-name: "elfhHub.Nhs.Models*"        
+      - dependency-name: "UK.NHS.CookieBanner"   
+      - dependency-name: "GDS.MultiPageFormData"      
+      - dependency-name: "linqtotwitter*"             
+      # Ignore some updates to the package    
+      - dependency-name: "Azure.Storage.Files.Shares"
+        versions: [">12.11.0"]
+      - dependency-name: "FluentAssertions"
+        versions: [">6.12.0"]
+      - dependency-name: "HtmlSanitizer"
+        versions: [">6.0.453"]
+      - dependency-name: "xunit"
+        versions: [">2.4.1"]
+      - dependency-name: "xunit.runner.visualstudio"
+        versions: [">2.4.3"]   
       - dependency-name: "Selenium.WebDriver.ChromeDriver"
         versions: ">=113.0.5672.1278" # Recommended version
       # For all packages, ignore all patch updates

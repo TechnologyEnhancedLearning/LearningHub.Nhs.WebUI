@@ -338,6 +338,7 @@
         {
             await this.cacheService.RemoveAsync($"{userId}:AllRolesWithPermissions");
             await this.cacheService.RemoveAsync($"{userId}:DatabricksReporter");
+            await this.cacheService.RemoveAsync($"{userId}:UserHasPublishedResources");
             return new LearningHubValidationResult(true);
         }
 

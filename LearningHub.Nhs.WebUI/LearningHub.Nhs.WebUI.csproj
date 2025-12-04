@@ -28,7 +28,6 @@
 		<None Remove="Enums\**" />
 		<None Remove="wwwroot\lib\fontawesome-pro-5.9.0\**" />
 		<TypeScriptCompile Remove="Enums\**" />
-		<TypeScriptCompile Remove="node_modules\nhsuk-frontend\**" />
 		<TypeScriptCompile Remove="wwwroot\lib\fontawesome-pro-5.9.0\**" />
 	</ItemGroup>
 	<ItemGroup>

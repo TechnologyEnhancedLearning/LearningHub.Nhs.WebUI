@@ -103,6 +103,7 @@
     <Folder Include="Stored Procedures\External" />
     <Folder Include="Tables\Elfh" />
     <Folder Include="Stored Procedures\Elfh" />
+    <Folder Include="Tables\Databricks" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\learningHub_Data.sql" />
@@ -577,7 +578,6 @@
     <Build Include="Tables\Elfh\UserAttributeTBL.sql" />
     <Build Include="Tables\Elfh\UserEmploymentTBL.sql" />
     <Build Include="Tables\Elfh\UserGroupTypeInputValidationTBL.sql" />
-    <Build Include="Tables\Elfh\UserHistoryAttributeTBL.sql" />
     <Build Include="Tables\Elfh\UserHistoryTBL.sql" />
     <Build Include="Tables\Elfh\userHistoryTypeTBL.sql" />
     <Build Include="Tables\Elfh\UserPasswordValidationTokenTBL.sql" />
@@ -622,7 +622,6 @@
     <Build Include="Tables\Elfh\UserAttributeTBL.sql" />
     <Build Include="Tables\Elfh\UserEmploymentTBL.sql" />
     <Build Include="Tables\Elfh\UserGroupTypeInputValidationTBL.sql" />
-    <Build Include="Tables\Elfh\UserHistoryAttributeTBL.sql" />
     <Build Include="Tables\Elfh\UserHistoryTBL.sql" />
     <Build Include="Tables\Elfh\userHistoryTypeTBL.sql" />
     <Build Include="Tables\Elfh\UserPasswordValidationTokenTBL.sql" />
@@ -680,7 +679,6 @@
     <Build Include="Stored Procedures\Adf\AdfMergeUserEmploymentResponsibility.sql" />
     <Build Include="Stored Procedures\Adf\AdfMergeUserGroupTypeInputValidation.sql" />
     <Build Include="Stored Procedures\Adf\AdfMergeUserHistory.sql" />
-    <Build Include="Stored Procedures\Adf\AdfMergeUserHistoryAttribute.sql" />
     <Build Include="Stored Procedures\Adf\AdfMergeUserHistoryType.sql" />
     <Build Include="Stored Procedures\Adf\AdfMergeUserPasswordValidationToke.sql" />
     <Build Include="Stored Procedures\Adf\AdfMergeUserProfileData.sql" />
@@ -691,6 +689,10 @@
     <None Include="Scripts\Post-Deploy\Scripts\TD-6148-ADFtableData.sql" />
     <Build Include="Tables\Adf\ADFSyncMetadata.sql" />
     <Build Include="Stored Procedures\Adf\proc_UpdateLastSyncTimeAdf.sql" />
+    <Build Include="Stored Procedures\Adf\AdfMergeUserGroupReporter.sql" />
+    <Build Include="Tables\Databricks\ReportHistory.sql" />
+    <Build Include="Tables\Elfh\UserGroupReporterTBL.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-6625-AddtionalTable-CDC.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

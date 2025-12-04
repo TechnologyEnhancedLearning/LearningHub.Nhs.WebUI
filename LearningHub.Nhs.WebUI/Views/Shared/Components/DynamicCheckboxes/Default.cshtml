@@ -1,0 +1,34 @@
+﻿@using LearningHub.Nhs.WebUI.Models.DynamicCheckbox
+@model DynamicCheckboxesViewModel
+@{
+    var propertyName = ViewData["PropertyName"]?.ToString() ?? "SelectedValues";
+}
+
+<div class="nhsuk-form-group @(Model.Required && !Model.SelectedValues.Any() ? "nhsuk-form-group--error" : "")">
+    <fieldset class="nhsuk-fieldset">
+        <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--m">
+            <span class="nhsuk-fieldset__heading">@Model.Label</span>
+        </legend>
+
+        <div class="nhsuk-checkboxes">
+            @for (int i = 0; i < Model.Checkboxes.Count; i++)
+            {
+                var checkbox = Model.Checkboxes[i];
+                var inputId = $"{propertyName}_{i}";
+
+                <div class="nhsuk-checkboxes__item">
+                    <input class="nhsuk-checkboxes__input"
+                           id="@inputId"
+                           name="@propertyName"
+                           type="checkbox"
+                           value="@checkbox.Value"
+                           @(checkbox.Selected ? "checked" : null) />
+
+                    <label class="nhsuk-label nhsuk-checkboxes__label" for="@inputId">
+                        @checkbox.Label
+                    </label>
+                </div>
+            }
+        </div>
+    </fieldset>
+</div>

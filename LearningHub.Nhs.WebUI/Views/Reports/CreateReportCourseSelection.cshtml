@@ -1,0 +1,62 @@
+﻿@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Helpers
+@using LearningHub.Nhs.WebUI.Models
+@using LearningHub.Nhs.WebUI.Models.Learning
+@using NHSUKViewComponents.Web.ViewModels
+@model LearningHub.Nhs.WebUI.Models.Report.ReportCreationCourseSelection;
+@{
+    ViewData["Title"] = "Select Course";
+    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    var routeData = new Dictionary<string, string> { { "ReturnToConfirmation", Context.Request.Query["returnToConfirmation"] } };
+}
+
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/reporting.css" asp-append-version="true" />
+}
+
+<div class="user-report">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-7">
+
+            <!--  Main content -->
+            <div class="nhsuk-grid-column-full">
+                <vc:back-link asp-controller="Reports" asp-action="Index" link-text="Back to: Report" />
+                <div class="nhsuk-hint">
+                    Create a course completion report
+                </div>
+                <h1 class="nhsuk-heading-xl">
+                    Select course(s)
+                </h1>
+                <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
+                   
+                    @if (errorHasOccurred)
+                    {
+                        <vc:error-summary order-of-property-names="@(new[] { nameof(Model.Courses) })" />
+                    }
+
+                    <form asp-controller="Reports" asp-action="CreateReportCourseSelection" method="post">
+                        <div class="nhsuk-form-group">
+                        @await Component.InvokeAsync("DynamicCheckboxes", new
+                            {
+                                label = "",
+                                checkboxes = Model.AllCources,
+                                required = false,
+                                errorMessage = "Please select at least one course",
+                                selectedValues = Model.Courses,
+                                propertyName = nameof(Model.Courses)
+                            })
+                        </div>
+                        <div class="nhsuk-form-group">
+
+                            <button class="nhsuk-button" type="submit">Continue</button>
+                        </div>
+                    </form>
+
+                </div>
+            
+               
+            </div>
+        </div>
+    </div>
+</div>

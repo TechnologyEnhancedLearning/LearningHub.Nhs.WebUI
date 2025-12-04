@@ -14,6 +14,8 @@ BEGIN
     SET NOCOUNT ON;
 
     SET IDENTITY_INSERT [elfh].[userEmploymentTBL] ON;
+	ALTER TABLE [elfh].[userEmploymentTBL] NOCHECK CONSTRAINT ALL;
+	ALTER TABLE [hub].[User] NOCHECK CONSTRAINT ALL;
     MERGE [elfh].[userEmploymentTBL] AS target
     USING @userEmploymentList AS source
     ON target.userEmploymentId = source.userEmploymentId
@@ -73,5 +75,7 @@ BEGIN
 
     -- Disable identity insert
     SET IDENTITY_INSERT [elfh].[userEmploymentTBL] OFF;
+	ALTER TABLE [elfh].[userEmploymentTBL] NOCHECK CONSTRAINT ALL;
+	ALTER TABLE [hub].[User] NOCHECK CONSTRAINT ALL;
 END
 GO

@@ -1,0 +1,135 @@
+﻿@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.Models.Enums.Report
+@using LearningHub.Nhs.WebUI.Helpers
+@using LearningHub.Nhs.WebUI.Models
+@using LearningHub.Nhs.WebUI.Models.Learning
+@model LearningHub.Nhs.WebUI.Models.Report.CourseCompletionViewModel
+
+@{
+    ViewData["Title"] = "Course completion report";
+    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+
+
+    var pagingModel = Model.ReportPaging;
+    int currentPage = pagingModel.CurrentPage;
+    int pageSize = pagingModel.PageSize;
+    int totalRows = pagingModel.TotalItems;
+
+    int startRow = (currentPage * pageSize) + 1;
+    int endRow = Math.Min(startRow + pageSize - 1, totalRows);
+    var distinctCourses = this.ViewData["matchedCourseNames"] as List<string>;
+
+}
+
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/reporting.css" asp-append-version="true" />
+}
+
+<div class="user-report">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-7">
+
+            <!--  Main content -->
+            <div class="nhsuk-grid-column-full">
+
+                <div class="nhsuk-u-padding-top-2 nhsuk-u-padding-bottom-2">
+                    <a href="/">Home</a>
+                    <i class="fa-solid fa-chevron-right nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+                    <a href="/Reports">Reports</a>
+                </div>
+
+                <h1 class="nhsuk-heading-xl"> Course completion report</h1>
+                <dl class="nhsuk-summary-list nhsuk-u-reading-width">
+
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Course@(distinctCourses.Count() > 1 ? "s" : "")
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            <ul>
+                                @foreach (var entry in distinctCourses)
+                                {
+                                    <li>@entry</li>
+                                }
+                            </ul>
+
+                        </dd>
+
+                        <dd class="nhsuk-summary-list__actions">
+                            <a asp-controller="Reports" asp-action="CreateReportCourseSelection">
+                                Change<span class="nhsuk-u-visually-hidden">&nbsp;Course</span>
+                            </a>
+
+                        </dd>
+
+                    </div>
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Reporting period
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @{
+                                if (Model.TimePeriod == "Custom" && Model.StartDate.HasValue && Model.EndDate.HasValue)
+                                {
+                                    <text> @Model.StartDate.Value.ToString("dd MMMM yyyy") to @Model.EndDate.Value.ToString("dd MMMM yyyy")</text>
+                                }
+                                else
+                                {
+                                    <text> @Model.TimePeriod days </text>
+                                }
+                            }
+
+                        </dd>
+
+                        <dd class="nhsuk-summary-list__actions">
+                            <a asp-controller="Reports" asp-action="CreateReportDateSelection">
+                                Change<span class="nhsuk-u-visually-hidden">&nbsp;Reporting period</span>
+                            </a>
+
+                        </dd>
+
+                    </div>
+                </dl>
+
+                <div>
+                    <h2 class="nhsuk-heading-m">Displaying @startRow–@endRow of @Model.TotalCount filtered row@(Model.TotalCount > 1 ? "s" : "")</h2>
+
+                    @if (Model.TotalCount != 0)
+                    {
+                        <p class="nhsuk-u-secondary-text-color nhsuk-u-reading-width">
+                            Request to download this report in a spreadsheet (.xls) format.You will be notified
+                            when the report is ready.
+                        </p>
+                        @if (Model.ReportHistoryModel != null && Model.ReportHistoryModel.DownloadRequest == null)
+                        {
+                            <form method="post" asp-controller="Reports" asp-action="QueueReportDownload">
+                                <input type="hidden" name="reportHistoryId" value="@Model.ReportHistoryId" />
+                                <button class="nhsuk-button nhsuk-button--reverse nhsuk-button--with-border" type="submit">Request report as spreadsheet</button>
+                            </form>
+                        }
+                        else if (Model.ReportHistoryModel != null && Model.ReportHistoryModel.DownloadRequest == true && Model.ReportHistoryModel.ReportStatusId == ((int)Status.Pending))
+                        {
+                            <div class="nhsuk-inset-text">
+                                <span class="nhsuk-u-visually-hidden">Information: </span>
+                                <p class="nhsuk-body-l nhsuk-u-font-weight-bold">We’re getting your report ready</p>
+                                <p>
+                                    You will be notified once it’s ready to download and you will be able to access it in the
+                                    <a href="/reports" class="nhsuk-link">Reports section</a>.
+                                </p>
+                            </div>
+                        }
+                    }
+
+                    @if (Model.CourseCompletionRecords.Any())
+                    {
+                        @await Html.PartialAsync("_ReportTable", Model)
+                    }
+                    
+                </div>
+            </div>
+            <div class="nhsuk-grid-column-full nhsuk-u-padding-5">
+                @await Html.PartialAsync("_ReportPaging", Model)
+            </div>
+        </div>
+    </div>
+</div>

@@ -282,7 +282,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     par_PageSize = 0,
                     par_PageNumber = 0,
                     par_Date_from = reportHistory.StartDate.GetValueOrDefault().ToString("yyyy-MM-dd"),
-                    par_Date_to = reportHistory.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd")
+                    par_Date_to = reportHistory.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd"),
+                    par_reportId = reportHistoryId
                 }
             };
 

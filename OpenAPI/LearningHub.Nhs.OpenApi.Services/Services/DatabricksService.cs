@@ -1,40 +1,24 @@
-﻿using LearningHub.Nhs.Models.Bookmark;
-using LearningHub.Nhs.Models.Entities.Reporting;
-using LearningHub.Nhs.OpenApi.Models.Configuration;
+﻿using LearningHub.Nhs.OpenApi.Models.Configuration;
 using LearningHub.Nhs.OpenApi.Services.HttpClients;
-using LearningHub.Nhs.OpenApi.Services.Interface.HttpClients;
 using LearningHub.Nhs.OpenApi.Services.Interface.Services;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json.Nodes;
 using System.Text;
 using System.Threading.Tasks;
 using LearningHub.Nhs.Models.Databricks;
 using System.Linq;
-using System.Net.Http.Headers;
 using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
 using LearningHub.Nhs.Models.Entities.DatabricksReport;
 using AutoMapper;
-using LearningHub.Nhs.Models.Entities.Activity;
-using LearningHub.Nhs.Models.Resource.Activity;
 using LearningHub.Nhs.Models.Common;
-using LearningHub.Nhs.Models.Notification;
 using Microsoft.EntityFrameworkCore;
-using LearningHub.Nhs.Models.Enums.Report;
-using Newtonsoft.Json.Linq;
 using LearningHub.Nhs.OpenApi.Models.ViewModels;
-using LearningHub.Nhs.Models.Resource;
-using LearningHub.Nhs.OpenApi.Repositories.Repositories;
-using LearningHub.Nhs.Models.Constants;
-using LearningHub.Nhs.Models.Hierarchy;
 using LearningHub.Nhs.Models.Enums;
 using System.Text.Json;
-using LearningHub.Nhs.Models.Entities.Resource;
 using LearningHub.Nhs.Models.Entities;
 
 namespace LearningHub.Nhs.OpenApi.Services.Services
@@ -83,7 +67,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <inheritdoc/>
         public async Task<bool> IsUserReporter(int userId)
         {
-            string cacheKey = $"{CacheKey}_{userId}";
+            string cacheKey = $"{userId}:{CacheKey}";
             var userReportPermission = await this.cachingService.GetAsync<bool>(cacheKey);
             if (userReportPermission.ResponseEnum == CacheReadResponseEnum.Found)
             {
@@ -129,7 +113,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <inheritdoc/>
         public async Task<DatabricksDetailedViewModel> CourseCompletionReport(int userId, DatabricksRequestModel model)
         {
-            userId = 22527;
         newEntry:
             if (model.ReportHistoryId == 0 && model.Take > 1)
             {
@@ -214,7 +197,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <inheritdoc/>
         public async Task<PagedResultSet<ReportHistoryModel>> GetPagedReportHistory(int userId,int  page, int pageSize)
         {
-            userId = 22527;
             var result = new PagedResultSet<ReportHistoryModel>();
             var query = this.reportHistoryRepository.GetByUserIdAsync(userId);
 
@@ -242,7 +224,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <inheritdoc/>
         public async Task<ReportHistoryModel> GetPagedReportHistoryById(int userId, int reportHistoryId)
         {
-            userId = 22527;
             var result = new ReportHistoryModel();
 
             var reportHistory = await this.reportHistoryRepository.GetByIdAsync(reportHistoryId);
@@ -266,7 +247,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <inheritdoc/>
         public async Task<bool> QueueReportDownload(int userId, int reportHistoryId)
         {
-            userId = 22527;
             var result = new ReportHistoryModel();
 
             var reportHistory = await this.reportHistoryRepository.GetByIdAsync(reportHistoryId);
@@ -302,7 +282,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     par_PageSize = 0,
                     par_PageNumber = 0,
                     par_Date_from = reportHistory.StartDate.GetValueOrDefault().ToString("yyyy-MM-dd"),
-                    par_Date_to = reportHistory.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd")
+                    par_Date_to = reportHistory.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd"),
+                    par_reportId = reportHistoryId
                 }
             };
 
@@ -332,7 +313,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <inheritdoc/>
         public async Task<ReportHistoryModel> DownloadReport(int userId, int reportHistoryId)
         {
-            userId = 22527;
             var response = new ReportHistoryModel();
 
             var reportHistory = await this.reportHistoryRepository.GetByIdAsync(reportHistoryId);

@@ -269,6 +269,6 @@ namespace LearningHub.Nhs.WebUI.Configuration
         /// <summary>
         /// Gets or sets the StatMandId.
         /// </summary>
-        public int StatMandId { get; set; } = 12;
+        public int StatMandId { get; set; }
     }
 }

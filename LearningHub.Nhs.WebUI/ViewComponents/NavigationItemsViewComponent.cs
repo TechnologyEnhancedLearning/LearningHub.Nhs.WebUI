@@ -57,10 +57,19 @@
                 var userId = this.User.Identity.GetCurrentUserId();
 
                 var (cacheExists, _) = await this.cacheService.TryGetAsync<string>($"{userId}:LoginWizard");
-
                 model = await this.permissionService.GetNavigationModelAsync(this.User, !cacheExists, controllerName);
 
-                model.NotificationCount = await this.notificationService.GetUserUnreadNotificationCountAsync(userId);
+                // Check if NotificationCount is already stored for this request
+                if (this.HttpContext.Items.TryGetValue("NotificationCount", out var cachedCount))
+                {
+                    model.NotificationCount = (int)cachedCount;
+                }
+                else
+                {
+                    var count = await this.notificationService.GetUserUnreadNotificationCountAsync(userId);
+                    this.HttpContext.Items["NotificationCount"] = count;
+                    model.NotificationCount = count;
+                }
             }
 
             return await Task.FromResult<IViewComponentResult>(this.View(navView, model));

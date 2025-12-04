@@ -337,6 +337,7 @@
         public async Task<LearningHubValidationResult> ClearUserCachedPermissions(int userId)
         {
             await this.cacheService.RemoveAsync($"{userId}:AllRolesWithPermissions");
+            await this.cacheService.RemoveAsync($"{userId}:DatabricksReporter");
             return new LearningHubValidationResult(true);
         }
 

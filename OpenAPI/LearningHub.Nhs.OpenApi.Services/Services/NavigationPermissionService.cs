@@ -48,7 +48,7 @@
             }
             else if (user.IsInRole("Administrator"))
             {
-                return AuthenticatedAdministrator(controllerName);
+                return await AuthenticatedAdministrator(controllerName, currentUserId);
             }
             else if (user.IsInRole("ReadOnly"))
             {
@@ -97,8 +97,9 @@
         /// The AuthenticatedAdministrator.
         /// </summary>
         /// <param name="controllerName">The controller name.</param>
+        /// <param name="userId">userId.</param>
         /// <returns>The <see cref="NavigationModel"/>.</returns>
-        private NavigationModel AuthenticatedAdministrator(string controllerName)
+        private async Task<NavigationModel> AuthenticatedAdministrator(string controllerName, int userId)
         {
             return new NavigationModel()
             {
@@ -115,7 +116,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
-                ShowReports = true,
+                ShowReports = await this.databricksService.IsUserReporter(userId),
             };
         }
 

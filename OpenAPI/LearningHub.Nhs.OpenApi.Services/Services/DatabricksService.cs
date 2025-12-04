@@ -67,47 +67,57 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <inheritdoc/>
         public async Task<bool> IsUserReporter(int userId)
         {
+            bool isReporter = false;
             string cacheKey = $"{userId}:{CacheKey}";
-            var userReportPermission = await this.cachingService.GetAsync<bool>(cacheKey);
-            if (userReportPermission.ResponseEnum == CacheReadResponseEnum.Found)
+            try
             {
-                return userReportPermission.Item;
+                var userReportPermission = await this.cachingService.GetAsync<bool>(cacheKey);
+                if (userReportPermission.ResponseEnum == CacheReadResponseEnum.Found)
+                {
+                    return userReportPermission.Item;
+                }
+
+
+                DatabricksApiHttpClient databricksInstance = new DatabricksApiHttpClient(this.databricksConfig);
+
+                var sqlText = $"CALL {this.databricksConfig.Value.UserPermissionEndpoint}({userId});";
+                const string requestUrl = "/api/2.0/sql/statements";
+
+                var requestPayload = new
+                {
+                    warehouse_id = this.databricksConfig.Value.WarehouseId,
+                    statement = sqlText,
+                    wait_timeout = "30s",
+                    on_wait_timeout = "CANCEL"
+                };
+
+                var jsonBody = JsonConvert.SerializeObject(requestPayload);
+                using var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                var response = await databricksInstance.GetClient().PostAsync(requestUrl, content);
+
+                var databricksResponse = await databricksInstance.GetClient().PostAsync(requestUrl, content);
+                if (databricksResponse.StatusCode is not HttpStatusCode.OK)
+                {
+                    //log failure
+                    return false;
+                }
+                var responseResult = await databricksResponse.Content.ReadAsStringAsync();
+
+                responseResult = responseResult.Trim();
+                var root = JsonDocument.Parse(responseResult).RootElement;
+                string data = root.GetProperty("result").GetProperty("data_array")[0][0].GetString();
+                isReporter = data == "1";
+
+                await this.cachingService.SetAsync(cacheKey, isReporter);
+                return isReporter;
+
             }
-        
-
-            DatabricksApiHttpClient databricksInstance = new DatabricksApiHttpClient(this.databricksConfig);
-
-            var sqlText = $"CALL {this.databricksConfig.Value.UserPermissionEndpoint}({userId});";
-            const string requestUrl = "/api/2.0/sql/statements";
-
-            var requestPayload = new
+            catch
             {
-                warehouse_id = this.databricksConfig.Value.WarehouseId,
-                statement = sqlText,
-                wait_timeout = "30s",
-                on_wait_timeout = "CANCEL"
-            };
-
-            var jsonBody = JsonConvert.SerializeObject(requestPayload);
-            using var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-
-            var response = await databricksInstance.GetClient().PostAsync(requestUrl, content);
-
-            var databricksResponse = await databricksInstance.GetClient().PostAsync(requestUrl, content);
-            if (databricksResponse.StatusCode is not HttpStatusCode.OK)
-            {
-                //log failure
-                return false;
+                await this.cachingService.SetAsync(cacheKey, isReporter);
+                return isReporter;
             }
-            var responseResult = await databricksResponse.Content.ReadAsStringAsync();
-
-            responseResult = responseResult.Trim();
-            var root = JsonDocument.Parse(responseResult).RootElement;
-            string data = root.GetProperty("result").GetProperty("data_array")[0][0].GetString();
-            bool isReporter = data == "1";
-
-            await this.cachingService.SetAsync(cacheKey, isReporter);
-            return isReporter;
         }
 
         /// <inheritdoc/>

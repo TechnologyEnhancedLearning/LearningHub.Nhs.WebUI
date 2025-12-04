@@ -265,6 +265,45 @@ namespace LearningHub.Nhs.WebUI.Controllers
         }
 
         /// <summary>
+        /// The RecordClickedSearchResult.
+        /// </summary>
+        /// <param name="url">The url.</param>
+        /// <param name="nodePathId">The nodePathId.</param>
+        /// <param name="itemIndex">The itemIndex.</param>
+        /// <param name="pageIndex">The page index.</param>
+        /// <param name="totalNumberOfHits">The totalNumberOfHits.</param>
+        /// <param name="searchText">The searchText.</param>
+        /// <param name="resourceReferenceId">The resourceReferenceId.</param>
+        /// <param name="groupId">The groupdId.</param>
+        /// <param name="searchId">The search id.</param>
+        /// <param name="timeOfSearch">time of search.</param>
+        /// <param name="userQuery">user query.</param>
+        /// <param name="query">search query.</param>
+        /// <param name="title">the title.</param>
+        [HttpGet("record-course-click")]
+        public void RecordCourseClick(string url, int nodePathId, int itemIndex, int pageIndex, int totalNumberOfHits, string searchText, int resourceReferenceId, Guid groupId, string searchId, long timeOfSearch, string userQuery, string query, string title)
+        {
+            var searchActionResourceModel = new SearchActionResourceModel
+            {
+                NodePathId = nodePathId,
+                ItemIndex = itemIndex,
+                NumberOfHits = pageIndex * this.Settings.FindwiseSettings.ResourceSearchPageSize,
+                TotalNumberOfHits = totalNumberOfHits,
+                SearchText = searchText,
+                ResourceReferenceId = resourceReferenceId,
+                GroupId = groupId,
+                SearchId = searchId,
+                TimeOfSearch = timeOfSearch,
+                UserQuery = userQuery,
+                Query = query,
+                Title = title,
+            };
+
+            this.searchService.CreateResourceSearchActionAsync(searchActionResourceModel);
+            this.Response.Redirect(url);
+        }
+
+        /// <summary>
         /// The RecordClickedCatalogueSearchResult.
         /// </summary>
         /// <param name="url">The url.</param>

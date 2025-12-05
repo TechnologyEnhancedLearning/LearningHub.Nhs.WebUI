@@ -49,7 +49,7 @@
             }
             else if (user.IsInRole("Administrator"))
             {
-                return this.AuthenticatedAdministrator(controllerName);
+                return await this.AuthenticatedAdministrator(controllerName);
             }
             else if (user.IsInRole("ReadOnly"))
             {
@@ -100,7 +100,7 @@
         /// </summary>
         /// <param name="controllerName">The controller name.</param>
         /// <returns>The <see cref="NavigationModel"/>.</returns>
-        private NavigationModel AuthenticatedAdministrator(string controllerName)
+        private async Task<NavigationModel> AuthenticatedAdministrator(string controllerName)
         {
             return new NavigationModel()
             {
@@ -118,7 +118,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
-                ShowReports = true,
+                ShowReports = await this.reportService.GetReporterPermission(),
             };
         }
 

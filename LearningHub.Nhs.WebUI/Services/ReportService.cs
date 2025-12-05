@@ -1,16 +1,16 @@
 ﻿namespace LearningHub.Nhs.WebUI.Services
 {
     using System;
-    using System.Collections.Generic;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
-    using elfhHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Databricks;
+    using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.Paging;
-    using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
 
@@ -19,15 +19,22 @@
     /// </summary>
     public class ReportService : BaseService<ReportService>, IReportService
     {
+        private readonly ICacheService cacheService;
+        private readonly IHttpContextAccessor contextAccessor;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ReportService"/> class.
         /// </summary>
+        /// <param name="cacheService">The cache service.</param>
+        /// <param name="contextAccessor">The contextAccessor.</param>
         /// <param name="learningHubHttpClient">The Web Api Http Client.</param>
         /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="logger">logger.</param>
-        public ReportService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<ReportService> logger)
+        public ReportService(ICacheService cacheService, IHttpContextAccessor contextAccessor, ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, ILogger<ReportService> logger)
           : base(learningHubHttpClient, openApiHttpClient, logger)
         {
+            this.cacheService = cacheService;
+            this.contextAccessor = contextAccessor;
         }
 
         /// <summary>
@@ -36,26 +43,10 @@
         /// <returns>The <see cref="T:Task{bool}"/>.</returns>
         public async Task<bool> GetReporterPermission()
         {
-            bool viewmodel = false;
-
-            var client = await this.OpenApiHttpClient.GetClientAsync();
-
-            var request = $"Report/GetReporterPermission";
-            var response = await client.GetAsync(request).ConfigureAwait(false);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var result = response.Content.ReadAsStringAsync().Result;
-                viewmodel = JsonConvert.DeserializeObject<bool>(result);
-            }
-            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
-                        ||
-                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-            {
-                throw new Exception("AccessDenied");
-            }
-
-            return viewmodel;
+            bool response = false;
+            var cacheKey = $"{this.contextAccessor.HttpContext.User.Identity.GetCurrentUserId()}:DatabricksReporter";
+            response = await this.cacheService.GetOrFetchAsync(cacheKey, this.FetchReporterPermission);
+            return response;
         }
 
         /// <summary>
@@ -189,6 +180,29 @@
             }
 
             return apiResponse;
+        }
+
+        private async Task<bool> FetchReporterPermission()
+        {
+            bool viewmodel = false;
+            var client = await this.OpenApiHttpClient.GetClientAsync();
+
+            var request = $"Report/GetReporterPermission";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewmodel = JsonConvert.DeserializeObject<bool>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewmodel;
         }
     }
 }

@@ -29,12 +29,22 @@
 &query={searchSignalQueryEncoded}&title={payload?.DocumentFields?.Title}";
     }
 
-    string GetMoodleCourseUrl(string courseIdWithPrefix)
+    string GetMoodleCourseUrl(string courseIdWithPrefix, int resourceReferenceId,int itemIndex, int nodePathId, SearchClickPayloadModel payload)
     {
        
         if (int.TryParse(courseIdWithPrefix, out int courseId))
         {
-            return moodleApiService.GetCourseUrl(courseId);
+            var searchSignal = payload?.SearchSignal;
+
+            string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
+            string url = moodleApiService.GetCourseUrl(courseId);
+
+            return $@"/search/record-course-click?url={url}&nodePathId={nodePathId}&itemIndex={payload?.HitNumber}
+                &pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={payload?.SearchSignal?.Stats?.TotalHits}&searchText={searchString}&resourceReferenceId={resourceReferenceId}
+                &groupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal?.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal.UserQuery)}
+                &query={searchSignalQueryEncoded}&title={payload?.DocumentFields?.Title}";
+
+            // return moodleApiService.GetCourseUrl(courseId);
         }
         else
         {
@@ -61,7 +71,7 @@
             <h3 class="nhsuk-heading-xs nhsuk-u-margin-bottom-2">
                 @if (item.ResourceType == "moodle")
                 {
-                    <a class="nhsuk-card__link" href="@GetMoodleCourseUrl(item.Id)">@item.Title</a>
+                    <a class="nhsuk-card__link" href="@GetMoodleCourseUrl(item.Id, item.ResourceReferenceId, index, item.NodePathId ?? 0, item.Click.Payload)">@item.Title</a>
                 }
                 else
                 {

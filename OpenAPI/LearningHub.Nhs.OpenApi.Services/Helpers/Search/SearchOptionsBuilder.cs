@@ -34,7 +34,6 @@
                 Skip = offset,
                 Size = pageSize,
                 IncludeTotalCount = true,
-                // Filter = "is_deleted eq false",
                 ScoringProfile = "boostExactTitle"
             };
 
@@ -112,10 +111,10 @@
                 "authoreddate" => "date_authored",
                 "authoredDate" => "date_authored",
 
-                "title" => "title",
-                "atoz" => "title",
-                "alphabetical" => "title",
-                "ztoa" => "title",
+                "title" => "normalised_title",
+                "atoz" => "normalised_title",
+                "alphabetical" => "normalised_title",
+                "ztoa" => "normalised_title",
 
                 _ => null // unknown sort → ignore
             };

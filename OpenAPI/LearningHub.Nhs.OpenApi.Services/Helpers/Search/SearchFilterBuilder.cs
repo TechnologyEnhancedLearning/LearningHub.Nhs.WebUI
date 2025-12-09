@@ -24,7 +24,7 @@
 
             // Merge filters from both sources
             MergeFilterDictionary(filters, requestTypeFilters);
-            //  MergeFilterDictionary(filters, providerFilters);
+            MergeFilterDictionary(filters, providerFilters);
 
             //NormaliseFilters(filters);
 

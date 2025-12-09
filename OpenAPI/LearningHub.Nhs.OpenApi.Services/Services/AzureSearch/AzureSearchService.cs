@@ -91,9 +91,6 @@
                 var pageSize = searchRequestModel.PageSize;
                 var offset = searchRequestModel.PageIndex * pageSize;
 
-                // Normalize resource_type filter values
-                var filters = SearchFilterBuilder.CombineAndNormaliseFilters(searchRequestModel.FilterText, searchRequestModel.ProviderFilterText);
-
                 // Build query string
                 var query = searchQueryType == SearchQueryType.Full
                     ? LuceneQueryBuilder.BuildLuceneQuery(searchRequestModel.SearchText)
@@ -103,6 +100,15 @@
                 {
                     { searchRequestModel.SortColumn, searchRequestModel.SortDirection }
                 };
+
+                // Normalize resource_type filter values
+                var filters = SearchFilterBuilder.CombineAndNormaliseFilters(searchRequestModel.FilterText, searchRequestModel.ProviderFilterText);
+
+                if (searchRequestModel.CatalogueId.HasValue)
+                {
+                    Dictionary<string, List<string>> catalogueIdFilter = new Dictionary<string, List<string>> { { "catalogue_id", new List<string> { searchRequestModel.CatalogueId.ToString() } } };
+                    filters = filters == null ? catalogueIdFilter : filters.Concat(catalogueIdFilter).ToDictionary(k => k.Key, v => v.Value);                   
+                }
 
                 var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, offset, pageSize, filters, sortBy, true);
                 SearchResults<Models.ServiceModels.AzureSearch.SearchDocument> filteredResponse = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(query, searchOptions, cancellationToken);

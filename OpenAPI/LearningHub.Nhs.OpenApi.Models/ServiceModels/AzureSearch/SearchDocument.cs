@@ -45,6 +45,12 @@ namespace LearningHub.Nhs.OpenApi.Models.ServiceModels.AzureSearch
         public string Title { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the normalised title.
+        /// </summary>
+        [JsonPropertyName("normalised_title")]
+        public string NormalisedTitle { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets the description.
         /// </summary>
         [JsonPropertyName("description")]

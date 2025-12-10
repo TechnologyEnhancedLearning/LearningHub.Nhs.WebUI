@@ -61,6 +61,11 @@
         public bool EndDate { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether gets or sets the HintText.
+        /// </summary>
+        public string HintText { get; set; }
+
+        /// <summary>
         /// Gets or sets the GetDate.
         /// </summary>
         /// <returns>DateTime.</returns>
@@ -85,11 +90,7 @@
             if (this.TimePeriod == "Custom")
             {
                 this.ValidateStartDate(validationResults);
-
-                if (this.EndDate)
-                {
-                    this.ValidateEndDate(validationResults);
-                }
+                this.ValidateEndDate(validationResults);
             }
 
             return validationResults;
@@ -126,6 +127,7 @@
                 new RadiosItemViewModel("7", "7 days", false, null),
                 new RadiosItemViewModel("30", "30 days", false, null),
                 new RadiosItemViewModel("90", "90 days", false, null),
+                new RadiosItemViewModel("Custom", "Custom date range", false, null),
             };
 
             // if (string.IsNullOrWhiteSpace(this.TimePeriod))

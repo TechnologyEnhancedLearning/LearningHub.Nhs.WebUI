@@ -40,7 +40,6 @@
 
                 <h1 class="nhsuk-heading-xl"> Course completion report</h1>
                 <dl class="nhsuk-summary-list nhsuk-u-reading-width">
-
                     <div class="nhsuk-summary-list__row">
                         <dt class="nhsuk-summary-list__key">
                             Course@(distinctCourses.Count() > 1 ? "s" : "")
@@ -92,10 +91,12 @@
                 </dl>
 
                 <div>
-                    <h2 class="nhsuk-heading-m">Displaying @startRow–@endRow of @Model.TotalCount filtered row@(Model.TotalCount > 1 ? "s" : "")</h2>
 
-                    @if (Model.TotalCount != 0)
+
+                    @if (Model.TotalCount > 0)
                     {
+                        <h2 class="nhsuk-heading-m">Displaying @startRow–@endRow of @Model.TotalCount filtered row@(Model.TotalCount > 1 ? "s" : "")</h2>
+
                         <p class="nhsuk-u-secondary-text-color nhsuk-u-reading-width">
                             Request to download this report in a spreadsheet (.xls) format.You will be notified
                             when the report is ready.
@@ -119,12 +120,33 @@
                             </div>
                         }
                     }
+                    else
+                    {
+                        <h2 class="nhsuk-heading-m">Displaying no results</h2>
+                    }
 
                     @if (Model.CourseCompletionRecords.Any())
                     {
                         @await Html.PartialAsync("_ReportTable", Model)
                     }
-                    
+                    else
+                    {
+                        <ul class="nhsuk-grid-row nhsuk-card-group">
+                            <li class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+                                <div class="nhsuk-card">
+                                    <div class="nhsuk-card__content">
+                                        <h3 class="nhsuk-card__heading nhsuk-heading-m">
+                                            No information is available
+                                        </h3>
+                                        <p class="nhsuk-card__description">
+                                            Please adjust your filters
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    }
+
                 </div>
             </div>
             <div class="nhsuk-grid-column-full nhsuk-u-padding-5">

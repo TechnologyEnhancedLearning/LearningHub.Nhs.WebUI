@@ -19,23 +19,10 @@
         width: auto;
     }
 
-    .nhsuk-summary-list__row {
-        display: flex !important;
-        align-items: flex-start; /* optional: aligns top of key/value */
-    }
-
-    .nhsuk-summary-list__row {
-        border-bottom: none;
-    }
-
-    .nhsuk-summary-list__key, .nhsuk-summary-list__value, .nhsuk-summary-list__actions {
-        border: none;
-    }
-
     .nhsuk-date-inline {
         display: flex;
         align-items: center;
-        gap: 0.5rem; /* space between label and input */
+        gap: 0.5rem;
     }
 
     .nhsuk-date-inline .nhsuk-label {
@@ -44,13 +31,47 @@
     }
 
     .nhsuk-button--with-border {
-        border: 2px solid #005eb8; 
-        background-color: #ffffff; 
-        color: #005eb8; 
+        border: 2px solid #005eb8;
+        background-color: #ffffff;
+        color: #005eb8;
     }
 
     .nhsuk-button--with-border:hover {
         background-color: #f0f8ff;
-        border-color: #003087; 
+        border-color: #003087;
+    }
+
+    .date-range-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .date-range-item {
+        flex: 0 1 auto;
+    }
+
+    @media (max-width: 767px) {
+        .date-range-container .nhsuk-label {
+            min-width: 50px;
+        }
+    }
+
+    .nhsuk-radios__divider {
+        text-align: center;
+        width: 40px;
+    }
+
+    .nhsuk-hint {
+        margin-bottom: 0.5rem;
+    }
+
+    .date-range-container .nhsuk-hint {
+        display: block;
+        max-height: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        visibility: hidden;
     }
 }

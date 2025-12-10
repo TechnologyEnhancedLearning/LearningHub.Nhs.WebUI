@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
+    using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Models.DynamicCheckbox;
     using NHSUKViewComponents.Web.ViewModels;
 
@@ -37,9 +38,9 @@
             this.AllCources = allCourses.Select(r => new DynamicCheckboxItemViewModel
             {
                 Value = r.Key.ToString(),
-                Label = r.Value,
+                Label = UtilityHelper.ConvertToSentenceCase(r.Value),
             }).ToList();
-            this.AllCources.Insert(0, new DynamicCheckboxItemViewModel { Value = "all", Label = "All Courses", });
+            this.AllCources.Insert(0, new DynamicCheckboxItemViewModel { Value = "all", Label = "All courses", });
             return this.AllCources;
         }
     }

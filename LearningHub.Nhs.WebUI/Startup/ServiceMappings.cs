@@ -120,6 +120,7 @@
             services.AddScoped<LoginWizardFilter>();
             services.AddScoped<SsoLoginFilterAttribute>();
             services.AddScoped<OfflineCheckFilter>();
+            services.AddScoped<ReporterPermissionFilter>();
         }
     }
 }

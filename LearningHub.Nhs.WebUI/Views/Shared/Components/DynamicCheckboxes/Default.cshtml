@@ -6,9 +6,12 @@
 
 <div class="nhsuk-form-group @(Model.Required && !Model.SelectedValues.Any() ? "nhsuk-form-group--error" : "")">
     <fieldset class="nhsuk-fieldset">
-        <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--m">
-            <span class="nhsuk-fieldset__heading">@Model.Label</span>
-        </legend>
+        @if (!string.IsNullOrEmpty(Model.Label))
+        {
+            <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--m">
+                <span class="nhsuk-fieldset__heading">@Model.Label</span>
+            </legend>
+        }
 
         <div class="nhsuk-checkboxes">
             @for (int i = 0; i < Model.Checkboxes.Count; i++)

@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "You do not have the required permissions to access this part of the Learning Hub";
+  Layout = ViewData["Layout"].ToString();
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/staticpages.css" asp-append-version="true" />
+}
+
+<div class="nhsuk-width-container app-width-container">
+  <div class="nhsuk-main-wrapper ">
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-full">
+           <h1 class="nhsuk-heading-xl">Access restricted</h1>
+        <div class="nhsuk-u-reading-width">
+           <p>You do not have the required permissions to access this part of the Learning Hub yet.</p>
+        </div>
+      </div>
+    </div>
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-full">
+        <div class="nhsuk-u-reading-width">
+          <div>
+           <p>If you think you should have access, please contact the support team.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

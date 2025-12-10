@@ -5,21 +5,15 @@
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using Azure;
     using GDS.MultiPageFormData;
     using GDS.MultiPageFormData.Enums;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Databricks;
-    using LearningHub.Nhs.Models.Moodle;
-    using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
-    using LearningHub.Nhs.WebUI.Models;
-    using LearningHub.Nhs.WebUI.Models.Account;
-    using LearningHub.Nhs.WebUI.Models.DynamicCheckbox;
     using LearningHub.Nhs.WebUI.Models.Learning;
     using LearningHub.Nhs.WebUI.Models.Report;
     using Microsoft.AspNetCore.Authorization;
@@ -27,12 +21,12 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using NHSUKViewComponents.Web.ViewModels;
 
     /// <summary>
     /// Defines the <see cref="ReportsController" />.
     /// </summary>
-    // [ServiceFilter(typeof(LoginWizardFilter))]
+    [ServiceFilter(typeof(LoginWizardFilter))]
+    [ServiceFilter(typeof(ReporterPermissionFilter))]
     [Authorize]
     [Route("Reports")]
     public class ReportsController : BaseController
@@ -158,7 +152,7 @@
         {
             var reportCreation = await this.multiPageFormService.GetMultiPageFormData<DatabricksRequestModel>(MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
 
-            if (courseSelection != null)
+            if (courseSelection.Courses != null)
             {
                 if (courseSelection.Courses.Any())
                 {
@@ -208,11 +202,19 @@
                     Skip = 1,
                 });
 
-                DateTime startDate = DateTime.MinValue;
-                var validDate = DateTime.TryParse(result.MinValidDate, out startDate);
-                dateVM.StartDay = validDate ? startDate.Day : 0;
-                dateVM.StartMonth = validDate ? startDate.Month : 0;
-                dateVM.StartYear = validDate ? startDate.Year : 0;
+                if (result != null)
+                {
+                    var validDate = DateTime.TryParse(result.MinValidDate, out DateTime startDate);
+                    dateVM.DataStart = validDate ? startDate : null;
+                    dateVM.HintText = validDate
+                        ? $"For example, {startDate.Day} {startDate.Month} {startDate.Year}"
+                        : $"For example, {DateTime.Now.Day} {DateTime.Now.Month} {DateTime.Now.Year}";
+                }
+                else
+                {
+                    dateVM.DataStart = null;
+                    dateVM.HintText = $"For example, {DateTime.Now.Day} {DateTime.Now.Month} {DateTime.Now.Year}";
+                }
             }
 
             return this.View(dateVM);
@@ -232,6 +234,12 @@
             // validate date
             var reportCreation = await this.multiPageFormService.GetMultiPageFormData<DatabricksRequestModel>(MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
             reportCreation.TimePeriod = reportCreationDate.TimePeriod;
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("CreateReportDateSelection", reportCreationDate);
+            }
+
             reportCreation.StartDate = reportCreationDate.GetStartDate();
             reportCreation.EndDate = reportCreationDate.GetEndDate();
             await this.multiPageFormService.SetMultiPageFormData(reportCreation, MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);

@@ -76,6 +76,11 @@
         public const string StartDate = "Enter a start date containing a day, month and a year";
 
         /// <summary>
+        /// Start date Required.
+        /// </summary>
+        public const string EndDate = "Enter an end date containing a day, month and a year";
+
+        /// <summary>
         /// Workplace Required.
         /// </summary>
         public const string WorkPlace = "Select a place of work";

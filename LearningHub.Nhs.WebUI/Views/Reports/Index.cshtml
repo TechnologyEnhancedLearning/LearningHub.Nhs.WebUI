@@ -29,7 +29,7 @@
 
                 <div class="nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-7">
                     <h1 class="nhsuk-heading-xl nhsuk-u-margin-bottom-0">Reports</h1>
-                    <p>View and manage your reports</p>
+                    <p class="nhsuk-u-padding-top-1">View and manage your reports</p>
                 </div>
 
             </div>
@@ -52,12 +52,13 @@
 
                 <div>
                     <h3>Previously run reports</h3>
-                    <p class="nhsuk-body-s nhsuk-u-reading-width">
-                        Reports are stored for 30 days from the date they’re generated. If you need to keep a copy, make sure you download it before it expires.
-                    </p>
-                    <hr class="nhsuk-section-break nhsuk-section-break--visible">
+                  
                     @if (Model.ReportHistoryModels.Any())
                     {
+                        <p class="nhsuk-body-s nhsuk-u-reading-width">
+                            Reports are stored for 30 days from the date they’re generated. If you need to keep a copy, make sure you download it before it expires.
+                        </p>
+                        <hr class="nhsuk-section-break nhsuk-section-break--visible">
                         @foreach (var entry in Model.ReportHistoryModels)
                         {
                             var matchedCourseNames = new List<string>();

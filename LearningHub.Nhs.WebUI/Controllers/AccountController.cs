@@ -1168,6 +1168,16 @@
         }
 
         /// <summary>
+        /// The user does not have permissions to access a section of the Learning Hub.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpGet]
+        public IActionResult AccessRestricted()
+        {
+            return this.View();
+        }
+
+        /// <summary>
         /// The user already has an already active session. Then prevent concurrent access to the Learning Hub.
         /// </summary>
         /// <returns>The <see cref="IActionResult"/>.</returns>

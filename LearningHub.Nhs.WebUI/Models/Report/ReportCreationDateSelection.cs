@@ -186,7 +186,18 @@
             {
                 startDateValidationResults.Add(
                     new ValidationResult(
-                        "Enter a start date after the start of data in the platform", new[] { nameof(this.StartDay), }));
+                        $"No data is available for the selected date range. Select a date after {this.DataStart.Value.Day} {this.DataStart.Value.Month} {this.DataStart.Value.Year}", new[] { nameof(this.StartDay), }));
+                startDateValidationResults.Add(
+                    new ValidationResult(
+                        string.Empty,
+                        new[] { nameof(this.StartMonth), nameof(this.StartYear), }));
+            }
+
+            if (startDate.Date > DateTime.Now.Date)
+            {
+                startDateValidationResults.Add(
+                    new ValidationResult(
+                        "The start date cannot be in the future", new[] { nameof(this.StartDay), }));
                 startDateValidationResults.Add(
                     new ValidationResult(
                         string.Empty,

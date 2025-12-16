@@ -2,6 +2,7 @@
 @model DynamicCheckboxesViewModel
 @{
     var propertyName = ViewData["PropertyName"]?.ToString() ?? "SelectedValues";
+    var exclusiveGroup = $"{propertyName}-list";
 }
 
 <div class="nhsuk-form-group @(Model.Required && !Model.SelectedValues.Any() ? "nhsuk-form-group--error" : "")">
@@ -17,7 +18,7 @@
             @for (int i = 0; i < Model.Checkboxes.Count; i++)
             {
                 var checkbox = Model.Checkboxes[i];
-                var inputId = $"{propertyName}_{i}";
+                var inputId = i == 0 ? propertyName : $"{propertyName}_{i}";
 
                 <div class="nhsuk-checkboxes__item">
                     <input class="nhsuk-checkboxes__input"
@@ -25,6 +26,8 @@
                            name="@propertyName"
                            type="checkbox"
                            value="@checkbox.Value"
+                           @(checkbox.Exclusive ? "data-checkbox-exclusive" : null)
+                           data-checkbox-exclusive-group="@exclusiveGroup"
                            @(checkbox.Selected ? "checked" : null) />
 
                     <label class="nhsuk-label nhsuk-checkboxes__label" for="@inputId">

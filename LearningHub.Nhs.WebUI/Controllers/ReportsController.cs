@@ -180,7 +180,7 @@
             var reportCreation = await this.multiPageFormService.GetMultiPageFormData<DatabricksRequestModel>(MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
             var dateVM = new ReportCreationDateSelection();
             dateVM.TimePeriod = reportCreation.TimePeriod;
-            if (reportCreation.StartDate.HasValue)
+            if (reportCreation.StartDate.HasValue && reportCreation.TimePeriod == "Custom")
             {
                 dateVM.StartDay = reportCreation.StartDate.HasValue ? reportCreation.StartDate.GetValueOrDefault().Day : 0;
                 dateVM.StartMonth = reportCreation.StartDate.HasValue ? reportCreation.StartDate.GetValueOrDefault().Month : 0;
@@ -189,33 +189,11 @@
                 dateVM.EndMonth = reportCreation.EndDate.HasValue ? reportCreation.EndDate.GetValueOrDefault().Month : 0;
                 dateVM.EndYear = reportCreation.EndDate.HasValue ? reportCreation.EndDate.GetValueOrDefault().Year : 0;
             }
-            else
-            {
-                var result = await this.reportService.GetCourseCompletionReport(new DatabricksRequestModel
-                {
-                    StartDate = reportCreation.StartDate,
-                    EndDate = reportCreation.EndDate,
-                    TimePeriod = reportCreation.TimePeriod,
-                    Courses = reportCreation.Courses,
-                    ReportHistoryId = reportCreation.ReportHistoryId,
-                    Take = 1,
-                    Skip = 1,
-                });
 
-                if (result != null)
-                {
-                    var validDate = DateTime.TryParse(result.MinValidDate, out DateTime startDate);
-                    dateVM.DataStart = validDate ? startDate : null;
-                    dateVM.HintText = validDate
-                        ? $"For example, {startDate.Day} {startDate.Month} {startDate.Year}"
-                        : $"For example, {DateTime.Now.Day} {DateTime.Now.Month} {DateTime.Now.Year}";
-                }
-                else
-                {
-                    dateVM.DataStart = null;
-                    dateVM.HintText = $"For example, {DateTime.Now.Day} {DateTime.Now.Month} {DateTime.Now.Year}";
-                }
-            }
+            var minDate = await this.GetMinDate();
+
+            dateVM.DataStart = minDate.DataStart;
+            dateVM.HintText = minDate.HintText;
 
             return this.View(dateVM);
         }
@@ -235,8 +213,20 @@
             var reportCreation = await this.multiPageFormService.GetMultiPageFormData<DatabricksRequestModel>(MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
             reportCreation.TimePeriod = reportCreationDate.TimePeriod;
 
+            if (reportCreation.TimePeriod == null)
+            {
+                var minDate = await this.GetMinDate();
+                reportCreationDate.DataStart = minDate.DataStart;
+                reportCreationDate.HintText = minDate.HintText;
+                this.ModelState.AddModelError("TimePeriod", CommonValidationErrorMessages.ReportingPeriodRequired);
+                return this.View("CreateReportDateSelection", reportCreationDate);
+            }
+
             if (!this.ModelState.IsValid)
             {
+                var minDate = await this.GetMinDate();
+                reportCreationDate.DataStart = minDate.DataStart;
+                reportCreationDate.HintText = minDate.HintText;
                 return this.View("CreateReportDateSelection", reportCreationDate);
             }
 
@@ -432,6 +422,39 @@
             }
 
             return courses;
+        }
+
+        private async Task<ReportCreationDateSelection> GetMinDate()
+        {
+            var dateVM = new ReportCreationDateSelection();
+            var reportCreation = await this.multiPageFormService.GetMultiPageFormData<DatabricksRequestModel>(MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
+
+            var result = await this.reportService.GetCourseCompletionReport(new DatabricksRequestModel
+            {
+                StartDate = null,
+                EndDate = null,
+                TimePeriod = reportCreation.TimePeriod,
+                Courses = reportCreation.Courses,
+                ReportHistoryId = 0,
+                Take = 1,
+                Skip = 1,
+            });
+
+            if (result != null)
+            {
+                var validDate = DateTime.TryParse(result.MinValidDate, out DateTime startDate);
+                dateVM.DataStart = validDate ? startDate : null;
+                dateVM.HintText = validDate
+                    ? $"For example, {startDate.Day} {startDate.Month} {startDate.Year}"
+                    : $"For example, {DateTime.Now.Day} {DateTime.Now.Month} {DateTime.Now.Year}";
+            }
+            else
+            {
+                dateVM.DataStart = null;
+                dateVM.HintText = $"For example, {DateTime.Now.Day} {DateTime.Now.Month} {DateTime.Now.Year}";
+            }
+
+            return dateVM;
         }
     }
 }

@@ -24,5 +24,10 @@
         /// Gets or sets a value indicating whether gets or sets a selected.
         /// </summary>
         public bool Selected { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the option is exclusive.
+        /// </summary>
+        public bool Exclusive { get; set; } = false;
     }
 }

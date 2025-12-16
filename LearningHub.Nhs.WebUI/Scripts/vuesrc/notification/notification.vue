@@ -198,6 +198,8 @@
                         return [{ text: 'Action required', className: 'fa-solid fa-triangle-exclamation text-warning pt-1' }];
                     case NotificationType.AccessRequest:
                         return [{ text: 'Access request', className: 'fa-solid fa-lock text-dark pt-1' }];
+                    case NotificationType.ReportProcessed:
+                        return [{ text: 'Report', className: 'fa-solid fa-circle-check text-success pt-1' }];
                     default:
                         return [{ text: 'unknown', className: '' }];
                 }

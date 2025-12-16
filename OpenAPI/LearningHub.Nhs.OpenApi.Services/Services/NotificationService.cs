@@ -208,6 +208,8 @@
 
             var message = learningHubConfig.Notifications.Report.Replace("[ReportName]", reportName).Replace("[ReportContent]", reportContent);
 
+            message = message.Replace("[ReportSection]", $"{this.learningHubConfig.BaseUrl.TrimEnd('/')}/{this.learningHubConfig.ReportUrl.TrimStart('/')}");
+
 
             var notification = await this.CreateAsync(userId, this.UserSpecificNotification(
                                     title, message, NotificationTypeEnum.ReportProcessed, NotificationPriorityEnum.General));

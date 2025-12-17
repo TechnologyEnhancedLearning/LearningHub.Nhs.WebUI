@@ -47,6 +47,7 @@
                     Value = cb.Value,
                     Label = cb.Label,
                     HintText = cb.HintText,
+                    Exclusive = cb.Exclusive,
                     Selected = selectedList.Contains(cb.Value),
                 }).ToList(),
             };

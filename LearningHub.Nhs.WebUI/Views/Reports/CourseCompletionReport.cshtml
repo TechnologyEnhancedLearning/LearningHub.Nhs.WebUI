@@ -6,7 +6,7 @@
 @model LearningHub.Nhs.WebUI.Models.Report.CourseCompletionViewModel
 
 @{
-    ViewData["Title"] = "Course completion report";
+    ViewData["Title"] = "Course progress report";
     var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
 
 
@@ -38,19 +38,27 @@
                     <a href="/Reports">Reports</a>
                 </div>
 
-                <h1 class="nhsuk-heading-xl"> Course completion report</h1>
+                <h1 class="nhsuk-heading-xl"> Course progress report</h1>
                 <dl class="nhsuk-summary-list nhsuk-u-reading-width">
                     <div class="nhsuk-summary-list__row">
                         <dt class="nhsuk-summary-list__key">
                             Course@(distinctCourses.Count() > 1 ? "s" : "")
                         </dt>
                         <dd class="nhsuk-summary-list__value">
-                            <ul>
-                                @foreach (var entry in distinctCourses)
-                                {
-                                    <li>@entry</li>
-                                }
-                            </ul>
+                            @if (distinctCourses.Count() > 1)
+                            {
+                                <ul>
+                                    @foreach (var entry in distinctCourses)
+                                    {
+                                        <li>@entry</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p>@distinctCourses.FirstOrDefault()</p>
+                            }
+
 
                         </dd>
 
@@ -97,15 +105,16 @@
                     {
                         <h2 class="nhsuk-heading-m">Displaying @startRow–@endRow of @Model.TotalCount filtered row@(Model.TotalCount > 1 ? "s" : "")</h2>
 
-                        <p class="nhsuk-u-secondary-text-color nhsuk-u-reading-width">
-                            Request to download this report in a spreadsheet (.xls) format.You will be notified
-                            when the report is ready.
-                        </p>
+                    
                         @if (Model.ReportHistoryModel != null && Model.ReportHistoryModel.DownloadRequest == null)
                         {
+                            <p class="nhsuk-u-secondary-text-color nhsuk-u-reading-width">
+                                Request to download this report in a spreadsheet (.xls) format.You will be notified
+                                when the report is ready.
+                            </p>
                             <form method="post" asp-controller="Reports" asp-action="QueueReportDownload">
                                 <input type="hidden" name="reportHistoryId" value="@Model.ReportHistoryId" />
-                                <button class="nhsuk-button nhsuk-button--reverse nhsuk-button--with-border" type="submit">Request report as spreadsheet</button>
+                                <button class="nhsuk-button nhsuk-button--reverse nhsuk-button--with-border" type="submit">Request report</button>
                             </form>
                         }
                         else if (Model.ReportHistoryModel != null && Model.ReportHistoryModel.DownloadRequest == true && Model.ReportHistoryModel.ReportStatusId == ((int)Status.Pending))

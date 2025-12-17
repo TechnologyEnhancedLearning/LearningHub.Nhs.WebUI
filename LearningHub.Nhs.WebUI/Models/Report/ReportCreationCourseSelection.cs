@@ -40,7 +40,7 @@
                 Value = r.Key.ToString(),
                 Label = UtilityHelper.ConvertToSentenceCase(r.Value),
             }).ToList();
-            this.AllCources.Insert(0, new DynamicCheckboxItemViewModel { Value = "all", Label = "All courses", });
+            this.AllCources.Insert(0, new DynamicCheckboxItemViewModel { Value = "all", Label = "All courses", Exclusive = true });
             return this.AllCources;
         }
     }

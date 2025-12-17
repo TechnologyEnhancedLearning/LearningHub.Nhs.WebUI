@@ -269,5 +269,10 @@
         /// Course Required.
         /// </summary>
         public const string CourseRequired = "Select a course";
+
+        /// <summary>
+        /// Course Required.
+        /// </summary>
+        public const string ReportingPeriodRequired = "Select a reporting period";
     }
 }

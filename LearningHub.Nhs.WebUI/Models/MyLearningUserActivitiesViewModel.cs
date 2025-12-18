@@ -11,7 +11,7 @@
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Models.Learning;
-    using NHSUKViewComponents.Web.ViewModels;
+    using NHSUKFrontendRazor.ViewModels;
 
     /// <summary>
     /// Defines the <see cref="MyLearningUserActivitiesViewModel" />.

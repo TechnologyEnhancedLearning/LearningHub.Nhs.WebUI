@@ -1,7 +1,7 @@
 ﻿namespace LearningHub.Nhs.WebUI.Models.Account
 {
     using System.Collections.Generic;
-    using NHSUKViewComponents.Web.ViewModels;
+    using NHSUKFrontendRazor.ViewModels;
 
     /// <summary>
     /// The CountrySearchViewModel.

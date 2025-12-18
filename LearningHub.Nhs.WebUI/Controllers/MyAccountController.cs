@@ -24,7 +24,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using NHSUKViewComponents.Web.ViewModels;
+    using NHSUKFrontendRazor.ViewModels;
     using ChangePasswordViewModel = LearningHub.Nhs.WebUI.Models.UserProfile.ChangePasswordViewModel;
     using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 

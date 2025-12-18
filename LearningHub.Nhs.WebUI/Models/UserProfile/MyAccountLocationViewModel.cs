@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using NHSUKViewComponents.Web.ViewModels;
+    using NHSUKFrontendRazor.ViewModels;
 
     /// <summary>
     /// Defines the <see cref="MyAccountLocationViewModel" />.

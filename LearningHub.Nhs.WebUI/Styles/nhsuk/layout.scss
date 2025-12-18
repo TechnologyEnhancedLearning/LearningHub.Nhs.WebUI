@@ -10,9 +10,9 @@ body {
 }
 
 .nhsuk-hero {
-    background-color: $color_nhsuk-blue;
-    color: #fff;
-    position: relative;
+  background-color: nhsuk-colour("blue");
+  color: #fff;
+  position: relative;
 }
 
 .nhsuk-hero a,
@@ -20,7 +20,7 @@ body {
 .nhsuk-hero a:hover,
 .nhsuk-hero a:active,
 .nhsuk-hero i {
-    color: $color_nhsuk-white;
+  color: nhsuk-colour("white");
 }
 
 .nhs-item-row {
@@ -130,7 +130,7 @@ body {
     font-size: px2rem(11);
     line-height: px2rem(18);
     font-weight: 900;
-    background: $nhsuk-error-color;
+    background: $nhsuk-error-colour;
     color: white;
     min-width: px2rem(18);
     height: px2rem(18);
@@ -168,8 +168,8 @@ body {
 }
 
 .beta-banner {
-    background-color: $color_nhsuk-grey-5;
-    color: $nhsuk-text-color;
+    background-color: nhsuk-colour("grey-5");
+    color: $nhsuk-text-colour;
     padding: px2rem(8) px2rem(16);
     display: flex;
     align-items: center;
@@ -178,12 +178,12 @@ body {
 }
 
 .beta-banner + div {
-    border-top: 1px solid $color_nhsuk-grey-3;
+    border-top: 1px solid nhsuk-colour("grey-3");
 }
 
 .beta-banner__beta-box {
-    background-color: $color_nhsuk-blue;
-    color: $color_nhsuk-white;
+    background-color: nhsuk-colour("blue");
+    color: nhsuk-colour("white");
     font-family: FrutigerLTW01-65Bold,Arial,sans-serif;
     height: px2rem(28);
     margin-right: px2rem(16);
@@ -247,12 +247,12 @@ button[data-toggle="modal"] {
 
 .autosuggestion-menu {
     padding: 16px 16px 0px 16px !important;
-    background-color: $color_nhsuk-white;
-    border-bottom: 1px solid $color_nhsuk-grey-4;
+    background-color: nhsuk-colour("white");
+    border-bottom: 1px solid nhsuk-colour("grey-4");
     border-radius: 0px 0px 4px 4px;
-    border-left: 1px solid $color_nhsuk-grey-4;
-    border-right: 1px solid $color_nhsuk-grey-4;
-    box-shadow: 0px 2px 3px 0px $color_nhsuk-grey-4;
+    border-left: 1px solid nhsuk-colour("grey-4");
+    border-right: 1px solid nhsuk-colour("grey-4");
+    box-shadow: 0px 2px 3px 0px nhsuk-colour("grey-4");
     list-style: none;
     overflow-x: hidden;
     overflow-y: auto;
@@ -264,8 +264,8 @@ button[data-toggle="modal"] {
 
 .autosuggestion-option {
     margin-bottom: 0;
-    border-bottom: 1px solid $color_nhsuk-grey-4;
-    color: $color_nhsuk-blue;
+    border-bottom: 1px solid nhsuk-colour("grey-4");
+    color: nhsuk-colour("blue");
     cursor: pointer;
     font-size: 16px;
     padding-bottom: 12px;
@@ -274,7 +274,7 @@ button[data-toggle="modal"] {
 }
 
 .autosuggestion-option .autosuggestion-icon {
-    fill: $color_nhsuk-grey-3 !important;
+    fill: nhsuk-colour("grey-3") !important;
     float: left;
     height: 20px;
     margin: 2px 8px 0 0;
@@ -282,7 +282,7 @@ button[data-toggle="modal"] {
 }
 
 .autosuggestion-option .autosuggestion-subtext {
-    color: $color_nhsuk-grey-2 !important;
+    color: nhsuk-colour("grey-2") !important;
     padding-left: 24px;
     margin: 0px;
 }
@@ -511,7 +511,7 @@ li.autosuggestion-option:last-of-type {
 
     .nhsuk-header__navigation-list .nhsuk-header__navigation-item,
     .nhsuk-header__navigation .nhsuk-header__navigation-title {
-        border-top: 1px solid $color_nhsuk-grey-4;
+        border-top: 1px solid nhsuk-colour("grey-4");
     }
 
     .nhsuk-header__menu-toggle {
@@ -540,7 +540,7 @@ li.autosuggestion-option:last-of-type {
         font-size: px2rem(11);
         line-height: px2rem(18);
         font-weight: 900;
-        background: $nhsuk-error-color;
+        background: $nhsuk-error-colour;
         color: $nhsuk-white;
         min-width: px2rem(18);
         width: fit-content;
@@ -557,7 +557,7 @@ li.autosuggestion-option:last-of-type {
         position: absolute;
         top: px2rem(-5);
         right: px2rem(-6);
-        background: $nhsuk-error-color;
+        background: $nhsuk-error-colour;
         width: px2rem(12);
         height: px2rem(12);
         border-radius: px2rem(6);
@@ -657,7 +657,7 @@ li.autosuggestion-option:last-of-type {
         width: 100%;
         flex-grow: 1;
         margin: px2rem(16) px2rem(-16) 0;
-        border-bottom: 1px solid $color_nhsuk-grey-4;
+        border-bottom: 1px solid nhsuk-colour("grey-4");
     }
 
     #header-mobile-search-control {
@@ -768,7 +768,7 @@ li.autosuggestion-option:last-of-type {
         width: 100%;
         flex-grow: 1;
         margin: px2rem(16) px2rem(-16) 0;
-        border-bottom: 1px solid $color_nhsuk-grey-4;
+        border-bottom: 1px solid nhsuk-colour("grey-4");
     }
 
     #header-mobile-search-control {

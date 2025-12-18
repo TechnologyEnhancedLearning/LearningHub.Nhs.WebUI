@@ -2,12 +2,12 @@
 @using Microsoft.Extensions.Options;
 @using LearningHub.Nhs.WebUI.Configuration;
 @inject IOptions<Settings> settings;
+@using NHSUKFrontendRazor.ViewModels;
 
-
-<div class="nhsuk-footer" id="nhsuk-footer">
-    <div class="nhsuk-width-container nhsuk-footer__container app-width-container">
-        <h2 class="nhsuk-u-visually-hidden">Support links</h2>
-        <ul class="nhsuk-footer__list">
+@* <div class="nhsuk-width-container" id="nhsuk-footer">
+  <div class="nhsuk-footer__meta">
+    <h2 class="nhsuk-u-visually-hidden">Support links</h2>
+    <ul class="nhsuk-footer__list">
             <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@(settings.Value.SupportUrls.SupportSite)">Help</a></li>
             @if (!SystemOffline())
             {
@@ -19,13 +19,37 @@
                 <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="/Home/Accessibility">Accessibility statement</a></li>
             }
         </ul>
-        <p class="nhsuk-footer__copyright">&copy; NHS England @DateTime.Now.Year</p>
+    <p class="nhsuk-body-s">&copy; NHS England @DateTime.Now.Year</p>
     </div>
-</div>
+</div> *@
 
-@functions {
+@* @functions {
     public bool SystemOffline()
     {
         return ViewContext.RouteData.Values["controller"].ToString() == "Offline";
     }
+} *@
+
+@{
+  var supportSiteUrl = settings.Value.SupportUrls.SupportSite;
+  var footerGroupData = new List<FooterItemGroupModel>
+  {
+    new FooterItemGroupModel(
+      new List<FooterItemViewModel>
+      {
+        new FooterItemViewModel("Help", supportSiteUrl),
+        new FooterItemViewModel("Contact us", "Home", "Contactus", new Dictionary<string, string>()),
+        new FooterItemViewModel("About us", "Home", "Index", new Dictionary<string, string>()),
+        new FooterItemViewModel("Service updates and releases", "Updates", "Index", new Dictionary<string, string>()),
+        new FooterItemViewModel("NHS sites", "Home", "Index", new Dictionary<string, string>()),
+        new FooterItemViewModel("Our policies", "Policies", "Index", new Dictionary<string, string>()),
+        new FooterItemViewModel("Accessibility statement", "Home", "Accessibility", new Dictionary<string, string>())
+      },
+      true
+    )
+  };
 }
+
+<vc:footer copyright="© NHS England 2024"
+           footer-group-list="@footerGroupData"
+           is-vertically-aligned="true"/> 

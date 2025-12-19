@@ -12,6 +12,7 @@
     <CodeAnalysisRuleSet />
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper" VersionOverride="16.0.0" />
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="LearningHub.Nhs.Models" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" VersionOverride="9.0.9" />

@@ -51,6 +51,11 @@ namespace LearningHub.NHS.OpenAPI.Configuration
         public const string DatabricksSectionName = "Databricks";
 
         /// <summary>
+        /// The JiraApiSettingsSectionName.
+        /// </summary>
+        public const string JiraApiSectionName = "JiraApiSettings";
+
+        /// <summary>
         /// Adds config.
         /// </summary>
         /// <param name="services">The service collection.</param>
@@ -72,6 +77,8 @@ namespace LearningHub.NHS.OpenAPI.Configuration
             services.AddOptions<MoodleConfig>().Bind(config.GetSection(MoodleSectionName));
 
             services.AddOptions<DatabricksConfig>().Bind(config.GetSection(DatabricksSectionName));
+
+            services.AddOptions<JiraApiConfig>().Bind(config.GetSection(JiraApiSectionName));
         }
 
         private static OptionsBuilder<T> RegisterPostConfigure<T>(this OptionsBuilder<T> builder)

@@ -6174,6 +6174,36 @@
           }
         }
       }
+    },
+    "/JiraRoadmap/GetRoadmapIssues": {
+      "get": {
+        "tags": [
+          "JiraRoadmap"
+        ],
+        "summary": "Get roadmap data grouped by components and status",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LearningHub.Nhs.Models.JiraRoadmap.RoadmapResponseDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LearningHub.Nhs.Models.JiraRoadmap.RoadmapResponseDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LearningHub.Nhs.Models.JiraRoadmap.RoadmapResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -14276,6 +14306,71 @@
           "value": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LearningHub.Nhs.Models.JiraRoadmap.RoadmapResponseDto": {
+        "type": "object",
+        "properties": {
+          "components": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LearningHub.Nhs.Models.JiraRoadmap.RoadmapComponentDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LearningHub.Nhs.Models.JiraRoadmap.RoadmapComponentDto": {
+        "type": "object",
+        "properties": {
+          "componentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "componentDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "states": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LearningHub.Nhs.Models.JiraRoadmap.RoadmapStateDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LearningHub.Nhs.Models.JiraRoadmap.RoadmapStateDto": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LearningHub.Nhs.Models.JiraRoadmap.RoadmapIssueDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LearningHub.Nhs.Models.JiraRoadmap.RoadmapIssueDto": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

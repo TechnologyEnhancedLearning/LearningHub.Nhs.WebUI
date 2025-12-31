@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper" VersionOverride="16.0.0" />
     <ProjectReference Include="..\LearningHub.Nhs.OpenApi.Models\LearningHub.Nhs.OpenApi.Models.csproj" />
   </ItemGroup>
 </Project>

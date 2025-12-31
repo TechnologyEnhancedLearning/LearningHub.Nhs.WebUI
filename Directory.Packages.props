@@ -26,7 +26,7 @@
 		<PackageVersion Include="Azure.Storage.Queues" Version="12.24.0" />
 		<PackageVersion Include="BuildWebCompiler" Version="1.12.405" />
 		<PackageVersion Include="coverlet.collector" Version="6.0.4" />
-		<PackageVersion Include="EntityFrameworkCore.Testing.Moq" Version="9.0.1" />
+		<PackageVersion Include="EntityFrameworkCore.Testing.Moq" Version="9.0.2" />
 		<PackageVersion Include="FluentAssertions" Version="6.12.0" />
 		<PackageVersion Include="FluentValidation" Version="12.1.1" />
 		<PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.1" />

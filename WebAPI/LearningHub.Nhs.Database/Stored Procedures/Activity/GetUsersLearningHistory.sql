@@ -6,6 +6,7 @@
 -- Modification History
 -- 23-09-2025  SA Added new columns for displaying video/Audio Progress
 -- 01-10-2025  SA added assesment score and passmark and provider details
+-- 16-12-2025  SA TD-6322 added the condition to validate the certificate enabled is true for the latest resourceversion.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUsersLearningHistory] (
 	  @userId INT,
@@ -31,7 +32,8 @@ BEGIN
 			ra.NodePathId AS NodePathId,
 			r.ResourceTypeId AS ResourceType,
 			rv.Title AS Title,
-			rv.CertificateEnabled AS CertificateEnabled,
+			 -- Get CertificateEnabled from the latest resource version
+            rvCurrent.CertificateEnabled AS CertificateEnabled,
 			ISNULL(ara.ActivityStatusId,  ra.ActivityStatusId) AS ActivityStatus,
 			ra.ActivityStart AS ActivityDate,
 			ISNULL(ara.DurationSeconds, 0) ActivityDurationSeconds,
@@ -50,7 +52,10 @@ BEGIN
 		LEFT JOIN activity.ResourceActivity ara
 			ON ara.LaunchResourceActivityId = ra.Id
 		INNER JOIN [resources].[Resource] r ON  ra.ResourceId = r.Id
-		INNER JOIN [resources].[ResourceVersion] rv ON  rv.Id = ra.ResourceVersionId AND rv.deleted =0
+		  -- Version used in the activity
+		INNER JOIN [resources].[ResourceVersion] rv ON rv.Id = ra.ResourceVersionId AND rv.Deleted = 0
+		-- Latest resource version
+		INNER JOIN [resources].[ResourceVersion] rvCurrent ON rvCurrent.Id = r.CurrentResourceVersionId
 		LEFT JOIN (
 		SELECT 
 			rp.ResourceVersionId,

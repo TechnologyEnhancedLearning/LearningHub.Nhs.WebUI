@@ -9,6 +9,7 @@
 -- 16-09-2025   Tobi    Added null check for ResourceReferenceID
 --17-09-2025    Swapna  Added resource version id
 -- 01-10-2025  SA added assesment score and passmark and provider details
+-- 16=12-2025  SA TD-6322 added the condition to validate the certificate enabled is true for the latest resourceversion.
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [resources].[GetUsercertificateDetails]
     @UserId INT,
@@ -26,7 +27,21 @@ BEGIN
         ResourceActivityId INT NOT NULL,
         PRIMARY KEY CLUSTERED (ResourceActivityId)
     );
-
+	-- to get the latest resourceVersion
+	;WITH LatestResourceVersion AS (
+    SELECT
+        rv.ResourceId,
+        rv.Id AS ResourceVersionId,
+        rv.CertificateEnabled
+    FROM resources.ResourceVersion rv
+    WHERE rv.Deleted = 0
+      AND rv.Id = (
+            SELECT MAX(rv2.Id)
+            FROM resources.ResourceVersion rv2
+            WHERE rv2.ResourceId = rv.ResourceId
+              AND rv2.Deleted = 0
+        )
+)
     INSERT INTO #MyActivity (ResourceId, ResourceActivityId)
     SELECT
         ra.ResourceId,
@@ -34,10 +49,10 @@ BEGIN
     FROM activity.ResourceActivity ra
     JOIN resources.Resource r
         ON ra.ResourceId = r.Id
-    JOIN resources.ResourceVersion rv
-        ON rv.Id = ra.ResourceVersionId
+    JOIN LatestResourceVersion lrv
+        ON lrv.ResourceId = ra.ResourceId
     WHERE ra.UserId = @UserId
-      AND rv.CertificateEnabled = 1
+      AND lrv.CertificateEnabled = 1
       AND (
             (r.ResourceTypeId IN (2, 7) AND ra.ActivityStatusId = 3)
          OR (ra.ActivityStart < '2020-09-07T00:00:00+00:00')

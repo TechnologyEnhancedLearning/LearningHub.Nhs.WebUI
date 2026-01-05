@@ -66,8 +66,8 @@
 
                             if (string.IsNullOrWhiteSpace(entry.CourseFilter))
                             {
-                                matchedCourseNames = "all courses";
-                                matchedCourseNamesDetails = new List<string> { "all courses" };
+                                matchedCourseNames = "All courses";
+                                matchedCourseNamesDetails = new List<string> { "All courses" };
                             }
                             else
                             {
@@ -96,7 +96,7 @@
                             <details class="nhsuk-details nhsuk-u-margin-top-2 nhsuk-u-margin-bottom-2">
                                 <summary class="nhsuk-details__summary nhsuk-u-flex nhsuk-u-justify-content-space-between nhsuk-u-align-items-center">
                                     <span class="nhsuk-details__summary-text">
-                                        course progress for @matchedCourseNames
+                                        Course progress for @matchedCourseNames
                                     </span>
                                     @if (downloadCheck)
                                     {

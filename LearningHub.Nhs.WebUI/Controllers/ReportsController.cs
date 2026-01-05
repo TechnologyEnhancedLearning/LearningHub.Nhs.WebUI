@@ -412,7 +412,7 @@
 
             if (reportCreation.Courses.Count == 0)
             {
-                matchedCourseNames = new List<string> { "all courses" };
+                matchedCourseNames = new List<string> { "All courses" };
             }
             else
             {

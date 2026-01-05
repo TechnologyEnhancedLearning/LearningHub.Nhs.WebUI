@@ -400,7 +400,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
                 if (string.IsNullOrWhiteSpace(reportHistory.CourseFilter))
                 {
-                    firstCourse = "all courses";
+                    firstCourse = "All courses";
                 }
                 else
                 {
@@ -422,7 +422,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
                 try
                 {
-                    var notificationId = await this.notificationService.CreateReportNotificationAsync(userId, "course progress", firstCourse);
+                    var notificationId = await this.notificationService.CreateReportNotificationAsync(userId, "Course progress", firstCourse);
 
                     if (notificationId > 0)
                     {
@@ -433,7 +433,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     new ReportSucessEmailModel
                     {
                         UserFirstName = user.FirstName,
-                        ReportName = "course progress",
+                        ReportName = "Course progress",
                         ReportTitle = firstCourse,
                         ReportUrl = $"{this.learningHubConfig.Value.BaseUrl.TrimEnd('/')}/{this.learningHubConfig.Value.ReportUrl.TrimStart('/')}"
                     });

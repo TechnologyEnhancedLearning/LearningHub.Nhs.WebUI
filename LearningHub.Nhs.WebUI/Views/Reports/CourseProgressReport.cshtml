@@ -63,7 +63,7 @@
                         </dd>
 
                         <dd class="nhsuk-summary-list__actions">
-                            <a asp-controller="Reports" asp-action="CreateReportCourseSelection">
+                            <a asp-controller="Reports" asp-action="CreateReportCourseSelection" asp-route-returnUrl="@Url.Action("CourseProgressReport", "Reports")">
                                 Change<span class="nhsuk-u-visually-hidden">&nbsp;Course</span>
                             </a>
 
@@ -89,7 +89,7 @@
                         </dd>
 
                         <dd class="nhsuk-summary-list__actions">
-                            <a asp-controller="Reports" asp-action="CreateReportDateSelection">
+                            <a asp-controller="Reports" asp-action="CreateReportDateSelection" asp-route-returnUrl="@Url.Action("CourseProgressReport", "Reports")">
                                 Change<span class="nhsuk-u-visually-hidden">&nbsp;Reporting period</span>
                             </a>
 
@@ -103,18 +103,18 @@
 
                     @if (Model.TotalCount > 0)
                     {
-                        <h2 class="nhsuk-heading-m">Displaying @startRow–@endRow of @Model.TotalCount filtered row@(Model.TotalCount > 1 ? "s" : "")</h2>
+                        <h2 class="nhsuk-heading-m">Displaying @startRow to @endRow of @Model.TotalCount filtered row@(Model.TotalCount > 1 ? "s" : "")</h2>
 
                     
                         @if (Model.ReportHistoryModel != null && Model.ReportHistoryModel.DownloadRequest == null)
                         {
                             <p class="nhsuk-u-secondary-text-color nhsuk-u-reading-width">
-                                Request to download this report in a spreadsheet (.xls) format.You will be notified
+                                Request to download this report in a spreadsheet (.xls) format. You will be notified
                                 when the report is ready.
                             </p>
                             <form method="post" asp-controller="Reports" asp-action="QueueReportDownload">
                                 <input type="hidden" name="reportHistoryId" value="@Model.ReportHistoryId" />
-                                <button class="nhsuk-button nhsuk-button--reverse nhsuk-button--with-border" type="submit">Request report</button>
+                                <button class="nhsuk-button nhsuk-button--secondary" type="submit">Request report</button>
                             </form>
                         }
                         else if (Model.ReportHistoryModel != null && Model.ReportHistoryModel.DownloadRequest == true && Model.ReportHistoryModel.ReportStatusId == ((int)Status.Pending))

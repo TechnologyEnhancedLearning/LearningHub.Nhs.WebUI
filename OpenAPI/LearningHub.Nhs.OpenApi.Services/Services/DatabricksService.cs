@@ -20,6 +20,10 @@ using LearningHub.Nhs.OpenApi.Models.ViewModels;
 using LearningHub.Nhs.Models.Enums;
 using System.Text.Json;
 using LearningHub.Nhs.Models.Entities;
+using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
+using elfhHub.Nhs.Models.Entities;
+using LearningHub.Nhs.Models.Email.Models;
+using LearningHub.Nhs.Models.Email;
 
 namespace LearningHub.Nhs.OpenApi.Services.Services
 {
@@ -35,8 +39,10 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         private readonly IQueueCommunicatorService queueCommunicatorService;
         private readonly ICachingService cachingService;
         private readonly INotificationService notificationService;
+        private readonly IEmailSenderService emailSenderService;
         private readonly IUserNotificationService userNotificationService;
         private readonly IMoodleApiService moodleApiService;
+        private readonly IUserProfileService userProfileService;
         private readonly IMapper mapper;
 
         /// <summary>
@@ -51,7 +57,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <param name="notificationService">notificationService.</param>
         /// <param name="userNotificationService">userNotificationService.</param>
         /// <param name="moodleApiService">moodleApiService.</param>
-        public DatabricksService(IOptions<DatabricksConfig> databricksConfig,IOptions<LearningHubConfig> learningHubConfig, IReportHistoryRepository reportHistoryRepository, IMapper mapper, IQueueCommunicatorService queueCommunicatorService, ICachingService cachingService, INotificationService notificationService, IUserNotificationService userNotificationService, IMoodleApiService moodleApiService)
+        /// <param name="emailSenderService">emailSenderService.</param>
+        /// <param name="userProfileService">userProfileService.</param>
+        public DatabricksService(IOptions<DatabricksConfig> databricksConfig,IOptions<LearningHubConfig> learningHubConfig, IReportHistoryRepository reportHistoryRepository, IMapper mapper, IQueueCommunicatorService queueCommunicatorService, ICachingService cachingService, INotificationService notificationService, IUserNotificationService userNotificationService, IMoodleApiService moodleApiService, IEmailSenderService emailSenderService, IUserProfileService userProfileService)
         {
             this.databricksConfig = databricksConfig;
             this.learningHubConfig = learningHubConfig;
@@ -62,6 +70,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             this.notificationService = notificationService;
             this.userNotificationService = userNotificationService;
             this.moodleApiService = moodleApiService;
+            this.emailSenderService = emailSenderService;
+            this.userProfileService = userProfileService;
         }
 
         /// <inheritdoc/>
@@ -388,20 +398,51 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
                 var courses = await moodleApiService.GetCoursesByCategoryIdAsync(learningHubConfig.Value.StatMandId);
 
-                firstCourse = string.IsNullOrWhiteSpace(reportHistory.CourseFilter)
-                    ? courses.Courses.Select(c => c.Displayname).FirstOrDefault()
-                    : courses.Courses
+                if (string.IsNullOrWhiteSpace(reportHistory.CourseFilter))
+                {
+                    firstCourse = "all courses";
+                }
+                else
+                {
+                    var matched = courses.Courses
                         .Where(c => reportHistory.CourseFilter.Contains(c.Id.ToString()))
                         .Select(c => c.Displayname)
-                        .FirstOrDefault();
+                        .ToList();
 
-
-                var notificationId = await this.notificationService.CreateReportNotificationAsync(userId, "Course Completion", firstCourse);
-
-                if (notificationId > 0)
-                {
-                    await this.userNotificationService.CreateAsync(userId, new UserNotification { UserId = reportHistory.CreateUserId, NotificationId = notificationId });
+                    if (matched.Count == 1)
+                    {
+                        firstCourse = matched[0].ToLower();
+                    }
+                    else
+                    {
+                        firstCourse = $"{matched[0].ToLower()} and {matched.Count - 1} others";
+                    }
                 }
+
+
+                try
+                {
+                    var notificationId = await this.notificationService.CreateReportNotificationAsync(userId, "course progress", firstCourse);
+
+                    if (notificationId > 0)
+                    {
+                        await this.userNotificationService.CreateAsync(userId, new UserNotification { UserId = reportHistory.CreateUserId, NotificationId = notificationId });
+                    }
+                    var user = await this.userProfileService.GetByIdAsync(reportHistory.CreateUserId);
+                    var emailModel = new SendEmailModel<ReportSucessEmailModel>(
+                    new ReportSucessEmailModel
+                    {
+                        UserFirstName = user.FirstName,
+                        ReportName = "course progress",
+                        ReportTitle = firstCourse,
+                        ReportUrl = $"{this.learningHubConfig.Value.BaseUrl.TrimEnd('/')}/{this.learningHubConfig.Value.ReportUrl.TrimStart('/')}"
+                    });
+                    emailModel.EmailAddress = user.EmailAddress;
+
+                    await this.emailSenderService.SendReportProcessedEmail(userId, emailModel);
+                }
+                catch { }
+
             }
             else
             {

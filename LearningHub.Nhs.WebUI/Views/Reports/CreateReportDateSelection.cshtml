@@ -17,15 +17,24 @@
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/reporting.css" asp-append-version="true" />
 }
 
+
 <div class="user-report">
     <div class="nhsuk-width-container app-width-container">
         <div class="nhsuk-grid-row nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-7">
 
             <!--  Main content -->
             <div class="nhsuk-grid-column-full">
-                <vc:back-link asp-controller="Reports" asp-action="CreateReportCourseSelection" link-text="Back to: Course Selection" />
+                
+                @if (string.IsNullOrWhiteSpace(ViewBag.ReturnUrl))
+                {
+                    <vc:back-link asp-controller="Reports" asp-action="CreateReportCourseSelection" link-text="Back to: Course Selection" />
+                }
+                else
+                {
+                    <vc:back-link asp-controller="Reports" asp-action="CourseProgressReport" link-text="Back to: Course Progress Report" />
+                }
                 <div class="nhsuk-hint">
-                    Create a course completion report
+                    Create a course progress report
                 </div>
 
                 <h1 class="nhsuk-heading-xl">
@@ -38,6 +47,7 @@
                         <vc:error-summary order-of-property-names="@(new[] { nameof(Model.TimePeriod) })" />
                     }
                     <form asp-controller="Reports" asp-action="CreateReportSummary" method="post">
+                        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
                         @Html.HiddenFor(x=>x.HintText)
                         @Html.HiddenFor(x =>x.DataStart)
                             <div class="nhsuk-form-group  @(errorHasOccurred ? "nhsuk-form-group--error" : "")">
@@ -88,8 +98,8 @@
                                                         <span class="nhsuk-hint">@Model.HintText</span>
                                                         <div class="date-range-container">
                                                             <div class="date-range-item">
-                                                                <div class="nhsuk-form-group nhsuk-date-inline">
-                                                                    <label class="nhsuk-label nhsuk-label--strong nhsuk-u-font-weight-bold nhsuk-u-padding-top-5" for="StartDate">From</label>
+                                                                <div class="nhsuk-form-group nhsuk-date-inline align-label-component">
+                                                                    <label class="nhsuk-label nhsuk-label--strong nhsuk-u-font-weight-bold nhsuk-u-padding-top-5 nhsuk-u-margin-right-3" for="StartDate">From</label>
                                                                     <vc:date-input id="StartDate"
                                                                                    label=""
                                                                                    day-id="StartDay"
@@ -100,8 +110,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="date-range-item">
-                                                                <div class="nhsuk-form-group nhsuk-date-inline">
-                                                                    <label class="nhsuk-label nhsuk-label--strong nhsuk-u-font-weight-bold nhsuk-u-padding-top-5" for="EndDate">To</label>
+                                                                <div class="nhsuk-form-group nhsuk-date-inline align-label-component">
+                                                                    <label class="nhsuk-label nhsuk-label--strong nhsuk-u-font-weight-bold nhsuk-u-padding-top-5 nhsuk-u-margin-right-3" for="EndDate">To</label>
                                                                     <vc:date-input id="EndDate"
                                                                                    label=""
                                                                                    day-id="EndDay"

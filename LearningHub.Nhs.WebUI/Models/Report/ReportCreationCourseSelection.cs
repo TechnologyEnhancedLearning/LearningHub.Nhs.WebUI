@@ -38,7 +38,7 @@
             this.AllCources = allCourses.Select(r => new DynamicCheckboxItemViewModel
             {
                 Value = r.Key.ToString(),
-                Label = UtilityHelper.ConvertToSentenceCase(r.Value),
+                Label = r.Value,
             }).ToList();
             this.AllCources.Insert(0, new DynamicCheckboxItemViewModel { Value = "all", Label = "All courses", Exclusive = true });
             return this.AllCources;

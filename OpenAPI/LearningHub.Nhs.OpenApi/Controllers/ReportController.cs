@@ -40,19 +40,19 @@
         }
 
         /// <summary>
-        /// Get CourseCompletionReport from Databricks.
+        /// Get CourseProgressReport from Databricks.
         /// </summary>
         /// <param name="requestModel">requestModel.</param>
         /// <returns>Task.</returns>
         [HttpPost]
-        [Route("GetCourseCompletionReport")]
-        public async Task<DatabricksDetailedViewModel> CourseCompletionReport(DatabricksRequestModel requestModel)
+        [Route("GetCourseProgressReport")]
+        public async Task<DatabricksDetailedViewModel> CourseProgressReport(DatabricksRequestModel requestModel)
         {
             return await this.databricksService.CourseCompletionReport(this.CurrentUserId.GetValueOrDefault(),requestModel);
         }
 
         /// <summary>
-        /// Get CourseCompletionReport from Databricks.
+        /// Get Report History from Databricks.
         /// </summary>
         /// <param name="request">request.</param>
         /// <returns>Task.</returns>

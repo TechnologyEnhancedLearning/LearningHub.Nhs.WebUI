@@ -6,6 +6,7 @@
     using LearningHub.Nhs.Models.Email;
     using LearningHub.Nhs.Models.Email.Models;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.OpenApi.Models.ViewModels;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Messaging;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
 
@@ -133,6 +134,32 @@
                 ["CatalogueName"] = model.CatalogueName,
                 ["CreateAccountUrl"] = model.CreateAccountUrl,
                 ["Greeting"] = model.Greeting,
+            };
+
+            var subject = this.Replace(emailTemplate.Subject, replacementDict);
+            var body = Replace(emailBody, replacementDict);
+            return new EmailDetails { Body = body, Subject = subject, EmailAddress = emailModel.EmailAddress };
+        }
+
+        /// <summary>
+        /// The GetCatalogueAccessRequestFailure.
+        /// </summary>
+        /// <param name="emailModel">The email model.</param>
+        /// <returns>The subject and body.</returns>
+        public EmailDetails GetReportProcessed(SendEmailModel<ReportSucessEmailModel> emailModel)
+        {
+            var emailTemplate = emailTemplateRepository.GetTemplate((int)EmailTemplates.ReportProcessed);
+            var emailBody = this.Replace(emailTemplate.EmailTemplateLayout.Body, new Dictionary<string, string>
+            {
+                ["Content"] = emailTemplate.Body,
+            });
+            var model = emailModel.Model;
+            var replacementDict = new Dictionary<string, string>
+            {
+                ["UserFirstName"] = model.UserFirstName,
+                ["ReportSection"] = model.ReportUrl,
+                ["ReportName"] = model.ReportName,
+                ["ReportContent"] = model.ReportTitle,
             };
 
             var subject = this.Replace(emailTemplate.Subject, replacementDict);

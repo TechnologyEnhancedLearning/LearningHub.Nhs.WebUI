@@ -62,7 +62,7 @@
 
             var client = await this.OpenApiHttpClient.GetClientAsync();
 
-            var request = $"Report/GetCourseCompletionReport";
+            var request = $"Report/GetCourseProgressReport";
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)

@@ -138,20 +138,22 @@
                                         <div class="nhsuk-summary-list__row">
                                             <dt class="nhsuk-summary-list__key nhsuk-summary-list__key--tight">Reporting on:</dt>
                                             <dd class="nhsuk-summary-list__value">
-                                                <ul class="nhsuk-list nhsuk-list--bullet">
+                                                
                                                     @if (matchedCourseNamesDetails.Count > 1)
                                                     {
+                                                    <ul class="nhsuk-list nhsuk-list--bullet">
                                                         @foreach (var item in matchedCourseNamesDetails)
                                                         {
                                                             <li>@item</li>
                                                         }
+                                                    </ul>
                                                     }
                                                     else
                                                     {
-                                                        @matchedCourseNamesDetails
+                                                        @matchedCourseNamesDetails.FirstOrDefault()
                                                     }
                                                    
-                                                </ul>
+                                               
                                             </dd>
                                         </div>
                                     </dl>

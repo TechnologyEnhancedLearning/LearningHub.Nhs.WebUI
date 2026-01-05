@@ -219,7 +219,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
-                ShowReports = false,
+                ShowReports = await this.databricksService.IsUserReporter(userId),
             };
         }
 

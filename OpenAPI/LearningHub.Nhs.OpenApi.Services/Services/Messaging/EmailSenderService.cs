@@ -61,6 +61,19 @@
         }
 
         /// <summary>
+        /// Sends report generation completion email to user.
+        /// </summary>
+        /// <param name="userId">The userId sending the email.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>The task.</returns>
+        public async Task SendReportProcessedEmail(int userId, SendEmailModel<ReportSucessEmailModel> model)
+        {
+            var template = emailTemplateService.GetReportProcessed(model);
+            await messageService.CreateEmailAsync(userId, template.Subject, template.Body, template.EmailAddress);
+        }
+
+
+        /// <summary>
         /// Sends email change confirmation email.
         /// </summary>
         /// <param name="userId">The userId sending the email.</param>

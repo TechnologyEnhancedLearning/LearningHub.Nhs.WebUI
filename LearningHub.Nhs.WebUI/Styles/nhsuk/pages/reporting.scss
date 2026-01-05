@@ -21,7 +21,21 @@
 
     .nhsuk-date-inline {
         display: flex;
-        align-items: center;
+        flex-direction: row;
+        /* align-items: center;*/
+        gap: 0.5rem;
+    }
+
+    .date-range-container .nhsuk-date-inline .nhsuk-error-message {
+        max-width: 400px;
+        word-wrap: break-word;
+        white-space: normal;
+    }
+
+
+    .align-label-component {
+        display: flex;
+        align-items: flex-start;
         gap: 0.5rem;
     }
 
@@ -55,6 +69,13 @@
         .date-range-container .nhsuk-label {
             min-width: 50px;
         }
+
+        .nhsuk-date-inline {
+            display: flex;
+            align-items: unset;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
     }
 
     .nhsuk-radios__divider {
@@ -73,5 +94,9 @@
         margin: 0;
         padding: 0;
         visibility: hidden;
+    }
+
+    .nhsuk-checkboxes__item:first-child .nhsuk-checkboxes__label {
+        font-weight: 900;
     }
 }

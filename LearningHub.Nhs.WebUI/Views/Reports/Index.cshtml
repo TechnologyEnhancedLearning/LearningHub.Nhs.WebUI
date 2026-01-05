@@ -45,14 +45,14 @@
             <div class="nhsuk-grid-column-full">
                 <div>
                     <p class="nhsuk-body-s">
-                        This page lists all reports you can access or have created. Use the Create a course completion report button to generate a new report.
+                        This page lists all reports you can access or have created. Use the Create a course progress report button to generate a new report.
                     </p>
-                    <a asp-controller="Reports" asp-action="CreateReportCourseSelection" class="nhsuk-button nhsuk-u-margin-top-2 nhsuk-u-margin-bottom-4">Create a course completion report</a>
+                    <a asp-controller="Reports" asp-action="CreateReportCourseSelection" class="nhsuk-button nhsuk-u-margin-top-2 nhsuk-u-margin-bottom-4">Create a course progress report</a>
                 </div>
 
                 <div>
                     <h3>Previously run reports</h3>
-                  
+
                     @if (Model.ReportHistoryModels.Any())
                     {
                         <p class="nhsuk-body-s nhsuk-u-reading-width">
@@ -61,18 +61,34 @@
                         <hr class="nhsuk-section-break nhsuk-section-break--visible">
                         @foreach (var entry in Model.ReportHistoryModels)
                         {
-                            var matchedCourseNames = new List<string>();
+                            var matchedCourseNames = string.Empty;
+                            var matchedCourseNamesDetails = new List<string>();
+
                             if (string.IsNullOrWhiteSpace(entry.CourseFilter))
                             {
-                                matchedCourseNames = allCourses.Select(course => course.Value).ToList();
+                                matchedCourseNames = "all courses";
+                                matchedCourseNamesDetails = new List<string> { "all courses" };
                             }
                             else
                             {
-                                matchedCourseNames = allCourses
-                                .Where(course => entry.CourseFilter.Contains(course.Key))
-                                .Select(course => course.Value)
+                                var matched = allCourses
+                                .Where(c => entry.CourseFilter.Contains(c.Key))
+                                .Select(c => c.Value)
                                 .ToList();
+
+                                matchedCourseNamesDetails = matched;
+
+                                if (matched.Count == 1)
+                                {
+                                    matchedCourseNames = matched[0];
+                                }
+                                else
+                                {
+                                    matchedCourseNames = $"{matched[0]} and {matched.Count - 1} others";
+                                }
                             }
+
+
                             string datePeriod = entry.PeriodDays > 0 ? $"{entry.PeriodDays} days" : $"{entry.StartDate.GetValueOrDefault().ToString("dd MMM yyyy")} to {entry.EndDate.GetValueOrDefault().ToString("dd MMM yyyy")}";
                             bool downloadCheck = entry.DownloadRequest != null && (bool)entry.DownloadRequest;
                             string expiryDate = entry.LastRun.AddDays(30).ToString("dd MMM yyyy");
@@ -80,7 +96,7 @@
                             <details class="nhsuk-details nhsuk-u-margin-top-2 nhsuk-u-margin-bottom-2">
                                 <summary class="nhsuk-details__summary nhsuk-u-flex nhsuk-u-justify-content-space-between nhsuk-u-align-items-center">
                                     <span class="nhsuk-details__summary-text">
-                                        Course completion for @matchedCourseNames.FirstOrDefault()?.Normalize()
+                                        course progress for @matchedCourseNames
                                     </span>
                                     @if (downloadCheck)
                                     {
@@ -117,16 +133,24 @@
                                         </div>
                                         <div class="nhsuk-summary-list__row">
                                             <dt class="nhsuk-summary-list__key nhsuk-summary-list__key--tight">Type:</dt>
-                                            <dd class="nhsuk-summary-list__value">Course completions</dd>
+                                            <dd class="nhsuk-summary-list__value">course progress</dd>
                                         </div>
                                         <div class="nhsuk-summary-list__row">
                                             <dt class="nhsuk-summary-list__key nhsuk-summary-list__key--tight">Reporting on:</dt>
                                             <dd class="nhsuk-summary-list__value">
                                                 <ul class="nhsuk-list nhsuk-list--bullet">
-                                                    @foreach(var item in matchedCourseNames)
+                                                    @if (matchedCourseNamesDetails.Count > 1)
                                                     {
-                                                        <li>@item</li>
+                                                        @foreach (var item in matchedCourseNamesDetails)
+                                                        {
+                                                            <li>@item</li>
+                                                        }
                                                     }
+                                                    else
+                                                    {
+                                                        @matchedCourseNamesDetails
+                                                    }
+                                                   
                                                 </ul>
                                             </dd>
                                         </div>
@@ -161,7 +185,7 @@
                     else
                     {
                         <ul class="nhsuk-grid-row nhsuk-card-group">
-                            <li class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+                            <li class="nhsuk-grid-column-two-thirds nhsuk-card-group__item">
                                 <div class="nhsuk-card">
                                     <div class="nhsuk-card__content">
                                         <h3 class="nhsuk-card__heading nhsuk-heading-m">

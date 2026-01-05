@@ -8,7 +8,6 @@
     ViewData["Title"] = "Select Course";
     var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
     var errorHasOccurred = !ViewData.ModelState.IsValid;
-    var routeData = new Dictionary<string, string> { { "ReturnToConfirmation", Context.Request.Query["returnToConfirmation"] } };
 }
 
 @section styles {
@@ -21,35 +20,51 @@
 
             <!--  Main content -->
             <div class="nhsuk-grid-column-full">
-                <vc:back-link asp-controller="Reports" asp-action="Index" link-text="Back to: Report" />
+                @if (string.IsNullOrWhiteSpace(ViewBag.ReturnUrl))
+                {
+                    <vc:back-link asp-controller="Reports" asp-action="Index" link-text="Back to: Report" />
+                }
+                else
+                {
+                    <vc:back-link asp-controller="Reports" asp-action="CourseProgressReport" link-text="Back to: Course Progress Report" />
+                }
                 <div class="nhsuk-hint">
-                    Create a course completion report
+                    Create a course progress report
                 </div>
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model.Courses) })" />
+                }
                 <h1 class="nhsuk-heading-xl">
                     Select course(s)
                 </h1>
                 <div class="nhsuk-u-reading-width nhsuk-u-padding-bottom-9">
-                   
-                    @if (errorHasOccurred)
-                    {
-                        <vc:error-summary order-of-property-names="@(new[] { nameof(Model.Courses) })" />
-                    }
+
+
 
                     <form asp-controller="Reports" asp-action="CreateReportCourseSelection" method="post">
+                        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
                         <div class="nhsuk-form-group">
-                        @await Component.InvokeAsync("DynamicCheckboxes", new
-                            {
-                                label = "",
-                                checkboxes = Model.AllCources,
-                                required = false,
-                                errorMessage = "Please select at least one course",
-                                selectedValues = Model.Courses,
-                                propertyName = nameof(Model.Courses)
-                            })
+                            @await Component.InvokeAsync("DynamicCheckboxes", new
+                                {
+                                    label = "",
+                                    checkboxes = Model.AllCources,
+                                    required = false,
+                                    errorMessage = "Select a course",
+                                    selectedValues = Model.Courses,
+                                    propertyName = nameof(Model.Courses)
+                                })
                         </div>
                         <div class="nhsuk-u-padding-top-7 nhsuk-u-padding-bottom-7">
-
-                            <button class="nhsuk-button" type="submit">Continue</button>
+                            @if (string.IsNullOrWhiteSpace(ViewBag.ReturnUrl))
+                            {
+                                <button class="nhsuk-button" type="submit"> Continue</button>
+                            }
+                            else
+                            {
+                                <button class="nhsuk-button" type="submit"> Submit</button>
+                            }
+                            
                         </div>
                     </form>
 

@@ -116,12 +116,14 @@
         /// CreateReportCourseSelection.
         /// </summary>
         /// <param name="searchText">searchText.</param>
+        /// <param name="returnUrl">returnUrl.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [Route("CreateReportCourseSelection")]
         [ResponseCache(CacheProfileName = "Never")]
         [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { "ReportWizardCWF" })]
-        public async Task<IActionResult> CreateReportCourseSelection(string searchText = "")
+        public async Task<IActionResult> CreateReportCourseSelection(string searchText = "", string returnUrl = "")
         {
+            this.ViewBag.ReturnUrl = returnUrl;
             var reportCreation = await this.multiPageFormService.GetMultiPageFormData<DatabricksRequestModel>(MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
             var coursevm = new ReportCreationCourseSelection { SearchText = searchText, Courses = reportCreation.Courses != null ? reportCreation.Courses : new List<string>() };
             var getCourses = await this.GetCoursesAsync();
@@ -143,12 +145,13 @@
         /// CreateReportCourseSelection.
         /// </summary>
         /// <param name="courseSelection">courseSelection.</param>
+        /// <param name="returnUrl">returnurl.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [HttpPost]
         [Route("CreateReportCourseSelection")]
         [ResponseCache(CacheProfileName = "Never")]
         [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { "ReportWizardCWF" })]
-        public async Task<IActionResult> CreateReportCourseSelection(ReportCreationCourseSelection courseSelection)
+        public async Task<IActionResult> CreateReportCourseSelection(ReportCreationCourseSelection courseSelection, string returnUrl = "")
         {
             var reportCreation = await this.multiPageFormService.GetMultiPageFormData<DatabricksRequestModel>(MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
 
@@ -158,56 +161,69 @@
                 {
                     reportCreation.Courses = courseSelection.Courses.Contains("all") ? new List<string>() : courseSelection.Courses;
                     await this.multiPageFormService.SetMultiPageFormData(reportCreation, MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
+                    if (!string.IsNullOrEmpty(returnUrl))
+                    {
+                        return this.Redirect(returnUrl);
+                    }
+
                     return this.RedirectToAction("CreateReportDateSelection");
                 }
             }
 
             this.ModelState.AddModelError("Courses", CommonValidationErrorMessages.CourseRequired);
+            reportCreation.Courses = null;
+            await this.multiPageFormService.SetMultiPageFormData(reportCreation, MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
             courseSelection.BuildCourses(await this.GetCoursesAsync());
             courseSelection.Courses = reportCreation.Courses;
+            this.ViewBag.ReturnUrl = returnUrl;
             return this.View("CreateReportCourseSelection", courseSelection);
         }
 
         /// <summary>
         /// CreateReportDateSelection.
         /// </summary>
+        /// <param name="returnUrl">returnUrl.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [Route("CreateReportDateSelection")]
         [ResponseCache(CacheProfileName = "Never")]
         [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { "ReportWizardCWF" })]
-        public async Task<IActionResult> CreateReportDateSelection()
+        public async Task<IActionResult> CreateReportDateSelection(string returnUrl = "")
         {
-            var reportCreation = await this.multiPageFormService.GetMultiPageFormData<DatabricksRequestModel>(MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
-            var dateVM = new ReportCreationDateSelection();
-            dateVM.TimePeriod = reportCreation.TimePeriod;
-            if (reportCreation.StartDate.HasValue && reportCreation.TimePeriod == "Custom")
+            this.ViewBag.ReturnUrl = returnUrl;
             {
-                dateVM.StartDay = reportCreation.StartDate.HasValue ? reportCreation.StartDate.GetValueOrDefault().Day : 0;
-                dateVM.StartMonth = reportCreation.StartDate.HasValue ? reportCreation.StartDate.GetValueOrDefault().Month : 0;
-                dateVM.StartYear = reportCreation.StartDate.HasValue ? reportCreation.StartDate.GetValueOrDefault().Year : 0;
-                dateVM.EndDay = reportCreation.EndDate.HasValue ? reportCreation.EndDate.GetValueOrDefault().Day : 0;
-                dateVM.EndMonth = reportCreation.EndDate.HasValue ? reportCreation.EndDate.GetValueOrDefault().Month : 0;
-                dateVM.EndYear = reportCreation.EndDate.HasValue ? reportCreation.EndDate.GetValueOrDefault().Year : 0;
+                var reportCreation = await this.multiPageFormService.GetMultiPageFormData<DatabricksRequestModel>(MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
+                var dateVM = new ReportCreationDateSelection();
+                dateVM.TimePeriod = reportCreation.TimePeriod;
+                if (reportCreation.StartDate.HasValue && reportCreation.TimePeriod == "Custom")
+                {
+                    dateVM.StartDay = reportCreation.StartDate.HasValue ? reportCreation.StartDate.GetValueOrDefault().Day : 0;
+                    dateVM.StartMonth = reportCreation.StartDate.HasValue ? reportCreation.StartDate.GetValueOrDefault().Month : 0;
+                    dateVM.StartYear = reportCreation.StartDate.HasValue ? reportCreation.StartDate.GetValueOrDefault().Year : 0;
+                    dateVM.EndDay = reportCreation.EndDate.HasValue ? reportCreation.EndDate.GetValueOrDefault().Day : 0;
+                    dateVM.EndMonth = reportCreation.EndDate.HasValue ? reportCreation.EndDate.GetValueOrDefault().Month : 0;
+                    dateVM.EndYear = reportCreation.EndDate.HasValue ? reportCreation.EndDate.GetValueOrDefault().Year : 0;
+                }
+
+                var minDate = await this.GetMinDate();
+
+                dateVM.DataStart = minDate.DataStart;
+                dateVM.HintText = minDate.HintText;
+
+                return this.View(dateVM);
             }
-
-            var minDate = await this.GetMinDate();
-
-            dateVM.DataStart = minDate.DataStart;
-            dateVM.HintText = minDate.HintText;
-
-            return this.View(dateVM);
         }
 
         /// <summary>
         /// CreateReportDateSelection.
         /// </summary>
         /// <param name="reportCreationDate">reportCreationDate.</param>
+        /// <param name="returnUrl">returnurl.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [Route("CreateReportSummary")]
         [HttpPost]
         [ResponseCache(CacheProfileName = "Never")]
         [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { "ReportWizardCWF" })]
-        public async Task<IActionResult> CreateReportSummary(ReportCreationDateSelection reportCreationDate)
+        public async Task<IActionResult> CreateReportSummary(ReportCreationDateSelection reportCreationDate, string returnUrl = "")
         {
             // validate date
             var reportCreation = await this.multiPageFormService.GetMultiPageFormData<DatabricksRequestModel>(MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
@@ -219,6 +235,7 @@
                 reportCreationDate.DataStart = minDate.DataStart;
                 reportCreationDate.HintText = minDate.HintText;
                 this.ModelState.AddModelError("TimePeriod", CommonValidationErrorMessages.ReportingPeriodRequired);
+                this.ViewBag.ReturnUrl = returnUrl;
                 return this.View("CreateReportDateSelection", reportCreationDate);
             }
 
@@ -227,13 +244,14 @@
                 var minDate = await this.GetMinDate();
                 reportCreationDate.DataStart = minDate.DataStart;
                 reportCreationDate.HintText = minDate.HintText;
+                this.ViewBag.ReturnUrl = returnUrl;
                 return this.View("CreateReportDateSelection", reportCreationDate);
             }
 
             reportCreation.StartDate = reportCreationDate.GetStartDate();
             reportCreation.EndDate = reportCreationDate.GetEndDate();
             await this.multiPageFormService.SetMultiPageFormData(reportCreation, MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
-            return this.RedirectToAction("CourseCompletionReport");
+            return this.RedirectToAction("CourseProgressReport");
         }
 
         /// <summary>
@@ -254,7 +272,7 @@
                 return this.RedirectToAction("Index");
             }
 
-            var reportRequest = new DatabricksRequestModel { Take = ReportPageSize, Skip = 0 };
+            var reportRequest = new DatabricksRequestModel { Take = ReportPageSize, Skip = 0, ReportHistoryId = reportHistoryId };
             var periodCheck = int.TryParse(report.PeriodDays.ToString(), out int numberOfDays);
             if (report.PeriodDays > 0 && periodCheck)
             {
@@ -267,7 +285,6 @@
                 reportRequest.TimePeriod = "Custom";
                 reportRequest.StartDate = report.StartDate;
                 reportRequest.EndDate = report.EndDate;
-                reportRequest.ReportHistoryId = reportHistoryId;
             }
 
             if (report.CourseFilter == "all")
@@ -278,7 +295,7 @@
             reportRequest.Courses = report.CourseFilter.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(f => f.Trim()).ToList();
 
             await this.multiPageFormService.SetMultiPageFormData(reportRequest, MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
-            return this.RedirectToAction("CourseCompletionReport");
+            return this.RedirectToAction("CourseProgressReport");
         }
 
         /// <summary>
@@ -313,7 +330,7 @@
         public async Task<IActionResult> QueueReportDownload(int reportHistoryId)
         {
             await this.reportService.QueueReportDownload(reportHistoryId);
-            return this.RedirectToAction("CourseCompletionReport");
+            return this.RedirectToAction("CourseProgressReport");
         }
 
         /// <summary>
@@ -321,11 +338,11 @@
         /// </summary>
         /// <param name="courseCompletion">courseCompletion.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        [Route("CourseCompletionReport")]
+        [Route("CourseProgressReport")]
         [HttpGet]
         [ResponseCache(CacheProfileName = "Never")]
         [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { "ReportWizardCWF" })]
-        public async Task<IActionResult> CourseCompletionReport(CourseCompletionViewModel courseCompletion = null)
+        public async Task<IActionResult> CourseProgressReport(CourseCompletionViewModel courseCompletion = null)
         {
             int page = 1;
 
@@ -395,7 +412,7 @@
 
             if (reportCreation.Courses.Count == 0)
             {
-                matchedCourseNames = allCourses.Select(course => course.Value).ToList();
+                matchedCourseNames = new List<string> { "all courses" };
             }
             else
             {
@@ -418,7 +435,7 @@
 
             foreach (var subCategory in subCategories.Courses)
             {
-                courses.Add(new KeyValuePair<string, string>(subCategory.Id.ToString(), subCategory.Displayname));
+                courses.Add(new KeyValuePair<string, string>(subCategory.Id.ToString(), UtilityHelper.ConvertToSentenceCase(subCategory.Displayname)));
             }
 
             return courses;

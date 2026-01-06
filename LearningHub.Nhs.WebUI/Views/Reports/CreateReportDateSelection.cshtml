@@ -36,16 +36,16 @@
                 <div class="nhsuk-hint">
                     Create a course progress report
                 </div>
-
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model.TimePeriod) })" />
+                }
                 <h1 class="nhsuk-heading-xl">
                     Reporting period
                 </h1>
                 <div class="nhsuk-u-padding-bottom-9">
 
-                    @if (errorHasOccurred)
-                    {
-                        <vc:error-summary order-of-property-names="@(new[] { nameof(Model.TimePeriod) })" />
-                    }
+                   
                     <form asp-controller="Reports" asp-action="CreateReportSummary" method="post">
                         <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
                         @Html.HiddenFor(x=>x.HintText)
@@ -55,6 +55,16 @@
                                 <div class="nhsuk-hint">
                                     For the last:
                                 </div>
+
+                                @if (errorHasOccurred)
+                                {
+                                    <div id="TimePeriod-error" class="nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-3">
+                                       
+                                            <span class="error-message--margin-bottom-1 nhsuk-error-message">
+                                            <span class="nhsuk-u-visually-hidden">Error:</span> Select a reporting period
+                                            </span>
+                                    </div>
+                                }
 
                                 <div class="nhsuk-radios" data-module="nhsuk-radios">
                                     @foreach (var (radio, index) in Model.PopulateDateRange().Select((r, i) => (r, i)))

@@ -524,5 +524,20 @@
 
             return false;
         }
+
+        /// <summary>
+        /// GetReportStatusDisplayText.
+        /// </summary>
+        /// <param name="status">The status.</param>
+        /// <returns>The string.</returns>
+        public static string GetReportStatusDisplayText(string status)
+        {
+            if (status == "Not completed")
+            {
+                return "In progress";
+            }
+
+            return status;
+        }
     }
 }

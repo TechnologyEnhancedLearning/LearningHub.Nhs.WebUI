@@ -25,6 +25,25 @@ jobs:
   - checkout: self
     clean: true
     fetchTags: false
+    # Inject Build Number into Swagger JSON
+  - task: PowerShell@2
+    displayName: 'Inject build number into Swagger definition'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $swaggerFile = "$(Build.SourcesDirectory)/SwaggerDefinitions/V1.3.0.json"
+
+        Write-Host "Swagger file: $swaggerFile"
+        Write-Host "Build Number: $(Build.BuildNumber)"
+
+        if (!(Test-Path $swaggerFile)) {
+          Write-Error "Swagger file not found"
+          exit 1
+        }
+
+        (Get-Content $swaggerFile -Raw) `
+          -replace '__BUILD_NUMBER__', '$(Build.BuildNumber)' |
+        Set-Content $swaggerFile
   - task: NuGetToolInstaller@1
     displayName: Use NuGet 5.8
     inputs:

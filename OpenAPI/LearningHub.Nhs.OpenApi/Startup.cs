@@ -226,8 +226,6 @@ namespace LearningHub.NHS.OpenAPI
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/dev/swagger.json", "v1.4.0");
-
-                ////c.SwaggerEndpoint("/SwaggerDefinitions/v1.3.0.json", "v1.3.0");
                 c.OAuthClientId(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:ClientId"));
                 c.OAuthClientSecret(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:ClientSecret"));
                 c.OAuthScopes(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:Scopes"));

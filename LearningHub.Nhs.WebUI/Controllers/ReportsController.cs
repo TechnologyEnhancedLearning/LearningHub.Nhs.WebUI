@@ -171,8 +171,7 @@
             }
 
             this.ModelState.AddModelError("Courses", CommonValidationErrorMessages.CourseRequired);
-            reportCreation.Courses = null;
-            await this.multiPageFormService.SetMultiPageFormData(reportCreation, MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
+
             courseSelection.BuildCourses(await this.GetCoursesAsync());
             courseSelection.Courses = reportCreation.Courses;
             this.ViewBag.ReturnUrl = returnUrl;

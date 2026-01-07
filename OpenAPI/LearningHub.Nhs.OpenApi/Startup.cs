@@ -93,11 +93,16 @@ namespace LearningHub.NHS.OpenAPI
             services.AddMvc()
                   .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
+            var swaggerTitle = this.Configuration["Swagger:Title"];
+            var swaggerVersion = this.Configuration["Swagger:Version"];
+            var swaggerDescription = $"A set of API endpoints for retrieving learning resource information from the Learning Hub learning platform. The [Learning Hub](https://learninghub.nhs.uk/) is a platform for hosting and sharing learning resources for health and social care provided by Technology Enhanced Learning (TEL) at NHS England. An application API key must be used to authorise calls to the API from external applications. To contact TEL to discuss connecting your external system to the Learning Hub, email england.tel@nhs.net.\n\n Build Number: {this.Configuration["Swagger:BuildNumber"]} \n\n";
+
             services.AddSwaggerGen(
                 c =>
                 {
                     // For docs see https://github.com/domaindrivendev/Swashbuckle.AspNetCore
-                    c.SwaggerDoc("dev", new OpenApiInfo { Title = "LearningHub.NHS.OpenAPI", Version = "dev" });
+                    c.SwaggerDoc("dev", new OpenApiInfo { Title = swaggerTitle, Version = swaggerVersion, Description = swaggerDescription });
+
                     c.CustomSchemaIds(type => type.FullName);
                     c.AddSecurityDefinition(
                         "ApiKey",
@@ -220,12 +225,9 @@ namespace LearningHub.NHS.OpenAPI
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                if (env.IsDevelopment())
-                {
-                    c.SwaggerEndpoint("/swagger/dev/swagger.json", "Auto-generated");
-                }
+                c.SwaggerEndpoint("/swagger/dev/swagger.json", "v1.4.0");
 
-                c.SwaggerEndpoint("/SwaggerDefinitions/v1.3.0.json", "v1.3.0");
+                ////c.SwaggerEndpoint("/SwaggerDefinitions/v1.3.0.json", "v1.3.0");
                 c.OAuthClientId(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:ClientId"));
                 c.OAuthClientSecret(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:ClientSecret"));
                 c.OAuthScopes(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:Scopes"));

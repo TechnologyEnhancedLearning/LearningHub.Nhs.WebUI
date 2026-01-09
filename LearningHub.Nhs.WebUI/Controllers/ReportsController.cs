@@ -348,6 +348,11 @@
             // validate date
             var reportCreation = await this.multiPageFormService.GetMultiPageFormData<DatabricksRequestModel>(MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
 
+            if (reportCreation.Courses == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+
             switch (courseCompletion.ReportFormActionType)
             {
                 case ReportFormActionTypeEnum.NextPageChange:

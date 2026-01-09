@@ -400,6 +400,7 @@
                 response.TotalCount = result.TotalCount;
                 response.CourseCompletionRecords = result.CourseCompletionRecords;
                 response.ReportHistoryModel = await this.reportService.GetReportHistoryById(result.ReportHistoryId);
+                response.ReportHistoryId = result.ReportHistoryId;
                 reportCreation.ReportHistoryId = result.ReportHistoryId;
             }
 

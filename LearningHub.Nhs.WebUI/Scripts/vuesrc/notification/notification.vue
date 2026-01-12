@@ -8,8 +8,9 @@
                     <thead>
                         <tr>
                             <th v-if="isHighPriority" class="p-0">
-                                &nbsp;
+                                <span class="sr-only">High Priority</span>
                             </th>
+
                             <th class="px-sm-3 py-sm-3" style="width:14%" @click="sortByDate" role=button>
                                 Date
                                 <i :class="['pl-2 pt-2 text-dark '+ sortDirectionIcon]"></i>
@@ -30,7 +31,7 @@
                                 <a href="#" @click="showNotification(notification)">{{ notification.title }}</a>
                             </td>
                             <td class="px-sm-3 py-sm-3">
-                                <div class="d-flex justify-content-between" 
+                                <div class="d-flex justify-content-between"
                                      v-for="item in notificationTypeContent(notification.notificationType)">
                                     {{ item.text }}&nbsp;
                                     <i :class="item.className"></i>
@@ -74,7 +75,7 @@
                         <i :class="['fal fa-envelope' + (notification.readOnDate != null ? '-open text-success' : '')]">&nbsp;</i>
                         <a href="#" @click="showNotification(notification)">{{ notification.title }}</a>
                     </div>
-                    
+
                     <a href="#deleteModalButton" data-toggle="modal" @click="selectNotification(notification)" aria-label="Delete" v-if="notification.userDismissable">
                         <i class="fas fa-ellipsis-h fa-lg" style="color: #435563;"></i>
                     </a>
@@ -173,7 +174,7 @@
                         .catch(e => console.log(e));
                 }
             },
-            async deleteNotification() {  
+            async deleteNotification() {
                 await axios.delete(
                     '/api/notification/' + this.selectedNotification.notificationId + '?userNotificationId=' + this.selectedNotification.id)
                     .catch(e => console.log(e));

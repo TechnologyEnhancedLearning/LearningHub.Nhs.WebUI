@@ -247,8 +247,8 @@
                 return this.View("CreateReportDateSelection", reportCreationDate);
             }
 
-            reportCreation.StartDate = reportCreationDate.GetStartDate();
-            reportCreation.EndDate = reportCreationDate.GetEndDate();
+            reportCreation.StartDate = reportCreation.TimePeriod == "Custom" ? reportCreationDate.GetStartDate() : null;
+            reportCreation.EndDate = reportCreation.TimePeriod == "Custom" ? reportCreationDate.GetEndDate() : null;
             await this.multiPageFormService.SetMultiPageFormData(reportCreation, MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
             return this.RedirectToAction("CourseProgressReport");
         }

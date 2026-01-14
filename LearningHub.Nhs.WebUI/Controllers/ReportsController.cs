@@ -171,8 +171,7 @@
             }
 
             this.ModelState.AddModelError("Courses", CommonValidationErrorMessages.CourseRequired);
-            reportCreation.Courses = null;
-            await this.multiPageFormService.SetMultiPageFormData(reportCreation, MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
+
             courseSelection.BuildCourses(await this.GetCoursesAsync());
             courseSelection.Courses = reportCreation.Courses;
             this.ViewBag.ReturnUrl = returnUrl;
@@ -248,8 +247,8 @@
                 return this.View("CreateReportDateSelection", reportCreationDate);
             }
 
-            reportCreation.StartDate = reportCreationDate.GetStartDate();
-            reportCreation.EndDate = reportCreationDate.GetEndDate();
+            reportCreation.StartDate = reportCreation.TimePeriod == "Custom" ? reportCreationDate.GetStartDate() : null;
+            reportCreation.EndDate = reportCreation.TimePeriod == "Custom" ? reportCreationDate.GetEndDate() : null;
             await this.multiPageFormService.SetMultiPageFormData(reportCreation, MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
             return this.RedirectToAction("CourseProgressReport");
         }
@@ -349,6 +348,11 @@
             // validate date
             var reportCreation = await this.multiPageFormService.GetMultiPageFormData<DatabricksRequestModel>(MultiPageFormDataFeature.AddCustomWebForm("ReportWizardCWF"), this.TempData);
 
+            if (reportCreation.Courses == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+
             switch (courseCompletion.ReportFormActionType)
             {
                 case ReportFormActionTypeEnum.NextPageChange:
@@ -401,6 +405,7 @@
                 response.TotalCount = result.TotalCount;
                 response.CourseCompletionRecords = result.CourseCompletionRecords;
                 response.ReportHistoryModel = await this.reportService.GetReportHistoryById(result.ReportHistoryId);
+                response.ReportHistoryId = result.ReportHistoryId;
                 reportCreation.ReportHistoryId = result.ReportHistoryId;
             }
 

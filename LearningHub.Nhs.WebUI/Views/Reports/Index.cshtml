@@ -84,8 +84,9 @@
                                 }
                                 else
                                 {
-                                    matchedCourseNames = $"{matched[0]} and {matched.Count - 1} others";
+                                    matchedCourseNames = $"{matched[0]} and {matched.Count - 1} other{((matched.Count - 1) > 1 ? "s" : "")}";
                                 }
+                                matchedCourseNames = UtilityHelper.ConvertToSentenceCase(matchedCourseNames);
                             }
 
 

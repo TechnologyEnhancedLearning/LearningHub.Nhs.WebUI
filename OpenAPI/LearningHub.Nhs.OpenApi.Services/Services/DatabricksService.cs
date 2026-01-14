@@ -21,9 +21,9 @@ using LearningHub.Nhs.Models.Enums;
 using System.Text.Json;
 using LearningHub.Nhs.Models.Entities;
 using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
-using elfhHub.Nhs.Models.Entities;
 using LearningHub.Nhs.Models.Email.Models;
 using LearningHub.Nhs.Models.Email;
+using LearningHub.Nhs.OpenApi.Services.Helpers;
 
 namespace LearningHub.Nhs.OpenApi.Services.Services
 {
@@ -415,10 +415,12 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     }
                     else
                     {
-                        firstCourse = $"{matched[0].ToLower()} and {matched.Count - 1} others";
+                        firstCourse = $"{matched[0].ToLower()} and {matched.Count - 1} other{((matched.Count - 1) > 1 ? "s" : "")}";
+
                     }
                 }
 
+                firstCourse = TextCasingHelper.ConvertToSentenceCase(firstCourse);
 
                 try
                 {

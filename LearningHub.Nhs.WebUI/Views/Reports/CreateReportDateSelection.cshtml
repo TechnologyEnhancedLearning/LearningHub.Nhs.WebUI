@@ -56,7 +56,7 @@
                                     For the last:
                                 </div>
 
-                                @if (errorHasOccurred)
+                                @if (errorHasOccurred && string.IsNullOrWhiteSpace(Model.TimePeriod))
                                 {
                                     <div id="TimePeriod-error" class="nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-3">
                                        

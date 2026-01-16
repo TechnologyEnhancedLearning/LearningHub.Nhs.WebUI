@@ -55,7 +55,11 @@
         }
     }
 
-    if (ViewBag.ActiveTab == "courses")
+    if (ViewBag.ActiveTab == "browse" && Model.NodeContents.Count() == 0)
+    {
+        ViewBag.ActiveTab = "courses";
+    }
+    else if (ViewBag.ActiveTab == "courses")
     {
         if (Model.Catalogue.SelectedCategoryId == 0 ||
          (Model.Catalogue.SelectedCategoryId > 0 &&

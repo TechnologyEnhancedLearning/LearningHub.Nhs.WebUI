@@ -66,7 +66,7 @@
                 HashedToken = hashedToken,
                 Salt = salt,
                 Lookup = lookupToken,
-                Expiry = DateTimeOffset.Now.AddMinutes(expiryMinutes),
+                Expiry = DateTimeOffset.UtcNow.AddMinutes(expiryMinutes),
                 TenantId = this.learningHubConfig.LearningHubTenantId,
                 UserId = userId,
                 Email = email,

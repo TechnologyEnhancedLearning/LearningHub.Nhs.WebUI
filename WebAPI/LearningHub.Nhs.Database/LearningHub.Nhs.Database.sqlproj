@@ -693,6 +693,16 @@
     <Build Include="Tables\Databricks\ReportHistory.sql" />
     <Build Include="Tables\Elfh\UserGroupReporterTBL.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-6625-AddtionalTable-CDC.sql" />
+    <Build Include="Functions\lakeflowUtilityVersion_1_1.sql" />
+    <Build Include="Functions\lakeflowDetectPlatform.sql" />
+    <Build Include="Stored Procedures\Adf\lakeflowDisableOldCaptureInstance_1_2.sql" />
+    <Build Include="Stored Procedures\Adf\lakeflowFixPermissions.sql" />
+    <Build Include="Stored Procedures\Adf\lakeflowMergeCaptureInstances_1_2.sql" />
+    <Build Include="Stored Procedures\Adf\lakeflowRefreshCaptureInstance_1_2.sql" />
+    <Build Include="Stored Procedures\Adf\lakeflowSetupChangeDataCapture.sql" />
+    <Build Include="Stored Procedures\Adf\lakeflowSetupChangeTracking.sql" />
+    <Build Include="Tables\Adf\lakeflowCaptureInstanceInfo_1_2.sql" />
+    <Build Include="Tables\Adf\lakeflowDdlAudit_1_2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

@@ -29,7 +29,7 @@
         private readonly IResourceService resourceService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ActivityController"/> class.
+        /// Initializes a new instance of the  <see cref="ActivityController"/> class.
         /// </summary>
         /// <param name="userService">The elfh user service.</param>
         /// <param name="activityService">The activity service.</param>

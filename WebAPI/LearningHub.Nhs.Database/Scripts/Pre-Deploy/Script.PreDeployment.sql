@@ -18,13 +18,17 @@ BEGIN
     RAISERROR (N'TD-2902 Add resource types to Content Server.sql must be run manually before release.', 16, 127) WITH NOWAIT
 END
 GO
--- =========================================
--- Pre-deployment: Disable Change Tracking for all tables
--- =========================================
+PRINT '*** PRE-DEPLOYMENT: Disable Change Tracking STARTED ***';
+GO
 
-DECLARE @schemaName NVARCHAR(128), @tableName NVARCHAR(128);
-DECLARE ct_cursor CURSOR FOR
-SELECT s.name AS schema_name, t.name AS table_name
+-- =========================================
+-- Disable Change Tracking on all tables
+-- =========================================
+DECLARE @schemaName SYSNAME, @tableName SYSNAME;
+DECLARE @sql NVARCHAR(MAX);
+
+DECLARE ct_cursor CURSOR FAST_FORWARD FOR
+SELECT s.name, t.name
 FROM sys.change_tracking_tables ct
 JOIN sys.tables t ON ct.object_id = t.object_id
 JOIN sys.schemas s ON t.schema_id = s.schema_id;
@@ -34,29 +38,30 @@ FETCH NEXT FROM ct_cursor INTO @schemaName, @tableName;
 
 WHILE @@FETCH_STATUS = 0
 BEGIN
+    SET @sql = N'ALTER TABLE [' + @schemaName + '].[' + @tableName + '] DISABLE CHANGE_TRACKING;';
     PRINT 'Disabling Change Tracking for table: ' + @schemaName + '.' + @tableName;
-    EXEC('ALTER TABLE [' + @schemaName + '].[' + @tableName + '] DISABLE CHANGE_TRACKING;');
+    EXEC (@sql);
 
     FETCH NEXT FROM ct_cursor INTO @schemaName, @tableName;
 END
 
 CLOSE ct_cursor;
 DEALLOCATE ct_cursor;
+GO
 
-PRINT 'Change Tracking has been disabled for all tables.';
+PRINT 'Table-level Change Tracking disabled.';
+GO
 
-
--- 2️⃣ Disable Change Tracking if enabled
-IF EXISTS (SELECT * FROM sys.change_tracking_databases WHERE database_id = DB_ID())
+-- =========================================
+-- Disable Change Tracking at database level
+-- MUST be in its own batch
+-- =========================================
+IF EXISTS (SELECT 1 FROM sys.change_tracking_databases WHERE database_id = DB_ID())
 BEGIN
-    PRINT 'Change Tracking is enabled. Disabling Change Tracking for the database...';
-    ALTER DATABASE CURRENT
-    SET CHANGE_TRACKING = OFF;
-    PRINT 'Change Tracking has been disabled.';
+    PRINT 'Disabling Change Tracking at database level...';
+    ALTER DATABASE CURRENT SET CHANGE_TRACKING = OFF;
 END
-ELSE
-BEGIN
-    PRINT 'Change Tracking is not enabled on this database.';
-END
+GO
 
-PRINT 'Change Tracking disable completed.';
+PRINT '*** PRE-DEPLOYMENT: Disable Change Tracking COMPLETED ***';
+GO

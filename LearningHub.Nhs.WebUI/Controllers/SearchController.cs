@@ -8,6 +8,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.WebUI.Filters;
+    using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models.Search;
     using Microsoft.AspNetCore.Authorization;
@@ -16,6 +17,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Microsoft.FeatureManagement;
     using Settings = LearningHub.Nhs.WebUI.Configuration.Settings;
 
     /// <summary>
@@ -28,6 +30,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     {
         private readonly ISearchService searchService;
         private readonly IFileService fileService;
+        private readonly IFeatureManager featureManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchController"/> class.
@@ -38,17 +41,20 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="searchService">The searchService.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="fileService">The fileService.</param>
+        /// <param name="featureManager"> The Feature flag manager.</param>
         public SearchController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
             IOptions<Settings> settings,
             ISearchService searchService,
             ILogger<SearchController> logger,
-            IFileService fileService)
+            IFileService fileService,
+            IFeatureManager featureManager)
         : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.searchService = searchService;
             this.fileService = fileService;
+            this.featureManager = featureManager;
         }
 
         /// <summary>
@@ -65,7 +71,18 @@ namespace LearningHub.Nhs.WebUI.Controllers
             search.SearchId ??= 0;
             search.GroupId = !string.IsNullOrWhiteSpace(search.GroupId) && Guid.TryParse(search.GroupId, out Guid groupId) ? groupId.ToString() : Guid.NewGuid().ToString();
 
-            var searchResult = await this.searchService.PerformSearch(this.User, search);
+            // Fix: Ensure an instance of IFeatureManager is injected and used
+            var azureSearchEnabled = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.AzureSearch)).Result;
+            SearchResultViewModel searchResult = new SearchResultViewModel();
+
+            if (azureSearchEnabled)
+            {
+                searchResult = await this.searchService.PerformSearch(this.User, search);
+            }
+            else
+            {
+                searchResult = await this.searchService.PerformSearchInFindwise(this.User, search);
+            }
 
             if (search.SearchId == 0 && searchResult.ResourceSearchResult != null)
             {
@@ -73,10 +90,13 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     search,
                     SearchFormActionTypeEnum.BasicSearch,
                     searchResult.ResourceSearchResult.TotalHits,
-                    searchResult.CatalogueSearchResult.TotalHits);
+                    searchResult.CatalogueSearchResult != null ? searchResult.CatalogueSearchResult.TotalHits : 0);
 
                 searchResult.ResourceSearchResult.SearchId = searchId;
-                searchResult.CatalogueSearchResult.SearchId = searchId;
+                if (searchResult.CatalogueSearchResult != null)
+                {
+                    searchResult.CatalogueSearchResult.SearchId = searchId;
+                }
             }
 
             if (filterApplied)
@@ -109,10 +129,11 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="groupId">The search group id.</param>
         /// <param name="searchId">The search id.</param>
         /// <param name="actionType">The action type.</param>
+        /// <param name="resourceCollectionFilter">The show filter.</param>
         /// <param name="feedback">The feedback.</param>
         /// <returns>The actionResult.</returns>
         [HttpPost("results")]
-        public async Task<IActionResult> IndexPost([FromQuery] SearchRequestViewModel search, int resourceCount, [FromForm] IEnumerable<string> filters, [FromForm] int? resourceAccessLevelId, [FromForm] IEnumerable<string> providerfilters, [FromForm] int? sortby, [FromForm] string groupId, [FromForm] int searchId, [FromQuery] string actionType, string feedback)
+        public async Task<IActionResult> IndexPost([FromQuery] SearchRequestViewModel search, int resourceCount, [FromForm] IEnumerable<string> filters, [FromForm] int? resourceAccessLevelId, [FromForm] IEnumerable<string> providerfilters, [FromForm] int? sortby, [FromForm] string groupId, [FromForm] int searchId, [FromQuery] string actionType, [FromForm] IEnumerable<string> resourceCollectionFilter, string feedback)
         {
             if (actionType == "feedback")
             {
@@ -144,14 +165,17 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 var existingProviderFilters = (search.ProviderFilters ?? new List<string>()).OrderBy(t => t);
                 var newProviderFilters = providerfilters.OrderBy(t => t);
                 var filterProviderUpdated = !newProviderFilters.SequenceEqual(existingProviderFilters);
+                var existingResourceCollectionFilter = (search.ResourceCollectionFilter ?? new List<string>()).OrderBy(t => t);
+                var newResourceCollectionFilter = resourceCollectionFilter.OrderBy(t => t);
+                var filterResourceCollectionUpdated = !newResourceCollectionFilter.SequenceEqual(existingResourceCollectionFilter);
 
-                // No sort or resource type filter updated or resource access level filter updated or provider filter applied
-                if ((search.Sortby ?? 0) == sortby && !filterUpdated && !resourceAccessLevelFilterUpdated && !filterProviderUpdated)
+                // No sort or resource type filter updated or resource access level filter updated or provider filter applied or resource collection filter applied
+                if ((search.Sortby ?? 0) == sortby && !filterUpdated && !resourceAccessLevelFilterUpdated && !filterProviderUpdated && !filterResourceCollectionUpdated)
                 {
                     return await this.Index(search, noSortFilterError: true);
                 }
 
-                if (search.ResourcePageIndex > 0 && (filterUpdated || resourceAccessLevelFilterUpdated || filterProviderUpdated))
+                if (search.ResourcePageIndex > 0 && (filterUpdated || resourceAccessLevelFilterUpdated || filterProviderUpdated || filterResourceCollectionUpdated))
                 {
                     search.ResourcePageIndex = null;
                 }
@@ -163,6 +187,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             search.GroupId = groupId;
             search.SearchId = searchId;
             search.ResourceAccessLevelId = resourceAccessLevelId;
+            search.ResourceCollectionFilter = resourceCollectionFilter;
 
             var routeValues = new RouteValueDictionary(search)
             {
@@ -218,6 +243,45 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="title">the title.</param>
         [HttpGet("record-resource-click")]
         public void RecordResourceClick(string url, int nodePathId, int itemIndex, int pageIndex, int totalNumberOfHits, string searchText, int resourceReferenceId, Guid groupId, string searchId, long timeOfSearch, string userQuery, string query, string title)
+        {
+            var searchActionResourceModel = new SearchActionResourceModel
+            {
+                NodePathId = nodePathId,
+                ItemIndex = itemIndex,
+                NumberOfHits = pageIndex * this.Settings.FindwiseSettings.ResourceSearchPageSize,
+                TotalNumberOfHits = totalNumberOfHits,
+                SearchText = searchText,
+                ResourceReferenceId = resourceReferenceId,
+                GroupId = groupId,
+                SearchId = searchId,
+                TimeOfSearch = timeOfSearch,
+                UserQuery = userQuery,
+                Query = query,
+                Title = title,
+            };
+
+            this.searchService.CreateResourceSearchActionAsync(searchActionResourceModel);
+            this.Response.Redirect(url);
+        }
+
+        /// <summary>
+        /// The RecordClickedSearchResult.
+        /// </summary>
+        /// <param name="url">The url.</param>
+        /// <param name="nodePathId">The nodePathId.</param>
+        /// <param name="itemIndex">The itemIndex.</param>
+        /// <param name="pageIndex">The page index.</param>
+        /// <param name="totalNumberOfHits">The totalNumberOfHits.</param>
+        /// <param name="searchText">The searchText.</param>
+        /// <param name="resourceReferenceId">The resourceReferenceId.</param>
+        /// <param name="groupId">The groupdId.</param>
+        /// <param name="searchId">The search id.</param>
+        /// <param name="timeOfSearch">time of search.</param>
+        /// <param name="userQuery">user query.</param>
+        /// <param name="query">search query.</param>
+        /// <param name="title">the title.</param>
+        [HttpGet("record-course-click")]
+        public void RecordCourseClick(string url, int nodePathId, int itemIndex, int pageIndex, int totalNumberOfHits, string searchText, int resourceReferenceId, Guid groupId, string searchId, long timeOfSearch, string userQuery, string query, string title)
         {
             var searchActionResourceModel = new SearchActionResourceModel
             {
@@ -313,7 +377,14 @@ namespace LearningHub.Nhs.WebUI.Controllers
 
             var autoSuggestions = await this.searchService.GetAutoSuggestionList(term);
 
-            return this.PartialView("_AutoComplete", autoSuggestions);
+            var azureSearchEnabled = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.AzureSearch)).Result;
+
+            if (!azureSearchEnabled)
+            {
+                return this.PartialView("_AutoComplete", autoSuggestions);
+            }
+
+            return this.PartialView("_AutoSuggest", autoSuggestions);
         }
 
         /// <summary>

@@ -116,6 +116,9 @@
                 case ResourceTypeEnum.Moodle:
                     typeText = "Course";
                     break;
+                case ResourceTypeEnum.Catalogue:
+                    typeText = "Catalogue";
+                    break;
                 default:
                     typeText = string.Empty;
                     break;

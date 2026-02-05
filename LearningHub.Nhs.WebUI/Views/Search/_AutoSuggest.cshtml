@@ -1,0 +1,70 @@
+﻿@model LearningHub.Nhs.Models.Search.AutoSuggestionModel;
+@inject LearningHub.Nhs.WebUI.Interfaces.IMoodleApiService moodleApiService;
+
+@using LearningHub.Nhs.Models.Search.SearchClick;
+@using Microsoft.AspNetCore.WebUtilities
+@using System.Web
+@{
+    var counter = 0;
+    var counter_res = 0;
+    string GetUrl(string term, string searchType, AutoSuggestionClickPayloadModel payload, string reference, int? resourceReferenceId)
+    {
+       
+        var url = string.Empty;
+        if (!string.IsNullOrEmpty(reference) && searchType == "catalogue")
+        {
+            url = "/Catalogue/" + reference;
+        }
+        else if ((resourceReferenceId > 0) && searchType == "resource")
+        {
+            url = "/Resource/" + resourceReferenceId;
+        }
+        else if ((resourceReferenceId > 0) && searchType == "course")
+        {
+            if (resourceReferenceId != null)
+                return moodleApiService.GetCourseUrl(resourceReferenceId.Value);
+        }
+        else if (!string.IsNullOrEmpty(term) && searchType == "Concepts")
+        {
+            url = "/Search/results?term=" + term;
+        }
+        else
+        {
+            url = "/Search/results?term=" + term;
+        }
+
+        return $@"/search/record-autosuggestion-click?term={term}&url={url}&clickTargetUrl={payload.ClickTargetUrl}&itemIndex={payload?.HitNumber}&&totalNumberOfHits={payload?.SearchSignal?.Stats?.TotalHits}
+&containerId={payload?.ContainerId}&name={payload?.DocumentFields.Name}&query={payload?.SearchSignal?.Query}&userQuery={HttpUtility.UrlEncode(payload?.SearchSignal?.UserQuery)}
+&searchId={payload?.SearchSignal?.SearchId}&timeOfSearch={payload?.SearchSignal?.TimeOfSearch}&title={payload?.DocumentFields?.Title}";
+    }
+}
+@if (Model != null)
+{
+    @foreach (var item in Model.ConceptDocument.ConceptDocumentList)
+    {
+        counter++;
+        <li class="autosuggestion-option autosugg-concepts" style="@((Model.ConceptDocument.ConceptDocumentList.Count == counter)? "border-bottom: 3px solid #d8dde0;": "" )">
+            <a tabindex="0" style="text-decoration:none !important" href="@GetUrl(item.Concept,"Concepts", item.Click.Payload, null, null)">
+                <svg class="nhsuk-icon autosuggestion-icon" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.8558 10.5296L15.7218 14.3861C15.8998 14.5627 16 14.8031 16 15.0539C16 15.3047 15.8998 15.5451 15.7218 15.7218C15.5451 15.8998 15.3047 16 15.0539 16C14.8031 16 14.5627 15.8998 14.3861 15.7218L10.5296 11.8558C7.76424 13.9254 3.86973 13.5064 1.60799 10.8959C-0.653748 8.28537 -0.513826 4.37088 1.92852 1.92852C4.37088 -0.513826 8.28537 -0.653748 10.8959 1.60799C13.5064 3.86973 13.9254 7.76424 11.8558 10.5296ZM6.58846 1.88528C3.99101 1.88528 1.88537 3.99093 1.88537 6.58837C1.88537 9.18581 3.99101 11.2915 6.58846 11.2915C9.1859 11.2915 11.2915 9.18581 11.2915 6.58837C11.2915 3.99093 9.1859 1.88528 6.58846 1.88528Z" />
+                </svg>
+                <p class="nhsuk-u-font-size-16 autosuggestion-link">@item.Concept</p>
+            </a>
+        </li>
+    }
+    @foreach (var item in Model.ResourceCollectionDocument.DocumentList)
+    {
+        counter_res++;
+        <li class="autosuggestion-option autosugg-resource" style="@((Model.ResourceCollectionDocument.DocumentList.Count == counter_res)? "border-bottom: 3px solid #d8dde0;": "" )">
+            <a tabindex="0" style="text-decoration:none !important" href="@GetUrl(item.Title, item.ResourceType, item.Click.Payload, item.URL, item.ResourceReferenceId)">
+                <p class="nhsuk-u-font-size-16 autosuggestion-link">@item.Title</p>
+                <p class="nhsuk-u-font-size-14 autosuggestion-subtext" style="padding:0;">
+                    Type: <span style="font-weight:bold; text-transform:capitalize;">
+                        @(item.ResourceType == "resource" ? "Learning resource" : item.ResourceType)
+                    </span>
+                </p>
+
+            </a>
+        </li>
+    }    
+}

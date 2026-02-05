@@ -46,7 +46,7 @@
 }
 
 <h2 class="nhsuk-u-margin-bottom-3">
-    @($"{resourceResult.TotalHits} resource{(resourceResult.TotalHits == 1 ? string.Empty : "s")}")
+    @($"Showing {resourceResult.TotalHits} result{(resourceResult.TotalHits == 1 ? string.Empty : "s")}")
 </h2>
 
 @if (resourceResult.TotalHits > 0)

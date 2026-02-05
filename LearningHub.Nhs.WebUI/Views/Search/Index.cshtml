@@ -1,19 +1,22 @@
-﻿@model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
+﻿@using Microsoft.FeatureManagement
+@inject IFeatureManager FeatureManager
+@model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
 
 @{
     ViewData["Title"] = "Search";
+    var azureSearchEnabled = await FeatureManager.IsEnabledAsync("AzureSearch");
 }
 
-@section styles{
+@section styles {
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/search.css" asp-append-version="true" />
 }
 
 <div class="search-page">
-    <div class="nhsuk-width-container app-width-container">     
+    <div class="nhsuk-width-container app-width-container">
         @if (Model.DidYouMeanEnabled)
         {
             <p class="nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-6 nhsuk-body-l">
-                No results were found for <b>@(Model.SearchString)</b> please change your search term or explore the suggestions below    
+                No results were found for <b>@(Model.SearchString)</b> please change your search term or explore the suggestions below
             </p>
         }
         else
@@ -22,14 +25,14 @@
                 Search results @(!string.IsNullOrEmpty(Model.SearchString) ? "for " + Model.SearchString : string.Empty)
             </h1>
         }
-            
+
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-two-thirds">
                 @await Html.PartialAsync("_SearchBar", @Model.SearchString)
             </div>
         </div>
 
-        @if (Model.CatalogueSearchResult?.TotalHits > 0)
+        @if (Model.CatalogueSearchResult?.TotalHits > 0 && !azureSearchEnabled)
         {
             @if (Model.DidYouMeanEnabled)
             {
@@ -52,18 +55,32 @@
                     Showing results for <b>@(Model.SuggestedResource)</b>
                 </p>
             }
+
+            @*   @if (azureSearchEnabled) // [BY] Use this when we create quick filters for Azure Search
+            {
+                @await Html.PartialAsync("_SearchFilter", Model)
+            } *@
+
             @await Html.PartialAsync("_ResourceFilter", Model)
+
 
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
                     <div class="nhsuk-u-reading-width">
-                        @await Html.PartialAsync("_ResourceSearchResult", Model)
+                        @if (azureSearchEnabled)
+                        {
+                            @await Html.PartialAsync("_SearchResult", Model)
+                        }
+                        else
+                        {
+                            @await Html.PartialAsync("_ResourceSearchResult", Model)
+                        }
                         @await Html.PartialAsync("_ResourcePagination", Model)
                     </div>
                 </div>
             </div>
         }
-        
+
         @if ((Model.CatalogueSearchResult?.TotalHits ?? 0) == 0 && (Model.ResourceSearchResult?.TotalHits ?? 0) == 0)
         {
             <div class="nhsuk-grid-row">

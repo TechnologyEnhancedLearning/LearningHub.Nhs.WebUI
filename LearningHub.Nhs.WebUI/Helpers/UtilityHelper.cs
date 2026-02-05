@@ -25,13 +25,17 @@
             { "article", ResourceTypeEnum.Article },
             { "case", ResourceTypeEnum.Case },
             { "weblink", ResourceTypeEnum.WebLink },
+            { "web link", ResourceTypeEnum.WebLink },
             { "audio", ResourceTypeEnum.Audio },
             { "scorm", ResourceTypeEnum.Scorm },
+            { "scorm e-learning resource", ResourceTypeEnum.Scorm },
             { "assessment", ResourceTypeEnum.Assessment },
             { "genericfile", ResourceTypeEnum.GenericFile },
+            { "file", ResourceTypeEnum.GenericFile },
             { "image", ResourceTypeEnum.Image },
             { "html", ResourceTypeEnum.Html },
             { "moodle", ResourceTypeEnum.Moodle },
+            { "catalogue", ResourceTypeEnum.Catalogue },
         };
 
         /// <summary>
@@ -146,6 +150,8 @@
                     return "HTML";
                 case ResourceTypeEnum.Moodle:
                     return "Course";
+                case ResourceTypeEnum.Catalogue:
+                    return "Catalogue";
                 default:
                     return "File";
             }
@@ -186,6 +192,8 @@
                     return "HTML";
                 case ResourceTypeEnum.Moodle:
                     return "Course";
+                case ResourceTypeEnum.Catalogue:
+                    return "Catalogue";
                 default:
                     return "File";
             }

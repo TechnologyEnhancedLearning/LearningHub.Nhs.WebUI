@@ -50,7 +50,15 @@
             </a>
         </li>
     }
+    @if (Model.ShowReports)
+    {
+        <li class="nhsuk-header__navigation-item @Html.IsSelected("Reports")">
+            <a class="nhsuk-header__navigation-link" href="/reports">
+                Reports
 
+            </a>
+        </li>
+    }
     @if (Model.ShowMyBookmarks)
     {
         <li class="nhsuk-header__navigation-item @Html.IsSelected("Bookmark")">
@@ -60,6 +68,7 @@
             </a>
         </li>
     }
+
 
     @if (Context.Request.Path.Value != "/Home/Error" && !SystemOffline())
     {

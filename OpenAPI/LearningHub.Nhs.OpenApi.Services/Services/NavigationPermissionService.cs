@@ -13,16 +13,19 @@
     {
         private readonly IResourceService resourceService;
         private readonly IUserGroupService userGroupService;
+        private readonly IDatabricksService databricksService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationPermissionService"/> class.
         /// </summary>
         /// <param name="resourceService">Resource service.</param>
         /// <param name="userGroupService">userGroup service.</param>
-        public NavigationPermissionService(IResourceService resourceService, IUserGroupService userGroupService)
+        /// <param name="databricksService">databricksService.</param>
+        public NavigationPermissionService(IResourceService resourceService, IUserGroupService userGroupService, IDatabricksService databricksService)
         {
             this.resourceService = resourceService;
             this.userGroupService = userGroupService;
+            this.databricksService = databricksService;
         }
 
         /// <summary>
@@ -45,7 +48,7 @@
             }
             else if (user.IsInRole("Administrator"))
             {
-                return AuthenticatedAdministrator(controllerName);
+                return await AuthenticatedAdministrator(controllerName, currentUserId);
             }
             else if (user.IsInRole("ReadOnly"))
             {
@@ -86,6 +89,7 @@
                 ShowSignOut = false,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
         }
 
@@ -93,8 +97,9 @@
         /// The AuthenticatedAdministrator.
         /// </summary>
         /// <param name="controllerName">The controller name.</param>
+        /// <param name="userId">userId.</param>
         /// <returns>The <see cref="NavigationModel"/>.</returns>
-        private NavigationModel AuthenticatedAdministrator(string controllerName)
+        private async Task<NavigationModel> AuthenticatedAdministrator(string controllerName, int userId)
         {
             return new NavigationModel()
             {
@@ -111,6 +116,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = await this.databricksService.IsUserReporter(userId),
             };
         }
 
@@ -137,6 +143,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = await this.databricksService.IsUserReporter(userId),
             };
         }
 
@@ -161,6 +168,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
         }
 
@@ -186,6 +194,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = true,
+                ShowReports = await this.databricksService.IsUserReporter(userId),
             };
         }
 
@@ -210,6 +219,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = await this.databricksService.IsUserReporter(userId),
             };
         }
 
@@ -234,6 +244,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
         }
     }

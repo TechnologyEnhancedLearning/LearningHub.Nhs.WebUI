@@ -12,18 +12,22 @@
     {
         private readonly IResourceService resourceService;
         private readonly IUserGroupService userGroupService;
+        private readonly IReportService reportService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationPermissionService"/> class.
         /// </summary>
         /// <param name="resourceService">Resource service.</param>
         /// <param name="userGroupService">UserGroup service.</param>
+        /// <param name="reportService">Report Service.</param>
         public NavigationPermissionService(
         IResourceService resourceService,
-        IUserGroupService userGroupService)
+        IUserGroupService userGroupService,
+        IReportService reportService)
         {
             this.resourceService = resourceService;
             this.userGroupService = userGroupService;
+            this.reportService = reportService;
         }
 
         /// <summary>
@@ -45,7 +49,7 @@
             }
             else if (user.IsInRole("Administrator"))
             {
-                return this.AuthenticatedAdministrator(controllerName);
+                return await this.AuthenticatedAdministrator(controllerName);
             }
             else if (user.IsInRole("ReadOnly"))
             {
@@ -87,6 +91,7 @@
                 ShowSignOut = false,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
         }
 
@@ -95,7 +100,7 @@
         /// </summary>
         /// <param name="controllerName">The controller name.</param>
         /// <returns>The <see cref="NavigationModel"/>.</returns>
-        private NavigationModel AuthenticatedAdministrator(string controllerName)
+        private async Task<NavigationModel> AuthenticatedAdministrator(string controllerName)
         {
             return new NavigationModel()
             {
@@ -113,6 +118,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = await this.reportService.GetReporterPermission(),
             };
         }
 
@@ -139,6 +145,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = await this.reportService.GetReporterPermission(),
             };
         }
 
@@ -164,6 +171,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
         }
 
@@ -190,6 +198,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = true,
+                ShowReports = await this.reportService.GetReporterPermission(),
             };
         }
 
@@ -215,6 +224,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = await this.reportService.GetReporterPermission(),
             };
         }
 
@@ -240,6 +250,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
         }
     }

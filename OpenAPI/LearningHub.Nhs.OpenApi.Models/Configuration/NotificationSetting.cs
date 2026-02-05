@@ -55,5 +55,15 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// Gets or sets the ResourceContributeAccess.
         /// </summary>
         public string ResourceContributeAccess { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the report title notification content.
+        /// </summary>
+        public string ReportTitle { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the report notification content.
+        /// </summary>
+        public string Report { get; set; } = null!;
     }
 }

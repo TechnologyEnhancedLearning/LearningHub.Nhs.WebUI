@@ -76,6 +76,11 @@
         public bool ShowBrowseCatalogues { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show reports.
+        /// </summary>
+        public bool ShowReports { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether ShowHome.
         /// </summary>
         public bool ShowHome { get; set; }

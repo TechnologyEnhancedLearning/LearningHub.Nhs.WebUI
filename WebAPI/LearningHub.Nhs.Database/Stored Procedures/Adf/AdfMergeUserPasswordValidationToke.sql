@@ -15,6 +15,8 @@ BEGIN
 
     -- Enable identity insert if userPasswordValidationTokenId is an IDENTITY column
     SET IDENTITY_INSERT [elfh].[userPasswordValidationTokenTBL] ON;
+	ALTER TABLE [elfh].[userPasswordValidationTokenTBL] NOCHECK CONSTRAINT ALL;
+	ALTER TABLE [hub].[User] NOCHECK CONSTRAINT ALL;
     MERGE [elfh].[userPasswordValidationTokenTBL] AS target
     USING @userPasswordValidationTokenList AS source
     ON target.userPasswordValidationTokenId = source.userPasswordValidationTokenId
@@ -56,5 +58,7 @@ BEGIN
 
     -- Disable identity insert
     SET IDENTITY_INSERT [elfh].[userPasswordValidationTokenTBL] OFF;
+	ALTER TABLE [hub].[User] CHECK CONSTRAINT ALL;
+	ALTER TABLE [elfh].[userPasswordValidationTokenTBL] CHECK CONSTRAINT ALL;
 END
 GO

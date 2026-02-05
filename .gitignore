@@ -66,3 +66,4 @@ obj
 /LearningHub.Nhs.WebUI.BlazorClient/LearningHub.Nhs.WebUI.BlazorClient.csproj.user
 /LearningHub.Nhs.WebUI.BlazorClient/wwwroot/appsettings.Development.json
 /LearningHub.Nhs.WebUI.BlazorClient/Properties/launchSettings.json
+/.github/dependabot.yml

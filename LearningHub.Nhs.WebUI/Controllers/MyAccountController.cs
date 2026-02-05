@@ -1398,7 +1398,7 @@
             }
             else
             {
-                if (!searchSubmission)
+                if (string.IsNullOrWhiteSpace(viewModel.FilterText))
                 {
                     viewModel.SelectedWorkPlaceId = profile.LocationId.ToString();
                     viewModel.FilterText = profile.LocationName;

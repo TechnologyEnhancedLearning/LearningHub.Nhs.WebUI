@@ -32,20 +32,6 @@ CREATE TYPE dbo.UserReportingUserType AS TABLE
     [AmendDate] DATETIMEOFFSET
 );
 GO
-CREATE TYPE UserHistoryAttributeType AS TABLE
-(
-    [userHistoryAttributeId] INT,
-    [userHistoryId] INT,
-    [attributeId] INT,
-    [intValue] INT NULL,
-    [textValue] NVARCHAR(1000) NULL,
-    [booleanValue] BIT NULL,
-    [dateValue] DATETIMEOFFSET NULL,
-    [deleted] BIT,
-    [amendUserId] INT,
-    [amendDate] DATETIMEOFFSET
-);
-GO
 CREATE TYPE UserEmploymentResponsibilityType AS TABLE
 (
     [userEmploymentResponsibilityId] INT,
@@ -582,6 +568,16 @@ CREATE TYPE dbo.MedicalCouncil AS TABLE
 	deleted bit,
 	amendUserID int ,
 	amendDate datetimeoffset(7)
+);
+GO
+CREATE TYPE [dbo].[UserGroupReporterType] AS TABLE
+(
+    [userGroupReporterId] INT,
+    [userId] INT,
+    [userGroupId] INT,
+    [deleted] BIT,
+    [amendUserId] INT,
+    [amendDate] DATETIMEOFFSET(7)
 );
 GO
 CREATE PROCEDURE [dbo].[AdfMergeattribute]

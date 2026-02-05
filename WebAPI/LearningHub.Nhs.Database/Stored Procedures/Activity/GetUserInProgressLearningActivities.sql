@@ -5,6 +5,7 @@
 --
 -- Modification History
 -- 01-10-2025  SA added assesment score and passmark and provider details
+-- 05-02-2025  SA TD-6860 : Fixed the null issue with the search history
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUserInProgressLearningActivities] (
 	 @userId INT
@@ -23,7 +24,7 @@ BEGIN
     (
         SELECT TOP 1 rr.OriginalResourceReferenceId
 		FROM [resources].[ResourceReference] rr		
-		WHERE rr.ResourceId = rv.ResourceId AND rr.Deleted = 0
+		WHERE rr.ResourceId = rv.ResourceId --AND rr.Deleted = 0
     ) AS ResourceReferenceID,
     ra.MajorVersion AS MajorVersion,
     ra.MinorVersion AS MinorVersion,

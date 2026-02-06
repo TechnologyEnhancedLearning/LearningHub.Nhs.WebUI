@@ -40,7 +40,6 @@ namespace LearningHub.Nhs.OpenApi.Services
 
             services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>();
             services.AddScoped<IDatabricksApiHttpClient, DatabricksApiHttpClient>();
-            services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<ILearningHubService, LearningHubService>();
             services.AddScoped<IResourceService, ResourceService>();
             services.AddScoped<ICatalogueService, CatalogueService>();

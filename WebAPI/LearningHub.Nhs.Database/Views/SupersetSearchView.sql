@@ -1,4 +1,12 @@
-﻿
+﻿-------------------------------------------------------------------------------
+-- Author       Binon Yesudhas
+-- Created      06-02-2026
+-- Purpose      Combined view of both catalogues and resources for Azure AI search
+--
+-- Modification History
+-- TD-6212 - https://hee-tis.atlassian.net/browse/TD-6212
+-- 06-02-2026  Binon Yesudhas  Initial Revision
+-------------------------------------------------------------------------------
 CREATE VIEW [dbo].[SupersetSearchView]
 AS
 

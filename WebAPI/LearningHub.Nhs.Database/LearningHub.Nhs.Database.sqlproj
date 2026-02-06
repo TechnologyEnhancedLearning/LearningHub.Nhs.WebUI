@@ -693,9 +693,9 @@
     <Build Include="Tables\Databricks\ReportHistory.sql" />
     <Build Include="Tables\Elfh\UserGroupReporterTBL.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-6625-AddtionalTable-CDC.sql" />
-    <None Include="Views\TD-6212.1.Azure Search-SearchCataloguesView.sql" />
-    <None Include="Views\TD-6212.3.Azure Search-SupersetSearchView.sql" />
-    <None Include="Views\TD-6212.2.Azure Search-SearchResourcesView.sql" />
+    <None Include="Views\SearchCataloguesView.sql" />
+    <None Include="Views\SupersetSearchView.sql" />
+    <None Include="Views\SearchResourcesView.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

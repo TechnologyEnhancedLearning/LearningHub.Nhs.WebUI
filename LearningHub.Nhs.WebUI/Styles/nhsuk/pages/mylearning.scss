@@ -24,6 +24,7 @@
         background-color: $nhsuk-green;
         transition: width .6s ease;
     }
+
     .nhs-item-row {
         display: flex;
         justify-content: space-between;
@@ -50,10 +51,13 @@
     .white-background {
         background-color: #fff
     }
-
     .table-content-spacing {
-        min-width: 75%;
-        max-width: 75%;
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+    }
+    .nhsuk-tag {
+        white-space: nowrap;
     }
 
     .search-box-container {

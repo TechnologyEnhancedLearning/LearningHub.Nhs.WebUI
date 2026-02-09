@@ -33,14 +33,14 @@
     {
         filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Downloaded</strong>";
     }
-  @if (Model.Viewed)
-  {
-    filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Viewed</strong>";
-  }
-  @if (Model.Launched)
-  {
-    filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Launched</strong>";
-  }
+    @if (Model.Viewed)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Viewed</strong>";
+    }
+    @if (Model.Launched)
+    {
+        filtersummary = filtersummary + $" <strong class='nhsuk-tag'>Launched</strong>";
+    }
     @if (string.IsNullOrWhiteSpace(filtersummary))
     {
         statusFilter = string.Empty;
@@ -107,19 +107,18 @@
     }
 
 }
-
-<div class="nhsuk-u-padding-bottom-4">
+<div class="nhsuk-u-padding-bottom-4 filter-summary">
     @if (!string.IsNullOrWhiteSpace(statusFilter) || !string.IsNullOrWhiteSpace(statusFilter))
     {
-        <span>Filtered by </span>
+        <span class="filter-label">Filtered by </span>
     }
     @if (!string.IsNullOrWhiteSpace(statusFilter))
     {
-        <span class="nhsuk-u-padding-right-3">@Html.Raw(statusFilter)</span>
+        <span class="filter-group">@Html.Raw(statusFilter)</span>
     }
     @if (!string.IsNullOrWhiteSpace(typeFilter))
     {
-        <span class="nhsuk-u-padding-right-3">@Html.Raw(typeFilter)</span>
+        <span class="filter-group">@Html.Raw(typeFilter)</span>
     }
 </div>
 

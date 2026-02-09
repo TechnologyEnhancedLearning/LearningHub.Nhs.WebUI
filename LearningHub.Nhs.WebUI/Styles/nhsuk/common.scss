@@ -39,7 +39,11 @@
         display: none !important;
     }
 }
-
+@media (max-width: 640px) {
+    .filter-summary {
+        flex-direction: column;
+    }
+}
 /* mobile  */
 .display-mobile--show {
     display: block !important;
@@ -66,6 +70,7 @@
     margin-top: auto !important;
     margin-bottom: auto !important;
 }
+
 .btn:focus, .btn.focus {
     outline: 0;
     box-shadow: 0 0 0 0.2rem $nhsuk-yellow !important;
@@ -78,6 +83,7 @@
     color: $nhsuk-black;
     box-shadow: 0 0 0 4px $nhsuk-yellow;
 }
+
 .sr-only {
     position: absolute;
     width: 1px;
@@ -89,5 +95,24 @@
     white-space: nowrap;
     border: 0;
 }
+.filter-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
 
+.filter-label {
+    width: 100%;
+}
 
+.filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+/* NHS tags should wrap properly */
+.filter-group .nhsuk-tag {
+    white-space: nowrap;
+}

@@ -67,6 +67,13 @@
         Task<LearningHubValidationResult> CompleteScormActivity(ScormActivityViewModel scormActivityViewModel);
 
         /// <summary>
+        /// The CompleteScormActivity.
+        /// </summary>
+        /// <param name="scormActivityViewModel">The updateScormActivityViewModel<see cref="ScormActivityViewModel"/>.</param>
+        /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
+        Task<LearningHubValidationResult> ScormCompleteActivity(ScormActivityViewModel scormActivityViewModel);
+
+        /// <summary>
         /// The ResolveScormActivity.
         /// </summary>
         /// <param name="userId">The user id.</param>

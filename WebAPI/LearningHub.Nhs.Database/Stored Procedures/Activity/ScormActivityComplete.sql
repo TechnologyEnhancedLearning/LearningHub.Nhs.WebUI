@@ -9,7 +9,7 @@
 -- 17-04-2024  Swapna Abraham	Reverted TD-1325 changes
 -- 10-02-2026  Swapna Abraham  TD-6848 Certificate Generation Does Not Trigger After Successful Completion of the Resources
 -------------------------------------------------------------------------------
-ALTER PROCEDURE [activity].[ScormActivityComplete]
+CREATE PROCEDURE [activity].[ScormActivityComplete]
 (
 	@UserId int,
 	@ScormActivityId int,

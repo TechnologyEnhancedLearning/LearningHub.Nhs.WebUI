@@ -18,7 +18,7 @@ CREATE PROCEDURE [activity].[ScormActivityComplete]
 )
 AS
 BEGIN
-    SET @ResourceActivityId  = 0
+
 	DECLARE @ScormResourceActivityId int
 	DECLARE @ActivityStatusId int
 	DECLARE @Score decimal(16,2)

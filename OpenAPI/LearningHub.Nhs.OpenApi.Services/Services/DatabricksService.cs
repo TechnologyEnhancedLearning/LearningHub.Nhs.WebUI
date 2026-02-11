@@ -24,6 +24,7 @@ using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
 using LearningHub.Nhs.Models.Email.Models;
 using LearningHub.Nhs.Models.Email;
 using LearningHub.Nhs.OpenApi.Services.Helpers;
+using System.Configuration;
 
 namespace LearningHub.Nhs.OpenApi.Services.Services
 {

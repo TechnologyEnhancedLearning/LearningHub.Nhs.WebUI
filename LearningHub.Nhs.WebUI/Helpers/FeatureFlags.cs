@@ -24,5 +24,10 @@
         /// The AzureSearch.
         /// </summary>
         public const string AzureSearch = "AzureSearch";
+
+        /// <summary>
+        /// The InPlatformReport.
+        /// </summary>
+        public const string InPlatformReport = "InPlatformReport";
     }
 }

@@ -2,9 +2,10 @@
 {
     using System.Security.Principal;
     using System.Threading.Tasks;
-    using LearningHub.Nhs.Models.Extensions;
+    using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// Defines the <see cref="NavigationPermissionService" />.
@@ -14,6 +15,7 @@
         private readonly IResourceService resourceService;
         private readonly IUserGroupService userGroupService;
         private readonly IDatabricksService databricksService;
+        private readonly IOptions<FeatureFlagsConfig> featureFlagsConfig;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationPermissionService"/> class.
@@ -21,11 +23,13 @@
         /// <param name="resourceService">Resource service.</param>
         /// <param name="userGroupService">userGroup service.</param>
         /// <param name="databricksService">databricksService.</param>
-        public NavigationPermissionService(IResourceService resourceService, IUserGroupService userGroupService, IDatabricksService databricksService)
+        /// <param name="featureFlagsConfig">featureFlags</param>
+        public NavigationPermissionService(IResourceService resourceService, IUserGroupService userGroupService, IDatabricksService databricksService, IOptions<FeatureFlagsConfig> featureFlagsConfig)
         {
             this.resourceService = resourceService;
             this.userGroupService = userGroupService;
             this.databricksService = databricksService;
+            this.featureFlagsConfig = featureFlagsConfig;
         }
 
         /// <summary>
@@ -116,7 +120,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
-                ShowReports = await this.databricksService.IsUserReporter(userId),
+                ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
             };
         }
 
@@ -143,7 +147,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
-                ShowReports = await this.databricksService.IsUserReporter(userId),
+                ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
             };
         }
 
@@ -194,7 +198,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = true,
-                ShowReports = await this.databricksService.IsUserReporter(userId),
+                ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
             };
         }
 
@@ -219,7 +223,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
-                ShowReports = await this.databricksService.IsUserReporter(userId),
+                ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
             };
         }
 
@@ -246,6 +250,16 @@
                 ShowBrowseCatalogues = false,
                 ShowReports = false,
             };
+        }
+
+        private bool IsInplatformReportActive()
+        {
+            bool.TryParse(this.featureFlagsConfig.Value.InPlatformReport, out bool inPlatformReport);
+            if (inPlatformReport)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

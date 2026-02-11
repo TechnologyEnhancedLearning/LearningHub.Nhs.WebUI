@@ -56,6 +56,11 @@ namespace LearningHub.NHS.OpenAPI.Configuration
         public const string DatabricksSectionName = "Databricks";
 
         /// <summary>
+        /// The FeatureFlagsSectionName.
+        /// </summary>
+        public const string FeatureFlagsSectionName = "FeatureFlags";
+
+        /// <summary>
         /// Adds config.
         /// </summary>
         /// <param name="services">The service collection.</param>
@@ -79,6 +84,8 @@ namespace LearningHub.NHS.OpenAPI.Configuration
             services.AddOptions<MoodleConfig>().Bind(config.GetSection(MoodleSectionName));
 
             services.AddOptions<DatabricksConfig>().Bind(config.GetSection(DatabricksSectionName));
+
+            services.AddOptions<FeatureFlagsConfig>().Bind(config.GetSection(FeatureFlagsSectionName));
         }
 
         private static OptionsBuilder<T> RegisterPostConfigure<T>(this OptionsBuilder<T> builder)

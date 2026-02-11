@@ -51,7 +51,16 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IUserGroupService, UserGroupService>();
             services.AddScoped<IMoodleApiService, MoodleApiService>();
             services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IDatabricksService, DatabricksService>();
+
+            var reportingEnabled = configuration.GetValue<bool>("FeatureFlags:InPlatformReport");
+            if (reportingEnabled)
+            {
+                services.AddScoped<IDatabricksService, DatabricksService>();
+            }
+            else
+            {
+                services.AddScoped<IDatabricksService, DatabricksServiceNoImplementation>();
+            }
 
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IEventLogService, EventLogService>();

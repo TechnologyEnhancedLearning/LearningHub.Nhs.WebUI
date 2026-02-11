@@ -2,8 +2,10 @@
 {
     using System.Security.Principal;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
+    using Microsoft.FeatureManagement;
 
     /// <summary>
     /// Defines the <see cref="NavigationPermissionService" />.
@@ -13,6 +15,7 @@
         private readonly IResourceService resourceService;
         private readonly IUserGroupService userGroupService;
         private readonly IReportService reportService;
+        private IFeatureManager featureManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationPermissionService"/> class.
@@ -20,14 +23,17 @@
         /// <param name="resourceService">Resource service.</param>
         /// <param name="userGroupService">UserGroup service.</param>
         /// <param name="reportService">Report Service.</param>
+        /// <param name="featureManager">Feature Manager.</param>
         public NavigationPermissionService(
         IResourceService resourceService,
         IUserGroupService userGroupService,
-        IReportService reportService)
+        IReportService reportService,
+        IFeatureManager featureManager)
         {
             this.resourceService = resourceService;
             this.userGroupService = userGroupService;
             this.reportService = reportService;
+            this.featureManager = featureManager;
         }
 
         /// <summary>
@@ -118,7 +124,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
-                ShowReports = await this.reportService.GetReporterPermission(),
+                ShowReports = this.DisplayReportMenu() ? await this.reportService.GetReporterPermission() : false,
             };
         }
 
@@ -145,7 +151,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
-                ShowReports = await this.reportService.GetReporterPermission(),
+                ShowReports = this.DisplayReportMenu() ? await this.reportService.GetReporterPermission() : false,
             };
         }
 
@@ -198,7 +204,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = true,
-                ShowReports = await this.reportService.GetReporterPermission(),
+                ShowReports = this.DisplayReportMenu() ? await this.reportService.GetReporterPermission() : false,
             };
         }
 
@@ -224,7 +230,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
-                ShowReports = await this.reportService.GetReporterPermission(),
+                ShowReports = this.DisplayReportMenu() ? await this.reportService.GetReporterPermission() : false,
             };
         }
 
@@ -252,6 +258,11 @@
                 ShowBrowseCatalogues = false,
                 ShowReports = false,
             };
+        }
+
+        private bool DisplayReportMenu()
+        {
+            return Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.InPlatformReport)).Result;
         }
     }
 }

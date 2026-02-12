@@ -24,6 +24,7 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -101,16 +102,33 @@
                     { searchRequestModel.SortColumn, searchRequestModel.SortDirection }
                 };
 
+                // Determine if we need to apply post-processing sort
+                bool needsPostProcessingSort = searchQueryType == SearchQueryType.Semantic &&
+                                               !string.IsNullOrEmpty(searchRequestModel.SortColumn) &&
+                                               searchRequestModel.SortColumn != "relevance";
+
+                // For semantic search with sorting, retrieve buffer size results for post-processing
+                int queryPageSize = pageSize;
+                int queryOffset = offset;
+                int semanticResultBufferSize = 50; //this.azureSearchConfig.SemanticResultBufferSize;
+
+                if (needsPostProcessingSort)
+                {
+                    // Retrieve semantic buffer size results from the start
+                    queryPageSize = semanticResultBufferSize;
+                    queryOffset = 0;
+                }
+
                 // Normalize resource_type filter values
                 var filters = SearchFilterBuilder.CombineAndNormaliseFilters(searchRequestModel.FilterText, searchRequestModel.ProviderFilterText);
 
                 if (searchRequestModel.CatalogueId.HasValue)
                 {
                     Dictionary<string, List<string>> catalogueIdFilter = new Dictionary<string, List<string>> { { "catalogue_id", new List<string> { searchRequestModel.CatalogueId.ToString() } } };
-                    filters = filters == null ? catalogueIdFilter : filters.Concat(catalogueIdFilter).ToDictionary(k => k.Key, v => v.Value);                   
+                    filters = filters == null ? catalogueIdFilter : filters.Concat(catalogueIdFilter).ToDictionary(k => k.Key, v => v.Value);
                 }
 
-                var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, offset, pageSize, filters, sortBy, true);
+                var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, queryOffset, queryPageSize, filters, sortBy, true);
                 SearchResults<Models.ServiceModels.AzureSearch.SearchDocument> filteredResponse = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(query, searchOptions, cancellationToken);
                 var count = Convert.ToInt32(filteredResponse.TotalCount);
 
@@ -148,6 +166,15 @@
                     })
                     .ToList();
 
+                // Apply post-processing sort if needed
+                if (needsPostProcessingSort)
+                {
+                    documents = ApplyPostProcessingSort(documents, searchRequestModel.SortColumn, searchRequestModel.SortDirection);
+
+                    // Apply pagination after sorting
+                    documents = documents.Skip(offset).Take(pageSize).ToList();
+                }
+
                 viewmodel.DocumentList = new Documentlist
                 {
                     Documents = documents.ToArray()
@@ -177,6 +204,45 @@
             }
         }
 
+        /// <summary>
+        /// Applies post-processing sort to a list of documents.
+        /// Used when semantic search is active with non-relevance sorting.
+        /// </summary>
+        /// <param name="documents">The documents to sort.</param>
+        /// <param name="sortColumn">The column to sort by (title, rating, authored_date).</param>
+        /// <param name="sortDirection">The sort direction (ascending/descending).</param>
+        /// <returns>The sorted list of documents.</returns>
+        private List<Document> ApplyPostProcessingSort(List<Document> documents, string sortColumn, string sortDirection)
+        {
+            if (documents == null || documents.Count == 0)
+            {
+                return documents;
+            }
+
+            bool isDescending = sortDirection != null &&
+                               (sortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase) ||
+                                sortDirection.Equals("descending", StringComparison.OrdinalIgnoreCase));
+
+            IOrderedEnumerable<Document> sortedDocuments = sortColumn?.ToLowerInvariant() switch
+            {
+                "title" => isDescending
+                    ? documents.OrderByDescending(d => d.Title, StringComparer.OrdinalIgnoreCase)
+                    : documents.OrderBy(d => d.Title, StringComparer.OrdinalIgnoreCase),
+                "rating" => isDescending
+                    ? documents.OrderByDescending(d => d.Rating)
+                    : documents.OrderBy(d => d.Rating),
+                "authored_date" or "dateauthored" => isDescending
+                    ? documents.OrderByDescending(d =>
+                        DateTime.TryParse(d.AuthoredDate, out var dt) ? dt : DateTime.MinValue)
+                    : documents.OrderBy(d =>
+                        DateTime.TryParse(d.AuthoredDate, out var dt) ? dt : DateTime.MinValue),
+                _ => isDescending
+                    ? documents.OrderByDescending(d => d.Title, StringComparer.OrdinalIgnoreCase)
+                    : documents.OrderBy(d => d.Title, StringComparer.OrdinalIgnoreCase)
+            };
+
+            return sortedDocuments.ToList();
+        }
         /// <inheritdoc/>
         public async Task<SearchCatalogueResultModel> GetCatalogueSearchResultAsync(CatalogueSearchRequestModel catalogSearchRequestModel, int userId, CancellationToken cancellationToken = default)
         {
@@ -634,16 +700,16 @@
                         Type = r.Document.ResourceCollection ?? "Suggestion"
                     });
 
-               var autoResults = autoResponse.Value.Results
-                    .Where(r => !string.IsNullOrWhiteSpace(r.Text))
-                    .Select((r, index) => new
-                    {
-                        Id = "A" + (index + 1),
-                        Text = r.Text.Trim(),
-                        URL = string.Empty,
-                        ResourceReferenceId = (string?)null,
-                        Type = "AutoComplete"
-                    });
+                var autoResults = autoResponse.Value.Results
+                     .Where(r => !string.IsNullOrWhiteSpace(r.Text))
+                     .Select((r, index) => new
+                     {
+                         Id = "A" + (index + 1),
+                         Text = r.Text.Trim(),
+                         URL = string.Empty,
+                         ResourceReferenceId = (string?)null,
+                         Type = "AutoComplete"
+                     });
 
                 var combined = suggestResults
                     .Concat(autoResults)

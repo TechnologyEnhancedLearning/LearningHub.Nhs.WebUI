@@ -600,12 +600,14 @@
                 suggestOptions.Select.Add("resource_type");
                 suggestOptions.Select.Add("resource_collection");
                 suggestOptions.Select.Add("url");
-                suggestOptions.Select.Add("resource_reference_id");                
+                suggestOptions.Select.Add("resource_reference_id");
+                suggestOptions.Select.Add("is_deleted");
 
                 var autoOptions = new AutocompleteOptions
                 {
                     Mode = AutocompleteMode.OneTermWithContext,
-                    Size = 5
+                    Size = 5,
+                    Filter = "is_deleted eq false"
                 };
 
                 var searchText = LuceneQueryBuilder.EscapeLuceneSpecialCharacters(term);
@@ -621,7 +623,8 @@
                 var autoResponse = await autoTask;
 
                 var suggestResults = suggestResponse.Value.Results
-                    .Where(r => !string.IsNullOrEmpty(r.Document?.Title))
+                    .Where(r => !string.IsNullOrEmpty(r.Document?.Title) &&
+                    r.Document?.IsDeleted == false)
                     .Select(r => new
                     {
                         Id = r.Document.Id,

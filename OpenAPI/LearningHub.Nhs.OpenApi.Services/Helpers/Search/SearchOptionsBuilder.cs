@@ -12,6 +12,110 @@
     public static class SearchOptionsBuilder
     {
         /// <summary>
+        /// Determines if a sort direction is descending.
+        /// </summary>
+        /// <param name="sortDirection">The sort direction string.</param>
+        /// <returns>True if descending, false otherwise.</returns>
+        public static bool IsDescendingSort(string? sortDirection)
+        {
+            return sortDirection != null &&
+                   (sortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase) ||
+                    sortDirection.Equals("descending", StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// Maps a UI sort column name to the corresponding Azure Search field name.
+        /// </summary>
+        /// <param name="uiSortColumn">The UI sort column name.</param>
+        /// <returns>The Azure Search field name, or null if no mapping exists.</returns>
+        public static string? MapSortColumnToSearchField(string? uiSortColumn)
+        {
+            if (string.IsNullOrWhiteSpace(uiSortColumn))
+                return null;
+
+            return uiSortColumn.Trim().ToLowerInvariant() switch
+            {
+                "avgrating" => "rating",
+                "rating" => "rating",
+                "authored_date" => "date_authored",
+                "authoreddate" => "date_authored",
+                "authoredDate" => "date_authored",
+                "title" => "normalised_title",
+                "atoz" => "normalised_title",
+                "alphabetical" => "normalised_title",
+                "ztoa" => "normalised_title",
+                _ => null
+            };
+        }
+
+        /// <summary>
+        /// Maps a UI sort column name to the corresponding Document property name for in-memory sorting.
+        /// </summary>
+        /// <param name="uiSortColumn">The UI sort column name.</param>
+        /// <returns>The Document property name.</returns>
+        public static string? MapSortColumnToDocumentProperty(string? uiSortColumn)
+        {
+            if (string.IsNullOrWhiteSpace(uiSortColumn))
+                return null;
+
+            return uiSortColumn.Trim().ToLowerInvariant() switch
+            {
+                "avgrating" => "rating",
+                "rating" => "rating",
+                "authored_date" => "authored_date",
+                "authoreddate" => "authored_date",
+                "authoredDate" => "authored_date",
+                "title" => "title",
+                "atoz" => "title",
+                "alphabetical" => "title",
+                "ztoa" => "title",
+                _ => "title" // Default to title
+            };
+        }
+
+        /// <summary>
+        /// Applies post-processing sort to a list of documents.
+        /// Used when semantic search is active with non-relevance sorting.
+        /// </summary>
+        /// <param name="documents">The documents to sort.</param>
+        /// <param name="sortColumn">The column to sort by (title, rating, authored_date).</param>
+        /// <param name="sortDirection">The sort direction (ascending/descending).</param>
+        /// <returns>The sorted list of documents.</returns>
+        public static List<LearningHub.Nhs.Models.Search.Document> ApplyPostProcessingSort(
+            List<LearningHub.Nhs.Models.Search.Document> documents,
+            string? sortColumn,
+            string? sortDirection)
+        {
+            if (documents == null || documents.Count == 0)
+            {
+                return documents;
+            }
+
+            bool isDescending = IsDescendingSort(sortDirection);
+            string? mappedColumn = MapSortColumnToDocumentProperty(sortColumn);
+
+            IOrderedEnumerable<LearningHub.Nhs.Models.Search.Document> sortedDocuments = mappedColumn?.ToLowerInvariant() switch
+            {
+                "title" => isDescending
+                    ? documents.OrderByDescending(d => d.Title, StringComparer.OrdinalIgnoreCase)
+                    : documents.OrderBy(d => d.Title, StringComparer.OrdinalIgnoreCase),
+                "rating" => isDescending
+                    ? documents.OrderByDescending(d => d.Rating)
+                    : documents.OrderBy(d => d.Rating),
+                "authored_date" => isDescending
+                    ? documents.OrderByDescending(d =>
+                        DateTime.TryParse(d.AuthoredDate, out var dt) ? dt : DateTime.MinValue)
+                    : documents.OrderBy(d =>
+                        DateTime.TryParse(d.AuthoredDate, out var dt) ? dt : DateTime.MinValue),
+                _ => isDescending
+                    ? documents.OrderByDescending(d => d.Title, StringComparer.OrdinalIgnoreCase)
+                    : documents.OrderBy(d => d.Title, StringComparer.OrdinalIgnoreCase)
+            };
+
+            return sortedDocuments.ToList();
+        }
+
+        /// <summary>
         /// Builds search options for Azure Search queries.
         /// </summary>
         /// <param name="searchQueryType">The type of search query.</param>
@@ -20,6 +124,7 @@
         /// <param name="filters">The filters to apply.</param>
         /// <param name="sortBy">The sort to apply.</param>
         /// <param name="includeFacets">Whether to include facets.</param>
+        /// <param name="config">The Azure Search configuration.</param>
         /// <returns>The configured search options.</returns>
         public static SearchOptions BuildSearchOptions(
             SearchQueryType searchQueryType,
@@ -27,14 +132,15 @@
             int pageSize,
             Dictionary<string, List<string>>? filters,
             Dictionary<string, string>? sortBy,
-            bool includeFacets)
+            bool includeFacets,
+            Models.Configuration.AzureSearchConfig config)
         {
             var searchOptions = new SearchOptions
             {
                 Skip = offset,
                 Size = pageSize,
                 IncludeTotalCount = true,
-                ScoringProfile = "boostExactTitle"
+                ScoringProfile = config.ScoringProfile
             };
 
             string sortByFinal = GetSortOption(sortBy);
@@ -45,7 +151,7 @@
                 searchOptions.QueryType = SearchQueryType.Semantic;
                 searchOptions.SemanticSearch = new SemanticSearchOptions
                 {
-                    SemanticConfigurationName = "default"
+                    SemanticConfigurationName = config.SemanticConfigurationName
                 };
             }
             else if (searchQueryType == SearchQueryType.Simple)
@@ -61,15 +167,20 @@
             }
 
             // Add facets
-            if (includeFacets)
+            if (includeFacets && config.FacetFields != null)
             {
-                searchOptions.Facets.Add("resource_type");
-                searchOptions.Facets.Add("resource_collection");
-                searchOptions.Facets.Add("provider_ids");
+                foreach (var facet in config.FacetFields)
+                {
+                    searchOptions.Facets.Add(facet);
+                }
             }
 
-            Dictionary<string, List<string>> deletFilter = new Dictionary<string, List<string>> {{ "is_deleted", new List<string> {"false"} }};
-            filters = filters == null ? deletFilter : filters.Concat(deletFilter).ToDictionary(k => k.Key, v => v.Value);
+            // Add deleted filter
+            Dictionary<string, List<string>> deleteFilter = new Dictionary<string, List<string>>
+            {
+                { config.DeletedFilterField, new List<string> { config.DeletedFilterValue } }
+            };
+            filters = filters == null ? deleteFilter : filters.Concat(deleteFilter).ToDictionary(k => k.Key, v => v.Value);
 
             // Apply filters
             if (filters?.Any() == true)
@@ -78,7 +189,7 @@
             }
 
             return searchOptions;
-        }
+        }        
 
         private static string GetSortOption(Dictionary<string, string>? sortBy)
         {
@@ -94,30 +205,11 @@
             if (string.IsNullOrWhiteSpace(uiSortKey))
                 return string.Empty;
 
-            // Determine direction safely
-            string sortDirection =
-                directionInput != null &&
-                directionInput.StartsWith("desc", StringComparison.OrdinalIgnoreCase)
-                    ? "desc"
-                    : "asc";
+            // Determine direction using shared helper
+            string sortDirection = IsDescendingSort(directionInput) ? "desc" : "asc";
 
-            // Map UI values to search fields
-            string? sortColumn = uiSortKey.Trim().ToLowerInvariant() switch
-            {
-                "avgrating" => "rating",
-                "rating" => "rating",
-
-                "authored_date" => "date_authored",
-                "authoreddate" => "date_authored",
-                "authoredDate" => "date_authored",
-
-                "title" => "normalised_title",
-                "atoz" => "normalised_title",
-                "alphabetical" => "normalised_title",
-                "ztoa" => "normalised_title",
-
-                _ => null // unknown sort → ignore
-            };
+            // Map UI values to search fields using shared helper
+            string? sortColumn = MapSortColumnToSearchField(uiSortKey);
 
             // No valid mapping → fall back to relevance
             if (string.IsNullOrWhiteSpace(sortColumn))

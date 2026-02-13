@@ -24,6 +24,7 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -101,16 +102,33 @@
                     { searchRequestModel.SortColumn, searchRequestModel.SortDirection }
                 };
 
+                // Determine if we need to apply post-processing sort
+                bool needsPostProcessingSort = searchQueryType == SearchQueryType.Semantic &&
+                                               !string.IsNullOrEmpty(searchRequestModel.SortColumn) &&
+                                               searchRequestModel.SortColumn != "relevance";
+
+                // For semantic search with sorting, retrieve buffer size results for post-processing
+                int queryPageSize = pageSize;
+                int queryOffset = offset;
+                int semanticResultBufferSize = this.azureSearchConfig.SemanticResultBufferSize;
+
+                if (needsPostProcessingSort)
+                {
+                    // Retrieve semantic buffer size results from the start
+                    queryPageSize = semanticResultBufferSize;
+                    queryOffset = 0;
+                }
+
                 // Normalize resource_type filter values
                 var filters = SearchFilterBuilder.CombineAndNormaliseFilters(searchRequestModel.FilterText, searchRequestModel.ProviderFilterText);
 
                 if (searchRequestModel.CatalogueId.HasValue)
                 {
                     Dictionary<string, List<string>> catalogueIdFilter = new Dictionary<string, List<string>> { { "catalogue_id", new List<string> { searchRequestModel.CatalogueId.ToString() } } };
-                    filters = filters == null ? catalogueIdFilter : filters.Concat(catalogueIdFilter).ToDictionary(k => k.Key, v => v.Value);                   
+                    filters = filters == null ? catalogueIdFilter : filters.Concat(catalogueIdFilter).ToDictionary(k => k.Key, v => v.Value);
                 }
 
-                var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, offset, pageSize, filters, sortBy, true);
+                var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, queryOffset, queryPageSize, filters, sortBy, true, this.azureSearchConfig);
                 SearchResults<Models.ServiceModels.AzureSearch.SearchDocument> filteredResponse = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(query, searchOptions, cancellationToken);
                 var count = Convert.ToInt32(filteredResponse.TotalCount);
 
@@ -147,6 +165,15 @@
                         };
                     })
                     .ToList();
+
+                // Apply post-processing sort if needed
+                if (needsPostProcessingSort)
+                {
+                    documents = SearchOptionsBuilder.ApplyPostProcessingSort(documents, searchRequestModel.SortColumn, searchRequestModel.SortDirection);
+
+                    // Apply pagination after sorting
+                    documents = documents.Skip(offset).Take(pageSize).ToList();
+                }
 
                 viewmodel.DocumentList = new Documentlist
                 {
@@ -606,7 +633,7 @@
                 var autoOptions = new AutocompleteOptions
                 {
                     Mode = AutocompleteMode.OneTermWithContext,
-                    Size = 5,
+                    Size = this.azureSearchConfig.ConceptsSuggesterSize,
                     Filter = "is_deleted eq false"
                 };
 
@@ -634,16 +661,16 @@
                         Type = r.Document.ResourceCollection ?? "Suggestion"
                     });
 
-               var autoResults = autoResponse.Value.Results
-                    .Where(r => !string.IsNullOrWhiteSpace(r.Text))
-                    .Select((r, index) => new
-                    {
-                        Id = "A" + (index + 1),
-                        Text = r.Text.Trim(),
-                        URL = string.Empty,
-                        ResourceReferenceId = (string?)null,
-                        Type = "AutoComplete"
-                    });
+                var autoResults = autoResponse.Value.Results
+                     .Where(r => !string.IsNullOrWhiteSpace(r.Text))
+                     .Select((r, index) => new
+                     {
+                         Id = "A" + (index + 1),
+                         Text = r.Text.Trim(),
+                         URL = string.Empty,
+                         ResourceReferenceId = (string?)null,
+                         Type = "AutoComplete"
+                     });
 
                 var combined = suggestResults
                     .Concat(autoResults)
@@ -668,10 +695,11 @@
                         Title = item.Text,
                         Click = BuildAutoSuggestClickModel(item.Id, item.Text, 0, 0, term, suggestResults.Count())
                     })
-                        .Take(5)
+                        .Take(this.azureSearchConfig.ResourceCollectionSuggesterSize)
                         .ToList()
                 };
 
+                // We couldn't pass null value so just etting to empty collection with 0 hits, as we are using one resouce colection in auto-suggest
                 var autoSuggestionCatalogue = new AutoSuggestionCatalogue
                 {
                     TotalHits = suggestResults.Count(),
@@ -702,7 +730,7 @@
                 };
 
                 viewmodel.ResourceCollectionDocument = autoSuggestion;
-                viewmodel.CatalogueDocument = autoSuggestionCatalogue;
+                viewmodel.CatalogueDocument = autoSuggestionCatalogue; // We coundt pass null value so just etting to empty collection with 0 hits, as we are using one resouce colection in auto-suggest
                 viewmodel.ConceptDocument = autoSuggestionConcept;
 
                 return viewmodel;

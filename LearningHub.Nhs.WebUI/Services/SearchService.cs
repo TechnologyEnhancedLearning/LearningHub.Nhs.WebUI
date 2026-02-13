@@ -151,10 +151,9 @@
                     {
                         var accessLevelFilters = resourceResult.Facets.Where(x => x.Id == "resource_access_level").First().Filters;
 
-                        var generalAccessValue = (int)ResourceAccessibilityEnum.GeneralAccess;
-                        var basicUserAudienceFilterItem = accessLevelFilters.Where(x => x.DisplayName == generalAccessValue.ToString()).FirstOrDefault();
+                        var basicUserAudienceFilterItem = accessLevelFilters.Where(x => x.DisplayName == "2").FirstOrDefault(); // GeneralAccess
                         var basicResourceAccesslevelCount = basicUserAudienceFilterItem?.Count ?? 0;
-                        var basicUserAudienceFilter = new SearchFilterModel() { DisplayName = ResourceAccessLevelHelper.GetPrettifiedResourceAccessLevelOptionDisplayName(ResourceAccessibilityEnum.GeneralAccess), Count = basicResourceAccesslevelCount, Value = generalAccessValue.ToString(), Selected = (searchRequest.ResourceAccessLevelId ?? 0) == generalAccessValue };
+                        var basicUserAudienceFilter = new SearchFilterModel() { DisplayName = ResourceAccessLevelHelper.GetPrettifiedResourceAccessLevelOptionDisplayName(ResourceAccessibilityEnum.GeneralAccess), Count = basicResourceAccesslevelCount, Value = "2", Selected = (searchRequest.ResourceAccessLevelId ?? 0) == 2 };
                         resourceAccessLevelFilters.Add(basicUserAudienceFilter);
                     }
 

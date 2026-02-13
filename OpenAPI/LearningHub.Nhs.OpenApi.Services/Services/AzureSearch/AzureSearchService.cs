@@ -114,8 +114,8 @@
 
                 if (needsPostProcessingSort)
                 {
-                    // Retrieve semantic buffer size results from the start
-                    queryPageSize = semanticResultBufferSize;
+                    // Retrieve semantic buffer size results from the starta nd add offset for post-processing sort and pagination
+                    queryPageSize = semanticResultBufferSize + offset;
                     queryOffset = 0;
                 }
 

@@ -85,7 +85,7 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// Gets or sets the facet fields to include in search results.
         /// Default is ["resource_type", "resource_collection", "provider_ids"].
         /// </summary>
-        public List<string> FacetFields { get; set; } = new List<string> { "resource_type", "resource_collection", "provider_ids" };
+        public List<string> FacetFields { get; set; } = new List<string> { "resource_type", "resource_collection", "provider_ids", "resource_access_level" };
 
         /// <summary>
         /// Gets or sets the field name for the deleted filter.

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace LearningHub.Nhs.OpenApi.Models.Configuration
 {
     /// <summary>
@@ -43,11 +45,58 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// <summary>
         /// Gets or sets the suggester name for auto-complete and suggestions.
         /// </summary>
-        public string SuggesterName { get; set; } = "test-search-suggester";
+        public string SuggesterName { get; set; } = null!;
+        
+        /// <summary>
+        /// Gets or sets the suggester size for auto-complete and suggestions.
+        /// </summary>
+        public int ConceptsSuggesterSize { get; set; } = 5;
+
+        /// <summary>
+        /// Gets or sets the resource collection size (catalogue, course and resources) for auto-complete and suggestions.
+        /// </summary>
+        public int ResourceCollectionSuggesterSize { get; set; } = 5;
 
         /// <summary>
         /// Gets or sets the search query type (semantic, full, or simple).
         /// </summary>
         public string SearchQueryType { get; set; } = "Semantic";
+
+        /// <summary>
+        /// Gets or sets the semantic result buffer size for post-processing sorts.
+        /// When sorting is applied to semantic search results, this many results are retrieved
+        /// before applying the sort and pagination. Default is 50.
+        /// </summary>
+        public int SemanticResultBufferSize { get; set; } = 55;
+
+        /// <summary>
+        /// Gets or sets the scoring profile name used for boosting search results.
+        /// Default is "boostExactTitle".
+        /// </summary>
+        public string ScoringProfile { get; set; } = "boostExactTitle";
+
+        /// <summary>
+        /// Gets or sets the semantic configuration name for semantic search.
+        /// Default is "default".
+        /// </summary>
+        public string SemanticConfigurationName { get; set; } = "default";
+
+        /// <summary>
+        /// Gets or sets the facet fields to include in search results.
+        /// Default is ["resource_type", "resource_collection", "provider_ids"].
+        /// </summary>
+        public List<string> FacetFields { get; set; } = new List<string> { "resource_type", "resource_collection", "provider_ids" };
+
+        /// <summary>
+        /// Gets or sets the field name for the deleted filter.
+        /// Default is "is_deleted".
+        /// </summary>
+        public string DeletedFilterField { get; set; } = "is_deleted";
+
+        /// <summary>
+        /// Gets or sets the value for the deleted filter.
+        /// Default is "false".
+        /// </summary>
+        public string DeletedFilterValue { get; set; } = "false";
     }
 }

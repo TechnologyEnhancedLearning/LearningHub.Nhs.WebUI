@@ -110,7 +110,7 @@
                 // For semantic search with sorting, retrieve buffer size results for post-processing
                 int queryPageSize = pageSize;
                 int queryOffset = offset;
-                int semanticResultBufferSize = 50; //this.azureSearchConfig.SemanticResultBufferSize;
+                int semanticResultBufferSize = this.azureSearchConfig.SemanticResultBufferSize;
 
                 if (needsPostProcessingSort)
                 {
@@ -128,7 +128,7 @@
                     filters = filters == null ? catalogueIdFilter : filters.Concat(catalogueIdFilter).ToDictionary(k => k.Key, v => v.Value);
                 }
 
-                var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, queryOffset, queryPageSize, filters, sortBy, true);
+                var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, queryOffset, queryPageSize, filters, sortBy, true, this.azureSearchConfig);
                 SearchResults<Models.ServiceModels.AzureSearch.SearchDocument> filteredResponse = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(query, searchOptions, cancellationToken);
                 var count = Convert.ToInt32(filteredResponse.TotalCount);
 
@@ -169,7 +169,7 @@
                 // Apply post-processing sort if needed
                 if (needsPostProcessingSort)
                 {
-                    documents = ApplyPostProcessingSort(documents, searchRequestModel.SortColumn, searchRequestModel.SortDirection);
+                    documents = SearchOptionsBuilder.ApplyPostProcessingSort(documents, searchRequestModel.SortColumn, searchRequestModel.SortDirection);
 
                     // Apply pagination after sorting
                     documents = documents.Skip(offset).Take(pageSize).ToList();
@@ -204,45 +204,6 @@
             }
         }
 
-        /// <summary>
-        /// Applies post-processing sort to a list of documents.
-        /// Used when semantic search is active with non-relevance sorting.
-        /// </summary>
-        /// <param name="documents">The documents to sort.</param>
-        /// <param name="sortColumn">The column to sort by (title, rating, authored_date).</param>
-        /// <param name="sortDirection">The sort direction (ascending/descending).</param>
-        /// <returns>The sorted list of documents.</returns>
-        private List<Document> ApplyPostProcessingSort(List<Document> documents, string sortColumn, string sortDirection)
-        {
-            if (documents == null || documents.Count == 0)
-            {
-                return documents;
-            }
-
-            bool isDescending = sortDirection != null &&
-                               (sortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase) ||
-                                sortDirection.Equals("descending", StringComparison.OrdinalIgnoreCase));
-
-            IOrderedEnumerable<Document> sortedDocuments = sortColumn?.ToLowerInvariant() switch
-            {
-                "title" => isDescending
-                    ? documents.OrderByDescending(d => d.Title, StringComparer.OrdinalIgnoreCase)
-                    : documents.OrderBy(d => d.Title, StringComparer.OrdinalIgnoreCase),
-                "rating" => isDescending
-                    ? documents.OrderByDescending(d => d.Rating)
-                    : documents.OrderBy(d => d.Rating),
-                "authored_date" or "dateauthored" => isDescending
-                    ? documents.OrderByDescending(d =>
-                        DateTime.TryParse(d.AuthoredDate, out var dt) ? dt : DateTime.MinValue)
-                    : documents.OrderBy(d =>
-                        DateTime.TryParse(d.AuthoredDate, out var dt) ? dt : DateTime.MinValue),
-                _ => isDescending
-                    ? documents.OrderByDescending(d => d.Title, StringComparer.OrdinalIgnoreCase)
-                    : documents.OrderBy(d => d.Title, StringComparer.OrdinalIgnoreCase)
-            };
-
-            return sortedDocuments.ToList();
-        }
         /// <inheritdoc/>
         public async Task<SearchCatalogueResultModel> GetCatalogueSearchResultAsync(CatalogueSearchRequestModel catalogSearchRequestModel, int userId, CancellationToken cancellationToken = default)
         {
@@ -672,7 +633,7 @@
                 var autoOptions = new AutocompleteOptions
                 {
                     Mode = AutocompleteMode.OneTermWithContext,
-                    Size = 5,
+                    Size = this.azureSearchConfig.ConceptsSuggesterSize,
                     Filter = "is_deleted eq false"
                 };
 
@@ -734,10 +695,11 @@
                         Title = item.Text,
                         Click = BuildAutoSuggestClickModel(item.Id, item.Text, 0, 0, term, suggestResults.Count())
                     })
-                        .Take(5)
+                        .Take(this.azureSearchConfig.ResourceCollectionSuggesterSize)
                         .ToList()
                 };
 
+                // We couldn't pass null value so just etting to empty collection with 0 hits, as we are using one resouce colection in auto-suggest
                 var autoSuggestionCatalogue = new AutoSuggestionCatalogue
                 {
                     TotalHits = suggestResults.Count(),
@@ -768,7 +730,7 @@
                 };
 
                 viewmodel.ResourceCollectionDocument = autoSuggestion;
-                viewmodel.CatalogueDocument = autoSuggestionCatalogue;
+                viewmodel.CatalogueDocument = autoSuggestionCatalogue; // We coundt pass null value so just etting to empty collection with 0 hits, as we are using one resouce colection in auto-suggest
                 viewmodel.ConceptDocument = autoSuggestionConcept;
 
                 return viewmodel;

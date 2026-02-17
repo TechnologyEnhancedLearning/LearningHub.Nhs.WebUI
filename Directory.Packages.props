@@ -35,7 +35,7 @@
 		<PackageVersion Include="IdentityModel" Version="4.6.0" />
 		<PackageVersion Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
 		<PackageVersion Include="linqtotwitter" Version="6.9.0" />
-		<PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
+		<PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="3.0.0" />
 		<PackageVersion Include="Microsoft.ApplicationInsights.EventCounterCollector" Version="2.23.0" />
 		<PackageVersion Include="Microsoft.ApplicationInsights.NLogTarget" Version="2.23.0" />
 		<PackageVersion Include="Microsoft.AspNetCore" Version="2.3.0" />

@@ -19,6 +19,7 @@
         var searchInput = document.getElementById("sub-search-field");
         var suggestionsList = document.getElementById("sub-search-field_listbox");
         var minLengthAutoComplete = 3;
+        let currentIndex = -1;
 
         function fetchSuggestions(term) {
             var xhr = new XMLHttpRequest();
@@ -69,9 +70,47 @@
             }
         }
 
+        function handleArrowKeys(e) {
+        const items = suggestionsList.querySelectorAll('.autosuggestion-option > a');
+        if (!items.length) return;
+
+        switch (e.key) {
+            case "ArrowDown":
+                e.preventDefault();
+                currentIndex = (currentIndex + 1) % items.length;
+                items[currentIndex].focus();
+                break;
+
+            case "ArrowUp":
+                e.preventDefault();
+                currentIndex = (currentIndex - 1 + items.length) % items.length;
+                items[currentIndex].focus();
+                break;
+
+            case "Tab":
+                if (currentIndex >= items.length - 1) {
+                    closeAllLists();
+                    currentIndex = -1;
+                }
+                else {
+                e.preventDefault();
+                currentIndex++;
+                items[currentIndex].focus();
+                        }
+                break;
+               }
+            }
+
+        searchInput.addEventListener("focus", function () {
+            currentIndex = -1;
+        });
+        searchInput.addEventListener("keydown", handleArrowKeys);
+        suggestionsList.addEventListener("keydown", handleArrowKeys);
+
         function closeAllLists() {
             suggestionsList.innerHTML = '';
             suggestionsList.style.display = "none";
+            currentIndex = -1;
         }
 
         autocomplete(searchInput, minLengthAutoComplete);

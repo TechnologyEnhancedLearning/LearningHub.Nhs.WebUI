@@ -102,6 +102,7 @@
     import { MKPlayer } from '@mediakind/mkplayer';
     import { MKPlayerType, MKStreamType } from '../MKPlayerConfigEnum';
     import { MKPlayerControlbar } from '../mkioplayer-controlbar';
+    import { BlockTypeEnum } from '../models/contribute-resource/blocks/blockTypeEnum';
 
     Vue.use(Vuelidate as any);
 
@@ -413,7 +414,9 @@
             initialise(): void {
                 // record activity on page created for resource article
                 if (this.userAuthenticated && this.resourceItem.resourceTypeEnum === ResourceType.CASE) {
-                    this.recordActivityLaunched();
+                   const blocks = this.resourceItem.caseDetails.blockCollection.blocks;
+                   const isMultiPage = blocks.some(b => b.blockType === BlockTypeEnum.PageBreak);
+                   this.recordActivityLaunched(isMultiPage);
                 }
                 else if (this.userAuthenticated && this.resourceItem.resourceTypeEnum === ResourceType.ASSESSMENT) {
                     this.getCurrentAssessmentActivity();
@@ -456,11 +459,11 @@
             hasResourceAccess(): boolean {
                 return this.userAuthenticated && (!(this.isGeneralUser && this.resourceItem.resourceAccessibilityEnum == this.ResourceAccessibility.FullAccess))
             },
-            async recordActivityLaunched(): Promise<void> {
+            async recordActivityLaunched(isMultiPageCase: boolean = false): Promise<void> {
 
                 if (!this.activityLogged) {
                     this.activityLogged = true;
-                    await activityRecorder.recordActivityLaunched(this.resourceItem.resourceTypeEnum, this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
+                    await activityRecorder.recordActivityLaunched(this.resourceItem.resourceTypeEnum, this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date(),isMultiPageCase)
                         // await activityRecorder.recordActivityLaunched(this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
                         .then(response => {
                             this.launchedResourceActivityId = response.createdId;

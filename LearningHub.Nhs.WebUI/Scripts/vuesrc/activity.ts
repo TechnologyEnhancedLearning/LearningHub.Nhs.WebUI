@@ -10,13 +10,16 @@ const recordActivityLaunched = async function (
     resourceVersionId: number,
     nodePathId: number,
     activityDatetime: Date,
+    isMultiPageCase: boolean = false,
     extraAttemptReason?: string): Promise<LearningHubValidationResultModel> {
 
     var data = {
         resourceVersionId: resourceVersionId,
         nodePathId: nodePathId,
         activityStatus: (resourceType == ResourceType.ASSESSMENT || resourceType == ResourceType.VIDEO || resourceType == ResourceType.AUDIO ||
-            resourceType == ResourceType.SCORM) ? ActivityStatus.Incomplete : ActivityStatus.Completed,
+            resourceType == ResourceType.SCORM ||
+            (resourceType == ResourceType.CASE && isMultiPageCase)
+        ) ? ActivityStatus.Incomplete : ActivityStatus.Completed,
         activityStart: activityDatetime,
         extraAttemptReason
     };
@@ -169,6 +172,26 @@ const recordActivityAndInteractionTogether = async function (
 
 };
 
+const recordCaseActivityComplete = async function (resourceActivityId: number, activityDatetime: Date): Promise<LearningHubValidationResultModel> {
+    var data = {
+        resourceActivityId: resourceActivityId,
+        activityStatus: ActivityStatus.Completed,
+        activityEnd: activityDatetime
+    };
+
+    return await AxiosWrapper.axios.post<LearningHubValidationResultModel>('/api/activity/CompleteCaseActivity', data)
+        .then(response => {
+            if (!response.data.isValid) {
+                window.location.pathname = './Home/Error';
+            }
+            return response.data;
+        })
+        .catch(e => {
+            console.log('recordCaseActivityComplete:' + e);
+            throw e;
+        });
+};
+
 const recordAssessmentResourceActivity = async function (
     resourceActivityId: number,
     matchQuestions: MatchQuestionState[],
@@ -222,5 +245,6 @@ export const activityRecorder = {
     recordMediaResourceActivityInteraction,
     recordActivityAndInteractionTogether,
     recordAssessmentResourceActivity,
-    recordAssessmentResourceActivityInteraction
+    recordAssessmentResourceActivityInteraction,
+    recordCaseActivityComplete
 };

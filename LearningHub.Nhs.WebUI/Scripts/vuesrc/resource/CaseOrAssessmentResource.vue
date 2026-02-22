@@ -238,6 +238,19 @@
                 if (isCompleted) {
                     this.pagesProgress.completePage(page);
                 }
+
+                // complete Case activity
+                if (this.allPagesCompleted && 
+                    this.resourceItem.resourceTypeEnum === ResourceType.CASE && 
+                    !this.isPreview && 
+                    this.resourceActivityId > 0) {
+        
+                    await activityRecorder.recordCaseActivityComplete(this.resourceActivityId, new Date());
+        
+                    // Refresh certificate status upon completion
+                    this.checkUserCertificateAvailability();
+                }
+
                 if (this.allPagesCompleted && this.isAssessment) {
                     this.allAssessmentInteractionsSubmitted = true;
                 }

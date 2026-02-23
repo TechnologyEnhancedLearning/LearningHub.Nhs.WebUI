@@ -172,14 +172,22 @@ const recordActivityAndInteractionTogether = async function (
 
 };
 
-const recordCaseActivityComplete = async function (resourceActivityId: number, activityDatetime: Date): Promise<LearningHubValidationResultModel> {
+const recordCaseActivityComplete = async function (resourceVersionId: number,
+    nodePathId: number,
+    activityStart: Date,
+    activityEnd: Date,
+    launchResourceActivityId: number): Promise<LearningHubValidationResultModel> {
+
     var data = {
-        resourceActivityId: resourceActivityId,
+        resourceVersionId: resourceVersionId,
+        nodePathId: nodePathId,
         activityStatus: ActivityStatus.Completed,
-        activityEnd: activityDatetime
+        activityStart: activityStart,
+        activityEnd: activityEnd,
+        launchResourceActivityId: launchResourceActivityId
     };
 
-    return await AxiosWrapper.axios.post<LearningHubValidationResultModel>('/api/activity/CompleteCaseActivity', data)
+    return await AxiosWrapper.axios.post<LearningHubValidationResultModel>('/api/activity/CreateResourceActivity', data)
         .then(response => {
             if (!response.data.isValid) {
                 window.location.pathname = './Home/Error';

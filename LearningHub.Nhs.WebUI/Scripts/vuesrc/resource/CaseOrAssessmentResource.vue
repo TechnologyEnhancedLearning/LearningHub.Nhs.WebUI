@@ -244,10 +244,12 @@
                     page === this.pageCount - 1 &&
                     this.resourceActivityId > 0) {
 
+                    let startDate = new Date(this.activityStart as any);
+
                     await activityRecorder.recordCaseActivityComplete(
                         this.resourceItem.resourceVersionId,
                         this.resourceItem.nodePathId,
-                        this.activityStart,
+                        startDate,
                         new Date(),
                         this.resourceActivityId
                     );
@@ -322,7 +324,13 @@
 
                 // Only make a new activity if the latest activity is finished
                 if (typeof latest.userScore === 'number') {
-                    const result = await activityRecorder.recordActivityLaunched(this.resourceItem.resourceTypeEnum, this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date() as Date, false, reason);
+                    const result = await activityRecorder.recordActivityLaunched(
+                        this.resourceItem.resourceTypeEnum,
+                        this.resourceItem.resourceVersionId,
+                        this.resourceItem.nodePathId,
+                        new Date(),
+                        false as boolean
+                    );
                     this.shuffleMatchQuestionsState();
                     await activityRecorder.recordAssessmentResourceActivity(result.createdId, this.matchQuestionsState, reason);
                 }

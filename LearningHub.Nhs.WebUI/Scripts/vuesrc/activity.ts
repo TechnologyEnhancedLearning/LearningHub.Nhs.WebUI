@@ -10,13 +10,18 @@ const recordActivityLaunched = async function (
     resourceVersionId: number,
     nodePathId: number,
     activityDatetime: Date,
+    isMultiPageCase: boolean = false,
     extraAttemptReason?: string): Promise<LearningHubValidationResultModel> {
 
     var data = {
         resourceVersionId: resourceVersionId,
         nodePathId: nodePathId,
-        activityStatus: (resourceType == ResourceType.ASSESSMENT || resourceType == ResourceType.VIDEO || resourceType == ResourceType.AUDIO ||
-            resourceType == ResourceType.SCORM) ? ActivityStatus.Incomplete : ActivityStatus.Completed,
+        activityStatus: (resourceType == ResourceType.ASSESSMENT ||
+            resourceType == ResourceType.VIDEO ||
+            resourceType == ResourceType.AUDIO ||
+            resourceType == ResourceType.SCORM ||
+            (resourceType == ResourceType.CASE && isMultiPageCase)
+        ) ? ActivityStatus.Incomplete : ActivityStatus.Completed,
         activityStart: activityDatetime,
         extraAttemptReason
     };
@@ -35,8 +40,10 @@ const recordActivityLaunched = async function (
             console.log('recordActivityLaunched:' + e);
             throw e;
         });
-
 };
+
+
+
 const recordActivity = async function (
     resourceVersionId: number,
     nodePathId: number,
@@ -215,6 +222,24 @@ const recordAssessmentResourceActivityInteraction = async function (
         });
 }
 
+// handle case completion
+const recordCaseActivityComplete = async function (
+    resourceVersionId: number,
+    nodePathId: number,
+    activityStart: Date,
+    activityEnd: Date,
+    launchResourceActivityId: number
+): Promise<LearningHubValidationResultModel> {
+    return await recordActivity(
+        resourceVersionId,
+        nodePathId,
+        activityStart,
+        activityEnd,
+        ActivityStatus.Completed,
+        launchResourceActivityId
+    );
+};
+
 export const activityRecorder = {
     recordActivityLaunched,
     recordActivity,
@@ -222,5 +247,6 @@ export const activityRecorder = {
     recordMediaResourceActivityInteraction,
     recordActivityAndInteractionTogether,
     recordAssessmentResourceActivity,
-    recordAssessmentResourceActivityInteraction
+    recordAssessmentResourceActivityInteraction,
+    recordCaseActivityComplete
 };

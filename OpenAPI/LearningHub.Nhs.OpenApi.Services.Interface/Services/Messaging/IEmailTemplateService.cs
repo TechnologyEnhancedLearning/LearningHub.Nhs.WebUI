@@ -7,6 +7,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging
     using System.Collections.Generic;
     using LearningHub.Nhs.Models.Email;
     using LearningHub.Nhs.Models.Email.Models;
+    using LearningHub.Nhs.Models.Entities.Messaging;
 
     /// <summary>
     /// The IEmailTemplateService.
@@ -64,5 +65,12 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging
         /// <param name="emailModel">The email model.</param>
         /// <returns>The subject and body.</returns>
         EmailDetails GetReportProcessed(SendEmailModel<ReportSucessEmailModel> emailModel);
+
+        /// <summary>
+        /// The GetEmailTemplate.
+        /// </summary>
+        /// <<param name="emailTemplateTypeId">The email template type id.</param>
+        /// <returns>The template.</returns>
+        EmailTemplate GetEmailTemplateById(int emailTemplateTypeId);
     }
 }

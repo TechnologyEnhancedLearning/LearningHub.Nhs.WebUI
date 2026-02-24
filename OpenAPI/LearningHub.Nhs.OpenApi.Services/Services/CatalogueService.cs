@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.ConstrainedExecution;
     using System.Threading.Tasks;
     using AutoMapper;
     using LearningHub.Nhs.Models.Catalogue;
@@ -14,6 +15,7 @@
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.GovNotifyMessaging;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.Validation;
@@ -57,6 +59,8 @@
         private readonly INotificationSenderService notificationSenderService;
         private readonly ITimezoneOffsetManager timezoneOffsetManager;
         private readonly ICategoryService categoryService;
+        private readonly IGovMessageService govMessageService;
+        private readonly IEmailTemplateService emailTemplateService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CatalogueService"/> class.
@@ -65,21 +69,52 @@
         /// <param name="catalogueRepository">
         /// The <see cref="ICatalogueRepository"/>.
         /// </param>
-        ///  <param name="categoryService"></param>
-        /// <param name="mapper"></param>
-        /// <param name="catalogueNodeVersionRepository"></param>
-        /// <param name="nodeResourceRepository"></param>
-        /// <param name="resourceVersionRepository"></param>
-        /// <param name="roleUserGroupRepository"></param>
-        /// <param name="providerService"></param>
-        /// <param name="catalogueAccessRequestRepository"></param>
-        /// <param name="userRepository"></param>
-        /// <param name="userProfileRepository"></param>
-        /// <param name="emailSenderService"></param>
-        /// <param name="bookmarkRepository"></param>
-        /// <param name="nodeActivityRepository"></param>
-        /// <param name="findwiseApiFacade"></param>
-        public CatalogueService(ICatalogueRepository catalogueRepository, ICategoryService categoryService, INodeRepository nodeRepository, IUserUserGroupRepository userUserGroupRepository, IMapper mapper, IOptions<FindwiseConfig> findwiseConfig, IOptions<LearningHubConfig> learningHubConfig, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, INodeResourceRepository nodeResourceRepository, IResourceVersionRepository resourceVersionRepository, IRoleUserGroupRepository roleUserGroupRepository, IProviderService providerService, ICatalogueAccessRequestRepository catalogueAccessRequestRepository, IUserRepository userRepository, IUserProfileRepository userProfileRepository, IEmailSenderService emailSenderService, IBookmarkRepository bookmarkRepository,INodeActivityRepository nodeActivityRepository, IFindwiseApiFacade findwiseApiFacade, INotificationSenderService notificationSenderService, ITimezoneOffsetManager timezoneOffsetManager)
+        /// <param name="categoryService"></param>
+        /// <param name="mapper">mapper.</param>
+        /// <param name="catalogueNodeVersionRepository">catalogueNodeVersionRepository.</param>
+        /// <param name="nodeResourceRepository">nodeResourceRepository.</param>
+        /// <param name="resourceVersionRepository">resourceVersionRepository.</param>
+        /// <param name="roleUserGroupRepository">roleUserGroupRepository.</param>
+        /// <param name="providerService">providerService.</param>
+        /// <param name="catalogueAccessRequestRepository">catalogueAccessRequestRepository.</param>
+        /// <param name="userRepository">userRepository.</param>
+        /// <param name="userProfileRepository">userProfileRepository.</param>
+        /// <param name="emailSenderService">emailSenderService.</param>
+        /// <param name="bookmarkRepository">bookmarkRepository.</param>
+        /// <param name="nodeActivityRepository">nodeActivityRepository.</param>
+        /// <param name="findwiseApiFacade">findwiseApiFacade.</param>
+        /// <param name="nodeRepository">nodeRepository.</param>
+        /// <param name="userUserGroupRepository">userUserGroupRepository.</param>
+        /// <param name="findwiseConfig">findwiseConfig.</param>
+        /// <param name="learningHubConfig">learningHubConfig.</param>
+        /// <param name="notificationSenderService">notificationSenderService.</param>
+        /// <param name="timezoneOffsetManager">timezoneOffsetManager.</param>
+        /// <param name="govMessageService">govMessageService.</param>
+        /// <param name="emailTemplateService">emailTemplateService.</param>
+        public CatalogueService(
+        ICatalogueRepository catalogueRepository,
+        INodeRepository nodeRepository,
+        IUserUserGroupRepository userUserGroupRepository,
+        IMapper mapper,
+        IOptions<FindwiseConfig> findwiseConfig,
+        IOptions<LearningHubConfig> learningHubConfig,
+        ICatalogueNodeVersionRepository catalogueNodeVersionRepository,
+        INodeResourceRepository nodeResourceRepository,
+        IResourceVersionRepository resourceVersionRepository,
+        IRoleUserGroupRepository roleUserGroupRepository,
+        IProviderService providerService,
+        ICatalogueAccessRequestRepository catalogueAccessRequestRepository,
+        IUserRepository userRepository,
+        IUserProfileRepository userProfileRepository,
+        IEmailSenderService emailSenderService,
+        IBookmarkRepository bookmarkRepository,
+        INodeActivityRepository nodeActivityRepository,
+        IFindwiseApiFacade findwiseApiFacade,
+        INotificationSenderService notificationSenderService,
+        ITimezoneOffsetManager timezoneOffsetManager,
+        ICategoryService categoryService,
+        IGovMessageService govMessageService,
+        IEmailTemplateService emailTemplateService)
         {
             this.catalogueRepository = catalogueRepository;
             this.categoryService = categoryService;
@@ -102,6 +137,8 @@
             this.findwiseConfig = findwiseConfig.Value;
             this.timezoneOffsetManager = timezoneOffsetManager;
             this.notificationSenderService = notificationSenderService;
+            this.govMessageService = govMessageService;
+            this.emailTemplateService = emailTemplateService;
         }
 
         /// <summary>
@@ -391,19 +428,51 @@
         /// </summary>
         /// <param name="currentUserId">The currentUserId.</param>
         /// <param name="reference">The reference.</param>
+        /// <param name="catalogueName">The catalogueName.</param>
         /// <param name="vm">The view model.</param>
         /// <param name="accessType">The accessType.</param>
         /// <returns>The bool.</returns>
-        public async Task<bool> RequestAccessAsync(int currentUserId, string reference, CatalogueAccessRequestViewModel vm, string accessType)
+        public async Task<bool> RequestAccessAsync(int currentUserId, string reference, string catalogueName, CatalogueAccessRequestViewModel vm, string accessType)
         {
-            await this.catalogueAccessRequestRepository.CreateCatalogueAccessRequestAsync(
-                currentUserId,
-                reference,
-                vm.Message,
-                vm.RoleId,
-                this.learningHubConfig.BaseUrl + "Catalogue/Manage/" + reference,
-                accessType);
+            var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)(accessType == "access" ? EmailTemplates.CatalogueAccessRequest : EmailTemplates.CataloguePermissionRequest));
 
+            var catalogueAdmin = await this.catalogueAccessRequestRepository.GetCatalogueAdminDetailsAsync(currentUserId, reference, vm.RoleId, accessType);
+
+            var queueMessages = catalogueAdmin
+                .Where(admin => !string.IsNullOrEmpty(admin.EmailAddress))
+                .Select(admin => new QueueMessage
+                {
+                    Recipient = admin.EmailAddress,
+                    TemplateId = emailTemplate.TemplateId,
+                    Personalisation = new Dictionary<string, string>
+                    {
+                        ["catalogue admin name"] = admin.FirstName,
+                        ["name"] = vm.UserFullName,
+                        ["email"] = vm.EmailAddress,
+                        ["catalogue name"] = catalogueName,
+                        ["message text"] = vm.Message,
+                        ["Review request url"] = this.learningHubConfig.BaseUrl + "Catalogue/Manage/" + reference,
+                    },
+                })
+                .ToList();
+
+            if (queueMessages.Count > 0)
+            {
+                var queueMessageList = new QueueMessageList
+                {
+                    Messages = queueMessages,
+                };
+
+                await this.govMessageService.QueueRequestsAsync(queueMessageList);
+            }
+
+            await this.catalogueAccessRequestRepository.CreateCatalogueAccessRequestAsync(
+        currentUserId,
+        reference,
+        vm.Message,
+        vm.RoleId,
+        this.learningHubConfig.BaseUrl + "Catalogue/Manage/" + reference,
+        accessType);
             return true;
         }
 
@@ -418,24 +487,40 @@
             var catalogue = this.catalogueNodeVersionRepository.GetBasicCatalogue(vm.CatalogueNodeId);
             var user = await this.userProfileRepository.GetByIdAsync(currentUserId);
             var invitedUser = await this.userProfileRepository.GetByEmailAddressAsync(vm.EmailAddress);
-            var greeting = "Hi there";
-            if (invitedUser != null)
+            ////var greeting = "Hi there";
+            ////if (invitedUser != null)
+            ////{
+            ////    greeting = $"Dear {invitedUser.FirstName}";
+            ////}
+
+            ////var emailModel = new SendEmailModel<CatalogueAccessInviteEmailModel>(
+            ////    new CatalogueAccessInviteEmailModel
+            ////    {
+            ////        CatalogueName = catalogue.Name,
+            ////        CatalogueUrl = $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}",
+            ////        AdminFullName = $"{user.FirstName} {user.LastName}",
+            ////        CreateAccountUrl = $"{this.learningHubConfig.BaseUrl}Registration/create-an-account",
+            ////        Greeting = greeting,
+            ////    });
+            ////emailModel.EmailAddress = vm.EmailAddress;
+            ////await this.emailSenderService.SendAccessRequestInviteEmail(currentUserId, emailModel);
+
+            var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)EmailTemplates.CatalogueAccessInvitation);
+
+            var personalisation = new Dictionary<string, dynamic>();
+            personalisation["name"] = user.FirstName;
+            personalisation["catalogue name"] = catalogue.Name;
+            personalisation["catalogue name url"] = $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}";
+
+            var emailRequest = new EmailRequest
             {
-                greeting = $"Dear {invitedUser.FirstName}";
-            }
+                Recipient = vm.EmailAddress,
+                TemplateId = emailTemplate.TemplateId,
+                Personalisation = personalisation,
+            };
 
-            var emailModel = new SendEmailModel<CatalogueAccessInviteEmailModel>(
-                new CatalogueAccessInviteEmailModel
-                {
-                    CatalogueName = catalogue.Name,
-                    CatalogueUrl = $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}",
-                    AdminFullName = $"{user.FirstName} {user.LastName}",
-                    CreateAccountUrl = $"{this.learningHubConfig.BaseUrl}Registration/create-an-account",
-                    Greeting = greeting,
-                });
-            emailModel.EmailAddress = vm.EmailAddress;
+            await this.govMessageService.SendEmailAsync(emailRequest);
 
-            await this.emailSenderService.SendAccessRequestInviteEmail(currentUserId, emailModel);
             return true;
         }
 
@@ -1084,14 +1169,33 @@
                 $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}",
                 responseMessage,
                 car.UserId);
-            await this.emailSenderService.SendRequestAccessFailureEmail(userId, new SendEmailModel<CatalogueAccessRequestFailureEmailModel>(new CatalogueAccessRequestFailureEmailModel
+
+            ////await this.emailSenderService.SendRequestAccessFailureEmail(userId, new SendEmailModel<CatalogueAccessRequestFailureEmailModel>(new CatalogueAccessRequestFailureEmailModel
+            ////{
+            ////    UserFirstName = car.UserProfile.FirstName,
+            ////    CatalogueName = catalogue.Name,
+            ////    RejectionReason = responseMessage,
+            ////    CatalogueUrl = this.learningHubConfig.BaseUrl + "Catalogue/" + catalogue.Url,
+            ////})
+            ////{ EmailAddress = car.EmailAddress });
+
+            var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)EmailTemplates.CatalogueAccessRequestFailure);
+
+            var personalisation = new Dictionary<string, dynamic>();
+            personalisation["name"] = car.UserProfile.FirstName;
+            personalisation["catalogue name"] = catalogue.Name;
+            personalisation["catalogue name url"] = $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}";
+            personalisation["reason"] = responseMessage;
+
+            var emailRequest = new EmailRequest
             {
-                UserFirstName = car.UserProfile.FirstName,
-                CatalogueName = catalogue.Name,
-                RejectionReason = responseMessage,
-                CatalogueUrl = this.learningHubConfig.BaseUrl + "Catalogue/" + catalogue.Url,
-            })
-            { EmailAddress = car.EmailAddress });
+                Recipient = car.EmailAddress,
+                TemplateId = emailTemplate.TemplateId,
+                Personalisation = personalisation,
+            };
+
+            await this.govMessageService.SendEmailAsync(emailRequest);
+
             return new LearningHubValidationResult(true);
         }
 
@@ -1179,13 +1283,31 @@
                 catalogue.Name,
                 $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}",
                 catalogueAccessRequest.UserId);
-            await this.emailSenderService.SendRequestAccessSuccessEmail(userId, new SendEmailModel<CatalogueAccessRequestSuccessEmailModel>(new CatalogueAccessRequestSuccessEmailModel
+
+            var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)EmailTemplates.CatalogueAccessRequestSuccess);
+
+            var personalisation = new Dictionary<string, dynamic>();
+            personalisation["name"] = catalogueAccessRequest.UserProfile.FirstName;
+            personalisation["catalogue name"] = catalogue.Name;
+            personalisation["catalogue name url"] = $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}";
+
+            var emailRequest = new EmailRequest
             {
-                UserFirstName = catalogueAccessRequest.UserProfile.FirstName,
-                CatalogueName = catalogue.Name,
-                CatalogueUrl = $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}",
-            })
-            { EmailAddress = catalogueAccessRequest.EmailAddress });
+                Recipient = catalogueAccessRequest.EmailAddress,
+                TemplateId = emailTemplate.TemplateId,
+                Personalisation = personalisation,
+            };
+
+            await this.govMessageService.SendEmailAsync(emailRequest);
+
+            ////await this.emailSenderService.SendRequestAccessSuccessEmail(userId, new SendEmailModel<CatalogueAccessRequestSuccessEmailModel>(new CatalogueAccessRequestSuccessEmailModel
+            ////{
+            ////    UserFirstName = catalogueAccessRequest.UserProfile.FirstName,
+            ////    CatalogueName = catalogue.Name,
+            ////    CatalogueUrl = $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}",
+            ////})
+            ////{ EmailAddress = catalogueAccessRequest.EmailAddress });
+
             return new LearningHubValidationResult(true) { CreatedId = uugId };
         }
 

@@ -696,6 +696,8 @@
     <Build Include="Views\SearchCataloguesView.sql" />
     <Build Include="Views\SupersetSearchView.sql" />
     <Build Include="Views\SearchResourcesView.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\EmailTemplateTableChanges.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\UpdateEmailTemplateData.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

@@ -1,6 +1,7 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Services.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
@@ -11,6 +12,7 @@
     using LearningHub.Nhs.Models.Email.Models;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.GovNotifyMessaging;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
@@ -28,6 +30,9 @@
         private readonly IEmailChangeValidationTokenRepository emailChangeValidationTokenRepository;
         private readonly IEmailSenderService emailSenderService;
         private readonly LearningHubConfig learningHubConfig;
+        private readonly IGovMessageService govMessageService;
+        private readonly IEmailTemplateService emailTemplateService;
+        private readonly IUserProfileRepository userProfileRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SecurityService"/> class.
@@ -35,14 +40,23 @@
         /// <param name="emailChangeValidationTokenRepository">emailChangeValidationTokenRepository.</param>
         /// <param name="emailSenderService">emailSenderService.</param>
         /// <param name="settings">settings.</param>
+        /// <param name="govMessageService">govMessageService.</param>
+        /// <param name="emailTemplateService">emailTemplateService.</param>
+        /// <param name="userProfileRepository">userProfileRepository.</param>
         public SecurityService(
             IEmailChangeValidationTokenRepository emailChangeValidationTokenRepository,
             IEmailSenderService emailSenderService,
-            IOptions<LearningHubConfig> learningHubConfig)
+            IOptions<LearningHubConfig> learningHubConfig,
+            IGovMessageService govMessageService,
+            IEmailTemplateService emailTemplateService,
+            IUserProfileRepository userProfileRepository)
         {
             this.emailChangeValidationTokenRepository = emailChangeValidationTokenRepository;
             this.emailSenderService = emailSenderService;
             this.learningHubConfig = learningHubConfig.Value;
+            this.govMessageService = govMessageService;
+            this.emailTemplateService = emailTemplateService;
+            this.userProfileRepository = userProfileRepository;
         }
 
         /// <summary>
@@ -74,7 +88,24 @@
             };
 
             var validateTokenUrl = $"{this.learningHubConfig.BaseUrl}confirm-email?token={HttpUtility.UrlEncode(userToken)}&loctoken={HttpUtility.UrlEncode(lookupToken)}";
-            await SendEmailChangeConfirmationEmail(userId, email, validateTokenUrl, isUserRoleUpgrade);
+            var user = await this.userProfileRepository.GetByIdAsync(userId);
+            var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)EmailTemplates.EmailChangeConfirmationEmail);
+            var personalisation = new Dictionary<string, dynamic>();
+            personalisation["user name"] = user.UserName;
+            personalisation["confirm_email_link"] = validateTokenUrl;
+            personalisation["date"] = emailChangeValidationToken.Expiry.ToString("dd-MM-yyyy");
+            personalisation["time"] = emailChangeValidationToken.Expiry.ToString("HH:mm");
+
+            var emailRequest = new EmailRequest
+            {
+                Recipient = email,
+                TemplateId = emailTemplate.TemplateId,
+                Personalisation = personalisation,
+            };
+
+            await this.govMessageService.SendEmailAsync(emailRequest);
+
+            ////await SendEmailChangeConfirmationEmail(userId, email, validateTokenUrl, isUserRoleUpgrade);
             await emailChangeValidationTokenRepository.CreateAsync(userId, emailChangeValidationToken);
         }
 
@@ -127,7 +158,21 @@
                     tokenResult.Email = emailChangeValidationToken.Email;
                     tokenResult.UserId = emailChangeValidationToken.UserId;
                     tokenResult.Valid = true;
-                    await this.SendEmailAfterEmailVerification(emailChangeValidationToken.UserId, emailChangeValidationToken.Email, isUserRoleUpgrade);
+
+                    var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)EmailTemplates.EmailVerified);
+                    var personalisation = new Dictionary<string, dynamic>();
+                    personalisation["user name"] = emailChangeValidationToken.User.UserName;
+
+                    var emailRequest = new EmailRequest
+                    {
+                        Recipient = emailChangeValidationToken.Email,
+                        TemplateId = emailTemplate.TemplateId,
+                        Personalisation = personalisation,
+                    };
+
+                    await this.govMessageService.SendEmailAsync(emailRequest);
+
+                    ////await this.SendEmailAfterEmailVerification(emailChangeValidationToken.UserId, emailChangeValidationToken.Email, isUserRoleUpgrade);
                 }
             }
 

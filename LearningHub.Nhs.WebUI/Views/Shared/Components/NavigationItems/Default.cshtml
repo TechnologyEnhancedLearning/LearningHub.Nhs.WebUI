@@ -72,21 +72,6 @@
                 </a>
             </li>
         } 
-        @if (Model.ShowNotifications)
-        {
-            <li class="nhsuk-header__navigation-item @Html.IsSelected("Notification")">
-                <a class="nhsuk-header__navigation-link" asp-area="" asp-controller="Notification" asp-action="Index">
-                    Notifications
-                    @if (Model.NotificationCount > 0)
-                    {
-                        <div class="nhsuk-header__notification-dot">@NotificationDisplay()</div>
-
-                    }
-                </a>
-            </li>
-            @* - below contains notification number code to be implemented & styled as appropriate. See Helpers\UtilityHelper.cs FormatUnreadNotificationCount()
-                      *@
-        }
         @if (Model.ShowAdmin)
         {
             <li class="nhsuk-header__navigation-item">
@@ -96,15 +81,6 @@
                 </a>
             </li>
         }
-    }
-    @if (Model.ShowRegister)
-    {
-        @* can likely remove this condition as Register functionality removed from menu and only shown in main content window. see \Services\NavigationPermissionService.cs *@
-        <li class="nhsuk-header__navigation-item @Html.IsSelected("Account")">
-            <a class="nhsuk-header__navigation-link" href="/create-an-account">
-                Create an account
-            </a>
-        </li>
     }
 }
 

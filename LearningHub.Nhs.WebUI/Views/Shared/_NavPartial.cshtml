@@ -8,8 +8,7 @@
   var controllerName = this.ViewContext.RouteData.Values["controller"].ToString().ToLower();
 }
 
-<div class="nhsuk-header__container nhsuk-width-container">
-
+<div class="nhsuk-header__container nhsuk-width-container @PreLoginClass()">
   <div class="nhsuk-header__service">
     <a class="nhsuk-header__service-logo" href="/" aria-label="NHS Learning Hub homepage">
       <svg class="nhsuk-header__logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" height="40" width="100" focusable="false" role="img" aria-label="NHS">
@@ -19,91 +18,32 @@
       <span class="nhsuk-header__service-name">Learning Hub</span>
     </a>
   </div>
-  <nav class="nhsuk-header__account" aria-label="Account">
-    <ul class="nhsuk-header__account-list">
-      <li class="nhsuk-header__account-item">
-        <svg class="nhsuk-icon nhsuk-icon--user" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" focusable="false" aria-hidden="true">
-          <path d="M12 1a11 11 0 1 1 0 22 11 11 0 0 1 0-22Zm0 2a9 9 0 0 0-5 16.5V18a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v1.5A9 9 0 0 0 12 3Zm0 3a3.5 3.5 0 1 1-3.5 3.5A3.4 3.4 0 0 1 12 6Z" />
-        </svg>
-        Florence Nightingale
-      </li>
-      <li class="nhsuk-header__account-item">
-        <a class="nhsuk-header__account-link" href="#">
-          Log out
-        </a>
-      </li>
-    </ul>
-  </nav>
-  <search class="nhsuk-header__search">
-    <form class="nhsuk-header__search-form" id="search" action="https://www.nhs.uk/search/" method="get">
-      <label class="nhsuk-u-visually-hidden" for="search-field">Search the NHS digital service manual</label>
-      <input class="nhsuk-header__search-input nhsuk-input" id="search-field" name="q" type="search" placeholder="Search" autocomplete="off">
-      <button class="nhsuk-header__search-submit" type="submit">
-        <svg class="nhsuk-icon nhsuk-icon--search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" focusable="false" role="img" aria-label="Search">
-          <title>Search</title>
-          <path d="m20.7 19.3-4.1-4.1a7 7 0 1 0-1.4 1.4l4 4.1a1 1 0 0 0 1.5 0c.4-.4.4-1 0-1.4ZM6 11a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z" />
-        </svg>
 
-      </button>
-    </form>
-  </search>
+  @await Component.InvokeAsync("NavigationItems", new { navView = "Searchbar", controllerName = controllerName })
+
+  @if (User.Identity.IsAuthenticated)
+  {
+    @await Component.InvokeAsync("NavigationItems", new { navView = "AccountLinks" })
+
+  }
 </div>
+
+@if (User.Identity.IsAuthenticated)
+{
 <nav class="nhsuk-header__navigation" aria-label="Menu">
   <div class="nhsuk-header__navigation-container nhsuk-width-container">
     <ul class="nhsuk-header__navigation-list">
-      <li class="nhsuk-header__navigation-item">
-        <a class="nhsuk-header__navigation-link" href="#">NHS service standard</a>
-      </li>
-      <li class="nhsuk-header__navigation-item">
-        <a class="nhsuk-header__navigation-link" href="#">Design system</a>
-      </li>
-      <li class="nhsuk-header__navigation-item">
-        <a class="nhsuk-header__navigation-link" href="#">Content guide</a>
-      </li>
-      <li class="nhsuk-header__navigation-item">
-        <a class="nhsuk-header__navigation-link" href="#">Accessibility</a>
-      </li>
-      <li class="nhsuk-header__navigation-item">
-        <a class="nhsuk-header__navigation-link" href="#">Community and contribution</a>
-      </li>
+      @await Component.InvokeAsync("NavigationItems")
       <li class="nhsuk-header__menu" hidden>
         <button class="nhsuk-header__menu-toggle nhsuk-header__navigation-link" id="toggle-menu" aria-expanded="false">
           <span class="nhsuk-u-visually-hidden">Browse </span>More
         </button>
       </li>
-    </ul>
-  </div>
-</nav>
-
-@*
-        <div class="nhsuk-header__transactional-service">
-
-            @await Component.InvokeAsync("NavigationItems", new { navView = "Searchbar", controllerName = controllerName })
-
-            <div class="nhsuk-header__not-mobile">
-                @await Component.InvokeAsync("NavigationItems", new { navView = "Topnav" })
-            </div>
-
-            @if (User.Identity.IsAuthenticated)
-            {
-                @await Component.InvokeAsync("NavigationItems", new { navView = "MenuNotificationDot" })
-            }
-        </div>
-
-        @await Component.InvokeAsync("NavigationItems", new { navView = "MobileTopRightNav", controllerName = controllerName })
+      </ul>
     </div>
+  </nav>
+}
 
-
-    @if (User.Identity.IsAuthenticated)
-    {
-        <nav class="nhsuk-header__navigation" id="header-navigation" role="navigation" aria-label="Primary navigation">
-            <ul class="nhsuk-header__navigation-list @BasicUserPaddingClass()">
-                @await Component.InvokeAsync("NavigationItems")
-            </ul>
-        </nav>
-    }
-
-*@
 @functions{
     public bool HideSearchBar()
     {
@@ -128,10 +68,5 @@
     public string PreLoginClass() {
         if (!User.Identity.IsAuthenticated) return "nhsuk-header__pre-login";
         return "";
-    }
-
-    public string BasicUserPaddingClass(){
-        bool isReadonly = (User.IsInRole("ReadOnly") || User.IsInRole("BasicUser"));
-        return isReadonly ? "nhsuk-u-padding-right-4" : string.Empty;
     }
 }

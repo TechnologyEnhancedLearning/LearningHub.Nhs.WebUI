@@ -123,27 +123,6 @@ form label.nhsuk-u-visually-hidden {
     height: 26px;
 }
 
-.nhsuk-header__notification-dot-mobile {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    background-color: #d5281b;
-    color: white;
-    font-size: 10px;
-    font-weight: bold;
-    padding: 2px 6px;
-    border-radius: 50%;
-    line-height: 1;
-    white-space: nowrap;
-}
-
-.nhsuk-account__links {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
 /* One third column layout that switches to full width at the small desktop breakpoint (990px) instead of mobile. */
 .nhsuk-grid-column-one-third-small-desktop {
     @extend .nhsuk-grid-column-one-third;
@@ -233,5 +212,89 @@ form label.nhsuk-u-visually-hidden {
         padding-left: px2rem(16);
         padding-right: px2rem(16);
     }
- 
+}
+
+.nhsuk-header .nhsuk-width-container,
+.nhsuk-footer .nhsuk-width-container {
+  max-width: px2rem(1144);
+}
+
+@media (min-width: px2rem(1024)) and (max-width: px2rem(1220)) {
+  .nhsuk-header .nhsuk-width-container {
+    margin-right: max(32px, calc(16px + env(safe-area-inset-right)));
+    margin-left: max(32px, calc(16px + env(safe-area-inset-left)));
+  }
+}
+
+@media (max-width: px2rem(640)) {
+  // overrides header becoming block display at 640 and below. Allows header has 3 elements
+  .nhsuk-header__container {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 0px;
+  }
+
+  .nhsuk-header__account {
+    width: 100%;
+  }
+}
+
+.nhsuk-header__account-link {
+  // make space for notification dot
+  margin-left: -8px;
+}
+
+.nhsuk-header__search-form {
+  // these rules not being picked up from v-10.
+  // may not be needed in future versions of v10
+
+  .nhsuk-button {
+    background-color: #edf4fa;
+    border: 1px solid transparent;
+    border-radius: 0 .25rem .25rem 0;
+    box-shadow: none;
+    color: nhsuk-colour("blue");
+    margin: 0;
+    padding: 0 7px;
+    width: 2.75rem;
+  }
+
+  .nhsuk-input {
+    border-color: transparent;
+    border-radius: .25rem 0 0 .25rem;
+    font-size: 1rem;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+@media (min-width: px2rem(991)) {
+  .nhsuk-header__search-form .nhsuk-input {
+    min-width: 18rem;
+  }
+}
+
+.nhsuk-header__search-form {
+
+  .nhsuk-form-group {
+    width: 100%;
+    margin: 0;
+  }
+
+  .nhsuk-input-wrapper {
+    display: flex;
+  }
+}
+
+.nhsuk-header__navigation-item--current a {
+  border-bottom: 4px solid nhsuk-colour("grey-4");
+  font-weight: normal;
+}
+
+.nhsuk-header__menu {
+  display: list-item;
+}
+
+.nhsuk-header .nhsuk-header__navigation-list .nhsuk-header__menu {
+  align-self: auto;
 }

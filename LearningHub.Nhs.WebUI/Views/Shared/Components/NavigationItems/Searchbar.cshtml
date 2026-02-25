@@ -5,99 +5,89 @@
 
 @model NavigationModel
 
-<!-- start Searchbar -->
-<div class="nhsuk-header__break"></div>
 @if (Model.ShowSearch)
 {
-    <input type="checkbox" id="header-mobile-search-control" tabindex="-1" aria-labelledby="close-search toggle-search" aria-hidden="true">
-}
-<div class="nhsuk-header__search">
-    @if (Model.ShowSearch)
-    {
-        <div class="nhsuk-header__search-wrap" id="wrap-search">
-            <form class="nhsuk-header__search-form" id="search" asp-controller="search" asp-action="results" method="get" role="search">
-                <label class="nhsuk-u-visually-hidden" for="search-field">Search the learning hub</label>
-                <input class="nhsuk-search__input" id="search-field" name="term" type="search" placeholder="Search the learning hub" autocomplete="off">
-                <ul id="search-field_listbox" class="nhsuk-list autosuggestion-menu" style="display:none"></ul>
-                <button class="nhsuk-search__submit" type="submit">
-                    <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="27" height="27">
-                        <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
-                    </svg>
-                    <span class="nhsuk-u-visually-hidden">Search</span>
-                </button>
-
-                <label for="header-mobile-search-control" class="nhsuk-search__close" id="close-search">
-                    <svg class="nhsuk-icon nhsuk-icon__close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="27" height="27">
-                        <path d="M13.41 12l5.3-5.29a1 1 0 1 0-1.42-1.42L12 10.59l-5.29-5.3a1 1 0 0 0-1.42 1.42l5.3 5.29-5.3 5.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l5.29-5.3 5.29 5.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"></path>
-                    </svg>
-                    <span class="nhsuk-u-visually-hidden">Close search</span>
-                </label>
-            </form>
+  <!-- start Searchbar -->
+  <search class="nhsuk-header__search">
+    <form class="nhsuk-header__search-form" id="search" asp-controller="search" asp-action="results" method="get" role="search" novalidate>
+      <div class="nhsuk-form-group">
+        <label class="nhsuk-label nhsuk-u-visually-hidden" for="search-field">Search the learning hub</label>
+        <div class="nhsuk-input-wrapper">
+          <input class="nhsuk-input" id="search-field" name="term" type="search" placeholder="Search the learning hub" autocomplete="off">
+          <ul id="search-field_listbox" class="nhsuk-list autosuggestion-menu" style="display:none"></ul>
+          <button class="nhsuk-button nhsuk-button--small" data-module="nhsuk-button" type="submit">
+            <svg class="nhsuk-icon nhsuk-icon--search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" focusable="false" role="img" aria-label="Search">
+              <title>Search</title>
+              <path d="m20.7 19.3-4.1-4.1a7 7 0 1 0-1.4 1.4l4 4.1a1 1 0 0 0 1.5 0c.4-.4.4-1 0-1.4ZM6 11a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z" />
+            </svg>
+          </button>
         </div>
-    }
-</div>
+      </div>
+    </form>
+  </search>
+  
+  <!-- end Searchbar -->
+  <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+          var searchInput = document.getElementById("search-field");
+          var suggestionsList = document.getElementById("search-field_listbox");
+          var minLengthAutoComplete = 3;
 
-<!-- end Searchbar -->
-<script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function () {
-        var searchInput = document.getElementById("search-field");
-        var suggestionsList = document.getElementById("search-field_listbox");
-        var minLengthAutoComplete = 3;
+          function fetchSuggestions(term) {
+              var xhr = new XMLHttpRequest();
+              xhr.open("GET", '@Url.Action("GetAutoSuggestion", "Search")' + '?term=' + encodeURIComponent(term), true);
+              xhr.onload = function () {
+                  if (xhr.status >= 200 && xhr.status < 400) {
+                      if (xhr.responseText.includes('<script>')) {
+                          return;
+                      }
+                      if (xhr.responseText.trim().length > 5) {
+                          suggestionsList.style.display = "block";
+                          suggestionsList.innerHTML = xhr.responseText;
+                      }
+                      else {
+                          closeAllLists();
+                      }
+                  } else {
+                      closeAllLists();
+                  }
+              };
+              xhr.onerror = function () {
+                  closeAllLists();
+              };
+              xhr.send();
+          }
 
-        function fetchSuggestions(term) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", '@Url.Action("GetAutoSuggestion", "Search")' + '?term=' + encodeURIComponent(term), true);
-            xhr.onload = function () {
-                if (xhr.status >= 200 && xhr.status < 400) {
-                    if (xhr.responseText.includes('<script>')) {
-                        return;
-                    }
-                    if (xhr.responseText.trim().length > 5) {
-                        suggestionsList.style.display = "block";
-                        suggestionsList.innerHTML = xhr.responseText;
-                    }
-                    else {
-                        closeAllLists();
-                    }
-                } else {
-                    closeAllLists();
-                }
-            };
-            xhr.onerror = function () {
-                closeAllLists();
-            };
-            xhr.send();
-        }
+          function autocomplete(input, minLength) {
+              if (input != null) {
+                  input.addEventListener("input", function () {
+                      var val = this.value.trimStart();
+                      if (val.length < minLength || val.trim() === "") {
+                          closeAllLists();
+                          return false;
+                      }
+                      fetchSuggestions(val);
+                  });
 
-        function autocomplete(input, minLength) {
-            if (input != null) {
-                input.addEventListener("input", function () {
-                    var val = this.value.trimStart();
-                    if (val.length < minLength || val.trim() === "") {
-                        closeAllLists();
-                        return false;
-                    }
-                    fetchSuggestions(val);
-                });
+                  document.addEventListener("click", function (e) {
+                      if (!searchInput.contains(e.target)) {
+                          suggestionsList.style.display = "none";
+                      } else {
+                          var val = searchInput.value;
+                          if (val.length >= minLengthAutoComplete) {
+                              if (suggestionsList.children.length > 0) { suggestionsList.style.display = "block"; }
+                          }
+                      }
+                  });
+              }
+          }
 
-                document.addEventListener("click", function (e) {
-                    if (!searchInput.contains(e.target)) {
-                        suggestionsList.style.display = "none";
-                    } else {
-                        var val = searchInput.value;
-                        if (val.length >= minLengthAutoComplete) {
-                            if (suggestionsList.children.length > 0) { suggestionsList.style.display = "block"; }
-                        }
-                    }
-                });
-            }
-        }
+          function closeAllLists() {
+              suggestionsList.innerHTML = '';
+              suggestionsList.style.display = "none";
+          }
 
-        function closeAllLists() {
-            suggestionsList.innerHTML = '';
-            suggestionsList.style.display = "none";
-        }
-
-        autocomplete(searchInput, minLengthAutoComplete);
-    });
-</script>
+          autocomplete(searchInput, minLengthAutoComplete);
+      });
+  </script>
+}

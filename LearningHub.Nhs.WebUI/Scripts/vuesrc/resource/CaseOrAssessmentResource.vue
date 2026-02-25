@@ -116,6 +116,7 @@
         props: {
             resourceItem: { type: Object } as PropOptions<ResourceItemModel>,
             resourceActivityId: { type: Number } as PropOptions<number>,
+            activityStart: { type: Date },
             assessmentProgress: { type: Object } as PropOptions<AssessmentProgressModel>,
             keepUserSessionAliveIntervalSeconds: { type: Number } as PropOptions<number>,
         },
@@ -234,10 +235,26 @@
                 this.questionsInFocus = [...this.questionsInFocus];
                 this.selectedQuestionValues = [...this.selectedQuestionValues];
             },
-            updateProgress(page: number, isCompleted: boolean) {
+            async updateProgress(page: number, isCompleted: boolean) {
                 if (isCompleted) {
                     this.pagesProgress.completePage(page);
                 }
+                if (this.resourceItem.resourceTypeEnum === ResourceType.CASE &&
+                    isCompleted &&
+                    page === this.pageCount - 1 &&
+                    this.resourceActivityId > 0) {
+
+                    let startDate = new Date(this.activityStart as any);
+
+                    await activityRecorder.recordCaseActivityComplete(
+                        this.resourceItem.resourceVersionId,
+                        this.resourceItem.nodePathId,
+                        startDate,
+                        new Date(),
+                        this.resourceActivityId
+                    );
+                }
+
                 if (this.allPagesCompleted && this.isAssessment) {
                     this.allAssessmentInteractionsSubmitted = true;
                 }
@@ -307,7 +324,13 @@
 
                 // Only make a new activity if the latest activity is finished
                 if (typeof latest.userScore === 'number') {
-                    const result = await activityRecorder.recordActivityLaunched(this.resourceItem.resourceTypeEnum, this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date(), reason);
+                    const result = await activityRecorder.recordActivityLaunched(
+                        this.resourceItem.resourceTypeEnum,
+                        this.resourceItem.resourceVersionId,
+                        this.resourceItem.nodePathId,
+                        new Date(),
+                        false as boolean
+                    );
                     this.shuffleMatchQuestionsState();
                     await activityRecorder.recordAssessmentResourceActivity(result.createdId, this.matchQuestionsState, reason);
                 }

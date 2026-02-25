@@ -13,14 +13,13 @@
         /// GETs data from Databricks API.
         /// </summary>
         /// <param name="requestUrl">The URL to make a get call to.</param>
-        /// <param name="authHeader">Optional authorization header.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        Task<HttpResponseMessage> GetData(string requestUrl, string? authHeader);
+        Task<HttpResponseMessage> GetData(string requestUrl);
 
         /// <summary>
         /// The Get Client method.
         /// </summary>
         /// <returns>The <see cref="HttpClient"/>.</returns>
-        HttpClient GetClient();
+        Task<HttpClient> GetClient();
     }
 }

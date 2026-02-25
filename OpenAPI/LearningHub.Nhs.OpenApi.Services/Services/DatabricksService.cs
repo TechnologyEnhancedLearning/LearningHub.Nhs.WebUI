@@ -104,10 +104,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
                 var jsonBody = JsonConvert.SerializeObject(requestPayload);
                 using var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-
-                var response = await databricksInstance.GetClient().PostAsync(requestUrl, content);
-
-                var databricksResponse = await databricksInstance.GetClient().PostAsync(requestUrl, content);
+               
+                var databricksResponse = await databricksInstance.GetClient().Result.PostAsync(requestUrl, content);
                 if (databricksResponse.StatusCode is not HttpStatusCode.OK)
                 {
                     //log failure
@@ -194,9 +192,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             var json = JsonConvert.SerializeObject(body);
             using var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await databricksInstance.GetClient().PostAsync(requestUrl, content);
+           // var response = await databricksInstance.GetClient().Result.PostAsync(requestUrl, content);
 
-            var databricksResponse = await databricksInstance.GetClient().PostAsync(requestUrl, content);
+            var databricksResponse = await databricksInstance.GetClient().Result.PostAsync(requestUrl, content);
             if (databricksResponse.StatusCode is not HttpStatusCode.OK)
             {
                 //log failure
@@ -311,7 +309,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             var json = JsonConvert.SerializeObject(body);
             using var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var databricksResponse = await databricksInstance.GetClient().PostAsync(requestUrl, content);
+            var databricksResponse = await databricksInstance.GetClient().Result.PostAsync(requestUrl, content);
             if (databricksResponse.StatusCode is not HttpStatusCode.OK)
             {
                 reportHistory.ProcessingMessage = databricksResponse.ReasonPhrase;

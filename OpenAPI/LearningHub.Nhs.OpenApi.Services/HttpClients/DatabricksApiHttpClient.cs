@@ -6,30 +6,35 @@
     using System.Threading.Tasks;
     using IdentityModel.Client;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
+    using LearningHub.Nhs.OpenApi.Services.Helpers;
     using LearningHub.Nhs.OpenApi.Services.Interface.HttpClients;
     using Microsoft.Extensions.Options;
-    using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
     /// <summary>
     /// Http client for Databricks.
     /// </summary>
-    public class DatabricksApiHttpClient : IDatabricksApiHttpClient
+    public class DatabricksApiHttpClient : IDatabricksApiHttpClient, IDisposable
     {
         private readonly HttpClient httpClient;
-        private readonly IOptions<DatabricksConfig> databricksConfig;
+        private readonly DatabricksOAuthTokenService tokenService;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabricksApiHttpClient"/> class.
         /// </summary>
-        /// <param name="databricksConfig">Configuration details for the databricks.</param>
-        public DatabricksApiHttpClient(IOptions<DatabricksConfig> databricksConfig)
+        /// <param name="config">Configuration details for the databricks.</param>
+        public DatabricksApiHttpClient(IOptions<DatabricksConfig> config)
         {
-            this.databricksConfig = databricksConfig;
-            this.httpClient = new HttpClient { BaseAddress = new Uri(databricksConfig.Value.InstanceUrl) };
-            this.httpClient.DefaultRequestHeaders.Accept.Clear();
-            this.httpClient.DefaultRequestHeaders.Accept.Add(
+            tokenService = new DatabricksOAuthTokenService(
+                config.Value.ClientId,
+                config.Value.ClientSecret,
+                config.Value.InstanceUrl);
+
+            httpClient = new HttpClient { BaseAddress = new Uri(config.Value.InstanceUrl) };
+            httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
         }
+
 
         /// <inheritdoc />
         public void Dispose()
@@ -41,23 +46,25 @@
         /// The Get Client method.
         /// </summary>
         /// <returns>The <see cref="HttpClient"/>.</returns>
-        public HttpClient GetClient()
+        public async Task<HttpClient> GetClient()
         {
-            string accessToken = this.databricksConfig.Value.Token;
-            this.httpClient.SetBearerToken(accessToken);
+            string token = await tokenService.GetAccessTokenAsync();
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
             return this.httpClient;
         }
 
-        /// <inheritdoc/>
-        public async Task<HttpResponseMessage> GetData(string requestUrl, string? authHeader)
-        {
-            if (!string.IsNullOrEmpty(authHeader))
-            {
-                this.httpClient.SetBearerToken(authHeader);
-            }
 
-            var message = await this.httpClient.GetAsync(requestUrl).ConfigureAwait(false);
-            return message;
+        /// <inheritdoc/>
+        public async Task<HttpResponseMessage> GetData(string requestUrl)
+        {
+            string token = await tokenService.GetAccessTokenAsync();
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            return await httpClient.GetAsync(requestUrl);
         }
+
     }
 }

@@ -11,7 +11,7 @@
     public static class SearchFilterBuilder
     {
 
-        public static Dictionary<string, List<string>> CombineAndNormaliseFilters(string requestTypeFilterText, string? providerFilterText)
+        public static Dictionary<string, List<string>> CombineAndNormaliseFilters(string requestTypeFilterText, string? providerFilterText, string? resourceAccessLevelFilterText)
         {
             var filters = new Dictionary<string, List<string>>
             {
@@ -21,10 +21,12 @@
             // Parse and merge additional filters from query string
             var requestTypeFilters = ParseQueryStringFilters(requestTypeFilterText);
             var providerFilters = ParseQueryStringFilters(providerFilterText);
+            var resourceAccessLevelFilters = ParseQueryStringFilters(resourceAccessLevelFilterText);
 
             // Merge filters from both sources
             MergeFilterDictionary(filters, requestTypeFilters);
             MergeFilterDictionary(filters, providerFilters);
+            MergeFilterDictionary(filters, resourceAccessLevelFilters);
 
             //NormaliseFilters(filters);
 

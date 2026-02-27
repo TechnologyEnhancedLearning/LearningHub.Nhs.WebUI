@@ -120,7 +120,7 @@
                 }
 
                 // Normalize resource_type filter values
-                var filters = SearchFilterBuilder.CombineAndNormaliseFilters(searchRequestModel.FilterText, searchRequestModel.ProviderFilterText);
+                var filters = SearchFilterBuilder.CombineAndNormaliseFilters(searchRequestModel.FilterText, searchRequestModel.ProviderFilterText, searchRequestModel.ResourceAccessLevelFilterText);
 
                 if (searchRequestModel.CatalogueId.HasValue)
                 {
@@ -157,6 +157,7 @@
                                         ?? new List<int>()
                                     ),
                             Rating = Convert.ToDecimal(doc.Rating),
+                            ResourceAccessLevel = Convert.ToInt32(doc.ResourceAccessLevel),
                             Author = doc.Author,
                             Authors = doc.Author?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToList(),
                             AuthoredDate = doc.DateAuthored?.ToString(),

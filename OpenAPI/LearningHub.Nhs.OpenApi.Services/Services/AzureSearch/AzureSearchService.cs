@@ -860,7 +860,7 @@
         /// </summary>
         /// <param name="searchText">The search text.</param>
         /// <param name="facets">The facet results.</param>
-        /// <param name="resourceAccessLevel">The resource access level filter, if any, used to further differentiate cache entries.</param>
+        /// <param name="resourceAccessLevel">The resource access level filter, if any, used to further differentiate cache entries. </param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The unfiltered facet results.</returns>
         private async Task<IDictionary<string, IList<FacetResult>>> GetUnfilteredFacetsAsync(

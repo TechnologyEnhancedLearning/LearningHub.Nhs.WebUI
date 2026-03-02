@@ -139,10 +139,29 @@
 
                 <div>
                     @UtilityHelper.GetAttribution(item.Authors)
-                    @if (!string.IsNullOrEmpty(item.AuthoredDate))
+
+                    @if (!string.IsNullOrWhiteSpace(item.AuthoredDate))
                     {
-                        @UtilityHelper.GetInOn(item.AuthoredDate)
-                        @: @item.AuthoredDate
+                        string displayDate = item.AuthoredDate;
+                        {
+                            // Define expected input formats
+                            string[] formats = { "dd/MM/yyyy HH:mm:ss", "dd/MM/yyyy", "yyyy-MM-dd HH:mm:ss",
+                                                    "yyyy-MM-dd","dd MMM yyyy HH:mm:ss","dd MMM yyyy" };
+
+                            if (DateTime.TryParseExact(
+                                item.AuthoredDate,
+                                formats,
+                                System.Globalization.CultureInfo.InvariantCulture,
+                                System.Globalization.DateTimeStyles.None,
+                                out DateTime parsedDate))
+                            {
+                                displayDate = parsedDate.ToString("dd MMM yyyy"); // consistent format
+                            }
+                        }
+
+                        @* Render helper text plus formatted date *@
+                        @UtilityHelper.GetInOn(displayDate)
+                        @: @displayDate
                     }
                 </div>
             </div>

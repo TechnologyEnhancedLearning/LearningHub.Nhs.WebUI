@@ -184,6 +184,7 @@
                 var unfilteredFacets = await GetUnfilteredFacetsAsync(
                    searchRequestModel.SearchText,
                    filteredResponse.Facets,
+                   searchRequestModel.ResourceAccessLevelFilterText,
                    cancellationToken);
 
                 // Merge facets from filtered and unfiltered results
@@ -859,14 +860,19 @@
         /// </summary>
         /// <param name="searchText">The search text.</param>
         /// <param name="facets">The facet results.</param>
+        /// <param name="resourceAccessLevel">The resource access level filter, if any, used to further differentiate cache entries.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The unfiltered facet results.</returns>
         private async Task<IDictionary<string, IList<FacetResult>>> GetUnfilteredFacetsAsync(
             string searchText,
             IDictionary<string, IList<FacetResult>> facets,
+            string? resourceAccessLevel, 
             CancellationToken cancellationToken)
         {
-            var cacheKey = $"AllFacets_{searchText?.ToLowerInvariant() ?? "*"}";
+            var normalizedSearch = searchText?.ToLowerInvariant() ?? "*";
+            var accessLevelKey = resourceAccessLevel?.ToString() ?? "null";
+            var cacheKey = $"AllFacets_{normalizedSearch}_ral_{accessLevelKey}";
+
             var cacheResponse = await this.cachingService.GetAsync<IDictionary<string, IList<CacheableFacetResult>>>(cacheKey);
 
             if (cacheResponse.ResponseEnum == CacheReadResponseEnum.Found)
@@ -883,6 +889,24 @@
             }
 
             return facets ?? new Dictionary<string, IList<FacetResult>>();
+        }
+
+        private static int? ExtractResourceAccessLevel(IDictionary<string, IList<FacetResult>> facets)
+        {
+            if (facets == null)
+                return null;
+
+            if (!facets.TryGetValue("resource_access_level", out var accessFacet))
+                return null;
+
+            if (accessFacet == null || accessFacet.Count == 0)
+                return null;
+
+            var rawValue = accessFacet.FirstOrDefault()?.Value;
+
+            var stringValue = rawValue?.ToString();
+
+            return int.TryParse(stringValue, out var parsed) ? parsed : (int?)null;
         }
 
         private ResourceMetadataViewModel MapToViewModel(Resource resource, List<ResourceActivityDTO> resourceActivities)

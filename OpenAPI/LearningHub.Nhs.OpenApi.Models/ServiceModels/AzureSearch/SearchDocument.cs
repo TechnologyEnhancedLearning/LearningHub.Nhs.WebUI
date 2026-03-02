@@ -97,7 +97,7 @@ namespace LearningHub.Nhs.OpenApi.Models.ServiceModels.AzureSearch
         /// Gets or sets the resource access level.
         /// </summary>
         [JsonPropertyName("resource_access_level")]
-        public string? ResourceAccessLevel { get; set; } = string.Empty;
+        public int? ResourceAccessLevel { get; set; }
         
         /// <summary>
         /// Gets or sets the date authored.

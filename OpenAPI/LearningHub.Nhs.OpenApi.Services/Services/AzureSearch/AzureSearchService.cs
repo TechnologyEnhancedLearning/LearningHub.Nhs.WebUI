@@ -891,24 +891,6 @@
             return facets ?? new Dictionary<string, IList<FacetResult>>();
         }
 
-        private static int? ExtractResourceAccessLevel(IDictionary<string, IList<FacetResult>> facets)
-        {
-            if (facets == null)
-                return null;
-
-            if (!facets.TryGetValue("resource_access_level", out var accessFacet))
-                return null;
-
-            if (accessFacet == null || accessFacet.Count == 0)
-                return null;
-
-            var rawValue = accessFacet.FirstOrDefault()?.Value;
-
-            var stringValue = rawValue?.ToString();
-
-            return int.TryParse(stringValue, out var parsed) ? parsed : (int?)null;
-        }
-
         private ResourceMetadataViewModel MapToViewModel(Resource resource, List<ResourceActivityDTO> resourceActivities)
         {
             var hasCurrentResourceVersion = resource.CurrentResourceVersion != null;

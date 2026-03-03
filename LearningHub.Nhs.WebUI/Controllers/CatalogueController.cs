@@ -11,6 +11,7 @@
     using LearningHub.Nhs.Models.Dashboard;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Hierarchy;
+    using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.WebUI.Configuration;
@@ -35,6 +36,7 @@
         private readonly IDashboardService dashboardService;
         private readonly ISearchService searchService;
         private readonly ICacheService cacheService;
+        private readonly ICategoryService categoryService;
         private LearningHubAuthServiceConfig authConfig;
         private ICatalogueService catalogueService;
         private IUserService userService;
@@ -57,6 +59,7 @@
         /// <param name="dashboardService">Dashboard service.</param>
         /// <param name="hierarchyService">HierarchyService.</param>
         /// <param name="userGroupService">userGroupService.</param>
+        /// <param name="categoryService">categoryService.</param>
         public CatalogueController(
            IHttpClientFactory httpClientFactory,
            IWebHostEnvironment hostingEnvironment,
@@ -69,7 +72,8 @@
            ICacheService cacheService,
            IDashboardService dashboardService,
            IHierarchyService hierarchyService,
-           IUserGroupService userGroupService)
+           IUserGroupService userGroupService,
+           ICategoryService categoryService)
            : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
         {
             this.authConfig = authConfig;
@@ -81,6 +85,7 @@
             this.dashboardService = dashboardService;
             this.hierarchyService = hierarchyService;
             this.userGroupService = userGroupService;
+            this.categoryService = categoryService;
         }
 
         /// <summary>
@@ -187,12 +192,13 @@
         /// <param name="tab">The tab name to display.</param>
         /// <param name="nodeId">The nodeId of the current folder. If not supplied, catalogue root contents are displayed.</param>
         /// <param name="search">The SearchRequestViewModel.</param>
+        /// <param name="moodleCategoryId">The moodleCategoryId.</param>
         /// <returns>IActionResult.</returns>
         [AllowAnonymous]
         [ServiceFilter(typeof(SsoLoginFilterAttribute))]
         [HttpGet]
         [Route("catalogue/{reference}/{tab?}")]
-        public async Task<IActionResult> IndexAsync(string reference, string tab, int? nodeId, SearchRequestViewModel search)
+        public async Task<IActionResult> IndexAsync(string reference, string tab, int? nodeId, SearchRequestViewModel search, int? moodleCategoryId)
         {
             if (tab == null || (tab == "search" && !this.User.Identity.IsAuthenticated))
             {
@@ -206,7 +212,8 @@
             this.ViewBag.ActiveTab = tab;
 
             var catalogue = await this.catalogueService.GetCatalogueAsync(reference);
-
+            var catalogueCategoryId = await this.categoryService.GetCatalogueVersionCategoryAsync(catalogue.Id);
+            catalogue.SelectedCategoryId = catalogueCategoryId;
             if (catalogue == null)
             {
                 return this.RedirectToAction("Error", "Home");
@@ -242,31 +249,85 @@
                 }
             }
 
-            if (tab == "browse")
+            if (nodeId.HasValue)
             {
-                if (nodeId.HasValue)
+                // if nodeId has a value it means the user is looking at a subfolder of the catalogue.
+                // Get the folder name and description, plus folder path data needed for the breadcrumbs.
+                viewModel.NodeDetails = await this.hierarchyService.GetNodeDetails(nodeId.Value);
+                viewModel.NodePathNodes = await this.hierarchyService.GetNodePathNodes(viewModel.NodeDetails.NodePathId);
+            }
+            else
+            {
+                // Otherwise user is looking at catalogue root.
+                nodeId = catalogue.NodeId;
+
+                viewModel.NodePathNodes = new List<NodeViewModel>
+                    {
+                        new NodeViewModel { Name = catalogue.Name },
+                    };
+            }
+
+            bool includeEmptyFolder = viewModel.UserGroups.Any(x => x.RoleId == (int)RoleEnum.LocalAdmin || x.RoleId == (int)RoleEnum.Editor || x.RoleId == (int)RoleEnum.Previewer) || this.User.IsInRole("Administrator");
+            var nodeContents = await this.hierarchyService.GetNodeContentsForCatalogueBrowse(nodeId.Value, includeEmptyFolder);
+            viewModel.NodeContents = nodeContents;
+
+            int categoryId = moodleCategoryId ?? await this.categoryService.GetCatalogueVersionCategoryAsync(catalogue.Id);
+            if (categoryId > 0)
+            {
+                var response = await this.categoryService.GetCoursesByCategoryIdAsync(categoryId);
+                viewModel.Courses = response.Courses;
+
+                var subCategories = await this.categoryService.GetSubCategoryByCategoryIdAsync(categoryId);
+                viewModel.SubCategories = subCategories;
+
+                if (moodleCategoryId.HasValue)
                 {
-                    // if nodeId has a value it means the user is looking at a subfolder of the catalogue.
-                    // Get the folder name and description, plus folder path data needed for the breadcrumbs.
-                    viewModel.NodeDetails = await this.hierarchyService.GetNodeDetails(nodeId.Value);
-                    viewModel.NodePathNodes = await this.hierarchyService.GetNodePathNodes(viewModel.NodeDetails.NodePathId);
+                    var moodleCategories = await this.categoryService.GetAllMoodleCategoriesAsync();
+
+                    // Start with the selected category
+                    var breadcrumbCategory = moodleCategories.FirstOrDefault(x => x.Id == moodleCategoryId);
+
+                    List<MoodleCategory> categories = new List<MoodleCategory>();
+                    categories.Insert(0, new MoodleCategory
+                    {
+                        Id = catalogue.NodeId,
+                        Name = catalogue.Name,
+                    });
+
+                    while (breadcrumbCategory != null)
+                    {
+                        // Add the current category to the breadcrumb list
+                        categories.Insert(1, breadcrumbCategory);
+
+                        // If there's no parent, stop
+                        if (breadcrumbCategory.Parent == 0 || breadcrumbCategory.Parent == catalogueCategoryId)
+                        {
+                            break;
+                        }
+
+                        // Move up one level
+                        breadcrumbCategory = moodleCategories.FirstOrDefault(x => x.Id == breadcrumbCategory.Parent);
+                    }
+
+                    viewModel.MoodleCategories = categories;
                 }
                 else
                 {
                     // Otherwise user is looking at catalogue root.
                     nodeId = catalogue.NodeId;
 
-                    viewModel.NodePathNodes = new List<NodeViewModel>
+                    viewModel.MoodleCategories = new List<MoodleCategory>
                     {
-                        new NodeViewModel { Name = catalogue.Name },
+                        new MoodleCategory { Name = catalogue.Name },
                     };
                 }
-
-                bool includeEmptyFolder = viewModel.UserGroups.Any(x => x.RoleId == (int)RoleEnum.LocalAdmin || x.RoleId == (int)RoleEnum.Editor || x.RoleId == (int)RoleEnum.Previewer) || this.User.IsInRole("Administrator");
-                var nodeContents = await this.hierarchyService.GetNodeContentsForCatalogueBrowse(nodeId.Value, includeEmptyFolder);
-                viewModel.NodeContents = nodeContents;
             }
-            else if (tab == "search")
+            else
+            {
+                viewModel.Catalogue.SelectedCategoryId = 0;
+            }
+
+            if (tab == "search")
             {
                 if (viewModel.SearchResults == null)
                 {
@@ -297,6 +358,24 @@
             }
 
             return this.View(viewModel);
+        }
+
+        /// <summary>
+        /// GetCourses.
+        /// </summary>
+        /// <param name="catalogueNodeVerstionId">The CatalogueNodeVerstionId.</param>
+        /// <param name="reference">The reference.</param>
+        /// <param name="tab">The tab.</param>
+        /// <returns>IActionResult.</returns>
+        [AllowAnonymous]
+        [ServiceFilter(typeof(SsoLoginFilterAttribute))]
+        [HttpGet]
+        [Route("GetCourses/{catalogueNodeVerstionId}/{reference}/{tab}")]
+        public async Task<IActionResult> GetCourses(int catalogueNodeVerstionId, string reference, string tab)
+        {
+            var categoryId = await this.categoryService.GetCatalogueVersionCategoryAsync(catalogueNodeVerstionId);
+            var response = await this.categoryService.GetCoursesByCategoryIdAsync(categoryId);
+            return this.PartialView("Courses", response.Courses);
         }
 
         /// <summary>

@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Dashboard;
+    using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.WebUI.Models;
 
     /// <summary>
@@ -17,6 +18,15 @@
         /// <param name="pageNumber">The page Number.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         Task<DashboardMyLearningResponseViewModel> GetMyAccessLearningsAsync(string dashboardType, int pageNumber);
+
+        /// <summary>
+        /// GetResourcesAsync.
+        /// </summary>
+        /// <param name="dashboardTrayLearningResourceType">The dashboardTrayLearningResource type.</param>
+        /// <param name="dashboardType">The dashboard type.</param>
+        /// <param name="pageNumber">The page Number.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<DashboardMyLearningResponseViewModel> GetMyCoursesAndElearning(string dashboardTrayLearningResourceType, string dashboardType, int pageNumber);
 
         /// <summary>
         /// GetCataloguesAsync.
@@ -47,6 +57,13 @@
         /// <param name="currentUserId">The current User Id type.</param>
         /// <param name="pageNumber">The page Number.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        Task<List<MoodleCourseResponseViewModel>> GetEnrolledCoursesFromMoodleAsync(int currentUserId, int pageNumber);
+        Task<List<MoodleCourseResponseModel>> GetEnrolledCoursesFromMoodleAsync(int currentUserId, int pageNumber);
+
+        /// <summary>
+        /// GetEnrolledCoursesFromMoodleAsync.
+        /// </summary>
+        /// <param name="currentUserId">The current User Id type.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<int> GetMoodleUserIdAsync(int currentUserId);
     }
 }

@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Hierarchy;
+    using LearningHub.Nhs.Models.Moodle;
+    using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.WebUI.Models.Search;
 
@@ -46,5 +48,20 @@
         /// Gets or sets the search result view model.
         /// </summary>
         public SearchResultViewModel SearchResults { get; set; }
+
+        /// <summary>
+        /// Gets or sets the courses in the catalogue.
+        /// </summary>
+        public List<Course> Courses { get; set; }
+
+        /// <summary>
+        /// Gets or sets the courses in the catalogue.
+        /// </summary>
+        public List<MoodleSubCategoryResponseModel> SubCategories { get; set; }
+
+        /// <summary>
+        /// Gets or sets the moodle categories.
+        /// </summary>
+        public List<MoodleCategory> MoodleCategories { get; set; }
     }
 }

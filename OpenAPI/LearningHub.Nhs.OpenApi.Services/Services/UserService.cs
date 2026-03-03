@@ -1,5 +1,6 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Services.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -188,8 +189,15 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<UserLHBasicViewModel> GetByIdAsync(int id)
         {
-            var user = await userRepository.GetByIdAsync(id);
-            return mapper.Map<UserLHBasicViewModel>(user);
+            try
+            {
+                var user = await userRepository.GetByIdAsync(id);
+                return mapper.Map<UserLHBasicViewModel>(user);
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
 
         /// <inheritdoc/>

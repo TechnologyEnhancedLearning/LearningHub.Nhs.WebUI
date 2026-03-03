@@ -7,6 +7,7 @@
 --
 -- 24 Jun 2024	OA	Initial Revision
 -- 27 Jun 2024  SA  Removed unused temp tables
+-- 29 Sep 2025  SA  Integrated the provider dertails 
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [resources].[GetRatedDashboardResources]
@@ -53,9 +54,24 @@ BEGIN
 			,CAST(ISNULL(ub.[Deleted], 1) ^ 1 AS BIT) AS IsBookmarked
 			,rvrs.AverageRating
 			,rvrs.RatingCount
+			,rpAgg.ProvidersJson
 		INTO #ratedresources
 		FROM Resources.Resource r
 		JOIN resources.resourceversion rv ON rv.ResourceId = r.Id	AND rv.id = r.CurrentResourceVersionId	AND rv.Deleted = 0
+		LEFT JOIN (
+		SELECT 
+			rp.ResourceVersionId,
+			JSON_QUERY('[' + STRING_AGG(
+				'{"Id":' + CAST(p.Id AS NVARCHAR) +
+				',"Name":"' + p.Name + '"' +
+				',"Description":"' + p.Description + '"' +
+				',"Logo":"' + ISNULL(p.Logo, '') + '"}', 
+			',') + ']') AS ProvidersJson
+		FROM resources.ResourceVersionProvider rp
+		JOIN hub.Provider p ON p.Id = rp.ProviderId
+		WHERE p.Deleted = 0 and rp.Deleted = 0
+		GROUP BY rp.ResourceVersionId
+		) rpAgg ON rpAgg.ResourceVersionId = r.CurrentResourceVersionId
 		JOIN resources.ResourceVersionRatingSummary rvrs ON r.CurrentResourceVersionId = rvrs.ResourceVersionId AND rvrs.RatingCount > 0	
 		JOIN hierarchy.NodeResource nr ON r.Id = nr.ResourceId AND nr.Deleted = 0
 		JOIN hierarchy.Node n ON n.Id = nr.NodeId AND n.Hidden = 0 AND n.Deleted = 0

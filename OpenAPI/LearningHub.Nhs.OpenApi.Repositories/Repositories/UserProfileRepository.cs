@@ -26,9 +26,9 @@
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The userProfile.</returns>
-        public Task<UserProfile> GetByIdAsync(int id)
+        public async Task<UserProfile> GetByIdAsync(int id)
         {
-            return DbContext.UserProfile.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+            return await DbContext.UserProfile.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
         }
 
         /// <summary>

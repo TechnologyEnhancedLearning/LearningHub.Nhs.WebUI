@@ -5,6 +5,7 @@
     var foldersActive = (Model.Page == CatalogueNavPage.Folders) ? "active" : "";
     var userGroupsActive = (Model.Page == CatalogueNavPage.UserGroups) ? "active" : "";
     var catalogueOwnerActive = (Model.Page == CatalogueNavPage.CatalogueOwner) ? "active" : "";
+    var categoryActive = (Model.Page == CatalogueNavPage.Category) ? "active" : "";
 }
 <div class="catalogue-tab-bar mt-5 ml-5">
     <div class="catalogue-tab-link @editAddActive">
@@ -23,6 +24,9 @@
         </div>
         <div class="catalogue-tab-link @catalogueOwnerActive">
             <a asp-action="CatalogueOwner" asp-controller="Catalogue" asp-route-id="@Model.CatalogueId">Catalogue owner</a>
+        </div>
+        <div class="catalogue-tab-link @categoryActive">
+            <a asp-action="MoodleCategory" asp-controller="Catalogue" asp-route-id="@Model.CatalogueId">Category</a>
         </div>
     }
 </div>

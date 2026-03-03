@@ -34,6 +34,11 @@
         /// Defines the Catalogue Owner.
         /// </summary>
         CatalogueOwner,
+
+        /// <summary>
+        /// Defines the Category.
+        /// </summary>
+        Category
     }
 
     /// <summary>

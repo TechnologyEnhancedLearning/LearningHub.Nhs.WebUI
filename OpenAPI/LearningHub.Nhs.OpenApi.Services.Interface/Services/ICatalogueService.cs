@@ -150,6 +150,21 @@
         /// <returns>The catalogue id.</returns>
         Task<LearningHubValidationResult> CreateCatalogueAsync(int userId, CatalogueViewModel catalogue);
 
+        /// <summary>
+        /// The AddCategoryToCatalogueAsync.
+        /// </summary>
+        /// <param name="userId">The userid.</param>
+        /// <param name="catalogue">The catalogue.</param>
+        /// <returns></returns>
+        Task<LearningHubValidationResult> AddCategoryToCatalogueAsync(int userId, CatalogueViewModel catalogue);
+
+        /// <summary>
+        /// The RemoveCategoryFromCatalogueAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="catalogue">The catalogue.</param>
+        /// <returns>The catalogue id.</returns>
+        Task<LearningHubValidationResult> RemoveCategoryFromCatalogueAsync(int userId, CatalogueViewModel catalogue);
 
         /// <summary>
         /// The UpdateCatalogueAsync.
@@ -238,6 +253,14 @@
         /// <param name="userId">userId.</param>
         /// <returns>The allcatalogue result based on letters.</returns>
         Task<AllCatalogueResponseViewModel> GetAllCataloguesAsync(string filterChar, int userId);
+
+        /// <summary>
+        /// The UpdateCatalogueOwnerAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="catalogueOwner">The catalogue owner.</param>
+        /// <returns>The catalogue view model.</returns>
+        Task<LearningHubValidationResult> UpdateCatalogueOwnerAsync(int userId, CatalogueOwnerViewModel catalogueOwner);
 
     }
 }

@@ -1,0 +1,43 @@
+﻿@using LearningHub.Nhs.Models.Enums;
+@using LearningHub.Nhs.Models.Moodle;
+@using LearningHub.Nhs.Models.Moodle.API
+@using LearningHub.Nhs.WebUI.Models.Catalogue;
+@using LearningHub.Nhs.WebUI.Helpers;
+@model CatalogueIndexViewModel;
+@inject LearningHub.Nhs.WebUI.Interfaces.IMoodleApiService moodleApiService;
+@{
+    string GetMoodleCourseUrl(int courseId)
+    {
+        return moodleApiService.GetCourseUrl(courseId);
+    }
+}
+<div>
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row nhsuk-u-padding-top-7 nhsuk-u-padding-bottom-5">
+            <h2>Courses</h2>
+            @foreach (MoodleSubCategoryResponseModel item in Model.SubCategories)
+            {
+                <div class="nhsuk-u-padding-bottom-3 nhsuk-u-padding-top-2">
+                    <h2 class="folder-title line-clamp-2">
+                        <img src="/images/folder-icon.svg" alt="folder icon" />
+                        <a asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-moodleCategoryId="@item.Id">@Html.Raw(@item.Name)</a>
+                    </h2>
+                </div>
+                <hr class="nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-0" />
+            }
+            @foreach (Course item in Model.Courses)
+            {
+                <div class="nhsuk-u-padding-bottom-3 nhsuk-u-padding-top-2">
+                    <h2 class="nhsuk-u-reading-width line-clamp-2"><a class="nhsuk-u-font-size-19" href="@GetMoodleCourseUrl(item.Id)">@item.Displayname</a></h2>
+                    <div class="nhsuk-u-padding-right-5 nhsuk-u-padding-bottom-5">
+                        <div class="nhsuk-u-padding-right-5 nhsuk-u-padding-bottom-3"><span class="nhsuk-u-font-weight-bold nhsuk-u-padding-right-2">Type:</span> Course</div>
+                        <div class="line-clamp-3">
+                            @HtmFormatlHelper.StripHtmlTags(item.Summary)
+                        </div>
+                    </div>
+                </div>
+                <hr class="nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-0" />
+            }
+        </div>
+    </div>
+</div>

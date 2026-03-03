@@ -58,6 +58,7 @@
         private readonly FindwiseConfig findwiseConfig;
         private readonly INotificationSenderService notificationSenderService;
         private readonly ITimezoneOffsetManager timezoneOffsetManager;
+        private readonly ICategoryService categoryService;
         private readonly IGovMessageService govMessageService;
         private readonly IEmailTemplateService emailTemplateService;
 
@@ -68,6 +69,7 @@
         /// <param name="catalogueRepository">
         /// The <see cref="ICatalogueRepository"/>.
         /// </param>
+        /// <param name="categoryService"></param>
         /// <param name="mapper">mapper.</param>
         /// <param name="catalogueNodeVersionRepository">catalogueNodeVersionRepository.</param>
         /// <param name="nodeResourceRepository">nodeResourceRepository.</param>
@@ -110,10 +112,12 @@
         IFindwiseApiFacade findwiseApiFacade,
         INotificationSenderService notificationSenderService,
         ITimezoneOffsetManager timezoneOffsetManager,
+        ICategoryService categoryService,
         IGovMessageService govMessageService,
         IEmailTemplateService emailTemplateService)
         {
             this.catalogueRepository = catalogueRepository;
+            this.categoryService = categoryService;
             this.nodeRepository = nodeRepository;
             this.userUserGroupRepository = userUserGroupRepository;
             this.mapper = mapper;
@@ -262,6 +266,7 @@
             // Used by the admin screen to inform the admin user if they need to add a user group.
             vm.HasUserGroup = this.GetRoleUserGroupsForCatalogue(vm.NodeId).Any();
             vm.Providers = await this.providerService.GetAllAsync();
+            vm.SelectedCategoryId = await this.categoryService.GetByCatalogueVersionIdAsync(vm.CatalogueNodeVersionId);
             return vm;
         }
 
@@ -627,7 +632,7 @@
             await this.RecordNodeActivity(userId, catalogue);
 
             var catalogueVM = this.mapper.Map<CatalogueViewModel>(catalogue);
-            var bookmark = this.bookmarkRepository.GetAll().Where(b => b.NodeId == catalogue.NodeId && b.UserId == userId).FirstOrDefault();
+            var bookmark = await this.bookmarkRepository.GetAll().Where(b => b.NodeId == catalogue.NodeId && b.UserId == userId).FirstOrDefaultAsync();
             catalogueVM.BookmarkId = bookmark?.Id;
             catalogueVM.IsBookmarked = !bookmark?.Deleted ?? false;
             catalogueVM.Providers = await this.providerService.GetByCatalogueVersionIdAsync(catalogueVM.Id);
@@ -675,6 +680,31 @@
             };
         }
 
+        /// <summary>
+        /// The AddCategoryToCatalogueAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="catalogue">The catalogue.</param>
+        /// <returns>The catalogue id.</returns>
+        public async Task<LearningHubValidationResult> AddCategoryToCatalogueAsync(int userId, CatalogueViewModel catalogue)
+        {
+            await this.catalogueNodeVersionRepository.AddCategoryToCatalogueAsync(userId, catalogue);
+
+            return new LearningHubValidationResult(true);
+        }
+
+        /// <summary>
+        /// The RemoveCategoryFromCatalogueAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="catalogue">The catalogue.</param>
+        /// <returns>The catalogue id.</returns>
+        public async Task<LearningHubValidationResult> RemoveCategoryFromCatalogueAsync(int userId, CatalogueViewModel catalogue)
+        {
+            await this.catalogueNodeVersionRepository.RemoveCategoryFromCatalogueAsync(userId, catalogue);
+
+            return new LearningHubValidationResult(true);
+        }
 
         /// <summary>
         /// The IsUserLocalAdminAsync.
@@ -734,9 +764,6 @@
                 IsValid = !details.Any(),
             };
         }
-
-
-
 
         /// <summary>
         /// Filter the items for resource version search.
@@ -1310,6 +1337,18 @@
                 Details = details,
                 IsValid = !details.Any(),
             };
+        }
+        /// <summary>
+        /// The UpdateCatalogueOwnerAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="catalogueOwner">The catalogue owner.</param>
+        /// <returns>The catalogue view model.</returns>
+        public async Task<LearningHubValidationResult> UpdateCatalogueOwnerAsync(int userId, CatalogueOwnerViewModel catalogueOwner)
+        {
+            await this.catalogueNodeVersionRepository.UpdateCatalogueOwnerAsync(userId, catalogueOwner);
+
+            return new LearningHubValidationResult(true);
         }
 
     }

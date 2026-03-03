@@ -25,7 +25,7 @@
         /// <summary>
         /// Gets or sets the selected work place id.
         /// </summary>
-        public int? SelectedWorkPlaceId { get; set; }
+        public string SelectedWorkPlaceId { get; set; }
 
         /// <summary>
         /// Gets or sets the WorkPlaceList.

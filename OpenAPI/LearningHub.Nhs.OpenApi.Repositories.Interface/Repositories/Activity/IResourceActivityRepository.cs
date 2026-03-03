@@ -80,6 +80,38 @@
         Task<IQueryable<ResourceActivity>> GetByUserIdFromSP(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel, DateTimeOffset detailedMediaActivityRecordingStartDate);
 
         /// <summary>
+        /// Get recent my learning Activity By user id.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">requestModel.</param>
+        /// <returns>ResourceActivity.</returns>
+        Task<List<MyLearningActivitiesViewModel>> GetUserRecentMyLearningActivities(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel);
+
+        /// <summary>
+        /// Get User history based on search text.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">requestModel.</param>
+        /// <returns>ResourceActivity.</returns>
+        Task<List<MyLearningActivitiesViewModel>> GetUserLearningHistoryBasedonSearchText(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel);
+
+        /// <summary>
+        /// Get user learning history.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">requestModel.</param>
+        /// <returns>ResourceActivity.</returns>
+        Task<List<MyLearningActivitiesViewModel>> GetUserLearningHistory(int userId, Nhs.Models.MyLearning.MyLearningRequestModel requestModel);
+
+        /// <summary>
+        /// Get User's in progress My LearningActivities.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="pageNumber">pageNumber.</param>
+        /// <returns></returns>
+        Task<List<MyLearningActivitiesViewModel>> GetUserInprogressLearningActivities(int userId, int pageNumber);
+
+        /// <summary>
         /// Check if scorm activity has been completed.
         /// </summary>
         /// <param name="userId">The user id.</param>
@@ -104,5 +136,19 @@
         /// <param name="activityId">The activityId.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<AssessmentActivityCompletionViewModel> GetAssessmentActivityCompletionPercentage(int userId, int resourceVersionId, int activityId);
+
+        /// <summary>
+        /// GetActivityStatusFilter.
+        /// </summary>
+        /// <param name="requestModel">The requestModel.</param>
+        /// <returns></returns>
+        (string strActivityStatus, bool activityStatusEnumFlag) GetActivityStatusFilter(MyLearningRequestModel requestModel);
+
+        /// <summary>
+        /// ApplyActivityStatusFilter.
+        /// </summary>
+        /// <param name="requestModel">The requestModel.</param>
+        /// <returns></returns>
+        (string strResourceTypes, bool resourceTypeFlag) ApplyResourceTypesfilters(MyLearningRequestModel requestModel);
     }
 }

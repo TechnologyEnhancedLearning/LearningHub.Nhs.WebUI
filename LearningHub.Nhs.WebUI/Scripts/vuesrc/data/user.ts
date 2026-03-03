@@ -67,15 +67,15 @@ const IsSystemAdmin = async function (): Promise<boolean[]> {
 };
 
 const IsValidUser = async function (currentPassword: string): Promise<boolean[]> {
-    var IsValidUser = `/api/User/ConfirmPassword/${currentPassword}`;
-    return await AxiosWrapper.axios.get<boolean[]>(IsValidUser)
-        .then(response => {
-            return response.data;
-        })
-        .catch(e => {
-            console.log('IsValidUser:' + e);
-            throw e;
+    try {
+        const response = await AxiosWrapper.axios.post<boolean[]>('/api/User/ConfirmPassword', {
+            PasswordHash: currentPassword
         });
+        return response.data;
+    } catch (e) {
+        console.error('IsValidUser:', e);
+        throw e;
+    }
 };
 
 const getCurrentUserBasicDetails = async function (): Promise<UserBasicModel> {

@@ -102,13 +102,13 @@
         /// <summary>
         /// to check user password is correct.
         /// </summary>
-        /// <param name="currentPassword">The currentPassword.</param>
+        /// <param name="password">The currentPassword.</param>
         /// <returns>The <see cref="Task{ActionResult}"/>.</returns>
-        [HttpGet]
-        [Route("ConfirmPassword/{currentPassword}")]
-        public async Task<ActionResult> ConfirmPassword(string currentPassword)
+        [HttpPost]
+        [Route("ConfirmPassword")]
+        public async Task<ActionResult> ConfirmPassword([FromBody] PasswordUpdateModel password)
         {
-            string passwordHash = this.userService.Base64MD5HashDigest(currentPassword);
+            string passwordHash = this.userService.Base64MD5HashDigest(password.PasswordHash);
             var userPersonalDetails = await this.userService.GetCurrentUserPersonalDetailsAsync();
             if (userPersonalDetails != null && userPersonalDetails.PasswordHash == passwordHash)
             {

@@ -15,7 +15,7 @@
     var suggestedTerm = Model.DidYouMeanEnabled ? Model.SuggestedCatalogue : searhTerm;
 
     string GetCatalogueUrl(string catalogueUrl, SearchClickPayloadModel list, int catalogueId)
-  {
+    {
         string encodedCatalogueUrl = HttpUtility.UrlEncode("/Catalogue/" + catalogueUrl);
         string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(list?.SearchSignal?.Query));
         string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
@@ -24,125 +24,124 @@
 &GroupId={groupId}&searchId={list?.SearchSignal.SearchId}&timeOfSearch={list?.SearchSignal.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(list?.SearchSignal?.UserQuery)}
 &query={searchSignalQueryEncoded}&name={list?.DocumentFields?.Name}";
         return url;
-  }
+    }
 
 }
 
-@section styles{
-  <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/catalogue.css" asp-append-version="true" />
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/catalogue.css" asp-append-version="true" />
 }
 
 <div class="nhsuk-width-container app-width-container" style="width:100%">
-  @if (hasSearchTerm)
-  {
-    var parms = new Dictionary<string, string> { { "term", searhTerm } };
-    <vc:back-link asp-controller="Search" asp-action="Index" asp-all-route-data="@parms" link-text="Back to: Search results" />
-  }
-  else
-  {
-    <vc:back-link asp-controller="Home" asp-action="Index" link-text="Back to: Learning Hub" />
-  }
-  <h1 class="nhsuk-u-margin-bottom-5">
-        @(hasSearchTerm ? $"Search results for {suggestedTerm}" : "All catalogues")
-  </h1>
-
-  <h2 class="nhsuk-u-margin-bottom-5">
-    @($"{Model.TotalCount} catalogue results")
-  </h2>
-
-
-  <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred">
-
-    @foreach (var item in Model.Catalogues)
+    @if (hasSearchTerm)
     {
-      <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
-
-        <div class="nhsuk-card catalogue-card">
-
-          <div class="nhsuk-card-banner-container">
-            @if (!string.IsNullOrWhiteSpace(item.CardImageUrl))
-            {
-              <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.CardImageUrl" alt="@item.Name" />
-            }
-            else if (!string.IsNullOrWhiteSpace(item.BannerUrl))
-            {
-              <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.BannerUrl" alt="@item.Name" />
-            }
-            else
-            {
-              <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
-            }
-          </div>
-           @if (item.Providers?.Count > 0)
-            {
-               <div class="card-provider-details">
-               @ProviderHelper.GetProviderString(item.Providers.FirstOrDefault().Name)
-               </div>
-            }
-            else
-            {
-               <div class="card-provider-details @cardStyle"></div>
-            }
-
-          <div class="nhsuk-card__content catalogue-card-content">
-
-            <h3 class="nhsuk-card__heading nhsuk-heading-m">
-                 <a class="nhsuk-card__link line-clamp-2" href="@GetCatalogueUrl(item.Url, item.ClickPayload, item.NodeId)">@item.Name</a>
-            </h3>
-
-            <div class="nhsuk-card__description catalogue-card-body">
-              <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
-                @Html.Raw(item.Description)
-              </div>
-
-              <div class="catalogue-meta">
-                <div>
-                  <div>
-                    @if (item.RestrictedAccess)
-                    {
-                      <div class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">@((item.HasAccess || this.User.IsInRole("Administrator")) ? "Access Granted" : "Access restricted")</div>
-                    }
-                  </div>
-                  <div>
-                    <a class="nhsuk-u-font-size-16 nhsuk-u-margin-right-3" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
-                     asp-route-bookmarked="@item.IsBookmarked"
-                     asp-route-id="@item.BookmarkId"
-                     asp-route-title="@item.Name.Truncate(60)"
-                     asp-route-nodeId="@item.NodeId"
-                     asp-route-path="@item.Url"
-                     asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
-                      @(item.IsBookmarked ? "Remove from" : "Add to")  my bookmarks
-                    </a>
-                  </div>
-                </div>
-                <div>
-                  @if (item.Providers?.Count > 0)
-                    {
-                      var provider = item.Providers.First();
-                      <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
-                    }
-                  else if (!string.IsNullOrEmpty(item.BadgeUrl))
-                  {
-                    <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="Provider's catalogue badge" class="catalogue-card-badge" />
-                  }
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </li>
+        var parms = new Dictionary<string, string> { { "term", searhTerm } };
+        <vc:back-link asp-controller="Search" asp-action="Index" asp-all-route-data="@parms" link-text="Back to: Search results" />
     }
-  </ul>
+    else
+    {
+        <vc:back-link asp-controller="Home" asp-action="Index" link-text="Back to: Learning Hub" />
+    }
+    <h1 class="nhsuk-u-margin-bottom-5">
+        @(hasSearchTerm ? $"Search results for {suggestedTerm}" : "All catalogues")
+    </h1>
 
-  @if (Model.TotalCount > 9)
-  {
-    var currentPage = this.ViewBag.PageIndex;
-    int totalPage = (Model.TotalCount / 9) + (Model.TotalCount % 9 == 0 ? 0 : 1);
-    var searchQueryParam = hasSearchTerm ? $"&term={searhTerm}" : string.Empty;
-    var prevUrl = $"/catalogues?pageindex={currentPage - 1}{searchQueryParam}";
-    var nextUrl = $"/catalogues?pageindex={currentPage + 1}{searchQueryParam}";
+    <h2 class="nhsuk-u-margin-bottom-5">
+        @($"{Model.TotalCount} catalogue results")
+    </h2>
 
-    @await Html.PartialAsync("_Pagination", new PaginationViewModel(currentPage, totalPage, prevUrl, nextUrl))
-  }
+
+    <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred">
+
+        @foreach (var item in Model.Catalogues)
+        {
+            <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+
+                <div class="nhsuk-card catalogue-card">
+
+                    <div class="nhsuk-card-banner-container">
+                        @if (!string.IsNullOrWhiteSpace(item.CardImageUrl))
+                        {
+                            <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.CardImageUrl" alt="@item.Name" />
+                        }
+                        else if (!string.IsNullOrWhiteSpace(item.BannerUrl))
+                        {
+                            <img class="nhsuk-card__img nhsuk-card-banner" src="/api/catalogue/download-image/@item.BannerUrl" alt="@item.Name" />
+                        }
+                        else
+                        {
+                            <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
+                        }
+                    </div>
+                    <div class="nhsuk-card__content catalogue-card-content">
+
+                        <h3 class="nhsuk-card__heading nhsuk-heading-m">
+                            <a class="nhsuk-card__link line-clamp-5" href="@GetCatalogueUrl(item.Url, item.ClickPayload, item.NodeId)">@item.Name</a>
+                        </h3>
+
+                        <div class="nhsuk-card__description catalogue-card-body">
+                            <div class="line-clamp-3 nhsuk-u-margin-bottom-2point5">
+                                @Html.Raw(item.Description)
+                            </div>
+
+                            <div class="catalogue-meta">
+                                <div>
+                                    <div>
+                                        @if (item.RestrictedAccess)
+                                        {
+                                            <div class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold">@((item.HasAccess || this.User.IsInRole("Administrator")) ? "Access Granted" : "Access restricted")</div>
+                                        }
+                                    </div>
+                                    <div>
+                                        <a class="nhsuk-u-font-size-16 nhsuk-u-margin-right-3" asp-controller="Bookmark" asp-action="BookmarkCatalogue"
+                                           asp-route-bookmarked="@item.IsBookmarked"
+                                           asp-route-id="@item.BookmarkId"
+                                           asp-route-title="@item.Name.Truncate(60)"
+                                           asp-route-nodeId="@item.NodeId"
+                                           asp-route-path="@item.Url"
+                                           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+                                            @(item.IsBookmarked ? "Remove from" : "Add to")  my bookmarks
+                                        </a>
+                                    </div>
+                                </div>
+                                <div>
+                                    @if (item.Providers?.Count > 0)
+                                    {
+                                        var provider = item.Providers.First();
+                                        <img src="~/images/provider-logos/@provider.Logo" alt="@provider.Name catalogue badge" class="provider-badge" />
+                                    }
+                                    else if (!string.IsNullOrEmpty(item.BadgeUrl))
+                                    {
+                                        <img src="@("/api/dashboard/download-image/" + Uri.EscapeDataString(item.BadgeUrl))" alt="Provider's catalogue badge" class="catalogue-card-badge" />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (item.Providers?.Count > 0)
+                    {
+                        <div class="card-provider-details">
+                            @ProviderHelper.GetProviderString(item.Providers.FirstOrDefault().Name)
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="card-provider-details @cardStyle"></div>
+                    }
+                </div>
+
+            </li>
+        }
+    </ul>
+
+    @if (Model.TotalCount > 9)
+    {
+        var currentPage = this.ViewBag.PageIndex;
+        int totalPage = (Model.TotalCount / 9) + (Model.TotalCount % 9 == 0 ? 0 : 1);
+        var searchQueryParam = hasSearchTerm ? $"&term={searhTerm}" : string.Empty;
+        var prevUrl = $"/catalogues?pageindex={currentPage - 1}{searchQueryParam}";
+        var nextUrl = $"/catalogues?pageindex={currentPage + 1}{searchQueryParam}";
+
+        @await Html.PartialAsync("_Pagination", new PaginationViewModel(currentPage, totalPage, prevUrl, nextUrl))
+    }
 </div>

@@ -1,5 +1,5 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
-@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+@inject LearningHub.Nhs.WebUI.Interfaces.IMoodleApiService moodleApiService; 
 
 @using System.Linq;
 @using System.Web;
@@ -15,11 +15,11 @@
 	var pagingModel = Model.ResourceResultPaging;
 	var index = pagingModel.CurrentPage * pagingModel.PageSize;
 	var searchString = HttpUtility.UrlEncode(Model.SearchString);
+	string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
 
 	string GetUrl(int resourceReferenceId, int itemIndex, int nodePathId, SearchClickPayloadModel payload)
 	{
-		var searchSignal = payload?.SearchSignal;
-		string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
+		var searchSignal = payload?.SearchSignal;		
 		string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
 
 		return $@"/search/record-resource-click?url=/Resource/{resourceReferenceId}&nodePathId={nodePathId}&itemIndex={payload?.HitNumber}
@@ -28,19 +28,38 @@
 &query={searchSignalQueryEncoded}&title={payload?.DocumentFields?.Title}";
 	}
 
-	string GetMoodleCourseUrl(string courseId)
+	string GetMoodleCourseUrl(string courseIdWithPrefix, int resourceReferenceId, int itemIndex, int nodePathId, SearchClickPayloadModel payload)
 	{
-		var prefix = "M";
-		if (courseId.StartsWith(prefix))
+		const string prefix = "M";
+
+		if (string.IsNullOrWhiteSpace(courseIdWithPrefix))
 		{
-			courseId = courseId.Replace(prefix, ""); ;
+			return string.Empty;
 		}
 
-		var apiBaseUrl = Configuration["MoodleAPIConfig:BaseUrl"];
-		string path = $"course/view.php";
-		string returnUrl = $@"{apiBaseUrl}{path}?id={courseId}";
+		if (!courseIdWithPrefix.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+		{
+			return string.Empty;
+		}
 
-		return returnUrl;
+		var courseIdPart = courseIdWithPrefix.Substring(prefix.Length);
+
+		if (int.TryParse(courseIdPart, out int courseId))
+		{
+			var searchSignal = payload?.SearchSignal;
+
+			string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
+			string url = moodleApiService.GetCourseUrl(courseId);
+
+			return $@"/search/record-course-click?url={url}&nodePathId={nodePathId}&itemIndex={payload?.HitNumber}
+                &pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={payload?.SearchSignal?.Stats?.TotalHits}&searchText={searchString}&resourceReferenceId={resourceReferenceId}
+                &groupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal?.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal.UserQuery)}
+                &query={searchSignalQueryEncoded}&title={payload?.DocumentFields?.Title}";
+		}
+		else
+		{
+			return string.Empty;
+		}
 	}
 
 	bool showCatalogueFieldsInResources = ViewBag.ShowCatalogueFieldsInResources == null || ViewBag.ShowCatalogueFieldsInResources == true;
@@ -55,7 +74,7 @@
 		<h3 class="nhsuk-heading-xs nhsuk-u-margin-bottom-2">
 			@if (item.ResourceType == "moodle")
 			{
-				<a class="nhsuk-card__link" href="@GetMoodleCourseUrl(item.Id)">@item.Title</a>
+				<a class="nhsuk-card__link" href="@GetMoodleCourseUrl(item.Id, item.ResourceReferenceId, index, item.NodePathId ?? 0, item.Click.Payload)">@item.Title</a>
 			}
 			else
 			{
@@ -93,7 +112,7 @@
 		<div class="resource-info nhsuk-body-s nhsuk-u-margin-bottom-2">
 			<div class="nhsuk-u-margin-right-4">
 				<strong>Type: </strong>
-				@UtilityHelper.GetPrettifiedResourceTypeNameMoodle(UtilityHelper.ToEnum<ResourceTypeEnumMoodle>(item.ResourceType), 0)
+				@UtilityHelper.GetPrettifiedResourceTypeName(UtilityHelper.ToEnum<ResourceTypeEnum>(item.ResourceType), 0)
 			</div>
 			<div>
 				@if (item.ResourceType != "moodle")

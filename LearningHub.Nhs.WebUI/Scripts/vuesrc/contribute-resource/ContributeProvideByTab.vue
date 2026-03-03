@@ -3,7 +3,7 @@
         <div class="lh-container-xl py-15">
             <div class="contribute contribute-providedby-tab">
                 <h2 id="licence-heading" class="nhsuk-heading-l pt-15">Content developed with</h2>
-                <p class="nhsuk-u-font-weight-normal">When applicable pease select the provider of this content. This will enable users to search for content produced by specific organisations.</p>
+                <p class="nhsuk-u-font-weight-normal">When applicable please select the provider of this content. This will enable users to search for content produced by specific organisations.</p>
                 <div class="my-3">
                     <input class="radio-button" name="resourceProviderId" type="radio" :value="0" v-model="resourceProviderId" @click="setResourceProvider($event.target.value)" />
                     <span class="span-provider nhsuk-u-font-weight-normal">Not applicable</span>

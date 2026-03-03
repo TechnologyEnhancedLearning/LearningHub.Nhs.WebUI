@@ -1,97 +1,104 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserWorkPlaceUpdateViewModel
 
 @{
-  ViewData["Title"] = "Update Place Of Work";
-  var errorHasOccurred = !ViewData.ModelState.IsValid;
+    ViewData["Title"] = "Update Place Of Work";
+    ViewData["DisableValidation"] = true;
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
 }
 
 <div class="create-account">
-  <div class="nhsuk-width-container app-width-container">
-    <div class="nhsuk-grid-row">
-      <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
-        <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
+                <vc:back-link asp-controller="MyAccount" asp-action="ChangeStartDate" link-text="Back to: Update Start Date" />
 
-        @if (errorHasOccurred)
-        {
-          <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
-        }
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                }
 
-        <h1 class="nhsuk-heading-xl">Update place of work</h1>
+                <h1 class="nhsuk-heading-xl">Update place of work</h1>
 
-        <div>
-          <div class="nhsuk-form-group">
-            <div class="nhsuk-label nhsuk-u-font-weight-bold">Current place of work</div>
-            <div class="nhsuk-hint">@Html.Raw(Model.WorkPlace)</div>
-          </div>
+                <div>
+                    <div class="nhsuk-form-group">
+                        <div class="nhsuk-label nhsuk-u-font-weight-bold">Current place of work</div>
+                        <div class="nhsuk-hint">@Html.Raw(Model.WorkPlace)</div>
+                    </div>
 
-          <div class="nhsuk-u-padding-bottom-5">
-            <hr class="nhsuk-section-break nhsuk-section-break--visible ">
-          </div>
+                    <div class="nhsuk-u-padding-bottom-5">
+                        <hr class="nhsuk-section-break nhsuk-section-break--visible ">
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(@Model.FilterText))
+                {
+                    <h2 class="nhsuk-heading-l">Search results for @Model.FilterText</h2>
+                }
+                else
+                {
+                    <h2 class="nhsuk-heading-l">Search for your place of work</h2>
+                }
+
+                <form>
+                    <input type="hidden" name="searchSubmission" value="true">
+                    <div class="@((errorHasOccurred && string.IsNullOrEmpty(Model.FilterText)) ? "nhsuk-form-group input-validation-error" : "nhsuk-form-group")">
+                        <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">
+                            Enter the name, postcode or Organisation Date Service (ODS) code of your place of work.
+                        </label>
+                        @if (errorHasOccurred && string.IsNullOrEmpty(Model.FilterText))
+                        {
+                            <span class="nhsuk-error-message">
+                                <span class="nhsuk-u-visually-hidden">Error:</span> @CommonValidationErrorMessages.SearchTermRequired
+                            </span>
+                        }
+                        <div class="nhsuk-form-group search-box-container" style="white-space:nowrap">
+                            <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText">
+                            <button class="nhsuk-search__submit__green" type="submit">
+                                <svg class="nhsuk-icon nhsuk-icon__search__green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
+                                </svg>
+                                <span class="nhsuk-u-visually-hidden">Search</span>
+                            </button>
+
+                        </div>
+                    </div>
+                </form>
+
+                @if (!string.IsNullOrWhiteSpace(@Model.FilterText))
+                {
+                    if (Model.WorkPlaceList.Any())
+                    {
+                        <form>
+                            <vc:radio-list asp-for="SelectedWorkPlaceId"
+                                           label="Select your place of work"
+                                           populate-with-current-values="true"
+                                           radios="@Model.WorkPlaceRadio()"
+                                           hint-text=""
+                                           required-client-side-error-message="Select a place of work"
+                                           required="true" />
+
+                            <div class="nhsuk-form-group">
+                                <input type="hidden" name="formSubmission" value="true">
+                                <input type="hidden" name="filterText" value="@Context.Request.Query["filterText"]">
+                                <button type="submit" class="nhsuk-button">Continue</button>
+                            </div>
+
+                        </form>
+
+                        @await Html.PartialAsync("_UserWorkPlacePaging", Model)
+                    }
+                    else
+                    {
+                        <h2 class="nhsuk-heading-l">No results found for @Model.FilterText</h2>
+                        <p>You could try:</p>
+                        <ul class="nhsuk-list nhsuk-list--bullet nhsuk-u-padding-bottom-3">
+                            <li>checking your spelling</li>
+                            <li>searching again using other words</li>
+                        </ul>
+                    }
+                }
+
+            </div>
         </div>
-
-        @if (!string.IsNullOrWhiteSpace(@Model.FilterText))
-        {
-          <h2 class="nhsuk-heading-l">Search results for @Model.FilterText</h2>
-        }
-        else
-        {
-          <h2 class="nhsuk-heading-l">Search for your place of work</h2>
-        }
-
-        <form>
-          <input type="hidden" name="searchSubmission" value="true">
-
-          <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">
-            Enter the name, postcode or Organisation Date Service (ODS) code of your place of work.
-          </label>
-
-          <div class="nhsuk-form-group search-box-container" style="white-space:nowrap">
-            <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText">
-            <button class="nhsuk-search__submit__green" type="submit">
-              <svg class="nhsuk-icon nhsuk-icon__search__green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
-              </svg>
-              <span class="nhsuk-u-visually-hidden">Search</span>
-            </button>
-
-          </div>
-        </form>
-
-        @if (!string.IsNullOrWhiteSpace(@Model.FilterText))
-        {
-          if (Model.WorkPlaceList.Any())
-          {
-            <form>
-              <vc:radio-list asp-for="SelectedWorkPlaceId"
-                             label="Select your place of work"
-                             populate-with-current-values="true"
-                             radios="@Model.WorkPlaceRadio()"
-                             hint-text=""
-                             required-client-side-error-message="Select a place of work"
-                             required="true" />
-
-              <div class="nhsuk-form-group">
-                <input type="hidden" name="formSubmission" value="true">
-                <input type="hidden" name="filterText" value="@Context.Request.Query["filterText"]">
-                <button type="submit" class="nhsuk-button">Continue</button>
-              </div>
-
-            </form>
-
-            @await Html.PartialAsync("_UserWorkPlacePaging", Model)
-          }
-          else
-          {
-            <h2 class="nhsuk-heading-l">No results found for @Model.FilterText</h2>
-            <p>You could try:</p>
-            <ul class="nhsuk-list nhsuk-list--bullet nhsuk-u-padding-bottom-3">
-              <li>checking your spelling</li>
-              <li>searching again using other words</li>
-            </ul>
-          }
-        }
-
-      </div>
     </div>
-  </div>
 </div>

@@ -1,8 +1,9 @@
 ﻿@using LearningHub.Nhs.Models.Dashboard
+@using LearningHub.Nhs.Models.Moodle.API
 @using LearningHub.Nhs.WebUI.Extensions
 @using LearningHub.Nhs.WebUI.Helpers
-@model MoodleCourseResponseViewModel
-@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+@model MoodleCourseResponseModel
+@inject LearningHub.Nhs.WebUI.Interfaces.IMoodleApiService moodleApiService;
 
 @{
     bool providerExists = false;
@@ -10,11 +11,7 @@
 
     string GetMoodleCourseUrl(int courseId)
     {
-        var apiBaseUrl = Configuration["MoodleAPIConfig:BaseUrl"];        
-        string path = $"course/view.php";
-        string returnUrl = $@"{apiBaseUrl}{path}?id={courseId}";
-
-        return returnUrl;
+        return moodleApiService.GetCourseUrl(courseId);
     }
 }
 <div class="nhsuk-card dashboard-card">
@@ -35,16 +32,6 @@
             <div class="nhsuk-bg-pale-blue nhsuk-card-banner nhsuk-card-banner-empty"></div>
         }
     </div>
-    @if (providerExists)
-    {
-        <div class="card-provider-details">
-        </div>
-    }
-    else
-    {
-        <div class="card-provider-details @cardStyle"></div>
-    }
-
     <div class="nhsuk-card__content dashboard-card-content">
         <h3 class="nhsuk-card__heading nhsuk-heading-m">
             <a class="nhsuk-card__link" href="@GetMoodleCourseUrl(Model.Id.Value)">@Model.DisplayName</a>
@@ -109,4 +96,13 @@
             </div>
         </div>
     </div>
+    @if (providerExists)
+    {
+        <div class="card-provider-details">
+        </div>
+    }
+    else
+    {
+        <div class="card-provider-details @cardStyle"></div>
+    }
 </div>

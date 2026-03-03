@@ -13,7 +13,8 @@
     /// Catalogue controller.
     /// </summary>
     [Route("Catalogue")]
-    [Authorize]
+    [Authorize(Policy = "AuthorizeOrCallFromLH")]
+    [ApiController]
     public class CatalogueController : OpenApiControllerBase
     {
         private readonly ICatalogueService catalogueService;
@@ -157,6 +158,46 @@
             try
             {
                 var vr = await this.catalogueService.CreateCatalogueAsync(this.CurrentUserId.GetValueOrDefault(), viewModel);
+                return this.Ok(new ApiResponse(true, vr));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
+        }
+
+        /// <summary>
+        /// The AddCategoryToCatalogue.
+        /// </summary>
+        /// <param name="viewModel">The viewModel.</param>
+        /// <returns>The actionResult.</returns>
+        [HttpPost]
+        [Route("AddCategoryToCatalogue")]
+        public async Task<IActionResult> AddCategoryToCatalogue([FromBody] CatalogueViewModel viewModel)
+        {
+            try
+            {
+                var vr = await this.catalogueService.AddCategoryToCatalogueAsync(this.CurrentUserId.GetValueOrDefault(), viewModel);
+                return this.Ok(new ApiResponse(true, vr));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
+        }
+
+        /// <summary>
+        /// The RemoveCategoryFromCatalogue.
+        /// </summary>
+        /// <param name="viewModel">The viewModel.</param>
+        /// <returns>The actionResult.</returns>
+        [HttpPost]
+        [Route("RemoveCategoryFromCatalogue")]
+        public async Task<IActionResult> RemoveCategoryFromCatalogue([FromBody] CatalogueViewModel viewModel)
+        {
+            try
+            {
+                var vr = await this.catalogueService.RemoveCategoryFromCatalogueAsync(this.CurrentUserId.GetValueOrDefault(), viewModel);
                 return this.Ok(new ApiResponse(true, vr));
             }
             catch (Exception ex)
@@ -373,6 +414,26 @@
         public async Task<IActionResult> AcceptAccessRequest(int accessRequestId)
         {
             return this.Ok(await this.catalogueService.AcceptAccessAsync(this.CurrentUserId.GetValueOrDefault(), accessRequestId));
+        }
+
+        /// <summary>
+        /// The UpdateCatalogueOwner.
+        /// </summary>
+        /// <param name="viewModel">The catalogue owner.</param>
+        /// <returns>The updated catalogue owner.</returns>
+        [HttpPut]
+        [Route("UpdateCatalogueOwner")]
+        public async Task<IActionResult> UpdateCatalogueOwner(CatalogueOwnerViewModel viewModel)
+        {
+            try
+            {
+                var vr = await this.catalogueService.UpdateCatalogueOwnerAsync(this.CurrentUserId.GetValueOrDefault(), viewModel);
+                return this.Ok(new ApiResponse(true, vr));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
         }
 
     }

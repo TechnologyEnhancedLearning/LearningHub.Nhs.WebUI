@@ -10,7 +10,7 @@
   <div class="nhsuk-width-container app-width-container">
     <div class="nhsuk-grid-row">
       <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
-        <vc:back-link asp-controller="MyAccount" asp-action="Index" link-text="Go back" />
+                <vc:back-link asp-controller="MyAccount" asp-action="MyEmploymentDetails" link-text="Go back to my employment" />
 
         @if (errorHasOccurred)
         {
@@ -41,11 +41,16 @@
 
         <form>
           <input type="hidden" name="searchSubmission" value="true">
-
+                    <div class="@((errorHasOccurred && string.IsNullOrEmpty(Model.FilterText)) ? "nhsuk-form-group input-validation-error" : "nhsuk-form-group")">
           <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">
             Search a generic term to best describe your role
           </label>
-
+                        @if (errorHasOccurred && string.IsNullOrEmpty(Model.FilterText))
+                        {
+                            <span class="nhsuk-error-message">
+                                <span class="nhsuk-u-visually-hidden">Error:</span> @CommonValidationErrorMessages.SearchTermRequired
+                            </span>
+                        }
           <div class="nhsuk-form-group search-box-container" style="white-space:nowrap">
             <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText">
             <button class="nhsuk-search__submit__green" type="submit">
@@ -54,6 +59,7 @@
               </svg>
               <span class="nhsuk-u-visually-hidden">Search</span>
             </button>
+          </div>
           </div>
         </form>
 

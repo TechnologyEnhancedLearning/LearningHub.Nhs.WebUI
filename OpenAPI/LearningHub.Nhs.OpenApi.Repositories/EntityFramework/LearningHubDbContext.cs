@@ -6,6 +6,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Content;
+    using LearningHub.Nhs.Models.Entities.DatabricksReport;
     using LearningHub.Nhs.Models.Entities.External;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Entities.Messaging;
@@ -15,6 +16,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Models.Messaging;
     using LearningHub.Nhs.Models.MyLearning;
+    using LearningHub.Nhs.Models.Notification;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.User;
@@ -124,6 +126,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets the Notification.
         /// </summary>
         public virtual DbSet<Notification> Notification { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Notification Count.
+        /// </summary>
+        public virtual DbSet<NotificationCount> NotificationCount { get; set; }
 
         /// <summary>
         /// Gets or sets the user notification..
@@ -352,6 +359,13 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// </summary>
         public virtual DbSet<DashboardResourceDto> DashboardResourceDto { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the UserCertificateViewModel
+        /// Gets or sets DashboardResourceDto. These are not entities. They are returned from the [resources].[GetUserCertificateDetails] stored proc..
+        /// </summary>
+        public virtual DbSet<UserCertificateViewModel> UserCertificateViewModel { get; set; }
+
         /// <summary>
         /// Gets or sets the ExternalContentDetailsViewModel.
         /// </summary>
@@ -419,6 +433,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets the NodeContentAdminViewModel.
         /// </summary>
         public virtual DbSet<NodeContentAdminViewModel> NodeContentAdminViewModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the User recent my learning activities.
+        /// </summary>
+        public virtual DbSet<MyLearningActivitiesViewModel> MyLearningActivitiesViewModel { get; set; }
 
         /// <summary>
         /// Gets or sets the node resource..
@@ -493,9 +512,14 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         public virtual DbSet<CatalogueNodeVersionProvider> CatalogueNodeVersionProvider { get; set; }
 
         /// <summary>
-        /// Gets or sets the catalogue node version keyword..
+        /// Gets or sets the catalogue node version keyword.
         /// </summary>
         public virtual DbSet<CatalogueNodeVersionKeyword> CatalogueNodeVersionKeyword { get; set; }
+
+        /// <summary>
+        /// Gets or sets the catalogue node version category.
+        /// </summary>
+        public virtual DbSet<CatalogueNodeVersionCategory> CatalogueNodeVersionCategory { get; set; }
 
         /// <summary>
         /// Gets or sets the Migration.
@@ -732,6 +756,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets User Provider.
         /// </summary>
         public virtual DbSet<UserProvider> UserProvider { get; set; }
+
+        /// <summary>
+        /// Gets or sets Report History.
+        /// </summary>
+        public virtual DbSet<ReportHistory> ReportHistory { get; set; }
 
         /// <summary>
         /// Gets or sets Resource Version Provider.

@@ -71,7 +71,7 @@
             string filename = Regex.Replace(file.FileName, "[^a-zA-Z0-9.]", string.Empty);
 
             var destContainer = new BlobContainerClient(new Uri(uploadSasUrl));
-            var destBlob = destContainer.GetBlockBlobClient(filename.IsNullOrEmpty() ? "file.txt" : filename);
+            var destBlob = destContainer.GetBlockBlobClient(string.IsNullOrEmpty(filename) ? "file.txt" : filename);
             await destBlob.UploadAsync(file.OpenReadStream());
 
             return asset.Name;

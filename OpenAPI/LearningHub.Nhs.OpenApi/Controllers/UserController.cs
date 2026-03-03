@@ -341,11 +341,11 @@
             }
             else
             {
-                var userId = this.User.Identity.GetCurrentUserId();
+                var userId = this.CurrentUserId.GetValueOrDefault();
 
                 var (cacheExists, _) = await this.cacheService.TryGetAsync<string>($"{userId}:LoginWizard");
 
-                model = await this.permissionService.GetNavigationModelAsync(this.User, !cacheExists, string.Empty);
+                model = await this.permissionService.GetNavigationModelAsync(this.User, !cacheExists, string.Empty, userId);
 
                 model.NotificationCount = await this.userNotificationService.GetUserUnreadNotificationCountAsync(userId);
             }
@@ -353,51 +353,47 @@
             return this.MenuItems(model);
         }
 
-
         private List<Dictionary<string, object>> MenuItems(NavigationModel model)
         {
             var menu = new List<Dictionary<string, object>>
             {
-                new Dictionary<string, object>
+               new Dictionary<string, object>
+                {
+                    { "title", "Home" },
+                    { "url", this.learningHubConfig.BaseUrl },
+                    { "visible", model.ShowMyLearning },
+                },
+               new Dictionary<string, object>
+                {
+                    { "title", "My learning activity" },
+                    { "url", this.learningHubConfig.MyLearningUrl },
+                    { "visible", model.ShowMyLearning },
+                },
+               new Dictionary<string, object>
+                {
+                    { "title", "My contributions" },
+                    { "url", this.learningHubConfig.MyContributionsUrl },
+                    { "visible", model.ShowMyContributions },
+                },
+               new Dictionary<string, object>
                 {
                     { "title", "Browse catalogues" },
                     { "url", this.learningHubConfig.BrowseCataloguesUrl },
                     { "visible", model.ShowBrowseCatalogues },
                 },
-                new Dictionary<string, object>
+               new Dictionary<string, object>
                 {
-                    { "title", "My Contributions" },
-                    { "url", this.learningHubConfig.MyContributionsUrl },
-                    { "visible", model.ShowMyContributions },
+                    { "title", "Reports" },
+                    { "url", this.learningHubConfig.ReportUrl },
+                    { "visible", model.ShowReports },
                 },
-                new Dictionary<string, object>
-                {
-                    { "title", "My bookmarks" },
-                    { "url", this.learningHubConfig.MyBookmarksUrl },
-                    { "visible", model.ShowMyBookmarks },
-                },
-                new Dictionary<string, object>
-                {
-                    { "title", "Help" },
-                    { "url", this.learningHubConfig.HelpUrl },
-                    { "visible", model.ShowHelp },
-                    { "openInNewTab", true },
-                },
-                new Dictionary<string, object>
-                {
-                    { "title", "Notifications" },
-                    { "url", this.learningHubConfig.NotificationsUrl },
-                    { "visible", model.ShowNotifications },
-                    { "hasNotification", model.NotificationCount > 0 },
-                    { "notificationCount", model.NotificationCount },
-                },
-                new Dictionary<string, object>
+               new Dictionary<string, object>
                 {
                     { "title", "Admin" },
                     { "url", this.learningHubConfig.AdminUrl },
                     { "visible", model.ShowAdmin },
                 },
-                new Dictionary<string, object>
+               new Dictionary<string, object>
                 {
                     { "title", "Sign Out" },
                     { "url", this.learningHubConfig.SignOutUrl },
@@ -405,8 +401,6 @@
                 },
             };
             return menu;
-
         }
-
     }
 }

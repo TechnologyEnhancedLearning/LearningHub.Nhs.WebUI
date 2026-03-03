@@ -82,10 +82,6 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public IQueryable<CatalogueNodeVersion> GetPublishedCataloguesForUserAsync(int userId)
         {
-            var communityCatalogue = DbContext.CatalogueNodeVersion.AsNoTracking()
-                    .Include(cnv => cnv.NodeVersion.Node)
-                    .Where(cnv => cnv.NodeVersion.VersionStatusEnum == VersionStatusEnum.Published
-                            && cnv.NodeVersion.NodeId == 1 /* Community Catalogue */);
 
             var cataloguesForUser = from cnv in DbContext.CatalogueNodeVersion.Include(cnv => cnv.NodeVersion.Node).AsNoTracking()
                                     join nv in DbContext.NodeVersion.Where(cnv => cnv.VersionStatusEnum == VersionStatusEnum.Published && !cnv.Deleted) // .Include(nv => nv.Node)
@@ -100,9 +96,9 @@
                                         on nv.Id equals n.CurrentNodeVersionId
                                     select cnv;
 
-            var returnedCatalogues = communityCatalogue.Union(cataloguesForUser).Distinct()
-                                                        .OrderBy(cnv => cnv.NodeVersion.NodeId != 1)
-                                                        .ThenBy(cnv => cnv.Name);
+            var returnedCatalogues = cataloguesForUser.Distinct()
+                                                         .OrderBy(cnv => cnv.NodeVersion.NodeId != 1)
+                                                         .ThenBy(cnv => cnv.Name);
 
             return returnedCatalogues;
         }
@@ -213,6 +209,52 @@
                 var param5 = new SqlParameter("@p5", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
 
                 await DbContext.Database.ExecuteSqlRawAsync("hierarchy.CatalogueOwnerUpdate @p0, @p1, @p2, @p3, @p4, @p5", param0, param1, param2, param3, param4, param5);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// The AddCategoryToCatalogueAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="vm">The catalogue view model.</param>
+        /// <returns>The task.</returns>
+        public async Task AddCategoryToCatalogueAsync(int userId, CatalogueViewModel vm)
+        {
+            try
+            {
+                var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = vm.CatalogueNodeVersionId };
+                var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = vm.SelectedCategoryId };
+                var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+                await DbContext.Database.ExecuteSqlRawAsync("hierarchy.CatalogueNodeVersionCategoryCreate @p0, @p1, @p2, @p3", param0, param1, param2, param3);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// The RemoveCategoryFromCatalogueAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="vm">The viewmodel.</param>
+        /// <returns></returns>
+        public async Task RemoveCategoryFromCatalogueAsync(int userId, CatalogueViewModel vm)
+        {
+            try
+            {
+                var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = vm.CatalogueNodeVersionId };
+                var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = vm.SelectedCategoryId };
+                var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+
+                await DbContext.Database.ExecuteSqlRawAsync("hierarchy.RemoveCatalogueCategory @p0, @p1, @p2, @p3", param0, param1, param2, param3);
             }
             catch (Exception ex)
             {

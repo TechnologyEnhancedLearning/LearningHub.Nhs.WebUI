@@ -5,9 +5,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
     using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using Microsoft.Data.SqlClient;
@@ -86,6 +88,25 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 
             return achievedCertificatedResourceIds;
         }
+
+
+        /// <summary>
+        /// GetUserCertificateDetails
+        /// </summary>
+        /// <param name="userId">The current user Id.</param>
+        /// <param name="filterText">The filter text</param>
+        /// <returns>A <see cref="Task{UserCertificateViewModel}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<List<UserCertificateViewModel>> GetUserCertificateDetails(int userId, string filterText = "")
+        {
+            var result = new List<UserCertificateViewModel>(); 
+                var param0 = new SqlParameter("@UserId", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@FilterText", SqlDbType.NVarChar, 200) { Value = filterText.Trim() ?? string.Empty };
+
+                result = await this.DbContext.UserCertificateViewModel
+                    .FromSqlRaw("resources.GetUserCertificateDetails @UserId = @UserId, @FilterText = @FilterText", param0, param1).AsNoTracking().ToListAsync();
+                return result;
+        }
+
 
         // </summary>
         // <param name="resourceReferenceIds"></param>

@@ -45,6 +45,34 @@
         }
 
         /// <summary>
+        /// Gets the detailed activity data.
+        /// </summary>
+        /// <param name="requestModel">The request model - filter settings.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpPost]
+        [Route("GetUserRecentMyLearningActivities")]
+        public async Task<ActionResult> GetUserRecentMyLearningActivities([FromBody] MyLearningRequestModel requestModel)
+        {
+            var activity = await this.myLearningService.GetUserRecentMyLearningActivities(requestModel);
+
+            return this.Ok(activity);
+        }
+
+        /// <summary>
+        /// Gets the detailed activity data.
+        /// </summary>
+        /// <param name="requestModel">The request model - filter settings.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        [HttpPost]
+        [Route("GetUserLearningHistory")]
+        public async Task<ActionResult> GetUserLearningHistory([FromBody] MyLearningRequestModel requestModel)
+        {
+            var activity = await this.myLearningService.GetUserLearningHistory(requestModel);
+
+            return this.Ok(activity);
+        }
+
+        /// <summary>
         /// Gets the played segment data for the progress modal in My Learning screen.
         /// </summary>
         /// <param name="resourceId">The resourceId.</param>

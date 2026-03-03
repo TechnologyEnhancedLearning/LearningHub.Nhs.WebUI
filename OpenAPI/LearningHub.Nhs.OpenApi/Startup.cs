@@ -21,7 +21,6 @@ namespace LearningHub.NHS.OpenAPI
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -65,10 +64,13 @@ namespace LearningHub.NHS.OpenAPI
             services.AddConfig(this.Configuration);
 
             services.AddApiKeyAuth();
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
-            services.AddAuthentication()
-            .AddJwtBearer(options =>
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+           .AddJwtBearer(options =>
             {
                 options.Authority = this.Configuration.GetValue<string>("LearningHUbAuthServiceConfig:Authority");
                 options.TokenValidationParameters = new TokenValidationParameters()
@@ -81,30 +83,32 @@ namespace LearningHub.NHS.OpenAPI
             });
 
             services.AddCustomMiddleware();
-            services.AddSingleton<IAuthorizationHandler, ReadWriteHandler>(); 
+            services.AddSingleton<IAuthorizationHandler, ReadWriteHandler>();
             services.AddSingleton<IAuthorizationHandler, AuthorizeOrCallFromLHHandler>();
 
             services.AddRepositories(this.Configuration);
-            services.AddServices();
-
-            services.AddDbContext<LearningHubDbContext>(
-                options =>
-                    options.UseSqlServer(this.Configuration.GetConnectionString("LearningHub")));
+            services.AddServices(this.Configuration);
             services.AddApplicationInsightsTelemetry();
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
-                options.Filters.Add(new AuthorizeFilter());
             });
+
             services.AddMvc()
                   .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            var swaggerTitle = this.Configuration["Swagger:Title"];
+            var swaggerVersion = this.Configuration["Swagger:Version"];
+            var swaggerDescription = $"A set of API endpoints for retrieving learning resource information from the Learning Hub learning platform. The [Learning Hub](https://learninghub.nhs.uk/) is a platform for hosting and sharing learning resources for health and social care provided by Technology Enhanced Learning (TEL) at NHS England. An application API key must be used to authorise calls to the API from external applications. To contact TEL to discuss connecting your external system to the Learning Hub, email england.tel@nhs.net.\n\n Build Number: {this.Configuration["Swagger:BuildNumber"]} \n\n";
+
             services.AddMessagingServices(this.Configuration);
             services.AddQueueingRepositories(this.Configuration);
             services.AddSwaggerGen(
                 c =>
                 {
                     // For docs see https://github.com/domaindrivendev/Swashbuckle.AspNetCore
-                    c.SwaggerDoc("dev", new OpenApiInfo { Title = "LearningHub.NHS.OpenAPI", Version = "dev" });
+                    c.SwaggerDoc("dev", new OpenApiInfo { Title = swaggerTitle, Version = swaggerVersion, Description = swaggerDescription });
+
                     c.CustomSchemaIds(type => type.FullName);
                     c.AddSecurityDefinition(
                         "ApiKey",
@@ -180,7 +184,7 @@ namespace LearningHub.NHS.OpenAPI
             services.AddDistributedCache(option =>
             {
                 option.RedisConnectionString = this.Configuration.GetConnectionString("LearningHubRedis");
-                option.KeyPrefix = envPrefix;
+                option.KeyPrefix = $"{envPrefix}_WebUI";
                 option.DefaultExpiryInMinutes = 60;
             });
 
@@ -227,12 +231,7 @@ namespace LearningHub.NHS.OpenAPI
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                if (env.IsDevelopment())
-                {
-                    c.SwaggerEndpoint("/swagger/dev/swagger.json", "Auto-generated");
-                }
-
-                c.SwaggerEndpoint("/SwaggerDefinitions/v1.3.0.json", "v1.3.0");
+                c.SwaggerEndpoint("/swagger/dev/swagger.json", "v1.4.0");
                 c.OAuthClientId(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:ClientId"));
                 c.OAuthClientSecret(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:ClientSecret"));
                 c.OAuthScopes(this.Configuration.GetValue<string>("LearningHubAuthServiceConfig:Scopes"));

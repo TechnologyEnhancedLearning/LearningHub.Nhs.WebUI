@@ -6,9 +6,11 @@ namespace LearningHub.Nhs.OpenApi.Services
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
     using LearningHub.Nhs.OpenApi.Services.Services;
+    using LearningHub.Nhs.OpenApi.Services.Services.AzureSearch;
     using LearningHub.Nhs.OpenApi.Services.Services.Findwise;
     using LearningHub.Nhs.OpenApi.Services.Services.Messaging;
     using LearningHub.Nhs.Services;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
@@ -20,10 +22,24 @@ namespace LearningHub.Nhs.OpenApi.Services
         /// Registers the implementations in the project with ASP.NET DI.
         /// </summary>
         /// <param name="services">The IServiceCollection.</param>
-        public static void AddServices(this IServiceCollection services)
+        /// <param name="configuration">The configuration.</param>
+        public static void AddServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IFindwiseClient, FindwiseClient>();
-            services.AddScoped<ISearchService, SearchService>();
+            // Register search service based on feature flag
+            var useAzureSearch = configuration.GetValue<bool>("FeatureFlags:UseAzureSearch", false);
+            
+            if (useAzureSearch)
+            {
+                services.AddScoped<ISearchService, AzureSearchService>();
+            }
+            else
+            {
+                services.AddScoped<IFindwiseClient, FindwiseClient>();
+                services.AddScoped<ISearchService, SearchService>();
+            }
+
+            services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>();
+            services.AddScoped<IDatabricksApiHttpClient, DatabricksApiHttpClient>();
             services.AddScoped<ILearningHubService, LearningHubService>();
             services.AddScoped<IResourceService, ResourceService>();
             services.AddScoped<ICatalogueService, CatalogueService>();
@@ -32,6 +48,19 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<INavigationPermissionService, NavigationPermissionService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IUserNotificationService, UserNotificationService>();
+            services.AddScoped<IUserGroupService, UserGroupService>();
+            services.AddScoped<IMoodleApiService, MoodleApiService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+
+            var reportingEnabled = configuration.GetValue<bool>("FeatureFlags:InPlatformReport");
+            if (reportingEnabled)
+            {
+                services.AddScoped<IDatabricksService, DatabricksService>();
+            }
+            else
+            {
+                services.AddScoped<IDatabricksService, DatabricksServiceNoImplementation>();
+            }
 
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IEventLogService, EventLogService>();
@@ -49,7 +78,6 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<ISecurityService, SecurityService>();
             services.AddScoped<IUserService, UserService>();
             services.AddTransient<IQueueCommunicatorService, QueueCommunicatorService>();
-            services.AddScoped<IFindwiseApiFacade, FindwiseApiFacade>();
             services.AddScoped<IEmailSenderService, EmailSenderService>();
             services.AddScoped<IEmailTemplateService, EmailTemplateService>();
             services.AddScoped<IMessageService, MessageService>();
@@ -64,6 +92,16 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IUserProviderService, UserProviderService>();
             services.AddScoped<IUserGroupService, UserGroupService>();
             services.AddScoped<IUserPasswordResetRequestsService, UserPasswordResetRequestsService>();
+
+            // Register IFindwiseApiFacade based on feature flag
+            if (useAzureSearch)
+            {
+                services.AddScoped<IFindwiseApiFacade, NullFindwiseApiFacade>();
+            }
+            else
+            {
+                services.AddScoped<IFindwiseApiFacade, FindwiseApiFacade>();
+            }
         }
     }
 }

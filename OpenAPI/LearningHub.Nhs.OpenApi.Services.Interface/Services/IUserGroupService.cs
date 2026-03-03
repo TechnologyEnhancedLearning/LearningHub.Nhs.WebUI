@@ -156,5 +156,7 @@
         /// <param name="currentUserId">The current user id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<LearningHubValidationResult> DeleteUserGroupAttributeAsync(UserGroupAttributeViewModel userGroupAttribute, int currentUserId);
+        /// <returns>The <see cref="Task{List}"/>.</returns>
+        Task<bool> UserHasCatalogueContributionPermission(int userId);
     }
 }

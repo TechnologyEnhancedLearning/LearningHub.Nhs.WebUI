@@ -1,182 +1,74 @@
 @using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Helpers
 @using LearningHub.Nhs.WebUI.Models
 @using LearningHub.Nhs.WebUI.Models.Learning
-@model MyLearningViewModel;
-
+@inject LearningHub.Nhs.WebUI.Interfaces.IMoodleApiService moodleApiService;
+@model MyLearningUserActivitiesViewModel;
 @{
-
-    ViewData["Title"] = "My learning";
-    var errorHasOccurred = !ViewData.ModelState.IsValid;
-    var startHintTextLines = new List<string> { $"From" };
-    var endHintTextLines = new List<string> { $"To" };
-    var routeData = ViewActivityHelper.GetActivityParameters(Model);
+    ViewData["Title"] = "Recent learning";
+    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+    string GetMoodleCourseUrl(int courseId)
+    {
+        return moodleApiService.GetCourseUrl(courseId);
+    }
 }
-
 @section styles {
-
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/mylearning.css" asp-append-version="true" />
+}
+@section NavBreadcrumbs {
 
+    <section class="nhsuk-hero">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+
+                    <div class="nhsuk-u-padding-top-3 nhsuk-u-padding-bottom-3">
+                        <a href="/">Home</a>
+                        <i class="fa-solid fa-chevron-right nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+                    </div>
+                    <div class="nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-7">
+                        <h1 class="nhsuk-heading-xl">My learning activity</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 }
 <div class="my-learning">
     <div class="nhsuk-width-container app-width-container">
-        <div class="nhsuk-grid-row nhsuk-u-padding-top-9 nhsuk-u-padding-bottom-9">
-            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-top-0">
-                @if (errorHasOccurred)
-                {
-                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
-                }
-                <h1 class="nhsuk-heading-xl">My learning</h1>
-                <p class="nhsuk-body-l">
-                    You can use this page to search and filter learning resources you've accessed, download certificates and generate a report
-                    of your activity.
-                </p>
-
-                <details class="nhsuk-details">
-                    <summary class="nhsuk-details__summary">
-                        <span class="nhsuk-details__summary-text">
-                            Learn how to manage My learning
-                        </span>
-                    </summary>
-                    <div class="nhsuk-details__text">
-                        <p>My learning displays an itemised activity table. This table details everything you have accessed in the Learning Hub.</p>
-                        <p>You can search your learning activity by entering a search term in the search box. This will only search your learning activity and not the entire Learning Hub. Results will be displayed placing your search term as the filter. To return to your full Itemised activity, either select clear all filters or uncheck your search term(s).</p>
-                    </div>
-                </details>
-
-                <p class="nhsuk-body">
-                    Download a report of your learning.
-                </p>
-                @if (Model.TotalCount != 0)
-                {
-                    <form method="post" asp-controller="MyLearning" asp-action="ExportToPDF" asp-all-route-data="@routeData">
-                        <button class="nhsuk-button" type="submit">Download PDF</button>
-                    </form>
-                }
-                else
-                {
-                    <button class="nhsuk-button" disabled="disabled">Download PDF</button>
-                }
-
-                <form asp-controller="MyLearning" asp-action="Index" method="post" asp-fragment="search-results">
-
-                    <h2 class="nhsuk-heading-l" id="search-results">Search within My learning</h2>
-                    <div class="nhsuk-form-group search-box-container nhsuk-u-padding-bottom-1" style="white-space:nowrap">
-                        <label class="nhsuk-label nhsuk-u-visually-hidden" for="SearchText">Search Text</label>
-                        <input class="nhsuk-input nhsuk-u-width-one-half search-box" placeholder="" id="SearchText" name="SearchText" value="@Model.SearchText" type="text" aria-required="true">
-                        <button class="nhsuk-search__submit" name="MyLearningFormActionType" value=@MyLearningFormActionTypeEnum.BasicSearch type="submit">
-                            <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
-                            </svg>
-                            <span class="nhsuk-u-visually-hidden">Search</span>
-                        </button>
-
-                    </div>
-                    <p class="nhsuk-body-l">
-                        <h3>@Model.TotalCount activity result@(Model.TotalCount > 1 ? "s" : "")</h3>
-                    </p>
-                </form>
+        <div class="nhsuk-grid-row nhsuk-u-padding-top-7">
+            <!-- Left column: SideNav -->
+            <div class="nhsuk-grid-column-one-quarter">
+                @await Component.InvokeAsync("SideNav", new { groupTitle = "Activity" })
             </div>
-            <div class="nhsuk-grid-column-one-half">
-                <p class="nhsuk-u-padding-left-0">
-                    <a class="nhsuk-u-width-one-quarter nhsuk-u-margin-right-4" asp-action="Index" asp-route-searchText="@Model.SearchText" asp-route-myLearningFormActionType="@MyLearningFormActionTypeEnum.ApplyWeekFilter" asp-fragment="search-results" title="This week">
-                        This week
-                    </a>
-                    <a class="nhsuk-u-width-one-quarter nhsuk-u-margin-right-4" asp-action="Index" asp-route-searchText="@Model.SearchText" asp-route-myLearningFormActionType="@MyLearningFormActionTypeEnum.ApplyMonthFilter" asp-fragment="search-results" title="This month">
-                        This month
-                    </a>
-                    <a class="nhsuk-u-width-one-quarter nhsuk-u-margin-right-4" asp-action="Index" asp-route-searchText="@Model.SearchText" asp-route-myLearningFormActionType="@MyLearningFormActionTypeEnum.ApplyTwelveMonthFilter" asp-fragment="search-results" title="Last 12 months">
-                        Last 12 months
-                    </a>
-                </p>
 
-            </div>
-            <div class="nhsuk-grid-column-full">
-                <div class="search-filters">
-                    <form asp-controller="MyLearning" asp-action="Index" method="post" asp-fragment="search-results">
-                        <input type="hidden" asp-for="@Model.SearchText" />
-                        <div class="filter-summary">
-                            <partial name="_filterSummary" model="@Model" />
-                        </div>
-                        <details class="nhsuk-details nhsuk-expander nhsuk-u-margin-bottom-7">
+            <!-- Right column: Main content -->
+            <div class="nhsuk-grid-column-three-quarters">
+                <div>
+                    <h2 class="nhsuk-heading-l">Recent learning</h2>
+                </div>
+                <div>
+                    <div class="search-filters">
+                        <form asp-controller="MyLearning" asp-action="Index" method="post" asp-fragment="search-results">
 
-                            <summary class="nhsuk-details__summary nhsuk-u-padding-0">
-                                <span class="nhsuk-details__summary-text">
-                                    Filter results
-                                </span>
-
-                                <hr class="nhsuk-u-margin-top-3 nhsuk-u-margin-bottom-3" />
-
-
-                                <hr class="nhsuk-u-margin-top-9 nhsuk-u-margin-bottom-0" />
-                            </summary>
-
-                            <div class="search-filter-items nhsuk-u-margin-top-0 nhsuk-u-padding-4 nhsuk-u-padding-bottom-0">
-
-                                <div class="nhsuk-grid-row">
-                                    <div class="nhsuk-grid-column-full filterForm">
-
-                                        <vc:radio-list asp-for="TimePeriod"
-                                                       label="Filter by date:"
-                                                       populate-with-current-values="true"
-                                                       radios="@Model.SortByDateRadio()"
-                                                       hint-text=""
-                                                       css-class="nhsuk-grid-column-one-quarter nhsuk-u-padding-bottom-3"
-                                                       required="true" />
-                                    </div>
-                                    <div class="nhsuk-grid-column-full">
-                                        <div class="nhsuk-grid-column-one-quarter">
-                                            <div class="nhsuk-form-group">
-                                                <div class="nhsuk-radios">
-
-                                                    <div class="nhsuk-radios__item">
-                                                        <input class="nhsuk-radios__input" id="example-inline-1" name="TimePeriod" type="radio" checked="@(Model.TimePeriod == "dateRange")" value="dateRange">
-                                                        <label class="nhsuk-label nhsuk-radios__label" for="example-inline-1">
-                                                            Select dates
-                                                        </label>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="nhsuk-grid-column-one-third nhsuk-u-padding-top-1">
-                                            <vc:date-input id="StartDate"
-                                                           label=""
-                                                           day-id="StartDay"
-                                                           month-id="StartMonth"
-                                                           year-id="StartYear"
-                                                           css-class=""
-                                                           hint-text-lines="@startHintTextLines" />
-                                        </div>
-                                        <div class="nhsuk-grid-column-one-third nhsuk-u-padding-top-1">
-                                            <vc:date-input id="EndDate"
-                                                           label=""
-                                                           day-id="EndDay"
-                                                           month-id="EndMonth"
-                                                           year-id="EndYear"
-                                                           css-class=""
-                                                           hint-text-lines="@endHintTextLines" />
-                                        </div>
-                                    </div>
-
+                            <div class="nhs-item-row">
+                                <div class="nhsuk-u-padding-bottom-3">
+                                    <span class="nhsuk-u-visually-hidden">No certificate available</span>
                                 </div>
+                                <a class="nhsuk-u-font-weight-bold" asp-action="Index" asp-route-searchText="@Model.SearchText" asp-route-myLearningFormActionType="@MyLearningFormActionTypeEnum.Default" asp-fragment="search-results">
+                                    Clear all filters
+                                </a>
+                            </div>
+                            <details class="nhsuk-details nhsuk-expander nhsuk-u-margin-bottom-7">
 
+                                <summary class="nhsuk-details__summary nhsuk-u-padding-0">
+                                    <span class="nhsuk-details__summary-text">
+                                        Filter results
+                                    </span>
+                                </summary>
 
-                                <hr class="nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-3" />
-
-                                <div class="nhsuk-grid-row">
-                                    <div class="nhsuk-grid-column-full filterForm">
-                                        <vc:checkboxes label="Filter by certificates:"
-                                                       populate-with-current-values="true"
-                                                       checkboxes="@Model.CertificateFilterCheckbox()"
-                                                       hint-text=""
-                                                       required="false"
-                                                       css-class="nhsuk-grid-column-one-quarter"
-                                                       errormessage="" />
-                                    </div>
-                                </div>
-
-                                <div class="nhsuk-grid-row">
-                                    <div class="nhsuk-grid-column-full filterForm">
+                                <div class="search-filter-items nhsuk-u-padding-top-3">
+                                    <div class="filterForm">
                                         <vc:checkboxes label="Filter by status:"
                                                        populate-with-current-values="true"
                                                        checkboxes="@Model.StatusFilterCheckbox()"
@@ -185,41 +77,177 @@
                                                        css-class="nhsuk-grid-column-one-quarter"
                                                        errormessage="" />
                                     </div>
+
+                                    <hr class="nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-0" />
+                                    <button data-module="nhsuk-button" type="submit" class="nhsuk-button nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0" name="MyLearningFormActionType" value="@MyLearningFormActionTypeEnum.ApplyMajorFilters" title="Apply">Apply</button>
                                 </div>
 
-                                <div class="nhsuk-grid-row">
-                                    <div class="nhsuk-grid-column-full filterForm">
-                                        <vc:checkboxes label="Filter by type:"
-                                                       populate-with-current-values="true"
-                                                       checkboxes="@Model.TypeFilterCheckbox()"
-                                                       hint-text=""
-                                                       required="false"
-                                                       css-class="nhsuk-grid-column-one-quarter"
-                                                       errormessage="" />
-                                    </div>
-                                </div>
-                                <hr class="nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-0" />
-                                <button data-module="nhsuk-button" type="submit" class="nhsuk-button nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0" name="MyLearningFormActionType" value="@MyLearningFormActionTypeEnum.ApplyMajorFilters" title="Apply">Apply</button>
-                            </div>
-
-                        </details>
-                    </form>
-                </div>
-                <partial name="_ActivityTable" model="@Model" />
-            </div>
-
-            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-top-9">
-                <div class="nhsuk-card">
-                    <div class="nhsuk-card__content">
-                        <h3 class="nhsuk-card__heading"> Get help </h3>
-                        <p class="nhsuk-card__description">
-                            Find further guidance and support on how to manage My learning at the <a href="@ViewBag.MyLearningHelpUrl" target="_blank">Learning Hub help centre</a>.
-                        </p>
+                            </details>
+                        </form>
                     </div>
                 </div>
-            </div>
-            <div class="nhsuk-grid-column-full">
-                @await Html.PartialAsync("_ActivityTablePaging", Model)
+                <div class="filter-summary">
+                    <partial name="_LearningFilterSummary" model="@Model" />
+                </div>
+                <hr class="nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-0" />
+                <div>
+                    <div class="nhsuk-u-padding-bottom-4">
+                        <hr class="nhsuk-section-break nhsuk-section-break--visible">
+                    </div>
+                </div>
+                <div>
+                    @foreach (var activity in Model.Activities)
+                    {
+
+                        var isCompleted = ViewActivityHelper.GetActivityStatusDisplayText(activity) == ActivityStatusEnum.Completed.ToString();
+
+                        var typeLabelClass = isCompleted ? "nhsuk-u-primary-text-color" : "nhsuk-u-secondary-text-color";
+                        var accessedLabelClass = typeLabelClass;
+                        var tagColorClass = isCompleted ? "nhsuk-tag--green" : "nhsuk-tag--blue";
+                        var statusText = isCompleted ? "Completed" : "In progress";
+                        var displayText = isCompleted ? "Completed" : "Accessed";
+
+                        var activityDate = activity.ActivityDate.Date;
+                        var today = DateTime.Today;
+                        var dateTimeText = activityDate == today ? "Today"
+                        : activityDate == today.AddDays(-1) ? "Yesterday"
+                        : activityDate.ToString("dd MMM yyyy");
+                        var certicateAwardedDate = activity.CertificateAwardedDate.Date;
+                        var certificateAwardedText = certicateAwardedDate == today ? "Today"
+                        : certicateAwardedDate == today.AddDays(-1) ? "Yesterday"
+                        : certicateAwardedDate.ToString("dd MMM yyyy");
+
+                        <div>
+                            <span class="nhsuk-u-padding-bottom-3">
+                                @if (ViewActivityHelper.GetResourceTypeDesc(activity.ResourceType) == "Course")
+                                {
+                                    <a class="nhsuk-u-font-size-19" href="@GetMoodleCourseUrl(activity.ResourceId)">@activity.Title</a>
+                                }
+                                else
+                                {
+                                    <a class="nhsuk-u-font-size-19" asp-controller="Resource" asp-action="Index" asp-route-resourceReferenceId="@activity.ResourceReferenceId">@activity.Title</a>
+                                }
+                            </span>
+                            <div>
+                                <div class="nhs-item-row nhsuk-u-padding-bottom-3 nhsuk-u-padding-top-2">
+                                    <div>
+                                        <span class="@typeLabelClass nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-padding-right-2">Type:</span>
+
+                                        <span class="nhsuk-u-padding-right-3  nhsuk-u-font-size-16 @typeLabelClass">
+                                            @ViewActivityHelper.GetResourceTypeDesc(activity.ResourceType)
+                                        </span>
+
+                                        <span class="nhsuk-u-padding-right-2 nhsuk-u-font-size-16 @accessedLabelClass nhsuk-u-font-weight-bold">
+                                            @displayText:
+                                        </span>
+                                        @if(isCompleted)
+                                        {
+                                        <span class="nhsuk-u-font-size-16 @accessedLabelClass">
+                                            @certificateAwardedText
+                                        </span>
+                                        }
+                                        else
+                                        {
+                                        <span class="nhsuk-u-font-size-16 @accessedLabelClass">
+                                            @dateTimeText
+                                        </span>
+                                        }
+                                    </div>
+                                    <div>
+                                        <span class="nhsuk-u-text-align-left  table-content-spacing">
+                                            <strong class="nhsuk-tag @tagColorClass">
+                                                @statusText
+                                            </strong>
+                                        </span>
+                                    </div>
+                                </div>
+                                @if (ViewActivityHelper.GetResourceTypeDesc(activity.ResourceType) == "Course")
+                                {
+                                    <div class="nhs-progress-container" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="nhs-progress-bar" style="width: @(activity.ScorePercentage)%"></div>
+                                    </div>
+                                }
+                                else @if (ViewActivityHelper.CanViewVidoProgress(activity))
+                                {
+                                    <div class="nhsuk-u-padding-top-1">
+                                        @activity.CompletionPercentage% complete
+                                        <a asp-controller="MyLearning" asp-action="ViewProgress" asp-route-resourceId="@activity.ResourceId" asp-route-version="@activity.MajorVersion" asp-route-maxTime="@activity.ResourceDurationMilliseconds" asp-route-returnUrl="@returnUrl" asp-route-resourceReferenceId="@activity.ResourceReferenceId">View Progress</a>
+                                    </div>
+                                }
+
+                                @if (ViewActivityHelper.CanCertificateawarded(activity))
+                                {
+
+                                    <div class="nhsuk-u-padding-bottom-5 nhsuk-u-padding-top-4 nhsuk-u-font-size-16">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="24" viewBox="0 0 19 24" fill="none">
+                                            <g clip-path="url(#clip0_4164_3951)">
+                                                <path d="M13.3598 18.9737V23.1883C13.3598 23.4148 12.7512 23.5225 12.4233 23.3543L9.57333 21.8784C9.35548 21.7662 8.97144 21.7685 8.76034 21.8851L6.18212 23.3139C5.86096 23.4911 5.23438 23.3879 5.23438 23.1546V17.6055" stroke="#007F3B" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M18.0346 9.08368C18.0346 9.70947 16.9027 10.2007 16.768 10.7884C16.6332 11.376 17.435 12.327 17.17 12.8721C16.9049 13.4171 15.6675 13.379 15.2857 13.8568C14.9039 14.3345 15.2228 15.5255 14.7422 15.9091C14.2616 16.2927 13.1746 15.714 12.6176 15.9831C12.0607 16.2523 11.8428 17.459 11.2365 17.5958C10.6301 17.7327 9.91816 16.739 9.29157 16.739C8.66498 16.739 7.93284 17.7304 7.34668 17.5958C6.76051 17.4613 6.51347 16.2456 5.96549 15.9831C5.4175 15.7207 4.31929 16.2904 3.84093 15.9091C3.36257 15.5278 3.68147 14.3368 3.29744 13.8568C2.9134 13.3768 1.68268 13.4284 1.41543 12.8721C1.14817 12.3158 1.95443 11.394 1.81743 10.7884C1.68044 10.1827 0.550781 9.71172 0.550781 9.08368C0.550781 8.45564 1.68268 7.96667 1.81743 7.37901C1.95218 6.79134 1.15042 5.84032 1.41543 5.29527C1.68044 4.75022 2.91789 4.78835 3.29968 4.3106C3.68147 3.83284 3.36257 2.64181 3.84317 2.25826C4.32378 1.87471 5.41077 2.4534 5.96773 2.18424C6.5247 1.91508 6.74255 0.708352 7.34892 0.57153C7.9553 0.434707 8.66723 1.42835 9.29381 1.42835C9.9204 1.42835 10.6525 0.43695 11.2387 0.57153C11.8249 0.706109 12.0719 1.92181 12.6199 2.18424C13.1679 2.44667 14.2661 1.87695 14.7445 2.25826C15.2228 2.63957 14.9039 3.8306 15.2879 4.3106C15.672 4.7906 16.9027 4.73901 17.17 5.29527C17.4372 5.85153 16.631 6.7734 16.768 7.37901C16.9049 7.98461 18.0346 8.45564 18.0346 9.08368Z" fill="#007F3B" />
+                                                <path d="M18.0346 9.08368C18.0346 9.70947 16.9027 10.2007 16.768 10.7884C16.6332 11.376 17.435 12.327 17.17 12.8721C16.9049 13.4171 15.6675 13.379 15.2857 13.8568C14.9039 14.3345 15.2228 15.5255 14.7422 15.9091C14.2616 16.2927 13.1746 15.714 12.6176 15.9831C12.0607 16.2523 11.8428 17.459 11.2365 17.5958C10.6301 17.7327 9.91816 16.739 9.29157 16.739C8.66498 16.739 7.93284 17.7304 7.34668 17.5958C6.76051 17.4612 6.51347 16.2455 5.96549 15.9831C5.4175 15.7207 4.31929 16.2904 3.84093 15.9091C3.36257 15.5278 3.68147 14.3368 3.29744 13.8568C2.9134 13.3768 1.68268 13.4284 1.41543 12.8721C1.14817 12.3158 1.95443 11.394 1.81743 10.7884C1.68044 10.1827 0.550781 9.71172 0.550781 9.08368C0.550781 8.45564 1.68268 7.96667 1.81743 7.37901C1.95218 6.79134 1.15042 5.84032 1.41543 5.29527C1.68044 4.75022 2.91789 4.78835 3.29968 4.3106C3.68147 3.83284 3.36257 2.64181 3.84317 2.25826C4.32378 1.87471 5.41077 2.4534 5.96773 2.18424C6.5247 1.91508 6.74255 0.708352 7.34892 0.57153C7.9553 0.434707 8.66723 1.42835 9.29381 1.42835C9.9204 1.42835 10.6525 0.43695 11.2387 0.57153C11.8249 0.706109 12.0719 1.92181 12.6199 2.18424C13.1679 2.44667 14.2661 1.87695 14.7445 2.25826C15.2228 2.63957 14.9039 3.8306 15.2879 4.3106C15.672 4.7906 16.9027 4.73901 17.17 5.29527C17.4372 5.85153 16.631 6.7734 16.768 7.37901C16.9049 7.98461 18.0346 8.45564 18.0346 9.08368Z" stroke="#007F3B" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M9.22597 13.2915L4.92969 8.03622L6.79148 5.27734H11.9479L13.6682 8.03622L9.22597 13.2915Z" fill="#007F3B" stroke="white" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M9.26706 13.2915L7.29297 8.03622L8.14863 5.27734H10.5157L11.304 8.03622L9.26706 13.2915Z" fill="#007F3B" stroke="white" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M5.11328 7.99609H12.1338" stroke="white" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" />
+                                            </g>
+                                            <defs>
+                                                <clipPath id="clip0_4164_3951">
+                                                    <rect width="18.5764" height="24" fill="white" />
+                                                </clipPath>
+                                            </defs>
+                                        </svg> <span class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-padding-right-2 nhsuk-u-padding-left-1">Certificate:</span>
+                                        <span class="nhsuk-u-font-size-16">awarded [@certificateAwardedText]</span>
+
+                                    </div>
+
+                                }
+                                else
+                                {
+                                    <div class="nhs-item-row nhsuk-u-padding-bottom-5 nhsuk-u-padding-top-4">
+                                        @if (ViewActivityHelper.GetResourceTypeDesc(activity.ResourceType) == "Course")
+                                        {
+                                            <div class="nhsuk-u-font-size-16 nhsuk-u-font-weight-bold nhsuk-u-secondary-text-color" id="progressText"> @activity.CompletedActivities of @activity.TotalActivities activities completed</div>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                <span class="nhsuk-u-visually-hidden">No certificate available</span>
+                                            </div>
+                                        }
+                                        @if (activity.CertificateEnabled == true)
+                                        {
+                                            <div class="nhsuk nhsuk-u-font-size-16 nhsuk-u-secondary-text-color">
+                                                Includes a certificate
+                                                <span class="nhsuk-u-padding-left-1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="24" viewBox="0 0 19 24" fill="none">
+                                                        <g clip-path="url(#clip0_1298_21764)">
+                                                            <path d="M13.7817 18.9737V23.1883C13.7817 23.4148 13.1731 23.5225 12.8452 23.3543L9.9952 21.8784C9.77736 21.7662 9.39332 21.7685 9.18221 21.8851L6.60399 23.3139C6.28284 23.4911 5.65625 23.3879 5.65625 23.1546V17.6055" stroke="#AEB7BD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                                            <path d="M18.4565 9.08368C18.4565 9.70947 17.3246 10.2007 17.1898 10.7884C17.0551 11.376 17.8568 12.327 17.5918 12.8721C17.3268 13.4171 16.0894 13.379 15.7076 13.8568C15.3258 14.3345 15.6447 15.5255 15.1641 15.9091C14.6835 16.2927 13.5965 15.714 13.0395 15.9831C12.4826 16.2523 12.2647 17.459 11.6583 17.5958C11.052 17.7327 10.34 16.739 9.71344 16.739C9.08685 16.739 8.35471 17.7304 7.76855 17.5958C7.18239 17.4613 6.93535 16.2456 6.38736 15.9831C5.83938 15.7207 4.74117 16.2904 4.2628 15.9091C3.78444 15.5278 4.10335 14.3368 3.71931 13.8568C3.33527 13.3768 2.10456 13.4284 1.8373 12.8721C1.57005 12.3158 2.3763 11.394 2.23931 10.7884C2.10231 10.1827 0.972656 9.71172 0.972656 9.08368C0.972656 8.45564 2.10456 7.96667 2.23931 7.37901C2.37406 6.79134 1.57229 5.84032 1.8373 5.29527C2.10231 4.75022 3.33977 4.78835 3.72156 4.3106C4.10335 3.83284 3.78444 2.64181 4.26505 2.25826C4.74566 1.87471 5.83264 2.4534 6.38961 2.18424C6.94658 1.91508 7.16442 0.708352 7.7708 0.57153C8.37717 0.434707 9.0891 1.42835 9.71569 1.42835C10.3423 1.42835 11.0744 0.43695 11.6606 0.57153C12.2467 0.706109 12.4938 1.92181 13.0418 2.18424C13.5898 2.44667 14.688 1.87695 15.1663 2.25826C15.6447 2.63957 15.3258 3.8306 15.7098 4.3106C16.0939 4.7906 17.3246 4.73901 17.5918 5.29527C17.8591 5.85153 17.0528 6.7734 17.1898 7.37901C17.3268 7.98461 18.4565 8.45564 18.4565 9.08368Z" fill="#F2F8FD" />
+                                                            <path d="M18.4565 9.08368C18.4565 9.70947 17.3246 10.2007 17.1898 10.7884C17.0551 11.376 17.8568 12.327 17.5918 12.8721C17.3268 13.4171 16.0894 13.379 15.7076 13.8568C15.3258 14.3345 15.6447 15.5255 15.1641 15.9091C14.6835 16.2927 13.5965 15.714 13.0395 15.9831C12.4826 16.2523 12.2647 17.459 11.6583 17.5958C11.052 17.7327 10.34 16.739 9.71344 16.739C9.08686 16.739 8.35471 17.7304 7.76855 17.5958C7.18239 17.4612 6.93535 16.2455 6.38736 15.9831C5.83938 15.7207 4.74117 16.2904 4.2628 15.9091C3.78444 15.5278 4.10335 14.3368 3.71931 13.8568C3.33527 13.3768 2.10456 13.4284 1.8373 12.8721C1.57005 12.3158 2.3763 11.394 2.23931 10.7884C2.10231 10.1827 0.972656 9.71172 0.972656 9.08368C0.972656 8.45564 2.10456 7.96667 2.23931 7.37901C2.37406 6.79134 1.57229 5.84032 1.8373 5.29527C2.10231 4.75022 3.33977 4.78835 3.72156 4.3106C4.10335 3.83284 3.78444 2.64181 4.26505 2.25826C4.74566 1.87471 5.83264 2.4534 6.38961 2.18424C6.94658 1.91508 7.16442 0.708352 7.7708 0.57153C8.37717 0.434707 9.0891 1.42835 9.71569 1.42835C10.3423 1.42835 11.0744 0.43695 11.6606 0.57153C12.2467 0.706109 12.4938 1.92181 13.0418 2.18424C13.5898 2.44667 14.688 1.87695 15.1663 2.25826C15.6447 2.63957 15.3258 3.8306 15.7098 4.3106C16.0939 4.7906 17.3246 4.73901 17.5918 5.29527C17.8591 5.85153 17.0528 6.7734 17.1898 7.37901C17.3268 7.98461 18.4565 8.45564 18.4565 9.08368Z" stroke="#AEB7BD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                                            <path d="M9.64784 13.2915L5.35156 8.03622L7.21336 5.27734H12.3698L14.0901 8.03622L9.64784 13.2915Z" fill="#F2F8FD" stroke="#AEB7BD" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" />
+                                                            <path d="M9.68893 13.2915L7.71484 8.03622L8.57051 5.27734H10.9376L11.7259 8.03622L9.68893 13.2915Z" fill="#F2F8FD" stroke="#AEB7BD" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" />
+                                                            <path d="M5.53516 7.99609H12.5556" stroke="#AEB7BD" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" />
+                                                        </g>
+                                                        <defs>
+                                                            <clipPath id="clip0_1298_21764">
+                                                                <rect width="18.5764" height="24" fill="white" transform="translate(0.421875)" />
+                                                            </clipPath>
+                                                        </defs>
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            <div class="nhsuk-u-padding-bottom-5">
+                                <hr class="nhsuk-section-break nhsuk-section-break--visible ">
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div>
+                    @await Html.PartialAsync("_ActivityTablePaging", Model)
+                    <div class="nhsuk-u-padding-bottom-9">Not seeing what you are looking for? <a asp-action="LearningHistory">Go to learning history</a> </div>
+                </div>
             </div>
         </div>
     </div>

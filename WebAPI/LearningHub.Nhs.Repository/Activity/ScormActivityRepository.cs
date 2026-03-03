@@ -226,6 +226,7 @@ namespace LearningHub.Nhs.Repository.Activity
                         .ThenInclude(sai => sai.ScormActivityInteractionCorrectResponse)
                         .Include(sai => sai.ScormActivityInteraction)
                         .ThenInclude(sai => sai.ScormActivityInteractionObjective)
+                        .AsSplitQuery()
                         .SingleOrDefault();
 
             updatedScormActivity.ResourceActivityId = existingScormActivity.ResourceActivityId;

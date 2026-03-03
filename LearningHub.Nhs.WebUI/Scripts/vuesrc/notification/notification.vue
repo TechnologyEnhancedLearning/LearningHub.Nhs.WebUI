@@ -1,7 +1,7 @@
 <template>
     <div>
         <div :class="['d-none d-md-block ' + (this.pagingModel.totalPages <= 1 ? 'pb-5' : '')]">
-            <h2>{{priorityTypeText}}</h2>
+            <h3 class="nhsuk-heading-m nhsuk-u-padding-bottom-5">{{priorityTypeText}}</h3>
             <hr class="nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-0" />
             <div class="table-responsive d-none d-md-block">
                 <table class="table table-hover table-bordered table-borderless-header small mb-0">
@@ -198,6 +198,8 @@
                         return [{ text: 'Action required', className: 'fa-solid fa-triangle-exclamation text-warning pt-1' }];
                     case NotificationType.AccessRequest:
                         return [{ text: 'Access request', className: 'fa-solid fa-lock text-dark pt-1' }];
+                    case NotificationType.ReportProcessed:
+                        return [{ text: 'Report', className: 'fa-solid fa-circle-check text-success pt-1' }];
                     default:
                         return [{ text: 'unknown', className: '' }];
                 }

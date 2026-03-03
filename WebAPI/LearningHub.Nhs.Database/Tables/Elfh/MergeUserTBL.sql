@@ -1,0 +1,12 @@
+﻿CREATE TABLE [elfh].[mergeUserTBL](
+	[mergeUserId] [int] IDENTITY(1,1) NOT NULL,
+	[fromUserId] [int] NOT NULL,
+	[intoUserId] [int] NOT NULL,
+	[amendUserId] [int] NOT NULL,
+	[createdDatetime] [datetimeoffset](7) NOT NULL,
+ CONSTRAINT [PK_mergeUserTBL] PRIMARY KEY CLUSTERED 
+(
+	[mergeUserId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO

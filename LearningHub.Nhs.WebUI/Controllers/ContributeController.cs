@@ -28,6 +28,7 @@
         private readonly IFileService fileService;
         private readonly IResourceService resourceService;
         private readonly IUserService userService;
+        private readonly IUserGroupService userGroupService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContributeController"/> class.
@@ -37,6 +38,7 @@
         /// <param name="logger">Logger.</param>
         /// <param name="settings">Settings.</param>
         /// <param name="userService">User service.</param>
+        /// <param name="userGroupService"> userGroupService.</param>
         /// <param name="fileService">File service.</param>
         /// <param name="resourceService">Resource service.</param>
         /// <param name="azureMediaService">Azure media service.</param>
@@ -48,6 +50,7 @@
             ILogger<ContributeController> logger,
             IOptions<Settings> settings,
             IUserService userService,
+            IUserGroupService userGroupService,
             IFileService fileService,
             IResourceService resourceService,
             IAzureMediaService azureMediaService,
@@ -58,6 +61,7 @@
             this.authConfig = authConfig;
 
             this.userService = userService;
+            this.userGroupService = userGroupService;
             this.fileService = fileService;
             this.resourceService = resourceService;
             this.azureMediaService = azureMediaService;
@@ -167,7 +171,8 @@
         [Route("my-contributions/{selectedTab}/{catalogueId}/{nodeId}")]
         public async Task<IActionResult> MyContributions()
         {
-            if ((this.User.IsInRole("ReadOnly") || this.User.IsInRole("BasicUser")) && !await this.resourceService.UserHasPublishedResourcesAsync())
+            bool catalogueContributionPermission = await this.userGroupService.UserHasCatalogueContributionPermission();
+            if ((this.User.IsInRole("ReadOnly") || this.User.IsInRole("BasicUser")) || (!catalogueContributionPermission && (!await this.resourceService.UserHasPublishedResourcesAsync())))
             {
                 return this.RedirectToAction("AccessDenied", "Home");
             }

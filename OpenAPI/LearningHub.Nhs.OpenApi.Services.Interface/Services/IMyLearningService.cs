@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.MyLearning;
 
@@ -18,6 +19,22 @@
         /// <param name="requestModel">The request model.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<MyLearningDetailedViewModel> GetActivityDetailed(int userId, MyLearningRequestModel requestModel);
+
+        /// <summary>
+        /// Gets the user recent my leraning activities.
+        /// </summary>
+        /// /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<MyLearningActivitiesDetailedViewModel> GetUserRecentMyLearningActivitiesAsync(int userId, MyLearningRequestModel requestModel);
+
+        /// <summary>
+        /// Gets history of users my leraning activities.
+        /// </summary>
+        /// /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">The request model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<MyLearningActivitiesDetailedViewModel> GetUserLearningHistoryAsync(int userId, MyLearningRequestModel requestModel);
 
         /// <summary>
         /// Gets the played segment data for the progress modal in My Learning screen.
@@ -45,5 +62,13 @@
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<List<MyLearningDetailedItemViewModel>> PopulateMyLearningDetailedItemViewModels(List<ResourceActivity> resourceActivities, int userId);
+
+        /// <summary>
+        /// Gets the resource certificate details.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="requestModel">The request model</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(int userId, MyLearningRequestModel requestModel);
     }
 }

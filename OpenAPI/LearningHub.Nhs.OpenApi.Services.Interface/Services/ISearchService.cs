@@ -1,5 +1,6 @@
 namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
 {
+    using System.Threading;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.Search.SearchClick;
@@ -17,8 +18,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// </summary>
         /// <param name="searchRequestModel">The catalog search request model.</param>
         /// <param name="userId">The user id.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<SearchResultModel> GetSearchResultAsync(SearchRequestModel searchRequestModel, int userId);
+        Task<SearchResultModel> GetSearchResultAsync(SearchRequestModel searchRequestModel, int userId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// The Get Catalogue Search Result Async method.
@@ -29,10 +31,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="userId">
         /// The user id.
         /// </param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        Task<SearchCatalogueResultModel> GetCatalogueSearchResultAsync(CatalogueSearchRequestModel catalogSearchRequestModel, int userId);
+        Task<SearchCatalogueResultModel> GetCatalogueSearchResultAsync(CatalogueSearchRequestModel catalogSearchRequestModel, int userId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// The create resource search action async.
@@ -152,8 +155,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// The Get Auto suggestion Results Async method.
         /// </summary>
         /// <param name="term">The term.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term);
+        Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///  The Send AutoSuggestion Event Async.

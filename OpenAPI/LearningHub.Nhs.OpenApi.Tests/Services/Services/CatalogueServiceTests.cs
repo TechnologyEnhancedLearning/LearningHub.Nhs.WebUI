@@ -45,6 +45,7 @@
         private readonly Mock<ITimezoneOffsetManager> timezoneOffsetManager;
         private readonly Mock<IGovMessageService> govMessageSevice;
         private readonly Mock<IEmailTemplateService> emailTemplateService;
+        private readonly Mock<ICategoryService> categoryService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CatalogueServiceTests"/> class.
@@ -52,6 +53,7 @@
         public CatalogueServiceTests()
         {
             this.catalogueRepository = new Mock<ICatalogueRepository>();
+            this.categoryService = new Mock<ICategoryService>();
             this.mapper = new Mock<IMapper>();
             this.catalogueNodeVersionRepository = new Mock<ICatalogueNodeVersionRepository>();
             this.catalogueAccessRequestRepository = new Mock<ICatalogueAccessRequestRepository>();
@@ -73,7 +75,11 @@
             this.timezoneOffsetManager = new Mock<ITimezoneOffsetManager>();
             this.govMessageSevice = new Mock<IGovMessageService>();
             this.emailTemplateService = new Mock<IEmailTemplateService>();
-            this.catalogueService = new CatalogueService(this.catalogueRepository.Object, this.nodeRepository.Object, this.userUserGroupRepository.Object, this.mapper.Object, this.findwiseConfig.Object, this.learningHubConfig.Object, this.catalogueNodeVersionRepository.Object, this.nodeResourceRepository.Object, this.resourceVersionRepository.Object, this.roleUserGroupRepository.Object, this.providerService.Object, this.catalogueAccessRequestRepository.Object, this.userRepository.Object, this.userProfileRepository.Object, this.emailSenderService.Object, this.bookmarkRepository.Object, this.nodeActivityRepository.Object, this.findwiseApiFacade.Object, this.notificationSenderService.Object, this.timezoneOffsetManager.Object, this.govMessageSevice.Object, this.emailTemplateService.Object);
+            this.catalogueService = new CatalogueService(this.catalogueRepository.Object,
+                this.nodeRepository.Object, this.userUserGroupRepository.Object, 
+                this.mapper.Object, this.findwiseConfig.Object, this.learningHubConfig.Object, 
+                this.catalogueNodeVersionRepository.Object, this.nodeResourceRepository.Object, this.resourceVersionRepository.Object,
+                this.roleUserGroupRepository.Object, this.providerService.Object, this.catalogueAccessRequestRepository.Object, this.userRepository.Object, this.userProfileRepository.Object, this.emailSenderService.Object, this.bookmarkRepository.Object, this.nodeActivityRepository.Object, this.findwiseApiFacade.Object, this.notificationSenderService.Object, this.timezoneOffsetManager.Object, this.categoryService.Object, this.govMessageSevice.Object, this.emailTemplateService.Object);
         }
 
         private static IEnumerable<CatalogueNodeVersion> CatalogueNodeVersionList => new List<CatalogueNodeVersion>()

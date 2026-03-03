@@ -3,8 +3,6 @@
     using System.Net.Http;
     using GDS.MultiPageFormData;
     using LearningHub.Nhs.Models.OpenAthens;
-    using LearningHub.Nhs.Services;
-    using LearningHub.Nhs.Services.Interface;
     using LearningHub.Nhs.WebUI.Filters;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -62,13 +60,6 @@
                          ServerCertificateCustomValidationCallback =
                                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
                      });
-                services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>()
-                 .ConfigurePrimaryHttpMessageHandler(
-                     () => new HttpClientHandler
-                     {
-                         ServerCertificateCustomValidationCallback =
-                                       HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
-                     });
             }
             else
             {
@@ -76,7 +67,6 @@
                 services.AddHttpClient<IOpenApiHttpClient, OpenApiHttpClient>();
                 services.AddHttpClient<IUserApiHttpClient, UserApiHttpClient>();
                 services.AddHttpClient<ILearningHubReportApiClient, LearningHubReportApiClient>();
-                services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>();
             }
 
             // Config
@@ -91,7 +81,9 @@
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IRegionService, RegionService>();
+            services.AddScoped<IReportService, ReportService>();
             services.AddScoped<ICatalogueService, CatalogueService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IHierarchyService, HierarchyService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IJobRoleService, JobRoleService>();
@@ -108,6 +100,7 @@
             services.AddSingleton<IRoadMapService, RoadMapService>();
             services.AddSingleton<IMyLearningService, MyLearningService>();
             services.AddSingleton<IDashboardService, DashboardService>();
+            services.AddSingleton<IMoodleApiService, MoodleApiService>();
             services.AddSingleton<IContentService, ContentService>();
             services.AddScoped<IPartialFileUploadService, PartialFileUploadService>();
             services.AddScoped<IRoleService, RoleService>();
@@ -127,6 +120,7 @@
             services.AddScoped<LoginWizardFilter>();
             services.AddScoped<SsoLoginFilterAttribute>();
             services.AddScoped<OfflineCheckFilter>();
+            services.AddScoped<ReporterPermissionFilter>();
         }
     }
 }

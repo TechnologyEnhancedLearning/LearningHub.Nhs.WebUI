@@ -8,6 +8,7 @@
     using HtmlAgilityPack;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Hierarchy;
+    using LearningHub.Nhs.Models.Moodle;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     /// <summary>
@@ -24,31 +25,17 @@
             { "article", ResourceTypeEnum.Article },
             { "case", ResourceTypeEnum.Case },
             { "weblink", ResourceTypeEnum.WebLink },
+            { "web link", ResourceTypeEnum.WebLink },
             { "audio", ResourceTypeEnum.Audio },
             { "scorm", ResourceTypeEnum.Scorm },
+            { "scorm e-learning resource", ResourceTypeEnum.Scorm },
             { "assessment", ResourceTypeEnum.Assessment },
             { "genericfile", ResourceTypeEnum.GenericFile },
+            { "file", ResourceTypeEnum.GenericFile },
             { "image", ResourceTypeEnum.Image },
             { "html", ResourceTypeEnum.Html },
-        };
-
-        /// TODO: Remove this method after adding to Moodle resource types to models project.
-        /// <summary>
-        /// Findwise Moodle resource type dictionary.
-        /// </summary>
-        public static readonly Dictionary<string, ResourceTypeEnumMoodle> FindwiseResourceMoodleTypeDict = new Dictionary<string, ResourceTypeEnumMoodle>()
-        {
-            { "video", ResourceTypeEnumMoodle.Video },
-            { "article", ResourceTypeEnumMoodle.Article },
-            { "case", ResourceTypeEnumMoodle.Case },
-            { "weblink", ResourceTypeEnumMoodle.WebLink },
-            { "audio", ResourceTypeEnumMoodle.Audio },
-            { "scorm", ResourceTypeEnumMoodle.Scorm },
-            { "assessment", ResourceTypeEnumMoodle.Assessment },
-            { "genericfile", ResourceTypeEnumMoodle.GenericFile },
-            { "image", ResourceTypeEnumMoodle.Image },
-            { "html", ResourceTypeEnumMoodle.Html },
-            { "moodle", ResourceTypeEnumMoodle.Course },
+            { "moodle", ResourceTypeEnum.Moodle },
+            { "catalogue", ResourceTypeEnum.Catalogue },
         };
 
         /// <summary>
@@ -161,54 +148,10 @@
                     return "Case";
                 case ResourceTypeEnum.Html:
                     return "HTML";
-                default:
-                    return "File";
-            }
-        }
-
-        /// TODO: Remove this method after adding to Moodle resource types to models project.
-        /// <summary>
-        /// Returns a prettified resource type name, suitable for display in the UI. Includes video/audio duration string.
-        /// </summary>
-        /// <param name="resourceType">The resource type.</param>
-        /// <param name="durationInMilliseconds">The media duration in milliseconds.</param>
-        /// <returns>The resource type name, and duration if applicable.</returns>
-        public static string GetPrettifiedResourceTypeNameMoodle(ResourceTypeEnumMoodle resourceType, int? durationInMilliseconds = 0)
-        {
-            switch (resourceType)
-            {
-                case ResourceTypeEnumMoodle.Assessment:
-                    return "Assessment";
-                case ResourceTypeEnumMoodle.Article:
-                    return "Article";
-                case ResourceTypeEnumMoodle.Audio:
-                    string durationText = GetDurationText(durationInMilliseconds ?? 0);
-                    durationText = string.IsNullOrEmpty(durationText) ? string.Empty : " - " + durationText;
-                    return "Audio" + durationText;
-                case ResourceTypeEnumMoodle.Equipment:
-                    return "Equipment";
-                case ResourceTypeEnumMoodle.Image:
-                    return "Image";
-                case ResourceTypeEnumMoodle.Scorm:
-                    return "elearning";
-                case ResourceTypeEnumMoodle.Video:
-                    durationText = GetDurationText(durationInMilliseconds ?? 0);
-                    durationText = string.IsNullOrEmpty(durationText) ? string.Empty : " - " + durationText;
-                    return "Video" + durationText;
-                case ResourceTypeEnumMoodle.WebLink:
-                    return "Web link";
-                case ResourceTypeEnumMoodle.GenericFile:
-                    return "File";
-                case ResourceTypeEnumMoodle.Embedded:
-                    return "Embedded";
-                case ResourceTypeEnumMoodle.Case:
-                    return "Case";
-                case ResourceTypeEnumMoodle.Html:
-                    return "HTML";
-                case ResourceTypeEnumMoodle.Moodle:
+                case ResourceTypeEnum.Moodle:
                     return "Course";
-                case ResourceTypeEnumMoodle.Course:
-                    return "Course";
+                case ResourceTypeEnum.Catalogue:
+                    return "Catalogue";
                 default:
                     return "File";
             }
@@ -247,6 +190,10 @@
                     return "Case";
                 case ResourceTypeEnum.Html:
                     return "HTML";
+                case ResourceTypeEnum.Moodle:
+                    return "Course";
+                case ResourceTypeEnum.Catalogue:
+                    return "Catalogue";
                 default:
                     return "File";
             }
@@ -557,6 +504,47 @@
             }
 
             return breadcrumbs;
+        }
+
+        /// <summary>
+        /// Returns breadcrumb tuple data ready to be passed into the _Breadcrumbs partial view when being used to display a folder path.
+        /// </summary>
+        /// <param name="moodleCategories">The list of folder nodes to display.</param>
+        /// <param name="catalogueUrl">The URL reference of the catalogue.</param>
+        /// <returns>A list of tuples, composed of Title and Url.</returns>
+        public static List<(string Title, string Url)> GetBreadcrumbsForCourses(List<MoodleCategory> moodleCategories, string catalogueUrl)
+        {
+            // Create breadcrumb tuple data
+            var breadcrumbs = new List<(string Title, string Url)> { ("Home", "/") };
+
+            for (int i = 0; i < moodleCategories.Count; i++)
+            {
+                string nodeUrl = $"/catalogue/{catalogueUrl}/courses";
+                if (i > 0)
+                {
+                    nodeUrl += $"?moodleCategoryId={moodleCategories[i].Id}";
+                }
+
+                breadcrumbs.Add((moodleCategories[i].Name, nodeUrl));
+            }
+
+            return breadcrumbs;
+        }
+
+        /// <summary>
+        /// Returns sentence case of input string.
+        /// </summary>
+        /// <param name="input">input.</param>
+        /// <returns>A sentence case string corresponding to the input string.</returns>
+        public static string ConvertToSentenceCase(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            input = input.ToLower();
+            return char.ToUpper(input[0]) + input.Substring(1);
         }
     }
 }

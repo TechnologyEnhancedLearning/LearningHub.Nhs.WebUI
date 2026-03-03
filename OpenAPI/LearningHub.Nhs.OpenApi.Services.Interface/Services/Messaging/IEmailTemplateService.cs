@@ -58,6 +58,14 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging
         /// <returns>The subject and body.</returns>
         EmailDetails GetEmailVerificationEmail(SendEmailModel<EmailChangeConfirmationEmailModel> emailModel, bool isUserRoleUpgrade);
 
+
+        /// <summary>
+        /// The GetCatalogueAccessRequestFailure.
+        /// </summary>
+        /// <param name="emailModel">The email model.</param>
+        /// <returns>The subject and body.</returns>
+        EmailDetails GetReportProcessed(SendEmailModel<ReportSucessEmailModel> emailModel);
+
         /// <summary>
         /// The GetEmailTemplate.
         /// </summary>

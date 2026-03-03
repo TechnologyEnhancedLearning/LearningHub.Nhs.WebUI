@@ -6,10 +6,12 @@ namespace LearningHub.Nhs.WebUI.Services
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.Contribute;
@@ -17,6 +19,7 @@ namespace LearningHub.Nhs.WebUI.Services
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
@@ -29,6 +32,8 @@ namespace LearningHub.Nhs.WebUI.Services
     {
         private readonly Settings settings;
         private readonly IAzureMediaService azureMediaService;
+        private readonly IHttpContextAccessor contextAccessor;
+        private readonly ICacheService cacheService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceService"/> class.
@@ -36,13 +41,17 @@ namespace LearningHub.Nhs.WebUI.Services
         /// <param name="learningHubHttpClient">Learning hub http client.</param>
         /// <param name="openApiHttpClient">The Open Api Http Client.</param>
         /// <param name="azureMediaService">Azure media services.</param>
+        /// <param name="contextAccessor">The http context accessor.</param>
+        /// <param name="cacheService">The cacheService.</param>
         /// <param name="logger">Logger.</param>
         /// <param name="settings">Settings.</param>
-        public ResourceService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, IAzureMediaService azureMediaService, ILogger<ResourceService> logger, IOptions<Settings> settings)
+        public ResourceService(ILearningHubHttpClient learningHubHttpClient, IOpenApiHttpClient openApiHttpClient, IAzureMediaService azureMediaService, IHttpContextAccessor contextAccessor, ICacheService cacheService, ILogger<ResourceService> logger, IOptions<Settings> settings)
           : base(learningHubHttpClient, openApiHttpClient, logger)
         {
             this.settings = settings.Value;
             this.azureMediaService = azureMediaService;
+            this.contextAccessor = contextAccessor;
+            this.cacheService = cacheService;
         }
 
         /// <summary>
@@ -885,24 +894,8 @@ namespace LearningHub.Nhs.WebUI.Services
         /// <returns>The <see cref="bool"/>.</returns>
         public async Task<bool> UserHasPublishedResourcesAsync()
         {
-            var client = await this.OpenApiHttpClient.GetClientAsync();
-
-            var request = $"Resource/HasPublishedResources";
-            var response = await client.GetAsync(request).ConfigureAwait(false);
-            bool hasResources = false;
-            if (response.IsSuccessStatusCode)
-            {
-                var result = response.Content.ReadAsStringAsync().Result;
-                hasResources = bool.Parse(result);
-            }
-            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
-                        ||
-                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-            {
-                throw new Exception("AccessDenied");
-            }
-
-            return hasResources;
+            var cacheKey = $"{this.contextAccessor.HttpContext.User.Identity.GetCurrentUserId()}:UserHasPublishedResources";
+            return await this.cacheService.GetOrFetchAsync("UserHasPublishedResources", () => this.HasPublishedResources());
         }
 
         /// <summary>
@@ -1339,6 +1332,33 @@ namespace LearningHub.Nhs.WebUI.Services
             }
 
             return filePaths;
+        }
+
+        /// <summary>
+        /// Check if the user has published resources.
+        /// </summary>
+        /// <returns>The bool.</returns>
+        /// <exception cref="Exception"></exception>
+        private async Task<bool> HasPublishedResources()
+        {
+            var client = await this.OpenApiHttpClient.GetClientAsync();
+
+            var request = $"Resource/HasPublishedResources";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+            bool hasResources = false;
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                hasResources = bool.Parse(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return hasResources;
         }
     }
 }

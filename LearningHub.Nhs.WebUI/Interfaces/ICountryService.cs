@@ -29,5 +29,17 @@
         /// </summary>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         Task<List<Country>> GetAllAsync();
+
+        /// <summary>
+        /// The GetAllUKCountries.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<List<GenericListViewModel>> GetAllUKCountries();
+
+        /// <summary>
+        /// The GetAllNonUKCountries.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<List<GenericListViewModel>> GetAllNonUKCountries();
     }
 }

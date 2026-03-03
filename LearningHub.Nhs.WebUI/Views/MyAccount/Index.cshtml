@@ -1,336 +1,145 @@
-﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.UserProfileSummaryViewModel
+﻿@model LearningHub.Nhs.WebUI.Models.UserProfile.MyAccountPersonalDetailsViewModel
 
-@{    
-   ViewData["Title"] = "My account details";
-  var isgeneralUser = User.IsInRole("BasicUser");
+@{
+    ViewData["Title"] = "Personal details";
+    var isgeneralUser = User.IsInRole("BasicUser");
 }
-<div class="bg-white nhsuk-u-padding-bottom-9">
+@section NavBreadcrumbs {
+
+    <section class="nhsuk-hero">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+
+                    <div class="nhsuk-u-padding-top-3 nhsuk-u-padding-bottom-3">
+                        <a href="/">Home</a>
+                        <i class="fa-solid fa-chevron-right nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
+                    </div>
+                    <div class="nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-7">
+                        <h1 class="nhsuk-heading-xl">My account</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+<div class="bg-white nhsuk-u-padding-bottom-7 nhsuk-u-padding-top-7">
     <div class="nhsuk-width-container app-width-container">
-        <div class="nhsuk-u-reading-width">
-            <div class="app-width-container">
-                <h1 class="nhsuk-heading-xl nhsuk-u-padding-top-7">@ViewData["Title"]</h1>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-quarter">
+                @await Component.InvokeAsync("SideNav", new { groupTitle = "Account" })
+            </div>
+            <div class="nhsuk-grid-column-three-quarters">
+                <h2 class="nhsuk-heading-l nhsuk-u-padding-bottom-7">@ViewData["Title"]</h2>
                 @if (isgeneralUser)
                 {
-                  <div class="nhsuk-inset-text">
-                    <span class="nhsuk-u-visually-hidden">Information: </span>
-                    <p>If you have a work email address you can upgrade to a full user account. Full users are able to access learning community resources, contribute and share knowledge and content. </p>
-                  </div>
+                    <div class="nhsuk-inset-text">
+                        <span class="nhsuk-u-visually-hidden">Information: </span>
+                        <p>If you have a work email address you can upgrade to a full user account. Full users are able to access learning community resources, contribute and share knowledge and content. </p>
+                    </div>
+                }
+
+                @if (this.ViewBag.CheckDetails == true)
+                {
+                    <div class="nhsuk-inset-text">
+                        <span class="nhsuk-u-visually-hidden">Information: </span>
+                        <p>Please check that your details are up-to-date.</p>
+                    </div>
+                }
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                }
+
+
+                <dl class="nhsuk-summary-list">
+
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Username
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @Model.UserName
+                        </dd>
+                    </div>
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Name
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @Model.Name
+                        </dd>
+
+                    </div>
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Preferred name
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @Model.PreferredName
+                        </dd>
+
+                    </div>
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Work email
+                        </dt>
+                        @if (Model.NewPrimaryEmailAddress != "" && Model.NewPrimaryEmailAddress != null)
+                        {
+                            <dd class="nhsuk-summary-list__value nhsuk-u-secondary-text-color ">
+                                Email pending
+                            </dd>
+                        }
+                        else
+                        {
+                            <dd class="nhsuk-summary-list__value">
+                                @Model.PrimaryEmailAddress
+                            </dd>
+                        }
+
+                    </div>
+
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key">
+                            Secondary email
+                        </dt>
+                        <dd class="nhsuk-summary-list__value">
+                            @Model.SecondaryEmailAddress
+                        </dd>
+
+                    </div>
+
+                </dl>
+
+                @if (Model.NewPrimaryEmailAddress != "" && Model.NewPrimaryEmailAddress != null)
+                {
+                    <div class="nhsuk-card nhsuk-u-width-two-thirds nhsuk-bg-pale-blue">
+                        <div class="nhsuk-card__content">
+                            <p class="nhsuk-card__description">
+                                The email address <b>@Model.NewPrimaryEmailAddress</b> is pending validation.
+                                <br />You can <a asp-action="RegenerateEmailChangeValidationToken" asp-route-newPrimaryEmail="@Model.NewPrimaryEmailAddress">resend the confirmation email </a> or <a asp-action="CancelEmailChangeValidationToken">cancel this email change.</a>
+                            </p>
+                        </div>
+                    </div>
+                }
+
+                <a asp-action="ChangePersonalDetails">
+                    Update details
+                </a>
+
+                @if (this.ViewBag.CheckDetails == true)
+                {
+                    <form asp-controller="MyAccount" asp-action="CheckDetails" method="post">
+                        <input name="returnUrl" type="hidden" asp-for="@Context.Request.Query["returnUrl"]" />
+                        <div class="nhsuk-u-padding-bottom-5 nhsuk-u-padding-top-5">
+                            <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
+                                Confirm
+                            </button>
+                        </div>
+                    </form>
                 }
             </div>
         </div>
-
-        @if (this.ViewBag.CheckDetails == true)
-        {
-            <div class="nhsuk-inset-text">
-                <span class="nhsuk-u-visually-hidden">Information: </span>
-                <p>Please check that your details are up-to-date.</p>
-            </div>
-        }
-
-        @if (!ViewData.ModelState.IsValid)
-        {
-            <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
-        }
-
-        <h2 class="nhsuk-heading-l">Personal details</h2>
-        <dl class="nhsuk-summary-list nhsuk-u-width-two-thirds">
-
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    Username
-                </dt>
-                <dd class="nhsuk-summary-list__value">
-                    @Model.UserName
-                </dd>
-            </div>
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    First name
-                </dt>
-                <dd class="nhsuk-summary-list__value">
-                    @Model.FirstName
-                </dd>
-
-                <dd class="nhsuk-summary-list__actions">
-                    <a asp-action="ChangeFirstName">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;first name</span>
-                    </a>
-
-                </dd>
-
-            </div>
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    Last name
-                </dt>
-                <dd class="nhsuk-summary-list__value">
-                    @Model.LastName
-                </dd>
-
-                <dd class="nhsuk-summary-list__actions">
-
-                    <a asp-action="ChangeLastName">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;last name</span>
-                    </a>
-
-                </dd>
-
-            </div>
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    Preferred name
-                </dt>
-                <dd class="nhsuk-summary-list__value">
-                    @Model.PreferredName
-                </dd>
-
-                <dd class="nhsuk-summary-list__actions">
-                    <a asp-action="ChangePreferredName">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;preferred name</span>
-                    </a>
-
-                </dd>
-
-            </div>
-        </dl>
-
-        <h2 class="nhsuk-heading-l">Location</h2>
-        <dl class="nhsuk-summary-list nhsuk-u-width-two-thirds">
-
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    Country
-                </dt>
-                <dd class="nhsuk-summary-list__value">
-                    @Model.CountryName
-                </dd>
-
-                <dd class="nhsuk-summary-list__actions">
-
-                    <a asp-action="ChangeCountry">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;country</span>
-                    </a>
-
-                </dd>
-
-            </div>
-            @if (Model.CountryName == "England")
-            {
-                <div class="nhsuk-summary-list__row">
-                    <dt class="nhsuk-summary-list__key">
-                        Region
-                    </dt>
-                    <dd class="nhsuk-summary-list__value">
-                        @Model.RegionName
-                    </dd>
-
-                    <dd class="nhsuk-summary-list__actions">
-
-                        <a asp-action="ChangeRegion">
-                            Change<span class="nhsuk-u-visually-hidden">&nbsp;region</span>
-                        </a>
-
-                    </dd>
-
-                </div>
-            }
-        </dl>
-
-        <h2 class="nhsuk-heading-l">Email address</h2>
-        <dl class="nhsuk-summary-list nhsuk-u-width-two-thirds">
-
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    Primary email address
-                </dt>
-                @if (Model.NewPrimaryEmailAddress != "" && Model.NewPrimaryEmailAddress != null)
-                {
-                      <dd class="nhsuk-summary-list__value nhsuk-u-secondary-text-color ">
-                        Email pending
-                      </dd>
-                }
-                else
-                {
-                    <dd class="nhsuk-summary-list__value">
-                      @Model.PrimaryEmailAddress
-                    </dd>
-                }
-
-                <dd class="nhsuk-summary-list__actions">
-
-                    <a asp-action="ChangePrimaryEmail">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;primary email</span>
-                    </a>
-
-                </dd>
-
-            </div>
-
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    Secondary email address
-                </dt>
-                <dd class="nhsuk-summary-list__value">
-                    @Model.SecondaryEmailAddress
-                </dd>
-
-                <dd class="nhsuk-summary-list__actions">
-
-                    <a asp-action="ChangeSecondaryEmail">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;secondry email</span>
-                    </a>
-
-                </dd>
-
-            </div>
-        </dl>
-        @if (Model.NewPrimaryEmailAddress != "" && Model.NewPrimaryEmailAddress != null)
-        {
-          <div class="nhsuk-card nhsuk-u-width-two-thirds nhsuk-bg-pale-blue">
-                <div class="nhsuk-card__content">
-                  <p class="nhsuk-card__description">
-                    The email address <b>@Model.NewPrimaryEmailAddress</b> is pending validation.
-            <br />You can <a asp-action="RegenerateEmailChangeValidationToken" asp-route-newPrimaryEmail="@Model.NewPrimaryEmailAddress">resend the confirmation email </a> or <a asp-action="CancelEmailChangeValidationToken">cancel this email change.</a>
-                  </p>
-              </div>
-          </div>
-        }
-        <h2 class="nhsuk-heading-l">Security</h2>
-        <dl class="nhsuk-summary-list nhsuk-u-width-two-thirds">
-
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    Password
-                </dt>
-                <dd class="nhsuk-summary-list__value" typeof="password">
-                    *************
-                </dd>
-
-                <dd class="nhsuk-summary-list__actions">
-
-                    <a asp-action="ConfirmPassword">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;password</span>
-                    </a>
-
-                </dd>
-
-            </div>
-
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    First security question
-                </dt>
-                <dd class="nhsuk-summary-list__value">
-                    @Model.SecurityFirstQuestion
-                </dd>
-
-                <dd class="nhsuk-summary-list__actions">
-
-                    <a asp-action="SecurityQuestionsDetails" asp-route-questionIndex="0">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;security question 1</span>
-                    </a>
-
-                </dd>
-
-            </div>
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">
-                    Second security question
-                </dt>
-                <dd class="nhsuk-summary-list__value">
-                    @Model.SecuritySecondQuestion
-                </dd>
-
-                <dd class="nhsuk-summary-list__actions">
-
-                    <a asp-action="SecurityQuestionsDetails" asp-route-questionIndex="1">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;security question 2</span>
-                    </a>
-
-                </dd>
-
-            </div>
-        </dl>
-
-        <h2 class="nhsuk-heading-l">Job details</h2>
-        <dl class="nhsuk-summary-list nhsuk-u-width-two-thirds">
-
-            <div class="nhsuk-summary-list__row">
-                <dt class="nhsuk-summary-list__key">Current role</dt>
-                <dd class="nhsuk-summary-list__value">@Model.JobRole</dd>
-                <dd class="nhsuk-summary-list__actions">
-                    <a asp-action="ChangeCurrentRole">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;current role</span>
-                    </a>
-                </dd>
-            </div>
-
-            @if (!string.IsNullOrEmpty(Model.MedicalCouncilNo))
-            {
-                <div class="nhsuk-summary-list__row">
-                    <dt class="nhsuk-summary-list__key">Professional registration number</dt>
-                    <dd class="nhsuk-summary-list__value">@Model.MedicalCouncilNo</dd>
-                    <dd class="nhsuk-summary-list__actions">
-                        <a asp-action="ChangeMedicalCouncilNo" asp-route-selectedJobRoleId="@Model.JobRoleId" asp-route-direct="true">
-                            Change<span class="nhsuk-u-visually-hidden">&nbsp;professional registration number</span>
-                        </a>
-                    </dd>
-                </div>
-            }
-            @if (!User.IsInRole("BasicUser"))
-            {
-                <div class="nhsuk-summary-list__row">
-                    <dt class="nhsuk-summary-list__key">Grade</dt>
-                    <dd class="nhsuk-summary-list__value">@Model.Grade</dd>
-                    <dd class="nhsuk-summary-list__actions">
-                        <a asp-action="ChangeGrade" asp-route-selectedJobRoleId="@Model.JobRoleId" asp-route-direct="true">
-                            Change<span class="nhsuk-u-visually-hidden">&nbsp;grade</span>
-                        </a>
-                    </dd>
-                </div>
-
-                <div class="nhsuk-summary-list__row">
-                    <dt class="nhsuk-summary-list__key">Primary specialty</dt>
-                    <dd class="nhsuk-summary-list__value">@Model.PrimarySpecialty</dd>
-                    <dd class="nhsuk-summary-list__actions">
-                        <a asp-action="ChangePrimarySpecialty">
-                            Change<span class="nhsuk-u-visually-hidden">&nbsp;primary specialty</span>
-                        </a>
-                    </dd>
-                </div>
-
-                <div class="nhsuk-summary-list__row">
-                    <dt class="nhsuk-summary-list__key">Start date</dt>
-                    <dd class="nhsuk-summary-list__value">@Model.JobStartDate?.ToString("dd MMMM yyyy")</dd>
-                    <dd class="nhsuk-summary-list__actions">
-                        <a asp-action="ChangeStartDate">
-                            Change<span class="nhsuk-u-visually-hidden">&nbsp;start date</span>
-                        </a>
-                    </dd>
-                </div>
-
-                <div class="nhsuk-summary-list__row">
-                    <dt class="nhsuk-summary-list__key">Place of work</dt>
-                <dd class="nhsuk-summary-list__value">@Html.Raw(Model.PlaceOfWork)</dd>
-                <dd class="nhsuk-summary-list__actions">
-                    <a asp-action="ChangeWorkPlace">
-                        Change<span class="nhsuk-u-visually-hidden">&nbsp;place of work</span>
-                    </a>
-                </dd>
-            </div>
-            }
-        </dl>
-
-        @if (this.ViewBag.CheckDetails == true)
-        {
-            <form asp-controller="MyAccount" asp-action="CheckDetails" method="post">
-                <input name="returnUrl" type="hidden" asp-for="@Context.Request.Query["returnUrl"]" />
-                <div class="nhsuk-u-padding-bottom-5">
-                    <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
-                        Confirm
-                    </button>
-                </div>
-            </form>
-        }
     </div>
 </div>

@@ -1,0 +1,34 @@
+﻿@using LearningHub.Nhs.WebUI.Models.SideMenu
+@model SideNavViewModel
+
+@foreach (var group in Model.Groups)
+{
+
+    <input type="checkbox" id="navToggle" class="nav-toggle" hidden aria-hidden="true" />
+
+    <label for="navToggle" class="side-nav__toggle" aria-controls="sideNav">
+        <span class="menu-icon">»</span>
+        <span class="menu-icon-text">Open page menu</span>
+    </label>
+
+    <div id="sideNav" class="side-nav__container">
+        <label for="navToggle" class="side-nav__close">
+            <span class="menu-icon-text"> Close page menu</span> <span class="menu-icon">«</span>
+        </label>
+
+        <nav class="side-nav" aria-label="@(group.GroupTitle) navigation">
+            <ul class="nhsuk-list side-nav__list">
+                @foreach (var item in group.Items)
+                {
+                    var isActive = item.IsActive?.Invoke(Model.RouteData) ?? false;
+                    <li class="side-nav__item @(isActive ? "side-nav__item--active" : "")">
+                        <a class="nhsuk-link" asp-controller="@item.Controller" asp-action="@item.Action">
+                            @item.Text
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+
+}

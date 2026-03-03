@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Catalogue;
+    using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Validation;
 
     /// <summary>

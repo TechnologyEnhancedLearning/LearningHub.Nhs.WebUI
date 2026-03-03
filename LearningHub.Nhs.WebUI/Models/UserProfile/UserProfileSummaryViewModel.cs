@@ -146,5 +146,10 @@
         /// Gets or sets the new primary email address.
         /// </summary>
         public string NewPrimaryEmailAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the location name without sub name.
+        /// </summary>
+        public string LocationName { get; set; }
     }
 }

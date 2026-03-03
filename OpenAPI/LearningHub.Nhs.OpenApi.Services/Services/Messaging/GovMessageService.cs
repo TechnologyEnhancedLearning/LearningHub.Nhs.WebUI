@@ -28,16 +28,14 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="GovMessageService"/> class.
         /// </summary>
-        /// <param name="findwiseClient">The findwiseHttpClient.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="messageQueueRepository">The message repository.</param>
         /// <param name="messageService">The message Service.</param>
         public GovMessageService(
-            IFindwiseClient findwiseClient,
             ILogger<Message> logger,
             IMessageQueueRepository messageQueueRepository,
             IGovNotifyService messageService)
-            : base(findwiseClient, logger)
+            : base(logger)
         {
             this.messageQueueRepository = messageQueueRepository;
             this.messageService = messageService;

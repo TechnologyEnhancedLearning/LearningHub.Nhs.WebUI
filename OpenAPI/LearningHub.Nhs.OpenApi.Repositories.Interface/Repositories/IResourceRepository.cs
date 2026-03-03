@@ -2,9 +2,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.MyLearning;
 
     /// <summary>
     /// Resource repository interface.
@@ -39,6 +41,14 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
         /// </summary>
         /// <param name="currentUserId"><see cref="currentUserId"/>.</param>
         Task<List<int>> GetAchievedCertificatedResourceIds(int currentUserId);
+
+        /// <summary>
+        /// GetUserCertificateDetails
+        /// </summary>
+        /// <param name="userId">The current user Id.</param>
+        /// <param name="filterText">The filter text</param>
+        /// <returns>A <see cref="Task{UserCertificateViewModel}"/> representing the result of the asynchronous operation.</returns>
+        Task<List<UserCertificateViewModel>> GetUserCertificateDetails(int userId, string filterText = "");
 
         /// <summary>
         /// The get by id async.

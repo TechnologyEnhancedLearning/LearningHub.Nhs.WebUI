@@ -2,9 +2,10 @@
 {
     using System.Security.Principal;
     using System.Threading.Tasks;
-    using LearningHub.Nhs.Models.Extensions;
+    using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// Defines the <see cref="NavigationPermissionService" />.
@@ -12,14 +13,23 @@
     public class NavigationPermissionService : INavigationPermissionService
     {
         private readonly IResourceService resourceService;
+        private readonly IUserGroupService userGroupService;
+        private readonly IDatabricksService databricksService;
+        private readonly IOptions<FeatureFlagsConfig> featureFlagsConfig;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationPermissionService"/> class.
         /// </summary>
         /// <param name="resourceService">Resource service.</param>
-        public NavigationPermissionService(IResourceService resourceService)
+        /// <param name="userGroupService">userGroup service.</param>
+        /// <param name="databricksService">databricksService.</param>
+        /// <param name="featureFlagsConfig">featureFlags</param>
+        public NavigationPermissionService(IResourceService resourceService, IUserGroupService userGroupService, IDatabricksService databricksService, IOptions<FeatureFlagsConfig> featureFlagsConfig)
         {
             this.resourceService = resourceService;
+            this.userGroupService = userGroupService;
+            this.databricksService = databricksService;
+            this.featureFlagsConfig = featureFlagsConfig;
         }
 
         /// <summary>
@@ -28,8 +38,9 @@
         /// <param name="user">The user<see cref="IPrincipal"/>.</param>
         /// <param name="loginWizardComplete">The loginWizardComplete<see cref="bool"/>.</param>
         /// <param name="controllerName">The controller name.</param>
+        /// <param name="currentUserId">The current user id.</param>
         /// <returns>The <see cref="Task{NavigationModel}"/>.</returns>
-        public async Task<NavigationModel> GetNavigationModelAsync(IPrincipal user, bool loginWizardComplete, string controllerName)
+        public async Task<NavigationModel> GetNavigationModelAsync(IPrincipal user, bool loginWizardComplete, string controllerName, int currentUserId)
         {
             if (!loginWizardComplete && (user.IsInRole("Administrator") || user.IsInRole("ReadOnly") || user.IsInRole("BlueUser") || user.IsInRole("BasicUser")))
             {
@@ -41,19 +52,19 @@
             }
             else if (user.IsInRole("Administrator"))
             {
-                return AuthenticatedAdministrator(controllerName);
+                return await AuthenticatedAdministrator(controllerName, currentUserId);
             }
             else if (user.IsInRole("ReadOnly"))
             {
-                return await AuthenticatedReadOnly(controllerName,user.Identity.GetCurrentUserId());
+                return await AuthenticatedReadOnly(controllerName, currentUserId);
             }
             else if (user.IsInRole("BasicUser"))
             {
-                return await AuthenticatedBasicUserOnly(user.Identity.GetCurrentUserId());
+                return await AuthenticatedBasicUserOnly(currentUserId);
             }
             else if (user.IsInRole("BlueUser"))
             {
-                return AuthenticatedBlueUser(controllerName);
+                return await AuthenticatedBlueUser(controllerName, currentUserId);
             }
             else
             {
@@ -82,6 +93,7 @@
                 ShowSignOut = false,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
         }
 
@@ -89,24 +101,26 @@
         /// The AuthenticatedAdministrator.
         /// </summary>
         /// <param name="controllerName">The controller name.</param>
+        /// <param name="userId">userId.</param>
         /// <returns>The <see cref="NavigationModel"/>.</returns>
-        private NavigationModel AuthenticatedAdministrator(string controllerName)
+        private async Task<NavigationModel> AuthenticatedAdministrator(string controllerName, int userId)
         {
             return new NavigationModel()
             {
                 ShowMyContributions = true,
                 ShowMyLearning = true,
-                ShowMyBookmarks = true,
+                ShowMyBookmarks = false,
                 ShowSearch = controllerName != "search" && controllerName != string.Empty,
                 ShowAdmin = true,
                 ShowForums = true,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = true,
-                ShowNotifications = true,
+                ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
             };
         }
 
@@ -114,24 +128,26 @@
         /// The AuthenticatedBlueUser.
         /// </summary>
         /// <param name="controllerName">The controller name.</param>
+        /// <param name="userId">The userId.</param>
         /// <returns>The <see cref="NavigationModel"/>.</returns>
-        private NavigationModel AuthenticatedBlueUser(string controllerName)
+        private async Task<NavigationModel> AuthenticatedBlueUser(string controllerName, int userId)
         {
             return new NavigationModel()
             {
-                ShowMyContributions = true,
+                ShowMyContributions = await this.userGroupService.UserHasCatalogueContributionPermission(userId),
                 ShowMyLearning = true,
-                ShowMyBookmarks = true,
+                ShowMyBookmarks = false,
                 ShowSearch = controllerName != "search" && controllerName != string.Empty,
                 ShowAdmin = false,
                 ShowForums = true,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = true,
-                ShowNotifications = true,
+                ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
             };
         }
 
@@ -149,13 +165,14 @@
                 ShowSearch = false,
                 ShowAdmin = false,
                 ShowForums = false,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = false,
                 ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
         }
 
@@ -170,17 +187,18 @@
             {
                 ShowMyContributions = await resourceService.HasPublishedResourcesAsync(userId),
                 ShowMyLearning = true,
-                ShowMyBookmarks = true,
+                ShowMyBookmarks = false,
                 ShowSearch = controllerName != "search" && controllerName != string.Empty,
                 ShowAdmin = false,
                 ShowForums = true,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = true,
-                ShowNotifications = true,
+                ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = true,
+                ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
             };
         }
 
@@ -194,17 +212,18 @@
             {
                 ShowMyContributions = await resourceService.HasPublishedResourcesAsync(userId),
                 ShowMyLearning = true,
-                ShowMyBookmarks = true,
+                ShowMyBookmarks = false,
                 ShowSearch = true,
                 ShowAdmin = false,
                 ShowForums = true,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = true,
-                ShowNotifications = true,
+                ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
             };
         }
 
@@ -222,14 +241,25 @@
                 ShowSearch = false,
                 ShowAdmin = false,
                 ShowForums = false,
-                ShowHelp = true,
+                ShowHelp = false,
                 ShowMyRecords = false,
                 ShowNotifications = false,
                 ShowRegister = false,
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
+        }
+
+        private bool IsInplatformReportActive()
+        {
+            bool.TryParse(this.featureFlagsConfig.Value.InPlatformReport, out bool inPlatformReport);
+            if (inPlatformReport)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -6,6 +6,7 @@
 -- Modification History
 -- 23-09-2025  SA Added new columns for displaying video/Audio Progress
 -- 01-10-2025  SA added assesment score and passmark and provider details
+-- 05-02-2025  SA TD-6860 : Fixed the null issue with the search history
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[GetUsersLearningHistory] (
 	  @userId INT,
@@ -24,7 +25,7 @@ BEGIN
 			(
 				SELECT TOP 1 rr.OriginalResourceReferenceId
 				FROM [resources].[ResourceReference] rr		
-				WHERE rr.ResourceId = rv.ResourceId AND rr.Deleted = 0
+				WHERE rr.ResourceId = rv.ResourceId --AND rr.Deleted = 0
 			) AS ResourceReferenceId,
 			ra.MajorVersion AS MajorVersion,
 			ra.MinorVersion AS MinorVersion,

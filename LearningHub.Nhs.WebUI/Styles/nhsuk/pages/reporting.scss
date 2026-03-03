@@ -1,0 +1,102 @@
+@use "../../abstracts/all" as *;
+
+
+.user-report {
+    .nhsuk-details__summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .override-summary-color {
+        color: black !important;
+        font-weight: normal;
+        text-decoration: none;
+    }
+
+    .nhsuk-summary-list__key--tight {
+        flex: 0 0 20%;
+        width: auto;
+    }
+
+    .nhsuk-date-inline {
+        display: flex;
+        flex-direction: row;
+        /* align-items: center;*/
+        gap: 0.5rem;
+    }
+
+    .date-range-container .nhsuk-date-inline .nhsuk-error-message {
+        max-width: 400px;
+        word-wrap: break-word;
+        white-space: normal;
+    }
+
+
+    .align-label-component {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .nhsuk-date-inline .nhsuk-label {
+        margin-bottom: 0;
+        white-space: nowrap;
+    }
+
+    .nhsuk-button--with-border {
+        border: 2px solid #005eb8;
+        background-color: #ffffff;
+        color: #005eb8;
+    }
+
+    .nhsuk-button--with-border:hover {
+        background-color: #f0f8ff;
+        border-color: #003087;
+    }
+
+    .date-range-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .date-range-item {
+        flex: 0 1 auto;
+    }
+
+    @media (max-width: 767px) {
+        .date-range-container .nhsuk-label {
+            min-width: 50px;
+        }
+
+        .nhsuk-date-inline {
+            display: flex;
+            align-items: unset;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+
+    .nhsuk-radios__divider {
+        text-align: center;
+        width: 40px;
+    }
+
+    .nhsuk-hint {
+        margin-bottom: 0.5rem;
+    }
+
+    .date-range-container .nhsuk-hint {
+        display: block;
+        max-height: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        visibility: hidden;
+    }
+
+    .nhsuk-checkboxes__item:first-child .nhsuk-checkboxes__label {
+        font-weight: 900;
+    }
+}

@@ -25,13 +25,17 @@
             { "article", ResourceTypeEnum.Article },
             { "case", ResourceTypeEnum.Case },
             { "weblink", ResourceTypeEnum.WebLink },
+            { "web link", ResourceTypeEnum.WebLink },
             { "audio", ResourceTypeEnum.Audio },
             { "scorm", ResourceTypeEnum.Scorm },
+            { "scorm e-learning resource", ResourceTypeEnum.Scorm },
             { "assessment", ResourceTypeEnum.Assessment },
             { "genericfile", ResourceTypeEnum.GenericFile },
+            { "file", ResourceTypeEnum.GenericFile },
             { "image", ResourceTypeEnum.Image },
             { "html", ResourceTypeEnum.Html },
             { "moodle", ResourceTypeEnum.Moodle },
+            { "catalogue", ResourceTypeEnum.Catalogue },
         };
 
         /// <summary>
@@ -146,6 +150,8 @@
                     return "HTML";
                 case ResourceTypeEnum.Moodle:
                     return "Course";
+                case ResourceTypeEnum.Catalogue:
+                    return "Catalogue";
                 default:
                     return "File";
             }
@@ -186,6 +192,8 @@
                     return "HTML";
                 case ResourceTypeEnum.Moodle:
                     return "Course";
+                case ResourceTypeEnum.Catalogue:
+                    return "Catalogue";
                 default:
                     return "File";
             }
@@ -521,6 +529,22 @@
             }
 
             return breadcrumbs;
+        }
+
+        /// <summary>
+        /// Returns sentence case of input string.
+        /// </summary>
+        /// <param name="input">input.</param>
+        /// <returns>A sentence case string corresponding to the input string.</returns>
+        public static string ConvertToSentenceCase(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            input = input.ToLower();
+            return char.ToUpper(input[0]) + input.Substring(1);
         }
     }
 }

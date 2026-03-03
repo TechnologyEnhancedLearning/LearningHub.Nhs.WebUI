@@ -167,7 +167,7 @@
         }
 
         /// <summary>
-        /// The CreateCatalogue.
+        /// The AddCategoryToCatalogue.
         /// </summary>
         /// <param name="viewModel">The viewModel.</param>
         /// <returns>The actionResult.</returns>
@@ -178,6 +178,26 @@
             try
             {
                 var vr = await this.catalogueService.AddCategoryToCatalogueAsync(this.CurrentUserId.GetValueOrDefault(), viewModel);
+                return this.Ok(new ApiResponse(true, vr));
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(new ApiResponse(false, new LearningHubValidationResult(false, ex.Message)));
+            }
+        }
+
+        /// <summary>
+        /// The RemoveCategoryFromCatalogue.
+        /// </summary>
+        /// <param name="viewModel">The viewModel.</param>
+        /// <returns>The actionResult.</returns>
+        [HttpPost]
+        [Route("RemoveCategoryFromCatalogue")]
+        public async Task<IActionResult> RemoveCategoryFromCatalogue([FromBody] CatalogueViewModel viewModel)
+        {
+            try
+            {
+                var vr = await this.catalogueService.RemoveCategoryFromCatalogueAsync(this.CurrentUserId.GetValueOrDefault(), viewModel);
                 return this.Ok(new ApiResponse(true, vr));
             }
             catch (Exception ex)

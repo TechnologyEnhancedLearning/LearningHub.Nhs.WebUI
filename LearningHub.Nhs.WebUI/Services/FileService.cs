@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Azure.Storage.Blobs;
     using Azure.Storage.Files.Shares;
     using Azure.Storage.Files.Shares.Models;
     using Azure.Storage.Sas;
@@ -12,6 +13,7 @@
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.Extensions.Options;
 
@@ -247,6 +249,26 @@
                 await this.MoveInPutDirectoryToArchive(allFilePath);
                 await this.MoveOutPutDirectoryToArchive(allContentPath);
             }
+        }
+
+        /// <summary>
+        /// The DownloadBlobFile.
+        /// </summary>
+        /// <param name="url">url.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<(Stream Stream, string FileName, string ContentType)> DownloadBlobFileAsync(string url)
+        {
+            var uri = new Uri(url);
+            string containerName = uri.Segments[1].TrimEnd('/');
+            string blobName = string.Join(string.Empty, uri.Segments, 2, uri.Segments.Length - 2);
+            BlobClient blobClient = new BlobClient(this.settings.AzureBlobSettings.ConnectionString, containerName, blobName);
+
+            var properties = await blobClient.GetPropertiesAsync();
+            string contentType = properties.Value.ContentType ?? "application/octet-stream";
+            string fileName = Path.GetFileName(blobClient.Name);
+            var stream = await blobClient.OpenReadAsync();
+
+            return (stream, fileName, contentType);
         }
 
         private static async Task WaitForCopyAsync(ShareFileClient fileClient)

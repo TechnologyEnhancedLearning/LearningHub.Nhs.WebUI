@@ -609,6 +609,19 @@
         }
 
         /// <summary>
+        /// The RemoveCategoryFromCatalogueAsync.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="catalogue">The catalogue.</param>
+        /// <returns>The catalogue id.</returns>
+        public async Task<LearningHubValidationResult> RemoveCategoryFromCatalogueAsync(int userId, CatalogueViewModel catalogue)
+        {
+            await this.catalogueNodeVersionRepository.RemoveCategoryFromCatalogueAsync(userId, catalogue);
+
+            return new LearningHubValidationResult(true);
+        }
+
+        /// <summary>
         /// The IsUserLocalAdminAsync.
         /// </summary>
         /// <param name="userId">The userId.</param>

@@ -353,7 +353,6 @@
             return this.MenuItems(model);
         }
 
-
         private List<Dictionary<string, object>> MenuItems(NavigationModel model)
         {
             var menu = new List<Dictionary<string, object>>
@@ -381,6 +380,12 @@
                     { "title", "Browse catalogues" },
                     { "url", this.learningHubConfig.BrowseCataloguesUrl },
                     { "visible", model.ShowBrowseCatalogues },
+                },
+               new Dictionary<string, object>
+                {
+                    { "title", "Reports" },
+                    { "url", this.learningHubConfig.ReportUrl },
+                    { "visible", model.ShowReports },
                 },
                new Dictionary<string, object>
                 {

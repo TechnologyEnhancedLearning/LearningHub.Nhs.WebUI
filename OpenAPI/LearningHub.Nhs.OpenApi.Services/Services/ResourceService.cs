@@ -27,6 +27,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using LearningHub.Nhs.Models.Resource.Contribute;
     using LearningHub.Nhs.Models.Resource.Files;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
+    using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.Models.ViewModels.Helpers;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
@@ -170,7 +171,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <param name="assessmentResourceActivityMatchQuestionRepository">The repository for assessment activity-question matches.</param>
         /// <param name="resourceVersionKeywordRepository">The repository for resource version keywords.</param>
         /// <param name="resourceVersionValidationResultRepository">The repository for validation results of resource versions.</param>
-        
+
 
         public ResourceService(ILearningHubService learningHubService, IFileTypeService fileTypeService, IBlockCollectionRepository blockCollectionRepository, IInternalSystemService internalSystemService, IResourceVersionAuthorRepository resourceVersionAuthorRepository, IFileChunkDetailRepository fileChunkDetailRepository, IQueueCommunicatorService queueCommunicatorService, IResourceRepository resourceRepository, IResourceVersionProviderRepository resourceVersionProviderRepository, IProviderService providerService, IArticleResourceVersionFileRepository articleResourceVersionFileRepository, IPublicationRepository publicationRepository, IMigrationSourceRepository migrationSourceRepository, IQuestionBlockRepository questionBlockRepository, IVideoRepository videoRepository, IWholeSlideImageRepository wholeSlideImageRepository, IEmbeddedResourceVersionRepository embeddedResourceVersionRepository, IEquipmentResourceVersionRepository equipmentResourceVersionRepository, IImageResourceVersionRepository imageResourceVersionRepository, IBookmarkRepository bookmarkRepository, IAssessmentResourceActivityMatchQuestionRepository assessmentResourceActivityMatchQuestionRepository, IResourceVersionKeywordRepository resourceVersionKeywordRepository, IResourceVersionValidationResultRepository resourceVersionValidationResultRepository, ILogger<ResourceService> logger, IWebLinkResourceVersionRepository webLinkResourceVersionRepository, ICaseResourceVersionRepository caseResourceVersionRepository, IScormResourceVersionRepository scormResourceVersionRepository, IGenericFileResourceVersionRepository genericFileResourceVersionRepository, IResourceVersionRepository resourceVersionRepository, IHtmlResourceVersionRepository htmlResourceVersionRepository, IMapper mapper, IFileRepository fileRepository, IOptions<AzureConfig> azureConfig, IOptions<LearningHubConfig> learningHubConfig, IUserProfileService userProfileService, IResourceVersionFlagRepository resourceVersionFlagRepository, IArticleResourceVersionRepository articleResourceVersionRepository, IAudioResourceVersionRepository audioResourceVersionRepository, IVideoResourceVersionRepository videoResourceVersionRepository, IAssessmentResourceVersionRepository assessmentResourceVersionRepository, IResourceLicenceRepository resourceLicenceRepository, IResourceReferenceRepository resourceReferenceRepository, IResourceVersionUserAcceptanceRepository resourceVersionUserAcceptanceRepository, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, ICachingService cachingService, ISearchService searchService, ICatalogueService catalogueService, INodeResourceRepository nodeResourceRepository, INodePathRepository nodePathRepository, IUserService userService, INodeRepository nodeRepository, IResourceSyncService resourceSyncService, IResourceSyncRepository resourceSyncRepository, IResourceVersionEventRepository resourceVersionEventRepository, LearningHubDbContext dbContext)
         {
@@ -206,8 +207,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             this.resourceVersionFlagRepository = resourceVersionFlagRepository;
             this.resourceVersionUserAcceptanceRepository = resourceVersionUserAcceptanceRepository;
             this.resourceVersionValidationResultRepository = resourceVersionValidationResultRepository;
-            this.resourceVersionKeywordRepository= resourceVersionKeywordRepository;
-            this.resourceVersionProviderRepository= resourceVersionProviderRepository;
+            this.resourceVersionKeywordRepository = resourceVersionKeywordRepository;
+            this.resourceVersionProviderRepository = resourceVersionProviderRepository;
             this.providerService = providerService;
             this.nodePathRepository = nodePathRepository;
             this.nodeResourceRepository = nodeResourceRepository;
@@ -323,7 +324,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             List<ResourceActivityDTO> resourceActivities = new List<ResourceActivityDTO>() { };
             List<ResourceReferenceWithResourceDetailsViewModel> resourceReferenceWithResourceDetailsViewModelLS = new List<ResourceReferenceWithResourceDetailsViewModel>() { };
 
-            resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(new List<int>(){ }, new List<int>(){ currentUserId }))?.ToList() ?? new List<ResourceActivityDTO>() { };
+            resourceActivities = (await this.resourceRepository.GetResourceActivityPerResourceMajorVersion(new List<int>() { }, new List<int>() { currentUserId }))?.ToList() ?? new List<ResourceActivityDTO>() { };
 
             // Removing resources that have no major versions with the required activitystatus
             List<int> resourceIds = resourceActivities
@@ -1332,7 +1333,21 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <returns>If the user has published resources.</returns>
         public async Task<bool> HasPublishedResourcesAsync(int userId)
         {
-            return await this.resourceRepository.UserHasPublishedResourcesAsync(userId);
+            string cacheKey = $"{userId}:UserHasPublishedResources";
+            var userHasPublishedResourcesInCache = await this.cachingService.GetAsync<bool>(cacheKey);
+            var userHasPublishedResources = false;
+
+            if (userHasPublishedResourcesInCache.ResponseEnum == CacheReadResponseEnum.Found)
+            {
+                userHasPublishedResources = userHasPublishedResourcesInCache.Item;
+            }
+            else
+            {
+                userHasPublishedResources = await this.resourceRepository.UserHasPublishedResourcesAsync(userId);
+                await this.cachingService.SetAsync($"{userId}:UserHasPublishedResources", userHasPublishedResources);
+            }
+
+            return userHasPublishedResources;
         }
 
         /// <summary>

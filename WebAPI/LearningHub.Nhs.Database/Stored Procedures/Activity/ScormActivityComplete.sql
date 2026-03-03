@@ -7,6 +7,7 @@
 --
 -- 11-06-2021  Killian Davies	Initial Revision
 -- 17-04-2024  Swapna Abraham	Reverted TD-1325 changes
+-- 10-02-2026  Swapna Abraham  TD-6848 Certificate Generation Does Not Trigger After Successful Completion of the Resources
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [activity].[ScormActivityComplete]
 (
@@ -45,13 +46,14 @@ BEGIN
 	IF EXISTS (SELECT 'X' FROM activity.ResourceActivity WHERE LaunchResourceActivityId = @ScormResourceActivityId AND ActivityStatusId IN (3, 4, 5))
 	BEGIN
 		DECLARE @ActivityStatusErrorMessage nvarchar(1024)
-		SELECT @ActivityStatusErrorMessage = 'ResourceActivity entry with Completed status already exists for ScormActivityId=' + @ScormActivityId
+		SELECT @ActivityStatusErrorMessage = 'ResourceActivity entry with Completed status already exists for ScormActivityId=' + CONVERT(nvarchar(20), @ScormActivityId);
 		RAISERROR (@ActivityStatusErrorMessage,   
 				   16, -- Severity.  
 				   1 -- State.  
 				   );  
 	END
-
+ELSE
+BEGIN
 	-- Validation ported from e-LfH: completed status requires duration > 0
 	IF (@ActivityStatusId IN (3, 4, 5) AND @DurationSeconds > 0)
 	BEGIN TRY
@@ -122,6 +124,7 @@ BEGIN
 				,@ErrorState
 				);
 	END CATCH
+END
 END
 
 GO

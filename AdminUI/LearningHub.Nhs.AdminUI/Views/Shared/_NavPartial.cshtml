@@ -1,6 +1,9 @@
-﻿@using Microsoft.Extensions.Options;
+﻿﻿@using Microsoft.Extensions.Options;
 @using LearningHub.Nhs.AdminUI.Configuration;
+@using LearningHub.Nhs.AdminUI.Helpers;
+@using Microsoft.FeatureManagement;
 @inject IOptions<WebSettings> webSettings
+@inject IFeatureManager featureManager
 
 @{
     var mainMenu = "Home";
@@ -13,7 +16,7 @@
         case "externalsystem":
         case "log":
         case "roadmap":
-        case "cms":    
+        case "cms":
         case "release":
         case "cache":
             mainMenu = "Settings";
@@ -30,12 +33,17 @@
         case "resourcesync":
             mainMenu = "ResourceSync";
             break;
+        case "azuresearchadmin":
+            mainMenu = "AzureSearch";
+            break;
 
     }
     string IsActive(string itemCheck)
     {
         return mainMenu == itemCheck ? "active" : "inactive";
     }
+
+    var azureSearchEnabled = await featureManager.IsEnabledAsync(FeatureFlags.AzureSearch);
 }
 
 <div class="header-main d-flex flex-row justify-content-between">
@@ -44,7 +52,6 @@
     </div>
     <div class="d-none d-lg-block align-self-center">
         <div class="mx-auto">
-
         </div>
     </div>
     <div class="align-self-start">
@@ -81,9 +88,18 @@
                 <li class="nav-item @IsActive("Settings")">
                     <a class="nav-link" href="/externalsystem"><i class="fa-solid fa-gear fa-lg" title="System"></i>System</a>
                 </li>
-                <li class="nav-item" @IsActive("ResourceSync")>
-                    <a class="nav-link" href="/ResourceSync/Resources"><i class="fa-solid fa-gear fa-lg" title="Sync"></i>Sync</a>
-                </li>
+                @if (!azureSearchEnabled)
+                {
+                    <li class="nav-item" @IsActive("ResourceSync")>
+                        <a class="nav-link" href="/ResourceSync/Resources"><i class="fa-solid fa-gear fa-lg" title="Sync"></i>Sync</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item @IsActive("AzureSearch")">
+                        <a class="nav-link" href="/AzureSearchAdmin"><i class="fa-solid fa-magnifying-glass fa-lg" title="Search Admin"></i>Search</a>
+                    </li>
+                }
             }
         </ul>
         <ul class="navbar-nav ml-auto">
@@ -102,4 +118,3 @@
         </ul>
     </div>
 </nav>
-

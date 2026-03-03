@@ -23,14 +23,13 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageService"/> class.
         /// </summary>
-        /// <param name="findwiseClient">The findwiseHttpClient.</param>
+       // /// <param name="findwiseClient">The findwiseHttpClient.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="messageRepository">The message repository.</param>
-        public MessageService(
-            IFindwiseClient findwiseClient,
+        public MessageService(            
             ILogger<Message> logger,
             IMessageRepository messageRepository)
-            : base(findwiseClient, logger)
+            : base(logger)
         {
             this.messageRepository = messageRepository;
         }

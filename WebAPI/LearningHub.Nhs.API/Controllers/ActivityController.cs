@@ -29,7 +29,7 @@
         private readonly IResourceService resourceService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ActivityController"/> class.
+        /// Initializes a new instance of the  <see cref="ActivityController"/> class.
         /// </summary>
         /// <param name="userService">The elfh user service.</param>
         /// <param name="activityService">The activity service.</param>
@@ -200,6 +200,27 @@
         public async Task<IActionResult> CompleteScormActivity(ScormActivityViewModel completeScormActivityViewModel)
         {
             var vr = await this.activityService.CompleteScormActivity(this.CurrentUserId, completeScormActivityViewModel);
+
+            if (vr.IsValid)
+            {
+                return this.Ok(new ApiResponse(true, vr));
+            }
+            else
+            {
+                return this.BadRequest(new ApiResponse(false, vr));
+            }
+        }
+
+        /// <summary>
+        /// Complete Scorm Activity.
+        /// </summary>
+        /// <param name="completeScormActivityViewModel">The scorm activity.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost]
+        [Route("ScormCompleteActivity")]
+        public async Task<IActionResult> ScormCompleteActivity(ScormActivityViewModel completeScormActivityViewModel)
+        {
+            var vr = await this.activityService.ScormCompleteActivity(this.CurrentUserId, completeScormActivityViewModel);
 
             if (vr.IsValid)
             {

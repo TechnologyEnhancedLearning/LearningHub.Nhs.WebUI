@@ -54,5 +54,13 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging
         /// <param name="isUserRoleUpgrade">The isUserRoleUpgrade.</param>
         /// <returns>The task.</returns>
         Task SendEmailVerifiedEmail(int userId, SendEmailModel<EmailChangeConfirmationEmailModel> model, bool isUserRoleUpgrade);
+
+        /// <summary>
+        /// Sends report generation completion email to user.
+        /// </summary>
+        /// <param name="userId">The userId sending the email.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>The task.</returns>
+        Task SendReportProcessedEmail(int userId, SendEmailModel<ReportSucessEmailModel> model);
     }
 }

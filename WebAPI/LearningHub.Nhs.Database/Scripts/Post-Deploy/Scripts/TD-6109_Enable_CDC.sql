@@ -124,64 +124,35 @@ EXEC sys.sp_cdc_enable_table
     @role_name     = NULL,
     @supports_net_changes = 0;
 GO
--- Table 16: User
-EXEC sys.sp_cdc_enable_table
-    @source_schema = N'hub',
-    @source_name   = N'User',
-    @role_name     = NULL,
-    @supports_net_changes = 0;
-GO
-
--- Table 17: UserGroup
-EXEC sys.sp_cdc_enable_table
-    @source_schema = N'hub',
-    @source_name   = N'UserGroup',
-    @role_name     = NULL,
-    @supports_net_changes = 0;
-GO
--- Table 18: UserProfile
-EXEC sys.sp_cdc_enable_table
-    @source_schema = N'hub',
-    @source_name   = N'UserProfile',
-    @role_name     = NULL,
-    @supports_net_changes = 0;
-GO
--- Table 19: UserProfile
-EXEC sys.sp_cdc_enable_table
-    @source_schema = N'hub',
-    @source_name   = N'UserUserGroup',
-    @role_name     = NULL,
-    @supports_net_changes = 0;
-GO
--- Table 20: AssessmentResourceVersion
+-- Table 16: AssessmentResourceVersion
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'AssessmentResourceVersion',
     @role_name     = NULL,
     @supports_net_changes = 0;
 GO
--- Table 21: Resource
+-- Table 17: Resource
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'Resource',
     @role_name     = NULL,
     @supports_net_changes = 0;
 GO
--- Table 22: ResourceReference
+-- Table 18: ResourceReference
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'ResourceReference',
     @role_name     = NULL,
     @supports_net_changes = 0;
 GO
--- Table 23: ResourceType
+-- Table 19: ResourceType
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'ResourceType',
     @role_name     = NULL,
     @supports_net_changes = 0;
 GO
--- Table 24: ResourceVersion
+-- Table 20: ResourceVersion
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'ResourceVersion',
@@ -189,7 +160,7 @@ EXEC sys.sp_cdc_enable_table
     @supports_net_changes = 0;
 GO
 
--- Table 25: ResourceVersionEvent
+-- Table 21: ResourceVersionEvent
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'ResourceVersionEvent',
@@ -197,42 +168,42 @@ EXEC sys.sp_cdc_enable_table
     @supports_net_changes = 0;
 GO
 
--- Table 26: ResourceVersionEventType
+-- Table 22: ResourceVersionEventType
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'ResourceVersionEventType',
     @role_name     = NULL,
     @supports_net_changes = 0;
 GO
--- Table 27: VersionStatus
+-- Table 23: VersionStatus
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'VersionStatus',
     @role_name     = NULL,
     @supports_net_changes = 0;
 GO
--- Table 28: VideoResourceVersion
+-- Table 24: VideoResourceVersion
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'VideoResourceVersion',
     @role_name     = NULL,
     @supports_net_changes = 0;
 GO
--- Table 29: WebLinkResourceVersion
+-- Table 25: WebLinkResourceVersion
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'WebLinkResourceVersion',
     @role_name     = NULL,
     @supports_net_changes = 0;
 GO
--- Table 30: ResourceAccessibility  
+-- Table 26: ResourceAccessibility  
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'ResourceAccessibility',
     @role_name     = NULL,
     @supports_net_changes = 0;
 GO
--- Table 31: ResourceVersionAuthor  
+-- Table 27: ResourceVersionAuthor  
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'ResourceVersionAuthor',
@@ -240,7 +211,7 @@ EXEC sys.sp_cdc_enable_table
     @supports_net_changes = 0;
 GO
 
--- Table 32: ResourceVersionKeyword  
+-- Table 28: ResourceVersionKeyword  
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'ResourceVersionKeyword',
@@ -248,14 +219,14 @@ EXEC sys.sp_cdc_enable_table
     @supports_net_changes = 0;
 GO
 
--- Table 33: ResourceVersionRating  
+-- Table 29: ResourceVersionRating  
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'resources',
     @source_name   = N'ResourceVersionRating',
     @role_name     = NULL,
     @supports_net_changes = 0;
 GO
--- Table 34: ScormActivityInteraction  
+-- Table 30: ScormActivityInteraction  
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'activity',
     @source_name   = N'ScormActivityInteraction',
@@ -263,7 +234,7 @@ EXEC sys.sp_cdc_enable_table
     @supports_net_changes = 0;
 GO
 
--- Table 35: ScormActivityInteractionCorrectResponse  
+-- Table 31: ScormActivityInteractionCorrectResponse  
 EXEC sys.sp_cdc_enable_table
     @source_schema = N'activity',
     @source_name   = N'ScormActivityInteractionCorrectResponse',

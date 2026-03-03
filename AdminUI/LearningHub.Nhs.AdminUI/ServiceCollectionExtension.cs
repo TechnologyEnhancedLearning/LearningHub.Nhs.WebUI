@@ -108,6 +108,11 @@
             services.AddScoped<IProviderService, ProviderService>();
             services.AddScoped<IMoodleApiService, MoodleApiService>();
 
+            // Configure Azure Search
+            services.Configure<AzureSearchConfig>(configuration.GetSection("AzureSearch"));
+            services.AddHttpClient("AzureSearch");
+            services.AddScoped<IAzureSearchAdminService, AzureSearchAdminService>();
+
             // web settings binding
             var webSettings = new WebSettings();
             configuration.Bind("WebSettings", webSettings);
@@ -160,12 +165,12 @@
             }).AddCookie(
             "Cookies",
             options =>
-                {
-                    options.AccessDeniedPath = "/Authorisation/AccessDenied";
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(webSettings.AuthTimeout);
-                    options.SlidingExpiration = true;
-                    options.EventsType = typeof(CookieEventHandler);
-                }).AddOpenIdConnect(
+            {
+                options.AccessDeniedPath = "/Authorisation/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(webSettings.AuthTimeout);
+                options.SlidingExpiration = true;
+                options.EventsType = typeof(CookieEventHandler);
+            }).AddOpenIdConnect(
                 "oidc",
                 options =>
                 {
@@ -185,12 +190,12 @@
                     options.GetClaimsFromUserInfoEndpoint = true;
 
                     options.Events.OnRemoteFailure = async context =>
-                                         {
-                                             context.Response.Redirect("/"); // If login cancelled return to home page
-                                             context.HandleResponse();
+                    {
+                        context.Response.Redirect("/"); // If login cancelled return to home page
+                        context.HandleResponse();
 
-                                             await Task.CompletedTask;
-                                         };
+                        await Task.CompletedTask;
+                    };
 
                     options.ClaimActions.MapUniqueJsonKey("role", "role");
                     options.ClaimActions.MapUniqueJsonKey("name", "elfh_userName");
@@ -223,11 +228,11 @@
 
             services.Configure<ForwardedHeadersOptions>(
                 options =>
-                    {
-                        options.ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor;
-                        options.KnownNetworks.Clear();
-                        options.KnownProxies.Clear();
-                    });
+                {
+                    options.ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor;
+                    options.KnownNetworks.Clear();
+                    options.KnownProxies.Clear();
+                });
 
             services.AddControllersWithViews(options =>
             {

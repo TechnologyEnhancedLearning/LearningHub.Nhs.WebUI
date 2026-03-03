@@ -148,5 +148,15 @@
         {
             return await this.facade.PostAsync<ApiResponse, CatalogueViewModel>("Catalogue/AddCategoryToCatalogue", catalogue);
         }
+
+        /// <summary>
+        /// The RemoveCategoryFromCatalogue.
+        /// </summary>
+        /// <param name="catalogue">The CatalogueViewModel.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        public async Task<ApiResponse> RemoveCategoryFromCatalogue(CatalogueViewModel catalogue)
+        {
+            return await this.facade.PostAsync<ApiResponse, CatalogueViewModel>("Catalogue/RemoveCategoryFromCatalogue", catalogue);
+        }    
     }
 }

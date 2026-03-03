@@ -76,6 +76,11 @@
         public const string StartDate = "Enter a start date containing a day, month and a year";
 
         /// <summary>
+        /// Start date Required.
+        /// </summary>
+        public const string EndDate = "Enter an end date containing a day, month and a year";
+
+        /// <summary>
         /// Workplace Required.
         /// </summary>
         public const string WorkPlace = "Select a place of work";
@@ -259,5 +264,15 @@
         /// Security question Required.
         /// </summary>
         public const string SecurityQuestionRequired = "Please select a security question";
+
+        /// <summary>
+        /// Course Required.
+        /// </summary>
+        public const string CourseRequired = "Select a course";
+
+        /// <summary>
+        /// Course Required.
+        /// </summary>
+        public const string ReportingPeriodRequired = "Select a reporting period";
     }
 }

@@ -100,3 +100,4 @@ obj
 /LearningHub.Nhs.WebUI/Views/Shared/Components/TaskList/Default.cshtml
 /LearningHub.Nhs.WebUI/Views/Shared/Components/TextInput/Default.cshtml
 /LearningHub.Nhs.WebUI/Views/Shared/Components/TextArea/Default.cshtml
+/.github/dependabot.yml

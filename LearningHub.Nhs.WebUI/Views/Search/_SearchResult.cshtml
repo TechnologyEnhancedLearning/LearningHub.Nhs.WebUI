@@ -144,22 +144,10 @@
 
                     @if (!string.IsNullOrWhiteSpace(item.AuthoredDate))
                     {
-                        string displayDate = item.AuthoredDate;
-                        {
-                            if (DateTime.TryParseExact(
-                                item.AuthoredDate,
-                                formats,
-                                System.Globalization.CultureInfo.InvariantCulture,
-                                System.Globalization.DateTimeStyles.None,
-                                out DateTime parsedDate))
-                            {
-                                displayDate = parsedDate.ToString("dd MMM yyyy"); // consistent format
-                            }
-                        }
-
+                        string formattedAuthoredDate = @UtilityHelper.GetFormattedAuthoredDate(item.AuthoredDate);
                         @* Render helper text plus formatted date *@
-                        @UtilityHelper.GetInOn(displayDate)
-                        @: @displayDate
+                        @UtilityHelper.GetInOn(formattedAuthoredDate)
+                        @: @formattedAuthoredDate
                     }
                 </div>
             </div>

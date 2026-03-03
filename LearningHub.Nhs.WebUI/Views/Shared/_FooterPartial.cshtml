@@ -2,30 +2,28 @@
 @using Microsoft.Extensions.Options;
 @using LearningHub.Nhs.WebUI.Configuration;
 @inject IOptions<Settings> settings;
+@using NHSUKFrontendRazor.ViewModels;
 
-
-<div class="nhsuk-footer" id="nhsuk-footer">
-    <div class="nhsuk-width-container nhsuk-footer__container app-width-container">
-        <h2 class="nhsuk-u-visually-hidden">Support links</h2>
-        <ul class="nhsuk-footer__list">
-            <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@(settings.Value.SupportUrls.SupportSite)">Help</a></li>
-            @if (!SystemOffline())
-            {
-                <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@Url.Action("Contactus", "Home")">Contact us</a></li>
-                <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@Url.Action("Aboutus", "Home")">About us</a></li>
-                <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@Url.Action("Updates", "RoadMap")">Service updates and releases</a></li>
-                <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="@Url.Action("NHSsites", "Home")">NHS sites</a></li>
-                <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="/Policies">Our policies</a></li>
-                <li class="nhsuk-footer__list-item"><a class="nhsuk-footer__list-item-link" href="/Home/Accessibility">Accessibility statement</a></li>
-            }
-        </ul>
-        <p class="nhsuk-footer__copyright">&copy; NHS England @DateTime.Now.Year</p>
-    </div>
-</div>
-
-@functions {
-    public bool SystemOffline()
-    {
-        return ViewContext.RouteData.Values["controller"].ToString() == "Offline";
-    }
+@{
+  var supportSiteUrl = settings.Value.SupportUrls.SupportSite;
+  var footerGroupData = new List<FooterItemGroupModel>
+  {
+    new FooterItemGroupModel(
+      new List<LinkViewModel>
+      {
+        new LinkViewModel(linkText: "Help", url: supportSiteUrl),
+        new LinkViewModel(linkText: "Contact us", aspController: "Home", aspAction: "Contactus"),
+        new LinkViewModel(linkText: "About us", aspController: "Home",  aspAction: "AboutUs"),
+        new LinkViewModel(linkText: "Service updates and releases", aspController: "Updates",  aspAction: "Index"),
+        new LinkViewModel(linkText: "NHS sites", aspController: "Home",  aspAction: "Index"),
+        new LinkViewModel(linkText: "Our policies", aspController: "Policies",  aspAction: "Index"),
+        new LinkViewModel(linkText: "Accessibility statement", aspController: "Home",  aspAction: "Accessibility")
+      },
+      true
+    )
+  };
 }
+
+<vc:footer copyright="© NHS England 2024"
+           footer-group-list="@footerGroupData"
+           is-vertically-aligned="true" />

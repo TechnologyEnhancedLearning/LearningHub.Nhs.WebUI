@@ -5,7 +5,7 @@
     using System.Linq;
     using elfhHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Paging;
-    using NHSUKViewComponents.Web.ViewModels;
+    using NHSUKFrontendRazor.ViewModels;
 
     /// <summary>
     /// Defines the <see cref="UserWorkPlaceUpdateViewModel" />.

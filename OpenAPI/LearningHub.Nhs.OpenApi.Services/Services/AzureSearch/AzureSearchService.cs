@@ -875,7 +875,7 @@
 
             var cacheResponse = await this.cachingService.GetAsync<IDictionary<string, IList<CacheableFacetResult>>>(cacheKey);
 
-            if (cacheResponse.ResponseEnum == CacheReadResponseEnum.Found)
+            if (cacheResponse.ResponseEnum == CacheReadResponseEnum.Found && string.IsNullOrEmpty(accessLevelKey))
             {
                 // Convert cached DTO back to FacetResult dictionary
                 return AzureSearchFacetHelper.ConvertFromCacheable(cacheResponse.Item);

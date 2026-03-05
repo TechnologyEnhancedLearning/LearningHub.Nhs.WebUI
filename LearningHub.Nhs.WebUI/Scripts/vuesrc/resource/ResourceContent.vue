@@ -72,7 +72,7 @@
             <div class="resource-panel-container" v-if="hasCatalogueAccess && hasCaseAssessmentAccees">
                 <div class="resource-item-row">
                     <div class="col-12 d-flex flex-column align-items-left p-0">
-                        <CaseOrAssessmentResource :resourceItem="resourceItem" :resourceActivityId="launchedResourceActivityId" :activityStart="activityStart" :assessmentProgress="assessmentProgress" :keepUserSessionAliveIntervalSeconds="keepUserSessionAliveIntervalSeconds" />
+                        <CaseOrAssessmentResource :resourceItem="resourceItem" :resourceActivityId="launchedResourceActivityId" :assessmentProgress="assessmentProgress" :keepUserSessionAliveIntervalSeconds="keepUserSessionAliveIntervalSeconds" />
                     </div>
                 </div>
             </div>
@@ -102,7 +102,6 @@
     import { MKPlayer } from '@mediakind/mkplayer';
     import { MKPlayerType, MKStreamType } from '../MKPlayerConfigEnum';
     import { MKPlayerControlbar } from '../mkioplayer-controlbar';
-    import { BlockCollectionModel } from '../models/contribute-resource/blocks/blockCollectionModel';
 
     Vue.use(Vuelidate as any);
 
@@ -123,7 +122,6 @@
                 ResourceAccessibility: ResourceAccessibility,
                 launchedResourceActivityId: 0,
                 mediaResourceActivityId: 0,
-                activityStart: null,
                 activityLogged: false,
                 activityEndLogged: false, // Applies to media only.
                 mediaResourceActivityLogged: false,
@@ -412,16 +410,10 @@
                 const userAgent = navigator.userAgent || navigator.vendor;
                 this.isIphone = /iPhone/i.test(userAgent);
             },
-            async initialise(): Promise<void> {
+            initialise(): void {
                 // record activity on page created for resource article
                 if (this.userAuthenticated && this.resourceItem.resourceTypeEnum === ResourceType.CASE) {
-                    let isMultiPageCase = false;
-                    if (this.resourceItem.resourceTypeEnum === ResourceType.CASE && this.resourceItem.caseDetails) {
-                        const blockCollection = new BlockCollectionModel(this.resourceItem.caseDetails.blockCollection);
-                        isMultiPageCase = blockCollection.getPages().length > 1;
-                    }
-
-                    await this.recordActivityLaunched(isMultiPageCase);
+                    this.recordActivityLaunched();
                 }
                 else if (this.userAuthenticated && this.resourceItem.resourceTypeEnum === ResourceType.ASSESSMENT) {
                     this.getCurrentAssessmentActivity();
@@ -464,12 +456,11 @@
             hasResourceAccess(): boolean {
                 return this.userAuthenticated && (!(this.isGeneralUser && this.resourceItem.resourceAccessibilityEnum == this.ResourceAccessibility.FullAccess))
             },
-            async recordActivityLaunched(isMultiPageCase: boolean = false): Promise<void> {
+            async recordActivityLaunched(): Promise<void> {
 
                 if (!this.activityLogged) {
                     this.activityLogged = true;
-                    this.activityStart = new Date();
-                    await activityRecorder.recordActivityLaunched(this.resourceItem.resourceTypeEnum, this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, this.activityStart,isMultiPageCase)
+                    await activityRecorder.recordActivityLaunched(this.resourceItem.resourceTypeEnum, this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
                         // await activityRecorder.recordActivityLaunched(this.resourceItem.resourceVersionId, this.resourceItem.nodePathId, new Date())
                         .then(response => {
                             this.launchedResourceActivityId = response.createdId;

@@ -6,6 +6,7 @@
 -- Modification History
 -- TD-6212 - https://hee-tis.atlassian.net/browse/TD-6212
 -- 06-02-2026  Binon Yesudhas  Initial Revision
+-- 05-03-2026  Binon Yesudhas  Added new parameter, ResourceAccessLevel to the view
 -------------------------------------------------------------------------------
 CREATE VIEW [dbo].[SupersetSearchView]
 AS
@@ -21,6 +22,7 @@ SELECT
     'catalogue' AS resource_collection,    
     c.Keywords as manual_tag,             -- e.g., comma-separated or JSON if multiple
 	'catalogue' AS resource_type,
+	NULL as resource_access_level,
 	NULL AS publication_date,
 	NULL AS date_authored, 
 	NULL AS rating,
@@ -50,6 +52,7 @@ SELECT
     'resource' AS resource_collection,   
     r.Keywords AS manual_tag,
 	r.ContentType AS resource_type,
+	r.ResourceAccessLevel as resource_access_level,
 	r.PublicationDate AS publication_date,
 	r.AuthoredDate AS date_authored,
 	CAST(r.AverageRating AS FLOAT) AS rating, 
@@ -66,9 +69,6 @@ SELECT
 	r.Deleted AS is_deleted
 FROM dbo.SearchResourcesView r;
 GO;
-
-
------------------------------------------------------------------------------------------------------------------
 
 
 

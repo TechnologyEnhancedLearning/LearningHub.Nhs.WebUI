@@ -408,6 +408,9 @@
                 "MM/dd/yyyy HH:mm:ss",
                 "yyyyMMdd",
                 "yyyyMMdd HH:mm:ss",
+                "M/d/yyyy",
+                "M/d/yyyy h:mm:ss tt",
+                "M/d/yyyy h:mm tt",
             };
 
             if (string.IsNullOrWhiteSpace(authoredDate))
@@ -415,19 +418,13 @@
                 return string.Empty;
             }
 
-            string displayDate = authoredDate;
-
-            if (DateTime.TryParseExact(
-                    authoredDate,
-                    dateFormats,
-                    CultureInfo.InvariantCulture,
-                    DateTimeStyles.None,
-                    out DateTime parsedDate))
+            if (DateTime.TryParse(authoredDate, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces, out var date) ||
+                DateTime.TryParseExact(authoredDate, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces, out date))
             {
-                displayDate = parsedDate.ToString("dd MMM yyyy");
+                return date.ToString("dd MMM yyyy");
             }
 
-            return displayDate;
+            return authoredDate;
         }
 
         /// <summary>

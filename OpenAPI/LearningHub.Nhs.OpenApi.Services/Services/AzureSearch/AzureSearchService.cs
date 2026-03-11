@@ -866,12 +866,14 @@
         private async Task<IDictionary<string, IList<FacetResult>>> GetUnfilteredFacetsAsync(
             string searchText,
             IDictionary<string, IList<FacetResult>> facets,
-            string? resourceAccessLevel, 
+            string? resourceAccessLevel,
             CancellationToken cancellationToken)
         {
             var normalizedSearch = searchText?.ToLowerInvariant() ?? "*";
             var accessLevelKey = resourceAccessLevel?.ToString() ?? "null";
-            var cacheKey = $"AllFacets_{normalizedSearch}_ral_{accessLevelKey}";
+            var cacheKey = $"Facets_{normalizedSearch}";
+            if (!string.IsNullOrWhiteSpace(accessLevelKey))
+                cacheKey += $"_{accessLevelKey.Replace("=", "_")}";
 
             var cacheResponse = await this.cachingService.GetAsync<IDictionary<string, IList<CacheableFacetResult>>>(cacheKey);
 

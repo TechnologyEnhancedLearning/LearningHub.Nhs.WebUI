@@ -115,26 +115,54 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers.Search
                     ? filteredFacets[facetKey].ToDictionary(f => f.Value?.ToString()?.ToLower() ?? "", f => (int)f.Count)
                     : new Dictionary<string, int>();
 
+                var filters = facetGroup.Value.Select(f =>
+                {
+                    var displayName = f.Value?.ToString()?.ToLower() ?? "";
+                    var isSelected = appliedValues.Any(av => av.Equals(f.Value?.ToString(), StringComparison.OrdinalIgnoreCase));
+
+                    // Default to the unfiltered count. This is used when:
+                    //  - no filtered search has been performed, OR
+                    //  - the filter value is selected (keep count so the option remains visible for deselection), OR
+                    //  - this facet group itself has an applied filter (multi-select pattern: a group's own
+                    //    counts are not narrowed down by its own selections so the user can still pick other values).
+                    // Only update counts using the filtered results when a filter from a DIFFERENT group
+                    // is driving the narrowing of this group.
+                    var count = (int)f.Count;
+                    if (!isSelected && filteredFacets != null && !hasAppliedFilter)
+                    {
+                        count = filteredFacetValues.TryGetValue(displayName, out var filteredCount) ? filteredCount : 0;
+                    }
+
+                    return new Filter
+                    {
+                        DisplayName = displayName,
+                        Count = count,
+                        Selected = isSelected
+                    };
+                }).ToList();
+
+                // Ensure all selected filter values remain visible even if absent from the unfiltered
+                // baseline (e.g. a resource selected under a resource-level filter that yields no results).
+                foreach (var selectedValue in appliedValues)
+                {
+                    var alreadyPresent = filters.Any(f =>
+                        f.DisplayName.Equals(selectedValue, StringComparison.OrdinalIgnoreCase));
+
+                    if (!alreadyPresent)
+                    {
+                        filters.Add(new Filter
+                        {
+                            DisplayName = selectedValue.ToLower(),
+                            Count = 0,
+                            Selected = true,
+                        });
+                    }
+                }
+
                 facets[index++] = new Facet
                 {
                     Id = facetKey,
-                    Filters = facetGroup.Value.Select(f =>
-                    {
-                        var displayName = f.Value?.ToString()?.ToLower() ?? "";
-                        var isSelected = appliedValues.Any(av => av.Equals(f.Value?.ToString(), StringComparison.OrdinalIgnoreCase));
-
-                        // Use filtered count if available and filter is not selected, otherwise use unfiltered count
-                        var count = !isSelected && filteredFacetValues.ContainsKey(displayName)
-                            ? filteredFacetValues[displayName]
-                            : (int)f.Count;
-
-                        return new Filter
-                        {
-                            DisplayName = displayName,
-                            Count = count,
-                            Selected = isSelected
-                        };
-                    }).ToArray()
+                    Filters = filters.ToArray()
                 };
             }
 

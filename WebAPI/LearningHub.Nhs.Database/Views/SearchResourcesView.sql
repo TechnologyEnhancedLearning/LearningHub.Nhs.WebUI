@@ -6,6 +6,7 @@
 -- Modification History
 -- TD-6212 - https://hee-tis.atlassian.net/browse/TD-6212
 -- 06-02-2026  Binon Yesudhas  Initial Revision
+-- 13-02-2026  Binon Yesudhas  Handle inconsistenrt resource type
 -------------------------------------------------------------------------------
 CREATE VIEW [dbo].[SearchResourcesView]
 AS
@@ -14,7 +15,10 @@ WITH BaseResource AS (
         r.Id,
 		r.ResourceTypeId,
 		-- r.ResourceTypeId as ContentType,
-        LOWER(rt.Name) AS ContentType,
+        CASE 
+			WHEN LOWER(rt.Name) LIKE '%scorm%' THEN 'scorm'
+			ELSE LOWER(rt.Name)
+		END AS ContentType,
         rv.Id AS ResourceVersionId,
         rv.Title,
         rv.Description,

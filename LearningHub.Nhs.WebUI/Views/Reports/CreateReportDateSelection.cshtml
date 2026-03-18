@@ -1,0 +1,164 @@
+﻿@using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Helpers
+@using LearningHub.Nhs.WebUI.Models
+@using LearningHub.Nhs.WebUI.Models.Learning
+@using NHSUKViewComponents.Web.ViewModels
+@model LearningHub.Nhs.WebUI.Models.Report.ReportCreationDateSelection;
+@{
+    ViewData["Title"] = "Select Date";
+    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    var customId = $"TimePeriod-{Model.PopulateDateRange().Count()}";
+    var hintTextLines = new List<string> { $"For example, {Model.StartDay} {Model.StartMonth} {Model.StartYear}" };
+    var hintTextLine = new List<string> { $" " };
+}
+
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/reporting.css" asp-append-version="true" />
+}
+
+
+<div class="user-report">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-7">
+
+            <!--  Main content -->
+            <div class="nhsuk-grid-column-full">
+                
+                @if (string.IsNullOrWhiteSpace(ViewBag.ReturnUrl))
+                {
+                    <vc:back-link asp-controller="Reports" asp-action="CreateReportCourseSelection" link-text="Back to: Course Selection" />
+                }
+                else
+                {
+                    <vc:back-link asp-controller="Reports" asp-action="CourseProgressReport" link-text="Back to: Course Progress Report" />
+                }
+                <div class="nhsuk-hint">
+                    Create a course progress report
+                </div>
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model.TimePeriod) })" />
+                }
+                <h1 class="nhsuk-heading-xl">
+                    Reporting period
+                </h1>
+                <div class="nhsuk-u-padding-bottom-9">
+
+                   
+                    <form asp-controller="Reports" asp-action="CreateReportSummary" method="post">
+                        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+                        @Html.HiddenFor(x=>x.HintText)
+                        @Html.HiddenFor(x =>x.DataStart)
+                            <div class="nhsuk-form-group  @(errorHasOccurred ? "nhsuk-form-group--error" : "")">
+                            <fieldset class="nhsuk-fieldset">
+                                <div class="nhsuk-hint">
+                                    For the last:
+                                </div>
+
+                                @if (errorHasOccurred && string.IsNullOrWhiteSpace(Model.TimePeriod))
+                                {
+                                    <div id="TimePeriod-error" class="nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-3">
+                                       
+                                            <span class="error-message--margin-bottom-1 nhsuk-error-message">
+                                            <span class="nhsuk-u-visually-hidden">Error:</span> Select a reporting period
+                                            </span>
+                                    </div>
+                                }
+
+                                <div class="nhsuk-radios" data-module="nhsuk-radios">
+                                    @foreach (var (radio, index) in Model.PopulateDateRange().Select((r, i) => (r, i)))
+                                    {
+                                        var radioId = index == 0 ? "TimePeriod" : $"TimePeriod-{index}";
+                                        @if (radio.Value != "Custom")
+                                        {
+                                            
+                                            <div class="nhsuk-radios__item">
+                                                <input class="nhsuk-radios__input"
+                                                       id="@radioId"
+                                                       asp-for="TimePeriod"
+                                                       name="TimePeriod"
+                                                       type="radio"
+                                                       value="@radio.Value"
+                                                       aria-describedby="@(!string.IsNullOrEmpty(radio.HintText) ? $"{radio.Value}-item-hint" : string.Empty)"
+                                                       data-val-required="Select a time period"
+                                                       data-val="false" />
+                                                <label class="nhsuk-label nhsuk-radios__label" for="@radioId">
+                                                    @radio.Label
+                                                </label>
+                                                @if (radio.HintText != null)
+                                                {
+                                                    <div class="nhsuk-hint nhsuk-radios__hint" id="@radio.Value-item-hint">
+                                                        @radio.HintText
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="nhsuk-radios__divider">or</div>
+                                            <div class="nhsuk-radios--conditional nhsuk-u-margin-bottom-2">
+                                                <div class="nhsuk-radios__item">
+                                                    <input type="radio" asp-for="TimePeriod" value="Custom" id="@customId" class="nhsuk-radios__input" data-val="false"
+                                                           aria-controls="conditional-timeperiod" aria-expanded="false" />
+                                                    <label class="nhsuk-label nhsuk-radios__label nhsuk-u-reading-width" for="@customId">
+                                                        Custom date range
+                                                    </label>
+                                                    <div class="nhsuk-radios__conditional @((errorHasOccurred && Model.TimePeriod=="Custom") ? "form-group-wrapper--error" : "" )" id="conditional-timeperiod">
+                                                        <span class="nhsuk-hint">@Model.HintText</span>
+                                                        <div class="date-range-container">
+                                                            <div class="date-range-item">
+                                                                <div class="nhsuk-form-group nhsuk-date-inline align-label-component">
+                                                                    <label class="nhsuk-label nhsuk-label--strong nhsuk-u-font-weight-bold nhsuk-u-padding-top-5 nhsuk-u-margin-right-3" for="StartDate">From</label>
+                                                                    <vc:date-input id="StartDate"
+                                                                                   label=""
+                                                                                   day-id="StartDay"
+                                                                                   month-id="StartMonth"
+                                                                                   year-id="StartYear"
+                                                                                   css-class=""
+                                                                                   hint-text-lines="@hintTextLine" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="date-range-item">
+                                                                <div class="nhsuk-form-group nhsuk-date-inline align-label-component">
+                                                                    <label class="nhsuk-label nhsuk-label--strong nhsuk-u-font-weight-bold nhsuk-u-padding-top-5 nhsuk-u-margin-right-3" for="EndDate">To</label>
+                                                                    <vc:date-input id="EndDate"
+                                                                                   label=""
+                                                                                   day-id="EndDay"
+                                                                                   month-id="EndMonth"
+                                                                                   year-id="EndYear"
+                                                                                   css-class="nhsuk-u-padding-top-0"
+                                                                                   hint-text-lines="@hintTextLine" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    }
+
+
+
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="nhsuk-u-padding-top-7 nhsuk-u-padding-bottom-7">
+
+                            <button class="nhsuk-button" type="submit">Submit</button>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+</div>

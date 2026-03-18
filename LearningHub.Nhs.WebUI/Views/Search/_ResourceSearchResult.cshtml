@@ -15,11 +15,11 @@
 	var pagingModel = Model.ResourceResultPaging;
 	var index = pagingModel.CurrentPage * pagingModel.PageSize;
 	var searchString = HttpUtility.UrlEncode(Model.SearchString);
+	string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
 
 	string GetUrl(int resourceReferenceId, int itemIndex, int nodePathId, SearchClickPayloadModel payload)
 	{
-		var searchSignal = payload?.SearchSignal;
-		string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
+		var searchSignal = payload?.SearchSignal;		
 		string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
 
 		return $@"/search/record-resource-click?url=/Resource/{resourceReferenceId}&nodePathId={nodePathId}&itemIndex={payload?.HitNumber}
@@ -28,7 +28,7 @@
 &query={searchSignalQueryEncoded}&title={payload?.DocumentFields?.Title}";
 	}
 
-	string GetMoodleCourseUrl(string courseIdWithPrefix)
+	string GetMoodleCourseUrl(string courseIdWithPrefix, int resourceReferenceId, int itemIndex, int nodePathId, SearchClickPayloadModel payload)
 	{
 		const string prefix = "M";
 
@@ -46,7 +46,15 @@
 
 		if (int.TryParse(courseIdPart, out int courseId))
 		{
-			return moodleApiService.GetCourseUrl(courseId);
+			var searchSignal = payload?.SearchSignal;
+
+			string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
+			string url = moodleApiService.GetCourseUrl(courseId);
+
+			return $@"/search/record-course-click?url={url}&nodePathId={nodePathId}&itemIndex={payload?.HitNumber}
+                &pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={payload?.SearchSignal?.Stats?.TotalHits}&searchText={searchString}&resourceReferenceId={resourceReferenceId}
+                &groupId={groupId}&searchId={searchSignal?.SearchId}&timeOfSearch={searchSignal?.TimeOfSearch}&userQuery={HttpUtility.UrlEncode(searchSignal.UserQuery)}
+                &query={searchSignalQueryEncoded}&title={payload?.DocumentFields?.Title}";
 		}
 		else
 		{
@@ -66,7 +74,7 @@
 		<h3 class="nhsuk-heading-xs nhsuk-u-margin-bottom-2">
 			@if (item.ResourceType == "moodle")
 			{
-				<a class="nhsuk-card__link" href="@GetMoodleCourseUrl(item.Id)">@item.Title</a>
+				<a class="nhsuk-card__link" href="@GetMoodleCourseUrl(item.Id, item.ResourceReferenceId, index, item.NodePathId ?? 0, item.Click.Payload)">@item.Title</a>
 			}
 			else
 			{

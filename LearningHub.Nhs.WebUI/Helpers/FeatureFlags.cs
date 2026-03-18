@@ -19,5 +19,15 @@
         /// The EnableMoodle.
         /// </summary>
         public const string EnableMoodle = "EnableMoodle";
+
+        /// <summary>
+        /// The AzureSearch.
+        /// </summary>
+        public const string AzureSearch = "AzureSearch";
+
+        /// <summary>
+        /// The InPlatformReport.
+        /// </summary>
+        public const string InPlatformReport = "InPlatformReport";
     }
 }

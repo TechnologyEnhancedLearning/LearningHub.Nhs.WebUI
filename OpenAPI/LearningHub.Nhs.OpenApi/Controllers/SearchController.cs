@@ -271,7 +271,7 @@
         {
             var results = await this.searchService.GetSearchResultAsync(searchRequestModel, this.CurrentUserId.GetValueOrDefault());
             var documents = results.DocumentList.Documents.ToList();
-            var catalogueIds = results.DocumentList.Documents.Select(x => x.CatalogueIds.FirstOrDefault()).Where(x => x != 0).ToHashSet().ToList();
+            var catalogueIds = results.DocumentList.Documents.Select(x => x.CatalogueIds?.FirstOrDefault() ?? 0).Where(id => id != 0).ToHashSet().ToList();
             var catalogues = this.catalogueService.GetCataloguesByNodeId(catalogueIds);
             var allProviders = await this.providerService.GetAllAsync();
 
@@ -282,12 +282,12 @@
                     document.Providers = allProviders.Where(n => document.ProviderIds.Contains(n.Id)).ToList();
                 }
 
-                if (document.CatalogueIds.Any(x => x == 1))
+                if (document.CatalogueIds?.Any(x => x == 1) == true)
                 {
                     continue;
                 }
 
-                var catalogue = catalogues.SingleOrDefault(x => x.NodeId == document.CatalogueIds.SingleOrDefault());
+                var catalogue = catalogues.SingleOrDefault(x => x.NodeId == document.CatalogueIds?.SingleOrDefault() == true);
 
                 if (catalogue == null)
                 {
@@ -345,7 +345,7 @@
             var relatedCatalogueIds = new List<int>();
             foreach (var document in results.DocumentList.Documents)
             {
-                foreach (int catalogueId in document.CatalogueIds)
+                foreach (int catalogueId in document.CatalogueIds ?? Enumerable.Empty<int>())
                 {
                     if (relatedCatalogueIds.IndexOf(catalogueId) == -1)
                     {

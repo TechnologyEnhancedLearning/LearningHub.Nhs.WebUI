@@ -4,12 +4,11 @@
 @{
     var resourceResult = Model.ResourceSearchResult;
     var filtersApplied = resourceResult.SortItemSelected.Value != string.Empty
-                            || resourceResult.SearchFilters.Any(f => f.Selected) || resourceResult.SearchResourceAccessLevelFilters.Any(f => f.Selected) 
-                            || resourceResult.SearchProviderFilters.Any(f =>f.Selected);
+                            || resourceResult.SearchFilters.Any(f => f.Selected) || resourceResult.SearchResourceAccessLevelFilters.Any(f => f.Selected);
 
     var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString().ToLower());
     queryParams["actiontype"] = "sort-filter";
-    var pageUrl = Model.CatalogueId > 0 ? "/catalogue/" + Model.CatalogueUrl +"/search" : "/search/results";
+    var pageUrl = Model.CatalogueId > 0 ? "/catalogue/" + Model.CatalogueUrl + "/search" : "/search/results";
     var actionUrl = QueryHelpers.AddQueryString(pageUrl, queryParams);
     var pageFragment = "#search-filters";
 
@@ -25,17 +24,10 @@
                             .Select(f => $"<strong class='nhsuk-tag'>{char.ToUpper(f.DisplayName[0])}{f.DisplayName[1..]}</strong>");
 
         if (resourceAccessLevelFilters.Any())
-        {   
+        {
             summary += $" and Filtered by Audience access level {string.Join(" ", resourceAccessLevelFilters)}";
         }
-        
 
-        var providerfilters = resourceResult.SearchProviderFilters.Where(f => f.Selected).Select(f => $"<strong class='nhsuk-tag'>{f.DisplayName}</strong>");
-
-        if (providerfilters.Any())
-        {
-            summary += $" and Filtered by Provider {string.Join(" ", providerfilters)}";
-        }
 
         if (filters.Any())
         {
@@ -46,7 +38,7 @@
 }
 
 <h2 class="nhsuk-u-margin-bottom-3">
-    @($"{resourceResult.TotalHits} resource{(resourceResult.TotalHits == 1 ? string.Empty : "s")}")
+    @($"Showing {resourceResult.TotalHits} result{(resourceResult.TotalHits == 1 ? string.Empty : "s")}")
 </h2>
 
 @if (resourceResult.TotalHits > 0)
@@ -128,38 +120,9 @@
                                         <div class="nhsuk-u-padding-left-0">
                                             <div class="nhsuk-checkboxes__item nhsuk-u-padding-bottom-3">
                                                 <input class="nhsuk-checkboxes__input" id="chk_filter_@filter.Value" name="resourceAccessLevelId" type="checkbox"
-                                                value="@filter.Value" checked="@filter.Selected" class="@(filter.Count > 0 ? "" : "disabled")">
+                                                       value="@filter.Value" checked="@filter.Selected" class="@(filter.Count > 0 ? "" : "disabled")">
                                                 <label class="nhsuk-label nhsuk-checkboxes__label" for="chk_filter_@filter.Value">
                                                     Show @filter.DisplayName (@filter.Count)
-                                                </label>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </fieldset>
-                        </div>
-                    }
-
-                    @if (resourceResult.SearchProviderFilters.Count > 0)
-                    {
-                        <hr class="nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-4" />
-
-                        <div class="nhsuk-grid-row">
-                            <fieldset class="nhsuk-grid-column-full">
-                                <legend>
-                                    <h2>Filter by provider:</h2>
-                                </legend>
-
-                                <div class="nhsuk-checkboxes">
-                                    @foreach (var filter in resourceResult.SearchProviderFilters)
-                                    {
-                                        <div class="nhsuk-grid-column-one-third nhsuk-u-padding-left-0">
-
-                                            <div class="nhsuk-checkboxes__item nhsuk-u-padding-bottom-3">
-                                                <input class="nhsuk-checkboxes__input" id="chk_provider_filter_@filter.Value" name="providerfilters" type="checkbox"
-                                                value="@filter.Value" checked="@filter.Selected" class="@(filter.Count > 0 ? "" : "disabled")">
-                                                <label class="nhsuk-label nhsuk-checkboxes__label" for="chk_provider_filter_@filter.Value">
-                                                    @filter.DisplayName (@filter.Count)
                                                 </label>
                                             </div>
                                         </div>

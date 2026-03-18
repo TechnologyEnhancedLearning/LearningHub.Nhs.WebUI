@@ -21,6 +21,15 @@
         Task<SearchResultViewModel> PerformSearch(IPrincipal user, SearchRequestViewModel searchRequest);
 
         /// <summary>
+        /// Performs a search - either a combined resource and catalogue search, or just a resource search if
+        /// searching within a catalogue.
+        /// </summary>
+        /// <param name="user">User.</param>
+        /// <param name="searchRequest">The SearchRequestViewModel.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<SearchResultViewModel> PerformSearchInFindwise(IPrincipal user, SearchRequestViewModel searchRequest);
+
+        /// <summary>
         /// Records the analytics events associated with a search.
         /// </summary>
         /// <param name="search">The SearchRequestViewModel.</param>

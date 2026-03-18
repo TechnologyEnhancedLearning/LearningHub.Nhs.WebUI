@@ -26,6 +26,11 @@ namespace LearningHub.NHS.OpenAPI.Configuration
         public const string FindwiseSectionName = "Findwise";
 
         /// <summary>
+        /// The AzureSearchSectionName.
+        /// </summary>
+        public const string AzureSearchSectionName = "AzureSearch";
+
+        /// <summary>
         /// The LearningHubSectionName.
         /// </summary>
         public const string LearningHubSectionName = "LearningHub";
@@ -46,6 +51,16 @@ namespace LearningHub.NHS.OpenAPI.Configuration
         public const string MoodleSectionName = "Moodle";
 
         /// <summary>
+        /// The DatabricksSectionName.
+        /// </summary>
+        public const string DatabricksSectionName = "Databricks";
+
+        /// <summary>
+        /// The FeatureFlagsSectionName.
+        /// </summary>
+        public const string FeatureFlagsSectionName = "FeatureFlags";
+
+        /// <summary>
         /// Adds config.
         /// </summary>
         /// <param name="services">The service collection.</param>
@@ -58,6 +73,8 @@ namespace LearningHub.NHS.OpenAPI.Configuration
 
             services.AddOptions<FindwiseConfig>().Bind(config.GetSection(FindwiseSectionName));
 
+            services.AddOptions<AzureSearchConfig>().Bind(config.GetSection(AzureSearchSectionName));
+
             services.AddOptions<LearningHubConfig>().Bind(config.GetSection(LearningHubSectionName));
 
             services.AddOptions<LearningHubApiConfig>().Bind(config.GetSection(LearningHubApiSectionName));
@@ -65,6 +82,10 @@ namespace LearningHub.NHS.OpenAPI.Configuration
             services.AddOptions<AzureConfig>().Bind(config.GetSection(AzureSectionName));
 
             services.AddOptions<MoodleConfig>().Bind(config.GetSection(MoodleSectionName));
+
+            services.AddOptions<DatabricksConfig>().Bind(config.GetSection(DatabricksSectionName));
+
+            services.AddOptions<FeatureFlagsConfig>().Bind(config.GetSection(FeatureFlagsSectionName));
         }
 
         private static OptionsBuilder<T> RegisterPostConfigure<T>(this OptionsBuilder<T> builder)

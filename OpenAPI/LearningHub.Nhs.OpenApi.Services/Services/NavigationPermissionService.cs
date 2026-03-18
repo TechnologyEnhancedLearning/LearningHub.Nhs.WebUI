@@ -2,9 +2,10 @@
 {
     using System.Security.Principal;
     using System.Threading.Tasks;
-    using LearningHub.Nhs.Models.Extensions;
+    using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Models.ViewModels;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// Defines the <see cref="NavigationPermissionService" />.
@@ -13,16 +14,22 @@
     {
         private readonly IResourceService resourceService;
         private readonly IUserGroupService userGroupService;
+        private readonly IDatabricksService databricksService;
+        private readonly IOptions<FeatureFlagsConfig> featureFlagsConfig;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationPermissionService"/> class.
         /// </summary>
         /// <param name="resourceService">Resource service.</param>
         /// <param name="userGroupService">userGroup service.</param>
-        public NavigationPermissionService(IResourceService resourceService, IUserGroupService userGroupService)
+        /// <param name="databricksService">databricksService.</param>
+        /// <param name="featureFlagsConfig">featureFlags</param>
+        public NavigationPermissionService(IResourceService resourceService, IUserGroupService userGroupService, IDatabricksService databricksService, IOptions<FeatureFlagsConfig> featureFlagsConfig)
         {
             this.resourceService = resourceService;
             this.userGroupService = userGroupService;
+            this.databricksService = databricksService;
+            this.featureFlagsConfig = featureFlagsConfig;
         }
 
         /// <summary>
@@ -45,7 +52,7 @@
             }
             else if (user.IsInRole("Administrator"))
             {
-                return AuthenticatedAdministrator(controllerName);
+                return await AuthenticatedAdministrator(controllerName, currentUserId);
             }
             else if (user.IsInRole("ReadOnly"))
             {
@@ -86,6 +93,7 @@
                 ShowSignOut = false,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
         }
 
@@ -93,8 +101,9 @@
         /// The AuthenticatedAdministrator.
         /// </summary>
         /// <param name="controllerName">The controller name.</param>
+        /// <param name="userId">userId.</param>
         /// <returns>The <see cref="NavigationModel"/>.</returns>
-        private NavigationModel AuthenticatedAdministrator(string controllerName)
+        private async Task<NavigationModel> AuthenticatedAdministrator(string controllerName, int userId)
         {
             return new NavigationModel()
             {
@@ -111,6 +120,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
             };
         }
 
@@ -137,6 +147,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
             };
         }
 
@@ -161,6 +172,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
         }
 
@@ -186,6 +198,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = true,
+                ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
             };
         }
 
@@ -210,6 +223,7 @@
                 ShowSignOut = true,
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
+                ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
             };
         }
 
@@ -234,7 +248,18 @@
                 ShowSignOut = true,
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
+                ShowReports = false,
             };
+        }
+
+        private bool IsInplatformReportActive()
+        {
+            bool.TryParse(this.featureFlagsConfig.Value.InPlatformReport, out bool inPlatformReport);
+            if (inPlatformReport)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

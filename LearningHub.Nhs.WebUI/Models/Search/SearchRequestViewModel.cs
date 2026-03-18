@@ -75,5 +75,10 @@
         /// </summary>
         [FromQuery]
         public IEnumerable<string> ProviderFilters { get; set; }
+
+        /// <summary>
+        /// Gets or sets the show filter (all, catalogues, courses, resources).
+        /// </summary>
+        public IEnumerable<string> ResourceCollectionFilter { get; set; }
     }
 }

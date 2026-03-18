@@ -19,6 +19,7 @@ export enum NotificationType {
     UserPermission = 6,
     PublishFailed = 7,
     AccessRequest = 8,
+    ReportProcessed = 9,
 }
 
 export enum NotificationPriority {

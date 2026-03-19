@@ -107,6 +107,14 @@
         Task<LearningHubValidationResult> CompleteScormActivity(int currentUserId, ScormActivityViewModel completeScormActivityViewModel);
 
         /// <summary>
+        /// Complete scorm activity.
+        /// </summary>
+        /// <param name="currentUserId">The user Id.</param>
+        /// <param name="completeScormActivityViewModel">The update scorm Activity View Model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<LearningHubValidationResult> ScormCompleteActivity(int currentUserId, ScormActivityViewModel completeScormActivityViewModel);
+
+        /// <summary>
         /// The resolve scorm activity.
         /// Resolves any completed active content that does not have associated completion events.
         /// Required when LMS has not received an LMSFinish event yet has received an LMSCommit with

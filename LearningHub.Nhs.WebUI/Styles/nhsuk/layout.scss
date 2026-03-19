@@ -287,7 +287,7 @@ button[data-toggle="modal"] {
 }
 
 .autosuggestion-option .autosuggestion-link {
-    display: flex;
+    display: block;
     margin-bottom: 0px;
     text-decoration: underline;
 }
@@ -338,7 +338,17 @@ li.autosuggestion-option:last-of-type {
 }
 
 
-
+.search-catalogue-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #0056b3;
+    color: white;
+    padding: 5px 15px;
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    font-size: 0.8em;
+}
 
 .side-nav__item:last-child {
     border-bottom: none;

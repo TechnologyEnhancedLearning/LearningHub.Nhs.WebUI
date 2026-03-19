@@ -212,6 +212,27 @@
         }
 
         /// <summary>
+        /// Complete Scorm Activity.
+        /// </summary>
+        /// <param name="completeScormActivityViewModel">The scorm activity.</param>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [HttpPost]
+        [Route("ScormCompleteActivity")]
+        public async Task<IActionResult> ScormCompleteActivity(ScormActivityViewModel completeScormActivityViewModel)
+        {
+            var vr = await this.activityService.ScormCompleteActivity(this.CurrentUserId, completeScormActivityViewModel);
+
+            if (vr.IsValid)
+            {
+                return this.Ok(new ApiResponse(true, vr));
+            }
+            else
+            {
+                return this.BadRequest(new ApiResponse(false, vr));
+            }
+        }
+
+        /// <summary>
         /// Launch Scorm Activity.
         /// </summary>
         /// <param name="launchScormActivityViewModel">The scorm activity.</param>

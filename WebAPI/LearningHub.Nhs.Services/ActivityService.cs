@@ -18,6 +18,7 @@
     using LearningHub.Nhs.Repository.Interface.Resources;
     using LearningHub.Nhs.Services.Helpers;
     using LearningHub.Nhs.Services.Interface;
+    using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using Microsoft.Rest;
@@ -521,6 +522,39 @@
             {
                 // Release associated active content
                 _ = await this.userService.ReleaseActiveContent(new ActiveContentReleaseViewModel() { UserId = currentUserId, ScormActivityId = completeScormActivityViewModel.InstanceId });
+            }
+
+            return new LearningHubValidationResult(true);
+        }
+
+        /// <summary>
+        /// Complete scorm activity.
+        /// </summary>
+        /// <param name="currentUserId">The user Id.</param>
+        /// <param name="completeScormActivityViewModel">The update scorm Activity View Model.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<LearningHubValidationResult> ScormCompleteActivity(int currentUserId, ScormActivityViewModel completeScormActivityViewModel)
+        {
+            try
+            {
+                if (completeScormActivityViewModel.LessonStatusId.HasValue
+                    && (completeScormActivityViewModel.LessonStatusId.Value == (int)ActivityStatusEnum.Completed
+                        || completeScormActivityViewModel.LessonStatusId == (int)ActivityStatusEnum.Passed
+                        || completeScormActivityViewModel.LessonStatusId == (int)ActivityStatusEnum.Failed))
+                {
+                    // Handle activity "complete" event - create new ResourceActivity record & perform any re-calc status updates.
+                    this.scormActivityRepository.Complete(currentUserId, completeScormActivityViewModel.InstanceId);
+                }
+            }
+            catch (SqlException ex)
+            {
+                if (!ex.Message.Contains(
+                    "ResourceActivity entry with Completed status already exists",
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    throw;
+                }
+                // else: intentionally ignore
             }
 
             return new LearningHubValidationResult(true);

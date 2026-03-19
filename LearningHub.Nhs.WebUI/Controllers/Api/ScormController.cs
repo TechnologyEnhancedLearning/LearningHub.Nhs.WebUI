@@ -261,6 +261,9 @@
                 // Persist update.
                 await this.activityService.UpdateScormActivityAsync(scoObject);
 
+                // Create Activity Complete event. (TODO process event using service bus queue - perform any longer running async status re-calc).
+                await this.activityService.ScormCompleteActivity(scoObject);
+
                 return true;
             }
             catch (Exception ex)

@@ -48,13 +48,14 @@ BEGIN
                   AND mar.PercentComplete = 100
             )
          OR (r.ResourceTypeId = 6 AND (
-                EXISTS (
-                    SELECT 1 
-                    FROM activity.ScormActivity sa
-                    WHERE sa.ResourceActivityId = ra.Id
-                      AND sa.CmiCoreLesson_status IN (3,5)
-                )
-                OR ra.ActivityStatusId IN (3,5)
+                --EXISTS (
+                --    SELECT 1 
+                --    FROM activity.ScormActivity sa
+                --    WHERE sa.ResourceActivityId = ra.Id
+                --      AND sa.CmiCoreLesson_status IN (3,5)
+                --)
+                --OR 
+                ra.ActivityStatusId IN (3,5)
             ))
         OR (
             r.ResourceTypeId = 11

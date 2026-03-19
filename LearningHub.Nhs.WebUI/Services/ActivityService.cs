@@ -295,6 +295,39 @@
         }
 
         /// <summary>
+        /// The CompleteScormActivity.
+        /// </summary>
+        /// <param name="scormActivityViewModel">The updateScormActivityViewModel<see cref="ScormActivityViewModel"/>.</param>
+        /// <returns>The <see cref="Task{LearningHubValidationResult}"/>.</returns>
+        public async Task<LearningHubValidationResult> ScormCompleteActivity(ScormActivityViewModel scormActivityViewModel)
+        {
+            var json = JsonConvert.SerializeObject(scormActivityViewModel);
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = await this.LearningHubHttpClient.GetClientAsync();
+
+            var request = $"Activity/ScormCompleteActivity";
+            var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
+
+            LearningHubValidationResult validationResult;
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                validationResult = JsonConvert.DeserializeObject<LearningHubValidationResult>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+            else
+            {
+                throw new Exception("Complete Scorm Activity failed!");
+            }
+
+            return validationResult;
+        }
+
+        /// <summary>
         /// The ResolveScormActivity.
         /// </summary>
         /// <param name="userId">User id.</param>

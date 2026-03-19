@@ -15,7 +15,7 @@
     var pagingModel = Model.ResourceResultPaging;
     var index = pagingModel.CurrentPage * pagingModel.PageSize;
     var searchString = HttpUtility.UrlEncode(Model.SearchString);
-    string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
+    string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());    
 
     string GetUrl(int resourceReferenceId, int itemIndex, int nodePathId, SearchClickPayloadModel payload)
     {
@@ -139,10 +139,13 @@
 
                 <div>
                     @UtilityHelper.GetAttribution(item.Authors)
-                    @if (!string.IsNullOrEmpty(item.AuthoredDate))
+
+                    @if (!string.IsNullOrWhiteSpace(item.AuthoredDate))
                     {
-                        @UtilityHelper.GetInOn(item.AuthoredDate)
-                        @: @item.AuthoredDate
+                        string formattedAuthoredDate = @UtilityHelper.GetFormattedAuthoredDate(item.AuthoredDate);
+                        @* Render helper text plus formatted date *@
+                        @UtilityHelper.GetInOn(formattedAuthoredDate)
+                        @: @formattedAuthoredDate
                     }
                 </div>
             </div>

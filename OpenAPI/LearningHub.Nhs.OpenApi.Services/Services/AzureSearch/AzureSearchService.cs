@@ -120,7 +120,7 @@
                 }
 
                 // Normalize resource_type filter values
-                var filters = SearchFilterBuilder.CombineAndNormaliseFilters(searchRequestModel.FilterText, searchRequestModel.ProviderFilterText);
+                var filters = SearchFilterBuilder.CombineAndNormaliseFilters(searchRequestModel.FilterText, searchRequestModel.ProviderFilterText, searchRequestModel.ResourceAccessLevelFilterText);
 
                 if (searchRequestModel.CatalogueId.HasValue)
                 {
@@ -157,6 +157,7 @@
                                         ?? new List<int>()
                                     ),
                             Rating = Convert.ToDecimal(doc.Rating),
+                            ResourceAccessLevel = Convert.ToInt32(doc.ResourceAccessLevel),
                             Author = doc.Author,
                             Authors = doc.Author?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToList(),
                             AuthoredDate = doc.DateAuthored?.ToString(),
@@ -183,6 +184,7 @@
                 var unfilteredFacets = await GetUnfilteredFacetsAsync(
                    searchRequestModel.SearchText,
                    filteredResponse.Facets,
+                   searchRequestModel.ResourceAccessLevelFilterText,
                    cancellationToken);
 
                 // Merge facets from filtered and unfiltered results
@@ -858,17 +860,24 @@
         /// </summary>
         /// <param name="searchText">The search text.</param>
         /// <param name="facets">The facet results.</param>
+        /// <param name="resourceAccessLevel">The resource access level filter, if any, used to further differentiate cache entries. </param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The unfiltered facet results.</returns>
         private async Task<IDictionary<string, IList<FacetResult>>> GetUnfilteredFacetsAsync(
             string searchText,
             IDictionary<string, IList<FacetResult>> facets,
+            string? resourceAccessLevel,
             CancellationToken cancellationToken)
         {
-            var cacheKey = $"AllFacets_{searchText?.ToLowerInvariant() ?? "*"}";
+            var normalizedSearch = searchText?.ToLowerInvariant() ?? "*";
+            var accessLevelKey = resourceAccessLevel?.ToString() ?? "null";
+            var cacheKey = $"Facets_{normalizedSearch}";
+            if (!string.IsNullOrWhiteSpace(accessLevelKey))
+                cacheKey += $"_{accessLevelKey.Replace("=", "_")}";
+
             var cacheResponse = await this.cachingService.GetAsync<IDictionary<string, IList<CacheableFacetResult>>>(cacheKey);
 
-            if (cacheResponse.ResponseEnum == CacheReadResponseEnum.Found)
+            if (cacheResponse.ResponseEnum == CacheReadResponseEnum.Found && string.IsNullOrEmpty(accessLevelKey))
             {
                 // Convert cached DTO back to FacetResult dictionary
                 return AzureSearchFacetHelper.ConvertFromCacheable(cacheResponse.Item);

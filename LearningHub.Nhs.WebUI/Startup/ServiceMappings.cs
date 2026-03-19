@@ -115,6 +115,7 @@
             services.AddSingleton<IJsDetectionLogger, JsDetectionLogger>();
             services.AddScoped<IInternalSystemService, InternalSystemService>();
             services.AddScoped<IProviderService, ProviderService>();
+            services.AddScoped<IJiraRoadmapService, JiraRoadmapService>();
 
             // Filters (that require DI)
             services.AddScoped<LoginWizardFilter>();

@@ -43,7 +43,7 @@
         /// <returns>UserId from Moodle.</returns>
         public async Task<int> GetMoodleUserIdByUsernameAsync(int currentUserId)
         {
-            var parameters = new Dictionary<string, string>
+                var parameters = new Dictionary<string, string>
             {
                 { "criteria[0][key]", "username" },
                 { "criteria[0][value]", currentUserId.ToString() }

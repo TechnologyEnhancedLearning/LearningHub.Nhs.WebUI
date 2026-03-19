@@ -1,5 +1,6 @@
 ﻿namespace LearningHub.Nhs.AdminUI.Controllers
 {
+    using LearningHub.Nhs.Models.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,11 @@
                 return this.HostingEnvironment.WebRootPath;
             }
         }
+
+        /// <summary>
+        /// Gets the CurrentUserEmail.
+        /// </summary>
+        protected string CurrentUserEmail => this.User.Identity.GetCurrentEmail();
 
         /// <summary>
         /// The OnActionExecuting.

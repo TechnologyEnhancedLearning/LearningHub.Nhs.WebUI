@@ -21,6 +21,7 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.StaticFiles;
+    using Microsoft.Azure.Management.Media.Models;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.FeatureManagement;
@@ -63,6 +64,7 @@
         /// <param name="fileService">The fileService.</param>
         /// <param name="cacheService">The cacheService.</param>
         /// <param name="featureManager"> The Feature flag manager.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         public ResourceController(
             IWebHostEnvironment hostingEnvironment,
             ILogger<ResourceController> logger,
@@ -79,8 +81,9 @@
             IHierarchyService hierarchyService,
             IFileService fileService,
             ICacheService cacheService,
+            IMoodleBridgeApiService moodleBridgeApiService,
             IFeatureManager featureManager)
-            : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+            : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.azureMediaService = azureMediaService;
             this.resourceService = resourceService;

@@ -50,6 +50,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="httpClientFactory">Http client factory.</param>
         /// <param name="hostingEnvironment">Hosting environment.</param>
         /// <param name="logger">Logger.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         /// <param name="settings">Settings.</param>
         /// <param name="userService">User service.</param>
         /// <param name="resourceService">Resource service.</param>
@@ -62,6 +63,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         public HomeController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
+            IMoodleBridgeApiService moodleBridgeApiService,
             ILogger<HomeController> logger,
             IOptions<Settings> settings,
             IUserService userService,
@@ -72,7 +74,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             IFeatureManager featureManager,
             IUserGroupService userGroupService,
             Microsoft.Extensions.Configuration.IConfiguration configuration)
-        : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+        : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.authConfig = authConfig;
             this.userService = userService;
@@ -215,7 +217,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 this.Logger.LogInformation("User is authenticated: User is {fullname} and userId is: {lhuserid}", this.User.Identity.GetCurrentName(), this.User.Identity.GetCurrentUserId());
                 if (this.User.IsInRole("Administrator") || this.User.IsInRole("BlueUser") || this.User.IsInRole("ReadOnly") || this.User.IsInRole("BasicUser"))
                 {
-                    var learningTask = this.dashboardService.GetMyCoursesAndElearning(dashboardTrayLearningResourceType, myLearningDashboard, 1);
+                    var learningTask = this.dashboardService.GetMyCoursesAndElearning(dashboardTrayLearningResourceType, myLearningDashboard, this.CurrentUserEmail, 1);
                     var resourcesTask = this.dashboardService.GetResourcesAsync(resourceDashboard, 1);
                     var cataloguesTask = this.dashboardService.GetCataloguesAsync(catalogueDashboard, 1);
                     var userGroupsTask = this.userGroupService.UserHasCatalogueContributionPermission();
@@ -282,7 +284,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                     switch (dashBoardTray)
                     {
                         case "my-learning":
-                            model.MyLearnings = await this.dashboardService.GetMyCoursesAndElearning(dashboardTrayLearningResourceType, myLearningDashBoard, pageNumber);
+                            model.MyLearnings = await this.dashboardService.GetMyCoursesAndElearning(dashboardTrayLearningResourceType, myLearningDashBoard, this.CurrentUserEmail, pageNumber);
                             return this.PartialView("_MyCoursesAndElearning", model);
                         case "resources":
                             model.Resources = await this.dashboardService.GetResourcesAsync(resourceDashBoard, pageNumber);
@@ -294,7 +296,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 }
                 else
                 {
-                    var learningTask = this.dashboardService.GetMyCoursesAndElearning(dashboardTrayLearningResourceType, myLearningDashBoard, dashBoardTray == "my-learning" ? pageNumber : 1);
+                    var learningTask = this.dashboardService.GetMyCoursesAndElearning(dashboardTrayLearningResourceType, myLearningDashBoard, this.CurrentUserEmail, dashBoardTray == "my-learning" ? pageNumber : 1);
                     var resourcesTask = this.dashboardService.GetResourcesAsync(resourceDashBoard, dashBoardTray == "resources" ? pageNumber : 1);
                     var cataloguesTask = this.dashboardService.GetCataloguesAsync(catalogueDashBoard, dashBoardTray == "catalogues" ? pageNumber : 1);
                     await Task.WhenAll(learningTask, resourcesTask, cataloguesTask);

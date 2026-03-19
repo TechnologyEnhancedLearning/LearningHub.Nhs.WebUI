@@ -59,7 +59,7 @@
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [HttpPost]
         [Route("GetUserRecentMyLearningActivities")]
-        public async Task<IActionResult> GetUserRecentMyLearningActivities([FromBody] MyLearningRequestModel requestModel)
+        public async Task<IActionResult> GetUserRecentMyLearningActivities([FromBody] MyLearningApiRequestViewModel requestModel)
         {
             var activityModel = await this.myLearningService.GetUserRecentMyLearningActivitiesAsync(this.CurrentUserId.GetValueOrDefault(), requestModel);
             return this.Ok(activityModel);
@@ -72,7 +72,7 @@
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [HttpPost]
         [Route("GetUserLearningHistory")]
-        public async Task<IActionResult> GetUserLearningHistory([FromBody] MyLearningRequestModel requestModel)
+        public async Task<IActionResult> GetUserLearningHistory([FromBody] MyLearningApiRequestViewModel requestModel)
         {
             var activityModel = await this.myLearningService.GetUserLearningHistoryAsync(this.CurrentUserId.GetValueOrDefault(), requestModel);
             return this.Ok(activityModel);
@@ -118,7 +118,7 @@
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [HttpPost]
         [Route("GetUserCertificateDetails")]
-        public async Task<IActionResult> GetUserCertificateDetails([FromBody] MyLearningRequestModel requestModel)
+        public async Task<IActionResult> GetUserCertificateDetails([FromBody] MyLearningApiRequestViewModel requestModel)
         {
             var certificateDetails = await this.myLearningService.GetUserCertificateDetails(this.CurrentUserId.GetValueOrDefault(), requestModel);
             return this.Ok(certificateDetails);

@@ -57,7 +57,7 @@
         /// <summary>
         /// Gets or sets the courses in the catalogue.
         /// </summary>
-        public List<MoodleSubCategoryResponseModel> SubCategories { get; set; }
+        public List<MoodleCategory> SubCategories { get; set; }
 
         /// <summary>
         /// Gets or sets the moodle categories.

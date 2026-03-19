@@ -46,12 +46,14 @@
         private readonly ILocationService locationService;
         private readonly ICacheService cacheService;
         private readonly IConfiguration configuration;
+        private readonly IMoodleBridgeApiService moodleBridgeApiService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MyAccountController"/> class.
         /// </summary>
         /// <param name="hostingEnvironment">The hostingEnvironment.</param>
         /// <param name="logger">The logger.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         /// <param name="settings">The settings.</param>
         /// <param name="httpClientFactory">The httpClientFactory.</param>
         /// <param name="userService">userService.</param>
@@ -80,8 +82,9 @@
                 ILocationService locationService,
                 IMultiPageFormService multiPageFormService,
                 ICacheService cacheService,
-                IConfiguration configuration)
-                : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+                IConfiguration configuration,
+                IMoodleBridgeApiService moodleBridgeApiService)
+                : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.userService = userService;
             this.loginWizardService = loginWizardService;

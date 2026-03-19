@@ -61,7 +61,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// GetUserCertificateFromMoodleInstancesAsync.
         /// </summary>
         /// <param name="moodleUserInstanceUserIds">Moodle Instances user id.</param>
-        /// <param name="requestModel">MyLearningRequestModel requestModel.</param>
+        /// <param name="filterText">filterText.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         Task<MoodleCertificateResponseModel> GetUserCertificateFromMoodleInstancesAsync(MoodleInstanceUserIdsViewModel moodleUserInstanceUserIds, string filterText = "");
 

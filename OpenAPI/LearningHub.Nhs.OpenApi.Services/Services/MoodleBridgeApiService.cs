@@ -105,11 +105,6 @@
                     throw new ArgumentException("UserIds are required.");
                 }
 
-                if (moodleUserInstanceUserIds.MoodleInstanceUserIds.ContainsKey("moodle-test"))
-                {
-                    moodleUserInstanceUserIds.MoodleInstanceUserIds["moodle-test"] = 280;
-                }
-
                 string statusFilter = string.Empty; ;
 
                 if ((requestModel.Incomplete && requestModel.Complete) || (!requestModel.Incomplete && !requestModel.Complete))
@@ -193,11 +188,6 @@
                     throw new ArgumentException("UserIds are required.");
                 }
 
-                if (moodleUserInstanceUserIds.MoodleInstanceUserIds.ContainsKey("moodle-test"))
-                {
-                    moodleUserInstanceUserIds.MoodleInstanceUserIds["moodle-test"] = 280;
-                }
-
                 string statusFilter = string.Empty; ;
 
                 if ((requestModel.Incomplete && requestModel.Complete) || (!requestModel.Incomplete && !requestModel.Complete))
@@ -269,16 +259,11 @@
         {
             try
             {
-                email = "binon.yesudhas@nhs.net";
                 var moodleUserInstanceUserIds = await this.GetUserInstancesByEmail(email);
                 if (moodleUserInstanceUserIds?.MoodleInstanceUserIds == null ||
                   !moodleUserInstanceUserIds.MoodleInstanceUserIds.Any())
                 {
                     throw new ArgumentException("UserIds are required.");
-                }
-                if (moodleUserInstanceUserIds.MoodleInstanceUserIds.ContainsKey("moodle-test"))
-                {
-                    moodleUserInstanceUserIds.MoodleInstanceUserIds["moodle-test"] = 280;
                 }
 
                 string statusFilter = "inprogress";
@@ -335,16 +320,11 @@
         {
             try
             {
-                email = "binon.yesudhas@nhs.net";
                 var moodleUserInstanceUserIds = await this.GetUserInstancesByEmail(email);
                 if (moodleUserInstanceUserIds?.MoodleInstanceUserIds == null ||
                   !moodleUserInstanceUserIds.MoodleInstanceUserIds.Any())
                 {
                     throw new ArgumentException("UserIds are required.");
-                }
-                if (moodleUserInstanceUserIds.MoodleInstanceUserIds.ContainsKey("moodle-test"))
-                {
-                    moodleUserInstanceUserIds.MoodleInstanceUserIds["moodle-test"] = 280;
                 }
                 var client = await this.moodleBridgeHttpClient.GetClient();
                 // Build query string (optional params)
@@ -406,10 +386,6 @@
                   !moodleUserInstanceUserIds.MoodleInstanceUserIds.Any())
                 {
                     throw new ArgumentException("UserIds are required.");
-                }
-                if (moodleUserInstanceUserIds.MoodleInstanceUserIds.ContainsKey("moodle-test"))
-                {
-                    moodleUserInstanceUserIds.MoodleInstanceUserIds["moodle-test"] = 280;
                 }
                 var client = await this.moodleBridgeHttpClient.GetClient();
 
@@ -492,7 +468,7 @@
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "An error occurred while fetching user instances by email.");
-                throw; // Re-throw the exception to ensure the caller is aware of the failure
+                throw; 
             }
         }
 

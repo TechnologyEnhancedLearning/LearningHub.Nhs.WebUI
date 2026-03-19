@@ -4,6 +4,7 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+
     /// <summary>
     /// Moodle Bridge operations.
     /// </summary>

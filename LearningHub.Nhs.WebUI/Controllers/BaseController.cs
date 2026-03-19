@@ -126,8 +126,7 @@
         {
             if (this.moodleUserIds == null)
             {
-                ////var moodleUserInstances = await this.moodleBridgeApiService.GetUserInstancesByEmail(this.CurrentUserEmail);
-                var moodleUserInstances = await this.moodleBridgeApiService.GetUserInstancesByEmail("binon.yesudhas@nhs.net");
+                var moodleUserInstances = await this.moodleBridgeApiService.GetUserInstancesByEmail(this.CurrentUserEmail);
                 this.moodleUserIds = moodleUserInstances;
             }
 

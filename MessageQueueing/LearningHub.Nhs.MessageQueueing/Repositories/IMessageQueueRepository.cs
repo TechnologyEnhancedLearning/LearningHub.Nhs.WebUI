@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.GovNotifyMessaging;
     using LearningHub.Nhs.Models.GovNotifyMessaging;
 
@@ -43,5 +44,23 @@
         /// <param name="request">The email request.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task SaveSingleEmailTransactions(SingleEmailRequest request);
+
+        /// <summary>
+        /// The GetPaginatedMessageRequests.
+        /// </summary>
+        /// <param name="offSet">offSet count.</param>
+        /// <param name="fetchRows">fetchRows count.</param>
+        /// <param name="sortColumn">sort column.</param>
+        /// <param name="sortDirection">sort direction.</param>
+        /// <param name="filter">filter.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<PagedResultSet<MessageRequestViewModel>> GetPaginatedMessageRequests(int? offSet, int? fetchRows, string sortColumn, string sortDirection, string filter);
+
+        /// <summary>
+        /// Get Message Request By Id.
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<MessageRequestViewModel> GetMessageRequestById(int id);
     }
 }

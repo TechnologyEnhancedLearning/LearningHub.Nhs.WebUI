@@ -2,18 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.MessageQueueing.Repositories;
     using LearningHub.Nhs.MessagingService.Interfaces;
-    using LearningHub.Nhs.Models.Entities.GovNotifyMessaging;
-    using LearningHub.Nhs.Models.Entities.Hierarchy;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.GovNotifyMessaging;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
-    using LearningHub.Nhs.OpenApi.Services.Services.Messaging;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// GovNotify Messaging Controller.
@@ -155,6 +151,36 @@
         {
             await this.messageQueueRepository.MessageDeliveryFailed(response);
             return this.Ok();
+        }
+
+        /// <summary>
+        /// Get Message Requests.
+        /// </summary>
+        /// <param name="page">page.</param>
+        /// <param name="pageSize">page size.</param>
+        /// <param name="sortColumn">sort column name.</param>
+        /// <param name="sortDirection">sort direction.</param>
+        /// <param name="filter">filter.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [Route("GetMessageRequests/{page}/{pageSize}/{sortColumn}/{sortDirection}/{filter}")]
+        [HttpGet]
+        public async Task<IActionResult> GetMessageRequests(int page, int pageSize, string sortColumn, string sortDirection, string filter)
+        {
+            PagedResultSet<MessageRequestViewModel> pagedResultSet = await this.govMessageService.GetMessageRequests(page, pageSize, sortColumn, sortDirection, filter);
+            return this.Ok(pagedResultSet);
+        }
+
+        /// <summary>
+        /// Get message request details by id.
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [Route("GetMessageRequestById/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetMessageRequestById(int id)
+        {
+            MessageRequestViewModel requestDetails = await this.govMessageService.GetMessageRequestById(id);
+            return this.Ok(requestDetails);
         }
     }
 }

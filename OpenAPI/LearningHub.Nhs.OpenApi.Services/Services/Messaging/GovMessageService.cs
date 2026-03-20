@@ -1,19 +1,17 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Services.Services.Messaging
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using AutoMapper;
     using LearningHub.Nhs.MessageQueueing.Repositories;
     using LearningHub.Nhs.MessagingService.Interfaces;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.GovNotifyMessaging;
     using LearningHub.Nhs.Models.Entities.Messaging;
     using LearningHub.Nhs.Models.Enums.GovNotifyMessaging;
     using LearningHub.Nhs.Models.GovNotifyMessaging;
-    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Messaging;
-    using LearningHub.Nhs.OpenApi.Services.Interface.HttpClients;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
 
@@ -24,6 +22,7 @@
     {
         private readonly IMessageQueueRepository messageQueueRepository;
         private readonly IGovNotifyService messageService;
+        private readonly IMapper mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GovMessageService"/> class.
@@ -31,14 +30,17 @@
         /// <param name="logger">The logger.</param>
         /// <param name="messageQueueRepository">The message repository.</param>
         /// <param name="messageService">The message Service.</param>
+        /// <param name="mapper">mapper.</param>
         public GovMessageService(
             ILogger<Message> logger,
             IMessageQueueRepository messageQueueRepository,
-            IGovNotifyService messageService)
+            IGovNotifyService messageService,
+            IMapper mapper)
             : base(logger)
         {
             this.messageQueueRepository = messageQueueRepository;
             this.messageService = messageService;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -100,6 +102,28 @@
             });
 
             await this.messageQueueRepository.QueueMessagesAsync(requests);
+        }
+
+        /// <summary>
+        /// Get paginated Message Requests.
+        /// </summary>
+        /// <returns>The <see cref="PagedResultSet{MessageRequestViewModel}"/>.</returns>
+        public async Task<PagedResultSet<MessageRequestViewModel>> GetMessageRequests(int page, int pageSize, string sortColumn, string sortDirection, string filter)
+        {
+            int? offset = (page - 1) * pageSize;
+            var result = await this.messageQueueRepository.GetPaginatedMessageRequests(offset, pageSize, sortColumn, sortDirection, filter);
+            return result;
+        }
+
+        /// <summary>
+        /// Get message request details by Id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>The <see cref="Task{MessageRequestViewModel}"/>.</returns>
+        public async Task<MessageRequestViewModel> GetMessageRequestById(int id)
+        {
+            var result = await this.messageQueueRepository.GetMessageRequestById(id);
+            return result;
         }
     }
 }

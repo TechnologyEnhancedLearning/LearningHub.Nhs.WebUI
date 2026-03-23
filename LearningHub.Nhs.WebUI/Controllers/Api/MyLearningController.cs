@@ -1,6 +1,7 @@
 ﻿namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -40,34 +41,6 @@
         public async Task<ActionResult> GetActivityDetailed([FromBody] MyLearningRequestModel requestModel)
         {
             var activity = await this.myLearningService.GetActivityDetailed(requestModel);
-
-            return this.Ok(activity);
-        }
-
-        /// <summary>
-        /// Gets the detailed activity data.
-        /// </summary>
-        /// <param name="requestModel">The request model - filter settings.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        [HttpPost]
-        [Route("GetUserRecentMyLearningActivities")]
-        public async Task<ActionResult> GetUserRecentMyLearningActivities([FromBody] MyLearningRequestModel requestModel)
-        {
-            var activity = await this.myLearningService.GetUserRecentMyLearningActivities(requestModel);
-
-            return this.Ok(activity);
-        }
-
-        /// <summary>
-        /// Gets the detailed activity data.
-        /// </summary>
-        /// <param name="requestModel">The request model - filter settings.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        [HttpPost]
-        [Route("GetUserLearningHistory")]
-        public async Task<ActionResult> GetUserLearningHistory([FromBody] MyLearningRequestModel requestModel)
-        {
-            var activity = await this.myLearningService.GetUserLearningHistory(requestModel);
 
             return this.Ok(activity);
         }

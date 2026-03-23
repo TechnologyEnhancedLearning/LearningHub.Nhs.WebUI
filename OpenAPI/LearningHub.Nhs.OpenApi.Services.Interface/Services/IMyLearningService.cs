@@ -26,7 +26,7 @@
         /// /// <param name="userId">The user id.</param>
         /// <param name="requestModel">The request model.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<MyLearningActivitiesDetailedViewModel> GetUserRecentMyLearningActivitiesAsync(int userId, MyLearningRequestModel requestModel);
+        Task<MyLearningActivitiesDetailedViewModel> GetUserRecentMyLearningActivitiesAsync(int userId, MyLearningApiRequestViewModel requestModel);
 
         /// <summary>
         /// Gets history of users my leraning activities.
@@ -34,7 +34,7 @@
         /// /// <param name="userId">The user id.</param>
         /// <param name="requestModel">The request model.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<MyLearningActivitiesDetailedViewModel> GetUserLearningHistoryAsync(int userId, MyLearningRequestModel requestModel);
+        Task<MyLearningActivitiesDetailedViewModel> GetUserLearningHistoryAsync(int userId, MyLearningApiRequestViewModel requestModel);
 
         /// <summary>
         /// Gets the played segment data for the progress modal in My Learning screen.
@@ -69,6 +69,6 @@
         /// <param name="userId">The user id.</param>
         /// <param name="requestModel">The request model</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(int userId, MyLearningRequestModel requestModel);
+        Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(int userId, MyLearningApiRequestViewModel requestModel);
     }
 }

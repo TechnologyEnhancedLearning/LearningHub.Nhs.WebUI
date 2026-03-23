@@ -14,6 +14,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     public class TrackingController : BaseController
     {
         private readonly IJsDetectionLogger jsDetectionLogger;
+        private readonly IMoodleBridgeApiService moodleBridgeApiService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackingController"/> class.
@@ -23,13 +24,15 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="settings">The settings.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="jsDetectionLogger">The JsDetectionLogger.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         public TrackingController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
+            IMoodleBridgeApiService moodleBridgeApiService,
             IOptions<Settings> settings,
             ILogger<TrackingController> logger,
             IJsDetectionLogger jsDetectionLogger)
-        : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+        : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.jsDetectionLogger = jsDetectionLogger;
         }

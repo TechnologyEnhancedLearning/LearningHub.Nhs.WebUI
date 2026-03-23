@@ -26,13 +26,15 @@
         /// <param name="logger">The logger<see cref="ILogger{AccountController}"/>.</param>
         /// <param name="settings">The settings<see cref="IOptions{Settings}"/>.</param>
         /// <param name="internalSystemService">The internalSystemService<see cref="IInternalSystemService"/>.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         public OfflineController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
             ILogger<OfflineController> logger,
             IOptions<Settings> settings,
-            IInternalSystemService internalSystemService)
-            : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+            IInternalSystemService internalSystemService,
+            IMoodleBridgeApiService moodleBridgeApiService)
+            : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.internalSystemService = internalSystemService;
         }

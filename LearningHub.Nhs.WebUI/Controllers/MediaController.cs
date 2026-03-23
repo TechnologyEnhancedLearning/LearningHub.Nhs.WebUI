@@ -26,8 +26,9 @@
         /// <param name="settings">Settings.</param>
         /// <param name="httpClientFactory">Http client factory.</param>
         /// <param name="azureMediaService">Azure media services.</param>
-        public MediaController(IWebHostEnvironment hostingEnvironment, ILogger<MediaController> logger, IOptions<Settings> settings, IHttpClientFactory httpClientFactory, IAzureMediaService azureMediaService)
-            : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
+        public MediaController(IWebHostEnvironment hostingEnvironment, ILogger<MediaController> logger, IOptions<Settings> settings, IHttpClientFactory httpClientFactory, IAzureMediaService azureMediaService, IMoodleBridgeApiService moodleBridgeApiService)
+            : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.azureMediaService = azureMediaService;
             this.logger = logger;

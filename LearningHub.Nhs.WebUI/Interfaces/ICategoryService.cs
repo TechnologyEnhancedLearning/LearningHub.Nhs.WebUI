@@ -18,21 +18,21 @@
         /// </summary>
         /// <param name="catalogueNodeVersionId">catalogueNodeVersionId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        Task<int> GetCatalogueVersionCategoryAsync(int catalogueNodeVersionId);
+        Task<CatalogueNodeVersionCategory> GetCatalogueVersionCategoryAsync(int catalogueNodeVersionId);
 
         /// <summary>
         /// GetCoursesByCategoryIdAsync.
         /// </summary>
         /// <param name="categoryId">categoryId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        Task<MoodleCoursesResponseModel> GetCoursesByCategoryIdAsync(int categoryId);
+        Task<MoodleCourseResultsResponseModel> GetCoursesByCategoryIdAsync(string categoryId);
 
         /// <summary>
         /// GetSubCategoryByCategoryIdAsync.
         /// </summary>
         /// <param name="categoryId">categoryId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        Task<List<MoodleSubCategoryResponseModel>> GetSubCategoryByCategoryIdAsync(int categoryId);
+        Task<List<SubCategoryResult>> GetSubCategoryByCategoryIdAsync(string categoryId);
 
         /// <summary>
         /// GetAllMoodleCategoriesAsync.

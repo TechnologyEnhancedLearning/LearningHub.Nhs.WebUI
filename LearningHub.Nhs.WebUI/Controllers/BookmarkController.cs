@@ -33,13 +33,15 @@
         /// <param name="settings">The settings.</param>
         /// <param name="httpClientFactory">The httpClientFactory.</param>
         /// <param name="bookmarkService">bookmarkService.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         public BookmarkController(
             IWebHostEnvironment hostingEnvironment,
             ILogger<ResourceController> logger,
             IOptions<Settings> settings,
             IHttpClientFactory httpClientFactory,
-            IBookmarkService bookmarkService)
-            : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+            IBookmarkService bookmarkService,
+            IMoodleBridgeApiService moodleBridgeApiService)
+            : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.bookmarkService = bookmarkService;
         }

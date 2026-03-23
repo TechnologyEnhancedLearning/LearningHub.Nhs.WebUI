@@ -6,12 +6,14 @@
 -- Modification History
 --
 -- 14-10-2025  SA	Initial Revision.
+-- 11-03-2026  SA   Added instance name
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[CatalogueNodeVersionCategoryCreate]
 (
 	@userId INT, 
 	@CatalogueNodeVersionId INT,
-	@CategoryId INT,
+	@categoryId INT,
+	@instanceName VARCHAR(50),
 	@UserTimezoneOffset int = NULL
 )
 
@@ -33,19 +35,21 @@ BEGIN
 	END
 
 	INSERT INTO [hierarchy].[CatalogueNodeVersionCategory]
-           ([CatalogueNodeVersionId]
-           ,[CategoryId]
-           ,[Deleted]
-           ,[CreateUserId]
-           ,[CreateDate]
-           ,[AmendUserId]
-           ,[AmendDate])
-     VALUES
-           (@CatalogueNodeVersionId
-           ,@CategoryId
-           ,0
-           ,@userId
-           ,@AmendDate
-           ,@userId
-           ,@AmendDate)
+       ([CatalogueNodeVersionId]
+       ,[CategoryId]
+	   ,[InstanceName]
+       ,[Deleted]
+       ,[CreateUserId]
+       ,[CreateDate]
+       ,[AmendUserId]
+       ,[AmendDate])
+ VALUES
+       (@CatalogueNodeVersionId
+       ,@categoryId
+	   ,@instanceName
+       ,0
+       ,@userId
+       ,@AmendDate
+       ,@userId
+       ,@AmendDate)
 END

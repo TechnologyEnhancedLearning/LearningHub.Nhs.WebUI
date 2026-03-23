@@ -42,6 +42,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="logger">The logger.</param>
         /// <param name="fileService">The fileService.</param>
         /// <param name="featureManager"> The Feature flag manager.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         public SearchController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
@@ -49,8 +50,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
             ISearchService searchService,
             ILogger<SearchController> logger,
             IFileService fileService,
+            IMoodleBridgeApiService moodleBridgeApiService,
             IFeatureManager featureManager)
-        : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+        : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.searchService = searchService;
             this.fileService = fileService;

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.MyLearning;
 
     /// <summary>
@@ -21,15 +22,17 @@
         /// Gets the user recent my leraning activities..
         /// </summary>
         /// <param name="requestModel">The request model.</param>
+        /// <param name="moodleInstanceUserIds">The moodleInstanceUserIds.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<MyLearningActivitiesDetailedViewModel> GetUserRecentMyLearningActivities(MyLearningRequestModel requestModel);
+        Task<MyLearningActivitiesDetailedViewModel> GetUserRecentMyLearningActivities(MyLearningRequestModel requestModel, MoodleInstanceUserIdsViewModel moodleInstanceUserIds);
 
         /// <summary>
         /// Gets the user leraning history.
         /// </summary>
         /// <param name="requestModel">The request model.</param>
+        /// <param name="moodleInstanceUserIds">The moodleInstanceUserIds.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<MyLearningActivitiesDetailedViewModel> GetUserLearningHistory(MyLearningRequestModel requestModel);
+        Task<MyLearningActivitiesDetailedViewModel> GetUserLearningHistory(MyLearningRequestModel requestModel, MoodleInstanceUserIdsViewModel moodleInstanceUserIds);
 
         /// <summary>
         /// Gets the played segment data for the progress modal in My Learning screen.
@@ -53,8 +56,9 @@
         /// Gets the user certificates.
         /// </summary>
         /// <param name="requestModel">The request model.</param>
+        /// <param name="moodleInstanceUserIds">The moodleInstanceUserIds.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(MyLearningRequestModel requestModel);
+        Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(MyLearningRequestModel requestModel, MoodleInstanceUserIdsViewModel moodleInstanceUserIds);
 
         /// <summary>
         /// Gets the resource URL for a given resource reference ID.

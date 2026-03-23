@@ -42,18 +42,18 @@
         /// </summary>
         /// <param name="catalogueNodeVersionId">The catalogueNodeVersionId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<int> GetCatalogueVersionCategoryAsync(int catalogueNodeVersionId)
+        public async Task<CatalogueNodeVersionCategory> GetCatalogueVersionCategoryAsync(int catalogueNodeVersionId)
         {
+            CatalogueNodeVersionCategory catalogueNodeVersionCategory = new CatalogueNodeVersionCategory { };
             var client = await this.OpenApiHttpClient.GetClientAsync();
 
             var request = $"category/GetCatalogueVersionCategory/{catalogueNodeVersionId}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
-            var categoryId = 0;
 
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
-                categoryId = Convert.ToInt32(result);
+                catalogueNodeVersionCategory = JsonConvert.DeserializeObject<CatalogueNodeVersionCategory>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
                        response.StatusCode == System.Net.HttpStatusCode.Forbidden)
@@ -61,7 +61,7 @@
                 throw new Exception("AccessDenied");
             }
 
-            return categoryId;
+            return catalogueNodeVersionCategory;
         }
 
         /// <summary>
@@ -69,9 +69,9 @@
         /// </summary>
         /// <param name="categoryId">The categoryId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<List<MoodleSubCategoryResponseModel>> GetSubCategoryByCategoryIdAsync(int categoryId)
+        public async Task<List<SubCategoryResult>> GetSubCategoryByCategoryIdAsync(string categoryId)
         {
-            List<MoodleSubCategoryResponseModel> viewmodel = new List<MoodleSubCategoryResponseModel> { };
+            List<SubCategoryResult> viewmodel = new List<SubCategoryResult> { };
 
             var client = await this.OpenApiHttpClient.GetClientAsync();
 
@@ -81,7 +81,7 @@
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
-                viewmodel = JsonConvert.DeserializeObject<List<MoodleSubCategoryResponseModel>>(result);
+                viewmodel = JsonConvert.DeserializeObject<List<SubCategoryResult>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
                        response.StatusCode == System.Net.HttpStatusCode.Forbidden)
@@ -97,9 +97,9 @@
         /// </summary>
         /// <param name="categoryId">The categoryId.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<MoodleCoursesResponseModel> GetCoursesByCategoryIdAsync(int categoryId)
+        public async Task<MoodleCourseResultsResponseModel> GetCoursesByCategoryIdAsync(string categoryId)
         {
-            MoodleCoursesResponseModel viewmodel = new MoodleCoursesResponseModel { };
+            MoodleCourseResultsResponseModel viewmodel = new MoodleCourseResultsResponseModel { };
 
             var client = await this.OpenApiHttpClient.GetClientAsync();
 
@@ -109,7 +109,7 @@
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
-                viewmodel = JsonConvert.DeserializeObject<MoodleCoursesResponseModel>(result);
+                viewmodel = JsonConvert.DeserializeObject<MoodleCourseResultsResponseModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
                        response.StatusCode == System.Net.HttpStatusCode.Forbidden)

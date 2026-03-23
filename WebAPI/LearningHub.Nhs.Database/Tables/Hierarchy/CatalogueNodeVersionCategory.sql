@@ -2,6 +2,7 @@
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[CatalogueNodeVersionId] [int] NOT NULL,
 	[CategoryId] [int] NOT NULL,
+	[InstanceName] [varchar](50) NULL,
 	[Deleted] [bit] NOT NULL,
 	[CreateUserId] [int] NOT NULL,
 	[CreateDate] [datetimeoffset](7) NOT NULL,

@@ -1,14 +1,17 @@
 ﻿#pragma warning disable SA1200 // Using directives should be placed correctly
 using System;
 using System.Diagnostics;
+using System.Linq;
 using LearningHub.Nhs.WebUI;
 using LearningHub.Nhs.WebUI.Interfaces;
 using LearningHub.Nhs.WebUI.JsDetection;
 using LearningHub.Nhs.WebUI.Middleware;
+using LearningHub.Nhs.WebUI.Services;
 using LearningHub.Nhs.WebUI.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -37,6 +40,21 @@ try
 
     builder.Services.AddHostedService<TimedHostedService>();
     builder.Services.ConfigureServices(builder.Configuration, builder.Environment);
+
+    // Automatically detect set of views stored in library that comes with it and registers them
+    builder.Services.AddControllersWithViews()
+    .ConfigureApplicationPartManager(manager =>
+    {
+        var razorAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+            .Where(asm => asm.GetTypes()
+                .Any(type => type.Namespace == "AspNetCoreGeneratedDocument"));
+
+        foreach (var assembly in razorAssemblies)
+        {
+            manager.ApplicationParts.Add(new AssemblyPart(assembly));
+            manager.ApplicationParts.Add(new CompiledRazorAssemblyPart(assembly));
+        }
+    });
 
     var app = builder.Build();
 

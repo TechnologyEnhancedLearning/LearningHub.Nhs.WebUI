@@ -25,6 +25,7 @@ using LearningHub.Nhs.Models.Email.Models;
 using LearningHub.Nhs.Models.Email;
 using LearningHub.Nhs.OpenApi.Services.Helpers;
 using System.Configuration;
+using LearningHub.Nhs.Models.Moodle;
 
 namespace LearningHub.Nhs.OpenApi.Services.Services
 {
@@ -42,7 +43,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         private readonly INotificationService notificationService;
         private readonly IEmailSenderService emailSenderService;
         private readonly IUserNotificationService userNotificationService;
-        private readonly IMoodleApiService moodleApiService;
+        private readonly IMoodleBridgeApiService moodleBridgeApiService;
         private readonly IUserProfileService userProfileService;
         private readonly IMapper mapper;
 
@@ -57,10 +58,10 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <param name="cachingService">cachingService.</param>
         /// <param name="notificationService">notificationService.</param>
         /// <param name="userNotificationService">userNotificationService.</param>
-        /// <param name="moodleApiService">moodleApiService.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService</param>
         /// <param name="emailSenderService">emailSenderService.</param>
         /// <param name="userProfileService">userProfileService.</param>
-        public DatabricksService(IOptions<DatabricksConfig> databricksConfig,IOptions<LearningHubConfig> learningHubConfig, IReportHistoryRepository reportHistoryRepository, IMapper mapper, IQueueCommunicatorService queueCommunicatorService, ICachingService cachingService, INotificationService notificationService, IUserNotificationService userNotificationService, IMoodleApiService moodleApiService, IEmailSenderService emailSenderService, IUserProfileService userProfileService)
+        public DatabricksService(IOptions<DatabricksConfig> databricksConfig, IOptions<LearningHubConfig> learningHubConfig, IReportHistoryRepository reportHistoryRepository, IMapper mapper, IQueueCommunicatorService queueCommunicatorService, ICachingService cachingService, INotificationService notificationService, IUserNotificationService userNotificationService, IMoodleBridgeApiService moodleBridgeApiService, IEmailSenderService emailSenderService, IUserProfileService userProfileService)
         {
             this.databricksConfig = databricksConfig;
             this.learningHubConfig = learningHubConfig;
@@ -70,7 +71,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             this.cachingService = cachingService;
             this.notificationService = notificationService;
             this.userNotificationService = userNotificationService;
-            this.moodleApiService = moodleApiService;
+            this.moodleBridgeApiService = moodleBridgeApiService;
             this.emailSenderService = emailSenderService;
             this.userProfileService = userProfileService;
         }
@@ -397,7 +398,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 //send notification
                 string firstCourse = string.Empty;
 
-                var courses = await moodleApiService.GetCoursesByCategoryIdAsync(learningHubConfig.Value.StatMandId);
+                string categoryId = learningHubConfig.Value.StatMandInstanceName + ":" + learningHubConfig.Value.StatMandId;
+
+                var courseResult = await moodleBridgeApiService.GetCoursesByCategoryIdAsync(categoryId);
 
                 if (string.IsNullOrWhiteSpace(reportHistory.CourseFilter))
                 {
@@ -405,9 +408,18 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 }
                 else
                 {
-                    var matched = courses.Courses
-                        .Where(c => reportHistory.CourseFilter.Contains(c.Id.ToString()))
-                        .Select(c => c.Displayname)
+                    var courses = courseResult?.Results?
+                                .Where(r => r.Instance == learningHubConfig.Value.StatMandInstanceName)
+                                .SelectMany(r => r.Data?.Courses.Courses ?? Enumerable.Empty<Course>())
+                                .Select(c => new KeyValuePair<string, string>(
+                                    c.Id.ToString(),
+                                    c.Displayname))
+                                .ToList() ?? new List<KeyValuePair<string, string>>();
+
+
+                    var matched = courses
+                        .Where(c => reportHistory.CourseFilter.Contains(c.Key.ToString()))
+                        .Select(c => c.Value)
                         .ToList();
 
                     if (matched.Count == 1)

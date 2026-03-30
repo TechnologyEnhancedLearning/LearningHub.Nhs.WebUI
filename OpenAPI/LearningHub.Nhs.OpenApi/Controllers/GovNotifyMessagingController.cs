@@ -47,13 +47,12 @@
             {
                 var response = await this.govMessageService.SendEmailAsync(request);
 
-                if (!response.IsSuccess)
-                {
-                    return this.BadRequest(new { error = response.ErrorMessage });
-                }
+                ////if (!response.IsSuccess)
+                ////{
+                ////    return this.BadRequest(new { error = response.ErrorMessage });
+                ////}
 
                 return this.Ok(response);
-
             }
             catch (Exception ex)
             {

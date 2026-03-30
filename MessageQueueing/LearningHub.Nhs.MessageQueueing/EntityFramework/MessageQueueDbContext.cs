@@ -35,5 +35,10 @@
         /// Gets or sets the PendingMessageRequests.
         /// </summary>
         public virtual DbSet<PendingMessageRequests> PendingMessageRequests { get; set; }
+
+        /// <summary>
+        /// Gets or sets the MessageRequestViewModel.
+        /// </summary>
+        public virtual DbSet<MessageRequestViewModel> MessageRequestViewModel { get; set; }
     }
 }

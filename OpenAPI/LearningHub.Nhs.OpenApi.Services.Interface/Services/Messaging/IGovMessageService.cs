@@ -1,12 +1,9 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.GovNotifyMessaging;
-    using LearningHub.Nhs.Models.Messaging;
-    using LearningHub.Nhs.Models.Validation;
-    using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
     /// The IGovMessageService interface.
@@ -27,5 +24,18 @@
         /// <param name="request">The QueueRequestList.</param>
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         Task QueueRequestsAsync(QueueMessageList request);
+
+        /// <summary>
+        /// Get Message Requests.
+        /// </summary>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        Task<PagedResultSet<MessageRequestViewModel>> GetMessageRequests(int page, int pageSize, string sortColumn, string sortDirection, string filter);
+
+        /// <summary>
+        /// Get Message request by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        Task<MessageRequestViewModel> GetMessageRequestById(int id);
     }
 }

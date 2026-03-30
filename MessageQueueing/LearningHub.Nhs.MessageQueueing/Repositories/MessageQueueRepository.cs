@@ -3,9 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Linq;
     using System.Threading.Tasks;
+    using AutoMapper;
     using LearningHub.Nhs.MessageQueueing.EntityFramework;
     using LearningHub.Nhs.MessageQueueing.Helpers;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.GovNotifyMessaging;
     using LearningHub.Nhs.Models.GovNotifyMessaging;
     using Microsoft.Data.SqlClient;
@@ -17,14 +20,17 @@
     public class MessageQueueRepository : IMessageQueueRepository
     {
         private readonly MessageQueueDbContext dbContext;
+        private readonly IMapper mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageQueueRepository"/> class.
         /// </summary>
         /// <param name="dbContext">The context.</param>
-        public MessageQueueRepository(MessageQueueDbContext dbContext)
+        /// <param name="mapper">mapper.</param>
+        public MessageQueueRepository(MessageQueueDbContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -87,6 +93,44 @@
             var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = request.Status };
             var param4 = new SqlParameter("@p4", SqlDbType.NVarChar) { Value = request.ErrorMessage == null ? DBNull.Value : request.ErrorMessage };
             await this.dbContext.Database.ExecuteSqlRawAsync("dbo.SaveSingleEmailTransactions @p0, @p1, @p2, @p3, @p4", param0, param1, param2, param3, param4);
+        }
+
+        /// <summary>
+        /// The Get Paginated MessageRequests.
+        /// </summary>
+        /// <param name="offSet">offset count.</param>
+        /// <param name="fetchRows">fetch rows.</param>
+        /// <param name="sortColumn">sort column.</param>
+        /// <param name="sortDirection">sort direction.</param>
+        /// <param name="filter">filter.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<PagedResultSet<MessageRequestViewModel>> GetPaginatedMessageRequests(int? offSet, int? fetchRows, string sortColumn, string sortDirection, string filter)
+        {
+            var result = new PagedResultSet<MessageRequestViewModel>();
+            var param0 = new SqlParameter("@offSet", SqlDbType.Int) { Value = offSet };
+            var param1 = new SqlParameter("@fetchRows", SqlDbType.Int) { Value = fetchRows };
+            var param2 = new SqlParameter("@sortColumn", SqlDbType.Text) { Value = sortColumn };
+            var param3 = new SqlParameter("@sortDirection", SqlDbType.Text) { Value = sortDirection };
+            var param4 = new SqlParameter("@filter", SqlDbType.Text) { Value = filter };
+            var param5 = new SqlParameter("@totalCount", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            var requests = await this.dbContext.MessageRequestViewModel.FromSqlRaw("dbo.GetAllMessageRequests @offSet,@fetchRows,@sortColumn,@sortDirection,@filter,@totalCount output ", param0, param1, param2, param3, param4, param5)
+               .AsNoTracking().ToListAsync();
+            result.TotalItemCount = (int)param5.Value;
+            result.Items = mapper.Map<List<MessageRequestViewModel>>(requests);
+            return result;
+        }
+
+        /// <summary>
+        /// Get Message Request By Id.
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<MessageRequestViewModel> GetMessageRequestById(int id)
+        {
+            var param0 = new SqlParameter("@id", SqlDbType.Int) { Value = id };
+            var result = await this.dbContext.MessageRequestViewModel.FromSqlRaw("dbo.GetMessageRequestById @id", param0).AsNoTracking().ToListAsync();
+            MessageRequestViewModel messageRequestViewModel = result.AsEnumerable().FirstOrDefault();
+            return messageRequestViewModel;
         }
     }
 }

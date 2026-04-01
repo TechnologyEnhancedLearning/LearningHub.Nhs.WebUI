@@ -28,17 +28,15 @@ BEGIN
     DECLARE @MaxRows INT = @MaxPageNumber * @FetchRows;
     DECLARE @OffsetRows INT = (@PageNumber - 1) * @FetchRows;
 
-    ----------------------------------------------------------------------
+
     -- Temp table instead of table variable
-    ----------------------------------------------------------------------
     CREATE TABLE #Resources (
         ResourceId INT NOT NULL PRIMARY KEY,
         ResourceActivityCount INT NOT NULL
     );
 
-    ----------------------------------------------------------------------
     -- Populate popular resources (TOP @MaxRows)
-    ----------------------------------------------------------------------
+
     INSERT INTO #Resources (ResourceId, ResourceActivityCount)
     SELECT TOP (@MaxRows)
         ra.ResourceId,
@@ -62,9 +60,8 @@ BEGIN
     GROUP BY ra.ResourceId
     ORDER BY COUNT(ra.ResourceVersionId) DESC;
 
-    ----------------------------------------------------------------------
     -- Main result set with paging
-    ----------------------------------------------------------------------
+
     SELECT 
         tr.ResourceId,
         rrRef.OriginalResourceReferenceId AS ResourceReferenceID,
@@ -100,9 +97,7 @@ BEGIN
         AND rv.Id = r.CurrentResourceVersionId
         AND rv.Deleted = 0
 
-    ----------------------------------------------------------------------
     -- Deterministic ResourceReference lookup
-    ----------------------------------------------------------------------
     OUTER APPLY (
         SELECT TOP 1 rr.OriginalResourceReferenceId
         FROM resources.ResourceReference rr
@@ -115,9 +110,7 @@ BEGIN
         ORDER BY rr.Id DESC
     ) rrRef
 
-    ----------------------------------------------------------------------
     -- Provider JSON aggregation
-    ----------------------------------------------------------------------
     LEFT JOIN (
         SELECT 
             rp.ResourceVersionId,
@@ -148,16 +141,12 @@ BEGIN
     JOIN hierarchy.CatalogueNodeVersion cnv 
         ON cnv.NodeVersionId = nv.Id AND cnv.Deleted = 0
 
-    ----------------------------------------------------------------------
     -- Bookmark lookup using same ResourceReference
-    ----------------------------------------------------------------------
     LEFT JOIN hub.UserBookmark ub 
         ON ub.UserId = @UserId
         AND ub.ResourceReferenceId = rrRef.OriginalResourceReferenceId
 
-    ----------------------------------------------------------------------
     -- Access check
-    ----------------------------------------------------------------------
     LEFT JOIN (
         SELECT DISTINCT CatalogueNodeId 
         FROM hub.RoleUserGroupView rug
@@ -169,9 +158,7 @@ BEGIN
             AND uug.UserId = @UserId
     ) auth ON n.Id = auth.CatalogueNodeId
 
-    ----------------------------------------------------------------------
-    -- Duration joins
-    ----------------------------------------------------------------------
+
     LEFT JOIN resources.VideoResourceVersion vrv 
         ON vrv.ResourceVersionId = r.CurrentResourceVersionId
     LEFT JOIN resources.AudioResourceVersion arv2 
@@ -182,12 +169,9 @@ BEGIN
     OFFSET @OffsetRows ROWS
     FETCH NEXT @FetchRows ROWS ONLY;
 
-    ----------------------------------------------------------------------
-    -- Total records (capped at 12)
-    ----------------------------------------------------------------------
-    SELECT @TotalRecords =
-        CASE WHEN COUNT(*) > @MaxRows THEN @MaxRows ELSE COUNT(*) END
-    FROM #Resources;
+
+
+    SELECT @TotalRecords = COUNT(*) FROM #Resources;
 
 END
 

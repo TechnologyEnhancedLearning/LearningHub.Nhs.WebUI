@@ -49,9 +49,7 @@ BEGIN
         ProvidersJson NVARCHAR(MAX)
     );
 
-    ----------------------------------------------------------------------
     -- Insert TOP(@MaxRows) rated resources
-    ----------------------------------------------------------------------
     INSERT INTO #RatedResources
     SELECT TOP (@MaxRows)
         r.Id AS ResourceId,
@@ -96,9 +94,7 @@ BEGIN
         ON rvrs.ResourceVersionId = r.CurrentResourceVersionId
         AND rvrs.RatingCount > 0
 
-    ----------------------------------------------------------------------
     -- Deterministic ResourceReference lookup
-    ----------------------------------------------------------------------
     OUTER APPLY (
         SELECT TOP 1 rr.OriginalResourceReferenceId
         FROM resources.ResourceReference rr
@@ -111,9 +107,8 @@ BEGIN
         ORDER BY rr.Id DESC
     ) rrRef
 
-    ----------------------------------------------------------------------
     -- Provider JSON aggregation
-    ----------------------------------------------------------------------
+
     LEFT JOIN (
         SELECT 
             rp.ResourceVersionId,
@@ -129,25 +124,19 @@ BEGIN
         GROUP BY rp.ResourceVersionId
     ) rpAgg ON rpAgg.ResourceVersionId = r.CurrentResourceVersionId
 
-    ----------------------------------------------------------------------
     -- Hierarchy joins
-    ----------------------------------------------------------------------
     JOIN hierarchy.NodeResource nr ON r.Id = nr.ResourceId AND nr.Deleted = 0
     JOIN hierarchy.Node n ON n.Id = nr.NodeId AND n.Hidden = 0 AND n.Deleted = 0
     JOIN hierarchy.NodePath np ON np.NodeId = n.Id AND np.Deleted = 0 AND np.IsActive = 1
     JOIN hierarchy.NodeVersion nv ON nv.NodeId = np.CatalogueNodeId AND nv.VersionStatusId = 2 AND nv.Deleted = 0
     JOIN hierarchy.CatalogueNodeVersion cnv ON cnv.NodeVersionId = nv.Id AND cnv.Deleted = 0
 
-    ----------------------------------------------------------------------
     -- Bookmark lookup
-    ----------------------------------------------------------------------
     LEFT JOIN hub.UserBookmark ub 
         ON ub.UserId = @UserId
         AND ub.ResourceReferenceId = rrRef.OriginalResourceReferenceId
 
-    ----------------------------------------------------------------------
     -- Access check
-    ----------------------------------------------------------------------
     LEFT JOIN (
         SELECT DISTINCT CatalogueNodeId 
         FROM hub.RoleUserGroupView rug
@@ -158,9 +147,6 @@ BEGIN
             AND uug.UserId = @UserId
     ) auth ON n.Id = auth.CatalogueNodeId
 
-    ----------------------------------------------------------------------
-    -- Duration joins
-    ----------------------------------------------------------------------
     LEFT JOIN resources.VideoResourceVersion vrv 
         ON vrv.ResourceVersionId = r.CurrentResourceVersionId
 
@@ -170,21 +156,15 @@ BEGIN
     WHERE rv.VersionStatusId = 2
     ORDER BY rvrs.AverageRating DESC, rvrs.RatingCount DESC, rv.Title;
 
-    ----------------------------------------------------------------------
-    -- Final paged result
-    ----------------------------------------------------------------------
+
     SELECT *
     FROM #RatedResources
     ORDER BY AverageRating DESC, RatingCount DESC, Title
     OFFSET @OffsetRows ROWS
     FETCH NEXT @FetchRows ROWS ONLY;
 
-    ----------------------------------------------------------------------
-    -- Total records (capped at 12)
-    ----------------------------------------------------------------------
-    SELECT @TotalRecords =
-        CASE WHEN COUNT(*) > @MaxRows THEN @MaxRows ELSE COUNT(*) END
-    FROM #RatedResources;
+    SELECT @TotalRecords = COUNT(*)  FROM #RatedResources;
+   
 
 END
 

@@ -560,6 +560,8 @@
     <Build Include="Stored Procedures\Adf\LoadElfhUsers.sql" />
     <Build Include="Stored Procedures\Adf\LoadElfhUserUserGroups.sql" />
     <Build Include="Stored Procedures\Adf\UpsertElfhExternalUsers.sql" />
+    <Build Include="Tables\Adf\ADFSyncMetadata.sql" />
+    <Build Include="Stored Procedures\Adf\proc_UpdateLastSyncTimeAdf.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

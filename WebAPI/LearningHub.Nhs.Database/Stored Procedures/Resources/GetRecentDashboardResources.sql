@@ -191,4 +191,4 @@ BEGIN
     OFFSET @OffsetRows ROWS FETCH NEXT @FetchRows ROWS ONLY;
 
 END
-GO
+

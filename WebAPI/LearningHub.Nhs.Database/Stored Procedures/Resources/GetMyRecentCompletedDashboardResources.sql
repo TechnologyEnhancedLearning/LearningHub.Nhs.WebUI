@@ -5,9 +5,9 @@
 --
 -- Modification History
 --
--- 24 Jun 2024	OA	Initial Revision
+-- 24 Jun 2024  OA  Initial Revision
 -- 27 Jun 2024  SA  Removed unused temp tables
--- 29 Sep 2025  SA  Integrated the provider dertails 
+-- 29 Sep 2025  SA  Integrated the provider details 
 -- 31 Mar 2026  OA  TD-7057 Script Optimization
 -------------------------------------------------------------------------------
 
@@ -20,18 +20,25 @@ CREATE PROCEDURE [resources].[GetMyRecentCompletedDashboardResources]
 AS
 BEGIN
     SET NOCOUNT ON;
+
     DECLARE @MaxPageNumber INT = 4;
     DECLARE @FetchRows INT = 3;
+
     IF @PageNumber > @MaxPageNumber
         SET @PageNumber = @MaxPageNumber;
+
     DECLARE @MaxRows INT = @MaxPageNumber * @FetchRows;
     DECLARE @OffsetRows INT = (@PageNumber - 1) * @FetchRows;
-    -- Use temp table instead of table variable:
+
+    -- Temp table for activity
     CREATE TABLE #MyActivity (
         ResourceId INT PRIMARY KEY,
         ResourceActivityId INT
     );
-    -- Latest activity per resource per user (we should consider precomputing this)
+
+
+    -- Latest activity per resource per user
+
     WITH LatestActivity AS (
         SELECT 
             a.Id,
@@ -92,8 +99,48 @@ BEGIN
             )
         )
     ORDER BY la.Id DESC;
-    -- Total count without duplicate queries:
+
+
+    -- Total count
+
     SELECT @TotalRecords = COUNT(*) FROM #MyActivity;
+
+
+    -- Precompute ResourceReference lookup (replaces OUTER APPLY)
+
+    CREATE TABLE #ResourceRefLookup (
+        ResourceId INT NOT NULL,
+        NodeId INT NOT NULL,
+        OriginalResourceReferenceId INT NOT NULL,
+        PRIMARY KEY (ResourceId, NodeId)
+    );
+
+    INSERT INTO #ResourceRefLookup (ResourceId, NodeId, OriginalResourceReferenceId)
+	SELECT 
+		x.ResourceId,
+		x.NodeId,
+		x.OriginalResourceReferenceId
+	FROM (
+		SELECT 
+			rr.ResourceId,
+			np.NodeId,
+			rr.OriginalResourceReferenceId,
+			ROW_NUMBER() OVER (
+				PARTITION BY rr.ResourceId, np.NodeId
+				ORDER BY rr.Id DESC
+			) AS rn
+		FROM resources.ResourceReference rr
+		JOIN hierarchy.NodePath np 
+			ON np.Id = rr.NodePathId
+		WHERE rr.Deleted = 0
+			AND np.Deleted = 0
+	) x
+	WHERE x.rn = 1;
+
+
+
+    -- Final SELECT
+
     SELECT 
         r.Id AS ResourceId,
         rrRef.OriginalResourceReferenceId AS ResourceReferenceID,
@@ -125,34 +172,35 @@ BEGIN
     JOIN activity.ResourceActivity ra ON ra.Id = ma.ResourceActivityId
     JOIN resources.ResourceVersion rv ON rv.Id = ra.ResourceVersionId AND rv.Deleted = 0
     JOIN resources.Resource r ON r.Id = rv.ResourceId
-    -- Replace correlated subquery with OUTER APPLY
-    OUTER APPLY (
-        SELECT TOP 1 rr.OriginalResourceReferenceId
-        FROM resources.ResourceReference rr
-        JOIN hierarchy.NodePath np 
-            ON np.Id = rr.NodePathId 
-            AND np.NodeId = nr.NodeId
-            AND np.Deleted = 0
-        WHERE rr.ResourceId = rv.ResourceId 
-            AND rr.Deleted = 0
-    ) rrRef
+    JOIN hierarchy.NodeResource nr ON r.Id = nr.ResourceId AND nr.Deleted = 0
+
+    -- Replaced OUTER APPLY
+    LEFT JOIN #ResourceRefLookup rrRef
+        ON rrRef.ResourceId = r.Id
+        AND rrRef.NodeId = nr.NodeId
+
     LEFT JOIN (
-        SELECT 
-            rp.ResourceVersionId,
-            JSON_QUERY('[' + STRING_AGG(
-                '{"Id":' + CAST(p.Id AS NVARCHAR) +
-                ',"Name":"' + p.Name + '"' +
-                ',"Description":"' + p.Description + '"' +
-                ',"Logo":"' + ISNULL(p.Logo,'') + '"}',
-            ',') + ']') AS ProvidersJson
-        FROM resources.ResourceVersionProvider rp
-        JOIN hub.Provider p ON p.Id = rp.ProviderId
-        WHERE rp.Deleted = 0 AND p.Deleted = 0
-        GROUP BY rp.ResourceVersionId
-    ) rpAgg ON rpAgg.ResourceVersionId = r.CurrentResourceVersionId
+    SELECT 
+        rp.ResourceVersionId,
+        (
+            SELECT 
+                p.Id,
+                p.Name,
+                p.Description,
+                p.Logo
+            FROM resources.ResourceVersionProvider rp2
+            JOIN hub.Provider p ON p.Id = rp2.ProviderId
+            WHERE rp2.ResourceVersionId = rp.ResourceVersionId
+              AND rp2.Deleted = 0
+              AND p.Deleted = 0
+            FOR JSON PATH
+        ) AS ProvidersJson
+    FROM resources.ResourceVersionProvider rp
+    GROUP BY rp.ResourceVersionId
+) rpAgg ON rpAgg.ResourceVersionId = r.CurrentResourceVersionId
+
     JOIN hierarchy.Publication p ON rv.PublicationId = p.Id AND p.Deleted = 0
     JOIN resources.ResourceVersionRatingSummary rvrs ON rv.Id = rvrs.ResourceVersionId AND rvrs.Deleted = 0
-    JOIN hierarchy.NodeResource nr ON r.Id = nr.ResourceId AND nr.Deleted = 0
     JOIN hierarchy.Node n ON n.Id = nr.NodeId AND n.Hidden = 0 AND n.Deleted = 0
     JOIN hierarchy.NodePath np ON np.NodeId = n.Id AND np.Deleted = 0 AND np.IsActive = 1
     JOIN hierarchy.NodeVersion nv ON nv.NodeId = np.CatalogueNodeId AND nv.VersionStatusId = 2 AND nv.Deleted = 0
@@ -177,4 +225,5 @@ BEGIN
     ORDER BY ma.ResourceActivityId DESC, rv.Title
     OFFSET @OffsetRows ROWS
     FETCH NEXT @FetchRows ROWS ONLY;
+
 END

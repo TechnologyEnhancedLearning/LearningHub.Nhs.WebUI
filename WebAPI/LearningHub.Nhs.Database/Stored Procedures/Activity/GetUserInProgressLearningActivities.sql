@@ -56,28 +56,38 @@ BEGIN
     INNER JOIN resources.Resource r ON ra.ResourceId = r.Id
     INNER JOIN resources.ResourceVersion rv ON rv.Id = ra.ResourceVersionId AND rv.Deleted = 0
 
-    OUTER APPLY (
-        SELECT TOP 1 rr.OriginalResourceReferenceId
-        FROM resources.ResourceReference rr
-        WHERE rr.ResourceId = rv.ResourceId
-          AND rr.Deleted = 0
-        ORDER BY rr.Id DESC
-    ) rrRef
+   LEFT JOIN (
+    SELECT 
+        ResourceId,
+        MAX(Id) AS LatestRefId
+    FROM resources.ResourceReference
+    WHERE Deleted = 0
+    GROUP BY ResourceId
+     ) rrLatest ON rrLatest.ResourceId = rv.ResourceId
 
-    LEFT JOIN (
+    LEFT JOIN resources.ResourceReference rrRef
+    ON rrRef.Id = rrLatest.LatestRefId
+
+      LEFT JOIN (
         SELECT 
             rp.ResourceVersionId,
-            JSON_QUERY('[' + STRING_AGG(
-                '{"Id":' + CAST(p.Id AS NVARCHAR) +
-                ',"Name":"' + p.Name + '"' +
-                ',"Description":"' + p.Description + '"' +
-                ',"Logo":"' + ISNULL(p.Logo, '') + '"}',
-            ',') + ']') AS ProvidersJson
+            (
+                SELECT 
+                    p.Id,
+                    p.Name,
+                    p.Description,
+                    p.Logo
+                FROM resources.ResourceVersionProvider rp2
+                JOIN hub.Provider p ON p.Id = rp2.ProviderId
+                WHERE rp2.ResourceVersionId = rp.ResourceVersionId
+                  AND rp2.Deleted = 0
+                  AND p.Deleted = 0
+                FOR JSON PATH
+            ) AS ProvidersJson
         FROM resources.ResourceVersionProvider rp
-        JOIN hub.Provider p ON p.Id = rp.ProviderId
-        WHERE p.Deleted = 0 AND rp.Deleted = 0
         GROUP BY rp.ResourceVersionId
     ) rpAgg ON rpAgg.ResourceVersionId = r.CurrentResourceVersionId
+
 
     LEFT JOIN resources.AssessmentResourceVersion arv ON arv.ResourceVersionId = ra.ResourceVersionId
     LEFT JOIN activity.AssessmentResourceActivity asra ON asra.ResourceActivityId = ra.Id

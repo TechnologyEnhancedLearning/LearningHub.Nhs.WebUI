@@ -112,19 +112,24 @@ BEGIN
 
     -- Provider JSON aggregation
     LEFT JOIN (
-        SELECT 
-            rp.ResourceVersionId,
-            JSON_QUERY('[' + STRING_AGG(
-                '{"Id":' + CAST(p.Id AS NVARCHAR) +
-                ',"Name":"' + p.Name + '"' +
-                ',"Description":"' + p.Description + '"' +
-                ',"Logo":"' + ISNULL(p.Logo,'') + '"}',
-            ',') + ']') AS ProvidersJson
-        FROM resources.ResourceVersionProvider rp
-        JOIN hub.Provider p ON p.Id = rp.ProviderId
-        WHERE p.Deleted = 0 AND rp.Deleted = 0
-        GROUP BY rp.ResourceVersionId
-    ) rpAgg ON rpAgg.ResourceVersionId = r.CurrentResourceVersionId
+    SELECT 
+        rp.ResourceVersionId,
+        (
+            SELECT 
+                p.Id,
+                p.Name,
+                p.Description,
+                p.Logo
+            FROM resources.ResourceVersionProvider rp2
+            JOIN hub.Provider p ON p.Id = rp2.ProviderId
+            WHERE rp2.ResourceVersionId = rp.ResourceVersionId
+              AND rp2.Deleted = 0
+              AND p.Deleted = 0
+            FOR JSON PATH
+        ) AS ProvidersJson
+    FROM resources.ResourceVersionProvider rp
+    GROUP BY rp.ResourceVersionId
+) rpAgg ON rpAgg.ResourceVersionId = r.CurrentResourceVersionId
 
     JOIN resources.ResourceVersionRatingSummary rvrs 
         ON r.CurrentResourceVersionId = rvrs.ResourceVersionId

@@ -29,19 +29,26 @@ BEGIN
     DECLARE @OffsetRows INT = (@PageNumber - 1) * @FetchRows;
 
     -- Providers precomputed:
-    SELECT 
-        rp.ResourceVersionId,
-        JSON_QUERY('[' + STRING_AGG(
-            '{"Id":' + CAST(p.Id AS NVARCHAR) +
-            ',"Name":"' + p.Name + '"' +
-            ',"Description":"' + p.Description + '"' +
-            ',"Logo":"' + ISNULL(p.Logo,'') + '"}',
-        ',') + ']') AS ProvidersJson
-    INTO #Providers
-    FROM resources.ResourceVersionProvider rp
-    JOIN hub.Provider p ON p.Id = rp.ProviderId
-    WHERE rp.Deleted = 0 AND p.Deleted = 0
-    GROUP BY rp.ResourceVersionId;
+   SELECT 
+    rp.ResourceVersionId,
+    ProvidersJson = (
+        SELECT 
+            p.Id,
+            p.Name,
+            p.Description,
+            p.Logo
+        FROM resources.ResourceVersionProvider rp2
+        JOIN hub.Provider p ON p.Id = rp2.ProviderId
+        WHERE rp2.ResourceVersionId = rp.ResourceVersionId
+          AND rp2.Deleted = 0
+          AND p.Deleted = 0
+        FOR JSON PATH
+    )
+INTO #Providers
+FROM resources.ResourceVersionProvider rp
+WHERE rp.Deleted = 0
+GROUP BY rp.ResourceVersionId;
+
 
     -- Auth precomputed
 

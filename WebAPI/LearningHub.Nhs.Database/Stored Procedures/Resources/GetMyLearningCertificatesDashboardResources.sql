@@ -82,19 +82,24 @@ JOIN activity.ResourceActivity ra ON ra.id = ma.ResourceActivityId
 JOIN resources.resourceversion rv ON rv.id = ra.ResourceVersionId AND rv.Deleted = 0	
 JOIN Resources.Resource r ON r.Id = rv.ResourceId
 LEFT JOIN (
-		SELECT 
-			rp.ResourceVersionId,
-			JSON_QUERY('[' + STRING_AGG(
-				'{"Id":' + CAST(p.Id AS NVARCHAR) +
-				',"Name":"' + p.Name + '"' +
-				',"Description":"' + p.Description + '"' +
-				',"Logo":"' + ISNULL(p.Logo, '') + '"}', 
-			',') + ']') AS ProvidersJson
-		FROM resources.ResourceVersionProvider rp
-		JOIN hub.Provider p ON p.Id = rp.ProviderId
-		WHERE p.Deleted = 0 and rp.Deleted = 0
-		GROUP BY rp.ResourceVersionId
-		) rpAgg ON rpAgg.ResourceVersionId = r.CurrentResourceVersionId
+    SELECT 
+        rp.ResourceVersionId,
+        (
+            SELECT 
+                p.Id,
+                p.Name,
+                p.Description,
+                p.Logo
+            FROM resources.ResourceVersionProvider rp2
+            JOIN hub.Provider p ON p.Id = rp2.ProviderId
+            WHERE rp2.ResourceVersionId = rp.ResourceVersionId
+              AND rp2.Deleted = 0
+              AND p.Deleted = 0
+            FOR JSON PATH
+        ) AS ProvidersJson
+    FROM resources.ResourceVersionProvider rp
+    GROUP BY rp.ResourceVersionId
+) rpAgg ON rpAgg.ResourceVersionId = r.CurrentResourceVersionId
 JOIN hierarchy.Publication p ON rv.PublicationId = p.Id AND p.Deleted = 0
 JOIN resources.ResourceVersionRatingSummary rvrs ON rv.Id = rvrs.ResourceVersionId	AND rvrs.Deleted = 0
 JOIN hierarchy.NodeResource nr ON r.Id = nr.ResourceId AND nr.Deleted = 0

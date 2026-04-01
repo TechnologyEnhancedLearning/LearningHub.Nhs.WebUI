@@ -28,9 +28,7 @@ BEGIN
     DECLARE @MaxRows INT = @MaxPageNumber * @FetchRows;
     DECLARE @OffsetRows INT = (@PageNumber - 1) * @FetchRows;
 
-    -------------------------------------------------------------------------
-    -- Providers (pre-aggregated)
-    -------------------------------------------------------------------------
+    -- Providers precomputed:
     SELECT 
         rp.ResourceVersionId,
         JSON_QUERY('[' + STRING_AGG(
@@ -45,9 +43,8 @@ BEGIN
     WHERE rp.Deleted = 0 AND p.Deleted = 0
     GROUP BY rp.ResourceVersionId;
 
-    -------------------------------------------------------------------------
-    -- User Authorization (precomputed)
-    -------------------------------------------------------------------------
+    -- Auth precomputed
+
     SELECT DISTINCT CatalogueNodeId
     INTO #Auth
     FROM hub.RoleUserGroupView rug
@@ -57,9 +54,7 @@ BEGIN
       AND uug.Deleted = 0
       AND uug.UserId = @UserId;
 
-    -------------------------------------------------------------------------
     -- ResourceReferenceId (precomputed)
-    -------------------------------------------------------------------------
     SELECT 
         rr.ResourceId,
         rr.NodePathId,
@@ -70,9 +65,7 @@ BEGIN
                                AND np.Deleted = 0
     WHERE rr.Deleted = 0;
 
-    -------------------------------------------------------------------------
-    -- Main dataset (TOP @MaxRows)
-    -------------------------------------------------------------------------
+
     SELECT TOP (@MaxRows)
         r.Id AS ResourceId,
         rv.Id AS ResourceVersionId,
@@ -113,15 +106,14 @@ BEGIN
                                     AND np2.Deleted = 0
          WHERE rf.ResourceId = r.Id) AS ResourceReferenceId,
 
-        ---------------------------------------------------------------------
+
         -- Bookmark
-        ---------------------------------------------------------------------
+
         ub.Id AS BookMarkId,
         CAST(ISNULL(ub.Deleted, 1) ^ 1 AS BIT) AS IsBookmarked,
 
-        ---------------------------------------------------------------------
         -- Access
-        ---------------------------------------------------------------------
+
         CAST(
             CASE 
                 WHEN cnv.RestrictedAccess = 1 
@@ -176,15 +168,9 @@ BEGIN
        )
     ORDER BY p.CreateDate DESC;
 
-    -------------------------------------------------------------------------
-    -- Total Records
-    -------------------------------------------------------------------------
-    SELECT @TotalRecords = CASE WHEN COUNT(*) > @MaxRows THEN @MaxRows ELSE COUNT(*) END
-    FROM #Recent;
 
-    -------------------------------------------------------------------------
-    -- Final Paged Output
-    -------------------------------------------------------------------------
+   SELECT @TotalRecords = COUNT(*) FROM #Recent;
+
     SELECT *
     FROM #Recent
     ORDER BY CreateDate DESC

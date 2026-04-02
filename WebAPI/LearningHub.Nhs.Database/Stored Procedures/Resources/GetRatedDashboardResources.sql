@@ -94,6 +94,13 @@ BEGIN
         ON rvrs.ResourceVersionId = r.CurrentResourceVersionId
         AND rvrs.RatingCount > 0
 
+        -- Hierarchy joins
+    JOIN hierarchy.NodeResource nr ON r.Id = nr.ResourceId AND nr.Deleted = 0
+    JOIN hierarchy.Node n ON n.Id = nr.NodeId AND n.Hidden = 0 AND n.Deleted = 0
+    JOIN hierarchy.NodePath np ON np.NodeId = n.Id AND np.Deleted = 0 AND np.IsActive = 1
+    JOIN hierarchy.NodeVersion nv ON nv.NodeId = np.CatalogueNodeId AND nv.VersionStatusId = 2 AND nv.Deleted = 0
+    JOIN hierarchy.CatalogueNodeVersion cnv ON cnv.NodeVersionId = nv.Id AND cnv.Deleted = 0
+
     -- Deterministic ResourceReference lookup
     OUTER APPLY (
         SELECT TOP 1 rr.OriginalResourceReferenceId
@@ -129,12 +136,7 @@ BEGIN
     GROUP BY rp.ResourceVersionId
 ) rpAgg ON rpAgg.ResourceVersionId = r.CurrentResourceVersionId
 
-    -- Hierarchy joins
-    JOIN hierarchy.NodeResource nr ON r.Id = nr.ResourceId AND nr.Deleted = 0
-    JOIN hierarchy.Node n ON n.Id = nr.NodeId AND n.Hidden = 0 AND n.Deleted = 0
-    JOIN hierarchy.NodePath np ON np.NodeId = n.Id AND np.Deleted = 0 AND np.IsActive = 1
-    JOIN hierarchy.NodeVersion nv ON nv.NodeId = np.CatalogueNodeId AND nv.VersionStatusId = 2 AND nv.Deleted = 0
-    JOIN hierarchy.CatalogueNodeVersion cnv ON cnv.NodeVersionId = nv.Id AND cnv.Deleted = 0
+
 
     -- Bookmark lookup
     LEFT JOIN hub.UserBookmark ub 

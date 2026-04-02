@@ -18,10 +18,10 @@
 -- 31 Mar 2026  OA  TD-7057 Script Optimization
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hierarchy].[GetDashboardCatalogues]
-	@DashboardType			nvarchar(30),
-	@UserId					INT,
-	@PageNumber				INT = 1,
-	@TotalRecords			INT OUTPUT
+    @DashboardType nvarchar(30),
+    @UserId INT,
+    @PageNumber INT = 1,
+    @TotalRecords INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -36,10 +36,9 @@ BEGIN
         SET @PageNumber = @MaxPageNumber;
 
     DECLARE @OffsetRows INT = (@PageNumber - 1) * @FetchRows;
+    DECLARE @MaxRows INT = @MaxPageNumber * @FetchRows;
 
-    -- Introduce shared temp table datasets for reuse everywhere:
-    
-    -- Providers aggregation
+---providers
     SELECT 
         cnp.CatalogueNodeVersionId,
         JSON_QUERY('[' + STRING_AGG(
@@ -54,7 +53,7 @@ BEGIN
     WHERE p.Deleted = 0 AND cnp.Deleted = 0
     GROUP BY cnp.CatalogueNodeVersionId;
 
-    -- Auth lookup
+   --auth
     SELECT DISTINCT CatalogueNodeId
     INTO #Auth
     FROM hub.RoleUserGroupView rug
@@ -64,10 +63,10 @@ BEGIN
         AND uug.Deleted = 0
         AND uug.UserId = @UserId;
 
-   
+   --base catalogue
     SELECT
         n.Id AS NodeId,
-        nv.Id AS NodeVersionId,
+        cnv.Id AS NodeVersionId,   
         cnv.Id AS CatalogueNodeVersionId,
         cnv.Name,
         cnv.Description,
@@ -78,26 +77,35 @@ BEGIN
         cnv.RestrictedAccess
     INTO #BaseCatalogues
     FROM hierarchy.Node n
-    JOIN hierarchy.NodeVersion nv ON nv.NodeId = n.Id AND nv.VersionStatusId = 2 AND nv.Deleted = 0
-    JOIN hierarchy.CatalogueNodeVersion cnv ON cnv.NodeVersionId = nv.Id AND cnv.Deleted = 0
-    WHERE n.Id <> 1 AND n.Hidden = 0 AND n.Deleted = 0;
+    JOIN hierarchy.NodeVersion nv 
+        ON nv.NodeId = n.Id 
+        AND nv.VersionStatusId = 2
+    JOIN hierarchy.CatalogueNodeVersion cnv 
+        ON cnv.NodeVersionId = nv.Id 
+        AND cnv.Deleted = 0
+    JOIN hub.Scope s 
+        ON s.CatalogueNodeId = n.Id 
+        AND s.Deleted = 0
+    WHERE n.Id <> 1 
+        AND n.Hidden = 0 
+        AND n.Deleted = 0;
 
+   --popular
     IF @DashboardType = 'popular-catalogues'
     BEGIN
-        SELECT 
-            na.NodeId,
-            COUNT(*) AS NodeCount
+        SELECT na.NodeId, COUNT(*) NodeCount
         INTO #Popular
         FROM activity.NodeActivity na
         JOIN hierarchy.Node n ON n.Id = na.NodeId
-        WHERE 
-            na.CatalogueNodeVersionId = n.CurrentNodeVersionId
+        WHERE na.CatalogueNodeVersionId = n.CurrentNodeVersionId
             AND n.Hidden = 0
             AND n.Deleted = 0
             AND na.NodeId <> 113
         GROUP BY na.NodeId;
 
-        SELECT @TotalRecords = COUNT(*) FROM #Popular;
+        SELECT @TotalRecords =
+            CASE WHEN COUNT(*) > 12 THEN @MaxRows ELSE COUNT(*) END
+        FROM #Popular;
 
         SELECT 
             b.NodeId,
@@ -129,13 +137,15 @@ BEGIN
         OFFSET @OffsetRows ROWS FETCH NEXT @FetchRows ROWS ONLY;
     END
 
+    --recent
     ELSE IF @DashboardType = 'recent-catalogues'
     BEGIN
-        SELECT @TotalRecords = COUNT(*)
-        FROM #BaseCatalogues
-        WHERE CatalogueNodeVersionId IN (
-            SELECT Id FROM hierarchy.CatalogueNodeVersion WHERE LastShownDate IS NOT NULL
-        );
+        SELECT @TotalRecords =
+            CASE WHEN COUNT(*) > 12 THEN @MaxRows ELSE COUNT(*) END
+        FROM #BaseCatalogues b
+        JOIN hierarchy.CatalogueNodeVersion cnv 
+            ON cnv.Id = b.CatalogueNodeVersionId
+        WHERE cnv.LastShownDate IS NOT NULL;
 
         SELECT 
             b.NodeId,
@@ -153,22 +163,84 @@ BEGIN
                 ELSE 1 
             END AS BIT) AS HasAccess,
 
-            ub.Id,
+            ub.Id AS BookMarkId,
             CAST(ISNULL(ub.Deleted,1) ^ 1 AS BIT) AS IsBookmarked,
             p.ProvidersJson
 
         FROM #BaseCatalogues b
+        JOIN hierarchy.CatalogueNodeVersion cnv 
+            ON cnv.Id = b.CatalogueNodeVersionId
         LEFT JOIN #Providers p ON p.CatalogueNodeVersionId = b.CatalogueNodeVersionId
         LEFT JOIN #Auth a ON a.CatalogueNodeId = b.NodeId
         LEFT JOIN hub.UserBookmark ub ON ub.UserId = @UserId AND ub.NodeId = b.NodeId
-        JOIN hierarchy.CatalogueNodeVersion cnv ON cnv.Id = b.CatalogueNodeVersionId
-        WHERE cnv.LastShownDate IS NOT NULL
 
-        ORDER BY cnv.LastShownDate DESC
+        WHERE cnv.LastShownDate IS NOT NULL
+        ORDER BY b.NodeId DESC   -- matches original final ordering
         OFFSET @OffsetRows ROWS FETCH NEXT @FetchRows ROWS ONLY;
     END
 
-    -- MY CATALOGUES with fixed MAX pattern
+    ELSE IF @DashboardType = 'highly-contributed-catalogues'
+    BEGIN
+        SELECT nr.NodeId, COUNT(*) NodeCount
+        INTO #HC
+        FROM hierarchy.Node n
+        JOIN hierarchy.NodeResource nr ON nr.NodeId = n.Id
+        JOIN resources.Resource r ON r.Id = nr.ResourceId
+        JOIN resources.ResourceVersion rv 
+            ON rv.Id = r.CurrentResourceVersionId 
+            AND rv.VersionStatusId = 2 
+            AND rv.Deleted = 0
+        JOIN hierarchy.Publication p ON p.Id = nr.PublicationId AND p.Deleted = 0
+        WHERE n.Id <> 1 AND nr.Deleted = 0 AND n.Deleted = 0 AND n.Hidden = 0
+        GROUP BY nr.NodeId;
+
+        SELECT @TotalRecords =
+            CASE WHEN COUNT(*) > 12 THEN @MaxRows ELSE COUNT(*) END
+        FROM #HC;
+
+        SELECT 
+            b.NodeId,
+            b.NodeVersionId,
+            b.Name,
+            b.Description,
+            b.BannerUrl,
+            b.BadgeUrl,
+            b.CardImageUrl,
+            b.Url,
+            b.RestrictedAccess,
+
+            CAST(CASE 
+                WHEN b.RestrictedAccess = 1 AND a.CatalogueNodeId IS NULL THEN 0 
+                ELSE 1 
+            END AS BIT) AS HasAccess,
+
+            (SELECT SUM(rvrs.AverageRating)
+             FROM resources.ResourceVersionRatingSummary rvrs
+             WHERE rvrs.ResourceVersionId IN (
+                 SELECT r.CurrentResourceVersionId
+                 FROM resources.Resource r
+                 WHERE r.Deleted = 0
+                 AND r.Id IN (
+                     SELECT nr.ResourceId
+                     FROM hierarchy.NodeResource nr
+                     WHERE nr.NodeId = b.NodeId
+                 )
+             )) AS AverageRating,
+
+            ub.Id AS BookMarkId,
+            CAST(ISNULL(ub.Deleted,1) ^ 1 AS BIT) AS IsBookmarked,
+            p.ProvidersJson
+
+        FROM #HC hc
+        JOIN #BaseCatalogues b ON b.NodeId = hc.NodeId
+        LEFT JOIN #Providers p ON p.CatalogueNodeVersionId = b.CatalogueNodeVersionId
+        LEFT JOIN #Auth a ON a.CatalogueNodeId = b.NodeId
+        LEFT JOIN hub.UserBookmark ub ON ub.UserId = @UserId AND ub.NodeId = b.NodeId
+
+        ORDER BY hc.NodeCount DESC, AverageRating DESC, b.Name
+        OFFSET @OffsetRows ROWS FETCH NEXT @FetchRows ROWS ONLY;
+    END
+
     ELSE IF @DashboardType = 'my-catalogues'
     BEGIN
         WITH Latest AS (
@@ -176,7 +248,7 @@ BEGIN
                 np.NodeId,
                 np.CatalogueNodeId,
                 ROW_NUMBER() OVER (
-                    PARTITION BY np.NodeId 
+                    PARTITION BY np.NodeId, np.CatalogueNodeId
                     ORDER BY ra.Id DESC
                 ) rn
             FROM activity.ResourceActivity ra
@@ -188,7 +260,9 @@ BEGIN
         FROM Latest
         WHERE rn = 1;
 
-        SELECT @TotalRecords = COUNT(*) FROM #MyCatalogues;
+        SELECT @TotalRecords =
+            CASE WHEN COUNT(*) > 12 THEN @MaxRows ELSE COUNT(*) END
+        FROM #MyCatalogues;
 
         SELECT 
             b.NodeId,
@@ -206,7 +280,7 @@ BEGIN
                 ELSE 1 
             END AS BIT) AS HasAccess,
 
-            ub.Id,
+            ub.Id AS BookMarkId,
             CAST(ISNULL(ub.Deleted,1) ^ 1 AS BIT) AS IsBookmarked,
             p.ProvidersJson
 
@@ -240,7 +314,7 @@ BEGIN
                 ELSE 1 
             END AS BIT) AS HasAccess,
 
-            ub.Id,
+            ub.Id AS BookMarkId,
             CAST(ISNULL(ub.Deleted,1) ^ 1 AS BIT) AS IsBookmarked,
             p.ProvidersJson
 

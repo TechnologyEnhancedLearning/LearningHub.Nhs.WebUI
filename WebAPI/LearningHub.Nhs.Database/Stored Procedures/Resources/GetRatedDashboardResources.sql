@@ -44,7 +44,7 @@ BEGIN
         HasAccess BIT,
         BookMarkId INT NULL,
         IsBookmarked BIT,
-        AverageRating FLOAT,
+        AverageRating DECIMAL(2, 1),
         RatingCount INT,
         ProvidersJson NVARCHAR(MAX)
     );

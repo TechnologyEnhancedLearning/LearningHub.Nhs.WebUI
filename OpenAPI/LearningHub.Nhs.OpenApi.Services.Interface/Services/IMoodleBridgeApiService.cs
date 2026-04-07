@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LearningHub.Nhs.Models.Moodle;
 using LearningHub.Nhs.Models.Moodle.API;
 using LearningHub.Nhs.Models.MyLearning;
+using LearningHub.Nhs.Models.User;
 
 namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
 {
@@ -18,6 +19,13 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="email">The current LH User email.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         Task<MoodleInstanceUserIdsViewModel> GetUserInstancesByEmail(string email);
+
+        /// <summary>
+        /// UpdateEmail.
+        /// </summary>
+        /// <param name="updateEmailaddressViewModel">TheupdateEmailaddressViewModel.</param>
+        /// <returns></returns>
+        Task<MoodleUpdateEmailResponseModel> UpdateEmail(UpdateEmailaddressViewModel updateEmailaddressViewModel);
 
         /// <summary>
         /// GetRecentEnrolledCoursesAsync.

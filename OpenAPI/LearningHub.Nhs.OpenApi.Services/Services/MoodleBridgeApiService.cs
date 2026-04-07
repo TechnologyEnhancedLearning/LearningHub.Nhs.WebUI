@@ -21,6 +21,7 @@
     using static System.Net.WebRequestMethods;
     using IdentityModel.Client;
     using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+    using LearningHub.Nhs.Models.User;
 
     /// <summary>
     /// MoodleBridgeApiService.
@@ -84,7 +85,54 @@
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "An error occurred while fetching user instances by email.");
-                throw; 
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// UpdateEmail.
+        /// </summary>
+        /// <param name="updateEmailaddressViewModel">The UpdateEmailaddressViewModel.</param>
+        /// <returns></returns>
+        public async Task<MoodleUpdateEmailResponseModel> UpdateEmail(UpdateEmailaddressViewModel updateEmailaddressViewModel)
+        {
+            try
+            {
+                var client = await this.moodleBridgeHttpClient.GetClient();
+
+                var requestUrl = "/api/v1/Users/update-email";
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                var response = await client.PostAsJsonAsync(requestUrl, updateEmailaddressViewModel)
+                                           .ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadAsStringAsync();
+
+                    var viewModel = System.Text.Json.JsonSerializer.Deserialize<MoodleUpdateEmailResponseModel>(result, options);
+
+                    return viewModel;
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
+                         response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    throw new Exception("AccessDenied");
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"API Error: {response.StatusCode}, Details: {errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "An error occurred while updating email.");
+                throw;
             }
         }
 
@@ -168,7 +216,7 @@
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "An error occurred while fetching user's recent learning activities ");
-                throw; 
+                throw;
             }
         }
 
@@ -333,7 +381,7 @@
                 {
                     queryParams.Add($"searchterm={Uri.EscapeDataString(filterText)}");
                 }
-               
+
                 var queryString = queryParams.Any()
                     ? "?" + string.Join("&", queryParams)
                     : string.Empty;
@@ -468,7 +516,7 @@
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "An error occurred while fetching user instances by email.");
-                throw; 
+                throw;
             }
         }
 
@@ -553,7 +601,7 @@
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "An error occurred while fetching sub categories by category id.");
-                throw; 
+                throw;
             }
         }
     }

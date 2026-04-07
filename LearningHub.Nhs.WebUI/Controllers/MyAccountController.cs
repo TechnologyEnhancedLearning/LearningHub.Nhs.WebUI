@@ -11,6 +11,7 @@
     using GDS.MultiPageFormData;
     using GDS.MultiPageFormData.Enums;
     using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -97,6 +98,7 @@
             this.multiPageFormService = multiPageFormService;
             this.cacheService = cacheService;
             this.configuration = configuration;
+            this.moodleBridgeApiService = moodleBridgeApiService;
         }
 
         private string LoginWizardCacheKey => $"{this.CurrentUserId}:LoginWizard";
@@ -1497,12 +1499,18 @@
             var validationResult = await this.userService.ValidateEmailChangeTokenAsync(token, loctoken, isUserRoleUpgrade);
 
             EmailChangeValidateViewModel model = new EmailChangeValidateViewModel();
+            UpdateEmailaddressViewModel emailModel = new UpdateEmailaddressViewModel()
+            {
+                OldEmail = user.EmailAddress,
+                NewEmail = validationResult.Email,
+            };
 
             if (validationResult.Valid)
             {
                 if (isUserRoleUpgrade)
                 {
                     await this.userService.UpgradeAsFullAccessUserAsync(validationResult.UserId, validationResult.Email);
+                    await this.moodleBridgeApiService.UpdateEmail(emailModel);
                     this.ViewBag.SuccessMessage = CommonValidationErrorMessages.EmailConfirmSucessMessage;
                     model.Token = token;
                     model.Loctoken = loctoken;
@@ -1511,6 +1519,7 @@
                 else
                 {
                     await this.userService.UpdateUserPrimaryEmailAsync(validationResult.Email);
+                    await this.moodleBridgeApiService.UpdateEmail(emailModel);
 
                     // Add UserHistory entry
                     UserHistoryViewModel userHistory = new UserHistoryViewModel()

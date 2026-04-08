@@ -64,6 +64,7 @@
         /// <param name="countryService">countryService.</param>
         /// <param name="regionService">regionService.</param>
         /// <param name="multiPageFormService">The multiPageFormService<see cref="IMultiPageFormService"/>.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         public UserController(
             IWebHostEnvironment hostingEnvironment,
             ILogger<ResourceController> logger,
@@ -73,8 +74,9 @@
             ILoginWizardService loginWizardService,
             ICountryService countryService,
             IRegionService regionService,
-            IMultiPageFormService multiPageFormService)
-            : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+            IMultiPageFormService multiPageFormService,
+            IMoodleBridgeApiService moodleBridgeApiService)
+            : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.userService = userService;
             this.loginWizardService = loginWizardService;

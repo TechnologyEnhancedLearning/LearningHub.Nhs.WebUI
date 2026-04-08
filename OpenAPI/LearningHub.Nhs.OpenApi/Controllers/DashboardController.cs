@@ -1,6 +1,7 @@
 ﻿namespace LearningHub.NHS.OpenAPI.Controllers
 {
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@
         [Route("resources/{dashboardType}/{pageNumber}")]
         public async Task<ActionResult> GetResources(string dashboardType, int pageNumber = 1)
         {
-           var response = await dashboardService.GetResources(dashboardType, pageNumber, this.CurrentUserId.GetValueOrDefault());
+           var response = await this.dashboardService.GetResources(dashboardType, pageNumber, this.CurrentUserId.GetValueOrDefault());
            return this.Ok(response);
         }
 
@@ -51,7 +52,7 @@
         [Route("catalogues/{dashboardType}/{pageNumber}")]
         public async Task<IActionResult> GetCatalogues(string dashboardType, int pageNumber = 1)
         {
-            var response = await dashboardService.GetCatalogues(dashboardType, pageNumber, this.CurrentUserId.GetValueOrDefault());
+            var response = await this.dashboardService.GetCatalogues(dashboardType, pageNumber, this.CurrentUserId.GetValueOrDefault());
             return this.Ok(response);
         }
 
@@ -65,22 +66,20 @@
         [Route("myaccesslearning/{dashboardType}/{pageNumber}")]
         public async Task<ActionResult> GetMyAccessLearnings(string dashboardType, int pageNumber = 1)
         {
-            var response = await dashboardService.GetMyAccessLearnings(dashboardType, pageNumber, this.CurrentUserId.GetValueOrDefault());
+            var response = await this.dashboardService.GetMyAccessLearnings(dashboardType, pageNumber, this.CurrentUserId.GetValueOrDefault());
             return this.Ok(response);
         }
 
         /// <summary>
         /// Gets Catalogues.
         /// </summary>
-        /// <param name="dashboardTrayLearningResourceType">The dashboardTrayLearningResource type.</param>
-        /// <param name="dashboardType">The dashboard type.</param>
-        /// <param name="pageNumber">The page Number.</param>
+        /// <param name="request">The GetMyCoursesAndElearningRequestModel.</param>
         /// <returns>IActionResult.</returns>
-        [HttpGet]
-        [Route("GetMyCoursesAndElearning/{dashboardTrayLearningResourceType}/{dashboardType}/{pageNumber}")]
-        public async Task<ActionResult> GetMyCoursesAndElearning(string dashboardTrayLearningResourceType, string dashboardType, int pageNumber = 1)
+        [HttpPost]
+        [Route("GetMyCoursesAndElearning")]
+        public async Task<ActionResult> GetMyCoursesAndElearning([FromBody] GetMyCoursesAndElearningRequestModel request)
         {
-            var response = await dashboardService.GetMyCoursesAndElearning(dashboardTrayLearningResourceType, dashboardType, pageNumber, this.CurrentUserId.GetValueOrDefault(), "All");
+            var response = await this.dashboardService.GetMyCoursesAndElearning(request, this.CurrentUserId.GetValueOrDefault(), "All");
             return this.Ok(response);
         }
     }

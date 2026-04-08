@@ -121,7 +121,7 @@
                             <span class="nhsuk-u-padding-bottom-3">
                                 @if (ViewActivityHelper.GetResourceTypeDesc(activity.ResourceType) == "Course")
                                 {
-                                    <a class="nhsuk-u-font-size-19" href="@GetMoodleCourseUrl(activity.ResourceId)">@activity.Title</a>
+                                        <a class="nhsuk-u-font-size-19" href="@activity.ResourceUrl">@activity.Title</a>
                                 }
                                 else
                                 {
@@ -140,17 +140,17 @@
                                         <span class="nhsuk-u-padding-right-2 nhsuk-u-font-size-16 @accessedLabelClass nhsuk-u-font-weight-bold">
                                             @displayText:
                                         </span>
-                                        @if(isCompleted)
+                                        @if (isCompleted)
                                         {
-                                        <span class="nhsuk-u-font-size-16 @accessedLabelClass">
-                                            @certificateAwardedText
-                                        </span>
+                                            <span class="nhsuk-u-font-size-16 @accessedLabelClass">
+                                                @certificateAwardedText
+                                            </span>
                                         }
                                         else
                                         {
-                                        <span class="nhsuk-u-font-size-16 @accessedLabelClass">
-                                            @dateTimeText
-                                        </span>
+                                            <span class="nhsuk-u-font-size-16 @accessedLabelClass">
+                                                @dateTimeText
+                                            </span>
                                         }
                                     </div>
                                     <div>

@@ -44,6 +44,7 @@
         /// <param name="azureMediaService">Azure media service.</param>
         /// <param name="authConfig">Auth config.</param>
         /// <param name="contributeService">Contribure service.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         public ContributeController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
@@ -55,8 +56,9 @@
             IResourceService resourceService,
             IAzureMediaService azureMediaService,
             LearningHubAuthServiceConfig authConfig,
-            IContributeService contributeService)
-            : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+            IContributeService contributeService,
+            IMoodleBridgeApiService moodleBridgeApiService)
+            : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.authConfig = authConfig;
 

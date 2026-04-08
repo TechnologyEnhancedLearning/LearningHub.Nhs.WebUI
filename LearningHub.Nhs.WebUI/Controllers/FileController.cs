@@ -25,13 +25,15 @@
         /// <param name="settings">The settings.</param>
         /// <param name="httpClientFactory">The httpClientFactory.</param>
         /// <param name="fileService">The fileService.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         public FileController(
             IWebHostEnvironment hostingEnvironment,
             ILogger<ResourceController> logger,
             IOptions<Settings> settings,
             IHttpClientFactory httpClientFactory,
-            IFileService fileService)
-            : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+            IFileService fileService,
+            IMoodleBridgeApiService moodleBridgeApiService)
+            : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.fileService = fileService;
         }

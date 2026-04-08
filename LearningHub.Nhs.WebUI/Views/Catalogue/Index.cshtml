@@ -57,8 +57,8 @@
 
     if (ViewBag.ActiveTab == "courses")
     {
-        if (Model.Catalogue.SelectedCategoryId == 0 ||
-         (Model.Catalogue.SelectedCategoryId > 0 &&
+        if (Model.Catalogue.SelectedCategoryId == null ||
+         (Model.Catalogue.SelectedCategoryId != null &&
           (Model.Courses == null || !Model.Courses.Any()) &&
           (Model.SubCategories == null || !Model.SubCategories.Any())))
         {
@@ -71,7 +71,7 @@
     {
         breadcrumbs = UtilityHelper.GetBreadcrumbsForFolderNodes(Model.NodePathNodes.SkipLast(1).ToList(), Model.Catalogue.Url);
     }
-    else if (ViewBag.ActiveTab == "courses" && Model.Catalogue.SelectedCategoryId > 0)
+    else if (ViewBag.ActiveTab == "courses" && Model.Catalogue.SelectedCategoryId !=null)
     {
         breadcrumbs = UtilityHelper.GetBreadcrumbsForCourses(Model.MoodleCategories, Model.Catalogue.Url);
     }
@@ -205,7 +205,7 @@
                             <a tabindex="0" class="subnavwhite-link text-nowrap" asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-tab="browse" asp-fragment="catalogue-details">Resources</a>
                         </li>
                     }
-                    @if (Model.Catalogue.SelectedCategoryId > 0 &&
+                    @if (Model.Catalogue.SelectedCategoryId != null &&
                     (
                     (Model.Courses != null && Model.Courses.Any()) ||
                     (Model.SubCategories != null && Model.SubCategories.Any())

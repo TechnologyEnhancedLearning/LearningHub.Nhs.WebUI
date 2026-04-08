@@ -266,7 +266,11 @@
             // Used by the admin screen to inform the admin user if they need to add a user group.
             vm.HasUserGroup = this.GetRoleUserGroupsForCatalogue(vm.NodeId).Any();
             vm.Providers = await this.providerService.GetAllAsync();
-            vm.SelectedCategoryId = await this.categoryService.GetByCatalogueVersionIdAsync(vm.CatalogueNodeVersionId);
+            var cataloguNodeeCategories = await this.categoryService.GetByCatalogueVersionIdAsync(vm.CatalogueNodeVersionId);
+            if (cataloguNodeeCategories != null)
+            {
+                vm.SelectedCategoryId = cataloguNodeeCategories.InstanceName + ":" + cataloguNodeeCategories.CategoryId;
+            }
             return vm;
         }
 

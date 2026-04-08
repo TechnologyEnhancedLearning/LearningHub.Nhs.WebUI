@@ -2,11 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Net.Http.Json;
     using System.Text;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Dashboard;
     using LearningHub.Nhs.Models.Entities.Analytics;
+    using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.Moodle.API;
+    using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
     using Microsoft.Extensions.Logging;
@@ -66,16 +69,25 @@
         /// </summary>
         /// <param name="dashboardTrayLearningResourceType">The dashboard Tray Learning Resource type.</param>
         /// <param name="dashboardType">The dashboard type.</param>
+        /// <param name="email">The email.</param>
         /// <param name="pageNumber">The page Number.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<DashboardMyLearningResponseViewModel> GetMyCoursesAndElearning(string dashboardTrayLearningResourceType, string dashboardType, int pageNumber)
+        public async Task<DashboardMyLearningResponseViewModel> GetMyCoursesAndElearning(string dashboardTrayLearningResourceType, string dashboardType, string email, int pageNumber)
         {
             DashboardMyLearningResponseViewModel viewmodel = new DashboardMyLearningResponseViewModel { };
 
             var client = await this.OpenApiHttpClient.GetClientAsync();
+            var request = new GetMyCoursesAndElearningRequestModel
+            {
+                DashboardTrayLearningResourceType = dashboardTrayLearningResourceType,
+                DashboardType = dashboardType,
+                Email = email,
+                PageNumber = pageNumber,
+            };
 
-            var request = $"dashboard/GetMyCoursesAndElearning/{dashboardTrayLearningResourceType}/{dashboardType}/{pageNumber}";
-            var response = await client.GetAsync(request).ConfigureAwait(false);
+            //// var request = $"dashboard/GetMyCoursesAndElearning/{dashboardTrayLearningResourceType}/{dashboardType}/{email}/{pageNumber}";
+            //// var response = await client.GetAsync(request).ConfigureAwait(false);
+            var response = await client.PostAsJsonAsync("dashboard/GetMyCoursesAndElearning", request);
 
             if (response.IsSuccessStatusCode)
             {

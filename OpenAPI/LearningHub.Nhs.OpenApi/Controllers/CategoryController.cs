@@ -19,16 +19,19 @@
     {
         private readonly ICategoryService categoryService;
         private readonly IMoodleApiService moodleApiService;
+        private readonly IMoodleBridgeApiService moodleBridgeApiService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CategoryController"/> class.
         /// </summary>
         /// <param name="categoryService">The category service.</param>
         /// <param name="moodleApiService">The moodleApi service.</param>
-        public CategoryController(ICategoryService categoryService, IMoodleApiService moodleApiService)
+        /// <param name="moodleBridgeApiService">The moodle Bridge Api service.</param>
+        public CategoryController(ICategoryService categoryService, IMoodleApiService moodleApiService, IMoodleBridgeApiService moodleBridgeApiService)
         {
             this.categoryService = categoryService;
             this.moodleApiService = moodleApiService;
+            this.moodleBridgeApiService = moodleBridgeApiService;
         }
 
         /// <summary>
@@ -51,9 +54,9 @@
         /// <returns>The catalogue.</returns>
         [HttpGet]
         [Route("GetCoursesByCategoryId/{categoryId}")]
-        public async Task<IActionResult> GetCoursesByCategoryId(int categoryId)
+        public async Task<IActionResult> GetCoursesByCategoryId(string categoryId)
         {
-            var courses = await this.moodleApiService.GetCoursesByCategoryIdAsync(categoryId);
+            var courses = await this.moodleBridgeApiService.GetCoursesByCategoryIdAsync(categoryId);
             return this.Ok(courses);
         }
 
@@ -64,9 +67,9 @@
         /// <returns>The catalogue.</returns>
         [HttpGet]
         [Route("GetSubCategoryByCategoryId/{categoryId}")]
-        public async Task<IActionResult> GetSubCategoryByCategoryId(int categoryId)
+        public async Task<IActionResult> GetSubCategoryByCategoryId(string categoryId)
         {
-            var subCategories = await this.moodleApiService.GetSubCategoryByCategoryIdAsync(categoryId);
+            var subCategories = await this.moodleBridgeApiService.GetSubCategoryByCategoryIdAsync(categoryId);
             return this.Ok(subCategories);
         }
     }

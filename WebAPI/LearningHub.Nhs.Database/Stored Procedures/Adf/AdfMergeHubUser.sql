@@ -13,8 +13,6 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    ALTER TABLE [hub].[user] NOCHECK CONSTRAINT FK_userTBL_userEmploymentTBL;
-	ALTER TABLE [elfh].[userEmploymentTBL] NOCHECK CONSTRAINT FK_userEmploymentTBL_userTBL;
 	ALTER TABLE [hub].[User] NOCHECK CONSTRAINT ALL;
   
     MERGE [hub].[User] AS target
@@ -65,8 +63,6 @@ BEGIN
             source.[regionId], source.[preferredTenantId],4,
             source.[CreateDate], source.[AmendUserId], source.[AmendDate], source.[Deleted]
         );
-		ALTER TABLE [hub].[user] NOCHECK CONSTRAINT FK_userTBL_userEmploymentTBL;
-	ALTER TABLE [elfh].[userEmploymentTBL] NOCHECK CONSTRAINT FK_userEmploymentTBL_userTBL;
 	ALTER TABLE [hub].[User] CHECK CONSTRAINT ALL;
 END
 GO

@@ -67,6 +67,7 @@
         /// <param name="specialtyService">The specialtyService.</param>
         /// <param name="locationService">The locationService.</param>
         /// <param name="gradeService">The gradeService.</param>
+        /// <param name="moodleBridgeApiService">The moodleBridgeApiService.</param>
         public AccountController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
@@ -82,8 +83,9 @@
             IMultiPageFormService multiPageFormService,
             ISpecialtyService specialtyService,
             ILocationService locationService,
-            IGradeService gradeService)
-            : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+            IGradeService gradeService,
+            IMoodleBridgeApiService moodleBridgeApiService)
+            : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.authConfig = authConfig;
             this.userService = userService;

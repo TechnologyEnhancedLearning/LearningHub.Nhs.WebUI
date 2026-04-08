@@ -38,6 +38,19 @@
         }
 
         /// <summary>
+        /// The GetMoodle Instances UserIds.
+        /// </summary>
+        /// <param name="email">The LH user email.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        [Route("UpdateEmail")]
+        public async Task<IActionResult> UpdateEmail([FromBody] UpdateEmailaddressViewModel updateEmailaddressViewModel)
+        {
+            var emailUpdateResponse = await this.moodleBridgeApiService.UpdateEmail(updateEmailaddressViewModel);
+            return this.Ok(emailUpdateResponse);
+        }
+
+        /// <summary>
         /// GetAllMoodleCategoriesAsync.
         /// </summary>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>

@@ -231,6 +231,7 @@
         MinorVersion = 0,
         ResourceType = ResourceTypeEnum.Moodle,
         Title = course.DisplayName,
+        ResourceUrl = course.CourseUrl,
         CertificateEnabled = course.CertificateEnabled,
         ActivityStatus = (course.Completed == true || course.ProgressPercentage.TrimEnd('%') == "100") ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
         ActivityDate = course.LastAccessDate.HasValue
@@ -360,7 +361,6 @@
                     (activityStatusEnumFlag && !resourceTypeFlag && requestModel.Request.Courses) ||
                     (activityStatusEnumFlag && !resourceTypeFlag && !requestModel.Request.Courses))
                 {
-                    ////entrolledCourses = await this.moodleApiService.GetEnrolledCoursesHistoryAsync(userId, requestModel.Request);
                     entrolledCourses = await this.moodleBridgeApiService.GetEnrolledCoursesHistoryAsync(requestModel.MoodleInstanceUserIds, requestModel.Request);
                     if (entrolledCourses != null)
                     {
@@ -378,6 +378,7 @@
         MinorVersion = 0,
         ResourceType = ResourceTypeEnum.Moodle,
         Title = course.DisplayName,
+        ResourceUrl = course.CourseUrl,
         CertificateEnabled = course.CertificateEnabled,
         ActivityStatus = (course.Completed == true || course.ProgressPercentage.TrimEnd('%') == "100") ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
         ActivityDate = course.LastAccessDate.HasValue

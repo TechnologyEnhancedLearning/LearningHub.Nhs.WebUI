@@ -6174,8 +6174,6 @@
           }
         }
       }
-    }
-  },
     },
     "/GovNotifyMessage/SendSms": {
       "post": {
@@ -6290,6 +6288,85 @@
           },
           "500": {
             "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/GovNotifyMessage/GetMessageRequests/{page}/{pageSize}/{sortColumn}/{sortDirection}/{filter}": {
+      "post": {
+        "tags": [
+          "GetMessageRequests"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "sortColumn",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortDirection",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/GovNotifyMessage/GetMessageRequestById/{id}": {
+      "post": {
+        "tags": [
+          "GetMessageRequests"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

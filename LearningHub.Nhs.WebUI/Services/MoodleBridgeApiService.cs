@@ -2,10 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Net.Http.Json;
     using System.Text.Json;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.Moodle.API;
+    using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
@@ -61,6 +63,46 @@
             catch (Exception ex)
             {
                 return viewmodel;
+            }
+        }
+
+        /// <summary>
+        /// UpdateEmail.
+        /// </summary>
+        /// <param name="updateEmailaddressViewModel">The updateEmailaddressViewModel.</param>
+        /// <returns>email update status.</returns>
+        public async Task<MoodleUpdateEmailResponseModel> UpdateEmail(UpdateEmailaddressViewModel updateEmailaddressViewModel)
+        {
+            try
+            {
+                var client = await this.openApiHttpClient.GetClientAsync();
+
+                var requestUrl = "MoodleBridge/UpdateEmail";
+
+                var response = await client.PostAsJsonAsync(requestUrl, updateEmailaddressViewModel)
+                                           .ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var viewModel = await response.Content
+                                                  .ReadFromJsonAsync<MoodleUpdateEmailResponseModel>();
+
+                    return viewModel;
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
+                         response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    throw new Exception("AccessDenied");
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"API Error: {response.StatusCode}, Details: {errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to update user email on moodle instances");
             }
         }
     }

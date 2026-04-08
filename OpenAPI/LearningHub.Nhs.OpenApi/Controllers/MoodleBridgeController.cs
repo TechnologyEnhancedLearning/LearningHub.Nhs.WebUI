@@ -1,6 +1,7 @@
 ﻿namespace LearningHub.NHS.OpenAPI.Controllers
 {
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;

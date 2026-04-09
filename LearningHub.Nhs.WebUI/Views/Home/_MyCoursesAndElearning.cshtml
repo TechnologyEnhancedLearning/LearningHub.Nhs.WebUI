@@ -93,7 +93,7 @@
                                 <partial name="_LearningActivityCard" model="activityViewModel" />
                             </li>
                         }
-                        @if (isLastPage && pagingViewModel.TotalCount >=8)
+                        @if (isLastPage && pagingViewModel.TotalCount >= 8)
                         {
                             <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
                                 <div class="nhsuk-card dashboard-card">
@@ -190,16 +190,17 @@
             else
             {
                 <div class="nhsuk-bg-white  nhsuk-u-padding-5">
-                    @if (Model.MyLearnings.Type == "my-in-progress" && Model.MyLearnings.TotalCount <= 0)
-                    {
-                        <h3 class="nhsuk-card__heading nhsuk-heading-m">You have not accessed any learning yet.</h3>
-                        <p class="nhsuk-card__description dashboard-card-body">Accessed resources and courses will be displayed here. Browse from the list of resources below or search for a specific term using the search bar at the top of the screen.</p>
-                    }
-                    else if (Model.MyLearnings.Type == "my-certificates" && Model.MyLearnings.TotalCount <= 0)
+                    @if (Model.MyLearnings.Type == "my-certificates" && Model.MyLearnings.TotalCount <= 0)
                     {
                         <h3 nhsuk-card__heading nhsuk-heading-m>You have no certificates.</h3>
                         <p class="nhsuk-card__description dashboard-card-body">Certificates when available will be displayed here.</p>
                     }
+                    else if (Model.DashboardTrayLearningResourceType == "elearning" && Model.MyLearnings.TotalCount <= 0)
+                    {
+                        <h3 class="nhsuk-card__heading nhsuk-heading-m">You have not accessed any learning yet.</h3>
+                        <p class="nhsuk-card__description dashboard-card-body">Accessed resources and courses will be displayed here. Browse from the list of resources below or search for a specific term using the search bar at the top of the screen.</p>
+                    }
+
                 </div>
             }
         </div>

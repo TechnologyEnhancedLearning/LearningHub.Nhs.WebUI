@@ -200,6 +200,16 @@
                         <h3 class="nhsuk-card__heading nhsuk-heading-m">You have not accessed any learning yet.</h3>
                         <p class="nhsuk-card__description dashboard-card-body">Accessed resources and courses will be displayed here. Browse from the list of resources below or search for a specific term using the search bar at the top of the screen.</p>
                     }
+                    else if (Model.DashboardTrayLearningResourceType == "courses" && Model.MyLearnings.TotalCount <= 0)
+                    {
+                        <h3 class="nhsuk-card__heading nhsuk-heading-m">You have not accessed any coursees yet.</h3>
+                        <p class="nhsuk-card__description dashboard-card-body">Accessed resources and courses will be displayed here. Browse from the list of resources below or search for a specific term using the search bar at the top of the screen.</p>
+                    }
+                    else if (Model.DashboardTrayLearningResourceType == "all" && Model.MyLearnings.TotalCount <= 0)
+                    {
+                        <h3 class="nhsuk-card__heading nhsuk-heading-m">You have not accessed any learning yet.</h3>
+                        <p class="nhsuk-card__description dashboard-card-body">Accessed resources and courses will be displayed here. Browse from the list of resources below or search for a specific term using the search bar at the top of the screen.</p>
+                    }
 
                 </div>
             }

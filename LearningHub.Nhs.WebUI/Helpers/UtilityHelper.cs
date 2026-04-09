@@ -386,6 +386,48 @@
         }
 
         /// <summary>
+        /// Formats an authored date string into a human-readable date if possible.
+        /// </summary>
+        /// <remarks>If the input does not match any of the supported date formats, the method returns the
+        /// original input string unchanged. This method does not validate whether the date is a valid calendar date
+        /// beyond format matching.</remarks>
+        /// <param name="authoredDate">The date string to format. Must be in one of the supported date formats, such as "yyyy-MM-dd", "dd/MM/yyyy",
+        /// "MM/dd/yyyy", "yyyyMMdd", "yyyy-MM-ddTHH:mm:ss", or "yyyy-MM-ddTHH:mm:ssZ". If null, empty, or whitespace,
+        /// an empty string is returned.</param>
+        /// <returns>A formatted date string in the form "dd MMM yyyy" if parsing succeeds; otherwise, the original input string
+        /// or an empty string if the input is null, empty, or whitespace.</returns>
+        public static string GetFormattedAuthoredDate(string authoredDate)
+        {
+            string[] dateFormats =
+            {
+                "dd/MM/yyyy",
+                "dd/MM/yyyy HH:mm:ss",
+                "yyyy-MM-dd",
+                "yyyy-MM-dd HH:mm:ss",
+                "MM/dd/yyyy",
+                "MM/dd/yyyy HH:mm:ss",
+                "yyyyMMdd",
+                "yyyyMMdd HH:mm:ss",
+                "M/d/yyyy",
+                "M/d/yyyy h:mm:ss tt",
+                "M/d/yyyy h:mm tt",
+            };
+
+            if (string.IsNullOrWhiteSpace(authoredDate))
+            {
+                return string.Empty;
+            }
+
+            if (DateTime.TryParse(authoredDate, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces, out var date) ||
+                DateTime.TryParseExact(authoredDate, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces, out date))
+            {
+                return date.ToString("dd MMM yyyy");
+            }
+
+            return authoredDate;
+        }
+
+        /// <summary>
         /// Gets the text to display on a generic file download button according to the file extension.
         /// </summary>
         /// <param name="extension">The file extension.</param>

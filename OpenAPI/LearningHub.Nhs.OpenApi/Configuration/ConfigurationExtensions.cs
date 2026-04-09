@@ -46,9 +46,15 @@ namespace LearningHub.NHS.OpenAPI.Configuration
         public const string AzureSectionName = "Azure";
 
         /// <summary>
-        /// The FindwiseSectionName.
+        /// The MoodleSectionName.
         /// </summary>
         public const string MoodleSectionName = "Moodle";
+
+        /// <summary>
+        /// The MoodleBridgeSectionName.
+        /// </summary>
+        public const string MoodleBridgeSectionName = "MoodleBridgeAPIConfig";
+
 
         /// <summary>
         /// The DatabricksSectionName.
@@ -82,6 +88,8 @@ namespace LearningHub.NHS.OpenAPI.Configuration
             services.AddOptions<AzureConfig>().Bind(config.GetSection(AzureSectionName));
 
             services.AddOptions<MoodleConfig>().Bind(config.GetSection(MoodleSectionName));
+
+            services.AddOptions<MoodleBridgeAPIConfig>().Bind(config.GetSection(MoodleBridgeSectionName));
 
             services.AddOptions<DatabricksConfig>().Bind(config.GetSection(DatabricksSectionName));
 

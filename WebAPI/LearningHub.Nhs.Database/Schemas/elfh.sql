@@ -1,3 +1,0 @@
-﻿CREATE SCHEMA [elfh]
-    AUTHORIZATION [dbo];
-GO

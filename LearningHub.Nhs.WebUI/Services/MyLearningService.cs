@@ -5,9 +5,11 @@
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Models;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
@@ -68,12 +70,19 @@
         /// Gets the user recent my leraning activities.
         /// </summary>
         /// <param name="requestModel">The request model.</param>
+        /// <param name="moodleInstanceUserIds">The moodleInstanceUserIds.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<MyLearningActivitiesDetailedViewModel> GetUserRecentMyLearningActivities(MyLearningRequestModel requestModel)
+        public async Task<MyLearningActivitiesDetailedViewModel> GetUserRecentMyLearningActivities(MyLearningRequestModel requestModel, MoodleInstanceUserIdsViewModel moodleInstanceUserIds)
         {
             MyLearningActivitiesDetailedViewModel viewModel = null;
 
-            var json = JsonConvert.SerializeObject(requestModel);
+            var payload = new MyLearningApiRequestViewModel
+            {
+                Request = requestModel,
+                MoodleInstanceUserIds = moodleInstanceUserIds,
+            };
+
+            var json = JsonConvert.SerializeObject(payload);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
             var client = await this.OpenApiHttpClient.GetClientAsync();
@@ -83,7 +92,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 viewModel = JsonConvert.DeserializeObject<MyLearningActivitiesDetailedViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -100,12 +109,18 @@
         /// Gets the user recent my leraning activities.
         /// </summary>
         /// <param name="requestModel">The request model.</param>
+        /// <param name="moodleInstanceUserIds">The moodleInstanceUserIds.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<MyLearningActivitiesDetailedViewModel> GetUserLearningHistory(MyLearningRequestModel requestModel)
+        public async Task<MyLearningActivitiesDetailedViewModel> GetUserLearningHistory(MyLearningRequestModel requestModel, MoodleInstanceUserIdsViewModel moodleInstanceUserIds)
         {
             MyLearningActivitiesDetailedViewModel viewModel = null;
+            var payload = new MyLearningApiRequestViewModel
+            {
+                Request = requestModel,
+                MoodleInstanceUserIds = moodleInstanceUserIds,
+            };
 
-            var json = JsonConvert.SerializeObject(requestModel);
+            var json = JsonConvert.SerializeObject(payload);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
             var client = await this.OpenApiHttpClient.GetClientAsync();
@@ -192,12 +207,17 @@
         /// Gets the user certificates.
         /// </summary>
         /// <param name="requestModel">The request model.</param>
+        /// <param name="moodleInstanceUserIds">The moodleInstanceUserIds.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(MyLearningRequestModel requestModel)
+        public async Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(MyLearningRequestModel requestModel, MoodleInstanceUserIdsViewModel moodleInstanceUserIds)
         {
             MyLearningCertificatesDetailedViewModel viewModel = null;
-
-            var json = JsonConvert.SerializeObject(requestModel);
+            var payload = new MyLearningApiRequestViewModel
+            {
+                Request = requestModel,
+                MoodleInstanceUserIds = moodleInstanceUserIds,
+            };
+            var json = JsonConvert.SerializeObject(payload);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
             var client = await this.OpenApiHttpClient.GetClientAsync();

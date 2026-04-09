@@ -39,6 +39,7 @@ namespace LearningHub.Nhs.OpenApi.Services
             }
 
             services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>();
+            services.AddHttpClient<IMoodleBridgeHttpClient, MoodleBridgeHttpClient>();
             services.AddScoped<IDatabricksApiHttpClient, DatabricksApiHttpClient>();
             services.AddScoped<ILearningHubService, LearningHubService>();
             services.AddScoped<IResourceService, ResourceService>();
@@ -91,6 +92,7 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IProviderService, ProviderService>();
             services.AddScoped<IUserProviderService, UserProviderService>();
             services.AddScoped<IUserGroupService, UserGroupService>();
+            services.AddScoped<IMoodleBridgeApiService, MoodleBridgeApiService>();
             services.AddScoped<IUserPasswordResetRequestsService, UserPasswordResetRequestsService>();
 
             // Register IFindwiseApiFacade based on feature flag

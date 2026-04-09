@@ -171,7 +171,10 @@
             {
                 foreach (var facet in config.FacetFields)
                 {
-                    searchOptions.Facets.Add(facet);
+                    var facetValue = facet.Contains("count:")
+                        ? facet: $"{facet},count:20";
+
+                    searchOptions.Facets.Add(facetValue);
                 }
             }
 

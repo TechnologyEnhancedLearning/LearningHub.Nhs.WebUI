@@ -25,13 +25,15 @@
         /// <param name="logger">Logger.</param>
         /// <param name="settings">Settings.</param>
         /// <param name="termsAndConditionsService">Terms and conditions service.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         public PoliciesController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
             ILogger<HomeController> logger,
             IOptions<Settings> settings,
-            ITermsAndConditionsService termsAndConditionsService)
-            : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+            ITermsAndConditionsService termsAndConditionsService,
+            IMoodleBridgeApiService moodleBridgeApiService)
+            : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.termsAndConditionsService = termsAndConditionsService;
         }

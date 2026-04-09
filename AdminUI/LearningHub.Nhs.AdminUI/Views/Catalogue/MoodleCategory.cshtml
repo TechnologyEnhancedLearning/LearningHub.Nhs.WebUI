@@ -6,7 +6,8 @@
     var page = CatalogueNavPage.Category;
     ViewData["Title"] = "Manage Category";
     var selectedCategoryName = Model.MoodleCategorySelectList
-        .FirstOrDefault(c => c.Value == Model.SelectedCategoryId.ToString())?.Text;
+    .FirstOrDefault(c => c.Value == Model.SelectedCategoryId?.ToString())?.Text
+    ?? string.Empty;
     var errorHasOccurred = !ViewData.ModelState.IsValid;
 }
 @section SideMenu {
@@ -40,7 +41,7 @@
         <div class="mt-5">
             <div class="row">
                 <div class="form-group">
-                    @if (Model.SelectedCategoryId > 0)
+                    @if (Model.SelectedCategoryId != null)
                     {
                         <div class="nhs-item-row">
                             <div id="selectedCategoryDisplay" class="nhsuk-u-padding-left-3">
@@ -53,7 +54,7 @@
                         </div>
                     }
 
-                    <div id="divcategory" class="nhsuk-u-padding-left-3" style="@(Model.SelectedCategoryId == 0 ? "display:block;" : "display:none;")">
+                    <div id="divcategory" class="nhsuk-u-padding-left-3" style="@(Model.SelectedCategoryId == null ? "display:block;" : "display:none;")">
                         <div id="diverror" class="nhsuk-form-group @(errorHasOccurred ? "nhsuk-form-group--error" : "")">
                             @if (errorHasOccurred)
                             {
@@ -68,8 +69,18 @@
                             </div>
                             <div class="nhsuk-u-padding-bottom-5">
                                 <div>
-                                    <select asp-for="SelectedCategoryId" asp-items="@Model.MoodleCategorySelectList" class="nhsuk-input nhsuk-u-font-size-24">
+                                    @* <select asp-for="SelectedCategoryId" asp-items="@Model.MoodleCategorySelectList" class="nhsuk-input nhsuk-u-font-size-24">
                                         <option value="0">-- Select --</option>
+                                    </select> *@
+
+                                    <select asp-for="SelectedCategoryId" class="nhsuk-input nhsuk-u-font-size-24">
+                                        <option value="">-- Select --</option>
+                                        @foreach (var item in Model.MoodleCategorySelectList)
+                                        {
+                                            <option value="@item.Value" disabled="@(string.IsNullOrEmpty(item.Value) ? "disabled" : null)">
+                                                @item.Text
+                                            </option>
+                                        }
                                     </select>
                                 </div>
                             </div>

@@ -91,6 +91,12 @@
                         }
                     }
                 });
+
+                searchInput.addEventListener("focus", function () {
+                currentIndex = -1;
+                });
+                searchInput.addEventListener("keydown", handleArrowKeys);
+                suggestionsList.addEventListener("keydown", handleArrowKeys);
             }
         }
 
@@ -124,12 +130,6 @@
                 break;
                }
             }
-
-        searchInput.addEventListener("focus", function () {
-            currentIndex = -1;
-        });
-        searchInput.addEventListener("keydown", handleArrowKeys);
-        suggestionsList.addEventListener("keydown", handleArrowKeys);
 
         function closeAllLists() {
             suggestionsList.innerHTML = '';

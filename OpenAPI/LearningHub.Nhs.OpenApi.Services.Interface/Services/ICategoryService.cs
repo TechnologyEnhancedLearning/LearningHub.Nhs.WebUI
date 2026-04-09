@@ -14,6 +14,6 @@
         /// </summary>
         /// <param name="nodeVersionId">node version id.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        Task<int> GetByCatalogueVersionIdAsync(int nodeVersionId);
+        Task<CatalogueNodeVersionCategory> GetByCatalogueVersionIdAsync(int nodeVersionId);
     }
 }

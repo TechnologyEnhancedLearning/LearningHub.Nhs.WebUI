@@ -23,6 +23,7 @@
     {
         private readonly IUserService userService;
         private readonly LearningHubAuthServiceConfig authConfig;
+        private readonly IMoodleBridgeApiService moodleBridgeApiService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenAthensController"/> class.
@@ -33,14 +34,16 @@
         /// <param name="env">The env.</param>
         /// <param name="httpClientFactory">The http client factory.</param>
         /// <param name="settings">The settings.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         public OpenAthensController(
             ILogger<OpenAthensController> logger,
             IUserService userService,
+            IMoodleBridgeApiService moodleBridgeApiService,
             LearningHubAuthServiceConfig authConfig,
             IWebHostEnvironment env,
             IHttpClientFactory httpClientFactory,
             IOptions<Settings> settings)
-            : base(env, httpClientFactory, logger, settings.Value)
+            : base(env, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.userService = userService;
             this.authConfig = authConfig;

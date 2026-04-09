@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Dashboard;
+    using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.WebUI.Models;
 
@@ -24,9 +25,10 @@
         /// </summary>
         /// <param name="dashboardTrayLearningResourceType">The dashboardTrayLearningResource type.</param>
         /// <param name="dashboardType">The dashboard type.</param>
+        /// <param name="email">The email.</param>
         /// <param name="pageNumber">The page Number.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        Task<DashboardMyLearningResponseViewModel> GetMyCoursesAndElearning(string dashboardTrayLearningResourceType, string dashboardType, int pageNumber);
+        Task<DashboardMyLearningResponseViewModel> GetMyCoursesAndElearning(string dashboardTrayLearningResourceType, string dashboardType, string email, int pageNumber);
 
         /// <summary>
         /// GetCataloguesAsync.

@@ -11,6 +11,7 @@
     using GDS.MultiPageFormData;
     using GDS.MultiPageFormData.Enums;
     using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
@@ -46,12 +47,14 @@
         private readonly ILocationService locationService;
         private readonly ICacheService cacheService;
         private readonly IConfiguration configuration;
+        private readonly IMoodleBridgeApiService moodleBridgeApiService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MyAccountController"/> class.
         /// </summary>
         /// <param name="hostingEnvironment">The hostingEnvironment.</param>
         /// <param name="logger">The logger.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         /// <param name="settings">The settings.</param>
         /// <param name="httpClientFactory">The httpClientFactory.</param>
         /// <param name="userService">userService.</param>
@@ -80,8 +83,9 @@
                 ILocationService locationService,
                 IMultiPageFormService multiPageFormService,
                 ICacheService cacheService,
-                IConfiguration configuration)
-                : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+                IConfiguration configuration,
+                IMoodleBridgeApiService moodleBridgeApiService)
+                : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.userService = userService;
             this.loginWizardService = loginWizardService;
@@ -94,6 +98,7 @@
             this.multiPageFormService = multiPageFormService;
             this.cacheService = cacheService;
             this.configuration = configuration;
+            this.moodleBridgeApiService = moodleBridgeApiService;
         }
 
         private string LoginWizardCacheKey => $"{this.CurrentUserId}:LoginWizard";
@@ -1494,12 +1499,18 @@
             var validationResult = await this.userService.ValidateEmailChangeTokenAsync(token, loctoken, isUserRoleUpgrade);
 
             EmailChangeValidateViewModel model = new EmailChangeValidateViewModel();
+            UpdateEmailaddressViewModel emailModel = new UpdateEmailaddressViewModel()
+            {
+                OldEmail = user.EmailAddress,
+                NewEmail = validationResult.Email,
+            };
 
             if (validationResult.Valid)
             {
                 if (isUserRoleUpgrade)
                 {
                     await this.userService.UpgradeAsFullAccessUserAsync(validationResult.UserId, validationResult.Email);
+                    await this.moodleBridgeApiService.UpdateEmail(emailModel);
                     this.ViewBag.SuccessMessage = CommonValidationErrorMessages.EmailConfirmSucessMessage;
                     model.Token = token;
                     model.Loctoken = loctoken;
@@ -1508,6 +1519,7 @@
                 else
                 {
                     await this.userService.UpdateUserPrimaryEmailAsync(validationResult.Email);
+                    await this.moodleBridgeApiService.UpdateEmail(emailModel);
 
                     // Add UserHistory entry
                     UserHistoryViewModel userHistory = new UserHistoryViewModel()

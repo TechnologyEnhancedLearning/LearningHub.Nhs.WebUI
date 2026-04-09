@@ -39,14 +39,16 @@
         /// <param name="httpClientFactory">Http client factory.</param>
         /// <param name="logger">Logger.</param>
         /// <param name="settings">Settings.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         public ContributeResourceController(
             IResourceService resourceService,
             ICatalogueService catalogueService,
             IWebHostEnvironment hostingEnv,
+            IMoodleBridgeApiService moodleBridgeApiService,
             IHttpClientFactory httpClientFactory,
             ILogger<ContributeResourceController> logger,
             IOptions<Settings> settings)
-            : base(hostingEnv, httpClientFactory, logger, settings.Value)
+            : base(hostingEnv, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.resourceService = resourceService;
             this.catalogueService = catalogueService;

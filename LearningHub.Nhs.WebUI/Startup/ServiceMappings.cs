@@ -101,6 +101,7 @@
             services.AddSingleton<IMyLearningService, MyLearningService>();
             services.AddSingleton<IDashboardService, DashboardService>();
             services.AddSingleton<IMoodleApiService, MoodleApiService>();
+            services.AddSingleton<IMoodleBridgeApiService, MoodleBridgeApiService>();
             services.AddSingleton<IContentService, ContentService>();
             services.AddScoped<IPartialFileUploadService, PartialFileUploadService>();
             services.AddScoped<IRoleService, RoleService>();

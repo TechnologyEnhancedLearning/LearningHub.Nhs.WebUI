@@ -9,6 +9,7 @@
     using GDS.MultiPageFormData.Enums;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Databricks;
+    using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Filters;
@@ -28,7 +29,6 @@
     [ServiceFilter(typeof(LoginWizardFilter))]
     [ServiceFilter(typeof(ReporterPermissionFilter))]
     [Authorize]
-    [Route("Reports")]
     public class ReportsController : BaseController
     {
         private const int ReportPageSize = 10;
@@ -68,6 +68,7 @@
         /// <param name="reportHistoryViewModel">reportHistoryViewModel.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [ResponseCache(CacheProfileName = "Never")]
+        [Route("Reports")]
         public async Task<IActionResult> Index(ReportHistoryViewModel reportHistoryViewModel = null)
         {
             int page = 1;
@@ -436,15 +437,19 @@
 
         private async Task<List<KeyValuePair<string, string>>> GetCoursesAsync()
         {
-            ////int categoryId = this.Settings.StatMandId;
-            string categoryId = "test";
-            var courses = new List<KeyValuePair<string, string>>();
-            var subCategories = await this.categoryService.GetCoursesByCategoryIdAsync(categoryId);
+            string categoryId = this.Settings.StatMandInstanceName + ":" + this.Settings.StatMandId;
+            var response = await this.categoryService.GetCoursesByCategoryIdAsync(categoryId);
+            var allcourses = response?.Results?
+                        .Where(r => r.Instance == this.Settings.StatMandInstanceName)
+                        .SelectMany(r => r.Data?.Courses.Courses ?? new List<Course>())
+                        .ToList();
 
-            ////foreach (var subCategory in subCategories.Courses)
-            ////{
-            ////    courses.Add(new KeyValuePair<string, string>(subCategory.Id.ToString(), UtilityHelper.ConvertToSentenceCase(subCategory.Displayname)));
-            ////}
+            var courses = new List<KeyValuePair<string, string>>();
+
+            foreach (var course in allcourses)
+            {
+                courses.Add(new KeyValuePair<string, string>(course.Id.ToString(), UtilityHelper.ConvertToSentenceCase(course.Displayname)));
+            }
 
             return courses;
         }

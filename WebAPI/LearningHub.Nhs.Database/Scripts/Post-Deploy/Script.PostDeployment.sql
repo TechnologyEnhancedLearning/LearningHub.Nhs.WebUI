@@ -86,4 +86,5 @@ UPDATE [resources].[ResourceVersion] SET CertificateEnabled = 0 WHERE VersionSta
 :r .\Scripts\AttributeData.sql 
 :r .\Scripts\PPSXFileType.sql
 :r .\Scripts\UpdateFileTypes.sql
+:r .\Scripts\TD-7116-mib_new_env.sql
 

@@ -334,7 +334,7 @@ namespace LearningHub.Nhs.Services
             searchClickPayloadModel.TimeOfClick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             searchClickPayloadModel.SearchSignal.ProfileSignature.ApplicationId = ApplicationId;
             searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileType = ProfileType;
-            searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileId = this.settings.Findwise.CollectionIds.Resource;
+            searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileId = "Resource";
 
             return await this.SendSearchEventClickAsync(searchClickPayloadModel, true);
         }
@@ -354,7 +354,7 @@ namespace LearningHub.Nhs.Services
             searchClickPayloadModel.TimeOfClick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             searchClickPayloadModel.SearchSignal.ProfileSignature.ApplicationId = ApplicationId;
             searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileType = ProfileType;
-            searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileId = this.settings.Findwise.CollectionIds.Catalogue;
+            searchClickPayloadModel.SearchSignal.ProfileSignature.ProfileId = "Catalogue";
 
             return await this.SendSearchEventClickAsync(searchClickPayloadModel, false);
         }
@@ -393,7 +393,7 @@ namespace LearningHub.Nhs.Services
             clickPayloadModel.TimeOfClick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             clickPayloadModel.SearchSignal.ProfileSignature.ApplicationId = ApplicationId;
             clickPayloadModel.SearchSignal.ProfileSignature.ProfileType = ProfileType;
-            clickPayloadModel.SearchSignal.ProfileSignature.ProfileId = this.settings.Findwise.CollectionIds.AutoSuggestion;
+            clickPayloadModel.SearchSignal.ProfileSignature.ProfileId = "AutoSuggestion";
 
             return await this.SendAutoSuggestionEventClickAsync(clickPayloadModel);
         }

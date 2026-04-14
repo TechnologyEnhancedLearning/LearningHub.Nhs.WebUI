@@ -232,7 +232,6 @@
 
             await this.GetRatingSummaryBasic(ratingViewModel.EntityVersionId);
 
-            // TODO: Submit new resource record to findwise.
             return retVal;
         }
 
@@ -333,7 +332,6 @@
 
             await this.resourceVersionRatingSummaryRepository.UpdateAsync(userId, ratingSummary);
 
-            // Submit updated rating to Findwise.
             await this.resourceService.SubmitResourceVersionToSearchAsync(ratingViewModel.EntityVersionId, userId);
         }
 

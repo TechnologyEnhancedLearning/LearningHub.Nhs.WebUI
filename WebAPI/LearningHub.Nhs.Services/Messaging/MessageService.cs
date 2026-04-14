@@ -9,7 +9,6 @@
     using LearningHub.Nhs.Models.Messaging;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.Repository.Interface.Messaging;
-    using LearningHub.Nhs.Services.Interface;
     using LearningHub.Nhs.Services.Interface.Messaging;
     using Microsoft.Extensions.Logging;
 
@@ -23,14 +22,12 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageService"/> class.
         /// </summary>
-        /// <param name="findwiseHttpClient">The findwiseHttpClient.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="messageRepository">The message repository.</param>
         public MessageService(
-            IFindWiseHttpClient findwiseHttpClient,
             ILogger<Message> logger,
             IMessageRepository messageRepository)
-            : base(findwiseHttpClient, logger)
+            : base(logger)
         {
             this.messageRepository = messageRepository;
         }

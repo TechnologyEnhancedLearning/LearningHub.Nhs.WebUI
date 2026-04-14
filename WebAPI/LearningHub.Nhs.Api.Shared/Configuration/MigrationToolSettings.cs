@@ -1,7 +1,7 @@
 ﻿namespace LearningHub.Nhs.Api.Shared.Configuration
 {
     /// <summary>
-    /// The FindwiseSettings.
+    /// The MigrationToolSettings.
     /// </summary>
     public class MigrationToolSettings
     {

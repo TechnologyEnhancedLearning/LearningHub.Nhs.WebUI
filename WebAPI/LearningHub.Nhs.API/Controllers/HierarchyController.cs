@@ -473,12 +473,6 @@
             try
             {
                 int publicationId = await this.hierarchyService.PublishHierarchyEditAsync(publishViewModel);
-
-                /* TODO - IT2 - confirm submission to Findwise (why here rather than in service method just called?)
-                if (publicationId > 0)
-                {
-                    this.hierarchyService.ConfirmSubmissionToSearch(publicationId, publishViewModel.UserId);
-                } */
             }
             catch (Exception ex)
             {

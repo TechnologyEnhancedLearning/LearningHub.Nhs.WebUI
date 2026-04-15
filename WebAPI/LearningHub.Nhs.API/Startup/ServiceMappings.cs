@@ -39,7 +39,6 @@ namespace LearningHub.Nhs.Api
     using LearningHub.Nhs.Repository.Report;
     using LearningHub.Nhs.Repository.Resources;
     using LearningHub.Nhs.Services;
-    using LearningHub.Nhs.Services.Findwise;
     using LearningHub.Nhs.Services.Interface;
     using LearningHub.Nhs.Services.Interface.Messaging;
     using LearningHub.Nhs.Services.Interface.Report;
@@ -218,7 +217,6 @@ namespace LearningHub.Nhs.Api
             services.AddScoped<IFileTypeService, FileTypeService>();
             services.AddScoped<IHierarchyService, HierarchyService>();
             services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<IFindWiseHttpClient, FindWiseHttpClient>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<ISecurityService, SecurityService>();
             services.AddScoped<IPermissionService, PermissionService>();
@@ -235,7 +233,6 @@ namespace LearningHub.Nhs.Api
             services.AddTransient<IEventService, EventService>();
             services.AddTransient<ICatalogueService, CatalogueService>();
             services.AddScoped<IResourceSyncService, ResourceSyncService>();
-            services.AddScoped<IFindwiseApiFacade, FindwiseApiFacade>();
             services.AddScoped<IEmailSenderService, EmailSenderService>();
             services.AddScoped<IEmailTemplateService, EmailTemplateService>();
             services.AddScoped<IMessageService, MessageService>();

@@ -165,7 +165,7 @@ namespace LearningHub.Nhs.Services.Interface
         Task<int> PublishResourceVersionAsync(PublishViewModel publishViewModel);
 
         /// <summary>
-        /// Submits a published resource version to the Findwise search.
+        /// Submits a published resource version to search.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
         /// <param name="userId">The userId<see cref="int"/>.</param>

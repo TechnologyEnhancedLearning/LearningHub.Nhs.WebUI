@@ -312,7 +312,7 @@
             searchViewModel.DocumentModel = results.DocumentList.Documents.ToList();
             searchViewModel.SearchString = searchRequestModel.SearchText;
             searchViewModel.Hits = results.DocumentList.Documents.Count();
-            searchViewModel.DescriptionMaximumLength = this.settings.Findwise.MaximumDescriptionLength;
+            searchViewModel.DescriptionMaximumLength = this.settings.AzureSearch.MaximumDescriptionLength;
             searchViewModel.ErrorOnAPI = results.ErrorsOnAPICall;
             searchViewModel.Facets = results.Facets;
 
@@ -418,7 +418,7 @@
                 DocumentModel = documents,
                 SearchString = catalogueSearchRequestModel.SearchText,
                 Hits = results.DocumentList.Documents.Count(),
-                DescriptionMaximumLength = this.settings.Findwise.MaximumDescriptionLength,
+                DescriptionMaximumLength = this.settings.AzureSearch.MaximumDescriptionLength,
                 ErrorOnAPI = results.ErrorsOnAPICall,
                 Facets = results.Facets,
             };
@@ -491,7 +491,7 @@
                 DocumentModel = documents,
                 SearchString = catalogueSearchRequestModel.SearchText,
                 Hits = results.DocumentList.Documents.Count(),
-                DescriptionMaximumLength = this.settings.Findwise.MaximumDescriptionLength,
+                DescriptionMaximumLength = this.settings.AzureSearch.MaximumDescriptionLength,
                 ErrorOnAPI = results.ErrorsOnAPICall,
                 Facets = results.Facets,
             };

@@ -8,17 +8,15 @@
     using AutoMapper;
     using LearningHub.Nhs.Models.Dashboard;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.Models.MyLearning;
+    using LearningHub.Nhs.Models.Provider;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Activity;
-    using LearningHub.Nhs.Models.Provider;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Hierarchy;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Resources;
-    using LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
-    using LearningHub.Nhs.Models.Entities.Resource;
-    using System.Diagnostics;
 
     /// <summary>
     /// The DashboardService.
@@ -277,7 +275,8 @@
 
             if (entrolledCourses != null)
             {
-                mappedEnrolledCourses = entrolledCourses?.Results?
+                var courses = entrolledCourses?.Results ?? Enumerable.Empty<CompletionResult>();
+                mappedEnrolledCourses = courses
     .Where(r => r.Data?.Courses != null)
     .SelectMany(r => r.Data.Courses)
     .Select(course => new MyLearningCombinedActivitiesViewModel
@@ -357,7 +356,7 @@
                 }
 
                 // Await all active tasks in parallel
-                if (courseCertificatesTask != null & dashboardTrayLearningResourceType == "all")
+                if (courseCertificatesTask != null && dashboardTrayLearningResourceType == "all")
                     await Task.WhenAll(courseCertificatesTask, resourceCertificatesTask);
                 else if (dashboardTrayLearningResourceType == "elearning")
                     await resourceCertificatesTask;
@@ -390,7 +389,7 @@
          CertificateDownloadUrl = c.DownloadLink,
          ResourceVersionId = 0,
          ProvidersJson = null
-     });
+     }) ?? Enumerable.Empty<UserCertificateViewModel>();
                 }
 
                 var allCertificates = resourceCertificates.Concat(mappedCourseCertificates);

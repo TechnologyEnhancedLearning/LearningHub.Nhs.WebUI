@@ -33,8 +33,7 @@ namespace LearningHub.Nhs.OpenApi.Services
             }
             else
             {
-                services.AddScoped<IFindwiseClient, FindwiseClient>();
-                services.AddScoped<ISearchService, SearchService>();
+                services.AddScoped<IFindwiseClient, FindwiseClient>();                
             }
 
             services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>();

@@ -19,6 +19,8 @@
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using LearningHub.Nhs.Models.Entities.Resource;
     using System.Diagnostics;
+    using StackExchange.Redis;
+    using LearningHub.Nhs.Models.Moodle;
 
     /// <summary>
     /// The DashboardService.
@@ -277,7 +279,8 @@
 
             if (entrolledCourses != null)
             {
-                mappedEnrolledCourses = entrolledCourses?.Results?
+                var courses = entrolledCourses?.Results ?? Enumerable.Empty<CompletionResult>();
+                mappedEnrolledCourses = courses
     .Where(r => r.Data?.Courses != null)
     .SelectMany(r => r.Data.Courses)
     .Select(course => new MyLearningCombinedActivitiesViewModel
@@ -312,24 +315,31 @@
                             : DateTimeOffset.MinValue,
     }).ToList();
             }
-
-            // Combine both result sets
-            var combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
-            int skip = (pageNumber - 1) * 3;
-            var totalCount = combainedUserActivities.Count() > 8 ? 8 : combainedUserActivities.Count();
-
-            bool isLastPage = skip + 3 >= 8;
-            int pageSize = isLastPage ? 2 : 3;
-            var pagedResults = combainedUserActivities.OrderByDescending(activity => activity.ActivityDate).Skip(skip).Take(pageSize).ToList();
-
-            // Count total records.
-            MyLearningActivitiesDetailedViewModel viewModel = new MyLearningActivitiesDetailedViewModel()
+            try
             {
-                TotalCount = totalCount,
-                Activities = pagedResults,
-            };
+                // Combine both result sets
+                var combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
+                int skip = (pageNumber - 1) * 3;
+                var totalCount = combainedUserActivities.Count() > 8 ? 8 : combainedUserActivities.Count();
 
-            return viewModel;
+                bool isLastPage = skip + 3 >= 8;
+                int pageSize = isLastPage ? 2 : 3;
+                var pagedResults = combainedUserActivities.OrderByDescending(activity => activity.ActivityDate).Skip(skip).Take(pageSize).ToList();
+
+                // Count total records.
+                MyLearningActivitiesDetailedViewModel viewModel = new MyLearningActivitiesDetailedViewModel()
+                {
+                    TotalCount = totalCount,
+                    Activities = pagedResults,
+                };
+
+                return viewModel;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
         }
 
         /// <summary>
@@ -357,7 +367,7 @@
                 }
 
                 // Await all active tasks in parallel
-                if (courseCertificatesTask != null & dashboardTrayLearningResourceType == "all")
+                if (courseCertificatesTask != null && dashboardTrayLearningResourceType == "all")
                     await Task.WhenAll(courseCertificatesTask, resourceCertificatesTask);
                 else if (dashboardTrayLearningResourceType == "elearning")
                     await resourceCertificatesTask;
@@ -390,7 +400,7 @@
          CertificateDownloadUrl = c.DownloadLink,
          ResourceVersionId = 0,
          ProvidersJson = null
-     });
+     }) ?? Enumerable.Empty<UserCertificateViewModel>();
                 }
 
                 var allCertificates = resourceCertificates.Concat(mappedCourseCertificates);

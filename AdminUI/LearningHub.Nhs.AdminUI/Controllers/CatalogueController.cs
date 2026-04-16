@@ -738,20 +738,29 @@ namespace LearningHub.Nhs.AdminUI.Controllers
             if (string.IsNullOrEmpty(catalogueViewModel.SelectedCategoryId))
             {
                 this.ModelState.AddModelError("SelectedCategoryId", "Please select a category.");
-            }
-            var vm = await this.catalogueService.GetCatalogueAsync(catalogueViewModel.CatalogueNodeVersionId);
-            vm.SelectedCategoryId = catalogueViewModel.SelectedCategoryId;
-            var vr = await this.catalogueService.AddCategoryToCatalogue(vm);
-            if (vr.Success)
-            {
+                var vm = await this.catalogueService.GetCatalogueAsync(catalogueViewModel.CatalogueNodeVersionId);
                 var categories = await this.moodleBridgeApiService.GetAllMoodleCategoriesAsync();
                 vm.MoodleCategorySelectList = BuildMoodleCategorySelectList(categories);
+
                 return this.View("MoodleCategory", vm);
             }
+
             else
             {
-                this.ViewBag.ErrorMessage = $"Category Update failed.";
-                return this.View("MoodleCategory", vm);
+                var vm = await this.catalogueService.GetCatalogueAsync(catalogueViewModel.CatalogueNodeVersionId);
+                vm.SelectedCategoryId = catalogueViewModel.SelectedCategoryId;
+                var vr = await this.catalogueService.AddCategoryToCatalogue(vm);
+                if (vr.Success)
+                {
+                    var categories = await this.moodleBridgeApiService.GetAllMoodleCategoriesAsync();
+                    vm.MoodleCategorySelectList = BuildMoodleCategorySelectList(categories);
+                    return this.View("MoodleCategory", vm);
+                }
+                else
+                {
+                    this.ViewBag.ErrorMessage = $"Category Update failed.";
+                    return this.View("MoodleCategory", vm);
+                }
             }
         }
 

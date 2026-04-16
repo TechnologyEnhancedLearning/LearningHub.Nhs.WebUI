@@ -408,7 +408,7 @@ namespace LearningHub.Nhs.Services
         /// </returns>
         private async Task<bool> SendSearchEventClickAsync(SearchClickPayloadModel searchClickPayloadModel, bool isResource)
         {
-            return await Task.FromResult(false);
+            return await Task.FromResult(true);
         }
 
         /// <summary>
@@ -420,7 +420,7 @@ namespace LearningHub.Nhs.Services
         /// </returns>
         private async Task<bool> SendAutoSuggestionEventClickAsync(AutoSuggestionClickPayloadModel clickPayloadModel)
         {
-            return await Task.FromResult(false);
+            return await Task.FromResult(true);
         }
 
         private string EncodeSearchText(string searchText)

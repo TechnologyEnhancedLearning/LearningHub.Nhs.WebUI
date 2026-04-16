@@ -8,19 +8,15 @@
     using AutoMapper;
     using LearningHub.Nhs.Models.Dashboard;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.Models.MyLearning;
+    using LearningHub.Nhs.Models.Provider;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Activity;
-    using LearningHub.Nhs.Models.Provider;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Hierarchy;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Resources;
-    using LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
-    using LearningHub.Nhs.Models.Entities.Resource;
-    using System.Diagnostics;
-    using StackExchange.Redis;
-    using LearningHub.Nhs.Models.Moodle;
 
     /// <summary>
     /// The DashboardService.
@@ -315,31 +311,24 @@
                             : DateTimeOffset.MinValue,
     }).ToList();
             }
-            try
+
+            // Combine both result sets
+            var combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
+            int skip = (pageNumber - 1) * 3;
+            var totalCount = combainedUserActivities.Count() > 8 ? 8 : combainedUserActivities.Count();
+
+            bool isLastPage = skip + 3 >= 8;
+            int pageSize = isLastPage ? 2 : 3;
+            var pagedResults = combainedUserActivities.OrderByDescending(activity => activity.ActivityDate).Skip(skip).Take(pageSize).ToList();
+
+            // Count total records.
+            MyLearningActivitiesDetailedViewModel viewModel = new MyLearningActivitiesDetailedViewModel()
             {
-                // Combine both result sets
-                var combainedUserActivities = mappedMyLearningActivities.Concat(mappedEnrolledCourses).ToList();
-                int skip = (pageNumber - 1) * 3;
-                var totalCount = combainedUserActivities.Count() > 8 ? 8 : combainedUserActivities.Count();
+                TotalCount = totalCount,
+                Activities = pagedResults,
+            };
 
-                bool isLastPage = skip + 3 >= 8;
-                int pageSize = isLastPage ? 2 : 3;
-                var pagedResults = combainedUserActivities.OrderByDescending(activity => activity.ActivityDate).Skip(skip).Take(pageSize).ToList();
-
-                // Count total records.
-                MyLearningActivitiesDetailedViewModel viewModel = new MyLearningActivitiesDetailedViewModel()
-                {
-                    TotalCount = totalCount,
-                    Activities = pagedResults,
-                };
-
-                return viewModel;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-
+            return viewModel;
         }
 
         /// <summary>

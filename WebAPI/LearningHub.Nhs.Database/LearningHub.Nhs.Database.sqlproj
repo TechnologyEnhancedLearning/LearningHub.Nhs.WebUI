@@ -569,6 +569,7 @@
     <Build Include="Tables\MIB\MoodleInstanceConfigs.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-7116-mib_new_env.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-7106-Resume-Databricks-Ingestion.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\ActivateChangeTracking.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

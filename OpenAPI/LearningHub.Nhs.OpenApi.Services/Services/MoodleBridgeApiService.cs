@@ -215,8 +215,7 @@
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, "An error occurred while fetching user's recent learning activities ");
-                throw;
+                return null;
             }
         }
 

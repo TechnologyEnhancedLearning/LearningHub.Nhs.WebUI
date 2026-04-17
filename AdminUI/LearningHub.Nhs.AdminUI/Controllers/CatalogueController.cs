@@ -740,6 +740,7 @@ namespace LearningHub.Nhs.AdminUI.Controllers
                 this.ModelState.AddModelError("SelectedCategoryId", "Please select a category.");
                 var vm = await this.catalogueService.GetCatalogueAsync(catalogueViewModel.CatalogueNodeVersionId);
                 var categories = await this.moodleBridgeApiService.GetAllMoodleCategoriesAsync();
+                vm.SelectedCategoryId = null;
                 vm.MoodleCategorySelectList = BuildMoodleCategorySelectList(categories);
 
                 return this.View("MoodleCategory", vm);

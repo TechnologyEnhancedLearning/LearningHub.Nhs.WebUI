@@ -640,4 +640,7 @@
   <ItemGroup>
     <None Include="Scripts\Post-Deploy\Scripts\ElfhExternalSystemsImport.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Post-Deploy\Scripts\TD-7133_AddIndexUserUserGroup.sql" />
+  </ItemGroup>
 </Project>

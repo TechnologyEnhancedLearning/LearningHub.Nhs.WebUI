@@ -246,6 +246,15 @@
         Task<LearningHubValidationResult> AcceptAccessAsync(int userId, int accessRequestId);
 
         /// <summary>
+        /// The ProvideCatalogueReaderAccessForScript.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="scriptCataloguereference">The scriptCataloguereference.</param>
+        /// <param name="scriptCatalogueNodeId">The scriptCatalogueNodeId.</param>
+        /// <returns>The validation result.</returns>
+        Task<LearningHubValidationResult> ProvideCatalogueReaderAccessForScript(int userId, string scriptCataloguereference, int scriptCatalogueNodeId);
+
+        /// <summary>
         /// GetAllCataloguesAsync.
         /// </summary>
         /// <param name="filterChar">filterChar.</param>

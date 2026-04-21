@@ -120,6 +120,15 @@
         Task<LearningHubValidationResult> AcceptAccessRequestAsync(int accessRequestId, int accessRequestUserId);
 
         /// <summary>
+        /// The ProvideCatalogueReaderAccess.
+        /// </summary>
+        /// <param name="userid">The userid.</param>
+        /// <param name="scriptCataloguereference">The scriptCataloguereference.</param>
+        /// <param name="scriptCatalogueNodeId">The scriptCatalogueNodeId.</param>
+        /// <returns>The validation result.</returns>
+        Task<LearningHubValidationResult> ProvideCatalogueReaderAccess(int userid, string scriptCataloguereference, int scriptCatalogueNodeId);
+
+        /// <summary>
         /// The RejectAccessRequestAsync.
         /// </summary>
         /// <param name="catalogueNodeId">The catalogueNodeId.</param>

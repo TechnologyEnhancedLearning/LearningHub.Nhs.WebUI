@@ -416,6 +416,20 @@
         }
 
         /// <summary>
+        /// The ProvideCatalogueReaderAccess.
+        /// </summary>
+        /// <param name="userid">The userid.</param>
+        /// <param name="scriptCataloguereference">The scriptCataloguereference.</param>
+        /// <param name="scriptCatalogueNodeId">The scriptCatalogueNodeId.</param>
+        /// <returns>The action result.</returns>
+        [HttpPost("ProvideCatalogueReaderAccess/{userid}/{scriptCataloguereference}/{scriptCatalogueNodeId}")]
+        [Authorize]
+        public async Task<IActionResult> ProvideCatalogueReaderAccess(int userid, string scriptCataloguereference, int scriptCatalogueNodeId)
+        {
+            return this.Ok(await this.catalogueService.ProvideCatalogueReaderAccessForScript(this.CurrentUserId.GetValueOrDefault(), scriptCataloguereference, scriptCatalogueNodeId));
+        }
+
+        /// <summary>
         /// The UpdateCatalogueOwner.
         /// </summary>
         /// <param name="viewModel">The catalogue owner.</param>

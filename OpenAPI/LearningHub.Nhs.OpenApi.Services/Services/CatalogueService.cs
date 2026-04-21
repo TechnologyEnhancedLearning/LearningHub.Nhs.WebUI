@@ -79,7 +79,7 @@
         /// <param name="bookmarkRepository"></param>
         /// <param name="nodeActivityRepository"></param>
         /// <param name="findwiseApiFacade"></param>
-        public CatalogueService(ICatalogueRepository catalogueRepository, ICategoryService categoryService, INodeRepository nodeRepository, IUserUserGroupRepository userUserGroupRepository, IMapper mapper, IOptions<FindwiseConfig> findwiseConfig, IOptions<LearningHubConfig> learningHubConfig, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, INodeResourceRepository nodeResourceRepository, IResourceVersionRepository resourceVersionRepository, IRoleUserGroupRepository roleUserGroupRepository, IProviderService providerService, ICatalogueAccessRequestRepository catalogueAccessRequestRepository, IUserRepository userRepository, IUserProfileRepository userProfileRepository, IEmailSenderService emailSenderService, IBookmarkRepository bookmarkRepository,INodeActivityRepository nodeActivityRepository, IFindwiseApiFacade findwiseApiFacade, INotificationSenderService notificationSenderService, ITimezoneOffsetManager timezoneOffsetManager)
+        public CatalogueService(ICatalogueRepository catalogueRepository, ICategoryService categoryService, INodeRepository nodeRepository, IUserUserGroupRepository userUserGroupRepository, IMapper mapper, IOptions<FindwiseConfig> findwiseConfig, IOptions<LearningHubConfig> learningHubConfig, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, INodeResourceRepository nodeResourceRepository, IResourceVersionRepository resourceVersionRepository, IRoleUserGroupRepository roleUserGroupRepository, IProviderService providerService, ICatalogueAccessRequestRepository catalogueAccessRequestRepository, IUserRepository userRepository, IUserProfileRepository userProfileRepository, IEmailSenderService emailSenderService, IBookmarkRepository bookmarkRepository, INodeActivityRepository nodeActivityRepository, IFindwiseApiFacade findwiseApiFacade, INotificationSenderService notificationSenderService, ITimezoneOffsetManager timezoneOffsetManager)
         {
             this.catalogueRepository = catalogueRepository;
             this.categoryService = categoryService;
@@ -1190,6 +1190,51 @@
                 CatalogueUrl = $"{this.learningHubConfig.BaseUrl}Catalogue/{catalogue.Url}",
             })
             { EmailAddress = catalogueAccessRequest.EmailAddress });
+            return new LearningHubValidationResult(true) { CreatedId = uugId };
+        }
+
+        /// <summary>
+        /// The ProvideCatalogueReaderAccessForScript.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="scriptCataloguereference">The scriptCataloguereference.</param>
+        /// <param name="scriptCatalogueNodeId">The scriptCatalogueNodeId.</param>
+        /// <returns>The validation result.</returns>
+        public async Task<LearningHubValidationResult> ProvideCatalogueReaderAccessForScript(int userId, string scriptCataloguereference, int scriptCatalogueNodeId)
+        {
+            ////var catalogue = this.catalogueNodeVersionRepository.GetBasicCatalogue(8);
+            var canEdit = await this.IsUserLocalAdminAsync(userId, scriptCatalogueNodeId);
+            if (!canEdit)
+            {
+                throw new Exception($"User '{userId}' does not have access to manage catalogue '{scriptCataloguereference}'");
+            }
+
+            RoleUserGroup rug = new RoleUserGroup();
+
+            var rugs = await this.roleUserGroupRepository.GetByRoleIdCatalogueId((int)RoleEnum.Reader, scriptCatalogueNodeId);
+
+            rug = rugs.Where(r => r.RoleId == (int)RoleEnum.Reader
+                                    && r.UserGroup.UserGroupAttribute.Any(uga => uga.AttributeId == (int)AttributeEnum.RestrictedAccess)
+                                    && r.Scope.ScopeType == ScopeTypeEnum.Catalogue).FirstOrDefault();
+
+            if (rug == null)
+            {
+                throw new Exception($"No role user group for readers in catalogue with node id {scriptCatalogueNodeId}");
+            }
+
+            var userGroupId = rug.UserGroupId;
+
+            var existingUug = this.userUserGroupRepository.GetAll().SingleOrDefault(x => x.UserId == userId && x.UserGroupId == userGroupId && !x.Deleted);
+
+            int uugId = 0;
+            if (existingUug == null)
+            {
+                uugId = await this.userUserGroupRepository.CreateAsync(userId, new LearningHub.Nhs.Models.Entities.UserUserGroup
+                {
+                    UserGroupId = userGroupId,
+                    UserId = userId,
+                });
+            }
             return new LearningHubValidationResult(true) { CreatedId = uugId };
         }
 

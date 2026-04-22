@@ -8,17 +8,15 @@
     using AutoMapper;
     using LearningHub.Nhs.Models.Dashboard;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.Models.MyLearning;
+    using LearningHub.Nhs.Models.Provider;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Activity;
-    using LearningHub.Nhs.Models.Provider;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Hierarchy;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Resources;
-    using LearningHub.Nhs.OpenApi.Repositories.Repositories.Activity;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
-    using LearningHub.Nhs.Models.Entities.Resource;
-    using System.Diagnostics;
 
     /// <summary>
     /// The DashboardService.
@@ -34,6 +32,11 @@
         /// The moodleApiService.
         /// </summary>
         private readonly IMoodleApiService moodleApiService;
+
+        /// <summary>
+        /// The moodleBridgeApiService.
+        /// </summary>
+        private readonly IMoodleBridgeApiService moodleBridgeApiService;
 
         /// <summary>
         /// The resourceActivityRepository.
@@ -54,9 +57,10 @@
         /// <param name="ratingService">ratingService.</param>
         /// <param name="providerService">providerService.</param>
         /// <param name="moodleApiService">moodleApiService.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         /// <param name="resourceActivityRepository">resourceActivityRepository.</param>
         /// <param name="resourceRepository">resourceRepository.</param>
-        public DashboardService(IMapper mapper, IResourceVersionRepository resourceVersionRepository, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, IRatingService ratingService, IProviderService providerService, IMoodleApiService moodleApiService, IResourceActivityRepository resourceActivityRepository, IResourceRepository resourceRepository)
+        public DashboardService(IMapper mapper, IResourceVersionRepository resourceVersionRepository, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, IRatingService ratingService, IProviderService providerService, IMoodleApiService moodleApiService, IMoodleBridgeApiService moodleBridgeApiService, IResourceActivityRepository resourceActivityRepository, IResourceRepository resourceRepository)
         {
             this.mapper = mapper;
             this.resourceVersionRepository = resourceVersionRepository;
@@ -66,6 +70,7 @@
             this.moodleApiService = moodleApiService;
             this.resourceActivityRepository = resourceActivityRepository;
             this.resourceRepository = resourceRepository;
+            this.moodleBridgeApiService = moodleBridgeApiService;
         }
 
         /// <summary>
@@ -126,28 +131,28 @@
         /// <param name="userId">The userId.</param>
         /// <param name="resourceType">The resourceType.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<DashboardMyLearningResponseViewModel> GetMyCoursesAndElearning(string dashboardTrayLearningResourceType, string dashboardType, int pageNumber, int userId, string resourceType)
+        public async Task<DashboardMyLearningResponseViewModel> GetMyCoursesAndElearning(GetMyCoursesAndElearningRequestModel requestModel, int userId, string resourceType)
         {
             MyLearningActivitiesDetailedViewModel myInProgressActivities = new();
             MyLearningCertificatesDetailedViewModel certificates = new();
             List<DashboardResourceDto> resources = new();
             int resourceCount = 0;
-            if (dashboardType == "my-in-progress")
+            if (requestModel.DashboardType == "my-in-progress")
             {
-                myInProgressActivities = await this.GetMyInprogressLearningAsync(dashboardTrayLearningResourceType, pageNumber, userId);
+                myInProgressActivities = await this.GetMyInprogressLearningAsync(requestModel.DashboardTrayLearningResourceType, requestModel.PageNumber, userId, requestModel.Email);
             }
-            else if (dashboardType == "my-certificates")
+            else if (requestModel.DashboardType == "my-certificates")
             {
-                certificates = await this.GetUserCertificateDetailsAsync(dashboardTrayLearningResourceType, pageNumber, userId);
+                certificates = await this.GetUserCertificateDetailsAsync(requestModel.DashboardTrayLearningResourceType, requestModel.PageNumber, userId, requestModel.Email);
             }
             else
             {
-                var result = resourceVersionRepository.GetResources(dashboardType, pageNumber, userId);
+                var result = resourceVersionRepository.GetResources(requestModel.DashboardType, requestModel.PageNumber, userId);
                 resourceCount = result.resourceCount;
                 resources = result.resources ?? new List<DashboardResourceDto>();
             }
 
-            var cataloguesResponse = dashboardType.ToLower() == "my-catalogues" ? catalogueNodeVersionRepository.GetCatalogues(dashboardType, pageNumber, userId) : (TotalCount: 0, Catalogues: new List<DashboardCatalogueDto>());
+            var cataloguesResponse = requestModel.DashboardType.ToLower() == "my-catalogues" ? catalogueNodeVersionRepository.GetCatalogues(requestModel.DashboardType, requestModel.PageNumber, userId) : (TotalCount: 0, Catalogues: new List<DashboardCatalogueDto>());
 
             var catalogueList = cataloguesResponse.Catalogues.Any() ? mapper.Map<List<DashboardCatalogueViewModel>>(cataloguesResponse.Catalogues) : new List<DashboardCatalogueViewModel>();
             if (catalogueList.Any())
@@ -196,19 +201,19 @@
 
             var response = new DashboardMyLearningResponseViewModel
             {
-                Type = dashboardType,
+                Type = requestModel.DashboardType,
                 Resources = resourceList,
                 Catalogues = catalogueList,
                 Activities = myInProgressActivities.Activities,
                 UserCertificates = certificates.Certificates,
-                TotalCount = dashboardType?.ToLower() switch
+                TotalCount = requestModel.DashboardType?.ToLower() switch
                 {
                     "my-catalogues" => cataloguesResponse.TotalCount,
                     "my-in-progress" => myInProgressActivities?.TotalCount ?? 0,
                     "my-certificates" => certificates?.TotalCount ?? 0,
                     _ => resourceCount
                 },
-                CurrentPage = pageNumber,
+                CurrentPage = requestModel.PageNumber,
             };
 
             return response;
@@ -220,11 +225,12 @@
         /// <param name="dashboardTrayLearningResourceType">The dashboardTrayLearningResourceType.</param>
         /// <param name="pageNumber">The pageNumber.</param>
         /// <param name="userId">The user id.</param>
+        /// <param name="email">The email.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<MyLearningActivitiesDetailedViewModel> GetMyInprogressLearningAsync(string dashboardTrayLearningResourceType, int pageNumber, int userId)
+        public async Task<MyLearningActivitiesDetailedViewModel> GetMyInprogressLearningAsync(string dashboardTrayLearningResourceType, int pageNumber, int userId, string email)
         {
             List<MyLearningActivitiesViewModel> result = new();
-            List<MoodleEnrolledCourseResponseModel> entrolledCourses = new();
+            MoodleCompletionsApiResponseModel entrolledCourses = new();
             List<MyLearningCombinedActivitiesViewModel> mappedMyLearningActivities = new();
             List<MyLearningCombinedActivitiesViewModel> mappedEnrolledCourses = new();
             if (dashboardTrayLearningResourceType != "courses")
@@ -234,7 +240,7 @@
 
             if (dashboardTrayLearningResourceType != "elearning")
             {
-                entrolledCourses = await this.moodleApiService.GetInProgressEnrolledCoursesAsync(userId);
+                entrolledCourses = await this.moodleBridgeApiService.GetInProgressEnrolledCoursesAsync(email);
             }
 
             if (result != null)
@@ -269,36 +275,41 @@
 
             if (entrolledCourses != null)
             {
-                mappedEnrolledCourses = entrolledCourses.Select(course => new MyLearningCombinedActivitiesViewModel
-                {
-                    UserId = userId,
-                    ResourceId = (int)course.Id,
-                    ResourceVersionId = (int)course.Id,
-                    IsCurrentResourceVersion = true,
-                    ResourceReferenceId = (int)course.Id,
-                    MajorVersion = 1,
-                    MinorVersion = 0,
-                    ResourceType = ResourceTypeEnum.Moodle,
-                    Title = course.DisplayName,
-                    CertificateEnabled = course.CertificateEnabled,
-                    ActivityStatus = (course.Completed == true || course.ProgressPercentage.TrimEnd('%') == "100") ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
-                    ActivityDate = course.LastAccessDate.HasValue
+                var courses = entrolledCourses?.Results ?? Enumerable.Empty<CompletionResult>();
+                mappedEnrolledCourses = courses
+    .Where(r => r.Data?.Courses != null)
+    .SelectMany(r => r.Data.Courses)
+    .Select(course => new MyLearningCombinedActivitiesViewModel
+    {
+        UserId = userId,
+        ResourceId = (int)course.Id,
+        ResourceVersionId = (int)course.Id,
+        IsCurrentResourceVersion = true,
+        ResourceReferenceId = (int)course.Id,
+        MajorVersion = 1,
+        MinorVersion = 0,
+        ResourceType = ResourceTypeEnum.Moodle,
+        Title = course.DisplayName,
+        ResourceUrl = course.CourseUrl,
+        CertificateEnabled = course.CertificateEnabled,
+        ActivityStatus = (course.Completed == true || course.ProgressPercentage.TrimEnd('%') == "100") ? ActivityStatusEnum.Completed : ActivityStatusEnum.Incomplete,
+        ActivityDate = course.LastAccessDate.HasValue
                             ? DateTimeOffset.FromUnixTimeSeconds(course.LastAccessDate.Value)
                             : DateTimeOffset.MinValue,
-                    ScorePercentage = Convert.ToInt32(course.ProgressPercentage.TrimEnd('%')),
-                    TotalActivities = course.TotalActivities,
-                    CompletedActivities = course.CompletedActivities,
-                    IsMostRecent = false,
-                    ResourceDurationMilliseconds = 0,
-                    CompletionPercentage = 0,
-                    ProvidersJson = null,
-                    AssesmentScore = 0,
-                    AssessmentPassMark = 0,
-                    AssessmentType = 0,
-                    CertificateAwardedDate = course.EndDate.HasValue
+        ScorePercentage = Convert.ToInt32(course.ProgressPercentage.TrimEnd('%')),
+        TotalActivities = course.TotalActivities,
+        CompletedActivities = course.CompletedActivities,
+        IsMostRecent = false,
+        ResourceDurationMilliseconds = 0,
+        CompletionPercentage = 0,
+        ProvidersJson = null,
+        AssesmentScore = 0,
+        AssessmentPassMark = 0,
+        AssessmentType = 0,
+        CertificateAwardedDate = course.EndDate.HasValue
                             ? DateTimeOffset.FromUnixTimeSeconds(course.EndDate.Value)
                             : DateTimeOffset.MinValue,
-                }).ToList();
+    }).ToList();
             }
 
             // Combine both result sets
@@ -327,16 +338,16 @@
         /// <param name="pageNumber">The pageNumber.</param>
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetailsAsync(string dashboardTrayLearningResourceType, int pageNumber, int userId)
+        public async Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetailsAsync(string dashboardTrayLearningResourceType, int pageNumber, int userId, string email)
         {
             try
             {
-                Task<List<MoodleUserCertificateResponseModel>>? courseCertificatesTask = null;
                 Task<List<UserCertificateViewModel>>? resourceCertificatesTask = null;
+                Task<MoodleCertificateResponseModel>? courseCertificatesTask = null;
 
                 if (dashboardTrayLearningResourceType != "elearning")
                 {
-                    courseCertificatesTask = moodleApiService.GetUserCertificateAsync(userId);
+                    courseCertificatesTask = moodleBridgeApiService.GetUserCertificateAsync(email);
 
                 }
                 if (dashboardTrayLearningResourceType != "courses")
@@ -345,7 +356,7 @@
                 }
 
                 // Await all active tasks in parallel
-                if (courseCertificatesTask != null & dashboardTrayLearningResourceType == "all")
+                if (courseCertificatesTask != null && dashboardTrayLearningResourceType == "all")
                     await Task.WhenAll(courseCertificatesTask, resourceCertificatesTask);
                 else if (dashboardTrayLearningResourceType == "elearning")
                     await resourceCertificatesTask;
@@ -361,23 +372,24 @@
 
                 if (courseCertificatesTask != null)
                 {
-                    var courseCertificates = courseCertificatesTask.Result ?? Enumerable.Empty<MoodleUserCertificateResponseModel>();
-
-                    mappedCourseCertificates = courseCertificates.Select(c => new UserCertificateViewModel
-                    {
-                        Title = string.IsNullOrWhiteSpace(c.ResourceTitle) ? c.ResourceName : c.ResourceTitle,
-                        ResourceTypeId = (int)ResourceTypeEnum.Moodle,
-                        ResourceReferenceId = 0,
-                        MajorVersion = 0,
-                        MinorVersion = 0,
-                        AwardedDate = c.AwardedDate.HasValue
+                    mappedCourseCertificates = courseCertificatesTask.Result?.Results?
+     .Where(r => r.Data?.Certificates != null)
+     .SelectMany(r => r.Data.Certificates)
+     .Select(c => new UserCertificateViewModel
+     {
+         Title = string.IsNullOrWhiteSpace(c.ResourceTitle) ? c.ResourceName : c.ResourceTitle,
+         ResourceTypeId = (int)ResourceTypeEnum.Moodle,
+         ResourceReferenceId = 0,
+         MajorVersion = 0,
+         MinorVersion = 0,
+         AwardedDate = c.AwardedDate.HasValue
                             ? DateTimeOffset.FromUnixTimeSeconds(c.AwardedDate.Value)
                             : DateTimeOffset.MinValue,
-                        CertificatePreviewUrl = c.PreviewLink,
-                        CertificateDownloadUrl = c.DownloadLink,
-                        ResourceVersionId = 0,
-                        ProvidersJson = null
-                    });
+         CertificatePreviewUrl = c.PreviewLink,
+         CertificateDownloadUrl = c.DownloadLink,
+         ResourceVersionId = 0,
+         ProvidersJson = null
+     }) ?? Enumerable.Empty<UserCertificateViewModel>();
                 }
 
                 var allCertificates = resourceCertificates.Concat(mappedCourseCertificates);

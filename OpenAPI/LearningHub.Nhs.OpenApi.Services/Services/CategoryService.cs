@@ -36,10 +36,10 @@
         }
 
         /// <inheritdoc />
-        public async Task<int> GetByCatalogueVersionIdAsync(int nodeVersionId)
+        public async Task<CatalogueNodeVersionCategory> GetByCatalogueVersionIdAsync(int nodeVersionId)
         {
             var category = await categoryRepository.GetCategoryByCatalogueIdAsync(nodeVersionId);
-            return category != null ? category.CategoryId : 0;
+            return category;
         }
     }
 }

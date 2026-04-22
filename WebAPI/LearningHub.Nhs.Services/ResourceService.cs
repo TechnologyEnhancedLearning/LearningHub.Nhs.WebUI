@@ -984,7 +984,7 @@ namespace LearningHub.Nhs.Services
         }
 
         /// <summary>
-        /// Submits a published resource version to the Findwise search.
+        /// Submits a published resource version to search.
         /// </summary>
         /// <param name="resourceVersionId">The resourceVersionId<see cref="int"/>.</param>
         /// <param name="userId">The userId<see cref="int"/>.</param>
@@ -1236,7 +1236,7 @@ namespace LearningHub.Nhs.Services
 
                 this.resourceVersionRepository.Unpublish(unpublishViewModel.ResourceVersionId, unpublishViewModel.Details, userId);
 
-                // Remove from Findwise Search Index
+                // Remove from Search Index
                 var r = await this.resourceVersionRepository.GetBasicByIdAsync(unpublishViewModel.ResourceVersionId);
                 await this.searchService.RemoveResourceFromSearchAsync(r.ResourceId);
 

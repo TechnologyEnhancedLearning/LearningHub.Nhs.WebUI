@@ -37,6 +37,7 @@
         private readonly IMultiPageFormService multiPageFormService;
         private readonly IReportService reportService;
         private readonly IFileService fileService;
+        private readonly IMoodleBridgeApiService moodleBridgeApiService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReportsController"/> class.
@@ -50,8 +51,9 @@
         /// <param name="hostingEnvironment">The hostingEnvironment<see cref="IWebHostEnvironment"/>.</param>
         /// <param name="logger">The logger<see cref="ILogger{AccountController}"/>.</param>
         /// <param name="settings">settings.</param>
-        public ReportsController(IHttpClientFactory httpClientFactory, IWebHostEnvironment hostingEnvironment, ILogger<AccountController> logger, IOptions<Settings> settings, ICacheService cacheService, IMultiPageFormService multiPageFormService, IReportService reportService, ICategoryService categoryService, IFileService fileService)
-            : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
+        public ReportsController(IHttpClientFactory httpClientFactory, IWebHostEnvironment hostingEnvironment, IMoodleBridgeApiService moodleBridgeApiService, ILogger<AccountController> logger, IOptions<Settings> settings, ICacheService cacheService, IMultiPageFormService multiPageFormService, IReportService reportService, ICategoryService categoryService, IFileService fileService)
+            : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.cacheService = cacheService;
             this.multiPageFormService = multiPageFormService;
@@ -434,14 +436,15 @@
 
         private async Task<List<KeyValuePair<string, string>>> GetCoursesAsync()
         {
-            int categoryId = this.Settings.StatMandId;
+            ////int categoryId = this.Settings.StatMandId;
+            string categoryId = "test";
             var courses = new List<KeyValuePair<string, string>>();
             var subCategories = await this.categoryService.GetCoursesByCategoryIdAsync(categoryId);
 
-            foreach (var subCategory in subCategories.Courses)
-            {
-                courses.Add(new KeyValuePair<string, string>(subCategory.Id.ToString(), UtilityHelper.ConvertToSentenceCase(subCategory.Displayname)));
-            }
+            ////foreach (var subCategory in subCategories.Courses)
+            ////{
+            ////    courses.Add(new KeyValuePair<string, string>(subCategory.Id.ToString(), UtilityHelper.ConvertToSentenceCase(subCategory.Displayname)));
+            ////}
 
             return courses;
         }

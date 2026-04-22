@@ -1,11 +1,19 @@
-﻿namespace LearningHub.Nhs.AdminUI.Controllers
+﻿using LearningHub.Nhs.Models.Databricks;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Net;
+
+namespace LearningHub.Nhs.AdminUI.Controllers
 {
+    using AngleSharp.Io;
+    using Azure;
     using LearningHub.Nhs.AdminUI.Configuration;
     using LearningHub.Nhs.AdminUI.Extensions;
+    using LearningHub.Nhs.AdminUI.Helpers;
     using LearningHub.Nhs.AdminUI.Interfaces;
     using LearningHub.Nhs.AdminUI.Models;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Models.Databricks;
     using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.Models.Resource;
@@ -71,6 +79,11 @@
         private readonly IMoodleApiService moodleApiService;
 
         /// <summary>
+        /// Defines the moodleApiService.
+        /// </summary>
+        private readonly IMoodleBridgeApiService moodleBridgeApiService;
+
+        /// <summary>
         /// Defines the _settings.
         /// </summary>
         private readonly WebSettings settings;
@@ -104,6 +117,7 @@
         /// <param name="fileService">The fileService<see cref="IFileService"/>.</param>
         /// <param name="providerService">The providerService<see cref="IProviderService"/>.</param>
         /// <param name="moodleApiService">The moodleApiService<see cref="IMoodleApiService"/>.</param>
+        /// <param name="moodleBridgeApiService">The moodleApiService<see cref="moodleBridgeApiService"/>.</param>
         /// <param name="logger">The logger<see cref="ILogger{LogController}"/>.</param>
         /// <param name="options">The options<see cref="IOptions{WebSettings}"/>.</param>
         /// <param name="websettings">The websettings<see cref="IOptions{WebSettings}"/>.</param>
@@ -114,6 +128,7 @@
             IFileService fileService,
             IProviderService providerService,
             IMoodleApiService moodleApiService,
+            IMoodleBridgeApiService moodleBridgeApiService,
             ILogger<LogController> logger,
             IOptions<WebSettings> options,
             IOptions<WebSettings> websettings)
@@ -124,6 +139,7 @@
             this.fileService = fileService;
             this.providerService = providerService;
             this.moodleApiService = moodleApiService;
+            this.moodleBridgeApiService = moodleBridgeApiService;
             this.logger = logger;
             this.websettings = websettings;
             this.settings = options.Value;
@@ -277,17 +293,9 @@
                 return this.RedirectToAction("Error");
             }
 
-            var categories = await this.moodleApiService.GetAllMoodleCategoriesAsync();
+            var categoriesResult = await this.moodleBridgeApiService.GetAllMoodleCategoriesAsync();
 
-            vm.MoodleCategories = categories;
-
-            // Build hierarchical select list
-            var selectList = BuildList(categories, parentId: null, depth: 0);
-            foreach (var item in selectList)
-            {
-                item.Text = WebUtility.HtmlDecode(item.Text);
-            }
-            vm.MoodleCategorySelectList = new SelectList(selectList, "Value", "Text");
+            vm.MoodleCategorySelectList = BuildMoodleCategorySelectList(categoriesResult);
             this.ViewData["CatalogueName"] = vm.Name;
             this.ViewData["id"] = id;
 
@@ -727,32 +735,33 @@
         [Route("AddCategoryToCatalogue")]
         public async Task<IActionResult> AddCategoryToCatalogue(CatalogueViewModel catalogueViewModel)
         {
-            if (catalogueViewModel.SelectedCategoryId == 0)
+            if (string.IsNullOrEmpty(catalogueViewModel.SelectedCategoryId))
             {
                 this.ModelState.AddModelError("SelectedCategoryId", "Please select a category.");
-            }
-            var vm = await this.catalogueService.GetCatalogueAsync(catalogueViewModel.CatalogueNodeVersionId);
-            vm.SelectedCategoryId = catalogueViewModel.SelectedCategoryId;
-            var vr = await this.catalogueService.AddCategoryToCatalogue(vm);
-            if (vr.Success)
-            {
-                var categories = await this.moodleApiService.GetAllMoodleCategoriesAsync();
-                vm.MoodleCategories = categories;
-                // Build hierarchical select list
-                var selectList = BuildList(categories, parentId: null, depth: 0);
-      
-                foreach (var item in selectList)
-                {
-                    item.Text = WebUtility.HtmlDecode(item.Text);
-                }
+                var vm = await this.catalogueService.GetCatalogueAsync(catalogueViewModel.CatalogueNodeVersionId);
+                var categories = await this.moodleBridgeApiService.GetAllMoodleCategoriesAsync();
+                vm.SelectedCategoryId = null;
+                vm.MoodleCategorySelectList = BuildMoodleCategorySelectList(categories);
 
-                vm.MoodleCategorySelectList = new SelectList(selectList, "Value", "Text");
                 return this.View("MoodleCategory", vm);
             }
+
             else
             {
-                this.ViewBag.ErrorMessage = $"Category Update failed.";
-                return this.View("MoodleCategory", vm);
+                var vm = await this.catalogueService.GetCatalogueAsync(catalogueViewModel.CatalogueNodeVersionId);
+                vm.SelectedCategoryId = catalogueViewModel.SelectedCategoryId;
+                var vr = await this.catalogueService.AddCategoryToCatalogue(vm);
+                if (vr.Success)
+                {
+                    var categories = await this.moodleBridgeApiService.GetAllMoodleCategoriesAsync();
+                    vm.MoodleCategorySelectList = BuildMoodleCategorySelectList(categories);
+                    return this.View("MoodleCategory", vm);
+                }
+                else
+                {
+                    this.ViewBag.ErrorMessage = $"Category Update failed.";
+                    return this.View("MoodleCategory", vm);
+                }
             }
         }
 
@@ -764,23 +773,16 @@
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         [HttpGet]
         [Route("RemoveCategoryFromCatalogue/{categoryId}/{catalogueNodeVersionId}")]
-        public async Task<IActionResult> RemoveCategoryFromCatalogue(int categoryId, int catalogueNodeVersionId)
+        public async Task<IActionResult> RemoveCategoryFromCatalogue(string categoryId, int catalogueNodeVersionId)
         {
             var vm = await this.catalogueService.GetCatalogueAsync(catalogueNodeVersionId);
             vm.SelectedCategoryId = categoryId;
             var vr = await this.catalogueService.RemoveCategoryFromCatalogue(vm);
             if (vr.Success)
             {
-                var categories = await this.moodleApiService.GetAllMoodleCategoriesAsync();
-                vm.MoodleCategories = categories;
-                vm.SelectedCategoryId = 0;
-                // Build hierarchical select list
-                var selectList = BuildList(categories, parentId: null, depth: 0);
-                foreach (var item in selectList)
-                {
-                    item.Text = WebUtility.HtmlDecode(item.Text);
-                }
-                vm.MoodleCategorySelectList = new SelectList(selectList, "Value", "Text");
+                var categories = await this.moodleBridgeApiService.GetAllMoodleCategoriesAsync();
+                vm.MoodleCategorySelectList = BuildMoodleCategorySelectList(categories);
+                vm.SelectedCategoryId = null;
                 return this.View("MoodleCategory", vm);
             }
             else
@@ -1090,33 +1092,91 @@
             }
         }
 
-        private List<SelectListItem> BuildList(IEnumerable<MoodleCategory> allCategories, int? parentId, int depth)
+        public static SelectList BuildMoodleCategorySelectList(IEnumerable<CategoryResult> results)
         {
             var selectList = new List<SelectListItem>();
 
-            // Handle both null and 0 as top-level depending on Moodle data
-            var children = allCategories
-                .Where(c => c.Parent == parentId || (parentId == null && (c.Parent == 0 || c.Parent == 0)))
-                .OrderBy(c => c.Name)
-                .ToList();
-
-            foreach (var child in children)
+            foreach (var result in results)
             {
-                // Indent with non-breaking spaces so browser keeps them
-                string indent = new string('\u00A0', depth * 3);
+                if (string.IsNullOrWhiteSpace(result.Instance))
+                    continue;
+
+                // Instance header
+                selectList.Add(new SelectListItem
+                {
+                    Value = "",
+                    Text = result.Instance,
+                    Disabled = true,
+                    Selected = false
+                });
+
+                // Handle instance error
+                if (result.Error != null)
+                {
+                    selectList.Add(new SelectListItem
+                    {
+                        Value = "",
+                        Text = "\u00A0\u00A0[Category unavailable]",
+                        Disabled = true,
+                        Selected = false
+                    });
+
+                    continue;
+                }
+
+                var categories = result.Data?.Categories;
+                if (categories == null || !categories.Any())
+                    continue;
+
+                var tree = categories
+                    .GroupBy(c => c.Parent)
+                    .ToDictionary(g => g.Key, g => g.OrderBy(x => x.Name).ToList());
+
+                TreeBuilderHelper.BuildTree(selectList, tree, 0, 1, result.Instance);
+            }
+
+            // Decode HTML entities
+            foreach (var item in selectList)
+            {
+                item.Text = WebUtility.HtmlDecode(item.Text);
+            }
+
+            return new SelectList(selectList, "Value", "Text");
+        }
+
+        /// </summary>
+        /// <param name="selectList"></param>
+        /// <param name="tree"></param>
+        /// <param name="parentId"></param>
+        /// <param name="depth"></param>
+        /// <param name="instance"></param>
+        /// <param name="group"></param>
+
+        // Recursive tree builder with indentation
+        private static void BuildTree(
+            List<SelectListItem> selectList,
+            Dictionary<int, List<MoodleCategory>> tree,
+            int parentId,
+            int depth,
+            string instance,
+            SelectListGroup group)
+        {
+            if (!tree.ContainsKey(parentId))
+                return;
+
+            foreach (var category in tree[parentId])
+            {
+                string indent = new string('\u00A0', depth * 2);
 
                 selectList.Add(new SelectListItem
                 {
-                    Value = child.Id.ToString(),
-                    Text = $"{indent}{child.Name}"
+                    Value = $"{instance}:{category.Id}",
+                    Text = $"{indent}{category.Name}",
+                    Group = group
                 });
 
-                // Recursively add nested children
-                selectList.AddRange(BuildList(allCategories, child.Id, depth + 1));
+                BuildTree(selectList, tree, category.Id, depth + 1, instance, group);
             }
-
-            return selectList;
         }
-
     }
 }

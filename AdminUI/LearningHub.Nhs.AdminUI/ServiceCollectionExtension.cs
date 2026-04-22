@@ -107,6 +107,7 @@
             services.AddTransient<IInternalSystemService, InternalSystemService>();
             services.AddScoped<IProviderService, ProviderService>();
             services.AddScoped<IMoodleApiService, MoodleApiService>();
+            services.AddScoped<IMoodleBridgeApiService, MoodleBridgeApiService>();
 
             // Configure Azure Search
             services.Configure<AzureSearchConfig>(configuration.GetSection("AzureSearch"));

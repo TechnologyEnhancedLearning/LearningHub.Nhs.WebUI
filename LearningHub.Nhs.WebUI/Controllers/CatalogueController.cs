@@ -9,6 +9,8 @@
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Dashboard;
+    using LearningHub.Nhs.Models.Databricks;
+    using LearningHub.Nhs.Models.Entities.Hierarchy;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Models.Moodle;
@@ -19,6 +21,7 @@
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models.Catalogue;
     using LearningHub.Nhs.WebUI.Models.Search;
+    using LinqToTwitter;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -42,7 +45,7 @@
         private IUserService userService;
         private IUserGroupService userGroupService;
         private IHierarchyService hierarchyService;
-        private Settings settings;
+        private Configuration.Settings settings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CatalogueController"/> class.
@@ -60,21 +63,23 @@
         /// <param name="hierarchyService">HierarchyService.</param>
         /// <param name="userGroupService">userGroupService.</param>
         /// <param name="categoryService">categoryService.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         public CatalogueController(
            IHttpClientFactory httpClientFactory,
            IWebHostEnvironment hostingEnvironment,
            ILogger<CatalogueController> logger,
            ICatalogueService catalogueService,
            IUserService userService,
-           IOptions<Settings> settings,
+           IOptions<Configuration.Settings> settings,
            LearningHubAuthServiceConfig authConfig,
            ISearchService searchService,
            ICacheService cacheService,
            IDashboardService dashboardService,
            IHierarchyService hierarchyService,
            IUserGroupService userGroupService,
-           ICategoryService categoryService)
-           : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+           ICategoryService categoryService,
+           IMoodleBridgeApiService moodleBridgeApiService)
+           : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.authConfig = authConfig;
             this.catalogueService = catalogueService;
@@ -192,13 +197,13 @@
         /// <param name="tab">The tab name to display.</param>
         /// <param name="nodeId">The nodeId of the current folder. If not supplied, catalogue root contents are displayed.</param>
         /// <param name="search">The SearchRequestViewModel.</param>
-        /// <param name="moodleCategoryId">The moodleCategoryId.</param>
+        /// <param name="categoryId">The moodleCategoryId.</param>
         /// <returns>IActionResult.</returns>
         [AllowAnonymous]
         [ServiceFilter(typeof(SsoLoginFilterAttribute))]
         [HttpGet]
         [Route("catalogue/{reference}/{tab?}")]
-        public async Task<IActionResult> IndexAsync(string reference, string tab, int? nodeId, SearchRequestViewModel search, int? moodleCategoryId)
+        public async Task<IActionResult> IndexAsync(string reference, string tab, int? nodeId, SearchRequestViewModel search, string? categoryId)
         {
             if (tab == null || (tab == "search" && !this.User.Identity.IsAuthenticated))
             {
@@ -212,8 +217,9 @@
             this.ViewBag.ActiveTab = tab;
 
             var catalogue = await this.catalogueService.GetCatalogueAsync(reference);
-            var catalogueCategoryId = await this.categoryService.GetCatalogueVersionCategoryAsync(catalogue.Id);
-            catalogue.SelectedCategoryId = catalogueCategoryId;
+            var catalogueCategory = await this.categoryService.GetCatalogueVersionCategoryAsync(catalogue.Id);
+            catalogue.SelectedCategoryId = catalogueCategory != null ? $"{catalogueCategory.InstanceName}:{catalogueCategory.CategoryId}" : null;
+
             if (catalogue == null)
             {
                 return this.RedirectToAction("Error", "Home");
@@ -270,22 +276,40 @@
             bool includeEmptyFolder = viewModel.UserGroups.Any(x => x.RoleId == (int)RoleEnum.LocalAdmin || x.RoleId == (int)RoleEnum.Editor || x.RoleId == (int)RoleEnum.Previewer) || this.User.IsInRole("Administrator");
             var nodeContents = await this.hierarchyService.GetNodeContentsForCatalogueBrowse(nodeId.Value, includeEmptyFolder);
             viewModel.NodeContents = nodeContents;
-
-            int categoryId = moodleCategoryId ?? await this.categoryService.GetCatalogueVersionCategoryAsync(catalogue.Id);
-            if (categoryId > 0)
+            var catalogueNodeVersionCategory = await this.categoryService.GetCatalogueVersionCategoryAsync(catalogue.Id);
+            string moodleInstanceCategoryId = null;
+            if (categoryId != null)
             {
-                var response = await this.categoryService.GetCoursesByCategoryIdAsync(categoryId);
-                viewModel.Courses = response.Courses;
+                moodleInstanceCategoryId = $"{catalogueNodeVersionCategory.InstanceName}:{categoryId}";
+            }
+            else
+            {
+                moodleInstanceCategoryId = catalogueNodeVersionCategory != null ? $"{catalogueNodeVersionCategory.InstanceName}:{catalogueNodeVersionCategory.CategoryId}" : null;
+            }
 
-                var subCategories = await this.categoryService.GetSubCategoryByCategoryIdAsync(categoryId);
-                viewModel.SubCategories = subCategories;
+            if (!string.IsNullOrEmpty(moodleInstanceCategoryId))
+            {
+                var response = await this.categoryService.GetCoursesByCategoryIdAsync(moodleInstanceCategoryId);
+                viewModel.Courses = response?.Results?
+    .Where(r => r.Instance == catalogueNodeVersionCategory.InstanceName)
+    .SelectMany(r => r.Data?.Courses.Courses ?? new List<Course>())
+    .ToList();
 
-                if (moodleCategoryId.HasValue)
+                var subCategories = await this.categoryService.GetSubCategoryByCategoryIdAsync(moodleInstanceCategoryId);
+                viewModel.SubCategories = subCategories
+    .Where(x => x.Instance == catalogueNodeVersionCategory.InstanceName &&
+                x.Data?.Categories != null &&
+                x.Data.Categories.Count > 0)
+    .SelectMany(x => x.Data.Categories)
+    .ToList();
+                if (moodleInstanceCategoryId != null)
                 {
                     var moodleCategories = await this.categoryService.GetAllMoodleCategoriesAsync();
 
+                    var (moodleInstanceName, moodleCategoryId) = moodleInstanceCategoryId.Split(':') is var p && p.Length == 2 ? (p[0], p[1]) : (null, null);
+
                     // Start with the selected category
-                    var breadcrumbCategory = moodleCategories.FirstOrDefault(x => x.Id == moodleCategoryId);
+                    var breadcrumbCategory = moodleCategories.FirstOrDefault(x => x.Id == Convert.ToInt32(moodleCategoryId));
 
                     List<MoodleCategory> categories = new List<MoodleCategory>();
                     categories.Insert(0, new MoodleCategory
@@ -298,12 +322,6 @@
                     {
                         // Add the current category to the breadcrumb list
                         categories.Insert(1, breadcrumbCategory);
-
-                        // If there's no parent, stop
-                        if (breadcrumbCategory.Parent == 0 || breadcrumbCategory.Parent == catalogueCategoryId)
-                        {
-                            break;
-                        }
 
                         // Move up one level
                         breadcrumbCategory = moodleCategories.FirstOrDefault(x => x.Id == breadcrumbCategory.Parent);
@@ -324,7 +342,7 @@
             }
             else
             {
-                viewModel.Catalogue.SelectedCategoryId = 0;
+                viewModel.Catalogue.SelectedCategoryId = null;
             }
 
             if (tab == "search")
@@ -373,9 +391,14 @@
         [Route("GetCourses/{catalogueNodeVerstionId}/{reference}/{tab}")]
         public async Task<IActionResult> GetCourses(int catalogueNodeVerstionId, string reference, string tab)
         {
-            var categoryId = await this.categoryService.GetCatalogueVersionCategoryAsync(catalogueNodeVerstionId);
+            var catalogueCategory = await this.categoryService.GetCatalogueVersionCategoryAsync(catalogueNodeVerstionId);
+            string categoryId = catalogueCategory.InstanceName + ":" + catalogueCategory.CategoryId;
             var response = await this.categoryService.GetCoursesByCategoryIdAsync(categoryId);
-            return this.PartialView("Courses", response.Courses);
+            var courses = response?.Results?
+    .Where(r => r.Instance == catalogueCategory.InstanceName)
+    .SelectMany(r => r.Data?.Courses.Courses ?? new List<Course>())
+    .ToList();
+            return this.PartialView("Courses", courses);
         }
 
         /// <summary>

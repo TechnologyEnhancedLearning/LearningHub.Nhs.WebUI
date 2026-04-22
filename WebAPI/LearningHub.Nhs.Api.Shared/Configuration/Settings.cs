@@ -133,9 +133,9 @@
         public MigrationToolSettings MigrationTool { get; set; }
 
         /// <summary>
-        /// Gets or sets the findwise settings.
+        /// Gets or sets the Azure Search settings.
         /// </summary>
-        public FindwiseSettings Findwise { get; set; }
+        public AzureSearchSettings AzureSearch { get; set; }
 
         /// <summary>
         /// Gets or sets the azure storage account connectionstring for queue.

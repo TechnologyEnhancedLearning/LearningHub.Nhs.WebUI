@@ -226,12 +226,14 @@
         {
             try
             {
+                var (instanceName, categoryId) = vm.SelectedCategoryId.Split(':') is var p && p.Length == 2 ? (p[0], p[1]) : (null, null);
                 var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = userId };
                 var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = vm.CatalogueNodeVersionId };
-                var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = vm.SelectedCategoryId };
-                var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
+                var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = categoryId };
+                var param3 = new SqlParameter("@p3", SqlDbType.VarChar) { Value = instanceName };
+                var param4 = new SqlParameter("@p4", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
 
-                await DbContext.Database.ExecuteSqlRawAsync("hierarchy.CatalogueNodeVersionCategoryCreate @p0, @p1, @p2, @p3", param0, param1, param2, param3);
+                await DbContext.Database.ExecuteSqlRawAsync("hierarchy.CatalogueNodeVersionCategoryCreate @p0, @p1, @p2, @p3, @p4", param0, param1, param2, param3, param4);
             }
             catch (Exception ex)
             {
@@ -249,9 +251,10 @@
         {
             try
             {
+                var (instanceName, categoryId) = vm.SelectedCategoryId.Split(':') is var p && p.Length == 2 ? (p[0], p[1]) : (null, null);
                 var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = userId };
                 var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = vm.CatalogueNodeVersionId };
-                var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = vm.SelectedCategoryId };
+                var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = categoryId };
                 var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = TimezoneOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
 
                 await DbContext.Database.ExecuteSqlRawAsync("hierarchy.RemoveCatalogueCategory @p0, @p1, @p2, @p3", param0, param1, param2, param3);

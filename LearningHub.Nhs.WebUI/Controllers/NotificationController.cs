@@ -32,13 +32,15 @@
         /// <param name="settings">Settings.</param>
         /// <param name="notificationService">Notification service.</param>
         /// <param name="logger">Logger.</param>
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
         public NotificationController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
             IOptions<Settings> settings,
             INotificationService notificationService,
+            IMoodleBridgeApiService moodleBridgeApiService,
             ILogger<NotificationController> logger)
-        : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+        : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.notificationService = notificationService;
         }

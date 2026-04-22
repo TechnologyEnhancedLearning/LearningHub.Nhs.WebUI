@@ -53,8 +53,9 @@
         /// <param name="userService">user Service.</param>
         /// <param name="pdfReportService">PDF Report Service.</param>
         /// <param name="fileService">fileService.</param>
-        public MyLearningController(IWebHostEnvironment hostingEnvironment, ILogger<ResourceController> logger, IOptions<Settings> settings, IHttpClientFactory httpClientFactory, IMyLearningService myLearningService, IResourceService resourceService, IHierarchyService hierarchyService, IUserService userService, IPDFReportService pdfReportService, IFileService fileService)
-            : base(hostingEnvironment, httpClientFactory, logger, settings.Value)
+        /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
+        public MyLearningController(IWebHostEnvironment hostingEnvironment, IMoodleBridgeApiService moodleBridgeApiService, ILogger<ResourceController> logger, IOptions<Settings> settings, IHttpClientFactory httpClientFactory, IMyLearningService myLearningService, IResourceService resourceService, IHierarchyService hierarchyService, IUserService userService, IPDFReportService pdfReportService, IFileService fileService)
+            : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.myLearningService = myLearningService;
             this.resourceService = resourceService;
@@ -227,7 +228,7 @@
                     break;
             }
 
-            var result = await this.myLearningService.GetUserRecentMyLearningActivities(myLearningRequestModel);
+            var result = await this.myLearningService.GetUserRecentMyLearningActivities(myLearningRequestModel, this.MoodleInstanceUserIds);
             var response = new MyLearningUserActivitiesViewModel(myLearningRequestModel);
 
             if (result != null)
@@ -374,7 +375,7 @@
                     break;
             }
 
-            var result = await this.myLearningService.GetUserLearningHistory(myLearningRequestModel);
+            var result = await this.myLearningService.GetUserLearningHistory(myLearningRequestModel, this.MoodleInstanceUserIds);
             var response = new MyLearningUserActivitiesViewModel(myLearningRequestModel);
 
             if (result != null)
@@ -457,7 +458,7 @@
             filter.Take = 999;
             var userDetails = await this.userService.GetCurrentUserBasicDetailsAsync();
             var response = new MyLearningUserActivitiesViewModel();
-            var result = await this.myLearningService.GetUserLearningHistory(filter);
+            var result = await this.myLearningService.GetUserLearningHistory(filter, this.MoodleInstanceUserIds);
             if (result != null)
             {
                 response.TotalCount = result.TotalCount;
@@ -611,7 +612,7 @@
                     break;
             }
 
-            var result = await this.myLearningService.GetUserCertificateDetails(myLearningRequestModel);
+            var result = await this.myLearningService.GetUserCertificateDetails(myLearningRequestModel, this.MoodleInstanceUserIds);
             var response = new MyLearningUserCertificatesViewModel(myLearningRequestModel);
 
             if (result != null)

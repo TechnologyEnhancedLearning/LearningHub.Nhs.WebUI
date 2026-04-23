@@ -570,6 +570,15 @@
     <None Include="Scripts\Post-Deploy\Scripts\TD-7116-mib_new_env.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-7106-Resume-Databricks-Ingestion.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\ActivateChangeTracking.sql" />
+    <Build Include="Tables\Report\DashboardResource.sql" />
+    <Build Include="Tables\Report\UserResourceActivity.sql" />
+    <Build Include="Stored Procedures\Resources\RefreshDashboardResources.sql" />
+    <Build Include="Stored Procedures\Resources\RefreshUserResourceActivity.sql" />
+    <Build Include="Stored Procedures\Resources\GetMyRecentCompletedDashboardResourcesRM.sql" />
+    <Build Include="Stored Procedures\Resources\GetPopularDashboardResourcesRM.sql" />
+    <Build Include="Stored Procedures\Resources\GetRatedDashboardResourcesRM.sql" />
+    <Build Include="Stored Procedures\Resources\GetRecentDashboardResourcesRM.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-7078-supportingindexes.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

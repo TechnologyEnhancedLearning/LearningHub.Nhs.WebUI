@@ -1,4 +1,13 @@
-﻿CREATE PROCEDURE [resources].[GetMyRecentCompletedDashboardResourcesRM]
+﻿-------------------------------------------------------------------------------
+-- Author       OA
+-- Created      23 April 2026
+-- Purpose      Get user recent completed resource from dashboard read model
+--
+-- Modification History
+-- 
+-- 23 April 2026  OA  TD-7078 Script Optimization
+-------------------------------------------------------------------------------
+CREATE PROCEDURE [resources].[GetMyRecentCompletedDashboardResourcesRM]
 (
     @UserId       INT,
     @PageNumber   INT = 1,

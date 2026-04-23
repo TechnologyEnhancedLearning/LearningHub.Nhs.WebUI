@@ -1,4 +1,13 @@
-﻿CREATE PROCEDURE [resources].[GetRecentDashboardResourcesRM]
+﻿-------------------------------------------------------------------------------
+-- Author       OA
+-- Created      23 April 2026
+-- Purpose      Get  recent resource from dashboard read model
+--
+-- Modification History
+-- 
+-- 23 April 2026  OA  TD-7078 Script Optimization
+-------------------------------------------------------------------------------
+CREATE PROCEDURE [resources].[GetRecentDashboardResourcesRM]
 (
     @UserId       INT,
     @PageNumber   INT = 1,

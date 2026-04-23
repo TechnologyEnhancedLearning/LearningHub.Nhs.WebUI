@@ -1,4 +1,13 @@
-﻿CREATE PROCEDURE [reports].[RefreshUserResourceActivity]
+﻿-------------------------------------------------------------------------------
+-- Author       OA
+-- Created      23 April 2026
+-- Purpose      Populate user resource activity read model
+--
+-- Modification History
+-- 
+-- 23 April 2026  OA  TD-7078 Script Optimization
+-------------------------------------------------------------------------------
+CREATE PROCEDURE [reports].[RefreshUserResourceActivity]
 AS
 BEGIN
     SET NOCOUNT ON;

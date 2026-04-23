@@ -122,3 +122,117 @@ BEGIN
     INCLUDE (ResourceId, LastAccessedDate);
 END;
 GO
+
+
+IF OBJECT_ID('reports.DashboardCatalogues', 'U') IS NOT NULL
+AND NOT EXISTS
+(
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = 'IX_DashboardCatalogues_Name'
+      AND object_id = OBJECT_ID('reports.DashboardCatalogues')
+)
+BEGIN
+    CREATE INDEX IX_DashboardCatalogues_Name
+    ON reports.DashboardCatalogues (Name);
+END;
+GO
+
+IF OBJECT_ID('reports.DashboardCatalogues', 'U') IS NOT NULL
+AND NOT EXISTS
+(
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = 'IX_DashboardCatalogues_Popular'
+      AND object_id = OBJECT_ID('reports.DashboardCatalogues')
+)
+BEGIN
+    CREATE INDEX IX_DashboardCatalogues_Popular
+    ON reports.DashboardCatalogues (CatalogueActivityCount DESC, Name)
+    INCLUDE
+    (
+        NodeVersionId,
+        CatalogueNodeVersionId,
+        Description,
+        BannerUrl,
+        BadgeUrl,
+        CardImageUrl,
+        Url,
+        RestrictedAccess,
+        LastShownDate,
+        ContributedResourceCount,
+        SumResourceAverageRating
+    );
+END;
+GO
+
+IF OBJECT_ID('reports.DashboardCatalogues', 'U') IS NOT NULL
+AND NOT EXISTS
+(
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = 'IX_DashboardCatalogues_Recent'
+      AND object_id = OBJECT_ID('reports.DashboardCatalogues')
+)
+BEGIN
+    CREATE INDEX IX_DashboardCatalogues_Recent
+    ON reports.DashboardCatalogues (LastShownDate DESC, Name)
+    INCLUDE
+    (
+        NodeVersionId,
+        CatalogueNodeVersionId,
+        Description,
+        BannerUrl,
+        BadgeUrl,
+        CardImageUrl,
+        Url,
+        RestrictedAccess,
+        CatalogueActivityCount,
+        ContributedResourceCount,
+        SumResourceAverageRating
+    )
+    WHERE LastShownDate IS NOT NULL;
+END;
+GO
+
+IF OBJECT_ID('reports.DashboardCatalogues', 'U') IS NOT NULL
+AND NOT EXISTS
+(
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = 'IX_DashboardCatalogues_HighlyContributed'
+      AND object_id = OBJECT_ID('reports.DashboardCatalogues')
+)
+BEGIN
+    CREATE INDEX IX_DashboardCatalogues_HighlyContributed
+    ON reports.DashboardCatalogues (ContributedResourceCount DESC, SumResourceAverageRating DESC, Name)
+    INCLUDE
+    (
+        NodeVersionId,
+        CatalogueNodeVersionId,
+        Description,
+        BannerUrl,
+        BadgeUrl,
+        CardImageUrl,
+        Url,
+        RestrictedAccess,
+        LastShownDate,
+        CatalogueActivityCount
+    );
+END;
+GO
+
+IF OBJECT_ID('reports.UserCatalogueActivity', 'U') IS NOT NULL
+AND NOT EXISTS
+(
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = 'IX_UserCatalogueActivity_User_Latest'
+      AND object_id = OBJECT_ID('reports.UserCatalogueActivity')
+)
+BEGIN
+    CREATE INDEX IX_UserCatalogueActivity_User_Latest
+    ON reports.UserCatalogueActivity (UserId, LatestActivityId DESC)
+    INCLUDE (CatalogueNodeId, LastAccessedDate);
+END;
+GO

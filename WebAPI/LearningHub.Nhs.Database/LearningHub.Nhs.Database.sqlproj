@@ -103,6 +103,7 @@
     <Folder Include="Tables\Databricks" />
     <Folder Include="Stored Procedures\Adf" />
     <Folder Include="Tables\MIB" />
+    <Folder Include="Stored Procedures\Report" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\learningHub_Data.sql" />
@@ -572,13 +573,18 @@
     <None Include="Scripts\Pre-Deploy\Scripts\ActivateChangeTracking.sql" />
     <Build Include="Tables\Report\DashboardResource.sql" />
     <Build Include="Tables\Report\UserResourceActivity.sql" />
-    <Build Include="Stored Procedures\Resources\RefreshDashboardResources.sql" />
-    <Build Include="Stored Procedures\Resources\RefreshUserResourceActivity.sql" />
     <Build Include="Stored Procedures\Resources\GetMyRecentCompletedDashboardResourcesRM.sql" />
     <Build Include="Stored Procedures\Resources\GetPopularDashboardResourcesRM.sql" />
     <Build Include="Stored Procedures\Resources\GetRatedDashboardResourcesRM.sql" />
     <Build Include="Stored Procedures\Resources\GetRecentDashboardResourcesRM.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-7078-supportingindexes.sql" />
+    <Build Include="Tables\Report\DashboardCatalogue.sql" />
+    <Build Include="Tables\Report\UserCatalogueActivity.sql" />
+    <Build Include="Stored Procedures\Report\RefreshDashboardCatalogues.sql" />
+    <Build Include="Stored Procedures\Report\RefreshUserCatalogueActivity.sql" />
+    <Build Include="Stored Procedures\Report\RefreshUserResourceActivity.sql" />
+    <Build Include="Stored Procedures\Report\RefreshDashboardResources.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetDashboardCataloguesRM.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

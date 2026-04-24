@@ -55,7 +55,17 @@
         }
     }
 
-    if (ViewBag.ActiveTab == "browse" && Model.NodeContents.Count() == 0)
+    if (ViewBag.ActiveTab == "browse" && Model.NodeContents.Count() == 0 && Model.Catalogue.SelectedCategoryId == null)
+    {
+        ViewBag.ActiveTab = "about";
+    }
+    else if (ViewBag.ActiveTab == "browse" && Model.NodeContents.Count() == 0 && (Model.Catalogue.SelectedCategoryId != null &&
+      (Model.Courses == null || !Model.Courses.Any()) &&
+      (Model.SubCategories == null || !Model.SubCategories.Any())))
+    {
+        ViewBag.ActiveTab = "about";
+    }
+    else if (ViewBag.ActiveTab == "browse" && Model.NodeContents.Count() == 0)
     {
         ViewBag.ActiveTab = "courses";
     }
@@ -75,7 +85,7 @@
     {
         breadcrumbs = UtilityHelper.GetBreadcrumbsForFolderNodes(Model.NodePathNodes.SkipLast(1).ToList(), Model.Catalogue.Url);
     }
-    else if (ViewBag.ActiveTab == "courses" && Model.Catalogue.SelectedCategoryId !=null)
+    else if (ViewBag.ActiveTab == "courses" && Model.Catalogue.SelectedCategoryId != null)
     {
         breadcrumbs = UtilityHelper.GetBreadcrumbsForCourses(Model.MoodleCategories, Model.Catalogue.Url);
     }

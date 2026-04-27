@@ -28,8 +28,7 @@ END
 UPDATE emailTemplateTBL
 SET body = '<p style ="color: #007bff">This is an automated email, please do not reply to this address</p>
 Dear [FullName],<br /><br /> 
-We received a request to retrieve your username or reset your password for the Learning Hub. If this was not you, please inform our <a href="[SupportFormUrl]">support team</a>.<br /><br /> 
-The username linked to this email address is: [UserName]<br /><br /> 
+We received a request to reset your password for the Learning Hub. If this was not you, please inform our <a href="[SupportFormUrl]">support team</a>.<br /><br /> 
 If you know your password, you can <a href="https://learninghub.nhs.uk/">sign in</a> straight away. If not, you need to <a href="[PasswordValidateUrl]">create a new password</a>.<br /><br /> 
 If the link to create a new password does not work, please copy and paste this directly into the address bar of your browser:<br />[PasswordValidateUrl]<br /><br />  
 This link will expire in [TimeLimit]. If you select the link after this time you will receive instructions on how to get  a new one.<br /><br /> 

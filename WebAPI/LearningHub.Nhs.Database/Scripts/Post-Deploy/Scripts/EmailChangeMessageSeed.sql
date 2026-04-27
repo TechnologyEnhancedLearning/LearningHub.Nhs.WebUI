@@ -33,7 +33,7 @@ BEGIN
 
 <p>Thank you for verifying your email address on the Learning Hub.</p>
 
-<p>Please now log in to the Learning Hub using your existing username and password.</p>
+<p>Please now log in to the Learning Hub using your email address and password.</p>
 
 <p>If you did not request this change, please contact the <a href="[SupportForm]">support team.</a></p>
 

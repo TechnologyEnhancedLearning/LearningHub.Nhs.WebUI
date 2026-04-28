@@ -1,0 +1,138 @@
+﻿@using LearningHub.Nhs.Models.JiraRoadmap
+
+@model LearningHub.Nhs.Models.JiraRoadmap.RoadmapResponseDto
+
+
+
+
+@{
+    ViewData["Title"] = "Learning Hub Roadmap";
+}
+
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/jira_roadmap.css asp-append-version="true" />
+
+}
+
+@* <style type="text/css">
+
+.jira-roadmap-intro {
+        padding-left: 170px;
+        }
+.jira-roadmap-banner {
+        width: 100%;
+        padding-bottom: 20px;
+        background-color: $nhsuk-grey-light;
+}
+
+
+    .jira-roadmap-state {
+        box-shadow: 0 0 0 2px $nhsuk-grey-light;
+        border-radius: 8px;
+    }
+
+    .jira-roadmap-state-heading {
+        display: inline-block;
+        background-color: $nhsuk-blue;
+        color: $nhsuk-white;
+        border-radius: 8px 0 8px 0;
+    }
+
+
+</style> *@
+
+
+@* @section NavBreadcrumbs {
+
+
+} *@
+
+
+<div class="jira-roadmap-banner">
+    <div class="jira-roadmap-intro">
+            <div class="nhsuk-grid-column-full">
+
+            <h1 class="nhsuk-heading-xl">Learning Hub Roadmap</h1>
+
+            <div class="nhsuk-u-reading-width">
+
+                <p class="nhsuk-body-l nhsuk-u-reading-width">
+                    Introduction text - needs to be replaced with approved copy.
+                </p>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<div class="nhsuk-width-container app-width-container">
+    <div class="jira-roadmap">
+        <div class="nhsuk-grid-row">
+
+            <div class="nhsuk-grid-column-one-third">
+                <nav class="nhsuk-contents-list" aria-label="Page contents">
+                    <h2 class="nhsuk-heading-s nhsuk-u-margin-bottom-2">Page contents</h2>
+                    <ol class="nhsuk-contents-list__list">
+                       @foreach (var component in Model.Components)
+                        {
+                            var anchorId = component.ComponentName.ToLower().Replace(" ", "-");
+
+                            <li class="nhsuk-contents-list__item">
+                                <a class="nhsuk-contents-list__link" href="#@anchorId">@component.ComponentName</a>
+                                </li>
+                         }
+                    </ol>
+                </nav>
+            </div>
+
+            <div class="nhsuk-grid-column-two-thirds">
+
+
+                @foreach (var component in Model.Components)
+                {
+                   
+                    var anchorId = System.Text.RegularExpressions.Regex
+                        .Replace(component.ComponentName.ToLowerInvariant(), @"[^a-z0-9]+", "-")
+                        .Trim('-');
+
+
+                    <h2 id="@anchorId">
+                        @component.ComponentName
+                    </h2>
+
+                    <p>@component.ComponentDescription</p>
+
+                    @foreach (var state in component.States)
+                    {
+                        <div class="jira-roadmap-state">
+
+                           
+
+                           
+                                    <span class="jira-roadmap-state-heading">
+                                        @state.State
+                                    </span>
+                           
+                                <div class="jira-roadmap-card-body">
+                                    <ul class="nhsuk-list">
+
+
+                                    @foreach (var issue in state.Issues)
+                                    {
+
+                                        <li class="jira-roadmap__tick-item">
+                                            @issue.Summary
+                                        </li>
+
+                                    }
+                                </ul>
+                                </div> 
+                           
+                        </div>
+                    }
+                }
+
+            </div>
+
+        </div>

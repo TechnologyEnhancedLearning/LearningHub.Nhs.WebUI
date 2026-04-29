@@ -1,0 +1,35 @@
+﻿@use "../../abstracts/all" as *;
+
+.jira-roadmap-intro {
+    padding-left: 170px;
+}
+
+.jira-roadmap-banner {
+    width: 100%;
+    padding-bottom: 20px;
+    background-color: $nhsuk-grey;
+}
+
+
+.jira-roadmap-state {
+    box-shadow: 0 0 0 1px $nhsuk-border-colour;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.jira-roadmap-state-heading {
+    display: inline-block;
+    background-color: $nhsuk-blue;
+    color: $nhsuk-white;
+    padding: 9px 20px 13px;
+    line-height: 1;
+    border-radius: 8px 0px 8px 0px;
+}
+
+.jira-roadmap-card-body {
+    display: inline-block;
+    border-radius: 4px 0 4px 0;
+    padding: 4px 16px;
+}
+

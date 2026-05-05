@@ -70,21 +70,5 @@ END
 UPDATE [resources].[ResourceVersion] SET CertificateEnabled = 0 WHERE VersionStatusId <> 1 AND CertificateEnabled IS NULL
 
 -- do not delete the script AddDigitalLearningSolutionsExternalSystem
-:r .\Scripts\AddDigitalLearningSolutionsExternalSystem.sql
-:r .\Scripts\Bookmark.sql
-:r .\Scripts\PopulateEventTypes.sql
-:r .\Scripts\InternalSystem.sql
-:r .\Scripts\UpdateDataForEmailTemplates.sql
-:r .\Scripts\RolePermissionForReleaseOffline.sql
-:r .\Scripts\ExternalSystemData.sql
-:r .\Scripts\EmailChangeMessageSeed.sql
-:r .\Scripts\PopulateProviders.sql
-:r .\Scripts\HtmlResourceType.sql
-:r .\Scripts\InitialiseDataForEmailTemplates.sql
-:r .\Scripts\TD-2929_ActivityStatusUpdates.sql
-:r .\Scripts\InitialiseDataForEmailTemplates.sql
-:r .\Scripts\AttributeData.sql 
-:r .\Scripts\PPSXFileType.sql
-:r .\Scripts\UpdateFileTypes.sql
 :r .\Scripts\TD-7116-mib_new_env.sql
 :r .\Scripts\TD-7106-Resume-Databricks-Ingestion.sql

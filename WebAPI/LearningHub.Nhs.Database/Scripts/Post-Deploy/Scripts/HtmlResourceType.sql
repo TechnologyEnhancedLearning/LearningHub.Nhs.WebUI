@@ -14,7 +14,7 @@ VALUES (6, 12, 'HtmlResource_RootIndexPresent', 0, 4, @now, 4, @now)
 END
 
 UPDATE resources.FileType SET NotAllowed = 1 WHERE Extension IN ('odp','key','pages','numbers','dhtml','odt')
-UPDATE [resources].[FileType] SET Deleted = 1 WHERE Id =0 
+--UPDATE [resources].[FileType] SET Deleted = 1 WHERE Id =0 
 
 
 IF NOT EXISTS(SELECT Id FROM [resources].[FileType] WHERE Extension = 'pub')

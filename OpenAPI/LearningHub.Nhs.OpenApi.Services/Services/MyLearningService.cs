@@ -250,7 +250,7 @@
         CertificateAwardedDate = course.EndDate.HasValue
                            ? DateTimeOffset.FromUnixTimeSeconds(course.EndDate.Value)
                            : DateTimeOffset.MinValue,
-    }).ToList();
+    }).ToList()?? new List<MyLearningCombinedActivitiesViewModel>(); ;
                 }
 
                 // Combine both result sets
@@ -397,7 +397,7 @@
         CertificateAwardedDate = course.EndDate.HasValue
                             ? DateTimeOffset.FromUnixTimeSeconds(course.EndDate.Value)
                             : DateTimeOffset.MinValue,
-    }).ToList();
+    }).ToList()?? new List<MyLearningCombinedActivitiesViewModel>(); 
                     }
                 }
 
@@ -763,7 +763,7 @@
             CertificateDownloadUrl = c.DownloadLink,
             ResourceVersionId = 0,
             ProvidersJson = null,
-        });
+        }) ?? Enumerable.Empty<UserCertificateViewModel>();
             }
 
             var allCertificates = resourceCertificates.Concat(mappedCourseCertificates);

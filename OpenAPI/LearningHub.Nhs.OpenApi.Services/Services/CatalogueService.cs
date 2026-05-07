@@ -51,7 +51,6 @@
         private readonly IBookmarkRepository bookmarkRepository;
         private readonly INodeRepository nodeRepository;
         private readonly INodeActivityRepository nodeActivityRepository;
-        private readonly IFindwiseApiFacade findwiseApiFacade;
         private readonly LearningHubConfig learningHubConfig;
         private readonly FindwiseConfig findwiseConfig;
         private readonly INotificationSenderService notificationSenderService;
@@ -78,8 +77,7 @@
         /// <param name="emailSenderService"></param>
         /// <param name="bookmarkRepository"></param>
         /// <param name="nodeActivityRepository"></param>
-        /// <param name="findwiseApiFacade"></param>
-        public CatalogueService(ICatalogueRepository catalogueRepository, ICategoryService categoryService, INodeRepository nodeRepository, IUserUserGroupRepository userUserGroupRepository, IMapper mapper, IOptions<FindwiseConfig> findwiseConfig, IOptions<LearningHubConfig> learningHubConfig, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, INodeResourceRepository nodeResourceRepository, IResourceVersionRepository resourceVersionRepository, IRoleUserGroupRepository roleUserGroupRepository, IProviderService providerService, ICatalogueAccessRequestRepository catalogueAccessRequestRepository, IUserRepository userRepository, IUserProfileRepository userProfileRepository, IEmailSenderService emailSenderService, IBookmarkRepository bookmarkRepository,INodeActivityRepository nodeActivityRepository, IFindwiseApiFacade findwiseApiFacade, INotificationSenderService notificationSenderService, ITimezoneOffsetManager timezoneOffsetManager)
+        public CatalogueService(ICatalogueRepository catalogueRepository, ICategoryService categoryService, INodeRepository nodeRepository, IUserUserGroupRepository userUserGroupRepository, IMapper mapper, IOptions<FindwiseConfig> findwiseConfig, IOptions<LearningHubConfig> learningHubConfig, ICatalogueNodeVersionRepository catalogueNodeVersionRepository, INodeResourceRepository nodeResourceRepository, IResourceVersionRepository resourceVersionRepository, IRoleUserGroupRepository roleUserGroupRepository, IProviderService providerService, ICatalogueAccessRequestRepository catalogueAccessRequestRepository, IUserRepository userRepository, IUserProfileRepository userProfileRepository, IEmailSenderService emailSenderService, IBookmarkRepository bookmarkRepository,INodeActivityRepository nodeActivityRepository, INotificationSenderService notificationSenderService, ITimezoneOffsetManager timezoneOffsetManager)
         {
             this.catalogueRepository = catalogueRepository;
             this.categoryService = categoryService;
@@ -97,7 +95,6 @@
             this.emailSenderService = emailSenderService;
             this.bookmarkRepository = bookmarkRepository;
             this.nodeActivityRepository = nodeActivityRepository;
-            this.findwiseApiFacade = findwiseApiFacade;
             this.learningHubConfig = learningHubConfig.Value;
             this.findwiseConfig = findwiseConfig.Value;
             this.timezoneOffsetManager = timezoneOffsetManager;
@@ -575,24 +572,6 @@
 
             var catalogueNodeVersionId = await this.catalogueNodeVersionRepository.CreateCatalogueAsync(userId, catalogue);
 
-            // Catalogue is in database, push to findwise
-            var cnv = this.catalogueNodeVersionRepository.GetAll()
-                .Include(x => x.NodeVersion).ThenInclude(x => x.Node)
-                .Include(x => x.Keywords)
-                .Include(x => x.CatalogueNodeVersionProvider)
-                .SingleOrDefault(x => x.Id == catalogueNodeVersionId);
-
-            if (cnv != null)
-            {
-                var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
-                if (searchModel.Description.Length > this.findwiseConfig.DescriptionLengthLimit)
-                {
-                    searchModel.Description = searchModel.Description.Substring(0, this.findwiseConfig.DescriptionLengthLimit - 4) + "</p>";
-                }
-
-                await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
-            }
-
             return new LearningHubValidationResult(true)
             {
                 CreatedId = catalogueNodeVersionId,
@@ -809,24 +788,6 @@
 
             await this.catalogueNodeVersionRepository.UpdateCatalogueAsync(userId, catalogue);
 
-            // Update catalogue in findwise
-            var cnv = this.catalogueNodeVersionRepository.GetAll()
-                .Include(x => x.NodeVersion).ThenInclude(x => x.Node)
-                .Include(x => x.Keywords)
-                .Include(x => x.CatalogueNodeVersionProvider)
-                .SingleOrDefault(x => x.Id == catalogue.CatalogueNodeVersionId);
-
-            if (cnv != null)
-            {
-                var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
-                if (searchModel.Description.Length > this.findwiseConfig.DescriptionLengthLimit)
-                {
-                    searchModel.Description = searchModel.Description.Substring(0, this.findwiseConfig.DescriptionLengthLimit - 4) + "</p>";
-                }
-
-                await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
-            }
-
             return new LearningHubValidationResult(true);
         }
 
@@ -852,24 +813,6 @@
             }
 
             await this.catalogueNodeVersionRepository.ShowCatalogue(userId, nodeId);
-
-            var cnv = this.catalogueNodeVersionRepository.GetAll()
-                    .Include(x => x.NodeVersion).ThenInclude(x => x.Node)
-                    .Include(x => x.Keywords)
-                    .Include(x => x.CatalogueNodeVersionProvider)
-                    .SingleOrDefault(x => x.NodeVersion.NodeId == nodeId);
-
-            // update findwise
-            if (cnv != null)
-            {
-                var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
-                if (searchModel.Description.Length > this.findwiseConfig.DescriptionLengthLimit)
-                {
-                    searchModel.Description = searchModel.Description.Substring(0, this.findwiseConfig.DescriptionLengthLimit - 4) + "</p>";
-                }
-
-                await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
-            }
 
             return new LearningHubValidationResult(true);
         }
@@ -927,23 +870,6 @@
 
             node.Hidden = true;
             await this.nodeRepository.UpdateAsync(userId, node);
-
-            // update findwise
-            var cnv = this.catalogueNodeVersionRepository.GetAll()
-                    .Include(x => x.NodeVersion).ThenInclude(x => x.Node)
-                    .Include(x => x.Keywords)
-                    .Include(x => x.CatalogueNodeVersionProvider)
-                    .SingleOrDefault(x => x.NodeVersion.NodeId == nodeId);
-            if (cnv != null)
-            {
-                var searchModel = this.mapper.Map<SearchCatalogueRequestModel>(cnv);
-                if (searchModel.Description.Length > this.findwiseConfig.DescriptionLengthLimit)
-                {
-                    searchModel.Description = searchModel.Description.Substring(0, this.findwiseConfig.DescriptionLengthLimit - 4) + "</p>";
-                }
-
-                await this.findwiseApiFacade.AddOrReplaceAsync(new List<SearchCatalogueRequestModel> { searchModel });
-            }
         }
 
 

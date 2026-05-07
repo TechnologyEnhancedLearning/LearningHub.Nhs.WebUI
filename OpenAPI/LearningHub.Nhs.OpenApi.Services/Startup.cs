@@ -7,7 +7,6 @@ namespace LearningHub.Nhs.OpenApi.Services
     using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
     using LearningHub.Nhs.OpenApi.Services.Services;
     using LearningHub.Nhs.OpenApi.Services.Services.AzureSearch;
-    using LearningHub.Nhs.OpenApi.Services.Services.Findwise;
     using LearningHub.Nhs.OpenApi.Services.Services.Messaging;
     using LearningHub.Nhs.Services;
     using Microsoft.Extensions.Configuration;
@@ -34,8 +33,7 @@ namespace LearningHub.Nhs.OpenApi.Services
             }
             else
             {
-                services.AddScoped<IFindwiseClient, FindwiseClient>();
-                services.AddScoped<ISearchService, SearchService>();
+                services.AddScoped<IFindwiseClient, FindwiseClient>();                
             }
 
             services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>();
@@ -93,16 +91,6 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IUserGroupService, UserGroupService>();
             services.AddScoped<IMoodleBridgeApiService, MoodleBridgeApiService>();
             services.AddScoped<IUserPasswordResetRequestsService, UserPasswordResetRequestsService>();
-
-            // Register IFindwiseApiFacade based on feature flag
-            if (useAzureSearch)
-            {
-                services.AddScoped<IFindwiseApiFacade, NullFindwiseApiFacade>();
-            }
-            else
-            {
-                services.AddScoped<IFindwiseApiFacade, FindwiseApiFacade>();
-            }
         }
     }
 }

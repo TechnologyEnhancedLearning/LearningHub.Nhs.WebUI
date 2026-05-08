@@ -1,4 +1,4 @@
-﻿CREATE TABLE [reports].[UserCatalogueActivity]
+﻿CREATE TABLE [readmodels].[UserCatalogueActivity]
 (
     UserId INT NOT NULL,
     CatalogueNodeId INT NOT NULL,

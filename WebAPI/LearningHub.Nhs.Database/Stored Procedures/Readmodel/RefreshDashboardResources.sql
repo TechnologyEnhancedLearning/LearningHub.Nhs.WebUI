@@ -7,7 +7,7 @@
 -- 
 -- 23 April 2026  OA  TD-7078 Script Optimization
 -------------------------------------------------------------------------------
-CREATE PROCEDURE [reports].[RefreshDashboardResources]
+CREATE PROCEDURE [readmodels].[RefreshDashboardResources]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -88,9 +88,9 @@ BEGIN
             ON #Ref (ResourceId, CatalogueNodeId);
 
        
-        TRUNCATE TABLE reports.DashboardResources;
+        TRUNCATE TABLE readmodels.DashboardResources;
 
-        INSERT INTO reports.DashboardResources
+        INSERT INTO readmodels.DashboardResources
         (
             ResourceId,
             ResourceReferenceId,

@@ -7,31 +7,46 @@
 -- 
 -- 23 April 2026  OA  TD-7078 Script Optimization
 -------------------------------------------------------------------------------
-CREATE PROCEDURE [reports].[RefreshUserCatalogueActivity]
+CREATE PROCEDURE [readmodels].[ApplyUserCatalogueActivityChanges]
+(
+    @ChangedActivityIdsJson NVARCHAR(MAX)
+)
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
 
-    DECLARE @LastProcessedActivityId INT;
+    IF @ChangedActivityIdsJson IS NULL OR ISJSON(@ChangedActivityIdsJson) <> 1
+        RETURN;
 
-    SELECT @LastProcessedActivityId = ISNULL(MAX(LatestActivityId), 0)
-    FROM reports.UserCatalogueActivity;
-
+    IF OBJECT_ID('tempdb..#ChangedActivityIds') IS NOT NULL DROP TABLE #ChangedActivityIds;
     IF OBJECT_ID('tempdb..#ChangedPairs') IS NOT NULL DROP TABLE #ChangedPairs;
     IF OBJECT_ID('tempdb..#LatestIds') IS NOT NULL DROP TABLE #LatestIds;
     IF OBJECT_ID('tempdb..#Latest') IS NOT NULL DROP TABLE #Latest;
 
-   
+    SELECT DISTINCT
+        TRY_CAST([value] AS INT) AS ActivityId
+    INTO #ChangedActivityIds
+    FROM OPENJSON(@ChangedActivityIdsJson)
+    WHERE TRY_CAST([value] AS INT) IS NOT NULL;
+
+    IF NOT EXISTS (SELECT 1 FROM #ChangedActivityIds)
+        RETURN;
+
+    CREATE CLUSTERED INDEX IX_ChangedActivityIds
+        ON #ChangedActivityIds (ActivityId);
+
+    /* Derive affected user-catalogue pairs */
     SELECT DISTINCT
         ra.UserId,
         np.CatalogueNodeId
     INTO #ChangedPairs
-    FROM activity.ResourceActivity ra
+    FROM #ChangedActivityIds c
+    JOIN activity.ResourceActivity ra
+        ON ra.Id = c.ActivityId
     JOIN hierarchy.NodePath np
         ON np.Id = ra.NodePathId
-    WHERE ra.Id > @LastProcessedActivityId
-      AND ra.UserId IS NOT NULL
+    WHERE ra.UserId IS NOT NULL
       AND ra.Deleted = 0
       AND np.Deleted = 0;
 
@@ -41,7 +56,7 @@ BEGIN
     CREATE CLUSTERED INDEX IX_ChangedPairs
         ON #ChangedPairs (UserId, CatalogueNodeId);
 
-    /* Latest activity id per changed (UserId, CatalogueNodeId) */
+    /* Latest activity id per affected (UserId, CatalogueNodeId) */
     SELECT
         ra.UserId,
         np.CatalogueNodeId,
@@ -80,12 +95,12 @@ BEGIN
     SET
         uca.LatestActivityId = l.LatestActivityId,
         uca.LastAccessedDate = l.LastAccessedDate
-    FROM reports.UserCatalogueActivity uca
+    FROM readmodels.UserCatalogueActivity uca
     JOIN #Latest l
         ON l.UserId = uca.UserId
        AND l.CatalogueNodeId = uca.CatalogueNodeId;
 
-    INSERT INTO reports.UserCatalogueActivity
+    INSERT INTO readmodels.UserCatalogueActivity
     (
         UserId,
         CatalogueNodeId,
@@ -98,8 +113,9 @@ BEGIN
         l.LatestActivityId,
         l.LastAccessedDate
     FROM #Latest l
-    LEFT JOIN reports.UserCatalogueActivity uca
+    LEFT JOIN readmodels.UserCatalogueActivity uca
         ON uca.UserId = l.UserId
        AND uca.CatalogueNodeId = l.CatalogueNodeId
     WHERE uca.UserId IS NULL;
 END;
+GO

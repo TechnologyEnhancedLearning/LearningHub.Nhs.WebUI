@@ -1,4 +1,4 @@
-﻿CREATE TABLE [reports].[DashboardCatalogues]
+﻿CREATE TABLE [readmodels].[DashboardCatalogues]
 (
     CatalogueNodeId INT NOT NULL,
     NodeVersionId INT NOT NULL,

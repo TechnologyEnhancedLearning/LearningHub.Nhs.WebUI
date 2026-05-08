@@ -7,17 +7,19 @@
 -- 
 -- 23 April 2026  OA  TD-7078 Script Optimization
 -------------------------------------------------------------------------------
-CREATE PROCEDURE [reports].[RefreshUserResourceActivity]
+CREATE PROCEDURE [readmodels].[ApplyUserResourceActivityChanges]
+(
+    @ChangedActivityIdsJson NVARCHAR(MAX)
+)
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
 
-    DECLARE @LastProcessedActivityId INT;
+    IF @ChangedActivityIdsJson IS NULL OR ISJSON(@ChangedActivityIdsJson) <> 1
+        RETURN;
 
-    SELECT @LastProcessedActivityId = ISNULL(MAX(LatestActivityId), 0)
-    FROM reports.UserResourceActivity;
-
+    IF OBJECT_ID('tempdb..#ChangedActivityIds') IS NOT NULL DROP TABLE #ChangedActivityIds;
     IF OBJECT_ID('tempdb..#ChangedPairs') IS NOT NULL DROP TABLE #ChangedPairs;
     IF OBJECT_ID('tempdb..#LatestIds') IS NOT NULL DROP TABLE #LatestIds;
     IF OBJECT_ID('tempdb..#Latest') IS NOT NULL DROP TABLE #Latest;
@@ -26,15 +28,28 @@ BEGIN
     IF OBJECT_ID('tempdb..#Sa') IS NOT NULL DROP TABLE #Sa;
     IF OBJECT_ID('tempdb..#Completion') IS NOT NULL DROP TABLE #Completion;
 
-    /* Find changed user-resource pairs from newly inserted activities */
     SELECT DISTINCT
-        a.UserId,
-        a.ResourceId
+        TRY_CAST([value] AS INT) AS ActivityId
+    INTO #ChangedActivityIds
+    FROM OPENJSON(@ChangedActivityIdsJson)
+    WHERE TRY_CAST([value] AS INT) IS NOT NULL;
+
+    IF NOT EXISTS (SELECT 1 FROM #ChangedActivityIds)
+        RETURN;
+
+    CREATE CLUSTERED INDEX IX_ChangedActivityIds
+        ON #ChangedActivityIds (ActivityId);
+
+    /* Derive affected user-resource pairs */
+    SELECT DISTINCT
+        ra.UserId,
+        ra.ResourceId
     INTO #ChangedPairs
-    FROM activity.ResourceActivity a
-    WHERE a.Id > @LastProcessedActivityId
-      AND a.UserId IS NOT NULL
-      AND a.Deleted = 0;
+    FROM #ChangedActivityIds c
+    JOIN activity.ResourceActivity ra
+        ON ra.Id = c.ActivityId
+    WHERE ra.UserId IS NOT NULL
+      AND ra.Deleted = 0;
 
     IF NOT EXISTS (SELECT 1 FROM #ChangedPairs)
         RETURN;
@@ -42,46 +57,46 @@ BEGIN
     CREATE CLUSTERED INDEX IX_ChangedPairs
         ON #ChangedPairs (UserId, ResourceId);
 
-    /* Latest activity id per changed (UserId, ResourceId)*/
+    /* Latest activity id per affected (UserId, ResourceId) */
     SELECT
-        a.UserId,
-        a.ResourceId,
-        MAX(a.Id) AS LatestActivityId
+        ra.UserId,
+        ra.ResourceId,
+        MAX(ra.Id) AS LatestActivityId
     INTO #LatestIds
-    FROM activity.ResourceActivity a
+    FROM activity.ResourceActivity ra
     JOIN #ChangedPairs cp
-        ON cp.UserId = a.UserId
-       AND cp.ResourceId = a.ResourceId
-    WHERE a.Deleted = 0
+        ON cp.UserId = ra.UserId
+       AND cp.ResourceId = ra.ResourceId
+    WHERE ra.Deleted = 0
     GROUP BY
-        a.UserId,
-        a.ResourceId;
+        ra.UserId,
+        ra.ResourceId;
 
     CREATE CLUSTERED INDEX IX_LatestIds
         ON #LatestIds (UserId, ResourceId);
 
-    /* Join back to get the full latest activity row */
+    /* Latest full row */
     SELECT
-        a.UserId,
-        a.ResourceId,
-        a.Id AS ActivityId,
-        a.ResourceVersionId,
-        a.LaunchResourceActivityId,
-        a.ActivityStatusId,
-        a.ActivityStart,
-        a.ActivityEnd,
+        ra.UserId,
+        ra.ResourceId,
+        ra.Id AS ActivityId,
+        ra.ResourceVersionId,
+        ra.LaunchResourceActivityId,
+        ra.ActivityStatusId,
+        ra.ActivityStart,
+        ra.ActivityEnd,
         r.ResourceTypeId
     INTO #Latest
     FROM #LatestIds li
-    JOIN activity.ResourceActivity a
-        ON a.Id = li.LatestActivityId
+    JOIN activity.ResourceActivity ra
+        ON ra.Id = li.LatestActivityId
     JOIN resources.Resource r
-        ON r.Id = a.ResourceId;
+        ON r.Id = ra.ResourceId;
 
     CREATE CLUSTERED INDEX IX_Latest
         ON #Latest (UserId, ResourceId);
 
-    
+    /* Collapse child tables */
     SELECT
         ara.ResourceActivityId,
         MAX(ara.Score) AS Score
@@ -124,7 +139,7 @@ BEGIN
     CREATE CLUSTERED INDEX IX_Sa
         ON #Sa (ResourceActivityId);
 
-    /* Recompute completion and latest-access state */
+    /* Recompute completion */
     SELECT
         l.UserId,
         l.ResourceId,
@@ -139,25 +154,21 @@ BEGIN
                          OR l.ActivityStart < '2020-09-07'
                      )
                     THEN 1
-
                 WHEN l.ResourceTypeId = 6
                      AND (
                          sa.CmiCoreLesson_status IN (3,5)
                          OR l.ActivityStatusId IN (3,5)
                      )
                     THEN 1
-
                 WHEN l.ResourceTypeId = 11
                      AND (
                          ara.Score >= arv.PassMark
                          OR l.ActivityStatusId IN (3,5)
                      )
                     THEN 1
-
                 WHEN l.ResourceTypeId IN (1,5,8,9,10,12)
                      AND l.ActivityStatusId = 3
                     THEN 1
-
                 ELSE 0
             END AS BIT
         ) AS IsCompleted
@@ -176,19 +187,19 @@ BEGIN
     CREATE CLUSTERED INDEX IX_Completion
         ON #Completion (UserId, ResourceId);
 
-    /* Update existing rows */
+    /* Update existing */
     UPDATE ura
     SET
         ura.LatestActivityId = c.LatestActivityId,
         ura.IsCompleted = c.IsCompleted,
         ura.LastAccessedDate = c.LastAccessedDate
-    FROM reports.UserResourceActivity ura
+    FROM readmodels.UserResourceActivity ura
     JOIN #Completion c
         ON c.UserId = ura.UserId
        AND c.ResourceId = ura.ResourceId;
 
-    /* Insert new rows */
-    INSERT INTO reports.UserResourceActivity
+    /* Insert new */
+    INSERT INTO readmodels.UserResourceActivity
     (
         UserId,
         ResourceId,
@@ -203,7 +214,7 @@ BEGIN
         c.IsCompleted,
         c.LastAccessedDate
     FROM #Completion c
-    LEFT JOIN reports.UserResourceActivity ura
+    LEFT JOIN readmodels.UserResourceActivity ura
         ON ura.UserId = c.UserId
        AND ura.ResourceId = c.ResourceId
     WHERE ura.UserId IS NULL;

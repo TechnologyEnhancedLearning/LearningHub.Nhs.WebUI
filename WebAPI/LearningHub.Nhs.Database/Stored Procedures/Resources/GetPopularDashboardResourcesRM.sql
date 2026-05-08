@@ -64,7 +64,7 @@ BEGIN
         dr.ProvidersJson,
         dr.ActivityCount AS SortActivityCount
     INTO #Base
-    FROM reports.DashboardResources dr
+    FROM readmodels.DashboardResources dr
     LEFT JOIN #Auth auth
         ON auth.CatalogueNodeId = dr.CatalogueNodeId
     LEFT JOIN hub.UserBookmark ub

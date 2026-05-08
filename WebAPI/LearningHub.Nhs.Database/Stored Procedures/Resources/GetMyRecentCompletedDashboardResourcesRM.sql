@@ -43,7 +43,7 @@ BEGIN
         ura.ResourceId,
         ura.LatestActivityId
     INTO #Candidates
-    FROM reports.UserResourceActivity ura
+    FROM readmodels.UserResourceActivity ura
     WHERE ura.UserId = @UserId
       AND ura.IsCompleted = 1
     ORDER BY ura.LatestActivityId DESC;
@@ -78,7 +78,7 @@ BEGIN
         c.LatestActivityId AS SortLatestActivityId
     INTO #Base
     FROM #Candidates c
-    JOIN reports.DashboardResources dr
+    JOIN readmodels.DashboardResources dr
         ON dr.ResourceId = c.ResourceId
     LEFT JOIN #Auth auth
         ON auth.CatalogueNodeId = dr.CatalogueNodeId

@@ -1,32 +1,32 @@
 ﻿
-  -- reports.DashboardResources
+  -- readmodels.DashboardResources
 
 
-IF OBJECT_ID('reports.DashboardResources', 'U') IS NOT NULL
+IF OBJECT_ID('readmodels.DashboardResources', 'U') IS NOT NULL
 AND NOT EXISTS
 (
     SELECT 1
     FROM sys.indexes
     WHERE name = 'IX_DashboardResources_ResourceId'
-      AND object_id = OBJECT_ID('reports.DashboardResources')
+      AND object_id = OBJECT_ID('readmodels.DashboardResources')
 )
 BEGIN
     CREATE INDEX IX_DashboardResources_ResourceId
-    ON reports.DashboardResources (ResourceId);
+    ON readmodels.DashboardResources (ResourceId);
 END;
 GO
 
-IF OBJECT_ID('reports.DashboardResources', 'U') IS NOT NULL
+IF OBJECT_ID('readmodels.DashboardResources', 'U') IS NOT NULL
 AND NOT EXISTS
 (
     SELECT 1
     FROM sys.indexes
     WHERE name = 'IX_DashboardResources_Recent'
-      AND object_id = OBJECT_ID('reports.DashboardResources')
+      AND object_id = OBJECT_ID('readmodels.DashboardResources')
 )
 BEGIN
     CREATE INDEX IX_DashboardResources_Recent
-    ON reports.DashboardResources (PublishedDate DESC, Title)
+    ON readmodels.DashboardResources (PublishedDate DESC, Title)
     INCLUDE
     (
         ResourceId,
@@ -46,17 +46,17 @@ BEGIN
 END;
 GO
 
-IF OBJECT_ID('reports.DashboardResources', 'U') IS NOT NULL
+IF OBJECT_ID('readmodels.DashboardResources', 'U') IS NOT NULL
 AND NOT EXISTS
 (
     SELECT 1
     FROM sys.indexes
     WHERE name = 'IX_DashboardResources_Popular'
-      AND object_id = OBJECT_ID('reports.DashboardResources')
+      AND object_id = OBJECT_ID('readmodels.DashboardResources')
 )
 BEGIN
     CREATE INDEX IX_DashboardResources_Popular
-    ON reports.DashboardResources (ActivityCount DESC, Title)
+    ON readmodels.DashboardResources (ActivityCount DESC, Title)
     INCLUDE
     (
         ResourceId,
@@ -76,17 +76,17 @@ BEGIN
 END;
 GO
 
-IF OBJECT_ID('reports.DashboardResources', 'U') IS NOT NULL
+IF OBJECT_ID('readmodels.DashboardResources', 'U') IS NOT NULL
 AND NOT EXISTS
 (
     SELECT 1
     FROM sys.indexes
     WHERE name = 'IX_DashboardResources_Rated'
-      AND object_id = OBJECT_ID('reports.DashboardResources')
+      AND object_id = OBJECT_ID('readmodels.DashboardResources')
 )
 BEGIN
     CREATE INDEX IX_DashboardResources_Rated
-    ON reports.DashboardResources (AverageRating DESC, RatingCount DESC, Title)
+    ON readmodels.DashboardResources (AverageRating DESC, RatingCount DESC, Title)
     INCLUDE
     (
         ResourceId,
@@ -105,50 +105,50 @@ BEGIN
 END;
 GO
 
- --reports.UserResourceActivity
+ --readmodels.UserResourceActivity
 
 
-IF OBJECT_ID('reports.UserResourceActivity', 'U') IS NOT NULL
+IF OBJECT_ID('readmodels.UserResourceActivity', 'U') IS NOT NULL
 AND NOT EXISTS
 (
     SELECT 1
     FROM sys.indexes
     WHERE name = 'IX_UserResourceActivity_UserCompletedLatest'
-      AND object_id = OBJECT_ID('reports.UserResourceActivity')
+      AND object_id = OBJECT_ID('readmodels.UserResourceActivity')
 )
 BEGIN
     CREATE INDEX IX_UserResourceActivity_UserCompletedLatest
-    ON reports.UserResourceActivity (UserId, IsCompleted, LatestActivityId DESC)
+    ON readmodels.UserResourceActivity (UserId, IsCompleted, LatestActivityId DESC)
     INCLUDE (ResourceId, LastAccessedDate);
 END;
 GO
 
 
-IF OBJECT_ID('reports.DashboardCatalogues', 'U') IS NOT NULL
+IF OBJECT_ID('readmodels.DashboardCatalogues', 'U') IS NOT NULL
 AND NOT EXISTS
 (
     SELECT 1
     FROM sys.indexes
     WHERE name = 'IX_DashboardCatalogues_Name'
-      AND object_id = OBJECT_ID('reports.DashboardCatalogues')
+      AND object_id = OBJECT_ID('readmodels.DashboardCatalogues')
 )
 BEGIN
     CREATE INDEX IX_DashboardCatalogues_Name
-    ON reports.DashboardCatalogues (Name);
+    ON readmodels.DashboardCatalogues (Name);
 END;
 GO
 
-IF OBJECT_ID('reports.DashboardCatalogues', 'U') IS NOT NULL
+IF OBJECT_ID('readmodels.DashboardCatalogues', 'U') IS NOT NULL
 AND NOT EXISTS
 (
     SELECT 1
     FROM sys.indexes
     WHERE name = 'IX_DashboardCatalogues_Popular'
-      AND object_id = OBJECT_ID('reports.DashboardCatalogues')
+      AND object_id = OBJECT_ID('readmodels.DashboardCatalogues')
 )
 BEGIN
     CREATE INDEX IX_DashboardCatalogues_Popular
-    ON reports.DashboardCatalogues (CatalogueActivityCount DESC, Name)
+    ON readmodels.DashboardCatalogues (CatalogueActivityCount DESC, Name)
     INCLUDE
     (
         NodeVersionId,
@@ -166,17 +166,17 @@ BEGIN
 END;
 GO
 
-IF OBJECT_ID('reports.DashboardCatalogues', 'U') IS NOT NULL
+IF OBJECT_ID('readmodels.DashboardCatalogues', 'U') IS NOT NULL
 AND NOT EXISTS
 (
     SELECT 1
     FROM sys.indexes
     WHERE name = 'IX_DashboardCatalogues_Recent'
-      AND object_id = OBJECT_ID('reports.DashboardCatalogues')
+      AND object_id = OBJECT_ID('readmodels.DashboardCatalogues')
 )
 BEGIN
     CREATE INDEX IX_DashboardCatalogues_Recent
-    ON reports.DashboardCatalogues (LastShownDate DESC, Name)
+    ON readmodels.DashboardCatalogues (LastShownDate DESC, Name)
     INCLUDE
     (
         NodeVersionId,
@@ -195,17 +195,17 @@ BEGIN
 END;
 GO
 
-IF OBJECT_ID('reports.DashboardCatalogues', 'U') IS NOT NULL
+IF OBJECT_ID('readmodels.DashboardCatalogues', 'U') IS NOT NULL
 AND NOT EXISTS
 (
     SELECT 1
     FROM sys.indexes
     WHERE name = 'IX_DashboardCatalogues_HighlyContributed'
-      AND object_id = OBJECT_ID('reports.DashboardCatalogues')
+      AND object_id = OBJECT_ID('readmodels.DashboardCatalogues')
 )
 BEGIN
     CREATE INDEX IX_DashboardCatalogues_HighlyContributed
-    ON reports.DashboardCatalogues (ContributedResourceCount DESC, SumResourceAverageRating DESC, Name)
+    ON readmodels.DashboardCatalogues (ContributedResourceCount DESC, SumResourceAverageRating DESC, Name)
     INCLUDE
     (
         NodeVersionId,
@@ -222,17 +222,17 @@ BEGIN
 END;
 GO
 
-IF OBJECT_ID('reports.UserCatalogueActivity', 'U') IS NOT NULL
+IF OBJECT_ID('readmodels.UserCatalogueActivity', 'U') IS NOT NULL
 AND NOT EXISTS
 (
     SELECT 1
     FROM sys.indexes
     WHERE name = 'IX_UserCatalogueActivity_User_Latest'
-      AND object_id = OBJECT_ID('reports.UserCatalogueActivity')
+      AND object_id = OBJECT_ID('readmodels.UserCatalogueActivity')
 )
 BEGIN
     CREATE INDEX IX_UserCatalogueActivity_User_Latest
-    ON reports.UserCatalogueActivity (UserId, LatestActivityId DESC)
+    ON readmodels.UserCatalogueActivity (UserId, LatestActivityId DESC)
     INCLUDE (CatalogueNodeId, LastAccessedDate);
 END;
 GO

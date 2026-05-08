@@ -1,4 +1,4 @@
-﻿CREATE TABLE [reports].[DashboardResources] (
+﻿CREATE TABLE [readmodels].[DashboardResources] (
     ResourceId INT NOT NULL,
     ResourceReferenceId INT NULL,
     ResourceVersionId INT NOT NULL,

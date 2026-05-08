@@ -65,7 +65,7 @@ BEGIN
         CAST(dr.AverageRating AS DECIMAL(3,2)) AS SortAverageRating,
         dr.RatingCount AS SortRatingCount
     INTO #Base
-    FROM reports.DashboardResources dr
+    FROM readmodels.DashboardResources dr
     LEFT JOIN #Auth auth
         ON auth.CatalogueNodeId = dr.CatalogueNodeId
     LEFT JOIN hub.UserBookmark ub

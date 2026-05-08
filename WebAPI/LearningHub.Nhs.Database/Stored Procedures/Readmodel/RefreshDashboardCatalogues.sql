@@ -7,7 +7,7 @@
 -- 
 -- 23 April 2026  OA  TD-7078 Script Optimization
 -------------------------------------------------------------------------------
-CREATE PROCEDURE [reports].[RefreshDashboardCatalogues]
+CREATE PROCEDURE [readmodels].[RefreshDashboardCatalogues]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -92,9 +92,9 @@ BEGIN
         CREATE CLUSTERED INDEX IX_Contributed
             ON #Contributed (CatalogueNodeId);
 
-        TRUNCATE TABLE reports.DashboardCatalogues;
+        TRUNCATE TABLE readmodels.DashboardCatalogues;
 
-        INSERT INTO reports.DashboardCatalogues
+        INSERT INTO readmodels.DashboardCatalogues
         (
             CatalogueNodeId,
             NodeVersionId,

@@ -46,7 +46,7 @@ BEGIN
     BEGIN
         SELECT @TotalRecords =
             CASE WHEN COUNT(*) > 12 THEN @MaxRows ELSE COUNT(*) END
-        FROM reports.DashboardCatalogues dc
+        FROM readmodels.DashboardCatalogues dc
         WHERE dc.CatalogueActivityCount > 0;
 
         SELECT
@@ -66,7 +66,7 @@ BEGIN
             ub.Id AS BookMarkId,
             CAST(ISNULL(ub.Deleted,1) ^ 1 AS BIT) AS IsBookmarked,
             dc.ProvidersJson
-        FROM reports.DashboardCatalogues dc
+        FROM readmodels.DashboardCatalogues dc
         LEFT JOIN #Auth a
             ON a.CatalogueNodeId = dc.CatalogueNodeId
         LEFT JOIN hub.UserBookmark ub
@@ -80,7 +80,7 @@ BEGIN
     BEGIN
         SELECT @TotalRecords =
             CASE WHEN COUNT(*) > 12 THEN @MaxRows ELSE COUNT(*) END
-        FROM reports.DashboardCatalogues dc
+        FROM readmodels.DashboardCatalogues dc
         WHERE dc.LastShownDate IS NOT NULL;
 
         SELECT
@@ -100,7 +100,7 @@ BEGIN
             ub.Id AS BookMarkId,
             CAST(ISNULL(ub.Deleted,1) ^ 1 AS BIT) AS IsBookmarked,
             dc.ProvidersJson
-        FROM reports.DashboardCatalogues dc
+        FROM readmodels.DashboardCatalogues dc
         LEFT JOIN #Auth a
             ON a.CatalogueNodeId = dc.CatalogueNodeId
         LEFT JOIN hub.UserBookmark ub
@@ -114,7 +114,7 @@ BEGIN
     BEGIN
         SELECT @TotalRecords =
             CASE WHEN COUNT(*) > 12 THEN @MaxRows ELSE COUNT(*) END
-        FROM reports.DashboardCatalogues dc
+        FROM readmodels.DashboardCatalogues dc
         WHERE dc.ContributedResourceCount > 0;
 
         SELECT
@@ -135,7 +135,7 @@ BEGIN
             ub.Id AS BookMarkId,
             CAST(ISNULL(ub.Deleted,1) ^ 1 AS BIT) AS IsBookmarked,
             dc.ProvidersJson
-        FROM reports.DashboardCatalogues dc
+        FROM readmodels.DashboardCatalogues dc
         LEFT JOIN #Auth a
             ON a.CatalogueNodeId = dc.CatalogueNodeId
         LEFT JOIN hub.UserBookmark ub
@@ -149,7 +149,7 @@ BEGIN
     BEGIN
         SELECT @TotalRecords =
             CASE WHEN COUNT(*) > 12 THEN @MaxRows ELSE COUNT(*) END
-        FROM reports.UserCatalogueActivity uca
+        FROM readmodels.UserCatalogueActivity uca
         WHERE uca.UserId = @UserId;
 
         SELECT
@@ -169,8 +169,8 @@ BEGIN
             ub.Id AS BookMarkId,
             CAST(ISNULL(ub.Deleted,1) ^ 1 AS BIT) AS IsBookmarked,
             dc.ProvidersJson
-        FROM reports.UserCatalogueActivity uca
-        JOIN reports.DashboardCatalogues dc
+        FROM readmodels.UserCatalogueActivity uca
+        JOIN readmodels.DashboardCatalogues dc
             ON dc.CatalogueNodeId = uca.CatalogueNodeId
         LEFT JOIN #Auth a
             ON a.CatalogueNodeId = dc.CatalogueNodeId
@@ -184,7 +184,7 @@ BEGIN
     ELSE
     BEGIN
         SELECT @TotalRecords = COUNT(*)
-        FROM reports.DashboardCatalogues;
+        FROM readmodels.DashboardCatalogues;
 
         SELECT
             dc.CatalogueNodeId AS NodeId,
@@ -203,7 +203,7 @@ BEGIN
             ub.Id AS BookMarkId,
             CAST(ISNULL(ub.Deleted,1) ^ 1 AS BIT) AS IsBookmarked,
             dc.ProvidersJson
-        FROM reports.DashboardCatalogues dc
+        FROM readmodels.DashboardCatalogues dc
         LEFT JOIN #Auth a
             ON a.CatalogueNodeId = dc.CatalogueNodeId
         LEFT JOIN hub.UserBookmark ub

@@ -1,4 +1,4 @@
-﻿CREATE TABLE [reports].[UserResourceActivity] (
+﻿CREATE TABLE [readmodels].[UserResourceActivity] (
     UserId INT NOT NULL,
     ResourceId INT NOT NULL,
     LatestActivityId INT NOT NULL,

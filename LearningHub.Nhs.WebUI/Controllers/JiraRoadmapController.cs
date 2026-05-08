@@ -36,15 +36,15 @@
         }
 
         /// <summary>
-        /// Returns public roadmap issues (data only endpoint for WebUI).
+        /// Returns public roadmap tickets (data only endpoint for WebUI).
         /// </summary>
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         [HttpGet]
-        [Route("getRoadmapIssues")]
-        public async Task<IActionResult> GetRoadmapIssues()
+        [Route("getRoadmapContent")]
+        public async Task<IActionResult> Index()
         {
             var roadmapResponse = await this.jiraRoadmapService.GetPublicRoadmapIssues();
-            return this.Json(roadmapResponse);
+            return this.View(roadmapResponse);
         }
      }
 }

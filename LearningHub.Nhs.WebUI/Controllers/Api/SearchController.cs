@@ -1,6 +1,7 @@
-﻿namespace LearningHub.Nhs.WebUI.Controllers.Api
+namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Enums;
@@ -8,6 +9,8 @@
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
+    using LearningHub.Nhs.WebUI.Models.Search;
+    using Microsoft.ApplicationInsights;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -20,14 +23,17 @@
     public class SearchController : ControllerBase
     {
         private readonly ISearchService searchService;
+        private readonly TelemetryClient telemetryClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchController"/> class.
         /// </summary>
         /// <param name="searchService">Resource service.</param>
-        public SearchController(ISearchService searchService)
+        /// <param name="telemetryClient">Application Insights telemetry client.</param>
+        public SearchController(ISearchService searchService, TelemetryClient telemetryClient)
         {
             this.searchService = searchService;
+            this.telemetryClient = telemetryClient;
         }
 
         /// <summary>
@@ -144,6 +150,44 @@
             };
 
             return this.Ok(await this.searchService.CreateCatalogueSearchActionAsync(searchActionCatalogueModel));
+        }
+
+        /// <summary>
+        /// Records search result click telemetry for Azure Search observability.
+        /// </summary>
+        /// <param name="model">The click telemetry payload.</param>
+        /// <returns>An <see cref="IActionResult"/>.</returns>
+        [HttpPost("RecordResultClickTelemetry")]
+        public IActionResult RecordResultClickTelemetry(SearchResultClickTelemetryModel model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.ResultUrl))
+            {
+                return this.BadRequest();
+            }
+
+            var properties = new Dictionary<string, string>
+            {
+                { "CorrelationId", model.CorrelationId ?? string.Empty },
+                { "SessionId", model.SessionId ?? string.Empty },
+                { "QueryText", model.QueryText ?? string.Empty },
+                { "QueryMode", model.QueryMode ?? string.Empty },
+                { "ResultUrl", model.ResultUrl ?? string.Empty },
+                { "ResultTitle", model.ResultTitle ?? string.Empty },
+                { "ResultType", model.ResultType ?? string.Empty },
+                { "OpenInNewTab", model.OpenInNewTab.ToString() },
+                { "InteractionType", model.InteractionType ?? string.Empty },
+            };
+
+            var metrics = new Dictionary<string, double>
+            {
+                { "ResultRank", model.ResultRank },
+                { "ResourceReferenceId", model.ResourceReferenceId },
+                { "NodePathId", model.NodePathId },
+            };
+
+            this.telemetryClient.TrackEvent("SearchResultClickTelemetry", properties, metrics);
+
+            return this.Ok();
         }
     }
 }

@@ -171,7 +171,6 @@
 @functions {
     public async Task<bool> DisplayOffline()
     {
-        return false;
         if (ViewContext.RouteData.Values["controller"].ToString() != "Offline" && User.Identity.IsAuthenticated)
         {
             var internalSystem = await this.internalSystemService.GetByIdAsync((int)InternalSystemType.LearningHub);

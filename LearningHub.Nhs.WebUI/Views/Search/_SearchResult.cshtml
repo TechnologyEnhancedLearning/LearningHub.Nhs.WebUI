@@ -15,7 +15,8 @@
     var pagingModel = Model.ResourceResultPaging;
     var index = pagingModel.CurrentPage * pagingModel.PageSize;
     var searchString = HttpUtility.UrlEncode(Model.SearchString);
-    string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());    
+    string groupId = HttpUtility.UrlEncode(Model.GroupId.ToString());
+    string telemetrySessionId = Model.GroupId.ToString();
 
     string GetUrl(int resourceReferenceId, int itemIndex, int nodePathId, SearchClickPayloadModel payload)
     {
@@ -61,7 +62,7 @@
 
     @if (item.ResourceType == "catalogue")
     {
-        @await Html.PartialAsync("_SearchCatalogueResult", (item, groupId, pagingModel.CurrentPage))
+        @await Html.PartialAsync("_SearchCatalogueResult", (item, telemetrySessionId, pagingModel.CurrentPage))
     }
     else
     {
@@ -71,11 +72,31 @@
             <h3 class="nhsuk-heading-xs nhsuk-u-margin-bottom-2">
                 @if (item.ResourceType == "moodle")
                 {
-                    <a class="nhsuk-card__link" href="@GetMoodleCourseUrl(item.Id, item.ResourceReferenceId, index, item.NodePathId ?? 0, item.Click.Payload)">@item.Title</a>
+                    <a class="nhsuk-card__link"
+                       href="@GetMoodleCourseUrl(item.Id, item.ResourceReferenceId, index, item.NodePathId ?? 0, item.Click.Payload)"
+                       data-search-click-telemetry="true"
+                       data-correlation-id="@item.Click.Payload?.SearchSignal?.SearchId"
+                       data-session-id="@telemetrySessionId"
+                       data-query-text="@item.Click.Payload?.SearchSignal?.UserQuery"
+                       data-query-mode="azure"
+                       data-result-rank="@item.Click.Payload?.HitNumber"
+                       data-resource-reference-id="@item.ResourceReferenceId"
+                       data-node-path-id="@(item.NodePathId ?? 0)"
+                       data-result-type="@item.ResourceType">@item.Title</a>
                 }
                 else
                 {
-                    <a class="nhsuk-card__link" href="@GetUrl(item.ResourceReferenceId, index, item.NodePathId ?? 0, item.Click.Payload)">@item.Title</a>
+                    <a class="nhsuk-card__link"
+                       href="@GetUrl(item.ResourceReferenceId, index, item.NodePathId ?? 0, item.Click.Payload)"
+                       data-search-click-telemetry="true"
+                       data-correlation-id="@item.Click.Payload?.SearchSignal?.SearchId"
+                       data-session-id="@telemetrySessionId"
+                       data-query-text="@item.Click.Payload?.SearchSignal?.UserQuery"
+                       data-query-mode="azure"
+                       data-result-rank="@item.Click.Payload?.HitNumber"
+                       data-resource-reference-id="@item.ResourceReferenceId"
+                       data-node-path-id="@(item.NodePathId ?? 0)"
+                       data-result-type="@item.ResourceType">@item.Title</a>
                 }
             </h3>
 

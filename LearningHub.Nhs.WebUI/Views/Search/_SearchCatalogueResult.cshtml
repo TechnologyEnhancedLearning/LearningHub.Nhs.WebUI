@@ -2,7 +2,7 @@
 @using LearningHub.Nhs.WebUI.Extensions
 @using LearningHub.Nhs.Models.Search.SearchClick;
 
-@model (LearningHub.Nhs.Models.Search.Document document, string groupId, int currentPage)
+@model (LearningHub.Nhs.Models.Search.Document document, string telemetrySessionId, int currentPage)
 
 @{
     var item = Model.document;
@@ -15,7 +15,7 @@
         var searchSignal = payload?.SearchSignal;
         var pagingModel = Model.currentPage;
         string encodedCatalogueUrl = HttpUtility.UrlEncode("/Catalogue/" + catalogueUrl);
-        string groupId = Model.groupId;// HttpUtility.UrlEncode(Model.GroupId.ToString());
+        string groupId = Model.telemetrySessionId;
         string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
 
         var url = $@"/search/record-catalogue-click?url={encodedCatalogueUrl}&nodePathId={nodePathId}&itemIndex={payload?.HitNumber}
@@ -33,7 +33,17 @@
         <div class="search-catalogue-badge"> Catalogue </div>
 
         <h3 class="nhsuk-heading-xs nhsuk-u-margin-bottom-2">
-            <a class="nhsuk-card__link" href="@GetUrl(item.CatalogueUrl, item.NodePathId ?? 0, 0, Convert.ToInt32(item.Id), item.Click.Payload)">@item.Title</a>
+            <a class="nhsuk-card__link"
+               href="@GetUrl(item.CatalogueUrl, item.NodePathId ?? 0, 0, Convert.ToInt32(item.Id), item.Click.Payload)"
+               data-search-click-telemetry="true"
+               data-correlation-id="@item.Click.Payload?.SearchSignal?.SearchId"
+               data-session-id="@Model.telemetrySessionId"
+               data-query-text="@item.Click.Payload?.SearchSignal?.UserQuery"
+               data-query-mode="azure"
+               data-result-rank="@item.Click.Payload?.HitNumber"
+               data-resource-reference-id="@item.Id"
+               data-node-path-id="@(item.NodePathId ?? 0)"
+               data-result-type="catalogue">@item.Title</a>
 
         </h3>
 

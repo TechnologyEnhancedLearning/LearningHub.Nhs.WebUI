@@ -10,9 +10,9 @@
     public interface IJiraRoadmapService
     {
         /// <summary>
-        /// Gets public roadmap issues from Jira Open API.
+        /// Gets public roadmap tickets from Jira Open API.
         /// </summary>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<RoadmapResponseDto> GetPublicRoadmapIssues();
+        Task<RoadmapResponseDto> GetPublicRoadmapTickets();
     }
 }

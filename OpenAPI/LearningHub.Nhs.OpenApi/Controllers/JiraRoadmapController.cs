@@ -26,23 +26,23 @@
         }
 
         /// <summary>
-        /// The GetRoadmapIssues controller, issues in jira.
+        /// The GetRoadmapTickets controller, tickets in jira.
         /// </summary>
         /// <returns>The <see cref="Task"/>.</returns>
         [HttpGet]
-        [Route("GetRoadmapIssues")]
-        public async Task<IActionResult> GetRoadmapIssues()
+        [Route("GetRoadmapTickets")]
+        public async Task<IActionResult> GetRoadmapTickets()
         {
-            var roadmapResponse = await this.GetRoadmapIssuesAsync();
+            var roadmapResponse = await this.GetRoadmapTicketsAsync();
             return this.Ok(roadmapResponse);
         }
 
         /// <summary>
-        /// Get all issues marked public and based on components in roadmap.
+        /// Get all tickets marked public and based on components in roadmap.
         /// </summary>
-        private async Task<RoadmapResponseDto> GetRoadmapIssuesAsync()
+        private async Task<RoadmapResponseDto> GetRoadmapTicketsAsync()
         {
-            return await this.jiraRoadmapService.GetPublicRoadmapIssues();
+            return await this.jiraRoadmapService.GetPublicRoadmapTickets();
         }
     }
 }

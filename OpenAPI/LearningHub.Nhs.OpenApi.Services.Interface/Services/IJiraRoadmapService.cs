@@ -9,9 +9,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
     public interface IJiraRoadmapService
     {
         /// <summary>
-        /// Get all issues marked public for roadmap.
+        /// Get all tickets marked public for roadmap.
         /// </summary>
         /// <returns></returns>
-        Task<RoadmapResponseDto> GetPublicRoadmapIssues();
+        Task<RoadmapResponseDto> GetPublicRoadmapTickets();
     }
 }

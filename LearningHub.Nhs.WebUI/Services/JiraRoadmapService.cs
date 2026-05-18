@@ -27,10 +27,10 @@
         }
 
         /// <inheritdoc />
-        public async Task<RoadmapResponseDto> GetPublicRoadmapIssues()
+        public async Task<RoadmapResponseDto> GetPublicRoadmapTickets()
         {
             var client = await this.OpenApiHttpClient.GetClientAsync();
-            var request = "JiraRoadmap/GetRoadmapIssues";
+            var request = "JiraRoadmap/GetRoadmapTickets";
             var response = await client.GetAsync(request).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
                         ||

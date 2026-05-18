@@ -9,28 +9,10 @@
 
 }
 
-@* <div class="jira-roadmap-banner">
-    <div class="jira-roadmap-intro">
-        <div class="nhsuk-grid-column-full">
-            <h1 class="nhsuk-heading-xl nhsuk-u-margin-top-5">Learning Hub Roadmap</h1>
-            <div class="nhsuk-u-reading-width">
-                <p class="nhsuk-body-l nhsuk-u-reading-width">
-                    Introduction text - needs to be replaced with approved copy.
-                </p>
-            </div>
-        </div>
-    </div>
-</div> *@
-
 <section class="nhsuk-hero">
     <div class="nhsuk-width-container app-width-container">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
-
-                @*                 <div class="nhsuk-u-padding-top-3 nhsuk-u-padding-bottom-3">
-                    <a href="/">Home</a>
-                    <i class="fa-solid fa-chevron-right nhsuk-u-padding-top-1 nhsuk-u-padding-bottom-1 nhsuk-u-padding-left-2 nhsuk-u-padding-right-2"></i>
-                </div> *@
                 <div class="nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-7">
                     <h1 class="nhsuk-heading-xl">Learning Hub Roadmap</h1>
                 </div>
@@ -38,80 +20,6 @@
         </div>
     </div>
 </section>
-
-@* <div class="nhsuk-width-container app-width-container">
-    <div class="jira-roadmap">
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-one-third">
-                <nav class="nhsuk-contents-list" aria-label="Page contents">
-                    <h2 class="nhsuk-heading-s nhsuk-u-margin-bottom-2">Page contents</h2>
-                    <ol class="nhsuk-contents-list__list">
-                        @foreach (var component in Model.Components)
-                        {
-                            var anchorId = component.ComponentName.ToLower().Replace(" ", "-");
-
-                            <li class="nhsuk-contents-list__item">
-                                <a class="nhsuk-contents-list__link" href="#@anchorId">@component.ComponentName</a>
-                            </li>
-                        }
-                    </ol>
-                </nav>
-            </div>
-            <div class="nhsuk-grid-column-two-thirds">
-
-
-                @foreach (var component in Model.Components)
-                {
-
-                    var anchorId = System.Text.RegularExpressions.Regex
-                    .Replace(component.ComponentName.ToLowerInvariant(), @"[^a-z0-9]+", "-")
-                    .Trim('-');
-
-
-                    <h2 id="@anchorId">
-                        @component.ComponentName
-                    </h2>
-
-                    <p>@component.ComponentDescription</p>
-
-                    @foreach (var state in component.States)
-                    {
-                        <div class="jira-roadmap-state">
-
-
-
-
-                            <span class="jira-roadmap-state-heading">
-                                @state.State
-                            </span>
-
-                            <div class="jira-roadmap-card-body">
-                                <ul class="nhsuk-list">
-
-
-                                    @foreach (var issue in state.Issues)
-                                    {
-
-                                        <li class="jira-roadmap__tick-item">
-                                            <svg class="nhsuk-icon nhsuk-icon--tick" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" focusable="false" aria-hidden="true">
-                                                <path d="M11.4 18.8a2 2 0 0 1-2.7.1h-.1L4 14.1a1.5 1.5 0 0 1 2.1-2L10 16l8.1-8.1a1.5 1.5 0 1 1 2.2 2l-8.9 9Z"></path>
-                                            </svg>
-                                            @issue.Summary
-                                        </li>
-
-                                    }
-                                </ul>
-                            </div>
-
-                        </div>
-                    }
-                }
-
-            </div>
-        </div>
-    </div>
-</div> *@
-
 
 <div class="bg-white nhsuk-u-padding-bottom-7 nhsuk-u-padding-top-7">
     <div class="nhsuk-width-container app-width-container">

@@ -1,28 +1,9 @@
 ﻿@use "../../abstracts/all" as *;
 
-.jira-roadmap-intro {
-    /*padding-left: 170px;*/
-    max-width: 75.5rem;
-    margin: 0 auto;
-    padding-left: 1rem;
-    padding-right: 2rem;
-}
-
-.jira-roadmap-banner {
-    width: 100%;
-    padding-bottom: 16px;
-    background-color: $nhsuk-grey-lighter;
-    margin-bottom: 24px;
-}
-
-
 .jira-roadmap-state {
-    /*box-shadow: 0 0 0 1px $nhsuk-border-colour;*/
-    box-shadow: inset 0 0 0 2px #d8dde0;
-    /*border: 2px solid #d8dde0;*/
+    box-shadow: inset 0 0 0 2px $nhsuk-grey-lighter;
     border-radius: .333rem;
     overflow: hidden;
-    /*margin-bottom: 16px;*/
 }
 
 .jira-roadmap-state-heading {
@@ -30,21 +11,21 @@
     background-color: $nhsuk-blue;
     color: $nhsuk-white;
     padding: 8px 16px;
-    /*line-height: 1;*/
     border-radius: 5px 0px 5px 0px;
 }
 
 .jira-roadmap-card-body {
-   /* display: block;
-    border-radius: 4px 0 4px 0;*/
     padding: 8px 16px;
 }
 
 .nhsuk-icon--tick {
     fill: $nhsuk-green-hover;
     height: 2rem;
-/*    left: -.25rem;
-    margin-top: -.25rem -4px;*/
     width: 2rem;
+}
+.jira-roadmap__tick-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
 }
 

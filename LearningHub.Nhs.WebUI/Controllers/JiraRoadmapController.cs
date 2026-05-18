@@ -43,7 +43,7 @@
         [Route("getRoadmapContent")]
         public async Task<IActionResult> Index()
         {
-            var roadmapResponse = await this.jiraRoadmapService.GetPublicRoadmapIssues();
+            var roadmapResponse = await this.jiraRoadmapService.GetPublicRoadmapTickets();
             return this.View(roadmapResponse);
         }
      }

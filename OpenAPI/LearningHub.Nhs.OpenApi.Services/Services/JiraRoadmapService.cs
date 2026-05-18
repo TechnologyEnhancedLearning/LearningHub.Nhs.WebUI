@@ -35,7 +35,7 @@
         /// Get all issues marked public for roadmap.
         /// </summary>
         /// <returns></returns>
-        public async Task<RoadmapResponseDto> GetPublicRoadmapIssues()
+        public async Task<RoadmapResponseDto> GetPublicRoadmapTickets()
         {
             RoadmapResponseDto viewModel = new RoadmapResponseDto();
 
@@ -66,18 +66,6 @@
 
                 if (jiraResponse?.Issues.Count > 0)
                 {
-                    ////var flatIssuesResponse = jiraResponse.Issues.Select(issue => new
-                    ////{
-                    ////    Component = issue.Fields?.Components?.FirstOrDefault()?.Name,
-                    ////    ComponentDescription = selectedComponents.ContainsKey(issue.Fields?.Components?.FirstOrDefault()?.Id) ? selectedComponents[issue.Fields?.Components?.FirstOrDefault()?.Id] : null,
-                    ////    RoadmapState = this.MapToDisplay(issue.Fields?.Status?.Name),
-                    ////    Issue = new RoadmapIssueDto
-                    ////    {
-                    ////        Summary = issue.Fields?.Summary?.ToString(),
-                    ////        Description = issue.Fields?.Description?.ToString()
-                    ////    }
-                    ////}).ToList();
-
                     var flatIssuesResponse = jiraResponse.Issues.SelectMany(issue => issue.Fields.Components.Where(c => selectedComponents.ContainsKey(c.Id))
                     .Select(component =>new
                     {

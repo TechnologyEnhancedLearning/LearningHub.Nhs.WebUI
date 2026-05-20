@@ -189,5 +189,39 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
 
             return this.Ok();
         }
+
+        /// <summary>
+        /// Records search executed telemetry for zero-result rate analysis.
+        /// </summary>
+        /// <param name="model">The search executed telemetry payload.</param>
+        /// <returns>An <see cref="IActionResult"/>.</returns>
+        [HttpPost("RecordSearchExecutedTelemetry")]
+        public IActionResult RecordSearchExecutedTelemetry(SearchExecutedTelemetryModel model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.QueryText))
+            {
+                return this.BadRequest();
+            }
+
+            var properties = new Dictionary<string, string>
+            {
+                { "CorrelationId", model.CorrelationId ?? string.Empty },
+                { "SessionId", model.SessionId ?? string.Empty },
+                { "QueryText", model.QueryText ?? string.Empty },
+                { "QueryMode", model.QueryMode ?? string.Empty },
+                { "UseSemanticReranker", model.UseSemanticReranker.ToString() },
+                { "ResultType", model.ResultType ?? string.Empty },
+            };
+
+            var metrics = new Dictionary<string, double>
+            {
+                { "ResultCount", model.ResultCount },
+                { "LatencyMs", model.LatencyMs },
+            };
+
+            this.telemetryClient.TrackEvent("SearchExecutedTelemetry", properties, metrics);
+
+            return this.Ok();
+        }
     }
 }

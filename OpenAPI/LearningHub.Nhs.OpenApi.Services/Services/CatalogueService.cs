@@ -92,6 +92,7 @@
         /// <param name="emailTemplateService">emailTemplateService.</param>
         public CatalogueService(
         ICatalogueRepository catalogueRepository,
+        ICategoryService @object,
         INodeRepository nodeRepository,
         IUserUserGroupRepository userUserGroupRepository,
         IMapper mapper,

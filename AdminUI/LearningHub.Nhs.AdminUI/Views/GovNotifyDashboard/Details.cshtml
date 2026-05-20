@@ -1,0 +1,80 @@
+﻿@model LearningHub.Nhs.Models.GovNotifyMessaging.MessageRequestViewModel
+@using LearningHub.Nhs.AdminUI.Services
+
+@{
+    ViewData["Title"] = "Details";
+}
+@section SideMenu {
+    @{
+        await Html.RenderPartialAsync("_NavSection");
+    }
+}
+
+<div class="panel-body admin-body">
+    <div class="d-flex flex-row justify-content-between col-12">
+        <a href="@Url.Action("Index", "GovNotifyDashboard")" class="pl-3"><i class="fa-solid fa-chevron-left">&nbsp;</i> Go back</a>
+    </div>
+    <div class="admin-section">
+        <div class="col-12">
+            <div class="id-container">ID @Model.Id</div>
+            <dl>
+                <dt>
+                    Recipient
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Recipient)
+                </dd>
+                <dt>
+                    Request type
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.RequestType)
+                </dd>
+                <dt>
+                    Request status
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.RequestStatus)
+                </dd>
+                <dt>
+                    Retry count
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.RetryCount)
+                </dd>
+                <dt>
+                    Created date
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CreatedAt)
+                </dd>
+                <dt>
+                    Deliver after date
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.DeliverAfter)
+                </dd>
+                <dt>
+                    Sent Date
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.SentAt)
+                </dd>
+                <dt>
+                    Last attempt date
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.LastAttemptAt)
+                </dd>
+                <dt>
+                    Error message
+                </dt>
+                <dd>
+                    @Html.Raw(OutputSanitizer.SanitizeOutputHtml(Model.ErrorMessage))
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+</div>
+

@@ -2,6 +2,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         private readonly ISearchService searchService;
         private readonly IFileService fileService;
         private readonly IFeatureManager featureManager;
+        private readonly ISearchTelemetryService searchTelemetryService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchController"/> class.
@@ -43,6 +45,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="fileService">The fileService.</param>
         /// <param name="featureManager"> The Feature flag manager.</param>
         /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
+        /// <param name="searchTelemetryService">Search telemetry service.</param>
         public SearchController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
@@ -51,12 +54,14 @@ namespace LearningHub.Nhs.WebUI.Controllers
             ILogger<SearchController> logger,
             IFileService fileService,
             IMoodleBridgeApiService moodleBridgeApiService,
-            IFeatureManager featureManager)
+            IFeatureManager featureManager,
+            ISearchTelemetryService searchTelemetryService)
         : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.searchService = searchService;
             this.fileService = fileService;
             this.featureManager = featureManager;
+            this.searchTelemetryService = searchTelemetryService;
         }
 
         /// <summary>
@@ -77,6 +82,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
             var azureSearchEnabled = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.AzureSearch)).Result;
             SearchResultViewModel searchResult = new SearchResultViewModel();
 
+            var stopwatch = Stopwatch.StartNew();
+
             if (azureSearchEnabled)
             {
                 searchResult = await this.searchService.PerformSearch(this.User, search);
@@ -85,6 +92,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
             {
                 searchResult = await this.searchService.PerformSearchInFindwise(this.User, search);
             }
+
+            stopwatch.Stop();
 
             if (search.SearchId == 0 && searchResult.ResourceSearchResult != null)
             {
@@ -99,6 +108,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 {
                     searchResult.CatalogueSearchResult.SearchId = searchId;
                 }
+
+                // Record SearchExecutedTelemetry for zero-result rate analysis
+                await this.searchTelemetryService.RecordSearchExecutedAsync(search, searchResult, stopwatch.ElapsedMilliseconds);
             }
 
             if (filterApplied)

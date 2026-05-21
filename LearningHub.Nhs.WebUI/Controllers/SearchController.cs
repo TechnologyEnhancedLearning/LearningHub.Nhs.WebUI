@@ -12,7 +12,6 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models.Search;
-    using Microsoft.ApplicationInsights;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -33,7 +32,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         private readonly ISearchService searchService;
         private readonly IFileService fileService;
         private readonly IFeatureManager featureManager;
-        private readonly TelemetryClient telemetryClient;
+        private readonly ISearchTelemetryService searchTelemetryService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchController"/> class.
@@ -46,7 +45,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="fileService">The fileService.</param>
         /// <param name="featureManager"> The Feature flag manager.</param>
         /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
-        /// <param name="telemetryClient">Application Insights telemetry client.</param>
+        /// <param name="searchTelemetryService">Search telemetry service.</param>
         public SearchController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
@@ -56,13 +55,13 @@ namespace LearningHub.Nhs.WebUI.Controllers
             IFileService fileService,
             IMoodleBridgeApiService moodleBridgeApiService,
             IFeatureManager featureManager,
-            TelemetryClient telemetryClient)
+            ISearchTelemetryService searchTelemetryService)
         : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.searchService = searchService;
             this.fileService = fileService;
             this.featureManager = featureManager;
-            this.telemetryClient = telemetryClient;
+            this.searchTelemetryService = searchTelemetryService;
         }
 
         /// <summary>
@@ -111,7 +110,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 }
 
                 // Record SearchExecutedTelemetry for zero-result rate analysis
-                this.RecordSearchExecutedTelemetry(search, searchResult, stopwatch.ElapsedMilliseconds);
+                await this.searchTelemetryService.RecordSearchExecutedAsync(search, searchResult, stopwatch.ElapsedMilliseconds);
             }
 
             if (filterApplied)
@@ -447,57 +446,6 @@ namespace LearningHub.Nhs.WebUI.Controllers
 
             this.searchService.SendAutoSuggestionClickActionAsync(clickPayloadModel);
             return this.Redirect(url);
-        }
-
-        /// <summary>
-        /// Records search executed telemetry for zero-result rate analysis.
-        /// </summary>
-        /// <param name="search">The search request view model.</param>
-        /// <param name="searchResult">The search result view model containing results.</param>
-        /// <param name="latencyMs">The search execution latency in milliseconds.</param>
-        private void RecordSearchExecutedTelemetry(SearchRequestViewModel search, SearchResultViewModel searchResult, long latencyMs)
-        {
-            if (searchResult == null || string.IsNullOrWhiteSpace(search?.Term))
-            {
-                return;
-            }
-
-            try
-            {
-                // Calculate total result count from both resource and catalogue results
-                int resultCount = (searchResult.ResourceSearchResult?.TotalHits ?? 0) +
-                                 (searchResult.CatalogueSearchResult?.TotalHits ?? 0);
-
-                // Use search ID or generate new correlation ID
-                var correlationId = search.SearchId > 0
-                    ? search.SearchId.ToString()
-                    : Guid.NewGuid().ToString();
-
-                var groupId = search.GroupId ?? Guid.NewGuid().ToString();
-
-                var properties = new Dictionary<string, string>
-                {
-                    { "CorrelationId", correlationId },
-                    { "SessionId", groupId },
-                    { "QueryText", search.Term ?? string.Empty },
-                    { "QueryMode", "standard" },
-                    { "UseSemanticReranker", "false" },
-                    { "ResultType", "combined" }, // Could be resource, catalogue, or combined
-                };
-
-                var metrics = new Dictionary<string, double>
-                {
-                    { "ResultCount", resultCount },
-                    { "LatencyMs", latencyMs },
-                };
-
-                this.telemetryClient.TrackEvent("SearchExecutedTelemetry", properties, metrics);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception but don't let telemetry errors impact search functionality
-                this.Logger.LogError(ex, "Failed to record SearchExecutedTelemetry for query: {QueryText}", search?.Term);
-            }
         }
     }
 }

@@ -108,6 +108,7 @@
             services.AddScoped<IProviderService, ProviderService>();
             services.AddScoped<IMoodleApiService, MoodleApiService>();
             services.AddScoped<IMoodleBridgeApiService, MoodleBridgeApiService>();
+            services.AddScoped<IGovNotifyDashboardService, GovNotifyDashboardService>();
 
             // Configure Azure Search
             services.Configure<AzureSearchConfig>(configuration.GetSection("AzureSearch"));

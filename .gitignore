@@ -67,3 +67,5 @@ obj
 /LearningHub.Nhs.WebUI.BlazorClient/wwwroot/appsettings.Development.json
 /LearningHub.Nhs.WebUI.BlazorClient/Properties/launchSettings.json
 /.github/dependabot.yml
+/MessageQueueing/LearningHub.Nhs.MessageQueueing.Database/LearningHub.Nhs.MessageQueueing.Database.dbmdl
+/MessageQueueing/LearningHub.Nhs.MessageQueueing.Database/LearningHub.Nhs.MessageQueueing.Database.jfm

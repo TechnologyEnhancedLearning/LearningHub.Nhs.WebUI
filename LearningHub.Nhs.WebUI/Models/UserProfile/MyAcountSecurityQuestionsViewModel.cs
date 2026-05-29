@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using elfhHub.Nhs.Models.Common;
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using NHSUKViewComponents.Web.ViewModels;
+    using NHSUKFrontendRazor.ViewModels;
 
     /// <summary>
     /// Defines the <see cref="MyAcountSecurityQuestionsViewModel" />.

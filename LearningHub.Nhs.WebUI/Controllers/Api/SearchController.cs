@@ -185,5 +185,23 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
 
             return this.Ok();
         }
+
+        /// <summary>
+        /// Records search facet applied telemetry for facet usage analysis.
+        /// </summary>
+        /// <param name="model">The facet applied telemetry payload.</param>
+        /// <returns>An <see cref="IActionResult"/>.</returns>
+        [HttpPost("RecordFacetAppliedTelemetry")]
+        public async Task<IActionResult> RecordFacetAppliedTelemetry(SearchFacetAppliedTelemetryModel model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.FacetField))
+            {
+                return this.BadRequest();
+            }
+
+            await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+
+            return this.Ok();
+        }
     }
 }

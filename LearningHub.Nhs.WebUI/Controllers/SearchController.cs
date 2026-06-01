@@ -107,10 +107,10 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 if (searchResult.CatalogueSearchResult != null)
                 {
                     searchResult.CatalogueSearchResult.SearchId = searchId;
-                }
 
-                // Record SearchExecutedTelemetry for zero-result rate analysis
-                await this.searchTelemetryService.RecordSearchExecutedAsync(search, searchResult, stopwatch.ElapsedMilliseconds);
+                    // Record SearchExecutedTelemetry for zero-result rate analysis
+                    await this.searchTelemetryService.RecordSearchExecutedAsync(search, searchResult, stopwatch.ElapsedMilliseconds);
+                }
             }
 
             if (filterApplied)
@@ -188,6 +188,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 {
                     return await this.Index(search, noSortFilterError: true);
                 }
+
+                // Record facet telemetry when filters are changed
+                await this.RecordFacetChangesAsync(search, filterUpdated, newFilters, existingFilters, resourceAccessLevelFilterUpdated, resourceAccessLevelId, search.ResourceAccessLevelId, filterProviderUpdated, newProviderFilters, existingProviderFilters, filterResourceCollectionUpdated, newResourceCollectionFilter, existingResourceCollectionFilter);
 
                 if (search.ResourcePageIndex > 0 && (filterUpdated || resourceAccessLevelFilterUpdated || filterProviderUpdated || filterResourceCollectionUpdated))
                 {
@@ -446,6 +449,196 @@ namespace LearningHub.Nhs.WebUI.Controllers
 
             this.searchService.SendAutoSuggestionClickActionAsync(clickPayloadModel);
             return this.Redirect(url);
+        }
+
+        /// <summary>
+        /// Records facet changes when filters are applied via the Apply button.
+        /// </summary>
+        /// <param name="search">The current search request.</param>
+        /// <param name="filterUpdated">Whether resource type filters were updated.</param>
+        /// <param name="newFilters">The new resource type filters.</param>
+        /// <param name="existingFilters">The existing resource type filters.</param>
+        /// <param name="resourceAccessLevelFilterUpdated">Whether resource access level filter was updated.</param>
+        /// <param name="newAccessLevelId">The new resource access level filter id.</param>
+        /// <param name="existingAccessLevelId">The existing resource access level filter id.</param>
+        /// <param name="filterProviderUpdated">Whether provider filters were updated.</param>
+        /// <param name="newProviderFilters">The new provider filters.</param>
+        /// <param name="existingProviderFilters">The existing provider filters.</param>
+        /// <param name="filterResourceCollectionUpdated">Whether resource collection filters were updated.</param>
+        /// <param name="newResourceCollectionFilter">The new resource collection filters.</param>
+        /// <param name="existingResourceCollectionFilter">The existing resource collection filters.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        private async Task RecordFacetChangesAsync(
+            SearchRequestViewModel search,
+            bool filterUpdated,
+            IOrderedEnumerable<string> newFilters,
+            IOrderedEnumerable<string> existingFilters,
+            bool resourceAccessLevelFilterUpdated,
+            int? newAccessLevelId,
+            int? existingAccessLevelId,
+            bool filterProviderUpdated,
+            IOrderedEnumerable<string> newProviderFilters,
+            IOrderedEnumerable<string> existingProviderFilters,
+            bool filterResourceCollectionUpdated,
+            IOrderedEnumerable<string> newResourceCollectionFilter,
+            IOrderedEnumerable<string> existingResourceCollectionFilter)
+        {
+            var correlationId = search.SearchId.ToString();
+            var sessionId = search.GroupId ?? string.Empty;
+            var queryText = search.Term ?? string.Empty;
+
+            // Record resource type filter changes
+            if (filterUpdated)
+            {
+                var addedFilters = newFilters.Except(existingFilters);
+                var removedFilters = existingFilters.Except(newFilters);
+
+                foreach (var filter in addedFilters)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "ResourceType",
+                        FacetValue = filter,
+                        FacetAction = "applied",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+
+                foreach (var filter in removedFilters)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "ResourceType",
+                        FacetValue = filter,
+                        FacetAction = "removed",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+            }
+
+            // Record resource access level filter changes
+            if (resourceAccessLevelFilterUpdated)
+            {
+                if (existingAccessLevelId.HasValue && existingAccessLevelId > 0)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "AudienceAccessLevel",
+                        FacetValue = existingAccessLevelId.ToString(),
+                        FacetAction = "removed",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+
+                if (newAccessLevelId.HasValue && newAccessLevelId > 0)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "AudienceAccessLevel",
+                        FacetValue = newAccessLevelId.ToString(),
+                        FacetAction = "applied",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+            }
+
+            // Record provider filter changes
+            if (filterProviderUpdated)
+            {
+                var addedProviders = newProviderFilters.Except(existingProviderFilters);
+                var removedProviders = existingProviderFilters.Except(newProviderFilters);
+
+                foreach (var provider in addedProviders)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "Provider",
+                        FacetValue = provider,
+                        FacetAction = "applied",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+
+                foreach (var provider in removedProviders)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "Provider",
+                        FacetValue = provider,
+                        FacetAction = "removed",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+            }
+
+            // Record resource collection filter changes
+            if (filterResourceCollectionUpdated)
+            {
+                var addedCollections = newResourceCollectionFilter.Except(existingResourceCollectionFilter);
+                var removedCollections = existingResourceCollectionFilter.Except(newResourceCollectionFilter);
+
+                foreach (var collection in addedCollections)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "ResourceCollection",
+                        FacetValue = collection,
+                        FacetAction = "applied",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+
+                foreach (var collection in removedCollections)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "ResourceCollection",
+                        FacetValue = collection,
+                        FacetAction = "removed",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+            }
         }
     }
 }

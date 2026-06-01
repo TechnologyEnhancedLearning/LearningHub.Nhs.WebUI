@@ -166,5 +166,41 @@ namespace LearningHub.Nhs.WebUI.Services
 
             return Task.CompletedTask;
         }
+
+        /// <summary>
+        /// Records search facet applied telemetry for facet usage analysis.
+        /// </summary>
+        /// <param name="model">The search facet applied telemetry model.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task RecordFacetAppliedTelemetryAsync(SearchFacetAppliedTelemetryModel model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.FacetField))
+            {
+                return Task.CompletedTask;
+            }
+
+            try
+            {
+                var properties = new Dictionary<string, string>
+                {
+                    { "CorrelationId", model.CorrelationId ?? string.Empty },
+                    { "SessionId", model.SessionId ?? string.Empty },
+                    { "QueryText", model.QueryText ?? string.Empty },
+                    { "QueryMode", model.QueryMode ?? string.Empty },
+                    { "FacetField", model.FacetField ?? string.Empty },
+                    { "FacetValue", model.FacetValue ?? string.Empty },
+                    { "FacetAction", model.FacetAction ?? string.Empty },
+                };
+
+                this.telemetryClient.TrackEvent("SearchFacetAppliedTelemetry", properties);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception but don't let telemetry errors impact search functionality
+                this.logger.LogError(ex, "Failed to record SearchFacetAppliedTelemetry for facet: {FacetField}", model?.FacetField);
+            }
+
+            return Task.CompletedTask;
+        }
     }
 }

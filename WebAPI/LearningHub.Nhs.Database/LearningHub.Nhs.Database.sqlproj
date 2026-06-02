@@ -591,6 +591,7 @@
     <None Include="Scripts\Post-Deploy\Scripts\TD-7078-PopulateReadModelHistoricUserActivities.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\EmailTemplateTableChanges.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\UpdateEmailTemplateData.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetCatalogueAdminDetails.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

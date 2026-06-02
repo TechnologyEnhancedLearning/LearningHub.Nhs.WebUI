@@ -17,10 +17,8 @@ CREATE PROCEDURE [hierarchy].[GetCatalogueAdminDetails]
 )
 AS
 BEGIN
-	BEGIN TRY
 		DECLARE @AmendDate datetimeoffset(7) = ISNULL(TODATETIMEOFFSET(DATEADD(mi, @UserTimezoneOffset, GETUTCDATE()), @UserTimezoneOffset), SYSDATETIMEOFFSET())
 
-		BEGIN TRAN
 			DECLARE @localAdminRoleId int = 3;
 
 			DECLARE @catalogueNodeId int;
@@ -53,23 +51,5 @@ BEGIN
 				) arug on uug.UserGroupId = arug.UserGroupId
 			JOIN [hub].[User] u on u.Id = uug.UserId
 			JOIN [hub].[UserProfile] up on up.Id = u.Id
-			where uug.Deleted = 0 and u.Deleted = 0 and up.Deleted = 0;
-
-	END TRY
-	BEGIN CATCH
-	    DECLARE @ErrorMessage NVARCHAR(4000);  
-		DECLARE @ErrorSeverity INT;  
-		DECLARE @ErrorState INT;  
-  
-		SELECT   
-			@ErrorMessage = ERROR_MESSAGE(),  
-			@ErrorSeverity = ERROR_SEVERITY(),  
-			@ErrorState = ERROR_STATE();  
-  
-		IF @@TRANCOUNT > 0  
-			ROLLBACK TRAN;  
-
-		RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);  
-
-	END CATCH
+			where uug.Deleted = 0 and u.Deleted = 0 and up.Deleted = 0;	
 END;

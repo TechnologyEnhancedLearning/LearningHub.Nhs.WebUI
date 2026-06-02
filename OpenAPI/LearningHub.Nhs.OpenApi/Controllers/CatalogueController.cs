@@ -240,9 +240,13 @@
         /// <param name="accessType">The accessType.</param>
         /// <returns>The ActionResult.</returns>
         [HttpPost]
-        [Route("RequestAccess/{reference}/{catalogueName}/{accessType}")]
+        [Route("RequestAccess/{reference}/{accessType}")]
         [Authorize]
-        public async Task<IActionResult> RequestAccess(string reference,string catalogueName, CatalogueAccessRequestViewModel vm, string accessType)
+        public async Task<IActionResult> RequestAccess(
+          [FromRoute] string reference,
+          [FromQuery] string catalogueName,
+          [FromBody] CatalogueAccessRequestViewModel vm,
+          [FromRoute] string accessType)
         {
             return this.Ok(await this.catalogueService.RequestAccessAsync(this.CurrentUserId.GetValueOrDefault(), reference, catalogueName, vm, accessType));
         }

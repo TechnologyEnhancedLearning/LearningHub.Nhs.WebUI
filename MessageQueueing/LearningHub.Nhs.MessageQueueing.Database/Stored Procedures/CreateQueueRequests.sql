@@ -6,15 +6,17 @@
 -- Modification History
 --
 -- 27-05-2025  Arunima George	Initial Revision
+-- 03-06-2026  Arunima George   TD-7354
 -------------------------------------------------------------------------------
 
-Create PROCEDURE [dbo].[CreateQueueRequests]
-    @QueueRequests dbo.QueueRequestTableType READONLY
+CREATE PROCEDURE [dbo].[CreateQueueRequests]
+    @QueueRequests dbo.QueueRequestTableType READONLY,
+	@UserTimezoneOffset int = NULL
 AS
 BEGIN
+	DECLARE @CreateDate datetimeoffset(7) = ISNULL(TODATETIMEOFFSET(DATEADD(mi, @UserTimezoneOffset, GETUTCDATE()), @UserTimezoneOffset), SYSDATETIMEOFFSET())
 
     INSERT INTO QueueRequests (RequestTypeId, Recipient, TemplateId, Personalisation, Status, RetryCount, CreatedAt, DeliverAfter)
-    SELECT 1, Recipient, TemplateId, Personalisation, 1, 0, SYSDATETIMEOFFSET(), DeliverAfter
+    SELECT 1, Recipient, TemplateId, Personalisation, 1, 0, @CreateDate, DeliverAfter
     FROM @QueueRequests;
 END
-GO

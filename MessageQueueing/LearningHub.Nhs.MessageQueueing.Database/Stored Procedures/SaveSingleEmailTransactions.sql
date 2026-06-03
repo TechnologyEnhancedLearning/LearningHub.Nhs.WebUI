@@ -1,12 +1,11 @@
 ﻿-------------------------------------------------------------------------------
 -- Author       Arunima George
 -- Created      27-05-2025
--- Purpose      Save one-off(like otp emails) failed email request.
+-- Purpose      Save all one-off(like otp) email request transactions.
 --
 -- Modification History
 --
 -- 27-05-2025  Arunima George	Initial Revision
--- 10-07-2025  Arunima George   Changed SP name to accomodate success/failed emails
 -- 03-06-2026  Arunima George   TD-7354
 -------------------------------------------------------------------------------
 

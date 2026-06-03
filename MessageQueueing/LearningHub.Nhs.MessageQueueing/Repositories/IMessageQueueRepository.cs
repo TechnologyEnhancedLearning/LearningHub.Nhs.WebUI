@@ -15,8 +15,9 @@
         /// The QueueMessagesAsync.
         /// </summary>
         /// <param name="emails">The emails list.</param>
+        /// <param name="userTimeOffset"></param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task QueueMessagesAsync(IEnumerable<QueueRequests> emails);
+        Task QueueMessagesAsync(IEnumerable<QueueRequests> emails, int? userTimeOffset);
 
         /// <summary>
         /// The GetPendingEmailsAsync.
@@ -42,8 +43,9 @@
         /// Save one-off emails.
         /// </summary>
         /// <param name="request">The email request.</param>
+        /// <param name="userTimeOffset">user time offset.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task SaveSingleEmailTransactions(SingleEmailRequest request);
+        Task SaveSingleEmailTransactions(SingleEmailRequest request, int? userTimeOffset);
 
         /// <summary>
         /// The GetPaginatedMessageRequests.

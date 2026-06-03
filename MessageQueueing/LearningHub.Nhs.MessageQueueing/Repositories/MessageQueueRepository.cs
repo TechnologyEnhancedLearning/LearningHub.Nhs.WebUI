@@ -37,12 +37,14 @@
         /// The QueueMessagesAsync.
         /// </summary>
         /// <param name="requests">The queue requests.</param>
+        /// <param name="userTimeOffset">userTimeOffset.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task QueueMessagesAsync(IEnumerable<QueueRequests> requests)
+        public async Task QueueMessagesAsync(IEnumerable<QueueRequests> requests, int? userTimeOffset)
         {
             var dataTable = DataTableBuilder.ToQueueRequestDataTable(requests);
             var param0 = new SqlParameter("@p0", SqlDbType.Structured) { Value = dataTable, TypeName = "dbo.QueueRequestTableType" };
-            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.CreateQueueRequests @p0", param0);
+            var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = userTimeOffset ?? (object)DBNull.Value };
+            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.CreateQueueRequests @p0, @p1", param0, param1);
         }
 
         /// <summary>
@@ -84,15 +86,17 @@
         /// The Save Single Emails.
         /// </summary>
         /// <param name="request">The request.</param>
+        /// <param name="userTimeOffset">userTimeOffset.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task SaveSingleEmailTransactions(SingleEmailRequest request)
+        public async Task SaveSingleEmailTransactions(SingleEmailRequest request, int? userTimeOffset)
         {
             var param0 = new SqlParameter("@p0", SqlDbType.NVarChar) { Value = request.Recipient };
             var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = request.TemplateId };
             var param2 = new SqlParameter("@p2", SqlDbType.NVarChar) { Value = request.Personalisation == null ? DBNull.Value : request.Personalisation };
             var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = request.Status };
             var param4 = new SqlParameter("@p4", SqlDbType.NVarChar) { Value = request.ErrorMessage == null ? DBNull.Value : request.ErrorMessage };
-            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.SaveSingleEmailTransactions @p0, @p1, @p2, @p3, @p4", param0, param1, param2, param3, param4);
+            var param5 = new SqlParameter("@p5", SqlDbType.Int) { Value = userTimeOffset ?? (object)DBNull.Value };
+            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.SaveSingleEmailTransactions @p0, @p1, @p2, @p3, @p4, @p5", param0, param1, param2, param3, param4, param5);
         }
 
         /// <summary>

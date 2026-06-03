@@ -445,6 +445,33 @@ li.autosuggestion-option:last-of-type {
 .nav-toggle:checked + label .menu-icon {
     transform: rotate(180deg);
 }
+.side-nav__sublist {
+    margin: 0;
+    padding-left: 20px;
+    border-right: none;
+}
+
+.side-nav__sublist .side-nav__item {
+    border-bottom: none;
+}
+
+
+.side-nav__parent {
+    display: block;
+    padding: 16px 12px;
+    font-weight: 700;
+    color: $nhsuk-black;
+    background-color: transparent;
+}
+
+.side-nav__sublist .side-nav__item--active {
+    background-color: #e8f0f7;
+}
+
+.side-nav__sublist a {
+    font-weight: 400;
+    padding: 12px 12px;
+}
 
 .form-group-wrapper--error {
     border-left: none !important;

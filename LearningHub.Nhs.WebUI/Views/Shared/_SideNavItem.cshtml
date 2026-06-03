@@ -1,0 +1,30 @@
+﻿@using LearningHub.Nhs.WebUI.Models.SideMenu
+@using Microsoft.AspNetCore.Routing
+@model (SideNavigationItem Item, RouteValueDictionary Route)
+
+@{
+    var isActive = Model.Item.IsActive?.Invoke(Model.Route) ?? false;
+}
+
+<li class="side-nav__item @(isActive ? "side-nav__item--active" : "")">
+
+    @if (!Model.Item.HasChildren)
+    {
+        <a class="nhsuk-link"
+           asp-controller="@Model.Item.Controller"
+           asp-action="@Model.Item.Action">
+            @Model.Item.Text
+        </a>
+    }
+    else
+    {
+        <span class="side-nav__parent">@Model.Item.Text</span>
+
+        <ul class="nhsuk-list side-nav__list side-nav__sublist">
+            @foreach (var child in Model.Item.Children)
+            {
+                @await Html.PartialAsync("_SideNavItem", (child, Model.Route))
+            }
+        </ul>
+    }
+</li>

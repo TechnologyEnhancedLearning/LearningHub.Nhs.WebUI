@@ -603,5 +603,58 @@
                 throw;
             }
         }
+
+
+        /// <summary>
+        /// GetUserBadgeFromMoodleInstancesAsync.
+        /// </summary>
+        /// <param name="moodleUserInstanceUserIds">moodleUserInstanceUserIds.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<MoodleBadgeResponseModel> GetUserBadgeFromMoodleInstancesAsync(MoodleInstanceUserIdsViewModel moodleUserInstanceUserIds)
+        {
+            try
+            {
+                if (moodleUserInstanceUserIds?.MoodleInstanceUserIds == null ||
+                  !moodleUserInstanceUserIds.MoodleInstanceUserIds.Any())
+                {
+                    throw new ArgumentException("UserIds are required.");
+                }
+                var client = await this.moodleBridgeHttpClient.GetClient();
+
+                
+
+                var requestUri = $"api/v1/Users/badges";
+
+                var response = await client.PostAsJsonAsync(
+                    requestUri,
+                    moodleUserInstanceUserIds).ConfigureAwait(false);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                    };
+
+                    var result = await response.Content
+                        .ReadFromJsonAsync<MoodleBadgeResponseModel>(options)
+                        .ConfigureAwait(false);
+
+                    return result ?? new MoodleBadgeResponseModel();
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    throw new Exception("AccessDenied");
+                }
+
+                throw new Exception($"Request failed with status code {response.StatusCode}");
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
     }
 }

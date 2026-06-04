@@ -11,6 +11,7 @@
     using LearningHub.Nhs.Models.Entities.Messaging;
     using LearningHub.Nhs.Models.Enums.GovNotifyMessaging;
     using LearningHub.Nhs.Models.GovNotifyMessaging;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
@@ -23,6 +24,7 @@
         private readonly IMessageQueueRepository messageQueueRepository;
         private readonly IGovNotifyService messageService;
         private readonly IMapper mapper;
+        private readonly ITimezoneOffsetManager timezoneOffsetManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GovMessageService"/> class.
@@ -31,16 +33,19 @@
         /// <param name="messageQueueRepository">The message repository.</param>
         /// <param name="messageService">The message Service.</param>
         /// <param name="mapper">mapper.</param>
+        /// <param name="timezoneOffsetManager">The timezoneOffsetManager.</param>
         public GovMessageService(
             ILogger<Message> logger,
             IMessageQueueRepository messageQueueRepository,
             IGovNotifyService messageService,
-            IMapper mapper)
+            IMapper mapper,
+            ITimezoneOffsetManager timezoneOffsetManager)
             : base(logger)
         {
             this.messageQueueRepository = messageQueueRepository;
             this.messageService = messageService;
             this.mapper = mapper;
+            this.timezoneOffsetManager = timezoneOffsetManager;
         }
 
         /// <summary>
@@ -74,7 +79,8 @@
                         Status = response.IsSuccess == true ? RequestStatusEnum.Sent : RequestStatusEnum.Failed,
                         ErrorMessage = response.ErrorMessage,
                     };
-                    await this.messageQueueRepository.SaveSingleEmailTransactions(emailRequest);
+                    var userTimeOffset = this.timezoneOffsetManager.UserTimezoneOffset;
+                    await this.messageQueueRepository.SaveSingleEmailTransactions(emailRequest, userTimeOffset);
                 }
             }
 
@@ -87,7 +93,7 @@
         /// <param name="request">The QueueRequestList.</param>
         /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
         public async Task QueueRequestsAsync(QueueMessageList request)
-        {
+        {   
             if (request?.Messages == null || !request.Messages.Any())
             {
                 throw new ArgumentException("At least one email must be provided in the request.");
@@ -101,7 +107,8 @@
                 DeliverAfter = q.DeliverAfter ?? null,
             });
 
-            await this.messageQueueRepository.QueueMessagesAsync(requests);
+            var userTimeOffset = this.timezoneOffsetManager.UserTimezoneOffset;
+            await this.messageQueueRepository.QueueMessagesAsync(requests, userTimeOffset);
         }
 
         /// <summary>

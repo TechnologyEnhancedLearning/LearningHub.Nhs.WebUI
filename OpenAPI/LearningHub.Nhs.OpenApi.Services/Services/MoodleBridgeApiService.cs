@@ -636,12 +636,11 @@
                     {
                         PropertyNameCaseInsensitive = true,
                     };
-
                     var result = await response.Content
-                        .ReadFromJsonAsync<MoodleBadgeResponseModel>(options)
+                        .ReadFromJsonAsync<MoodleBadgeResultWrapper>(options)
                         .ConfigureAwait(false);
 
-                    return result ?? new MoodleBadgeResponseModel();
+                    return result.Results.FirstOrDefault() ?? new MoodleBadgeResponseModel();
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                 {

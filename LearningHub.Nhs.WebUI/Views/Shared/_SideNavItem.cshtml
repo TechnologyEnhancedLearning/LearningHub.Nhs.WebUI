@@ -3,10 +3,12 @@
 @model (SideNavigationItem Item, RouteValueDictionary Route)
 
 @{
-    var isActive = Model.Item.IsActive?.Invoke(Model.Route) ?? false;
+    var isSelfActive = Model.Item.IsActive?.Invoke(Model.Route) ?? false;
+    var isChildActive = Model.Item.Children?.Any(child => child.IsActive?.Invoke(Model.Route) ?? false) ?? false;
+    var isActive = isSelfActive || isChildActive;
 }
 
-<li class="side-nav__item @(isActive ? "side-nav__item--active" : "")">
+<li class="side-nav__item @(!Model.Item.HasChildren && isActive ? "side-nav__item--active" : "")">
 
     @if (!Model.Item.HasChildren)
     {
@@ -18,13 +20,17 @@
     }
     else
     {
-        <span class="side-nav__parent">@Model.Item.Text</span>
+        <details class="side-nav__details" @(isActive ? "open" : "")>
+            <summary class="side-nav__parent @(isActive ? "side-nav__parent--active" : "")">
+                @Model.Item.Text
+            </summary>
 
-        <ul class="nhsuk-list side-nav__list side-nav__sublist">
-            @foreach (var child in Model.Item.Children)
-            {
-                @await Html.PartialAsync("_SideNavItem", (child, Model.Route))
-            }
-        </ul>
+            <ul class="nhsuk-list side-nav__list side-nav__sublist">
+                @foreach (var child in Model.Item.Children)
+                {
+                    @await Html.PartialAsync("_SideNavItem", (child, Model.Route))
+                }
+            </ul>
+        </details>
     }
 </li>

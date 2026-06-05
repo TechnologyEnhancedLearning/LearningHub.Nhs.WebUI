@@ -28,7 +28,7 @@
         /// <summary>
         /// Gets or sets a value indicating IsActiven.
         /// </summary>
-        public Func<RouteValueDictionary, bool> IsActive { get; set; }
+        public Func<RouteValueDictionary, bool>? IsActive { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating Children.

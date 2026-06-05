@@ -9,12 +9,7 @@
     var errorHasOccurred = !ViewData.ModelState.IsValid;
     var distintResourceType = new List<string>();
     var routeData = ViewActivityHelper.GetActivityParameters(Model);
-    // if (Model.Badges.Any())
-    // {
-    //     var distinctIds = Model.Badges.Select(c => c.).Distinct();
-    //     distintResourceType = distinctIds.Where(id => Enum.IsDefined(typeof(ResourceTypeEnum), id))
-    //     .Select(id => Enum.GetName(typeof(ResourceTypeEnum), id)).OrderBy(name => name).ToList();
-    // }
+
     var searchMessage = string.Empty;
     if (Model.Badges.Any())
     {
@@ -42,14 +37,6 @@
 }
 
 
-
-@functions {
-    bool IsEntryActive(string entry)
-    {
-        var prop = Model.GetType().GetProperty(entry);
-        return prop != null && prop.PropertyType == typeof(bool) && (bool)prop.GetValue(Model);
-    }
-}
 
 @section styles {
 

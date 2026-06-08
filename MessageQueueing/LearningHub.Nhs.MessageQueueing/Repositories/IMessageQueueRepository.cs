@@ -29,15 +29,17 @@
         /// Marks a message as failed, or queues it for a retry.
         /// </summary>
         /// <param name="response">The response.</param>
+        /// <param name="userTimeOffset">The userTimeOffset.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task MessageDeliveryFailed(GovNotifyResponse response);
+        Task MessageDeliveryFailed(GovNotifyResponse response, int? userTimeOffset);
 
         /// <summary>
         /// Marks a message as send.
         /// </summary>
         /// <param name="response">The response.</param>
+        /// <param name="userTimeOffset">The userTimeOffset.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task MessageDeliverySuccess(GovNotifyResponse response);
+        Task MessageDeliverySuccess(GovNotifyResponse response, int? userTimeOffset);
 
         /// <summary>
         /// Save one-off emails.

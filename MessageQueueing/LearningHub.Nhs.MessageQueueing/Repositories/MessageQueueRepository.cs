@@ -62,24 +62,28 @@
         /// The Update Email request as success.
         /// </summary>
         /// <param name="response">Th response.</param>
+        /// <param name="userTimeOffset">Th userTimeOffset.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task MessageDeliverySuccess(GovNotifyResponse response)
+        public async Task MessageDeliverySuccess(GovNotifyResponse response, int? userTimeOffset)
         {
             var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = response.Id };
             var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = response.NotificationId };
-            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.MessageDeliverySuccess @p0, @p1", param0, param1);
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = userTimeOffset ?? (object)DBNull.Value };
+            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.MessageDeliverySuccess @p0, @p1, @p2", param0, param1, param2);
         }
 
         /// <summary>
         /// The Update Email request as failed.
         /// </summary>
         /// <param name="response">Th response.</param>
+        /// <param name="userTimeOffset">Th userTimeOffset.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task MessageDeliveryFailed(GovNotifyResponse response)
+        public async Task MessageDeliveryFailed(GovNotifyResponse response, int? userTimeOffset)
         {
             var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = response.Id };
             var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = response.ErrorMessage };
-            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.MessageDeliveryFailed @p0, @p1", param0, param1);
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = userTimeOffset ?? (object)DBNull.Value };
+            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.MessageDeliveryFailed @p0, @p1, @p2", param0, param1, param2);
         }
 
         /// <summary>

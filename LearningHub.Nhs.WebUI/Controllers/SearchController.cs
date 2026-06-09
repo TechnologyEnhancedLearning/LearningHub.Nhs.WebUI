@@ -107,10 +107,10 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 if (searchResult.CatalogueSearchResult != null)
                 {
                     searchResult.CatalogueSearchResult.SearchId = searchId;
-
-                    // Record SearchExecutedTelemetry for zero-result rate analysis
-                    await this.searchTelemetryService.RecordSearchExecutedAsync(search, searchResult, stopwatch.ElapsedMilliseconds);
                 }
+
+                // Record SearchExecutedTelemetry for zero-result rate analysis
+                await this.searchTelemetryService.RecordSearchExecutedAsync(search, searchResult, stopwatch.ElapsedMilliseconds);
             }
 
             if (filterApplied)

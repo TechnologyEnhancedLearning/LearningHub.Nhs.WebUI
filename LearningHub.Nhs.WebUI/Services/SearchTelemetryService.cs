@@ -131,41 +131,41 @@ namespace LearningHub.Nhs.WebUI.Services
         /// </summary>
         /// <param name="model">The search executed telemetry model.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task RecordSearchExecutedFromApiAsync(SearchExecutedTelemetryModel model)
-        {
-            if (model == null || string.IsNullOrWhiteSpace(model.QueryText))
-            {
-                return Task.CompletedTask;
-            }
+        // public Task RecordSearchExecutedFromApiAsync(SearchExecutedTelemetryModel model)
+        // {
+        //    if (model == null || string.IsNullOrWhiteSpace(model.QueryText))
+        //    {
+        //        return Task.CompletedTask;
+        //    }
 
-            try
-            {
-                var properties = new Dictionary<string, string>
-                {
-                    { "CorrelationId", model.CorrelationId ?? string.Empty },
-                    { "SessionId", model.SessionId ?? string.Empty },
-                    { "QueryText", model.QueryText ?? string.Empty },
-                    { "QueryMode", model.QueryMode ?? string.Empty },
-                    { "UseSemanticReranker", model.UseSemanticReranker.ToString() },
-                    { "ResultType", model.ResultType ?? string.Empty },
-                };
+        // try
+        //    {
+        //        var properties = new Dictionary<string, string>
+        //        {
+        //            { "CorrelationId", model.CorrelationId ?? string.Empty },
+        //            { "SessionId", model.SessionId ?? string.Empty },
+        //            { "QueryText", model.QueryText ?? string.Empty },
+        //            { "QueryMode", model.QueryMode ?? string.Empty },
+        //            { "UseSemanticReranker", model.UseSemanticReranker.ToString() },
+        //            { "ResultType", model.ResultType ?? string.Empty },
+        //        };
 
-                var metrics = new Dictionary<string, double>
-                {
-                    { "ResultCount", model.ResultCount },
-                    { "LatencyMs", model.LatencyMs },
-                };
+        // var metrics = new Dictionary<string, double>
+        //        {
+        //            { "ResultCount", model.ResultCount },
+        //            { "LatencyMs", model.LatencyMs },
+        //        };
 
-                this.telemetryClient.TrackEvent("SearchExecutedTelemetry", properties, metrics);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception but don't let telemetry errors impact search functionality
-                this.logger.LogError(ex, "Failed to record SearchExecutedTelemetry from API for query: {QueryText}", model?.QueryText);
-            }
+        // this.telemetryClient.TrackEvent("SearchExecutedTelemetry", properties, metrics);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log the exception but don't let telemetry errors impact search functionality
+        //        this.logger.LogError(ex, "Failed to record SearchExecutedTelemetry from API for query: {QueryText}", model?.QueryText);
+        //    }
 
-            return Task.CompletedTask;
-        }
+        // return Task.CompletedTask;
+        // }
 
         /// <summary>
         /// Records search facet applied telemetry for facet usage analysis.

@@ -1,5 +1,6 @@
 ﻿@model DashboardViewModel
 @using LearningHub.Nhs.Models.Dashboard;
+@using LearningHub.Nhs.Models.Enums;
 @using LearningHub.Nhs.WebUI.Models.DashBoard;
 @{
 	string GetActiveTabName()
@@ -90,6 +91,15 @@
 							var resourceViewModel = new Tuple<string, DashboardResourceViewModel>("my-learning", resource);
 							<li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
 								<partial name="_ResourceCard" model="resourceViewModel" />
+
+								--------- NFR CARD 1 MyAccessedLearningTray--------------
+								<vc:card title="@resourceViewModel.Item2.Title"
+										 description="@UtilityHelper.StripHtmlFromString(resourceViewModel.Item2.Description)"
+										 heading-level="3"
+										 text="@resourceViewModel.Item2.Title"
+										 asp-controller="Dashboard"
+										 asp-action="RecordDashboardNavigation"
+										 asp-route-data="@(new Dictionary<string, string> { { "eventType", EventTypeEnum.DashBoardResourceView.ToString() }, { "url", "/Resource/" + resourceViewModel.Item2.ResourceReferenceId }, { "resourceReference", resourceViewModel.Item2.ResourceReferenceId.ToString() } })" />
 							</li>
 						}
 					}
@@ -99,6 +109,18 @@
 						{
 							<li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
 								<partial name="_CatalogueCard" model="catalogue" />
+								---------- NFR CARD 2 MyAccessedLearningTray-------------
+								@{
+									var nfrMyLearningCatalogueImg = !string.IsNullOrWhiteSpace(catalogue.CardImageUrl) ? "/api/catalogue/download-image/" + catalogue.CardImageUrl : (!string.IsNullOrWhiteSpace(catalogue.BannerUrl) ? "/api/catalogue/download-image/" + catalogue.BannerUrl : null);
+								}
+								<vc:card title="@catalogue.Name"
+										 description="@UtilityHelper.StripHtmlFromString(catalogue.Description)"
+										 image-src="@nfrMyLearningCatalogueImg"
+										 heading-level="3"
+										 text="@catalogue.Name"
+										 asp-controller="Catalogue"
+										 asp-action="Index"
+										 asp-route-data="@(new Dictionary<string, string> { { "reference", catalogue.Url } })" />
 							</li>
 						}
 					}
@@ -153,6 +175,13 @@
 		<div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item"></div>
 		<div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item  nhsuk-u-padding-top-3 display--no-js-hide">
 			<partial name="_DashboardPaging" model="pagingViewModel" />
+			------------- NFR CARD 3 MyAccessedLearningTray-----------
+			@{
+				string queryParams = $"/?dashboardTrayLearningResourceType={pagingViewModel.DashboardTrayLearningResourceType}&myLearningDashboard={pagingViewModel.MyLearningDashboard}&resourceDashboard={pagingViewModel.ResourceDashboard}&catalogueDashboard={pagingViewModel.CatalogueDashboard}#{pagingViewModel.DashboardTrayType}";
+				string prevUrl = pagingViewModel.CurrentPage > 1 ? $"/home/loadpage/{pagingViewModel.DashboardTrayLearningResourceType}/{pagingViewModel.DashboardTrayType}/{pagingViewModel.MyLearningDashboard}/{pagingViewModel.ResourceDashboard}/{pagingViewModel.CatalogueDashboard}/{pagingViewModel.CurrentPage - 1}{queryParams}" : "";
+				string nextUrl = pagingViewModel.CurrentPage < pagingViewModel.TotalPages ? $"/home/loadpage/{pagingViewModel.DashboardTrayLearningResourceType}/{pagingViewModel.DashboardTrayType}/{pagingViewModel.MyLearningDashboard}/{pagingViewModel.ResourceDashboard}/{pagingViewModel.CatalogueDashboard}/{pagingViewModel.CurrentPage + 1}{queryParams}" : "";
+			}
+			<vc:pagination current-page="@pagingViewModel.CurrentPage" total-page="@pagingViewModel.TotalPages" prev-url="@prevUrl" next-url="@nextUrl" />
 		</div>
 	</div>
 </div>

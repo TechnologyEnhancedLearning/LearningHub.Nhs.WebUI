@@ -137,6 +137,24 @@
                     @if (Model.CourseCompletionRecords.Any())
                     {
                         @await Html.PartialAsync("_ReportTable", Model)
+                        
+                        var reportTableRows = Model.CourseCompletionRecords.Select(entry => new List<NHSUKFrontendRazor.ViewModels.TableColumnModel>
+                        {
+                            new NHSUKFrontendRazor.ViewModels.TableColumnModel("Username", entry.UserName),
+                            new NHSUKFrontendRazor.ViewModels.TableColumnModel("First name", entry.FirstName),
+                            new NHSUKFrontendRazor.ViewModels.TableColumnModel("Last name", entry.LastName),
+                            new NHSUKFrontendRazor.ViewModels.TableColumnModel("Email address", entry.Email),
+                            new NHSUKFrontendRazor.ViewModels.TableColumnModel("Medical council no", entry.MedicalCouncilNo),
+                            new NHSUKFrontendRazor.ViewModels.TableColumnModel("Medical council name", entry.MedicalCouncilName),
+                            new NHSUKFrontendRazor.ViewModels.TableColumnModel("Role", entry.Role),
+                            new NHSUKFrontendRazor.ViewModels.TableColumnModel("Grade", entry.Grade),
+                            new NHSUKFrontendRazor.ViewModels.TableColumnModel("Location", entry.Location),
+                            new NHSUKFrontendRazor.ViewModels.TableColumnModel("Programme name", entry.Programme),
+                            new NHSUKFrontendRazor.ViewModels.TableColumnModel("Course learning path name", entry.Course),
+                            new NHSUKFrontendRazor.ViewModels.TableColumnModel("Status", ViewActivityHelper.GetReportStatusDisplayText(entry.CourseStatus))
+                        }).ToList();
+                        
+                        <vc:table title="Course progress report" rows="@reportTableRows" is-responsive="true" has-numeric-data="false" />
                     }
                     else
                     {

@@ -135,6 +135,12 @@
         @* Catalogue header *@
         <div class="nhsuk-u-margin-bottom-7">
             <partial name="_Breadcrumbs" model="new BreadcrumbViewModel { Breadcrumbs = breadcrumbs, ShowBackToParentOnMobile = false }" />
+            ---------- NFR BREADCRUMBS Catalogue Index--------------
+            @await Html.PartialAsync("_Breadcrumbs", new BreadcrumbViewModel { Breadcrumbs = breadcrumbs, ShowBackToParentOnMobile = true })
+            @{
+                var nfrBreadcrumbLinks = breadcrumbs.Select(b => new NHSUKFrontendRazor.ViewModels.LinkViewModel(b.Title, b.Url)).ToList();
+            }
+            <vc:breadcrumbs links="@nfrBreadcrumbLinks" />
             @if (Model.Catalogue.Hidden)
             {
                 <div class="nhsuk-u-margin-bottom-4">

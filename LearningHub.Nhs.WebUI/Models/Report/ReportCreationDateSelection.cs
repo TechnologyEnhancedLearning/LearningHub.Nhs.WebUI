@@ -5,7 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using LearningHub.Nhs.WebUI.Helpers;
-    using NHSUKViewComponents.Web.ViewModels;
+    using NHSUKFrontendRazor.ViewModels;
 
     /// <summary>
     /// ReportCreationDateSelection.

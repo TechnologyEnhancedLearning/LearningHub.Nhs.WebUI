@@ -1,5 +1,6 @@
 ﻿@model DashboardViewModel
 @using LearningHub.Nhs.Models.Dashboard;
+@using LearningHub.Nhs.Models.Enums;
 @using LearningHub.Nhs.WebUI.Models.DashBoard;
 @using LearningHub.Nhs.Models.MyLearning;
 @{
@@ -91,6 +92,20 @@
                             var activityViewModel = new Tuple<string, MyLearningCombinedActivitiesViewModel>("my-learning", activity);
                             <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
                                 <partial name="_LearningActivityCard" model="activityViewModel" />
+
+                                ----- NFR CARD MyCourseAndLearning------
+                                @{
+                                    var nfrActivityHref = ViewActivityHelper.GetResourceTypeDesc(activityViewModel.Item2.ResourceType) == "Course" ? activityViewModel.Item2.ResourceUrl : null;
+                                    var nfrActivityRouteData = ViewActivityHelper.GetResourceTypeDesc(activityViewModel.Item2.ResourceType) != "Course" ? new Dictionary<string, string> { { "resourceReferenceId", activityViewModel.Item2.ResourceReferenceId.ToString() } } : null;
+                                }
+                                <vc:card title="@activityViewModel.Item2.Title"
+                                         description="@ViewActivityHelper.GetResourceTypeDesc(activityViewModel.Item2.ResourceType)"
+                                         heading-level="3"
+                                         text="@activityViewModel.Item2.Title"
+                                         href="@nfrActivityHref"
+                                         asp-controller="@(nfrActivityHref == null ? "Resource" : null)"
+                                         asp-action="@(nfrActivityHref == null ? "Index" : null)"
+                                         asp-route-data="@nfrActivityRouteData" />
                             </li>
                         }
                         @if (isLastPage && pagingViewModel.TotalCount >= 8)
@@ -144,6 +159,19 @@
                         var certificateViewmodel = new Tuple<string, UserCertificateViewModel>("my-learning", userCertificate);
                         <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
                             <partial name="_CertificateCard" model="certificateViewmodel" />
+                            -------- NFR CARD MyCourseAndLearning -----------
+                            @{
+                                var nfrCertHref = (ResourceTypeEnum)certificateViewmodel.Item2.ResourceTypeId == ResourceTypeEnum.Moodle ? certificateViewmodel.Item2.CertificatePreviewUrl : null;
+                                var nfrCertRouteData = (ResourceTypeEnum)certificateViewmodel.Item2.ResourceTypeId != ResourceTypeEnum.Moodle ? new Dictionary<string, string> { { "resourceReferenceId", certificateViewmodel.Item2.ResourceReferenceId.ToString() } } : null;
+                            }
+                            <vc:card title="@certificateViewmodel.Item2.Title"
+                                     description="@UtilityHelper.GetPrettifiedResourceTypeName((ResourceTypeEnum)certificateViewmodel.Item2.ResourceTypeId)"
+                                     heading-level="3"
+                                     text="@certificateViewmodel.Item2.Title"
+                                     href="@nfrCertHref"
+                                     asp-controller="@(nfrCertHref == null ? "MyLearning" : null)"
+                                     asp-action="@(nfrCertHref == null ? "Certificate" : null)"
+                                     asp-route-data="@nfrCertRouteData" />
                         </li>
                     }
                     @if (isLastPage && pagingViewModel.TotalCount >= 8)
@@ -225,6 +253,13 @@
         <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item"></div>
         <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item  nhsuk-u-padding-top-3 display--no-js-hide">
             <partial name="_DashboardPaging" model="pagingViewModel" />
+            --------- NFR PAGINATION MyCourseAndLearning-----------------
+            @{
+                string queryParams = $"/?dashboardTrayLearningResourceType={pagingViewModel.DashboardTrayLearningResourceType}&myLearningDashboard={pagingViewModel.MyLearningDashboard}&resourceDashboard={pagingViewModel.ResourceDashboard}&catalogueDashboard={pagingViewModel.CatalogueDashboard}#{pagingViewModel.DashboardTrayType}";
+                string prevUrl = pagingViewModel.CurrentPage > 1 ? $"/home/loadpage/{pagingViewModel.DashboardTrayLearningResourceType}/{pagingViewModel.DashboardTrayType}/{pagingViewModel.MyLearningDashboard}/{pagingViewModel.ResourceDashboard}/{pagingViewModel.CatalogueDashboard}/{pagingViewModel.CurrentPage - 1}{queryParams}" : "";
+                string nextUrl = pagingViewModel.CurrentPage < pagingViewModel.TotalPages ? $"/home/loadpage/{pagingViewModel.DashboardTrayLearningResourceType}/{pagingViewModel.DashboardTrayType}/{pagingViewModel.MyLearningDashboard}/{pagingViewModel.ResourceDashboard}/{pagingViewModel.CatalogueDashboard}/{pagingViewModel.CurrentPage + 1}{queryParams}" : "";
+            }
+            <vc:pagination current-page="@pagingViewModel.CurrentPage" total-page="@pagingViewModel.TotalPages" prev-url="@prevUrl" next-url="@nextUrl" />
         </div>
     </div>
 </div>

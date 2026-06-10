@@ -6,7 +6,7 @@
     using System.Linq;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Models.DynamicCheckbox;
-    using NHSUKViewComponents.Web.ViewModels;
+    using NHSUKFrontendRazor.ViewModels;
 
     /// <summary>
     /// CourseSelection.

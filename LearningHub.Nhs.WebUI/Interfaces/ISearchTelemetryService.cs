@@ -29,7 +29,7 @@ namespace LearningHub.Nhs.WebUI.Interfaces
         /// </summary>
         /// <param name="model">The search executed telemetry model.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task RecordSearchExecutedFromApiAsync(SearchExecutedTelemetryModel model);
+        // Task RecordSearchExecutedFromApiAsync(SearchExecutedTelemetryModel model);
 
         /// <summary>
         /// Records search facet applied telemetry for facet usage analysis.

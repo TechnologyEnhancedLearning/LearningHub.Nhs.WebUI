@@ -173,18 +173,18 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
         /// </summary>
         /// <param name="model">The search executed telemetry payload.</param>
         /// <returns>An <see cref="IActionResult"/>.</returns>
-        [HttpPost("RecordSearchExecutedTelemetry")]
-        public async Task<IActionResult> RecordSearchExecutedTelemetry(SearchExecutedTelemetryModel model)
-        {
-            if (model == null || string.IsNullOrWhiteSpace(model.QueryText))
-            {
-                return this.BadRequest();
-            }
+        // [HttpPost("RecordSearchExecutedTelemetry")]
+        // public async Task<IActionResult> RecordSearchExecutedTelemetry(SearchExecutedTelemetryModel model)
+        // {
+        //    if (model == null || string.IsNullOrWhiteSpace(model.QueryText))
+        //    {
+        //        return this.BadRequest();
+        //    }
 
-            await this.searchTelemetryService.RecordSearchExecutedFromApiAsync(model);
+        // await this.searchTelemetryService.RecordSearchExecutedFromApiAsync(model);
 
-            return this.Ok();
-        }
+        // return this.Ok();
+        // }
 
         /// <summary>
         /// Records search facet applied telemetry for facet usage analysis.

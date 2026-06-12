@@ -32,9 +32,10 @@ namespace LearningHub.Nhs.WebUI.Services
         /// </summary>
         /// <param name="search">The search request view model.</param>
         /// <param name="searchResult">The search result view model containing results.</param>
+        /// <param name="userId">The user performing the search.</param>
         /// <param name="latencyMs">The search execution latency in milliseconds.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task RecordSearchExecutedAsync(SearchRequestViewModel search, SearchResultViewModel searchResult, long latencyMs)
+        public Task RecordSearchExecutedAsync(SearchRequestViewModel search, SearchResultViewModel searchResult, int userId, long latencyMs)
         {
             if (searchResult == null || string.IsNullOrWhiteSpace(search?.Term))
             {
@@ -47,17 +48,15 @@ namespace LearningHub.Nhs.WebUI.Services
                 int resultCount = (searchResult.ResourceSearchResult?.TotalHits ?? 0) +
                                  (searchResult.CatalogueSearchResult?.TotalHits ?? 0);
 
-                // Use search ID or generate new correlation ID
-                var correlationId = search.SearchId > 0
-                    ? search.SearchId.ToString()
-                    : Guid.NewGuid().ToString();
-
                 var groupId = search.GroupId ?? Guid.NewGuid().ToString();
+
+                // Use search ID or generate new correlation ID
+                var correlationId = groupId;
 
                 var properties = new Dictionary<string, string>
                 {
                     { "CorrelationId", correlationId },
-                    { "SessionId", groupId },
+                    { "SessionId", userId.ToString() },
                     { "QueryText", search.Term ?? string.Empty },
                     { "QueryMode", "standard" },
                     { "UseSemanticReranker", "false" },
@@ -110,7 +109,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
                 var metrics = new Dictionary<string, double>
                 {
-                    { "ResultRank", model.ResultRank },
+                    { "ResultRank", model.ResultRank + 1 },
                     { "ResourceReferenceId", model.ResourceReferenceId },
                     { "NodePathId", model.NodePathId },
                 };

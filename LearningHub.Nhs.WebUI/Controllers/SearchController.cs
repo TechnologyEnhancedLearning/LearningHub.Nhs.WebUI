@@ -6,6 +6,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.WebUI.Filters;
@@ -110,7 +111,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 }
 
                 // Record SearchExecutedTelemetry for zero-result rate analysis
-                await this.searchTelemetryService.RecordSearchExecutedAsync(search, searchResult, stopwatch.ElapsedMilliseconds);
+                await this.searchTelemetryService.RecordSearchExecutedAsync(search, searchResult, this.User.Identity.GetCurrentUserId(), stopwatch.ElapsedMilliseconds);
             }
 
             if (filterApplied)

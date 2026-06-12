@@ -13,9 +13,10 @@ namespace LearningHub.Nhs.WebUI.Interfaces
         /// </summary>
         /// <param name="search">The search request view model.</param>
         /// <param name="searchResult">The search result view model containing results.</param>
+        /// <param name="userId">The user performing the search.</param>
         /// <param name="latencyMs">The search execution latency in milliseconds.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task RecordSearchExecutedAsync(SearchRequestViewModel search, SearchResultViewModel searchResult, long latencyMs);
+        Task RecordSearchExecutedAsync(SearchRequestViewModel search, SearchResultViewModel searchResult, int userId, long latencyMs);
 
         /// <summary>
         /// Records search result click telemetry for click-through analysis.

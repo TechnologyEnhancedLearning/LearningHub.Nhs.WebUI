@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "You cannot register with the Learning Hub yet";
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/staticpages.css" asp-append-version="true" />
+}
+
+<div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-main-wrapper ">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <h1 class="nhsuk-heading-xl">@ViewData["Title"]</h1>
+                <p class="nhsuk-u-margin-bottom-0 nhsuk-u-reading-width">
+                    Your current email address does not give you permission to register with the Learning Hub.
+                    Alternatively, use a qualifying work email address would allow you to access the Learning Hub.
+                </p>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <details class="nhsuk-details nhsuk-expander nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-5 nhsuk-u-reading-width">
+                    <summary class="nhsuk-details__summary">
+                        <span class="nhsuk-details__summary-text">
+                            What is a qualifying work email address?
+                        </span>
+                    </summary>
+                    <div class="nhsuk-details__text">
+                        <p>Providing a qualifying work email address will help us to determine which resources can be made available to you.</p>
+                        <p>Examples of qualifying email addresses include:
+                            <ul class="nhsuk-u-margin-left-2 nhsuk-u-margin-bottom-0">
+                                <li class="nhsuk-u-margin-bottom-0">any NHS email address (including those from Wales, Scotland and Northern Ireland)</li>
+                                <li class="nhsuk-u-margin-bottom-0">any healthcare / student email address</li>
+                                <li class="nhsuk-u-margin-bottom-0">&#64;hscni.net</li>
+                                <li class="nhsuk-u-margin-bottom-0">&#64;gov.uk</li>
+                                <li class="nhsuk-u-margin-bottom-0">&#64;ac.uk</li>
+                            </ul>
+                        </p>
+                    </div>
+                </details>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <p class="nhsuk-u-reading-width">Provided you are in the UK, you can use your current email address to register with the elearning for healthcare (elfh) hub to access learning resources.</p>
+                <a class="nhsuk-button nhsuk-u-margin-bottom-7" href="@(this.ViewBag.ELfhHubUrl)">Visit the elfh hub to access learning resources</a>
+                <p class="nhsuk-u-reading-width">If you feel the information we have about your role is incorrect, please contact our <a href="@(this.ViewBag.SupportUrl)">support desk</a> and we will be happy to help.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+

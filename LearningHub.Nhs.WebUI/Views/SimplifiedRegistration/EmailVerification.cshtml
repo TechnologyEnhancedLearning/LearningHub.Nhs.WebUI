@@ -1,0 +1,68 @@
+﻿@using LearningHub.Nhs.WebUI.Models.SimplifiedRegistration
+@using Microsoft.Extensions.Options;
+@using LearningHub.Nhs.WebUI.Configuration;
+@model EmailValidateViewModel;
+@inject IOptions<Settings> settings
+
+@{
+    ViewData["Title"] = "Create new account";
+    ViewData["DisableValidation"] = true;
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+<div class="create-account">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-half nhsuk-u-padding-top-8">
+                <img src="" alt="test image" />
+            </div>
+            <div class="nhsuk-grid-column-one-half nhsuk-u-padding-top-8">
+                @if (errorHasOccurred)
+                {
+                    <vc:error-summary order-of-property-names="@(new[] { nameof(Model.Email) })" />
+                }
+                <span>Create new account</span>
+                <h1>Get started with the Learning Hub</h1>
+                <p>
+                    Enter an NHS, healthcare, student, or GOV.UK email address if you have one. If you do not have one, you may provide an alternative email address to continue.
+                </p>
+                <p>
+                    We'll ask you to verify your email and complete a few short steps before you can access learning.
+                </p>
+                <form class="nhsuk-u-margin-bottom-2" asp-controller="SimplifiedRegistration" asp-action="EmailVerification" method="post">
+                    <input type="hidden" name="formSubmission" value="true">
+
+                    <vc:text-input asp-for="Email"
+                                   label="Enter your email address"
+                                   populate-with-current-value="true"
+                                   type="text"
+                                   spell-check="false"
+                                   hint-text=""
+                                   autocomplete="off"
+                                   css-class="nhsuk-u-width-one-half"
+                                   required="true"
+                                   required-client-side-error-message="You need to enter your email address" />
+
+
+                   @*  <vc:text-input asp-for="ComfirmEmail"
+                                   label="Confirm your email address"
+                                   populate-with-current-value="true"
+                                   type="text"
+                                   spell-check="false"
+                                   hint-text=""
+                                   autocomplete="off"
+                                   css-class="nhsuk-u-width-one-half"
+                                   required="true"
+                                   required-client-side-error-message="You need to enter your email address" /> *@
+                    <button class="nhsuk-button" type="submit">Start account creation</button>
+
+                </form>
+                <p>
+                    Already have an account? <a asp-controller="Login" asp-action="Index">Log in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

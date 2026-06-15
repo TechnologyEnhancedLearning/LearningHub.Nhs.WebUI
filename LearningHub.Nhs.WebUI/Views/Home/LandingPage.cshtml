@@ -15,15 +15,15 @@
     var whoCanAccess = options.Value.SupportUrls.WhoCanAccessTheLearningHub;
 }
 
-@section styles{
+@section styles {
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/landing_page.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/information_page.css" asp-append-version="true" />
-   @*  <link href="https://amp.azure.net/libs/amp/2.3.10/skins/amp-default/azuremediaplayer.min.css" type="text/css" rel="stylesheet" /> *@
+    @*  <link href="https://amp.azure.net/libs/amp/2.3.10/skins/amp-default/azuremediaplayer.min.css" type="text/css" rel="stylesheet" /> *@
 }
 
 
 <div class="">
-    <div class="landing-page__landing-page-banner">
+@*     <div class="landing-page__landing-page-banner">
         <div class="landing-page__banner-panel display--hide display-desktop--show">
             <h1>A platform for learning and sharing resources</h1>
             <div class="text">
@@ -36,9 +36,38 @@
         <div class="text">
             Sign up, explore and learn
         </div>
-    </div>
+    </div> *@
 
+    @* start *@
     <div class="landing-page__access-container">
+        <div class="nhsuk-width-container app-width-container">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-one-half">
+                    <img src="" alt="test image" />
+                </div>
+                <div class="nhsuk-grid-column-one-half landing-page--login-tray">
+                    <h2>Start learning today</h2>
+                    <p>
+                        Specialist healthcare learning and development in one place.
+                    </p>
+                    <div class="nhsuk-button-group nhsuk-button-group--small">
+                        <a asp-controller="SimplifiedRegistration" asp-action="CreateAnAccount" class="nhsuk-button nhsuk-button--beta-login">Create an account</a>
+                        <a asp-controller="Login" asp-action="Index" class="nhsuk-button nhsuk-button--reverse landing-page--btn-login">Log in</a>
+                    </div>
+                    <div class="nhsuk-u-margin-top-3">
+                        <a class="nhsuk-link nhsuk-link--reverse" href="/forgotten-password">Forgotten username or password</a>
+                        <a asp-controller="SimplifiedRegistration" asp-action="CheckYourEmail" class="nhsuk-button nhsuk-button--beta-login">EmailVerification</a>
+                        <p>
+                            <a asp-controller="Account" asp-action="CreateAnAccount">Create new account</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* end *@
+
+    @* <div class="landing-page__access-container">
         <div class="nhsuk-width-container app-width-container">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
@@ -67,7 +96,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> *@
 
     <div id="cmsPage">
         <partial name="_CmsPageRow" model="@Model" />

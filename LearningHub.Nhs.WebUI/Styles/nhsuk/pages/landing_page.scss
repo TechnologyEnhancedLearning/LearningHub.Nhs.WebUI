@@ -60,6 +60,36 @@
     }
 }
 
+/*.nhsuk-button--beta-login {
+    background-color: $nhsuk-blue;
+    box-shadow: 0 4px 0 #002f5c;
+}
+
+.nhsuk-button--beta-login:hover {
+    background-color: $nhsuk-btn-blue-hover;
+}*/
+
+// By default, the text on reverse (white) buttons turns white once clicked, rendering them invisible.
+.nhsuk-button--reverse:visited {
+    color: $nhsuk-black
+}
+.landing-page--btn-login {
+   /* background-color: $nhsuk-white !important;*/
+    color: $nhsuk-blue !important;
+    text-decoration: none;
+    box-shadow: 0 4px 0 #005eb8 !important;
+    margin-left: 20px;
+}
+
+.landing-page--login-tray {
+    background-color: #330072;
+    color: $nhsuk-white !important;
+    border-radius: 8px;
+    padding: 32px !important;
+}
+.landing-page--link {
+
+}
 /* desktop */
 @media (max-width: px2rem(989)) {
     .landing-page__landing-page-banner {

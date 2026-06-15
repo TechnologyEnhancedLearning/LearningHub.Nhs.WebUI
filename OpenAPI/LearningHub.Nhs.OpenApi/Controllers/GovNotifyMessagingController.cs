@@ -1,0 +1,192 @@
+﻿namespace LearningHub.NHS.OpenAPI.Controllers
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using LearningHub.Nhs.MessageQueueing.Repositories;
+    using LearningHub.Nhs.MessagingService.Interfaces;
+    using LearningHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Models.GovNotifyMessaging;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
+    using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+
+    /// <summary>
+    /// GovNotify Messaging Controller.
+    /// </summary>
+    [Route("GovNotifyMessage")]
+    [Authorize]
+    public class GovNotifyMessagingController : OpenApiControllerBase
+    {
+        private readonly IGovNotifyService messageService;
+        private readonly IMessageQueueRepository messageQueueRepository;
+        private readonly IGovMessageService govMessageService;
+        private readonly Nhs.OpenApi.Repositories.Interface.Repositories.ITimezoneOffsetManager timezoneOffsetManager;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GovNotifyMessagingController"/> class.
+        /// </summary>
+        /// <param name="messageService">The message service.</param>
+        /// <param name="messageQueueRepository">The email Queue Repository.</param>
+        /// <param name="govMessageService">The govMessageService.</param>
+        /// <param name="timezoneOffsetManager">The timezoneOffsetManager.</param>
+        public GovNotifyMessagingController(IGovNotifyService messageService, IMessageQueueRepository messageQueueRepository, IGovMessageService govMessageService, ITimezoneOffsetManager timezoneOffsetManager)
+        {
+            this.messageService = messageService;
+            this.messageQueueRepository = messageQueueRepository;
+            this.govMessageService = govMessageService;
+            this.timezoneOffsetManager = timezoneOffsetManager;
+        }
+
+        /// <summary>
+        /// Sends an email using UK Gov.Notify.
+        /// </summary>
+        /// <param name="request">personalisation.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [Route("SendEmail")]
+        [HttpPost]
+        public async Task<IActionResult> SendEmailAsync([FromBody] EmailRequest request)
+        {
+            try
+            {
+                var response = await this.govMessageService.SendEmailAsync(request);
+
+                ////if (!response.IsSuccess)
+                ////{
+                ////    return this.BadRequest(new { error = response.ErrorMessage });
+                ////}
+
+                return this.Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Sends a sms using UK Gov.Notify.
+        /// </summary>
+        /// <param name="request">SendSmsRequest.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [Route("SendSms")]
+        [HttpPost]
+        public async Task<IActionResult> SendSmsAsync([FromBody] SmsRequest request)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(request.PhoneNumber) || string.IsNullOrWhiteSpace(request.TemplateId))
+                {
+                    return this.BadRequest("phoneNumber and template ID are required");
+                }
+
+                var response = await this.messageService.SendSmsAsync(request.PhoneNumber, request.TemplateId, request.Personalisation);
+                return this.Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return this.Ok(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// To queue the MessageRequests.
+        /// </summary>
+        /// <param name="request">The QueueRequestList.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [Route("QueueRequests")]
+        [HttpPost]
+        public async Task<IActionResult> QueueRequests([FromBody] QueueMessageList request)
+        {
+            ////if (request?.Messages == null || !request.Messages.Any())
+            ////{
+            ////    return this.BadRequest("At least one email must be provided in the request.");
+            ////}
+
+            ////var requests = request.Messages.Select(q => new QueueRequests
+            ////{
+            ////    Recipient = q.Recipient,
+            ////    TemplateId = q.TemplateId,
+            ////    Personalisation = q.Personalisation != null ? JsonConvert.SerializeObject(q.Personalisation) : null,
+            ////    DeliverAfter = q.DeliverAfter ?? null,
+            ////});
+
+            ////await this.messageQueueRepository.QueueMessagesAsync(requests);
+            ////return this.Ok(new { Message = $"{requests.Count()} message requests queued successfully." });
+
+            await this.govMessageService.QueueRequestsAsync(request);
+
+            return this.Ok(new { Message = $"{request.Messages.Count} message requests queued successfully." });
+        }
+
+        /// <summary>
+        /// To fetch the Pending or failed Message Requests.
+        /// </summary>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [Route("PendingMessageRequests")]
+        [HttpGet]
+        public async Task<IEnumerable<PendingMessageRequests>> PendingMessageRequests()
+        {
+            return await this.messageQueueRepository.GetPendingEmailsAsync();
+        }
+
+        /// <summary>
+        /// Update message request as Success.
+        /// </summary>
+        /// <param name="response">The response.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [Route("MessageSuccessUpdate")]
+        [HttpPost]
+        public async Task<IActionResult> MessageSuccessUpdate([FromBody] GovNotifyResponse response)
+        {
+            var userTimeOffset = this.timezoneOffsetManager.UserTimezoneOffset;
+            await this.messageQueueRepository.MessageDeliverySuccess(response, userTimeOffset);
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// Update message request as Failed.
+        /// </summary>
+        /// <param name="response">The response.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [Route("MessageFailedUpdate")]
+        [HttpPost]
+        public async Task<IActionResult> MessageFailedUpdate([FromBody] GovNotifyResponse response)
+        {
+            var userTimeOffset = this.timezoneOffsetManager.UserTimezoneOffset;
+            await this.messageQueueRepository.MessageDeliveryFailed(response, userTimeOffset);
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// Get Message Requests.
+        /// </summary>
+        /// <param name="page">page.</param>
+        /// <param name="pageSize">page size.</param>
+        /// <param name="sortColumn">sort column name.</param>
+        /// <param name="sortDirection">sort direction.</param>
+        /// <param name="filter">filter.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [Route("GetMessageRequests/{page}/{pageSize}/{sortColumn}/{sortDirection}/{filter}")]
+        [HttpGet]
+        public async Task<IActionResult> GetMessageRequests(int page, int pageSize, string sortColumn, string sortDirection, string filter)
+        {
+            PagedResultSet<MessageRequestViewModel> pagedResultSet = await this.govMessageService.GetMessageRequests(page, pageSize, sortColumn, sortDirection, filter);
+            return this.Ok(pagedResultSet);
+        }
+
+        /// <summary>
+        /// Get message request details by id.
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [Route("GetMessageRequestById/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetMessageRequestById(int id)
+        {
+            MessageRequestViewModel requestDetails = await this.govMessageService.GetMessageRequestById(id);
+            return this.Ok(requestDetails);
+        }
+    }
+}

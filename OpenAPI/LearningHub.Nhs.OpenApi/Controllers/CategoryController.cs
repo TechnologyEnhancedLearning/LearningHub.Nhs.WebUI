@@ -2,9 +2,6 @@
 {
     using System;
     using System.Threading.Tasks;
-    using LearningHub.Nhs.Models.Catalogue;
-    using LearningHub.Nhs.Models.Common;
-    using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -18,19 +15,16 @@
     public class CategoryController : OpenApiControllerBase
     {
         private readonly ICategoryService categoryService;
-        private readonly IMoodleApiService moodleApiService;
         private readonly IMoodleBridgeApiService moodleBridgeApiService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CategoryController"/> class.
         /// </summary>
         /// <param name="categoryService">The category service.</param>
-        /// <param name="moodleApiService">The moodleApi service.</param>
         /// <param name="moodleBridgeApiService">The moodle Bridge Api service.</param>
-        public CategoryController(ICategoryService categoryService, IMoodleApiService moodleApiService, IMoodleBridgeApiService moodleBridgeApiService)
+        public CategoryController(ICategoryService categoryService, IMoodleBridgeApiService moodleBridgeApiService)
         {
             this.categoryService = categoryService;
-            this.moodleApiService = moodleApiService;
             this.moodleBridgeApiService = moodleBridgeApiService;
         }
 

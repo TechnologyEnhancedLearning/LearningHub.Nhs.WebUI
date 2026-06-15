@@ -1,7 +1,7 @@
 ﻿<link href="~/css/mkplayer-ui.css" rel="stylesheet" asp-append-version="true" />
 <template>
     <div>
-        <div :id="getPlayerUniqueId" class="video-container"></div>
+        <div :id="playerUniqueId" class="video-container"></div>
         <noscript>
             <p class="amp-no-js">
                 To view this media please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
@@ -50,16 +50,20 @@
                 mkioKey: '',
                 playBackUrl: '',
                 sourceLoaded: true,
-                isIphone: false
+                isIphone: false,
+                playerUniqueId: `videoContainer_${this.fileId}_${Date.now()}` // We need to generate a new unique ID for the video player on every render otherwise the video player will not load properly.
             };
         },
-        async created() {
-            await this.getMKIOPlayerKey();
-            this.getMediaPlayUrl();
-            this.load();
-        },
-        mounted() {
+        async mounted() {
             this.checkIfIphone();
+
+            await this.getMKIOPlayerKey();
+
+            this.getMediaPlayUrl();
+
+            this.$nextTick(() => {
+                this.load();
+            });
         },
         methods: {
             onPlayerReady() {
@@ -100,7 +104,7 @@
                 this.playBackUrl = this.playBackUrl.substring(0, this.playBackUrl.lastIndexOf("manifest")) + "manifest(format=m3u8-cmaf,encryption=cbc)";
                 if (this.isIphone) {
                     this.playBackUrl = "/Media/MediaManifest?playBackUrl=" + this.playBackUrl + "&token=" + this.azureMediaServicesToken;
-                }     
+                }
             },
             checkIfIphone() {
                 const userAgent = navigator.userAgent || navigator.vendor;
@@ -108,11 +112,7 @@
             },
             load() {
                 // Grab the video container
-                this.videoContainer = document.getElementById(this.getPlayerUniqueId);
-
-                if (!this.mkioKey) {
-                    this.getMKIOPlayerKey();
-                }
+                this.videoContainer = document.getElementById(this.playerUniqueId);
 
                 // Prepare the player configuration
                 const playerConfig = {
@@ -168,15 +168,16 @@
             }
         },
         computed: {
-            getPlayerUniqueId(): string {
-                // We need to generate a new unique ID for the video player on every render otherwise the video player will not load properly.
-                // This is because the AMP is only intended to be a static player and so is not optimised for componentisation.
-                // So, when we switch between tabs on the Case resource creation page, the video player unmounts and then remounts if
-                // we go back to the Contents tab. As a result, a new unique ID is needed so that the media player knows it has to
-                // initalise itself again, which we do in the `mounted()` lifecycle method above.
-                const time = new Date().getTime()
-                return `videoContainer_${this.fileId}_${time}`
-            },
+            //getPlayerUniqueId(): string {
+            //    // We need to generate a new unique ID for the video player on every render otherwise the video player will not load properly.
+            //    // This is because the AMP is only intended to be a static player and so is not optimised for componentisation.
+            //    // So, when we switch between tabs on the Case resource creation page, the video player unmounts and then remounts if
+            //    // we go back to the Contents tab. As a result, a new unique ID is needed so that the media player knows it has to
+            //    // initalise itself again, which we do in the `mounted()` lifecycle method above.
+            //    const time = new Date().getTime()
+            //    console.log("getPlayerUniqueId " + this.fileId);
+            //    return `videoContainer_${this.fileId}_${time}`
+            //},
             captionsTrackAvailable(): boolean {
                 return !!this.videoFile
                     && !!this.videoFile.captionsFile
@@ -200,6 +201,22 @@
                 return this.transcriptFileModel.getDownloadResourceLink();
             },
         },
+        watch: {
+            videoFile: {
+                immediate: true,
+                handler() {
+                    if (this.player) {
+                        this.player.destroy();
+                    }
+
+                    this.getMediaPlayUrl();
+
+                    this.$nextTick(() => {
+                        this.load();
+                    });
+                }
+            }
+        }
     })
 </script>
 
@@ -232,41 +249,49 @@
             --min-width: 200px;
         }
     }
+
     @media (min-width: 375px) { /* Non standard for graceful */
         .video-container {
             --min-width: 300px;
         }
     }
+
     @media (min-width: 450px) { /* Non standard for graceful */
         .video-container {
             --min-width: 400px;
         }
     }
+
     @media (min-width: 576px) {
         .video-container {
             --min-width: 500px;
         }
     }
+
     @media (min-width: 650px) { /* Non standard for graceful */
         .video-container {
             --min-width: 600px;
         }
     }
+
     @media (min-width: 768px) {
         .video-container {
             --min-width: 700px;
         }
     }
+
     @media (min-width: 850px) { /* Non standard for graceful */
         .video-container {
             --min-width: 800px;
         }
     }
-    @media (min-width: 992px) { 
+
+    @media (min-width: 992px) {
         .video-container {
             --min-width: 900px;
         }
-    }   
+    }
+
     @media (min-width: 1024px) {
         .video-container {
             --min-width: 1024px;

@@ -24,6 +24,7 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Drawing.Printing;
     using System.Globalization;
     using System.Linq;
     using System.Threading;
@@ -213,24 +214,35 @@
 
             try
             {
+                var searchQueryType = SearchOptionsBuilder.ParseSearchQueryType(this.azureSearchConfig.SearchQueryType);
                 var offset = catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize;
 
-                // Build filters for catalogue search
+                var query = searchQueryType == SearchQueryType.Full
+                    ? LuceneQueryBuilder.BuildLuceneQuery(catalogSearchRequestModel.SearchText)
+                    : catalogSearchRequestModel.SearchText;
+
+                Dictionary<string, string> sortBy = new Dictionary<string, string>()
+                {
+                   { "title", "asc" }
+                };
+
                 var filters = new Dictionary<string, List<string>>
                 {
-                    { "resource_collection", new List<string> { "Catalogue" } }
+                     { "resource_collection", new List<string> { "catalogue" } }
                 };
 
-                var searchOptions = new SearchOptions
-                {
-                    Skip = offset,
-                    Size = catalogSearchRequestModel.PageSize,
-                    IncludeTotalCount = true,
-                    Filter = SearchFilterBuilder.BuildFilterExpression(filters)
-                };
+                //var searchOptions = new SearchOptions
+                //{
+                //    Skip = offset,
+                //    Size = catalogSearchRequestModel.PageSize,
+                //    IncludeTotalCount = true,
+                //    Filter = SearchFilterBuilder.BuildFilterExpression(filters)
+                //};
+
+                var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, offset, catalogSearchRequestModel.PageSize, filters, sortBy, false, this.azureSearchConfig);
 
                 SearchResults<Models.ServiceModels.AzureSearch.SearchDocument> response = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(
-                    catalogSearchRequestModel.SearchText,
+                    query,
                     searchOptions,
                     cancellationToken);
                 var count = Convert.ToInt32(response.TotalCount);
@@ -543,22 +555,35 @@
             CancellationToken cancellationToken = default;
             try
             {
+                var searchQueryType = SearchOptionsBuilder.ParseSearchQueryType(this.azureSearchConfig.SearchQueryType);
                 var offset = catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize;
+
+                var query = searchQueryType == SearchQueryType.Full
+                    ? LuceneQueryBuilder.BuildLuceneQuery(catalogSearchRequestModel.SearchText)
+                    : catalogSearchRequestModel.SearchText;
+
+                Dictionary<string, string> sortBy = new Dictionary<string, string>()
+                {
+                   { "title", "asc" }
+                };
+
                 var filters = new Dictionary<string, List<string>>
                 {
                      { "resource_collection", new List<string> { "catalogue" } }
                 };
 
-                var searchOptions = new SearchOptions
-                {
-                    Skip = offset,
-                    Size = catalogSearchRequestModel.PageSize,
-                    IncludeTotalCount = true,
-                    Filter = SearchFilterBuilder.BuildFilterExpression(filters)
-                };
+                //var searchOptions = new SearchOptions
+                //{
+                //    Skip = offset,
+                //    Size = catalogSearchRequestModel.PageSize,
+                //    IncludeTotalCount = true,
+                //    Filter = SearchFilterBuilder.BuildFilterExpression(filters)
+                //};
+
+                var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, offset, catalogSearchRequestModel.PageSize, filters, sortBy, false, this.azureSearchConfig);
 
                 SearchResults<Models.ServiceModels.AzureSearch.SearchDocument> response = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(
-                    catalogSearchRequestModel.SearchText, searchOptions, cancellationToken);
+                    query, searchOptions, cancellationToken);
                 var count = Convert.ToInt32(response.TotalCount);
 
                 var documentList = new CatalogueDocumentList

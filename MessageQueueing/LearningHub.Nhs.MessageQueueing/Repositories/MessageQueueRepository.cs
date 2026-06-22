@@ -11,6 +11,7 @@
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.GovNotifyMessaging;
     using LearningHub.Nhs.Models.GovNotifyMessaging;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
 
@@ -21,16 +22,18 @@
     {
         private readonly MessageQueueDbContext dbContext;
         private readonly IMapper mapper;
-
+        private readonly ITimezoneOffsetManager tzOffsetManager;
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageQueueRepository"/> class.
         /// </summary>
         /// <param name="dbContext">The context.</param>
         /// <param name="mapper">mapper.</param>
-        public MessageQueueRepository(MessageQueueDbContext dbContext, IMapper mapper)
+        /// <param name="tzOffsetManager">tzOffsetManager.</param>
+        public MessageQueueRepository(MessageQueueDbContext dbContext, IMapper mapper,ITimezoneOffsetManager tzOffsetManager)
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
+            this.tzOffsetManager = tzOffsetManager;
         }
 
         /// <summary>
@@ -43,7 +46,7 @@
         {
             var dataTable = DataTableBuilder.ToQueueRequestDataTable(requests);
             var param0 = new SqlParameter("@p0", SqlDbType.Structured) { Value = dataTable, TypeName = "dbo.QueueRequestTableType" };
-            var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = userTimeOffset ?? (object)DBNull.Value };
+            var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = this.tzOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
             await this.dbContext.Database.ExecuteSqlRawAsync("dbo.CreateQueueRequests @p0, @p1", param0, param1);
         }
 
@@ -68,7 +71,7 @@
         {
             var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = response.Id };
             var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = response.NotificationId };
-            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = userTimeOffset ?? (object)DBNull.Value };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = this.tzOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
             await this.dbContext.Database.ExecuteSqlRawAsync("dbo.MessageDeliverySuccess @p0, @p1, @p2", param0, param1, param2);
         }
 
@@ -82,7 +85,7 @@
         {
             var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = response.Id };
             var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = response.ErrorMessage };
-            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = userTimeOffset ?? (object)DBNull.Value };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = this.tzOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
             await this.dbContext.Database.ExecuteSqlRawAsync("dbo.MessageDeliveryFailed @p0, @p1, @p2", param0, param1, param2);
         }
 
@@ -99,7 +102,7 @@
             var param2 = new SqlParameter("@p2", SqlDbType.NVarChar) { Value = request.Personalisation == null ? DBNull.Value : request.Personalisation };
             var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = request.Status };
             var param4 = new SqlParameter("@p4", SqlDbType.NVarChar) { Value = request.ErrorMessage == null ? DBNull.Value : request.ErrorMessage };
-            var param5 = new SqlParameter("@p5", SqlDbType.Int) { Value = userTimeOffset ?? (object)DBNull.Value };
+            var param5 = new SqlParameter("@p5", SqlDbType.Int) { Value = this.tzOffsetManager.UserTimezoneOffset ?? (object)DBNull.Value };
             await this.dbContext.Database.ExecuteSqlRawAsync("dbo.SaveSingleEmailTransactions @p0, @p1, @p2, @p3, @p4, @p5", param0, param1, param2, param3, param4, param5);
         }
 

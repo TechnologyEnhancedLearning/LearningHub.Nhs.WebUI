@@ -1,5 +1,7 @@
 ﻿namespace LearningHub.Nhs.MessageQueueing.Repositories
 {
+    using Microsoft.Data.SqlClient;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -12,8 +14,6 @@
     using LearningHub.Nhs.Models.Entities.GovNotifyMessaging;
     using LearningHub.Nhs.Models.GovNotifyMessaging;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
-    using Microsoft.Data.SqlClient;
-    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// The MessageQueueRepository.

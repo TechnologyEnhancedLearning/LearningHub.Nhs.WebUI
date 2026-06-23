@@ -79,7 +79,7 @@
                         Status = response.IsSuccess == true ? RequestStatusEnum.Sent : RequestStatusEnum.Failed,
                         ErrorMessage = response.ErrorMessage,
                     };
-                    var userTimeOffset = this.timezoneOffsetManager.UserTimezoneOffset;
+                    var userTimeOffset = this.timezoneOffsetManager.UserTimezoneOffset?? request.TimezoneOffset;
                     await this.messageQueueRepository.SaveSingleEmailTransactions(emailRequest, userTimeOffset);
                 }
             }

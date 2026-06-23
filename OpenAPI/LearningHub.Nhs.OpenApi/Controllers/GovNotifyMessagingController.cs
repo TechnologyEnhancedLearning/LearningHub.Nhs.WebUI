@@ -11,6 +11,7 @@
     using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     /// <summary>
     /// GovNotify Messaging Controller.
@@ -51,12 +52,6 @@
             try
             {
                 var response = await this.govMessageService.SendEmailAsync(request);
-
-                ////if (!response.IsSuccess)
-                ////{
-                ////    return this.BadRequest(new { error = response.ErrorMessage });
-                ////}
-
                 return this.Ok(response);
             }
             catch (Exception ex)

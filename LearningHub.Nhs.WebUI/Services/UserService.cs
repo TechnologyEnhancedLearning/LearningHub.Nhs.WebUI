@@ -258,15 +258,15 @@
         }
 
         /// <inheritdoc/>
-        public async Task ForgotPasswordAsync(string email)
+        public async Task ForgotPasswordAsync(Models.Account.ForgotPasswordViewModel model)
         {
             var json = JsonConvert.SerializeObject(
-                new elfhHub.Nhs.Models.Common.ForgotPasswordViewModel { EmailAddress = email });
+                new elfhHub.Nhs.Models.Common.ForgotPasswordViewModel { EmailAddress = model.EmailAddress });
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
             var client = await this.userApiHttpClient.GetClientAsync();
 
-            var request = $"ElfhUser/ForgotPassword";
+            var request = $"ElfhUser/ForgotPassword?timeoffset={Uri.EscapeDataString(model.TimezoneOffset?.ToString() ?? "0")}";
 
             var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
 

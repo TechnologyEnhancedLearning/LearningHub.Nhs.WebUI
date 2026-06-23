@@ -1225,7 +1225,7 @@
             var status = await this.userService.CanRequestPasswordResetAsync(model.EmailAddress, passwordRequestLimitingPeriod, passwordRequestLimit);
             if (status)
             {
-                await this.userService.ForgotPasswordAsync(model.EmailAddress);
+                await this.userService.ForgotPasswordAsync(model);
                 return this.View("ForgotPasswordAcknowledgement");
             }
             else

@@ -111,7 +111,7 @@
                         var today = DateTime.Today;
 
                         var dateTimeText =
-                        activityDate == DateTimeOffset.MinValue ? "" :
+                        activityDate == DateTimeOffset.UnixEpoch ? "" :
                         activityDate.Date == today ? "Today" :
                         activityDate.Date == today.AddDays(-1) ? "Yesterday" :
                         activityDate.ToString("dd MMM yyyy");

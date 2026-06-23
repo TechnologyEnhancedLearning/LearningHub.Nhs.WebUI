@@ -14,10 +14,6 @@
     bool providerExists = Model.Item2.Providers?.Count > 0;
     string cardStyle = Model.Item1.Contains("my-learning") ? "card-provider-details--darkblank" : "card-provider-details--blank";
     var activityDate = Model.Item2.AwardedDate.Date;
-    // // var today = DateTime.Today;
-    // // var dateTimeText = activityDate == today ? "Today"
-    // // : activityDate == today.AddDays(-1) ? "Yesterday"
-    // // : activityDate.ToString("dd MMM yyyy");
     var today = DateTime.Today;
 
     var dateTimeText =

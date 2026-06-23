@@ -80,5 +80,10 @@
         /// Gets or sets the show filter (all, catalogues, courses, resources).
         /// </summary>
         public IEnumerable<string> ResourceCollectionFilter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the search source filter (lh, moodle-prod, mooc-prod).
+        /// </summary>
+        public IEnumerable<string> SearchSourceFilter { get; set; }
     }
 }

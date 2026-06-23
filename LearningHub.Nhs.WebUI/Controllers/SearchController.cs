@@ -73,6 +73,10 @@ namespace LearningHub.Nhs.WebUI.Controllers
             search.SearchId ??= 0;
             search.GroupId = !string.IsNullOrWhiteSpace(search.GroupId) && Guid.TryParse(search.GroupId, out Guid groupId) ? groupId.ToString() : Guid.NewGuid().ToString();
 
+            var x = this.MoodleInstanceUserIds;
+            var sourceFilter = x.MoodleInstanceUserIds.Select(kvp => kvp.Key.ToString()).Concat(new[] { "lh" }).ToList();
+            search.SearchSourceFilter = sourceFilter;
+
             // Fix: Ensure an instance of IFeatureManager is injected and used
             var azureSearchEnabled = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.AzureSearch)).Result;
             SearchResultViewModel searchResult = new SearchResultViewModel();
@@ -377,7 +381,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 return this.RedirectToAction("AccessDenied", "Home");
             }
 
-            var autoSuggestions = await this.searchService.GetAutoSuggestionList(term);
+            string sourceFilter = "lh, moodle-test";
+            var autoSuggestions = await this.searchService.GetAutoSuggestionList(term, sourceFilter);
 
             var azureSearchEnabled = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.AzureSearch)).Result;
 

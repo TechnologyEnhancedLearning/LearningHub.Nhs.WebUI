@@ -623,7 +623,7 @@
         }
 
         /// <inheritdoc/>
-        public async Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term, CancellationToken cancellationToken = default)
+        public async Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term, string sourceFilter, CancellationToken cancellationToken = default)
         {
             var viewmodel = new AutoSuggestionModel();
 
@@ -633,6 +633,9 @@
                 {
                     Size = 10,
                 };
+                var sources = sourceFilter.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim());
+                var sourceClause = string.Join(" or ", sources.Select(s => $"source eq '{s}'"));
+                var filter = $"is_deleted eq false and ({sourceClause})";
 
                 var response = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(
                     term,
@@ -656,12 +659,15 @@
                 suggestOptions.Select.Add("url");
                 suggestOptions.Select.Add("resource_reference_id");
                 suggestOptions.Select.Add("is_deleted");
+                suggestOptions.Select.Add("source");
 
                 var autoOptions = new AutocompleteOptions
                 {
                     Mode = AutocompleteMode.OneTermWithContext,
                     Size = this.azureSearchConfig.ConceptsSuggesterSize,
-                    Filter = "is_deleted eq false"
+                    Filter = filter
+                    // Filter = "is_deleted eq false and source eq 'moodle-test'"
+                    // Filter = "is_deleted eq false and (source eq 'Moodle' or source eq 'Resource' or source eq 'Catalogue')"
                 };
 
                 var searchText = LuceneQueryBuilder.EscapeLuceneSpecialCharacters(term);

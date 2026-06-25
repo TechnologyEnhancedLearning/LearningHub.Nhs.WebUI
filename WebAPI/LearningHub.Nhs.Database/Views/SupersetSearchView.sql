@@ -68,7 +68,8 @@ SELECT
 	NULL AS url,
 	--r.AmendDate AS last_modified,
 	SWITCHOFFSET(CAST(r.AmendDate AS datetimeoffset), '+00:00') AS last_modified,
-	r.Deleted AS is_deleted
+	r.Deleted AS is_deleted,
+	'lh' as source
 FROM dbo.SearchResourcesView r;
 GO;
 

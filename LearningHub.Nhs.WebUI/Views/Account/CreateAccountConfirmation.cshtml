@@ -215,6 +215,7 @@
                     }
                 </dl>
                 <form asp-controller="Account" asp-action="CreateAccountConfirmation" method="post">
+                    <input type="hidden" id="TimezoneOffset" name="TimezoneOffset" />
                     <button class="nhsuk-button" id="save-button" type="submit">@(accountCreationType == AccountCreationTypeEnum.FullAccess ? "Continue to create a Full User account" : "Continue to create a General user account")</button>
                 </form>
                 @if (accountCreationType == AccountCreationTypeEnum.GeneralAccess)
@@ -236,3 +237,6 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    document.getElementById("TimezoneOffset").value = -new Date().getTimezoneOffset();
+</script>

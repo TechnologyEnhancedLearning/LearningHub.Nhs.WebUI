@@ -34,5 +34,10 @@
         /// Gets or sets the AccountCreationViewModel.
         /// </summary>
         public AccountCreationViewModel AccountCreationViewModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the TimezoneOffset.
+        /// </summary>
+        public int? TimezoneOffset { get; set; }
     }
 }

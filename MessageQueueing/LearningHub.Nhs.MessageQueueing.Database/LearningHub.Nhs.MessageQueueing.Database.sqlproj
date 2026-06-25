@@ -75,6 +75,7 @@
     <Build Include="User-Defined Table Types\QueueRequestTableType.sql" />
     <Build Include="Stored Procedures\GetMessageRequestById.sql" />
     <Build Include="Stored Procedures\GetAllMessageRequests.sql" />
+    <Build Include="Tables\DeploymentSmokeTest.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Post-Deploy\Scripts\RequestStatusData.sql" />

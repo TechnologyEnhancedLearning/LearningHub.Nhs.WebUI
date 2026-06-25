@@ -629,45 +629,40 @@
 
             try
             {
-                var searchOptions = new SearchOptions
-                {
-                    Size = 10,
-                };
                 var sources = sourceFilter.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim());
                 var sourceClause = string.Join(" or ", sources.Select(s => $"source eq '{s}'"));
                 var filter = $"is_deleted eq false and ({sourceClause})";
 
-                var response = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(
-                    term,
-                    searchOptions,
-                    cancellationToken);
-
                 var suggestOptions = new SuggestOptions
                 {
                     Size = 50,
-                    UseFuzzyMatching = true
-                };
-                suggestOptions.SearchFields.Add("title");
-                suggestOptions.SearchFields.Add("description");
-                suggestOptions.SearchFields.Add("manual_tag");
-                suggestOptions.Select.Add("id");
-                suggestOptions.Select.Add("title");
-                suggestOptions.Select.Add("description");
-                suggestOptions.Select.Add("manual_tag");
-                suggestOptions.Select.Add("resource_type");
-                suggestOptions.Select.Add("resource_collection");
-                suggestOptions.Select.Add("url");
-                suggestOptions.Select.Add("resource_reference_id");
-                suggestOptions.Select.Add("is_deleted");
-                suggestOptions.Select.Add("source");
+                    UseFuzzyMatching = true,
+                    Filter = filter,
+                    SearchFields = {
+                        "title",
+                        "description",
+                        "manual_tag"
+                    },
+                    Select = {
 
+                        "id",
+                        "title",
+                        "description",
+                        "manual_tag",
+                        "resource_type",
+                        "resource_collection",
+                        "url",
+                        "resource_reference_id",
+                        "is_deleted",
+                        "source"
+                    }
+                };
+               
                 var autoOptions = new AutocompleteOptions
                 {
                     Mode = AutocompleteMode.OneTermWithContext,
                     Size = this.azureSearchConfig.ConceptsSuggesterSize,
-                    Filter = filter
-                    // Filter = "is_deleted eq false and source eq 'moodle-test'"
-                    // Filter = "is_deleted eq false and (source eq 'Moodle' or source eq 'Resource' or source eq 'Catalogue')"
+                    Filter = filter                    
                 };
 
                 var searchText = LuceneQueryBuilder.EscapeLuceneSpecialCharacters(term);

@@ -7,6 +7,7 @@
 --
 -- 24 Jun 2024	OA	Initial Revision
 -- 29 Sep 2025  SA  Integrated the provider dertails 
+-- 26-06-2026   SA TD-7454: Certificate Not Generated for Informal Assessments When Pass Mark is Null
 -------------------------------------------------------------------------------
 
 CREATE PROCEDURE [resources].[GetMyLearningCertificatesDashboardResources]
@@ -44,7 +45,7 @@ BEGIN
                     (r.ResourceTypeId IN (2, 7) AND ra.ActivityStatusId = 3 OR ra.ActivityStart < '2020-09-07 00:00:00 +00:00' OR mar.Id IS NOT NULL AND mar.PercentComplete = 100)
                 OR (r.ResourceTypeId = 6 AND (sa.CmiCoreLesson_status IN(3,5) OR (ra.ActivityStatusId IN(3, 5))))
                 OR ((r.ResourceTypeId = 11 AND arv.AssessmentType = 2) AND (ara.Score >= arv.PassMark OR ra.ActivityStatusId IN(3, 5)))
-                OR ((r.ResourceTypeId = 11 AND arv.AssessmentType =1) AND (ara.Score >= arv.PassMark AND ra.ActivityStatusId IN(3, 5,7)))
+                OR ((r.ResourceTypeId = 11 AND arv.AssessmentType =1) AND ((arv.PassMark IS NULL OR ara.Score >= arv.PassMark) AND ra.ActivityStatusId IN(3, 5,7)))
                 OR (r.ResourceTypeId IN (1, 5, 8, 9, 10, 12) AND ra.ActivityStatusId = 3))		
             GROUP BY ra.ResourceId
             ORDER BY ResourceActivityId DESC

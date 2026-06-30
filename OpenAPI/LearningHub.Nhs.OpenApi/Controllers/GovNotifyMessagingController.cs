@@ -135,7 +135,7 @@
         [HttpPost]
         public async Task<IActionResult> MessageSuccessUpdate([FromBody] GovNotifyResponse response)
         {
-            var userTimeOffset = this.timezoneOffsetManager.UserTimezoneOffset;
+            var userTimeOffset = response.MessageSentTime.HasValue ? (int)response.MessageSentTime.Value.Offset.TotalMinutes : 0;
             await this.messageQueueRepository.MessageDeliverySuccess(response, userTimeOffset);
             return this.Ok();
         }
@@ -149,7 +149,7 @@
         [HttpPost]
         public async Task<IActionResult> MessageFailedUpdate([FromBody] GovNotifyResponse response)
         {
-            var userTimeOffset = this.timezoneOffsetManager.UserTimezoneOffset;
+            var userTimeOffset = response.MessageSentTime.HasValue ? (int)response.MessageSentTime.Value.Offset.TotalMinutes : 0;
             await this.messageQueueRepository.MessageDeliveryFailed(response, userTimeOffset);
             return this.Ok();
         }

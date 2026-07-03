@@ -25,7 +25,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     /// </summary>
     [Authorize]
     [Route("[controller]")]
-    [ServiceFilter(typeof(LoginWizardFilter))]
+    ////[ServiceFilter(typeof(LoginWizardFilter))]
     public class SearchController : BaseController
     {
         private readonly ISearchService searchService;

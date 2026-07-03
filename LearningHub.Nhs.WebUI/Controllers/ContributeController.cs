@@ -19,7 +19,7 @@
     /// Defines the <see cref="ContributeController" />.
     /// </summary>
     [Authorize]
-    [ServiceFilter(typeof(LoginWizardFilter))]
+    ////[ServiceFilter(typeof(LoginWizardFilter))]
     public class ContributeController : BaseController
     {
         private readonly LearningHubAuthServiceConfig authConfig;

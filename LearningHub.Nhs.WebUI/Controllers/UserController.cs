@@ -24,7 +24,7 @@
     /// The UserController.
     /// </summary>
     [Authorize]
-    [ServiceFilter(typeof(LoginWizardFilter))]
+    ////[ServiceFilter(typeof(LoginWizardFilter))]
     public partial class UserController : BaseController
     {
         /// <summary>

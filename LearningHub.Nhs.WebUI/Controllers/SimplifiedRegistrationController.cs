@@ -9,17 +9,13 @@
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Extensions;
     using LearningHub.Nhs.WebUI.Filters;
-    using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
-    ////using LearningHub.Nhs.WebUI.Models.Account;
     using LearningHub.Nhs.WebUI.Models.SimplifiedRegistration;
-    using LearningHub.Nhs.WebUI.Services;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Microsoft.Extensions.Primitives;
-    using NHSUKViewComponents.Web.ViewModels;
 
     /// <summary>
     /// Defines the <see cref="SimplifiedRegistrationController" />.
@@ -106,28 +102,17 @@
                     return this.RedirectToAction("CreateAccountInvalidAccountDoesntExist");
                 case "NewUserIsEligible":
                     var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-                    if (returnToConfirmation == true && accountCreation.AccountCreationType == AccountCreationTypeEnum.GeneralAccess && accountCreation.EmailAddress != emailValidateViewModel.Email)
-                    {
-                        accountCreation.EmailAddress = emailValidateViewModel.Email;
-                        accountCreation.AccountCreationType = AccountCreationTypeEnum.FullAccess;
-                        await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-                        return this.RedirectToAction("CreateAccountAccessChangeConfirmation");
-                    }
-                    else
-                    {
-                        return this.RedirectToAction("CreateAccountAccessChangeConfirmation");
-                        ////accountCreation.EmailAddress = emailValidateViewModel.Email;
-                        ////accountCreation.AccountCreationType = AccountCreationTypeEnum.FullAccess;
-                        ////await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-                        ////return this.CheckConfirmationUpdate() ? this.RedirectToAction("CreateAccountConfirmation", new AccountCreationViewModel { LocationId = accountCreation.LocationId }) : this.RedirectToAction("CreateAccountFullUserConfirmation");
-                    }
+                    accountCreation.EmailAddress = emailValidateViewModel.Email;
+                    accountCreation.AccountCreationType = AccountCreationTypeEnum.FullAccess;
+                    await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+                    return this.RedirectToAction("PersonalDetails");
 
                 case "NewGeneralUserIsEligible":
                     var generalAccountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
                     generalAccountCreation.AccountCreationType = AccountCreationTypeEnum.GeneralAccess;
                     generalAccountCreation.EmailAddress = emailValidateViewModel.Email;
                     await this.multiPageFormService.SetMultiPageFormData(generalAccountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-                    return this.RedirectToAction("CreateAccountGeneralUserConfirmation");
+                    return this.RedirectToAction("PersonalDetails");
                 case "NonUKLocation":
                     return this.RedirectToAction("RestrictedLocation");
                 default:
@@ -143,32 +128,6 @@
         public async Task<IActionResult> RestrictedLocation()
         {
             return this.View();
-        }
-
-        /// <summary>
-        /// CreateAccountGeneralUserConfirmation.
-        /// </summary>
-        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        [Route("CreateAccountGeneralUserConfirmation")]
-        [ResponseCache(CacheProfileName = "Never")]
-        [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
-        public async Task<IActionResult> CreateAccountGeneralUserConfirmation()
-        {
-            return this.View();
-        }
-
-        /// <summary>
-        /// CreateAccountGeneralUserConfirmation.
-        /// </summary>
-        /// <param name="returnToConfirmation">returnToConfirmation.</param>
-        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        [HttpPost]
-        [Route("CreateAccountGeneralUserConfirmation")]
-        [ResponseCache(CacheProfileName = "Never")]
-        [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
-        public async Task<IActionResult> CreateAccountGeneralUserConfirmation(bool? returnToConfirmation = false)
-        {
-            return this.RedirectToAction("CreateAccountPersonalDetails");
         }
 
         /// <summary>
@@ -198,29 +157,70 @@
         }
 
         /// <summary>
-        /// CreateAccountAccessChangeConfirmation.
+        /// Personal Details.
         /// </summary>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        [Route("CreateAccountAccessChangeConfirmation")]
+        [Route("PersonalDetails")]
         [ResponseCache(CacheProfileName = "Never")]
         [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
-        public async Task<IActionResult> CreateAccountAccessChangeConfirmation()
+        public async Task<IActionResult> PersonalDetails()
         {
-            return this.View();
+            var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            this.ViewBag.AccountCreationType = accountCreation.AccountCreationType;
+            return this.View(new PersonalDetails
+            {
+                FirstName = accountCreation.FirstName,
+                LastName = accountCreation.LastName,
+                PrimaryEmailAddress = accountCreation.EmailAddress,
+            });
         }
 
         /// <summary>
-        /// CreateAccountAccessChangeConfirmation.
+        /// Personal Details.
         /// </summary>
-        /// <param name="returnToConfirmation">returnToConfirmation.</param>
+        /// <param name="personalDetailsViewModel">personalDetailsViewModel.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [HttpPost]
-        [Route("CreateAccountAccessChangeConfirmation")]
+        [Route("PersonalDetails")]
         [ResponseCache(CacheProfileName = "Never")]
         [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
-        public async Task<IActionResult> CreateAccountAccessChangeConfirmation(bool? returnToConfirmation = false)
+        public async Task<IActionResult> PersonalDetails(PersonalDetails personalDetailsViewModel)
         {
-            return this.RedirectToAction("CreateAccountFullUserConfirmation");
+            var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            this.ViewBag.AccountCreationType = accountCreation.AccountCreationType;
+            bool valid = this.TryValidateModel(personalDetailsViewModel);
+
+            if (!valid)
+            {
+                return this.View(personalDetailsViewModel);
+            }
+
+            accountCreation.FirstName = personalDetailsViewModel.FirstName.Trim();
+            accountCreation.LastName = personalDetailsViewModel.LastName.Trim();
+            await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+
+            var request = new SimplifiedRegistrationRequestViewModel
+            {
+                UserRegistrationType = (UserRegistrationTypeEnum)accountCreation.AccountCreationType,
+                EmailAddress = accountCreation.EmailAddress,
+                FirstName = accountCreation.FirstName,
+                LastName = accountCreation.LastName,
+                SelfRegistration = true,
+            };
+            var response = await this.userService.SimplifiedRegisterNewUser(request);
+            if (!response.IsValid)
+            {
+                var errorMessage = string.Join(", ", response.Details);
+                this.ModelState.AddModelError(string.Empty, errorMessage);
+                return this.View(personalDetailsViewModel);
+            }
+            else
+            {
+                await this.multiPageFormService.ClearMultiPageFormData(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+                this.TempData.Clear();
+            }
+
+            return this.RedirectToAction("CheckYourEmail", new { accountCreation.EmailAddress });
         }
 
         /// <summary>
@@ -235,137 +235,72 @@
             return this.View();
         }
 
-        /////// <summary>
-        /////// Account confirmation view.
-        /////// </summary>
-        /////// <returns>The <see cref="IActionResult"/>.</returns>
-        /////// <param name="accountCreationViewModel">accountCreationViewModel.</param>
-        ////[Route("Registration/CreateAccountConfirmation")]
-        ////[ResponseCache(CacheProfileName = "Never")]
-        ////[TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
-        ////public async Task<IActionResult> CreateAccountConfirmation(AccountCreationViewModel accountCreationViewModel)
-        ////{
-        ////    var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-        ////    AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
-        ////    if (accountCreation.AccountCreationType == AccountCreationTypeEnum.FullAccess)
-        ////    {
-        ////        var placeOfWorkCheck = int.TryParse(accountCreationViewModel.LocationId, out int locationId);
-        ////        if (!placeOfWorkCheck || locationId == 0)
-        ////        {
-        ////            this.ModelState.AddModelError("LocationId", CommonValidationErrorMessages.WorkPlace);
-        ////            var location = await this.locationService.GetPagedFilteredAsync(accountCreationViewModel.FilterText, 1, UserRegistrationContentPageSize);
-        ////            return this.View("CreateAccountWorkPlace", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, WorkPlaceList = location.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = location.Item1, PageSize = UserRegistrationContentPageSize, HasItems = location.Item1 > 0, CurrentPage = 1 }, LocationId = accountCreation.LocationId });
-        ////        }
-
-        ////        accountCreation.LocationId = accountCreationViewModel.LocationId;
-        ////        await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-        ////    }
-
-        ////    this.ViewBag.AccountCreationType = accountCreation.AccountCreationType;
-        ////    if (accountCreation.IsLoginWizard)
-        ////    {
-        ////        return this.RedirectToAction("AccountConfirmation", "LoginWizard");
-        ////    }
-
-        ////    var response = await this.GetAccountConfirmationDetails(accountCreation);
-        ////    return this.View(response);
-        ////}
-
-        /////// <summary>
-        /////// Account confirmation and Create account API request.
-        /////// </summary>
-        /////// <returns>The <see cref="IActionResult"/>.</returns>
-        ////[HttpPost]
-        ////[Route("Registration/CreateAccountConfirmation")]
-        ////[ResponseCache(CacheProfileName = "Never")]
-        ////[TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
-        ////public async Task<IActionResult> CreateAccountConfirmation()
-        ////{
-        ////    var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-        ////    this.ViewBag.AccountCreationType = accountCreation.AccountCreationType;
-        ////    AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
-        ////    ////if (accountCreation.CountryId == "1" && (string.IsNullOrWhiteSpace(accountCreation.RegionId) || accountCreation.RegionId == "0"))
-        ////    ////{
-        ////    ////    this.ModelState.AddModelError(string.Empty, CommonValidationErrorMessages.RegionRequiredSummary);
-        ////    ////    var accountDetails = await this.GetAccountConfirmationDetails(accountCreation);
-        ////    ////    return this.View(accountDetails);
-        ////    ////}
-        ////    ////else
-        ////    ////{
-        ////    var request = new RegistrationRequestViewModel
-        ////    {
-        ////        UserRegistrationType = (UserRegistrationTypeEnum)accountCreation.AccountCreationType,
-        ////        CountryId = 0,
-        ////        RegionId = null,
-        ////        EmailAddress = accountCreation.EmailAddress,
-        ////        SecondaryEmailAddress = null,
-        ////        JobRoleId = 0,
-        ////        FirstName = accountCreation.FirstName,
-        ////        LastName = accountCreation.LastName,
-        ////        SelfRegistration = true,
-        ////        GradeId = 0,
-        ////        LocationId = 0,
-        ////        LocationStartDate = accountCreation.StartDate.GetValueOrDefault(),
-        ////        MedicalCouncilNumber = accountCreation.RegistrationNumber,
-        ////        SpecialtyId = int.TryParse(accountCreation.PrimarySpecialtyId, out int specialtyId) ? specialtyId : 0,
-        ////    };
-        ////    var response = await this.userService.RegisterNewUser(request);
-        ////    if (!response.IsValid)
-        ////    {
-        ////        var errorMessage = string.Join(", ", response.Details);
-        ////        this.ModelState.AddModelError(string.Empty, errorMessage);
-        ////        var accountDetails = await this.GetAccountConfirmationDetails(accountCreation);
-        ////        return this.View(accountDetails);
-        ////    }
-        ////    else
-        ////    {
-        ////        await this.multiPageFormService.ClearMultiPageFormData(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
-        ////        this.TempData.Clear();
-        ////    }
-        ////    ////}
-
-        ////    return this.View("CreateAccountSuccess");
-        ////}
-
         /// <summary>
         /// Check your email page.
         /// </summary>
+        /// <param name="emailAddress">email address.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
-        public IActionResult CheckYourEmail()
+        public IActionResult CheckYourEmail(string emailAddress)
         {
-            return this.View();
+            return this.View(model: emailAddress);
         }
 
-        private bool CheckConfirmationUpdate()
+        /// <summary>
+        /// The validate password.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <param name="loctoken">The loctoken.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("validate-email")]
+        public async Task<IActionResult> ValidatePassword(string token, string loctoken)
         {
-            bool returnToConfirmation = false;
-            StringValues rtc;
-            bool formSubmission;
-            if (this.HttpContext.Request.HasFormContentType)
+            if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(loctoken))
             {
-                formSubmission = this.HttpContext.Request.Form.Keys.Contains("formSubmission");
-                rtc = this.HttpContext.Request.Form["returnToConfirmation"];
-                if (!string.IsNullOrWhiteSpace(rtc))
-                {
-                    returnToConfirmation = bool.Parse(rtc);
-                }
+                return this.View("ValidatePassword");
+            }
+
+            var validationResult = await this.userService.ValidateUserPasswordTokenAsync(token, loctoken);
+            PasswordValidateViewModel changePasswordViewModel = new PasswordValidateViewModel();
+
+            changePasswordViewModel.Username = validationResult.UserName;
+            changePasswordViewModel.Token = token;
+            changePasswordViewModel.Loctoken = loctoken;
+            if (validationResult.Valid)
+            {
+                return this.View("SetPassword", changePasswordViewModel);
             }
             else
             {
-                formSubmission = this.HttpContext.Request.Query.Keys.Contains("formSubmission");
-                this.HttpContext.Request.Query.TryGetValue("returnToConfirmation", out rtc);
-                if (!string.IsNullOrWhiteSpace(rtc))
+                return this.View("ValidatePassword");
+            }
+        }
+
+        /// <summary>
+        /// The change password.
+        /// </summary>
+        /// <param name="model">The model<see cref="PasswordValidateViewModel"/>.</param>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpPost]
+        public async Task<IActionResult> SetPassword(PasswordValidateViewModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("SetPassword", model);
+            }
+            else
+            {
+                var result = await this.userService.SetUserInitialPasswordAsync(model.Token, model.Loctoken, model.NewPassword);
+
+                if (result)
                 {
-                    returnToConfirmation = bool.Parse(rtc);
+                    return this.View("RegistrationSuccess");
+                }
+                else
+                {
+                    return this.View("Error");
                 }
             }
-
-            if (returnToConfirmation && formSubmission)
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }

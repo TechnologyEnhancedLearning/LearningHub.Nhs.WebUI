@@ -87,4 +87,16 @@
         color: #d5281b;
         font-size: 19px;
     }
+    // By default, the text on reverse (white) buttons turns white once clicked, rendering them invisible.
+    .nhsuk-button--reverse:visited {
+        color: $nhsuk-black
+    }
+
+    .landing-page--btn-login {
+        color: $nhsuk-blue !important;
+        text-decoration: none;
+        box-shadow: 0 4px 0 #005eb8 !important;
+        margin-left: 20px;
+        border-color: #005eb8 !important;
+    }
 }

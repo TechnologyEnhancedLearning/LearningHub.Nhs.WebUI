@@ -33,7 +33,7 @@
     /// CatalogueController.
     /// </summary>
     [Authorize]
-    [ServiceFilter(typeof(LoginWizardFilter))]
+    ////[ServiceFilter(typeof(LoginWizardFilter))]
     public class CatalogueController : BaseController
     {
         private readonly IDashboardService dashboardService;

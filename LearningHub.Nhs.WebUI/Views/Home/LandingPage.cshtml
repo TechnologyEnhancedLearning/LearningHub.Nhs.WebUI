@@ -23,27 +23,11 @@
 
 
 <div class="">
-@*     <div class="landing-page__landing-page-banner">
-        <div class="landing-page__banner-panel display--hide display-desktop--show">
-            <h1>A platform for learning and sharing resources</h1>
-            <div class="text">
-                Sign up, explore and learn
-            </div>
-        </div>
-    </div>
-    <div class="landing-page__banner-panel-mobile display-desktop--hide">
-        <h1>A platform for learning and sharing resources</h1>
-        <div class="text">
-            Sign up, explore and learn
-        </div>
-    </div> *@
-
-    @* start *@
     <div class="landing-page__access-container">
         <div class="nhsuk-width-container app-width-container">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
-                    <img src="" alt="test image" />
+                    <img src="" />
                 </div>
                 <div class="nhsuk-grid-column-one-half landing-page--login-tray">
                     <h2>Start learning today</h2>
@@ -54,49 +38,13 @@
                         <a asp-controller="SimplifiedRegistration" asp-action="CreateAnAccount" class="nhsuk-button nhsuk-button--beta-login">Create an account</a>
                         <a asp-controller="Login" asp-action="Index" class="nhsuk-button nhsuk-button--reverse landing-page--btn-login">Log in</a>
                     </div>
-                    <div class="nhsuk-u-margin-top-3">
-                        <a class="nhsuk-link nhsuk-link--reverse" href="/forgotten-password">Forgotten username or password</a>
-                        <a asp-controller="SimplifiedRegistration" asp-action="CheckYourEmail" class="nhsuk-button nhsuk-button--beta-login">EmailVerification</a>
-                        <p>
-                            <a asp-controller="Account" asp-action="CreateAnAccount">Create new account</a>
-                        </p>
+                    <div class="nhsuk-u-margin-top-5">
+                        <a class="nhsuk-link landing-page--link" href="/forgotten-password">Forgotten username or password</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @* end *@
-
-    @* <div class="landing-page__access-container">
-        <div class="nhsuk-width-container app-width-container">
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-full">
-                    <h2>Access your Learning Hub account</h2>
-                </div>
-                <div class="nhsuk-grid-column-one-half">
-                    <h3>Use your Learning Hub or elfh credentials</h3>
-                    <p>
-                        <a asp-controller="Login" asp-action="Index" class="nhsuk-button nhsuk-button--beta-login">Log in</a>
-                    </p>
-                    <p class="nhsuk-u-margin-bottom-2">
-                        <a href="/forgotten-password">Forgotten username or password</a>
-                    </p>
-                    <p>
-                        <a asp-controller="Account" asp-action="CreateAnAccount">Create new account</a>
-                    </p>
-                </div>
-                <div class="nhsuk-grid-column-one-half landing-page__open-athens--mobile">
-                    <h3>Use your OpenAthens credentials</h3>
-                    <p>
-                        <a asp-controller="OpenAthens" asp-action="Login" asp-route-returnUrl=@authRequiredReturnUrl asp-route-invalidScope=false class="nhsuk-button nhsuk-button--secondary">Log in with OpenAthens</a>
-                    </p>
-                    <p>
-                        Registered NHS England and NHS Scotland OpenAthens users can login using their account.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div> *@
 
     <div id="cmsPage">
         <partial name="_CmsPageRow" model="@Model" />

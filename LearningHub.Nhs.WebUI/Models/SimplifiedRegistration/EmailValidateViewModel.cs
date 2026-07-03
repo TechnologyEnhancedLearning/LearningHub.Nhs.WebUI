@@ -18,11 +18,5 @@
         [EmailAddress(ErrorMessage = CommonValidationErrorMessages.InvalidEmail)]
         [NoWhitespace(ErrorMessage = CommonValidationErrorMessages.WhitespaceInEmail)]
         public string Email { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to ReturnToConfirmation Page.
-        /// </summary>
-        [DefaultValue(false)]
-        public bool? ReturnToConfirmation { get; set; }
     }
 }

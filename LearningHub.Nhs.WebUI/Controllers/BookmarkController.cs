@@ -20,7 +20,7 @@
     /// </summary>
     [Authorize]
     [AutoValidateAntiforgeryToken]
-    [ServiceFilter(typeof(LoginWizardFilter))]
+    ////[ServiceFilter(typeof(LoginWizardFilter))]
     public partial class BookmarkController : BaseController
     {
         private readonly IBookmarkService bookmarkService;

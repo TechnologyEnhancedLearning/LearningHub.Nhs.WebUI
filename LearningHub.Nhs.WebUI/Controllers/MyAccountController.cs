@@ -113,28 +113,28 @@
         [Route("myaccount")]
         public async Task<IActionResult> Index(string returnUrl = null, bool? checkDetails = false)
         {
-            string loginWizardCacheKey = $"{this.CurrentUserId}:LoginWizard";
-            var (cacheExists, loginWizard) = await this.cacheService.TryGetAsync<Models.Account.LoginWizardViewModel>(loginWizardCacheKey);
+            ////string loginWizardCacheKey = $"{this.CurrentUserId}:LoginWizard";
+            ////var (cacheExists, loginWizard) = await this.cacheService.TryGetAsync<Models.Account.LoginWizardViewModel>(loginWizardCacheKey);
 
-            if (checkDetails == true || cacheExists)
-            {
-                this.ViewBag.CheckDetails = true;
+            ////if (checkDetails == true || cacheExists)
+            ////{
+            ////    this.ViewBag.CheckDetails = true;
 
-                var rules = loginWizard.LoginWizardStagesRemaining.SelectMany(l => l.LoginWizardRules.Where(r => r.Required));
-                foreach (var rule in rules)
-                {
-                    this.ModelState.AddModelError(string.Empty, rule.Description);
-                }
+            ////    var rules = loginWizard.LoginWizardStagesRemaining.SelectMany(l => l.LoginWizardRules.Where(r => r.Required));
+            ////    foreach (var rule in rules)
+            ////    {
+            ////        this.ModelState.AddModelError(string.Empty, rule.Description);
+            ////    }
 
-                if (this.TempData.ContainsKey("IsJobRoleRequired"))
-                {
-                    if (this.TempData["IsJobRoleRequired"] != null && (bool)this.TempData["IsJobRoleRequired"] == true)
-                    {
-                        this.ModelState.AddModelError(string.Empty, CommonValidationErrorMessages.RoleRequired);
-                        this.TempData["IsJobRoleRequired"] = null;
-                    }
-                }
-            }
+            ////    if (this.TempData.ContainsKey("IsJobRoleRequired"))
+            ////    {
+            ////        if (this.TempData["IsJobRoleRequired"] != null && (bool)this.TempData["IsJobRoleRequired"] == true)
+            ////        {
+            ////            this.ModelState.AddModelError(string.Empty, CommonValidationErrorMessages.RoleRequired);
+            ////            this.TempData["IsJobRoleRequired"] = null;
+            ////        }
+            ////    }
+            ////}
 
             var userPersonalDetails = await this.userService.GetMyAccountPersonalDetailsAsync();
             return this.View("Index", userPersonalDetails);
@@ -149,28 +149,28 @@
         [Route("myaccount-employment")]
         public async Task<IActionResult> MyEmploymentDetails(bool? checkDetails = false)
         {
-            string loginWizardCacheKey = $"{this.CurrentUserId}:LoginWizard";
-            var (cacheExists, loginWizard) = await this.cacheService.TryGetAsync<Models.Account.LoginWizardViewModel>(loginWizardCacheKey);
+            ////string loginWizardCacheKey = $"{this.CurrentUserId}:LoginWizard";
+            ////var (cacheExists, loginWizard) = await this.cacheService.TryGetAsync<Models.Account.LoginWizardViewModel>(loginWizardCacheKey);
 
-            if (checkDetails == true || cacheExists)
-            {
-                this.ViewBag.CheckDetails = true;
+            ////if (checkDetails == true || cacheExists)
+            ////{
+            ////    this.ViewBag.CheckDetails = true;
 
-                var rules = loginWizard.LoginWizardStagesRemaining.SelectMany(l => l.LoginWizardRules.Where(r => r.Required));
-                foreach (var rule in rules)
-                {
-                    this.ModelState.AddModelError(string.Empty, rule.Description);
-                }
+            ////    var rules = loginWizard.LoginWizardStagesRemaining.SelectMany(l => l.LoginWizardRules.Where(r => r.Required));
+            ////    foreach (var rule in rules)
+            ////    {
+            ////        this.ModelState.AddModelError(string.Empty, rule.Description);
+            ////    }
 
-                if (this.TempData.ContainsKey("IsJobRoleRequired"))
-                {
-                    if (this.TempData["IsJobRoleRequired"] != null && (bool)this.TempData["IsJobRoleRequired"] == true)
-                    {
-                        this.ModelState.AddModelError(string.Empty, CommonValidationErrorMessages.RoleRequired);
-                        this.TempData["IsJobRoleRequired"] = null;
-                    }
-                }
-            }
+            ////    if (this.TempData.ContainsKey("IsJobRoleRequired"))
+            ////    {
+            ////        if (this.TempData["IsJobRoleRequired"] != null && (bool)this.TempData["IsJobRoleRequired"] == true)
+            ////        {
+            ////            this.ModelState.AddModelError(string.Empty, CommonValidationErrorMessages.RoleRequired);
+            ////            this.TempData["IsJobRoleRequired"] = null;
+            ////        }
+            ////    }
+            ////}
 
             var employmentDetails = await this.userService.GetMyEmploymentDetailsAsync();
             return this.View("MyEmployment", employmentDetails);

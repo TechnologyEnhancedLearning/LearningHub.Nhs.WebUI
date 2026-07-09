@@ -28,7 +28,7 @@
     /// The MyLearningController.
     /// </summary>
     [Authorize]
-    [ServiceFilter(typeof(LoginWizardFilter))]
+    ////[ServiceFilter(typeof(LoginWizardFilter))]
     public class MyLearningController : BaseController
     {
         private const int MyLearningPageSize = 5;

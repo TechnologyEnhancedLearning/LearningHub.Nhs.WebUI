@@ -29,7 +29,7 @@
     /// <summary>
     /// Defines the <see cref="ResourceController" />.
     /// </summary>
-    [ServiceFilter(typeof(LoginWizardFilter))]
+    ////[ServiceFilter(typeof(LoginWizardFilter))]
     public class ResourceController : BaseController
     {
         private readonly IAzureMediaService azureMediaService;

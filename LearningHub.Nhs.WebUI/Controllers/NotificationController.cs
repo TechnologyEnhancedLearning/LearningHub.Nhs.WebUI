@@ -19,7 +19,7 @@
     /// Defines the <see cref="NotificationController" />.
     /// </summary>
     [Authorize]
-    [ServiceFilter(typeof(LoginWizardFilter))]
+    ////[ServiceFilter(typeof(LoginWizardFilter))]
     public class NotificationController : BaseController
     {
         private readonly INotificationService notificationService;

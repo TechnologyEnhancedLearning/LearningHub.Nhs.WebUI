@@ -1,0 +1,37 @@
+﻿@using Microsoft.Extensions.Options;
+@using LearningHub.Nhs.WebUI.Configuration;
+@inject IOptions<Settings> settings
+
+@{
+    ViewData["Title"] = "Account ready";
+    ViewData["DisableValidation"] = true;
+    var returnUrl = (string)Url.ActionContext.HttpContext.Request.Query["returnUrl"];
+}
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+<div class="create-account">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-top-8">
+                <h1>Your account is ready to go</h1>
+                <p>
+                    Your account has been created and you can start using the Learning Hub right away.
+                </p>
+                <p>
+                    Before you start, there are a few optional steps that can help us tailor the content and improve your experience.
+                </p>
+                <p>
+                    Finishing account creation should take 2 to 5 minutes. You can do these now, or come back to them later.
+                </p>
+                <div>
+                    <a asp-controller="" asp-action="" class="nhsuk-button">Continue setup</a>
+                    <a asp-controller="Account" asp-action="AuthorisationRequired" asp-route-originalurl="@returnUrl" class="nhsuk-button nhsuk-button--reverse landing-page--btn-login">Start learning now</a>
+                </div>
+            </div>
+            <div class="nhsuk-grid-column-one-half nhsuk-u-padding-top-8">
+            </div>
+
+        </div>
+    </div>
+</div>

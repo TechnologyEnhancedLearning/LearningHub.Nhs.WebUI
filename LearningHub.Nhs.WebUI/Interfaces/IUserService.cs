@@ -518,5 +518,12 @@
         /// <param name="model">MyAccountLocationViewModel.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task UpdateMyAccountLocationDetailsAsync(int userId, MyAccountLocationViewModel model);
+
+        /// <summary>
+        /// The Simplified Register New User.
+        /// </summary>
+        /// <param name="registrationRequest">Registration request.</param>
+        /// <returns>A <see cref="LearningHubValidationResult"/> representing the result of the asynchronous operation.</returns>
+        Task<LearningHubValidationResult> SimplifiedRegisterNewUser(SimplifiedRegistrationRequestViewModel registrationRequest);
     }
 }

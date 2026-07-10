@@ -651,7 +651,7 @@
             var currentUserId = publishViewModel.UserId;
             var publicationId = this.hierarchyEditRepository.Publish(publishViewModel.HierarchyEditId, publishViewModel.IsMajorRevision, publishViewModel.Notes, currentUserId);
 
-            bool success = true; // From Findwise in IT2
+            bool success = true;
 
             if (success)
             {

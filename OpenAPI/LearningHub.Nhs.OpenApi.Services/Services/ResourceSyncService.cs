@@ -24,7 +24,6 @@
         private readonly IResourceVersionRepository resourceVersionRepository;
         private readonly ICatalogueNodeVersionRepository catalogueNodeVersionRepository;
         private readonly IGenericFileResourceVersionRepository genericFileResourceVersionRepository;
-        private readonly IFindwiseApiFacade findwiseApiFacade;
         private readonly IMapper mapper;
 
         /// <summary>
@@ -34,21 +33,18 @@
         /// <param name="resourceVersionRepository">The resourceVersionRepository.</param>
         /// <param name="catalogueNodeVersionRepository">The catalogueNodeVersionRepository.</param>
         /// <param name="genericFileResourceVersionRepository">The genericFileResourceVersionRepository.</param>
-        /// <param name="findwiseApiFacade">The findwiseApiFacade.</param>
         /// <param name="mapper">The mapper.</param>
         public ResourceSyncService(
             IResourceSyncRepository resourceSyncRepository,
             IResourceVersionRepository resourceVersionRepository,
             ICatalogueNodeVersionRepository catalogueNodeVersionRepository,
             IGenericFileResourceVersionRepository genericFileResourceVersionRepository,
-            IFindwiseApiFacade findwiseApiFacade,
             IMapper mapper)
         {
             this.resourceSyncRepository = resourceSyncRepository;
             this.resourceVersionRepository = resourceVersionRepository;
             this.catalogueNodeVersionRepository = catalogueNodeVersionRepository;
             this.genericFileResourceVersionRepository = genericFileResourceVersionRepository;
-            this.findwiseApiFacade = findwiseApiFacade;
             this.mapper = mapper;
         }
 
@@ -104,46 +100,6 @@
         /// <returns>The task.</returns>
         public async Task<LearningHubValidationResult> SyncForUserAsync(int userId)
         {
-            // Obtain Resource Version dataset related to the sync list for the supplied User Id.
-            var syncList = resourceSyncRepository.GetSyncListForUser(userId, true).ToList();
-
-            var resources = syncList.Select(x => x.Resource).ToList();
-
-            // Sync Updates
-            var resourcesToUpdate = resources.Where(x => !this.ResourceIsUnpublished(x)).ToList();
-            var resourceVersionIdList = resourcesToUpdate.Select(x => x.Id).ToList();
-            var mappedResourcesToUpdate = await this.BuildSearchResourceRequestModelList(resourceVersionIdList);
-
-            // Validate Findwise submission
-            var invalidResourceDetails = new List<string>();
-            foreach (var r in mappedResourcesToUpdate)
-            {
-                if (!r.IsValidForSubmission())
-                {
-                    invalidResourceDetails.Add(r.Title);
-                }
-            }
-
-            if (invalidResourceDetails.Count > 0)
-            {
-                return new LearningHubValidationResult(false, $"The following Resources are not valid for submission: {string.Join(", ", invalidResourceDetails)}");
-            }
-
-            // Send update to Findwise
-            if (mappedResourcesToUpdate.Any())
-            {
-                await findwiseApiFacade.AddOrReplaceAsync(mappedResourcesToUpdate.ToList());
-            }
-
-            // Synce Deletes
-            var resourcesToDelete = resources.Where(x => this.ResourceIsUnpublished(x)).ToList();
-            var mappedResourcesToDelete = resourcesToDelete.Select(x => mapper.Map<SearchResourceRequestModel>(x)).ToList();
-
-            if (mappedResourcesToDelete.Any())
-            {
-                await findwiseApiFacade.RemoveAsync(mappedResourcesToDelete.ToList());
-            }
-
             await resourceSyncRepository.SetSyncedForUserAsync(userId);
 
             return new LearningHubValidationResult(true);
@@ -243,27 +199,6 @@
         /// <returns>The task.</returns>
         public async Task<LearningHubValidationResult> SyncSingleAsync(int resourceVersionId)
         {
-            var resourceVersion = GetResourcesWithIncludes().SingleOrDefault(x => x.Id == resourceVersionId);
-            if (resourceVersion == null)
-            {
-                throw new Exception($"No resource version found for id '{resourceVersionId}'");
-            }
-
-            var searchResourceRequestModel = await BuildSearchResourceRequestModel(resourceVersionId);
-            if (ResourceIsUnpublished(resourceVersion))
-            {
-                await findwiseApiFacade.RemoveAsync(new List<SearchResourceRequestModel> { searchResourceRequestModel });
-            }
-            else
-            {
-                if (!searchResourceRequestModel.IsValidForSubmission())
-                {
-                    return new LearningHubValidationResult(false, $"Resource '{resourceVersion.Title}' is not valid for submission to Findwise");
-                }
-
-                await findwiseApiFacade.AddOrReplaceAsync(new List<SearchResourceRequestModel> { searchResourceRequestModel });
-            }
-
             return new LearningHubValidationResult(true);
         }
 

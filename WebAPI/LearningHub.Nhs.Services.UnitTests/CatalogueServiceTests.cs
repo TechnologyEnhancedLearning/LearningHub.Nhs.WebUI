@@ -28,7 +28,6 @@ namespace LearningHub.Nhs.Services.UnitTests
     {
         private readonly Mock<IUserRepository> mockUserRepository;
         private readonly Mock<IResourceVersionRepository> mockResourceVersionRepository;
-        private readonly Mock<IFindwiseApiFacade> mockFindwiseApiFacade;
         private Mock<IRoleUserGroupRepository> mockRoleUserGroupRepository;
         private Mock<IUserUserGroupRepository> mockUserUserGroupRepository;
         private MockRepository mockRepository;
@@ -62,7 +61,6 @@ namespace LearningHub.Nhs.Services.UnitTests
             this.mockRoleUserGroupRepository = this.mockRepository.Create<IRoleUserGroupRepository>();
             this.mockUserRepository = this.mockRepository.Create<IUserRepository>();
             this.mockResourceVersionRepository = this.mockRepository.Create<IResourceVersionRepository>();
-            this.mockFindwiseApiFacade = this.mockRepository.Create<IFindwiseApiFacade>();
             this.mockRoleUserGroupRepository = this.mockRepository.Create<IRoleUserGroupRepository>();
             this.mockUserUserGroupRepository = this.mockRepository.Create<IUserUserGroupRepository>();
             this.mockEmailSenderService = this.mockRepository.Create<IEmailSenderService>();
@@ -142,7 +140,6 @@ namespace LearningHub.Nhs.Services.UnitTests
                 this.mockUserRepository.Object,
                 this.mockRoleUserGroupRepository.Object,
                 this.mockResourceVersionRepository.Object,
-                this.mockFindwiseApiFacade.Object,
                 this.mockUserUserGroupRepository.Object,
                 this.mockEmailSenderService.Object,
                 ////this.mockUserService.Object,

@@ -208,9 +208,12 @@
 
                             var activityDate = certificate.AwardedDate.Date;
                             var today = DateTime.Today;
-                            var dateTimeText = activityDate == today ? "Today"
-                            : activityDate == today.AddDays(-1) ? "Yesterday"
-                            : activityDate.ToString("dd MMM yyyy");
+
+                            var dateTimeText =
+                            activityDate == DateTimeOffset.MinValue ? "" :
+                            activityDate.Date == today ? "Today" :
+                            activityDate.Date == today.AddDays(-1) ? "Yesterday" :
+                            activityDate.ToString("dd MMM yyyy");
 
 
 

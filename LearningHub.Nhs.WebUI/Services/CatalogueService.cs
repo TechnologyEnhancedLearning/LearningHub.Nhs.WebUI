@@ -275,7 +275,7 @@
         /// <returns>The task.</returns>
         public async Task<LearningHubValidationResult> RequestAccessAsync(string reference, string catalogueName, CatalogueAccessRequestViewModel vm, string accessType)
         {
-            var request = $"Catalogue/RequestAccess/{reference}/{catalogueName}/{accessType}";
+            var request = $"Catalogue/RequestAccess/{reference}/{accessType}" + $"?catalogueName={Uri.EscapeDataString(catalogueName)}";
 
             var client = await this.OpenApiHttpClient.GetClientAsync();
             var content = new StringContent(JsonConvert.SerializeObject(vm), Encoding.UTF8, "application/json");

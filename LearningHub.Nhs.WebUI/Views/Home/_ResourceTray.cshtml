@@ -69,9 +69,9 @@
 
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
-            <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred nhsuk-u-margin-bottom-2">
-                @if (@Model.Resources.Resources != null)
-                {
+            @if (@Model.Resources.Resources.Count() > 0)
+            {
+                <ul class="nhsuk-grid-row nhsuk-card-group nhsuk-card-group--centred nhsuk-u-margin-bottom-2">
                     @foreach (var resource in Model.Resources.Resources)
                     {
                         var resourceViewModel = new Tuple<string, DashboardResourceViewModel>("resources", resource);
@@ -79,8 +79,16 @@
                             <partial name="_ResourceCard" model="resourceViewModel" />
                         </li>
                     }
+                </ul>
+            }
+            else
+            {
+                if (Model.Resources.Type == "my-recent-completed")
+                {
+                    <h3 nhsuk-card__heading nhsuk-heading-m>You have not recently completed any learning.</h3>
+                    <p class="nhsuk-card__description dashboard-card-body">When available your completed learning will be displayed here.</p>
                 }
-            </ul>
+            }
         </div>
     </div>
     <div class="nhsuk-grid-row">

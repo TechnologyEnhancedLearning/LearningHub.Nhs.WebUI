@@ -15,8 +15,9 @@
         /// The QueueMessagesAsync.
         /// </summary>
         /// <param name="emails">The emails list.</param>
+        /// <param name="userTimeOffset"></param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task QueueMessagesAsync(IEnumerable<QueueRequests> emails);
+        Task QueueMessagesAsync(IEnumerable<QueueRequests> emails, int? userTimeOffset);
 
         /// <summary>
         /// The GetPendingEmailsAsync.
@@ -28,22 +29,25 @@
         /// Marks a message as failed, or queues it for a retry.
         /// </summary>
         /// <param name="response">The response.</param>
+        /// <param name="userTimeOffset">The userTimeOffset.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task MessageDeliveryFailed(GovNotifyResponse response);
+        Task MessageDeliveryFailed(GovNotifyResponse response, int? userTimeOffset);
 
         /// <summary>
         /// Marks a message as send.
         /// </summary>
         /// <param name="response">The response.</param>
+        /// <param name="userTimeOffset">The userTimeOffset.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task MessageDeliverySuccess(GovNotifyResponse response);
+        Task MessageDeliverySuccess(GovNotifyResponse response, int? userTimeOffset);
 
         /// <summary>
         /// Save one-off emails.
         /// </summary>
         /// <param name="request">The email request.</param>
+        /// <param name="userTimeOffset">user time offset.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task SaveSingleEmailTransactions(SingleEmailRequest request);
+        Task SaveSingleEmailTransactions(SingleEmailRequest request, int? userTimeOffset);
 
         /// <summary>
         /// The GetPaginatedMessageRequests.

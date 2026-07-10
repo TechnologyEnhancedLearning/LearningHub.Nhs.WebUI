@@ -20,14 +20,12 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationTemplateService"/> class.
         /// </summary>
-        /// <param name="fwClient">The findwise client.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="notificationTemplateRepository">The notification template repository.</param>
         public NotificationTemplateService(
-            IFindWiseHttpClient fwClient,
             ILogger<NotificationTemplate> logger,
             INotificationTemplateRepository notificationTemplateRepository)
-            : base(fwClient, logger)
+            : base(logger)
         {
             this.notificationTemplateRepository = notificationTemplateRepository;
         }

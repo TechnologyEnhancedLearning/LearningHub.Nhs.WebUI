@@ -2125,5 +2125,35 @@
                 throw new Exception("Update user location details failed!");
             }
         }
+
+        /// <summary>
+        /// The register new user.
+        /// </summary>
+        /// <param name="registrationRequest">The registrationRequest<see cref="SimplifiedRegistrationRequestViewModel"/>.</param>
+        /// <returns>The <see cref="LearningHubValidationResult"/>.</returns>
+        public async Task<LearningHubValidationResult> SimplifiedRegisterNewUser(SimplifiedRegistrationRequestViewModel registrationRequest)
+        {
+            var json = JsonConvert.SerializeObject(registrationRequest);
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = await this.userApiHttpClient.GetClientAsync();
+
+            var request = $"ElfhUser/SimplifiedRegisterUser";
+
+            var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
+
+            LearningHubValidationResult result = null;
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                result = JsonConvert.DeserializeObject<LearningHubValidationResult>(content);
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return result;
+        }
     }
 }

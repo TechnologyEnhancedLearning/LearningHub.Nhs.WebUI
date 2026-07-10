@@ -32,7 +32,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     /// <summary>
     /// Defines the <see cref="HomeController" />.
     /// </summary>
-    [ServiceFilter(typeof(LoginWizardFilter))]
+    ////[ServiceFilter(typeof(LoginWizardFilter))]
     public class HomeController : BaseController
     {
         private readonly LearningHubAuthServiceConfig authConfig;

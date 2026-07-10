@@ -26,7 +26,7 @@
     /// <summary>
     /// Defines the <see cref="ReportsController" />.
     /// </summary>
-    [ServiceFilter(typeof(LoginWizardFilter))]
+    ////[ServiceFilter(typeof(LoginWizardFilter))]
     [ServiceFilter(typeof(ReporterPermissionFilter))]
     [Authorize]
     public class ReportsController : BaseController

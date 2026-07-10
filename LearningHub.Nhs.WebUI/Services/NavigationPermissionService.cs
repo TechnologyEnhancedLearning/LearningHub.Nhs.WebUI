@@ -45,11 +45,11 @@
         /// <returns>The <see cref="Task{NavigationModel}"/>.</returns>
         public async Task<NavigationModel> GetNavigationModelAsync(IPrincipal user, bool loginWizardComplete, string controllerName)
         {
-            if (!loginWizardComplete && (user.IsInRole("Administrator") || user.IsInRole("ReadOnly") || user.IsInRole("BlueUser") || user.IsInRole("BasicUser")))
-            {
-                return this.InLoginWizard();
-            }
-            else if (!user.Identity.IsAuthenticated)
+            ////if (!loginWizardComplete && (user.IsInRole("Administrator") || user.IsInRole("ReadOnly") || user.IsInRole("BlueUser") || user.IsInRole("BasicUser")))
+            ////{
+            ////    return this.InLoginWizard();
+            ////}
+            if (!user.Identity.IsAuthenticated)
             {
                 return this.NotAuthenticated();
             }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Net.Http;
     using System.Security.Principal;
@@ -75,7 +76,7 @@
             {
                 SearchId = searchRequest.SearchId.Value,
                 SearchText = searchString,
-                FilterText = this.BuildFilterText(searchRequest.Filters, searchRequest.ResourceCollectionFilter),
+                FilterText = this.BuildFilterText(searchRequest.Filters, searchRequest.ResourceCollectionFilter, searchRequest.SearchSourceFilter),
                 ProviderFilterText = searchRequest.ProviderFilters?.Any() == true ? $"&provider_ids={string.Join("&provider_ids=", searchRequest.ProviderFilters)}" : string.Empty,
                 SortColumn = selectedSortItem.Value,
                 SortDirection = selectedSortItem?.SortDirection,
@@ -294,7 +295,7 @@
             {
                 SearchId = searchRequest.SearchId.Value,
                 SearchText = searchString,
-                FilterText = this.BuildFilterText(searchRequest.Filters, searchRequest.ResourceCollectionFilter),
+                FilterText = this.BuildFilterText(searchRequest.Filters, searchRequest.ResourceCollectionFilter, searchRequest.SearchSourceFilter),
                 ProviderFilterText = searchRequest.ProviderFilters?.Any() == true ? $"&provider_ids={string.Join("&provider_ids=", searchRequest.ProviderFilters)}" : string.Empty,
                 SortColumn = selectedSortItem.Value,
                 SortDirection = selectedSortItem?.SortDirection,
@@ -923,11 +924,12 @@
         /// The GetAutoSuggestionList.
         /// </summary>
         /// <param name="term">The term.</param>
+        /// <param name="searchSourceFilterText">The search source filter text.</param>
         /// <returns>The auto suggestion list.</returns>
-        public async Task<AutoSuggestionModel> GetAutoSuggestionList(string term)
+        public async Task<AutoSuggestionModel> GetAutoSuggestionList(string term, string searchSourceFilterText)
         {
             var client = await this.OpenApiHttpClient.GetClientAsync();
-            var request = $"Search/GetAutoSuggestionResult/{term}";
+            var request = $"Search/GetAutoSuggestionResult/{term}/{searchSourceFilterText}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
 
             var viewModel = new AutoSuggestionModel();
@@ -987,8 +989,9 @@
         /// </summary>
         /// <param name="resourceTypeFilter">The resource type filters.</param>
         /// <param name="resourceCollectionFilter">The resource collection filters.</param>
+        /// <param name="searchSourceFilter">The search source filters.</param>
         /// <returns>The combined filter text.</returns>
-        private string BuildFilterText(IEnumerable<string> resourceTypeFilter, IEnumerable<string> resourceCollectionFilter)
+        private string BuildFilterText(IEnumerable<string> resourceTypeFilter, IEnumerable<string> resourceCollectionFilter, IEnumerable<string> searchSourceFilter)
         {
             var filterParts = new List<string>();
 
@@ -1001,6 +1004,8 @@
             {
                 filterParts.Add($"&resource_collection={string.Join("&resource_collection=", resourceCollectionFilter)}");
             }
+
+            filterParts.Add($"&source={string.Join("&source=", searchSourceFilter)}");
 
             return string.Join(string.Empty, filterParts);
         }

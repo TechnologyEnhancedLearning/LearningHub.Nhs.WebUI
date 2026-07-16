@@ -24,6 +24,7 @@
         background-color: $nhsuk-green;
         transition: width .6s ease;
     }
+
     .nhs-item-row {
         display: flex;
         justify-content: space-between;
@@ -207,5 +208,48 @@
 
     label {
         font-family: $font-stack;
+    }
+
+    .badge-summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+
+    .badge-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px; /* NHS spacing */
+    }
+    /* Circle column */
+    .badge-header__circle-col {
+        flex: 0 0 auto;
+    }
+    /* Text column */
+    .badge-header__text-col {
+        flex: 1 1 auto;
+    }
+
+
+    .badge-circle {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 5px solid #005eb8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .badge-dates-row {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .badge-dates-separator {
+        flex: 0 0 1px;
     }
 }

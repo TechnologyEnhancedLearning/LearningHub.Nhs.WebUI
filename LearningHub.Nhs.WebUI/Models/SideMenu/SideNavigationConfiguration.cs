@@ -17,78 +17,92 @@
         public static IEnumerable<SideNavigationGroup> GetGroupedMenus()
         {
             return new List<SideNavigationGroup>
-        {
-            new SideNavigationGroup
             {
-                GroupTitle = "Account",
-                Items = new List<SideNavigationItem>
+                new SideNavigationGroup
                 {
-                    new SideNavigationItem
+                    GroupTitle = "Account",
+                    Items = new List<SideNavigationItem>
                     {
-                        Text = "Personal details",
-                        Controller = "MyAccount",
-                        Action = "Index",
-                        IsActive = route => MatchRoute(route, "MyAccount", "Index"),
-                    },
-                    new SideNavigationItem
-                    {
-                        Text = "My employment",
-                        Controller = "MyAccount",
-                        Action = "MyEmploymentDetails",
-                        IsActive = route => MatchRoute(route, "MyAccount", "MyEmploymentDetails"),
-                    },
-                    new SideNavigationItem
-                    {
-                        Text = "Security",
-                        Controller = "MyAccount",
-                        Action = "MyAccountSecurity",
-                        IsActive = route => MatchRoute(route, "MyAccount", "MyAccountSecurity"),
-                    },
-                    new SideNavigationItem
-                    {
-                        Text = "Notifications",
-                        Controller = "Notification",
-                        Action = "Index",
-                        IsActive = route => MatchRoute(route, "Notification", "Index"),
+                        new SideNavigationItem
+                        {
+                            Text = "Personal details",
+                            Controller = "MyAccount",
+                            Action = "Index",
+                            IsActive = route => MatchRoute(route, "MyAccount", "Index"),
+                        },
+                        new SideNavigationItem
+                        {
+                            Text = "My employment",
+                            Controller = "MyAccount",
+                            Action = "MyEmploymentDetails",
+                            IsActive = route => MatchRoute(route, "MyAccount", "MyEmploymentDetails"),
+                        },
+                        new SideNavigationItem
+                        {
+                            Text = "Security",
+                            Controller = "MyAccount",
+                            Action = "MyAccountSecurity",
+                            IsActive = route => MatchRoute(route, "MyAccount", "MyAccountSecurity"),
+                        },
+                        new SideNavigationItem
+                        {
+                            Text = "Notifications",
+                            Controller = "Notification",
+                            Action = "Index",
+                            IsActive = route => MatchRoute(route, "Notification", "Index"),
+                        },
                     },
                 },
-            },
-            new SideNavigationGroup
-            {
-                GroupTitle = "Activity",
-                Items = new List<SideNavigationItem>
+                new SideNavigationGroup
                 {
-                    new SideNavigationItem
+                    GroupTitle = "Activity",
+                    Items = new List<SideNavigationItem>
                     {
-                        Text = "Recent learning",
-                        Controller = "MyLearning",
-                        Action = "Index",
-                        IsActive = route => MatchRoute(route, "MyLearning", "Index"),
-                    },
-                    new SideNavigationItem
-                    {
-                        Text = "Bookmarks",
-                        Controller = "Bookmark",
-                        Action = "Index",
-                        IsActive = route => MatchRoute(route, "Bookmark", "Index"),
-                    },
-                    new SideNavigationItem
-                    {
-                        Text = "Certificates",
-                        Controller = "MyLearning",
-                        Action = "Certificates",
-                        IsActive = route => MatchRoute(route, "MyLearning", "Certificates"),
-                    },
-                    new SideNavigationItem
-                    {
-                        Text = "Learning history",
-                        Controller = "MyLearning",
-                        Action = "LearningHistory",
-                        IsActive = route => MatchRoute(route, "MyLearning", "LearningHistory"),
+                        new SideNavigationItem
+                        {
+                            Text = "Recent learning",
+                            Controller = "MyLearning",
+                            Action = "Index",
+                            IsActive = route => MatchRoute(route, "MyLearning", "Index"),
+                        },
+                        new SideNavigationItem
+                        {
+                            Text = "Bookmarks",
+                            Controller = "Bookmark",
+                            Action = "Index",
+                            IsActive = route => MatchRoute(route, "Bookmark", "Index"),
+                        },
+                        new SideNavigationItem
+                        {
+                            Text = "Badges and Certificates",
+                            Children = new List<SideNavigationItem>
+                            {
+                                new SideNavigationItem
+                                {
+                                    Text = "Badges",
+                                    Controller = "MyLearning",
+                                    Action = "Badges",
+                                    IsActive = route => MatchRoute(route, "MyLearning", "Badges"),
+                                },
+                                new SideNavigationItem
+                                {
+                                    Text = "Certificates",
+                                    Controller = "MyLearning",
+                                    Action = "Certificates",
+                                    IsActive = route => MatchRoute(route, "MyLearning", "Certificates"),
+                                },
+                            },
+                        },
+                        new SideNavigationItem
+                        {
+                            Text = "Learning history",
+                            Controller = "MyLearning",
+                            Action = "LearningHistory",
+                            IsActive = route => MatchRoute(route, "MyLearning", "LearningHistory"),
+                        },
                     },
                 },
-            },
-        };
+            };
         }
 
         /// <summary>

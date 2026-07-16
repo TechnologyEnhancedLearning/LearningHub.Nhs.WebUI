@@ -59,14 +59,14 @@ BEGIN
    LEFT JOIN (
     SELECT 
         ResourceId,
-        MAX(Id) AS LatestRefId
+        MIN(Id) AS OldestRefId
     FROM resources.ResourceReference
     WHERE Deleted = 0
     GROUP BY ResourceId
-     ) rrLatest ON rrLatest.ResourceId = rv.ResourceId
+    ) rrOldest ON rrOldest.ResourceId = rv.ResourceId
 
     LEFT JOIN resources.ResourceReference rrRef
-    ON rrRef.Id = rrLatest.LatestRefId
+        ON rrRef.Id = rrOldest.OldestRefId
 
       LEFT JOIN (
         SELECT 

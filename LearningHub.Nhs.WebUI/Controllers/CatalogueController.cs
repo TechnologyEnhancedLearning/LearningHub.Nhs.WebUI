@@ -578,7 +578,8 @@
         {
             if (this.ModelState.IsValid)
             {
-                var validationResult = await this.catalogueService.RequestAccessAsync(viewModel.CatalogueUrl, new CatalogueAccessRequestViewModel() { Message = viewModel.AccessRequestMessage, RoleId = (int)RoleEnum.Reader }, "access");
+                var userFullName = viewModel.CurrentUser.FirstName + " " + viewModel.CurrentUser.LastName;
+                var validationResult = await this.catalogueService.RequestAccessAsync(viewModel.CatalogueUrl, viewModel.CatalogueName, new CatalogueAccessRequestViewModel() { Message = viewModel.AccessRequestMessage, RoleId = (int)RoleEnum.Reader, EmailAddress = viewModel.CurrentUser.EmailAddress, UserFullName = userFullName }, "access");
 
                 if (validationResult.IsValid)
                 {
@@ -660,7 +661,8 @@
         {
             if (this.ModelState.IsValid)
             {
-                var validationResult = await this.catalogueService.RequestAccessAsync(viewModel.CatalogueUrl, new CatalogueAccessRequestViewModel() { Message = viewModel.AccessRequestMessage, RoleId = (int)RoleEnum.Previewer }, "permission");
+                var userFullName = viewModel.CurrentUser.FirstName + " " + viewModel.CurrentUser.LastName;
+                var validationResult = await this.catalogueService.RequestAccessAsync(viewModel.CatalogueUrl, viewModel.CatalogueName, new CatalogueAccessRequestViewModel() { Message = viewModel.AccessRequestMessage, RoleId = (int)RoleEnum.Previewer, EmailAddress = viewModel.CurrentUser.EmailAddress, UserFullName = userFullName }, "permission");
 
                 if (validationResult.IsValid)
                 {
@@ -694,7 +696,9 @@
         {
             if (this.ModelState.IsValid)
             {
-                var validationResult = await this.catalogueService.RequestAccessAsync(viewModel.CatalogueUrl, new CatalogueAccessRequestViewModel() { Message = viewModel.AccessRequestMessage, RoleId = (int)RoleEnum.Previewer }, "access");
+                var userFullName = viewModel.CurrentUser.FirstName + " " + viewModel.CurrentUser.LastName;
+
+                var validationResult = await this.catalogueService.RequestAccessAsync(viewModel.CatalogueUrl, viewModel.CatalogueName, new CatalogueAccessRequestViewModel() { Message = viewModel.AccessRequestMessage, RoleId = (int)RoleEnum.Previewer, EmailAddress = viewModel.CurrentUser.EmailAddress, UserFullName = userFullName }, "access");
 
                 if (validationResult.IsValid)
                 {

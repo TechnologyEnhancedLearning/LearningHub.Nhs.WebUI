@@ -67,11 +67,11 @@
         }
 
         /// <summary>
-        /// The SyncWithFindwise.
+        /// The Sync.
         /// </summary>
         /// <returns>The action result.</returns>
         [HttpPost("Sync")]
-        public async Task<IActionResult> SyncWithFindwise()
+        public async Task<IActionResult> Sync()
         {
             var vr = await this.resourceSyncService.SyncForUserAsync(this.CurrentUserId);
             return this.Ok(new ApiResponse(vr.IsValid, vr));

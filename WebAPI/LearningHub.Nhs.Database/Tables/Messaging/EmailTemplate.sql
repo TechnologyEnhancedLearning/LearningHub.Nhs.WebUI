@@ -11,7 +11,8 @@
 	[CreateDate] [datetimeoffset](7) NOT NULL,
 	[AmendUserId] [int] NULL,
 	[AmendDate] [datetimeoffset](7) NULL,
-	CONSTRAINT [PK_email_template] PRIMARY KEY CLUSTERED 
+	[TemplateId] VARCHAR(50) NULL, 
+    CONSTRAINT [PK_email_template] PRIMARY KEY CLUSTERED 
 	(
 		[Id] ASC
 	) ON [PRIMARY]

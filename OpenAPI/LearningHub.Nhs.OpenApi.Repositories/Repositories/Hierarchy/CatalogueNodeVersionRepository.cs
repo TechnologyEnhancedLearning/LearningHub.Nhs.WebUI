@@ -364,7 +364,7 @@
             var param2 = new SqlParameter("@pageNumber", SqlDbType.Int) { Value = pageNumber };
             var param3 = new SqlParameter("@TotalRecords", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
-            var dashboardCatalogues = DbContext.DashboardCatalogueDto.FromSqlRaw("[hierarchy].[GetDashboardCatalogues] @DashboardType, @UserId, @pageNumber, @TotalRecords OUTPUT", param0, param1, param2, param3).ToList();
+            var dashboardCatalogues = DbContext.DashboardCatalogueDto.FromSqlRaw("[hierarchy].[GetDashboardCataloguesRM] @DashboardType, @UserId, @pageNumber, @TotalRecords OUTPUT", param0, param1, param2, param3).ToList();
 
             return (TotalCount: (int)param3.Value, Catalogues: dashboardCatalogues);
         }

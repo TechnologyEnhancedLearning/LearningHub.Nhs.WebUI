@@ -1,0 +1,144 @@
+﻿namespace LearningHub.Nhs.MessageQueueing.Repositories
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using AutoMapper;
+    using LearningHub.Nhs.MessageQueueing.EntityFramework;
+    using LearningHub.Nhs.MessageQueueing.Helpers;
+    using LearningHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Models.Entities.GovNotifyMessaging;
+    using LearningHub.Nhs.Models.GovNotifyMessaging;
+    using Microsoft.Data.SqlClient;
+    using Microsoft.EntityFrameworkCore;
+
+    /// <summary>
+    /// The MessageQueueRepository.
+    /// </summary>
+    public class MessageQueueRepository : IMessageQueueRepository
+    {
+        private readonly MessageQueueDbContext dbContext;
+        private readonly IMapper mapper;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageQueueRepository"/> class.
+        /// </summary>
+        /// <param name="dbContext">The context.</param>
+        /// <param name="mapper">mapper.</param>
+        public MessageQueueRepository(MessageQueueDbContext dbContext, IMapper mapper)
+        {
+            this.dbContext = dbContext;
+            this.mapper = mapper;
+        }
+
+        /// <summary>
+        /// The QueueMessagesAsync.
+        /// </summary>
+        /// <param name="requests">The queue requests.</param>
+        /// <param name="userTimeOffset">userTimeOffset.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task QueueMessagesAsync(IEnumerable<QueueRequests> requests, int? userTimeOffset)
+        {
+            var dataTable = DataTableBuilder.ToQueueRequestDataTable(requests);
+            var param0 = new SqlParameter("@p0", SqlDbType.Structured) { Value = dataTable, TypeName = "dbo.QueueRequestTableType" };
+            var param1 = new SqlParameter("@p1", SqlDbType.Int) { Value = userTimeOffset ?? (object)DBNull.Value };
+            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.CreateQueueRequests @p0, @p1", param0, param1);
+        }
+
+        /// <summary>
+        /// The GetPendingEmailsAsync.
+        /// </summary>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<IEnumerable<PendingMessageRequests>> GetPendingEmailsAsync()
+        {
+            var result = await this.dbContext.PendingMessageRequests.FromSqlRaw("[dbo].[GetQueueRequests]")
+              .AsNoTracking().ToListAsync();
+            return result;
+        }
+
+        /// <summary>
+        /// The Update Email request as success.
+        /// </summary>
+        /// <param name="response">Th response.</param>
+        /// <param name="userTimeOffset">Th userTimeOffset.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task MessageDeliverySuccess(GovNotifyResponse response, int? userTimeOffset)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = response.Id };
+            var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = response.NotificationId };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = userTimeOffset ?? (object)DBNull.Value };
+            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.MessageDeliverySuccess @p0, @p1, @p2", param0, param1, param2);
+        }
+
+        /// <summary>
+        /// The Update Email request as failed.
+        /// </summary>
+        /// <param name="response">Th response.</param>
+        /// <param name="userTimeOffset">Th userTimeOffset.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task MessageDeliveryFailed(GovNotifyResponse response, int? userTimeOffset)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.Int) { Value = response.Id };
+            var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = response.ErrorMessage };
+            var param2 = new SqlParameter("@p2", SqlDbType.Int) { Value = userTimeOffset ?? (object)DBNull.Value };
+            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.MessageDeliveryFailed @p0, @p1, @p2", param0, param1, param2);
+        }
+
+        /// <summary>
+        /// The Save Single Emails.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="userTimeOffset">userTimeOffset.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task SaveSingleEmailTransactions(SingleEmailRequest request, int? userTimeOffset)
+        {
+            var param0 = new SqlParameter("@p0", SqlDbType.NVarChar) { Value = request.Recipient };
+            var param1 = new SqlParameter("@p1", SqlDbType.NVarChar) { Value = request.TemplateId };
+            var param2 = new SqlParameter("@p2", SqlDbType.NVarChar) { Value = request.Personalisation == null ? DBNull.Value : request.Personalisation };
+            var param3 = new SqlParameter("@p3", SqlDbType.Int) { Value = request.Status };
+            var param4 = new SqlParameter("@p4", SqlDbType.NVarChar) { Value = request.ErrorMessage == null ? DBNull.Value : request.ErrorMessage };
+            var param5 = new SqlParameter("@p5", SqlDbType.Int) { Value = userTimeOffset ?? (object)DBNull.Value };
+            await this.dbContext.Database.ExecuteSqlRawAsync("dbo.SaveSingleEmailTransactions @p0, @p1, @p2, @p3, @p4, @p5", param0, param1, param2, param3, param4, param5);
+        }
+
+        /// <summary>
+        /// The Get Paginated MessageRequests.
+        /// </summary>
+        /// <param name="offSet">offset count.</param>
+        /// <param name="fetchRows">fetch rows.</param>
+        /// <param name="sortColumn">sort column.</param>
+        /// <param name="sortDirection">sort direction.</param>
+        /// <param name="filter">filter.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<PagedResultSet<MessageRequestViewModel>> GetPaginatedMessageRequests(int? offSet, int? fetchRows, string sortColumn, string sortDirection, string filter)
+        {
+            var result = new PagedResultSet<MessageRequestViewModel>();
+            var param0 = new SqlParameter("@offSet", SqlDbType.Int) { Value = offSet };
+            var param1 = new SqlParameter("@fetchRows", SqlDbType.Int) { Value = fetchRows };
+            var param2 = new SqlParameter("@sortColumn", SqlDbType.Text) { Value = sortColumn };
+            var param3 = new SqlParameter("@sortDirection", SqlDbType.Text) { Value = sortDirection };
+            var param4 = new SqlParameter("@filter", SqlDbType.Text) { Value = filter };
+            var param5 = new SqlParameter("@totalCount", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            var requests = await this.dbContext.MessageRequestViewModel.FromSqlRaw("dbo.GetAllMessageRequests @offSet,@fetchRows,@sortColumn,@sortDirection,@filter,@totalCount output ", param0, param1, param2, param3, param4, param5)
+               .AsNoTracking().ToListAsync();
+            result.TotalItemCount = (int)param5.Value;
+            result.Items = mapper.Map<List<MessageRequestViewModel>>(requests);
+            return result;
+        }
+
+        /// <summary>
+        /// Get Message Request By Id.
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<MessageRequestViewModel> GetMessageRequestById(int id)
+        {
+            var param0 = new SqlParameter("@id", SqlDbType.Int) { Value = id };
+            var result = await this.dbContext.MessageRequestViewModel.FromSqlRaw("dbo.GetMessageRequestById @id", param0).AsNoTracking().ToListAsync();
+            MessageRequestViewModel messageRequestViewModel = result.AsEnumerable().FirstOrDefault();
+            return messageRequestViewModel;
+        }
+    }
+}

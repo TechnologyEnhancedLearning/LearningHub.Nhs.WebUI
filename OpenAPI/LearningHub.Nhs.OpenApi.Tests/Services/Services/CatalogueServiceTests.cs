@@ -38,11 +38,12 @@
         private readonly Mock<IBookmarkRepository> bookmarkRepository;
         private readonly Mock<INodeRepository> nodeRepository;
         private readonly Mock<INodeActivityRepository> nodeActivityRepository;
-        private readonly Mock<IFindwiseApiFacade> findwiseApiFacade;
         private readonly Mock<IOptions<LearningHubConfig>> learningHubConfig;
         private readonly Mock<IOptions<FindwiseConfig>> findwiseConfig;
         private readonly Mock<INotificationSenderService> notificationSenderService;
         private readonly Mock<ITimezoneOffsetManager> timezoneOffsetManager;
+        private readonly Mock<IGovMessageService> govMessageSevice;
+        private readonly Mock<IEmailTemplateService> emailTemplateService;
         private readonly Mock<ICategoryService> categoryService;
 
         /// <summary>
@@ -51,6 +52,7 @@
         public CatalogueServiceTests()
         {
             this.catalogueRepository = new Mock<ICatalogueRepository>();
+            this.categoryService = new Mock<ICategoryService>();
             this.mapper = new Mock<IMapper>();
             this.catalogueNodeVersionRepository = new Mock<ICatalogueNodeVersionRepository>();
             this.catalogueAccessRequestRepository = new Mock<ICatalogueAccessRequestRepository>();
@@ -65,13 +67,19 @@
             this.bookmarkRepository = new Mock<IBookmarkRepository>();
             this.nodeRepository = new Mock<INodeRepository>();
             this.nodeActivityRepository = new Mock<INodeActivityRepository>();
-            this.findwiseApiFacade = new Mock<IFindwiseApiFacade>();
             this.learningHubConfig = new Mock<IOptions<LearningHubConfig>>();
             this.findwiseConfig = new Mock<IOptions<FindwiseConfig>>();
             this.notificationSenderService = new Mock<INotificationSenderService>();
             this.timezoneOffsetManager = new Mock<ITimezoneOffsetManager>();
+            this.govMessageSevice = new Mock<IGovMessageService>();
+            this.emailTemplateService = new Mock<IEmailTemplateService>();
             this.categoryService = new Mock<ICategoryService>();
-            this.catalogueService = new CatalogueService(this.catalogueRepository.Object, this.categoryService.Object, this.nodeRepository.Object, this.userUserGroupRepository.Object, this.mapper.Object, this.findwiseConfig.Object, this.learningHubConfig.Object, this.catalogueNodeVersionRepository.Object, this.nodeResourceRepository.Object, this.resourceVersionRepository.Object, this.roleUserGroupRepository.Object, this.providerService.Object, this.catalogueAccessRequestRepository.Object, this.userRepository.Object, this.userProfileRepository.Object, this.emailSenderService.Object, this.bookmarkRepository.Object, this.nodeActivityRepository.Object, this.findwiseApiFacade.Object,this.notificationSenderService.Object,this.timezoneOffsetManager.Object);
+            this.catalogueService = new CatalogueService(this.catalogueRepository.Object, this.categoryService.Object,
+                this.nodeRepository.Object, this.userUserGroupRepository.Object, 
+                this.mapper.Object, this.findwiseConfig.Object, this.learningHubConfig.Object, 
+                this.catalogueNodeVersionRepository.Object, this.nodeResourceRepository.Object, this.resourceVersionRepository.Object,
+                this.roleUserGroupRepository.Object, this.providerService.Object, this.catalogueAccessRequestRepository.Object, this.userRepository.Object, this.userProfileRepository.Object, this.emailSenderService.Object, this.bookmarkRepository.Object, this.nodeActivityRepository.Object, this.notificationSenderService.Object, this.timezoneOffsetManager.Object, this.categoryService.Object, this.govMessageSevice.Object, this.emailTemplateService.Object);
+            
         }
 
         private static IEnumerable<CatalogueNodeVersion> CatalogueNodeVersionList => new List<CatalogueNodeVersion>()

@@ -45,12 +45,15 @@ BEGIN
 		
 	IF EXISTS (SELECT 'X' FROM activity.ResourceActivity WHERE LaunchResourceActivityId = @ScormResourceActivityId AND ActivityStatusId IN (3, 4, 5))
 	BEGIN
-		DECLARE @ActivityStatusErrorMessage nvarchar(1024)
-		SELECT @ActivityStatusErrorMessage = 'ResourceActivity entry with Completed status already exists for ScormActivityId=' + CONVERT(nvarchar(20), @ScormActivityId);
-		RAISERROR (@ActivityStatusErrorMessage,   
-				   16, -- Severity.  
-				   1 -- State.  
-				   );  
+		UPDATE activity.ResourceActivity SET ActivityStatusId = @ActivityStatusId, 
+		                                     DurationSeconds = @DurationSeconds, 
+											 Score = @Score, 
+											 ActivityEnd = DATEADD(second, @DurationSeconds, ActivityStart),
+											 CreateUserId = @UserId,
+											CreateDate = @AmendDate,
+											AmendUserId = @UserId,
+											AmendDate = @AmendDate
+											where LaunchResourceActivityId = @ScormResourceActivityId  
 	END
 ELSE
 BEGIN

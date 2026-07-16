@@ -157,6 +157,11 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// </summary>
         public int StatMandId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the StatMandInstanceName.
+        /// </summary>
+        public string StatMandInstanceName { get; set; } = null!;
+
 
         /// <summary>
         /// Gets or sets <see cref="AuthClientIdentityKey"/>.

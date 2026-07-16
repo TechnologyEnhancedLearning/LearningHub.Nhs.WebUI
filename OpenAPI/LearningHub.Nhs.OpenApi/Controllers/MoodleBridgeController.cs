@@ -1,10 +1,10 @@
 ﻿namespace LearningHub.NHS.OpenAPI.Controllers
 {
+    using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.User;
+    using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using System.Threading.Tasks;
-    using LearningHub.Nhs.OpenApi.Services.Interface.Services;
-    using LearningHub.Nhs.Models.User;
 
     /// <summary>
     /// Moodle Bridge operations.

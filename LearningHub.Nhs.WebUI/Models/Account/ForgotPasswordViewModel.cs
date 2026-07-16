@@ -18,5 +18,10 @@
         [EmailAddress(ErrorMessage = CommonValidationErrorMessages.InvalidEmail)]
         [NoWhitespace(ErrorMessage = CommonValidationErrorMessages.WhitespaceInEmail)]
         public string EmailAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the TimezoneOffset.
+        /// </summary>
+        public int? TimezoneOffset { get; set; }
     }
 }

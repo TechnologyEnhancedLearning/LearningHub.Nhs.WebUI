@@ -1333,6 +1333,264 @@
             }
         }
 
+        /// <summary>
+        /// Get the autosuggested roles.
+        /// </summary>
+        /// <param name="term">The search term.</param>
+        /// <returns>Matching job roles.</returns>
+        [HttpGet]
+        public async Task<IActionResult> SearchRoles(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return this.Json(Enumerable.Empty<object>());
+            }
+
+            var roles = await this.jobRoleService.GetFilteredAsync(term);
+
+            var result = roles?
+                .Select(x => new
+                {
+                    id = x.Id,
+                    text = x.Name,
+                    category = x.NameWithStaffGroup.Substring(x.Name.Length).Trim().Trim('(', ')'),
+                });
+
+            return this.Json(result ?? Enumerable.Empty<object>());
+        }
+
+        /// <summary>
+        /// Get the autosuggested specialities.
+        /// </summary>
+        /// <param name="term">The search term.</param>
+        /// <returns>Matching job roles.</returns>
+        [HttpGet]
+        public async Task<IActionResult> SearchSpecialities(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return this.Json(Enumerable.Empty<object>());
+            }
+
+            string filterText = Regex.Replace(term, "[:!@#$%^&*()}{|\":?><\\[\\]\\;'/.,~\\\"\"\\'\\\\/]", " ");
+            var results = await this.specialtyService.GetPagedSpecialtiesAsync(filterText, 0, 1000);
+
+            var result = results.Item2?
+                .Select(x => new
+                {
+                    id = x.Id,
+                    text = x.Name,
+                });
+
+            return this.Json(result ?? Enumerable.Empty<object>());
+        }
+
+        /// <summary>
+        /// Get the autosuggested specialities.
+        /// </summary>
+        /// <param name="term">The search term.</param>
+        /// <returns>Matching job roles.</returns>
+        [HttpGet]
+        public async Task<IActionResult> SearchOrganizations(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return this.Json(Enumerable.Empty<object>());
+            }
+
+            string filterText = Regex.Replace(term, "[:!@#$%^&*()}{|\":?><\\[\\]\\;'/.,~\\\"\"\\'\\\\/]", " ");
+            var location = await this.locationService.GetPagedFilteredAsync(filterText, 0, 1000);
+
+            var result = location.Item2?
+                .Select(x => new
+                {
+                    id = x.Id,
+                    text = x.Name,
+                });
+
+            return this.Json(result ?? Enumerable.Empty<object>());
+        }
+
+        /// <summary>
+        /// Submit Professional Registration number.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        /// <param name="accountCreationViewModel">accountCreationViewModel.</param>
+        [Route("Registration/UserProfileTasks")]
+        [ResponseCache(CacheProfileName = "Never")]
+        [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
+        public async Task<IActionResult> UserProfileTasks(AccountCreationViewModel accountCreationViewModel)
+        {
+            var roleCheck = int.TryParse(accountCreationViewModel.CurrentRole, out int roleId);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
+            var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+
+            if (string.IsNullOrWhiteSpace(accountCreationViewModel.CurrentRole) || !roleCheck)
+            {
+                this.ModelState.AddModelError("CurrentRole", CommonValidationErrorMessages.RoleRequired);
+                var jobroles = await this.jobRoleService.GetPagedFilteredAsync(accountCreationViewModel.FilterText, 1, UserRegistrationContentPageSize);
+                return this.View("CreateAccountCurrentRole", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, CountryId = accountCreation.CountryId, RoleList = jobroles.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = jobroles.Item1, PageSize = UserRegistrationContentPageSize, HasItems = jobroles.Item1 > 0, CurrentPage = 1 }, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+            }
+
+            var jobrole = await this.jobRoleService.GetByIdAsync(roleId);
+            accountCreation.CurrentRole = jobrole.Id.ToString();
+            accountCreation.CurrentRoleName = jobrole.Name;
+            accountCreation.MedicalCouncilId = jobrole.MedicalCouncilId;
+            accountCreation.MedicalCouncilName = jobrole.MedicalCouncilName;
+            accountCreation.MedicalCouncilCode = jobrole.MedicalCouncilCode;
+
+            await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            this.ViewBag.Job = jobrole;
+            this.ViewBag.AccountCreationType = accountCreation.AccountCreationType;
+            return this.View(new AccountCreationViewModel { CurrentRole = accountCreation.CurrentRole, CurrentRoleName = accountCreation.CurrentRoleName, RegistrationNumber = accountCreation.RegistrationNumber, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+            //// return jobrole.MedicalCouncilId > 0 ? this.View(new AccountCreationViewModel { RegistrationNumber = accountCreation.RegistrationNumber, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation }) : this.RedirectToAction("CreateAccountGradeSelection", new AccountCreationViewModel { ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+        }
+
+        /// <summary>
+        /// Submit Professional Registration Number.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        /// <param name="accountCreationViewModel">accountCreationViewModel.</param>
+        [Route("Registration/CreateAccountProfessionalRegistrationNumber")]
+        [ResponseCache(CacheProfileName = "Never")]
+        [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
+        public async Task<IActionResult> CreateAccountProfessionalRegistrationNumber(AccountCreationViewModel accountCreationViewModel)
+        {
+            ////var roleCheck = int.TryParse(accountCreationViewModel.CurrentRole, out int roleId);
+            ////AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
+            var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+
+            ////if (string.IsNullOrWhiteSpace(accountCreationViewModel.CurrentRole) || !roleCheck)
+            ////{
+            ////    this.ModelState.AddModelError("CurrentRole", CommonValidationErrorMessages.RoleRequired);
+            ////    var jobroles = await this.jobRoleService.GetPagedFilteredAsync(accountCreationViewModel.FilterText, 1, UserRegistrationContentPageSize);
+            ////    return this.View("CreateAccountCurrentRole", new AccountCreationListViewModel { FilterText = accountCreationViewModel.FilterText, CountryId = accountCreation.CountryId, RoleList = jobroles.Item2, AccountCreationPaging = new AccountCreationPagingModel { TotalItems = jobroles.Item1, PageSize = UserRegistrationContentPageSize, HasItems = jobroles.Item1 > 0, CurrentPage = 1 }, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+            ////}
+
+            ////var jobrole = await this.jobRoleService.GetByIdAsync(roleId);
+            ////accountCreation.CurrentRole = jobrole.Id.ToString();
+            ////accountCreation.CurrentRoleName = jobrole.Name;
+            ////accountCreation.MedicalCouncilId = jobrole.MedicalCouncilId;
+            ////accountCreation.MedicalCouncilName = jobrole.MedicalCouncilName;
+            ////accountCreation.MedicalCouncilCode = jobrole.MedicalCouncilCode;
+
+            await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            ////this.ViewBag.Job = jobrole;
+            return this.View(new AccountCreationViewModel { RegistrationNumber = accountCreation.RegistrationNumber, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+        }
+
+        /// <summary>
+        /// Select Grade.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        /// <param name="accountCreationViewModel">accountCreationViewModel.</param>
+        [HttpPost]
+        [Route("Registration/CreateAccountSaveProfessionalRegistrationNumber")]
+        [ResponseCache(CacheProfileName = "Never")]
+        [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
+        public async Task<IActionResult> CreateAccountSaveProfessionalRegistrationNumber(AccountCreationViewModel accountCreationViewModel)
+        {
+            var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
+            var roleCheck = int.TryParse(accountCreation.CurrentRole, out int roleId);
+            if (accountCreation.MedicalCouncilId.HasValue && (int)accountCreation.MedicalCouncilId > 0 && (int)accountCreation.MedicalCouncilId < 4)
+            {
+                string validateMedicalCouncilNumber = await this.jobRoleService.ValidateMedicalCouncilNumber(accountCreation.LastName, (int)accountCreation.MedicalCouncilId, accountCreationViewModel.RegistrationNumber);
+                if (!string.IsNullOrWhiteSpace(validateMedicalCouncilNumber))
+                {
+                    this.ModelState.AddModelError("RegistrationNumber", validateMedicalCouncilNumber);
+                    this.ViewBag.Job = await this.jobRoleService.GetByIdAsync(roleId);
+                    return this.View("CreateAccountProfessionalRegistrationNumber", accountCreationViewModel);
+                }
+            }
+
+            accountCreation.RegistrationNumber = accountCreationViewModel.RegistrationNumber;
+            await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+
+            if (accountCreation.AccountCreationType == AccountCreationTypeEnum.GeneralAccess)
+            {
+                return this.RedirectToAction("CreateAccountConfirmation", new AccountCreationViewModel { PrimaryUserEmploymentId = accountCreation.PrimaryUserEmploymentId });
+            }
+
+            return this.View(new AccountCreationListViewModel { CurrentRole = accountCreation.CurrentRole, GradeId = accountCreation.GradeId, MedicalCouncilCode = accountCreation.MedicalCouncilCode, MedicalCouncilId = accountCreation.MedicalCouncilId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+        }
+
+        /// <summary>
+        /// Create Account Recovery Email.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        [Route("Registration/CreateAccountRecoveryEmail")]
+        [ResponseCache(CacheProfileName = "Never")]
+        [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
+        public async Task<ActionResult> CreateAccountRecoveryEmail()
+        {
+            var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            this.ViewBag.AccountCreationType = accountCreation.AccountCreationType;
+            return this.View(new PersonalDetails
+            {
+                FirstName = accountCreation.FirstName,
+                LastName = accountCreation.LastName,
+                PrimaryEmailAddress = accountCreation.EmailAddress,
+                SecondaryEmailAddress = accountCreation.SecondaryEmailAddress,
+                IsLoginWizard = accountCreation.IsLoginWizard,
+            });
+        }
+
+        /// <summary>
+        /// Create Account Recovery Email.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        /// <param name="personalDetailsViewModel">personalDetailsViewModel.</param>
+        /// <param name="returnToConfirmation">returnToConfirmation.</param>
+        [HttpPost]
+        [Route("Registration/CreateAccountRecoveryEmail")]
+        [ResponseCache(CacheProfileName = "Never")]
+        [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
+        public async Task<IActionResult> CreateAccountRecoveryEmail(PersonalDetails personalDetailsViewModel, bool? returnToConfirmation = false)
+        {
+            var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            this.ViewBag.AccountCreationType = accountCreation.AccountCreationType;
+            var personalDetails = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            personalDetails.SecondaryEmailAddress = personalDetailsViewModel.SecondaryEmailAddress?.Trim();
+            await this.multiPageFormService.SetMultiPageFormData(personalDetails, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            return this.CheckConfirmationUpdate() ? this.RedirectToAction("CreateAccountConfirmation", new AccountCreationViewModel { LocationId = personalDetails.LocationId }) : this.RedirectToAction("CreateAccountCountrySearch");
+        }
+
+        /// <summary>
+        /// Search Primary Specialty.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        /// <param name="accountCreationViewModel">accountCreationViewModel.</param>
+        [Route("Registration/CreateAccountLearnerPrimarySpecialty")]
+        [ResponseCache(CacheProfileName = "Never")]
+        [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
+        public async Task<IActionResult> CreateAccountLearnerPrimarySpecialty(AccountCreationViewModel accountCreationViewModel)
+        {
+            var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
+            accountCreation.GradeId = accountCreationViewModel.GradeId;
+            await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            return this.CheckConfirmationUpdate() ? this.RedirectToAction("CreateAccountConfirmation", new AccountCreationViewModel { LocationId = accountCreation.LocationId }) : this.View(new AccountCreationViewModel() { ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation, GradeId = accountCreation.GradeId, CurrentRole = accountCreation.CurrentRole, RegistrationNumber = accountCreation.RegistrationNumber });
+        }
+
+        /// <summary>
+        /// Select Grade.
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/>.</returns>
+        /// <param name="accountCreationViewModel">accountCreationViewModel.</param>
+        [Route("Registration/CreateAccountSelectGrade")]
+        [ResponseCache(CacheProfileName = "Never")]
+        [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
+        public async Task<IActionResult> CreateAccountSelectGrade(AccountCreationViewModel accountCreationViewModel)
+        {
+            var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            AccountCreationFormHelper.PopulateGroupedFormControlMetadata(this.ViewData);
+            accountCreation.RegistrationNumber = accountCreationViewModel.RegistrationNumber;
+            await this.multiPageFormService.SetMultiPageFormData(accountCreation, MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
+            var grades = await this.gradeService.GetGradesForJobRoleAsync(int.TryParse(accountCreation.CurrentRole, out int roleId) ? roleId : 0);
+            return this.View(new AccountCreationListViewModel { GradeList = grades, CurrentRole = accountCreation.CurrentRole, GradeId = accountCreation.GradeId, MedicalCouncilCode = accountCreation.MedicalCouncilCode, MedicalCouncilId = accountCreation.MedicalCouncilId, ReturnToConfirmation = accountCreationViewModel.ReturnToConfirmation });
+        }
+
         private async Task<AccountCreationConfirmation> GetAccountConfirmationDetails(AccountCreationViewModel accountCreationViewModel)
         {
             var country = await this.countryService.GetByIdAsync(int.TryParse(accountCreationViewModel.CountryId, out int countryId) ? countryId : 0);

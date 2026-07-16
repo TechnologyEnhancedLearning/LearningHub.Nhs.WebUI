@@ -792,6 +792,36 @@
             };
         }
 
+        /// <summary>
+        /// Gets the badge details.
+        /// </summary>
+        /// <param name="requestModel">The request model</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<MyLearningBadgesDetailedViewModel> GetUserBadgeDetails(MyLearningApiRequestViewModel requestModel)
+        {
+            var userBadges = await moodleBridgeApiService.GetUserBadgeFromMoodleInstancesAsync(requestModel.MoodleInstanceUserIds);
+            if (userBadges != null && userBadges.Data != null && userBadges.Data.Badges.Count != 0)
+            {
+                var filteredBadges = !string.IsNullOrWhiteSpace(requestModel.Request.SearchText) ? userBadges.Data.Badges.Where(x => x.Name.Contains(requestModel.Request.SearchText, StringComparison.CurrentCultureIgnoreCase)) : userBadges.Data.Badges;
+
+                var orderedBadges = filteredBadges.OrderByDescending(c => c.TimeCreated);
+
+                var totalCount = orderedBadges.Count();
+                var pagedResults = orderedBadges
+                    .Skip(requestModel.Request.Skip)
+                    .Take(requestModel.Request.Take)
+                    .ToList();
+
+                return new MyLearningBadgesDetailedViewModel
+                {
+                    Badges = pagedResults,
+                    TotalCount = totalCount
+                };
+            }
+            return new MyLearningBadgesDetailedViewModel();
+        }
+
+
         private IQueryable<ResourceActivity> ApplyFilters(IQueryable<ResourceActivity> query, MyLearningRequestModel requestModel)
         {
             // Text filter - Title, Keywords or Description.

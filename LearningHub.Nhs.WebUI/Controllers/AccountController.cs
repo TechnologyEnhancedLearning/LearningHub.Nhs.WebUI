@@ -1066,12 +1066,13 @@
         /// <summary>
         /// Account confirmation and Create account API request.
         /// </summary>
+        /// <param name="accountCreationConfirmationModel">accountCreationConfirmation.</param>
         /// <returns>The <see cref="IActionResult"/>.</returns>
         [HttpPost]
         [Route("Registration/CreateAccountConfirmation")]
         [ResponseCache(CacheProfileName = "Never")]
         [TypeFilter(typeof(RedirectMissingMultiPageFormData), Arguments = new object[] { nameof(MultiPageFormDataFeature.AddRegistrationPrompt) })]
-        public async Task<IActionResult> CreateAccountConfirmation()
+        public async Task<IActionResult> CreateAccountConfirmation(AccountCreationConfirmation accountCreationConfirmationModel)
         {
             var accountCreation = await this.multiPageFormService.GetMultiPageFormData<AccountCreationViewModel>(MultiPageFormDataFeature.AddRegistrationPrompt, this.TempData);
             this.ViewBag.AccountCreationType = accountCreation.AccountCreationType;
@@ -1100,6 +1101,7 @@
                     LocationStartDate = accountCreation.StartDate.GetValueOrDefault(),
                     MedicalCouncilNumber = accountCreation.RegistrationNumber,
                     SpecialtyId = int.TryParse(accountCreation.PrimarySpecialtyId, out int specialtyId) ? specialtyId : 0,
+                    TimezoneOffset = accountCreationConfirmationModel.TimezoneOffset,
                 };
                 var response = await this.userService.RegisterNewUser(request);
                 if (!response.IsValid)
@@ -1225,7 +1227,7 @@
             var status = await this.userService.CanRequestPasswordResetAsync(model.EmailAddress, passwordRequestLimitingPeriod, passwordRequestLimit);
             if (status)
             {
-                await this.userService.ForgotPasswordAsync(model.EmailAddress);
+                await this.userService.ForgotPasswordAsync(model);
                 return this.View("ForgotPasswordAcknowledgement");
             }
             else

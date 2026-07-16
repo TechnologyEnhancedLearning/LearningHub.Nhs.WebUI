@@ -240,9 +240,13 @@
         /// <param name="accessType">The accessType.</param>
         /// <returns>The ActionResult.</returns>
         [HttpPost]
-        [Route("RequestAccess/{reference}/{catalogueName}/{accessType}")]
+        [Route("RequestAccess/{reference}/{accessType}")]
         [Authorize]
-        public async Task<IActionResult> RequestAccess(string reference,string catalogueName, CatalogueAccessRequestViewModel vm, string accessType)
+        public async Task<IActionResult> RequestAccess(
+          [FromRoute] string reference,
+          [FromQuery] string catalogueName,
+          [FromBody] CatalogueAccessRequestViewModel vm,
+          [FromRoute] string accessType)
         {
             return this.Ok(await this.catalogueService.RequestAccessAsync(this.CurrentUserId.GetValueOrDefault(), reference, catalogueName, vm, accessType));
         }
@@ -414,6 +418,20 @@
         public async Task<IActionResult> AcceptAccessRequest(int accessRequestId)
         {
             return this.Ok(await this.catalogueService.AcceptAccessAsync(this.CurrentUserId.GetValueOrDefault(), accessRequestId));
+        }
+
+        /// <summary>
+        /// The ProvideCatalogueReaderAccess.
+        /// </summary>
+        /// <param name="userid">The userid.</param>
+        /// <param name="scriptCataloguereference">The scriptCataloguereference.</param>
+        /// <param name="scriptCatalogueNodeId">The scriptCatalogueNodeId.</param>
+        /// <returns>The action result.</returns>
+        [HttpPost("ProvideCatalogueReaderAccess/{userid}/{scriptCataloguereference}/{scriptCatalogueNodeId}")]
+        [Authorize]
+        public async Task<IActionResult> ProvideCatalogueReaderAccess(int userid, string scriptCataloguereference, int scriptCatalogueNodeId)
+        {
+            return this.Ok(await this.catalogueService.ProvideCatalogueReaderAccessForScript(this.CurrentUserId.GetValueOrDefault(), scriptCataloguereference, scriptCatalogueNodeId));
         }
 
         /// <summary>

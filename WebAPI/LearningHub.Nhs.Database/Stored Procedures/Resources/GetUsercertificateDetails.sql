@@ -9,6 +9,7 @@
 -- 16-09-2025   Tobi    Added null check for ResourceReferenceID
 --17-09-2025    Swapna  Added resource version id
 -- 01-10-2025  SA added assesment score and passmark and provider details
+-- 26-06-2026  SA  TD-7454: Certificate Not Generated for Informal Assessments When Pass Mark is Null
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [resources].[GetUsercertificateDetails]
     @UserId INT,
@@ -66,8 +67,25 @@ BEGIN
                     FROM activity.AssessmentResourceActivity ara
                     JOIN resources.AssessmentResourceVersion arv
                       ON arv.ResourceVersionId = ra.ResourceVersionId
-                    WHERE ara.ResourceActivityId = ra.Id
-                      AND ara.Score is not null AND ara.Score >= arv.PassMark -- formal AND informal assessment
+                   WHERE ara.ResourceActivityId = ra.Id
+					AND ara.Score IS NOT NULL
+					AND (
+					 -- Formal assessment: must meet the pass mark
+					(arv.AssessmentType = 2
+					 AND ara.Score >= arv.PassMark)
+
+					OR
+
+					-- Informal assessment:
+					-- If PassMark is defined, user must pass.
+					-- If PassMark is NULL, any completed attempt is valid.
+					(arv.AssessmentType = 1
+					 AND (
+							arv.PassMark IS NULL
+						 OR ara.Score >= arv.PassMark
+						 )
+					)
+				  )
                 )
                 -- Or explicitly marked as passed
                 OR ra.ActivityStatusId = 5

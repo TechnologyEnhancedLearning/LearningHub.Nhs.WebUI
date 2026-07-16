@@ -275,7 +275,7 @@
         /// <returns>The task.</returns>
         public async Task<LearningHubValidationResult> RequestAccessAsync(string reference, string catalogueName, CatalogueAccessRequestViewModel vm, string accessType)
         {
-            var request = $"Catalogue/RequestAccess/{reference}/{catalogueName}/{accessType}";
+            var request = $"Catalogue/RequestAccess/{reference}/{accessType}" + $"?catalogueName={Uri.EscapeDataString(catalogueName)}";
 
             var client = await this.OpenApiHttpClient.GetClientAsync();
             var content = new StringContent(JsonConvert.SerializeObject(vm), Encoding.UTF8, "application/json");
@@ -458,6 +458,39 @@
                 var result = await response.Content.ReadAsStringAsync();
                 catalogueAccessRequested = JsonConvert.DeserializeObject<LearningHubValidationResult>(result);
                 var cacheKey = $"{accessRequestUserId}:AllRolesWithPermissions";
+                await this.cacheService.RemoveAsync(cacheKey);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                    ||
+                    response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return catalogueAccessRequested;
+        }
+
+        /// <summary>
+        /// The ProvideCatalogueReaderAccess.
+        /// </summary>
+        /// <param name="userid">The userid.</param>
+        /// <param name="scriptCataloguereference">The scriptCataloguereference.</param>
+        /// <param name="scriptCatalogueNodeId">The scriptCatalogueNodeId.</param>
+        /// <returns>The validation result.</returns>
+        public async Task<LearningHubValidationResult> ProvideCatalogueReaderAccess(int userid, string scriptCataloguereference, int scriptCatalogueNodeId)
+        {
+            var request = $"Catalogue/ProvideCatalogueReaderAccess/{userid}/{scriptCataloguereference}/{scriptCatalogueNodeId}";
+
+            var client = await this.OpenApiHttpClient.GetClientAsync();
+            var content = new StringContent(JsonConvert.SerializeObject(new { }));
+            var response = await client.PostAsync(request, content).ConfigureAwait(false);
+            var catalogueAccessRequested = new LearningHubValidationResult();
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                catalogueAccessRequested = JsonConvert.DeserializeObject<LearningHubValidationResult>(result);
+                var cacheKey = $"{userid}:AllRolesWithPermissions";
                 await this.cacheService.RemoveAsync(cacheKey);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized

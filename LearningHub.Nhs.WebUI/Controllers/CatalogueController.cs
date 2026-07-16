@@ -6,6 +6,7 @@
     using System.Net.Http;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
+    using System.Web;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Dashboard;
@@ -14,6 +15,7 @@
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Models.Moodle;
+    using LearningHub.Nhs.Models.Report;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.WebUI.Configuration;
@@ -198,16 +200,27 @@
         /// <param name="nodeId">The nodeId of the current folder. If not supplied, catalogue root contents are displayed.</param>
         /// <param name="search">The SearchRequestViewModel.</param>
         /// <param name="categoryId">The moodleCategoryId.</param>
+        /// <param name="status">The status.</param>
         /// <returns>IActionResult.</returns>
         [AllowAnonymous]
         [ServiceFilter(typeof(SsoLoginFilterAttribute))]
         [HttpGet]
         [Route("catalogue/{reference}/{tab?}")]
-        public async Task<IActionResult> IndexAsync(string reference, string tab, int? nodeId, SearchRequestViewModel search, string? categoryId)
+        public async Task<IActionResult> IndexAsync(string reference, string tab, int? nodeId, SearchRequestViewModel search, string? categoryId, bool? status)
         {
             if (tab == null || (tab == "search" && !this.User.Identity.IsAuthenticated))
             {
                 tab = "browse";
+            }
+
+            if (status != true)
+            {
+                var scriptCataloguereference = this.Settings.ScriptCataloguereference;
+                if (reference == scriptCataloguereference)
+                {
+                    var redirectUri = $"{this.authConfig.Authority}/sso/LinkToScript?userid={this.CurrentUserId}";
+                    return this.Redirect(redirectUri);
+                }
             }
 
             this.ViewBag.Reference = reference;
@@ -376,6 +389,30 @@
             }
 
             return this.View(viewModel);
+        }
+
+        /// <summary>
+        /// GrantCatalogueAccessAfterSignup.
+        /// </summary>
+        /// <param name="userid">The userid.</param>
+        /// <returns>IActionResult.</returns>
+        [AllowAnonymous]
+        [ServiceFilter(typeof(SsoLoginFilterAttribute))]
+        [HttpGet]
+        [Route("GrantCatalogueAccessAfterSignup/{userid}")]
+        public async Task<IActionResult> GrantCatalogueAccessAfterSignup(int userid)
+        {
+            var scriptCataloguereference = this.Settings.ScriptCataloguereference;
+            var scriptCatalogueNodeId = this.Settings.ScriptCatalogueNodeId;
+            await this.catalogueService.ProvideCatalogueReaderAccess(userid, scriptCataloguereference, scriptCatalogueNodeId);
+            return this.RedirectToAction("index", new
+            {
+                reference = this.Settings.ScriptCataloguereference,
+                tab = string.Empty,
+                nodeId = (int?)null,
+                categoryId = (string?)null,
+                Status = true,
+            });
         }
 
         /// <summary>

@@ -7,9 +7,11 @@
     using LearningHub.Nhs.MessagingService.Interfaces;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.GovNotifyMessaging;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     /// <summary>
     /// GovNotify Messaging Controller.
@@ -21,17 +23,21 @@
         private readonly IGovNotifyService messageService;
         private readonly IMessageQueueRepository messageQueueRepository;
         private readonly IGovMessageService govMessageService;
+        private readonly Nhs.OpenApi.Repositories.Interface.Repositories.ITimezoneOffsetManager timezoneOffsetManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GovNotifyMessagingController"/> class.
         /// </summary>
         /// <param name="messageService">The message service.</param>
         /// <param name="messageQueueRepository">The email Queue Repository.</param>
-        public GovNotifyMessagingController(IGovNotifyService messageService, IMessageQueueRepository messageQueueRepository, IGovMessageService govMessageService)
+        /// <param name="govMessageService">The govMessageService.</param>
+        /// <param name="timezoneOffsetManager">The timezoneOffsetManager.</param>
+        public GovNotifyMessagingController(IGovNotifyService messageService, IMessageQueueRepository messageQueueRepository, IGovMessageService govMessageService, ITimezoneOffsetManager timezoneOffsetManager)
         {
             this.messageService = messageService;
             this.messageQueueRepository = messageQueueRepository;
             this.govMessageService = govMessageService;
+            this.timezoneOffsetManager = timezoneOffsetManager;
         }
 
         /// <summary>
@@ -46,12 +52,6 @@
             try
             {
                 var response = await this.govMessageService.SendEmailAsync(request);
-
-                ////if (!response.IsSuccess)
-                ////{
-                ////    return this.BadRequest(new { error = response.ErrorMessage });
-                ////}
-
                 return this.Ok(response);
             }
             catch (Exception ex)
@@ -135,7 +135,8 @@
         [HttpPost]
         public async Task<IActionResult> MessageSuccessUpdate([FromBody] GovNotifyResponse response)
         {
-            await this.messageQueueRepository.MessageDeliverySuccess(response);
+            var userTimeOffset = response.MessageSentTime.HasValue ? (int)response.MessageSentTime.Value.Offset.TotalMinutes : 0;
+            await this.messageQueueRepository.MessageDeliverySuccess(response, userTimeOffset);
             return this.Ok();
         }
 
@@ -148,7 +149,8 @@
         [HttpPost]
         public async Task<IActionResult> MessageFailedUpdate([FromBody] GovNotifyResponse response)
         {
-            await this.messageQueueRepository.MessageDeliveryFailed(response);
+            var userTimeOffset = response.MessageSentTime.HasValue ? (int)response.MessageSentTime.Value.Offset.TotalMinutes : 0;
+            await this.messageQueueRepository.MessageDeliveryFailed(response, userTimeOffset);
             return this.Ok();
         }
 

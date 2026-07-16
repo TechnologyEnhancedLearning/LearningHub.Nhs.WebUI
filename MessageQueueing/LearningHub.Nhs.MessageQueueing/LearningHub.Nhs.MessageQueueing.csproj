@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LearningHub.Nhs.Models" Version="4.0.17" />
+    <PackageReference Include="LearningHub.Nhs.Models" Version="4.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\OpenAPI\LearningHub.Nhs.OpenApi.Repositories.Interface\LearningHub.Nhs.OpenApi.Repositories.Interface.csproj" />
   </ItemGroup>
 
 </Project>

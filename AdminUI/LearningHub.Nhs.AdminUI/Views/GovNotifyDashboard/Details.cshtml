@@ -46,25 +46,25 @@
                     Created date
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.CreatedAt)
+                    @Model.CreatedAt.DateTime.ToString("dd/MM/yyyy HH:mm:ss")
                 </dd>
                 <dt>
                     Deliver after date
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.DeliverAfter)
+                    @Model.DeliverAfter?.DateTime.ToString("dd/MM/yyyy HH:mm:ss")
                 </dd>
                 <dt>
                     Sent Date
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.SentAt)
+                    @Model.SentAt?.DateTime.ToString("dd/MM/yyyy HH:mm:ss")
                 </dd>
                 <dt>
                     Last attempt date
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.LastAttemptAt)
+                    @Model.LastAttemptAt?.DateTime.ToString("dd/MM/yyyy HH:mm:ss")
                 </dd>
                 <dt>
                     Error message

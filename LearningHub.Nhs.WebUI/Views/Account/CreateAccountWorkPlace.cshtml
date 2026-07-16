@@ -12,13 +12,14 @@
     {
         bool.TryParse(Context.Request.Query["returnToConfirmation"].ToString(), out returnToConfirmation);
     }
+    string selectedOrganizationId = Context.Request.Query["selectedOrganizationId"];
 }
-@section styles{
+@section styles {
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
 }
-    <div class="create-account">
-        <div class="nhsuk-width-container app-width-container">
-            <div class="nhsuk-grid-row">
+<div class="create-account">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-two-thirds @(returnToConfirmation ? "nhsuk-u-padding-top-7":string.Empty) nhsuk-u-padding-bottom-9">
                 @if (!returnToConfirmation)
                 {
@@ -29,68 +30,289 @@
                     <vc:error-summary order-of-property-names="@(new[] { nameof(Model.FilterText) })" />
                 }
                 <h1 class="nhsuk-heading-xl">Search results for @Model.FilterText </h1>
-                <form asp-controller="Account" asp-action="CreateAccountWorkPlace" method="get">
+                    <form asp-controller="Account"
+                          asp-action="CreateAccountConfirmation"
+                          method="get"
+                          autocomplete="off"
+                          id="organizationSearchForm"
+                          novalidate>
                     <input type="hidden" name="formSubmission" value="true">
                     <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
                     <label class="nhsuk-label nhsuk-u-visually-hidden" for="FilterText">Search results for @Model.FilterText</label>
-                    <div class="nhsuk-form-group search-box-container " style="white-space:nowrap">
-                        <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText">
-                        <button class="nhsuk-search__submit" type="submit">
-                            <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
-                            </svg>
-                            <span class="nhsuk-u-visually-hidden">Search</span>
-                        </button>
-
+                    <div class="nhsuk-form-group search-box-container " style="white-space:nowrap" id="search-group">
+                        <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText" aria-describedby="organization-search-hint"
+                               aria-controls="organization-results-container">
                     </div>
-                </form>
-                @if (Model.WorkPlaceList.Any())
-                {
-                    <form asp-controller="Account" asp-action="CreateAccountConfirmation" method="get">
-                        <input type="hidden" name="formSubmission" value="true">
+
+                    @if (Model.WorkPlaceList.Any())
+                    {
+                        <!-- Search results -->
+                        <div id="organization-results-container" class="nhsuk-form-group nhsuk-u-margin-top-4" @(Model.WorkPlaceList.Any() ? "" : "hidden")>
+                            <fieldset class="nhsuk-fieldset" aria-describedby="organization-results-hint">
+                                <legend class="nhsuk-fieldset__legend nhsuk-u-visually-hidden">
+                                    Select your current role
+                                </legend>
+
+                                <div class="nhsuk-radios" id="organization-results">
+                                    @if (Model.WorkPlaceList.Any())
+                                    {
+                                        foreach (var organization in Model.WorkPlaceList)
+                                        {
+                                            var organizationId = $"organization-{organization.Id}";
+                                            var isChecked = Model.CurrentRole == organization.Id.ToString();
+
+                                            <div class="nhsuk-radios__item autocomplete-radio-item">
+                                                <input class="nhsuk-radios__input organization-radio"
+                                                       id="@organizationId"
+                                                       name="OrganizationChoice"
+                                                       type="radio"
+                                                       value="@organization.Id"
+                                                       data-text="@organization.Name"
+                                                @(isChecked ? "checked" : "") />
+
+                                                <label class="nhsuk-label nhsuk-radios__label" for="@organizationId">
+                                                    <strong>@organization.Name</strong>
+                                                </label>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <!-- Other option -->
+                        <div class="nhsuk-form-group nhsuk-u-margin-top-5" id="other-organization-group">
+                            <fieldset class="nhsuk-fieldset">
+                                <legend class="nhsuk-fieldset__legend nhsuk-body">
+                                    If you can't find your role select other
+                                </legend>
+
+                                <div class="nhsuk-radios" data-module="nhsuk-radios">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input"
+                                               id="organization-other"
+                                               name="OrganizationChoice"
+                                               type="radio"
+                                               value="Other"
+                                               data-aria-controls="organization-other" />
 
 
-                        <vc:radio-list asp-for="LocationId"
-                                   label="Select your place of work"
-                                   populate-with-current-values="true"
-                                   radios="@Model.WorkPlaceRadio()"
-                                   hint-text=""
-                                   required-client-side-error-message="Select a place of work"
-                                   required="true" />
+                                        <label class="nhsuk-label nhsuk-radios__label" for="organization-other">
+                                            Other
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
 
                         <div class="nhsuk-form-group">
                             <input type="hidden" name="filterText" value="@Context.Request.Query["filterText"]">
                             <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
-                            <button type="submit" class="nhsuk-button">Continue</button>
+                            <input type="hidden" id="Currentorganization" name="PrimarySpecialtyId" value="@selectedOrganizationId" />
+                            <button type="submit" class="nhsuk-button">Save</button>
                         </div>
-                    </form>
-                }
-                else
-                {
 
-                    <h2 class="nhsuk-heading-l">No results found for @Model.FilterText</h2>
-                    <p>You could try:</p>
-                    <ul class="nhsuk-list nhsuk-list--bullet nhsuk-u-padding-bottom-3">
-                        <li>checking your spelling</li>
-                        <li>searching again using other words</li>
-                    </ul>
-                    <details class="nhsuk-details nhsuk-expander">
-                        <summary class="nhsuk-details__summary">
-                            <span class="nhsuk-details__summary-text">
-                                Why do I need to provide details about where I work?
-                            </span>
-                        </summary>
-                        <div class="nhsuk-details__text">
-                            <p>Information on your place of work will help us provide activity reports to evidence your learning.</p>
-                        </div>
-                    </details>
 
-                }
-                @if (Model.WorkPlaceList.Any())
-                {
-                    @await Html.PartialAsync("_AccountCreationWorkPlacePaging", Model.AccountCreationPaging)
-                }
+                    }
+                    else
+                    {
+
+                        <h2 class="nhsuk-heading-l">No results found for @Model.FilterText</h2>
+                        <p>You could try:</p>
+                        <ul class="nhsuk-list nhsuk-list--bullet nhsuk-u-padding-bottom-3">
+                            <li>checking your spelling</li>
+                            <li>searching again using other words</li>
+                        </ul>
+                        <details class="nhsuk-details nhsuk-expander">
+                            <summary class="nhsuk-details__summary">
+                                <span class="nhsuk-details__summary-text">
+                                    Why do I need to provide details about where I work?
+                                </span>
+                            </summary>
+                            <div class="nhsuk-details__text">
+                                <p>Information on your place of work will help us provide activity reports to evidence your learning.</p>
+                            </div>
+                        </details>
+
+                    }
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("organizationSearchForm");
+        const input = document.getElementById("FilterText");
+        const resultsContainer = document.getElementById("organization-results-container");
+        const results = document.getElementById("organization-results");
+        const currentorganization = document.getElementById("Currentorganization");
+        const otherRadio = document.getElementById("organization-other");
+        const searchGroup = document.getElementById("search-group");
+
+        let debounceTimer = null;
+
+          function clearorganizationSelection() {
+        document.querySelectorAll(".organization-radio").forEach(radio => {
+            radio.checked = false;
+        });
+
+        currentorganization.value = "";
+    }
+        function selectSuggestedorganization(organizationId, organizationText) {
+            currentorganization.value = organizationId;
+
+            // Clear Other
+            if (otherRadio) {
+                otherRadio.checked = false;
+            }
+
+            input.value = organizationText;
+        }
+
+        function bindorganizationRadioEvents() {
+            const organizationRadios = document.querySelectorAll(".organization-radio");
+
+            organizationRadios.forEach(radio => {
+                radio.addEventListener("change", function () {
+                    if (this.checked) {
+                        const organizationId = this.value;
+                        const organizationText = this.getAttribute("data-text") || "";
+                        selectSuggestedorganization(organizationId, organizationText);
+                    }
+                });
+            });
+        }
+
+          function renderResults(data) {
+        results.innerHTML = "";
+
+        if (!data || data.length === 0) {
+            resultsContainer.hidden = true;
+            return;
+        }
+
+        data.forEach(organization => {
+            const item = document.createElement("div");
+            item.className = "nhsuk-radios__item autocomplete-radio-item";
+
+            const radioId = "organization-" + organization.id;
+
+            item.innerHTML = `
+                <input class="nhsuk-radios__input organization-radio"
+                       id="${radioId}"
+                       name="organizationChoice"
+                       type="radio"
+                       value="${organization.id}"
+                       data-text="${organization.text}" />
+                <label class="nhsuk-label nhsuk-radios__label" for="${radioId}">
+                    <strong>${organization.text}</strong>
+                    ${organization.category ? '<span class="nhsuk-hint">' + organization.category + '</span>' : ''}
+                </label>
+            `;
+
+            results.appendChild(item);
+        });
+
+        resultsContainer.hidden = false;
+        bindorganizationRadioEvents();
+    }
+
+        function searchorganizations() {
+            const term = input.value.trim();
+
+            // If user starts searching again, clear current selected organization
+            clearorganizationSelection();
+
+            if (term.length < 2) {
+                results.innerHTML = "";
+                resultsContainer.hidden = true;
+                return;
+            }
+
+            fetch(`/Account/SearchOrganizations?term=${encodeURIComponent(term)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Search request failed.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    renderResults(data);
+                })
+                .catch(error => {
+                    console.error("organization search failed:", error);
+                    results.innerHTML = "";
+                    resultsContainer.hidden = true;
+                });
+        }
+
+        // Initial binding for server-rendered radios
+        bindorganizationRadioEvents();
+
+        // If Other is already selected on page load
+        if (otherRadio && otherRadio.checked) {
+           // toggleOtherConditional(true);
+        }
+
+        //trigger autosuggest
+            input.addEventListener("input", function () {
+        clearTimeout(debounceTimer);
+
+        debounceTimer = setTimeout(() => {
+            const term = input.value.trim();
+
+            if (term.length < 2) {
+                results.innerHTML = "";
+                resultsContainer.hidden = true;
+                return;
+            }
+
+            searchorganizations();
+        }, 300);
+    });
+
+         input.addEventListener("keydown", function (e) {
+         if (e.key === "Enter") {
+             e.preventDefault();
+
+            // force search instead of submit
+            searchorganizations();
+        }
+    });
+
+        // Other selected
+           if (otherRadio) {
+        otherRadio.addEventListener("change", function () {
+            if (this.checked) {
+                document.querySelectorAll(".organization-radio").forEach(radio => {
+                    radio.checked = false;
+                });
+
+                currentorganization.value = "";
+                input.value = "";
+                results.innerHTML = "";
+                resultsContainer.hidden = true;
+            }
+        });
+    }
+
+    if (form) {
+        form.addEventListener("submit", function (e) {
+            const selectedSuggestion = currentorganization.value.trim();
+            const selectedOther = otherRadio && otherRadio.checked;
+
+            if (!selectedSuggestion && !selectedOther) {
+                e.preventDefault();
+                showClientError("FilterText");
+                return;
+            }
+
+            if (otherRadio.checked) {
+                currentorganization.value = "Other";
+            }
+        });
+    }
+    });
+</script> 

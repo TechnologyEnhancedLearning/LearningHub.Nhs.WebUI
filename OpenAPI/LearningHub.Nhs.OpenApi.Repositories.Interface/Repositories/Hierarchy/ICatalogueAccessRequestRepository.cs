@@ -1,8 +1,10 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories.Hierarchy
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
+    using LearningHub.Nhs.Models.Hierarchy;
 
     /// <summary>
     /// The ICatalogueAccessRequestRepository interface.
@@ -42,5 +44,19 @@
             int roleId,
             string catalogueManageAccessUrl,
             string accessType);
+
+        /// <summary>
+        /// The GetCatalogueAdminDetailsAsync.
+        /// </summary>
+        /// <param name="currentUserId">The currentUserId.</param>
+        /// <param name="reference">The reference.</param>
+        /// <param name="roleId">The roleId.</param>
+        /// <param name="accessType">The accessType.</param>
+        /// <returns>The task.</returns>
+        Task<List<CatalogueAdminViewModel>> GetCatalogueAdminDetailsAsync(
+                int currentUserId,
+                string reference,
+                int roleId,
+                string accessType);
     }
 }

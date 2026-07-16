@@ -14,9 +14,12 @@
     string cardStyle = Model.Item1.Contains("my-learning") ? "card-provider-details--darkblank" : "card-provider-details--blank";
     var activityDate = Model.Item2.ActivityDate.Date;
     var today = DateTime.Today;
-    var dateTimeText = activityDate == today ? "Today"
-    : activityDate == today.AddDays(-1) ? "Yesterday"
-    : activityDate.ToString("dd MMM yyyy");
+
+    var dateTimeText =
+        activityDate == DateTimeOffset.UnixEpoch ? "" :
+        activityDate.Date == today ? "Today" :
+        activityDate.Date == today.AddDays(-1) ? "Yesterday" :
+        activityDate.ToString("dd MMM yyyy");
     string GetMoodleCourseUrl(int courseId)
     {
         return moodleApiService.GetCourseUrl(courseId);

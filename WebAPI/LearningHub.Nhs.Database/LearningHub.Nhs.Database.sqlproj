@@ -103,6 +103,8 @@
     <Folder Include="Tables\Databricks" />
     <Folder Include="Stored Procedures\Adf" />
     <Folder Include="Tables\MIB" />
+    <Folder Include="Stored Procedures\Readmodel" />
+    <Folder Include="Tables\Readmodel" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\learningHub_Data.sql" />
@@ -570,6 +572,26 @@
     <None Include="Scripts\Post-Deploy\Scripts\TD-7116-mib_new_env.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-7106-Resume-Databricks-Ingestion.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\ActivateChangeTracking.sql" />
+    <Build Include="Stored Procedures\Resources\GetMyRecentCompletedDashboardResourcesRM.sql" />
+    <Build Include="Stored Procedures\Resources\GetPopularDashboardResourcesRM.sql" />
+    <Build Include="Stored Procedures\Resources\GetRatedDashboardResourcesRM.sql" />
+    <Build Include="Stored Procedures\Resources\GetRecentDashboardResourcesRM.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-7078-supportingindexes.sql" />
+    <Build Include="Stored Procedures\Readmodel\RefreshDashboardCatalogues.sql" />
+    <Build Include="Stored Procedures\Readmodel\RefreshDashboardResources.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetDashboardCataloguesRM.sql" />
+    <Build Include="Schemas\readmodels.sql" />
+    <Build Include="Tables\Readmodel\DashboardCatalogue.sql" />
+    <Build Include="Tables\Readmodel\DashboardResource.sql" />
+    <Build Include="Tables\Readmodel\UserCatalogueActivity.sql" />
+    <Build Include="Tables\Readmodel\UserResourceActivity.sql" />
+    <Build Include="Stored Procedures\Readmodel\ApplyUserResourceActivityChanges.sql" />
+    <Build Include="Stored Procedures\Readmodel\ApplyUserCatalogueActivityChanges.sql" />
+    <Build Include="Stored Procedures\Readmodel\RefreshDashboardReadModels.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-7078-PopulateReadModelHistoricUserActivities.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\EmailTemplateTableChanges.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\UpdateEmailTemplateData.sql" />
+    <Build Include="Stored Procedures\Hierarchy\GetCatalogueAdminDetails.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

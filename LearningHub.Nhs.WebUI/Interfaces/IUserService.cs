@@ -70,9 +70,9 @@
         /// <summary>
         /// The ForgotPasswordAsync.
         /// </summary>
-        /// <param name="email">Email.</param>
+        /// <param name="model">model.</param>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task ForgotPasswordAsync(string email);
+        Task ForgotPasswordAsync(Models.Account.ForgotPasswordViewModel model);
 
         /// <summary>
         /// The GetCurrentUserAsync.

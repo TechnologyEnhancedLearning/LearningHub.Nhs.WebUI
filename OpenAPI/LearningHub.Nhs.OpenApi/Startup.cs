@@ -8,12 +8,10 @@ namespace LearningHub.NHS.OpenAPI
     using System.Collections.Generic;
     using System.IO;
     using AspNetCore.Authentication.ApiKey;
-    using LearningHub.Nhs.Api.Authentication;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.NHS.OpenAPI.Auth;
-    using LearningHub.NHS.OpenAPI.Authentication;
     using LearningHub.NHS.OpenAPI.Configuration;
     using LearningHub.NHS.OpenAPI.Middleware;
     using LearningHub.Nhs.OpenApi.Repositories;
@@ -21,7 +19,6 @@ namespace LearningHub.NHS.OpenAPI
     using LearningHub.Nhs.OpenApi.Services;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
@@ -31,6 +28,13 @@ namespace LearningHub.NHS.OpenAPI
     using Microsoft.Extensions.Hosting;
     using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
+    using Microsoft.AspNetCore.Authorization;
+    using LearningHub.NHS.OpenAPI.Authentication;
+    using System.Configuration;
+    using LearningHub.Nhs.MessagingService;
+    using LearningHub.Nhs.MessageQueueing;
+    using Microsoft.AspNetCore.Authentication.Cookies;
+    using LearningHub.Nhs.Api.Authentication;
 
     /// <summary>
     /// The Startup class.
@@ -97,6 +101,8 @@ namespace LearningHub.NHS.OpenAPI
             var swaggerVersion = this.Configuration["Swagger:Version"];
             var swaggerDescription = $"A set of API endpoints for retrieving learning resource information from the Learning Hub learning platform. The [Learning Hub](https://learninghub.nhs.uk/) is a platform for hosting and sharing learning resources for health and social care provided by Technology Enhanced Learning (TEL) at NHS England. An application API key must be used to authorise calls to the API from external applications. To contact TEL to discuss connecting your external system to the Learning Hub, email england.tel@nhs.net.\n\n Build Number: {this.Configuration["Swagger:BuildNumber"]} \n\n";
 
+            services.AddMessagingServices(this.Configuration);
+            services.AddQueueingRepositories(this.Configuration);
             services.AddSwaggerGen(
                 c =>
                 {

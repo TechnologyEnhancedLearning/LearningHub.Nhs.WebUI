@@ -291,13 +291,22 @@
             }
             else if (activityDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment)
             {
+                if (!activityDetailedItemViewModel.AssessmentDetails.PassMark.HasValue)
+                {
+                    return activityDetailedItemViewModel.Complete ? "Completed" : "Incomplete";
+                }
+
                 if (activityDetailedItemViewModel.Complete)
                 {
-                    return activityDetailedItemViewModel.ScorePercentage >= activityDetailedItemViewModel.AssessmentDetails.PassMark ? "Passed" : "Failed";
+                    return activityDetailedItemViewModel.ScorePercentage >= activityDetailedItemViewModel.AssessmentDetails.PassMark.Value
+                        ? "Passed"
+                        : "Failed";
                 }
                 else
                 {
-                    return activityDetailedItemViewModel.ScorePercentage >= activityDetailedItemViewModel.AssessmentDetails.PassMark ? "Passed" : "Incomplete";
+                    return activityDetailedItemViewModel.ScorePercentage >= activityDetailedItemViewModel.AssessmentDetails.PassMark.Value
+                        ? "Passed"
+                        : "Incomplete";
                 }
             }
             else

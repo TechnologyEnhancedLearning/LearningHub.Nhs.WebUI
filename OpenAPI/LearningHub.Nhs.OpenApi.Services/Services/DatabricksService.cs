@@ -194,8 +194,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             var json = JsonConvert.SerializeObject(body);
             using var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await databricksInstance.GetClient().PostAsync(requestUrl, content);
-
             var databricksResponse = await databricksInstance.GetClient().PostAsync(requestUrl, content);
             if (databricksResponse.StatusCode is not HttpStatusCode.OK)
             {
@@ -515,7 +513,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     CourseStatus = row[17]?.ToString(),
                     PermissionType = row[18]?.ToString(),
                     MinValidDate = row[19]?.ToString(),
-                    TotalRows = row[20] != null && int.TryParse(row[18].ToString(), out int totalRows) ? totalRows : 0
+                    TotalRows = row[20] != null && int.TryParse(row[20].ToString(), out int totalRows) ? totalRows : 0
                 };
 
                 records.Add(record);

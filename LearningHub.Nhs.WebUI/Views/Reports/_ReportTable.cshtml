@@ -52,102 +52,152 @@
                     Email address
                 </th>
                 <th role="columnheader" class="" scope="col">
-                    Medical council no
+                    Alt email address
                 </th>
-                <th role="columnheader" class="" scope="col">
-                    Medical council name
-                </th>
+                
                 <th role="columnheader" class="" scope="col">
                     Role
-                </th>
-                <th role="columnheader" class="" scope="col">
-                    Grade
                 </th>
                 <th role="columnheader" class="" scope="col">
                     Location
                 </th>
                 <th role="columnheader" class="" scope="col">
-                    Programme name
+                    Payroll employee number
                 </th>
                 <th role="columnheader" class="" scope="col">
-                    Course learning path name
+                    ESR Number
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Speciality reference
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Organisation
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    TISID
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    NHSP UniqueID
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Course
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Course start date
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Course completion date
+                </th>
+                <th role="columnheader" class="" scope="col">
+                    Course duration
                 </th>
                 <th role="columnheader" class="" scope="col">
                     Status
                 </th>
             </tr>
         </thead>
-        <tbody class="nhsuk-table__body">
-            @foreach (var entry in Model.CourseCompletionRecords)
-            {
-                <tr role="row" class="nhsuk-table__row">
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading"> Username </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">
-                            @entry.UserName
-                        </span>
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading">First name </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.FirstName</span>
+            <tbody class="nhsuk-table__body">
+                @foreach (var entry in Model.CourseCompletionRecords)
+                {
+                    <tr role="row" class="nhsuk-table__row">
 
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading">Last name </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.LastName</span>
-
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading">Email address </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Email </span>
-
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading">Medical council no </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.MedicalCouncilNo</span>
-
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading">Medical council name </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.MedicalCouncilName</span>
-
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading">Role </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Role</span>
-
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading">Grade </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Grade</span>
-
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading">Location </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Location</span>
-
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading">Programme name </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Programme</span>
-
-                    </td>
-                    <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                        <span class="nhsuk-table-responsive__heading"> Course learning path name </span>
-                        <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Course</span>
-
-                    </td>
                         <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
-                            <span class="nhsuk-table-responsive__heading"> Status </span>
-                            <span class="nhsuk-u-text-align-left table-content-spacing">@ViewActivityHelper.GetReportStatusDisplayText(entry.CourseStatus)</span>
-
+                            <span class="nhsuk-table-responsive__heading">Username</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.UserName</span>
                         </td>
-                </tr>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">First name</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.FirstName</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">Last name</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.LastName</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">Email address</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Email</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">Alt email address</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.AltEmail</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">Role</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Role</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">Location</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Location</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">Payroll employee number</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.PayrollEmployeeNumber</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">ESR Number</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.ESRNumber</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">Speciality reference</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.SpecialityReference</span>
+                        </td>                     
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">Organisation</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Organisation</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">TISID</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.TISID</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">NHSP UniqueID</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.NHSPUniqueID</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">Course</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.Course</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">Course start date</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.CourseStartDate</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">Course completion date</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.CourseCompletionDate</span>
+                        </td>
+
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">Course duration</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">@entry.CourseDuration</span>
+                        </td>
 
 
-            }
+                        <td role="cell" class="nhsuk-table__cell nhsuk-u-font-size-16">
+                            <span class="nhsuk-table-responsive__heading">Status</span>
+                            <span class="nhsuk-u-text-align-left table-content-spacing">
+                                @ViewActivityHelper.GetReportStatusDisplayText(entry.CourseStatus)
+                            </span>
+                        </td>
 
-        </tbody>
+                    </tr>
+                }
+            
+            </tbody>
     </table>
     </div>
 }

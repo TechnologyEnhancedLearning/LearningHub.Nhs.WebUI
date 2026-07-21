@@ -164,7 +164,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
             const string requestUrl = "/api/2.0/sql/statements";
 
-            var sql = $@"CALL {this.databricksConfig.Value.CourseCompletionEndpoint}(:par_adminId, :par_completionFlag, :par_locationId, :par_catalogueId, :par_learnerId, :par_courseId, :par_PageSize, :par_PageNumber, :par_Date_from, :par_Date_to);";
+            var sql = $@"CALL {this.databricksConfig.Value.CourseCompletionEndpoint}(:par_adminId, :par_completionFlag, :par_locationId, :par_learnerId, :par_courseId, :par_PageSize, :par_PageNumber, :par_Date_from, :par_Date_to);";
 
 
             var parameters = new List<KeyValuePair<string, object>>
@@ -172,7 +172,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 new("par_adminId", userId),
                 new("par_completionFlag", -1),
                 new("par_locationId", -1),
-                new("par_catalogueId", -1),
                 new("par_learnerId", -1),
                 new("par_courseId", model.Courses.Count < 1 ? string.Empty : string.Join(",",  model.Courses)),
                 new("par_PageSize", model.Take),
@@ -194,8 +193,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
 
             var json = JsonConvert.SerializeObject(body);
             using var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await databricksInstance.GetClient().PostAsync(requestUrl, content);
 
             var databricksResponse = await databricksInstance.GetClient().PostAsync(requestUrl, content);
             if (databricksResponse.StatusCode is not HttpStatusCode.OK)
@@ -298,7 +295,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     par_adminId = userId,
                     par_completionFlag = -1,
                     par_locationId = -1,
-                    par_catalogueId = -1,
                     par_learnerId = -1,
                     par_courseId = reportHistory.CourseFilter,
                     par_PageSize = 0,
@@ -501,21 +497,23 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                     FirstName = row[1]?.ToString(),
                     LastName = row[2]?.ToString(),
                     Email = row[3]?.ToString(),
-                    Programme = row[4]?.ToString(),
-                    Course = row[5]?.ToString(),
-                    CourseStatus = row[6]?.ToString(),
-                    Location = row[7]?.ToString(),
-                    Role = row[8]?.ToString(),
-                    Grade = row[9]?.ToString(),
-                    MedicalCouncilNo = row[10]?.ToString(),
-                    MedicalCouncilName = row[11]?.ToString(),
-                    LastAccess = row[12]?.ToString(),
-                    CourseCompletionDate = row[13]?.ToString(),
-                    ReferenceType = row[14]?.ToString(),
-                    ReferenceValue = row[15]?.ToString(),
-                    PermissionType = row[16]?.ToString(),
-                    MinValidDate = row[17]?.ToString(),
-                    TotalRows = row[18] != null && int.TryParse(row[18].ToString(), out int totalRows) ? totalRows : 0
+                    AltEmail = row[4]?.ToString(),
+                    Role = row[5]?.ToString(),
+                    Location = row[6]?.ToString(),
+                    PayrollEmployeeNumber = row[7]?.ToString(),
+                    ESRNumber = row[8]?.ToString(),
+                    SpecialityReference = row[9]?.ToString(),
+                    Organisation = row[10]?.ToString(),
+                    TISID = row[11]?.ToString(),
+                    NHSPUniqueID = row[12]?.ToString(),
+                    Course = row[13]?.ToString(),
+                    CourseStartDate = row[14]?.ToString(),
+                    CourseCompletionDate = row[15]?.ToString(),
+                    CourseDuration = row[16]?.ToString(),
+                    CourseStatus = row[17]?.ToString(),
+                    PermissionType = row[18]?.ToString(),
+                    MinValidDate = row[19]?.ToString(),
+                    TotalRows = row[20] != null && int.TryParse(row[20].ToString(), out int totalRows) ? totalRows : 0
                 };
 
                 records.Add(record);

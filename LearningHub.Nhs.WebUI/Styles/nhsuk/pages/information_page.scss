@@ -1,6 +1,4 @@
 ﻿@use "../../abstracts/all" as *;
-//@import "../nhsuk/common";
-@import "../layout.scss";
 
 .information-page__row--padding-top {
     padding-top: 4rem;
@@ -80,6 +78,7 @@
     border-width: 0 1px 1px 1px;
     border-color: $nhsuk-grey-divider;
 }
+
 .information-page__video-text-container-title {
     font-size: 1.5rem;
     font-weight: bold;
@@ -148,8 +147,4 @@
         line-height: 2rem;
         padding-bottom: 1rem;
     }
-}
-
-/* mobile  */
-@media (max-width: px2rem(640)) {
 }

@@ -1,0 +1,56 @@
+﻿@using Microsoft.Extensions.Options;
+@using LearningHub.Nhs.WebUI.Configuration;
+@using LearningHub.Nhs.WebUI.Helpers;
+@inject IOptions<Settings> settings
+
+@model NavigationModel
+
+<!-- start AccountLinks -->
+@if (Model.ShowMyAccount)
+{
+  <nav class="nhsuk-header__account" aria-label="Account">
+    @if (Model.NotificationCount > 0)
+    {
+      <div class="nhsuk-header__notification-dot">@NotificationDisplay()</div>
+    }
+    <ul class="nhsuk-header__account-list">
+      <li class="nhsuk-header__account-item">
+        <svg class="nhsuk-icon nhsuk-icon--user" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" focusable="false" aria-hidden="true">
+          <path d="M12 1a11 11 0 1 1 0 22 11 11 0 0 1 0-22Zm0 2a9 9 0 0 0-5 16.5V18a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v1.5A9 9 0 0 0 12 3Zm0 3a3.5 3.5 0 1 1-3.5 3.5A3.4 3.4 0 0 1 12 6Z" />
+        </svg>
+
+        <a class="nhsuk-header__account-link" asp-controller="Myaccount" asp-action="Index">
+          My account
+        </a>
+      </li>
+
+      @if (Model.ShowSignOut)
+      {
+        <li class="nhsuk-header__account-item">
+          <a class="nhsuk-header__account-link" asp-controller="Home" asp-action="Logout">
+            Log out
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+}
+
+
+<!-- end AccountLinks -->
+@functions {
+    public string NotificationDisplay()
+    {
+        if (Model.NotificationCount < 1)
+        {
+            return "";
+        }
+
+        var returnString = Model.NotificationCount.ToString();
+        if (Model.NotificationCount > 9)
+        {
+            returnString = "9+";
+        }
+        return returnString;
+    }
+}

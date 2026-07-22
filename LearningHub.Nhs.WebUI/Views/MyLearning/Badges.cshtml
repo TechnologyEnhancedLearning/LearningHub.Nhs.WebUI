@@ -189,10 +189,13 @@
 
                                                 <span class="badge-dates-separator"></span>
 
-                                                <span>
-                                                    Expiry:
-                                                    <strong>@(expiryDate?.ToString("dd/MM/yyyy") ?? "—")</strong>
-                                                </span>
+                                                @if (expiryDate != null)
+                                                {
+                                                    <span>
+                                                        Expiry:
+                                                        <strong>@expiryDate.Value.ToString("dd/MM/yyyy")</strong>
+                                                    </span>
+                                                }
                                             </div>
 
                                             <a class="nhsuk-link" target="_blank" href="@badge.BadgeUrl">

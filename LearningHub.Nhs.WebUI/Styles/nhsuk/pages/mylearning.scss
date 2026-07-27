@@ -229,6 +229,7 @@
     /* Text column */
     .badge-header__text-col {
         flex: 1 1 auto;
+        min-width: 0;
     }
 
 
@@ -245,11 +246,18 @@
 
     .badge-dates-row {
         display: flex;
+        //justify-content: space-between;
         align-items: center;
-        gap: 24px;
+        width: 100%;
+        gap: 12px;
     }
 
-    .badge-dates-separator {
-        flex: 0 0 1px;
+    .badge-dates-row > span {
+        white-space: nowrap;
+    }
+
+    .badge-expiry {
+        margin-left: auto;
+        text-align: right;
     }
 }

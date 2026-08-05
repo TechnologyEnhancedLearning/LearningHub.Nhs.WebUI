@@ -218,7 +218,7 @@
                 var scriptCataloguereference = this.Settings.ScriptCataloguereference;
                 if (reference == scriptCataloguereference)
                 {
-                    var redirectUri = $"{this.authConfig.Authority}/sso/LinkToScript?userid={this.CurrentUserId}";
+                    var redirectUri = $"{this.authConfig.Authority}/sso/LinkToScript/{this.CurrentUserId}";
                     return this.Redirect(redirectUri);
                 }
             }

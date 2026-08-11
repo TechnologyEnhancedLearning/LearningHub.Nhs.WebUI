@@ -90,7 +90,7 @@ BEGIN
 			[AttributeSequence] = ROW_NUMBER() OVER (PARTITION BY uug.UserId ORDER BY ISNULL(uga.Id, 0)),
 			[UserIdDenseRank] = DENSE_RANK() OVER (ORDER BY up.LastName, up.FirstName, up.Id),
 			AddedByPlatformAdmin = CASE WHEN PlatformAdminAdded.UserId IS NULL THEN 0 ELSE 1 END,
-			AddedByUsername = CASE WHEN uga.Id IS NULL THEN 'Platform admin' ELSE u_addedBy.UserName END,
+			AddedByUsername = CASE WHEN uga.Id IS NULL THEN 'Platform admin' ELSE u_addedBy.LegacyUserName END,
 			AddedDatetime =  CASE WHEN uga.Id IS NULL THEN NULL ELSE uug.CreateDate END,
 			CanRemove = CASE WHEN PlatformAdminAdded.UserId  IS NULL THEN 1 ELSE 0 END,
 			rug.RoleId 

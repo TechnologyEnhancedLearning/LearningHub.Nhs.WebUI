@@ -209,6 +209,11 @@
     <None Include="Scripts\LH Database Scripts\Move CC resource to a custom catalogue.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\TD-6159-turn-off-cdc.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\TD-6159-turn-on-cdc.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-7526-SeedProfessionalBody.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-7528-Seed-OrganisationType.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-7530-SeedJobRoleType.sql" />
+    <None Include="Scripts\Post-Deploy\Scripts\TD-7556-seedRole.sql" />
+    <None Include="Tables\Hub\MergeUserLearningHistoryLog.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="LearningHub.Nhs.Database.refactorlog" />
@@ -592,6 +597,14 @@
     <None Include="Scripts\Pre-Deploy\Scripts\EmailTemplateTableChanges.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\UpdateEmailTemplateData.sql" />
     <Build Include="Stored Procedures\Hierarchy\GetCatalogueAdminDetails.sql" />
+    <Build Include="Tables\Hub\ProfessionalBody.sql" />
+    <Build Include="Tables\Hub\JobRoleType.sql" />
+    <Build Include="Tables\Hub\Organisation.sql" />
+    <Build Include="Tables\Hub\OrganisationType.sql" />
+    <Build Include="Tables\Hub\UserOrganisation.sql" />
+    <Build Include="Tables\Hub\UserRole.sql" />
+    <Build Include="Tables\Hub\UserPasswordValidationToken.sql" />
+    <Build Include="Tables\Hub\UserExternalSystem.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

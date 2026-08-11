@@ -116,6 +116,16 @@
             entity.CreateDate = amendDate;
             entity.AmendUserId = userId;
             entity.AmendDate = amendDate;
+
+            if (entity is IRemoveAudit removeAudit)
+            {
+                removeAudit.RemoveDate = null;
+                removeAudit.RemoveUserId = null;
+            }
+            else
+            {
+                entity.Deleted = false;
+            }
         }
 
         /// <summary>
@@ -147,11 +157,7 @@
             entity.AmendDate = this.GetAmendDate();
             this.DbContext.Entry(entity).Property("CreateUserId").IsModified = false;
             this.DbContext.Entry(entity).Property("CreateDate").IsModified = false;
-            if (entity.GetType() == typeof(User))
-            {
-                this.DbContext.Entry(entity).Property("VersionStartTime").IsModified = false;
-                this.DbContext.Entry(entity).Property("VersionEndTime").IsModified = false;
-            }
+            
         }
 
         /// <summary>
@@ -161,7 +167,18 @@
         /// <param name="entity">The entity.</param>
         public void SetAuditFieldsForDelete(int userId, EntityBase entity)
         {
-            entity.Deleted = true;
+            var amendDate = this.GetAmendDate();
+
+            if (entity is IRemoveAudit removeAudit)
+            {
+                removeAudit.RemoveDate = amendDate;
+                removeAudit.RemoveUserId = userId;
+            }
+            else
+            {
+                entity.Deleted = true;
+            }
+
             entity.AmendUserId = userId;
             entity.AmendDate = this.GetAmendDate();
             this.DbContext.Entry(entity).Property("CreateUserId").IsModified = false;

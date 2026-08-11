@@ -22,8 +22,8 @@ BEGIN
 		
 	DECLARE @ResourceVersionEventTypeId int=3
 
-	SELECT @Details = CASE WHEN ISNULL(@Details,'') = '' THEN 'Unpublished by ' + [UserName]
-						   ELSE 'Unpublished by ' + [UserName] + ': ' + ISNULL(@Details,'') 
+	SELECT @Details = CASE WHEN ISNULL(@Details,'') = '' THEN 'Unpublished by ' + [LegacyUserName]
+						   ELSE 'Unpublished by ' + [LegacyUserName] + ': ' + ISNULL(@Details,'') 
 					  END
 	FROM hub.[User]
 	WHERE Id = @UserId

@@ -90,4 +90,10 @@ UPDATE [resources].[ResourceVersion] SET CertificateEnabled = 0 WHERE VersionSta
 :r .\Scripts\TD-7106-Resume-Databricks-Ingestion.sql
 :r .\Scripts\TD-7078-supportingindexes.sql
 :r .\Scripts\TD-7078-PopulateReadModelHistoricUserActivities.sql
+:r .\Scripts\TD-7556-seedRole.sql
+:r .\Scripts\TD-7530-SeedJobRoleType.sql
+:r .\Scripts\TD-7526-SeedProfessionalBody.sql
+:r .\Scripts\TD-7528-Seed-OrganisationType.sql
+
+
 

@@ -1,47 +1,33 @@
-﻿CREATE TABLE [hub].[User](
-	[Id] [int] NOT NULL,
-	[UserName] [nvarchar](50) NOT NULL,
-	[countryId] [int] NULL,
-	[registrationCode] [nvarchar](50) NULL,
-	[activeFromDate] [datetimeoffset](7) NULL,
-	[activeToDate] [datetimeoffset](7) NULL,
-	[passwordHash] [nvarchar](255) NULL,
-	[mustChangeNextLogin] [bit] NULL,
-	[passwordLifeCounter] [int] NULL,
-	[securityLifeCounter] [int] NULL,
-	[RemoteLoginKey] [nvarchar](50) NULL,
-	[RemoteLoginGuid] [uniqueidentifier] NULL,
-	[RemoteLoginStart] [datetimeoffset](7) NULL,
-	[RestrictToSSO] [bit] NULL,
-	[loginTimes] [int] NULL,
-	[loginWizardInProgress] [bit] NULL,
-	[lastLoginWizardCompleted] [datetimeoffset](7) NULL,
-	[primaryUserEmploymentId] [int] NULL,
-	[regionId] [int] NULL,
-	[preferredTenantId] [int] NULL,
-	[CreateUserId] [int] NOT NULL,
-	[CreateDate] [datetimeoffset](7) NOT NULL,
-	[AmendUserId] [int] NOT NULL,
-	[AmendDate] [datetimeoffset](7) NOT NULL,
-	[VersionStartTime] [datetime2](7) GENERATED ALWAYS AS ROW START NOT NULL,
-	[VersionEndTime] [datetime2](7) GENERATED ALWAYS AS ROW END NOT NULL,
-	[Deleted] [bit] NOT NULL,
- CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
+﻿CREATE TABLE [hub].[User]
 (
-	[Id] ASC
-),
-	PERIOD FOR SYSTEM_TIME ([VersionStartTime], [VersionEndTime])
-) ON [PRIMARY]
-GO
+    [Id] INT NOT NULL,
+    [FirstName] NVARCHAR(50) NULL,
+    [LastName] NVARCHAR(50) NULL,
+    [EmailAddress] NVARCHAR(100) NULL,
+    [RecoveryEmailAddress] NVARCHAR(100) NULL,
+    [LegacyUserName] NVARCHAR(50) NOT NULL,
+    [ProfessionalBodyId] INT NULL,
+    [ProfessionalRegistrationNumber] NVARCHAR(50) NULL,
+    [Active] BIT NULL,
+    [PasswordHash] NVARCHAR(255) NULL,
+    [MustChangePassword] BIT NULL,
+    [PasswordLifeCounter] INT NULL,
+    [SecurityLifeCounter] INT NULL,
+    [RemoteLoginKey] NVARCHAR(50) NULL,
+    [RemoteLoginGuid] UNIQUEIDENTIFIER NULL,
+    [RemoteLoginStart] DATETIMEOFFSET(7) NULL,
+    [RestrictToSSO] BIT NULL,
+    [RequestUserLogout] BIT NULL,
 
-ALTER TABLE [hub].[User] ADD  DEFAULT (getutcdate()) FOR [VersionStartTime]
-GO
+    [CreateDate] DATETIMEOFFSET(7) NOT NULL,
+    [CreateUserId] INT NULL,
+    [AmendDate] DATETIMEOFFSET(7) NULL,
+    [AmendUserId] INT NULL,
+    [RemoveDate] DATETIMEOFFSET(7) NULL,
+    [RemoveUserId] INT NULL,
+    [RemovalMethodId] INT NULL,
 
-ALTER TABLE [hub].[User] ADD  DEFAULT (CONVERT([datetime2],'9999-12-31 23:59:59.9999999')) FOR [VersionEndTime]
-GO
-
-CREATE INDEX idx_User_Deleted ON hub.[User] (Deleted) include (UserName) WITH (FILLFACTOR = 95);
-GO
-
-CREATE INDEX idx_User_Username ON [hub].[User] (UserName) WITH (FILLFACTOR = 95);
+    CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED ([Id]),
+    CONSTRAINT [FK_User_ProfessionalBody] FOREIGN KEY ([ProfessionalBodyId]) REFERENCES [hub].[ProfessionalBody] ([Id])
+);
 GO

@@ -22,7 +22,7 @@ BEGIN
 
 	SELECT	@ItemsReturned = Count(*)
 	FROM	hub.[Role] r
-	WHERE	r.Deleted = 0
+	WHERE	r.RemoveDate is null
 		AND	
 			(
 			[Name] like '%' + @searchText + '%'
@@ -36,14 +36,14 @@ BEGIN
 		SELECT	Id,
 				[Name],
 				[Description],
-				Deleted,
+				RemoveDate,
 				CreateUserId,
 				CreateDate,
 				AmendUserId,
 				AmendDate,
 				ROW_NUMBER() OVER(ORDER BY [Name], Id) AS RowNumber
 		FROM	hub.[Role]
-		WHERE	Deleted = 0
+		WHERE	RemoveDate is null
 		AND	
 			(
 			[Name] like '%' + @searchText + '%'

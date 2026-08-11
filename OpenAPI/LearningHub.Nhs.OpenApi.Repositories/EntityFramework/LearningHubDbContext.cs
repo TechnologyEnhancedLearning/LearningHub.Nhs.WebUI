@@ -20,6 +20,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.Resource.ResourceDisplay;
     using LearningHub.Nhs.Models.User;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
     using Microsoft.EntityFrameworkCore;
     using CatalogueAdminViewModel = LearningHub.Nhs.Models.Hierarchy.CatalogueAdminViewModel;
     using Event = LearningHub.Nhs.Models.Entities.Analytics.Event;
@@ -794,6 +795,8 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             {
                 mapping.Map(modelBuilder);
             }
+
+            modelBuilder.ApplyRemoveAuditConvention();
         }
     }
 }

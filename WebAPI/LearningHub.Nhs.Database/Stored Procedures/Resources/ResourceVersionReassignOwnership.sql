@@ -169,7 +169,7 @@ BEGIN
 	DECLARE @UserName nvarchar(50)
 	DECLARE @ResourceVersionEventTypeId int = 5 -- Admin event type
 	DECLARE @Details nvarchar(1024)
-	SELECT @Details = 'Transferred resource ownership to UserName=' + UserName
+	SELECT @Details = 'Transferred resource ownership to UserName=' + LegacyUserName
 	FROM hub.[User] WHERE Id=@NewOwnerUserId
 
 	EXECUTE [resources].[ResourceVersionEventCreate]  @ResourceVersionId, @ResourceVersionEventTypeId, @Details, @UserId, @UserTimezoneOffset

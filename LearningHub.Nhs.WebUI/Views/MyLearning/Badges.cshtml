@@ -134,9 +134,7 @@
                 <div class="nhsuk-u-padding-bottom-4">
                     <hr class="nhsuk-section-break nhsuk-section-break--visible">
                 </div>
-
-                <div class="nhsuk-grid-row">
-
+                <ul class="nhsuk-grid-row nhsuk-card-group tel-badge-card-group">
                     @foreach (var badge in Model.Badges)
                     {
                         // Convert nullable Unix timestamps
@@ -156,64 +154,57 @@
                             var d when d.Value.Date == today.AddDays(-1) => "Yesterday",
                             var d => d.Value.ToString("dd/MM/yyyy")
                         };
-                       
-                        <div class="nhsuk-grid-column-one-half">
-                            <div class="nhsuk-card nhsuk-card--clickable nhsuk-u-margin-bottom-4">
+
+                        <li class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+                            <div class="nhsuk-card tel-card--badge tel-card--tight-padding tel-card--rounded-corners">
                                 <div class="nhsuk-card__content">
-
-                                    <!-- FLEX ROW: circle column + text column -->
                                     <div class="badge-header">
-
-                                        <!-- LEFT COLUMN: circle -->
-                                        <div class="badge-header__circle-col">
-                                            <div class="badge-circle">
-                                                <span class="badge-circle__inner"></span>
-                                            </div>
-                                        </div>
-
                                         <!-- RIGHT COLUMN: title + all text -->
                                         <div class="badge-header__text-col">
-
-                                            <h2 class="nhsuk-heading-m nhsuk-u-margin-bottom-2">
+                                            <h2 class="nhsuk-card__heading nhsuk-heading-xs">
                                                 @badge.Name
                                             </h2>
+                                        </div>
+                                    </div>
 
-                                            <p class="nhsuk-body-s nhsuk-u-margin-bottom-1">
-                                                By: Technology Enhanced Learning
-                                            </p>
-
-                                            <div class="nhsuk-body-s nhsuk-u-margin-bottom-3 badge-dates-row">
-                                                <span>
-                                                    On: <strong>@activityText</strong>
-                                                </span>
-
-                                              
-
-                                                @if (expiryDate != null)
-                                                {
-                                                    <span class="badge-expiry">
-                                                        Expiry:
-                                                        <strong>@expiryDate.Value.ToString("dd/MM/yyyy")</strong>
-                                                    </span>
-                                                }
+                                    <div class="nhsuk-u-margin-bottom-3">
+                                        <dl class="definition-list definition-list--inline nhsuk-u-margin-bottom-2 definition-list--small">
+                                            <div class="definition-list__group">
+                                                <dt class="definition-list__title">By:</dt>
+                                                <dd class="definition-list__description">Technology Enhanced Learning</dd>
                                             </div>
+                                        </dl>
 
-                                            <a class="nhsuk-link" target="_blank" href="@badge.BadgeUrl">
-                                                View badge details
-                                            </a>
+
+                                        <div class="badge-dates-row">
+                                            <dl class="definition-list definition-list--inline nhsuk-u-margin-bottom-2 definition-list--small">
+                                                <div class="definition-list__group">
+                                                    <dt class="definition-list__title">On:</dt>
+                                                    <dd class="definition-list__description">@activityText</dd>
+                                                </div>
+                                            </dl>
+                                            @if (expiryDate != null)
+                                            {
+                                                <dl class="definition-list definition-list--inline nhsuk-u-margin-bottom-2 definition-list--small">
+                                                    <div class="definition-list__group">
+                                                    <dt class="definition-list__title">Expires:</dt>
+                                                    <dd class="definition-list__description">@expiryDate.Value.ToString("dd/MM/yyyy")</dd>
+                                                </div>
+                                                </dl>
+                                            }
 
                                         </div>
-
                                     </div>
+
+                                    <a class="tel-badge__action-link" target="_blank" href="@badge.BadgeUrl">View badge details</a>
 
                                 </div>
                             </div>
-                        </div>
-
-
+                        </li>
                     }
+                </ul>
 
-                </div>
+             
 
 
                 <div>

@@ -200,6 +200,7 @@ div.bmj-best-practice-logo-image {
     border-radius: 4px;
     font-family: sans-serif;
 }
+
 .filteractive {
     color: $nhsuk-blue !important;
     border-color: #376cac;
@@ -207,10 +208,15 @@ div.bmj-best-practice-logo-image {
 }
 
 .filterinactive {
-    color: #d8dde0;
-    border-color: #d8dde0;
-    background-color: $nhsuk-white;
-    opacity: 0.7;
+  color: $nhsuk-secondary-text-colour;
+  border-color: #d8dde0;
+  background-color: $nhsuk-white;
+  opacity: 0.7;
+}
+
+
+.filterinactive:visited {
+  color: $nhsuk-secondary-text-colour;
 }
 
 filterfocus {

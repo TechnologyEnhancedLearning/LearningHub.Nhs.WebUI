@@ -53,24 +53,24 @@
 
                             <div class="nhsuk-radios">
                                 <div class="nhsuk-radios--conditional">
-                                <div class="nhsuk-radios__item">
-                                    <input type="radio" asp-for="SelectedFolderId" value="0" id="SelectedFolderId" class="nhsuk-radios__input" data-val="false"
-                                           aria-controls="conditional-newfolder" aria-expanded="false" />
-                                    <label class="nhsuk-label nhsuk-radios__label" for="SelectedFolderId">
-                                        Add a folder and include the bookmark in it
-                                    </label>
-                                    @* Note: The hidden div following a conditional radio button (nhsuk-radios__conditional) needs to be a SIBLING of the radio button input element. *@
-                                    <div class="nhsuk-radios__conditional nhsuk-u-margin-bottom-0" id="conditional-newfolder">
-                                        <vc:text-input asp-for="NewFolderName"
-                                                       label="New folder name"
-                                                       populate-with-current-value="false"
-                                                       type="text"
-                                                       spell-check="false"
-                                                       hint-text=""
-                                                       autocomplete="off"
-                                                       css-class=""
-                                                       required="@(Model.SelectedFolderId == 0)" />
-                                    </div>
+                                  <div class="nhsuk-radios__item">
+                                      <input type="radio" asp-for="SelectedFolderId" value="0" id="SelectedFolderId" class="nhsuk-radios__input" data-val="false"
+                                             aria-controls="conditional-newfolder" aria-expanded="false" />
+                                      <label class="nhsuk-label nhsuk-radios__label" for="SelectedFolderId">
+                                          Add a folder and include the bookmark in it
+                                      </label>
+
+                                  </div>
+                                  <div class="nhsuk-radios__conditional nhsuk-u-margin-bottom-0" id="conditional-newfolder">
+                                  <vc:text-input asp-for="NewFolderName"
+                                                 label="New folder name"
+                                                 populate-with-current-value="false"
+                                                 type="text"
+                                                 spell-check="false"
+                                                 hint-text=""
+                                                 autocomplete="off"
+                                                 css-class=""
+                                                 required="@(Model.SelectedFolderId == 0)" />
                                 </div>
                                 </div>
 

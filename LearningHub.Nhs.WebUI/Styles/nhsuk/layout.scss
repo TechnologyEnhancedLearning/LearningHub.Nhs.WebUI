@@ -55,9 +55,15 @@ body {
 }
 
 .nhsuk-width-container.app-width-container.beta-banner {
-    padding: px2rem(8) px2rem(32);
-    max-width: px2rem(1208);
-    margin: 0 auto;
+  padding: px2rem(8) px2rem(32);
+  max-width: px2rem(1208);
+  margin: 0 auto;
+}
+
+#nhsuk-cookie-banner .nhsuk-width-container {
+  padding: px2rem(8) px2rem(32);
+  max-width: px2rem(1208);
+  margin: 0 auto;
 }
 
 .nhsuk-header .nhsuk-header__container::after {
@@ -174,15 +180,7 @@ body {
 }
 
 button[data-toggle="modal"] {
-    color: #005eb8;
-    padding: 0;
-    border: none;
-    background: none;
-
-    &:focus {
-        background: yellow;
-        border-bottom: 4px solid;
-    }
+  padding: 0.25rem;
 }
 
 .autosuggestion-menu {
@@ -516,10 +514,6 @@ li.autosuggestion-option:last-of-type a:focus {
     .nhsuk-width-container.app-width-container.beta-banner {
         padding-left: px2rem(16);
         padding-right: px2rem(16);
-    }
-
-    .nhsuk-back-link {
-        padding: 0.5rem 0;
     }
 
     .nhsuk-width-container.nhsuk-header__container.app-width-container {

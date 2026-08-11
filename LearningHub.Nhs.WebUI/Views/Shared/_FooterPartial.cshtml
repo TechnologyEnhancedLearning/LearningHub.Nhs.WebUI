@@ -24,6 +24,6 @@
   };
 }
 
-<vc:footer copyright="© NHS England 2024"
+<vc:footer copyright="@($"© NHS England {DateTime.Now.Year}")"
            footer-group-list="@footerGroupData"
            is-vertically-aligned="true" />

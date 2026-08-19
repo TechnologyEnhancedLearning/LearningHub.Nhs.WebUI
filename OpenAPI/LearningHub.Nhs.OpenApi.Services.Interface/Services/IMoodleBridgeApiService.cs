@@ -86,5 +86,12 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="categoryId">The categoryId.</param>
         /// <returns></returns>
         Task<List<SubCategoryResult>> GetSubCategoryByCategoryIdAsync(string categoryId);
+
+        /// <summary>
+        /// GetUserBadgeFromMoodleInstancesAsync.
+        /// </summary>
+        /// <param name="moodleUserInstanceUserIds">moodleUserInstanceUserIds.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<MoodleBadgeResponseModel> GetUserBadgeFromMoodleInstancesAsync(MoodleInstanceUserIdsViewModel moodleUserInstanceUserIds);
     }
 }

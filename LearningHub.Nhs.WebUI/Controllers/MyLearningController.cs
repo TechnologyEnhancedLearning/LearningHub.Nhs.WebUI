@@ -728,6 +728,59 @@
         }
 
         /// <summary>
+        /// Get user certificates.
+        /// </summary>
+        /// <param name="badgeRequest">The badgeRequest.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [Route("mylearning/badges")]
+        [HttpGet]
+        [HttpPost]
+        public async Task<IActionResult> Badges(MyLearningUserBadgesViewModel badgeRequest = null)
+        {
+            int badgePageSize = 8;
+            var myLearningRequestModel = new MyLearningRequestModel
+            {
+                SearchText = badgeRequest.SearchText?.Trim(),
+                Skip = badgeRequest.CurrentPageIndex * badgePageSize,
+                Take = badgePageSize,
+            };
+
+            switch (badgeRequest.MyLearningFormActionType)
+            {
+                case MyLearningFormActionTypeEnum.NextPageChange:
+                    badgeRequest.CurrentPageIndex += 1;
+                    myLearningRequestModel.Skip = badgeRequest.CurrentPageIndex * badgePageSize;
+                    break;
+
+                case MyLearningFormActionTypeEnum.PreviousPageChange:
+                    badgeRequest.CurrentPageIndex -= 1;
+                    myLearningRequestModel.Skip = badgeRequest.CurrentPageIndex * badgePageSize;
+                    break;
+                case MyLearningFormActionTypeEnum.BasicSearch:
+
+                    myLearningRequestModel = new MyLearningRequestModel
+                    {
+                        SearchText = badgeRequest.SearchText?.Trim(),
+                        Skip = badgeRequest.CurrentPageIndex * badgePageSize,
+                        Take = badgePageSize,
+                    };
+                    break;
+            }
+
+            var result = await this.myLearningService.GetUserBadgeDetails(myLearningRequestModel, this.MoodleInstanceUserIds);
+            var response = new MyLearningUserBadgesViewModel(myLearningRequestModel);
+
+            if (result != null)
+            {
+                response.TotalCount = result.TotalCount;
+                response.Badges = result.Badges;
+            }
+
+            response.MyLearningPaging = new MyLearningPagingModel() { CurrentPage = badgeRequest.CurrentPageIndex, PageSize = badgePageSize, TotalItems = response.TotalCount, HasItems = response.TotalCount > 0 };
+            return this.View(response);
+        }
+
+        /// <summary>
         /// Gets the Certificate name.
         /// </summary>
         /// <param name="resourceTitile">The resourceTitile.</param>

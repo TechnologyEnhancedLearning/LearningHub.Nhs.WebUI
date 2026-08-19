@@ -165,14 +165,23 @@
                 return "Downloaded";
             }
             else if (myLearningDetailedItemViewModel.ResourceType == ResourceTypeEnum.Assessment)
-            {
+            {              
+                if (!myLearningDetailedItemViewModel.AssessmentDetails.PassMark.HasValue)
+                {
+                    return myLearningDetailedItemViewModel.Complete ? "Completed" : "Incomplete";
+                }
+
                 if (myLearningDetailedItemViewModel.Complete)
                 {
-                    return myLearningDetailedItemViewModel.ScorePercentage >= myLearningDetailedItemViewModel.AssessmentDetails.PassMark ? "Passed" : "Failed";
+                    return myLearningDetailedItemViewModel.ScorePercentage >= myLearningDetailedItemViewModel.AssessmentDetails.PassMark.Value
+                        ? "Passed"
+                        : "Failed";
                 }
                 else
                 {
-                    return myLearningDetailedItemViewModel.ScorePercentage >= myLearningDetailedItemViewModel.AssessmentDetails.PassMark ? "Passed" : "Incomplete";
+                    return myLearningDetailedItemViewModel.ScorePercentage >= myLearningDetailedItemViewModel.AssessmentDetails.PassMark.Value
+                        ? "Passed"
+                        : "Incomplete";
                 }
             }
             else

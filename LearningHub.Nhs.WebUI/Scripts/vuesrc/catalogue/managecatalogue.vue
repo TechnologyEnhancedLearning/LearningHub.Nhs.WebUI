@@ -12,31 +12,24 @@
 
             <div v-if="catalogue && !isLoading">
                 <div class="lh-padding-fluid">
-                    <div class="lh-container-xl">
-                        <div class="nhsuk-back-link">
+                  <div class="lh-container-xl">
+                      <a :href="'/catalogue/' + reference" class="nhsuk-back-link" id="goBackLink">
+                        Go back
+                      </a>
+                    <h1>Catalogue Management</h1>
+                    <div class="nhsuk-grid-row" v-if="(catalogue.restrictedAccess || catalogue.hidden)">
+                      <div class="nhsuk-grid-column-full">
+                        <p>You are managing the following catalogue and can invite users to request access.</p>
+                        <input type="button" class="nhsuk-button" @click="inviteUserModal()" value="Invite Users" v-if="(catalogue.restrictedAccess || catalogue.hidden)" />
 
-                            <a :href="'/catalogue/' + reference" class="nhsuk-back-link__link" id="goBackLink">
-                                <svg class="nhsuk-icon nhsuk-icon__chevron-left"
-                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
-                                </svg>
-                                Go back
-                            </a>
-                        </div>
-                        <h1>Catalogue Management</h1>
-                        <div class="nhsuk-grid-row" v-if="(catalogue.restrictedAccess || catalogue.hidden)">
-                            <div class="nhsuk-grid-column-full">
-                                <p>You are managing the following catalogue and can invite users to request access.</p>
-                                <input type="button" class="nhsuk-button" @click="inviteUserModal()" value="Invite Users" v-if="(catalogue.restrictedAccess || catalogue.hidden)" />  
-
-                            </div>
-                        </div>
-                        <div class="row pt-4">
-                            <div class="col">
-                                <h2>{{catalogue.name}}</h2>
-                            </div>
-                        </div>
+                      </div>
                     </div>
+                    <div class="row pt-4">
+                      <div class="col">
+                        <h2>{{catalogue.name}}</h2>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="lh-padding-fluid-md">

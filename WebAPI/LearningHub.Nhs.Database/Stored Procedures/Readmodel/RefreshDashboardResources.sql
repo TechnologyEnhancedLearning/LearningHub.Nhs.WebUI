@@ -128,8 +128,8 @@ BEGIN
             CASE WHEN n.Id = 1 THEN NULL ELSE cnv.BadgeUrl END AS BadgeUrl,
             cnv.RestrictedAccess,
             pub.CreateDate AS PublishedDate,
-            CAST(rvrs.AverageRating AS DECIMAL(3,2)) AS AverageRating,
-            rvrs.RatingCount,
+            CAST(COALESCE(rvrs.AverageRating, 0.00) AS DECIMAL(3,2)) AS AverageRating,
+            COALESCE(rvrs.RatingCount, 0) AS RatingCount,
             ISNULL(ac.ActivityCount, 0) AS ActivityCount,
             prov.ProvidersJson
         FROM resources.Resource r

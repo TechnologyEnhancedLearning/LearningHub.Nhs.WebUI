@@ -5,7 +5,7 @@
     using LearningHub.Nhs.Models.MyLearning;
     using LearningHub.Nhs.Models.Paging;
     using LearningHub.Nhs.WebUI.Models.Learning;
-    using NHSUKViewComponents.Web.ViewModels;
+    using NHSUKFrontendRazor.ViewModels;
 
     /// <summary>
     /// Defines the <see cref="MyLearningUserCertificatesViewModel" />.

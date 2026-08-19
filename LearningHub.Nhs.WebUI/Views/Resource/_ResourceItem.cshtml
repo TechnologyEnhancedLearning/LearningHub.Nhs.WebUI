@@ -64,7 +64,7 @@
                     This resource contains sensitive content which some people may find offensive or disturbing.
                 </p>
                 <div>
-                    <a class="nhsuk-button nhsuk-button--secondary" href="@GetSensitiveContentUrl()">Show content</a>
+                    <a class="nhsuk-button nhsuk-button--secondary-solid" href="@GetSensitiveContentUrl()">Show content</a>
                 </div>
             </div>
         }
@@ -147,7 +147,7 @@
 
                     @if (resourceItem.ArticleDetails.Files != null && resourceItem.ArticleDetails.Files.Count > 0)
                     {
-                        <div class="nhsuk-card">
+                        <div class="class="nhsuk-card nhsuk-bg-light-blue"">
                             <div class="nhsuk-card__content">
                                 <h2 class="nhsuk-card__heading">Documents</h2>
                                 @foreach (var file in resourceItem.ArticleDetails.Files)

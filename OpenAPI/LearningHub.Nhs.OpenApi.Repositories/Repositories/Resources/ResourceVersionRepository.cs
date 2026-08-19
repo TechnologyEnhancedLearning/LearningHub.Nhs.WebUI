@@ -732,16 +732,16 @@
             switch (dashboardType)
             {
                 case "my-recent-completed":
-                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyRecentCompletedDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetMyRecentCompletedDashboardResourcesRM @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
                     break;
                 case "recent-resources":
-                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetRecentDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetRecentDashboardResourcesRM @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
                     break;
                 case "rated-resources":
-                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetRatedDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetRatedDashboardResourcesRM @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
                     break;
                 case "popular-resources":
-                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetPopularDashboardResources @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
+                    dashboardResources = this.DbContext.DashboardResourceDto.FromSqlRaw("resources.GetPopularDashboardResourcesRM @userId, @pageNumber, @totalRows output", param0, param1, param2).ToList();
                     break;
             }
 

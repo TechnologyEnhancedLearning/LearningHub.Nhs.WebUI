@@ -61,6 +61,14 @@
         Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(MyLearningRequestModel requestModel, MoodleInstanceUserIdsViewModel moodleInstanceUserIds);
 
         /// <summary>
+        /// Gets the user certificates.
+        /// </summary>
+        /// <param name="requestModel">The request model.</param>
+        /// <param name="moodleInstanceUserIds">The moodleInstanceUserIds.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<MyLearningBadgesDetailedViewModel> GetUserBadgeDetails(MyLearningRequestModel requestModel, MoodleInstanceUserIdsViewModel moodleInstanceUserIds);
+
+        /// <summary>
         /// Gets the resource URL for a given resource reference ID.
         /// </summary>
         /// <param name="resourceReferenceId">resourceReferenceId.</param>

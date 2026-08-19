@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using elfhHub.Nhs.Models.Common;
-    using NHSUKViewComponents.Web.ViewModels;
+    using NHSUKFrontendRazor.ViewModels;
 
     /// <summary>
     /// Defines the <see cref="UserGradeUpdateViewModel" />.

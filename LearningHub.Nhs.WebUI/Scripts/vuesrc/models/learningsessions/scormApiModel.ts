@@ -152,7 +152,8 @@ export class ScormApiModel {
 						this.LMSLastErrorCode = 301;
 						this.LMSLastErrorMsg = "Unable to disconnect cleanly from the e-LfH LMS";
 
-						alert("Error communicating with the LMS server.  Your learning details may not have been saved.");
+						//alert("Error communicating with the LMS server.  Your learning details may not have been saved.");
+						window.dispatchEvent(new CustomEvent('show-lms-error'));
 					}
 
 					result = false;
@@ -821,8 +822,9 @@ export class ScormApiModel {
 						this.LMSLastErrorCode = 101;
 						this.LMSLastErrorMsg = "LMSCommit failed. Unable to communicate with the LMS.";
 
-						alert("Error communicating with the LMS server.  Your learning details may not have been saved.\n\n" +
-							"If the error persists please email support@learninghub.nhs.uk for further assistance.");
+						window.dispatchEvent(new CustomEvent('show-lms-error'));
+						//alert("Error communicating with the LMS server.  Your learning details may not have been saved.\n\n" +
+						//	"If the error persists please email support@learninghub.nhs.uk for further assistance.");
 					}
 
 					result = false;

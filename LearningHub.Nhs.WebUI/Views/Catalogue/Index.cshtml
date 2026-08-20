@@ -95,15 +95,15 @@
     }
 
     var restrictedAccessVm = new RestrictedAccessBannerViewModel
-            {
-                TitleText = "Access to this catalogue is restricted",
-                BodyText = "This catalogue has been restricted to a limited group of users. You can request access from the catalogue administrator.",
-                CatalogueNodeVersionId = Model.Catalogue.Id,
-                RestrictedAccess = Model.Catalogue.RestrictedAccess,
-                HasCatalogueAccess = Unlocked(),
-                CatalogueAccessRequest = Model.CatalogueAccessRequest,
-                UserGroups = Model.UserGroups
-            };
+    {
+        TitleText = "Access to this catalogue is restricted",
+        BodyText = "This catalogue has been restricted to a limited group of users. You can request access from the catalogue administrator.",
+        CatalogueNodeVersionId = Model.Catalogue.Id,
+        RestrictedAccess = Model.Catalogue.RestrictedAccess,
+        HasCatalogueAccess = Unlocked(),
+        CatalogueAccessRequest = Model.CatalogueAccessRequest,
+        UserGroups = Model.UserGroups
+    };
 
     var provider = Model.Catalogue.Providers?.FirstOrDefault();
     var hasBadge = !string.IsNullOrWhiteSpace(Model.Catalogue.BadgeUrl);
@@ -119,16 +119,25 @@
     <partial name="_LoginBanner" />
     <partial name="_RestrictedAccessBanner" model="@restrictedAccessVm" />
 
-    @* Admin banner *@
-    @if (CanManage())
-    {
-        <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-3 nhsuk-u-margin-bottom-3">
-            <div class="nhsuk-width-container app-width-container">
+    <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-4 nhsuk-u-padding-bottom-3 nhsuk-u-margin-bottom-3">
+        <div class="nhsuk-width-container app-width-container">
+            @* Admin banner *@
+            @if (CanManage())
+            {
+
                 <p>You are an administrator for this catalogue.</p>
                 <a class="nhsuk-button" asp-controller="Catalogue" asp-action="Manage" asp-route-reference="@Model.Catalogue.Url">Manage this catalogue</a>
-            </div>
+
+            }
+            @* SSO Script*@
+            @if (this.ViewBag.ScriptCatalogue == true)
+            {
+
+                <a class="nhsuk-button" asp-controller="Catalogue" asp-action="RedirecttoScriptSSO">SCRIPT login</a>
+
+            }
         </div>
-    }
+    </div>
 
     <div class="nhsuk-width-container app-width-container nhsuk-u-margin-bottom-7">
 
@@ -220,10 +229,10 @@
                         </li>
                     }
                     @if (Model.Catalogue.SelectedCategoryId != null &&
-                    (
-                    (Model.Courses != null && Model.Courses.Any()) ||
-                    (Model.SubCategories != null && Model.SubCategories.Any())
-                    ))
+                                        (
+                                        (Model.Courses != null && Model.Courses.Any()) ||
+                                        (Model.SubCategories != null && Model.SubCategories.Any())
+                                        ))
                     {
                         <li class="subnavwhite-item @(ViewBag.ActiveTab == "courses" ? "active" : string.Empty)">
                             <a tabindex="0" class="subnavwhite-link text-nowrap" asp-controller="Catalogue" asp-route-reference="@Model.Catalogue.Url" asp-route-tab="courses" asp-fragment="catalogue-details">Courses</a>

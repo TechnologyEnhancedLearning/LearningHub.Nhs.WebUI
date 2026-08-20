@@ -218,10 +218,10 @@
                 var scriptCataloguereference = this.Settings.ScriptCataloguereference;
                 if (reference == scriptCataloguereference)
                 {
-                    var redirectUri = $"{this.authConfig.Authority}/sso/LinkToScript/{this.CurrentUserId}";
-                    return this.Redirect(redirectUri);
+                    this.ViewBag.ScriptCatalogue = true;
                 }
-            }
+
+             }
 
             this.ViewBag.Reference = reference;
             this.ViewBag.UserAuthenticated = this.User.Identity.IsAuthenticated;
@@ -783,6 +783,17 @@
             this.ViewBag.PageIndex = pageIndex;
             this.ViewBag.PageSize = allCatalogueSearchPageSize;
             return this.View("AllCatalogueSearch", catalogues);
+        }
+
+        /// <summary>
+        /// Redirect to Script SSO.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
+        [Route("catalogue/RedirecttoScriptSSO")]
+        public IActionResult RedirecttoScriptSSO()
+        {
+            var redirectUri = $"{this.authConfig.Authority}/sso/LinkToScript/{this.CurrentUserId}";
+            return this.Redirect(redirectUri);
         }
     }
 }

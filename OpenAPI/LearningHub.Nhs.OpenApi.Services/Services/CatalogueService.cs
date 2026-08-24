@@ -775,7 +775,7 @@
                         items = items.Where(x => x.Title.Contains(filter.Value));
                         break;
                     case "createuser":
-                        items = items.Where(x => x.CreateUser.UserName.Contains(filter.Value));
+                        items = items.Where(x => x.CreateUser.LegacyUserName.Contains(filter.Value));
                         break;
                     default:
                         break;
@@ -799,11 +799,11 @@
                 case "createuser":
                     if (sortDirection == "D")
                     {
-                        items = items.OrderByDescending(x => x.CreateUser.UserName);
+                        items = items.OrderByDescending(x => x.CreateUser.LegacyUserName);
                     }
                     else
                     {
-                        items = items.OrderBy(x => x.CreateUser.UserName);
+                        items = items.OrderBy(x => x.CreateUser.LegacyUserName);
                     }
 
                     break;

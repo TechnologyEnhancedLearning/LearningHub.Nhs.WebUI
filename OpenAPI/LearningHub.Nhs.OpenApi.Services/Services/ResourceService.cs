@@ -1724,7 +1724,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 }
 
                 resourceVersionViewModel.CreateUserId = resourceVersion.CreateUserId;
-                resourceVersionViewModel.CreateUser = resourceVersion.CreateUser.UserName;
+                resourceVersionViewModel.CreateUser = resourceVersion.CreateUser.LegacyUserName;
                 resourceVersionViewModel.CreateDate = resourceVersion.CreateDate;
                 resourceVersionViewModel.HasValidationErrors = resourceVersion.ResourceVersionValidationResult != null && resourceVersion.VersionStatusEnum == VersionStatusEnum.FailedToPublish;
                 resourceVersionViewModel.ResourceAccessibilityEnum = resourceVersion.ResourceAccessibilityEnum;
@@ -4247,7 +4247,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                         items = items.Where(x => x.Title.Contains(filter.Value));
                         break;
                     case "createuser":
-                        items = items.Where(x => x.CreateUser.UserName.Contains(filter.Value));
+                        items = items.Where(x => x.CreateUser.LegacyUserName.Contains(filter.Value));
                         break;
                     case "userid":
                         // Used by User Detail screen Contributions tab to filter by userId.
@@ -4304,11 +4304,11 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 case "createuser":
                     if (sortDirection == "D")
                     {
-                        items = items.OrderByDescending(x => x.CreateUser.UserName);
+                        items = items.OrderByDescending(x => x.CreateUser.LegacyUserName);
                     }
                     else
                     {
-                        items = items.OrderBy(x => x.CreateUser.UserName);
+                        items = items.OrderBy(x => x.CreateUser.LegacyUserName);
                     }
 
                     break;
@@ -4701,7 +4701,7 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 }
 
                 resourceVersionViewModel.CreateUserId = resourceVersion.CreateUserId;
-                resourceVersionViewModel.CreateUser = resourceVersion.CreateUser.UserName;
+                resourceVersionViewModel.CreateUser = resourceVersion.CreateUser.LegacyUserName;
                 resourceVersionViewModel.CreateDate = resourceVersion.CreateDate;
             }
         }

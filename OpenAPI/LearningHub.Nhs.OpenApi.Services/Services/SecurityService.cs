@@ -154,14 +154,14 @@
                 {
                     emailChangeValidationToken.StatusId = (int)EmailChangeValidationTokenStatusEnum.Completed;
                     await emailChangeValidationTokenRepository.UpdateAsync(emailChangeValidationToken.UserId, emailChangeValidationToken);
-                    tokenResult.UserName = emailChangeValidationToken.User.UserName;
+                    tokenResult.UserName = emailChangeValidationToken.User.LegacyUserName;
                     tokenResult.Email = emailChangeValidationToken.Email;
                     tokenResult.UserId = emailChangeValidationToken.UserId;
                     tokenResult.Valid = true;
 
                     var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)EmailTemplates.EmailVerified);
                     var personalisation = new Dictionary<string, dynamic>();
-                    personalisation["user name"] = emailChangeValidationToken.User.UserName;
+                    personalisation["user name"] = emailChangeValidationToken.User.LegacyUserName;
 
                     var emailRequest = new EmailRequest
                     {

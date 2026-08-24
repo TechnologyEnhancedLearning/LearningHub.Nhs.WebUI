@@ -301,7 +301,7 @@
 
                         break;
                     case "CreatedBy":
-                        items = items.Where(l => l.CreateUser.UserName.Contains(filter.Value));
+                        items = items.Where(l => l.CreateUser.LegacyUserName.Contains(filter.Value));
                         break;
                     case "NotificationPriority":
                         if (int.TryParse(filter.Value, out var np))
@@ -351,7 +351,7 @@
                     items = descending ? items.OrderByDescending(l => l.EndDate) : items.OrderBy(l => l.EndDate);
                     break;
                 case "CreatedBy":
-                    items = descending ? items.OrderByDescending(l => l.CreateUser.UserName) : items.OrderBy(l => l.CreateUser.UserName);
+                    items = descending ? items.OrderByDescending(l => l.CreateUser.LegacyUserName) : items.OrderBy(l => l.CreateUser.LegacyUserName);
                     break;
                 case "NotificationPriority":
                     items = descending ? items.OrderByDescending(l => l.NotificationPriorityEnum) : items.OrderBy(l => l.NotificationPriorityEnum);

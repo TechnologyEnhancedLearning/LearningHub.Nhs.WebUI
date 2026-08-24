@@ -64,11 +64,11 @@
                                         .ThenInclude(ug => ug.RoleUserGroup)
                                         .ThenInclude(rug => rug.Role)
                                         .AsNoTracking()
-                                        .FirstOrDefaultAsync(n => n.UserName == username && !n.Deleted);
+                                        .FirstOrDefaultAsync(n => n.LegacyUserName == username && !n.Deleted);
             }
             else
             {
-                return await DbContext.User.FirstOrDefaultAsync(n => n.UserName == username);
+                return await DbContext.User.FirstOrDefaultAsync(n => n.LegacyUserName == username);
             }
         }
 

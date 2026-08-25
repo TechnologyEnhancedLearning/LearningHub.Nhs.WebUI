@@ -180,7 +180,7 @@
             }
 
             entity.AmendUserId = userId;
-            entity.AmendDate = this.GetAmendDate();
+            entity.AmendDate = amendDate;
             this.DbContext.Entry(entity).Property("CreateUserId").IsModified = false;
             this.DbContext.Entry(entity).Property("CreateDate").IsModified = false;
         }

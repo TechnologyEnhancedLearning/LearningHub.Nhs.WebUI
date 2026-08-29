@@ -39,7 +39,7 @@
     "save": "^2.9.0",
     "ts-debounce": "2.3.0",
     "tus-js-client": "^2.3.2",
-    "vue": "^2.7.14",
+    "vue": "^3.0.0",
     "vue-carousel": "^0.18.0",
     "vue-clamp": "0.4.1",
     "vue-click-outside": "1.1.0",

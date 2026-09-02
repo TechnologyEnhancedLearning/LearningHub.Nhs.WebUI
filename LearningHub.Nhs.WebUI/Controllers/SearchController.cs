@@ -61,13 +61,14 @@ namespace LearningHub.Nhs.WebUI.Controllers
             IFileService fileService,
             IMoodleBridgeApiService moodleBridgeApiService,
             IFeatureManager featureManager,
-            ICacheService cacheService)
+            ICacheService cacheService,
+            ISearchTelemetryService searchTelemetryService)
         : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.searchService = searchService;
             this.fileService = fileService;
             this.featureManager = featureManager;
-            this.searchTelemetryService = this.searchTelemetryService;
+            this.searchTelemetryService = searchTelemetryService;
             this.cacheService = cacheService;
         }
 

@@ -99,8 +99,9 @@
         /// The Get AutoSuggestion List.
         /// </summary>
         /// <param name="term">The term.</param>
+        /// <param name="searchSourceFilterText">The search source filter text.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<AutoSuggestionModel> GetAutoSuggestionList(string term);
+        Task<AutoSuggestionModel> GetAutoSuggestionList(string term, string searchSourceFilterText);
 
         /// <summary>
         /// The Send AutoSuggestion Click Action Async.

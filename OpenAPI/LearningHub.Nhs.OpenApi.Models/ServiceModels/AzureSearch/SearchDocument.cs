@@ -141,6 +141,12 @@ namespace LearningHub.Nhs.OpenApi.Models.ServiceModels.AzureSearch
         [JsonPropertyName("is_deleted")]
         public bool IsDeleted { get; set; }
 
+        // <summary>
+        /// Gets or sets the url.
+        /// </summary>
+        [JsonPropertyName("source")]
+        public string Source { get; set; } = string.Empty;
+
         /// <summary>
         /// Strips paragraph tags from input string.
         /// </summary>

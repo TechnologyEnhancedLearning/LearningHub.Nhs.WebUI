@@ -5,6 +5,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.WebUI.Filters;
@@ -28,9 +29,12 @@ namespace LearningHub.Nhs.WebUI.Controllers
     [ServiceFilter(typeof(LoginWizardFilter))]
     public class SearchController : BaseController
     {
+        private const string SearchSourceFilterCacheKey = "SearchSourceFilter_{0}";
+
         private readonly ISearchService searchService;
         private readonly IFileService fileService;
         private readonly IFeatureManager featureManager;
+        private readonly ICacheService cacheService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchController"/> class.
@@ -41,8 +45,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="searchService">The searchService.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="fileService">The fileService.</param>
-        /// <param name="featureManager"> The Feature flag manager.</param>
+        /// <param name="featureManager">The Feature flag manager.</param>
         /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
+        /// <param name="cacheService">The cacheService.</param>
         public SearchController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
@@ -51,12 +56,14 @@ namespace LearningHub.Nhs.WebUI.Controllers
             ILogger<SearchController> logger,
             IFileService fileService,
             IMoodleBridgeApiService moodleBridgeApiService,
-            IFeatureManager featureManager)
+            IFeatureManager featureManager,
+            ICacheService cacheService)
         : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.searchService = searchService;
             this.fileService = fileService;
             this.featureManager = featureManager;
+            this.cacheService = cacheService;
         }
 
         /// <summary>
@@ -72,6 +79,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
         {
             search.SearchId ??= 0;
             search.GroupId = !string.IsNullOrWhiteSpace(search.GroupId) && Guid.TryParse(search.GroupId, out Guid groupId) ? groupId.ToString() : Guid.NewGuid().ToString();
+
+            var sourceFilter = await this.GetCachedSearchSourceFilter();
+            search.SearchSourceFilter = sourceFilter;
 
             // Fix: Ensure an instance of IFeatureManager is injected and used
             var azureSearchEnabled = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.AzureSearch)).Result;
@@ -377,7 +387,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 return this.RedirectToAction("AccessDenied", "Home");
             }
 
-            var autoSuggestions = await this.searchService.GetAutoSuggestionList(term);
+            var sources = await this.GetCachedSearchSourceFilter();
+            string sourceFilter = string.Join(",", sources);
+            var autoSuggestions = await this.searchService.GetAutoSuggestionList(term, sourceFilter);
 
             var azureSearchEnabled = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.AzureSearch)).Result;
 
@@ -434,6 +446,42 @@ namespace LearningHub.Nhs.WebUI.Controllers
 
             this.searchService.SendAutoSuggestionClickActionAsync(clickPayloadModel);
             return this.Redirect(url);
+        }
+
+        /// <summary>
+        /// Gets the cached search source filter. Uses distributed cache (Redis) to avoid repeated database calls.
+        /// Cache is stored per user and expires after 1 hour with sliding expiration.
+        /// </summary>
+        /// <returns>Cached source filter collection.</returns>
+        private async Task<IEnumerable<string>> GetCachedSearchSourceFilter()
+        {
+            // Create cache key unique to current user
+            var cacheKey = string.Format(SearchSourceFilterCacheKey, this.CurrentUserId);
+
+            // Try to get from cache
+            var cachedResult = await this.cacheService.GetAsync<List<string>>(cacheKey);
+            if (cachedResult != null && cachedResult.Count > 0)
+            {
+                return cachedResult;
+            }
+
+            // Fetch and cache for this user (cache for 1 hour with sliding expiration)
+            var sourceFilter = this.ConfigureSearchSourceFilter();
+            var sourceFilterList = sourceFilter.ToList();
+
+            await this.cacheService.SetAsync(cacheKey, sourceFilterList, expiryInMinutes: 60, slidingExpiration: true);
+
+            return sourceFilterList;
+        }
+
+        /// <summary>
+        /// Gets the search source filter by joining Moodle instance user IDs with "lh".
+        /// </summary>
+        /// <returns>Collection of source filter values.</returns>
+        private IEnumerable<string> ConfigureSearchSourceFilter()
+        {
+            var sourceFilter = this.MoodleInstanceUserIds.MoodleInstanceUserIds.Select(kvp => kvp.Key.ToString()).Concat(new[] { "lh" }).ToList();
+            return sourceFilter;
         }
     }
 }

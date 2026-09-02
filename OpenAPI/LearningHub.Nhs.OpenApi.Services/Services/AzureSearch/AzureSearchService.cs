@@ -19,6 +19,7 @@
     using LearningHub.Nhs.OpenApi.Services.Helpers;
     using LearningHub.Nhs.OpenApi.Services.Helpers.Search;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using Microsoft.EntityFrameworkCore.Metadata.Internal;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
@@ -134,10 +135,11 @@
 
                 // Map documents
                 var documents = filteredResponse.GetResults()
-                    .Select(result =>
+                    .Select((result, index) =>
                     {
                         var doc = result.Document;
                         doc.ParseManualTags();
+                        var absoluteIndex = (searchRequestModel.PageIndex * searchRequestModel.PageSize) + index;
 
                         return new Document
                         {
@@ -162,7 +164,7 @@
                             Authors = doc.Author?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToList(),
                             AuthoredDate = doc.DateAuthored?.ToString(),
                             ResourceReferenceId = int.TryParse(doc.ResourceReferenceId, out var id) ? id : 0,
-                            Click = BuildSearchClickModel(doc.Id, doc.Title, searchRequestModel.PageIndex, searchRequestModel.SearchId, filters, query, count)
+                            Click = BuildSearchClickModel(doc.Id, doc.Title, absoluteIndex, searchRequestModel.SearchId, filters, query, count)
                         };
                     })
                     .ToList();
@@ -238,17 +240,18 @@
                 var documentList = new CatalogueDocumentList
                 {
                     Documents = response.GetResults()
-                    .Select(result =>
+                    .Select((result, index) =>
                     {
                         var doc = result.Document;
                         doc.ParseManualTags();
-
+                        var absoluteIndex = (catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize) + index;
+                        
                         return new CatalogueDocument
                         {
                             Id = doc.Id,
                             Name = doc.Title,
                             Description = doc.Description,
-                            Click = BuildSearchClickModel(doc.Id, doc.Title, catalogSearchRequestModel.PageIndex, catalogSearchRequestModel.SearchId, filters, catalogSearchRequestModel.SearchText, count)
+                            Click = BuildSearchClickModel(doc.Id, doc.Title, absoluteIndex, catalogSearchRequestModel.SearchId, filters, catalogSearchRequestModel.SearchText, count)
                         };
                     })
                     .ToArray()
@@ -564,10 +567,11 @@
                 var documentList = new CatalogueDocumentList
                 {
                     Documents = response.GetResults()
-                    .Select(result =>
+                    .Select((result, index) =>
                     {
                         var doc = result.Document;
                         doc.ParseManualTags();
+                        var absoluteIndex = (catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize) + index;
 
                         return new CatalogueDocument
                         {

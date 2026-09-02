@@ -220,8 +220,7 @@
                 {
                     this.ViewBag.ScriptCatalogue = true;
                 }
-
-             }
+            }
 
             this.ViewBag.Reference = reference;
             this.ViewBag.UserAuthenticated = this.User.Identity.IsAuthenticated;

@@ -91,7 +91,7 @@ namespace LearningHub.Nhs.WebUI.Interfaces
         /// <param name="changeingFileId">Changing file id.</param>
         /// <param name="currentUserId">Current user id.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        Task<FileUploadResult> ProcessArticleFileAsync(int resourceVersionId, IFormFile file, int fileSize,int changeingFileId, int currentUserId);
+        Task<FileUploadResult> ProcessArticleFileAsync(int resourceVersionId, IFormFile file, int fileSize, int changeingFileId, int currentUserId);
 
         /// <summary>
         /// The ProcessResourceAttachedFileAsync.

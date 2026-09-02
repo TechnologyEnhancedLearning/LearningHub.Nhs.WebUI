@@ -80,7 +80,6 @@
             services.AddScoped<IUserGroupService, UserGroupService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<ISearchService, SearchService>();
-            services.AddScoped<ISearchTelemetryService, SearchTelemetryService>();
             services.AddScoped<IRegionService, RegionService>();
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<ICatalogueService, CatalogueService>();

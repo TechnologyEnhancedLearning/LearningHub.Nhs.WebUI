@@ -1,4 +1,4 @@
-namespace LearningHub.Nhs.WebUI.Controllers.Api
+﻿namespace LearningHub.Nhs.WebUI.Controllers.Api
 {
     using System;
     using System.Linq;
@@ -8,7 +8,6 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
     using LearningHub.Nhs.WebUI.Models;
-    using LearningHub.Nhs.WebUI.Models.Search;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -21,17 +20,14 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
     public class SearchController : ControllerBase
     {
         private readonly ISearchService searchService;
-        private readonly ISearchTelemetryService searchTelemetryService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchController"/> class.
         /// </summary>
         /// <param name="searchService">Resource service.</param>
-        /// <param name="searchTelemetryService">Search telemetry service.</param>
-        public SearchController(ISearchService searchService, ISearchTelemetryService searchTelemetryService)
+        public SearchController(ISearchService searchService)
         {
             this.searchService = searchService;
-            this.searchTelemetryService = searchTelemetryService;
         }
 
         /// <summary>
@@ -148,60 +144,6 @@ namespace LearningHub.Nhs.WebUI.Controllers.Api
             };
 
             return this.Ok(await this.searchService.CreateCatalogueSearchActionAsync(searchActionCatalogueModel));
-        }
-
-        /// <summary>
-        /// Records search result click telemetry for Azure Search observability.
-        /// </summary>
-        /// <param name="model">The click telemetry payload.</param>
-        /// <returns>An <see cref="IActionResult"/>.</returns>
-        [HttpPost("RecordResultClickTelemetry")]
-        public async Task<IActionResult> RecordResultClickTelemetry(SearchResultClickTelemetryModel model)
-        {
-            if (model == null || string.IsNullOrWhiteSpace(model.ResultUrl))
-            {
-                return this.BadRequest();
-            }
-
-            await this.searchTelemetryService.RecordResultClickTelemetryAsync(model);
-
-            return this.Ok();
-        }
-
-        /// <summary>
-        /// Records search executed telemetry for zero-result rate analysis.
-        /// </summary>
-        /// <param name="model">The search executed telemetry payload.</param>
-        /// <returns>An <see cref="IActionResult"/>.</returns>
-        // [HttpPost("RecordSearchExecutedTelemetry")]
-        // public async Task<IActionResult> RecordSearchExecutedTelemetry(SearchExecutedTelemetryModel model)
-        // {
-        //    if (model == null || string.IsNullOrWhiteSpace(model.QueryText))
-        //    {
-        //        return this.BadRequest();
-        //    }
-
-        // await this.searchTelemetryService.RecordSearchExecutedFromApiAsync(model);
-
-        // return this.Ok();
-        // }
-
-        /// <summary>
-        /// Records search facet applied telemetry for facet usage analysis.
-        /// </summary>
-        /// <param name="model">The facet applied telemetry payload.</param>
-        /// <returns>An <see cref="IActionResult"/>.</returns>
-        [HttpPost("RecordFacetAppliedTelemetry")]
-        public async Task<IActionResult> RecordFacetAppliedTelemetry(SearchFacetAppliedTelemetryModel model)
-        {
-            if (model == null || string.IsNullOrWhiteSpace(model.FacetField))
-            {
-                return this.BadRequest();
-            }
-
-            await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
-
-            return this.Ok();
         }
     }
 }

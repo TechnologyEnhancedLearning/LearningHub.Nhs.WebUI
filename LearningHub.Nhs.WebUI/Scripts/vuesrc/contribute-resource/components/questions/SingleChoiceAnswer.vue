@@ -52,14 +52,14 @@
         data() {
             return {
                 message: this.answer.blockCollection.blocks[0].textBlock.content,
-                charactersRemaining: 120 - this.answer.blockCollection.blocks[0].textBlock.content.length,
+                charactersRemaining: 500 - this.answer.blockCollection.blocks[0].textBlock.content.length,
                 AnswerTypeEnum: AnswerTypeEnum
             }
         },
         watch: {
             message() {
                 this.answer.blockCollection.blocks[0].textBlock.content = this.message;
-                this.charactersRemaining = 120 - this.message.length;
+                this.charactersRemaining = 500 - this.message.length;
             },
             answer: {
                 deep: true,

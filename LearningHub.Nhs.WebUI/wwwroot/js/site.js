@@ -24,8 +24,8 @@ LHGlobal.sessionManager = new function () {
     var sm = this;
 
     var _idleTime = 0;
-    var _warningTime = 2 * 60 * 1000;     // 15 minutes
-    var _sessionTimeout = 3 * 60 * 1000;  // 20 minutes
+    var _warningTime = 15 * 60 * 1000;     // 15 minutes
+    var _sessionTimeout = 20 * 60 * 1000;  // 20 minutes
 
     var _on = false;
     var _warningShown = false;

@@ -7,7 +7,7 @@
                     <label class="nhsuk-u-visually-hidden" for="messagedetails"></label>
                     <EditSaveFieldWithCharacterCount v-model="message"
                                                      addEditLabel="response text"
-                                                     v-bind:characterLimit="120"
+                                                     v-bind:characterLimit="500"
                                                      v-bind:inputId="messagedetails"
                                                      v-bind:isH3="true"></EditSaveFieldWithCharacterCount>
                 </div>
@@ -56,7 +56,7 @@
         data() {
             return {
                 message: this.answer.blockCollection.blocks[0].textBlock.content,
-                charactersRemaining: 120 - this.answer.blockCollection.blocks[0].textBlock.content.length,
+                charactersRemaining: 500 - this.answer.blockCollection.blocks[0].textBlock.content.length,
                 AnswerTypeEnum: AnswerTypeEnum,
                 status: this.answer.status
             }
@@ -65,7 +65,7 @@
         watch: {
             message() {
                 this.answer.blockCollection.blocks[0].textBlock.content = this.message;
-                this.charactersRemaining = 120 - this.message.length;
+                this.charactersRemaining = 500 - this.message.length;
             },
             status() {
                 this.answer.status = this.status;

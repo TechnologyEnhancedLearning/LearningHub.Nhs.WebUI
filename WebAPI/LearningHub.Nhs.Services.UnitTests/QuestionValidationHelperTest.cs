@@ -840,7 +840,7 @@
             // Assert
             Assert.NotNull(result);
             Assert.False(result.IsValid);
-            Assert.True(result.Details.All(details => details == "Text answers must not exceed 120 characters in length."));
+            Assert.True(result.Details.All(details => details == "Text answers must not exceed 500 characters in length."));
         }
 
         private BlockViewModel GenerateTextBlock(int order, string content = "test content")

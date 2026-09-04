@@ -62,5 +62,17 @@
             var moodleCategories = await this.moodleBridgeApiService.GetAllMoodleCategoriesAsync();
             return this.Ok(moodleCategories);
         }
+
+        /// <summary>
+        /// Gets the configured Moodle instance base URLs keyed by instance short name.
+        /// </summary>
+        /// <returns>The <see cref="Task{IActionResult}"/>.</returns>
+        [HttpGet]
+        [Route("Configuration")]
+        public async Task<IActionResult> GetConfiguration()
+        {
+            var moodleConfiguration = await this.moodleBridgeApiService.GetMoodleInstanceBaseUrlsAsync();
+            return this.Ok(moodleConfiguration);
+        }
     }
 }

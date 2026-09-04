@@ -165,7 +165,8 @@
                             Authors = doc.Author?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToList(),
                             AuthoredDate = doc.DateAuthored?.ToString(),
                             ResourceReferenceId = int.TryParse(doc.ResourceReferenceId, out var id) ? id : 0,
-                            Click = BuildSearchClickModel(doc.Id, doc.Title, absoluteIndex, searchRequestModel.SearchId, filters, query, count)
+                            Click = BuildSearchClickModel(doc.Id, doc.Title, absoluteIndex, searchRequestModel.SearchId, filters, query, count),
+                            Url = doc.Source,
                         };
                     })
                     .ToList();

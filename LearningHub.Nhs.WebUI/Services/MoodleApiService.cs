@@ -106,9 +106,24 @@
         /// <returns>return course URL.</returns>
         public string GetCourseUrl(int courseId)
         {
-            var apiBaseUrl = this.configuration.BaseUrl;
-            string path = this.configuration.CoursePath;
-            return $"{apiBaseUrl}{path}?id={courseId}";
+            return this.GetCourseUrl(courseId, this.configuration.BaseUrl);
+        }
+
+        /// <summary>
+        /// GetCourseUrl.
+        /// </summary>
+        /// <param name="courseId">course Id. </param>
+        /// <param name="baseUrl">The Moodle base URL.</param>
+        /// <returns>return course URL.</returns>
+        public string GetCourseUrl(int courseId, string baseUrl)
+        {
+            if (string.IsNullOrWhiteSpace(baseUrl))
+            {
+                return string.Empty;
+            }
+
+            string path = (this.configuration.CoursePath ?? string.Empty).TrimStart('/');
+            return $"{baseUrl.TrimEnd('/')}/{path}?id={courseId}";
         }
     }
 }

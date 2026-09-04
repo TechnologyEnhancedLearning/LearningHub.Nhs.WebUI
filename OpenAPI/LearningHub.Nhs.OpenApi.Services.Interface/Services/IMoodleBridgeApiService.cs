@@ -28,6 +28,12 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         Task<MoodleUpdateEmailResponseModel> UpdateEmail(UpdateEmailaddressViewModel updateEmailaddressViewModel);
 
         /// <summary>
+        /// Gets the configured Moodle instance base URLs keyed by instance short name.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<IDictionary<string, string>> GetMoodleInstanceBaseUrlsAsync();
+
+        /// <summary>
         /// GetRecentEnrolledCoursesAsync.
         /// </summary>
         /// <param name="moodleUserInstanceUserIds">The moodleUserInstanceUserIds.</param>

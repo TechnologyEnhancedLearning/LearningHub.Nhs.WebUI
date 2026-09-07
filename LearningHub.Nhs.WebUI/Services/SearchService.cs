@@ -1005,7 +1005,10 @@
                 filterParts.Add($"&resource_collection={string.Join("&resource_collection=", resourceCollectionFilter)}");
             }
 
-            filterParts.Add($"&source={string.Join("&source=", searchSourceFilter)}");
+            if (searchSourceFilter?.Any() == true)
+            {
+                filterParts.Add($"&source={string.Join("&source=", searchSourceFilter)}");
+            }
 
             return string.Join(string.Empty, filterParts);
         }

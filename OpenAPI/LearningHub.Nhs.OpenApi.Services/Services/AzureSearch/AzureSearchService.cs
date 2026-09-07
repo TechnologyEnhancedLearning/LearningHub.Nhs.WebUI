@@ -48,6 +48,7 @@
         private readonly ILearningHubService learningHubService;
         private readonly IResourceRepository resourceRepository;
         private readonly ICachingService cachingService;
+        private readonly IMoodleBridgeApiService moodleBridgeApiService;
         private readonly SearchClient searchClient;
         private readonly ILogger<AzureSearchService> logger;
         private readonly AzureSearchConfig azureSearchConfig;
@@ -61,6 +62,7 @@
         /// <param name="azureSearchConfig">The Azure Search configuration.</param>
         /// <param name="resourceRepository">The resource repository.</param>
         /// <param name="cachingService">The caching service.</param>
+        /// <param name="moodleBridgeApiService">The Moodle bridge service.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper.</param>
         public AzureSearchService(
@@ -69,6 +71,7 @@
             IOptions<AzureSearchConfig> azureSearchConfig,
             IResourceRepository resourceRepository,
             ICachingService cachingService,
+            IMoodleBridgeApiService moodleBridgeApiService,
             ILogger<AzureSearchService> logger,
             IMapper mapper)
         {
@@ -76,6 +79,7 @@
             this.eventService = eventService;
             this.resourceRepository = resourceRepository;
             this.cachingService = cachingService;
+            this.moodleBridgeApiService = moodleBridgeApiService;
             this.logger = logger;
             this.mapper = mapper;
             this.azureSearchConfig = azureSearchConfig.Value;
@@ -133,21 +137,27 @@
                 var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, queryOffset, queryPageSize, filters, sortBy, true, this.azureSearchConfig);
                 SearchResults<Models.ServiceModels.AzureSearch.SearchDocument> filteredResponse = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(query, searchOptions, cancellationToken);
                 var count = Convert.ToInt32(filteredResponse.TotalCount);
+                var searchResults = filteredResponse.GetResults().ToList();
+                var hasMoodleResults = searchResults.Any(result => string.Equals(MapToResourceType(result.Document.ResourceType), "moodle", StringComparison.OrdinalIgnoreCase));
+                var moodleInstanceBaseUrls = hasMoodleResults
+                    ? await this.GetMoodleInstanceBaseUrlsAsync().ConfigureAwait(false)
+                    : new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
                 // Map documents
-                var documents = filteredResponse.GetResults()
+                var documents = searchResults
                     .Select((result, index) =>
                     {
                         var doc = result.Document;
                         doc.ParseManualTags();
                         var absoluteIndex = (searchRequestModel.PageIndex * searchRequestModel.PageSize) + index;
+                        var resourceType = MapToResourceType(doc.ResourceType);
 
                         return new Document
                         {
                             Id = doc.Id,
                             Title = doc.Title,
                             Description = doc.Description,
-                            ResourceType = MapToResourceType(doc.ResourceType),
+                            ResourceType = resourceType,
                             ProviderIds = doc.ProviderIds?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList(),
                             CatalogueIds =
                                 doc.ResourceType == "catalogue"
@@ -165,7 +175,10 @@
                             Authors = doc.Author?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToList(),
                             AuthoredDate = doc.DateAuthored?.ToString(),
                             ResourceReferenceId = int.TryParse(doc.ResourceReferenceId, out var id) ? id : 0,
-                            Click = BuildSearchClickModel(doc.Id, doc.Title, absoluteIndex, searchRequestModel.SearchId, filters, query, count)
+                            Click = BuildSearchClickModel(doc.Id, doc.Title, absoluteIndex, searchRequestModel.SearchId, filters, query, count),
+                            Url = resourceType == "moodle"
+                                ? ResolveMoodleBaseUrl(doc.Source, moodleInstanceBaseUrls)
+                                : doc.Url,
                         };
                     })
                     .ToList();
@@ -257,7 +270,7 @@
                         var doc = result.Document;
                         doc.ParseManualTags();
                         var absoluteIndex = (catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize) + index;
-                        
+
                         return new CatalogueDocument
                         {
                             Id = doc.Id,
@@ -661,12 +674,12 @@
                         "source"
                     }
                 };
-               
+
                 var autoOptions = new AutocompleteOptions
                 {
                     Mode = AutocompleteMode.OneTermWithContext,
                     Size = this.azureSearchConfig.ConceptsSuggesterSize,
-                    Filter = filter                    
+                    Filter = filter
                 };
 
                 var searchText = LuceneQueryBuilder.EscapeLuceneSpecialCharacters(term);
@@ -883,6 +896,70 @@
                 cleanedResourceType = ResourceTypeEnum.GenericFile.ToString();
 
             return cleanedResourceType;
+        }
+
+        private static string ResolveMoodleBaseUrl(string source, IDictionary<string, string> moodleInstanceBaseUrls)
+        {
+            if (string.IsNullOrWhiteSpace(source))
+            {
+                return string.Empty;
+            }
+
+            return moodleInstanceBaseUrls.TryGetValue(source, out var baseUrl)
+                ? baseUrl
+                : string.Empty;
+        }
+
+        private async Task<IDictionary<string, string>> GetMoodleInstanceBaseUrlsAsync()
+        {
+            try
+            {
+                var cacheMoodleSources = "moodlesources";
+
+                // Try to get from cache first
+                var cacheResponse = await this.cachingService.GetAsync<IList<IDictionary<string, string>>>(cacheMoodleSources).ConfigureAwait(false);
+
+                if (cacheResponse.ResponseEnum == CacheReadResponseEnum.Found && cacheResponse.Item != null)
+                {
+                    // Transform cached data to the expected return type
+                    var cachedData = cacheResponse.Item;
+                    var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+                    foreach (var item in cachedData)
+                    {
+                        if (item != null && item.ContainsKey("InstanceName") && item.ContainsKey("BaseUrl"))
+                        {
+                            result[item["InstanceName"]] = item["BaseUrl"];
+                        }
+                    }
+                   
+                    return result;
+                }
+                else
+                {
+                    // Get fresh data from API
+                    var moodleUrls = await this.moodleBridgeApiService.GetMoodleInstanceBaseUrlsAsync().ConfigureAwait(false);
+
+                    // Cache the response for future use
+                    if (moodleUrls != null && moodleUrls.Count > 0)
+                    {
+                        var cacheData = moodleUrls.Select(kv => new Dictionary<string, string>
+                        {
+                            { "InstanceName", kv.Key },
+                            { "BaseUrl", kv.Value }
+                        }).ToList();
+
+                        await this.cachingService.SetAsync(cacheMoodleSources, cacheData).ConfigureAwait(false);                        
+                    }
+
+                    return moodleUrls;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogWarning(ex, "Unable to resolve Moodle instance base URLs while mapping Azure Search results.");
+                return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            }
         }
 
         /// <summary>

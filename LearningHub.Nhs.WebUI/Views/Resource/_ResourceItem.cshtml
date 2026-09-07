@@ -147,23 +147,35 @@
 
                     @if (resourceItem.ArticleDetails.Files != null && resourceItem.ArticleDetails.Files.Count > 0)
                     {
-                        <div class="class="nhsuk-card nhsuk-bg-light-blue"">
+                        <div class="class=" nhsuk-card nhsuk-bg-light-blue"">
                             <div class="nhsuk-card__content">
                                 <h2 class="nhsuk-card__heading">Documents</h2>
                                 @foreach (var file in resourceItem.ArticleDetails.Files)
                                 {
                                     <p class="nhsuk-u-margin-bottom-2 word-break__break-word">
                                         <span class="nhsuk-u-margin-right-3 pill pill--small @UtilityHelper.GetPillColour(file.FileName)">@GetFileExtension(file.FileName)</span>
-                                        <a class="nhsuk-u-margin-right-3" href="@GetFileLink(file.FilePath, file.FileName)">@file.FileName</a> (@file.FileSizeKb KB)
+                                        <a class="nhsuk-u-margin-right-3" href="@GetFileLink(file.FilePath, file.FileName)">@file.FileName</a>
+                                        @if (file.FileSizeKb < 1000)
+                                        {
+                                            <span>(@file.FileSizeKb KB)</span>
+                                        }
+                                        else if (file.FileSizeKb < 1000000)
+                                        {
+                                            <span>(@((file.FileSizeKb / 1000.0).ToString("0.0")) MB)</span>
+                                        }
+                                        else
+                                        {
+                                            <span>(@((file.FileSizeKb / 1000000.0).ToString("0.0")) GB)</span>
+                                        }
                                     </p>
                                 }
                             </div>
                         </div>
                     }
                 }
-               
+
                 @if (canShowMoreDetails && resourceItem.ResourceTypeEnum == ResourceTypeEnum.Video || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Audio || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Scorm ||
-               resourceItem.ResourceTypeEnum == ResourceTypeEnum.Case || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Assessment)
+                            resourceItem.ResourceTypeEnum == ResourceTypeEnum.Case || resourceItem.ResourceTypeEnum == ResourceTypeEnum.Assessment)
                 {
                     if (resourceItem.ResourceTypeEnum == ResourceTypeEnum.Case)
                     {
@@ -172,7 +184,7 @@
 
                     @* Video/Audio/Scorm/Case/Assessment require JavaScript - use Vue.js resource app. *@
 
-                    if (!@ViewBag.DisplayAVResourceFlag && (resourceItem.AudioDetails !=null || resourceItem.VideoDetails !=null))
+                    if (!@ViewBag.DisplayAVResourceFlag && (resourceItem.AudioDetails != null || resourceItem.VideoDetails != null))
                     {
                         <partial name="_AudioVideoUnavailable" />
                     }

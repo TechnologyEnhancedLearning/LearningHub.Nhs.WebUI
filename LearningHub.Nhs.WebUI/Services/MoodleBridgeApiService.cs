@@ -133,22 +133,27 @@
         /// <summary>
         /// Gets a Moodle course URL for the supplied Moodle instance source.
         /// </summary>
-        /// <param name="source">The Moodle instance source identifier.</param>
+        /// <param name="sourceOrBaseUrl">The Moodle instance source identifier or resolved base URL.</param>
         /// <param name="courseId">The Moodle course id.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<string> GetCourseUrlAsync(string source, int courseId)
+        public async Task<string> GetCourseUrlAsync(string sourceOrBaseUrl, int courseId)
         {
-            if (string.IsNullOrWhiteSpace(source))
+            if (string.IsNullOrWhiteSpace(sourceOrBaseUrl))
             {
                 this.logger.LogWarning("Unable to determine Moodle BaseUrl because the search result source was empty for course {CourseId}.", courseId);
                 return string.Empty;
             }
 
+            if (Uri.TryCreate(sourceOrBaseUrl, UriKind.Absolute, out _))
+            {
+                return this.moodleApiService.GetCourseUrl(courseId, sourceOrBaseUrl);
+            }
+
             var moodleInstanceBaseUrls = await this.GetMoodleInstanceBaseUrlsAsync().ConfigureAwait(false);
 
-            if (!moodleInstanceBaseUrls.TryGetValue(source, out var baseUrl) || string.IsNullOrWhiteSpace(baseUrl))
+            if (!moodleInstanceBaseUrls.TryGetValue(sourceOrBaseUrl, out var baseUrl) || string.IsNullOrWhiteSpace(baseUrl))
             {
-                this.logger.LogWarning("Unable to determine Moodle BaseUrl for search result source {Source}.", source);
+                this.logger.LogWarning("Unable to determine Moodle BaseUrl for search result source {Source}.", sourceOrBaseUrl);
                 return string.Empty;
             }
 

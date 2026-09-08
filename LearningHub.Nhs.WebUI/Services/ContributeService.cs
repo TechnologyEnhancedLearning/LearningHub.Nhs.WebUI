@@ -627,7 +627,7 @@
                 FileName = fileChunkDetail.FileName,
                 FilePath = filelocation,
                 FileChunkDetailId = fileChunkDetail.Id,
-                FileSize = (int)(fileChunkDetail.FileSizeKb / 1000),
+                FileSize = fileChunkDetail.FileSizeKb,
                 ReplacedFileId = existingFileId,
             });
 

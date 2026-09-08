@@ -3,6 +3,7 @@
     using AutoMapper;
     using Azure.Search.Documents;
     using Azure.Search.Documents.Models;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Entities.Resource.Blocks;
@@ -702,6 +703,7 @@
                         Id = r.Document.Id,
                         Text = r.Document.Title.Trim(),
                         URL = r.Document.Url,
+                        Source = r.Document.Source,
                         ResourceReferenceId = (r.Document.ResourceCollection == "resource") ? r.Document.ResourceReferenceId : r.Document.Id,
                         Type = r.Document.ResourceCollection ?? "Suggestion"
                     });
@@ -713,6 +715,7 @@
                          Id = "A" + (index + 1),
                          Text = r.Text.Trim(),
                          URL = string.Empty,
+                         Source = string.Empty,
                          ResourceReferenceId = (string?)null,
                          Type = "AutoComplete"
                      });
@@ -728,6 +731,11 @@
                     TotalHits = combined.Count
                 };
 
+                var hasMoodleResults = suggestResults.Any(result => string.Equals(MapToResourceType(result.Type), "course", StringComparison.OrdinalIgnoreCase));
+                var moodleInstanceBaseUrls = hasMoodleResults
+                    ? await this.GetMoodleInstanceBaseUrlsAsync().ConfigureAwait(false)
+                    : new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
                 var autoSuggestion = new AutoSuggestionResourceCollection
                 {
                     TotalHits = suggestResults.Count(),
@@ -735,7 +743,9 @@
                     {
                         Id = item.Id,
                         ResourceType = item.Type,
-                        URL = item.URL,
+                        URL = item.Type == "course"
+                                ? ResolveMoodleBaseUrl(item.Source, moodleInstanceBaseUrls)
+                                : item.URL,
                         ResourceReferenceId = item.ResourceReferenceId != null && int.TryParse(item.ResourceReferenceId, out var refId) ? refId : 0,
                         Title = item.Text,
                         Click = BuildAutoSuggestClickModel(item.Id, item.Text, 0, 0, term, suggestResults.Count())

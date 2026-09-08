@@ -22,7 +22,7 @@
         else if ((resourceReferenceId > 0) && searchType == "course")
         {
             if (resourceReferenceId != null)
-                return moodleApiService.GetCourseUrl(resourceReferenceId.Value);
+                return moodleApiService.GetCourseUrl(resourceReferenceId.Value, reference);
         }
         else if (!string.IsNullOrEmpty(term) && searchType == "Concepts")
         {

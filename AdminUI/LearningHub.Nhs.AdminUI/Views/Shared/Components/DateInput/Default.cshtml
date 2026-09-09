@@ -1,0 +1,134 @@
+@model NHSUKFrontendRazor.ViewModels.DateInputViewModel
+
+@{
+    var errorCss = Model.HasError ? "nhsuk-form-group--error" : "";
+    var dayErrorCss = Model.HasDayError ? "nhsuk-input--error" : "";
+    var monthErrorCss = Model.HasMonthError ? "nhsuk-input--error" : "";
+    var yearErrorCss = Model.HasYearError ? "nhsuk-input--error" : "";
+    var hintTextLine = string.Empty;
+}
+
+<div class="@Model.CssClass @errorCss" id="@Model.Id">
+    <fieldset class="nhsuk-fieldset" aria-describedby="@Model.Id-hint" role="group">
+        <legend class="nhsuk-fieldset__legend nhsuk-label">
+            @if (Model.IsPageHeading.GetValueOrDefault() == true)
+            {
+                <h1>
+                    @Model.Label
+                </h1>
+            }
+            else
+            {
+                @Model.Label
+            }
+        </legend>
+
+        @if (Model.HintTextLines != null)
+        {
+            @foreach (var hintText in Model.HintTextLines)
+            {
+                hintTextLine = hintText;
+            }
+        }
+
+        <div class="nhsuk-hint" id="@Model.Id-hint">
+            @hintTextLine
+        </div>
+
+        @if (Model.HasError)
+        {
+            @foreach (var message in Model.ErrorMessages)
+            {
+                <span class="error-message--margin-bottom-1 nhsuk-error-message">
+                    <span class="nhsuk-u-visually-hidden">Error:</span> @message
+                </span>
+            }
+        }
+
+        <div class="nhsuk-date-input">
+            <div class="nhsuk-date-input__item">
+                <div class="nhsuk-form-group">
+                    <label class="nhsuk-label" for="@Model.DayId">Day</label>
+                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 @dayErrorCss"
+                           id="@Model.DayId"
+                           name="@Model.DayId"
+                           value="@Model.DayValue"
+                           type="text"
+                           pattern="[0-9]*"
+                           min="1"
+                           max="31"
+                           step="1"
+                           inputmode="numeric"
+                           aria-describedby="date-error" aria-invalid="false" />
+                </div>
+            </div>
+            <div class="nhsuk-date-input__item">
+                <div class="nhsuk-form-group">
+                    <label class="nhsuk-label" for="@Model.MonthId">Month</label>
+                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 @monthErrorCss"
+                           id="@Model.MonthId"
+                           name="@Model.MonthId"
+                           value="@Model.MonthValue"
+                           type="text"
+                           pattern="[0-9]*"
+                           min="1"
+                           max="12"
+                           step="1"
+                           inputmode="numeric"
+                           aria-describedby="date-error" aria-invalid="false" />
+                </div>
+            </div>
+            <div class="nhsuk-date-input__item">
+                <div class="nhsuk-form-group">
+                    <label class="nhsuk-label" for="@Model.YearId">Year</label>
+                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-3 @yearErrorCss"
+                           id="@Model.YearId"
+                           name="@Model.YearId"
+                           value="@Model.YearValue"
+                           type="text"
+                           pattern="[0-9]*"
+                           min="1900"
+                           max="9999"
+                           step="1"
+                           inputmode="numeric"
+                           aria-describedby="date-error" aria-invalid="false" />
+                </div>
+            </div>
+            <span id="date-error" class="error-message--margin-bottom-1 nhsuk-error-message" aria-live="polite" style="visibility: hidden;">
+            </span>
+        </div>
+    </fieldset>
+    <script>
+        const fields = [@Model.DayId, @Model.MonthId, @Model.YearId];
+
+        const errorElement = document.getElementById('date-error');
+        for (let field of fields) {
+            const inputElement = document.getElementById(field.id);
+
+            inputElement.addEventListener('input', function (event) {
+
+                if (event.inputType === 'deleteContentBackward') {
+                    return;
+                }
+
+                const value = event.data;
+                const min = parseInt(inputElement.getAttribute('min'));
+                const max = parseInt(inputElement.getAttribute('max'));
+
+                inputElement.setAttribute('aria-invalid', 'false');
+                errorElement.textContent = '';
+                errorElement.style.visibility = 'hidden';
+
+                setTimeout(function () {
+                    if (value < 1 || value > max || !value.match(/^[0-9]*$/)) {
+                        inputElement.value = inputElement.value.slice(0, -1) + 1;
+                        inputElement.value = inputElement.value.slice(0, -1);
+                        inputElement.setAttribute('aria-invalid', 'true');
+                        errorElement.textContent = `Invalid input. Please enter a number between ${min} and ${max}.`;
+                        errorElement.style.visibility = 'visible';
+                    }
+                }, 0);
+            });
+        }
+    </script>
+</div>

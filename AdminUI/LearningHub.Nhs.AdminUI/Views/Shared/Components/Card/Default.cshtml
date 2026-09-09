@@ -1,0 +1,47 @@
+@model NHSUKFrontendRazor.ViewModels.CardViewModel
+
+@{
+    var isClickable = Model.Link != null;
+    var secondaryParent = Model.IsSecondary ? "nhsuk-card--secondary" : "";
+    var secondaryContent = Model.IsSecondary ? "nhsuk-card__content--secondary" : "nhsuk-card__content--primary";
+    var headingLevel = Model.HeadingLevel != 2 && (Model.HeadingLevel >= 1 && Model.HeadingLevel <= 6) ? "h" + Model.HeadingLevel : "h2";
+    var headingOpening = $"<{headingLevel} class=\"nhsuk-card__heading nhsuk-heading-m\">";
+    var headingClosing = $"</{headingLevel}>";
+}
+
+<div class="nhsuk-card @(isClickable ? "nhsuk-card--clickable" : "") @secondaryParent">
+
+    @if (!string.IsNullOrEmpty(Model.ImageSrc))
+    {
+        <img class="nhsuk-card__img" src="@Model.ImageSrc" alt="">
+    }
+
+    <div class="nhsuk-card__content @secondaryContent">
+
+
+        @Html.Raw(headingOpening)
+        @if (isClickable)
+        {
+            <a class="nhsuk-card__link" asp-controller="@Model.Link.AspController" asp-action="@Model.Link.AspAction" asp-all-route-data="@Model.Link.AspAllRouteData">@Model.Title</a>
+        }
+        else
+        {
+            @Model.Title
+        }
+        @Html.Raw(headingClosing)
+
+
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <p class="nhsuk-card__description">@Html.Raw(@Model.Description)</p>
+        }
+
+
+        @if (Model.HasArrow == true)
+        {
+            <svg class="nhsuk-icon nhsuk-icon--chevron-right-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" focusable="false" aria-hidden="true">
+                <path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm-.3 5.8a1 1 0 1 0-1.5 1.4l2.9 2.8-2.9 2.8a1 1 0 0 0 1.5 1.4l3.5-3.5c.4-.4.4-1 0-1.4Z"></path>
+            </svg>
+        }
+    </div>
+</div>

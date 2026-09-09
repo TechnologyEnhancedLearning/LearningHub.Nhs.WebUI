@@ -1,0 +1,36 @@
+@model NHSUKFrontendRazor.ViewModels.FooterViewModel
+
+<footer class="nhsuk-footer" role="contentinfo">
+    <div class="nhsuk-width-container">
+        @(Model.IsVerticallyAligned ? "" : Html.Raw("<div class='nhsuk-footer__navigation nhsuk-grid-row'>"))
+        @foreach (var group in Model.FooterGroupList)
+        {
+            @(Model.IsVerticallyAligned ? "" : Html.Raw("<div class='nhsuk-grid-column-one-quarter'>"))
+            @(group.IsMeta? Html.Raw("<div class='nhsuk-footer__meta'><h2 class='nhsuk-u-visually-hidden'>Support links</h2>") : "")
+            <ul class="nhsuk-footer__list">
+                @foreach (var item in group.FooterItemList)
+                {
+                    <li class="nhsuk-footer__list-item">
+                        @if (!string.IsNullOrWhiteSpace(item.Url))
+                        {
+                            <a class="nhsuk-footer__list-item-link" href="@item.Url" target="_blank" rel="noopener noreferrer">@item.LinkText</a>
+                        }
+                        else
+                        {
+                            <a class="nhsuk-footer__list-item-link" asp-controller="@item.AspController" asp-action="@item.AspAction" asp-all-route-data="@item.AspAllRouteData">@item.LinkText</a>
+                        }
+
+                    </li>
+                }
+            </ul>
+            @(group.IsMeta? Html.Raw("</div>") : "")
+            @(Model.IsVerticallyAligned ? "" : Html.Raw("</div>"))
+        }
+        @(Model.IsVerticallyAligned ? "" : Html.Raw("</div>"))
+
+        <div class="nhsuk-footer__meta">
+            <p class="nhsuk-body-s">@Model.Copyright</p>
+        </div>
+
+    </div>
+</footer>

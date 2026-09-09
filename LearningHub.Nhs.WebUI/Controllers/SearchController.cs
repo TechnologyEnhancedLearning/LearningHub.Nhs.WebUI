@@ -5,6 +5,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
     using System.Diagnostics;
     using System.Linq;
     using System.Net.Http;
+    using System.Runtime.InteropServices.WindowsRuntime;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Extensions;
@@ -38,6 +39,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         private readonly IFeatureManager featureManager;
         private readonly ISearchTelemetryService searchTelemetryService;
         private readonly ICacheService cacheService;
+        private readonly IMoodleBridgeApiService moodleBridgeSearchApiService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchController"/> class.
@@ -50,6 +52,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="fileService">The fileService.</param>
         /// <param name="featureManager">The Feature flag manager.</param>
         /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
+        /// <param name="moodleBridgeSearchApiService">moodleBridgeSearchApiService.</param>
         /// <param name="cacheService">The cacheService.</param>
         /// <param name="searchTelemetryService">Search telemetry service.</param>
         public SearchController(
@@ -60,6 +63,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             ILogger<SearchController> logger,
             IFileService fileService,
             IMoodleBridgeApiService moodleBridgeApiService,
+            IMoodleBridgeApiService moodleBridgeSearchApiService,
             IFeatureManager featureManager,
             ICacheService cacheService,
             ISearchTelemetryService searchTelemetryService)
@@ -69,6 +73,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             this.fileService = fileService;
             this.featureManager = featureManager;
             this.searchTelemetryService = searchTelemetryService;
+            this.moodleBridgeSearchApiService = moodleBridgeApiService;
             this.cacheService = cacheService;
         }
 
@@ -672,7 +677,7 @@ namespace LearningHub.Nhs.WebUI.Controllers
             }
 
             // Fetch and cache for this user (cache for 1 hour with sliding expiration)
-            var sourceFilter = this.ConfigureSearchSourceFilter();
+            var sourceFilter = await this.ConfigureSearchSourceFilterAsync();
             var sourceFilterList = sourceFilter.ToList();
 
             await this.cacheService.SetAsync(cacheKey, sourceFilterList, expiryInMinutes: 60, slidingExpiration: true);
@@ -684,9 +689,12 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// Gets the search source filter by joining Moodle instance user IDs with "lh".
         /// </summary>
         /// <returns>Collection of source filter values.</returns>
-        private IEnumerable<string> ConfigureSearchSourceFilter()
+        private async Task<IEnumerable<string>> ConfigureSearchSourceFilterAsync()
         {
-            var sourceFilter = this.MoodleInstanceUserIds.MoodleInstanceUserIds.Select(kvp => kvp.Key.ToString()).Concat(new[] { "lh" }).ToList();
+            var moodleInstanceBaseUrls = await this.moodleBridgeSearchApiService.GetMoodleInstanceBaseUrlsAsync().ConfigureAwait(false);
+            var sourceFilter = moodleInstanceBaseUrls.Select(kvp => kvp.Key.ToString()).Concat(new[] { "lh" }).ToList();
+
+            // var sourceFilter = this.MoodleInstanceUserIds.MoodleInstanceUserIds.Select(kvp => kvp.Key.ToString()).Concat(new[] { "lh" }).ToList();
             return sourceFilter;
         }
     }

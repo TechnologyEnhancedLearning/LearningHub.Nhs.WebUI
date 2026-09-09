@@ -8,6 +8,7 @@
 	[Weighting] [int] NOT NULL,
 	[CreatedAt] [datetime2](7) NOT NULL,
 	[UpdatedAt] [datetime2](7) NOT NULL,
+	[AllowedAccessLevels] [nvarchar](1000) NULL,
  CONSTRAINT [PK_InstanceConfigs] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

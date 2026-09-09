@@ -90,3 +90,4 @@ UPDATE [resources].[ResourceVersion] SET CertificateEnabled = 0 WHERE VersionSta
 :r .\Scripts\TD-7106-Resume-Databricks-Ingestion.sql
 :r .\Scripts\TD-7078-supportingindexes.sql
 :r .\Scripts\TD-7078-PopulateReadModelHistoricUserActivities.sql
+

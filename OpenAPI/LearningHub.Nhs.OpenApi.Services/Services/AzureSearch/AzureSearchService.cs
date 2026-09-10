@@ -647,9 +647,18 @@
 
             try
             {
-                var sources = sourceFilter.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim());
-                var sourceClause = string.Join(" or ", sources.Select(s => $"source eq '{s}'"));
-                var filter = $"is_deleted eq false and ({sourceClause})";
+                var filter = "is_deleted eq false";
+
+                if (!string.IsNullOrWhiteSpace(sourceFilter))
+                {
+                    var sources = sourceFilter
+                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(s => s.Trim());
+
+                    var sourceClause = string.Join(" or ", sources.Select(s => $"source eq '{s}'"));
+
+                    filter += $" and ({sourceClause})";
+                }
 
                 var suggestOptions = new SuggestOptions
                 {

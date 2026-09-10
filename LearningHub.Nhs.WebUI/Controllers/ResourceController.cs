@@ -44,6 +44,7 @@
         private readonly IFileService fileService;
         private readonly ICacheService cacheService;
         private readonly IFeatureManager featureManager;
+        private LearningHubAuthServiceConfig authConfig;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceController"/> class.
@@ -65,6 +66,7 @@
         /// <param name="cacheService">The cacheService.</param>
         /// <param name="featureManager"> The Feature flag manager.</param>
         /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
+        /// <param name="authConfig">authConfig.</param>
         public ResourceController(
             IWebHostEnvironment hostingEnvironment,
             ILogger<ResourceController> logger,
@@ -82,7 +84,8 @@
             IFileService fileService,
             ICacheService cacheService,
             IMoodleBridgeApiService moodleBridgeApiService,
-            IFeatureManager featureManager)
+            IFeatureManager featureManager,
+            LearningHubAuthServiceConfig authConfig)
             : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.azureMediaService = azureMediaService;
@@ -97,6 +100,7 @@
             this.fileService = fileService;
             this.cacheService = cacheService;
             this.featureManager = featureManager;
+            this.authConfig = authConfig;
         }
 
         /// <summary>
@@ -145,6 +149,14 @@
                 || resource.ResourceTypeEnum == ResourceTypeEnum.Html)
             {
                 externalContentDetails = await this.resourceService.GetExternalContentDetailsAsync(resource.ResourceVersionId);
+            }
+
+            var scriptCatalogueNodeId = this.Settings.ScriptCatalogueNodeId;
+            var scriptCataloguereference = this.Settings.ScriptCataloguereference;
+            if (resource.Catalogue.NodeId == scriptCatalogueNodeId)
+            {
+                await this.catalogueService.ProvideCatalogueReaderAccess(this.CurrentUserId, scriptCataloguereference, scriptCatalogueNodeId);
+                this.ViewBag.ScriptCatalogue = true;
             }
 
             var hasCatalogueAccess = false;
@@ -526,6 +538,17 @@
             }
 
             return this.Ok(this.Content("No file found"));
+        }
+
+        /// <summary>
+        /// Redirect to Script SSO.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
+        [Route("catalogue/RedirecttoScriptSSO")]
+        public IActionResult RedirecttoScriptSSO()
+        {
+            var redirectUri = $"{this.authConfig.Authority}/sso/LinkToScript/{this.CurrentUserId}";
+            return this.Redirect(redirectUri);
         }
 
         /// <summary>

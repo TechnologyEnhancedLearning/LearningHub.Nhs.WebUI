@@ -213,15 +213,6 @@
                 tab = "browse";
             }
 
-            if (status != true)
-            {
-                var scriptCataloguereference = this.Settings.ScriptCataloguereference;
-                if (reference == scriptCataloguereference)
-                {
-                    this.ViewBag.ScriptCatalogue = true;
-                }
-            }
-
             this.ViewBag.Reference = reference;
             this.ViewBag.UserAuthenticated = this.User.Identity.IsAuthenticated;
             this.ViewBag.SupportUrl = this.settings.SupportUrls.SupportForm;
@@ -388,30 +379,6 @@
             }
 
             return this.View(viewModel);
-        }
-
-        /// <summary>
-        /// GrantCatalogueAccessAfterSignup.
-        /// </summary>
-        /// <param name="userid">The userid.</param>
-        /// <returns>IActionResult.</returns>
-        [AllowAnonymous]
-        [ServiceFilter(typeof(SsoLoginFilterAttribute))]
-        [HttpGet]
-        [Route("GrantCatalogueAccessAfterSignup/{userid}")]
-        public async Task<IActionResult> GrantCatalogueAccessAfterSignup(int userid)
-        {
-            var scriptCataloguereference = this.Settings.ScriptCataloguereference;
-            var scriptCatalogueNodeId = this.Settings.ScriptCatalogueNodeId;
-            await this.catalogueService.ProvideCatalogueReaderAccess(userid, scriptCataloguereference, scriptCatalogueNodeId);
-            return this.RedirectToAction("index", new
-            {
-                reference = this.Settings.ScriptCataloguereference,
-                tab = string.Empty,
-                nodeId = (int?)null,
-                categoryId = (string?)null,
-                Status = true,
-            });
         }
 
         /// <summary>

@@ -50,13 +50,8 @@
  
 
     <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-3">
-    <div class="nhsuk-width-container app-width-container">
-     @if (this.ViewBag.ScriptCatalogue == true)
-     {
-            <a class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-4" asp-controller="Resource" asp-action="RedirecttoScriptSSO">SCRIPT login</a>
-     }
-
-        @if (resource.DisplayForContributor && resource.ResourceVersionIdPublishing == 0)
+        <div class="nhsuk-width-container app-width-container">
+                    @if (resource.DisplayForContributor && resource.ResourceVersionIdPublishing == 0)
         {
             @if (resource.ResourceVersionIdInEdit > 0)
             {
@@ -118,6 +113,14 @@
                 </div>
             }
 
+        }
+         @if (this.ViewBag.ScriptCatalogue == true)
+        {
+            <a class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-4"
+               asp-controller="Resource"
+               asp-action="RedirecttoScriptSSO">
+                SCRIPT login
+            </a>
         }
         </div>
     </div>

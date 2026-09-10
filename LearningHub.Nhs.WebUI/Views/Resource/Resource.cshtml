@@ -49,81 +49,142 @@
 }
  
 
-    <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-3">
-        <div class="nhsuk-width-container app-width-container">
-                    @if (resource.DisplayForContributor && resource.ResourceVersionIdPublishing == 0)
-        {
-            @if (resource.ResourceVersionIdInEdit > 0)
-            {
-                <div class="contributor-panel">
-                    <p class="nhsuk-u-margin-top-2">There is a new draft of this resource</p>
+   <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-3">
+    <div class="nhsuk-width-container app-width-container">
 
-                    <div>
-                        @if (!resource.ReadOnly)
-                        {
-                            @if (resource.ResourceTypeEnum == ResourceTypeEnum.Case || resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
+        <div class="resource-button-row">
+
+            @if (resource.DisplayForContributor && resource.ResourceVersionIdPublishing == 0)
+            {
+                @if (resource.ResourceVersionIdInEdit > 0)
+                {
+                    <div class="contributor-panel">
+
+                        <p class="nhsuk-u-margin-top-2">
+                            There is a new draft of this resource
+                        </p>
+
+                        <div>
+                            @if (!resource.ReadOnly)
                             {
-                                <a class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-4" asp-controller="ContributeResource" asp-action="Edit" asp-route-resourceVersionId="@resource.ResourceVersionIdInEdit">Continue Editing</a>
+                                @if (resource.ResourceTypeEnum == ResourceTypeEnum.Case ||
+                                     resource.ResourceTypeEnum == ResourceTypeEnum.Assessment)
+                                {
+                                    <a class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-4"
+                                       asp-controller="ContributeResource"
+                                       asp-action="Edit"
+                                       asp-route-resourceVersionId="@resource.ResourceVersionIdInEdit">
+                                        Continue Editing
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-4"
+                                       asp-controller="Contribute"
+                                       asp-action="ContributeAResource"
+                                       asp-route-resourceVersionId="@resource.ResourceVersionIdInEdit">
+                                        Continue Editing
+                                    </a>
+                                }
                             }
-                            else
-                            {
-                                <a class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-4" asp-controller="Contribute" asp-action="ContributeAResource" asp-route-resourceVersionId="@resource.ResourceVersionIdInEdit">Continue Editing</a>
-                            }
-                        }
+                        </div>
                     </div>
-                </div>
+                }
+
+                @if (resource.VersionStatusEnum == VersionStatusEnum.Published
+                     && resource.ResourceVersionIdInEdit == 0
+                     && resource.ResourceVersionIdPublishing == 0
+                     && !resource.ReadOnly)
+                {
+                    <div class="nhsuk-u-text-align-right nhsuk-u-margin-right-4">
+
+                        <form method="get" action="~/Resource/EditConfirm">
+                            <input type="hidden" name="ResourceReferenceId"
+                                   value="@Model.ResourceReferenceId" />
+                            <input type="hidden" name="ResourceItem.ResourceId"
+                                   value="@resource.ResourceId" />
+                            <input type="hidden" name="ResourceItem.Title"
+                                   value="@Model.ResourceItem.Title" />
+
+                            <button type="submit"
+                                    class="nhsuk-button"
+                                    value="Edit resource">
+                                Edit resource
+                            </button>
+                        </form>
+
+                        <form method="get" action="~/Resource/UnpublishConfirm">
+                            <input type="hidden" name="ResourceReferenceId"
+                                   value="@Model.ResourceReferenceId" />
+                            <input type="hidden" name="ResourceItem.ResourceVersionId"
+                                   value="@resource.ResourceVersionId" />
+                            <input type="hidden" name="ResourceItem.Title"
+                                   value="@Model.ResourceItem.Title" />
+                            <input type="hidden" name="ResourceItem.ResourceTypeEnum"
+                                   value="@(resource.ResourceTypeEnum)" />
+                            <input type="hidden"
+                                   name="ResourceItem.Catalogue.CatalogueNodeVersionId"
+                                   value="@resource.Catalogue.CatalogueNodeVersionId" />
+                            <input type="hidden"
+                                   name="ExternalContentDetails.EsrLinkType"
+                                   value="@((resource.ResourceTypeEnum == ResourceTypeEnum.Scorm ||
+                                             resource.ResourceTypeEnum == ResourceTypeEnum.GenericFile)
+                                             ? Model.ExternalContentDetails.EsrLinkType
+                                             : null)" />
+
+                            <button type="submit"
+                                    class="nhsuk-button nhsuk-button--secondary-solid"
+                                    value="Unpublish">
+                                Unpublish
+                            </button>
+                        </form>
+
+                    </div>
+                }
+
+                @if (resource.VersionStatusEnum == VersionStatusEnum.Unpublished
+                     && resource.ResourceVersionIdInEdit == 0
+                     && resource.ResourceVersionIdPublishing == 0
+                     && !resource.ReadOnly)
+                {
+                    <div class="nhsuk-u-text-align-right">
+
+                        <form method="get" action="~/Resource/EditConfirm">
+                            <input type="hidden" name="ResourceReferenceId"
+                                   value="@Model.ResourceReferenceId" />
+                            <input type="hidden" name="ResourceItem.ResourceId"
+                                   value="@resource.ResourceId" />
+                            <input type="hidden" name="ResourceItem.Title"
+                                   value="@Model.ResourceItem.Title" />
+
+                            <button type="submit"
+                                    class="nhsuk-button"
+                                    value="Edit resource">
+                                Edit resource
+                            </button>
+                        </form>
+
+                    </div>
+                }
             }
 
-            @if (resource.VersionStatusEnum == VersionStatusEnum.Published
-                         && resource.ResourceVersionIdInEdit == 0
-                         && resource.ResourceVersionIdPublishing == 0
-                         && !resource.ReadOnly)
+            @* SCRIPT is outside the main DisplayForContributor *@
+            @if (this.ViewBag.ScriptCatalogue == true)
             {
-                <div class="nhsuk-u-text-align-right  nhsuk-u-margin-right-4 nhsuk-u-margin-bottom-4">
-                    <form method="get" style="display:inline-block" action="~/Resource/EditConfirm">
-                        <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
-                        <input type="hidden" name="ResourceItem.ResourceId" value="@resource.ResourceId" />
-                        <input type="hidden" name="ResourceItem.Title" value="@Model.ResourceItem.Title" />
-                        <button type="submit" class="nhsuk-button" value="Edit resource">Edit resource</button>
-                    </form>
-                    <form method="get" style="display:inline-block" action="~/Resource/UnpublishConfirm">
-                        <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
-                        <input type="hidden" name="ResourceItem.ResourceVersionId" value="@resource.ResourceVersionId" />
-                        <input type="hidden" name="ResourceItem.Title" value="@Model.ResourceItem.Title" />
-                        <input type="hidden" name="ResourceItem.ResourceTypeEnum" value="@(resource.ResourceTypeEnum)" />
-                        <input type="hidden" name="ResourceItem.Catalogue.CatalogueNodeVersionId" value="@resource.Catalogue.CatalogueNodeVersionId" />
-                        <input type="hidden" name="ExternalContentDetails.EsrLinkType" value="@((resource.ResourceTypeEnum == ResourceTypeEnum.Scorm || resource.ResourceTypeEnum == ResourceTypeEnum.GenericFile) ? Model.ExternalContentDetails.EsrLinkType : null)" />
-                        <button type="submit" class="nhsuk-button nhsuk-button--secondary-solid" value="Unpublish">Unpublish</button>
-                    </form>
+                <div class="script-login">
+                    <a class="nhsuk-button nhsuk-button--secondary"
+                       asp-controller="Resource"
+                       asp-action="RedirecttoScriptSSO">
+                        SCRIPT login
+                    </a>
                 </div>
             }
 
-            @if (resource.VersionStatusEnum == VersionStatusEnum.Unpublished
-                         && resource.ResourceVersionIdInEdit == 0
-                         && resource.ResourceVersionIdPublishing == 0
-                         && !resource.ReadOnly)
-            {
-                <div class="nhsuk-u-text-align-right">
-                    <form method="get" class="nhsuk-u-margin-bottom-4" action="~/Resource/EditConfirm">
-                        <input type="hidden" name="ResourceReferenceId" value="@Model.ResourceReferenceId" />
-                        <input type="hidden" name="ResourceItem.ResourceId" value="@resource.ResourceId" />
-                        <input type="hidden" name="ResourceItem.Title" value="@Model.ResourceItem.Title" />
-                        <button type="submit" class="nhsuk-button nhsuk-u-margin-bottom-4" value="Edit resource">Edit resource</button>
-                    </form>
-                </div>
-            }
-
-        }
-         @if (this.ViewBag.ScriptCatalogue == true)
-        {
-            <a class="nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-4"
-               asp-controller="Resource"
-               asp-action="RedirecttoScriptSSO">
-                SCRIPT login
-            </a>
-        }
         </div>
+
     </div>
+</div>
+
 
 
 <div class="nhsuk-width-container app-width-container nhsuk-u-width-full nhsuk-u-padding-bottom-7">

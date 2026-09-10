@@ -47,12 +47,18 @@
 {
     <partial name="_RestrictedResourceAccessBanner" />
 }
+ 
 
-@if (resource.DisplayForContributor && resource.ResourceVersionIdPublishing == 0)
-{
     <div class="nhsuk-bg-pale-blue nhsuk-u-padding-top-3">
         <div class="nhsuk-width-container app-width-container">
-
+          <div class="nhsuk-u-text-align-right  nhsuk-u-margin-right-4 nhsuk-u-margin-bottom-4">
+            @if (this.ViewBag.ScriptCatalogue == true)
+            {
+                <a class="nhsuk-button" asp-controller="Resource" asp-action="RedirecttoScriptSSO">SCRIPT login</a>
+            }
+           </div>
+           @if (resource.DisplayForContributor && resource.ResourceVersionIdPublishing == 0)
+        {
             @if (resource.ResourceVersionIdInEdit > 0)
             {
                 <div class="contributor-panel">
@@ -75,9 +81,9 @@
             }
 
             @if (resource.VersionStatusEnum == VersionStatusEnum.Published
-           && resource.ResourceVersionIdInEdit == 0
-           && resource.ResourceVersionIdPublishing == 0
-           && !resource.ReadOnly)
+                         && resource.ResourceVersionIdInEdit == 0
+                         && resource.ResourceVersionIdPublishing == 0
+                         && !resource.ReadOnly)
             {
                 <div class="nhsuk-u-text-align-right  nhsuk-u-margin-right-4 nhsuk-u-margin-bottom-4">
                     <form method="get" style="display:inline-block" action="~/Resource/EditConfirm">
@@ -99,9 +105,9 @@
             }
 
             @if (resource.VersionStatusEnum == VersionStatusEnum.Unpublished
-           && resource.ResourceVersionIdInEdit == 0
-           && resource.ResourceVersionIdPublishing == 0
-           && !resource.ReadOnly)
+                         && resource.ResourceVersionIdInEdit == 0
+                         && resource.ResourceVersionIdPublishing == 0
+                         && !resource.ReadOnly)
             {
                 <div class="nhsuk-u-text-align-right">
                     <form method="get" class="nhsuk-u-margin-bottom-4" action="~/Resource/EditConfirm">
@@ -112,9 +118,11 @@
                     </form>
                 </div>
             }
+
+        }
         </div>
     </div>
-}
+
 
 <div class="nhsuk-width-container app-width-container nhsuk-u-width-full nhsuk-u-padding-bottom-7">
 

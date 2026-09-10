@@ -544,7 +544,7 @@
         /// Redirect to Script SSO.
         /// </summary>
         /// <returns>IActionResult.</returns>
-        [Route("catalogue/RedirecttoScriptSSO")]
+        [Route("Resource/RedirecttoScriptSSO")]
         public IActionResult RedirecttoScriptSSO()
         {
             var redirectUri = $"{this.authConfig.Authority}/sso/LinkToScript/{this.CurrentUserId}";

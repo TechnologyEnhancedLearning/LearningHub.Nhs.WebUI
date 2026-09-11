@@ -416,7 +416,7 @@
                 FileTypeId = fileType == null ? 0 : fileType.Id,
                 FileName = file.FileName,
                 FilePath = filelocation,
-                FileSize = (int)(fileSize / 1000),
+                FileSize = (int)(file.Length / 1000),
                 ReplacedFileId = existingFileId,
             });
 
@@ -426,7 +426,7 @@
                 ResourceVersionId = resourceVersionId,
                 FileName = file.FileName,
                 FileTypeId = fileType == null ? 0 : fileType.Id,
-                FileSizeKb = (int)(fileSize / 1000),
+                FileSizeKb = (int)(file.Length / 1000),
                 Invalid = false,
             };
         }

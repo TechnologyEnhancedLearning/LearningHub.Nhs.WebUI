@@ -929,7 +929,7 @@
         public async Task<AutoSuggestionModel> GetAutoSuggestionList(string term, string searchSourceFilterText)
         {
             var client = await this.OpenApiHttpClient.GetClientAsync();
-            var request = $"Search/GetAutoSuggestionResult/{term}/{searchSourceFilterText}";
+            var request = $"Search/GetAutoSuggestionResult/{term}?searchSourceFilterText={searchSourceFilterText}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
 
             var viewModel = new AutoSuggestionModel();

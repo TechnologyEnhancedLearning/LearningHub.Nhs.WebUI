@@ -185,7 +185,7 @@
     <Build Include="Tables\Resource\ScormResourceVersion.sql" />
     <Build Include="Tables\Hub\Tenant.sql" />
     <None Include="Scripts\ELFH Database Scripts\Set up LH Read Only User Group.sql" />
-    <None Include="Scripts\ELFH Database Scripts\Set up LH admin password reset email template.sql" />
+    <None Include="Scripts\ELFH Database Scripts\proc_UserDetailForAuthenticationByEmail.sql" />
     <None Include="Scripts\ELFH Database Scripts\AddUserContactEmail.sql" />
     <None Include="Scripts\LH Database Scripts\Create RecentlyAdded Resource Data.sql" />
     <None Include="Scripts\LH Database Scripts\UpdateResourceVersion.sql" />
@@ -592,6 +592,7 @@
     <None Include="Scripts\Pre-Deploy\Scripts\EmailTemplateTableChanges.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\UpdateEmailTemplateData.sql" />
     <Build Include="Stored Procedures\Hierarchy\GetCatalogueAdminDetails.sql" />
+    <None Include="Scripts\ELFH Database Scripts\AddUserHistoryType.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

@@ -6,6 +6,8 @@
 @using LearningHub.Nhs.WebUI.Models.Learning
 @using LearningHub.Nhs.WebUI.Helpers;
 @using Microsoft.Extensions.Options;
+@using Microsoft.FeatureManagement
+@inject IFeatureManager FeatureManager
 @inject IOptions<Settings> settings
 @model CertificateDetails
 
@@ -1156,7 +1158,15 @@
                             {
                                 <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>PRN:</b> @Model.ProfessionalRegistrationNumber</div>
                             }
-                            <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>Username:</b> @Model.UserViewModel.UserName</div>
+                            @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase3) ||
+                           await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase4))
+                            {
+                                <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>Email:</b> @Model.UserViewModel.EmailAddress</div>
+                            }
+                            else
+                            {
+                                <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>Username:</b> @Model.UserViewModel.UserName</div>
+                            }
                             <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19 nhsuk-u-padding-bottom-4"><b>Report generated on</b> @DateTime.Now.ToString("dd MMMM yyyy")</div>
                             <table style="width:100%;table-layout:fixed;margin-top:0px;" role="table" class="nhsuk-table-responsive">
                                 <thead role="rowgroup" class="nhsuk-table__head">

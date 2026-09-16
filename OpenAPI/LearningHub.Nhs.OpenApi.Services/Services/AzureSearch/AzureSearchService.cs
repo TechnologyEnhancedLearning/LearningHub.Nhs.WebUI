@@ -3,6 +3,7 @@
     using AutoMapper;
     using Azure.Search.Documents;
     using Azure.Search.Documents.Models;
+    using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Resource;
     using LearningHub.Nhs.Models.Entities.Resource.Blocks;
@@ -19,11 +20,13 @@
     using LearningHub.Nhs.OpenApi.Services.Helpers;
     using LearningHub.Nhs.OpenApi.Services.Helpers.Search;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using Microsoft.EntityFrameworkCore.Metadata.Internal;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Drawing.Printing;
     using System.Globalization;
     using System.Linq;
     using System.Threading;
@@ -46,6 +49,7 @@
         private readonly ILearningHubService learningHubService;
         private readonly IResourceRepository resourceRepository;
         private readonly ICachingService cachingService;
+        private readonly IMoodleBridgeApiService moodleBridgeApiService;
         private readonly SearchClient searchClient;
         private readonly ILogger<AzureSearchService> logger;
         private readonly AzureSearchConfig azureSearchConfig;
@@ -59,6 +63,7 @@
         /// <param name="azureSearchConfig">The Azure Search configuration.</param>
         /// <param name="resourceRepository">The resource repository.</param>
         /// <param name="cachingService">The caching service.</param>
+        /// <param name="moodleBridgeApiService">The Moodle bridge service.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper.</param>
         public AzureSearchService(
@@ -67,6 +72,7 @@
             IOptions<AzureSearchConfig> azureSearchConfig,
             IResourceRepository resourceRepository,
             ICachingService cachingService,
+            IMoodleBridgeApiService moodleBridgeApiService,
             ILogger<AzureSearchService> logger,
             IMapper mapper)
         {
@@ -74,6 +80,7 @@
             this.eventService = eventService;
             this.resourceRepository = resourceRepository;
             this.cachingService = cachingService;
+            this.moodleBridgeApiService = moodleBridgeApiService;
             this.logger = logger;
             this.mapper = mapper;
             this.azureSearchConfig = azureSearchConfig.Value;
@@ -131,20 +138,27 @@
                 var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, queryOffset, queryPageSize, filters, sortBy, true, this.azureSearchConfig);
                 SearchResults<Models.ServiceModels.AzureSearch.SearchDocument> filteredResponse = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(query, searchOptions, cancellationToken);
                 var count = Convert.ToInt32(filteredResponse.TotalCount);
+                var searchResults = filteredResponse.GetResults().ToList();
+                var hasMoodleResults = searchResults.Any(result => string.Equals(MapToResourceType(result.Document.ResourceType), "moodle", StringComparison.OrdinalIgnoreCase));
+                var moodleInstanceBaseUrls = hasMoodleResults
+                    ? await this.GetMoodleInstanceBaseUrlsAsync().ConfigureAwait(false)
+                    : new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
                 // Map documents
-                var documents = filteredResponse.GetResults()
-                    .Select(result =>
+                var documents = searchResults
+                    .Select((result, index) =>
                     {
                         var doc = result.Document;
                         doc.ParseManualTags();
+                        var absoluteIndex = (searchRequestModel.PageIndex * searchRequestModel.PageSize) + index;
+                        var resourceType = MapToResourceType(doc.ResourceType);
 
                         return new Document
                         {
                             Id = doc.Id,
                             Title = doc.Title,
                             Description = doc.Description,
-                            ResourceType = MapToResourceType(doc.ResourceType),
+                            ResourceType = resourceType,
                             ProviderIds = doc.ProviderIds?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList(),
                             CatalogueIds =
                                 doc.ResourceType == "catalogue"
@@ -162,7 +176,10 @@
                             Authors = doc.Author?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToList(),
                             AuthoredDate = doc.DateAuthored?.ToString(),
                             ResourceReferenceId = int.TryParse(doc.ResourceReferenceId, out var id) ? id : 0,
-                            Click = BuildSearchClickModel(doc.Id, doc.Title, searchRequestModel.PageIndex, searchRequestModel.SearchId, filters, query, count)
+                            Click = BuildSearchClickModel(doc.Id, doc.Title, absoluteIndex, searchRequestModel.SearchId, filters, query, count),
+                            Url = resourceType == "moodle"
+                                ? ResolveMoodleBaseUrl(doc.Source, moodleInstanceBaseUrls)
+                                : doc.Url,
                         };
                     })
                     .ToList();
@@ -213,24 +230,35 @@
 
             try
             {
+                var searchQueryType = SearchOptionsBuilder.ParseSearchQueryType(this.azureSearchConfig.SearchQueryType);
                 var offset = catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize;
 
-                // Build filters for catalogue search
+                var query = searchQueryType == SearchQueryType.Full
+                    ? LuceneQueryBuilder.BuildLuceneQuery(catalogSearchRequestModel.SearchText)
+                    : catalogSearchRequestModel.SearchText;
+
+                Dictionary<string, string> sortBy = new Dictionary<string, string>()
+                {
+                   { "title", "asc" }
+                };
+
                 var filters = new Dictionary<string, List<string>>
                 {
-                    { "resource_collection", new List<string> { "Catalogue" } }
+                     { "resource_collection", new List<string> { "catalogue" } }
                 };
 
-                var searchOptions = new SearchOptions
-                {
-                    Skip = offset,
-                    Size = catalogSearchRequestModel.PageSize,
-                    IncludeTotalCount = true,
-                    Filter = SearchFilterBuilder.BuildFilterExpression(filters)
-                };
+                //var searchOptions = new SearchOptions
+                //{
+                //    Skip = offset,
+                //    Size = catalogSearchRequestModel.PageSize,
+                //    IncludeTotalCount = true,
+                //    Filter = SearchFilterBuilder.BuildFilterExpression(filters)
+                //};
+
+                var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, offset, catalogSearchRequestModel.PageSize, filters, sortBy, false, this.azureSearchConfig);
 
                 SearchResults<Models.ServiceModels.AzureSearch.SearchDocument> response = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(
-                    catalogSearchRequestModel.SearchText,
+                    query,
                     searchOptions,
                     cancellationToken);
                 var count = Convert.ToInt32(response.TotalCount);
@@ -238,17 +266,18 @@
                 var documentList = new CatalogueDocumentList
                 {
                     Documents = response.GetResults()
-                    .Select(result =>
+                    .Select((result, index) =>
                     {
                         var doc = result.Document;
                         doc.ParseManualTags();
+                        var absoluteIndex = (catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize) + index;
 
                         return new CatalogueDocument
                         {
                             Id = doc.Id,
                             Name = doc.Title,
                             Description = doc.Description,
-                            Click = BuildSearchClickModel(doc.Id, doc.Title, catalogSearchRequestModel.PageIndex, catalogSearchRequestModel.SearchId, filters, catalogSearchRequestModel.SearchText, count)
+                            Click = BuildSearchClickModel(doc.Id, doc.Title, absoluteIndex, catalogSearchRequestModel.SearchId, filters, catalogSearchRequestModel.SearchText, count)
                         };
                     })
                     .ToArray()
@@ -543,31 +572,45 @@
             CancellationToken cancellationToken = default;
             try
             {
+                var searchQueryType = SearchOptionsBuilder.ParseSearchQueryType(this.azureSearchConfig.SearchQueryType);
                 var offset = catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize;
+
+                var query = searchQueryType == SearchQueryType.Full
+                    ? LuceneQueryBuilder.BuildLuceneQuery(catalogSearchRequestModel.SearchText)
+                    : catalogSearchRequestModel.SearchText;
+
+                Dictionary<string, string> sortBy = new Dictionary<string, string>()
+                {
+                   { "title", "asc" }
+                };
+
                 var filters = new Dictionary<string, List<string>>
                 {
                      { "resource_collection", new List<string> { "catalogue" } }
                 };
 
-                var searchOptions = new SearchOptions
-                {
-                    Skip = offset,
-                    Size = catalogSearchRequestModel.PageSize,
-                    IncludeTotalCount = true,
-                    Filter = SearchFilterBuilder.BuildFilterExpression(filters)
-                };
+                //var searchOptions = new SearchOptions
+                //{
+                //    Skip = offset,
+                //    Size = catalogSearchRequestModel.PageSize,
+                //    IncludeTotalCount = true,
+                //    Filter = SearchFilterBuilder.BuildFilterExpression(filters)
+                //};
+
+                var searchOptions = SearchOptionsBuilder.BuildSearchOptions(searchQueryType, offset, catalogSearchRequestModel.PageSize, filters, sortBy, false, this.azureSearchConfig);
 
                 SearchResults<Models.ServiceModels.AzureSearch.SearchDocument> response = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(
-                    catalogSearchRequestModel.SearchText, searchOptions, cancellationToken);
+                    query, searchOptions, cancellationToken);
                 var count = Convert.ToInt32(response.TotalCount);
 
                 var documentList = new CatalogueDocumentList
                 {
                     Documents = response.GetResults()
-                    .Select(result =>
+                    .Select((result, index) =>
                     {
                         var doc = result.Document;
                         doc.ParseManualTags();
+                        var absoluteIndex = (catalogSearchRequestModel.PageIndex * catalogSearchRequestModel.PageSize) + index;
 
                         return new CatalogueDocument
                         {
@@ -598,45 +641,55 @@
         }
 
         /// <inheritdoc/>
-        public async Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term, CancellationToken cancellationToken = default)
+        public async Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term, string sourceFilter, CancellationToken cancellationToken = default)
         {
             var viewmodel = new AutoSuggestionModel();
 
             try
             {
-                var searchOptions = new SearchOptions
-                {
-                    Size = 10,
-                };
+                var filter = "is_deleted eq false";
 
-                var response = await this.searchClient.SearchAsync<Models.ServiceModels.AzureSearch.SearchDocument>(
-                    term,
-                    searchOptions,
-                    cancellationToken);
+                if (!string.IsNullOrWhiteSpace(sourceFilter))
+                {
+                    var sources = sourceFilter
+                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(s => s.Trim());
+
+                    var sourceClause = string.Join(" or ", sources.Select(s => $"source eq '{s}'"));
+
+                    filter += $" and ({sourceClause})";
+                }
 
                 var suggestOptions = new SuggestOptions
                 {
                     Size = 50,
-                    UseFuzzyMatching = true
+                    UseFuzzyMatching = true,
+                    Filter = filter,
+                    SearchFields = {
+                        "title",
+                        "description",
+                        "manual_tag"
+                    },
+                    Select = {
+
+                        "id",
+                        "title",
+                        "description",
+                        "manual_tag",
+                        "resource_type",
+                        "resource_collection",
+                        "url",
+                        "resource_reference_id",
+                        "is_deleted",
+                        "source"
+                    }
                 };
-                suggestOptions.SearchFields.Add("title");
-                suggestOptions.SearchFields.Add("description");
-                suggestOptions.SearchFields.Add("manual_tag");
-                suggestOptions.Select.Add("id");
-                suggestOptions.Select.Add("title");
-                suggestOptions.Select.Add("description");
-                suggestOptions.Select.Add("manual_tag");
-                suggestOptions.Select.Add("resource_type");
-                suggestOptions.Select.Add("resource_collection");
-                suggestOptions.Select.Add("url");
-                suggestOptions.Select.Add("resource_reference_id");
-                suggestOptions.Select.Add("is_deleted");
 
                 var autoOptions = new AutocompleteOptions
                 {
                     Mode = AutocompleteMode.OneTermWithContext,
                     Size = this.azureSearchConfig.ConceptsSuggesterSize,
-                    Filter = "is_deleted eq false"
+                    Filter = filter
                 };
 
                 var searchText = LuceneQueryBuilder.EscapeLuceneSpecialCharacters(term);
@@ -659,6 +712,7 @@
                         Id = r.Document.Id,
                         Text = r.Document.Title.Trim(),
                         URL = r.Document.Url,
+                        Source = r.Document.Source,
                         ResourceReferenceId = (r.Document.ResourceCollection == "resource") ? r.Document.ResourceReferenceId : r.Document.Id,
                         Type = r.Document.ResourceCollection ?? "Suggestion"
                     });
@@ -670,6 +724,7 @@
                          Id = "A" + (index + 1),
                          Text = r.Text.Trim(),
                          URL = string.Empty,
+                         Source = string.Empty,
                          ResourceReferenceId = (string?)null,
                          Type = "AutoComplete"
                      });
@@ -685,6 +740,11 @@
                     TotalHits = combined.Count
                 };
 
+                var hasMoodleResults = suggestResults.Any(result => string.Equals(MapToResourceType(result.Type), "course", StringComparison.OrdinalIgnoreCase));
+                var moodleInstanceBaseUrls = hasMoodleResults
+                    ? await this.GetMoodleInstanceBaseUrlsAsync().ConfigureAwait(false)
+                    : new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
                 var autoSuggestion = new AutoSuggestionResourceCollection
                 {
                     TotalHits = suggestResults.Count(),
@@ -692,7 +752,9 @@
                     {
                         Id = item.Id,
                         ResourceType = item.Type,
-                        URL = item.URL,
+                        URL = item.Type == "course"
+                                ? ResolveMoodleBaseUrl(item.Source, moodleInstanceBaseUrls)
+                                : item.URL,
                         ResourceReferenceId = item.ResourceReferenceId != null && int.TryParse(item.ResourceReferenceId, out var refId) ? refId : 0,
                         Title = item.Text,
                         Click = BuildAutoSuggestClickModel(item.Id, item.Text, 0, 0, term, suggestResults.Count())
@@ -853,6 +915,70 @@
                 cleanedResourceType = ResourceTypeEnum.GenericFile.ToString();
 
             return cleanedResourceType;
+        }
+
+        private static string ResolveMoodleBaseUrl(string source, IDictionary<string, string> moodleInstanceBaseUrls)
+        {
+            if (string.IsNullOrWhiteSpace(source))
+            {
+                return string.Empty;
+            }
+
+            return moodleInstanceBaseUrls.TryGetValue(source, out var baseUrl)
+                ? baseUrl
+                : string.Empty;
+        }
+
+        private async Task<IDictionary<string, string>> GetMoodleInstanceBaseUrlsAsync()
+        {
+            try
+            {
+                var cacheMoodleSources = "moodlesources";
+
+                // Try to get from cache first
+                var cacheResponse = await this.cachingService.GetAsync<IList<IDictionary<string, string>>>(cacheMoodleSources).ConfigureAwait(false);
+
+                if (cacheResponse.ResponseEnum == CacheReadResponseEnum.Found && cacheResponse.Item != null)
+                {
+                    // Transform cached data to the expected return type
+                    var cachedData = cacheResponse.Item;
+                    var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+                    foreach (var item in cachedData)
+                    {
+                        if (item != null && item.ContainsKey("InstanceName") && item.ContainsKey("BaseUrl"))
+                        {
+                            result[item["InstanceName"]] = item["BaseUrl"];
+                        }
+                    }
+                   
+                    return result;
+                }
+                else
+                {
+                    // Get fresh data from API
+                    var moodleUrls = await this.moodleBridgeApiService.GetMoodleInstanceBaseUrlsAsync().ConfigureAwait(false);
+
+                    // Cache the response for future use
+                    if (moodleUrls != null && moodleUrls.Count > 0)
+                    {
+                        var cacheData = moodleUrls.Select(kv => new Dictionary<string, string>
+                        {
+                            { "InstanceName", kv.Key },
+                            { "BaseUrl", kv.Value }
+                        }).ToList();
+
+                        await this.cachingService.SetAsync(cacheMoodleSources, cacheData).ConfigureAwait(false);                        
+                    }
+
+                    return moodleUrls;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogWarning(ex, "Unable to resolve Moodle instance base URLs while mapping Azure Search results.");
+                return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            }
         }
 
         /// <summary>

@@ -155,9 +155,10 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// The Get Auto suggestion Results Async method.
         /// </summary>
         /// <param name="term">The term.</param>
+        /// <param name="searchSource">The search source.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term, CancellationToken cancellationToken = default);
+        Task<AutoSuggestionModel> GetAutoSuggestionResultsAsync(string term, string searchSource, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///  The Send AutoSuggestion Event Async.

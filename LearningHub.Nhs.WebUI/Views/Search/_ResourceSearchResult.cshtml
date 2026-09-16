@@ -1,5 +1,5 @@
 ﻿@model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
-@inject LearningHub.Nhs.WebUI.Interfaces.IMoodleApiService moodleApiService; 
+@inject LearningHub.Nhs.WebUI.Interfaces.IMoodleBridgeApiService moodleBridgeApiService; 
 
 @using System.Linq;
 @using System.Web;
@@ -28,7 +28,7 @@
 &query={searchSignalQueryEncoded}&title={payload?.DocumentFields?.Title}";
 	}
 
-	string GetMoodleCourseUrl(string courseIdWithPrefix, int resourceReferenceId, int itemIndex, int nodePathId, SearchClickPayloadModel payload)
+	async Task<string> GetMoodleCourseUrl(string courseIdWithPrefix, string source, int resourceReferenceId, int itemIndex, int nodePathId, SearchClickPayloadModel payload)
 	{
 		const string prefix = "M";
 
@@ -49,7 +49,12 @@
 			var searchSignal = payload?.SearchSignal;
 
 			string searchSignalQueryEncoded = HttpUtility.UrlEncode(HttpUtility.UrlDecode(searchSignal?.Query));
-			string url = moodleApiService.GetCourseUrl(courseId);
+			string url = await moodleBridgeApiService.GetCourseUrlAsync(source, courseId);
+
+			if (string.IsNullOrWhiteSpace(url))
+			{
+				return string.Empty;
+			}
 
 			return $@"/search/record-course-click?url={url}&nodePathId={nodePathId}&itemIndex={payload?.HitNumber}
                 &pageIndex={pagingModel.CurrentPage}&totalNumberOfHits={payload?.SearchSignal?.Stats?.TotalHits}&searchText={searchString}&resourceReferenceId={resourceReferenceId}
@@ -74,7 +79,7 @@
 		<h3 class="nhsuk-heading-xs nhsuk-u-margin-bottom-2">
 			@if (item.ResourceType == "moodle")
 			{
-				<a class="nhsuk-card__link" href="@GetMoodleCourseUrl(item.Id, item.ResourceReferenceId, index, item.NodePathId ?? 0, item.Click.Payload)">@item.Title</a>
+				<a class="nhsuk-card__link" href="@(await GetMoodleCourseUrl(item.Id, item.Url, item.ResourceReferenceId, index, item.NodePathId ?? 0, item.Click.Payload))">@item.Title</a>
 			}
 			else
 			{

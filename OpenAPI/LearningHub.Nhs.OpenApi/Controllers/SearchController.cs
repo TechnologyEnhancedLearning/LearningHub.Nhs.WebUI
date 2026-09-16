@@ -252,12 +252,14 @@
         /// Get AutoSuggestionResults.
         /// </summary>
         /// <param name="term">The term.</param>
+        /// <param name="searchSourceFilterText">source items.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        [HttpGet]
-        [Route("GetAutoSuggestionResult/{term}")]
-        public async Task<IActionResult> GetAutoSuggestionResults(string term)
+        [HttpGet("GetAutoSuggestionResult/{term}")]
+        public async Task<IActionResult> GetAutoSuggestionResults(
+            string term,
+            [FromQuery] string? searchSourceFilterText = null)
         {
-            var autosuggestionViewModel = await this.GetAutoSuggestions(term);
+            var autosuggestionViewModel = await this.GetAutoSuggestions(term, searchSourceFilterText);
             return this.Ok(autosuggestionViewModel);
         }
 
@@ -438,10 +440,11 @@
         /// Get AutoSuggestion Results.
         /// </summary>
         /// <param name="term">term.</param>
+        /// <param name="searchSourceFilter">The search source filter.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        private async Task<AutoSuggestionModel> GetAutoSuggestions(string term)
+        private async Task<AutoSuggestionModel> GetAutoSuggestions(string term, string searchSourceFilter)
         {
-            var autosuggestionModel = await this.searchService.GetAutoSuggestionResultsAsync(term);
+            var autosuggestionModel = await this.searchService.GetAutoSuggestionResultsAsync(term, searchSourceFilter);
             if (autosuggestionModel != null)
             {
                 var documents = autosuggestionModel.CatalogueDocument.CatalogueDocumentList;

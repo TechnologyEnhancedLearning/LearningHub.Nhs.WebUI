@@ -117,7 +117,7 @@
         }
 
         /// <summary>
-        /// The get user ids and instances async.
+        /// Gets the user ids and instances async.
         /// </summary>
         /// <returns>
         /// The <see cref="Task"/>.

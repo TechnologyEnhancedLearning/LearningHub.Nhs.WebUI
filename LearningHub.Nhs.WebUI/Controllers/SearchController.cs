@@ -2,9 +2,12 @@ namespace LearningHub.Nhs.WebUI.Controllers
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.Search;
     using LearningHub.Nhs.Models.Search.SearchClick;
     using LearningHub.Nhs.WebUI.Filters;
@@ -28,9 +31,14 @@ namespace LearningHub.Nhs.WebUI.Controllers
     [ServiceFilter(typeof(LoginWizardFilter))]
     public class SearchController : BaseController
     {
+        private const string SearchSourceFilterCacheKey = "SearchSourceFilter_{0}";
+
         private readonly ISearchService searchService;
         private readonly IFileService fileService;
         private readonly IFeatureManager featureManager;
+        private readonly ISearchTelemetryService searchTelemetryService;
+        private readonly ICacheService cacheService;
+        private readonly IMoodleBridgeApiService moodleBridgeSearchApiService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchController"/> class.
@@ -41,8 +49,11 @@ namespace LearningHub.Nhs.WebUI.Controllers
         /// <param name="searchService">The searchService.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="fileService">The fileService.</param>
-        /// <param name="featureManager"> The Feature flag manager.</param>
+        /// <param name="featureManager">The Feature flag manager.</param>
         /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
+        /// <param name="moodleBridgeSearchApiService">moodleBridgeSearchApiService.</param>
+        /// <param name="cacheService">The cacheService.</param>
+        /// <param name="searchTelemetryService">Search telemetry service.</param>
         public SearchController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostingEnvironment,
@@ -51,12 +62,18 @@ namespace LearningHub.Nhs.WebUI.Controllers
             ILogger<SearchController> logger,
             IFileService fileService,
             IMoodleBridgeApiService moodleBridgeApiService,
-            IFeatureManager featureManager)
+            IMoodleBridgeApiService moodleBridgeSearchApiService,
+            IFeatureManager featureManager,
+            ICacheService cacheService,
+            ISearchTelemetryService searchTelemetryService)
         : base(hostingEnvironment, httpClientFactory, logger, moodleBridgeApiService, settings.Value)
         {
             this.searchService = searchService;
             this.fileService = fileService;
             this.featureManager = featureManager;
+            this.searchTelemetryService = searchTelemetryService;
+            this.moodleBridgeSearchApiService = moodleBridgeApiService;
+            this.cacheService = cacheService;
         }
 
         /// <summary>
@@ -73,9 +90,14 @@ namespace LearningHub.Nhs.WebUI.Controllers
             search.SearchId ??= 0;
             search.GroupId = !string.IsNullOrWhiteSpace(search.GroupId) && Guid.TryParse(search.GroupId, out Guid groupId) ? groupId.ToString() : Guid.NewGuid().ToString();
 
+            var sourceFilter = await this.GetCachedSearchSourceFilter();
+            search.SearchSourceFilter = sourceFilter;
+
             // Fix: Ensure an instance of IFeatureManager is injected and used
             var azureSearchEnabled = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.AzureSearch)).Result;
             SearchResultViewModel searchResult = new SearchResultViewModel();
+
+            var stopwatch = Stopwatch.StartNew();
 
             if (azureSearchEnabled)
             {
@@ -85,6 +107,8 @@ namespace LearningHub.Nhs.WebUI.Controllers
             {
                 searchResult = await this.searchService.PerformSearchInFindwise(this.User, search);
             }
+
+            stopwatch.Stop();
 
             if (search.SearchId == 0 && searchResult.ResourceSearchResult != null)
             {
@@ -99,6 +123,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 {
                     searchResult.CatalogueSearchResult.SearchId = searchId;
                 }
+
+                // Record SearchExecutedTelemetry for zero-result rate analysis
+                await this.searchTelemetryService.RecordSearchExecutedAsync(search, searchResult, this.User.Identity.GetCurrentUserId(), stopwatch.ElapsedMilliseconds);
             }
 
             if (filterApplied)
@@ -176,6 +203,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 {
                     return await this.Index(search, noSortFilterError: true);
                 }
+
+                // Record facet telemetry when filters are changed
+                await this.RecordFacetChangesAsync(search, filterUpdated, newFilters, existingFilters, resourceAccessLevelFilterUpdated, resourceAccessLevelId, search.ResourceAccessLevelId, filterProviderUpdated, newProviderFilters, existingProviderFilters, filterResourceCollectionUpdated, newResourceCollectionFilter, existingResourceCollectionFilter);
 
                 if (search.ResourcePageIndex > 0 && (filterUpdated || resourceAccessLevelFilterUpdated || filterProviderUpdated || filterResourceCollectionUpdated))
                 {
@@ -377,7 +407,9 @@ namespace LearningHub.Nhs.WebUI.Controllers
                 return this.RedirectToAction("AccessDenied", "Home");
             }
 
-            var autoSuggestions = await this.searchService.GetAutoSuggestionList(term);
+            var sources = await this.GetCachedSearchSourceFilter();
+            string sourceFilter = string.Join(",", sources);
+            var autoSuggestions = await this.searchService.GetAutoSuggestionList(term, sourceFilter);
 
             var azureSearchEnabled = Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.AzureSearch)).Result;
 
@@ -434,6 +466,235 @@ namespace LearningHub.Nhs.WebUI.Controllers
 
             this.searchService.SendAutoSuggestionClickActionAsync(clickPayloadModel);
             return this.Redirect(url);
+        }
+
+        /// <summary>
+        /// Records facet changes when filters are applied via the Apply button.
+        /// </summary>
+        /// <param name="search">The current search request.</param>
+        /// <param name="filterUpdated">Whether resource type filters were updated.</param>
+        /// <param name="newFilters">The new resource type filters.</param>
+        /// <param name="existingFilters">The existing resource type filters.</param>
+        /// <param name="resourceAccessLevelFilterUpdated">Whether resource access level filter was updated.</param>
+        /// <param name="newAccessLevelId">The new resource access level filter id.</param>
+        /// <param name="existingAccessLevelId">The existing resource access level filter id.</param>
+        /// <param name="filterProviderUpdated">Whether provider filters were updated.</param>
+        /// <param name="newProviderFilters">The new provider filters.</param>
+        /// <param name="existingProviderFilters">The existing provider filters.</param>
+        /// <param name="filterResourceCollectionUpdated">Whether resource collection filters were updated.</param>
+        /// <param name="newResourceCollectionFilter">The new resource collection filters.</param>
+        /// <param name="existingResourceCollectionFilter">The existing resource collection filters.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        private async Task RecordFacetChangesAsync(
+            SearchRequestViewModel search,
+            bool filterUpdated,
+            IOrderedEnumerable<string> newFilters,
+            IOrderedEnumerable<string> existingFilters,
+            bool resourceAccessLevelFilterUpdated,
+            int? newAccessLevelId,
+            int? existingAccessLevelId,
+            bool filterProviderUpdated,
+            IOrderedEnumerable<string> newProviderFilters,
+            IOrderedEnumerable<string> existingProviderFilters,
+            bool filterResourceCollectionUpdated,
+            IOrderedEnumerable<string> newResourceCollectionFilter,
+            IOrderedEnumerable<string> existingResourceCollectionFilter)
+        {
+            var correlationId = search.SearchId.ToString();
+            var sessionId = search.GroupId ?? string.Empty;
+            var queryText = search.Term ?? string.Empty;
+
+            // Record resource type filter changes
+            if (filterUpdated)
+            {
+                var addedFilters = newFilters.Except(existingFilters);
+                var removedFilters = existingFilters.Except(newFilters);
+
+                foreach (var filter in addedFilters)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "ResourceType",
+                        FacetValue = filter,
+                        FacetAction = "applied",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+
+                foreach (var filter in removedFilters)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "ResourceType",
+                        FacetValue = filter,
+                        FacetAction = "removed",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+            }
+
+            // Record resource access level filter changes
+            if (resourceAccessLevelFilterUpdated)
+            {
+                if (existingAccessLevelId.HasValue && existingAccessLevelId > 0)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "AudienceAccessLevel",
+                        FacetValue = existingAccessLevelId.ToString(),
+                        FacetAction = "removed",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+
+                if (newAccessLevelId.HasValue && newAccessLevelId > 0)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "AudienceAccessLevel",
+                        FacetValue = newAccessLevelId.ToString(),
+                        FacetAction = "applied",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+            }
+
+            // Record provider filter changes
+            if (filterProviderUpdated)
+            {
+                var addedProviders = newProviderFilters.Except(existingProviderFilters);
+                var removedProviders = existingProviderFilters.Except(newProviderFilters);
+
+                foreach (var provider in addedProviders)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "Provider",
+                        FacetValue = provider,
+                        FacetAction = "applied",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+
+                foreach (var provider in removedProviders)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "Provider",
+                        FacetValue = provider,
+                        FacetAction = "removed",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+            }
+
+            // Record resource collection filter changes
+            if (filterResourceCollectionUpdated)
+            {
+                var addedCollections = newResourceCollectionFilter.Except(existingResourceCollectionFilter);
+                var removedCollections = existingResourceCollectionFilter.Except(newResourceCollectionFilter);
+
+                foreach (var collection in addedCollections)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "ResourceCollection",
+                        FacetValue = collection,
+                        FacetAction = "applied",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+
+                foreach (var collection in removedCollections)
+                {
+                    var model = new SearchFacetAppliedTelemetryModel
+                    {
+                        CorrelationId = correlationId,
+                        SessionId = sessionId,
+                        QueryText = queryText,
+                        QueryMode = "standard",
+                        FacetField = "ResourceCollection",
+                        FacetValue = collection,
+                        FacetAction = "removed",
+                    };
+
+                    await this.searchTelemetryService.RecordFacetAppliedTelemetryAsync(model);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the cached search source filter. Uses distributed cache (Redis) to avoid repeated database calls.
+        /// Cache is stored per user and expires after 1 hour with sliding expiration.
+        /// </summary>
+        /// <returns>Cached source filter collection.</returns>
+        private async Task<IEnumerable<string>> GetCachedSearchSourceFilter()
+        {
+            // Create cache key unique to current user
+            var cacheKey = string.Format(SearchSourceFilterCacheKey, this.CurrentUserId);
+
+            // Try to get from cache
+            var cachedResult = await this.cacheService.GetAsync<List<string>>(cacheKey);
+            if (cachedResult != null && cachedResult.Count > 0)
+            {
+                return cachedResult;
+            }
+
+            // Fetch and cache for this user (cache for 1 hour with sliding expiration)
+            var sourceFilter = await this.ConfigureSearchSourceFilterAsync();
+            var sourceFilterList = sourceFilter.ToList();
+
+            await this.cacheService.SetAsync(cacheKey, sourceFilterList, expiryInMinutes: 60, slidingExpiration: true);
+
+            return sourceFilterList;
+        }
+
+        /// <summary>
+        /// Gets the search source filter by joining Moodle instance user IDs with "lh".
+        /// </summary>
+        /// <returns>Collection of source filter values.</returns>
+        private async Task<IEnumerable<string>> ConfigureSearchSourceFilterAsync()
+        {
+            var moodleInstanceBaseUrls = await this.moodleBridgeSearchApiService.GetMoodleInstanceBaseUrlsAsync().ConfigureAwait(false);
+            var sourceFilter = moodleInstanceBaseUrls.Select(kvp => kvp.Key.ToString()).Concat(new[] { "lh" }).ToList();
+
+            // var sourceFilter = this.MoodleInstanceUserIds.MoodleInstanceUserIds.Select(kvp => kvp.Key.ToString()).Concat(new[] { "lh" }).ToList();
+            return sourceFilter;
         }
     }
 }

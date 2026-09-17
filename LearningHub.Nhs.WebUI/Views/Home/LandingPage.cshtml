@@ -1,6 +1,8 @@
 ﻿@using LearningHub.Nhs.WebUI.Models
 @model LandingPageViewModel
 @inject Microsoft.Extensions.Options.IOptions<LearningHub.Nhs.WebUI.Configuration.Settings> options
+@using Microsoft.FeatureManagement
+@inject IFeatureManager FeatureManager
 @{
     ViewData["Title"] = "Learning Hub - Home";
     // OpenAthens url needs to makes sure that the return to WebUI first hits the authorisationrequired endpoint,
@@ -49,9 +51,19 @@
                     <p>
                         <a asp-controller="Login" asp-action="Index" class="nhsuk-button">Log in</a>
                     </p>
-                    <p class="nhsuk-u-margin-bottom-2">
-                        <a href="/forgotten-password">Forgotten username or password</a>
-                    </p>
+                    @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase3) ||
+                    await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase4))
+                    {
+                        <p class="nhsuk-u-margin-bottom-2">
+                            <a href="/forgotten-password">Forgotten password</a>
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="nhsuk-u-margin-bottom-2">
+                            <a href="/forgotten-password">Forgotten username or password</a>
+                        </p>
+                    }
                     <p>
                         <a asp-controller="Account" asp-action="CreateAnAccount">Create new account</a>
                     </p>

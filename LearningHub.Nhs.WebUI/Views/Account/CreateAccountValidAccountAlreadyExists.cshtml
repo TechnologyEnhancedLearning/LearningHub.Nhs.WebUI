@@ -1,11 +1,13 @@
-﻿@{
+﻿@using Microsoft.FeatureManagement
+@inject IFeatureManager FeatureManager
+@{
     ViewData["Title"] = "You already have an account";
 
     var originalUrl = "/";
     var authRequiredReturnUrl = Url.Action("AuthorisationRequired", "Account", new { originalUrl = originalUrl }, "https");
 }
 
-@section styles{
+@section styles {
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/staticpages.css" asp-append-version="true" />
 }
 
@@ -16,7 +18,15 @@
                 <h1 class="nhsuk-heading-xl">@ViewData["Title"]</h1>
                 <article class="nhsuk-u-reading-width">
                     <section>
-                        <p>You already have an elearning for healthcare (elfh) hub account. You can use your elfh username and password to access the Learning Hub.</p>
+                        @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase3) ||
+                        await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase4))
+                        {
+                            <p>You already have an elearning for healthcare (elfh) hub account. You can use your elfh email address and password to access the Learning Hub.</p>
+                        }
+                        else
+                        {
+                            <p>You already have an elearning for healthcare (elfh) hub account. You can use your elfh username and password to access the Learning Hub.</p>
+                        }
                     </section>
                 </article>
             </div>
@@ -29,9 +39,19 @@
                     <a asp-controller="OpenAthens" asp-action="Login" asp-route-returnUrl="@authRequiredReturnUrl" asp-route-invalidScope="false"
                        class="nhsuk-button nhsuk-button--secondary">OpenAthens Log in</a>
                 </div>
-                <p class="nhsuk-u-margin-bottom-3">
-                    <a asp-controller="Account" asp-action="ForgotUserPassword" class="">Forgotten username or password</a>
-                </p>
+                @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase3) ||
+                await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase4))
+                {
+                    <p class="nhsuk-u-margin-bottom-3">
+                        <a asp-controller="Account" asp-action="ForgotUserPassword" class="">Forgotten password</a>
+                    </p>
+                }
+                else
+                {
+                    <p class="nhsuk-u-margin-bottom-3">
+                        <a asp-controller="Account" asp-action="ForgotUserPassword" class="">Forgotten username or password</a>
+                    </p>
+                }
                 <p>
                     <a href="@(this.ViewBag.WhoCanAccessTheLearningHubUrl)" target="_blank">Who can access the Learning Hub?</a>
                 </p>

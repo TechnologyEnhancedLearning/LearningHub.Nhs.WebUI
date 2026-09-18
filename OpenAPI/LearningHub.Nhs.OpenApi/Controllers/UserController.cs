@@ -395,6 +395,18 @@
                 },
                new Dictionary<string, object>
                 {
+                    { "title", "VLE Courses" },
+                    { "url", this.learningHubConfig.ReportUrl },
+                    { "visible", model.ShowVLECourses },
+                },
+               new Dictionary<string, object>
+                {
+                    { "title", "Calendar" },
+                    { "url", this.learningHubConfig.ReportUrl },
+                    { "visible", model.ShowCalendar },
+                },
+               new Dictionary<string, object>
+                {
                     { "title", "Sign Out" },
                     { "url", this.learningHubConfig.SignOutUrl },
                     { "visible", model.ShowSignOut },

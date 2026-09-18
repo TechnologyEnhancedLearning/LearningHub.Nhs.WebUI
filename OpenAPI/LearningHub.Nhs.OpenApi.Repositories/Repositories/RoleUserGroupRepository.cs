@@ -1,5 +1,6 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 {
+    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
@@ -130,6 +131,26 @@
 
             var vm = await this.DbContext.RoleUserGroupViewModel.FromSqlRaw("hub.RoleUserGroupGetByUserId @userId", param0).AsNoTracking().ToListAsync();
             return vm;
+        }
+
+        /// <summary>
+        /// Get list of PGVLERoleUserGroupViewModel for a supplied User Group.
+        /// </summary>
+        /// <param name="userId">The userGroupId.</param>
+        /// <returns>A list of RoleUserGroupViewModel.</returns>
+        public async Task<List<UserUserGroupViewModel>> GetPGVLEUserGroupViewModelsByUserId(int userId)
+        {
+            try
+            {
+                var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+
+                var vm = await this.DbContext.UserUserGroupViewModel.FromSqlRaw("hub.GetPGVLERoleUserGroupGetByUserId @userId", param0).AsNoTracking().ToListAsync();
+                return vm;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error executing stored procedure hub.GetPGVLEUserGroupViewModelsByUserId: {ex.Message}", ex);
+            }
         }
     }
 }

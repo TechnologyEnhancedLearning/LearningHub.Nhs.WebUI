@@ -158,5 +158,12 @@
         Task<LearningHubValidationResult> DeleteUserGroupAttributeAsync(UserGroupAttributeViewModel userGroupAttribute, int currentUserId);
         /// <returns>The <see cref="Task{List}"/>.</returns>
         Task<bool> UserHasCatalogueContributionPermission(int userId);
+
+        /// <summary>
+        /// IsAuthenticatedPGVLEUser.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<bool> IsAuthenticatedPGVLEUser(int userId); 
     }
 }

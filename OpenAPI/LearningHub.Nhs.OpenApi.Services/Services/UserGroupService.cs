@@ -17,12 +17,20 @@
     using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json;
     using Microsoft.AspNetCore.Http;
+    using LearningHub.Nhs.Models.Constants;
+    using LearningHub.Nhs.OpenApi.Services.HttpClients;
+    using System.Net.Http;
+    using System.Net;
+    using System.Text.Json;
+    using System.Text;
 
     /// <summary>
     /// The user group service.
     /// </summary>
     public class UserGroupService : IUserGroupService
     {
+        private const string CacheKey = "PGVLEUserPermission";
+
         /// <summary>
         /// The mapper.
         /// </summary>
@@ -137,6 +145,21 @@
             return false;
         }
 
+        /// <inheritdoc />
+        public async Task<bool> IsAuthenticatedPGVLEUser(int userId)
+        {
+            string cacheKey = $"{userId}:{CacheKey}";
+            var userPGVLEPermission = await this.cachingService.GetAsync<bool>(cacheKey);
+            if (userPGVLEPermission.ResponseEnum == CacheReadResponseEnum.Found)
+            {
+                return userPGVLEPermission.Item;
+            }
+
+            var isPGVLEUser = (await this.roleUserGroupRepository.GetPGVLEUserGroupViewModelsByUserId(userId)).Any();
+            await this.cachingService.SetAsync(cacheKey, isPGVLEUser);
+            return isPGVLEUser;
+        }
+
         /// <summary>
         /// The create async.
         /// </summary>
@@ -205,7 +228,7 @@
                         retVal.Add(new LearningHubValidationResult(false, detail));
                     }
                 }
-        }
+            }
 
             return retVal;
         }
@@ -374,8 +397,8 @@
                     var userUserGroupslst = await userUserGroupRepository.GetByUserIdandUserGroupIdAsync(userUserGroup.UserId, userUserGroup.UserGroupId);
                     if (userUserGroupslst == null)
                     {
-                      var entity = mapper.Map<UserUserGroup>(userUserGroup);
-                      await userUserGroupRepository.CreateAsync(currentUserId, entity);
+                        var entity = mapper.Map<UserUserGroup>(userUserGroup);
+                        await userUserGroupRepository.CreateAsync(currentUserId, entity);
                     }
                 }
             }

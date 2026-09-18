@@ -10,5 +10,10 @@
         /// The InPlatformReport.
         /// </summary>
         public string InPlatformReport { get; set; } = null!;
+
+        /// <summary>
+        /// The VLENavigation.
+        /// </summary>
+        public string VLENavigation { get; set; } = null!;
     }
 }

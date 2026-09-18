@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Caching;
+    using LearningHub.Nhs.Models.Constants;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.User;
@@ -87,6 +88,18 @@
                         .Any(p => p == permissionCode);
         }
 
+        /// <summary>
+        /// The IsAuthenticatedPGVLEUser.
+        /// </summary>
+        /// <returns>The <see cref="T:Task{bool}"/>.</returns>
+        public async Task<bool> IsAuthenticatedPGVLEUser()
+        {
+            bool response = false;
+            var cacheKey = $"{this.contextAccessor.HttpContext.User.Identity.GetCurrentUserId()}:PGVLEUserPermission";
+            response = await this.cacheService.GetOrFetchAsync(cacheKey, this.FetchPGVLEUserPermission);
+            return response;
+        }
+
         private async Task<List<RoleUserGroupViewModel>> FetchRoleUserGroupDetailAsync()
         {
             List<RoleUserGroupViewModel> viewmodel = null;
@@ -124,6 +137,29 @@
             {
                 var result = response.Content.ReadAsStringAsync().Result;
                 viewmodel = JsonConvert.DeserializeObject<List<RoleUserGroupViewModel>>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewmodel;
+        }
+
+        private async Task<bool> FetchPGVLEUserPermission()
+        {
+            bool viewmodel = false;
+            var client = await this.OpenApiHttpClient.GetClientAsync();
+
+            var request = $"UserGroup/GetPGVLEUserPermission";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewmodel = JsonConvert.DeserializeObject<bool>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
                         ||

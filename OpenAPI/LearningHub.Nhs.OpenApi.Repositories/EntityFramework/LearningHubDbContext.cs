@@ -123,6 +123,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         public virtual DbSet<RoleUserGroupViewModel> RoleUserGroupViewModel { get; set; }
 
         /// <summary>
+        /// Gets or sets the role user group view model.
+        /// </summary>
+        public virtual DbSet<UserUserGroupViewModel> UserUserGroupViewModel { get; set; }
+
+        /// <summary>
         /// Gets or sets the Notification.
         /// </summary>
         public virtual DbSet<Notification> Notification { get; set; }

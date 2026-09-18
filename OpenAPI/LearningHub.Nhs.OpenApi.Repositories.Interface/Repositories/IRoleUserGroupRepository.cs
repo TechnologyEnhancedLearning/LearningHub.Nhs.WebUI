@@ -57,6 +57,13 @@
         Task<List<RoleUserGroupViewModel>> GetRoleUserGroupViewModelsByUserId(int userId);
 
         /// <summary>
+        /// GetPGVLEUserGroupViewModelsByUserId.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <returns>A list of RoleUserGroupViewModel.</returns>
+        Task<List<UserUserGroupViewModel>> GetPGVLEUserGroupViewModelsByUserId(int userId);
+
+        /// <summary>
         /// The get all for search.
         /// </summary>
         /// <param name="catalogueNodeId">The catalogueNodeId.</param>

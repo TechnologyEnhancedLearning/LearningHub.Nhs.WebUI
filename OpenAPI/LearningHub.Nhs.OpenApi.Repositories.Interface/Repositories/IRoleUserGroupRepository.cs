@@ -60,8 +60,9 @@
         /// GetPGVLEUserGroupViewModelsByUserId.
         /// </summary>
         /// <param name="userId">The userId.</param>
+        /// <param name="userGroupId">The userGroupId.</param>
         /// <returns>A list of RoleUserGroupViewModel.</returns>
-        Task<List<UserUserGroupViewModel>> GetPGVLEUserGroupViewModelsByUserId(int userId);
+        Task<List<UserUserGroupViewModel>> GetPGVLEUserGroupViewModelsByUserId(int userId, int vleUserGroupId);
 
         /// <summary>
         /// The get all for search.

@@ -396,13 +396,13 @@
                new Dictionary<string, object>
                 {
                     { "title", "VLE Courses" },
-                    { "url", this.learningHubConfig.ReportUrl },
+                    { "url", this.learningHubConfig.VLECoursesUrl },
                     { "visible", model.ShowVLECourses },
                 },
                new Dictionary<string, object>
                 {
                     { "title", "Calendar" },
-                    { "url", this.learningHubConfig.ReportUrl },
+                    { "url", this.learningHubConfig.CalendarUrl },
                     { "visible", model.ShowCalendar },
                 },
                new Dictionary<string, object>

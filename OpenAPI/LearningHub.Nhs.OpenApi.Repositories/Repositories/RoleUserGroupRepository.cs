@@ -137,14 +137,16 @@
         /// Get list of PGVLERoleUserGroupViewModel for a supplied User Group.
         /// </summary>
         /// <param name="userId">The userGroupId.</param>
+        /// <param name="vleUserGroupId">The vleCourseId.</param>
         /// <returns>A list of RoleUserGroupViewModel.</returns>
-        public async Task<List<UserUserGroupViewModel>> GetPGVLEUserGroupViewModelsByUserId(int userId)
+        public async Task<List<UserUserGroupViewModel>> GetPGVLEUserGroupViewModelsByUserId(int userId, int vleUserGroupId)
         {
             try
             {
                 var param0 = new SqlParameter("@userId", SqlDbType.Int) { Value = userId };
+                var param1 = new SqlParameter("@vleUserGroupId", SqlDbType.Int) { Value = vleUserGroupId };
 
-                var vm = await this.DbContext.UserUserGroupViewModel.FromSqlRaw("hub.GetPGVLERoleUserGroupGetByUserId @userId", param0).AsNoTracking().ToListAsync();
+                var vm = await this.DbContext.UserUserGroupViewModel.FromSqlRaw("hub.GetPGVLERoleUserGroupGetByUserId @userId, @vleUserGroupId", param0,param1).AsNoTracking().ToListAsync();
                 return vm;
             }
             catch (Exception ex)

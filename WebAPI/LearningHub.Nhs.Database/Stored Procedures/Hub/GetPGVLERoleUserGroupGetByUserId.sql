@@ -8,11 +8,13 @@
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [hub].[GetPGVLERoleUserGroupGetByUserId]
 (
-@userId int
+@userId INT,
+@vleUserGroupId INT
 )
 AS
 
 BEGIN
+
 
 	SELECT ug.Id,
 	    uug.Id As UserGroupId,
@@ -25,7 +27,7 @@ BEGIN
 		hub.UserUserGroup uug ON ug.Id = uug.UserGroupId
 	WHERE
 		uug.UserId = @userId
-	    AND ug.Id = 10690
+	    AND ug.Id = @vleUserGroupId
 		AND uug.Deleted = 0 AND ug.Deleted = 0
 
 END

@@ -11,7 +11,6 @@
     using LearningHub.NHS.OpenAPI.Controllers;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// User Group operations.

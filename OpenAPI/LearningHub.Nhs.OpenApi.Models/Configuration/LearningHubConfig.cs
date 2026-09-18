@@ -153,6 +153,16 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         public string ReportUrl { get; set; } = null!;
 
         /// <summary>
+        /// Gets or sets <see cref="VLECoursesUrl"/>.
+        /// </summary>
+        public string VLECoursesUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="CalendarUrl"/>.
+        /// </summary>
+        public string CalendarUrl { get; set; } = null!;
+
+        /// <summary>
         /// Gets or sets the StatMandId.
         /// </summary>
         public int StatMandId { get; set; }
@@ -162,6 +172,10 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// </summary>
         public string StatMandInstanceName { get; set; } = null!;
 
+        /// <summary>
+        /// Gets or sets the VLEUserGroupId.
+        /// </summary>
+        public int VLEUserGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets <see cref="AuthClientIdentityKey"/>.

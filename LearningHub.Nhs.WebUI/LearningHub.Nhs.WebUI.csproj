@@ -168,6 +168,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\OpenAPI\LearningHub.Nhs.OpenApi.Models\LearningHub.Nhs.OpenApi.Models.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<TypeScriptCompile Include="jest.config.ts" />
 		<TypeScriptCompile Include="Scripts\vuesrc\helpers\utils.ts" />
 		<TypeScriptCompile Include="Scripts\vuesrc\models\mylearning\assessmentDetailsModel.ts" />

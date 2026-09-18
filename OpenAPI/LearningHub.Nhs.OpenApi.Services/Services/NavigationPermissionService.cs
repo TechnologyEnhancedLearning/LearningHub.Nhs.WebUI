@@ -94,6 +94,8 @@
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
                 ShowReports = false,
+                ShowVLECourses = false,
+                ShowCalendar = false,
             };
         }
 
@@ -105,8 +107,10 @@
         /// <returns>The <see cref="NavigationModel"/>.</returns>
         private async Task<NavigationModel> AuthenticatedAdministrator(string controllerName, int userId)
         {
+            var isPGVLEUser = await this.userGroupService.IsAuthenticatedPGVLEUser(userId);
             return new NavigationModel()
             {
+
                 ShowMyContributions = true,
                 ShowMyLearning = true,
                 ShowMyBookmarks = false,
@@ -121,6 +125,8 @@
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
                 ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
+                ShowVLECourses = this.IsVLENavigationActive() ? isPGVLEUser : false,
+                ShowCalendar = this.IsVLENavigationActive() ? isPGVLEUser : false,
             };
         }
 
@@ -132,6 +138,7 @@
         /// <returns>The <see cref="NavigationModel"/>.</returns>
         private async Task<NavigationModel> AuthenticatedBlueUser(string controllerName, int userId)
         {
+            var isPGVLEUser = await this.userGroupService.IsAuthenticatedPGVLEUser(userId);
             return new NavigationModel()
             {
                 ShowMyContributions = await this.userGroupService.UserHasCatalogueContributionPermission(userId),
@@ -148,6 +155,8 @@
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
                 ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
+                ShowVLECourses = this.IsVLENavigationActive() ? isPGVLEUser : false,
+                ShowCalendar = this.IsVLENavigationActive() ? isPGVLEUser : false,
             };
         }
 
@@ -173,6 +182,8 @@
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
                 ShowReports = false,
+                ShowVLECourses = false,
+                ShowCalendar = false,
             };
         }
 
@@ -183,6 +194,7 @@
         /// <returns>The <see cref="Task{NavigationModel}"/>.</returns>
         private async Task<NavigationModel> AuthenticatedReadOnly(string controllerName,int userId)
         {
+            var isPGVLEUser = await this.userGroupService.IsAuthenticatedPGVLEUser(userId);
             return new NavigationModel()
             {
                 ShowMyContributions = await resourceService.HasPublishedResourcesAsync(userId),
@@ -199,6 +211,8 @@
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = true,
                 ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
+                ShowVLECourses = this.IsVLENavigationActive() ? isPGVLEUser : false,
+                ShowCalendar = this.IsVLENavigationActive() ? isPGVLEUser : false,
             };
         }
 
@@ -208,6 +222,7 @@
         /// <returns>The <see cref="Task{NavigationModel}"/>.</returns>
         private async Task<NavigationModel> AuthenticatedBasicUserOnly(int userId)
         {
+            var isPGVLEUser = await this.userGroupService.IsAuthenticatedPGVLEUser(userId);
             return new NavigationModel()
             {
                 ShowMyContributions = await resourceService.HasPublishedResourcesAsync(userId),
@@ -224,6 +239,8 @@
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
                 ShowReports = this.IsInplatformReportActive() ? await this.databricksService.IsUserReporter(userId) : false,
+                ShowVLECourses = this.IsVLENavigationActive() ? isPGVLEUser : false,
+                ShowCalendar = this.IsVLENavigationActive() ? isPGVLEUser : false,
             };
         }
 
@@ -249,6 +266,8 @@
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
                 ShowReports = false,
+                ShowVLECourses = false,
+                ShowCalendar = false,
             };
         }
 
@@ -261,5 +280,15 @@
             }
             return false;
         }
+        private bool IsVLENavigationActive()
+        {
+            bool.TryParse(this.featureFlagsConfig.Value.VLENavigation, out bool vleNavigation);
+            if (vleNavigation)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

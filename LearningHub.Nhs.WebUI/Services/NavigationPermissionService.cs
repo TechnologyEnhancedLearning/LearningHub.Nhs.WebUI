@@ -98,6 +98,8 @@
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
                 ShowReports = false,
+                ShowVLECourses = false,
+                ShowCalendar = false,
             };
         }
 
@@ -108,6 +110,7 @@
         /// <returns>The <see cref="NavigationModel"/>.</returns>
         private async Task<NavigationModel> AuthenticatedAdministrator(string controllerName)
         {
+            var isPGVLEUser = await this.userGroupService.IsAuthenticatedPGVLEUser();
             return new NavigationModel()
             {
                 ShowHome = true,
@@ -125,6 +128,8 @@
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
                 ShowReports = this.DisplayReportMenu() ? await this.reportService.GetReporterPermission() : false,
+                ShowVLECourses = this.DisplayVLENavigationMenu() ? isPGVLEUser : false,
+                ShowCalendar = this.DisplayVLENavigationMenu() ? isPGVLEUser : false,
             };
         }
 
@@ -135,6 +140,7 @@
         /// <returns>The <see cref="NavigationModel"/>.</returns>
         private async Task<NavigationModel> AuthenticatedBlueUser(string controllerName)
         {
+            var isPGVLEUser = await this.userGroupService.IsAuthenticatedPGVLEUser();
             return new NavigationModel()
             {
                 ShowHome = true,
@@ -152,6 +158,8 @@
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
                 ShowReports = this.DisplayReportMenu() ? await this.reportService.GetReporterPermission() : false,
+                ShowVLECourses = this.DisplayVLENavigationMenu() ? isPGVLEUser : false,
+                ShowCalendar = this.DisplayVLENavigationMenu() ? isPGVLEUser : false,
             };
         }
 
@@ -178,6 +186,8 @@
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
                 ShowReports = false,
+                ShowVLECourses = false,
+                ShowCalendar = false,
             };
         }
 
@@ -188,6 +198,7 @@
         /// <returns>The <see cref="Task{NavigationModel}"/>.</returns>
         private async Task<NavigationModel> AuthenticatedReadOnly(string controllerName)
         {
+            var isPGVLEUser = await this.userGroupService.IsAuthenticatedPGVLEUser();
             return new NavigationModel()
             {
                 ShowHome = true,
@@ -205,6 +216,8 @@
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = true,
                 ShowReports = this.DisplayReportMenu() ? await this.reportService.GetReporterPermission() : false,
+                ShowVLECourses = this.DisplayVLENavigationMenu() ? isPGVLEUser : false,
+                ShowCalendar = this.DisplayVLENavigationMenu() ? isPGVLEUser : false,
             };
         }
 
@@ -214,6 +227,7 @@
         /// <returns>The <see cref="Task{NavigationModel}"/>.</returns>
         private async Task<NavigationModel> AuthenticatedBasicUserOnly()
         {
+            var isPGVLEUser = await this.userGroupService.IsAuthenticatedPGVLEUser();
             return new NavigationModel()
             {
                 ShowHome = true,
@@ -231,6 +245,8 @@
                 ShowMyAccount = true,
                 ShowBrowseCatalogues = true,
                 ShowReports = this.DisplayReportMenu() ? await this.reportService.GetReporterPermission() : false,
+                ShowVLECourses = this.DisplayVLENavigationMenu() ? isPGVLEUser : false,
+                ShowCalendar = this.DisplayVLENavigationMenu() ? isPGVLEUser : false,
             };
         }
 
@@ -257,12 +273,19 @@
                 ShowMyAccount = false,
                 ShowBrowseCatalogues = false,
                 ShowReports = false,
+                ShowVLECourses = false,
+                ShowCalendar = false,
             };
         }
 
         private bool DisplayReportMenu()
         {
             return Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.InPlatformReport)).Result;
+        }
+
+        private bool DisplayVLENavigationMenu()
+        {
+            return Task.Run(() => this.featureManager.IsEnabledAsync(FeatureFlags.VLENavigation)).Result;
         }
     }
 }

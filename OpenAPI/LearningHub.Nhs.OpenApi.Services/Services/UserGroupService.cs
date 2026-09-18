@@ -17,12 +17,22 @@
     using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json;
     using Microsoft.AspNetCore.Http;
+    using LearningHub.Nhs.Models.Constants;
+    using LearningHub.Nhs.OpenApi.Services.HttpClients;
+    using System.Net.Http;
+    using System.Net;
+    using System.Text.Json;
+    using System.Text;
+    using LearningHub.Nhs.OpenApi.Models.Configuration;
+    using Microsoft.Extensions.Options;
 
     /// <summary>
     /// The user group service.
     /// </summary>
     public class UserGroupService : IUserGroupService
     {
+        private const string CacheKey = "PGVLEUserPermission";
+
         /// <summary>
         /// The mapper.
         /// </summary>
@@ -60,6 +70,11 @@
         private readonly ICachingService cachingService;
 
         /// <summary>
+        /// The learning hub config.
+        /// </summary>
+        private readonly IOptions<LearningHubConfig> learningHubConfig;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UserGroupService"/> class.
         /// </summary>
         /// <param name="roleUserGroupRepository">roleUserGroupRepository.</param>
@@ -70,6 +85,7 @@
         /// <param name="userGroupAttributeRepository">The user group attribute repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="cachingService">The caching service.</param>
+        /// <param name="learningHubConfig">The learningHubConfig.</param>
         public UserGroupService(
             ICatalogueService catalogueService,
             IUserGroupRepository userGroupRepository,
@@ -78,7 +94,8 @@
             IRoleUserGroupRepository roleUserGroupRepository,
             IUserGroupAttributeRepository userGroupAttributeRepository,
             IMapper mapper,
-            ICachingService cachingService)
+            ICachingService cachingService,
+            IOptions<LearningHubConfig> learningHubConfig)
         {
             this.catalogueService = catalogueService;
             this.userGroupRepository = userGroupRepository;
@@ -88,6 +105,7 @@
             this.userGroupAttributeRepository = userGroupAttributeRepository;
             this.mapper = mapper;
             this.cachingService = cachingService;
+            this.learningHubConfig = learningHubConfig;
         }
 
         /// <summary>
@@ -135,6 +153,21 @@
             }
 
             return false;
+        }
+
+        /// <inheritdoc />
+        public async Task<bool> IsAuthenticatedPGVLEUser(int userId)
+        {
+            string cacheKey = $"{userId}:{CacheKey}";
+            var userPGVLEPermission = await this.cachingService.GetAsync<bool>(cacheKey);
+            if (userPGVLEPermission.ResponseEnum == CacheReadResponseEnum.Found)
+            {
+                return userPGVLEPermission.Item;
+            }
+
+            var isPGVLEUser = (await this.roleUserGroupRepository.GetPGVLEUserGroupViewModelsByUserId(userId,this.learningHubConfig.Value.VLEUserGroupId)).Any();
+            await this.cachingService.SetAsync(cacheKey, isPGVLEUser);
+            return isPGVLEUser;
         }
 
         /// <summary>
@@ -205,7 +238,7 @@
                         retVal.Add(new LearningHubValidationResult(false, detail));
                     }
                 }
-        }
+            }
 
             return retVal;
         }
@@ -374,8 +407,8 @@
                     var userUserGroupslst = await userUserGroupRepository.GetByUserIdandUserGroupIdAsync(userUserGroup.UserId, userUserGroup.UserGroupId);
                     if (userUserGroupslst == null)
                     {
-                      var entity = mapper.Map<UserUserGroup>(userUserGroup);
-                      await userUserGroupRepository.CreateAsync(currentUserId, entity);
+                        var entity = mapper.Map<UserUserGroup>(userUserGroup);
+                        await userUserGroupRepository.CreateAsync(currentUserId, entity);
                     }
                 }
             }

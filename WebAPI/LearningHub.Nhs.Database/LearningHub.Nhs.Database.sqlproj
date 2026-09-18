@@ -592,6 +592,7 @@
     <None Include="Scripts\Pre-Deploy\Scripts\EmailTemplateTableChanges.sql" />
     <None Include="Scripts\Post-Deploy\Scripts\UpdateEmailTemplateData.sql" />
     <Build Include="Stored Procedures\Hierarchy\GetCatalogueAdminDetails.sql" />
+    <Build Include="Stored Procedures\Hub\GetPGVLERoleUserGroupGetByUserId.sql" />
     <None Include="Scripts\ELFH Database Scripts\AddUserHistoryType.sql" />
   </ItemGroup>
   <ItemGroup>

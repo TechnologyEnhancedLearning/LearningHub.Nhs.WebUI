@@ -34,5 +34,11 @@
         /// <param name="permissionCode">To check against permission code.</param>
         /// <returns>Success or not.</returns>
         Task<bool> UserHasPermissionAsync(string permissionCode);
+
+        /// <summary>
+        /// The IsAuthenticatedPGVLEUser.
+        /// </summary>
+        /// <returns>The <see cref="T:Task{bool}"/>.</returns>
+        Task<bool> IsAuthenticatedPGVLEUser();
     }
 }

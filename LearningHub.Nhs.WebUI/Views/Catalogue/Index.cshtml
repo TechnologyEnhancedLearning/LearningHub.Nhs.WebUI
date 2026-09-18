@@ -129,13 +129,6 @@
                 <a class="nhsuk-button" asp-controller="Catalogue" asp-action="Manage" asp-route-reference="@Model.Catalogue.Url">Manage this catalogue</a>
 
             }
-            @* SSO Script*@
-            @if (this.ViewBag.ScriptCatalogue == true)
-            {
-
-                <a class="nhsuk-button" asp-controller="Catalogue" asp-action="RedirecttoScriptSSO">SCRIPT login</a>
-
-            }
         </div>
     </div>
 

@@ -3,7 +3,7 @@
 .contributor-panel {
     display: flex;
     justify-content: space-between;
-
+    
     @media (max-width: 768px) {
         flex-wrap:wrap;
     }
@@ -12,6 +12,26 @@
 .catalogue-badge {
     height: 60px;
     min-width: 60px;
+}
+.resource-button-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.resource-button-row form {
+    display: inline-block;
+}
+
+.resource-button-row .contributor-panel {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.resource-button-row .script-login {
+    flex-shrink: 0;
 }
 
 // Resource content section -----------------------------------------

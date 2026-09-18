@@ -929,7 +929,7 @@
         public async Task<AutoSuggestionModel> GetAutoSuggestionList(string term, string searchSourceFilterText)
         {
             var client = await this.OpenApiHttpClient.GetClientAsync();
-            var request = $"Search/GetAutoSuggestionResult/{term}/{searchSourceFilterText}";
+            var request = $"Search/GetAutoSuggestionResult/{term}?searchSourceFilterText={searchSourceFilterText}";
             var response = await client.GetAsync(request).ConfigureAwait(false);
 
             var viewModel = new AutoSuggestionModel();
@@ -1005,7 +1005,10 @@
                 filterParts.Add($"&resource_collection={string.Join("&resource_collection=", resourceCollectionFilter)}");
             }
 
-            filterParts.Add($"&source={string.Join("&source=", searchSourceFilter)}");
+            if (searchSourceFilter?.Any() == true)
+            {
+                filterParts.Add($"&source={string.Join("&source=", searchSourceFilter)}");
+            }
 
             return string.Join(string.Empty, filterParts);
         }

@@ -34,5 +34,13 @@
         /// The VLENavigation.
         /// </summary>
         public const string VLENavigation = "VLENavigation";
+        /// The EmailBasedAuthenticationPhase3.
+        /// </summary>
+        public const string EmailBasedAuthenticationPhase3 = "EmailBasedAuthenticationPhase3";
+
+        /// <summary>
+        /// The EmailBasedAuthenticationPhase4.
+        /// </summary>
+        public const string EmailBasedAuthenticationPhase4 = "EmailBasedAuthenticationPhase4";
     }
 }

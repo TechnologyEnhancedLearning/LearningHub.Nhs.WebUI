@@ -254,9 +254,10 @@
         /// <param name="term">The term.</param>
         /// <param name="searchSourceFilterText">source items.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        [HttpGet]
-        [Route("GetAutoSuggestionResult/{term}/{searchSourceFilterText}")]
-        public async Task<IActionResult> GetAutoSuggestionResults(string term, string searchSourceFilterText)
+        [HttpGet("GetAutoSuggestionResult/{term}")]
+        public async Task<IActionResult> GetAutoSuggestionResults(
+            string term,
+            [FromQuery] string? searchSourceFilterText = null)
         {
             var autosuggestionViewModel = await this.GetAutoSuggestions(term, searchSourceFilterText);
             return this.Ok(autosuggestionViewModel);

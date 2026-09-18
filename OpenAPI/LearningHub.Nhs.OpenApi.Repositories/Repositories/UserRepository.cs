@@ -1,11 +1,14 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 {
-    using System.Linq;
-    using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
+    using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
+    using System.Data;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The user repository.
@@ -78,6 +81,24 @@
             return DbContext.UserUserGroup
                 .Any(uug => uug.UserId == userId &&
                             uug.UserGroupId == SystemAdminUserGroup);
+        }
+
+        /// <summary>
+        /// The get user detail for the authentication.
+        /// </summary>
+        /// <param name = "username">
+        /// username.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        public async Task<UserAuthenticateDto> GetUserDetailForAuthentication(string username)
+        {
+            var param0 = new SqlParameter("@userName", SqlDbType.VarChar) { Value = username };
+
+            var userAuthenticateDto = await this.DbContext.UserAuthenticateDto.FromSqlRaw("proc_UserDetailForAuthenticationByUserName @userName", param0).AsNoTracking().ToListAsync();
+
+            return userAuthenticateDto.FirstOrDefault();
         }
     }
 }

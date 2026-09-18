@@ -9,6 +9,32 @@
     /// </summary>
     public interface ISecurityService
     {
+
+        /// <summary>
+        /// The validate token async.
+        /// </summary>
+        /// <param name="token">
+        /// The token.
+        /// </param>
+        /// <param name="loctoken">
+        /// The loctoken.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        Task<PasswordValidationTokenResult> ValidateTokenAsync(string token, string loctoken);
+
+        /// <summary>
+        /// The set initial password async.
+        /// </summary>
+        /// <param name="passwordCreateModel">
+        /// The password create model.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        Task<bool> SetInitialPasswordAsync(PasswordCreateModel passwordCreateModel);
+
         /// <summary>
         /// The email change validate token async.
         /// </summary>

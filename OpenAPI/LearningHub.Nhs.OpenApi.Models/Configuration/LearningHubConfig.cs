@@ -182,5 +182,10 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// Gets or sets <see cref="ReportApiClientIdentityKey"/>.
         /// </summary>
         public string ReportApiClientIdentityKey { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="MaxLogonAttempts"/>.
+        /// </summary>
+        public int MaxLogonAttempts {  get; set; }
     }
 }

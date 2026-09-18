@@ -3,6 +3,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.Entities.Resource;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Dashboard;
+    using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Content;
@@ -818,6 +819,21 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// </summary>
         public virtual DbSet<UserRole> UserRole { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the UserPasswordValidationToken.
+        /// </summary>
+        public virtual DbSet<UserPasswordValidationToken> UserPasswordValidationToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets the  MergeUserLearningHistoryLog.
+        /// </summary>
+        public virtual DbSet<MergeUserLearningHistoryLog> MergeUserLearningHistoryLog { get; set; }
+
+        /// <summary>
+        /// Gets or sets the UserAuthentiate Dto.
+        /// </summary>
+        public virtual DbSet<UserAuthenticateDto> UserAuthenticateDto { get; set; }
 
 
 

@@ -17,7 +17,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="LearningHub.Nhs.Models" Version="4.0.23" />
+	  <Compile Include="..\..\..\LearningHub.Nhs.UserApi\LearningHub.Nhs.UserApi.Repository.Interface\IUserPasswordValidationTokenRepository.cs" Link="Repositories\IUserPasswordValidationTokenRepository.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="LearningHub.Nhs.Models" Version="4.0.206" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.7" />
 	</ItemGroup>
 

@@ -1,12 +1,9 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Services.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Constants;
+    using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Resource;
@@ -18,6 +15,11 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The user service.
@@ -200,6 +202,30 @@
             }
         }
 
+        /// <summary>
+        /// The get by id async.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<User> GetAuthUserByIdAsync(int id)
+        {
+            try
+            {
+                var user = await userRepository.GetByIdAsync(id);
+                return user;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<UserAuthenticateDto> GetUserDetailForAuthenticateAsync(string userName)
+        {
+            return await this.userRepository.GetUserDetailForAuthentication(userName);
+        }
+
         /// <inheritdoc/>
         public bool IsAdminUser(int userId)
         {
@@ -235,6 +261,52 @@
             }
 
             return retVal;
+        }
+
+        /// <inheritdoc/>
+        public async Task RecordSuccessfulSigninAsync(int id, CancellationToken token = default)
+        {
+            var user = await this.userRepository.GetByIdAsync(id);
+
+            if (user.PasswordLifeCounter != 0 || user.SecurityLifeCounter != 0)
+            {
+                user.PasswordLifeCounter = 0;
+                user.SecurityLifeCounter = 0;
+
+                await this.userRepository.UpdateAsync(id, user);
+
+                await this.InvalidateUserCacheAsync(user.Id, user.LegacyUserName, token);
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task RecordUnsuccessfulSigninAsync(int id, CancellationToken token = default)
+        {
+            var user = await this.userRepository.GetByIdAsync(id);
+
+            user.PasswordLifeCounter++;
+
+            await this.userRepository.UpdateAsync(id, user);
+
+            await this.InvalidateUserCacheAsync(user.Id, user.LegacyUserName, token);
+        }
+
+        /// <inheritdoc/>
+        private async Task InvalidateUserCacheAsync(int userId, string userName, CancellationToken cancellationToken)
+        {
+            if (userId == 0 || string.IsNullOrWhiteSpace(userName))
+            {
+                return;
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            await Task.WhenAll(
+               this.cachingService.RemoveAsync($"{CacheKeys.UserLoadByUserId}:{userId}"),
+               this.cachingService.RemoveAsync($"{CacheKeys.UserLoadByUserName}:{userName}"));
         }
 
         private IQueryable<User> PresetFilterItems(IQueryable<User> items, List<PagingColumnFilter> presetFilterCriteria)

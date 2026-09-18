@@ -16,10 +16,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Include="..\..\..\LearningHub.Nhs.UserApi\LearningHub.Nhs.UserApi\Authentication\LoginSso.cs" Link="Authentication\LoginSso.cs" />
+      <Compile Include="..\..\..\LearningHub.Nhs.UserApi\LearningHub.Nhs.UserApi\Controllers\AuthenticationController.cs" Link="Controllers\AuthenticationController.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="AspNetCore.Authentication.ApiKey" Version="8.0.1" />
         <PackageReference Include="elfhHub.Nhs.Models" Version="3.0.15" />
         <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
-        <PackageReference Include="LearningHub.Nhs.Models" Version="4.0.91" />
+        <PackageReference Include="LearningHub.Nhs.Models" Version="4.0.206" />
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
         <PackageReference Include="Microsoft.ApplicationInsights.NLogTarget" Version="2.22.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.36" />

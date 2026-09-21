@@ -34,6 +34,8 @@
         /// The VLENavigation.
         /// </summary>
         public const string VLENavigation = "VLENavigation";
+
+        /// <summary>
         /// The EmailBasedAuthenticationPhase3.
         /// </summary>
         public const string EmailBasedAuthenticationPhase3 = "EmailBasedAuthenticationPhase3";

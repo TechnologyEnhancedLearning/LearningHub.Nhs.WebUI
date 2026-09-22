@@ -1,33 +1,32 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 {
+    using LearningHub.Nhs.Models.Entities;
+    using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
+    using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using LearningHub.Nhs.Models.Entities;
-    using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
-    using LearningHub.Nhs.UserApi.Repository.Interface;
-    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// The user password validation token repository.
     /// </summary>
-    public class UserPasswordValidationTokenRepository : IUserPasswordValidationTokenRepository
+    public class UserPasswordValidationTokenRepository : GenericRepository<UserPasswordValidationToken>, IUserPasswordValidationTokenRepository
     {
+       
         /// <summary>
-        /// Initializes a new instance of the <see cref="UserPasswordValidationTokenRepository"/> class.
+        ///Initializes a new instance of the <see cref="UserPasswordValidationTokenRepository"/> class.
         /// </summary>
         /// <param name="dbContext">
         /// The db context.
         /// </param>
-        public UserPasswordValidationTokenRepository(LearningHubDbContext dbContext)
+        /// <param name="tzOffsetManager">
+        /// The Timezone offset manager.
+        /// </param>
+        public UserPasswordValidationTokenRepository(LearningHubDbContext dbContext, ITimezoneOffsetManager tzOffsetManager)
+            : base(dbContext, tzOffsetManager)
         {
-            this.DbContext = dbContext;
         }
-
-        /// <summary>
-        /// Gets the db context.
-        /// </summary>
-        protected LearningHubDbContext DbContext { get; }
 
         /// <inheritdoc/>
         public async Task<UserPasswordValidationToken> GetByToken(string lookup)

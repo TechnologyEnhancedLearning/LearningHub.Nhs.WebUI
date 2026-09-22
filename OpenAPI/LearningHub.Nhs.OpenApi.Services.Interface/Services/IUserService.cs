@@ -3,6 +3,7 @@
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities;
+    using LearningHub.Nhs.Models.ProfessionalBody;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.Models.Validation;
@@ -27,7 +28,7 @@
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        Task<UserLHBasicViewModel> GetByIdAsync(int id);
+       // Task<UserLHBasicViewModel> GetByIdAsync(int id);
 
         /// <summary>
         /// The get by id async.
@@ -115,5 +116,26 @@
         /// <param name="token">The <see cref="CancellationToken"/> token.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task RecordUnsuccessfulSigninAsync(int id, CancellationToken token = default);
+
+
+        ////////////////////////////////////////////////////////////
+
+        Task<PagedResultSet<UserViewModel>> SearchAsync(UserSearchRequest request);
+
+        Task<UserViewModel> GetByIdAsync(int id);
+
+        Task<UserViewModel> CreateAsync(CreateUserRequest request,int currentUserId);
+
+        Task<UserViewModel> PatchAsync(int id, PatchUserRequest request, int currentUserId);
+
+        Task<bool> SoftDeleteAsync(int id, int currentUserId);
+
+        Task<bool> RestoreAsync(int id, int currentUserId);
+
+        Task<bool> IsEmailAvailableAsync(string email, int? excludeUserId = null);
+
+        Task<IReadOnlyList<ProfessionalBodyViewModel>> GetProfessionalBodiesAsync();
+
+        Task<UserViewModel?> ClearProfessionalRegistrationAsync(int id, int currentUserId);
     }
 }

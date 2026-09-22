@@ -34,7 +34,8 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<User> GetByIdAsync(int id)
         {
-            return await DbContext.User.FirstOrDefaultAsync(n => n.Id == id);
+            return await this.DbContext.User.Include(x => x.ProfessionalBody)
+                .FirstOrDefaultAsync(user => user.Id == id && !user.Deleted);
         }
 
         /// <summary>
@@ -99,6 +100,36 @@
             var userAuthenticateDto = await this.DbContext.UserAuthenticateDto.FromSqlRaw("proc_UserDetailForAuthenticationByUserName @userName", param0).AsNoTracking().ToListAsync();
 
             return userAuthenticateDto.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets a user by id, including soft-deleted users.
+        /// </summary>
+        /// <param name="id">The user id.</param>
+        /// <returns>The user if found.</returns>
+        public async Task<User?> GetByIdIncludingDeletedAsync(int id)
+        {
+            return await this.DbContext.User.FirstOrDefaultAsync(user => user.Id == id);
+        }
+
+        /// <summary>
+        /// Checks whether an email address is available for use.
+        /// </summary>
+        /// <param name="email">The email address.</param>
+        /// <param name="excludeUserId">
+        /// Optional user id to exclude from the check.
+        /// </param>
+        /// <returns>True when the email address is available.</returns>
+        public async Task<bool> IsEmailAvailableAsync(string email, int? excludeUserId = null)
+        {
+            var query = this.DbContext.User.AsNoTracking().Where(user => user.EmailAddress == email);
+
+            if (excludeUserId.HasValue)
+            {
+                query = query.Where(user => user.Id != excludeUserId.Value);
+            }
+
+            return !await query.AnyAsync();
         }
     }
 }

@@ -6,7 +6,6 @@
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities;
-    using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.User;
     using LearningHub.NHS.OpenAPI.Helpers;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
@@ -17,7 +16,7 @@
     using Microsoft.Extensions.Options;
 
     /// <summary>
-    /// The log controller.
+    /// The user controller.
     /// </summary>
     [Route("User")]
     [ApiController]

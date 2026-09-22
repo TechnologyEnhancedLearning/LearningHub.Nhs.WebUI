@@ -21,20 +21,6 @@
                 .HasColumnName("Id")
                 .ValueGeneratedNever();
 
-            modelBuilder.Property(e => e.UserName)
-                .IsRequired()
-                .HasColumnName("UserName")
-                .HasMaxLength(50);
-
-            modelBuilder.Property(e => e.VersionEndTime)
-                .HasColumnName("VersionEndTime")
-                .HasDefaultValueSql("(CONVERT([datetime2],'9999-12-31 23:59:59.9999999'))");
-
-            modelBuilder.Property(e => e.VersionStartTime)
-                .HasColumnName("VersionStartTime")
-                .HasDefaultValueSql("(getutcdate())");
-
-            modelBuilder.Ignore(e => e.Token);
             modelBuilder.Ignore(e => e.AssignedRoles);
         }
     }

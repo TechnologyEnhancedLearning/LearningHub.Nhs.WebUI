@@ -53,10 +53,12 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
             services.AddScoped<IEmailChangeValidationTokenRepository, EmailChangeValidationTokenRepository>();
             services.AddScoped<IUserPasswordResetRequestsRepository, UserPasswordResetRequestsRepository>();
+            services.AddScoped<IUserPasswordValidationTokenRepository, UserPasswordValidationTokenRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
-            services.AddScoped<IReportHistoryRepository, ReportHistoryRepository>();   
+            services.AddScoped<IReportHistoryRepository, ReportHistoryRepository>();
+            services.AddScoped<IProfessionalBodyRepository, ProfessionalBodyRepository>();
             services.AddTransient<INotificationTemplateRepository, NotificationTemplateRepository>();
             services.AddTransient<IBookmarkRepository, BookmarkRepository>();
             services.AddTransient<IProviderRepository, ProviderRepository>();
@@ -64,6 +66,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddTransient<INotificationRepository, NotificationRepository>();
             services.AddTransient<IUserNotificationRepository, UserNotificationRepository>();
             services.AddTransient<IScopeRepository, ScopeRepository>();
+            
 
             // Resources
             services.AddScoped<IArticleResourceVersionRepository, ArticleResourceVersionRepository>();

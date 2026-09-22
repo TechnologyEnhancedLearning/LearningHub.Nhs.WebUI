@@ -48,5 +48,9 @@
         /// The <see cref="Task"/>.
         /// </returns>
         Task<UserAuthenticateDto> GetUserDetailForAuthentication(string username);
+
+        Task<User> GetByIdIncludingDeletedAsync(int id);
+
+        Task<bool> IsEmailAvailableAsync(string email, int? excludeUserId = null);
     }
 }

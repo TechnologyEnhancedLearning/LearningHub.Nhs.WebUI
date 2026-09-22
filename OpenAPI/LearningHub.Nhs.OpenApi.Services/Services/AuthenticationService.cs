@@ -24,7 +24,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthenticationService"/> class.
         /// </summary>
-        /// <param name="elfhUserService">The user service.</param>
         /// <param name="userService">The Lh user service.</param>
         /// <param name="settings">The settings.</param>
         /// <param name="logger">The logger.</param>

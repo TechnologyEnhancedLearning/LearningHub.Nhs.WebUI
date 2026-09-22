@@ -8,6 +8,8 @@
 
 @{
     var restricted = settings.Value.Restricted;
+    var courseUrl = settings.Value.VLECoursesUrl;
+    var calendarUrl = settings.Value.CalendarUrl;
     var createAccountDisplay = restricted ? "none" : "flex";
 }
 
@@ -68,6 +70,25 @@
             </a>
         </li>
     }
+    @if (Model.ShowVLECourses)
+    {
+        <li class="nhsuk-header__navigation-item @Html.IsSelected("VLE Courses")">
+            <a class="nhsuk-header__navigation-link" href="@settings.Value.VLECoursesUrl">
+                VLECourses
+
+            </a>
+        </li>
+    }
+    @if (Model.ShowCalendar)
+    {
+        <li class="nhsuk-header__navigation-item @Html.IsSelected("Calendar")">
+            <a class="nhsuk-header__navigation-link" href="@settings.Value.CalendarUrl">
+                Calendar
+
+            </a>
+        </li>
+    }
+
 
 
     @if (Context.Request.Path.Value != "/Home/Error" && !SystemOffline())

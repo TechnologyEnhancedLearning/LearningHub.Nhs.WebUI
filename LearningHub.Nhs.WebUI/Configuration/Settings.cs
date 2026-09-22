@@ -202,6 +202,16 @@ namespace LearningHub.Nhs.WebUI.Configuration
         public string ScriptCataloguereference { get; set; }
 
         /// <summary>
+        /// Gets or sets the VLECoursesUrl.
+        /// </summary>
+        public string VLECoursesUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CalendarUrl.
+        /// </summary>
+        public string CalendarUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets the ScriptCatalogueNodeId.
         /// </summary>
         public int ScriptCatalogueNodeId { get; set; }

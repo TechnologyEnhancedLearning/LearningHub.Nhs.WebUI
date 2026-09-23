@@ -18,6 +18,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Maintenance;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Messaging;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Migrations;
+    using LearningHub.Nhs.OpenApi.Repositories.Repositories.Organisation;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Resources;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -59,6 +60,9 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddScoped<IReportHistoryRepository, ReportHistoryRepository>();
             services.AddScoped<IProfessionalBodyRepository, ProfessionalBodyRepository>();
+            services.AddScoped<IOrganisationRepository, OrganisationRepository>();
+            services.AddScoped<IUserExternalSystemRepository, UserExternalSystemRepository>();
+            services.AddScoped<IExternalSystemUserRepository, ExternalSystemUserRepository>();
             services.AddTransient<INotificationTemplateRepository, NotificationTemplateRepository>();
             services.AddTransient<IBookmarkRepository, BookmarkRepository>();
             services.AddTransient<IProviderRepository, ProviderRepository>();
@@ -67,6 +71,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddTransient<IUserNotificationRepository, UserNotificationRepository>();
             services.AddTransient<IScopeRepository, ScopeRepository>();
             
+
 
             // Resources
             services.AddScoped<IArticleResourceVersionRepository, ArticleResourceVersionRepository>();

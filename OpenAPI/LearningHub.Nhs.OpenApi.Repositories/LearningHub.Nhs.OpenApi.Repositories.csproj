@@ -17,10 +17,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="..\..\..\LearningHub.Nhs.UserApi\LearningHub.Nhs.UserApi.Repository\UserPasswordValidationTokenRepository.cs" Link="Repositories\UserPasswordValidationTokenRepository.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\LearningHub.Nhs.OpenApi.Repositories.Interface\LearningHub.Nhs.OpenApi.Repositories.Interface.csproj" />
 	</ItemGroup>
 

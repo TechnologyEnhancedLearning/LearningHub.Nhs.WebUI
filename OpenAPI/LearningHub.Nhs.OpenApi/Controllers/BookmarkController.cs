@@ -47,7 +47,6 @@
 
             var fallbackBookmarks = await this.bookmarkService.GetAllByParent(this.TokenWithoutBearer);
             return this.Ok(fallbackBookmarks);
-
         }
 
         /// <summary>

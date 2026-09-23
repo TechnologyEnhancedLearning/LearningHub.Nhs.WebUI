@@ -18,10 +18,11 @@
 
 	<ItemGroup>
 		<PackageReference Include="LearningHub.Nhs.Models" Version="4.0.206" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\WebAPI\LearningHub.Nhs.Repository.Interface\LearningHub.Nhs.Repository.Interface.csproj" />
 		<ProjectReference Include="..\LearningHub.Nhs.OpenApi.Models\LearningHub.Nhs.OpenApi.Models.csproj" />
 	</ItemGroup>
 

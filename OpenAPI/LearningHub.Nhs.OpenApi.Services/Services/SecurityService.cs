@@ -6,7 +6,6 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web;
-    using elfhHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Email;
     using LearningHub.Nhs.Models.Email.Models;

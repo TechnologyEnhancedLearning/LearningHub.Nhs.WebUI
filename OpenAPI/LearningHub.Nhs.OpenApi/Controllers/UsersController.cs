@@ -16,7 +16,7 @@
     /// </summary>
     [ApiController]
     [Authorize]
-    [Route("api/users")]
+    [Route("users")]
     public class UsersController : OpenApiControllerBase
     {
         private readonly IUserService userService;

@@ -1,7 +1,6 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
 {
     using System.Threading.Tasks;
-    using elfhHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Common;
 
     /// <summary>

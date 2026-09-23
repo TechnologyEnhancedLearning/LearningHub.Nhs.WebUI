@@ -29,5 +29,10 @@
         /// The InPlatformReport.
         /// </summary>
         public const string InPlatformReport = "InPlatformReport";
+
+        /// <summary>
+        /// The VLENavigation.
+        /// </summary>
+        public const string VLENavigation = "VLENavigation";
     }
 }

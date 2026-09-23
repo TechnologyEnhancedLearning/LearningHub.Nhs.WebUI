@@ -285,5 +285,15 @@ namespace LearningHub.Nhs.WebUI.Configuration
         /// Gets or sets the StatMandInstanceName.
         /// </summary>
         public string StatMandInstanceName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the VLECoursesUrl.
+        /// </summary>
+        public string VLECoursesUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CalendarUrl.
+        /// </summary>
+        public string CalendarUrl { get; set; }
     }
 }

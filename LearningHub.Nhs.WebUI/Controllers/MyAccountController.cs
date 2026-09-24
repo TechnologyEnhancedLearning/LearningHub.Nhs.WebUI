@@ -15,18 +15,14 @@
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
-    using LearningHub.Nhs.WebUI.Models;
     using LearningHub.Nhs.WebUI.Models.Account;
     using LearningHub.Nhs.WebUI.Models.UserProfile;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.DataProtection.KeyManagement;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Routing;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using Microsoft.IdentityModel.Tokens;
     using NHSUKFrontendRazor.ViewModels;
     using ChangePasswordViewModel = LearningHub.Nhs.WebUI.Models.UserProfile.ChangePasswordViewModel;
     using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;

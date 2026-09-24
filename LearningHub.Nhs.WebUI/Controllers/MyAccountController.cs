@@ -142,19 +142,9 @@
         [Route("myaccount-employment")]
         public async Task<IActionResult> MyEmploymentDetails(bool? checkDetails = false)
         {
-            string loginWizardCacheKey = $"{this.CurrentUserId}:LoginWizard";
-            var (cacheExists, loginWizard) = await this.cacheService.TryGetAsync<Models.Account.LoginWizardViewModel>(loginWizardCacheKey);
-
-            if (checkDetails == true || cacheExists)
+            if (checkDetails == true)
             {
                 this.ViewBag.CheckDetails = true;
-
-                var rules = loginWizard.LoginWizardStagesRemaining.SelectMany(l => l.LoginWizardRules.Where(r => r.Required));
-                foreach (var rule in rules)
-                {
-                    this.ModelState.AddModelError(string.Empty, rule.Description);
-                }
-
                 if (this.TempData.ContainsKey("IsJobRoleRequired"))
                 {
                     if (this.TempData["IsJobRoleRequired"] != null && (bool)this.TempData["IsJobRoleRequired"] == true)

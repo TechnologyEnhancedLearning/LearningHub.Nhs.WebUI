@@ -84,5 +84,15 @@
         /// Gets or sets a value indicating whether ShowHome.
         /// </summary>
         public bool ShowHome { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show VLE Courses.
+        /// </summary>
+        public bool ShowVLECourses { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show VLE Calendar.
+        /// </summary>
+        public bool ShowCalendar { get; set; }
     }
 }

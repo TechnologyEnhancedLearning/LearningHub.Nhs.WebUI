@@ -182,5 +182,20 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// Gets or sets <see cref="ReportApiClientIdentityKey"/>.
         /// </summary>
         public string ReportApiClientIdentityKey { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="VLECoursesUrl"/>.
+        /// </summary>
+        public string VLECoursesUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets <see cref="CalendarUrl"/>.
+        /// </summary>
+        public string CalendarUrl { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the VLEUserGroupId.
+        /// </summary>
+        public int VLEUserGroupId { get; set; }
     }
 }

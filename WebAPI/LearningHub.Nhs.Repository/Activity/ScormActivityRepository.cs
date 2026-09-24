@@ -7,11 +7,9 @@ namespace LearningHub.Nhs.Repository.Activity
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
-    using System.Runtime.InteropServices.WindowsRuntime;
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities.Activity;
-    using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Repository.Interface;
     using LearningHub.Nhs.Repository.Interface.Activity;
     using Microsoft.Data.SqlClient;

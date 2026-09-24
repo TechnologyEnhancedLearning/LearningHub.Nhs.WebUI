@@ -19,12 +19,14 @@
     using LearningHub.Nhs.WebUI.Models.Account;
     using LearningHub.Nhs.WebUI.Models.UserProfile;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.DataProtection.KeyManagement;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Microsoft.IdentityModel.Tokens;
     using NHSUKFrontendRazor.ViewModels;
     using ChangePasswordViewModel = LearningHub.Nhs.WebUI.Models.UserProfile.ChangePasswordViewModel;
     using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
@@ -109,34 +111,29 @@
         /// <param name="returnUrl">The redirect back url.</param>
         /// <param name="checkDetails">Whether to check account details.</param>
         /// <returns>IActionResult.</returns>
-        [HttpGet]
-        [Route("myaccount")]
         public async Task<IActionResult> Index(string returnUrl = null, bool? checkDetails = false)
         {
-            string loginWizardCacheKey = $"{this.CurrentUserId}:LoginWizard";
-            var (cacheExists, loginWizard) = await this.cacheService.TryGetAsync<Models.Account.LoginWizardViewModel>(loginWizardCacheKey);
-
-            if (checkDetails == true || cacheExists)
+            if (checkDetails == true)
             {
                 this.ViewBag.CheckDetails = true;
 
-                var rules = loginWizard.LoginWizardStagesRemaining.SelectMany(l => l.LoginWizardRules.Where(r => r.Required));
-                foreach (var rule in rules)
-                {
-                    this.ModelState.AddModelError(string.Empty, rule.Description);
-                }
-
                 if (this.TempData.ContainsKey("IsJobRoleRequired"))
                 {
-                    if (this.TempData["IsJobRoleRequired"] != null && (bool)this.TempData["IsJobRoleRequired"] == true)
+                    if (this.TempData["IsJobRoleRequired"] != null &&
+                        (bool)this.TempData["IsJobRoleRequired"] == true)
                     {
-                        this.ModelState.AddModelError(string.Empty, CommonValidationErrorMessages.RoleRequired);
+                        this.ModelState.AddModelError(
+                            string.Empty,
+                            CommonValidationErrorMessages.RoleRequired);
+
                         this.TempData["IsJobRoleRequired"] = null;
                     }
                 }
             }
 
-            var userPersonalDetails = await this.userService.GetMyAccountPersonalDetailsAsync();
+            var userPersonalDetails =
+                await this.userService.GetMyAccountPersonalDetailsAsync();
+
             return this.View("Index", userPersonalDetails);
         }
 
@@ -198,6 +195,7 @@
         [Route("myaccount/ChangePersonalDetails")]
         public async Task<IActionResult> ChangePersonalDetails()
         {
+            await this.cacheService.SetAsync($"{this.CurrentUserId}:LoginWizard", "start");
             var userPersonalDetails = await this.userService.GetMyAccountPersonalDetailsAsync();
             return this.View("ChangePersonalDetails", userPersonalDetails);
         }

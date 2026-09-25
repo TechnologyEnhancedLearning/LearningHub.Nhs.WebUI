@@ -1,0 +1,49 @@
+@using TaskListViewModel = NHSUKFrontendRazor.ViewModels.TaskListViewModel;
+@using TaskStateStyle = NHSUKFrontendRazor.ViewModels.TaskStateStyle;
+
+<ul class="nhsuk-task-list">
+    @foreach (var task in Model.ListItems)
+    {
+        var hasLink = task.StateStyle != TaskStateStyle.UNSTARTED;
+        var statusClass = task.StateStyle switch
+        {
+            TaskStateStyle.COMPLETED => "nhsuk-task-list__status nhsuk-task-list__status--completed",
+            TaskStateStyle.INCOMPLETE => "nhsuk-task-list__status",
+            TaskStateStyle.UNSTARTED => "nhsuk-task-list__status nhsuk-task-list__status--cannot-start-yet",
+            _ => "nhsuk-task-list__status"
+        };
+        var statusId = task.StateStyle == TaskStateStyle.UNSTARTED
+        ? $"task-list-{task.Id}-status"
+        : task.Id;
+
+
+        <li class="nhsuk-task-list__item @(hasLink ? "nhsuk-task-list__item--with-link" : "")">
+            <div class="nhsuk-task-list__name-and-hint">
+                @if (hasLink)
+                {
+					<a class="nhsuk-link nhsuk-task-list__link" asp-controller="@task.AspController" asp-action="@task.AspAction" asp-all-route-data="@task.AspRouteData" aria-describedby="@statusId">
+                        @task.Name
+                    </a>
+                }
+                else
+                {
+                    <div>@task.Name</div>
+                }
+                @if (!String.IsNullOrWhiteSpace(task.HintText))
+                {
+                    <div id="@statusId" class="nhsuk-task-list__hint">@task.HintText</div>
+                }
+            </div>
+            <div class="@statusClass" id="@statusId">
+                @if (task.StateStyle == TaskStateStyle.INCOMPLETE)
+                {
+                    <strong class="nhsuk-tag nhsuk-tag--blue">@task.State</strong>
+                }
+                else
+                {
+                    @task.State
+                }
+            </div>
+        </li>
+    }
+</ul>

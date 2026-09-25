@@ -1,0 +1,33 @@
+@model NHSUKFrontendRazor.ViewModels.TableViewModel
+
+<table role="table" class="@(Model.IsResponsive ? "nhsuk-table-responsive" : "")">
+    <caption class="nhsuk-table__caption">@Model.Title</caption>
+    <thead role="rowgroup" class="nhsuk-table__head">
+        <tr role="row">
+            @foreach (var col in Model.Rows[0])
+            {
+                <th role="columnheader" class="@(Model.HasNumericData ? "nhsuk-table__header--numeric" : "")" scope="col">
+                    @col.Header
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody class="nhsuk-table__body">
+        @foreach (var row in Model.Rows)
+        {
+            <tr role="row" class="nhsuk-table__row">
+                @foreach (var col in row)
+                {
+                    <td role="cell" class="nhsuk-table__cell @(Model.HasNumericData ? "nhsuk-table__cell--numeric" : "")">
+                        @if (Model.IsResponsive)
+                        {
+                            <span class="nhsuk-table-responsive__heading" aria-hidden="true">@col.Header </span>
+                        }
+
+                        @col.Column
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,23 @@
+@model NHSUKFrontendRazor.ViewModels.BreadcrumbsViewModel
+
+@{
+    var lastLink = Model.Links.Count > 0 ? Model.Links[Model.Links.Count - 1] : null;
+}
+<nav class="nhsuk-breadcrumb" aria-label="Breadcrumb">
+    <ol class="nhsuk-breadcrumb__list">
+        @foreach (var link in Model.Links)
+        {
+            <li class="nhsuk-breadcrumb__list-item">
+                <a class="nhsuk-breadcrumb__link" href="@link.Url">@link.LinkText</a>
+            </li>
+        }
+    </ol>
+
+    @if (Model.Links.Count > 0)
+    {
+        <a class="nhsuk-back-link" href="@lastLink.Url">
+            @lastLink.LinkText
+        </a>
+    }
+
+</nav>

@@ -1,0 +1,32 @@
+@model NHSUKFrontendRazor.ViewModels.HeroViewModel
+
+@{
+	var hasImage = !String.IsNullOrWhiteSpace(Model.ImageSrc);
+	var hasHeading = !String.IsNullOrWhiteSpace(Model.Heading);
+	var hasTextContent = !String.IsNullOrWhiteSpace(Model.TextContent);
+}
+<section class="nhsuk-hero @(hasImage ? "nhsuk-hero--image" : "") @(hasTextContent ? "nhsuk-hero--image-description" : "")" @(hasImage ? $"style=background-image:url({Model.ImageSrc})" : "")>
+	<div class="nhsuk-hero__overlay">
+		@if (hasHeading || hasTextContent)
+		{
+			<div class="nhsuk-width-container @(!hasImage ? "nhsuk-hero--border" : "")">
+				<div class="nhsuk-grid-row">
+					<div class="nhsuk-grid-column-two-thirds">
+						<div class="@(hasImage ? "nhsuk-hero-content" : "nhsuk-hero__wrapper")">
+							@if (hasHeading)
+							{
+								<h1 class="nhsuk-u-margin-bottom-3">@Model.Heading</h1>
+							}
+							@if (hasTextContent)
+							{
+								<p class="nhsuk-body-l nhsuk-u-margin-bottom-0">@Model.TextContent</p>
+							}
+
+							<span class="nhsuk-hero__arrow" aria-hidden="true"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</section>

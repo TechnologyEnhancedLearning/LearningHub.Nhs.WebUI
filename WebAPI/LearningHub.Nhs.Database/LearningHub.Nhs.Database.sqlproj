@@ -594,6 +594,8 @@
     <Build Include="Stored Procedures\Hierarchy\GetCatalogueAdminDetails.sql" />
     <None Include="Scripts\ELFH Database Scripts\AddUserHistoryType.sql" />
     <Build Include="Stored Procedures\Hub\GetPGVLERoleUserGroupGetByUserId.sql" />
+    <Build Include="Stored Procedures\Resources\GetResourceReferencesByOriginalIds.sql" />
+    <None Include="Scripts\Pre-Deploy\Scripts\TD-7819-Create_Table_Type.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

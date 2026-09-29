@@ -1,0 +1,6 @@
+﻿
+CREATE TYPE dbo.IntIdsTableList AS TABLE
+(
+    Id INT NOT NULL PRIMARY KEY
+);
+GO

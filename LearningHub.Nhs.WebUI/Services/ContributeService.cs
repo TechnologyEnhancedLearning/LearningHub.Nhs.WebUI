@@ -70,7 +70,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -104,7 +104,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -138,7 +138,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -171,7 +171,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -201,7 +201,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -232,7 +232,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -265,7 +265,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -298,7 +298,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -328,7 +328,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (apiResponse.ValidationResult == null)
@@ -364,7 +364,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<FileChunkDetailViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -807,7 +807,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -841,7 +841,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -875,7 +875,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -909,7 +909,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -943,7 +943,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -977,7 +977,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1011,7 +1011,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1045,7 +1045,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1079,7 +1079,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1136,7 +1136,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1170,7 +1170,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1204,7 +1204,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1238,7 +1238,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1343,7 +1343,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1376,7 +1376,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)

@@ -356,7 +356,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = response.Content.ReadAsStringAsync().Result;
+                    var result = await response.Content.ReadAsStringAsync();
                     ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result) as ApiResponse;
 
                     if (!apiResponse.Success)
@@ -399,7 +399,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = response.Content.ReadAsStringAsync().Result;
+                    var result = await response.Content.ReadAsStringAsync();
                     ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result) as ApiResponse;
 
                     if (!apiResponse.Success)
@@ -438,7 +438,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = response.Content.ReadAsStringAsync().Result;
+                    var result = await response.Content.ReadAsStringAsync();
                     ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result) as ApiResponse;
 
                     if (!apiResponse.Success)
@@ -480,7 +480,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = response.Content.ReadAsStringAsync().Result;
+                    var result = await response.Content.ReadAsStringAsync();
                     searchViewModel = JsonConvert.DeserializeObject<SearchViewModel>(result);
 
                     if (searchViewModel.DocumentModel != null
@@ -518,7 +518,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = response.Content.ReadAsStringAsync().Result;
+                    var result = await response.Content.ReadAsStringAsync();
                     ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result) as ApiResponse;
 
                     if (!apiResponse.Success)
@@ -604,7 +604,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = response.Content.ReadAsStringAsync().Result;
+                    var result = await response.Content.ReadAsStringAsync();
                     ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result) as ApiResponse;
 
                     if (!apiResponse.Success)
@@ -688,7 +688,7 @@ namespace LearningHub.Nhs.WebUI.Services
             var viewModel = new AutoSuggestionModel();
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewModel = JsonConvert.DeserializeObject<AutoSuggestionModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
@@ -718,7 +718,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = response.Content.ReadAsStringAsync().Result;
+                    var result = await response.Content.ReadAsStringAsync();
                     ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result) as ApiResponse;
 
                     if (!apiResponse.Success)

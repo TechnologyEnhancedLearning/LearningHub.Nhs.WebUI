@@ -63,7 +63,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -95,7 +95,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<ArticleViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -124,7 +124,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<AudioViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -153,7 +153,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<ResourceHeaderViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -181,7 +181,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 fileTypeList = JsonConvert.DeserializeObject<List<FileTypeViewModel>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -210,7 +210,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<GenericFileViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -239,7 +239,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<HtmlResourceViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -268,7 +268,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<ScormViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
@@ -296,7 +296,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<ExternalContentDetailsViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
@@ -325,7 +325,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -357,7 +357,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<ImageViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -386,7 +386,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 resourceInfo = JsonConvert.DeserializeObject<ResourceInformationViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -415,7 +415,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
 
                 resourceItem = JsonConvert.DeserializeObject<ResourceItemViewModel>(result);
 
@@ -461,7 +461,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 licences = JsonConvert.DeserializeObject<List<ResourceLicenceViewModel>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -490,7 +490,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 resourceLocations = JsonConvert.DeserializeObject<CatalogueLocationsViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -519,7 +519,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<ResourceDetailViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -548,7 +548,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<ResourceVersionViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -577,7 +577,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<ResourceVersionExtendedViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -617,7 +617,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<VideoViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -656,7 +656,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<WebLinkViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -685,7 +685,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<CaseViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -714,7 +714,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<AssessmentViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -743,7 +743,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<AssessmentViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -772,7 +772,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<AssessmentProgressViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -801,7 +801,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<AssessmentProgressViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -831,7 +831,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<List<FileViewModel>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -863,7 +863,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -892,7 +892,7 @@ namespace LearningHub.Nhs.WebUI.Services
             bool hasResources = false;
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 hasResources = bool.Parse(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -924,7 +924,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -938,7 +938,7 @@ namespace LearningHub.Nhs.WebUI.Services
             }
             else
             {
-                var err = response.Content.ReadAsStringAsync().Result;
+                var err = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(err);
                 string message = "ERROR:\r\n";
                 foreach (string detail in apiResponse.ValidationResult.Details)
@@ -971,7 +971,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -985,7 +985,7 @@ namespace LearningHub.Nhs.WebUI.Services
             }
             else
             {
-                var err = response.Content.ReadAsStringAsync().Result;
+                var err = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(err);
                 string message = "ERROR:\r\n";
                 foreach (string detail in apiResponse.ValidationResult.Details)
@@ -1064,7 +1064,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<ResourceVersionValidationResultViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -1093,7 +1093,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<ResourceVersionExtendedViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -1124,7 +1124,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1138,7 +1138,7 @@ namespace LearningHub.Nhs.WebUI.Services
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
                 if (apiResponse.ValidationResult == null)
                 {
@@ -1168,7 +1168,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1182,7 +1182,7 @@ namespace LearningHub.Nhs.WebUI.Services
             }
             else
             {
-                var err = response.Content.ReadAsStringAsync().Result;
+                var err = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(err);
                 string message = "ERROR:\r\n";
                 foreach (string detail in apiResponse.ValidationResult.Details)
@@ -1214,7 +1214,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1246,7 +1246,7 @@ namespace LearningHub.Nhs.WebUI.Services
             ApiResponse apiResponse = null;
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1260,7 +1260,7 @@ namespace LearningHub.Nhs.WebUI.Services
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
                 if (apiResponse.ValidationResult == null)
                 {
@@ -1286,7 +1286,7 @@ namespace LearningHub.Nhs.WebUI.Services
             ApiResponse apiResponse = null;
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -1300,7 +1300,7 @@ namespace LearningHub.Nhs.WebUI.Services
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
                 if (apiResponse.ValidationResult == null)
                 {
@@ -1328,7 +1328,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 filePaths = JsonConvert.DeserializeObject<List<string>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized

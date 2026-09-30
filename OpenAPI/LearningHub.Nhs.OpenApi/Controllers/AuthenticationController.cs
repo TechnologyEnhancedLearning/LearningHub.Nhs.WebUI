@@ -12,7 +12,7 @@
     /// Authentication operations.
     /// </summary>
     [Authorize(Policy = "AuthorizeOrCallFromLH")]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {

@@ -6,7 +6,7 @@
 --
 -- 28-09-2026  SA	Initial Revision
 -------------------------------------------------------------------------------
-ALTER PROCEDURE [resources].[GetResourceReferencesByOriginalIds]
+CREATE PROCEDURE [resources].[GetResourceReferencesByOriginalIds]
 (
     @OriginalResourceReferenceIds dbo.IntIdsTableList READONLY
 )

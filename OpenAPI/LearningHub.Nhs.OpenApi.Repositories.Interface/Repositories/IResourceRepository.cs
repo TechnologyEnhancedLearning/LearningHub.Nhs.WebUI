@@ -29,6 +29,21 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
             IEnumerable<int> originalResourceReferenceIds);
 
         /// <summary>
+        /// Gets resource references by their original resource reference Ids.
+        /// </summary>
+        /// <param name="originalResourceReferenceIds"><see cref="originalResourceReferenceIds"/>.</param>
+        /// <returns>Resource references.</returns>
+        Task<List<BulkResourceReferenceDTO>> GetBulkResourceReferencesByOriginalResourceReferenceIds(List<int> originalResourceReferenceIds);
+
+        /// <summary>
+        /// Gets resource activity for resorceids and userIds
+        /// </summary>
+        /// <param name="resourceIds"><see cref="resourceIds"/>.</param>
+        /// <param name="userId"><see cref="userId"/>.</param>
+        /// <returns>Resource references.</returns>
+        Task<List<ResourceActivityDTO>> GetBulkResourceActivityPerResourceMajorVersion(List<int> resourceIds, int userId);
+
+        /// <summary>
         /// Gets resource activity for resourceReferenceIds and userIds.
         /// </summary>
         /// <param name="resourceReferenceIds"><see cref="resourceReferenceIds"/>.</param>

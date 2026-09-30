@@ -39,6 +39,24 @@ namespace LearningHub.Nhs.OpenApi.Services.Helpers
 
             return catalogue;
         }
+        
+        /// <summary>
+        /// The get catalogue from resource reference method.
+        /// </summary>
+        /// <param name="resourceReference">The resourceReference.</param>
+        /// <returns>The catalogue the resource reference is part of.</returns>
+        public static CatalogueViewModel GetCatalogueDetails(this BulkResourceReferenceDTO resourceReference)
+        {
+            var catalogue = new CatalogueViewModel(0, NoCatalogueText, false);
+
+            if (resourceReference.CatalogueId != 0)
+            {           
+                catalogue = new CatalogueViewModel(resourceReference.CatalogueId,resourceReference.CatalogueName,resourceReference.RestrictedAccess);
+            }
+
+            return catalogue;
+        }
+
 
         /// <summary>
         /// Orders the IEnumerable of resources according to the sequence of ids given.

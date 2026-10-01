@@ -1,0 +1,17 @@
+@model NHSUKFrontendRazor.ViewModels.FieldsetViewModel
+
+<div class="nhsuk-tabs js-enabled" data-module="nhsuk-tabs">
+    <fieldset class="nhsuk-fieldset">
+        <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--l">
+            <h1 class="nhsuk-fieldset__heading">
+                @Model.Title
+            </h1>
+        </legend>
+
+        @foreach (var field in Model.FieldList)
+        {
+            @field.Content(null)
+        }
+
+    </fieldset>
+</div>

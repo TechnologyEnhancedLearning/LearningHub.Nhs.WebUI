@@ -1158,14 +1158,13 @@
                             {
                                 <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>PRN:</b> @Model.ProfessionalRegistrationNumber</div>
                             }
-                            @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase3) ||
-                           await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase4))
+                            @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase1))
                             {
-                                <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>Email:</b> @Model.UserViewModel.EmailAddress</div>
+                                <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>Username:</b> @Model.UserViewModel.UserName</div>
                             }
                             else
                             {
-                                <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>Username:</b> @Model.UserViewModel.UserName</div>
+                                <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19"><b>Email:</b> @Model.UserViewModel.EmailAddress</div>
                             }
                             <div class="nhsuk-u-padding-bottom-2 nhsuk-u-font-size-19 nhsuk-u-padding-bottom-4"><b>Report generated on</b> @DateTime.Now.ToString("dd MMMM yyyy")</div>
                             <table style="width:100%;table-layout:fixed;margin-top:0px;" role="table" class="nhsuk-table-responsive">

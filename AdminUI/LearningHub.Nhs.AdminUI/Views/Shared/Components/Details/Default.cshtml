@@ -1,0 +1,14 @@
+@model NHSUKFrontendRazor.ViewModels.DetailsViewModel
+
+<details class="nhsuk-details">
+    <summary class="nhsuk-details__summary">
+        <span class="nhsuk-details__summary-text">
+            @Model.Summary
+        </span>
+    </summary>
+    <div class="nhsuk-details__text">
+
+        @Html.Raw(@Model.Content)
+
+    </div>
+</details>

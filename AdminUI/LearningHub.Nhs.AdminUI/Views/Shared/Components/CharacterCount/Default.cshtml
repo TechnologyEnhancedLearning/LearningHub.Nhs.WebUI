@@ -1,0 +1,35 @@
+@model NHSUKFrontendRazor.ViewModels.CharacterCountViewModel
+
+<div class="nhsuk-character-count" data-module="nhsuk-character-count"
+@(Model.MaxWords != null ? $"data-maxwords={Model.MaxWords}" : $"data-maxlength={Model.MaxLength}") @(Model.Threshold != null ? $"data-threshold={Model.Threshold}" : "")>
+
+    <div class="nhsuk-form-group @(Model.HasError ? "nhsuk-form-group--error" : "")">
+        <h1 class="nhsuk-label-wrapper">
+            @if (!String.IsNullOrWhiteSpace(Model.Label))
+            {
+                <label class="nhsuk-label nhsuk-label--l" for=@(Model.Id)>
+                    @Model.Label
+                </label>
+            }
+        </h1>
+        @if (!String.IsNullOrWhiteSpace(Model.Hint))
+        {
+            <div class="nhsuk-hint" id="@(Model.Id)-hint">
+                @Model.Hint
+            </div>
+        }
+
+        @if (Model.HasError)
+        {
+            <span class="nhsuk-error-message" id="@(Model.Id)-error">
+                <span class="nhsuk-u-visually-hidden">Error:</span> The input for the question "@Model.Label" must be @(Model.MaxWords != null ? Model.MaxWords + " words or less" : Model.MaxLength + " characters or less")
+            </span>
+        }
+        <textarea class="nhsuk-textarea nhsuk-js-character-count" id=@(Model.Id) name=@(Model.Id) rows="5" aria-describedby="@(Model.Id)-hint"></textarea>
+    </div>
+
+    <div class="nhsuk-hint nhsuk-character-count__message" id="@(Model.Id)-info">
+        You can enter up to @(Model.MaxWords != null ? Model.MaxWords + " words" : Model.MaxLength + " characters")
+    </div>
+
+</div>

@@ -1,0 +1,28 @@
+@model NHSUKFrontendRazor.ViewModels.TabsViewModel
+
+<div class="nhsuk-tabs js-enabled" data-module="nhsuk-tabs">
+    <h2 class="nhsuk-tabs__title">
+        @Model.Title
+    </h2>
+
+    <ul class="nhsuk-tabs__list">
+
+        @foreach (var tab in Model.TabsList)
+        {
+            <li class="nhsuk-tabs__list-item @(tab.IsActive ? "nhsuk-tabs__list-item--selected" : "")">
+                <a class="nhsuk-tabs__tab" href="#@tab.Name.ToLower().Replace(" ", "-")">
+                    @tab.Name
+                </a>
+            </li>
+        }
+    </ul>
+
+    @foreach (var tab in Model.TabsList)
+    {
+        <div class="nhsuk-tabs__panel @(!tab.IsActive ? "nhsuk-tabs__panel--hidden" : "")" id="@tab.Name.ToLower().Replace(" ", "-")">
+			@tab.Content(null)
+        </div>
+    }
+
+
+</div>

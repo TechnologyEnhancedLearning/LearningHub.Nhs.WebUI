@@ -1,0 +1,30 @@
+@model NHSUKFrontendRazor.ViewModels.SummaryListViewModel
+
+@{
+	bool hasActions = !String.IsNullOrWhiteSpace(@Model.SummaryListItem.First().AspController);
+}
+
+<dl class="nhsuk-summary-list @(!Model.HasBorder ?  "nhsuk-summary-list--no-border" : "")">
+	@foreach (var listItem in Model.SummaryListItem)
+	{
+		<div class="nhsuk-summary-list__row">
+			<dt class="nhsuk-summary-list__key">
+				@listItem.Title
+			</dt>
+			<dd class="nhsuk-summary-list__value">
+				@listItem.Description
+			</dd>
+
+			@if (hasActions)
+			{
+				<dd class="nhsuk-summary-list__actions">
+
+					<a asp-controller="@listItem.AspController" asp-action="@listItem.AspAction" asp-all-route-data="@listItem.AspRouteData">
+						@listItem.ActionName<span class="nhsuk-u-visually-hidden"> @listItem.Title</span>
+					</a>
+
+				</dd>
+			}
+		</div>
+	}
+</dl>

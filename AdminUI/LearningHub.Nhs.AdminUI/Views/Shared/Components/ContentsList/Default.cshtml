@@ -1,0 +1,22 @@
+@model NHSUKFrontendRazor.ViewModels.ContentsListViewModel
+
+<nav class="nhsuk-contents-list" role="navigation" aria-label="@Model.Name">
+    <h2 class="nhsuk-u-visually-hidden">Contents</h2>
+    <ol class="nhsuk-contents-list__list">
+        @foreach (var item in Model.ListItems)
+        {
+            if (item.IsActive)
+            {
+                <li class="nhsuk-contents-list__item" aria-current="page">
+                    <span class="nhsuk-contents-list__current">@item.Title</span>
+                </li>
+            }
+            else
+            {
+                <li class="nhsuk-contents-list__item">
+                    <a class="nhsuk-contents-list__link" asp-controller="@item.AspController" asp-action="@item.AspAction" asp-all-route-data="@item.AspRouteData">@item.Title</a>
+                </li>
+            }
+        }
+    </ol>
+</nav>

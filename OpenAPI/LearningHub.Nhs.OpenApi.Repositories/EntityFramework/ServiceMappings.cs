@@ -126,6 +126,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, UserGroupAttributeMap>();
             services.AddSingleton<IEntityTypeMap, UserNotificationMap>();
             services.AddSingleton<IEntityTypeMap, UserUserGroupMap>();
+            services.AddSingleton<IEntityTypeMap, UserGroupReporterMap>();
             services.AddSingleton<IEntityTypeMap, VideoMap>();
             services.AddSingleton<IEntityTypeMap, VideoFileMap>();
             services.AddSingleton<IEntityTypeMap, WebLinkResourceVersionMap>();

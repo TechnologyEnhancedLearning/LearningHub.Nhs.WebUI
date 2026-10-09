@@ -63,5 +63,40 @@
         /// <param name="userId">The userId.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<List<RoleUserGroup>> GetAllforSearch(int catalogueNodeId, int userId);
+
+        ////////////////
+
+        /// <summary>
+        /// Retrieves an active role-to-user-group assignment for the specified role, user group, and scope.
+        /// </summary>
+        /// <param name="roleId">The identifier of the role.</param>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <param name="scopeId">The identifier of the scope.</param>
+        /// <returns>The matching active role-user-group assignment if found; otherwise, <c>null</c>.</returns>
+        Task<RoleUserGroup> GetActiveAsync(int roleId, int userGroupId, int scopeId);
+
+        /// <summary>
+        /// Retrieves a role-to-user-group assignment for update operations, including records that have been marked as deleted.
+        /// </summary>
+        /// <param name="roleId">The identifier of the role.</param>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <param name="scopeId">The identifier of the scope.</param>
+        /// <returns>The matching role-user-group assignment if found; otherwise, <c>null</c>.</returns>
+        Task<RoleUserGroup> GetIncludingDeletedForUpdateAsync(int roleId, int userGroupId, int scopeId);
+
+        /// <summary>
+        /// Retrieves all active role assignments associated with a specified user group.
+        /// </summary>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <returns>A collection of active role-user-group assignments.</returns>
+        Task<List<RoleUserGroup>> GetActiveByUserGroupIdAsync(int userGroupId);
+
+        /// <summary>
+        /// Retrieves all active role assignments for a specified role and catalogue node.
+        /// </summary>
+        /// <param name="roleId">The identifier of the role.</param>
+        /// <param name="catalogueNodeId">The identifier of the catalogue node.</param>
+        /// <returns>A collection of active role-user-group assignments.</returns>
+        Task<List<RoleUserGroup>> GetActiveByRoleIdCatalogueIdAsync(int roleId, int catalogueNodeId);
     }
 }

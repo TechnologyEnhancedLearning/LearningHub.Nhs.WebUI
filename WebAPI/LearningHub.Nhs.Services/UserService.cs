@@ -276,7 +276,7 @@
                         items = items.Where(x => x.Id == enteredId);
                         break;
                     case "username":
-                        items = items.Where(x => x.UserName.Contains(filter.Value));
+                        items = items.Where(x => x.LegacyUserName.Contains(filter.Value));
                         break;
                     case "excludeusergroupid":
                         items = items.Where(x => !x.UserUserGroup.Any(uug => uug.UserGroupId == int.Parse(filter.Value)));
@@ -296,11 +296,11 @@
                 case "username":
                     if (sortDirection == "D")
                     {
-                        items = items.OrderByDescending(x => x.UserName);
+                        items = items.OrderByDescending(x => x.LegacyUserName);
                     }
                     else
                     {
-                        items = items.OrderBy(x => x.UserName);
+                        items = items.OrderBy(x => x.LegacyUserName);
                     }
 
                     break;

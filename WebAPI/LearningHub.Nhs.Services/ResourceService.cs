@@ -3751,7 +3751,7 @@ namespace LearningHub.Nhs.Services
                         items = items.Where(x => x.Title.Contains(filter.Value));
                         break;
                     case "createuser":
-                        items = items.Where(x => x.CreateUser.UserName.Contains(filter.Value));
+                        items = items.Where(x => x.CreateUser.LegacyUserName.Contains(filter.Value));
                         break;
                     case "userid":
                         // Used by User Detail screen Contributions tab to filter by userId.
@@ -4174,7 +4174,7 @@ namespace LearningHub.Nhs.Services
                 }
 
                 resourceVersionViewModel.CreateUserId = resourceVersion.CreateUserId;
-                resourceVersionViewModel.CreateUser = resourceVersion.CreateUser.UserName;
+                resourceVersionViewModel.CreateUser = resourceVersion.CreateUser.LegacyUserName;
                 resourceVersionViewModel.CreateDate = resourceVersion.CreateDate;
             }
         }

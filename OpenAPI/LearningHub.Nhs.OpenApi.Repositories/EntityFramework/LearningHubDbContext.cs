@@ -119,6 +119,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         public virtual DbSet<UserUserGroup> UserUserGroup { get; set; }
 
         /// <summary>
+        /// Gets or sets the user group reporter.
+        /// </summary>
+        public virtual DbSet<UserGroupReporter> UserGroupReporter { get; set; }
+
+        /// <summary>
         /// Gets or sets the role user group view model.
         /// </summary>
         public virtual DbSet<RoleUserGroupViewModel> RoleUserGroupViewModel { get; set; }

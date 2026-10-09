@@ -5,6 +5,7 @@
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.User;
+    using LearningHub.Nhs.Models.UserGroup;
     using LearningHub.Nhs.Models.Validation;
 
     /// <summary>
@@ -158,5 +159,131 @@
         Task<LearningHubValidationResult> DeleteUserGroupAttributeAsync(UserGroupAttributeViewModel userGroupAttribute, int currentUserId);
         /// <returns>The <see cref="Task{List}"/>.</returns>
         Task<bool> UserHasCatalogueContributionPermission(int userId);
+
+
+        ////////////////////////////////////////////
+
+            /// <summary>
+            /// Retrieves all user groups.
+            /// </summary>
+            /// <returns>A collection of user groups.</returns>
+            Task<IReadOnlyCollection<UserGroupViewModel>> GetAllAsync();
+
+            /// <summary>
+            /// Retrieves a user group by its identifier.
+            /// </summary>
+            /// <param name="id">The identifier of the user group.</param>
+            /// <returns>The matching user group.</returns>
+            Task<UserGroupViewModel> GetByIdAsync(int id);
+
+            /// <summary>
+            /// Retrieves all user groups associated with a specified user.
+            /// </summary>
+            /// <param name="userId">The identifier of the user.</param>
+            /// <returns>A collection of user groups.</returns>
+            Task<IReadOnlyCollection<UserGroupViewModel>> GetByUserIdAsync(int userId);
+
+            /// <summary>
+            /// Creates a new user group.
+            /// </summary>
+            /// <param name="request">The user group creation request.</param>
+            /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+            /// <returns>The newly created user group.</returns>
+            Task<UserGroupViewModel> CreateAsync(CreateUserGroupRequest request, int currentUserId);
+
+            /// <summary>
+            /// Updates a user group using the supplied patch request.
+            /// </summary>
+            /// <param name="userGroupId">The identifier of the user group.</param>
+            /// <param name="request">The patch request containing the updated values.</param>
+            /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+            /// <returns>The updated user group.</returns>
+            Task<UserGroupViewModel> PatchAsync(int userGroupId, UpdateUserGroupRequest request, int currentUserId);
+
+            /// <summary>
+            /// Soft deletes a user group.
+            /// </summary>
+            /// <param name="userGroupId">The identifier of the user group.</param>
+            /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+            /// <returns><c>true</c> if the user group was deleted; otherwise, <c>false</c>.</returns>
+            Task<bool> SoftDeleteAsync(int userGroupId, int currentUserId);
+
+            /// <summary>
+            /// Retrieves all users assigned to a user group.
+            /// </summary>
+            /// <param name="userGroupId">The identifier of the user group.</param>
+            /// <returns>A collection of user group memberships.</returns>
+            Task<IReadOnlyCollection<UserGroupMembershipViewModel>> GetUsersAsync(int userGroupId);
+
+            /// <summary>
+            /// Adds users to a user group.
+            /// </summary>
+            /// <param name="userGroupId">The identifier of the user group.</param>
+            /// <param name="request">The request containing the users to add.</param>
+            /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+            /// <returns>The updated collection of user group memberships.</returns>
+            Task<IReadOnlyCollection<UserGroupMembershipViewModel>> AddUsersAsync(int userGroupId, AddUserGroupUsersRequest request, int currentUserId);
+
+            /// <summary>
+            /// Removes a user from a user group.
+            /// </summary>
+            /// <param name="userGroupId">The identifier of the user group.</param>
+            /// <param name="userId">The identifier of the user to remove.</param>
+            /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+            /// <returns><c>true</c> if the user was removed; otherwise, <c>false</c>.</returns>
+            Task<bool> RemoveUserAsync(int userGroupId, int userId, int currentUserId);
+
+            /// <summary>
+            /// Retrieves all reporters assigned to a user group.
+            /// </summary>
+            /// <param name="userGroupId">The identifier of the user group.</param>
+            /// <returns>A collection of reporter assignments.</returns>
+            Task<IReadOnlyCollection<UserGroupReporterViewModel>> GetReportersAsync(int userGroupId);
+
+            /// <summary>
+            /// Adds reporters to a user group.
+            /// </summary>
+            /// <param name="userGroupId">The identifier of the user group.</param>
+            /// <param name="request">The request containing the reporters to add.</param>
+            /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+            /// <returns>The updated collection of reporter assignments.</returns>
+            Task<IReadOnlyCollection<UserGroupReporterViewModel>> AddReportersAsync(int userGroupId, AddUserGroupReportersRequest request, int currentUserId);
+
+            /// <summary>
+            /// Removes a reporter from a user group.
+            /// </summary>
+            /// <param name="userGroupId">The identifier of the user group.</param>
+            /// <param name="userId">The identifier of the reporter to remove.</param>
+            /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+            /// <returns><c>true</c> if the reporter was removed; otherwise, <c>false</c>.</returns>
+            Task<bool> RemoveReporterAsync(int userGroupId, int userId, int currentUserId);
+
+            /// <summary>
+            /// Retrieves all catalogue links associated with a user group.
+            /// </summary>
+            /// <param name="userGroupId">The identifier of the user group.</param>
+            /// <returns>A collection of catalogue links.</returns>
+            Task<IReadOnlyCollection<UserGroupCatalogueViewModel>> GetCataloguesAsync(int userGroupId);
+
+            /// <summary>
+            /// Links a catalogue node and role to a user group.
+            /// </summary>
+            /// <param name="userGroupId">The identifier of the user group.</param>
+            /// <param name="request">The catalogue link request.</param>
+            /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+            /// <returns>The newly created catalogue link.</returns>
+            Task<UserGroupCatalogueViewModel> LinkCatalogueAsync(int userGroupId, LinkUserGroupCatalogueRequest request, int currentUserId);
+
+            /// <summary>
+            /// Removes a catalogue link from a user group.
+            /// </summary>
+            /// <param name="userGroupId">The identifier of the user group.</param>
+            /// <param name="catalogueNodeId">The identifier of the catalogue node.</param>
+            /// <param name="roleId">The identifier of the role.</param>
+            /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+            /// <returns><c>true</c> if the catalogue link was removed; otherwise, <c>false</c>.</returns>
+            Task<bool> UnlinkCatalogueAsync(int userGroupId, int catalogueNodeId, int roleId, int currentUserId);
+        
+
     }
 }

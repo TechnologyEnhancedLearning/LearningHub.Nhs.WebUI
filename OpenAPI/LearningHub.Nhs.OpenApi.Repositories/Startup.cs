@@ -46,7 +46,8 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<ICatalogueRepository, CatalogueRepository>();
             services.AddScoped<ITimezoneOffsetManager, TimezoneOffsetManager>();
             services.AddScoped<IRoleUserGroupRepository, RoleUserGroupRepository>();
-            services.AddScoped<IUserGroupRepository, UserGroupRepository>();
+            services.AddScoped<IUserGroupRepository, UserGroupRepository>(); //UserGroupReporterRepository
+            services.AddScoped<IUserGroupReporterRepository, UserGroupReporterRepository>();
             services.AddScoped<IUserGroupAttributeRepository, UserGroupAttributeRepository>();
             services.AddScoped<IUserUserGroupRepository, UserUserGroupRepository>();
             services.AddScoped<IUserRepository, UserRepository>();

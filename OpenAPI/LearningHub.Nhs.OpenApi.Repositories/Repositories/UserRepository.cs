@@ -131,5 +131,13 @@
 
             return !await query.AnyAsync();
         }
+
+        public async Task<bool> UserExistsAsync(int userId)
+        {
+            return await DbContext.User.AsNoTracking()
+                    .AnyAsync(
+                        x => x.Id == userId &&
+                             !x.Deleted);
+        }
     }
 }

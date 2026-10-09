@@ -1,22 +1,26 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Services.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using LearningHub.Nhs.Caching;
     using AutoMapper;
+    using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Enums;
     using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.User;
+    using LearningHub.Nhs.Models.UserGroup;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
+    using LearningHub.Nhs.OpenApi.Repositories.Repositories;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json;
-    using Microsoft.AspNetCore.Http;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The user group service.
@@ -50,6 +54,11 @@
         private IScopeRepository scopeRepository;
 
         /// <summary>
+        /// The user repository.
+        /// </summary>
+        private readonly IUserRepository userRepository;
+
+        /// <summary>
         /// The user group attribute repository.
         /// </summary>
         private IUserGroupAttributeRepository userGroupAttributeRepository;
@@ -60,21 +69,30 @@
         private readonly ICachingService cachingService;
 
         /// <summary>
+        /// The user group reporter
+        /// </summary>
+        private readonly IUserGroupReporterRepository userGroupReporterRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UserGroupService"/> class.
         /// </summary>
         /// <param name="roleUserGroupRepository">roleUserGroupRepository.</param>
         /// <param name="catalogueService">The catalogue service.</param>
         /// <param name="userGroupRepository">The user group repository.</param>
+        /// <param name="userGroupReporterRepository">Repository for user group reporter operations.</param>
         /// <param name="userUserGroupRepository">The user - user group repository.</param>
         /// <param name="scopeRepository">The scope repository.</param>
+        /// <param name="userRepository">The user repository.</param>
         /// <param name="userGroupAttributeRepository">The user group attribute repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="cachingService">The caching service.</param>
         public UserGroupService(
             ICatalogueService catalogueService,
             IUserGroupRepository userGroupRepository,
+            IUserGroupReporterRepository userGroupReporterRepository,
             IUserUserGroupRepository userUserGroupRepository,
             IScopeRepository scopeRepository,
+            IUserRepository userRepository,
             IRoleUserGroupRepository roleUserGroupRepository,
             IUserGroupAttributeRepository userGroupAttributeRepository,
             IMapper mapper,
@@ -82,23 +100,25 @@
         {
             this.catalogueService = catalogueService;
             this.userGroupRepository = userGroupRepository;
+            this.userGroupReporterRepository = userGroupReporterRepository;
             this.userUserGroupRepository = userUserGroupRepository;
             this.scopeRepository = scopeRepository;
+            this.userRepository = userRepository;
             this.roleUserGroupRepository = roleUserGroupRepository;
             this.userGroupAttributeRepository = userGroupAttributeRepository;
             this.mapper = mapper;
             this.cachingService = cachingService;
         }
 
-        /// <summary>
-        /// The get by id async.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<UserGroup> GetByIdAsync(int id)
-        {
-            return await userGroupRepository.GetByIdAsync(id);
-        }
+        ///// <summary>
+        ///// The get by id async.
+        ///// </summary>
+        ///// <param name="id">The id.</param>
+        ///// <returns>The <see cref="Task"/>.</returns>
+        //public async Task<UserGroup> GetByIdAsync(int id)
+        //{
+        //    return await userGroupRepository.GetByIdAsync(id);
+        //}
 
         /// <summary>
         /// The get by id async.
@@ -614,7 +634,820 @@
 
             return result;
         }
+        //////////////////////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Retrieves all active user groups.
+        /// </summary>
+        /// <returns>A collection of active user groups.</returns>
+        public async Task<IReadOnlyCollection<UserGroupViewModel>> GetAllAsync()
+        {
+            var entities = await userGroupRepository.GetAllActiveAsync();
+
+            return mapper.Map<List<UserGroupViewModel>>(entities);
+        }
+
+        /// <summary>
+        /// Retrieves a user group by its identifier.
+        /// </summary>
+        /// <param name="id">The identifier of the user group.</param>
+        /// <returns>The matching user group if found; otherwise, <c>null</c>.</returns>
+        public async Task<UserGroupViewModel> GetByIdAsync(int id)
+        {
+            var entity = await userGroupRepository.GetByIdAsync(id);
+
+            return entity == null
+                ? null
+                : mapper.Map<UserGroupViewModel>(entity);
+        }
+
+        /// <summary>
+        /// Retrieves all user groups associated with a specified user.
+        /// </summary>
+        /// <param name="userId">The identifier of the user.</param>
+        /// <returns>
+        /// A collection of user groups, or <c>null</c> if the user does not exist.
+        /// </returns>
+        public async Task<IReadOnlyCollection<UserGroupViewModel>> GetByUserIdAsync(int userId)
+        {
+            if (!await userRepository.UserExistsAsync(userId))
+            {
+                return null;
+            }
+
+            var entities =
+                await userGroupRepository.GetByUserIdAsync(userId);
+
+            return mapper.Map<List<UserGroupViewModel>>(entities);
+        }
+
+        /// <summary>
+        /// Creates a new user group.
+        /// </summary>
+        /// <param name="request">The user group creation request.</param>
+        /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+        /// <returns>The newly created user group.</returns>
+        /// <exception cref="ValidationException">
+        /// Thrown when the name is invalid or already exists.
+        /// </exception>
+        public async Task<UserGroupViewModel> CreateAsync(
+            CreateUserGroupRequest request,
+            int currentUserId)
+        {
+            var name = request.Name?.Trim();
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ValidationException(
+                    "User group name is required.");
+            }
+
+            if (await userGroupRepository
+                .NameExistsAsync(name))
+            {
+                throw new ValidationException(
+                    $"User group name '{name}' is already in use.");
+            }
+
+            var entity = new UserGroup
+            {
+                Name = name,
+                Description =
+                    request.Description?.Trim(),
+            };
+
+            await ValidateUserGroupAsync(entity);
+
+            try
+            {
+                var id =
+                    await userGroupRepository.CreateAsync(
+                        currentUserId,
+                        entity);
+
+                var created =
+                    await userGroupRepository.GetByIdAsync(
+                        id);
+
+                if (created == null)
+                {
+                    throw new InvalidOperationException(
+                        $"User group {id} was created but could not be retrieved.");
+                }
+
+                return mapper.Map<UserGroupViewModel>(
+                    created);
+            }
+            catch (DbUpdateException ex)
+                when (IsUniqueConstraintViolation(ex))
+            {
+                throw new ValidationException(
+                    $"User group name '{name}' is already in use.");
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing user group.
+        /// </summary>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <param name="request">The patch request containing updated values.</param>
+        /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+        /// <returns>
+        /// The updated user group, or <c>null</c> if the group does not exist.
+        /// </returns>
+        /// <exception cref="ValidationException">
+        /// Thrown when validation fails or the name already exists.
+        /// </exception>
+        public async Task<UserGroupViewModel> PatchAsync(
+    int userGroupId,
+    UpdateUserGroupRequest request,
+    int currentUserId)
+        {
+            var userGroup =
+                await userGroupRepository.GetForUpdateAsync(userGroupId);
+
+            if (userGroup == null)
+            {
+                return null;
+            }
+
+            var hasChanges = false;
+
+            if (request.Name != null)
+            {
+                var name = request.Name.Trim();
+
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    throw new ValidationException(
+                        "User group name cannot be empty.");
+                }
+
+                if (!string.Equals(
+                    userGroup.Name,
+                    name,
+                    StringComparison.Ordinal))
+                {
+                    if (await userGroupRepository.NameExistsAsync(
+                        name,
+                        userGroupId))
+                    {
+                        throw new ValidationException(
+                            $"User group name '{name}' is already in use.");
+                    }
+
+                    userGroup.Name = name;
+                    hasChanges = true;
+                }
+            }
+
+            if (request.Description != null)
+            {
+                var description = request.Description.Trim();
+
+                if (!string.Equals(
+                    userGroup.Description,
+                    description,
+                    StringComparison.Ordinal))
+                {
+                    userGroup.Description = description;
+                    hasChanges = true;
+                }
+            }
+
+            if (!hasChanges)
+            {
+                return mapper.Map<UserGroupViewModel>(userGroup);
+            }
+
+            await ValidateUserGroupAsync(userGroup);
+
+            try
+            {
+                await userGroupRepository.UpdateAsync(
+                    currentUserId,
+                    userGroup);
+            }
+            catch (DbUpdateException ex)
+                when (IsUniqueConstraintViolation(ex))
+            {
+                throw new ValidationException(
+                    $"User group name '{userGroup.Name}' is already in use.");
+            }
+
+            return mapper.Map<UserGroupViewModel>(userGroup);
+        }
+
+
+
+        /// <summary>
+        /// Soft deletes a user group.
+        /// </summary>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+        /// <returns>
+        /// <c>true</c> if the group was deleted; otherwise, <c>false</c>.
+        /// </returns>
+        public async Task<bool> SoftDeleteAsync(
+            int userGroupId,
+            int currentUserId)
+        {
+            var entity =
+                await userGroupRepository
+                    .GetForUpdateAsync(userGroupId);
+
+            if (entity == null)
+            {
+                return false;
+            }
+
+            // A whole-group delete must not bypass
+            // catalogue safety rules.
+            var catalogueLinks =
+                await roleUserGroupRepository
+                    .GetActiveByUserGroupIdAsync(
+                        userGroupId);
+
+            foreach (var catalogueLink in catalogueLinks)
+            {
+                await ValidateCanRemoveCatalogueLinkAsync(
+                    catalogueLink);
+            }
+
+            entity.Deleted = true;
+
+            await userGroupRepository.UpdateAsync(
+                currentUserId,
+                entity);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Retrieves the users assigned to a user group.
+        /// </summary>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <returns>
+        /// A collection of user memberships, or <c>null</c> if the group does not exist.
+        /// </returns>
+        public async Task<IReadOnlyCollection<UserGroupMembershipViewModel>> GetUsersAsync(int userGroupId)
+        {
+            if (!await userGroupRepository.ExistsAsync(
+                    userGroupId))
+            {
+                return null;
+            }
+
+            var memberships =
+                await userUserGroupRepository
+                    .GetByUserGroupIdAsync(
+                        userGroupId);
+
+            return mapper.Map<
+                List<UserGroupMembershipViewModel>>(
+                    memberships);
+        }
+
+        /// <summary>
+        /// Adds users to a user group.
+        /// </summary>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <param name="request">The request containing users to add.</param>
+        /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+        /// <returns>
+        /// The updated collection of user memberships.
+        /// </returns>
+        /// <exception cref="ValidationException">
+        /// Thrown when one or more supplied users are invalid or already members.
+        /// </exception>
+        public async Task<IReadOnlyCollection<UserGroupMembershipViewModel>> AddUsersAsync(
+            int userGroupId,
+            AddUserGroupUsersRequest request,
+            int currentUserId)
+        {
+            if (!await userGroupRepository.ExistsAsync(
+                    userGroupId))
+            {
+                return null;
+            }
+
+            var userIds =
+                request.UserIds?
+                    .Distinct()
+                    .ToList()
+                ?? new List<int>();
+
+            if (userIds.Count == 0)
+            {
+                throw new ValidationException(
+                    "At least one user must be supplied.");
+            }
+
+            // Validate every user before changing anything.
+            foreach (var userId in userIds)
+            {
+                if (!await userRepository.UserExistsAsync(
+                        userId))
+                {
+                    throw new ValidationException(
+                        $"User {userId} was not found.");
+                }
+            }
+
+            var existing =
+                await userUserGroupRepository
+                    .GetByUserGroupAndUserIdsForUpdateAsync(
+                        userGroupId,
+                        userIds);
+
+            var existingByUser =
+                existing
+                    .GroupBy(x => x.UserId)
+                    .ToDictionary(
+                        group => group.Key,
+                        group => group
+                            .OrderByDescending(x => x.Id)
+                            .First());
+
+            var duplicates =
+                existing
+                    .Where(x => !x.Deleted)
+                    .Select(x => x.UserId)
+                    .Distinct()
+                    .ToList();
+
+            if (duplicates.Count > 0)
+            {
+                throw new ValidationException(
+                    $"The following users are already members of the user group: {string.Join(", ", duplicates)}.");
+            }
+
+            try
+            {
+                foreach (var userId in userIds)
+                {
+                    if (existingByUser.TryGetValue(
+                            userId,
+                            out var oldMembership))
+                    {
+                        oldMembership.Deleted = false;
+
+                        await userUserGroupRepository
+                            .UpdateAsync(
+                                currentUserId,
+                                oldMembership);
+
+                        continue;
+                    }
+
+                    await userUserGroupRepository.CreateAsync(
+                        currentUserId,
+                        new UserUserGroup
+                        {
+                            UserId = userId,
+                            UserGroupId = userGroupId,
+                        });
+                }
+            }
+            catch (DbUpdateException ex)
+                when (IsUniqueConstraintViolation(ex))
+            {
+                throw new ValidationException(
+                    "One or more users are already members of this user group.");
+            }
+
+            return await GetUsersAsync(userGroupId);
+        }
+
+        /// <summary>
+        /// Removes a user from a user group.
+        /// </summary>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <param name="userId">The identifier of the user to remove.</param>
+        /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+        /// <returns>
+        /// <c>true</c> if the user was removed; otherwise, <c>false</c>.
+        /// </returns>
+        public async Task<bool> RemoveUserAsync(
+            int userGroupId,
+            int userId,
+            int currentUserId)
+        {
+            if (!await userGroupRepository.ExistsAsync(
+                    userGroupId))
+            {
+                return false;
+            }
+
+            var membership =
+                await userUserGroupRepository
+                    .GetForUpdateAsync(
+                        userId,
+                        userGroupId);
+
+            if (membership == null)
+            {
+                return false;
+            }
+
+            membership.Deleted = true;
+
+            await userUserGroupRepository.UpdateAsync(
+                currentUserId,
+                membership);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Retrieves the reporters assigned to a user group.
+        /// </summary>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <returns>
+        /// A collection of reporter assignments, or <c>null</c> if the group does not exist.
+        /// </returns>
+        public async Task<IReadOnlyCollection<UserGroupReporterViewModel>> GetReportersAsync(int userGroupId)
+        {
+            if (!await userGroupRepository.ExistsAsync(
+                    userGroupId))
+            {
+                return null;
+            }
+
+            var reporters =
+                await userGroupReporterRepository
+                    .GetByUserGroupIdAsync(
+                        userGroupId);
+
+            return mapper.Map<
+                List<UserGroupReporterViewModel>>(
+                    reporters);
+        }
+
+        /// <summary>
+        /// Adds reporters to a user group.
+        /// </summary>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <param name="request">The request containing reporters to add.</param>
+        /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+        /// <returns>
+        /// The updated collection of reporter assignments.
+        /// </returns>
+        /// <exception cref="ValidationException">
+        /// Thrown when one or more supplied reporters are invalid or already assigned.
+        /// </exception>
+        public async Task<IReadOnlyCollection<UserGroupReporterViewModel>> AddReportersAsync(
+            int userGroupId,
+            AddUserGroupReportersRequest request,
+            int currentUserId)
+        {
+            if (!await userGroupRepository.ExistsAsync(
+                    userGroupId))
+            {
+                return null;
+            }
+
+            var userIds =
+                request.UserIds?
+                    .Distinct()
+                    .ToList()
+                ?? new List<int>();
+
+            if (userIds.Count == 0)
+            {
+                throw new ValidationException(
+                    "At least one reporter must be supplied.");
+            }
+
+            foreach (var userId in userIds)
+            {
+                if (!await userRepository.UserExistsAsync(
+                        userId))
+                {
+                    throw new ValidationException(
+                        $"User {userId} was not found.");
+                }
+            }
+
+            var existing =
+                await userGroupReporterRepository
+                    .GetByUserGroupAndUserIdsForUpdateAsync(
+                        userGroupId,
+                        userIds);
+
+            var existingByUser =
+                existing
+                    .GroupBy(x => x.UserId)
+                    .ToDictionary(
+                        group => group.Key,
+                        group => group
+                            .OrderByDescending(x => x.Id)
+                            .First());
+
+            var duplicates =
+                existing
+                    .Where(x => !x.Deleted)
+                    .Select(x => x.UserId)
+                    .Distinct()
+                    .ToList();
+
+            if (duplicates.Count > 0)
+            {
+                throw new ValidationException(
+                    $"The following users are already reporters for the user group: {string.Join(", ", duplicates)}.");
+            }
+
+            try
+            {
+                foreach (var userId in userIds)
+                {
+                    if (existingByUser.TryGetValue(
+                            userId,
+                            out var oldReporter))
+                    {
+                        oldReporter.Deleted = false;
+
+                        await userGroupReporterRepository
+                            .UpdateAsync(
+                                currentUserId,
+                                oldReporter);
+
+                        continue;
+                    }
+
+                    await userGroupReporterRepository
+                        .CreateAsync(
+                            currentUserId,
+                            new UserGroupReporter
+                            {
+                                UserId = userId,
+                                UserGroupId =
+                                    userGroupId,
+                            });
+                }
+            }
+            catch (DbUpdateException ex)
+                when (IsUniqueConstraintViolation(ex))
+            {
+                throw new ValidationException(
+                    "One or more users are already reporters for this user group.");
+            }
+
+            return await GetReportersAsync(
+                userGroupId);
+        }
+
+        /// <summary>
+        /// Removes a reporter from a user group.
+        /// </summary>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <param name="userId">The identifier of the reporter.</param>
+        /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+        /// <returns>
+        /// <c>true</c> if the reporter was removed; otherwise, <c>false</c>.
+        /// </returns>
+        public async Task<bool> RemoveReporterAsync(
+            int userGroupId,
+            int userId,
+            int currentUserId)
+        {
+            if (!await userGroupRepository.ExistsAsync(
+                    userGroupId))
+            {
+                return false;
+            }
+
+            var reporter =
+                await userGroupReporterRepository
+                    .GetForUpdateAsync(
+                        userId,
+                        userGroupId);
+
+            if (reporter == null)
+            {
+                return false;
+            }
+
+            reporter.Deleted = true;
+
+            await userGroupReporterRepository.UpdateAsync(
+                currentUserId,
+                reporter);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Retrieves catalogue links associated with a user group.
+        /// </summary>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <returns>
+        /// A collection of catalogue links, or <c>null</c> if the group does not exist.
+        /// </returns>
+        public async Task<IReadOnlyCollection<UserGroupCatalogueViewModel>> GetCataloguesAsync(int userGroupId)
+        {
+            if (!await userGroupRepository.ExistsAsync(
+                    userGroupId))
+            {
+                return null;
+            }
+
+            var associations =
+                await roleUserGroupRepository
+                    .GetActiveByUserGroupIdAsync(
+                        userGroupId);
+
+            return associations
+                .Where(
+                    x => x.Scope.CatalogueNodeId
+                        .HasValue)
+                .Select(MapCatalogueLink)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Links a catalogue to a user group for the specified role.
+        /// </summary>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <param name="request">The catalogue link request.</param>
+        /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+        /// <returns>The created catalogue link.</returns>
+        /// <exception cref="ValidationException">
+        /// Thrown when the catalogue, role, or association is invalid.
+        /// </exception>
+        public async Task<UserGroupCatalogueViewModel> LinkCatalogueAsync(
+            int userGroupId,
+            LinkUserGroupCatalogueRequest request,
+            int currentUserId)
+        {
+            if (!await userGroupRepository.ExistsAsync(
+                    userGroupId))
+            {
+                return null;
+            }
+
+            if (!Enum.IsDefined(
+                    typeof(RoleEnum),
+                    request.RoleId))
+            {
+                throw new ValidationException(
+                    $"Role {request.RoleId} is invalid.");
+            }
+
+            var catalogue =
+                catalogueService.GetBasicCatalogue(
+                    request.CatalogueNodeId);
+
+            if (catalogue == null)
+            {
+                throw new ValidationException(
+                    $"Catalogue {request.CatalogueNodeId} was not found.");
+            }
+
+            var scope =
+                await scopeRepository
+                    .GetByCatalogueNodeIdAsync(
+                        request.CatalogueNodeId);
+
+            if (scope == null)
+            {
+                scope = new Scope
+                {
+                    ScopeType =
+                        ScopeTypeEnum.Catalogue,
+
+                    CatalogueNodeId =
+                        request.CatalogueNodeId,
+                };
+
+                var scopeId =
+                    await scopeRepository.CreateAsync(
+                        currentUserId,
+                        scope);
+
+                scope.Id = scopeId;
+            }
+
+            var existing =
+                await roleUserGroupRepository
+                    .GetIncludingDeletedForUpdateAsync(
+                        request.RoleId,
+                        userGroupId,
+                        scope.Id);
+
+            if (existing != null &&
+                !existing.Deleted)
+            {
+                throw new ValidationException(
+                    "This user group is already linked to the catalogue for the supplied role.");
+            }
+
+            try
+            {
+                if (existing != null)
+                {
+                    existing.Deleted = false;
+
+                    await roleUserGroupRepository.UpdateAsync(
+                        currentUserId,
+                        existing);
+
+                    return MapCatalogueLink(existing);
+                }
+
+                var association =
+                    new RoleUserGroup
+                    {
+                        RoleId = request.RoleId,
+                        UserGroupId = userGroupId,
+                        ScopeId = scope.Id,
+                    };
+
+                var id =
+                    await roleUserGroupRepository
+                        .CreateAsync(
+                            currentUserId,
+                            association);
+
+                var created =
+                    await roleUserGroupRepository
+                        .GetByIdAsync(id);
+
+                if (created == null)
+                {
+                    throw new InvalidOperationException(
+                        $"RoleUserGroup {id} was created but could not be retrieved.");
+                }
+
+                return MapCatalogueLink(created);
+            }
+            catch (DbUpdateException ex)
+                when (IsUniqueConstraintViolation(ex))
+            {
+                throw new ValidationException(
+                    "This user group is already linked to the catalogue for the supplied role.");
+            }
+        }
+
+        /// <summary>
+        /// Removes a catalogue link from a user group.
+        /// </summary>
+        /// <param name="userGroupId">The identifier of the user group.</param>
+        /// <param name="catalogueNodeId">The identifier of the catalogue node.</param>
+        /// <param name="roleId">The identifier of the role.</param>
+        /// <param name="currentUserId">The identifier of the user performing the operation.</param>
+        /// <returns>
+        /// <c>true</c> if the link was removed; otherwise, <c>false</c>.
+        /// </returns>
+        public async Task<bool> UnlinkCatalogueAsync(
+            int userGroupId,
+            int catalogueNodeId,
+            int roleId,
+            int currentUserId)
+        {
+            if (!await userGroupRepository.ExistsAsync(
+                    userGroupId))
+            {
+                return false;
+            }
+
+            var scope =
+                await scopeRepository
+                    .GetByCatalogueNodeIdAsync(
+                        catalogueNodeId);
+
+            if (scope == null)
+            {
+                return false;
+            }
+
+            var association =
+                await roleUserGroupRepository
+                    .GetIncludingDeletedForUpdateAsync(
+                        roleId,
+                        userGroupId,
+                        scope.Id);
+
+            if (association == null ||
+                association.Deleted)
+            {
+                return false;
+            }
+
+            await ValidateCanRemoveCatalogueLinkAsync(
+                association);
+
+            association.Deleted = true;
+
+            await roleUserGroupRepository.UpdateAsync(
+                currentUserId,
+                association);
+
+            return true;
+        }
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
         /// Apply preset filter to the items for user user group search.
         /// </summary>
@@ -967,5 +1800,113 @@
 
             return items;
         }
+
+        private async Task ValidateCanRemoveCatalogueLinkAsync(RoleUserGroup roleUserGroup)
+        {
+            if (roleUserGroup.Scope == null ||
+                roleUserGroup.Scope.ScopeType !=
+                    ScopeTypeEnum.Catalogue ||
+                !roleUserGroup.Scope
+                    .CatalogueNodeId.HasValue)
+            {
+                return;
+            }
+
+            var catalogueNodeId =
+                roleUserGroup.Scope
+                    .CatalogueNodeId.Value;
+
+            var catalogue =
+                catalogueService.GetBasicCatalogue(
+                    catalogueNodeId);
+
+            if (catalogue == null)
+            {
+                return;
+            }
+
+            // Preserve existing restricted-access rule.
+            if (roleUserGroup.RoleId ==
+                    (int)RoleEnum.Reader &&
+                roleUserGroup.UserGroup
+                    .UserGroupAttribute
+                    .Any(
+                        x => x.AttributeId ==
+                            (int)AttributeEnum
+                                .RestrictedAccess) &&
+                catalogue.RestrictedAccess)
+            {
+                throw new ValidationException(
+                    "Cannot delete the default Restricted Access User Group in a Restricted Catalogue.");
+            }
+
+            // Preserve existing Local Admin rule.
+            if (roleUserGroup.RoleId ==
+                    (int)RoleEnum.LocalAdmin &&
+                catalogue.RestrictedAccess &&
+                !catalogue.Hidden)
+            {
+                var localAdminGroups =
+                    await roleUserGroupRepository
+                        .GetActiveByRoleIdCatalogueIdAsync(
+                            roleUserGroup.RoleId,
+                            catalogueNodeId);
+
+                var hasAnotherLocalAdmin =
+                    localAdminGroups.Any(
+                        x => x.Id != roleUserGroup.Id);
+
+                if (!hasAnotherLocalAdmin)
+                {
+                    throw new ValidationException(
+                        "A Restricted Catalogue that is visible must have at least one Local Admin User Group.");
+                }
+            }
+        }
+
+        private static async Task ValidateUserGroupAsync(UserGroup entity)
+        {
+            var validator =
+                new UserGroupValidator();
+
+            var result =
+                await validator.ValidateAsync(entity);
+
+            if (result.IsValid)
+            {
+                return;
+            }
+
+            var message =
+                string.Join(
+                    " ",
+                    result.Errors.Select(
+                        x => x.ErrorMessage));
+
+            throw new ValidationException(message);
+        }
+
+        private static UserGroupCatalogueViewModel MapCatalogueLink(RoleUserGroup entity)
+        {
+            return new UserGroupCatalogueViewModel
+            {
+                Id = entity.Id,
+                UserGroupId = entity.UserGroupId,
+                RoleId = entity.RoleId,
+                RoleName = entity.Role?.Name,
+                ScopeId = entity.ScopeId.GetValueOrDefault(),
+                CatalogueNodeId =entity.Scope.CatalogueNodeId.GetValueOrDefault(),
+            };
+        }
+
+        private static bool IsUniqueConstraintViolation(DbUpdateException exception)
+        {
+            return exception.InnerException
+                is SqlException sqlException &&
+                (sqlException.Number == 2601 ||
+                 sqlException.Number == 2627);
+        }
+
     }
 }
+

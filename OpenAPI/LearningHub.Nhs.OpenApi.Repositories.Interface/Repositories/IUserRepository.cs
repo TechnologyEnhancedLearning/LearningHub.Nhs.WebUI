@@ -52,5 +52,6 @@
         Task<User> GetByIdIncludingDeletedAsync(int id);
 
         Task<bool> IsEmailAvailableAsync(string email, int? excludeUserId = null);
+        Task<bool> UserExistsAsync(int userId);
     }
 }

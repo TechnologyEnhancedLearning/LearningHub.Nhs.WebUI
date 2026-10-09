@@ -321,7 +321,7 @@
                     items = descending ? items.OrderByDescending(l => l.EndDate) : items.OrderBy(l => l.EndDate);
                     break;
                 case "CreatedBy":
-                    items = descending ? items.OrderByDescending(l => l.CreateUser.UserName) : items.OrderBy(l => l.CreateUser.UserName);
+                    items = descending ? items.OrderByDescending(l => l.CreateUser.LegacyUserName) : items.OrderBy(l => l.CreateUser.LegacyUserName);
                     break;
                 case "NotificationPriority":
                     items = descending ? items.OrderByDescending(l => l.NotificationPriorityEnum) : items.OrderBy(l => l.NotificationPriorityEnum);

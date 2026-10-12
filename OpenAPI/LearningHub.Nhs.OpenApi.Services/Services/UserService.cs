@@ -191,7 +191,7 @@
         {
             try
             {
-                var user = await userRepository.GetByIdAsync(id);
+                var user = await userRepository.GetBasicUserByIdAsync(id);
                 return mapper.Map<UserLHBasicViewModel>(user);
             }
             catch(Exception ex)

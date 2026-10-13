@@ -36,5 +36,12 @@
         /// <param name="userId">The user id.</param>
         /// <returns>The <see cref="bool"/>.</returns>
         bool IsAdminUser(int userId);
+
+        /// <summary>
+        /// The get by id async.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<User?> GetBasicUserByIdAsync(int id);
     }
 }

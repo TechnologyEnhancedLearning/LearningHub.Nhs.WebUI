@@ -154,7 +154,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 PartialFileViewModel responseViewModel = JsonConvert.DeserializeObject<PartialFileViewModel>(result);
 
                 var blob = this.GetCloudAppendBlob(responseViewModel.FileId);
@@ -322,7 +322,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                string result = response.Content.ReadAsStringAsync().Result;
+                string result = await response.Content.ReadAsStringAsync();
                 PartialFileViewModel responseViewModel = JsonConvert.DeserializeObject<PartialFileViewModel>(result);
                 return responseViewModel;
             }

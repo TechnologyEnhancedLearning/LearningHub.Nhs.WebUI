@@ -39,7 +39,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 internalSystemViewModel = JsonConvert.DeserializeObject<InternalSystemViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized

@@ -28,12 +28,30 @@
             @foreach (Course item in Model.Courses)
             {
                 <div class="nhsuk-u-padding-bottom-3 nhsuk-u-padding-top-2">
-                    <h2 class="nhsuk-u-reading-width line-clamp-2"><a class="nhsuk-u-font-size-19" href="@item.CourseUrl">@item.Displayname</a></h2>
+                    <h2 class="nhsuk-u-reading-width line-clamp-2">@Html.Raw(item.Displayname)</h2>
                     <div class="nhsuk-u-padding-right-5 nhsuk-u-padding-bottom-5">
                         <div class="nhsuk-u-padding-right-5 nhsuk-u-padding-bottom-3"><span class="nhsuk-u-font-weight-bold nhsuk-u-padding-right-2">Type:</span> Course</div>
                         <div class="line-clamp-3">
                             @HtmFormatlHelper.StripHtmlTags(item.Summary)
                         </div>
+                        @if (Model.HasAllowedAccessLevel)
+                        {
+                            <form asp-action="MoodleInstanceUserEnrolment" asp-controller="catalogue" method="post" asp-route-CourseId="@item.Id" asp-route-InstanceName="@Model.InstanceName" asp-route-CourseUrl="@item.CourseUrl">
+                                <div class="nhsuk-u-padding-right-5 nhsuk-u-padding-top-3">
+                                    <button class="nhsuk-button nhsuk-button--small"
+                                            type="submit">
+                                        Enrol
+                                        <span class="nhsuk-u-visually-hidden">
+                                            on @Html.Raw(item.Displayname)
+                                        </span>
+                                    </button>
+                                </div>
+                            </form>                          
+                        }
+                        else
+                        {
+                            <div class="nhsuk-u-padding-right-5"><span class="nhsuk-u-font-weight-bold nhsuk-u-padding-right-2">Enrolment unavailable:</span> This course has access level restrictions that you do not meet.</div>
+                        }
                     </div>
                 </div>
                 <hr class="nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-0" />

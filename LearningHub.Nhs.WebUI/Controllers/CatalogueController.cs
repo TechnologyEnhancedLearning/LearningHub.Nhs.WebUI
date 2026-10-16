@@ -292,6 +292,12 @@
 
             if (!string.IsNullOrEmpty(moodleInstanceCategoryId))
             {
+                viewModel.InstanceName = catalogueNodeVersionCategory.InstanceName;
+                var userAccessRole = this.User.IsInRole("BasicUser") ? "general" : "full";
+                var moodleInstanceConfigs = await this.catalogueService.GetMoodleInstanceConfigsAsync();
+                var instanceConfig = moodleInstanceConfigs.Configurations.FirstOrDefault(x => x.ShortName.Equals(catalogueNodeVersionCategory.InstanceName, StringComparison.OrdinalIgnoreCase));
+                viewModel.HasAllowedAccessLevel = instanceConfig?.AllowedAccessLevels?.Contains(userAccessRole, StringComparer.OrdinalIgnoreCase) == true;
+
                 var response = await this.categoryService.GetCoursesByCategoryIdAsync(moodleInstanceCategoryId);
                 viewModel.Courses = response?.Results?
     .Where(r => r.Instance == catalogueNodeVersionCategory.InstanceName)
@@ -760,6 +766,35 @@
         {
             var redirectUri = $"{this.authConfig.Authority}/sso/LinkToScript/{this.CurrentUserId}";
             return this.Redirect(redirectUri);
+        }
+
+        /// <summary>
+        /// MoodleInstanceUserEnrolment.
+        /// </summary>
+        /// <param name="courseId"> The CourseId.</param>
+        /// <param name="instanceName"> The InstanceName.</param>
+        /// <param name="courseUrl"> The courseUrl.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost]
+        [Route("catalogue/MoodleInstanceUserEnrolment")]
+        public async Task<IActionResult> MoodleInstanceUserEnrolment(int courseId, string instanceName, string courseUrl)
+        {
+            var request = new MoodleUserEnrolmentRequestViewModel
+            {
+                InstanceId = instanceName,
+                CourseId = courseId,
+                UserEmail = this.CurrentUserEmail,
+            };
+
+            var result = await this.catalogueService.MoodleInstanceUserEnrolmentAsync(request);
+            if (result.IsSuccess)
+            {
+               return this.Redirect(courseUrl);
+            }
+            else
+            {
+                return this.RedirectToAction("Error", "Home");
+            }
         }
     }
 }

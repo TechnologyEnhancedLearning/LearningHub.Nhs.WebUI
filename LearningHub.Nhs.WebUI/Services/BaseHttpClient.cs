@@ -96,6 +96,7 @@
                     DateTimeOffset.Parse(expiresAt)
                         .AddSeconds(-60)
                         .ToUniversalTime() < DateTime.UtcNow;
+
                 // compare
                 if (tokenExpired)
                 {

@@ -8,9 +8,13 @@
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Common;
+    using LearningHub.Nhs.Models.Moodle;
+    using LearningHub.Nhs.Models.Moodle.API;
+    using LearningHub.Nhs.Models.Report.ReportCreate;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.Models.Validation;
     using LearningHub.Nhs.WebUI.Interfaces;
+    using LearningHub.Nhs.WebUI.Models.Catalogue;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
 
@@ -663,6 +667,73 @@
             }
 
             return viewmodel;
+        }
+
+        /// <summary>
+        /// GetMoodleInstanceConfigsAsync.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<MoodleConfigurationResponseModel> GetMoodleInstanceConfigsAsync()
+        {
+            MoodleConfigurationResponseModel viewmodel = new MoodleConfigurationResponseModel();
+
+            try
+            {
+                var client = await this.OpenApiHttpClient.GetClientAsync();
+                var request = $"MoodleBridge/GetAllMoodleInstanceConfigs";
+                var response = await client.GetAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    viewmodel = JsonConvert.DeserializeObject<MoodleConfigurationResponseModel>(result);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    throw new Exception("AccessDenied");
+                }
+
+                return viewmodel;
+            }
+            catch (Exception ex)
+            {
+                return viewmodel;
+            }
+        }
+
+        /// <summary>
+        /// MoodleInstanceUserEnrolmentAsync.
+        /// </summary>
+        /// <param name="requestModel">The requestModel.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<UserEnrolmentResult> MoodleInstanceUserEnrolmentAsync(MoodleUserEnrolmentRequestViewModel requestModel)
+        {
+            var viewModel = new UserEnrolmentResult();
+            var json = JsonConvert.SerializeObject(requestModel);
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = await this.OpenApiHttpClient.GetClientAsync();
+
+            var request = $"MoodleBridge/MoodleInstanceUserEnrolment";
+            var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
+            var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                viewModel = JsonConvert.DeserializeObject<UserEnrolmentResult>(responseContent);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+            else
+            {
+                throw new Exception($"Exception HttpStatusCode={response.StatusCode}");
+            }
+
+            return viewModel;
         }
     }
 }

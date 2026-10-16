@@ -66,7 +66,6 @@
         /// <param name="userGroupService">userGroupService.</param>
         /// <param name="categoryService">categoryService.</param>
         /// <param name="moodleBridgeApiService">moodleBridgeApiService.</param>
-        /// <param name="moodleInstancesConfigService">moodleInstancesConfigService.</param>
         public CatalogueController(
            IHttpClientFactory httpClientFactory,
            IWebHostEnvironment hostingEnvironment,

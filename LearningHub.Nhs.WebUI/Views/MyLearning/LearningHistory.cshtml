@@ -318,7 +318,30 @@
                 </div>
 
                 <div>
-                    @await Html.PartialAsync("LearningHistoryPaging", Model)
+                    @* @await Html.PartialAsync("LearningHistoryPaging", Model) *@
+
+                    @{
+                        var pagingModel = Model.MyLearningPaging;
+                        int currentPageIndex = pagingModel.CurrentPage + 1;
+                        int totalPages = pagingModel.TotalPages;
+
+                        var nextRouteData = new Dictionary<string, string>(routeData);
+                        var previousRouteData = new Dictionary<string, string>(routeData);
+                        nextRouteData["CurrentPageIndex"] = pagingModel.CurrentPage.ToString();
+                        previousRouteData["CurrentPageIndex"] = pagingModel.CurrentPage.ToString();
+                        nextRouteData["MyLearningFormActionType"] = MyLearningFormActionTypeEnum.NextPageChange.ToString();
+                        previousRouteData["MyLearningFormActionType"] = MyLearningFormActionTypeEnum.PreviousPageChange.ToString();
+
+                        string prevUrl = pagingModel.CurrentPage > 0
+                            ? Url.Action("LearningHistory", previousRouteData)
+                            : null;
+
+                        string nextUrl = pagingModel.CurrentPage < pagingModel.TotalPages - 1
+                            ? Url.Action("LearningHistory", nextRouteData)
+                            : null;
+                    }
+
+                    <vc:pagination current-page="@currentPageIndex" total-page="@totalPages" prev-url="@prevUrl" next-url="@nextUrl" />
                 </div>
             </div>
         </div>

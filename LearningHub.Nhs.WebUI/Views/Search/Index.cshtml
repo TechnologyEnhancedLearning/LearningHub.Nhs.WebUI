@@ -1,4 +1,5 @@
-﻿@using Microsoft.FeatureManagement
+﻿@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.FeatureManagement
 @inject IFeatureManager FeatureManager
 @model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
 
@@ -75,7 +76,42 @@
                         {
                             @await Html.PartialAsync("_ResourceSearchResult", Model)
                         }
-                        @await Html.PartialAsync("_ResourcePagination", Model)
+                        @* @await Html.PartialAsync("_ResourcePagination", Model) *@
+                        
+                        @{
+                            var pagingModel = Model.ResourceResultPaging;
+                            var indexParamName = "resourcepageindex";
+                            var pageFragment = "#search-filters";
+                            var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString().ToLower());
+                            if (pagingModel.CurrentPage < 0 || pagingModel.CurrentPage >= pagingModel.TotalPages)
+                            {
+                                queryParams[indexParamName] = "0";
+                                Context.Response.Redirect(QueryHelpers.AddQueryString(Context.Request.Path, queryParams));
+                            }
+
+                            queryParams["searchid"] = $"{Model.ResourceSearchResult.SearchId}";
+                            queryParams["groupid"] = $"{Model.GroupId}";
+                            queryParams["resourcecount"] = $"{pagingModel.TotalItems}";
+
+                            int currentPageIndex = pagingModel.CurrentPage + 1;
+                            int totalPages = pagingModel.TotalPages;
+
+                            string prevUrl = null;
+                            if (pagingModel.CurrentPage > 0)
+                            {
+                                queryParams[indexParamName] = $"{pagingModel.CurrentPage - 1}";
+                                prevUrl = string.Concat(QueryHelpers.AddQueryString("/search/record-resource-navigation", queryParams), pageFragment);
+                            }
+
+                            string nextUrl = null;
+                            if (pagingModel.CurrentPage < pagingModel.TotalPages - 1)
+                            {
+                                queryParams[indexParamName] = $"{pagingModel.CurrentPage + 1}";
+                                nextUrl = string.Concat(QueryHelpers.AddQueryString("/search/record-resource-navigation", queryParams), pageFragment);
+                            }
+                        }
+
+                        <vc:pagination current-page="@currentPageIndex" total-page="@totalPages" prev-url="@prevUrl" next-url="@nextUrl" />
                     </div>
                 </div>
             </div>

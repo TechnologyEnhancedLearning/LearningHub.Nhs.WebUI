@@ -78,6 +78,8 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IResourceSyncService, ResourceSyncService>();
             services.AddScoped<ISecurityService, SecurityService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IUserRoleService, UserRoleService>();
             services.AddTransient<IQueueCommunicatorService, QueueCommunicatorService>();
             services.AddScoped<IEmailSenderService, EmailSenderService>();
             services.AddScoped<IEmailTemplateService, EmailTemplateService>();

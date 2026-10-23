@@ -1,10 +1,11 @@
 ﻿namespace LearningHub.NHS.OpenAPI.Controllers
 {
+    using LearningHub.Nhs.OpenApi.Models.Exceptions;
+    using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Net;
     using System.Security.Claims;
-    using LearningHub.Nhs.OpenApi.Models.Exceptions;
-    using Microsoft.AspNetCore.Mvc;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The base class for API controllers.

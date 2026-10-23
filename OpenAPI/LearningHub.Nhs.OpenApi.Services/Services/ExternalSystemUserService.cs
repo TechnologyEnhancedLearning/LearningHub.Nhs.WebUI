@@ -44,5 +44,6 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
         {
             return await this.userExternalSystemRepo.GetUserExternalSystemByUserIdandCodeAsync(userId, clientCode);
         }
+
     }
 }

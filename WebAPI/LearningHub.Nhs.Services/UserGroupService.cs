@@ -643,7 +643,7 @@
                         items = items.Where(x => x.UserGroup.Name.Contains(filter.Value));
                         break;
                     case "username":
-                        items = items.Where(x => x.User.LegacyUserName.Contains(filter.Value));
+                        items = items.Where(x => x.User.UserName.Contains(filter.Value));
                         break;
                     default:
                         break;
@@ -700,11 +700,11 @@
                 case "username":
                     if (sortDirection == "D")
                     {
-                        items = items.OrderByDescending(x => x.User.LegacyUserName);
+                        items = items.OrderByDescending(x => x.User.UserName);
                     }
                     else
                     {
-                        items = items.OrderBy(x => x.User.LegacyUserName);
+                        items = items.OrderBy(x => x.User.UserName);
                     }
 
                     break;

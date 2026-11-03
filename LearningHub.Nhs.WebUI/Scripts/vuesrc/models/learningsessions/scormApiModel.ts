@@ -22,7 +22,7 @@ export class ScormApiModel {
 		this.sco = new ScoModel();
 		this.LMSLastErrorCode = 0;
 		this.LMSLastErrorMsg = "";
-    }
+	}
 
 	LMSGetLastError() { // returns the last error recorded by the LMS
 		return this.LMSLastErrorCode;
@@ -72,12 +72,12 @@ export class ScormApiModel {
 		return result;
 	}
 
-	LMSGetDiagnostic (errorCode: string) { // The vendor specific textual description that corresponds to the input error code
+	LMSGetDiagnostic(errorCode: string) { // The vendor specific textual description that corresponds to the input error code
 		//TODO: add more specific msgs for elfh codes
 		return this.LMSLastErrorMsg;
 	}
 
-	LMSInitialize (str: string): string { // initialise connection to the LMS, e.g. record the session start time
+	LMSInitialize(str: string): string { // initialise connection to the LMS, e.g. record the session start time
 
 		this.LMSLastErrorCode = 0;
 		this.LMSLastErrorMsg = "";
@@ -115,7 +115,7 @@ export class ScormApiModel {
 		return result.toString();
 	}
 
-	LMSFinish (str: string): string { // finish the communication with the LMS
+	LMSFinish(str: string): string { // finish the communication with the LMS
 
 		this.LMSLastErrorCode = 0;
 		this.LMSLastErrorMsg = "";
@@ -152,8 +152,7 @@ export class ScormApiModel {
 						this.LMSLastErrorCode = 301;
 						this.LMSLastErrorMsg = "Unable to disconnect cleanly from the e-LfH LMS";
 
-						//alert("Error communicating with the LMS server.  Your learning details may not have been saved.");
-						window.dispatchEvent(new CustomEvent('show-lms-error'));
+						alert("Error communicating with the LMS server.  Your learning details may not have been saved.");
 					}
 
 					result = false;
@@ -167,7 +166,7 @@ export class ScormApiModel {
 		return result.toString(); // The specification specifies a string return value
 	}
 
-	LMSGetValue (paramName: string) {
+	LMSGetValue(paramName: string) {
 
 		this.LMSLastErrorCode = 0;
 		this.LMSLastErrorMsg = "";
@@ -372,7 +371,7 @@ export class ScormApiModel {
 						break;
 					}
 				}
-            }
+			}
 
 		}
 		//else if (paramName === "cmi.interactions.0.correct_responses._count") {
@@ -382,11 +381,11 @@ export class ScormApiModel {
 		else if (paramName === "cmi.core.exit") {
 			this.LMSLastErrorCode = 404;
 			this.LMSLastErrorMsg = "Element is write only";
-		}	
+		}
 		else if (paramName === "cmi.core.session_time") {
 			this.LMSLastErrorCode = 404;
 			this.LMSLastErrorMsg = "Element is write only";
-		}	
+		}
 		else {
 			this.LMSLastErrorCode = 401;
 			this.LMSLastErrorMsg = "Not implemented error";
@@ -397,7 +396,7 @@ export class ScormApiModel {
 		return result.toString(); // The specification specifies a string return value
 	}
 
-	LMSSetValue (paramName: string, paramValue: string) {
+	LMSSetValue(paramName: string, paramValue: string) {
 
 		this.LMSLastErrorCode = 0;
 		this.LMSLastErrorMsg = "";
@@ -472,7 +471,7 @@ export class ScormApiModel {
 			if (this.isValidateDataType(paramValue, CMIDataType.Exit)) {
 				this.sco.exit = paramValue;
 				result = true;
-            }
+			}
 		}
 		else if (paramName === "cmi.core.session_time") {
 			if (this.isValidateDataType(paramValue, CMIDataType.CMITimeSpan)) {
@@ -729,16 +728,16 @@ export class ScormApiModel {
 					// get the interaction from the collection
 					const objective = interaction.objectives[objSeqId];
 
-                    switch (objProp) {
-                        case "id":
-                            objective.id = paramValue;
-                            result = true;
+					switch (objProp) {
+						case "id":
+							objective.id = paramValue;
+							result = true;
 							break;
 						default:
 							this.LMSLastErrorCode = 401;
 							this.LMSLastErrorMsg = "Not implemented error";
 							break;
-                    }
+					}
 
 					//interaction.objectives[objSeqId] = objective;
 
@@ -749,7 +748,7 @@ export class ScormApiModel {
 					//    // "cmi.interactions.0.correct_responses.1.pattern"
 					//    break;
 				}
-            }
+			}
 
 			this.sco.interactions[seqNumber] = interaction;
 			this.sco.interactionsCount = this.sco.interactions.length;
@@ -782,7 +781,7 @@ export class ScormApiModel {
 	}
 
 
-	LMSCommit (str: string) {
+	LMSCommit(str: string) {
 		this.LMSLastErrorCode = 0;
 		this.LMSLastErrorMsg = "";
 
@@ -810,7 +809,7 @@ export class ScormApiModel {
 				// Attempt SendBeacon if browser did not honour request (jqHXR.status === 0)
 				// - occurs on attempt to make synchronous XMLHttp call on browser dismissal (Chrome).
 				// Otherwise display error alert and return false.
-				if (jqHXR.status === 0 && navigator.sendBeacon !== undefined) { 
+				if (jqHXR.status === 0 && navigator.sendBeacon !== undefined) {
 					if (navigator.sendBeacon('/api/Scorm/LMSCommit/', formData)) {
 						result = true;
 					}
@@ -822,9 +821,8 @@ export class ScormApiModel {
 						this.LMSLastErrorCode = 101;
 						this.LMSLastErrorMsg = "LMSCommit failed. Unable to communicate with the LMS.";
 
-						window.dispatchEvent(new CustomEvent('show-lms-error'));
-						//alert("Error communicating with the LMS server.  Your learning details may not have been saved.\n\n" +
-						//	"If the error persists please email support@learninghub.nhs.uk for further assistance.");
+						alert("Error communicating with the LMS server.  Your learning details may not have been saved.\n\n" +
+							"If the error persists please email support@learninghub.nhs.uk for further assistance.");
 					}
 
 					result = false;
@@ -838,7 +836,7 @@ export class ScormApiModel {
 		return result;
 	}
 
-	private SecondsToTime(totalSeconds: number) : string {
+	private SecondsToTime(totalSeconds: number): string {
 
 		const intHours = Math.floor(totalSeconds / (60 * 60));
 		const intMinutes = Math.floor((totalSeconds - (intHours * 60 * 60)) / 60);
@@ -852,7 +850,7 @@ export class ScormApiModel {
 
 	}
 
-	private TimeToSeconds(sessionTime: string) : number {
+	private TimeToSeconds(sessionTime: string): number {
 		if (sessionTime === "") {
 			return 0;
 		} else {
@@ -877,7 +875,7 @@ export class ScormApiModel {
 		}
 	}
 
-	private sortBySeqNum(a: any, b: any) : number {
+	private sortBySeqNum(a: any, b: any): number {
 		if (parseInt(a.SequenceNumber, 10) < parseInt(b.SequenceNumber, 10))
 			return -1;
 		if (parseInt(a.SequenceNumber, 10) > parseInt(b.SequenceNumber, 10))
@@ -885,7 +883,7 @@ export class ScormApiModel {
 		return 0;
 	}
 
-	private LogError(Message: string, URL: string) : void {
+	private LogError(Message: string, URL: string): void {
 
 		const data = { Message: Message, URL: URL };
 
@@ -893,16 +891,16 @@ export class ScormApiModel {
 
 	}
 
-	private logStatement(statement: string, result: string) : void {
+	private logStatement(statement: string, result: string): void {
 		if (this.loggingEnabled) {
 			this.trace.push(
 				{
 					statement: statement,
 					result: result
-                }
+				}
 			);
-        }
-    }
+		}
+	}
 
 	private isValidCMIFeedback(value: string, interactionType: string): boolean {
 		let response = false;
@@ -915,7 +913,7 @@ export class ScormApiModel {
 				}
 				break;
 			case CMIVocabularyInteraction.Choice:		// Up to 26 single chars separated by comma
-				if (value.match(/^[\w]([,][\w]){0,25}$/)) { 
+				if (value.match(/^[\w]([,][\w]){0,25}$/)) {
 					response = true;
 				}
 				break;
@@ -965,11 +963,11 @@ export class ScormApiModel {
 		let response = false;
 		value = value.toString();
 
-        switch (type) {
+		switch (type) {
 			case CMIDataType.CMIBlank:
 				if (value === '') {
 					response = true;
-                }
+				}
 				break;
 			case CMIDataType.CMIBoolean:
 				if (value === 'true' || value === 'false') {
@@ -979,9 +977,9 @@ export class ScormApiModel {
 			case CMIDataType.CMIDecimal: {
 				if (value.match(/^-?\d+\.?\d*$/)) {
 					response = true;
-                }
+				}
 				break;
-            }
+			}
 			case CMIDataType.CMIDecimalOrBlank: {
 				if (value.match(/^-?\d*\.?\d*$/)) {
 					response = true;
@@ -1059,7 +1057,7 @@ export class ScormApiModel {
 					|| value === CMIVocabularyExit.Suspend
 					|| value === CMIVocabularyExit.TimeOut) {
 					response = true;
-                }
+				}
 				break;
 			case CMIDataType.Credit:
 				if (value === CMIVocabularyCredit.Credit
@@ -1105,8 +1103,8 @@ export class ScormApiModel {
 					response = true;
 				}
 				break;
-            default:
-        }
+			default:
+		}
 
 		if (!response) {
 			this.LMSLastErrorCode = 405;

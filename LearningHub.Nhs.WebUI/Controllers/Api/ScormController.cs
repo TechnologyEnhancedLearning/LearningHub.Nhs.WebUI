@@ -163,7 +163,7 @@
             try
             {
                 // Check that SCO content is active
-                var activeContentList = this.userService.GetActiveContentAsync().Result;
+                var activeContentList = await this.userService.GetActiveContentAsync();
                 var activeContent = activeContentList.FirstOrDefault(ac => ac.ScormActivityId == scoObject.InstanceId);
 
                 if (activeContent == null)

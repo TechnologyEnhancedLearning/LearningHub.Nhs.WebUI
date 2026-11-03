@@ -112,6 +112,7 @@
 
             // Configure Azure Search
             services.Configure<AzureSearchConfig>(configuration.GetSection("AzureSearch"));
+            services.Configure<EmailLoginFeatureManagementConfig>(configuration.GetSection("EmailLoginFeatureManagement"));
             services.AddHttpClient("AzureSearch");
             services.AddScoped<IAzureSearchAdminService, AzureSearchAdminService>();
 

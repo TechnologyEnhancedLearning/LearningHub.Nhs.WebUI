@@ -76,10 +76,18 @@
             });
         }
 
-        window.onunload = refreshResourcePage;
-        function refreshResourcePage() {
-            window.opener.refreshPage();
+        // pagehide is more reliable than unload in modern browsers
+        window.addEventListener("pagehide", refreshResourcePage);
 
+        function refreshResourcePage() {
+
+        // Make sure the parent/opener still exists
+         if (window.opener &&
+                !window.opener.closed &&
+                typeof window.opener.refreshPage === "function") {
+
+                window.opener.refreshPage();
+            }
         }
 
     </script>

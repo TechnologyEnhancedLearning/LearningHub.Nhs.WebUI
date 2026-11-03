@@ -197,5 +197,10 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// Gets or sets the VLEUserGroupId.
         /// </summary>
         public int VLEUserGroupId { get; set; }
+
+        /// <summary>
+        /// Gets or Sets the EmailBasedAuthenticationPhase1
+        /// </summary>
+        public bool EmailBasedAuthenticationPhase1 {  get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿@using elfhHub.Nhs.Models.Common
 @model LearningHub.Nhs.WebUI.Models.Account.AccountCreationListViewModel
+@using LearningHub.Nhs.WebUI.Models.Account
 
 @{
     ViewData["Title"] = "Region";
@@ -38,7 +39,38 @@
                     <button type="submit" class="nhsuk-button">Continue</button>
 
                 </form>
-                @await Html.PartialAsync("_AccountCreationRegionPaging", Model.AccountCreationPaging)
+                @* @await Html.PartialAsync("_AccountCreationRegionPaging", Model.AccountCreationPaging) *@
+
+                @{
+                    var pagingModel = Model.AccountCreationPaging;
+                    string currentPage = $"{pagingModel.CurrentPage} of {pagingModel.TotalPages}";
+                    int currentPageIndex = pagingModel.CurrentPage;
+                    int totalPages = pagingModel.TotalPages;
+
+                    string prevUrl = pagingModel.CurrentPage > 1
+                    ? Url.Action("CreateAccountRegionSelection",
+                    new
+                    {
+                        currentPageIndex = pagingModel.CurrentPage,
+                        accountCreationPagingEnum = AccountCreationPagingEnum.PreviousPageChange,
+                        filterText = Context.Request.Query["filterText"],
+                        countryId = Context.Request.Query["CountryId"],
+                    })
+                    : null;
+
+                    string nextUrl = pagingModel.CurrentPage < pagingModel.TotalPages
+                    ? Url.Action("CreateAccountRegionSelection",
+                    new
+                    {
+                        currentPageIndex = pagingModel.CurrentPage,
+                        accountCreationPagingEnum = AccountCreationPagingEnum.NextPageChange,
+                        filterText = Context.Request.Query["filterText"],
+                        countryId = Context.Request.Query["CountryId"],
+                    })
+                    : null;
+                }
+
+                <vc:pagination current-page="@currentPageIndex" total-page="@totalPages" prev-url="@prevUrl" next-url="@nextUrl" />
             </div>
         </div>
     </div>

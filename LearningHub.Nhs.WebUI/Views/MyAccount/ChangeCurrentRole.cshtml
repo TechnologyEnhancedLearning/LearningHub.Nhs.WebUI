@@ -84,7 +84,33 @@
 
             </form>
 
-            @await Html.PartialAsync("_UserJobRolePaging", Model)
+            @* @await Html.PartialAsync("_UserJobRolePaging", Model) *@
+
+            var pagingModel = Model;
+            string currentPage = $"{pagingModel.CurrentPage} of {pagingModel.TotalPages}";
+            int currentPageIndex = pagingModel.CurrentPage;
+            int totalPages = pagingModel.TotalPages;
+
+            string prevUrl = pagingModel.CurrentPage > 1
+                ? Url.Action("ChangeCurrentRole",
+                new
+                {
+                    currentPage = pagingModel.CurrentPage - 1,
+                    filterText = Context.Request.Query["filterText"],
+                })
+                : null;
+
+            string nextUrl = pagingModel.CurrentPage < pagingModel.TotalPages
+                ? Url.Action("ChangeCurrentRole",
+                new
+                {
+                    currentPage = pagingModel.CurrentPage + 1,
+                    filterText = Context.Request.Query["filterText"],
+                })
+                : null;
+            
+
+            <vc:pagination current-page="@currentPageIndex" total-page="@totalPages" prev-url="@prevUrl" next-url="@nextUrl" />
           }
           else
           {

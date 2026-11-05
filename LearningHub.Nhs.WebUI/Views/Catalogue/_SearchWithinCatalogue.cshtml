@@ -1,4 +1,5 @@
-﻿@model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
+﻿@using Microsoft.AspNetCore.WebUtilities
+@model LearningHub.Nhs.WebUI.Models.Search.SearchResultViewModel
 
 <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
@@ -14,7 +15,44 @@
         <div class="nhsuk-grid-column-full">
             <div class="nhsuk-u-reading-width">
                 @await Html.PartialAsync("../Search/_ResourceSearchResult", Model)
-                @await Html.PartialAsync("_SearchPagination", Model)
+                @* @await Html.PartialAsync("_SearchPagination", Model) *@
+                
+                @{
+                    var pagingModel = Model.ResourceResultPaging;
+                    var indexParamName = "resourcepageindex";
+
+                    var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString().ToLower());
+                    if (pagingModel.CurrentPage < 0 || pagingModel.CurrentPage >= pagingModel.TotalPages)
+                    {
+                        queryParams[indexParamName] = "0";
+                        Context.Response.Redirect(QueryHelpers.AddQueryString(Context.Request.Path, queryParams));
+                    }
+
+                    queryParams["searchid"] = $"{Model.ResourceSearchResult.SearchId}";
+                    queryParams["groupid"] = $"{Model.GroupId}";
+                    queryParams["resourcecount"] = $"{pagingModel.TotalItems}";
+                    queryParams["reference"] = this.ViewBag.Reference;
+                    queryParams["tab"] = this.ViewBag.ActiveTab;
+
+                    int currentPageIndex = pagingModel.CurrentPage + 1;
+                    int totalPages = pagingModel.TotalPages;
+
+                    string prevUrl = null;
+                    if (pagingModel.CurrentPage > 0)
+                    {
+                        queryParams[indexParamName] = $"{pagingModel.CurrentPage - 1}";
+                        prevUrl = QueryHelpers.AddQueryString("/catalogue/record-search-navigation", queryParams);
+                    }
+
+                    string nextUrl = null;
+                    if (pagingModel.CurrentPage < pagingModel.TotalPages - 1)
+                    {
+                        queryParams[indexParamName] = $"{pagingModel.CurrentPage + 1}";
+                        nextUrl = QueryHelpers.AddQueryString("/catalogue/record-search-navigation", queryParams);
+                    }
+                }
+
+                <vc:pagination current-page="@currentPageIndex" total-page="@totalPages" prev-url="@prevUrl" next-url="@nextUrl" />
             </div>
         </div>
     </div>

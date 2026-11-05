@@ -18,11 +18,24 @@
     queryParams["reference"] = this.ViewBag.Reference;
     queryParams["tab"] = this.ViewBag.ActiveTab;
 
-    queryParams[indexParamName] = $"{pagingModel.CurrentPage - 1}";
-    var prevUrl = QueryHelpers.AddQueryString("/catalogue/record-search-navigation", queryParams);
+    int currentPageIndex = pagingModel.CurrentPage + 1;
+    int totalPages = pagingModel.TotalPages;
 
-    queryParams[indexParamName] = $"{pagingModel.CurrentPage + 1}";
-    var nextUrl = QueryHelpers.AddQueryString("/catalogue/record-search-navigation", queryParams);
+    string prevUrl = null;
+    if (pagingModel.CurrentPage > 0)
+    {
+        queryParams[indexParamName] = $"{pagingModel.CurrentPage - 1}";
+        prevUrl = QueryHelpers.AddQueryString("/catalogue/record-search-navigation", queryParams);
+    }
 
-    @await Html.PartialAsync("_Pagination", new PaginationViewModel(pagingModel.CurrentPage + 1, pagingModel.TotalPages, prevUrl, nextUrl))
+    string nextUrl = null;
+    if (pagingModel.CurrentPage < pagingModel.TotalPages - 1)
+    {
+        queryParams[indexParamName] = $"{pagingModel.CurrentPage + 1}";
+        nextUrl = QueryHelpers.AddQueryString("/catalogue/record-search-navigation", queryParams);
+    }
+
+    <vc:pagination current-page="@currentPageIndex" total-page="@totalPages" prev-url="@prevUrl" next-url="@nextUrl" />
+
+    // @await Html.PartialAsync("_Pagination", new PaginationViewModel(pagingModel.CurrentPage + 1, pagingModel.TotalPages, prevUrl, nextUrl))
 }

@@ -208,7 +208,30 @@
                 </div>
             </div>
             <div class="nhsuk-grid-column-full nhsuk-u-padding-5">
-                @await Html.PartialAsync("_ReportHistoryPaging", Model)
+                @* @await Html.PartialAsync("_ReportHistoryPaging", Model) *@
+                
+                @{
+                    var reportPaging = Model.ReportPaging;
+                    int currentPageIndex = reportPaging.CurrentPage + 1;
+                    int totalPages = reportPaging.TotalPages;
+
+                    var routeData = new Dictionary<string, string>();
+                    routeData["CurrentPageIndex"] = reportPaging.CurrentPage.ToString();
+                    var nextRouteData = new Dictionary<string, string>(routeData);
+                    var previousRouteData = new Dictionary<string, string>(routeData);
+                    nextRouteData["ReportFormActionType"] = ReportFormActionTypeEnum.NextPageChange.ToString();
+                    previousRouteData["ReportFormActionType"] = ReportFormActionTypeEnum.PreviousPageChange.ToString();
+
+                    string prevUrl = reportPaging.CurrentPage > 0
+                        ? Url.Action("Index", previousRouteData)
+                        : null;
+
+                    string nextUrl = reportPaging.CurrentPage < reportPaging.TotalPages - 1
+                        ? Url.Action("Index", nextRouteData)
+                        : null;
+                }
+
+                <vc:pagination current-page="@currentPageIndex" total-page="@totalPages" prev-url="@prevUrl" next-url="@nextUrl" />
             </div>
         </div>
     </div>

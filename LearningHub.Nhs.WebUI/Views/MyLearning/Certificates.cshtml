@@ -209,13 +209,15 @@
                             var activityDate = certificate.AwardedDate.Date;
                             var today = DateTime.Today;
 
-                            var dateTimeText =
-                            activityDate == DateTimeOffset.UnixEpoch ? "" :
-                            activityDate.Date == today ? "Today" :
-                            activityDate.Date == today.AddDays(-1) ? "Yesterday" :
-                            activityDate.ToString("dd MMM yyyy");
-
-
+                            string? dateTimeText =
+                            activityDate == DateTimeOffset.MinValue ||
+                            activityDate == DateTimeOffset.UnixEpoch
+                            ? null
+                            : activityDate.Date == today
+                            ? "Today"
+                            : activityDate.Date == today.AddDays(-1)
+                            ? "Yesterday"
+                            : activityDate.ToString("dd MMM yyyy");
 
                             <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
                                 <div class="nhsuk-card dashboard-card nhsuk-card--radius-6">

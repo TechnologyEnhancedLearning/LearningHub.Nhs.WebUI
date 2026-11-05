@@ -15,11 +15,15 @@
     var activityDate = Model.Item2.ActivityDate.Date;
     var today = DateTime.Today;
 
-    var dateTimeText =
-        activityDate == DateTimeOffset.UnixEpoch ? "" :
-        activityDate.Date == today ? "Today" :
-        activityDate.Date == today.AddDays(-1) ? "Yesterday" :
-        activityDate.ToString("dd MMM yyyy");
+    string? dateTimeText =
+     activityDate == DateTimeOffset.MinValue ||
+     activityDate == DateTimeOffset.UnixEpoch
+         ? null
+         : activityDate.Date == today
+             ? "Today"
+             : activityDate.Date == today.AddDays(-1)
+                 ? "Yesterday"
+                 : activityDate.ToString("dd MMM yyyy");
     string GetMoodleCourseUrl(int courseId)
     {
         return moodleApiService.GetCourseUrl(courseId);

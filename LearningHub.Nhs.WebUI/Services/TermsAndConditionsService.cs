@@ -60,7 +60,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result) as ApiResponse;
 
                 if (!apiResponse.Success)
@@ -96,7 +96,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<TermsAndConditions>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized

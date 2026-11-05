@@ -229,7 +229,7 @@
         {
             try
             {
-                var activeContent = this.userService.GetActiveContentAsync().Result;
+                var activeContent = await this.userService.GetActiveContentAsync();
                 if (!activeContent.Any(ac => ac.ScormActivityId == scoObject.InstanceId))
                 {
                     throw new Exception($"User does not have ActiveContent for ScormActivityId={scoObject.InstanceId}");

@@ -77,6 +77,59 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
         }
 
         /// <inheritdoc/>
+        public async Task<List<BulkResourceReferenceDTO>> GetBulkResourceReferencesByOriginalResourceReferenceIds(List<int> originalResourceReferenceIds)
+        {
+            var ids = originalResourceReferenceIds.Distinct().ToList();
+            if (ids.Count == 0)
+            {
+                return new List<BulkResourceReferenceDTO>();
+            }
+            var referenceIdsTable = new DataTable();
+            referenceIdsTable.Columns.Add("Id", typeof(int));
+            foreach (var id in ids)
+            {
+                referenceIdsTable.Rows.Add(id);
+            }
+            var idsParameter = new SqlParameter("@OriginalResourceReferenceIds", SqlDbType.Structured)
+            {
+                TypeName = "dbo.IntIdsTableList",
+                Value = referenceIdsTable
+            };
+
+            return await this.DbContext.Set<BulkResourceReferenceDTO>().FromSqlRaw("EXEC [resources].GetResourceReferencesByOriginalIds @OriginalResourceReferenceIds", idsParameter).AsNoTracking().ToListAsync();
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<ResourceActivityDTO>> GetBulkResourceActivityPerResourceMajorVersion(List<int> resourceIds, int userId)
+        {
+            var ids = resourceIds.Distinct().ToList();
+
+            if (ids.Count == 0)
+            {
+                return new List<ResourceActivityDTO>();
+            }
+
+            var resourceIdsTable = new DataTable();
+            resourceIdsTable.Columns.Add("Id", typeof(int));
+
+            foreach (var id in ids)
+            {
+                resourceIdsTable.Rows.Add(id);
+            }
+
+            var resourceIdsParameter = new SqlParameter(
+                "@ResourceIds",
+                SqlDbType.Structured)
+            {
+                TypeName = "dbo.IntIdsTableList",
+                Value = resourceIdsTable
+            };
+
+            var userIdParameter = new SqlParameter("@UserId",SqlDbType.Int){Value = userId};
+            return await this.DbContext.Set<ResourceActivityDTO>().FromSqlRaw("[activity].[GetResourceActivityByResourceId] " + "@ResourceIds, @UserId", resourceIdsParameter, userIdParameter).AsNoTracking().ToListAsync();
+        }
+
+        /// <inheritdoc/>
         public async Task<List<int>> GetAchievedCertificatedResourceIds(int currentUserId)
         {
             // Use dashboard logic to ensure same resources determined has having achieved certificates
@@ -98,13 +151,13 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
         /// <returns>A <see cref="Task{UserCertificateViewModel}"/> representing the result of the asynchronous operation.</returns>
         public async Task<List<UserCertificateViewModel>> GetUserCertificateDetails(int userId, string filterText = "")
         {
-            var result = new List<UserCertificateViewModel>(); 
-                var param0 = new SqlParameter("@UserId", SqlDbType.Int) { Value = userId };
-                var param1 = new SqlParameter("@FilterText", SqlDbType.NVarChar, 200) { Value = filterText.Trim() ?? string.Empty };
+            var result = new List<UserCertificateViewModel>();
+            var param0 = new SqlParameter("@UserId", SqlDbType.Int) { Value = userId };
+            var param1 = new SqlParameter("@FilterText", SqlDbType.NVarChar, 200) { Value = filterText.Trim() ?? string.Empty };
 
-                result = await this.DbContext.UserCertificateViewModel
-                    .FromSqlRaw("resources.GetUserCertificateDetails @UserId = @UserId, @FilterText = @FilterText", param0, param1).AsNoTracking().ToListAsync();
-                return result;
+            result = await this.DbContext.UserCertificateViewModel
+                .FromSqlRaw("resources.GetUserCertificateDetails @UserId = @UserId, @FilterText = @FilterText", param0, param1).AsNoTracking().ToListAsync();
+            return result;
         }
 
 
@@ -233,6 +286,22 @@ namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
             return await this.DbContext.Resource.AnyAsync(r => r.CurrentResourceVersionId == resourceVersionId && !r.Deleted);
         }
 
+        /// <summary>
+        /// CreateIdTable.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        private static DataTable CreateIdTable(IEnumerable<int> ids)
+        {
+            var table = new DataTable();
+            table.Columns.Add("Id", typeof(int));
 
+            foreach (var id in ids.Distinct())
+            {
+                table.Rows.Add(id);
+            }
+
+            return table;
+        }
     }
 }

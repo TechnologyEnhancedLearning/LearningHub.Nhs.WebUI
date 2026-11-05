@@ -33,33 +33,16 @@
 
 -- Create the new stored procedure
 CREATE PROCEDURE [activity].[GetResourceActivityPerResourceMajorVersion]
-    @ResourceIds VARCHAR(MAX) = NULL,
-    @UserIds VARCHAR(MAX) = NULL
+    @ResourceIds dbo.IntIdsTableList READONLY,
+    @UserId INT
 AS
 BEGIN
 
-  -- Split the comma-separated list into a table of integers
-    DECLARE @ResourceIdTable TABLE (ResourceId INT);
+   SET NOCOUNT ON;
 
-    IF @ResourceIds IS NOT NULL AND @ResourceIds <> ''
-    BEGIN
-        INSERT INTO @ResourceIdTable (ResourceId)
-        SELECT CAST(value AS INT)
-        FROM STRING_SPLIT(@ResourceIds, ',');
-    END;
-
-    -- Split the comma-separated list of UserIds into a table
-    DECLARE @UserIdTable TABLE (UserId INT);
-
-    IF @UserIds IS NOT NULL AND @UserIds <> ''
-    BEGIN
-        INSERT INTO @UserIdTable (UserId)
-        SELECT CAST(value AS INT)
-        FROM STRING_SPLIT(@UserIds, ',');
-    END;
-
-    WITH FilteredResourceActivities AS (
-        SELECT 
+   WITH RankedActivities AS
+    (
+        SELECT
             ars.[Id],
             ars.[UserId],
             ars.[LaunchResourceActivityId],
@@ -77,76 +60,58 @@ BEGIN
             ars.[CreateUserID],
             ars.[CreateDate],
             ars.[AmendUserID],
-            ars.[AmendDate]
-        FROM 
-            [activity].[resourceactivity] ars
-        WHERE 
-            (@UserIds IS NULL OR ars.userId IN (SELECT UserId FROM @UserIdTable) OR NOT EXISTS (SELECT 1 FROM @UserIdTable))
-            AND (@ResourceIds IS NULL OR @ResourceIds = '' OR ars.resourceId IN (SELECT ResourceId FROM @ResourceIdTable) OR NOT EXISTS (SELECT 1 FROM @ResourceIdTable))
-            AND ars.Deleted = 0
-            AND ars.ActivityStatusId NOT IN (1, 6, 2) -- These Ids are not in use - Launched, Downloaded, In Progress (stored as completed and incomplete then renamed in the application)
-    ),
-    RankedActivities AS (
-        SELECT 
-            ra.[Id],
-            ra.[UserId],
-            ra.[LaunchResourceActivityId],
-            ra.[ResourceId],
-            ra.[ResourceVersionId],
-            ra.[MajorVersion],
-            ra.[MinorVersion],
-            ra.[NodePathId],
-            ra.[ActivityStatusId],
-            ra.[ActivityStart],
-            ra.[ActivityEnd],
-            ra.[DurationSeconds],
-            ra.[Score],
-            ra.[Deleted],
-            ra.[CreateUserID],
-            ra.[CreateDate],
-            ra.[AmendUserID],
-            ra.[AmendDate],
-            ROW_NUMBER() OVER (
-                PARTITION BY resourceId, userId, MajorVersion 
-                ORDER BY 
-                    CASE 
-                        WHEN ActivityStatusId = 5 THEN 1    -- Passed
-                        WHEN ActivityStatusId = 3 THEN 2    -- Completed
-                        WHEN ActivityStatusId = 4 THEN 3    -- Failed
-                        WHEN ActivityStatusId = 7 THEN 4    -- Incomplete
-                        ELSE 5 -- shouldn't be any
+            ars.[AmendDate],
+
+            ROW_NUMBER() OVER
+            (
+                PARTITION BY
+                    ars.ResourceId,
+                    ars.UserId,
+                    ars.MajorVersion
+
+                ORDER BY
+                    CASE ars.ActivityStatusId
+                        WHEN 5 THEN 1 -- Passed
+                        WHEN 3 THEN 2 -- Completed
+                        WHEN 4 THEN 3 -- Failed
+                        WHEN 7 THEN 4 -- Incomplete
+                        ELSE 5
                     END,
-					Id DESC -- we have two entries per interacting with a resource the start and the end, we are just returning the last entry made
-					-- there is the option of instead coalescing LaunchResourceActivityId, ActivityStart,ActivityEnd potentially via joining LaunchResourceActivityId and UserId
+                    ars.Id DESC
             ) AS RowNum
-        FROM 
-            FilteredResourceActivities ra
+
+        FROM [activity].[resourceactivity] ars
+
+        INNER JOIN @ResourceIds r
+            ON r.Id = ars.ResourceId
+
+        WHERE ars.UserId = @UserId
+          AND ars.Deleted = 0
+          AND ars.ActivityStatusId NOT IN (1, 6, 2)
     )
-    SELECT 
-        ra.[Id],
-        ra.[UserId],
-        ra.[LaunchResourceActivityId],
-        ra.[ResourceId],
-        ra.[ResourceVersionId],
-        ra.[MajorVersion],
-        ra.[MinorVersion],
-        ra.[NodePathId],
-        ra.[ActivityStatusId],
-        ra.[ActivityStart],
-        ra.[ActivityEnd],
-        ra.[DurationSeconds],
-        ra.[Score],
-        ra.[Deleted],
-        ra.[CreateUserID],
-        ra.[CreateDate],
-        ra.[AmendUserID],
-        ra.[AmendDate]
-    FROM 
-        RankedActivities ra
-    WHERE 
-        RowNum = 1
-	order by MajorVersion desc;
+
+    SELECT
+        [Id],
+        [UserId],
+        [LaunchResourceActivityId],
+        [ResourceId],
+        [ResourceVersionId],
+        [MajorVersion],
+        [MinorVersion],
+        [NodePathId],
+        [ActivityStatusId],
+        [ActivityStart],
+        [ActivityEnd],
+        [DurationSeconds],
+        [Score],
+        [Deleted],
+        [CreateUserID],
+        [CreateDate],
+        [AmendUserID],
+        [AmendDate]
+    FROM RankedActivities
+    WHERE RowNum = 1
+    ORDER BY MajorVersion DESC;
 END;
-GO
 
 

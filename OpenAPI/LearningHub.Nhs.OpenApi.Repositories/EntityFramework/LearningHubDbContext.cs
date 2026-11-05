@@ -196,7 +196,10 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets the resource version flag..
         /// </summary>
         public virtual DbSet<ResourceVersionFlag> ResourceVersionFlag { get; set; }
-
+        /// <summary>
+        /// Gets or sets the resource version flag..
+        /// </summary>
+        public virtual DbSet<BulkResourceReferenceDTO> BulkResourceReferenceDTO { get; set; }
 
         /// <summary>
         /// Gets or sets the resource version validation result.
@@ -799,6 +802,8 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             {
                 mapping.Map(modelBuilder);
             }
+
+            modelBuilder.Entity<BulkResourceReferenceDTO>().HasNoKey().ToView(null);
         }
     }
 }

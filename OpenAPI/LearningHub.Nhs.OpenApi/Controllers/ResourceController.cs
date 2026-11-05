@@ -166,7 +166,7 @@ namespace LearningHub.NHS.OpenAPI.Controllers
                 throw new HttpResponseException($"Too many resources requested. The maximum is {MaxNumberOfReferenceIds}", HttpStatusCode.BadRequest);
             }
 
-            return await this.resourceService.GetResourceReferencesByOriginalIds(bulkResourceReferences.ResourceReferenceIds, this.CurrentUserId.GetValueOrDefault());
+            return await this.resourceService.GetBulkResourceReferencesByOriginalIds(bulkResourceReferences.ResourceReferenceIds, this.CurrentUserId.GetValueOrDefault());         
         }
 
         /// <summary>

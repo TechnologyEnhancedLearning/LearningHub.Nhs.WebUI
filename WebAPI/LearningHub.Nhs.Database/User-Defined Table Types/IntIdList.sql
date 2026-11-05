@@ -1,0 +1,8 @@
+﻿CREATE TYPE [dbo].[IntIdList] AS TABLE(
+	[Id] [int] NOT NULL,
+	PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (IGNORE_DUP_KEY = OFF)
+)
+GO

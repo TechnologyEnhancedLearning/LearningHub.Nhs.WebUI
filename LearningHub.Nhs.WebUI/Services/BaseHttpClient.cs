@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Threading;
     using System.Threading.Tasks;
     using IdentityModel.Client;
     using LearningHub.Nhs.Caching;
@@ -22,7 +23,7 @@
     /// </summary>
     public abstract class BaseHttpClient
     {
-        private static readonly ConcurrentDictionary<int, object> DictionaryLocks = new ConcurrentDictionary<int, object>();
+        private static readonly ConcurrentDictionary<int, SemaphoreSlim> TokenRefreshLocks = new ();
 
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly HttpClient httpClient;
@@ -77,65 +78,92 @@
             // get the current HttpContext to access the tokens
             var currentContext = this.httpContextAccessor.HttpContext;
 
-            if (this.WebSettings.EnableTempDebugging != null && this.WebSettings.EnableTempDebugging.ToLower() == "true")
+            if (this.WebSettings.EnableTempDebugging?.ToLower() == "true")
             {
-                this.logger.LogError("Temp Debugging: LearningHubHttpClient > GetClientAsync User is authenticated. User=" + currentContext.User.Identity.GetCurrentName());
+                this.logger.LogError(
+                    "Temp Debugging: LearningHubHttpClient > GetClientAsync User is authenticated. User={User}",
+                    currentContext?.User?.Identity?.GetCurrentName());
             }
 
             if (currentContext?.User?.Identity?.IsAuthenticated == true)
             {
                 // should we renew access and refresh tokens?
                 // get expires_at value
-                var expires_at = await currentContext.GetTokenAsync("expires_at");
+                var expiresAt = await currentContext.GetTokenAsync("expires_at");
 
+                var tokenExpired =
+                    string.IsNullOrWhiteSpace(expiresAt) ||
+                    DateTimeOffset.Parse(expiresAt)
+                        .AddSeconds(-60)
+                        .ToUniversalTime() < DateTime.UtcNow;
                 // compare
-                if (string.IsNullOrWhiteSpace(expires_at)
-                    || (DateTimeOffset.Parse(expires_at).AddSeconds(-60).ToUniversalTime() < DateTime.UtcNow))
+                if (tokenExpired)
                 {
-                    var currentUserId = currentContext.User.Identity.GetCurrentUserId();
+                    var currentUserId =
+                        currentContext.User.Identity.GetCurrentUserId();
 
                     if (currentUserId > 0)
                     {
-                        lock (DictionaryLocks.GetOrAdd(currentUserId, new object()))
+                        var tokenLock = TokenRefreshLocks.GetOrAdd(
+                            currentUserId,
+                            _ => new SemaphoreSlim(1, 1));
+
+                        await tokenLock.WaitAsync();
+
+                        try
                         {
-                            // only the initial thread will get into this condition, since the value in the dictionaryLocks will be deleted by
-                            // initial thread also after get new access token for the specific currentUserId.
-                            if (DictionaryLocks.ContainsKey(currentUserId))
+                            // Re-check after acquiring the lock.
+                            expiresAt =
+                                await currentContext.GetTokenAsync("expires_at");
+
+                            tokenExpired =
+                                string.IsNullOrWhiteSpace(expiresAt) ||
+                                DateTimeOffset.Parse(expiresAt)
+                                    .AddSeconds(-60)
+                                    .ToUniversalTime() < DateTime.UtcNow;
+
+                            if (tokenExpired)
                             {
-                                expires_at = currentContext.GetTokenAsync("expires_at").Result;
-
-                                if (string.IsNullOrWhiteSpace(expires_at) || (DateTimeOffset.Parse(expires_at).AddSeconds(-60).ToUniversalTime() < DateTime.UtcNow))
-                                {
-                                    accessToken = this.RenewTokensAsync().Result;
-                                }
-                                else
-                                {
-                                   accessToken = currentContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken).Result;
-                                }
-
-                                object removedObject;
-                                DictionaryLocks.TryRemove(currentUserId, out removedObject);
+                                accessToken = await this.RenewTokensAsync();
                             }
+                            else
+                            {
+                                accessToken =
+                                    await currentContext.GetTokenAsync(
+                                        OpenIdConnectParameterNames.AccessToken);
+                            }
+                        }
+                        finally
+                        {
+                            tokenLock.Release();
                         }
                     }
                 }
                 else
                 {
                     // get access token
-                    accessToken = await currentContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+                    accessToken =
+                        await currentContext.GetTokenAsync(
+                            OpenIdConnectParameterNames.AccessToken);
                 }
 
                 if (!this.httpClient.DefaultRequestHeaders.Contains("x-tz-offset"))
                 {
-                    var tzOffset = await this.cacheService.GetAsync<int?>(currentContext.User.GetTimezoneOffsetCacheKey());
+                    var tzOffset =
+                        await this.cacheService.GetAsync<int?>(
+                            currentContext.User.GetTimezoneOffsetCacheKey());
+
                     if (tzOffset.HasValue)
                     {
-                        this.httpClient.DefaultRequestHeaders.Add("x-tz-offset", tzOffset.Value.ToString());
+                        this.httpClient.DefaultRequestHeaders.Add(
+                            "x-tz-offset",
+                            tzOffset.Value.ToString());
                     }
                 }
             }
 
             this.httpClient.SetBearerToken(accessToken);
+
             return this.httpClient;
         }
 

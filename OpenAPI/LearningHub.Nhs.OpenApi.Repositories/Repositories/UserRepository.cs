@@ -35,6 +35,18 @@
         }
 
         /// <summary>
+        /// The get by id async.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<User?> GetBasicUserByIdAsync(int id)
+        {
+           var user = await DbContext.User.AsNoTracking().Where(x =>x.Id == id)
+                                      .Select(u => new User { Id = u.Id, UserName = u.UserName }).FirstOrDefaultAsync();
+            return user;
+        }
+
+        /// <summary>
         /// The get by id include roles async.
         /// </summary>
         /// <param name="id">The id.</param>

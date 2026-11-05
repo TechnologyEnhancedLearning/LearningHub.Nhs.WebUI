@@ -31,14 +31,9 @@
         public const string InPlatformReport = "InPlatformReport";
 
         /// <summary>
-        /// The EmailBasedAuthenticationPhase3.
+        /// The EmailBasedAuthenticationPhase1.
         /// </summary>
-        public const string EmailBasedAuthenticationPhase3 = "EmailBasedAuthenticationPhase3";
-
-        /// <summary>
-        /// The EmailBasedAuthenticationPhase4.
-        /// </summary>
-        public const string EmailBasedAuthenticationPhase4 = "EmailBasedAuthenticationPhase4";
+        public const string EmailBasedAuthenticationPhase1 = "EmailBasedAuthenticationPhase1";
 
         /// <summary>
         /// The VLENavigation.

@@ -6,13 +6,8 @@
     public class EmailLoginFeatureManagementConfig
     {
         /// <summary>
-        /// Gets or sets the EmailBasedAuthenticationPhase3.
+        /// Gets or sets the EmailBasedAuthenticationPhase1.
         /// </summary>
-        public bool EmailBasedAuthenticationPhase3 { get; set; }
-
-        /// <summary>
-        /// Gets or sets the EmailBasedAuthenticationPhase4.
-        /// </summary>
-        public bool EmailBasedAuthenticationPhase4 { get; set; }
+        public bool EmailBasedAuthenticationPhase1 { get; set; }
     }
 }

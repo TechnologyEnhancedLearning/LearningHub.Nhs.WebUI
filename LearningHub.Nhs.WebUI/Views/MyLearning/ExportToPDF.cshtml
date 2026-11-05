@@ -47,14 +47,13 @@
         <div class="lh-padding-fluid bg-white">
             <div class="lh-container-xl">
                 <div class="activity-report-heading pb-4">
-                    @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase3) ||
-                    await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase4))
+                    @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase1))
                     {
-                        <h3 class="nhsuk-heading-xs">Activity report: </h3> <span class="no-wrap">  @Model.Item1.FirstName @Model.Item1.LastName (@Model.Item1.EmailAddress)</span>
+                        <h3 class="nhsuk-heading-xs">Activity report: </h3> <span class="no-wrap">  @Model.Item1.FirstName @Model.Item1.LastName (@Model.Item1.UserName)</span>
                     }
                     else
                     {
-                        <h3 class="nhsuk-heading-xs">Activity report: </h3> <span class="no-wrap">  @Model.Item1.FirstName @Model.Item1.LastName (@Model.Item1.UserName)</span>
+                        <h3 class="nhsuk-heading-xs">Activity report: </h3> <span class="no-wrap">  @Model.Item1.FirstName @Model.Item1.LastName (@Model.Item1.EmailAddress)</span>
                     }
                 </div>
             </div>

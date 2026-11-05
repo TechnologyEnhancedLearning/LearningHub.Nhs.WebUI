@@ -15,15 +15,14 @@
                     You can now access learning resources, contribute and share knowledge content.
                 </div>
                 <div class="nhsuk-label nhsuk-u-width-two-thirds nhsuk-u-padding-bottom-3" id="contact-hint">
-                    @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase3) ||
-                    await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase4))
+                    @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase1))
                     {
-                        <p> Please now log in to the Learning Hub using your email and password.</p>
+                        <p> Please now log in to the Learning Hub using your existing username and password.</p>
                     }
                     else
                     {
-                        <p> Please now log in to the Learning Hub using your existing username and password.</p>
-                    }                   
+                        <p> Please now log in to the Learning Hub using your email and password.</p>
+                    }
                     <p>You will receive an email to verify this change. The email will come from donotreply@learninghub.nhs.uk and may go into your spam or junk folder.</p>
                 </div>
                 <div class="nhsuk-label nhsuk-padding-top-2" id="contact-hint">

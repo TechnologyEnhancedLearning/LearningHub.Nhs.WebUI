@@ -18,14 +18,13 @@
                 <h1 class="nhsuk-heading-xl">@ViewData["Title"]</h1>
                 <article class="nhsuk-u-reading-width">
                     <section>
-                        @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase3) ||
-                        await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase4))
+                        @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase1)) 
                         {
-                            <p>You already have an elearning for healthcare (elfh) hub account. You can use your elfh email address and password to access the Learning Hub.</p>
+                            <p>You already have an elearning for healthcare (elfh) hub account. You can use your elfh username and password to access the Learning Hub.</p>
                         }
                         else
                         {
-                            <p>You already have an elearning for healthcare (elfh) hub account. You can use your elfh username and password to access the Learning Hub.</p>
+                            <p>You already have an elearning for healthcare (elfh) hub account. You can use your elfh email address and password to access the Learning Hub.</p>
                         }
                     </section>
                 </article>
@@ -39,17 +38,16 @@
                     <a asp-controller="OpenAthens" asp-action="Login" asp-route-returnUrl="@authRequiredReturnUrl" asp-route-invalidScope="false"
                        class="nhsuk-button nhsuk-button--secondary">OpenAthens Log in</a>
                 </div>
-                @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase3) ||
-                await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase4))
+                @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase1))
                 {
                     <p class="nhsuk-u-margin-bottom-3">
-                        <a asp-controller="Account" asp-action="ForgotUserPassword" class="">Forgotten password</a>
+                        <a asp-controller="Account" asp-action="ForgotUserPassword" class="">Forgotten username or password</a>
                     </p>
                 }
                 else
                 {
                     <p class="nhsuk-u-margin-bottom-3">
-                        <a asp-controller="Account" asp-action="ForgotUserPassword" class="">Forgotten username or password</a>
+                        <a asp-controller="Account" asp-action="ForgotUserPassword" class="">Forgotten password</a>
                     </p>
                 }
                 <p>

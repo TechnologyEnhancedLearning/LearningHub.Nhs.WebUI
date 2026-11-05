@@ -52,14 +52,14 @@
                         <li>Place of work details</li>
 
                     </ul>
-                    @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase3) ||
-                    await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase4))
+                    @if (await FeatureManager.IsEnabledAsync(FeatureFlags.EmailBasedAuthenticationPhase1))                  
                     {
-                        <p class="nhsuk-body">After registering you will receive an email that includes a link to create a password.</p>
+                        <p class="nhsuk-body">After registering you will receive an email that includes your username and a link to create a password.</p>
                     }
                     else
                     {
-                        <p class="nhsuk-body">After registering you will receive an email that includes your username and a link to create a password.</p>
+                        <p class="nhsuk-body">After registering you will receive an email that includes a link to create a password.</p>
+                       
                     }
 
                     <form asp-controller="Registration" asp-action="CreateAccountEmailVerification" method="get">

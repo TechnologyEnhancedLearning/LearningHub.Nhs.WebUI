@@ -894,8 +894,24 @@ namespace LearningHub.Nhs.WebUI.Services
         /// <returns>The <see cref="bool"/>.</returns>
         public async Task<bool> UserHasPublishedResourcesAsync()
         {
-            var cacheKey = $"{this.contextAccessor.HttpContext.User.Identity.GetCurrentUserId()}:UserHasPublishedResources";
-            return await this.cacheService.GetOrFetchAsync("UserHasPublishedResources", () => this.HasPublishedResources());
+            var client = await this.OpenApiHttpClient.GetClientAsync();
+
+            var request = $"Resource/HasPublishedResources";
+            var response = await client.GetAsync(request).ConfigureAwait(false);
+            bool hasResources = false;
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                hasResources = bool.Parse(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return hasResources;
         }
 
         /// <summary>

@@ -8,7 +8,7 @@
 -------------------------------------------------------------------------------
 CREATE PROCEDURE [resources].[GetResourceReferencesByOriginalIds]
 (
-    @OriginalResourceReferenceIds dbo.IntIdsTableList READONLY
+    @OriginalResourceReferenceIds dbo.IntIdList READONLY
 )
 AS
 BEGIN

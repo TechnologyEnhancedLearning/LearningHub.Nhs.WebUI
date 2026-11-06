@@ -33,7 +33,7 @@
 
 -- Create the new stored procedure
 CREATE PROCEDURE [activity].[GetResourceActivityPerResourceMajorVersion]
-    @ResourceIds dbo.IntIdsTableList READONLY,
+    @ResourceIds dbo.IntIdList READONLY,
     @UserId INT
 AS
 BEGIN

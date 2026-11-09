@@ -52,6 +52,11 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IMoodleApiService, MoodleApiService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IOrganisationService, OrganisationService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IPasswordManagerService, PasswordManagerService>();
+
+            services.AddScoped<IExternalSystemUserService, ExternalSystemUserService>();
+
 
             var reportingEnabled = configuration.GetValue<bool>("FeatureFlags:InPlatformReport");
             if (reportingEnabled)

@@ -95,12 +95,12 @@
         /// </returns>
         public async Task<UserAuthenticateDto> GetUserDetailForAuthentication(string username)
         {
-            var param0 = new SqlParameter("@userName", SqlDbType.VarChar) { Value = username };
+                var param0 = new SqlParameter("@userName", SqlDbType.VarChar) { Value = username };
 
-            var userAuthenticateDto = await this.DbContext.UserAuthenticateDto.FromSqlRaw("proc_UserDetailForAuthenticationByUserName @userName", param0).AsNoTracking().ToListAsync();
+                var userAuthenticateDto = await this.DbContext.UserAuthenticateDto.FromSqlRaw("proc_UserDetailForAuthenticationByUserName @userName", param0).AsNoTracking().ToListAsync();
 
-            return userAuthenticateDto.FirstOrDefault();
-        }
+                return userAuthenticateDto.FirstOrDefault();
+            }
 
         /// <summary>
         /// Gets a user by id, including soft-deleted users.

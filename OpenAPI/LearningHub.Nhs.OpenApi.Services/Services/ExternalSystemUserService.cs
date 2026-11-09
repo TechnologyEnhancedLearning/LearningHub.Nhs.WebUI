@@ -5,7 +5,8 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.External;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
-    using LearningHub.Nhs.UserApi.Services.Interface;
+    using LearningHub.Nhs.OpenApi.Services.Interface.Services;
+
 
     /// <summary>
     /// The external system user service.

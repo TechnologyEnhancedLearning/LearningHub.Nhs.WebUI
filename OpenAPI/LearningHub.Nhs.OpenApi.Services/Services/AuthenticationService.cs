@@ -3,10 +3,6 @@ using LearningHub.Nhs.OpenApi.Models.Configuration;
 using LearningHub.Nhs.OpenApi.Services.Interface.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LearningHub.Nhs.OpenApi.Services.Services
@@ -161,9 +157,9 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             {
                 if (this.passwordManagerService.Base64MD5HashDigest(login.Password) == user.PasswordHash)
                 {
-                    loginResult.ErrorMessage = string.Empty;
-                    loginResult.IsAuthenticated = true;
-                    loginResult.UserName = user.UserName;
+                loginResult.ErrorMessage = string.Empty;
+                loginResult.IsAuthenticated = true;
+                loginResult.UserName = user.UserName;
                 }
                 else
                 {

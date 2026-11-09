@@ -6,7 +6,7 @@
     var cookieBannerCookieName = (Configuration["CookieBannerConsent:CookieName"]);
     Context.Request.Cookies.TryGetValue(cookieBannerCookieName, out string cookieBannerCookieValue);
 }
-@section styles{
+@section styles {
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/staticpages.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/cookie_policy.css" asp-append-version="true" />
 }
@@ -99,9 +99,9 @@
                                                title="https://learninghub.nhs.uk">learninghub.nhs.uk</a>
                                         </td>
                                         <td class="nhsuk-table__cell" data-label="Purpose" role="cell">
-                                            <span class="nhsuk-table-responsive__heading">Purpose</span>                                            
-                                             ARRAffinity cookie is set by Azure app service, and allows the service to choose the
-                                             right instance established by a user to deliver subsequent requests made by that user.                                           
+                                            <span class="nhsuk-table-responsive__heading">Purpose</span>
+                                            ARRAffinity cookie is set by Azure app service, and allows the service to choose the
+                                            right instance established by a user to deliver subsequent requests made by that user.
                                         </td>
                                         <td class="nhsuk-table__cell" data-label="Expiry" role="cell">
                                             <span class="nhsuk-table-responsive__heading">Expiry</span>
@@ -153,15 +153,15 @@
                                             <a href="http://learninghubnhsuk-auth-prod.azurewebsites.net/" data-cke-saved-href="http://learninghubnhsuk-auth-prod.azurewebsites.net/" title="http://learninghubnhsuk-auth-prod.azurewebsites.net">learninghubnhsuk-auth-prod.azurewebsites.net</a>
                                         </td>
                                         <td class="nhsuk-table__cell" data-label="Purpose" role="cell">
-                                            <span class="nhsuk-table-responsive__heading">Purpose</span>                                           
-                                             This cookie is set by Windows Azure cloud, and is used for load balancing to make sure
-                                             the visitor page requests are routed to the same server in any browsing.
+                                            <span class="nhsuk-table-responsive__heading">Purpose</span>
+                                            This cookie is set by Windows Azure cloud, and is used for load balancing to make sure
+                                            the visitor page requests are routed to the same server in any browsing.
                                         </td>
                                         <td class="nhsuk-table__cell" data-label="Expiry" role="cell">
                                             <span class="nhsuk-table-responsive__heading">Expiry</span>
                                             Session
                                         </td>
-                                    </tr>                                    
+                                    </tr>
                                     <tr class="nhsuk-table__row" role="row">
                                         <td class="nhsuk-table__cell" data-label="Cookie name" role="cell">
                                             <span class="nhsuk-table-responsive__heading">Cookie name</span>
@@ -170,8 +170,8 @@
                                         <td class="nhsuk-table__cell" data-label="Domain" role="cell">
                                             <span class="nhsuk-table-responsive__heading">Domain</span>
                                             <p>
-                                                <a href="https://auth.learninghub.nhs.uk/" data-cke-saved-href="https://auth.learninghub.nhs.uk/" 
-                                                title="https://auth.learninghub.nhs.uk">auth.learninghub.nhs.uk</a>
+                                                <a href="https://auth.learninghub.nhs.uk/" data-cke-saved-href="https://auth.learninghub.nhs.uk/"
+                                                   title="https://auth.learninghub.nhs.uk">auth.learninghub.nhs.uk</a>
                                             </p>
                                         </td>
                                         <td class="nhsuk-table__cell" data-label="Purpose" role="cell">
@@ -182,7 +182,7 @@
                                             <span class="nhsuk-table-responsive__heading">Expiry</span>
                                             Session
                                         </td>
-                                    </tr>                  
+                                    </tr>
                                     <tr class="nhsuk-table__row" role="row">
                                         <td class="nhsuk-table__cell" data-label="Cookie name" role="cell">
                                             <span class="nhsuk-table-responsive__heading">Cookie name</span>
@@ -196,9 +196,9 @@
                                             </p>
                                         </td>
                                         <td class="nhsuk-table__cell" data-label="Purpose" role="cell">
-                                            <span class="nhsuk-table-responsive__heading">Purpose</span>                                           
+                                            <span class="nhsuk-table-responsive__heading">Purpose</span>
                                             This cookie is derived from the main authentication cookie, and it used for the
-                                            check session endpoint for browser-based JavaScript clients at signout time.                                            
+                                            check session endpoint for browser-based JavaScript clients at signout time.
                                         </td>
                                         <td class="nhsuk-table__cell" data-label="Expiry" role="cell">
                                             <span class="nhsuk-table-responsive__heading">Expiry</span>
@@ -276,38 +276,6 @@
                                             13 months
                                         </td>
                                     </tr>
-                                    <tr class="nhsuk-table__row" role="row">
-                                        <td class="nhsuk-table__cell" data-label="Cookie name" role="cell">
-                                            <span class="nhsuk-table-responsive__heading">Cookie name</span>
-                                            Hotjar cookies
-                                        </td>
-                                        <td class="nhsuk-table__cell" data-label="Domain" role="cell">
-                                            <span class="nhsuk-table-responsive__heading">Domain</span>
-                                            <a href="https://learninghub.nhs.uk/"
-                                               data-cke-saved-href="https://learninghub.nhs.uk/" title="https://learninghub.nhs.uk">learninghub.nhs.uk</a>
-                                        </td>
-                                        <td class="nhsuk-table__cell" data-label="Purpose" role="cell">
-                                            <span class="nhsuk-table-responsive__heading">Purpose</span>
-                                            <div class="flex-container-vertical">
-                                                <p>
-                                                    Hotjar Tracking Code cookies are set on a visitor's browser when they visit a website that loads the Hotjar
-                                                    Tracking Code. These cookies allow the Hotjar Tracking Code to function correctly. Apart from cookies, the
-                                                    Hotjar Tracking Code uses local and session storage as well.
-                                                </p>
-                                                <p>These include cookies with names starting "_hj".</p>
-                                                <p>
-                                                    <a href="https://help.hotjar.com/hc/en-us/articles/6952777582999-Cookies-Set-by-the-Hotjar-Tracking-Code">
-                                                        More
-                                                        information about Hotjar cookies
-                                                    </a>.
-                                                </p>
-                                            </div>
-                                        </td>
-                                        <td class="nhsuk-table__cell" data-label="Expire" role="cell">
-                                            <span class="nhsuk-table-responsive__heading">Expiry</span>
-                                            1 year
-                                        </td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -316,8 +284,8 @@
             </section>
             <section>
                 <div>
-                    @await Html.PartialAsync("_CookiePolicyConfirmation", new CookieConsentViewModel {UserConsent = cookieBannerCookieValue, Layout = Layout})
-                    @await Html.PartialAsync("~/Views/Shared/_PageReviewPartial.cshtml", new PageReviewModel { LastReviewedDate = new DateTime(2020, 5, 26), NextReviewDate = new DateTime(2026, 8, 16) })
+                    @await Html.PartialAsync("_CookiePolicyConfirmation", new CookieConsentViewModel { UserConsent = cookieBannerCookieValue, Layout = Layout })
+                    @await Html.PartialAsync("~/Views/Shared/_PageReviewPartial.cshtml", new PageReviewModel { LastReviewedDate = new DateTime(2026, 8, 16), NextReviewDate = new DateTime(2032, 10, 06) })
                 </div>
             </section>
         </article>

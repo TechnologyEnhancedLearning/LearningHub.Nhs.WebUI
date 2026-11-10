@@ -1,0 +1,135 @@
+﻿@using LearningHub.Nhs.WebUI.Models.Account;
+@using Microsoft.Extensions.Options;
+@using LearningHub.Nhs.WebUI.Configuration;
+@model AccountCreationViewModel;
+@inject IOptions<Settings> settings
+@{
+    ViewData["Title"] = "Learner profile";
+    string currentRole = !string.IsNullOrWhiteSpace(Context.Request.Query["CurrentRole"]) ? Context.Request.Query["CurrentRole"] : Model.CurrentRole;
+    var routeData = new Dictionary<string, string> { { "CurrentRole", currentRole }, { "ReturnToConfirmation", Context.Request.Query["returnToConfirmation"] } };
+    AccountCreationTypeEnum accountCreationType = ViewBag.AccountCreationType;
+}
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+<div class="create-account">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-three-quarters nhsuk-u-padding-top-7 nhsuk-u-padding-bottom-9">
+                <vc:back-link asp-controller="Account" asp-action="CreateAccountCurrentRole" asp-all-route-data="@routeData" link-text="Back to: Search for your current role" />
+                <h1 class="nhsuk-heading-xl">@ViewData["Title"]</h1>
+                <dl class="nhsuk-summary-list">
+
+                    <div class="nhsuk-summary-list__row">
+                        <dt class="nhsuk-summary-list__key no-bottom-border">
+                            Your role
+                        </dt>
+                        <dd class="nhsuk-summary-list__value no-bottom-border">
+                            @Model.CurrentRoleName
+                        </dd>
+
+                        <dd class="nhsuk-summary-list__actions no-bottom-border">
+
+                            <a asp-action="CreateAccountCurrentRole" asp-route-CurrentRole="@Model.CurrentRole" asp-route-returnToConfirmation="true">
+                                Change<span class="nhsuk-u-visually-hidden">&nbsp;current role</span>
+                            </a>
+
+                        </dd>
+
+                    </div>
+                </dl>
+                @if (accountCreationType == AccountCreationTypeEnum.FullAccess)
+                {
+                    <div class="nhsuk-u-margin-bottom-6">
+                        <p class="nhsuk-body">
+                            Complete your profile to:
+                        </p>
+                        <ul class="nhsuk-list nhsuk-list--bullet">
+                            <li>Show certificates for your completed learning</li>
+                            <li>Help us connect you to learning from your organisation</li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <div class="nhsuk-u-margin-bottom-6">
+                        <p class="nhsuk-body">
+                            Complete your profile to help us connect you to learning from your organisation.
+                        </p>
+                    </div>
+                }
+                <div>
+                    <ul class="nhsuk-task-list">
+                        @if (accountCreationType == AccountCreationTypeEnum.FullAccess)
+                        {
+                            <li class="nhsuk-task-list__item nhsuk-task-list__item--with-link">
+                                <div class="nhsuk-task-list__name-and-hint">
+                                    <a class="nhsuk-link nhsuk-task-list__link" href="CreateAccountLearnerPrimarySpecialty" aria-describedby="primary-specialty">
+                                        Primary specialty
+                                    </a>
+                                </div>
+                                <div class="nhsuk-task-list__status" id="primary-specialty">
+                                    <strong class="nhsuk-tag nhsuk-tag--grey">
+                                        Optional
+                                    </strong>
+                                </div>
+                            </li>
+                            <li class="nhsuk-task-list__item nhsuk-task-list__item--with-link">
+                                <div class="nhsuk-task-list__name-and-hint">
+                                    <a class="nhsuk-link nhsuk-task-list__link" asp-action="CreateAccountProfessionalRegistrationNumber" asp-all-route-data="@routeData" aria-describedby="your-professional-registration-number">
+                                        Your professional registration number (PRN)
+                                    </a>
+                                </div>
+                                <div class="nhsuk-task-list__status" id="your-professional-registration-number">
+                                    <strong class="nhsuk-tag nhsuk-tag--grey">
+                                        Optional
+                                    </strong>
+                                </div>
+                            </li>
+                            <li class="nhsuk-task-list__item nhsuk-task-list__item--with-link">
+                                <div class="nhsuk-task-list__name-and-hint">
+                                    <a class="nhsuk-link nhsuk-task-list__link" href="CreateAccountSelectGrade" aria-describedby="Pay-band">
+                                        Pay band
+                                    </a>
+
+                                </div>
+                                <div class="nhsuk-task-list__status" id="Pay-band">
+                                    <strong class="nhsuk-tag nhsuk-tag--grey">
+                                        Optional
+                                    </strong>
+                                </div>
+                            </li>
+                        }
+                        <li class="nhsuk-task-list__item nhsuk-task-list__item--with-link">
+                            <div class="nhsuk-task-list__name-and-hint">
+                                <a class="nhsuk-link nhsuk-task-list__link" href="CreateAccountWorkPlaceSearch" aria-describedby="which-organisation-do-you-work-for">
+                                    Which organisation do you work for
+                                </a>
+                            </div>
+                            <div class="nhsuk-task-list__status" id="which-organisation-do-you-work-for">
+                                <strong class="nhsuk-tag nhsuk-tag--grey">
+                                    Optional
+                                </strong>
+                            </div>
+                        </li>
+                        <li class="nhsuk-task-list__item">
+                            <div class="nhsuk-task-list__name-and-hint">
+                                <div>
+                                    <a class="nhsuk-link nhsuk-task-list__link" href="CreateAccountRecoveryEmail" aria-describedby="account-recovery-email">
+                                        Account recovery email
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="nhsuk-task-list__status" id="account-recovery-email">
+                                <strong class="nhsuk-tag nhsuk-tag--grey">
+                                    Optional
+                                </strong>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

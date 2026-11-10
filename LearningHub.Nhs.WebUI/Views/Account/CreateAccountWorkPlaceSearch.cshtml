@@ -9,7 +9,7 @@
 
 }
 
-@section styles{
+@section styles {
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
 }
 <div class="create-account">
@@ -23,46 +23,184 @@
                 }
                 <h1 class="nhsuk-heading-xl">Search for your place of work</h1>
 
-                <form asp-controller="Account" asp-action="CreateAccountWorkPlace" method="get">
+                <form asp-controller="Account" asp-action="CreateAccountWorkPlace" method="get" id="organizationSearchForm">
                     <input type="hidden" name="formSubmission" value="true">
                     <div class="@(errorHasOccurred ? "nhsuk-form-group input-validation-error" : "nhsuk-form-group")">
-                    <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">
-                        Enter the name, postcode or Organisation Date Service (ODS) code of your place of work.
+                        <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">
+                            Enter the name, postcode or Organisation Date Service (ODS) code of your employer.
 
-                    </label>
-                    @if (errorHasOccurred)
-                    {
-                        <span class="nhsuk-error-message">
-                            <span class="nhsuk-u-visually-hidden">Error:</span> @CommonValidationErrorMessages.SearchTermRequired
-                        </span>
-                    }
-                    <div class="nhsuk-form-group search-box-container nhsuk-u-padding-bottom-5" style="white-space:nowrap">
-                        <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText" @if (errorHasOccurred)
+                        </label>
+                        @if (errorHasOccurred)
                         {
-                            <text>aria-describedby="error-summary-title custom-validation-error"</text>
-                        }>
-                        <button class="nhsuk-search__submit" type="submit">
+                            <span class="nhsuk-error-message">
+                                <span class="nhsuk-u-visually-hidden">Error:</span> @CommonValidationErrorMessages.SearchTermRequired
+                            </span>
+                        }
+                        <div class="search-box-container" style="white-space:nowrap; position:relative;">
+                            <input class="nhsuk-input nhsuk-search__input input-right-border"
+                                   type="search"
+                                   autocomplete="off"
+                                   id="FilterText"
+                                   name="FilterText"
+                                   placeholder="Search for organaization"
+                                   value="@Model.FilterText"
+                                   aria-describedby="organization-search-hint"
+                                   aria-controls="organization-results-container" />
+                        </div>
+                        @*  <div class="nhsuk-form-group search-box-container nhsuk-u-padding-bottom-5" style="white-space:nowrap">
+                            <input class="nhsuk-input nhsuk-search__input input-right-border" type="search" autocomplete="off" id="FilterText" name="FilterText" aria-controls="Organization-results-container" placeholder="Search for organaization" value="@Model.FilterText" @if (errorHasOccurred)
+                            {
+                                <text>aria-describedby="error-summary-title custom-validation-error"</text>
+                            }>
+                            @*   <button class="nhsuk-search__submit" type="submit">
                             <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                                 <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
                             </svg>
                             <span class="nhsuk-u-visually-hidden">Search</span>
-                        </button>
+                        </button> 
 
-                    </div>
+                        </div> *@
+                        <!-- Autosuggestion results -->
+                        <div id="organization-results-container"
+                             class="autocomplete-results-container"
+                             hidden>
+                            <fieldset class="nhsuk-fieldset">
+                                <legend class="nhsuk-fieldset__legend nhsuk-u-visually-hidden">
+                                    Suggestedorganizations
+                                </legend>
+
+                                <div class="nhsuk-radios" id="organization-results"></div>
+                            </fieldset>
+                        </div>
                     </div>
                 </form>
-
-                <details class="nhsuk-details nhsuk-expander">
-                    <summary class="nhsuk-details__summary">
-                        <span class="nhsuk-details__summary-text">
-                            Why do I need to provide details about where I work?
-                        </span>
-                    </summary>
-                    <div class="nhsuk-details__text">
-                        <p>Information on your place of work will help us provide activity reports to evidence your learning.</p>
-                    </div>
-                </details>
             </div>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("organizationSearchForm");
+        const input = document.getElementById("FilterText");
+        const resultsContainer = document.getElementById("organization-results-container");
+        const results = document.getElementById("organization-results");
+
+        let debounceTimer = null;
+
+        function clearResults() {
+            results.innerHTML = "";
+            resultsContainer.hidden = true;
+        }
+
+        function renderResults(data) {
+            results.innerHTML = "";
+
+            if (!data || data.length === 0) {
+                clearResults();
+                return;
+            }
+
+            data.forEach(organization => {
+                const item = document.createElement("div");
+                item.className = "nhsuk-radios__item autocomplete-radio-item";
+
+                const radioId = "organization-" +organization.id;
+                const categoryHtml =organization.category
+                    ? `<span class="nhsuk-hint">${organization.category}</span>`
+                    : "";
+
+                item.innerHTML = `
+                    <input class="nhsuk-radios__input organization-radio"
+                           id="${radioId}"
+                           name="SuggestedOrganization"
+                           type="radio"
+                           value="${organization.id}"
+                           data-text="${organization.text}" />
+                    <label class="nhsuk-label nhsuk-radios__label" for="${radioId}">
+                        <strong>${organization.text}</strong>                    
+                    </label>
+                `;
+
+                results.appendChild(item);
+            });
+
+            resultsContainer.hidden = false;
+
+            bindSuggestionEvents();
+        }
+
+        function bindSuggestionEvents() {
+            const radios = document.querySelectorAll(".organization-radio");
+
+            radios.forEach(radio => {
+                radio.addEventListener("change", function () {
+                    if (this.checked) {
+                        const selectedText = this.getAttribute("data-text") || "";
+                        input.value = selectedText;
+
+                        // Submit the form immediately after selecting a suggestion
+                        form.submit();
+                    }
+                });
+            });
+        }
+
+        function searchOrganizations() {
+            const term = input.value.trim();
+
+            if (term.length < 2) {
+                clearResults();
+                return;
+            }
+
+            fetch(`/Account/SearchOrganizations?term=${encodeURIComponent(term)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Search request failed.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    renderResults(data);
+                })
+                .catch(error => {
+                    console.error("Organization search failed:", error);
+                    clearResults();
+                });
+        }
+
+        // Load autosuggestions on each keypress
+        input.addEventListener("input", function () {
+            clearTimeout(debounceTimer);
+
+            debounceTimer = setTimeout(function () {
+                searchOrganizations();
+            }, 250);
+        });
+
+        // Hide results if user clears input
+        input.addEventListener("search", function () {
+            if (!input.value.trim()) {
+                clearResults();
+            }
+        });
+
+        // Allow normal Enter submit for the search page
+        input.addEventListener("keydown", function (e) {
+            if (e.key === "Escape") {
+                clearResults();
+            }
+        });
+
+        // Close suggestions when clicking outside
+        document.addEventListener("click", function (e) {
+            const clickedInside =
+                form.contains(e.target) ||
+                resultsContainer.contains(e.target);
+
+            if (!clickedInside) {
+                clearResults();
+            }
+        });
+    });
+</script>

@@ -5,62 +5,92 @@
 @{
     ViewData["Title"] = "Role";
     var errorHasOccurred = !ViewData.ModelState.IsValid;
-    string currentCountry = !string.IsNullOrWhiteSpace(Context.Request.Query["CountryId"]) ? Context.Request.Query["CountryId"] : Model.CountryId;
+    string currentCountry = !string.IsNullOrWhiteSpace(Context.Request.Query["CountryId"])
+        ? Context.Request.Query["CountryId"]
+        : Model.CountryId;
+
     var routeData = new Dictionary<string, string> { { "CountryId", currentCountry } };
 }
 
-@section styles{
+@section styles {
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
 }
-    <div class="create-account">
-        <div class="nhsuk-width-container app-width-container">
-            <div class="nhsuk-grid-row">
+<div class="create-account">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-9">
+
                 @if (Model.CountryId == "1")
                 {
-                  <vc:back-link asp-controller="Account" asp-action="CreateAccountRegionSelection" asp-all-route-data="@routeData" link-text="Back to: Select your region" />
-
+                    <vc:back-link asp-controller="Account"
+                                  asp-action="CreateAccountRegionSelection"
+                                  asp-all-route-data="@routeData"
+                                  link-text="Back to: Select your region" />
                 }
                 else
                 {
-                  <vc:back-link asp-controller="Account" asp-action="CreateAccountCountrySelection" asp-all-route-data="@routeData" link-text="Back to: Select your country" />
-
+                    <vc:back-link asp-controller="Account"
+                                  asp-action="CreateAccountCountrySelection"
+                                  asp-all-route-data="@routeData"
+                                  link-text="Back to: Select your country" />
                 }
-                
+
                 @if (errorHasOccurred)
                 {
                     <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
                 }
+
                 <h1 class="nhsuk-heading-xl">Search for your current role</h1>
 
-                <form asp-controller="Account" asp-action="CreateAccountCurrentRole" method="get">
-                    <input type="hidden" name="formSubmission" value="true">
-                    <div class="@(errorHasOccurred ? "nhsuk-form-group input-validation-error" : "nhsuk-form-group")">
-                    <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">Use a generic term to best describe your role</label>
-                    @if (errorHasOccurred)
-                    {
-                        <span class="nhsuk-error-message">
-                            <span class="nhsuk-u-visually-hidden">Error:</span> @CommonValidationErrorMessages.SearchTermRequired
-                        </span>
-                    }
-                    <div class="nhsuk-form-group search-box-container nhsuk-u-padding-bottom-5" style="white-space:nowrap">
-                        <input type="hidden" name="RegionId" value="@Context.Request.Query["RegionId"]">
-                        <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText" @if (errorHasOccurred)
-                        {
-                            <text>aria-describedby="error-summary-title custom-validation-error"</text>
-                        }>
-                        <button class="nhsuk-search__submit" type="submit">
-                            <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
-                            </svg>
-                            <span class="nhsuk-u-visually-hidden">Search</span>
-                        </button>
+                <form asp-controller="Account"
+                      asp-action="CreateAccountCurrentRole"
+                      method="get"
+                      id="roleSearchForm"
+                      autocomplete="off">
 
+                    <input type="hidden" name="formSubmission" value="true" />
+                    <input type="hidden" name="RegionId" value="@Context.Request.Query["RegionId"]" />
+                    <input type="hidden" name="CountryId" value="@currentCountry" />
+
+                    <div class="@(errorHasOccurred ? "nhsuk-form-group nhsuk-form-group--error" : "nhsuk-form-group")" id="search-group">
+                        <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">
+                            Use a generic term to best describe your role
+                        </label>
+
+                        @if (errorHasOccurred)
+                        {
+                            <span class="nhsuk-error-message" id="custom-validation-error">
+                                <span class="nhsuk-u-visually-hidden">Error:</span> @CommonValidationErrorMessages.SearchTermRequired
+                            </span>
+                        }
+
+                        <div class="nhsuk-form-group search-box-container nhsuk-u-padding-bottom-2" style="white-space:nowrap; position:relative;">
+                            <input class="nhsuk-input nhsuk-search__input input-right-border"
+                                   type="search"
+                                   autocomplete="off"
+                                   id="FilterText"
+                                   name="FilterText"
+                                   value="@Model.FilterText"
+                                   aria-controls="role-results-container"
+                            @(errorHasOccurred ? "aria-describedby=\"error-summary-title custom-validation-error\"" : "") />
+                        </div>
                     </div>
+
+                    <!-- Autosuggestion results -->
+                    <div id="role-results-container"
+                         class="autocomplete-results-container"
+                         hidden>
+                        <fieldset class="nhsuk-fieldset">
+                            <legend class="nhsuk-fieldset__legend nhsuk-u-visually-hidden">
+                                Suggested roles
+                            </legend>
+
+                            <div class="nhsuk-radios" id="role-results"></div>
+                        </fieldset>
                     </div>
                 </form>
-
-                <details class="nhsuk-details nhsuk-expander">
+@* 
+                <details class="nhsuk-details nhsuk-expander nhsuk-u-margin-top-5">
                     <summary class="nhsuk-details__summary">
                         <span class="nhsuk-details__summary-text">
                             Why do I need to provide details about my role?
@@ -69,8 +99,138 @@
                     <div class="nhsuk-details__text">
                         <p>In the future, resources will be recommended to you based on your role.</p>
                     </div>
-                </details>
+                </details> *@
+
             </div>
         </div>
     </div>
 </div>
+
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("roleSearchForm");
+        const input = document.getElementById("FilterText");
+        const resultsContainer = document.getElementById("role-results-container");
+        const results = document.getElementById("role-results");
+
+        let debounceTimer = null;
+
+        function clearResults() {
+            results.innerHTML = "";
+            resultsContainer.hidden = true;
+        }
+
+        function renderResults(data) {
+            results.innerHTML = "";
+
+            if (!data || data.length === 0) {
+                clearResults();
+                return;
+            }
+
+            data.forEach(role => {
+                const item = document.createElement("div");
+                item.className = "nhsuk-radios__item autocomplete-radio-item";
+
+                const radioId = "role-" + role.id;
+                const categoryHtml = role.category
+                    ? `<span class="nhsuk-hint">${role.category}</span>`
+                    : "";
+
+                item.innerHTML = `
+                    <input class="nhsuk-radios__input role-radio"
+                           id="${radioId}"
+                           name="SuggestedRole"
+                           type="radio"
+                           value="${role.id}"
+                           data-text="${role.text}" />
+                    <label class="nhsuk-label nhsuk-radios__label" for="${radioId}">
+                        <strong>${role.text}</strong>
+                        ${categoryHtml}
+                    </label>
+                `;
+
+                results.appendChild(item);
+            });
+
+            resultsContainer.hidden = false;
+
+            bindSuggestionEvents();
+        }
+
+        function bindSuggestionEvents() {
+            const radios = document.querySelectorAll(".role-radio");
+
+            radios.forEach(radio => {
+                radio.addEventListener("change", function () {
+                    if (this.checked) {
+                        const selectedText = this.getAttribute("data-text") || "";
+                        input.value = selectedText;
+
+                        // Submit the form immediately after selecting a suggestion
+                        form.submit();
+                    }
+                });
+            });
+        }
+
+        function searchRoles() {
+            const term = input.value.trim();
+
+            if (term.length < 2) {
+                clearResults();
+                return;
+            }
+
+            fetch(`/Account/SearchRoles?term=${encodeURIComponent(term)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Search request failed.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    renderResults(data);
+                })
+                .catch(error => {
+                    console.error("Role search failed:", error);
+                    clearResults();
+                });
+        }
+
+        // Load autosuggestions on each keypress
+        input.addEventListener("input", function () {
+            clearTimeout(debounceTimer);
+
+            debounceTimer = setTimeout(function () {
+                searchRoles();
+            }, 250);
+        });
+
+        // Hide results if user clears input
+        input.addEventListener("search", function () {
+            if (!input.value.trim()) {
+                clearResults();
+            }
+        });
+
+        // Allow normal Enter submit for the search page
+        input.addEventListener("keydown", function (e) {
+            if (e.key === "Escape") {
+                clearResults();
+            }
+        });
+
+        // Close suggestions when clicking outside
+        document.addEventListener("click", function (e) {
+            const clickedInside =
+                form.contains(e.target) ||
+                resultsContainer.contains(e.target);
+
+            if (!clickedInside) {
+                clearResults();
+            }
+        });
+    });
+</script>

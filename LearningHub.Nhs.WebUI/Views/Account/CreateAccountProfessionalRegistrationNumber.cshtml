@@ -1,0 +1,50 @@
+﻿@using elfhHub.Nhs.Models.Common
+@using LearningHub.Nhs.WebUI.Models.Account
+@model AccountCreationViewModel;
+
+@{
+
+    Layout = ViewData["Layout"].ToString();
+    string currentRole = !string.IsNullOrWhiteSpace(Context.Request.Query["CurrentRole"]) ? Context.Request.Query["CurrentRole"] : Model.CurrentRole;
+    var routeData = new Dictionary<string, string> { { "CurrentRole", currentRole }, { "ReturnToConfirmation", Context.Request.Query["returnToConfirmation"] } };
+    var errorHasOccurred = !ViewData.ModelState.IsValid;
+    JobRoleBasicViewModel jobDetails = ViewBag.Job;
+}
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
+}
+<div class="create-account">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds nhsuk-u-padding-bottom-2">
+                <vc:back-link asp-controller="Account" asp-action="UserProfileTasks" asp-all-route-data="@routeData" link-text="Back link" />
+                <h1 class="nhsuk-heading-xl">Enter your professional registration number (PRN)</h1>
+                <form asp-controller="Account" asp-action="CreateAccountSaveProfessionalRegistrationNumber" method="post">
+                    <input type="hidden" name="formSubmission" value="true">
+                    @if (errorHasOccurred)
+                    {
+                        <vc:error-summary order-of-property-names="@(new[] { nameof(Model.RegistrationNumber) })" />
+                    }
+                    <input type="hidden" name="CurrentRole" value="@Context.Request.Query["CurrentRole"]">
+                    <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+
+                    <vc:text-input asp-for="RegistrationNumber"
+                                   label="You may know this as your NMC number or PIN "
+                                   populate-with-current-value="true"
+                                   type="text"
+                                   spell-check="false"
+                                   hint-text=""
+                                   autocomplete=""
+                                   css-class="nhsuk-u-width-one-half"
+                                   required="false" />
+
+                    <div class="nhsuk-form-group">
+                        <button type="submit" class="nhsuk-button">Save</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

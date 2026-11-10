@@ -14,16 +14,16 @@
     var routeData = new Dictionary<string, string> { { "CountryId", Model.CountryId } };
 }
 
-@section styles{
+@section styles {
     <link rel="stylesheet" type="text/css" href="~/css/nhsuk/pages/createaccount.css" asp-append-version="true" />
 }
-    <div class="create-account">
-        <div class="nhsuk-width-container app-width-container">
-            <div class="nhsuk-grid-row">
+<div class="create-account">
+    <div class="nhsuk-width-container app-width-container">
+        <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-two-thirds @(returnToConfirmation ? "nhsuk-u-padding-top-7":string.Empty) nhsuk-u-padding-bottom-9">
                 @if (!returnToConfirmation)
                 {
-          if (Model.CountryId == "1") //|| errorHasOccurred
+                    if (Model.CountryId == "1") //|| errorHasOccurred
                     {
                         <vc:back-link asp-controller="Account" asp-action="CreateAccountRegionSelection" asp-all-route-data="@routeData" link-text="Back to: Select your region" />
 
@@ -39,70 +39,126 @@
                     <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
                 }
                 <h1 class="nhsuk-heading-xl">Search results for @Model.FilterText</h1>
+                <form asp-controller="Account"
+                      asp-action="UserProfileTasks"
+                      method="get"
+                      autocomplete="off"
+                      id="roleForm"
+                      novalidate>
 
-                <form asp-controller="Account" asp-action="CreateAccountCurrentRole" method="get">
-                    <input type="hidden" name="formSubmission" value="true">
-                    <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
+                    <input type="hidden" name="returnToConfirmation"
+                           value="@Context.Request.Query["returnToConfirmation"]" />
 
-                    <label for="FilterText" class="nhsuk-body-l nhsuk-u-font-size-19 nhsuk-u-margin-bottom-3">Use a generic term to best describe your role</label>
-                    <div class="nhsuk-form-group search-box-container" style="white-space:nowrap">
-                        <input type="hidden" name="RegionId" value="@Context.Request.Query["RegionId"]">
-                        <input class="nhsuk-input nhsuk-search__input" type="search" autocomplete="off" id="FilterText" name="FilterText" placeholder="" value="@Model.FilterText">
-                        <button class="nhsuk-search__submit" type="submit">
-                            <svg class="nhsuk-icon nhsuk-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
-                            </svg>
-                            <span class="nhsuk-u-visually-hidden">Search</span>
-                        </button>
+                    <input type="hidden" name="RegionId"
+                           value="@Context.Request.Query["RegionId"]" />
 
+                    <input type="hidden" id="CurrentRole"
+                           name="CurrentRole"
+                           value="@Model.CurrentRole" />
+
+                    @if (errorHasOccurred)
+                    {
+                        <vc:error-summary order-of-property-names="@(new[] { nameof(Model) })" />
+                    }
+
+                    <h1 class="nhsuk-heading-xl">Your role</h1>
+
+                    <h2 class="nhsuk-heading-l">Search for your current role</h2>
+
+                    <div class="nhsuk-form-group" id="search-group">
+                        <label for="FilterText" class="nhsuk-label">
+                            Search for a generic term to best describe your role
+                        </label>
+
+                        <div class="search-box-container" style="white-space:nowrap; position:relative;">
+                            <input class="nhsuk-input nhsuk-search__input input-right-border"
+                                   type="search"
+                                   autocomplete="off"
+                                   id="FilterText"
+                                   name="FilterText"
+                                   value="@Model.FilterText"
+                                   aria-describedby="role-search-hint"
+                                   aria-controls="role-results-container" /> 
+                        </div>
                     </div>
 
+                    <!-- Search results -->
+                    <div id="role-results-container" class="nhsuk-form-group nhsuk-u-margin-top-4" @(Model.RoleList.Any() ? "" : "hidden")>
+                        <fieldset class="nhsuk-fieldset" aria-describedby="role-results-hint">
+                            <legend class="nhsuk-fieldset__legend nhsuk-u-visually-hidden">
+                                Select your current role
+                            </legend>
 
-                </form>
+                            <div class="nhsuk-radios" id="role-results">
+                                @if (Model.RoleList.Any())
+                                {
+                                    foreach (var role in Model.RoleList)
+                                    {
+                                        var staffGroup = string.Empty;
 
-                <form asp-controller="Account" asp-action="CreateAccountProfessionalRegNumber" method="get">
-                    <input type="hidden" name="formSubmission" value="true">
-                    <input type="hidden" name="returnToConfirmation" value="@Context.Request.Query["returnToConfirmation"]">
-                    @if (Model.RoleList.Any())
-                    {
+                                        if (!string.IsNullOrWhiteSpace(role.NameWithStaffGroup) && role.NameWithStaffGroup.Length > role.Name.Length)
+                                        {
+                                            staffGroup = role.NameWithStaffGroup.Substring(role.Name.Length).Trim().Trim('(', ')');
+                                        }
 
-                        <vc:radio-list asp-for="CurrentRole"
-                                   label="Select your current role"
-                                   populate-with-current-values="true"
-                                   radios="@Model.RoleRadio()"
-                                   hint-text=""
-                                   required-client-side-error-message="Select a role"
-                                   required="true" />
+                                        var roleId = $"role-{role.Id}";
+                                        var isChecked = Model.CurrentRole == role.Id.ToString();
 
-                        <div class="nhsuk-form-group">
-                            <input type="hidden" name="filterText" value="@Context.Request.Query["filterText"]">
-                            <button type="submit" class="nhsuk-button">Continue</button>
-                        </div>
+                                        <div class="nhsuk-radios__item autocomplete-radio-item">
+                                            <input class="nhsuk-radios__input role-radio"
+                                                   id="@roleId"
+                                                   name="RoleChoice"
+                                                   type="radio"
+                                                   value="@role.Id"
+                                                   data-text="@role.Name"
+                                            @(isChecked ? "checked" : "") />
 
-                    }
-                    else
-                    {
-                        <h2 class="nhsuk-heading-l">No results found for @Model.FilterText</h2>
-                        <p>You could try:</p>
-                        <ul class="nhsuk-list nhsuk-list--bullet nhsuk-u-padding-bottom-3">
-                            <li>checking your spelling</li>
-                            <li>searching again using other words</li>
-                        </ul>
-
-                        <details class="nhsuk-details nhsuk-expander">
-                            <summary class="nhsuk-details__summary">
-                                <span class="nhsuk-details__summary-text">
-                                    Why do I need to provide details about my role?
-                                </span>
-                            </summary>
-                            <div class="nhsuk-details__text">
-                                <p>In the future, resources will be recommended to you based on your role.</p>
+                                            <label class="nhsuk-label nhsuk-radios__label" for="@roleId">
+                                                <strong>@role.Name</strong>
+                                                @if (!string.IsNullOrWhiteSpace(staffGroup))
+                                                {
+                                                    <span class="nhsuk-hint">@staffGroup</span>
+                                                }
+                                            </label>
+                                        </div>
+                                    }
+                                }
                             </div>
-                        </details>
+                        </fieldset>
+                    </div>
 
-                    }
+                    <!-- Other option -->
+                    <div class="nhsuk-form-group nhsuk-u-margin-top-5" id="other-role-group">
+                        <fieldset class="nhsuk-fieldset">
+                            <legend class="nhsuk-fieldset__legend nhsuk-body">
+                                If you can't find your role select other
+                            </legend>
 
+                            <div class="nhsuk-radios" data-module="nhsuk-radios">
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input"
+                                           id="role-other"
+                                           name="RoleChoice"
+                                           type="radio"
+                                           value="Other"
+                                           data-aria-controls="role-other" />
+
+
+                                    <label class="nhsuk-label nhsuk-radios__label" for="role-other">
+                                        Other
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="nhsuk-form-group nhsuk-u-margin-top-4">
+                        <button type="submit" class="nhsuk-button" id="continueButton">
+                            Continue
+                        </button>
+                    </div>
                 </form>
+
                 @if (Model.RoleList.Any())
                 {
                     @await Html.PartialAsync("_AccountCreationJobRolePaging", Model.AccountCreationPaging)
@@ -112,3 +168,179 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("roleForm");
+        const input = document.getElementById("FilterText");
+        const resultsContainer = document.getElementById("role-results-container");
+        const results = document.getElementById("role-results");
+        const currentRole = document.getElementById("CurrentRole");
+        const otherRadio = document.getElementById("role-other");
+        const searchGroup = document.getElementById("search-group");
+        const otherRoleTextGroup = document.getElementById("other-role-text-group");
+
+        let debounceTimer = null;
+
+          function clearRoleSelection() {
+        document.querySelectorAll(".role-radio").forEach(radio => {
+            radio.checked = false;
+        });
+
+        currentRole.value = "";
+    }
+        function selectSuggestedRole(roleId, roleText) {
+            currentRole.value = roleId;
+
+            // Clear Other
+            if (otherRadio) {
+                otherRadio.checked = false;
+            }
+
+            input.value = roleText;
+        }
+
+        function bindRoleRadioEvents() {
+            const roleRadios = document.querySelectorAll(".role-radio");
+
+            roleRadios.forEach(radio => {
+                radio.addEventListener("change", function () {
+                    if (this.checked) {
+                        const roleId = this.value;
+                        const roleText = this.getAttribute("data-text") || "";
+                        selectSuggestedRole(roleId, roleText);
+                    }
+                });
+            });
+        }
+
+        function renderResults(data) {
+            results.innerHTML = "";
+
+            if (!data || data.length === 0) {
+                resultsContainer.hidden = true;
+                return;
+            }
+
+            data.forEach(role => {
+                const item = document.createElement("div");
+                item.className = "nhsuk-radios__item autocomplete-radio-item";
+
+                const radioId = "role-" + role.id;
+
+                item.innerHTML = `
+                    <input class="nhsuk-radios__input role-radio"
+                           id="${radioId}"
+                           name="RoleChoice"
+                           type="radio"
+                           value="${role.id}"
+                           data-text="${role.text}" />
+                    <label class="nhsuk-label nhsuk-radios__label" for="${radioId}">
+                        <strong>${role.text}</strong>                       
+                    </label>
+                `;
+
+                results.appendChild(item);
+            });
+
+            resultsContainer.hidden = false;
+            bindRoleRadioEvents();
+        }
+
+        function searchRoles() {
+            const term = input.value.trim();
+
+            // If user starts searching again, clear current selected role
+            clearRoleSelection();
+
+            if (term.length < 2) {
+                results.innerHTML = "";
+                resultsContainer.hidden = true;
+                return;
+            }
+
+            fetch(`/Account/SearchRoles?term=${encodeURIComponent(term)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Search request failed.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    renderResults(data);
+                })
+                .catch(error => {
+                    console.error("Role search failed:", error);
+                    results.innerHTML = "";
+                    resultsContainer.hidden = true;
+                });
+        }
+
+        // Initial binding for server-rendered radios
+        bindRoleRadioEvents();
+
+        // If Other is already selected on page load
+        if (otherRadio && otherRadio.checked) {
+           // toggleOtherConditional(true);
+        }
+
+        //trigger autosuggest
+            input.addEventListener("input", function () {
+        clearTimeout(debounceTimer);
+
+        debounceTimer = setTimeout(() => {
+            const term = input.value.trim();
+
+            if (term.length < 2) {
+                results.innerHTML = "";
+                resultsContainer.hidden = true;
+                return;
+            }
+
+            searchRoles();
+        }, 300);
+    });
+
+         input.addEventListener("keydown", function (e) {
+         if (e.key === "Enter") {
+             e.preventDefault();
+
+            // force search instead of submit
+            searchRoles();
+        }
+    });
+
+        // Other selected
+          otherRadio.addEventListener("change", function () {
+        if (this.checked) {
+            // Clear any selected search result
+            document.querySelectorAll(".role-radio").forEach(radio => {
+                radio.checked = false;
+            });
+
+            currentRole.value = "";
+
+            // Optional: clear the search text and hide results
+            input.value = "";
+            results.innerHTML = "";
+            resultsContainer.hidden = true;
+        }
+    });
+
+        // Form submit validation
+        form.addEventListener("submit", function (e) {
+            const selectedSuggestion = currentRole.value.trim();
+            const selectedOther = otherRadio.checked;
+
+            if (!selectedSuggestion && !selectedOther) {
+                e.preventDefault();
+                showClientError("FilterText");
+                return;
+            }
+
+            // If Other selected, copy manual entry to CurrentRole if your backend expects one value
+            if (otherRadio.checked) {
+                currentRole.value = "1345";
+            }
+        });
+    });
+</script>

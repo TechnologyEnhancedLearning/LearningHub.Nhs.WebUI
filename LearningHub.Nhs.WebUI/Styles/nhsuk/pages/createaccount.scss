@@ -83,20 +83,88 @@
         border-bottom: 0px;
     }
 
+    .input-right-border {
+        border-right: 1px solid $nhsuk-grey-light !important;
+    }
+
     .custom-validation-error {
         color: #d5281b;
         font-size: 19px;
     }
-    // By default, the text on reverse (white) buttons turns white once clicked, rendering them invisible.
-    .nhsuk-button--reverse:visited {
-        color: $nhsuk-black
+
+    .autocomplete-results {
+        border: 1px solid #d8dde0;
+        border-radius: 4px;
+        /* max-height: 350px;*/
+        overflow-y: auto;
+        margin-top: 12px;
     }
 
-    .landing-page--btn-login {
-        color: $nhsuk-blue !important;
-        text-decoration: none;
-        box-shadow: 0 4px 0 #005eb8 !important;
-        margin-left: 20px;
-        border-color: #005eb8 !important;
+    .autocomplete-item {
+        padding: 14px 16px;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f4f5;
+    }
+
+    .autocomplete-item:hover {
+        background: #f0f4f5;
+    }
+
+    .autocomplete-item.selected {
+        background: #005eb8;
+        color: white;
+    }
+
+    .selected-pill {
+        display: inline-block;
+        background: #d8dde0;
+        border-radius: 16px;
+        padding: 6px 12px;
+        margin-top: 10px;
+    }
+    /*.autocomplete-radio-item {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #d8dde0;
+    }*/
+
+    .autocomplete-radio-item:last-child {
+        border-bottom: none;
+    }
+
+    #role-results-container {
+        border: 1px solid #d8dde0;
+        border-radius: 4px;
+        padding: 16px;
+        background: #fff;
+    }
+
+    #role-results .nhsuk-radios__label strong {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    #specialty-results-container {
+        border: 1px solid #d8dde0;
+        border-radius: 4px;
+        padding: 16px;
+        background: #fff;
+    }
+
+    #specialty-results .nhsuk-radios__label strong {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    #organization-results-container {
+        border: 1px solid #d8dde0;
+        border-radius: 4px;
+        padding: 16px;
+        background: #fff;
+    }
+
+    #organization-results .nhsuk-radios__label strong {
+        display: block;
+        margin-bottom: 4px;
     }
 }

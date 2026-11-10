@@ -91,21 +91,25 @@
 
                             var activityViewModel = new Tuple<string, MyLearningCombinedActivitiesViewModel>("my-learning", activity);
                             <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
-                                <partial name="_LearningActivityCard" model="activityViewModel" />
+                                @* <partial name="_LearningActivityCard" model="activityViewModel" /> *@
 
-                                ----- NFR CARD MyCourseAndLearning------
+
                                 @{
-                                    var nfrActivityHref = ViewActivityHelper.GetResourceTypeDesc(activityViewModel.Item2.ResourceType) == "Course" ? activityViewModel.Item2.ResourceUrl : null;
-                                    var nfrActivityRouteData = ViewActivityHelper.GetResourceTypeDesc(activityViewModel.Item2.ResourceType) != "Course" ? new Dictionary<string, string> { { "resourceReferenceId", activityViewModel.Item2.ResourceReferenceId.ToString() } } : null;
+                                    var isCourse = ViewActivityHelper.GetResourceTypeDesc(activity.ResourceType) == "Course";
+                                    bool providerExists = activity.Providers?.Count > 0;
+                                    var accessedDate = activity.ActivityDate.Date == DateTime.Today ? "Today" : activity.ActivityDate.ToString("dd MMM yyyy");
                                 }
-                                <vc:card title="@activityViewModel.Item2.Title"
-                                         description="@ViewActivityHelper.GetResourceTypeDesc(activityViewModel.Item2.ResourceType)"
+
+                                <vc:card title="@activity.Title"
                                          heading-level="3"
-                                         text="@activityViewModel.Item2.Title"
-                                         href="@nfrActivityHref"
-                                         asp-controller="@(nfrActivityHref == null ? "Resource" : null)"
-                                         asp-action="@(nfrActivityHref == null ? "Index" : null)"
-                                         asp-route-data="@nfrActivityRouteData" />
+                                         resource-type="@ViewActivityHelper.GetResourceTypeDesc(activity.ResourceType)"
+                                         description="@($"Accessed: {accessedDate}")"
+                                         provider-details="@(providerExists? ProviderHelper.GetProviderString(activity.Providers.First().Name) : null)"
+                                         provider-footer-class="card-provider-details--darkblank"
+                                         href="@(isCourse? activity.ResourceUrl: null)"
+                                         asp-controller="@(!isCourse ? "Resource" : null)"
+                                         asp-action="@(!isCourse ? "Index" : null)"
+                                         asp-route-data="@(!isCourse ? new Dictionary<string, string> { { "resourceReferenceId", activity.ResourceReferenceId.ToString() } } : null)" />
                             </li>
                         }
                         @if (isLastPage && pagingViewModel.TotalCount >= 8)
@@ -158,20 +162,24 @@
 
                         var certificateViewmodel = new Tuple<string, UserCertificateViewModel>("my-learning", userCertificate);
                         <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
-                            <partial name="_CertificateCard" model="certificateViewmodel" />
-                            -------- NFR CARD MyCourseAndLearning -----------
+                            @* <partial name="_CertificateCard" model="certificateViewmodel" /> *@
+                           
                             @{
-                                var nfrCertHref = (ResourceTypeEnum)certificateViewmodel.Item2.ResourceTypeId == ResourceTypeEnum.Moodle ? certificateViewmodel.Item2.CertificatePreviewUrl : null;
-                                var nfrCertRouteData = (ResourceTypeEnum)certificateViewmodel.Item2.ResourceTypeId != ResourceTypeEnum.Moodle ? new Dictionary<string, string> { { "resourceReferenceId", certificateViewmodel.Item2.ResourceReferenceId.ToString() } } : null;
+                                bool isMoodle = (ResourceTypeEnum)userCertificate.ResourceTypeId == ResourceTypeEnum.Moodle;
+                                bool providerExists = userCertificate.Providers?.Count > 0;
+                                string certUrl = isMoodle
+                                ? userCertificate.CertificatePreviewUrl
+                                : Url.Action("Certificate", "MyLearning", new { resourceReferenceId = userCertificate.ResourceReferenceId });
+                                var awardedDate = userCertificate.AwardedDate.Date == DateTime.Today ? "Today" : userCertificate.AwardedDate.ToString("dd MMM yyyy");
                             }
-                            <vc:card title="@certificateViewmodel.Item2.Title"
-                                     description="@UtilityHelper.GetPrettifiedResourceTypeName((ResourceTypeEnum)certificateViewmodel.Item2.ResourceTypeId)"
+
+                            <vc:card title="@userCertificate.Title"
                                      heading-level="3"
-                                     text="@certificateViewmodel.Item2.Title"
-                                     href="@nfrCertHref"
-                                     asp-controller="@(nfrCertHref == null ? "MyLearning" : null)"
-                                     asp-action="@(nfrCertHref == null ? "Certificate" : null)"
-                                     asp-route-data="@nfrCertRouteData" />
+                                     resource-type="@UtilityHelper.GetPrettifiedResourceTypeName((ResourceTypeEnum)userCertificate.ResourceTypeId)"
+                                     description="@($"Awarded: {awardedDate}")"
+                                     provider-details="@(providerExists? ProviderHelper.GetProviderString(userCertificate.Providers.First().Name) : null)"
+                                     provider-footer-class="card-provider-details--darkblank"
+                                     href="@certUrl" />
                         </li>
                     }
                     @if (isLastPage && pagingViewModel.TotalCount >= 8)
@@ -252,8 +260,7 @@
         </div>
         <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item"></div>
         <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item  nhsuk-u-padding-top-3 display--no-js-hide">
-            <partial name="_DashboardPaging" model="pagingViewModel" />
-            --------- NFR PAGINATION MyCourseAndLearning-----------------
+            @* <partial name="_DashboardPaging" model="pagingViewModel" /> *@
             @{
                 string queryParams = $"/?dashboardTrayLearningResourceType={pagingViewModel.DashboardTrayLearningResourceType}&myLearningDashboard={pagingViewModel.MyLearningDashboard}&resourceDashboard={pagingViewModel.ResourceDashboard}&catalogueDashboard={pagingViewModel.CatalogueDashboard}#{pagingViewModel.DashboardTrayType}";
                 string prevUrl = pagingViewModel.CurrentPage > 1 ? $"/home/loadpage/{pagingViewModel.DashboardTrayLearningResourceType}/{pagingViewModel.DashboardTrayType}/{pagingViewModel.MyLearningDashboard}/{pagingViewModel.ResourceDashboard}/{pagingViewModel.CatalogueDashboard}/{pagingViewModel.CurrentPage - 1}{queryParams}" : "";

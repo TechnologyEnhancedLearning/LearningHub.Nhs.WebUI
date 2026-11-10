@@ -58,7 +58,7 @@
 
         @foreach (var item in Model.Catalogues)
         {
-            <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+            @* <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
 
                 <div class="nhsuk-card catalogue-card">
 
@@ -133,11 +133,53 @@
                         }
                 </div>
 
-            </li>
+            </li> *@
+            <div>---HMMMMM---
+                </div>
+               
+                    bool providerExists = item.Providers?.Count > 0;
+                    var bannerImg = !string.IsNullOrWhiteSpace(item.CardImageUrl)
+                        ? $"/api/catalogue/download-image/{item.CardImageUrl}"
+                        : (!string.IsNullOrWhiteSpace(item.BannerUrl) ? $"/api/catalogue/download-image/{item.BannerUrl}" : null); 
+                
+                
+                <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
+                    <vc:card title="@item.Name"
+                             heading-level="3"
+                             has-banner="true"
+                             image-src="@bannerImg"
+                             description="@item.Description"
+                             access-permission="@(item.RestrictedAccess ? ((item.HasAccess || User.IsInRole("Administrator")) ? "Access Granted" : "Access restricted") : null)"
+                             bookmark-text="@(item.IsBookmarked ? "Remove from my bookmarks" : "Add to my bookmarks")"
+                             bookmark-href="@Url.Action("BookmarkCatalogue", "Bookmark", new { bookmarked = item.IsBookmarked, id = item.BookmarkId, title = item.Name.Truncate(60), nodeId = item.NodeId, path = item.Url, returnUrl = Context.Request.Path + Context.Request.QueryString })"
+                             badge-src="@(providerExists ? $"/images/provider-logos/{item.Providers.First().Logo}" : (!string.IsNullOrEmpty(item.BadgeUrl) ? $"/api/dashboard/download-image/{Uri.EscapeDataString(item.BadgeUrl)}" : null))"
+                             provider-details="@(providerExists ? ProviderHelper.GetProviderString(item.Providers.FirstOrDefault().Name) : null)"
+                             provider-footer-class="card-provider-details--blank"
+                             asp-controller="Catalogue"
+                             asp-action="Index"
+                             asp-route-data="@(new Dictionary<string, string> { { "reference", item.Url } })" />
+                </li>
         }
     </ul>
 
-    @await Html.PartialAsync("_AllCataloguePagination", Model)
+    @* @await Html.PartialAsync("_AllCataloguePagination", Model) *@
+
+    @{
+    string prevUrl = !string.IsNullOrEmpty(Model.PrevChar)
+        ? Url.Action("GetAllCatalogue", "Catalogue", new { filterChar = Model.PrevChar })
+        : null;
+
+    string nextUrl = !string.IsNullOrEmpty(Model.NextChar)
+        ? Url.Action("GetAllCatalogue", "Catalogue", new { filterChar = Model.NextChar })
+        : null;
+    }
+
+    <vc:pagination current-page="@Model.FilterChar"
+                   total-page=""
+                   prev-url="@prevUrl"
+                   next-url="@nextUrl"
+                   previous-sequence="@Model.PrevChar"
+                   next-sequence="@Model.NextChar" />
 
 </div>
 </div>

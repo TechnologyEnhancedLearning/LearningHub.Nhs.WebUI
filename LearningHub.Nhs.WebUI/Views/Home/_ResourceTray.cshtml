@@ -1,6 +1,7 @@
 ﻿@model DashboardViewModel
 @using LearningHub.Nhs.Models.Dashboard
 @using LearningHub.Nhs.Models.Enums
+@using LearningHub.Nhs.WebUI.Extensions
 @using LearningHub.Nhs.WebUI.Models.DashBoard;
 
 @{
@@ -77,16 +78,24 @@
                     {
                         var resourceViewModel = new Tuple<string, DashboardResourceViewModel>("resources", resource);
                         <li class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item">
-                            <partial name="_ResourceCard" model="resourceViewModel" />
+                            @* <partial name="_ResourceCard" model="resourceViewModel" /> *@
 
-                            --------- NFR PAGINATION ResourceTray-----------------
-                            <vc:card title="@resourceViewModel.Item2.Title"
-                                     description="@UtilityHelper.StripHtmlFromString(resourceViewModel.Item2.Description)"
+                            <vc:card title="@UtilityHelper.StripHtmlFromString(resource.Title)"
                                      heading-level="3"
-                                     text="@resourceViewModel.Item2.Title"
+                                     resource-type="@UtilityHelper.GetPrettifiedResourceTypeName(resource.ResourceType, resource.DurationInMilliseconds)"
+                                     description="@UtilityHelper.StripHtmlFromString(resource.Description)"
+                                     catalogue-text="@UtilityHelper.StripHtmlFromString(resource.CatalogueName)"
+                                     catalogue-href="@Url.Action("Index", "Catalogue", new { reference = resource.Url })"
+                                     rating-content="@await Html.PartialAsync("_StarRatingWithCount", new StarRatingWithCountViewModel { AverageRating = (decimal)resource.AverageRating, RatingCount = resource.RatingCount, ResourceReferenceId = resource.ResourceReferenceId })"
+                                     access-permission="@(resource.RestrictedAccess ? ((resource.HasAccess || User.IsInRole("Administrator")) ? "Access granted" : "Access restricted") : null)"
+                                     bookmark-text="@(resource.IsBookmarked ? "Remove from my bookmarks" : "Add to my bookmarks")"
+                                     bookmark-href="@Url.Action("BookmarkResource", "Bookmark", new { bookmarked = resource.IsBookmarked, id = resource.BookmarkId, title = resource.Title.Truncate(60), rri = resource.ResourceReferenceId, returnUrl = Context.Request.Path + Context.Request.QueryString })"
+                                     badge-src="@(resource.Providers?.Count > 0 ? $"/images/provider-logos/{resource.Providers.First().Logo}" : (!string.IsNullOrEmpty(resource.BadgeUrl) ? $"/api/dashboard/download-image/{Uri.EscapeDataString(resource.BadgeUrl)}" : null))"
+                                     provider-details="@(resource.Providers?.Count > 0 ? ProviderHelper.GetProviderString(resource.Providers.First().Name) : null)"
+                                     provider-footer-class="card-provider-details--blank"
                                      asp-controller="Dashboard"
                                      asp-action="RecordDashboardNavigation"
-                                     asp-route-data="@(new Dictionary<string, string> { { "eventType", EventTypeEnum.DashBoardResourceView.ToString() }, { "url", "/Resource/" + resourceViewModel.Item2.ResourceReferenceId }, { "resourceReference", resourceViewModel.Item2.ResourceReferenceId.ToString() } })" />
+                                     asp-route-data="@(new Dictionary<string, string> { { "eventType", EventTypeEnum.DashBoardResourceView.ToString() }, { "url", "/Resource/" + resource.ResourceReferenceId }, { "resourceReference", resource.ResourceReferenceId.ToString() } })" />
                         </li>
                     }
                 </ul>
@@ -108,9 +117,8 @@
                 </div>
                 <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item"></div>
                 <div class="nhsuk-grid-column-one-third-small-desktop nhsuk-card-group__item  nhsuk-u-padding-top-2 display--no-js-hide">
-                    <partial name="_DashboardPaging" model="pagingViewModel" />
+                    @* <partial name="_DashboardPaging" model="pagingViewModel" /> *@
 
-                    --------- NFR PAGINATION ResourceTray-----------------
                     @{
                         string queryParams = $"/?dashboardTrayLearningResourceType={pagingViewModel.DashboardTrayLearningResourceType}&myLearningDashboard={pagingViewModel.MyLearningDashboard}&resourceDashboard={pagingViewModel.ResourceDashboard}&catalogueDashboard={pagingViewModel.CatalogueDashboard}#{pagingViewModel.DashboardTrayType}";
                         string prevUrl = pagingViewModel.CurrentPage > 1 ? $"/home/loadpage/{pagingViewModel.DashboardTrayLearningResourceType}/{pagingViewModel.DashboardTrayType}/{pagingViewModel.MyLearningDashboard}/{pagingViewModel.ResourceDashboard}/{pagingViewModel.CatalogueDashboard}/{pagingViewModel.CurrentPage - 1}{queryParams}" : "";

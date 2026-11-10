@@ -37,6 +37,6 @@ FROM
 WHERE
 	ug.Deleted = 0
 	AND rug.Deleted = 0
-	AND r.Deleted = 0
+	AND r.RemoveDate is null
 
 GO

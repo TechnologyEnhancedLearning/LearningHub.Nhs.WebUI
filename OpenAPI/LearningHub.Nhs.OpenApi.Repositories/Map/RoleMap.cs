@@ -7,7 +7,7 @@
     /// <summary>
     /// The role map.
     /// </summary>
-    public class RoleMap : BaseEntityMap<Role>
+    public class RoleMap : AuditableEntityMap<Role>
     {
         /// <summary>
         /// The internal map.
@@ -19,14 +19,22 @@
         {
             modelBuilder.ToTable("Role", "hub");
 
-            modelBuilder.Property(e => e.Description)
-                .HasColumnName("Description")
-                .HasMaxLength(255);
+            modelBuilder.Property(e => e.Code)
+                .HasColumnName("Code")
+                .HasMaxLength(50);
 
             modelBuilder.Property(e => e.Name)
                 .IsRequired()
                 .HasColumnName("Name")
-                .HasMaxLength(50);
+                .HasMaxLength(100);
+
+            modelBuilder.Property(e => e.ScopeType)
+                .HasColumnName("ScopeType")
+                .HasMaxLength(250);
+
+            modelBuilder.Property(e => e.Description)
+                .HasColumnName("Description")
+                .HasMaxLength(500);
         }
     }
 }

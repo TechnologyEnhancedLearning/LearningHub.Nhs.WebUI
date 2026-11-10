@@ -3,6 +3,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
     using LearningHub.Nhs.Entities.Resource;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Dashboard;
+    using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Entities.Activity;
     using LearningHub.Nhs.Models.Entities.Content;
@@ -116,6 +117,11 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// Gets or sets the user user group..
         /// </summary>
         public virtual DbSet<UserUserGroup> UserUserGroup { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user group reporter.
+        /// </summary>
+        public virtual DbSet<UserGroupReporter> UserGroupReporter { get; set; }
 
         /// <summary>
         /// Gets or sets the role user group view model.
@@ -790,6 +796,63 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
         /// </summary>
         public virtual DbSet<AssessmentActivityCompletionViewModel> AssessmentActivityCompletionViewModel { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the JobRoleType.
+        /// </summary>
+        public virtual DbSet<JobRoleType> JobRoleType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Organisation.
+        /// </summary>
+        public virtual DbSet<Organisation> Organisation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the OrganisationType.
+        /// </summary>
+        public virtual DbSet<OrganisationType> OrganisationType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ProfessionalBody.
+        /// </summary>
+        public virtual DbSet<ProfessionalBody> ProfessionalBody { get; set; }
+
+        /// <summary>
+        /// Gets or sets the UserExternalSystem.
+        /// </summary>
+        public virtual DbSet<UserExternalSystem> UserExternalSystem { get; set; }
+
+        /// <summary>
+        /// Gets or sets the UserOrganisation.
+        /// </summary>
+        public virtual DbSet<UserOrganisation> UserOrganisation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the UserRole.
+        /// </summary>
+        public virtual DbSet<UserRole> UserRole { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the UserPasswordValidationToken.
+        /// </summary>
+        public virtual DbSet<UserPasswordValidationToken> UserPasswordValidationToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets the  MergeUserLearningHistoryLog.
+        /// </summary>
+        public virtual DbSet<MergeUserLearningHistoryLog> MergeUserLearningHistoryLog { get; set; }
+
+        /// <summary>
+        /// Gets or sets the UserAuthentiate Dto.
+        /// </summary>
+        public virtual DbSet<UserAuthenticateDto> UserAuthenticateDto { get; set; }
+
+
+
+
+
+
         /// <summary>
         /// The on model creating.
         /// </summary>
@@ -802,6 +865,8 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             {
                 mapping.Map(modelBuilder);
             }
+
+            modelBuilder.ApplyRemoveAuditConvention();
 
             modelBuilder.Entity<BulkResourceReferenceDTO>().HasNoKey().ToView(null);
         }

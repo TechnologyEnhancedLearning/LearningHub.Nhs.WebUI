@@ -1,14 +1,12 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Services.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Constants;
+    using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Enums;
+    using LearningHub.Nhs.Models.ProfessionalBody;
     using LearningHub.Nhs.Models.Resource;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.Models.Validation;
@@ -17,7 +15,15 @@
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
+    using Microsoft.IdentityModel.Tokens;
     using Newtonsoft.Json;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The user service.
@@ -43,7 +49,7 @@
         /// The logger.
         /// </summary>
         private readonly ILogger<UserService> logger;
-        private readonly IUserProfileRepository userDetailsRepository;
+        private readonly IProfessionalBodyRepository professionalBodyRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserService"/> class.
@@ -52,19 +58,19 @@
         /// <param name="mapper">The mapper.</param>
         /// <param name="cachingService">The caching service.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="userDetailsRepository">The userDetailsRepository.</param>
+        /// <param name="professionalBodyRepository">The userDetailsRepository.</param>
         public UserService(
             IUserRepository userRepository,
             IMapper mapper,
             ICachingService cachingService,
             ILogger<UserService> logger,
-            IUserProfileRepository userDetailsRepository)
+            IProfessionalBodyRepository professionalBodyRepository)
         {
             this.userRepository = userRepository;
             this.mapper = mapper;
             this.cachingService = cachingService;
             this.logger = logger;
-            this.userDetailsRepository = userDetailsRepository;
+            this.professionalBodyRepository = professionalBodyRepository;
         }
 
         /// <summary>
@@ -182,22 +188,46 @@
             return user;
         }
 
+
+        /// <summary>
+        /// Gets a user by id.
+        /// </summary>
+        /// <param name="id">The user id.</param>
+        /// <returns>The user if found.</returns>
+        public async Task<UserViewModel> GetByIdAsync(int id)
+        {
+            var user = await this.userRepository.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return this.mapper.Map<UserViewModel>(user);
+        }
+
         /// <summary>
         /// The get by id async.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
-        public async Task<UserLHBasicViewModel> GetByIdAsync(int id)
+        public async Task<User> GetAuthUserByIdAsync(int id)
         {
             try
             {
-                var user = await userRepository.GetBasicUserByIdAsync(id);
-                return mapper.Map<UserLHBasicViewModel>(user);
+                var user = await userRepository.GetByIdAsync(id);
+                return user;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }
+        }
+
+        /// <inheritdoc/>
+        public async Task<UserAuthenticateDto> GetUserDetailForAuthenticateAsync(string userName)
+        {
+            return await this.userRepository.GetUserDetailForAuthentication(userName);
         }
 
         /// <inheritdoc/>
@@ -235,6 +265,462 @@
             }
 
             return retVal;
+        }
+
+        /// <inheritdoc/>
+        public async Task RecordSuccessfulSigninAsync(int id, CancellationToken token = default)
+        {
+            var user = await this.userRepository.GetByIdAsync(id);
+
+            if (user.PasswordLifeCounter != 0 || user.SecurityLifeCounter != 0)
+            {
+                user.PasswordLifeCounter = 0;
+                user.SecurityLifeCounter = 0;
+
+                await this.userRepository.UpdateAsync(id, user);
+
+                await this.InvalidateUserCacheAsync(user.Id, user.LegacyUserName, token);
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task RecordUnsuccessfulSigninAsync(int id, CancellationToken token = default)
+        {
+            var user = await this.userRepository.GetByIdAsync(id);
+
+            user.PasswordLifeCounter++;
+
+            await this.userRepository.UpdateAsync(id, user);
+
+            await this.InvalidateUserCacheAsync(user.Id, user.LegacyUserName, token);
+        }
+
+        /// <summary>
+        /// Creates a new user.
+        /// </summary>
+        /// <param name="request">The user creation request.</param>
+        /// <param name="currentUserId">
+        /// The id of the user performing the operation.
+        /// </param>
+        /// <returns>The created user.</returns>
+        public async Task<UserViewModel> CreateAsync(CreateUserRequest request, int currentUserId)
+        {
+            var email = request.PrimaryEmail.Trim();
+
+            if (!await this.userRepository.IsEmailAvailableAsync(email))
+            {
+                throw new ValidationException("The email address is already in use.");
+            }
+
+            await this.ValidateProfessionalRegistrationAsync(request.ProfessionalBodyId, request.ProfessionalRegistrationNumber);
+
+            var user = new User
+            {
+                FirstName = request.FirstName?.Trim(),
+                LastName = request.LastName?.Trim(),
+                EmailAddress = email,
+                RecoveryEmailAddress =
+                    request.RecoveryEmail?.Trim(),
+                ProfessionalBodyId =
+                    request.ProfessionalBodyId,
+                ProfessionalRegistrationNumber =
+                    request.ProfessionalRegistrationNumber?.Trim(),
+                Active = true,
+            };
+
+            var validationResult = await this.ValidateAsync(user);
+
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException("The supplied user details are invalid.");
+            }
+
+            var userId = await this.userRepository.CreateAsync(currentUserId, user);
+
+            user.Id = userId;
+
+            return this.mapper.Map<UserViewModel>(user);
+        }
+
+        /// <summary>
+        /// Partially updates a user.
+        /// </summary>
+        /// <param name="id">The user id.</param>
+        /// <param name="request">The patch request.</param>
+        /// <param name="currentUserId">
+        /// The id of the user performing the update.
+        /// </param>
+        /// <returns>The updated user, or null when not found.</returns>
+        public async Task<UserViewModel?> PatchAsync(int id, PatchUserRequest request, int currentUserId)
+        {
+            var user = await this.userRepository.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (request.FirstName != null)
+            {
+                user.FirstName = request.FirstName.Trim();
+            }
+
+            if (request.LastName != null)
+            {
+                user.LastName = request.LastName.Trim();
+            }
+
+            if (request.PrimaryEmail != null)
+            {
+                var email = request.PrimaryEmail.Trim();
+
+                if (string.IsNullOrWhiteSpace(email))
+                {
+                    throw new ValidationException("Primary email cannot be empty.");
+                }
+
+                // Only check availability if the email has actually changed.
+                if (!string.Equals(user.EmailAddress,email,StringComparison.OrdinalIgnoreCase))
+                {
+                    var emailAvailable = await this.userRepository.IsEmailAvailableAsync(email,id);
+
+                    if (!emailAvailable)
+                    {
+                        throw new ValidationException("The email address is already in use.");
+                    }
+                }
+
+                user.EmailAddress = email;
+            }
+
+            if (request.RecoveryEmail != null)
+            {
+                user.RecoveryEmailAddress = request.RecoveryEmail.Trim();
+            }
+
+            var professionalBodyId = request.ProfessionalBodyId ?? user.ProfessionalBodyId;
+
+            var registrationNumber = request.ProfessionalRegistrationNumber ?? user.ProfessionalRegistrationNumber;
+
+            if (request.ProfessionalBodyId.HasValue ||
+                request.ProfessionalRegistrationNumber != null)
+            {
+                await this.ValidateProfessionalRegistrationAsync(
+                    professionalBodyId,
+                    registrationNumber);
+
+                if (request.ProfessionalBodyId.HasValue)
+                {
+                    user.ProfessionalBodyId = request.ProfessionalBodyId.Value;
+                }
+
+                if (request.ProfessionalRegistrationNumber != null)
+                {
+                    user.ProfessionalRegistrationNumber = request.ProfessionalRegistrationNumber.Trim();
+                }
+            }
+
+            var validationResult = await this.ValidateAsync(user);
+
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException("The supplied user details are invalid.");
+            }
+
+            await this.userRepository.UpdateAsync(currentUserId,user);
+
+            await this.InvalidateUserCacheAsync(user.Id,user.LegacyUserName,CancellationToken.None);
+
+            return this.mapper.Map<UserViewModel>(user);
+        }
+
+        /// <summary>
+        /// Soft deletes a user.
+        /// </summary>
+        /// <param name="id">The user id.</param>
+        /// <param name="currentUserId">
+        /// The id of the user performing the operation.
+        /// </param>
+        /// <returns>True when the user was deleted.</returns>
+        public async Task<bool> SoftDeleteAsync(int id,int currentUserId)
+        {
+            var user = await this.userRepository.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.Deleted = true;
+
+            await this.userRepository.UpdateAsync(currentUserId,user);
+
+            await this.InvalidateUserCacheAsync(user.Id,user.LegacyUserName,CancellationToken.None);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Restores a soft-deleted user.
+        /// </summary>
+        /// <param name="id">The user id.</param>
+        /// <param name="currentUserId">
+        /// The id of the user performing the operation.
+        /// </param>
+        /// <returns>True when the user was restored.</returns>
+        public async Task<bool> RestoreAsync(int id, int currentUserId)
+        {
+            var user = await this.userRepository.GetByIdIncludingDeletedAsync(id);
+
+            if (user == null || !user.Deleted)
+            {
+                return false;
+            }
+
+            user.Deleted = false;
+
+            await this.userRepository.UpdateAsync(currentUserId,user);
+
+            await this.InvalidateUserCacheAsync(user.Id,user.LegacyUserName,CancellationToken.None);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks whether an email address is available.
+        /// </summary>
+        /// <param name="email">The email address.</param>
+        /// <param name="excludeUserId">
+        /// Optional user id to exclude.
+        /// </param>
+        /// <returns>True when the email is available.</returns>
+        public async Task<bool> IsEmailAvailableAsync(string email, int? excludeUserId = null)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return false;
+            }
+
+            return await this.userRepository.IsEmailAvailableAsync(email.Trim(),excludeUserId);
+        }
+
+        /// <summary>
+        /// Searches users.
+        /// </summary>
+        /// <param name="request">The search request.</param>
+        /// <returns>A paged collection of users.</returns>
+        public async Task<PagedResultSet<UserViewModel>> SearchAsync(UserSearchRequest request)
+        {
+            var page = request.Page <= 0 ? 1 : request.Page;
+
+            var pageSize = request.PageSize <= 0 ? 20   : Math.Min(request.PageSize, 100);
+
+            var query = this.userRepository.GetAll().Where(user => !user.Deleted);
+
+            if (!string.IsNullOrWhiteSpace(request.Query))
+            {
+                var searchTerm = request.Query.Trim();
+
+                query = query.Where(user => 
+                    (user.FirstName != null && user.FirstName.Contains(searchTerm)) ||
+                    (user.LastName != null &&  user.LastName.Contains(searchTerm)) ||
+                    (user.EmailAddress != null && user.EmailAddress.Contains(searchTerm)) ||
+                    (user.LegacyUserName != null && user.LegacyUserName.Contains(searchTerm)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.Email))
+            {
+                var email = request.Email.Trim();
+
+                query = query.Where(user => user.EmailAddress != null && user.EmailAddress.Contains(email));
+            }
+
+            if (request.Active.HasValue)
+            {
+                query = query.Where(user => (user.Active ?? false) == request.Active.Value);
+            }
+
+            var totalItemCount = await query.CountAsync();
+
+            query = ApplySearchOrder(query,request.Sort,request.Direction);
+
+            var users = await this.mapper
+                .ProjectTo<UserViewModel>(
+                    query
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize))
+                .ToListAsync();
+
+            return new PagedResultSet<UserViewModel>
+            {
+                Items = users,
+                TotalItemCount = totalItemCount,
+            };
+        }
+
+        public async Task<UserViewModel> ClearProfessionalRegistrationAsync(int id, int currentUserId)
+        {
+            var user = await this.userRepository.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            user.ProfessionalBodyId = null;
+            user.ProfessionalRegistrationNumber = null;
+
+            await this.userRepository.UpdateAsync(currentUserId, user);
+
+            await this.InvalidateUserCacheAsync(user.Id, user.LegacyUserName, CancellationToken.None);
+
+            return this.mapper.Map<UserViewModel>(user);
+        }
+
+        public async Task<IReadOnlyList<ProfessionalBodyViewModel>> GetProfessionalBodiesAsync()
+        {
+            var professionalBodies =
+                await this.professionalBodyRepository.GetAllAsync();
+
+            return professionalBodies
+                .Select(x => new ProfessionalBodyViewModel
+                {
+                    Id = x.Id,
+                    Name = x.ProfessionalBodyName,
+                    OrderByNumber = x.OrderByNumber,
+                    RegexPattern = x.RegexPattern,
+                })
+                .ToList();
+        }
+
+        private static IQueryable<User> ApplySearchOrder(IQueryable<User> query, string? sort, string? direction)
+        {
+            var descending =
+                string.Equals(
+                    direction,
+                    "desc",
+                    StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(
+                    direction,
+                    "d",
+                    StringComparison.OrdinalIgnoreCase);
+
+            return sort?.Trim().ToLowerInvariant() switch
+            {
+                "firstname" => descending
+                    ? query.OrderByDescending(user => user.FirstName)
+                    : query.OrderBy(user => user.FirstName),
+
+                "lastname" => descending
+                    ? query.OrderByDescending(user => user.LastName)
+                    : query.OrderBy(user => user.LastName),
+
+                "email" or "primaryemail" => descending
+                    ? query.OrderByDescending(user => user.EmailAddress)
+                    : query.OrderBy(user => user.EmailAddress),
+
+                "active" => descending
+                    ? query.OrderByDescending(user => user.Active)
+                    : query.OrderBy(user => user.Active),
+
+                "id" => descending
+                    ? query.OrderByDescending(user => user.Id)
+                    : query.OrderBy(user => user.Id),
+
+                _ => query.OrderBy(user => user.Id),
+            };
+        }
+
+    
+
+        private async Task ValidateProfessionalRegistrationAsync(int? professionalBodyId, string? registrationNumber)
+        {
+            // No professional body selected.
+            if (!professionalBodyId.HasValue)
+            {
+                if (!string.IsNullOrWhiteSpace(registrationNumber))
+                {
+                    throw new ValidationException(
+                        "A professional body must be selected when a professional registration number is supplied.");
+                }
+
+                return;
+            }
+
+            var professionalBody =
+                await this.professionalBodyRepository
+                    .GetByIdAsync(professionalBodyId.Value);
+
+            if (professionalBody == null)
+            {
+                throw new ValidationException(
+                    "The selected professional body does not exist.");
+            }
+
+            // Registration number itself remains optional.
+            if (string.IsNullOrWhiteSpace(registrationNumber))
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(
+                professionalBody.RegexPattern))
+            {
+                return;
+            }
+
+            try
+            {
+                var isValid = Regex.IsMatch(
+                    registrationNumber.Trim(),
+                    professionalBody.RegexPattern,
+                    RegexOptions.CultureInvariant |
+                    RegexOptions.IgnoreCase,
+                    TimeSpan.FromMilliseconds(250));
+
+                if (!isValid)
+                {
+                    throw new ValidationException(
+                        $"The professional registration number is not valid for {professionalBody.ProfessionalBodyName}.");
+                }
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                this.logger.LogError(
+                    "Professional body regex timed out for ProfessionalBodyId {ProfessionalBodyId}.",
+                    professionalBody.Id);
+
+                throw new InvalidOperationException(
+                    "The professional registration validation rule is invalid.");
+            }
+            catch (ArgumentException ex)
+            {
+                this.logger.LogError(
+                    ex,
+                    "Invalid regex configured for ProfessionalBodyId {ProfessionalBodyId}.",
+                    professionalBody.Id);
+
+                throw new InvalidOperationException(
+                    "The professional registration validation rule is invalid.");
+            }
+        }
+
+        /// <inheritdoc/>
+        private async Task InvalidateUserCacheAsync(int userId, string userName, CancellationToken cancellationToken)
+        {
+            if (userId == 0 || string.IsNullOrWhiteSpace(userName))
+            {
+                return;
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            await Task.WhenAll(
+               this.cachingService.RemoveAsync($"{CacheKeys.UserLoadByUserId}:{userId}"),
+               this.cachingService.RemoveAsync($"{CacheKeys.UserLoadByUserName}:{userName}"));
         }
 
         private IQueryable<User> PresetFilterItems(IQueryable<User> items, List<PagingColumnFilter> presetFilterCriteria)
@@ -276,7 +762,7 @@
                         items = items.Where(x => x.Id == enteredId);
                         break;
                     case "username":
-                        items = items.Where(x => x.UserName.Contains(filter.Value));
+                        items = items.Where(x => x.LegacyUserName.Contains(filter.Value));
                         break;
                     case "excludeusergroupid":
                         items = items.Where(x => !x.UserUserGroup.Any(uug => uug.UserGroupId == int.Parse(filter.Value)));
@@ -296,11 +782,11 @@
                 case "username":
                     if (sortDirection == "D")
                     {
-                        items = items.OrderByDescending(x => x.UserName);
+                        items = items.OrderByDescending(x => x.LegacyUserName);
                     }
                     else
                     {
-                        items = items.OrderBy(x => x.UserName);
+                        items = items.OrderBy(x => x.LegacyUserName);
                     }
 
                     break;

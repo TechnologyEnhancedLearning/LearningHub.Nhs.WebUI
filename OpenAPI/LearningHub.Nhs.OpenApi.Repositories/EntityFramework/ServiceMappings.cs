@@ -126,6 +126,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, UserGroupAttributeMap>();
             services.AddSingleton<IEntityTypeMap, UserNotificationMap>();
             services.AddSingleton<IEntityTypeMap, UserUserGroupMap>();
+            services.AddSingleton<IEntityTypeMap, UserGroupReporterMap>();
             services.AddSingleton<IEntityTypeMap, VideoMap>();
             services.AddSingleton<IEntityTypeMap, VideoFileMap>();
             services.AddSingleton<IEntityTypeMap, WebLinkResourceVersionMap>();
@@ -185,6 +186,18 @@ namespace LearningHub.Nhs.OpenApi.Repositories.EntityFramework
             services.AddSingleton<IEntityTypeMap, MigrationInputRecordMap>();
             services.AddSingleton<IEntityTypeMap, MigrationSourceMap>();
             services.AddSingleton<IEntityTypeMap, ReportHistoryMap>();
+
+            //user related
+            services.AddSingleton<IEntityTypeMap, JobRoleTypeMap>();
+            services.AddSingleton<IEntityTypeMap, OrganisationMap>();
+            services.AddSingleton<IEntityTypeMap, OrganisationTypeMap>();
+            services.AddSingleton<IEntityTypeMap, RoleMap>();
+            services.AddSingleton<IEntityTypeMap, UserExternalSystemMap>();
+            services.AddSingleton<IEntityTypeMap, UserMap>();
+            services.AddSingleton<IEntityTypeMap, UserOrganisationMap>();
+            services.AddSingleton<IEntityTypeMap, UserRoleMap>();
+
+
 
             // External
             services.AddSingleton<IEntityTypeMap, UserProfileMap>();

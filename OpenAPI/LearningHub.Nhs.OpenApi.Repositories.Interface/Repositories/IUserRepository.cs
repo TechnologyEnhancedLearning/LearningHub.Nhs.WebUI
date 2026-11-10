@@ -1,7 +1,8 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories
 {
-    using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The UserRepository interface.
@@ -43,5 +44,21 @@
         /// <param name="id">The id.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<User?> GetBasicUserByIdAsync(int id);
+
+        /// <summary>
+        /// The get user detail for the authentication.
+        /// </summary>
+        /// <param name = "username">
+        /// username.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        Task<UserAuthenticateDto> GetUserDetailForAuthentication(string username);
+
+        Task<User> GetByIdIncludingDeletedAsync(int id);
+
+        Task<bool> IsEmailAvailableAsync(string email, int? excludeUserId = null);
+        Task<bool> UserExistsAsync(int userId);
     }
 }

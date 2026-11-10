@@ -18,6 +18,7 @@ namespace LearningHub.Nhs.OpenApi.Repositories
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Maintenance;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Messaging;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Migrations;
+    using LearningHub.Nhs.OpenApi.Repositories.Repositories.Organisation;
     using LearningHub.Nhs.OpenApi.Repositories.Repositories.Resources;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -45,7 +46,8 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<ICatalogueRepository, CatalogueRepository>();
             services.AddScoped<ITimezoneOffsetManager, TimezoneOffsetManager>();
             services.AddScoped<IRoleUserGroupRepository, RoleUserGroupRepository>();
-            services.AddScoped<IUserGroupRepository, UserGroupRepository>();
+            services.AddScoped<IUserGroupRepository, UserGroupRepository>(); //UserGroupReporterRepository
+            services.AddScoped<IUserGroupReporterRepository, UserGroupReporterRepository>();
             services.AddScoped<IUserGroupAttributeRepository, UserGroupAttributeRepository>();
             services.AddScoped<IUserUserGroupRepository, UserUserGroupRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
@@ -53,10 +55,15 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
             services.AddScoped<IEmailChangeValidationTokenRepository, EmailChangeValidationTokenRepository>();
             services.AddScoped<IUserPasswordResetRequestsRepository, UserPasswordResetRequestsRepository>();
+            services.AddScoped<IUserPasswordValidationTokenRepository, UserPasswordValidationTokenRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
-            services.AddScoped<IReportHistoryRepository, ReportHistoryRepository>();   
+            services.AddScoped<IReportHistoryRepository, ReportHistoryRepository>();
+            services.AddScoped<IProfessionalBodyRepository, ProfessionalBodyRepository>();
+            services.AddScoped<IOrganisationRepository, OrganisationRepository>();
+            services.AddScoped<IUserExternalSystemRepository, UserExternalSystemRepository>();
+            services.AddScoped<IExternalSystemUserRepository, ExternalSystemUserRepository>();
             services.AddTransient<INotificationTemplateRepository, NotificationTemplateRepository>();
             services.AddTransient<IBookmarkRepository, BookmarkRepository>();
             services.AddTransient<IProviderRepository, ProviderRepository>();
@@ -64,6 +71,10 @@ namespace LearningHub.Nhs.OpenApi.Repositories
             services.AddTransient<INotificationRepository, NotificationRepository>();
             services.AddTransient<IUserNotificationRepository, UserNotificationRepository>();
             services.AddTransient<IScopeRepository, ScopeRepository>();
+            services.AddTransient<IRoleRepository, RoleRepository>();
+            services.AddTransient<IUserRoleRepository, UserRoleRepository>();
+
+
 
             // Resources
             services.AddScoped<IArticleResourceVersionRepository, ArticleResourceVersionRepository>();

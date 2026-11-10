@@ -6,7 +6,6 @@
     using LearningHub.Nhs.Caching;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Entities;
-    using LearningHub.Nhs.Models.Extensions;
     using LearningHub.Nhs.Models.User;
     using LearningHub.NHS.OpenAPI.Helpers;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
@@ -17,7 +16,7 @@
     using Microsoft.Extensions.Options;
 
     /// <summary>
-    /// The log controller.
+    /// The user controller.
     /// </summary>
     [Route("User")]
     [ApiController]
@@ -37,6 +36,8 @@
         private readonly IUserPasswordResetRequestsService userPasswordResetRequestsService;
         private readonly INavigationPermissionService permissionService;
 
+        private readonly IUserGroupService userGroupService;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UserController"/> class.
         /// </summary>
@@ -50,7 +51,9 @@
         /// The securityService service.
         /// </param>
         /// <param name="userNotificationService">The userNotificationService.</param>
+        /// <param name="userPasswordResetRequestsService">The user password reset service.</param>
         /// <param name="permissionService">The permissionService.</param>
+        /// <param name="userGroupService">The user group service.</param>
         /// <param name="cacheService">The cacheService.</param>
         /// <param name="learningHubConfig">The learningHubConfig.</param>
         public UserController(
@@ -60,6 +63,7 @@
             IUserNotificationService userNotificationService,
             IUserPasswordResetRequestsService userPasswordResetRequestsService,
             INavigationPermissionService permissionService,
+            IUserGroupService userGroupService,
             ICacheService cacheService,
             IOptions<LearningHubConfig> learningHubConfig)
         {
@@ -69,6 +73,7 @@
             this.userNotificationService = userNotificationService;
             this.userPasswordResetRequestsService = userPasswordResetRequestsService;
             this.permissionService = permissionService;
+            this.userGroupService = userGroupService;
             this.cacheService = cacheService;
             this.learningHubConfig = learningHubConfig.Value;
         }
@@ -351,6 +356,29 @@
             }
 
             return this.MenuItems(model);
+        }
+
+        /// <summary>
+        /// Gets all groups associated with the specified user.
+        /// </summary>
+        /// <param name="id">The unique identifier of the user.</param>
+        /// <returns>
+        /// 200 OK with the user's groups if found; otherwise, 404 Not Found.
+        /// </returns>
+        [HttpGet("{id:int}/usergroups")]
+        public async Task<IActionResult> GetUserGroupsAsync(int id)
+        {
+            // Retrieve all groups for the specified user.
+            var groups = await this.userGroupService.GetByUserIdAsync(id);
+
+            // Return 404 if no groups were found for the user.
+            if (groups == null)
+            {
+                return this.NotFound();
+            }
+
+            // Return the user's groups.
+            return this.Ok(groups);
         }
 
         private List<Dictionary<string, object>> MenuItems(NavigationModel model)

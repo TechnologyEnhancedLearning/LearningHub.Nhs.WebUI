@@ -39,6 +39,7 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddHttpClient<IMoodleHttpClient, MoodleHttpClient>();
             services.AddHttpClient<IMoodleBridgeHttpClient, MoodleBridgeHttpClient>();
             services.AddScoped<IDatabricksApiHttpClient, DatabricksApiHttpClient>();
+            services.AddScoped<IOdsOrganisationClient, OdsOrganisationClient>();
             services.AddScoped<ILearningHubService, LearningHubService>();
             services.AddScoped<IResourceService, ResourceService>();
             services.AddScoped<ICatalogueService, CatalogueService>();
@@ -50,6 +51,12 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IUserGroupService, UserGroupService>();
             services.AddScoped<IMoodleApiService, MoodleApiService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IOrganisationService, OrganisationService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IPasswordManagerService, PasswordManagerService>();
+
+            services.AddScoped<IExternalSystemUserService, ExternalSystemUserService>();
+
 
             var reportingEnabled = configuration.GetValue<bool>("FeatureFlags:InPlatformReport");
             if (reportingEnabled)
@@ -76,6 +83,8 @@ namespace LearningHub.Nhs.OpenApi.Services
             services.AddScoped<IResourceSyncService, ResourceSyncService>();
             services.AddScoped<ISecurityService, SecurityService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IUserRoleService, UserRoleService>();
             services.AddTransient<IQueueCommunicatorService, QueueCommunicatorService>();
             services.AddScoped<IEmailSenderService, EmailSenderService>();
             services.AddScoped<IEmailTemplateService, EmailTemplateService>();

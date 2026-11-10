@@ -1,11 +1,14 @@
 ﻿namespace LearningHub.Nhs.OpenApi.Repositories.Repositories
 {
-    using System.Linq;
-    using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities;
     using LearningHub.Nhs.OpenApi.Repositories.EntityFramework;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
+    using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
+    using System.Data;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The user repository.
@@ -31,7 +34,8 @@
         /// <returns>The <see cref="Task"/>.</returns>
         public async Task<User> GetByIdAsync(int id)
         {
-            return await DbContext.User.FirstOrDefaultAsync(n => n.Id == id);
+            return await this.DbContext.User.Include(x => x.ProfessionalBody)
+                .FirstOrDefaultAsync(user => user.Id == id && !user.Deleted);
         }
 
         /// <summary>
@@ -76,11 +80,11 @@
                                         .ThenInclude(ug => ug.RoleUserGroup)
                                         .ThenInclude(rug => rug.Role)
                                         .AsNoTracking()
-                                        .FirstOrDefaultAsync(n => n.UserName == username && !n.Deleted);
+                                        .FirstOrDefaultAsync(n => n.LegacyUserName == username && !n.Deleted);
             }
             else
             {
-                return await DbContext.User.FirstOrDefaultAsync(n => n.UserName == username);
+                return await DbContext.User.FirstOrDefaultAsync(n => n.LegacyUserName == username);
             }
         }
 
@@ -90,6 +94,62 @@
             return DbContext.UserUserGroup
                 .Any(uug => uug.UserId == userId &&
                             uug.UserGroupId == SystemAdminUserGroup);
+        }
+
+        /// <summary>
+        /// The get user detail for the authentication.
+        /// </summary>
+        /// <param name = "username">
+        /// username.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        public async Task<UserAuthenticateDto> GetUserDetailForAuthentication(string username)
+        {
+                var param0 = new SqlParameter("@userName", SqlDbType.VarChar) { Value = username };
+
+                var userAuthenticateDto = await this.DbContext.UserAuthenticateDto.FromSqlRaw("proc_UserDetailForAuthenticationByUserName @userName", param0).AsNoTracking().ToListAsync();
+
+                return userAuthenticateDto.FirstOrDefault();
+            }
+
+        /// <summary>
+        /// Gets a user by id, including soft-deleted users.
+        /// </summary>
+        /// <param name="id">The user id.</param>
+        /// <returns>The user if found.</returns>
+        public async Task<User?> GetByIdIncludingDeletedAsync(int id)
+        {
+            return await this.DbContext.User.FirstOrDefaultAsync(user => user.Id == id);
+        }
+
+        /// <summary>
+        /// Checks whether an email address is available for use.
+        /// </summary>
+        /// <param name="email">The email address.</param>
+        /// <param name="excludeUserId">
+        /// Optional user id to exclude from the check.
+        /// </param>
+        /// <returns>True when the email address is available.</returns>
+        public async Task<bool> IsEmailAvailableAsync(string email, int? excludeUserId = null)
+        {
+            var query = this.DbContext.User.AsNoTracking().Where(user => user.EmailAddress == email);
+
+            if (excludeUserId.HasValue)
+            {
+                query = query.Where(user => user.Id != excludeUserId.Value);
+            }
+
+            return !await query.AnyAsync();
+        }
+
+        public async Task<bool> UserExistsAsync(int userId)
+        {
+            return await DbContext.User.AsNoTracking()
+                    .AnyAsync(
+                        x => x.Id == userId &&
+                             !x.Deleted);
         }
     }
 }

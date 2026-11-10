@@ -202,5 +202,10 @@ namespace LearningHub.Nhs.OpenApi.Models.Configuration
         /// Gets or Sets the EmailBasedAuthenticationPhase1
         /// </summary>
         public bool EmailBasedAuthenticationPhase1 {  get; set; }
+
+        /// <summary>
+        /// Gets or sets <see cref="MaxLogonAttempts"/>.
+        /// </summary>
+        public int MaxLogonAttempts {  get; set; }
     }
 }

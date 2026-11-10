@@ -23,6 +23,7 @@
 
 	<ItemGroup>
 	  <Folder Include="ServiceModels\MoodleBridge\" />
+	  <Folder Include="ServiceModels\User\" />
 	</ItemGroup>
 
 </Project>

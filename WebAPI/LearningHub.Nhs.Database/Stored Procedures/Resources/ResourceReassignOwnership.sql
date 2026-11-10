@@ -20,7 +20,7 @@ AS
 
 BEGIN
 
-	IF NOT EXISTS (SELECT 'X' FROM hub.[User] WHERE Id=@UserId AND Deleted=0)
+	IF NOT EXISTS (SELECT 'X' FROM hub.[User] WHERE Id=@UserId AND RemoveDate is null)
 	BEGIN
 		RAISERROR ('Error - Please supply a valid UserId for auditing purposes', -- Message text.  
 				16, -- Severity.  
@@ -34,7 +34,7 @@ BEGIN
 	--------------------------------------------------------------------
 	DECLARE @NewOwnerUserId int
 
-	SELECT @NewOwnerUserId = Id FROM hub.[User] WHERE [UserName]=@NewOwnerUserName AND Deleted=0
+	SELECT @NewOwnerUserId = Id FROM hub.[User] WHERE [LegacyUserName]=@NewOwnerUserName AND RemoveDate is null
 
 	IF @NewOwnerUserId IS NULL
 	BEGIN

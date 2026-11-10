@@ -1,18 +1,22 @@
-﻿CREATE TABLE [hub].[Role](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](50) NOT NULL,
-	[Description] [nvarchar](255) NULL,
-	[Deleted] [bit] NOT NULL,
-	[CreateUserId] [int] NOT NULL,
-	[CreateDate] [datetimeoffset](7) NOT NULL,
-	[AmendUserId] [int] NOT NULL,
-	[AmendDate] [datetimeoffset](7) NOT NULL,
- CONSTRAINT [PK_role] PRIMARY KEY CLUSTERED 
+﻿CREATE TABLE [hub].[Role]
 (
-	[Id] ASC
-)
-) ON [PRIMARY]
-GO
+    [Id] INT IDENTITY(1,1) NOT NULL,
+    [Code] NVARCHAR(50) NULL,
+    [Name] NVARCHAR(100) NOT NULL,
+    [ScopeType] NVARCHAR(250) NULL,
+    [Description] NVARCHAR(500) NULL,
 
-ALTER TABLE [hub].[Role] ADD  CONSTRAINT [DF_role_amendDate]  DEFAULT (sysdatetimeoffset()) FOR [AmendDate]
+    [CreateDate] DATETIMEOFFSET(7) NOT NULL,
+    [CreateUserId] INT NULL,
+    [AmendDate] DATETIMEOFFSET(7) NULL,
+    [AmendUserId] INT NULL,
+    [RemoveDate] DATETIMEOFFSET(7) NULL,
+    [RemoveUserId] INT NULL,
+
+    CONSTRAINT [PK_Role] PRIMARY KEY CLUSTERED ([Id]),
+    --CONSTRAINT [UQ_Role_Code] UNIQUE ([Code]),
+    CONSTRAINT [FK_Role_CreateUser] FOREIGN KEY ([CreateUserId]) REFERENCES [hub].[User] ([Id]),
+    CONSTRAINT [FK_Role_AmendUser] FOREIGN KEY ([AmendUserId]) REFERENCES [hub].[User] ([Id]),
+    CONSTRAINT [FK_Role_RemoveUser] FOREIGN KEY ([RemoveUserId]) REFERENCES [hub].[User] ([Id])
+);
 GO

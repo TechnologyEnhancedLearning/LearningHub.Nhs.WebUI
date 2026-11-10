@@ -133,4 +133,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="TextBackgroundColour" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="d4f0c655-cdfd-44f4-a7bf-058abaed7d17" ChangeDateTime="08/11/2026 15:18:33">
+    <Property Name="ElementName" Value="[hub].[User].[UserName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[hub].[User]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[LegacyUserName]" />
+  </Operation>
 </Operations>

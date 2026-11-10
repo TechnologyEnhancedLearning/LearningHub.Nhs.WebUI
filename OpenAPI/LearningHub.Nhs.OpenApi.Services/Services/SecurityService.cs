@@ -6,8 +6,6 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web;
-    using elfhHub.Nhs.Models.Common;
-    using elfhHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Email;
     using LearningHub.Nhs.Models.Email.Models;
@@ -16,6 +14,7 @@
     using LearningHub.Nhs.Models.GovNotifyMessaging;
     using LearningHub.Nhs.OpenApi.Models.Configuration;
     using LearningHub.Nhs.OpenApi.Repositories.Interface.Repositories;
+    using LearningHub.Nhs.OpenApi.Repositories.Repositories;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services.Messaging;
     using Microsoft.Extensions.Options;
@@ -34,23 +33,29 @@
         private readonly IGovMessageService govMessageService;
         private readonly IEmailTemplateService emailTemplateService;
         private readonly IUserProfileRepository userProfileRepository;
+        private readonly IUserPasswordValidationTokenRepository userPasswordValidationTokenRepository;
+        private readonly IUserRepository userRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SecurityService"/> class.
         /// </summary>
         /// <param name="emailChangeValidationTokenRepository">emailChangeValidationTokenRepository.</param>
         /// <param name="emailSenderService">emailSenderService.</param>
-        /// <param name="settings">settings.</param>
+        /// <param name="learningHubConfig">learningHubConfig.</param>
         /// <param name="govMessageService">govMessageService.</param>
         /// <param name="emailTemplateService">emailTemplateService.</param>
         /// <param name="userProfileRepository">userProfileRepository.</param>
+        /// <param name="userPasswordValidationTokenRepository">userPasswordValidationTokenRepository.</param>
+        /// <param name="userRepository">userRepository.</param>
         public SecurityService(
             IEmailChangeValidationTokenRepository emailChangeValidationTokenRepository,
             IEmailSenderService emailSenderService,
             IOptions<LearningHubConfig> learningHubConfig,
             IGovMessageService govMessageService,
             IEmailTemplateService emailTemplateService,
-            IUserProfileRepository userProfileRepository)
+            IUserProfileRepository userProfileRepository,
+            IUserPasswordValidationTokenRepository userPasswordValidationTokenRepository,
+            IUserRepository userRepository)
         {
             this.emailChangeValidationTokenRepository = emailChangeValidationTokenRepository;
             this.emailSenderService = emailSenderService;
@@ -58,6 +63,79 @@
             this.govMessageService = govMessageService;
             this.emailTemplateService = emailTemplateService;
             this.userProfileRepository = userProfileRepository;
+            this.userPasswordValidationTokenRepository = userPasswordValidationTokenRepository;
+            this.userRepository = userRepository;
+        }
+
+
+        public async Task<PasswordValidationTokenResult> ValidateTokenAsync(string token, string loctoken)
+        {
+            PasswordValidationTokenResult tokenResult = new PasswordValidationTokenResult() { Valid = false, TokenIssue = string.Empty };
+
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(loctoken))
+            {
+                tokenResult.TokenIssue = "Invalid";
+            }
+
+            var userPasswordValidationToken = await this.userPasswordValidationTokenRepository.GetByToken(loctoken);
+            if (userPasswordValidationToken == null)
+            {
+                tokenResult.TokenIssue = "Invalid";
+            }
+            else
+            {
+                var hashedToken = this.SecureHash(token, userPasswordValidationToken.Salt);
+
+                if (!userPasswordValidationToken.HashedToken.Equals(hashedToken))
+                {
+                    tokenResult.TokenIssue = "Invalid";
+                }
+                else if (userPasswordValidationToken.HashedToken.Equals(hashedToken) && userPasswordValidationToken.Expiry < DateTimeOffset.Now)
+                {
+                    tokenResult.TokenIssue = "Expired";
+                    await this.userPasswordValidationTokenRepository.ExpireUserPasswordValidationToken(userPasswordValidationToken.Lookup);
+                }
+                else
+                {
+                    tokenResult.UserName = userPasswordValidationToken.User.LegacyUserName;
+                    tokenResult.Valid = true;
+                }
+            }
+
+            return tokenResult;
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> SetInitialPasswordAsync(PasswordCreateModel passwordCreateModel)
+        {
+            var result = await this.ValidateTokenAsync(passwordCreateModel.Token, passwordCreateModel.Loctoken);
+
+            if (!result.Valid)
+            {
+                return false;
+            }
+            else
+            {
+                var user = await this.userRepository.GetByUsernameAsync(result.UserName,false);
+                if (user != null)
+                {
+                    user.PasswordHash = passwordCreateModel.PasswordHash;
+                    user.PasswordLifeCounter = 0;
+                    user.SecurityLifeCounter = 0;
+                    user.MustChangePassword = false;
+                    user.AmendUserId = user.Id;
+
+                    await this.userRepository.UpdateAsync(user.Id, user);
+
+                    await this.userPasswordValidationTokenRepository.ExpireUserPasswordValidationToken(passwordCreateModel.Loctoken);
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
         /// <summary>
@@ -155,7 +233,7 @@
                 {
                     emailChangeValidationToken.StatusId = (int)EmailChangeValidationTokenStatusEnum.Completed;
                     await emailChangeValidationTokenRepository.UpdateAsync(emailChangeValidationToken.UserId, emailChangeValidationToken);
-                    tokenResult.UserName = emailChangeValidationToken.User.UserName;
+                    tokenResult.UserName = emailChangeValidationToken.User.LegacyUserName;
                     tokenResult.Email = emailChangeValidationToken.Email;
                     tokenResult.UserId = emailChangeValidationToken.UserId;
                     tokenResult.Valid = true;

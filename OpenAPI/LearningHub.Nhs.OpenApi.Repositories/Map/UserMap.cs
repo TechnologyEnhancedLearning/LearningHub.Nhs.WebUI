@@ -7,7 +7,7 @@
     /// <summary>
     /// The user map.
     /// </summary>
-    public class UserMap : BaseEntityMap<User>
+    public class UserMap : AuditableEntityMap<User>
     {
         /// <summary>
         /// The internal map.
@@ -23,21 +23,68 @@
                 .HasColumnName("Id")
                 .ValueGeneratedNever();
 
-            modelBuilder.Property(e => e.UserName)
-                .IsRequired()
-                .HasColumnName("UserName")
+            modelBuilder.Property(e => e.FirstName)
+           .HasColumnName("FirstName")
+           .HasMaxLength(50);
+
+            modelBuilder.Property(e => e.LastName)
+                .HasColumnName("LastName")
                 .HasMaxLength(50);
 
-            modelBuilder.Property(e => e.VersionEndTime)
-                .HasColumnName("VersionEndTime")
-                .HasDefaultValueSql("(CONVERT([datetime2],'9999-12-31 23:59:59.9999999'))");
+            modelBuilder.Property(e => e.EmailAddress)
+                .HasColumnName("EmailAddress")
+                .HasMaxLength(100);
 
-            modelBuilder.Property(e => e.VersionStartTime)
-                .HasColumnName("VersionStartTime")
-                .HasDefaultValueSql("(getutcdate())");
+            modelBuilder.Property(e => e.RecoveryEmailAddress)
+                .HasColumnName("RecoveryEmailAddress")
+                .HasMaxLength(100);
 
-            modelBuilder.Ignore(e => e.Token);
-            modelBuilder.Ignore(e => e.AssignedRoles);
+            modelBuilder.Property(e => e.LegacyUserName)
+                .IsRequired()
+                .HasColumnName("LegacyUserName")
+                .HasMaxLength(50);
+
+            modelBuilder.Property(e => e.ProfessionalBodyId)
+                .HasColumnName("ProfessionalBodyId");
+
+            modelBuilder.Property(e => e.ProfessionalRegistrationNumber)
+                .HasColumnName("ProfessionalRegistrationNumber")
+                .HasMaxLength(50);
+
+            modelBuilder.Property(e => e.Active)
+                .HasColumnName("Active");
+
+            modelBuilder.Property(e => e.PasswordHash)
+                .HasColumnName("PasswordHash")
+                .HasMaxLength(255);
+
+            modelBuilder.Property(e => e.MustChangePassword)
+                .HasColumnName("MustChangePassword");
+
+            modelBuilder.Property(e => e.PasswordLifeCounter)
+           .HasColumnName("PasswordLifeCounter");
+
+            modelBuilder.Property(e => e.SecurityLifeCounter)
+                .HasColumnName("SecurityLifeCounter");
+
+            modelBuilder.Property(e => e.RemoteLoginKey)
+                .HasColumnName("RemoteLoginKey")
+                .HasMaxLength(50);
+
+            modelBuilder.Property(e => e.RemoteLoginGuid)
+                .HasColumnName("RemoteLoginGuid");
+
+            modelBuilder.Property(e => e.RemoteLoginStart)
+                .HasColumnName("RemoteLoginStart");
+
+            modelBuilder.Property(e => e.RestrictToSSO)
+                .HasColumnName("RestrictToSSO");
+
+            modelBuilder.Property(e => e.RequestUserLogout)
+                .HasColumnName("RequestUserLogout");
+
+            modelBuilder.Property(e => e.RemovalMethodId)
+                .HasColumnName("RemovalMethodId");
         }
     }
 }

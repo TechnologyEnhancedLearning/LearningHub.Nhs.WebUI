@@ -51,5 +51,5 @@ BEGIN
 				) arug on uug.UserGroupId = arug.UserGroupId
 			JOIN [hub].[User] u on u.Id = uug.UserId
 			JOIN [hub].[UserProfile] up on up.Id = u.Id
-			where uug.Deleted = 0 and u.Deleted = 0 and up.Deleted = 0;	
+			where uug.Deleted = 0 and u.RemoveDate is null and up.Deleted = 0;	
 END;

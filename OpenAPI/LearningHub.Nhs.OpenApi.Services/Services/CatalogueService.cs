@@ -68,7 +68,7 @@
         /// <param name="catalogueRepository">
         /// The <see cref="ICatalogueRepository"/>.
         /// </param>
-        /// <param name="categoryService"></param>
+        /// <param name="categoryService">The categoryService.</param>
         /// <param name="mapper">mapper.</param>
         /// <param name="catalogueNodeVersionRepository">catalogueNodeVersionRepository.</param>
         /// <param name="nodeResourceRepository">nodeResourceRepository.</param>
@@ -1239,6 +1239,51 @@
             ////})
             ////{ EmailAddress = catalogueAccessRequest.EmailAddress });
 
+            return new LearningHubValidationResult(true) { CreatedId = uugId };
+        }
+
+        /// <summary>
+        /// The ProvideCatalogueReaderAccessForScript.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="scriptCataloguereference">The scriptCataloguereference.</param>
+        /// <param name="scriptCatalogueNodeId">The scriptCatalogueNodeId.</param>
+        /// <returns>The validation result.</returns>
+        public async Task<LearningHubValidationResult> ProvideCatalogueReaderAccessForScript(int userId, string scriptCataloguereference, int scriptCatalogueNodeId)
+        {
+            ////var catalogue = this.catalogueNodeVersionRepository.GetBasicCatalogue(8);
+            var canEdit = await this.IsUserLocalAdminAsync(userId, scriptCatalogueNodeId);
+            if (!canEdit)
+            {
+                throw new Exception($"User '{userId}' does not have access to manage catalogue '{scriptCataloguereference}'");
+            }
+
+            RoleUserGroup rug = new RoleUserGroup();
+
+            var rugs = await this.roleUserGroupRepository.GetByRoleIdCatalogueId((int)RoleEnum.Reader, scriptCatalogueNodeId);
+
+            rug = rugs.Where(r => r.RoleId == (int)RoleEnum.Reader
+                                    && r.UserGroup.UserGroupAttribute.Any(uga => uga.AttributeId == (int)AttributeEnum.RestrictedAccess)
+                                    && r.Scope.ScopeType == ScopeTypeEnum.Catalogue).FirstOrDefault();
+
+            if (rug == null)
+            {
+                throw new Exception($"No role user group for readers in catalogue with node id {scriptCatalogueNodeId}");
+            }
+
+            var userGroupId = rug.UserGroupId;
+
+            var existingUug = this.userUserGroupRepository.GetAll().SingleOrDefault(x => x.UserId == userId && x.UserGroupId == userGroupId && !x.Deleted);
+
+            int uugId = 0;
+            if (existingUug == null)
+            {
+                uugId = await this.userUserGroupRepository.CreateAsync(userId, new LearningHub.Nhs.Models.Entities.UserUserGroup
+                {
+                    UserGroupId = userGroupId,
+                    UserId = userId,
+                });
+            }
             return new LearningHubValidationResult(true) { CreatedId = uugId };
         }
 

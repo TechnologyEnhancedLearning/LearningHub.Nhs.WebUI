@@ -27,7 +27,7 @@ export class AnswerModel {
             || (!!this.blockCollection &&
                 this.blockCollection.blocks
                     .filter(block => block.blockType === BlockTypeEnum.Text)
-                    .every(block => block.textBlock.content.length <= 120) &&
+                    .every(block => block.textBlock.content.length <= 500) &&
                 this.blockCollection.isReadyToPublish());
 
         return isReadyToPublish && (!isMatchGame || this.blockCollection.blocks.length === 2);

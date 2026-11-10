@@ -79,17 +79,21 @@
         bottom: 0;
         padding: 10px;
     }
+
         .trace-container .trace-row {
             display: flex;
         }
+
         .trace-container .statement {
             flex: 50%;
             min-width: 350px;
         }
+
         .trace-container .result {
             flex: 50%;
             min-width: 100px;
         }
+
     .text-popup {
         position: fixed;
         height: 75%;
@@ -97,6 +101,7 @@
         top: 12.5%;
         left: 12.5%;
     }
+
         .text-popup textarea {
             height: 100%;
             width: 100%;

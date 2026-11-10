@@ -4,6 +4,8 @@
   var bookmarkType = (Model.BookmarkTypeId == 1) ? "Folder" : "Bookmark";
   var titleAction = Model.Bookmarked ? "Delete" : "Add";
   var buttonAction = Model.Bookmarked ? "Delete" : "Continue";
+  ViewData["DisableValidation"] = true;
+  var errorHasOccurred = !ViewData.ModelState.IsValid;
 
   ViewData["Title"] = $"{titleAction} {bookmarkType}";
 
@@ -63,8 +65,11 @@
     <vc:back-link asp-controller="@controller" asp-action="@action" asp-all-route-data="@routeParams" link-text="@backToText" />
 
     <form asp-controller="Bookmark" asp-action="BookmarkToggle" asp-route-returnUrl="@ViewBag.ReturnUrl" method="post">
-
-      <vc:error-summary order-of-property-names="@(new[] { nameof(Model.Title) })" />
+            @if (errorHasOccurred)
+            {
+                <vc:error-summary order-of-property-names="@(new[] { nameof(Model.Title) })" />
+            }
+      
 
       @if (Model.Bookmarked)
       {

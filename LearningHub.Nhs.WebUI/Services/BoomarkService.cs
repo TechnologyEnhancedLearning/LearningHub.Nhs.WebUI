@@ -47,7 +47,7 @@
             var bookmarkId = bookmarkViewModel.Id;
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 bookmarkId = Convert.ToInt32(result);
             }
 
@@ -75,7 +75,7 @@
             var bookmarkId = bookmarkViewModel.Id;
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 bookmarkId = Convert.ToInt32(result);
             }
 
@@ -111,7 +111,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<IEnumerable<UserBookmarkViewModel>>(result);
             }
 
@@ -139,7 +139,7 @@
             var bookmarkId = bookmarkViewModel.Id;
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 bookmarkId = Convert.ToInt32(result);
             }
 

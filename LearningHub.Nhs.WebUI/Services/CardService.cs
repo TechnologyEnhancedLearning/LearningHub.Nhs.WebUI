@@ -42,7 +42,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 totals = JsonConvert.DeserializeObject<MyContributionsTotalsViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -74,7 +74,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 myContributionCards = JsonConvert.DeserializeObject<List<ContributedResourceCardViewModel>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -102,7 +102,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 myresourcecards = JsonConvert.DeserializeObject<MyResourceViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -131,7 +131,7 @@ namespace LearningHub.Nhs.WebUI.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 resourceCardExtendedViewModel = JsonConvert.DeserializeObject<ResourceCardExtendedViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized

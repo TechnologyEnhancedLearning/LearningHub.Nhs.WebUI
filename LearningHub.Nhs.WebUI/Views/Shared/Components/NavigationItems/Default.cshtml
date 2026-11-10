@@ -9,6 +9,8 @@
 @{
     var restricted = settings.Value.Restricted;
     var createAccountDisplay = restricted ? "none" : "flex";
+    var courseUrl = settings.Value.VLECoursesUrl;
+    var calendarUrl = settings.Value.CalendarUrl;
 }
 
 <!-- start default navigation -->
@@ -68,7 +70,24 @@
             </a>
         </li>
     }
+    @if (Model.ShowVLECourses)
+    {
+        <li class="nhsuk-header__navigation-item @Html.IsSelected("VLECourses")">
+            <a class="nhsuk-header__navigation-link" href="@settings.Value.VLECoursesUrl">
+                VLE Courses
 
+            </a>
+        </li>
+    }
+    @if (Model.ShowCalendar)
+    {
+        <li class="nhsuk-header__navigation-item @Html.IsSelected("Calendar")">
+            <a class="nhsuk-header__navigation-link" href="@settings.Value.CalendarUrl">
+                Calendar
+
+            </a>
+        </li>
+    }
 
     @if (Context.Request.Path.Value != "/Home/Error" && !SystemOffline())
     {
@@ -81,21 +100,6 @@
                 </a>
             </li>
         } 
-        @if (Model.ShowNotifications)
-        {
-            <li class="nhsuk-header__navigation-item @Html.IsSelected("Notification")">
-                <a class="nhsuk-header__navigation-link" asp-area="" asp-controller="Notification" asp-action="Index">
-                    Notifications
-                    @if (Model.NotificationCount > 0)
-                    {
-                        <div class="nhsuk-header__notification-dot">@NotificationDisplay()</div>
-
-                    }
-                </a>
-            </li>
-            @* - below contains notification number code to be implemented & styled as appropriate. See Helpers\UtilityHelper.cs FormatUnreadNotificationCount()
-                      *@
-        }
         @if (Model.ShowAdmin)
         {
             <li class="nhsuk-header__navigation-item">
@@ -105,15 +109,6 @@
                 </a>
             </li>
         }
-    }
-    @if (Model.ShowRegister)
-    {
-        @* can likely remove this condition as Register functionality removed from menu and only shown in main content window. see \Services\NavigationPermissionService.cs *@
-        <li class="nhsuk-header__navigation-item @Html.IsSelected("Account")">
-            <a class="nhsuk-header__navigation-link" href="/create-an-account">
-                Create an account
-            </a>
-        </li>
     }
 }
 

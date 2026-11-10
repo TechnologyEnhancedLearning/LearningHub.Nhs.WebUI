@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using System.Web;
     using elfhHub.Nhs.Models.Common;
+    using elfhHub.Nhs.Models.Entities;
     using LearningHub.Nhs.Models.Common;
     using LearningHub.Nhs.Models.Email;
     using LearningHub.Nhs.Models.Email.Models;
@@ -91,7 +92,7 @@
             var user = await this.userProfileRepository.GetByIdAsync(userId);
             var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)EmailTemplates.EmailChangeConfirmationEmail);
             var personalisation = new Dictionary<string, dynamic>();
-            personalisation["user name"] = user.UserName;
+            personalisation["user name"] = this.learningHubConfig.EmailBasedAuthenticationPhase1? user.UserName: user.FirstName;
             personalisation["confirm_email_link"] = validateTokenUrl;
             personalisation["date"] = emailChangeValidationToken.Expiry.ToString("dd-MM-yyyy");
             personalisation["time"] = emailChangeValidationToken.Expiry.ToString("HH:mm");
@@ -158,11 +159,10 @@
                     tokenResult.Email = emailChangeValidationToken.Email;
                     tokenResult.UserId = emailChangeValidationToken.UserId;
                     tokenResult.Valid = true;
-
+                    var user = await this.userProfileRepository.GetByIdAsync(emailChangeValidationToken.UserId);
                     var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)EmailTemplates.EmailVerified);
                     var personalisation = new Dictionary<string, dynamic>();
-                    personalisation["user name"] = emailChangeValidationToken.User.UserName;
-
+                    personalisation["user name"] = this.learningHubConfig.EmailBasedAuthenticationPhase1 ? emailChangeValidationToken.User.UserName : user.FirstName;
                     var emailRequest = new EmailRequest
                     {
                         Recipient = emailChangeValidationToken.Email,

@@ -5,7 +5,7 @@
     using Microsoft.AspNetCore.Authentication.Cookies;
 
     /// <summary>
-    /// Defines the <see cref="CookieEventHandler" />.
+    /// Defines the  <see cref="CookieEventHandler" />.
     /// </summary>
     public class CookieEventHandler : CookieAuthenticationEvents
     {

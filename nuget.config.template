@@ -47,7 +47,8 @@
 			<package pattern="NHSUKSearchSortFilterPaginate" />
 			<package pattern="NHSUKViewComponents.Web" />
 			<package pattern="UK.NHS.CookieBanner" />
-			<!-- Best practice to only apply all to one source but we may want to enable it for convenience (and we do duplicate some packages across both sources) -->
+            <package pattern="NHSUKFrontendRazor" />
+            <!-- Best practice to only apply all to one source but we may want to enable it for convenience (and we do duplicate some packages across both sources) -->
 			<!-- <package pattern="*" /> -->
 		</packageSource>
 

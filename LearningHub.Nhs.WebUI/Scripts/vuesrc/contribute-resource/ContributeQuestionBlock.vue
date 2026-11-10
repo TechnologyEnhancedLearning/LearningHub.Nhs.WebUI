@@ -12,7 +12,7 @@
                                :header="`Set the question`">
             <QuestionBlockCollectionInput
                 :blockCollection="questionBlock.questionBlockCollection"
-                :textMaxLength="250"
+                :textMaxLength="500"
                 :placeholderText="'Type a question for the reader here.'"
                 :imageZone="imageZone"/>
         </ExpansionPanelContent>

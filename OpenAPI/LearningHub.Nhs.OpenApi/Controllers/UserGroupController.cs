@@ -376,5 +376,16 @@
                 return this.BadRequest(new ApiResponse(false, vr));
             }
         }
+
+        /// <summary>
+        /// Get all catalogues.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [HttpGet]
+        [Route("GetPGVLEUserPermission")]
+        public async Task<bool> GetPGVLEUserPermission()
+        {
+            return await this.userGroupService.IsAuthenticatedPGVLEUser(this.CurrentUserId.GetValueOrDefault());
+        }
     }
 }

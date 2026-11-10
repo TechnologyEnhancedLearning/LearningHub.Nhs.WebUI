@@ -1,23 +1,16 @@
-// Components
-import Header from 'nhsuk-frontend/packages/components/header/header';
-import SkipLink from 'nhsuk-frontend/packages/components/skip-link/skip-link';
-import Details from 'nhsuk-frontend/packages/components/details/details';
-import Radios from 'nhsuk-frontend/packages/components/radios/radios';
-import Checkboxes from 'nhsuk-frontend/packages/components/checkboxes/checkboxes';
+// Components (default exports in v10)
+import {
+    initHeader,
+    initSkipLinks, 
+    initRadios, 
+    initCheckboxes 
+} from 'nhsuk-frontend';
 
-// Polyfills
-import 'nhsuk-frontend/packages/polyfills';
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
-
-// Initialize components
-document.addEventListener(
-  'DOMContentLoaded',
-  () => {
-    Details();
-    Header();
-    SkipLink();
-    Radios();
-    Checkboxes();
-  },
-);
+// Initialize components once DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // V10: Call the initialization functions directly.
+    initHeader();
+    initSkipLinks();
+    initRadios();
+    initCheckboxes();
+});

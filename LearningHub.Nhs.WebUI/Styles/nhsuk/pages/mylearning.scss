@@ -24,6 +24,7 @@
         background-color: $nhsuk-green;
         transition: width .6s ease;
     }
+
     .nhs-item-row {
         display: flex;
         justify-content: space-between;
@@ -207,5 +208,166 @@
 
     label {
         font-family: $font-stack;
+    }
+    // Content above cards
+    .badge-summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .tel-badge-card-group {
+        container-type: inline-size;
+
+        @container (max-width: 800px) {
+            .nhsuk-card-group__item {
+                width: 100%;
+            }
+        }
+    }
+    // Card content styling
+    .tel-card {
+        &--tight-padding {
+            .nhsuk-card__content {
+                padding: 1rem;
+            }
+        }
+
+        &--rounded-corners {
+            border-radius: 0.5%;
+        }
+
+        &--badge {
+            .nhsuk-card__content {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+        }
+    }
+
+    .tel-badge__action-link {
+        margin-top: auto;
+    }
+
+    .badge-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 1rem;
+        /* Circle column */
+        &__circle-col {
+            flex: 0 0 auto;
+            align-self: flex-start;
+        }
+        /* Text column */
+        &__text-col {
+            flex: 1 1 auto;
+
+            h2 {
+                margin-bottom: 0 !important;
+            }
+        }
+    }
+    // both the image wrapper and the image
+    .badge-circle {
+        display: flex;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 2px solid #005eb8;
+        align-items: center;
+        justify-content: center;
+        background-color: $nhsuk-blue;
+    }
+
+    .badge-circle__image {
+        width: 60px;
+        height: 60px;
+    }
+    // This controls how the date definistion lists collapse
+    .badge-dates-row {
+        display: flex;
+        align-items: start;
+        flex-wrap: wrap;
+        column-gap: 1rem;
+    }
+
+    .badge-definition-list-wrapper {
+        display: flex;
+        align-items: start;
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        &__provider-row {
+        }
+
+        &__dates-row {
+            display: flex;
+            align-items: start;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+    }
+
+    .badge-dates-separator {
+        flex: 0 0 1px;
+    }
+    //
+    // Definition list styling
+    //
+
+    .definition-list {
+        $this: &;
+
+        font-size: 1.1875rem;
+
+        &__title,
+        &__description {
+            display: block;
+            word-break: break-word;
+        }
+
+        &__title {
+            font-weight: bold;
+        }
+
+        &__description {
+            margin-left: 0;
+        }
+
+        &__group {
+            &:nth-last-child(n + 2) {
+                padding-bottom: 1rem;
+            }
+        }
+
+        &--small {
+            font-size: 1rem;
+        }
+
+        &--inline {
+            .definition-list__group {
+                display: flex;
+                flex-direction: row;
+                align-items: baseline;
+            }
+
+            .definition-list__title,
+            .definition-list__description {
+                width: auto;
+                flex: 0 1 auto;
+                margin: 0;
+            }
+
+            .definition-list__title {
+                flex-shrink: 0;
+            }
+
+
+            .definition-list__description {
+                margin-left: 0.25rem;
+            }
+        }
     }
 }

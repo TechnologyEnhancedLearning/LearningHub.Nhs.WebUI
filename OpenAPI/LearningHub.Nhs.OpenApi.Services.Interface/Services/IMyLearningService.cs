@@ -70,5 +70,12 @@
         /// <param name="requestModel">The request model</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<MyLearningCertificatesDetailedViewModel> GetUserCertificateDetails(int userId, MyLearningApiRequestViewModel requestModel);
+
+        /// <summary>
+        /// Gets the badge details.
+        /// </summary>
+        /// <param name="requestModel">The request model</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        Task<MyLearningBadgesDetailedViewModel> GetUserBadgeDetails(MyLearningApiRequestViewModel requestModel);
     }
 }

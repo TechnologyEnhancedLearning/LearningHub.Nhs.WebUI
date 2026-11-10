@@ -53,7 +53,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewModel = JsonConvert.DeserializeObject<MyLearningDetailedViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -159,7 +159,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewModel = JsonConvert.DeserializeObject<List<PlayedSegmentViewModel>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -190,7 +190,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewModel = JsonConvert.DeserializeObject<Tuple<int, MyLearningDetailedItemViewModel>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -229,6 +229,43 @@
             {
                 var result = response.Content.ReadAsStringAsync().Result;
                 viewModel = JsonConvert.DeserializeObject<MyLearningCertificatesDetailedViewModel>(result);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                        ||
+                     response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Gets the user certificates.
+        /// </summary>
+        /// <param name="requestModel">The request model.</param>
+        /// <param name="moodleInstanceUserIds">The moodleInstanceUserIds.</param>
+        /// <returns>The <see cref="Task"/>.</returns>
+        public async Task<MyLearningBadgesDetailedViewModel> GetUserBadgeDetails(MyLearningRequestModel requestModel, MoodleInstanceUserIdsViewModel moodleInstanceUserIds)
+        {
+            MyLearningBadgesDetailedViewModel viewModel = null;
+            var payload = new MyLearningApiRequestViewModel
+            {
+                Request = requestModel,
+                MoodleInstanceUserIds = moodleInstanceUserIds,
+            };
+            var json = JsonConvert.SerializeObject(payload);
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = await this.OpenApiHttpClient.GetClientAsync();
+
+            var request = $"MyLearning/GetUserBadgeDetails";
+            var response = await client.PostAsync(request, stringContent).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                viewModel = JsonConvert.DeserializeObject<MyLearningBadgesDetailedViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
                         ||

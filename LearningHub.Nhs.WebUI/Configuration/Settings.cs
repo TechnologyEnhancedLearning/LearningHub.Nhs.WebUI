@@ -197,6 +197,16 @@ namespace LearningHub.Nhs.WebUI.Configuration
         public int PasswordRequestLimitingPeriod { get; set; }
 
         /// <summary>
+        /// Gets or sets the ScriptCataloguereference.
+        /// </summary>
+        public string ScriptCataloguereference { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ScriptCatalogueNodeId.
+        /// </summary>
+        public int ScriptCatalogueNodeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the PasswordRequestLimit.
         /// </summary>
         public int PasswordRequestLimit { get; set; }
@@ -275,5 +285,15 @@ namespace LearningHub.Nhs.WebUI.Configuration
         /// Gets or sets the StatMandInstanceName.
         /// </summary>
         public string StatMandInstanceName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the VLECoursesUrl.
+        /// </summary>
+        public string VLECoursesUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CalendarUrl.
+        /// </summary>
+        public string CalendarUrl { get; set; }
     }
 }

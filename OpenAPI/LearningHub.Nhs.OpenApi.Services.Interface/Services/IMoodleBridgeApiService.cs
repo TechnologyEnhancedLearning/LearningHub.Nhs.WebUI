@@ -28,6 +28,12 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         Task<MoodleUpdateEmailResponseModel> UpdateEmail(UpdateEmailaddressViewModel updateEmailaddressViewModel);
 
         /// <summary>
+        /// Gets the configured Moodle instance base URLs keyed by instance short name.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<IDictionary<string, string>> GetMoodleInstanceBaseUrlsAsync();
+
+        /// <summary>
         /// GetRecentEnrolledCoursesAsync.
         /// </summary>
         /// <param name="moodleUserInstanceUserIds">The moodleUserInstanceUserIds.</param>
@@ -86,5 +92,12 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="categoryId">The categoryId.</param>
         /// <returns></returns>
         Task<List<SubCategoryResult>> GetSubCategoryByCategoryIdAsync(string categoryId);
+
+        /// <summary>
+        /// GetUserBadgeFromMoodleInstancesAsync.
+        /// </summary>
+        /// <param name="moodleUserInstanceUserIds">moodleUserInstanceUserIds.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<MoodleBadgeResponseModel> GetUserBadgeFromMoodleInstancesAsync(MoodleInstanceUserIdsViewModel moodleUserInstanceUserIds);
     }
 }

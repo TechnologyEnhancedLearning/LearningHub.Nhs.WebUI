@@ -31,5 +31,13 @@
         /// <param name="courseId">course Id. </param>
         /// <returns>return course URL.</returns>
         string GetCourseUrl(int courseId);
+
+        /// <summary>
+        /// GetCourseUrl.
+        /// </summary>
+        /// <param name="courseId">course Id. </param>
+        /// <param name="baseUrl">The Moodle base URL.</param>
+        /// <returns>return course URL.</returns>
+        string GetCourseUrl(int courseId, string baseUrl);
     }
 }

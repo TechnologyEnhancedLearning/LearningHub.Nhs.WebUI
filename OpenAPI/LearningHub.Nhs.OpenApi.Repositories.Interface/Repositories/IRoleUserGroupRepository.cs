@@ -63,5 +63,13 @@
         /// <param name="userId">The userId.</param>
         /// <returns>The <see cref="Task"/>.</returns>
         Task<List<RoleUserGroup>> GetAllforSearch(int catalogueNodeId, int userId);
+
+        /// <summary>
+        /// GetPGVLEUserGroupViewModelsByUserId.
+        /// </summary>
+        /// <param name="userId">The userId.</param>
+        /// <param name="userGroupId">The userGroupId.</param>
+        /// <returns>A list of RoleUserGroupViewModel.</returns>
+        Task<List<UserUserGroupViewModel>> GetPGVLEUserGroupViewModelsByUserId(int userId, int vleUserGroupId);
     }
 }

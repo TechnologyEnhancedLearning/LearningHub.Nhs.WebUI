@@ -14,9 +14,7 @@
         <div v-if="hierarchyEditLoaded && !catalogueLockedForEdit">
             <div class="lh-padding-fluid grey-banner">
                 <div class="lh-container-xl">
-                    <div class="nhsuk-back-link nhsuk-u-padding-bottom-3 nhsuk-u-padding-top-3">           
-                        <a v-bind:href="myContributionsPageUrl"> < My Contributions</a>
-                    </div>
+                    <a class="nhsuk-back-link" v-bind:href="myContributionsPageUrl">My Contributions</a>
                     <div class="py-3">
                         <h1 class="nhsuk-heading-xl nhsuk-u-margin-bottom-2">Contribute a resource</h1>
                         <div>Before you can continue, give this new resource a title and select a resource type.</div>

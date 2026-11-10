@@ -131,7 +131,7 @@ BEGIN
                 WHEN dc.RestrictedAccess = 1 AND a.CatalogueNodeId IS NULL THEN 0
                 ELSE 1
             END AS BIT) AS HasAccess,
-            dc.SumResourceAverageRating AS AverageRating,
+            CAST(COALESCE(dc.SumResourceAverageRating, 0.00) AS DECIMAL(18,2)) AS AverageRating,
             ub.Id AS BookMarkId,
             CAST(ISNULL(ub.Deleted,1) ^ 1 AS BIT) AS IsBookmarked,
             dc.ProvidersJson

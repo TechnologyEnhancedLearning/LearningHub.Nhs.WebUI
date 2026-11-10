@@ -41,7 +41,7 @@
         /// <summary>
         /// The InvokeAsync.
         /// </summary>
-        /// <param name="navView">Navigation View - "Default", "Topnav" or "Searchbar".</param>
+        /// <param name="navView">Navigation View - "Default", "AccountLinks" or "Searchbar".</param>
         /// <param name="controllerName">Controller name.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         public async Task<IViewComponentResult> InvokeAsync(string navView = "Default", string controllerName = "")

@@ -15,17 +15,15 @@
     using LearningHub.Nhs.WebUI.Configuration;
     using LearningHub.Nhs.WebUI.Helpers;
     using LearningHub.Nhs.WebUI.Interfaces;
-    using LearningHub.Nhs.WebUI.Models;
     using LearningHub.Nhs.WebUI.Models.Account;
     using LearningHub.Nhs.WebUI.Models.UserProfile;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Routing;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
-    using NHSUKViewComponents.Web.ViewModels;
+    using NHSUKFrontendRazor.ViewModels;
     using ChangePasswordViewModel = LearningHub.Nhs.WebUI.Models.UserProfile.ChangePasswordViewModel;
     using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
@@ -109,8 +107,6 @@
         /// <param name="returnUrl">The redirect back url.</param>
         /// <param name="checkDetails">Whether to check account details.</param>
         /// <returns>IActionResult.</returns>
-        [HttpGet]
-        [Route("myaccount")]
         public async Task<IActionResult> Index(string returnUrl = null, bool? checkDetails = false)
         {
             ////string loginWizardCacheKey = $"{this.CurrentUserId}:LoginWizard";
@@ -136,7 +132,9 @@
             ////    }
             ////}
 
-            var userPersonalDetails = await this.userService.GetMyAccountPersonalDetailsAsync();
+            var userPersonalDetails =
+                await this.userService.GetMyAccountPersonalDetailsAsync();
+
             return this.View("Index", userPersonalDetails);
         }
 
@@ -198,6 +196,7 @@
         [Route("myaccount/ChangePersonalDetails")]
         public async Task<IActionResult> ChangePersonalDetails()
         {
+            await this.cacheService.SetAsync($"{this.CurrentUserId}:LoginWizard", "start");
             var userPersonalDetails = await this.userService.GetMyAccountPersonalDetailsAsync();
             return this.View("ChangePersonalDetails", userPersonalDetails);
         }

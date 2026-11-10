@@ -137,6 +137,47 @@
         }
 
         /// <summary>
+        /// Gets the configured Moodle instance base URLs keyed by instance short name.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<IDictionary<string, string>> GetMoodleInstanceBaseUrlsAsync()
+        {
+            try
+            {
+                var client = await this.moodleBridgeHttpClient.GetClient();
+                var response = await client.GetAsync("/api/v1/diagnostics/configuration").ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                    };
+
+                    var configuration = System.Text.Json.JsonSerializer.Deserialize<MoodleBridgeConfigurationResponseModel>(result, options);
+
+                    return configuration?.Configurations?
+                        .Where(i => !string.IsNullOrWhiteSpace(i.ShortName) && !string.IsNullOrWhiteSpace(i.BaseUrl))
+                        .GroupBy(i => i.ShortName, StringComparer.OrdinalIgnoreCase)
+                        .ToDictionary(g => g.Key, g => g.First().BaseUrl, StringComparer.OrdinalIgnoreCase)
+                        ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    throw new Exception("AccessDenied");
+                }
+
+                throw new Exception($"Request failed with status code {response.StatusCode}");
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "An error occurred while fetching Moodle bridge configuration.");
+                throw;
+            }
+        }
+
+        /// <summary>
         /// GetEnrolledCoursesAsync.
         /// </summary>
         /// <param name="moodleUserInstanceUserIds">Moodle instances user id.</param>
@@ -295,6 +336,22 @@
             {
                 return null;
             }
+        }
+
+        private sealed class MoodleBridgeConfigurationResponseModel
+        {
+            public List<MoodleBridgeConfigurationInstanceModel> Configurations { get; set; } = new();
+        }
+
+        private sealed class MoodleBridgeConfigurationInstanceModel
+        {
+            public string ShortName { get; set; } = string.Empty;
+            public string BaseUrl { get; set; } = string.Empty;
+
+            // Optional, if you need them later:
+            public int Weighting { get; set; }
+            public List<string> EnabledEndpoints { get; set; } = new();
+            public bool IsEnabled { get; set; }
         }
 
         /// <summary>
@@ -603,5 +660,57 @@
                 throw;
             }
         }
+
+
+        /// <summary>
+        /// GetUserBadgeFromMoodleInstancesAsync.
+        /// </summary>
+        /// <param name="moodleUserInstanceUserIds">moodleUserInstanceUserIds.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<MoodleBadgeResponseModel> GetUserBadgeFromMoodleInstancesAsync(MoodleInstanceUserIdsViewModel moodleUserInstanceUserIds)
+        {
+            try
+            {
+                if (moodleUserInstanceUserIds?.MoodleInstanceUserIds == null ||
+                  !moodleUserInstanceUserIds.MoodleInstanceUserIds.Any())
+                {
+                    throw new ArgumentException("UserIds are required.");
+                }
+                var client = await this.moodleBridgeHttpClient.GetClient();
+
+
+
+                var requestUri = $"api/v1/Users/badges";
+
+                var response = await client.PostAsJsonAsync(
+                    requestUri,
+                    moodleUserInstanceUserIds).ConfigureAwait(false);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                    };
+                    var result = await response.Content
+                        .ReadFromJsonAsync<MoodleBadgeResultWrapper>(options)
+                        .ConfigureAwait(false);
+
+                    return result.Results.FirstOrDefault() ?? new MoodleBadgeResponseModel();
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    throw new Exception("AccessDenied");
+                }
+
+                throw new Exception($"Request failed with status code {response.StatusCode}");
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
     }
 }

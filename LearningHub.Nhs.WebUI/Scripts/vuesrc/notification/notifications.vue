@@ -19,58 +19,52 @@
             </div>
 
             <div v-if="showMessage" :class="[showMessage ? 'd-block' : 'd-none', 'nhsuk-u-margin-bottom-7']">
-                <div class="nhsuk-back-link">
-                    <a class="nhsuk-back-link__link" href="#" @click="showNotificationList($event)">
-                        <svg class="nhsuk-icon nhsuk-icon__chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
-                        </svg>
-                        Back to: Notifications
-                    </a>
+                <a class="nhsuk-back-link" href="#" @click="showNotificationList($event)">
+                  Back to: Notifications
+                </a>
+              <div class="row">
+                <div class="col-md-8">
+                  <h2>{{this.selectedNotification.title}}</h2>
                 </div>
+              </div>
 
-                <div class="row">
-                    <div class="col-md-8">
-                        <h2>{{this.selectedNotification.title}}</h2>
+              <div class="row nhsuk-u-font-size-19">
+                <div class="col-md-8" v-html="selectedNotification.body" />
+
+                <div class="col-md-4">
+                  <div class="d-block d-md-none mx-n4">
+                    <hr class="mt-3" />
+                  </div>
+
+                  <div class="row">
+                    <div class="col-4">Added on:</div>
+                    <div class="col">
+                      {{selectedNotification.date | formatDate('DD MMM YYYY')}}
                     </div>
-                </div>
-
-                <div class="row nhsuk-u-font-size-19">
-                    <div class="col-md-8" v-html="selectedNotification.body" />
-
-                    <div class="col-md-4">
-                        <div class="d-block d-md-none mx-n4">
-                            <hr class="mt-3" />
-                        </div>
-
-                        <div class="row">
-                            <div class="col-4">Added on:</div>
-                            <div class="col">
-                                {{selectedNotification.date | formatDate('DD MMM YYYY')}}
-                            </div>
-                            <div class="w-100 py-2"></div>
-                            <div class="col-4">Type:</div>
-                            <div class="col" v-for="item in notificationTypeContent()">
-                                <i :class="[item.className + ' pr-3']"></i>{{ item.text }}
-                            </div>
-                            <div class="w-100 py-2"></div>
-                            <div class="col-4">Status:</div>
-                            <div class="col">
-                                <i class="fa-regular fa-envelope-open text-success pr-3"></i>Read
-                            </div>
-                        </div>
-
-                        <div class="d-none d-md-block">
-                            <hr class="py-2 mt-3" />
-                        </div>
-
-                        <template v-if="selectedNotification.userDismissable">
-                            <div class="d-block d-md-none mx-n4">
-                                <hr class="py-2 mt-4" />
-                            </div>
-                            <button data-target="#deleteModal" data-toggle="modal" class="nhsuk-button">Delete</button>
-                        </template>
+                    <div class="w-100 py-2"></div>
+                    <div class="col-4">Type:</div>
+                    <div class="col" v-for="item in notificationTypeContent()">
+                      <i :class="[item.className + ' pr-3']"></i>{{ item.text }}
                     </div>
+                    <div class="w-100 py-2"></div>
+                    <div class="col-4">Status:</div>
+                    <div class="col">
+                      <i class="fa-regular fa-envelope-open text-success pr-3"></i>Read
+                    </div>
+                  </div>
+
+                  <div class="d-none d-md-block">
+                    <hr class="py-2 mt-3" />
+                  </div>
+
+                  <template v-if="selectedNotification.userDismissable">
+                    <div class="d-block d-md-none mx-n4">
+                      <hr class="py-2 mt-4" />
+                    </div>
+                    <button data-target="#deleteModal" data-toggle="modal" class="nhsuk-button">Delete</button>
+                  </template>
                 </div>
+              </div>
             </div>
 
             <div class="modal" tabindex="-1" role="dialog" id="deleteModalButton">

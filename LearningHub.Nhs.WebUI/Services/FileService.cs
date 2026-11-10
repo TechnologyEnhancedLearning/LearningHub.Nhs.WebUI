@@ -261,7 +261,7 @@
             var uri = new Uri(url);
             string containerName = uri.Segments[1].TrimEnd('/');
             string blobName = string.Join(string.Empty, uri.Segments, 2, uri.Segments.Length - 2);
-            BlobClient blobClient = new BlobClient(this.settings.AzureBlobSettings.ConnectionString, containerName, blobName);
+            BlobClient blobClient = new BlobClient(this.settings.AzureFileStorageConnectionString, containerName, blobName);
 
             var properties = await blobClient.GetPropertiesAsync();
             string contentType = properties.Value.ContentType ?? "application/octet-stream";

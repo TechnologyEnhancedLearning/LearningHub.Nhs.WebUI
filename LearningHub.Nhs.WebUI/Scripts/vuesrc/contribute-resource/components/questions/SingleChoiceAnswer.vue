@@ -27,7 +27,7 @@
             <hr class="cutoff-line">
         </div>
         <div>
-            <input type="text" id="txtmessage" aria-describedby="messageError" class="form-control text-input" maxlength="120" v-model="message" />
+            <input type="text" id="txtmessage" aria-describedby="messageError" class="form-control text-input" maxlength="500" v-model="message" />
             <div class="footer-text" id="messageError">
                 You have {{ charactersRemaining }} characters remaining.
             </div>
@@ -52,14 +52,14 @@
         data() {
             return {
                 message: this.answer.blockCollection.blocks[0].textBlock.content,
-                charactersRemaining: 120 - this.answer.blockCollection.blocks[0].textBlock.content.length,
+                charactersRemaining: 500 - this.answer.blockCollection.blocks[0].textBlock.content.length,
                 AnswerTypeEnum: AnswerTypeEnum
             }
         },
         watch: {
             message() {
                 this.answer.blockCollection.blocks[0].textBlock.content = this.message;
-                this.charactersRemaining = 120 - this.message.length;
+                this.charactersRemaining = 500 - this.message.length;
             },
             answer: {
                 deep: true,

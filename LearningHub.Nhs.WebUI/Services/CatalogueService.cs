@@ -49,7 +49,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<List<CatalogueBasicViewModel>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -78,7 +78,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<CatalogueViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
@@ -106,7 +106,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<CatalogueViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
@@ -134,7 +134,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<CatalogueViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
@@ -165,7 +165,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<CatalogueResourceResponseViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
@@ -353,7 +353,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewModel = JsonConvert.DeserializeObject<List<RestrictedCatalogueAccessRequestViewModel>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -386,7 +386,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<RestrictedCatalogueSummaryViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||
@@ -421,7 +421,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewModel = JsonConvert.DeserializeObject<RestrictedCatalogueUsersViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -458,6 +458,39 @@
                 var result = await response.Content.ReadAsStringAsync();
                 catalogueAccessRequested = JsonConvert.DeserializeObject<LearningHubValidationResult>(result);
                 var cacheKey = $"{accessRequestUserId}:AllRolesWithPermissions";
+                await this.cacheService.RemoveAsync(cacheKey);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                    ||
+                    response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new Exception("AccessDenied");
+            }
+
+            return catalogueAccessRequested;
+        }
+
+        /// <summary>
+        /// The ProvideCatalogueReaderAccess.
+        /// </summary>
+        /// <param name="userid">The userid.</param>
+        /// <param name="scriptCataloguereference">The scriptCataloguereference.</param>
+        /// <param name="scriptCatalogueNodeId">The scriptCatalogueNodeId.</param>
+        /// <returns>The validation result.</returns>
+        public async Task<LearningHubValidationResult> ProvideCatalogueReaderAccess(int userid, string scriptCataloguereference, int scriptCatalogueNodeId)
+        {
+            var request = $"Catalogue/ProvideCatalogueReaderAccess/{userid}/{scriptCataloguereference}/{scriptCatalogueNodeId}";
+
+            var client = await this.OpenApiHttpClient.GetClientAsync();
+            var content = new StringContent(JsonConvert.SerializeObject(new { }));
+            var response = await client.PostAsync(request, content).ConfigureAwait(false);
+            var catalogueAccessRequested = new LearningHubValidationResult();
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                catalogueAccessRequested = JsonConvert.DeserializeObject<LearningHubValidationResult>(result);
+                var cacheKey = $"{userid}:AllRolesWithPermissions";
                 await this.cacheService.RemoveAsync(cacheKey);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -580,7 +613,7 @@
             ApiResponse apiResponse = null;
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                 if (!apiResponse.Success)
@@ -594,7 +627,7 @@
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
                 if (apiResponse.ValidationResult == null)
                 {
@@ -620,7 +653,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<AllCatalogueResponseViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized ||

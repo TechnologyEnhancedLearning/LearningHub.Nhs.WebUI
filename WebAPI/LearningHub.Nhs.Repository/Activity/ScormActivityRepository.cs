@@ -10,7 +10,6 @@ namespace LearningHub.Nhs.Repository.Activity
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Dto;
     using LearningHub.Nhs.Models.Entities.Activity;
-    using LearningHub.Nhs.Models.Hierarchy;
     using LearningHub.Nhs.Repository.Interface;
     using LearningHub.Nhs.Repository.Interface.Activity;
     using Microsoft.Data.SqlClient;
@@ -81,8 +80,7 @@ namespace LearningHub.Nhs.Repository.Activity
             var param3 = new SqlParameter("@p3", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
             this.DbContext.Database.ExecuteSqlRaw("[activity].[ScormActivityComplete] @p0, @p1, @p2, @p3 output", param0, param1, param2, param3);
-
-            return (int)param3.Value;
+            return param3.Value == DBNull.Value ? 0 : (int)param3.Value;
         }
 
         /// <summary>

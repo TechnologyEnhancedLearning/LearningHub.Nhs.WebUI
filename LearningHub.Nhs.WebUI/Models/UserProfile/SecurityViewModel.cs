@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using elfhHub.Nhs.Models.Common;
-    using NHSUKViewComponents.Web.ViewModels;
+    using NHSUKFrontendRazor.ViewModels;
 
     /// <summary>
     /// Defines the <see cref="SecurityViewModel" />.

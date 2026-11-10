@@ -123,5 +123,20 @@
             var certificateDetails = await this.myLearningService.GetUserCertificateDetails(this.CurrentUserId.GetValueOrDefault(), requestModel);
             return this.Ok(certificateDetails);
         }
+
+        /// <summary>
+        /// Gets the user badge details.
+        /// </summary>
+        /// <param name="requestModel">
+        /// The requestModel.
+        /// </param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpPost]
+        [Route("GetUserBadgeDetails")]
+        public async Task<IActionResult> GetUserBadgeDetails([FromBody] MyLearningApiRequestViewModel requestModel)
+        {
+            var badgeDetails = await this.myLearningService.GetUserBadgeDetails(requestModel);
+            return this.Ok(badgeDetails);
+        }
     }
 }

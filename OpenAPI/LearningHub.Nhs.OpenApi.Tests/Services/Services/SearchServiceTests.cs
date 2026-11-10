@@ -35,6 +35,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
         private readonly Mock<IResourceRepository> resourceRepository;
         private readonly Mock<IResourceService> resourceService;
         private readonly Mock<ICachingService> cachingService;
+        private readonly Mock<IMoodleBridgeApiService> moodleBridgeApiService;
         private readonly Mock<IEventService> eventService;
         private readonly AzureSearchService searchService;
         private readonly Mock<IOptions<FindwiseConfig>> findwiseConfig;
@@ -49,6 +50,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
             this.resourceRepository = new Mock<IResourceRepository>();
             this.resourceService = new Mock<IResourceService>();
             this.cachingService = new Mock<ICachingService>();
+            this.moodleBridgeApiService = new Mock<IMoodleBridgeApiService>();
             this.azureSearchConfig = new Mock<IOptions<AzureSearchConfig>>();
             this.eventService = new Mock<IEventService>();
             this.mapper = new Mock<IMapper>();
@@ -61,6 +63,7 @@ namespace LearningHub.Nhs.OpenApi.Tests.Services.Services
                 this.azureSearchConfig.Object,
                 this.resourceRepository.Object,
                 this.cachingService.Object,
+                this.moodleBridgeApiService.Object,
                 this.mockLogger.Object,
                 this.mapper.Object
                 );

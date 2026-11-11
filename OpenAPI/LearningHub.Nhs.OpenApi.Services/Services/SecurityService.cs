@@ -240,7 +240,7 @@
                     var user = await this.userProfileRepository.GetByIdAsync(emailChangeValidationToken.UserId);
                     var emailTemplate = this.emailTemplateService.GetEmailTemplateById((int)EmailTemplates.EmailVerified);
                     var personalisation = new Dictionary<string, dynamic>();
-                    personalisation["user name"] = this.learningHubConfig.EmailBasedAuthenticationPhase1 ? emailChangeValidationToken.User.UserName : user.FirstName;
+                    personalisation["user name"] = this.learningHubConfig.EmailBasedAuthenticationPhase1 ? emailChangeValidationToken.User.LegacyUserName : user.FirstName;
                     var emailRequest = new EmailRequest
                     {
                         Recipient = emailChangeValidationToken.Email,

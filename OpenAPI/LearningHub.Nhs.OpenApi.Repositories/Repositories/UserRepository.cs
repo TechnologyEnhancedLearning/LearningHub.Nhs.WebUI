@@ -46,7 +46,7 @@
         public async Task<User?> GetBasicUserByIdAsync(int id)
         {
            var user = await DbContext.User.AsNoTracking().Where(x =>x.Id == id)
-                                      .Select(u => new User { Id = u.Id, UserName = u.UserName }).FirstOrDefaultAsync();
+                                      .Select(u => new User { Id = u.Id, LegacyUserName = u.LegacyUserName }).FirstOrDefaultAsync();
             return user;
         }
 

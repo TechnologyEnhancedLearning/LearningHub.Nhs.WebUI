@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using LearningHub.Nhs.Models.Common;
 
     /// <summary>
     /// User Group operations.
@@ -158,12 +159,9 @@
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteAsync(
-            int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            var deleted = await userGroupService.SoftDeleteAsync(
-                id,
-                CurrentUserId.GetValueOrDefault());
+            var deleted = await userGroupService.SoftDeleteAsync(id, CurrentUserId.GetValueOrDefault());
 
             return deleted
                 ? NoContent()
@@ -800,24 +798,25 @@
         //        return this.BadRequest(new ApiResponse(false, vr));
         //    }
         //}
-        /// <summary>
-        /// Delete specific UserGroup by Id.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <returns>The <see cref="Task"/>.</returns>
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
-        {
-            var vr = await this.userGroupService.DeleteAsync(this.CurrentUserId.GetValueOrDefault(), id);
-            if (vr.IsValid)
-            {
-                return this.Ok(new ApiResponse(true, vr));
-            }
-            else
-            {
-                return this.BadRequest(new ApiResponse(false, vr));
-            }
-        }
+
+        ///// <summary>
+        ///// Delete specific UserGroup by Id.
+        ///// </summary>
+        ///// <param name="id">The id.</param>
+        ///// <returns>The <see cref="Task"/>.</returns>
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteAsync(int id)
+        //{
+        //    var vr = await this.userGroupService.DeleteAsync(this.CurrentUserId.GetValueOrDefault(), id);
+        //    if (vr.IsValid)
+        //    {
+        //        return this.Ok(new ApiResponse(true, vr));
+        //    }
+        //    else
+        //    {
+        //        return this.BadRequest(new ApiResponse(false, vr));
+        //    }
+        //}
 
         /// <summary>
         /// Get all catalogues.

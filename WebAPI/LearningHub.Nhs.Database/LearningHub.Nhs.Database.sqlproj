@@ -613,6 +613,8 @@
     <Build Include="User-Defined Table Types\IntIdsTableList.sql" />
     <Build Include="Stored Procedures\Resources\GetResourceReferencesByOriginalIds.sql" />
     <None Include="Scripts\Pre-Deploy\Scripts\TD-7819-Create_Table_Type.sql" />
+    <Build Include="Tables\Hub\GmcLrmp.sql" />
+    <Build Include="Tables\Hub\GdcRegister.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Pre-Deploy\Scripts\Card5766_AuthorTableChanges.PreDeployment.sql" />

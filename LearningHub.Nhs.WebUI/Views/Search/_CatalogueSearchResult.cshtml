@@ -1,4 +1,5 @@
 ﻿@using System.Web;
+@using Microsoft.AspNetCore.WebUtilities;
 @using LearningHub.Nhs.WebUI.Extensions
 @using LearningHub.Nhs.Models.Search.SearchClick;
 
@@ -27,7 +28,45 @@
 
 @if (pagingModel.TotalPages > 1)
 {
-    @await Html.PartialAsync("_CataloguePagination", Model)
+    @* @await Html.PartialAsync("_CataloguePagination", Model) *@
+    
+    var indexParamName = "cataloguepageindex";
+
+    var queryParams = QueryHelpers.ParseQuery(Context.Request.QueryString.ToString().ToLower());
+    if (pagingModel.CurrentPage < 0 || pagingModel.CurrentPage >= pagingModel.TotalPages)
+    {
+        queryParams[indexParamName] = "0";
+        Context.Response.Redirect(QueryHelpers.AddQueryString(Context.Request.Path, queryParams));
+    }
+
+    queryParams["searchid"] = $"{Model.ResourceSearchResult?.SearchId}";
+    queryParams["groupid"] = $"{Model.GroupId}";
+    queryParams["cataloguecount"] = $"{Model.CatalogueSearchResult.TotalHits}";
+
+    int currentPageIndex = pagingModel.CurrentPage + 1;
+    int totalPages = pagingModel.TotalPages;
+
+    string prevUrl = null;
+    if (pagingModel.CurrentPage > 0)
+    {
+        queryParams[indexParamName] = $"{pagingModel.CurrentPage - 1}";
+        prevUrl = QueryHelpers.AddQueryString("/search/record-catalogue-navigation", queryParams);
+    }
+
+    string nextUrl = null;
+    if (pagingModel.CurrentPage < pagingModel.TotalPages - 1)
+    {
+        queryParams[indexParamName] = $"{pagingModel.CurrentPage + 1}";
+        nextUrl = QueryHelpers.AddQueryString("/search/record-catalogue-navigation", queryParams);
+    }
+
+    <div class="catalogue-pagination">
+        <h2 class="nhsuk-u-margin-bottom-0">
+            @($"{Model.CatalogueSearchResult.TotalHits} catalogue{(Model.CatalogueSearchResult.TotalHits == 1 ? string.Empty : "s")}")
+        </h2>
+
+        <vc:pagination current-page="@currentPageIndex" total-page="@totalPages" prev-url="@prevUrl" next-url="@nextUrl" />
+    </div>
 
     <div class="catalogue-all-link nhsuk-u-margin-bottom-3">
         <a href="/catalogues?term=@searchString">View all catalogues</a>

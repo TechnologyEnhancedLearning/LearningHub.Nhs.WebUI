@@ -137,7 +137,20 @@
         }
     </ul>
 
-    @await Html.PartialAsync("_AllCataloguePagination", Model)
+    @* @await Html.PartialAsync("_AllCataloguePagination", Model) *@
+
+    @if (Model.PrevChar != null || Model.NextChar != null)
+    {
+        string prevUrl = Model.PrevChar != null
+            ? Url.Action("GetAllCatalogue", new { filterChar = Model.PrevChar })
+            : null;
+
+        string nextUrl = Model.NextChar != null
+            ? Url.Action("GetAllCatalogue", new { filterChar = Model.NextChar })
+            : null;
+
+        <vc:pagination prev-char="@Model.PrevChar" next-char="@Model.NextChar" prev-url="@prevUrl" next-url="@nextUrl" />
+    }
 
 </div>
 </div>

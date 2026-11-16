@@ -1,5 +1,6 @@
 ﻿@using elfhHub.Nhs.Models.Common
 @model LearningHub.Nhs.WebUI.Models.Account.AccountCreationListViewModel
+@using LearningHub.Nhs.WebUI.Models.Account
 
 @{
     ViewData["Title"] = "Select Grade";
@@ -74,7 +75,38 @@
 
                 @if (Model.GradeList.Any())
                 {
-                    @await Html.PartialAsync("_AccountCreationGradePaging", Model.AccountCreationPaging)
+                    @* @await Html.PartialAsync("_AccountCreationGradePaging", Model.AccountCreationPaging) *@
+
+                    var pagingModel = Model.AccountCreationPaging;
+                    string currentPage = $"{pagingModel.CurrentPage} of {pagingModel.TotalPages}";
+                    int currentPageIndex = pagingModel.CurrentPage;
+                    int totalPages = pagingModel.TotalPages;
+
+                    string prevUrl = pagingModel.CurrentPage > 1
+                    ? Url.Action("CreateAccountGradeSelection",
+                    new
+                    {
+                        currentPageIndex = pagingModel.CurrentPage,
+                        accountCreationPagingEnum = AccountCreationPagingEnum.PreviousPageChange,
+                        registrationNumber = Context.Request.Query["registrationNumber"],
+                        currentRole = Context.Request.Query["currentRole"],
+                        returnToConfirmation = Context.Request.Query["returnToConfirmation"]
+                    })
+                    : null;
+
+                    string nextUrl = pagingModel.CurrentPage < pagingModel.TotalPages
+                    ? Url.Action("CreateAccountGradeSelection",
+                    new
+                    {
+                        currentPageIndex = pagingModel.CurrentPage,
+                        accountCreationPagingEnum = AccountCreationPagingEnum.NextPageChange,
+                        registrationNumber = Context.Request.Query["registrationNumber"],
+                        currentRole = Context.Request.Query["currentRole"],
+                        returnToConfirmation = Context.Request.Query["returnToConfirmation"]
+                    })
+                    : null;
+
+                    <vc:pagination current-page="@currentPageIndex" total-page="@totalPages" prev-url="@prevUrl" next-url="@nextUrl" />
                 }
             </div>
         </div>

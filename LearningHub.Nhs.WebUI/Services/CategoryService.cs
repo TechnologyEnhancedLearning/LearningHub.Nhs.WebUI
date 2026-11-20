@@ -132,7 +132,7 @@
             {
                 var client = await this.OpenApiHttpClient.GetClientAsync();
 
-                var request = $"Moodle/GetAllMoodleCategories";
+                var request = $"MoodleBridge/GetAllMoodleCategories";
                 var response = await client.GetAsync(request).ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)

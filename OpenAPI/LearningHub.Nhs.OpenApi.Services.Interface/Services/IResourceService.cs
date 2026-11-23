@@ -271,6 +271,13 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <returns><see cref="Task"/>The resourceReferenceMetaDataViewModel.</returns>
         Task<BulkResourceReferenceViewModel> GetResourceReferencesByOriginalIds(List<int> originalResourceReferenceIds, int? currentUserId);
 
+        /// <summary>
+        /// The get resources by Ids endpoint.
+        /// </summary>
+        /// <param name="originalResourceReferenceIds">The original resource reference Ids.</param>
+        /// <param name="currentUserId">.</param>
+        /// <returns><see cref="Task"/>The resourceReferenceMetaDataViewModel.</returns>
+        Task<BulkResourceReferenceViewModel> GetBulkResourceReferencesByOriginalIds(List<int> originalResourceReferenceIds, int? currentUserId);
 
         /// <summary>
         /// The get resource by id async.

@@ -48,7 +48,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<LocationBasicViewModel>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -77,7 +77,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<List<LocationBasicViewModel>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
@@ -108,7 +108,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
+                var result = await response.Content.ReadAsStringAsync();
                 viewmodel = JsonConvert.DeserializeObject<Tuple<int, List<LocationBasicViewModel>>>(result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized

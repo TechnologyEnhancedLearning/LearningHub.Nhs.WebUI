@@ -312,6 +312,40 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
             return new BulkResourceReferenceViewModel(matchedResources, unmatchedIds);
         }
 
+        /// <summary>
+        /// bulk get by ids async.
+        /// </summary>
+        /// <param name="originalResourceReferenceIds">the resource reference ids.</param>
+        /// <returns>the resource.</returns>
+        public async Task<BulkResourceReferenceViewModel> GetBulkResourceReferencesByOriginalIds(List<int> originalResourceReferenceIds, int? currentUserId)
+        {
+            var resourceReferenceIds = originalResourceReferenceIds.Distinct().ToList();
+            var resourceReferencesList = await this.resourceRepository.GetBulkResourceReferencesByOriginalResourceReferenceIds(resourceReferenceIds);
+            var matchedIds = resourceReferencesList.Select(r => r.OriginalResourceReferenceId).ToHashSet();
+
+            var unmatchedIds = originalResourceReferenceIds.Where(id => !matchedIds.Contains(id)).ToList();
+
+            if (unmatchedIds.Count > 0)
+            {
+                this.logger.LogInformation("Some resource ids not matched");
+            }
+
+            foreach (var duplicateIds in resourceReferencesList.GroupBy(r => r.OriginalResourceReferenceId).Where(g => g.Count() > 1))
+            {
+                this.logger.LogWarning("Multiple resource references found with OriginalResourceReferenceId {ResourceReferenceId}", duplicateIds.Key);
+            }
+
+            var resourceActivities = new List<ResourceActivityDTO>();
+            if (currentUserId.HasValue && resourceReferencesList.Count > 0)
+            {
+                var resourceIds = resourceReferencesList.Select(r => r.ResourceId).Distinct().ToList();
+                resourceActivities = (await this.resourceRepository.GetBulkResourceActivityPerResourceMajorVersion(resourceIds, currentUserId.Value))?.ToList() ?? new List<ResourceActivityDTO>();
+            }
+            var activitiesByResourceId = resourceActivities.GroupBy(a => a.ResourceId).ToDictionary(g => g.Key, g => g.ToList());
+            var matchedResources = resourceReferencesList.Select(rr => { activitiesByResourceId.TryGetValue(rr.ResourceId, out var activities); return this.GetBulkResourceReferenceWithResourceDetailsViewModel(rr, activities ?? new List<ResourceActivityDTO>()); }).ToList();
+
+            return new BulkResourceReferenceViewModel(matchedResources, unmatchedIds);
+        }
 
         /// <summary>
         /// the get by id async.
@@ -408,6 +442,56 @@ namespace LearningHub.Nhs.OpenApi.Services.Services
                 resourceReference.Resource?.CurrentResourceVersion?.ResourceVersionRatingSummary?.AverageRating ?? 0,
                 this.learningHubService.GetResourceLaunchUrl(resourceReference.OriginalResourceReferenceId),
                 majorVersionIdActivityStatusDescription);
+        }
+
+        private ResourceReferenceWithResourceDetailsViewModel GetBulkResourceReferenceWithResourceDetailsViewModel(BulkResourceReferenceDTO resourceReference, List<ResourceActivityDTO> resourceActivities)
+        {
+            if (resourceReference.ResourceId == 0)
+            {
+                throw new Exception("No matching resource");
+            }
+
+            if (resourceReference.CurrentResourceVersionId == 0)
+            {
+                this.logger.LogInformation($"Resource with OriginalResourceReferenceId {resourceReference.Id} is missing a current resource version");
+            }
+
+            if (!resourceReference.AverageRating.HasValue)
+            {
+                this.logger.LogInformation($"Resource with Id: {resourceReference.ResourceId} is missing a ResourceVersionRatingSummary");
+            }
+
+            var resourceTypeName = ((ResourceTypeEnum)resourceReference.ResourceTypeId).ToString();
+            if (!Enum.IsDefined(typeof(ResourceTypeEnum), resourceReference.ResourceTypeId))
+            {
+                this.logger.LogError($"Resource has unrecognised type: {resourceReference.ResourceTypeId}");
+            }
+            var activityStatuses = GetMajorVersionIdActivityStatusDescription((ResourceTypeEnum)resourceReference.ResourceTypeId, resourceActivities);
+
+            return new ResourceReferenceWithResourceDetailsViewModel(
+                resourceReference.ResourceId,
+                resourceReference.OriginalResourceReferenceId,
+                resourceReference.Title ?? ResourceHelpers.NoResourceVersionText,
+                resourceReference.Description ?? string.Empty,
+                resourceReference.GetCatalogueDetails(),
+                resourceTypeName,
+                resourceReference.MajorVersion ?? 0,
+                resourceReference.AverageRating ?? 0,
+                this.learningHubService.GetResourceLaunchUrl(resourceReference.OriginalResourceReferenceId),
+                activityStatuses);
+        }
+
+        public static List<MajorVersionIdActivityStatusDescription> GetMajorVersionIdActivityStatusDescription(ResourceTypeEnum resourceType, IEnumerable<ResourceActivityDTO> resourceActivities)
+        {
+            return resourceActivities
+         .GroupBy(x => x.MajorVersion)
+         .Select(g => g.First())
+         .Select(x => new MajorVersionIdActivityStatusDescription(
+         x.MajorVersion,
+         ActivityStatusHelper.GetActivityStatusDescription(
+             (ActivityStatusEnum)x.ActivityStatusId,
+             resourceType)))
+        .OrderByDescending(x => x.MajorVersionId).ToList();
         }
 
         /// <summary>

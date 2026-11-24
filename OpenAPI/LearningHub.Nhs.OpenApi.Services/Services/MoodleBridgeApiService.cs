@@ -22,6 +22,9 @@
     using IdentityModel.Client;
     using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
     using LearningHub.Nhs.Models.User;
+    using LearningHub.Nhs.OpenApi.Repositories.Repositories;
+    using Azure.Core;
+    using LearningHub.Nhs.Models.Databricks;
 
     /// <summary>
     /// MoodleBridgeApiService.
@@ -336,6 +339,86 @@
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// GetAllMoodleInstanceConfigsAsync.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public async Task<MoodleConfigurationResponseModel> GetAllMoodleInstanceConfigsAsync()
+        {
+            try
+            {
+                var client = await this.moodleBridgeHttpClient.GetClient();
+                var response = await client
+                    .GetAsync("/api/v1/diagnostics/configuration")
+                    .ConfigureAwait(false);
+
+                var responseContent = await response.Content
+                    .ReadAsStringAsync()
+                    .ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                    };
+
+                    var result = System.Text.Json.JsonSerializer.Deserialize<MoodleConfigurationResponseModel>(json, options);
+
+                    return result ?? new MoodleConfigurationResponseModel();
+                }
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized ||
+                    response.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    throw new UnauthorizedAccessException("AccessDenied");
+                }
+
+                throw new HttpRequestException(
+                    $"Configuration API failed. StatusCode={(int)response.StatusCode} ({response.StatusCode})");
+            }
+            catch(Exception ex)
+            {
+                return new MoodleConfigurationResponseModel();
+            }
+        }
+
+        /// <summary>
+        /// MoodleInstanceUserEnrolmentAsync
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<UserEnrolmentResult> MoodleInstanceUserEnrolmentAsync(MoodleUserEnrolmentRequestViewModel request)
+        {
+            var client = await this.moodleBridgeHttpClient.GetClient();
+            var response = await client.PostAsJsonAsync(
+                "/api/v1/Users/enrolments",
+                request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result =
+                    await response.Content.ReadFromJsonAsync<MoodleUserEnrolmentResponseModel>();
+
+                return new UserEnrolmentResult
+                {
+                    IsSuccess = true,
+                    Status = result?.Status
+                };
+            }
+
+            var error =
+                await response.Content.ReadFromJsonAsync<MoodleApiErrorResponse>();
+
+            return new UserEnrolmentResult
+            {
+                IsSuccess = false,
+                ErrorMessage = error?.Message ?? "Unknown error occurred."
+            };
         }
 
         private sealed class MoodleBridgeConfigurationResponseModel

@@ -4,7 +4,10 @@
     using System.Threading.Tasks;
     using LearningHub.Nhs.Models.Catalogue;
     using LearningHub.Nhs.Models.Entities.Hierarchy;
+    using LearningHub.Nhs.Models.Moodle;
+    using LearningHub.Nhs.Models.Moodle.API;
     using LearningHub.Nhs.Models.Validation;
+    using LearningHub.Nhs.WebUI.Models.Catalogue;
 
     /// <summary>
     /// Defines the <see cref="ICatalogueService" />.
@@ -156,5 +159,18 @@
         /// <param name="filterChar">The letter.</param>
         /// <returns>The allcatalogue result based on letters.</returns>
         Task<AllCatalogueResponseViewModel> GetAllCatalogueAsync(string filterChar);
+
+        /// <summary>
+        /// GetMoodleInstanceConfigsAsync.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<MoodleConfigurationResponseModel> GetMoodleInstanceConfigsAsync();
+
+        /// <summary>
+        /// MoodleInstanceUserEnrolmentAsync.
+        /// </summary>
+        /// <param name="requestModel">The requestModel.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<UserEnrolmentResult> MoodleInstanceUserEnrolmentAsync(MoodleUserEnrolmentRequestViewModel requestModel);
     }
 }

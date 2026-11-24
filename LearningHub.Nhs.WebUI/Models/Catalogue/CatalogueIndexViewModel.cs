@@ -63,5 +63,15 @@
         /// Gets or sets the moodle categories.
         /// </summary>
         public List<MoodleCategory> MoodleCategories { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether user hasAllowedAccessLevel.
+        /// </summary>
+        public bool HasAllowedAccessLevel { get; set; }
+
+        /// <summary>
+        /// Gets or Sets the instatnce name.
+        /// </summary>
+        public string InstanceName { get; set; }
     }
 }

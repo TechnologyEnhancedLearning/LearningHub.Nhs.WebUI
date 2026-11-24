@@ -1,6 +1,7 @@
 ﻿namespace LearningHub.NHS.OpenAPI.Controllers
 {
     using System.Threading.Tasks;
+    using LearningHub.Nhs.Models.Moodle;
     using LearningHub.Nhs.Models.User;
     using LearningHub.Nhs.OpenApi.Services.Interface.Services;
     using Microsoft.AspNetCore.Authorization;
@@ -73,6 +74,41 @@
         {
             var moodleConfiguration = await this.moodleBridgeApiService.GetMoodleInstanceBaseUrlsAsync();
             return this.Ok(moodleConfiguration);
+        }
+
+        /// <summary>
+        /// GetAllMoodleInstanceConfigsAsync.
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpGet]
+        [Route("GetAllMoodleInstanceConfigs")]
+        public async Task<IActionResult> GetAllMoodleInstanceConfigs()
+        {
+            var moodleInstanceConfigs = await this.moodleBridgeApiService.GetAllMoodleInstanceConfigsAsync();
+            return this.Ok(moodleInstanceConfigs);
+        }
+
+        /// <summary>
+        /// Enrols a user on a Moodle course.
+        /// </summary>
+        /// <param name="enrolmentRequestViewModel">
+        /// Moodle user enrolment request.
+        /// </param>
+        /// <returns>
+        /// The Moodle enrolment result.
+        /// </returns>
+        [HttpPost]
+        [Route("MoodleInstanceUserEnrolment")]
+        public async Task<IActionResult> MoodleInstanceUserEnrolment(
+            [FromBody] MoodleUserEnrolmentRequestViewModel enrolmentRequestViewModel)
+        {
+            if (enrolmentRequestViewModel == null)
+            {
+                return this.BadRequest("The enrolment request is required.");
+            }
+
+            var userEnrolmentResponse = await this.moodleBridgeApiService.MoodleInstanceUserEnrolmentAsync(enrolmentRequestViewModel);
+            return this.Ok(userEnrolmentResponse);
         }
     }
 }

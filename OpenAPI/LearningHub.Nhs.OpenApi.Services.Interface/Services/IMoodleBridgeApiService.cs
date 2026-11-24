@@ -99,5 +99,21 @@ namespace LearningHub.Nhs.OpenApi.Services.Interface.Services
         /// <param name="moodleUserInstanceUserIds">moodleUserInstanceUserIds.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         Task<MoodleBadgeResponseModel> GetUserBadgeFromMoodleInstancesAsync(MoodleInstanceUserIdsViewModel moodleUserInstanceUserIds);
+
+        /// <summary>
+        /// MoodleInstanceUserEnrolmentAsync
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        /// <exception cref="Exception"></exception>
+        Task<MoodleConfigurationResponseModel> GetAllMoodleInstanceConfigsAsync();
+
+        /// <summary>
+        /// MoodleInstanceUserEnrolmentAsync
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<UserEnrolmentResult> MoodleInstanceUserEnrolmentAsync(MoodleUserEnrolmentRequestViewModel request);
+
     }
 }

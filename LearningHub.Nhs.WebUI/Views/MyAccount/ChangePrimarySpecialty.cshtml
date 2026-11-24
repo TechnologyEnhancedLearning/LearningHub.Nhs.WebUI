@@ -121,7 +121,32 @@
 
         @if (Model.SpecialtyList?.Count > 0)
         {
-          @await Html.PartialAsync("_UserPrimarySpecialtyPaging", Model)
+            @* @await Html.PartialAsync("_UserPrimarySpecialtyPaging", Model) *@
+
+            var pagingModel = Model;
+            string currentPage = $"{pagingModel.CurrentPage} of {pagingModel.TotalPages}";
+            int currentPageIndex = pagingModel.CurrentPage;
+            int totalPages = pagingModel.TotalPages;
+
+            string prevUrl = pagingModel.CurrentPage > 1
+            ? Url.Action("ChangePrimarySpecialty",
+            new
+            {
+                currentPage = pagingModel.CurrentPage - 1,
+                filterText = Context.Request.Query["filterText"],
+            })
+            : null;
+
+            string nextUrl = pagingModel.CurrentPage < pagingModel.TotalPages
+            ? Url.Action("ChangePrimarySpecialty",
+            new
+            {
+                currentPage = pagingModel.CurrentPage + 1,
+                filterText = Context.Request.Query["filterText"],
+            })
+            : null;
+
+            <vc:pagination current-page="@currentPageIndex" total-page="@totalPages" prev-url="@prevUrl" next-url="@nextUrl" />
         }
 
       </div>

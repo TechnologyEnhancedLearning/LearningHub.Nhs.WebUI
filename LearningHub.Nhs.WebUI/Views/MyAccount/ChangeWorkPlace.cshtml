@@ -85,7 +85,32 @@
 
                         </form>
 
-                        @await Html.PartialAsync("_UserWorkPlacePaging", Model)
+                        @* @await Html.PartialAsync("_UserWorkPlacePaging", Model) *@
+
+                        var pagingModel = Model;
+                        int currentPageIndex = pagingModel.CurrentPage;
+                        int totalPages = pagingModel.TotalPages;
+
+                        string prevUrl = pagingModel.CurrentPage > 1
+                            ? Url.Action("ChangeWorkPlace",
+                            new
+                            {
+                                currentPage = pagingModel.CurrentPage - 1,
+                                filterText = Context.Request.Query["filterText"],
+                            })
+                            : null;
+
+                        string nextUrl = pagingModel.CurrentPage < pagingModel.TotalPages
+                            ? Url.Action("ChangeWorkPlace",
+                            new
+                            {
+                                currentPage = pagingModel.CurrentPage + 1,
+                                filterText = Context.Request.Query["filterText"],
+                            })
+                            : null;
+                        
+
+                        <vc:pagination current-page="@currentPageIndex" total-page="@totalPages" prev-url="@prevUrl" next-url="@nextUrl" />
                     }
                     else
                     {

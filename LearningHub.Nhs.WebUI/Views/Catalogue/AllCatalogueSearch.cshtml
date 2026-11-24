@@ -128,10 +128,12 @@
         var currentPage = this.ViewBag.PageIndex;
         int totalPage = (Model.TotalCount / pageSize) + (Model.TotalCount % pageSize == 0 ? 0 : 1);
         var searchQueryParam = hasSearchTerm ? $"&term={searchTerm}" : string.Empty;
-        var prevUrl = $"/allcataloguesearch?pageindex={currentPage - 1}{searchQueryParam}";
-        var nextUrl = $"/allcataloguesearch?pageindex={currentPage + 1}{searchQueryParam}";
+        var prevUrl = currentPage > 1 ? $"/allcataloguesearch?pageindex={currentPage - 1}{searchQueryParam}" : null;
+        var nextUrl = currentPage < totalPage ? $"/allcataloguesearch?pageindex={currentPage + 1}{searchQueryParam}" : null;
 
-        @await Html.PartialAsync("_Pagination", new PaginationViewModel(currentPage, totalPage, prevUrl, nextUrl))
+        <vc:pagination current-page="@currentPage" total-page="@totalPage" prev-url="@prevUrl" next-url="@nextUrl" />
+        
+        @* @await Html.PartialAsync("_Pagination", new PaginationViewModel(currentPage, totalPage, prevUrl, nextUrl)) *@
     }
 
     @if (Model.TotalCount == 0)

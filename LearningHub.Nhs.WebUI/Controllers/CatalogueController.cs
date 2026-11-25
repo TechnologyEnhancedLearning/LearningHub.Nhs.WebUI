@@ -295,8 +295,11 @@
                 viewModel.InstanceName = catalogueNodeVersionCategory.InstanceName;
                 var userAccessRole = this.User.IsInRole("BasicUser") ? "general" : "full";
                 var moodleInstanceConfigs = await this.catalogueService.GetMoodleInstanceConfigsAsync();
-                var instanceConfig = moodleInstanceConfigs.Configurations.FirstOrDefault(x => x.ShortName.Equals(catalogueNodeVersionCategory.InstanceName, StringComparison.OrdinalIgnoreCase));
-                viewModel.HasAllowedAccessLevel = instanceConfig?.AllowedAccessLevels?.Contains(userAccessRole, StringComparer.OrdinalIgnoreCase) == true;
+                if (moodleInstanceConfigs.Configurations != null)
+                {
+                    var instanceConfig = moodleInstanceConfigs.Configurations.FirstOrDefault(x => x.ShortName.Equals(catalogueNodeVersionCategory.InstanceName, StringComparison.OrdinalIgnoreCase));
+                    viewModel.HasAllowedAccessLevel = instanceConfig?.AllowedAccessLevels?.Contains(userAccessRole, StringComparer.OrdinalIgnoreCase) == true;
+                }
 
                 var response = await this.categoryService.GetCoursesByCategoryIdAsync(moodleInstanceCategoryId);
                 viewModel.Courses = response?.Results?

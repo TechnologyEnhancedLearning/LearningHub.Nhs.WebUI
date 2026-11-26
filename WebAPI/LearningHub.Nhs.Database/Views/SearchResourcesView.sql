@@ -7,6 +7,7 @@
 -- TD-6212 - https://hee-tis.atlassian.net/browse/TD-6212
 -- 06-02-2026  Binon Yesudhas  Initial Revision
 -- 13-02-2026  Binon Yesudhas  Handle inconsistenrt resource type
+-- 25-11-2026  Binon Yesudhas  Include catalogue visibility check in the view 
 -------------------------------------------------------------------------------
 CREATE VIEW [dbo].[SearchResourcesView]
 AS
@@ -27,7 +28,13 @@ WITH BaseResource AS (
         p.CreateDate AS PublicationDate,
         rvrs.AverageRating,
 		amend.MaxAmendDate AS AmendDate,
-		CASE WHEN rv.VersionStatusId = 2 THEN CAST(0 AS bit) ELSE CAST(1 AS bit) END AS Deleted,		
+		CAST(CASE
+				WHEN rv.VersionStatusId <> 2 THEN 1
+				WHEN n.Hidden = 1 THEN 1
+				WHEN n.Deleted = 1 THEN 1
+				ELSE 0
+			END
+		AS BIT) AS Deleted,
         ROW_NUMBER() OVER(PARTITION BY r.Id ORDER BY p.Id DESC) AS RowNumber
     FROM resources.ResourceVersion rv
     INNER JOIN hub.[User] u ON u.Id = rv.CreateUserId
@@ -35,9 +42,13 @@ WITH BaseResource AS (
     INNER JOIN resources.ResourceVersionRatingSummary rvrs ON rvrs.ResourceVersionId = rv.Id
     INNER JOIN hierarchy.Publication p ON p.Id = rv.PublicationId
 	INNER JOIN resources.ResourceType rt ON r.ResourceTypeId = rt.id
+	INNER JOIN hierarchy.NodeResource nr ON nr.ResourceId = r.Id AND nr.VersionStatusId = 2
+	INNER JOIN hierarchy.Node n ON n.Id = nr.NodeId
+    INNER JOIN hierarchy.NodePath np ON np.NodeId = n.Id AND np.IsActive = 1
+	LEFT JOIN hierarchy.CatalogueNodeVersion cnv ON  n.CurrentNodeVersionId = cnv.NodeVersionId AND cnv.Deleted = 0 
 	CROSS APPLY (
         SELECT MAX(v) AS MaxAmendDate
-        FROM (VALUES (rv.AmendDate), (r.AmendDate), (rvrs.AmendDate)) AS value(v)
+        FROM (VALUES (rv.AmendDate), (r.AmendDate), (rvrs.AmendDate), (n.AmendDate)) AS value(v)
     ) AS amend
     WHERE
         rv.VersionStatusId in (2,3)
